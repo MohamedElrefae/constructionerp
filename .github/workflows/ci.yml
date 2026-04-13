@@ -92,5 +92,5 @@ jobs:
       - name: Run JS Property Tests
         working-directory: /home/runner/frappe-bench/apps/construction/construction/construction/tests
         run: |
-          npm install
+          npm install --no-audit --no-fund
           node --test test_print_settings_properties.js
