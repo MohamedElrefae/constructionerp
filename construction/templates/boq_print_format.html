@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Bill of Quantities - {{ header.title }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 10px;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #333;
+            padding-bottom: 15px;
+        }
+        
+        .header h1 {
+            font-size: 18px;
+            margin: 0 0 5px 0;
+        }
+        
+        .header h2 {
+            font-size: 14px;
+            margin: 0 0 10px 0;
+            color: #666;
+        }
+        
+        .header-info {
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .header-info table {
+            width: 100%;
+            border: none;
+            margin-top: 0;
+        }
+        
+        .header-info td {
+            text-align: left;
+            border: none;
+            padding: 2px 5px;
+            width: 33%;
+        }
+        
+        .header-info .label {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        th {
+            background-color: #333;
+            color: white;
+            padding: 8px 5px;
+            text-align: left;
+            font-size: 9px;
+        }
+        
+        td {
+            padding: 5px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .section-row {
+            background-color: #f0f0f0;
+            font-weight: bold;
+        }
+        
+        .item-row td {
+            padding-left: 15px;
+        }
+        
+        .wbs-code {
+            font-family: monospace;
+        }
+        
+        .number {
+            text-align: right;
+        }
+        
+        .total-row {
+            background-color: #333;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .total-row td {
+            padding: 10px 5px;
+        }
+        
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 8px;
+            color: #999;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+        }
+        
+        @media print {
+            body { padding: 0; }
+            .header { page-break-inside: avoid; }
+            table { page-break-inside: auto; }
+            tr { page-break-inside: avoid; page-break-after: auto; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>BILL OF QUANTITIES</h1>
+        <h2>{{ header.title }}</h2>
+        <div class="header-info">
+            <table>
+                <tr>
+                    <td>
+                        <span class="label">Project:</span> {{ header.project_name or header.project }}<br>
+                        <span class="label">BOQ Type:</span> {{ header.boq_type }}
+                    </td>
+                    <td>
+                        <span class="label">Status:</span> {{ header.status }}<br>
+                        <span class="label">Version:</span> {{ header.version }}
+                    </td>
+                    <td>
+                        <span class="label">Export Date:</span> {{ export_date }}<br>
+                        <span class="label">Company:</span> {{ company }}
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    
+    {# Numeric column keys that need %.2f formatting and right-alignment #}
+    {% set numeric_keys = ["quantity", "contract_unit_price", "factor", "line_total"] %}
+
+    <table>
+        <thead>
+            <tr>
+                {% for col in columns %}
+                <th style="width: {{ col.width }}%">{{ col.label }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for node in items %}
+            <tr class="{% if node.is_group %}section-row{% else %}item-row{% endif %}">
+                {% for col in columns %}
+                {% set key = col.key %}
+                {# Determine CSS classes for this cell #}
+                {% set cell_classes = [] %}
+                {% if key == "wbs_code" %}{% set _ = cell_classes.append("wbs-code") %}{% endif %}
+                {% if key in numeric_keys %}{% set _ = cell_classes.append("number") %}{% endif %}
+                <td{% if cell_classes %} class="{{ cell_classes | join(' ') }}"{% endif %}>
+                    {# Map column key to node value with appropriate formatting #}
+                    {% if key == "title" %}
+                        {{ node.indent }}{{ node.title }}
+                    {% elif key == "type" %}
+                        {% if node.is_group %}Section{% else %}Item{% endif %}
+                    {% elif key in numeric_keys %}
+                        {% set val = node[key] %}
+                        {% if val %}{{ "%.2f"|format(val) }}{% endif %}
+                    {% else %}
+                        {{ node[key] or '' }}
+                    {% endif %}
+                </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+
+            {# Grand total row — find line_total column position for dynamic spanning #}
+            {% set ns = namespace(line_total_idx=-1) %}
+            {% for col in columns %}
+                {% if col.key == "line_total" %}
+                    {% set ns.line_total_idx = loop.index0 %}
+                {% endif %}
+            {% endfor %}
+            <tr class="total-row">
+                {% if ns.line_total_idx > 0 %}
+                <td colspan="{{ ns.line_total_idx }}" style="text-align: right; padding-right: 20px;">GRAND TOTAL</td>
+                <td class="number">{{ "%.2f"|format(grand_total) }}</td>
+                {% if ns.line_total_idx < columns|length - 1 %}
+                <td colspan="{{ columns|length - ns.line_total_idx - 1 }}"></td>
+                {% endif %}
+                {% elif ns.line_total_idx == 0 %}
+                <td class="number">{{ "%.2f"|format(grand_total) }}</td>
+                {% if columns|length > 1 %}
+                <td colspan="{{ columns|length - 1 }}"></td>
+                {% endif %}
+                {% else %}
+                {# line_total column not present — span all columns #}
+                <td colspan="{{ columns|length }}" style="text-align: right; padding-right: 20px;">GRAND TOTAL: {{ "%.2f"|format(grand_total) }}</td>
+                {% endif %}
+            </tr>
+        </tbody>
+    </table>
+    
+    <div class="footer">
+        <p>Generated by Construction ERP - BOQ Management System</p>
+        <p>BOQ Reference: {{ header.name }} | Total Contract Value: {{ "%.2f"|format(header.total_contract_value) }}</p>
+    </div>
+</body>
+</html>

@@ -11,15 +11,10 @@ module_app = {
     "construction": "construction",
 }
 
-# Doctype-specific JavaScript files
-# Paths are relative to the app module folder (construction/construction/)
 doctype_js = {
     "BOQ Header": "construction/doctype/boq_header/boq_header.js"
 }
 
 doctype_tree_js = {
-    "BOQ Structure": "construction/doctype/boq_structure/boq_structure_tree.js"
+    "BOQ Structure": "construction/public/js/boq_structure_tree.js"
 }
-
-# Global JS includes (raw asset path — loaded directly, not bundled)
-app_include_js = ["/assets/construction/js/print_settings_dialog.js"]
