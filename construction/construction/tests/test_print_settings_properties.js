@@ -10,7 +10,7 @@
 const { describe, it } = require('node:test');
 const assert = require('node:assert/strict');
 const fc = require('fast-check');
-const { ColumnConfigManager } = require('../public/js/print_settings_dialog.js');
+const { ColumnConfigManager } = require('../../public/js/print_settings_dialog.js');
 
 // ---------------------------------------------------------------------------
 // Generators
@@ -1282,7 +1282,7 @@ describe('Property 9: Serialization Round-Trip', function () {
 // Unit Tests: PreviewPanel Rendering
 // ---------------------------------------------------------------------------
 
-const { PreviewPanel } = require('../public/js/print_settings_dialog.js');
+const { PreviewPanel } = require('../../public/js/print_settings_dialog.js');
 
 describe('PreviewPanel Rendering', function () {
     /**
