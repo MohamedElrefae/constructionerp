@@ -7,7 +7,14 @@ frappe.treeview_settings["BOQ Structure"] = {
             fieldtype: "Link",
             options: "BOQ Header",
             label: __("BOQ Header"),
+            description: __("Select a BOQ Header to view its structure tree"),
             reqd: true,
+            get_query: function() {
+                return {
+                    filters: {},
+                    fields: ["name", "title", "project", "status", "boq_type"]
+                };
+            }
         },
     ],
     root_label: "BOQ Structure",
@@ -41,6 +48,26 @@ frappe.treeview_settings["BOQ Structure"] = {
             return treeview.page.fields_dict.boq_header.get_value();
         }
 
+        // Update page title with project name when BOQ Header is selected
+        var boq_field = treeview.page.fields_dict.boq_header;
+        if (boq_field && boq_field.$input) {
+            boq_field.$input.on("change", function() {
+                var boq = get_boq_header();
+                if (boq) {
+                    frappe.db.get_value("BOQ Header", boq, ["title", "project"]).then(function(r) {
+                        if (r && r.message) {
+                            var project = r.message.project || "";
+                            var title = r.message.title || boq;
+                            treeview.page.set_title(
+                                __("BOQ Structure") + " — " + project + " / " + title
+                            );
+                        }
+                    });
+                }
+            });
+        }
+
+
         treeview.page.add_inner_button(
             __("BOQ Header"),
             function () {
@@ -66,14 +93,14 @@ frappe.treeview_settings["BOQ Structure"] = {
             __("Excel - Header Only"),
             function () {
                 var boq = get_boq_header();
-                if (!boq) { frappe.msgprint("Please select a BOQ Header first."); return; }
+                if (!boq) { frappe.msgprint(__("Please select a BOQ Header first.")); return; }
                 frappe.call({
                     method: "construction.api.boq_api.export_boq_header_excel",
                     args: { boq_header: boq },
                     callback: function(r) {
                         if (r.message && r.message.file_url) {
                             window.open(r.message.file_url);
-                            frappe.show_alert({ message: "Header exported", indicator: "green" });
+                            frappe.show_alert({ message: __("Header exported"), indicator: "green" });
                         }
                     }
                 });
@@ -85,33 +112,14 @@ frappe.treeview_settings["BOQ Structure"] = {
             __("Excel - Full BOQ"),
             function () {
                 var boq = get_boq_header();
-                if (!boq) { frappe.msgprint("Please select a BOQ Header first."); return; }
+                if (!boq) { frappe.msgprint(__("Please select a BOQ Header first.")); return; }
                 frappe.call({
                     method: "construction.api.boq_api.export_boq_excel",
                     args: { boq_header: boq },
                     callback: function(r) {
                         if (r.message && r.message.file_url) {
                             window.open(r.message.file_url);
-                            frappe.show_alert({ message: "BOQ exported", indicator: "green" });
-                        }
-                    }
-                });
-            },
-            __("Export")
-        );
-
-        treeview.page.add_inner_button(
-            __("PDF - Header Only"),
-            function () {
-                var boq = get_boq_header();
-                if (!boq) { frappe.msgprint("Please select a BOQ Header first."); return; }
-                frappe.call({
-                    method: "construction.api.boq_api.export_boq_header_pdf",
-                    args: { boq_header: boq },
-                    callback: function(r) {
-                        if (r.message && r.message.file_url) {
-                            window.open(r.message.file_url);
-                            frappe.show_alert({ message: "Header PDF exported", indicator: "green" });
+                            frappe.show_alert({ message: __("BOQ exported"), indicator: "green" });
                         }
                     }
                 });
@@ -123,50 +131,19 @@ frappe.treeview_settings["BOQ Structure"] = {
             __("PDF - Full BOQ"),
             function () {
                 var boq = get_boq_header();
-                if (!boq) { frappe.msgprint("Please select a BOQ Header first."); return; }
+                if (!boq) { frappe.msgprint(__("Please select a BOQ Header first.")); return; }
                 frappe.call({
                     method: "construction.api.boq_api.export_boq_pdf",
                     args: { boq_header: boq },
                     callback: function(r) {
                         if (r.message && r.message.file_url) {
                             window.open(r.message.file_url);
-                            frappe.show_alert({ message: "BOQ PDF exported", indicator: "green" });
+                            frappe.show_alert({ message: __("BOQ PDF exported"), indicator: "green" });
                         }
                     }
                 });
             },
             __("Export")
-        );
-
-        treeview.page.add_inner_button(
-            __("Print - Header Only"),
-            function () {
-                var boq = get_boq_header();
-                if (!boq) { frappe.msgprint("Please select a BOQ Header first."); return; }
-                frappe.set_route("print", "BOQ Header", boq);
-            },
-            __("Print")
-        );
-
-        treeview.page.add_inner_button(
-            __("Print - Full BOQ"),
-            function () {
-                var boq = get_boq_header();
-                if (!boq) { frappe.msgprint("Please select a BOQ Header first."); return; }
-                frappe.call({
-                    method: "construction.api.boq_api.export_boq_pdf",
-                    args: { boq_header: boq },
-                    freeze: true,
-                    freeze_message: "Generating Full BOQ PDF...",
-                    callback: function(r) {
-                        if (r.message && r.message.file_url) {
-                            window.open(r.message.file_url);
-                            frappe.show_alert({ message: "Full BOQ PDF ready", indicator: "green" });
-                        }
-                    }
-                });
-            },
-            __("Print")
         );
     },
 };

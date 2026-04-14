@@ -10,6 +10,7 @@
     "wbs_code",
     "parent_structure",
     "boq_header",
+    "project",
     "cb0",
     "is_group",
     "description",
@@ -56,6 +57,17 @@
       "label": "BOQ Header",
       "options": "BOQ Header",
       "reqd": 1
+    },
+    {
+      "fieldname": "project",
+      "fieldtype": "Link",
+      "options": "Project",
+      "label": "Project",
+      "fetch_from": "boq_header.project",
+      "fetch_if_empty": 1,
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "read_only": 1
     },
     {
       "fieldname": "cb0",
