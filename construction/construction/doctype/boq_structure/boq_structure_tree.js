@@ -11,7 +11,6 @@ frappe.treeview_settings["BOQ Structure"] = {
             reqd: true,
         },
     ],
-    root_label: "BOQ Structure",
     get_tree_nodes: "construction.api.boq_api.get_children",
     add_tree_node: "construction.api.boq_api.add_node",
     fields: [
