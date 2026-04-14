@@ -5,11 +5,12 @@
   "doctype": "DocType",
   "engine": "InnoDB",
   "field_order": [
-    "project", "boq_type", "status", "version", "title",
+    "project", "project_name", "boq_type", "status", "version", "title",
     "total_contract_value", "total_budgeted_cost", "locked_by", "locked_date"
   ],
   "fields": [
     {"fieldname": "project", "fieldtype": "Link", "in_list_view": 1, "label": "Project", "options": "Project", "reqd": 1},
+    {"fieldname": "project_name", "fieldtype": "Data", "label": "Project Name", "fetch_from": "project.project_name", "read_only": 1, "in_list_view": 1},
     {"default": "Tender", "fieldname": "boq_type", "fieldtype": "Select", "in_list_view": 1, "label": "BOQ Type", "options": "Tender\nContract\nVariation"},
     {"default": "Draft", "fieldname": "status", "fieldtype": "Select", "in_list_view": 1, "label": "Status", "options": "Draft\nPricing\nFrozen\nLocked"},
     {"default": "1", "fieldname": "version", "fieldtype": "Int", "label": "Version", "non_negative": 1},
@@ -28,7 +29,7 @@
   "naming_rule": "Expression",
   "title_field": "title",
   "show_title_field_in_link": 1,
-  "search_fields": "project, boq_type, status",
+  "search_fields": "project_name",
   "owner": "Administrator",
   "permissions": [
     {"create": 1, "delete": 1, "email": 1, "export": 1, "print": 1, "read": 1, "report": 1, "role": "System Manager", "share": 1, "write": 1},
