@@ -22,4 +22,13 @@ doctype_tree_js = {
 }
 
 # Global JS includes (raw asset path — loaded directly, not bundled)
-app_include_js = ["/assets/construction/js/print_settings_dialog.js"]
+app_include_js = [
+    "/assets/construction/js/print_settings_dialog.js",
+    "/assets/construction/js/construction_export_menu.js"
+]
+
+# Fixtures — exported records that ship with the app
+fixtures = [
+    {"dt": "Workspace", "filters": [["module", "=", "construction"]]}
+]
+

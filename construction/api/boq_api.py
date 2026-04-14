@@ -8,10 +8,15 @@ from frappe import _
 @frappe.whitelist()
 def get_children(doctype, parent="", boq_header=None, is_root=False, **filters):
     """Get children for BOQ Structure tree view."""
-    conditions = "AND `boq_header` = %(boq_header)s" if is_root else ""
-    parent_value = "" if is_root else parent
-
-    parent_fields = ", `parent_structure` as parent" if not is_root else ""
+    # Treat root label or is_root as top-level query
+    if is_root or parent == "BOQ Structure" or not parent:
+        parent_value = ""
+        conditions = "AND `boq_header` = %(boq_header)s" if boq_header else ""
+        parent_fields = ""
+    else:
+        parent_value = parent
+        conditions = ""
+        parent_fields = ", `parent_structure` as parent"
 
     nodes = frappe.db.sql(f"""
         SELECT
@@ -39,6 +44,8 @@ def add_node():
     args = make_tree_args(**args)
 
     parent = args.get("parent_structure") or args.get("parent") or ""
+    if parent == "BOQ Structure":
+        parent = ""
     if parent and frappe.db.exists("BOQ Structure", parent):
         args.parent_structure = parent
     else:

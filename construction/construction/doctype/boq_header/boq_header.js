@@ -1,4 +1,5 @@
 // PrintSettingsDialog, ColumnConfigManager, PreviewPanel are registered globally via hooks.py
+// ConstructionExportMenu, ConstructionViewMenu are registered globally via hooks.py
 
 frappe.ui.form.on("BOQ Header", {
     refresh(frm) {
@@ -29,11 +30,162 @@ frappe.ui.form.on("BOQ Header", {
                 { field_key: "created_on", label: "Created On", default_width: 12, default_visible: false, default_sort_order: 8 },
                 { field_key: "modified_on", label: "Modified On", default_width: 12, default_visible: false, default_sort_order: 9 },
             ];
-            frm.add_custom_button("View Tree", () => {
-                frappe.set_route("Tree", "BOQ Structure", { boq_header: frm.doc.name });
-            }, "Actions");
 
-            frm.add_custom_button("Advance Status", () => {
+            // ── Helper: build export callback for frappe.call ──
+            function make_export_callback(method, args_fn, success_msg) {
+                return function (column_config) {
+                    return new Promise(function (resolve, reject) {
+                        frappe.call({
+                            method: method,
+                            args: args_fn(column_config),
+                            callback(r) {
+                                if (r.message && r.message.file_url) {
+                                    window.open(r.message.file_url);
+                                    frappe.show_alert({ message: success_msg, indicator: "green" });
+                                    resolve();
+                                } else if (r.message && r.message.error) {
+                                    frappe.show_alert({ message: r.message.error, indicator: "red" });
+                                    reject(new Error(r.message.error));
+                                } else {
+                                    resolve();
+                                }
+                            },
+                            error: function (err) { reject(err); }
+                        });
+                    });
+                };
+            }
+
+            function header_args(column_config) {
+                return { boq_header: frm.doc.name, column_config: JSON.stringify(column_config) };
+            }
+
+            var header_sample_data = [{
+                project_name: frm.doc.project_name || "",
+                boq_number: frm.doc.name || "",
+                revision: frm.doc.revision || "",
+                status: frm.doc.status || "",
+                total_value: frm.doc.total_value || 0
+            }];
+
+            // ── View Menu (standalone button with Tree / Table options) ──
+            new ConstructionViewMenu(frm, [
+                {
+                    label: __("Tree View"),
+                    icon: "fa fa-sitemap",
+                    value: "tree",
+                    action: function () {
+                        frappe.set_route("Tree", "BOQ Structure", { boq_header: frm.doc.name });
+                    }
+                },
+                {
+                    label: __("Table View"),
+                    icon: "fa fa-table",
+                    value: "table",
+                    action: function () {
+                        frappe.set_route("List", "BOQ Structure", { boq_header: frm.doc.name });
+                    }
+                }
+            ], "tree");
+
+            // ── Export Menu (standalone dropdown with icon) ──
+            new ConstructionExportMenu(frm, [
+                {
+                    label: __("Excel - Header Only"),
+                    icon: "fa fa-file-excel-o",
+                    action: function () {
+                        new PrintSettingsDialog({
+                            report_type: "BOQ_Header_Excel",
+                            columns: BOQ_HEADER_COLUMNS,
+                            sample_data: header_sample_data,
+                            export_callback: make_export_callback(
+                                "construction.api.boq_api.export_boq_header_excel",
+                                header_args, "Header exported successfully"
+                            )
+                        }).show();
+                    }
+                },
+                {
+                    label: __("Excel - Full BOQ"),
+                    icon: "fa fa-file-excel-o",
+                    action: function () {
+                        new PrintSettingsDialog({
+                            report_type: "BOQ_Full_Excel",
+                            columns: BOQ_FULL_COLUMNS,
+                            sample_data: [],
+                            export_callback: make_export_callback(
+                                "construction.api.boq_api.export_boq_excel",
+                                header_args, "BOQ exported successfully"
+                            )
+                        }).show();
+                    }
+                },
+                {
+                    label: __("PDF - Header Only"),
+                    icon: "fa fa-file-pdf-o",
+                    separator_before: true,
+                    action: function () {
+                        new PrintSettingsDialog({
+                            report_type: "BOQ_Header_PDF",
+                            columns: BOQ_HEADER_COLUMNS,
+                            sample_data: header_sample_data,
+                            export_callback: make_export_callback(
+                                "construction.api.boq_api.export_boq_header_pdf",
+                                header_args, "Header PDF exported successfully"
+                            )
+                        }).show();
+                    }
+                },
+                {
+                    label: __("PDF - Full BOQ"),
+                    icon: "fa fa-file-pdf-o",
+                    action: function () {
+                        new PrintSettingsDialog({
+                            report_type: "BOQ_Full_PDF",
+                            columns: BOQ_FULL_COLUMNS,
+                            sample_data: [],
+                            export_callback: make_export_callback(
+                                "construction.api.boq_api.export_boq_pdf",
+                                header_args, "BOQ PDF exported successfully"
+                            )
+                        }).show();
+                    }
+                },
+                {
+                    label: __("Print - Header Only"),
+                    icon: "fa fa-print",
+                    separator_before: true,
+                    action: function () {
+                        frappe.set_route("print", "BOQ Header", frm.doc.name);
+                    }
+                },
+                {
+                    label: __("Print - Full BOQ"),
+                    icon: "fa fa-print",
+                    action: function () {
+                        frappe.call({
+                            method: "construction.api.boq_api.export_boq_pdf",
+                            args: { boq_header: frm.doc.name },
+                            freeze: true,
+                            freeze_message: "Generating Full BOQ PDF...",
+                            callback(r) {
+                                if (r.message && r.message.file_url) {
+                                    var printWindow = window.open(r.message.file_url);
+                                    if (printWindow) {
+                                        printWindow.onload = function () { printWindow.print(); };
+                                    }
+                                    frappe.show_alert({ message: "Full BOQ PDF ready", indicator: "green" });
+                                } else if (r.message && r.message.error) {
+                                    frappe.show_alert({ message: r.message.error, indicator: "red" });
+                                }
+                            }
+                        });
+                    }
+                }
+            ]);
+
+            // ── Actions group (non-export actions only) ──
+            frm.add_custom_button(__("Advance Status"), () => {
                 const transitions = { Draft: "Pricing", Pricing: "Frozen", Frozen: "Locked" };
                 const next = transitions[frm.doc.status];
                 if (!next) { frappe.msgprint("BOQ is already Locked."); return; }
@@ -49,188 +201,10 @@ frappe.ui.form.on("BOQ Header", {
                         }
                     });
                 });
-            }, "Actions");
-
-            frm.add_custom_button("Export Excel - Header Only", () => {
-                const sample_data = [{
-                    project_name: frm.doc.project_name || "",
-                    boq_number: frm.doc.name || "",
-                    revision: frm.doc.revision || "",
-                    status: frm.doc.status || "",
-                    total_value: frm.doc.total_value || 0
-                }];
-                const dialog = new PrintSettingsDialog({
-                    report_type: "BOQ_Header_Excel",
-                    columns: BOQ_HEADER_COLUMNS,
-                    sample_data: sample_data,
-                    export_callback: function (column_config) {
-                        return new Promise(function (resolve, reject) {
-                            frappe.call({
-                                method: "construction.api.boq_api.export_boq_header_excel",
-                                args: {
-                                    boq_header: frm.doc.name,
-                                    column_config: JSON.stringify(column_config)
-                                },
-                                callback(r) {
-                                    if (r.message && r.message.file_url) {
-                                        window.open(r.message.file_url);
-                                        frappe.show_alert({ message: "Header exported successfully", indicator: "green" });
-                                        resolve();
-                                    } else if (r.message && r.message.error) {
-                                        frappe.show_alert({ message: r.message.error, indicator: "red" });
-                                        reject(new Error(r.message.error));
-                                    } else {
-                                        resolve();
-                                    }
-                                },
-                                error: function (err) {
-                                    reject(err);
-                                }
-                            });
-                        });
-                    }
-                });
-                dialog.show();
-            }, "Actions");
-
-            frm.add_custom_button("Export Excel - Full BOQ", () => {
-                const dialog = new PrintSettingsDialog({
-                    report_type: "BOQ_Full_Excel",
-                    columns: BOQ_FULL_COLUMNS,
-                    sample_data: [],
-                    export_callback: function (column_config) {
-                        return new Promise(function (resolve, reject) {
-                            frappe.call({
-                                method: "construction.api.boq_api.export_boq_excel",
-                                args: {
-                                    boq_header: frm.doc.name,
-                                    column_config: JSON.stringify(column_config)
-                                },
-                                callback(r) {
-                                    if (r.message && r.message.file_url) {
-                                        window.open(r.message.file_url);
-                                        frappe.show_alert({ message: "BOQ exported successfully", indicator: "green" });
-                                        resolve();
-                                    } else if (r.message && r.message.error) {
-                                        frappe.show_alert({ message: r.message.error, indicator: "red" });
-                                        reject(new Error(r.message.error));
-                                    } else {
-                                        resolve();
-                                    }
-                                },
-                                error: function (err) {
-                                    reject(err);
-                                }
-                            });
-                        });
-                    }
-                });
-                dialog.show();
-            }, "Actions");
-
-            frm.add_custom_button("Export PDF - Header Only", () => {
-                const sample_data = [{
-                    project_name: frm.doc.project_name || "",
-                    boq_number: frm.doc.name || "",
-                    revision: frm.doc.revision || "",
-                    status: frm.doc.status || "",
-                    total_value: frm.doc.total_value || 0
-                }];
-                const dialog = new PrintSettingsDialog({
-                    report_type: "BOQ_Header_PDF",
-                    columns: BOQ_HEADER_COLUMNS,
-                    sample_data: sample_data,
-                    export_callback: function (column_config) {
-                        return new Promise(function (resolve, reject) {
-                            frappe.call({
-                                method: "construction.api.boq_api.export_boq_header_pdf",
-                                args: {
-                                    boq_header: frm.doc.name,
-                                    column_config: JSON.stringify(column_config)
-                                },
-                                callback(r) {
-                                    if (r.message && r.message.file_url) {
-                                        window.open(r.message.file_url);
-                                        frappe.show_alert({ message: "Header PDF exported successfully", indicator: "green" });
-                                        resolve();
-                                    } else if (r.message && r.message.error) {
-                                        frappe.show_alert({ message: r.message.error, indicator: "red" });
-                                        reject(new Error(r.message.error));
-                                    } else {
-                                        resolve();
-                                    }
-                                },
-                                error: function (err) {
-                                    reject(err);
-                                }
-                            });
-                        });
-                    }
-                });
-                dialog.show();
-            }, "Actions");
-
-            frm.add_custom_button("Export PDF - Full BOQ", () => {
-                const dialog = new PrintSettingsDialog({
-                    report_type: "BOQ_Full_PDF",
-                    columns: BOQ_FULL_COLUMNS,
-                    sample_data: [],
-                    export_callback: function (column_config) {
-                        return new Promise(function (resolve, reject) {
-                            frappe.call({
-                                method: "construction.api.boq_api.export_boq_pdf",
-                                args: {
-                                    boq_header: frm.doc.name,
-                                    column_config: JSON.stringify(column_config)
-                                },
-                                callback(r) {
-                                    if (r.message && r.message.file_url) {
-                                        window.open(r.message.file_url);
-                                        frappe.show_alert({ message: "BOQ PDF exported successfully", indicator: "green" });
-                                        resolve();
-                                    } else if (r.message && r.message.error) {
-                                        frappe.show_alert({ message: r.message.error, indicator: "red" });
-                                        reject(new Error(r.message.error));
-                                    } else {
-                                        resolve();
-                                    }
-                                },
-                                error: function (err) {
-                                    reject(err);
-                                }
-                            });
-                        });
-                    }
-                });
-                dialog.show();
-            }, "Actions");
-
-            frm.add_custom_button("Print - Header Only", () => {
-                frappe.set_route("print", "BOQ Header", frm.doc.name);
-            }, "Actions");
-
-            frm.add_custom_button("Print - Full BOQ", () => {
-                frappe.call({
-                    method: "construction.api.boq_api.export_boq_pdf",
-                    args: { boq_header: frm.doc.name },
-                    freeze: true,
-                    freeze_message: "Generating Full BOQ PDF...",
-                    callback(r) {
-                        if (r.message && r.message.file_url) {
-                            var printWindow = window.open(r.message.file_url);
-                            if (printWindow) {
-                                printWindow.onload = function() { printWindow.print(); };
-                            }
-                            frappe.show_alert({ message: "Full BOQ PDF ready", indicator: "green" });
-                        } else if (r.message && r.message.error) {
-                            frappe.show_alert({ message: r.message.error, indicator: "red" });
-                        }
-                    }
-                });
-            }, "Actions");
+            }, __("Actions"));
 
             if (frm.doc.status === "Draft") {
-                frm.add_custom_button("Import Excel", () => {
+                frm.add_custom_button(__("Import Excel"), () => {
                     const d = new frappe.ui.Dialog({
                         title: "Import BOQ from Excel",
                         fields: [{ label: "Excel File", fieldname: "file_url", fieldtype: "Attach", reqd: 1 }],
@@ -250,8 +224,9 @@ frappe.ui.form.on("BOQ Header", {
                         }
                     });
                     d.show();
-                }, "Actions");
+                }, __("Actions"));
             }
         }
     }
 });
+
