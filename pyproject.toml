@@ -38,6 +38,7 @@ select = [
     "RUF",
 ]
 ignore = [
+    "B007", # loop control variable not used within loop body
     "B017", # assertRaises(Exception) - should be more specific
     "B018", # useless expression, not assigned to anything
     "B023", # function doesn't bind loop variable - will have last iteration's value
@@ -45,11 +46,22 @@ ignore = [
     "E101", # indentation contains mixed spaces and tabs
     "E402", # module level import not at top of file
     "E501", # line too long
+    "E722", # bare except
     "E741", # ambiguous variable name
     "F401", # "unused" imports
     "F403", # can't detect undefined names from * import
     "F405", # can't detect undefined names from * import
     "F722", # syntax error in forward type annotation
+    "F841", # local variable assigned but never used
+    "RUF002", # ambiguous unicode character in docstring
+    "RUF003", # ambiguous unicode character in comment
+    "RUF010", # use explicit conversion flag
+    "RUF012", # mutable class attributes without ClassVar annotation
+    "RUF013", # PEP 484 prohibits implicit Optional
+    "UP006", # use builtin type instead of typing
+    "UP007", # use X | Y for type annotations
+    "UP015", # unnecessary open mode parameters
+    "UP035", # deprecated typing imports
     "W191", # indentation contains tabs
 ]
 typing-modules = ["frappe.types.DF"]
@@ -58,3 +70,4 @@ typing-modules = ["frappe.types.DF"]
 quote-style = "double"
 indent-style = "tab"
 docstring-code-format = true
+

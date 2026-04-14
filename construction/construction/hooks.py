@@ -8,13 +8,9 @@ app_email = "melrefa3@hotmail.com"
 app_license = "MIT"
 
 module_app = {
-    "construction": "construction",
+	"construction": "construction",
 }
 
-doctype_js = {
-    "BOQ Header": "construction/doctype/boq_header/boq_header.js"
-}
+doctype_js = {"BOQ Header": "construction/doctype/boq_header/boq_header.js"}
 
-doctype_tree_js = {
-    "BOQ Structure": "construction/public/js/boq_structure_tree.js"
-}
+doctype_tree_js = {"BOQ Structure": "construction/public/js/boq_structure_tree.js"}

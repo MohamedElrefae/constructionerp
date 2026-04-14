@@ -96,6 +96,9 @@
 		"hljs": true,
 		"Awesomplete": true,
 		"Sortable": true,
+"PrintSettingsDialog": true,
+"ConstructionExportMenu": true,
+"ConstructionViewMenu": true,
 		"Showdown": true,
 		"Taggle": true,
 		"Gantt": true,
@@ -122,3 +125,4 @@
 		"extend_cscript": true
 	}
 }
+
