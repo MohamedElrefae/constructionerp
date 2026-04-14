@@ -1,0 +1,89 @@
+{
+  "actions": [],
+  "creation": "2026-04-14 12:00:00.000000",
+  "doctype": "DocType",
+  "editable_grid": 1,
+  "engine": "InnoDB",
+  "field_order": [
+    "default_light_theme",
+    "default_dark_theme",
+    "section_break_1",
+    "allow_user_override",
+    "force_modern_ui",
+    "column_break_1",
+    "notes"
+  ],
+  "fields": [
+    {
+      "fieldname": "default_light_theme",
+      "fieldtype": "Link",
+      "label": "Default Light Theme",
+      "options": "Desk Theme",
+      "description": "Default Desk Theme for Light mode"
+    },
+    {
+      "fieldname": "default_dark_theme",
+      "fieldtype": "Link",
+      "label": "Default Dark Theme",
+      "options": "Desk Theme",
+      "description": "Default Desk Theme for Dark mode"
+    },
+    {
+      "fieldname": "section_break_1",
+      "fieldtype": "Section Break"
+    },
+    {
+      "default": "1",
+      "fieldname": "allow_user_override",
+      "fieldtype": "Check",
+      "label": "Allow User Override",
+      "description": "Allow users to set their own theme preferences"
+    },
+    {
+      "default": "1",
+      "fieldname": "force_modern_ui",
+      "fieldtype": "Check",
+      "label": "Force Modern UI",
+      "description": "If unchecked, site can fall back to pure ERPNext UI"
+    },
+    {
+      "fieldname": "column_break_1",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "notes",
+      "fieldtype": "Text",
+      "label": "Notes",
+      "read_only": 1,
+      "default": "Configure site-wide modern theme settings here. Users can override these if 'Allow User Override' is enabled."
+    }
+  ],
+  "issingle": 1,
+  "links": [],
+  "modified": "2026-04-14 12:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "Construction",
+  "name": "Modern Theme Settings",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "print": 1,
+      "read": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "read": 1,
+      "role": "All"
+    }
+  ],
+  "quick_entry": 0,
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": [],
+  "track_changes": 1
+}

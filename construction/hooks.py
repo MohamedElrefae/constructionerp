@@ -8,20 +8,34 @@ app_email = "melrefa3@hotmail.com"
 app_license = "MIT"
 
 module_app = {
-	"construction": "construction",
+    "construction": "construction",
 }
 
 # Doctype-specific JavaScript files
 # Paths are relative to the app module folder (construction/construction/)
-doctype_js = {"BOQ Header": "construction/doctype/boq_header/boq_header.js"}
+doctype_js = {
+    "BOQ Header": "construction/doctype/boq_header/boq_header.js"
+}
 
-doctype_tree_js = {"BOQ Structure": "construction/doctype/boq_structure/boq_structure_tree.js"}
+doctype_tree_js = {
+    "BOQ Structure": "construction/doctype/boq_structure/boq_structure_tree.js"
+}
 
 # Global JS includes (raw asset path — loaded directly, not bundled)
 app_include_js = [
-	"/assets/construction/js/print_settings_dialog.js",
-	"/assets/construction/js/construction_export_menu.js",
+    "/assets/construction/js/print_settings_dialog.js",
+    "/assets/construction/js/construction_export_menu.js",
+    "/assets/construction/js/modern_theme_loader.js",
+    "/assets/construction/js/components/index.js"
 ]
 
-# Fixtures — exported records that ship with the app
-fixtures = [{"dt": "Workspace", "filters": [["module", "=", "construction"]]}]
+# Global CSS includes for Modern Theme
+app_include_css = [
+    "/assets/construction/css/modern_theme_tokens.css",
+    "/assets/construction/css/modern_theme_base.css",
+    "/assets/construction/css/modern_theme_components.css",
+    "/assets/construction/css/modern_theme_forms.css",
+    "/assets/construction/css/modern_theme_tree.css",
+    "/assets/construction/css/modern_theme_sidebar.css",
+    "/assets/construction/css/modern_theme_layout.css"
+]
