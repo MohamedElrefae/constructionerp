@@ -41,7 +41,7 @@ def get_effective_desk_theme():
 		# Check for per-user override (if enabled)
 		if allow_user_override:
 			try:
-				user_theme = frappe.get_doc("User Desk Theme", {"user": user})
+				user_theme = frappe.db.get_value("User Desk Theme", {"user": user}, ["light_theme", "dark_theme"], as_dict=True)
 				if user_theme and not user_theme.inherit_from_site:
 					# User has custom theme preference
 					theme_name = user_theme.light_theme if mode == "light" else user_theme.dark_theme
@@ -103,7 +103,7 @@ def get_user_theme_settings():
 
 		# Check if user has custom theme settings
 		try:
-			user_theme = frappe.get_doc("User Desk Theme", {"user": user})
+			user_theme = frappe.db.get_value("User Desk Theme", {"user": user}, ["light_theme", "dark_theme"], as_dict=True)
 			return {
 				"exists": True,
 				"inherit_from_site": user_theme.inherit_from_site,
@@ -147,7 +147,7 @@ def save_user_theme_settings(inherit_from_site, light_theme=None, dark_theme=Non
 
 		# Get or create user theme doc
 		try:
-			user_theme = frappe.get_doc("User Desk Theme", {"user": user})
+			user_theme = frappe.db.get_value("User Desk Theme", {"user": user}, ["light_theme", "dark_theme"], as_dict=True)
 		except frappe.DoesNotExistError:
 			user_theme = frappe.new_doc("User Desk Theme")
 			user_theme.user = user
