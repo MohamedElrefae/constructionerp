@@ -25,7 +25,7 @@ doctype_tree_js = {
 app_include_js = [
     "/assets/construction/js/print_settings_dialog.js",
     "/assets/construction/js/construction_export_menu.js",
-    "/assets/construction/js/modern_theme_loader.js",
+    "/assets/construction/js/theme_system_2025.js",
     "/assets/construction/js/components/index.js"
 ]
 

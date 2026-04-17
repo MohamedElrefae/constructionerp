@@ -1,0 +1,27 @@
+html[data-modern-theme="construction_light"],
+html[data-modern-theme="construction_light"][data-theme="light"] {
+  --navbar-bg: #f0fdf4;
+  --sidebar-bg: #f0fdf4;
+  --sidebar_bg: #f0fdf4;
+  --topbar_bg: #f0fdf4;
+  --surface-bg: #ffffff;
+  --surface: #ffffff;
+  --overlay-bg: #ffffff;
+  --accent-primary: #2E7D32;
+  --accent: #2E7D32;
+  --accent-primary-hover: #60AD5E;
+  --accent-tertiary: #2E7D32;
+  --button_bg: #2E7D32;
+  --button_text: #FFFFFF;
+  --primary-blue: #2E7D32;
+  --border-color: #d1e7dd;
+  --border: #d1e7dd;
+  --hover-bg: #dcfce7;
+  --active-bg: #bbf7d0;
+  --selected-bg: #dcfce7;
+  --selected_bg: #dcfce7;
+  --active_tab_bg: #dcfce7;
+  --info-bg: rgba(46, 125, 50, 0.08);
+  --info: #2E7D32;
+  --info-strong: #2E7D32;
+}

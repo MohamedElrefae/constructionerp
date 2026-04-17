@@ -247,3 +247,28 @@ def resolve_mode(desk_theme_pref):
 		return "light"
 	else:
 		return "light"
+
+
+@frappe.whitelist()
+def save_user_mode(mode):
+    """
+    Persist user light/dark mode preference without triggering
+    TimestampMismatchError. Uses frappe.db.set_value with
+    update_modified=False so it never conflicts with concurrent
+    User document writes.
+    """
+    try:
+        if mode not in ('light', 'dark'):
+            return {'success': False, 'message': 'Invalid mode'}
+
+        user = frappe.session.user
+        desk_theme_value = 'Dark' if mode == 'dark' else 'Light'
+
+        frappe.db.set_value('User', user, 'desk_theme', desk_theme_value, update_modified=False)
+        frappe.db.commit()
+
+        return {'success': True, 'mode': mode}
+    except Exception as e:
+        frappe.log_error(f'Error saving user mode: {str(e)}')
+        return {'success': False, 'message': str(e)}
+
