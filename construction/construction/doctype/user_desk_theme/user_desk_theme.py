@@ -20,10 +20,10 @@ class UserDeskTheme(Document):
         
         # Validate theme references
         if not self.inherit_from_site:
-            if self.light_theme and not frappe.db.exists("Desk Theme", self.light_theme):
+            if self.light_theme and not frappe.db.exists("Construction Theme", self.light_theme):
                 frappe.throw(f"Light theme '{self.light_theme}' does not exist")
             
-            if self.dark_theme and not frappe.db.exists("Desk Theme", self.dark_theme):
+            if self.dark_theme and not frappe.db.exists("Construction Theme", self.dark_theme):
                 frappe.throw(f"Dark theme '{self.dark_theme}' does not exist")
         
         # Ensure user is valid

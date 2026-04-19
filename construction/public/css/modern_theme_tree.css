@@ -351,23 +351,34 @@
   }
 }
 
-/* Frappe native tree view button overrides */
+/* ============================================
+   FRAPPE NATIVE TREE VIEW BUTTON OVERRIDES
+   Targets Frappe's default tree toolbar & node action buttons
+   to match the Vite app's "ultimate button" style
+   ============================================ */
+
+/* Toolbar buttons (Collapse All, Expand All, etc.) */
 .modern-theme-loaded .page-head .page-actions .btn-default,
+.modern-theme-loaded .page-head .btn-default.ellipsis,
 .modern-theme-loaded .page-head .inner-group-button .btn-default,
 .modern-theme-loaded .page-head .page-actions .btn-secondary {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   min-height: 36px;
   padding: 0.5rem 0.75rem;
   border: 1px solid var(--border-color);
   border-radius: 10px;
   font-size: 0.8rem;
   font-weight: 500;
+  cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   background-color: var(--surface, #fff);
   color: var(--text-primary);
 }
+
 .modern-theme-loaded .page-head .page-actions .btn-default:hover,
+.modern-theme-loaded .page-head .btn-default.ellipsis:hover,
 .modern-theme-loaded .page-head .inner-group-button .btn-default:hover,
 .modern-theme-loaded .page-head .page-actions .btn-secondary:hover {
   background-color: var(--hover-bg);
@@ -377,24 +388,29 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-/* Tree node action links (Edit, Add Child, Delete) */
+/* Tree node action buttons (Edit, Add Child, Delete) */
+.modern-theme-loaded .tree-node-toolbar .btn.btn-default.btn-xs.tree-toolbar-button,
 .modern-theme-loaded .tree-node-toolbar .btn-link,
 .modern-theme-loaded .tree-node-toolbar a,
 .modern-theme-loaded .tree-node-toolbar button {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   min-height: 30px;
   padding: 4px 12px;
   border: 1px solid var(--border-color);
   border-radius: 8px;
   font-size: 0.8rem;
   font-weight: 500;
+  cursor: pointer;
   transition: all 0.2s ease;
   background-color: var(--surface, #fff);
   color: var(--text-primary);
   text-decoration: none;
   margin: 0 2px;
 }
+
+.modern-theme-loaded .tree-node-toolbar .btn.btn-default.btn-xs.tree-toolbar-button:hover,
 .modern-theme-loaded .tree-node-toolbar .btn-link:hover,
 .modern-theme-loaded .tree-node-toolbar a:hover,
 .modern-theme-loaded .tree-node-toolbar button:hover {
@@ -405,6 +421,11 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   text-decoration: none;
 }
+
+/* Delete action — icon-based :has() detection with :last-child positional fallback */
+.modern-theme-loaded .tree-node-toolbar .tree-toolbar-button:has(.icon-trash):hover,
+.modern-theme-loaded .tree-node-toolbar .tree-toolbar-button:has([class*="trash"]):hover,
+.modern-theme-loaded .tree-node-toolbar .btn.btn-default.btn-xs.tree-toolbar-button:last-child:hover,
 .modern-theme-loaded .tree-node-toolbar .btn-link:last-child:hover,
 .modern-theme-loaded .tree-node-toolbar a:last-child:hover {
   border-color: var(--error, #DE3F3F);
@@ -412,7 +433,7 @@
   background-color: rgba(222, 63, 63, 0.06);
 }
 
-/* Dropdown toggle buttons (View, Export) */
+/* Dropdown toggle buttons in toolbar (View, Export) */
 .modern-theme-loaded .page-head .inner-group-button .dropdown-toggle {
   border-radius: 10px;
   border: 1px solid var(--border-color);
@@ -423,6 +444,7 @@
   padding: 0.5rem 0.75rem;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
 .modern-theme-loaded .page-head .inner-group-button .dropdown-toggle:hover {
   background-color: var(--hover-bg);
   border-color: var(--accent);
@@ -430,7 +452,7 @@
   transform: translateY(-1px);
 }
 
-/* Primary action button (+ New) */
+/* Primary action button (+ New) — already matches, ensure consistency */
 .modern-theme-loaded .page-head .primary-action {
   border-radius: 10px !important;
   min-height: 36px;
@@ -439,6 +461,7 @@
   padding: 0.5rem 0.75rem;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
 .modern-theme-loaded .page-head .primary-action:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);

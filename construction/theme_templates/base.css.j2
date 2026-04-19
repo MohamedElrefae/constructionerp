@@ -1,0 +1,35 @@
+/* ===== BASE CSS VARIABLES: {{ theme_name }} ===== */
+html[data-modern-theme="{{ theme_name }}"] {
+  /* Layout Colors */
+  --navbar-bg: {{ navbar_bg }};
+  --sidebar-bg: {{ sidebar_bg }};
+  --surface-bg: {{ surface_bg }};
+  --body-bg: {{ body_bg }};
+  
+  /* Text Colors */
+  --text-primary: {{ text_primary }};
+  --text-secondary: {{ text_secondary }};
+  
+  /* Accent Colors */
+  --accent-primary: {{ accent_primary }};
+  --accent-primary-hover: {{ accent_primary_hover }};
+  --accent-secondary: {{ accent_secondary }};
+  
+  /* UI Elements */
+  --border-color: {{ border_color }};
+  
+  /* Semantic Colors */
+  --success: {{ success_color }};
+  --warning: {{ warning_color }};
+  --error: {{ error_color }};
+  
+{% if is_dark_mode %}
+  /* Dark Mode Specific */
+  --hover-bg: rgba(255, 255, 255, 0.08);
+  --shadow-color: rgba(0, 0, 0, 0.4);
+{% else %}
+  /* Light Mode Specific */
+  --hover-bg: rgba(0, 0, 0, 0.04);
+  --shadow-color: rgba(0, 0, 0, 0.1);
+{% endif %}
+}

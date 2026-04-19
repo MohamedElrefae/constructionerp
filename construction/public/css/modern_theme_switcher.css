@@ -1,22 +1,203 @@
+/**
+ * Modern Theme Switcher Styles
+ * Enhanced visual feedback for theme selection
+ */
+
+/* Theme Switcher Popup Container */
+.theme-switcher-popup {
+    min-width: 280px;
+    padding: 12px;
+}
+
+/* Individual Theme Item */
 .theme-item {
-  display: flex;
-  align-items: center;
-  padding: 12px 16px;
-  margin: 4px 0;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  border: 2px solid transparent;
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    margin: 4px 0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
 }
+
 .theme-item:hover {
-  background-color: var(--hover-bg, rgba(0, 0, 0, 0.05));
+    background-color: var(--hover-bg, rgba(0, 0, 0, 0.05));
+    transform: translateX(4px);
 }
+
+/* Active/Selected Theme */
 .theme-item.active-theme {
-  border-color: var(--accent-primary, #2E7D32) !important;
-  background: rgba(46, 125, 50, 0.1) !important;
+    border-color: var(--accent-primary, #2E7D32) !important;
+    background: linear-gradient(
+        135deg,
+        var(--selected-bg, rgba(46, 125, 50, 0.15)) 0%,
+        var(--hover-bg, rgba(46, 125, 50, 0.05)) 100%
+    ) !important;
+    box-shadow: 0 2px 8px rgba(46, 125, 50, 0.2);
 }
+
+/* Selected Indicator (Checkmark) */
 .selected-indicator {
-  color: var(--accent-primary, #2E7D32);
-  font-weight: bold;
-  margin-right: 8px;
+    color: var(--accent-primary, #2E7D32);
+    font-weight: bold;
+    margin-right: 8px;
+    font-size: 1.1em;
+}
+
+/* Theme Icon */
+.theme-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    margin-right: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2em;
+}
+
+/* Light Theme Icon */
+.theme-item[data-theme="light"] .theme-icon,
+.theme-item[data-theme="construction_light"] .theme-icon {
+    background: linear-gradient(135deg, #FFF9C4 0%, #FFECB3 100%);
+    box-shadow: inset 0 0 8px rgba(255, 193, 7, 0.3);
+}
+
+/* Dark Theme Icon */
+.theme-item[data-theme="dark"] .theme-icon,
+.theme-item[data-theme="construction_dark"] .theme-icon {
+    background: linear-gradient(135deg, #374151 0%, #1f2937 100%);
+    box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Automatic Theme Icon */
+.theme-item[data-theme="automatic"] .theme-icon {
+    background: linear-gradient(135deg, #60a5fa 50%, #fbbf24 50%);
+}
+
+/* Theme Label */
+.theme-label {
+    font-weight: 500;
+    color: var(--text-primary, #1e293b);
+    font-size: 0.95rem;
+}
+
+/* Theme Description */
+.theme-info {
+    font-size: 0.8rem;
+    color: var(--text-muted, #94a3b8);
+    margin-top: 2px;
+}
+
+/* Active Theme Label */
+.theme-item.active-theme .theme-label {
+    color: var(--accent-primary, #2E7D32);
+    font-weight: 600;
+}
+
+/* Section Divider */
+.theme-section-divider {
+    height: 1px;
+    background: var(--border-color, #e2e8f0);
+    margin: 8px 0;
+}
+
+/* Section Label */
+.theme-section-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted, #94a3b8);
+    padding: 8px 16px 4px;
+    font-weight: 600;
+}
+
+/* Dark Mode Overrides */
+[data-theme="dark"] .theme-item:hover {
+    background-color: var(--hover-bg, rgba(255, 255, 255, 0.05));
+}
+
+[data-theme="dark"] .theme-label {
+    color: var(--text-primary, #f9fafb);
+}
+
+[data-theme="dark"] .theme-info {
+    color: var(--text-muted, #9ca3af);
+}
+
+/* Animation for theme change */
+@keyframes themePulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+}
+
+.theme-item.active-theme {
+    animation: themePulse 0.3s ease;
+}
+
+/* Current Mode Indicator in Navbar */
+.navbar .theme-indicator {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 16px;
+    font-size: 0.85rem;
+    background: var(--surface-bg, #f1f5f9);
+    border: 1px solid var(--border-color, #e2e8f0);
+    margin-left: 8px;
+}
+
+.navbar .theme-indicator::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 6px;
+}
+
+.navbar .theme-indicator[data-mode="light"]::before {
+    background: #fbbf24;
+    box-shadow: 0 0 6px #fbbf24;
+}
+
+.navbar .theme-indicator[data-mode="dark"]::before {
+    background: #60a5fa;
+    box-shadow: 0 0 6px #60a5fa;
+}
+
+/* Custom Construction Theme Badge */
+.construction-theme-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
+    color: white;
+    margin-left: 8px;
+}
+
+/* ============================================
+   CSS-Only Fallback: Selected Theme Indicators
+   Works even when JS visual indicators fail
+   ============================================ */
+
+/* Light mode — highlight the light theme item */
+html[data-theme="light"] .theme-item[data-theme="light"]:not(.active-theme),
+body[data-selected-theme="light"] .theme-item[data-theme="light"]:not(.active-theme),
+body[data-selected-theme="construction_light"] .theme-item[data-theme="construction_light"]:not(.active-theme) {
+    border-color: var(--accent-primary, #2E7D32);
+    background: var(--selected-bg, rgba(46, 125, 50, 0.1));
+}
+
+/* Dark mode — highlight the dark theme item */
+html[data-theme="dark"] .theme-item[data-theme="dark"]:not(.active-theme),
+body[data-selected-theme="dark"] .theme-item[data-theme="dark"]:not(.active-theme),
+body[data-selected-theme="construction_dark"] .theme-item[data-theme="construction_dark"]:not(.active-theme) {
+    border-color: var(--accent-primary, #2E7D32);
+    background: var(--selected-bg, rgba(46, 125, 50, 0.15));
 }

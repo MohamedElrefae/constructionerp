@@ -37,26 +37,26 @@
       "fieldname": "light_theme",
       "fieldtype": "Link",
       "label": "Light Theme",
-      "options": "Desk Theme",
+      "options": "Construction Theme",
       "depends_on": "inherit_from_site",
       "mandatory_depends_on": "eval:doc.inherit_from_site == 0",
-      "description": "Custom Desk Theme for Light mode"
+      "description": "Custom Construction Theme for Light mode"
     },
     {
       "fieldname": "dark_theme",
       "fieldtype": "Link",
       "label": "Dark Theme",
-      "options": "Desk Theme",
+      "options": "Construction Theme",
       "depends_on": "inherit_from_site",
       "mandatory_depends_on": "eval:doc.inherit_from_site == 0",
-      "description": "Custom Desk Theme for Dark mode"
+      "description": "Custom Construction Theme for Dark mode"
     }
   ],
   "index_web_pages_for_search": 1,
   "links": [],
   "modified": "2026-04-14 12:00:00.000000",
   "modified_by": "Administrator",
-  "module": "construction",
+  "module": "Construction",
   "name": "User Desk Theme",
   "owner": "Administrator",
   "permissions": [

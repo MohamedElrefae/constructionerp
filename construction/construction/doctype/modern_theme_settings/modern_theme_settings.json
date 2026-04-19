@@ -2,15 +2,18 @@
   "actions": [],
   "creation": "2026-04-14 12:00:00.000000",
   "doctype": "DocType",
-  "editable_grid": 1,
+  "editable_grid": 0,
   "engine": "InnoDB",
   "field_order": [
     "default_light_theme",
     "default_dark_theme",
     "section_break_1",
     "allow_user_override",
-    "force_modern_ui",
+    "enforce_contrast_check",
     "column_break_1",
+    "theme_switcher_limit",
+    "css_cache_ttl",
+    "notes_section",
     "notes"
   ],
   "fields": [
@@ -18,19 +21,22 @@
       "fieldname": "default_light_theme",
       "fieldtype": "Link",
       "label": "Default Light Theme",
-      "options": "Desk Theme",
-      "description": "Default Desk Theme for Light mode"
+      "options": "Construction Theme",
+      "description": "Default Construction Theme for Light mode",
+      "reqd": 0
     },
     {
       "fieldname": "default_dark_theme",
       "fieldtype": "Link",
       "label": "Default Dark Theme",
-      "options": "Desk Theme",
-      "description": "Default Desk Theme for Dark mode"
+      "options": "Construction Theme",
+      "description": "Default Construction Theme for Dark mode",
+      "reqd": 0
     },
     {
       "fieldname": "section_break_1",
-      "fieldtype": "Section Break"
+      "fieldtype": "Section Break",
+      "label": "User Preferences"
     },
     {
       "default": "1",
@@ -40,40 +46,59 @@
       "description": "Allow users to set their own theme preferences"
     },
     {
-      "default": "1",
-      "fieldname": "force_modern_ui",
+      "default": "0",
+      "fieldname": "enforce_contrast_check",
       "fieldtype": "Check",
-      "label": "Force Modern UI",
-      "description": "If unchecked, site can fall back to pure ERPNext UI"
+      "label": "Enforce Contrast Check",
+      "description": "Block theme save if WCAG AA contrast ratio is not met"
     },
     {
       "fieldname": "column_break_1",
       "fieldtype": "Column Break"
     },
     {
+      "fieldname": "theme_switcher_limit",
+      "fieldtype": "Int",
+      "label": "Theme Switcher Limit",
+      "default": "12",
+      "description": "Maximum number of themes shown in theme switcher dropdown"
+    },
+    {
+      "fieldname": "css_cache_ttl",
+      "fieldtype": "Int",
+      "label": "CSS Cache TTL (seconds)",
+      "default": "3600",
+      "description": "How long to cache generated CSS (default: 1 hour)"
+    },
+    {
+      "fieldname": "notes_section",
+      "fieldtype": "Section Break",
+      "label": "Information"
+    },
+    {
       "fieldname": "notes",
       "fieldtype": "Text",
       "label": "Notes",
       "read_only": 1,
-      "default": "Configure site-wide modern theme settings here. Users can override these if 'Allow User Override' is enabled."
+      "default": "Site-wide Modern Theme Settings. Configure individual themes in the Construction Theme DocType. Users can override these defaults if 'Allow User Override' is enabled."
     }
   ],
   "issingle": 1,
   "links": [],
-  "modified": "2026-04-14 12:00:00.000000",
+  "modified": "2026-04-20 01:00:00.000000",
   "modified_by": "Administrator",
-  "module": "construction",
+  "module": "Construction",
   "name": "Modern Theme Settings",
   "owner": "Administrator",
   "permissions": [
     {
       "create": 1,
-      "delete": 1,
-      "email": 1,
-      "print": 1,
+      "delete": 0,
+      "email": 0,
+      "print": 0,
       "read": 1,
       "role": "System Manager",
-      "share": 1,
+      "share": 0,
       "write": 1
     },
     {

@@ -1,5 +1,6 @@
 (function () {
   'use strict';
+  function _norm(n){return n?n.toLowerCase().replace(/\s+/g,'_'):'';}
   var VERSION = '5.1';
   console.log('%c[Modern Theme] LOADER v' + VERSION + ' \u2014 20260417','background:#2E7D32;color:#fff;padding:4px 8px;border-radius:4px;font-weight:bold');
 
