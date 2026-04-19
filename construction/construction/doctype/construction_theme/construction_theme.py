@@ -159,18 +159,25 @@ class ConstructionTheme(Document):
         - login_page_title must not exceed 30 characters
         """
         # Validate bg_type ↔ bg_color/bg_image mutual requirement
+        # Only enforce when user is actively configuring login page
+        # (i.e., at least one login-specific field has a value)
         bg_type = self.get('login_page_bg_type')
         bg_color = self.get('login_page_bg_color')
         bg_image = self.get('login_page_bg_image')
         
-        if bg_type == "Background Image":
-            if not bg_image:
+        has_any_login_config = any([
+            self.get('login_btn_bg'), self.get('login_btn_text'),
+            self.get('login_heading_text_color'), self.get('login_tab_bg_color'),
+            bg_color, bg_image
+        ])
+        
+        if has_any_login_config:
+            if bg_type == "Background Image" and not bg_image:
                 frappe.throw(_(
                     "Login Page Background Image is required when "
                     "Login Page Background Type is set to 'Background Image'."
                 ))
-        elif bg_type == "Solid Color":
-            if not bg_color:
+            elif bg_type == "Solid Color" and not bg_color:
                 frappe.throw(_(
                     "Login Page Background Color is required when "
                     "Login Page Background Type is set to 'Solid Color'."

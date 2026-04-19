@@ -261,7 +261,7 @@
       "fieldname": "login_page_bg_type",
       "fieldtype": "Select",
       "label": "Login Page Background Type",
-      "options": "Solid Color\nBackground Image"
+      "options": "\nSolid Color\nBackground Image"
     },
     {
       "fieldname": "login_page_bg_color",
@@ -281,7 +281,7 @@
       "fieldname": "login_box_position",
       "fieldtype": "Select",
       "label": "Login Box Position",
-      "options": "Default\nLeft\nRight"
+      "options": "\nDefault\nLeft\nRight"
     },
     {
       "fieldname": "login_logo_inside_box",
