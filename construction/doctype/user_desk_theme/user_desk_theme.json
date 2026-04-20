@@ -1,0 +1,87 @@
+{
+  "actions": [],
+  "creation": "2026-04-14 12:00:00.000000",
+  "doctype": "DocType",
+  "editable_grid": 1,
+  "engine": "InnoDB",
+  "field_order": [
+    "user",
+    "inherit_from_site",
+    "section_break_1",
+    "light_theme",
+    "dark_theme"
+  ],
+  "fields": [
+    {
+      "fieldname": "user",
+      "fieldtype": "Link",
+      "label": "User",
+      "options": "User",
+      "reqd": 1,
+      "unique": 1,
+      "description": "The user these theme settings apply to"
+    },
+    {
+      "default": "1",
+      "fieldname": "inherit_from_site",
+      "fieldtype": "Check",
+      "label": "Inherit from Site",
+      "description": "Use site default themes instead of custom preferences"
+    },
+    {
+      "fieldname": "section_break_1",
+      "fieldtype": "Section Break",
+      "depends_on": "eval:doc.inherit_from_site == 0"
+    },
+    {
+      "fieldname": "light_theme",
+      "fieldtype": "Link",
+      "label": "Light Theme",
+      "options": "Construction Theme",
+      "depends_on": "inherit_from_site",
+      "mandatory_depends_on": "eval:doc.inherit_from_site == 0",
+      "description": "Custom Construction Theme for Light mode"
+    },
+    {
+      "fieldname": "dark_theme",
+      "fieldtype": "Link",
+      "label": "Dark Theme",
+      "options": "Construction Theme",
+      "depends_on": "inherit_from_site",
+      "mandatory_depends_on": "eval:doc.inherit_from_site == 0",
+      "description": "Custom Construction Theme for Dark mode"
+    }
+  ],
+  "index_web_pages_for_search": 1,
+  "links": [],
+  "modified": "2026-04-14 12:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "Construction",
+  "name": "User Desk Theme",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "print": 1,
+      "read": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "create": 1,
+      "delete": 1,
+      "read": 1,
+      "role": "All",
+      "write": 1,
+      "if_owner": 1
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": [],
+  "title_field": "user",
+  "track_changes": 1
+}

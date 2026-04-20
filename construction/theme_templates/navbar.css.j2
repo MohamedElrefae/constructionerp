@@ -1,0 +1,35 @@
+/* ===== NAVBAR: {{ theme_name }} ===== */
+html[data-modern-theme="{{ theme_name }}"] .navbar {
+    background: {{ navbar_bg }} !important;
+    border-bottom: 2px solid {{ accent_primary }} !important;
+{% if is_dark_mode %}
+    box-shadow: 0 2px 8px rgba(0,0,0,.3) !important;
+{% else %}
+    box-shadow: 0 2px 4px rgba(0,0,0,.1) !important;
+{% endif %}
+}
+
+html[data-modern-theme="{{ theme_name }}"] .navbar .nav-link {
+    color: {{ text_primary }} !important;
+    transition: all .25s ease !important;
+}
+
+html[data-modern-theme="{{ theme_name }}"] .navbar .nav-link:hover {
+    color: {{ accent_primary }} !important;
+    background: {{ accent_primary }}19 !important;
+    border-radius: 8px !important;
+}
+
+html[data-modern-theme="{{ theme_name }}"] .navbar input[type="text"] {
+    background: {{ navbar_bg }} !important;
+    border-color: {{ border_color }} !important;
+    color: {{ text_primary }} !important;
+}
+
+html[data-modern-theme="{{ theme_name }}"] .navbar .navbar-home {
+    color: {{ text_primary }} !important;
+}
+
+html[data-modern-theme="{{ theme_name }}"] .navbar .navbar-home:hover {
+    color: {{ accent_primary }} !important;
+}

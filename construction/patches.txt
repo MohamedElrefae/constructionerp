@@ -1,0 +1,1 @@
+construction.patches.v6_0.set_default_new_theme_fields

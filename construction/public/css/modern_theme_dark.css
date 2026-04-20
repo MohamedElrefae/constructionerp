@@ -1,0 +1,165 @@
+/**
+ * Construction Modern Theme - Dark Mode
+ * Only active when data-modern-theme="construction_dark" is set.
+ * Standard dark mode uses Frappe defaults + tokens from modern_theme_tokens.css.
+ * This file adds the green-accented "Construction" look on a dark background.
+ */
+
+/* ---- Variable overrides ---- */
+html[data-modern-theme="construction_dark"],
+html[data-modern-theme="construction_dark"][data-theme="dark"] {
+  --navbar-bg: #0d1f12;
+  --sidebar-bg: #0d1f12;
+  --sidebar_bg: #0d1f12;
+  --surface-bg: #181A20;
+  --surface: #1a2e1e;
+  --overlay-bg: #1a2e1e;
+
+  --text-primary: #f9fafb;
+  --text-secondary: #d1d5db;
+  --text-muted: #9ca3af;
+
+  /* Green accent (brighter for dark mode) */
+  --accent-primary: #4CAF50;
+  --accent: #4CAF50;
+  --accent-primary-hover: #81C784;
+  --accent-tertiary: #81C784;
+  --button_bg: #4CAF50;
+  --button_text: #FFFFFF;
+  --primary-blue: #4CAF50;
+
+  --border-color: #2d4a31;
+  --border: #2d4a31;
+  --hover-bg: #1a3a1e;
+  --active-bg: #2d5a32;
+  --selected-bg: #1a3a1e;
+  --selected_bg: #1a3a1e;
+  --active_tab_bg: #1a3a1e;
+  --info-bg: rgba(76, 175, 80, 0.1);
+  --info: #4CAF50;
+  --info-strong: #81C784;
+
+  /* Slightly green-tinted backgrounds */
+  --field_bg: #1a2e1e;
+  --table_header_bg: #0d1f12;
+  --table_row_bg: #1a2e1e;
+  --modal_bg: #1a2e1e;
+  --topbar_bg: #0d1f12;
+}
+
+/* ---- Component overrides (scoped to construction_dark) ---- */
+
+/* ---- Component overrides (scoped to construction_dark) ---- */
+
+[data-modern-theme="construction_dark"] .layout-main {
+  background-color: var(--surface-bg);
+}
+
+[data-modern-theme="construction_dark"] .layout-side-section {
+  background-color: var(--sidebar-bg);
+}
+
+/* Explicit sidebar text color for dark mode */
+[data-modern-theme="construction_dark"] .desk-sidebar-item a,
+[data-modern-theme="construction_dark"] .desk-sidebar-item.standard-sidebar-item a.item-anchor {
+  color: #E8E8E8 !important;
+}
+
+[data-modern-theme="construction_dark"] .desk-sidebar-item.standard-sidebar-item.selected a.item-anchor {
+  color: #4CAF50 !important;
+}
+
+[data-modern-theme="construction_dark"] .navbar {
+  background-color: var(--navbar-bg);
+  border-bottom: 1px solid var(--border-color);
+}
+
+[data-modern-theme="construction_dark"] .form-control {
+  background-color: var(--field_bg);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+[data-modern-theme="construction_dark"] .form-control:focus {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+}
+
+[data-modern-theme="construction_dark"] .btn-primary {
+  background-color: var(--accent-primary);
+  border-color: var(--accent-primary);
+  color: white;
+}
+
+[data-modern-theme="construction_dark"] .btn-primary:hover {
+  background-color: #388e3c;
+  border-color: #388e3c;
+}
+
+[data-modern-theme="construction_dark"] a {
+  color: var(--accent-tertiary);
+}
+
+[data-modern-theme="construction_dark"] a:hover {
+  color: var(--accent-primary);
+}
+
+[data-modern-theme="construction_dark"] .sidebar-item.active a {
+  color: var(--accent-primary);
+  background-color: var(--hover-bg);
+}
+
+[data-modern-theme="construction_dark"] .dropdown-menu {
+  background-color: var(--overlay-bg);
+  border-color: var(--border-color);
+}
+
+[data-modern-theme="construction_dark"] .modal-content {
+  background-color: var(--modal_bg);
+  border-color: var(--border-color);
+}
+
+[data-modern-theme="construction_dark"] .table thead th {
+  background-color: var(--table_header_bg);
+  border-bottom-color: var(--border-color);
+}
+
+[data-modern-theme="construction_dark"] .nav-tabs .nav-link.active {
+  color: var(--accent-primary) !important;
+  border-bottom-color: var(--accent-primary) !important;
+}
+
+/* Scrollbar with green tint */
+[data-modern-theme="construction_dark"] ::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+[data-modern-theme="construction_dark"] ::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-primary);
+}
+
+
+/* ============================================
+   SIDEBAR TEXT COLOR FIX FOR ALL DARK THEMES
+   ============================================ */
+
+/* Standard dark mode sidebar text */
+[data-theme="dark"] .desk-sidebar-item a,
+[data-theme="dark"] .desk-sidebar-item.standard-sidebar-item a.item-anchor {
+  color: #E8E8E8 !important;
+}
+
+[data-theme="dark"] .desk-sidebar-item.standard-sidebar-item.selected a.item-anchor {
+  color: #2076FF !important;
+}
+
+/* Construction dark mode sidebar text */
+[data-modern-theme="construction_dark"] .desk-sidebar-item a,
+[data-modern-theme="construction_dark"] .desk-sidebar-item.standard-sidebar-item a.item-anchor {
+  color: #E8E8E8 !important;
+}
+
+[data-modern-theme="construction_dark"] .desk-sidebar-item.standard-sidebar-item.selected a.item-anchor {
+  color: #4CAF50 !important;
+}

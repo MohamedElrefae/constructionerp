@@ -1,0 +1,101 @@
+/**
+ * Construction Modern Theme - Light Mode
+ * Only active when data-modern-theme="construction_light" is set.
+ * Standard light mode uses Frappe defaults + tokens from modern_theme_tokens.css.
+ * This file adds the green-accented "Construction" look.
+ */
+
+/* ---- Variable overrides ---- */
+html[data-modern-theme="construction_light"],
+html[data-modern-theme="construction_light"][data-theme="light"] {
+  --navbar-bg: #f0fdf4;
+  --sidebar-bg: #f0fdf4;
+  --sidebar_bg: #f0fdf4;
+  --surface-bg: #ffffff;
+  --overlay-bg: #ffffff;
+
+  --text-primary: #1e293b;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+
+  /* Green accent instead of blue */
+  --accent-primary: #2E7D32;
+  --accent: #2E7D32;
+  --accent-primary-hover: #60AD5E;
+  --accent-tertiary: #2E7D32;
+  --button_bg: #2E7D32;
+  --button_text: #FFFFFF;
+  --primary-blue: #2E7D32;
+
+  --border-color: #d1e7dd;
+  --border: #d1e7dd;
+  --hover-bg: #dcfce7;
+  --active-bg: #bbf7d0;
+  --selected-bg: #dcfce7;
+  --selected_bg: #dcfce7;
+  --active_tab_bg: #dcfce7;
+  --info-bg: rgba(46, 125, 50, 0.08);
+  --info: #2E7D32;
+  --info-strong: #2E7D32;
+}
+
+/* ---- Component overrides (scoped to construction_light) ---- */
+
+/* ---- Component overrides (scoped to construction_light) ---- */
+
+[data-modern-theme="construction_light"] .layout-main {
+  background-color: var(--surface-bg);
+}
+
+[data-modern-theme="construction_light"] .layout-side-section {
+  background-color: var(--sidebar-bg);
+}
+
+/* Explicit sidebar text color for light mode */
+[data-modern-theme="construction_light"] .desk-sidebar-item a,
+[data-modern-theme="construction_light"] .desk-sidebar-item.standard-sidebar-item a.item-anchor {
+  color: #2C3E50 !important;
+}
+
+[data-modern-theme="construction_light"] .desk-sidebar-item.standard-sidebar-item.selected a.item-anchor {
+  color: #2E7D32 !important;
+}
+
+[data-modern-theme="construction_light"] .navbar {
+  background-color: var(--navbar-bg);
+  border-bottom: 1px solid var(--border-color);
+}
+
+[data-modern-theme="construction_light"] .form-control:focus {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.15);
+}
+
+[data-modern-theme="construction_light"] .btn-primary {
+  background-color: var(--accent-primary);
+  border-color: var(--accent-primary);
+  color: white;
+}
+
+[data-modern-theme="construction_light"] .btn-primary:hover {
+  background-color: #1b5e20;
+  border-color: #1b5e20;
+}
+
+[data-modern-theme="construction_light"] a {
+  color: var(--accent-primary);
+}
+
+[data-modern-theme="construction_light"] a:hover {
+  color: #1b5e20;
+}
+
+[data-modern-theme="construction_light"] .sidebar-item.active a {
+  color: var(--accent-primary);
+  background-color: var(--hover-bg);
+}
+
+[data-modern-theme="construction_light"] .nav-tabs .nav-link.active {
+  color: var(--accent-primary) !important;
+  border-bottom-color: var(--accent-primary) !important;
+}

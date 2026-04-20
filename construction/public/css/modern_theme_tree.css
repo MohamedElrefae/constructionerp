@@ -1,0 +1,468 @@
+/**
+ * Modern Theme Tree View Styles
+ * Styling for hierarchical tree display with RTL support
+ */
+
+/* ============================================
+   TREE VIEW CONTAINER
+   ============================================ */
+
+.modern-tree-view {
+  background-color: var(--surface);
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+}
+
+.modern-tree-view__header {
+  display: grid;
+  grid-template-columns: auto auto 8px 100px 150px 120px 80px 80px 1fr;
+  align-items: center;
+  padding: var(--tree-node-padding);
+  background-color: var(--table_header_bg);
+  border-bottom: 2px solid var(--border-color);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-sm);
+  color: var(--heading-text);
+  gap: var(--tree-node-gap);
+}
+
+.modern-tree-view__header-cell {
+  white-space: nowrap;
+}
+
+.modern-tree-view__body {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+/* ============================================
+   TREE NODE (ROW)
+   ============================================ */
+
+.modern-tree-node {
+  display: grid;
+  grid-template-columns: auto auto 8px 100px 150px 120px 80px 80px 1fr;
+  align-items: center;
+  padding: var(--tree-node-padding);
+  border-bottom: 1px solid var(--border-color);
+  font-size: var(--font-size-sm);
+  gap: var(--tree-node-gap);
+  white-space: nowrap;
+  min-width: min-content;
+  transition: background-color 0.2s ease, box-shadow 0.15s ease, transform 0.05s ease;
+}
+
+.modern-tree-node:hover {
+  background-color: var(--hover-bg);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.modern-tree-node--selected {
+  background-color: var(--selected_bg) !important;
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+.modern-tree-node--inactive {
+  opacity: 0.6;
+}
+
+.modern-tree-node--inactive .modern-tree-node__name {
+  text-decoration: line-through;
+  color: var(--text-disabled);
+}
+
+/* ============================================
+   TREE NODE CELLS
+   ============================================ */
+
+.modern-tree-node__expander {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.modern-tree-node__expander:hover {
+  background-color: var(--hover-bg);
+}
+
+.modern-tree-node__expander--expanded {
+  transform: rotate(90deg);
+}
+
+.modern-tree-node__expander--placeholder {
+  visibility: hidden;
+}
+
+.modern-tree-node__status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modern-tree-node__status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--success);
+}
+
+.modern-tree-node--inactive .modern-tree-node__status-dot {
+  background-color: var(--error);
+}
+
+.modern-tree-node__code {
+  font-family: 'SF Mono', Monaco, monospace;
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+}
+
+.modern-tree-node__name {
+  font-weight: var(--font-weight-medium);
+  color: var(--text-primary);
+}
+
+.modern-tree-node__type {
+  color: var(--text-secondary);
+  font-size: var(--font-size-xs);
+}
+
+.modern-tree-node__level {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 8px;
+  background-color: var(--chip-bg);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+}
+
+.modern-tree-node__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+}
+
+/* ============================================
+   TREE INDENTATION
+   ============================================ */
+
+.modern-tree-node__indent {
+  width: var(--tree-indent-size);
+  flex-shrink: 0;
+}
+
+/* Support multiple levels */
+.modern-tree-node--level-0 { padding-left: 0; }
+.modern-tree-node--level-1 { padding-left: 20px; }
+.modern-tree-node--level-2 { padding-left: 40px; }
+.modern-tree-node--level-3 { padding-left: 60px; }
+.modern-tree-node--level-4 { padding-left: 80px; }
+.modern-tree-node--level-5 { padding-left: 100px; }
+.modern-tree-node--level-6 { padding-left: 120px; }
+
+/* ============================================
+   ACTION BUTTONS (Small)
+   ============================================ */
+
+.modern-tree-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  background-color: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  gap: 4px;
+}
+
+.modern-tree-action-btn:hover {
+  background-color: var(--hover-bg);
+  border-color: var(--accent);
+}
+
+.modern-tree-action-btn--edit:hover {
+  background-color: rgba(32, 118, 255, 0.1);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.modern-tree-action-btn--add:hover {
+  background-color: rgba(33, 193, 151, 0.1);
+  border-color: var(--success);
+  color: var(--success);
+}
+
+.modern-tree-action-btn--toggle:hover {
+  background-color: rgba(255, 192, 72, 0.1);
+  border-color: var(--warning);
+  color: var(--warning);
+}
+
+.modern-tree-action-btn--delete:hover {
+  background-color: rgba(222, 63, 63, 0.1);
+  border-color: var(--error);
+  color: var(--error);
+}
+
+/* ============================================
+   TREE VIEW TOOLBAR
+   ============================================ */
+
+.modern-tree-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-md) var(--space-lg);
+  background-color: var(--surface);
+  border-bottom: 1px solid var(--border-color);
+  gap: var(--space-md);
+}
+
+.modern-tree-toolbar__left {
+  display: flex;
+  align-items: center;
+  gap: var(--toolbar-gap);
+}
+
+.modern-tree-toolbar__right {
+  display: flex;
+  align-items: center;
+  gap: var(--toolbar-gap);
+}
+
+.modern-tree-toolbar__title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--heading-text);
+}
+
+/* ============================================
+   TREE VIEW FILTERS
+   ============================================ */
+
+.modern-tree-filters {
+  display: flex;
+  align-items: center;
+  gap: var(--control-gap);
+  padding: var(--space-sm) var(--space-lg);
+  background-color: var(--sidebar_bg);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.modern-tree-filter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modern-tree-filter__label {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+/* ============================================
+   RTL SUPPORT (Right-to-Left)
+   ============================================ */
+
+[dir="rtl"] .modern-tree-view__header,
+[dir="rtl"] .modern-tree-node {
+  direction: rtl;
+}
+
+[dir="rtl"] .modern-tree-node__actions {
+  justify-content: flex-start;
+}
+
+[dir="rtl"] .modern-tree-node--level-1 { padding-right: 20px; padding-left: 0; }
+[dir="rtl"] .modern-tree-node--level-2 { padding-right: 40px; padding-left: 0; }
+[dir="rtl"] .modern-tree-node--level-3 { padding-right: 60px; padding-left: 0; }
+[dir="rtl"] .modern-tree-node--level-4 { padding-right: 80px; padding-left: 0; }
+[dir="rtl"] .modern-tree-node--level-5 { padding-right: 100px; padding-left: 0; }
+[dir="rtl"] .modern-tree-node--level-6 { padding-right: 120px; padding-left: 0; }
+
+[dir="rtl"] .modern-tree-node--selected {
+  box-shadow: inset -3px 0 0 var(--accent);
+}
+
+[dir="rtl"] .modern-tree-node__expander--expanded {
+  transform: rotate(-90deg);
+}
+
+/* Reverse grid for RTL */
+[dir="rtl"] .modern-tree-view__header,
+[dir="rtl"] .modern-tree-node {
+  grid-template-columns: 1fr 80px 80px 120px 150px 100px 8px auto auto;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 1200px) {
+  .modern-tree-view__header,
+  .modern-tree-node {
+    grid-template-columns: auto auto 8px 80px 120px 100px 60px 60px 1fr;
+  }
+  
+  [dir="rtl"] .modern-tree-view__header,
+  [dir="rtl"] .modern-tree-node {
+    grid-template-columns: 1fr 60px 60px 100px 120px 80px 8px auto auto;
+  }
+}
+
+@media (max-width: 992px) {
+  .modern-tree-view__header,
+  .modern-tree-node {
+    grid-template-columns: auto auto 8px 1fr auto auto;
+  }
+  
+  .modern-tree-node__type,
+  .modern-tree-node__level {
+    display: none;
+  }
+  
+  [dir="rtl"] .modern-tree-view__header,
+  [dir="rtl"] .modern-tree-node {
+    grid-template-columns: auto auto 1fr 8px auto auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .modern-tree-toolbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .modern-tree-toolbar__right {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+/* ============================================
+   FRAPPE NATIVE TREE VIEW BUTTON OVERRIDES
+   Targets Frappe's default tree toolbar & node action buttons
+   to match the Vite app's "ultimate button" style
+   ============================================ */
+
+/* Toolbar buttons (Collapse All, Expand All, etc.) */
+.modern-theme-loaded .page-head .page-actions .btn-default,
+.modern-theme-loaded .page-head .btn-default.ellipsis,
+.modern-theme-loaded .page-head .inner-group-button .btn-default,
+.modern-theme-loaded .page-head .page-actions .btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background-color: var(--surface, #fff);
+  color: var(--text-primary);
+}
+
+.modern-theme-loaded .page-head .page-actions .btn-default:hover,
+.modern-theme-loaded .page-head .btn-default.ellipsis:hover,
+.modern-theme-loaded .page-head .inner-group-button .btn-default:hover,
+.modern-theme-loaded .page-head .page-actions .btn-secondary:hover {
+  background-color: var(--hover-bg);
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Tree node action buttons (Edit, Add Child, Delete) */
+.modern-theme-loaded .tree-node-toolbar .btn.btn-default.btn-xs.tree-toolbar-button,
+.modern-theme-loaded .tree-node-toolbar .btn-link,
+.modern-theme-loaded .tree-node-toolbar a,
+.modern-theme-loaded .tree-node-toolbar button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 30px;
+  padding: 4px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: var(--surface, #fff);
+  color: var(--text-primary);
+  text-decoration: none;
+  margin: 0 2px;
+}
+
+.modern-theme-loaded .tree-node-toolbar .btn.btn-default.btn-xs.tree-toolbar-button:hover,
+.modern-theme-loaded .tree-node-toolbar .btn-link:hover,
+.modern-theme-loaded .tree-node-toolbar a:hover,
+.modern-theme-loaded .tree-node-toolbar button:hover {
+  background-color: var(--hover-bg);
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  text-decoration: none;
+}
+
+/* Delete action — icon-based :has() detection with :last-child positional fallback */
+.modern-theme-loaded .tree-node-toolbar .tree-toolbar-button:has(.icon-trash):hover,
+.modern-theme-loaded .tree-node-toolbar .tree-toolbar-button:has([class*="trash"]):hover,
+.modern-theme-loaded .tree-node-toolbar .btn.btn-default.btn-xs.tree-toolbar-button:last-child:hover,
+.modern-theme-loaded .tree-node-toolbar .btn-link:last-child:hover,
+.modern-theme-loaded .tree-node-toolbar a:last-child:hover {
+  border-color: var(--error, #DE3F3F);
+  color: var(--error, #DE3F3F);
+  background-color: rgba(222, 63, 63, 0.06);
+}
+
+/* Dropdown toggle buttons in toolbar (View, Export) */
+.modern-theme-loaded .page-head .inner-group-button .dropdown-toggle {
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  background-color: var(--surface, #fff);
+  color: var(--text-primary);
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 0.5rem 0.75rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modern-theme-loaded .page-head .inner-group-button .dropdown-toggle:hover {
+  background-color: var(--hover-bg);
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-1px);
+}
+
+/* Primary action button (+ New) — already matches, ensure consistency */
+.modern-theme-loaded .page-head .primary-action {
+  border-radius: 10px !important;
+  min-height: 36px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 0.5rem 0.75rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modern-theme-loaded .page-head .primary-action:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+}

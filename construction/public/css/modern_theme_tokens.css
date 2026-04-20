@@ -1,0 +1,375 @@
+/**
+ * Modern Theme Tokens for ERPNext
+ * Extracted from C:\5\accounting-systemr5\src\index.css
+ * Design tokens matching the previous Vite app exactly
+ */
+
+/* ============================================
+   SECTION 1: CORE TOKENS (Colors, Spacing, Typography)
+   ============================================ */
+
+:root {
+  /* Primary Colors - Earth Green */
+  --color-primary-main: #2E7D32;
+  --color-primary-light: #60AD5E;
+  --color-primary-dark: #005005;
+  --color-primary-contrast: #FFFFFF;
+
+  /* Secondary Colors - Brown */
+  --color-secondary-main: #6D4C41;
+  --color-secondary-light: #9C786C;
+  --color-secondary-dark: #40241A;
+  --color-secondary-contrast: #FFFFFF;
+
+  /* Accent Colors - Blue */
+  --color-accent: #2076FF;
+  --color-accent-hover: #4A90FF;
+  --color-accent-dark: #003C8F;
+
+  /* Info Colors */
+  --color-info-main: #1565C0;
+  --color-info-light: #5E92F3;
+  --color-info-dark: #003C8F;
+
+  /* Success Colors */
+  --color-success-main: #21C197;
+  --color-success-light: #60AD5E;
+  --color-success-dark: #005005;
+
+  /* Warning Colors */
+  --color-warning-main: #FFC048;
+  --color-warning-light: #FFD180;
+  --color-warning-dark: #F6A000;
+
+  /* Error Colors */
+  --color-error-main: #DE3F3F;
+  --color-error-light: #EF5350;
+  --color-error-dark: #C62828;
+
+  /* Spacing Scale (8px base) */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+
+  /* Typography */
+  --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+
+  /* Font Weights */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Line Heights */
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+}
+
+/* ============================================
+   SECTION 2: SEMANTIC TOKENS (Dark Mode)
+   ============================================ */
+
+html[data-theme='dark'] {
+  /* Core tokens - dark mode */
+  --background: #181A20;
+  --surface: #23272F;
+  --border: #393C43;
+  --accent: #2076FF;
+  --text: #EDEDED;
+  --muted_text: #8D94A2;
+  --heading: #FAFAFA;
+  --error: #DE3F3F;
+  --success: #21C197;
+  --warning: #FFC048;
+  
+  /* Field backgrounds */
+  --field_bg: #23272F;
+  --selected_bg: #343940;
+  --sidebar_bg: #22262A;
+  --topbar_bg: #23272F;
+  --button_bg: #2076FF;
+  --button_text: #FFFFFF;
+  --table_header_bg: #22262A;
+  --table_row_bg: #23272F;
+  --modal_bg: #23272F;
+  --active_tab_bg: #343940;
+
+  /* Legacy aliases */
+  --content-bg: var(--surface);
+  --hover-bg: rgba(255, 255, 255, 0.08);
+  --text-primary: var(--text);
+  --text-secondary: var(--muted_text);
+  --text-disabled: #6b7280;
+  --heading-text: var(--heading);
+  --border-color: var(--border);
+  --border-light: var(--border);
+  --accent-primary: var(--accent);
+  --accent-primary-hover: #4A90FF;
+  --primary-blue: var(--accent);
+  --info-bg: rgba(32, 118, 255, 0.08);
+  --on-accent: var(--button_text);
+  --on-success: #FFFFFF;
+  --on-warning: #111111;
+  --on-error: #FFFFFF;
+  --on-neutral: #FFFFFF;
+  --on-info: #FFFFFF;
+  --success-strong: #16A085;
+  --warning-strong: #F6A000;
+  --error-strong: #C53030;
+  --info: var(--accent);
+  --info-strong: #4A90FF;
+  --chip-bg: rgba(255, 255, 255, 0.1);
+  --row-alt-bg: rgba(255, 255, 255, 0.03);
+
+  /* Hover effects */
+  --hover-bg-color: rgba(255, 255, 255, 0.08);
+  --hover-border-color: var(--accent);
+  --hover-text-color: var(--heading);
+}
+
+/* ============================================
+   SECTION 3: SEMANTIC TOKENS (Light Mode)
+   ============================================ */
+
+html[data-theme='light'] {
+  /* Core tokens - light mode */
+  --background: #F5F6FA;
+  --surface: #FFFFFF;
+  --border: #E2E6ED;
+  --accent: #2076FF;
+  --text: #181C23;
+  --muted_text: #6B7280;
+  --heading: #1F2937;
+  --error: #DE3F3F;
+  --success: #21C197;
+  --warning: #FFC048;
+  
+  /* Field backgrounds */
+  --field_bg: #FFFFFF;
+  --selected_bg: #E8F4FD;
+  --sidebar_bg: #F8FAFC;
+  --topbar_bg: #FFFFFF;
+  --button_bg: #2076FF;
+  --button_text: #FFFFFF;
+  --table_header_bg: #F8FAFC;
+  --table_row_bg: #FFFFFF;
+  --modal_bg: #FFFFFF;
+  --active_tab_bg: #E8F4FD;
+
+  /* Legacy aliases */
+  --content-bg: var(--surface);
+  --hover-bg: rgba(0, 0, 0, 0.04);
+  --text-primary: var(--text);
+  --text-secondary: var(--muted_text);
+  --text-disabled: #9CA3AF;
+  --heading-text: var(--heading);
+  --border-color: var(--border);
+  --border-light: var(--border);
+  --accent-primary: var(--accent);
+  --accent-primary-hover: #4A90FF;
+  --primary-blue: var(--accent);
+  --info-bg: rgba(32, 118, 255, 0.08);
+  --on-accent: var(--button_text);
+  --on-success: #FFFFFF;
+  --on-warning: #111111;
+  --on-error: #FFFFFF;
+  --on-neutral: #FFFFFF;
+  --on-info: #FFFFFF;
+  --success-strong: #16A085;
+  --warning-strong: #F6A000;
+  --error-strong: #C53030;
+  --info: var(--accent);
+  --info-strong: #4A90FF;
+  --chip-bg: rgba(0, 0, 0, 0.05);
+  --row-alt-bg: rgba(0, 0, 0, 0.02);
+
+  /* Hover effects */
+  --hover-bg-color: rgba(0, 0, 0, 0.04);
+  --hover-border-color: var(--accent);
+  --hover-text-color: var(--heading);
+}
+
+/* ============================================
+   SECTION 4: COMPONENT TOKENS (Buttons, Inputs, Cards, Panels)
+   ============================================ */
+
+:root {
+  /* Buttons */
+  --btn-height-sm: 32px;
+  --btn-height-md: 40px;
+  --btn-height-lg: 48px;
+  --btn-radius: 8px;
+  --btn-padding-sm: 8px 12px;
+  --btn-padding-md: 12px 16px;
+  --btn-padding-lg: 16px 24px;
+  
+  /* Ultimate Button (from old app) */
+  --ultimate-btn-min-height: 36px;
+  --ultimate-btn-min-width: 85px;
+  --ultimate-btn-padding: 0.5rem 0.75rem;
+  --ultimate-btn-radius: 10px;
+  --ultimate-btn-font-size: 0.8rem;
+  --ultimate-btn-backdrop-blur: 10px;
+  --ultimate-btn-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Inputs */
+  --input-height: 44px;
+  --input-padding: 12px 16px;
+  --input-radius: 8px;
+  --input-border-width: 1px;
+  --input-focus-ring-width: 3px;
+
+  /* Cards */
+  --card-padding: 24px;
+  --card-radius: 12px;
+  --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --card-shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.08);
+
+  /* Panels */
+  --panel-padding: 24px;
+  --panel-radius: 12px;
+  --panel-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --panel-backdrop-blur: 10px;
+  --panel-border: 1px solid var(--border-color);
+
+  /* Tree View */
+  --tree-node-padding: 0.75rem 1rem;
+  --tree-node-gap: 0.5rem;
+  --tree-indent-size: 20px;
+  --tree-header-bg: var(--surface);
+  --tree-row-hover: var(--hover-bg);
+
+  /* Sidebar */
+  --sidebar-width: 280px;
+  --sidebar-padding: 16px;
+  --sidebar-item-height: 44px;
+  --sidebar-item-radius: 8px;
+  --sidebar-item-padding: 12px 16px;
+
+  /* Form Layout Controls */
+  --layout-control-height: 40px;
+  --layout-control-radius: 8px;
+  --layout-preview-gap: 8px;
+}
+
+/* ============================================
+   SECTION 5: LAYOUT TOKENS (Grid, Spacing, Shadows)
+   ============================================ */
+
+:root {
+  /* Radius */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-panel: 0 4px 16px rgba(0, 0, 0, 0.08);
+
+  /* Layout Spacing */
+  --section-gap: 20px;
+  --toolbar-gap: 8px;
+  --control-gap: 12px;
+  --control-height: 40px;
+
+  /* Page Layout */
+  --page-max-width: 1400px;
+  --content-gutter: 24px;
+
+  /* Grid */
+  --grid-columns: 12;
+  --grid-gap: 20px;
+
+  /* Transitions */
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.5s ease;
+}
+
+/* ============================================
+   SECTION 6: HOVER EFFECTS (Applied to both modes)
+   ============================================ */
+
+/* Base hover transition */
+.hoverable {
+  transition: background-color var(--transition-fast), 
+              border-color var(--transition-fast), 
+              color var(--transition-fast),
+              transform var(--transition-fast),
+              box-shadow var(--transition-fast);
+}
+
+/* Button hover states */
+.ultimate-btn:hover {
+  background-color: var(--accent-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(32, 118, 255, 0.3);
+}
+
+.ultimate-btn:active {
+  transform: translateY(0);
+}
+
+/* Tree node hover */
+.tree-node:hover {
+  background-color: var(--hover-bg);
+}
+
+/* Sidebar item hover */
+.sidebar-item:hover {
+  background-color: var(--hover-bg);
+  color: var(--heading-text);
+}
+
+/* Card hover */
+.card:hover {
+  box-shadow: var(--card-shadow-hover);
+}
+
+/* Input focus/hover */
+.input-base:hover {
+  border-color: var(--accent);
+}
+
+.input-base:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(32, 118, 255, 0.1);
+}
+
+/* Table row hover */
+.table-row:hover {
+  background-color: var(--hover-bg);
+}
+
+/* Link hover */
+a:hover {
+  color: var(--accent-primary-hover);
+}
+
+/* ============================================
+   SECTION 7: RTL SUPPORT
+   ============================================ */
+
+[dir="rtl"] {
+  /* Flip margins/paddings that need it */
+  --tree-indent-direction: right;
+}
+
+[dir="ltr"] {
+  --tree-indent-direction: left;
+}

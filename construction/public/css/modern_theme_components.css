@@ -1,0 +1,349 @@
+/**
+ * Modern Theme Component Styles
+ * Specific styling for custom components
+ */
+
+/* ============================================
+   ULTIMATE BUTTON STYLES
+   From original app TreeView.css
+   ============================================ */
+
+.ultimate-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--ultimate-btn-min-height);
+  min-width: var(--ultimate-btn-min-width);
+  padding: var(--ultimate-btn-padding);
+  border: none;
+  border-radius: var(--ultimate-btn-radius);
+  font-size: var(--ultimate-btn-font-size);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: var(--ultimate-btn-transition);
+  overflow: hidden;
+  user-select: none;
+  backdrop-filter: blur(var(--ultimate-btn-backdrop-blur));
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.1),
+    0 1px 2px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 color-mix(in srgb, var(--on-accent) 10%, transparent);
+}
+
+.ultimate-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--on-accent) 8%, transparent) 0%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+.ultimate-btn:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.15),
+    0 2px 4px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 color-mix(in srgb, var(--on-accent) 12%, transparent);
+}
+
+.ultimate-btn:active {
+  transform: translateY(0);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.1),
+    inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.ultimate-btn:disabled,
+.ultimate-btn.ultimate-btn--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Button variants */
+.ultimate-btn--primary {
+  background-color: var(--accent-primary);
+  color: var(--on-accent);
+}
+
+.ultimate-btn--primary:hover {
+  background-color: var(--accent-primary-hover);
+  box-shadow: 0 4px 12px rgba(32, 118, 255, 0.3);
+}
+
+.ultimate-btn--secondary {
+  background-color: var(--surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.ultimate-btn--secondary:hover {
+  background-color: var(--hover-bg);
+  border-color: var(--accent);
+}
+
+.ultimate-btn--danger {
+  background-color: var(--error);
+  color: var(--on-error);
+}
+
+.ultimate-btn--danger:hover {
+  background-color: var(--error-strong);
+  box-shadow: 0 4px 12px rgba(222, 63, 63, 0.3);
+}
+
+.ultimate-btn--success {
+  background-color: var(--success);
+  color: var(--on-success);
+}
+
+.ultimate-btn--success:hover {
+  background-color: var(--success-strong);
+  box-shadow: 0 4px 12px rgba(33, 193, 151, 0.3);
+}
+
+/* Loading state */
+.ultimate-btn--loading {
+  pointer-events: none;
+}
+
+.ultimate-btn--loading::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: ultimate-spin 0.8s linear infinite;
+}
+
+@keyframes ultimate-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Success state */
+.ultimate-btn--success-state {
+  background-color: var(--success) !important;
+  color: var(--on-success) !important;
+}
+
+/* Error state */
+.ultimate-btn--error-state {
+  background-color: var(--error) !important;
+  color: var(--on-error) !important;
+}
+
+/* ============================================
+   CHIP / BADGE STYLES
+   ============================================ */
+
+.modern-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  background-color: var(--chip-bg);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-primary);
+  gap: 6px;
+}
+
+.modern-chip--success {
+  background-color: rgba(33, 193, 151, 0.15);
+  color: var(--success);
+}
+
+.modern-chip--warning {
+  background-color: rgba(255, 192, 72, 0.15);
+  color: var(--warning);
+}
+
+.modern-chip--error {
+  background-color: rgba(222, 63, 63, 0.15);
+  color: var(--error);
+}
+
+.modern-chip--info {
+  background-color: var(--info-bg);
+  color: var(--info-strong);
+}
+
+/* ============================================
+   TOOLTIP STYLES
+   ============================================ */
+
+.modern-tooltip {
+  position: relative;
+  cursor: help;
+}
+
+.modern-tooltip::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-8px);
+  padding: 8px 12px;
+  background-color: var(--surface);
+  color: var(--text-primary);
+  font-size: var(--font-size-xs);
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-color);
+  z-index: 1000;
+}
+
+.modern-tooltip:hover::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(-4px);
+}
+
+/* Help text icon */
+.modern-help-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: var(--accent);
+  color: var(--on-accent);
+  font-size: 10px;
+  cursor: help;
+  margin-left: 6px;
+}
+
+.modern-help-icon:hover {
+  background-color: var(--accent-primary-hover);
+}
+
+/* ============================================
+   EXPORT BUTTONS
+   ============================================ */
+
+.export-buttons-container {
+  display: flex;
+  gap: var(--toolbar-gap);
+}
+
+.export-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background-color: var(--surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.export-btn:hover {
+  background-color: var(--hover-bg);
+  border-color: var(--accent);
+  color: var(--accent-primary);
+}
+
+.export-btn--excel:hover {
+  border-color: #21C197;
+  color: #21C197;
+}
+
+.export-btn--pdf:hover {
+  border-color: #DE3F3F;
+  color: #DE3F3F;
+}
+
+/* ============================================
+   SEARCH INPUT
+   ============================================ */
+
+.modern-search-input {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.modern-search-input input {
+  width: 100%;
+  padding: 10px 16px 10px 40px;
+  background-color: var(--field_bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--input-radius);
+  color: var(--text-primary);
+  font-size: var(--font-size-sm);
+  transition: all 0.2s ease;
+}
+
+.modern-search-input input:hover {
+  border-color: var(--accent);
+}
+
+.modern-search-input input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(32, 118, 255, 0.1);
+  outline: none;
+}
+
+.modern-search-input .search-icon {
+  position: absolute;
+  left: 14px;
+  color: var(--text-secondary);
+  pointer-events: none;
+}
+
+/* ============================================
+   FILTER CHIPS
+   ============================================ */
+
+.filter-chips-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--control-gap);
+  padding: var(--space-sm) 0;
+}
+
+.filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background-color: var(--info-bg);
+  border: 1px solid var(--info);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  color: var(--info-strong);
+}
+
+.filter-chip .remove-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.filter-chip .remove-btn:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
