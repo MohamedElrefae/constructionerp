@@ -4,18 +4,18 @@ import json
 def update_construction_workspace():
     """Update the Construction workspace to show theme DocTypes"""
     ws = frappe.get_doc('Workspace', 'Construction')
-    
+
     # Clear existing shortcuts and links
     ws.shortcuts = []
     ws.links = []
-    
+
     # Add BOQ Management section
     ws.append('links', {
         'type': 'Card Break',
         'label': 'BOQ Management',
         'hidden': 0
     })
-    
+
     # Add BOQ links
     for doctype in ['BOQ Header', 'BOQ Structure', 'BOQ Item']:
         ws.append('links', {
@@ -25,14 +25,14 @@ def update_construction_workspace():
             'link_type': 'DocType',
             'hidden': 0
         })
-    
+
     # Add Theme Settings section
     ws.append('links', {
         'type': 'Card Break',
         'label': 'Theme Settings',
         'hidden': 0
     })
-    
+
     # Add Theme links
     for doctype in ['Construction Theme', 'Modern Theme Settings']:
         ws.append('links', {
@@ -42,7 +42,7 @@ def update_construction_workspace():
             'link_type': 'DocType',
             'hidden': 0
         })
-    
+
     # Add shortcuts
     for doctype in ['BOQ Header', 'BOQ Structure', 'Construction Theme', 'Modern Theme Settings']:
         ws.append('shortcuts', {
@@ -52,7 +52,7 @@ def update_construction_workspace():
             'doc_view': 'List',
             'color': 'Green' if 'BOQ' in doctype else 'Blue'
         })
-    
+
     # Build content JSON with shortcuts
     content = [
         {
@@ -70,7 +70,7 @@ def update_construction_workspace():
             }
         }
     ]
-    
+
     # Add shortcuts to content
     col = 0
     for shortcut in ws.shortcuts:
@@ -84,9 +84,9 @@ def update_construction_workspace():
             }
         })
         col += 3
-    
+
     ws.content = json.dumps(content)
     ws.save()
     frappe.db.commit()
-    
+
     return {'status': 'success', 'message': 'Workspace updated with all sections'}

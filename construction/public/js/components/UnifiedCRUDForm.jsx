@@ -5,11 +5,11 @@
  */
 
 const UnifiedCRUDForm = (props) => {
-  const { 
-    config, 
-    initialData = {}, 
+  const {
+    config,
+    initialData = {},
     mode = 'create', // 'create' | 'edit' | 'view'
-    onSubmit, 
+    onSubmit,
     onCancel,
     onDelete,
     className = ''
@@ -39,7 +39,7 @@ const UnifiedCRUDForm = (props) => {
       ...prev,
       [fieldId]: value
     }));
-    
+
     // Clear error for this field
     if (errors[fieldId]) {
       setErrors(prev => ({
@@ -68,22 +68,22 @@ const UnifiedCRUDForm = (props) => {
   // Validate form
   const validateForm = async () => {
     const newErrors = {};
-    
+
     for (const field of config.fields) {
       // Skip hidden fields
       if (!layout.visibleFields.includes(field.id)) continue;
-      
+
       // Check conditional logic
       if (field.conditionalLogic && !field.conditionalLogic(formData)) continue;
-      
+
       const value = formData[field.id];
-      
+
       // Required validation
       if (field.required && !value) {
         newErrors[field.id] = `${field.label} is required`;
         continue;
       }
-      
+
       // Custom validation
       if (field.validation && value) {
         const error = field.validation(value);
@@ -91,7 +91,7 @@ const UnifiedCRUDForm = (props) => {
           newErrors[field.id] = error;
         }
       }
-      
+
       // Server-side validation for critical fields
       if (field.serverValidation && value) {
         try {
@@ -104,7 +104,7 @@ const UnifiedCRUDForm = (props) => {
               context: formData
             }
           });
-          
+
           if (!result.message.valid) {
             newErrors[field.id] = result.message.errors[0];
           }
@@ -113,7 +113,7 @@ const UnifiedCRUDForm = (props) => {
         }
       }
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -121,14 +121,14 @@ const UnifiedCRUDForm = (props) => {
   // Handle submit
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (mode === 'view') {
       onCancel && onCancel();
       return;
     }
-    
+
     setLoading(true);
-    
+
     const isValid = await validateForm();
     if (!isValid) {
       setLoading(false);
@@ -138,7 +138,7 @@ const UnifiedCRUDForm = (props) => {
       });
       return;
     }
-    
+
     try {
       const result = await onSubmit(formData);
       if (result.success) {
@@ -182,7 +182,7 @@ const UnifiedCRUDForm = (props) => {
     const value = formData[field.id];
     const error = errors[field.id];
     const isFullWidth = layout.fullWidthFields.includes(field.id);
-    const isDisabled = mode === 'view' || field.disabled || 
+    const isDisabled = mode === 'view' || field.disabled ||
       (field.dependsOn && !formData[field.dependsOn]);
 
     return (
@@ -196,7 +196,7 @@ const UnifiedCRUDForm = (props) => {
         onChange={(val) => handleChange(field.id, val)}
         helpText={field.helpText}
         isAutoFilled={field.autoFill && value && !initialData[field.id]}
-        dependencyMessage={field.dependsOn && !formData[field.dependsOn] ? 
+        dependencyMessage={field.dependsOn && !formData[field.dependsOn] ?
           field.dependencyErrorMessage || `Requires ${field.dependsOn}` : null}
       />
     );
@@ -206,15 +206,15 @@ const UnifiedCRUDForm = (props) => {
   const gridClass = `modern-form-grid--${layout.columnCount}-col`;
 
   return (
-    <form 
+    <form
       className={`modern-crud-form ${className}`}
       onSubmit={handleSubmit}
     >
       {/* Header */}
       <div className="modern-crud-form__header">
         <h2 className="modern-crud-form__title">
-          {mode === 'create' ? `Create ${config.title}` : 
-           mode === 'edit' ? `Edit ${config.title}` : 
+          {mode === 'create' ? `Create ${config.title}` :
+           mode === 'edit' ? `Edit ${config.title}` :
            config.title}
         </h2>
         <div className="modern-crud-form__actions">
@@ -277,9 +277,9 @@ const UnifiedCRUDForm = (props) => {
             {__('Delete')}
           </button>
         )}
-        
+
         <div style={{ flex: 1 }}></div>
-        
+
         <button
           type="button"
           className="ultimate-btn ultimate-btn--secondary"
@@ -288,7 +288,7 @@ const UnifiedCRUDForm = (props) => {
         >
           {__('Cancel')}
         </button>
-        
+
         {mode !== 'view' && (
           <button
             type="submit"

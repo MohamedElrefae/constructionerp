@@ -9,7 +9,7 @@ def switch_theme(theme_name=None):
     """
     Override Frappe's default switch_theme to handle construction themes.
     Uses SQL to avoid Python controller import issues.
-    
+
     Args:
         theme_name: Theme name (can be Frappe standard or Construction theme)
     """
@@ -21,7 +21,7 @@ def switch_theme(theme_name=None):
         mode = "dark" if user_doc.desk_theme in ["Dark", "automatic"] else "light"
         return {"message": f"Theme check - current mode: {mode}", "mode": mode}
     user = frappe.session.user
-    
+
     try:
         # Check if this is a construction theme using SQL
         construction_theme = frappe.db.sql("""
@@ -29,17 +29,17 @@ def switch_theme(theme_name=None):
             WHERE theme_name = %s AND is_active = 1
             LIMIT 1
         """, (theme_name,), as_dict=True)
-        
+
         if construction_theme:
             # It's a construction theme - persist to User Desk Theme
             theme_record = construction_theme[0]
             is_dark = 'Dark' in (theme_record.theme_type or '')
             mode = 'dark' if is_dark else 'light'
-            
+
             # Update User.desk_theme
             desk_theme_value = "Dark" if is_dark else "Light"
             frappe.db.set_value("User", user, "desk_theme", desk_theme_value, update_modified=False)
-            
+
             # Update or create User Desk Theme record
             existing = frappe.db.get_value("User Desk Theme", {"user": user}, "name")
             if existing:
@@ -59,7 +59,7 @@ def switch_theme(theme_name=None):
                 else:
                     udt.light_theme = theme_record.name
                 udt.insert(ignore_permissions=True)
-            
+
             frappe.db.commit()
             return {"message": f"Theme switched to {theme_name}", "mode": mode}
         else:
@@ -67,9 +67,9 @@ def switch_theme(theme_name=None):
             # Map to mode
             mode = "dark" if theme_name in ["Dark", "Automatic"] else "light"
             frappe.db.set_value("User", user, "desk_theme", mode)
-            
+
             return {"message": f"Theme switched to {theme_name}", "mode": mode}
-            
+
     except Exception as e:
         frappe.logger().error(f"[Theme Switch] Error: {str(e)}")
         # Fallback to just setting desk_theme

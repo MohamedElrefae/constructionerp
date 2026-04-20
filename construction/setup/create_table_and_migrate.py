@@ -9,7 +9,7 @@ import json
 
 def run():
     """Create table and migrate themes in one command."""
-    
+
     # Create table if not exists
     create_table_sql = """
     CREATE TABLE IF NOT EXISTS `tabConstruction Theme` (
@@ -45,24 +45,24 @@ def run():
         `docstatus` TINYINT(1) DEFAULT 0
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
     """
-    
+
     try:
         frappe.db.sql(create_table_sql)
         print("✓ Table 'tabConstruction Theme' created or already exists")
     except Exception as e:
         print(f"Table creation note: {e}")
-    
+
     # Check if table exists
     table_exists = frappe.db.sql("""
-        SELECT COUNT(*) FROM information_schema.tables 
-        WHERE table_schema = DATABASE() 
+        SELECT COUNT(*) FROM information_schema.tables
+        WHERE table_schema = DATABASE()
         AND table_name = 'tabConstruction Theme'
     """)[0][0]
-    
+
     if not table_exists:
         print("✗ Failed to create table. Aborting.")
         return
-    
+
     # Migration data
     themes = [
         {
@@ -124,17 +124,17 @@ def run():
             "description": "Construction branded dark theme"
         }
     ]
-    
+
     created = 0
     updated = 0
-    
+
     for theme in themes:
         # Check if exists
         exists = frappe.db.sql(
             "SELECT name FROM `tabConstruction Theme` WHERE name = %s LIMIT 1",
             (theme["name"],)
         )
-        
+
         if exists:
             # Update
             frappe.db.sql("""
@@ -186,12 +186,12 @@ def run():
             ))
             created += 1
             print(f"  Created: {theme['name']}")
-    
+
     frappe.db.commit()
-    
+
     print(f"\n✓ Migration Complete:")
     print(f"  Created: {created}")
     print(f"  Updated: {updated}")
     print(f"  Total: {created + updated}")
-    
+
     return {"created": created, "updated": updated}

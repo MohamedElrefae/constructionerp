@@ -7,33 +7,33 @@ from frappe.model.document import Document
 
 class ModernThemeSettings(Document):
     """Site-wide Modern Theme Settings (Single DocType)
-    
+
     This is a site-wide configuration DocType that stores:
     - Default themes for light/dark modes
     - User override permissions
     - Contrast check enforcement
     - Theme switcher UI settings
     - CSS cache TTL
-    
+
     Individual theme configurations are stored in the Construction Theme DocType.
     Per-user theme preferences are stored in the User Desk Theme DocType.
     """
-    
+
     def validate(self):
         """Validate theme settings"""
         # Validate that referenced themes exist
         if self.default_light_theme:
             if not frappe.db.exists('Construction Theme', self.default_light_theme):
                 frappe.throw(f"Construction Theme '{self.default_light_theme}' does not exist")
-        
+
         if self.default_dark_theme:
             if not frappe.db.exists('Construction Theme', self.default_dark_theme):
                 frappe.throw(f"Construction Theme '{self.default_dark_theme}' does not exist")
-        
+
         # Validate theme switcher limit
         if self.theme_switcher_limit and self.theme_switcher_limit < 1:
             frappe.throw("Theme Switcher Limit must be at least 1")
-        
+
         # Validate CSS cache TTL
         if self.css_cache_ttl and self.css_cache_ttl < 60:
             frappe.throw("CSS Cache TTL must be at least 60 seconds")

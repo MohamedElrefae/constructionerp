@@ -86,7 +86,7 @@
         callback: function (r) {
           if (!r.message) return;
           var data = r.message;
-          
+
           self.currentTheme = data.theme_name;
           self.currentMode = data.mode;
           self.currentThemeDoc = data.theme_doc;
@@ -127,7 +127,7 @@
 
     fetchAndInjectCSS: function (themeDoc) {
       var self = this;
-      
+
       // Check client-side cache first
       if (self.cssCache[themeDoc]) {
         self.injectCSS(self.cssCache[themeDoc], themeDoc);
@@ -140,10 +140,10 @@
         callback: function (r) {
           if (r.message && r.message.css) {
             var css = r.message.css;
-            
+
             // Cache in memory
             self.cssCache[themeDoc] = css;
-            
+
             // Inject into DOM
             self.injectCSS(css, themeDoc);
           }
@@ -157,20 +157,20 @@
 
     injectCSS: function (css, themeDoc) {
       var elId = 'theme-css-' + themeDoc.replace(/\s+/g, '-').toLowerCase();
-      
+
       // Remove existing theme CSS
       var existing = document.getElementById(elId);
       if (existing) {
         existing.remove();
       }
-      
+
       // Create new style element
       var style = document.createElement('style');
       style.id = elId;
       style.setAttribute('data-theme-source', 'api');
       style.textContent = css;
       document.head.appendChild(style);
-      
+
       console.log('[Modern Theme] CSS injected for: ' + themeDoc);
     },
 
@@ -250,7 +250,7 @@
       /**
        * Apply feature toggle body classes based on theme configuration.
        * Removes all existing ct-theme-* classes before applying new ones.
-       * 
+       *
        * Mapping:
        * - hide_help_button → ct-theme-hide-help
        * - hide_search_bar → ct-theme-hide-search
@@ -392,14 +392,14 @@
 
   // ─── 3. EARLY THEME SWITCHER OVERRIDE ─────────────────────────────
   // This must run BEFORE frappe initializes ThemeSwitcher
-  
+
   function setupThemeSwitcherOverride() {
     // Wait for frappe to be available
     if (typeof frappe === 'undefined' || !frappe.ui) {
       setTimeout(setupThemeSwitcherOverride, 50);
       return;
     }
-    
+
     // Check if ThemeSwitcher exists yet
     if (!frappe.ui.ThemeSwitcher) {
       // ThemeSwitcher hasn't been defined by Frappe yet
@@ -410,7 +410,7 @@
           return new CustomThemeSwitcher(...args);
         }
       });
-      
+
       // Define our custom ThemeSwitcher class
       var CustomThemeSwitcher = class extends (frappe.ui.Dialog || function() {}) {
         constructor(opts) {
@@ -422,7 +422,7 @@
           ];
           this.setup_themes = this.setupThemes.bind(this);
         }
-        
+
         setupThemes() {
           var self = this;
           // Fetch construction themes from API
@@ -450,7 +450,7 @@
             }
           });
         }
-        
+
         render_themes() {
           var self = this;
           this.$body.empty();
@@ -465,14 +465,14 @@
             self.$body.append($item);
           });
         }
-        
+
         switch_theme(theme_name) {
           if (!theme_name) return;
-          
+
           var targetMode = 'light';
           var themeDoc = null;
           var isConstruction = false;
-          
+
           if (theme_name === 'dark') {
             targetMode = 'dark';
           } else if (theme_name === 'light') {
@@ -488,11 +488,11 @@
               targetMode = theme_name.toLowerCase().indexOf('dark') !== -1 ? 'dark' : 'light';
             }
           }
-          
+
           // Apply theme
           document.documentElement.setAttribute('data-theme', targetMode);
           ModernThemeLoader.currentMode = targetMode;
-          
+
           if (isConstruction && themeDoc) {
             document.documentElement.setAttribute('data-modern-theme', themeDoc);
             ModernThemeLoader.currentTheme = theme_name;
@@ -507,12 +507,12 @@
             ModernThemeLoader.isConstruction = false;
             ModernThemeLoader.persistModePreference(targetMode);
           }
-          
+
           ModernThemeLoader.updateNavbarIndicator(targetMode);
           this.hide();
         }
       };
-      
+
       // Assign our custom class to frappe.ui.ThemeSwitcher
       frappe.ui.ThemeSwitcher = CustomThemeSwitcher;
       console.log('[Modern Theme] ThemeSwitcher override applied early');
@@ -521,20 +521,20 @@
       var OriginalThemeSwitcher = frappe.ui.ThemeSwitcher;
       var OriginalFetchThemes = OriginalThemeSwitcher.prototype.fetch_themes;
       var OriginalSwitchTheme = OriginalThemeSwitcher.prototype.switch_theme;
-      
+
       // Override fetch_themes - clear existing themes first to avoid duplicates
       OriginalThemeSwitcher.prototype.fetch_themes = function() {
         var self = this;
         // Clear any existing themes to prevent duplicates
         self.themes = [];
-        
+
         return new Promise(function(resolve) {
           frappe.call({
             method: 'construction.api.theme_api.list_available_themes',
             callback: function(r) {
               // Start fresh with empty array
               var themes = [];
-              
+
               if (r.message && r.message.success && r.message.themes) {
                 var constructionThemes = r.message.themes.map(function(t) {
                   return {
@@ -547,14 +547,14 @@
                 });
                 themes = constructionThemes;
               }
-              
+
               // Add Frappe native themes at the end
               themes.push(
                 { name: 'automatic', label: '⚡ Automatic', info: 'Follows system preference' },
                 { name: 'dark', label: '🌙 Dark', info: 'Frappe Dark Theme' },
                 { name: 'light', label: '☀️ Light', info: 'Frappe Light Theme' }
               );
-              
+
               self.themes = themes;
               resolve(self.themes);
             },
@@ -570,25 +570,25 @@
           });
         });
       };
-      
+
       // Override switch_theme with error handling and construction theme support
       OriginalThemeSwitcher.prototype.switch_theme = function(theme_name) {
         if (!theme_name) {
           console.warn('[Modern Theme] No theme name provided');
           return;
         }
-        
+
         console.log('[Modern Theme] Switching to:', theme_name);
-        
+
         var targetMode = 'light';
         var themeDoc = null;
         var isConstruction = false;
-        
+
         var themeNameLower = theme_name.toLowerCase ? theme_name.toLowerCase() : String(theme_name);
-        
+
         // Check if it's a construction theme first (before standard themes)
         var theme = this.themes ? this.themes.find(function(t) { return t && t.name === theme_name; }) : null;
-        
+
         if (theme && theme.is_construction) {
           isConstruction = true;
           themeDoc = theme.theme_doc || theme.name;
@@ -601,11 +601,11 @@
         } else if (themeNameLower === 'automatic') {
           targetMode = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
         }
-        
+
         // Apply theme
         document.documentElement.setAttribute('data-theme', targetMode);
         ModernThemeLoader.currentMode = targetMode;
-        
+
         if (isConstruction && themeDoc) {
           document.documentElement.setAttribute('data-modern-theme', themeDoc);
           ModernThemeLoader.currentTheme = theme_name;
@@ -622,22 +622,22 @@
           ModernThemeLoader.persistModePreference(targetMode);
           console.log('[Modern Theme] Standard theme applied:', theme_name);
         }
-        
+
         ModernThemeLoader.updateNavbarIndicator(targetMode);
         if (this.hide) this.hide();
       };
-      
+
       console.log('[Modern Theme] ThemeSwitcher patched');
-      
+
       // Mark as patched so we can detect if Frappe overwrites it
       OriginalThemeSwitcher.prototype._modernThemePatched = true;
       OriginalThemeSwitcher.prototype._modernThemeVersion = VERSION;
     }
   }
-  
+
   // Start the override setup immediately
   setupThemeSwitcherOverride();
-  
+
   // DEFERRED PATCH: Wait for Frappe's desk bundle to load, then patch again
   // This is necessary because Frappe's theme_switcher.js loads in the desk bundle
   // and overwrites our patch. We need to patch AFTER it loads.
@@ -652,18 +652,18 @@
     // Keep checking periodically
     setTimeout(deferredPatch, 1000);
   }
-  
+
   // Start deferred patching after a short delay to let initial load complete
   setTimeout(deferredPatch, 3000);
 
   // ─── 10. INIT ─────────────────────────────────────────────────────
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function () { 
+    document.addEventListener('DOMContentLoaded', function () {
       ModernThemeLoader.init();
     });
   } else {
-    setTimeout(function () { 
+    setTimeout(function () {
       ModernThemeLoader.init();
     }, 0);
   }

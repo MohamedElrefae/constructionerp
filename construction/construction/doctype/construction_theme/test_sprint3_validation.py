@@ -21,7 +21,7 @@ class TestLoginTitleHTMLEscaping:
     def test_login_title_html_escaping(self, title_text):
         """
         **Validates: Requirements 2.6, 9.2**
-        
+
         For any string containing HTML special characters, generate_login_css()
         output SHALL contain HTML-escaped equivalents and SHALL NOT contain
         raw unescaped characters in CSS content.
@@ -37,10 +37,10 @@ class TestLoginTitleHTMLEscaping:
         theme.body_bg = "#f5f5f5"
         theme.text_primary = "#1e293b"
         theme.login_page_title = title_text
-        
+
         # Generate login CSS
         login_css = theme.generate_login_css()
-        
+
         # Check that HTML special characters are escaped in the output
         special_chars = ['<', '>', '&', '"', "'"]
         for char in special_chars:
@@ -66,7 +66,7 @@ class TestFeatureToggleBodyClassMapping:
     def test_feature_toggle_mapping(self, hide_help, hide_search, hide_sidebar, hide_like, mobile_card):
         """
         **Validates: Requirements 8.2, 8.3, 14.1**
-        
+
         For any combination of boolean values for the 5 feature toggle fields,
         applyFeatureToggles() SHALL result in document.body having exactly the set
         of ct-theme-* classes corresponding to the enabled toggles.
@@ -86,7 +86,7 @@ class TestFeatureToggleBodyClassMapping:
         theme.hide_sidebar = 1 if hide_sidebar else 0
         theme.hide_like_comment = 1 if hide_like else 0
         theme.mobile_card_view = 1 if mobile_card else 0
-        
+
         # Get feature toggles dict
         toggles = {
             "hide_help_button": theme.hide_help_button,
@@ -95,7 +95,7 @@ class TestFeatureToggleBodyClassMapping:
             "hide_like_comment": theme.hide_like_comment,
             "mobile_card_view": theme.mobile_card_view,
         }
-        
+
         # Expected classes
         expected_classes = []
         if hide_help:
@@ -108,7 +108,7 @@ class TestFeatureToggleBodyClassMapping:
             expected_classes.append("ct-theme-hide-like-comment")
         if mobile_card:
             expected_classes.append("ct-theme-mobile-card")
-        
+
         # Verify the mapping is correct
         TOGGLE_MAP = {
             'hide_help_button': 'ct-theme-hide-help',
@@ -117,12 +117,12 @@ class TestFeatureToggleBodyClassMapping:
             'hide_like_comment': 'ct-theme-hide-like-comment',
             'mobile_card_view': 'ct-theme-mobile-card'
         }
-        
+
         actual_classes = []
         for field, class_name in TOGGLE_MAP.items():
             if toggles.get(field):
                 actual_classes.append(class_name)
-        
+
         assert set(actual_classes) == set(expected_classes), \
             f"Toggle mapping mismatch: expected {expected_classes}, got {actual_classes}"
 
@@ -140,7 +140,7 @@ class TestFeatureToggleCleanupOnSwitch:
     def test_toggle_cleanup_on_switch(self, first_hide_help, first_hide_search, second_hide_help, second_hide_search):
         """
         **Validates: Requirements 8.5, 14.2**
-        
+
         For any two distinct toggle configurations, switching from the first to
         the second SHALL result in document.body containing only the ct-theme-*
         classes from the second configuration, with zero classes from the first
@@ -154,7 +154,7 @@ class TestFeatureToggleCleanupOnSwitch:
             "hide_like_comment": 0,
             "mobile_card_view": 0,
         }
-        
+
         # Second configuration
         second_toggles = {
             "hide_help_button": 1 if second_hide_help else 0,
@@ -163,7 +163,7 @@ class TestFeatureToggleCleanupOnSwitch:
             "hide_like_comment": 0,
             "mobile_card_view": 0,
         }
-        
+
         # Build expected classes for each config
         TOGGLE_MAP = {
             'hide_help_button': 'ct-theme-hide-help',
@@ -172,28 +172,28 @@ class TestFeatureToggleCleanupOnSwitch:
             'hide_like_comment': 'ct-theme-hide-like-comment',
             'mobile_card_view': 'ct-theme-mobile-card'
         }
-        
+
         first_classes = set()
         for field, class_name in TOGGLE_MAP.items():
             if first_toggles.get(field):
                 first_classes.add(class_name)
-        
+
         second_classes = set()
         for field, class_name in TOGGLE_MAP.items():
             if second_toggles.get(field):
                 second_classes.add(class_name)
-        
+
         # Verify that switching removes old classes and adds new ones
         # Simulate the cleanup logic
         all_ct_classes = set(TOGGLE_MAP.values())
-        
+
         # After first application, we should have first_classes
         # After second application, we should have second_classes
         # No classes from first_classes should remain if not in second_classes
-        
+
         classes_to_remove = first_classes - second_classes
         classes_to_add = second_classes - first_classes
-        
+
         # Verify the logic is sound
         assert (first_classes | classes_to_add) - classes_to_remove == second_classes, \
             "Toggle cleanup logic is incorrect"
@@ -210,11 +210,11 @@ class TestLoginCSSContainsRequiredElements:
         login_tab_bg_color=st.just("#ffffff")
     )
     @settings(max_examples=50)
-    def test_login_css_elements(self, login_btn_bg, login_page_bg_color, login_box_position, 
+    def test_login_css_elements(self, login_btn_bg, login_page_bg_color, login_box_position,
                                 login_heading_text_color, login_tab_bg_color):
         """
         **Validates: Requirements 10.2, 15**
-        
+
         For any Construction Theme record with login page fields populated,
         generate_login_css() output SHALL contain CSS rules targeting login button
         background, page background, box positioning, heading text color, and
@@ -235,15 +235,15 @@ class TestLoginCSSContainsRequiredElements:
         theme.login_box_position = login_box_position
         theme.login_heading_text_color = login_heading_text_color
         theme.login_tab_bg_color = login_tab_bg_color
-        
+
         login_css = theme.generate_login_css()
-        
+
         # Verify required elements are present
         assert ".login-page .btn-primary" in login_css, "Login button styling missing"
         assert ".login-page" in login_css, "Login page styling missing"
         assert ".login-page .login-box h2" in login_css, "Login heading styling missing"
         assert ".login-page .nav-tabs" in login_css, "Login tab styling missing"
-        
+
         # Verify colors are included
         assert login_btn_bg in login_css, f"Login button color {login_btn_bg} not in CSS"
         assert login_page_bg_color in login_css, f"Login page color {login_page_bg_color} not in CSS"
@@ -272,10 +272,10 @@ class TestIntegrationLoginFileGeneration:
         theme.is_default_light = 1
         theme.login_btn_bg = "#2E7D32"
         theme.login_page_bg_color = "#f0fdf4"
-        
+
         # Save the theme
         theme.insert()
-        
+
         # Verify that _regenerate_login_theme_file was called
         # (This would be verified by checking if login_theme.css exists)
         # For now, we just verify the theme was saved
@@ -294,11 +294,11 @@ class TestSmokeHooksVerification:
             os.path.dirname(__file__),
             '..', '..', '..', 'hooks.py'
         )
-        
+
         if os.path.exists(hooks_path):
             with open(hooks_path, 'r') as f:
                 hooks_content = f.read()
-            
+
             # Check for web_include_css entry
             assert 'web_include_css' in hooks_content, "web_include_css not found in hooks.py"
             assert 'login_theme.css' in hooks_content, "login_theme.css not found in web_include_css"

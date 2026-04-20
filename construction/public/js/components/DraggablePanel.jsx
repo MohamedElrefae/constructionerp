@@ -16,7 +16,7 @@ const DraggablePanel = (props) => {
   } = props;
 
   const panelRef = React.useRef(null);
-  
+
   const [position, setPosition] = React.useState(initialPosition);
   const [size, setSize] = React.useState(initialSize);
   const [isMaximized, setIsMaximized] = React.useState(false);
@@ -24,7 +24,7 @@ const DraggablePanel = (props) => {
   const [isDragging, setIsDragging] = React.useState(false);
   const [isResizing, setIsResizing] = React.useState(false);
   const [resizeHandle, setResizeHandle] = React.useState(null);
-  
+
   const dragStartPos = React.useRef({ x: 0, y: 0 });
   const panelStartPos = React.useRef({ x: 0, y: 0 });
   const resizeStart = React.useRef({ x: 0, y: 0, width: 0, height: 0 });
@@ -32,11 +32,11 @@ const DraggablePanel = (props) => {
   // Handle drag start
   const handleDragStart = (e) => {
     if (isMaximized || isDocked) return;
-    
+
     setIsDragging(true);
     dragStartPos.current = { x: e.clientX, y: e.clientY };
     panelStartPos.current = { ...position };
-    
+
     // Add global event listeners
     document.addEventListener('mousemove', handleDragMove);
     document.addEventListener('mouseup', handleDragEnd);
@@ -45,10 +45,10 @@ const DraggablePanel = (props) => {
   // Handle drag move
   const handleDragMove = React.useCallback((e) => {
     if (!isDragging) return;
-    
+
     const deltaX = e.clientX - dragStartPos.current.x;
     const deltaY = e.clientY - dragStartPos.current.y;
-    
+
     setPosition({
       x: panelStartPos.current.x + deltaX,
       y: panelStartPos.current.y + deltaY
@@ -66,9 +66,9 @@ const DraggablePanel = (props) => {
   const handleResizeStart = (e, handle) => {
     e.stopPropagation();
     e.preventDefault();
-    
+
     if (isMaximized || isDocked) return;
-    
+
     setIsResizing(true);
     setResizeHandle(handle);
     resizeStart.current = {
@@ -79,7 +79,7 @@ const DraggablePanel = (props) => {
       left: position.x,
       top: position.y
     };
-    
+
     document.addEventListener('mousemove', handleResizeMove);
     document.addEventListener('mouseup', handleResizeEnd);
   };
@@ -87,15 +87,15 @@ const DraggablePanel = (props) => {
   // Handle resize move
   const handleResizeMove = React.useCallback((e) => {
     if (!isResizing) return;
-    
+
     const deltaX = e.clientX - resizeStart.current.x;
     const deltaY = e.clientY - resizeStart.current.y;
-    
+
     let newWidth = resizeStart.current.width;
     let newHeight = resizeStart.current.height;
     let newX = position.x;
     let newY = position.y;
-    
+
     // Handle different resize directions
     if (resizeHandle.includes('e')) {
       newWidth = Math.max(minSize.width, resizeStart.current.width + deltaX);
@@ -117,7 +117,7 @@ const DraggablePanel = (props) => {
         newY = resizeStart.current.top + deltaY;
       }
     }
-    
+
     setSize({ width: newWidth, height: newHeight });
     if (resizeHandle.includes('w') || resizeHandle.includes('n')) {
       setPosition({ x: newX, y: newY });
@@ -160,7 +160,7 @@ const DraggablePanel = (props) => {
         borderRadius: 0
       };
     }
-    
+
     if (isDocked) {
       return {
         position: 'fixed',
@@ -171,7 +171,7 @@ const DraggablePanel = (props) => {
         borderRadius: '12px 0 0 12px'
       };
     }
-    
+
     return {
       position: 'fixed',
       left: position.x,
@@ -219,7 +219,7 @@ const DraggablePanel = (props) => {
       )}
 
       {/* Header */}
-      <div 
+      <div
         className="draggable-panel__header"
         onMouseDown={handleDragStart}
       >

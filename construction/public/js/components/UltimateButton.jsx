@@ -41,7 +41,7 @@ const UltimateButton = (props) => {
 
   const handleClick = async (e) => {
     if (loading || disabled || showSuccess || showError) return;
-    
+
     if (onClick) {
       await onClick(e);
     }
@@ -49,23 +49,23 @@ const UltimateButton = (props) => {
 
   const getButtonClasses = () => {
     const classes = ['ultimate-btn'];
-    
+
     // Variant
     classes.push(`ultimate-btn--${variant}`);
-    
+
     // Size
     if (size === 'sm') classes.push('ultimate-btn--small');
     if (size === 'lg') classes.push('ultimate-btn--large');
-    
+
     // States
     if (loading) classes.push('ultimate-btn--loading');
     if (showSuccess) classes.push('ultimate-btn--success-state');
     if (showError) classes.push('ultimate-btn--error-state');
     if (disabled) classes.push('ultimate-btn--disabled');
-    
+
     // Custom class
     if (className) classes.push(className);
-    
+
     return classes.filter(Boolean).join(' ');
   };
 

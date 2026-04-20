@@ -64,7 +64,7 @@ def create_boq_node(boq_header, parent_structure=None, title=None, is_group=0):
     try:
         # Get the parent structure if provided
         parent = parent_structure if parent_structure else ""
-        
+
         # Create the BOQ Structure node
         doc = frappe.new_doc("BOQ Structure")
         doc.boq_header = boq_header
@@ -72,7 +72,7 @@ def create_boq_node(boq_header, parent_structure=None, title=None, is_group=0):
         doc.title = title or "New Node"
         doc.is_group = 1 if is_group else 0
         doc.insert()
-        
+
         return {
             "success": True,
             "name": doc.name
@@ -90,27 +90,27 @@ def advance_boq_status(boq_header, target_status):
     """Advance BOQ status to next state."""
     try:
         doc = frappe.get_doc("BOQ Header", boq_header)
-        
+
         # Define valid transitions
         transitions = {
             "Draft": "Pricing",
-            "Pricing": "Frozen", 
+            "Pricing": "Frozen",
             "Frozen": "Locked"
         }
-        
+
         current_status = doc.status
         allowed_next = transitions.get(current_status)
-        
+
         if target_status != allowed_next:
             return {
                 "success": False,
                 "error": f"Invalid status transition from {current_status}. Next status should be {allowed_next}"
             }
-        
+
         # Update status
         doc.status = target_status
         doc.save()
-        
+
         return {
             "success": True,
             "message": f"Status updated to {target_status}"
@@ -128,10 +128,10 @@ def export_boq_header_pdf(boq_header, column_config=None):
     """Export BOQ Header information only to PDF."""
     try:
         from construction.services.boq_export_service import BOQExportService
-        
+
         # Generate PDF file with header info only
         result = BOQExportService.export_header_to_pdf(boq_header, column_config)
-        
+
         if result.get("success"):
             return {
                 "success": True,
@@ -141,7 +141,7 @@ def export_boq_header_pdf(boq_header, column_config=None):
             }
         else:
             return result
-            
+
     except Exception as e:
         frappe.log_error(f"PDF export error: {str(e)}")
         return {
@@ -155,10 +155,10 @@ def export_boq_header_excel(boq_header, column_config=None):
     """Export BOQ Header information only to Excel."""
     try:
         from construction.services.boq_export_service import BOQExportService
-        
+
         # Generate Excel file with header info only
         result = BOQExportService.export_header_to_excel(boq_header, column_config)
-        
+
         if result.get("success"):
             return {
                 "success": True,
@@ -168,7 +168,7 @@ def export_boq_header_excel(boq_header, column_config=None):
             }
         else:
             return result
-            
+
     except Exception as e:
         frappe.log_error(f"Excel export error: {str(e)}")
         return {
@@ -182,10 +182,10 @@ def export_boq_excel(boq_header, column_config=None):
     """Export complete BOQ (Header + Structure + Items) to Excel."""
     try:
         from construction.services.boq_export_service import BOQExportService
-        
+
         # Generate Excel file
         result = BOQExportService.export_to_excel(boq_header, column_config)
-        
+
         if result.get("success"):
             return {
                 "success": True,
@@ -195,7 +195,7 @@ def export_boq_excel(boq_header, column_config=None):
             }
         else:
             return result
-            
+
     except Exception as e:
         frappe.log_error(f"Excel export error: {str(e)}")
         return {
@@ -209,10 +209,10 @@ def export_boq_pdf(boq_header, column_config=None):
     """Export BOQ to PDF."""
     try:
         from construction.services.boq_export_service import BOQExportService
-        
+
         # Generate PDF file
         result = BOQExportService.export_to_pdf(boq_header, column_config)
-        
+
         if result.get("success"):
             return {
                 "success": True,
@@ -222,7 +222,7 @@ def export_boq_pdf(boq_header, column_config=None):
             }
         else:
             return result
-            
+
     except Exception as e:
         frappe.log_error(f"PDF export error: {str(e)}")
         return {
@@ -236,9 +236,9 @@ def import_boq_excel(file_url, boq_header):
     """Import BOQ from Excel."""
     try:
         from construction.services.boq_import_service import BOQImportService
-        
+
         result = BOQImportService.import_from_excel(file_url, boq_header)
-        
+
         return result
     except Exception as e:
         frappe.log_error(f"Excel import error: {str(e)}")
