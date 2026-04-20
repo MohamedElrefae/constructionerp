@@ -1,0 +1,2 @@
+# Frappe framework is the only dependency — managed by bench
+frappe

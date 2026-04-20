@@ -1,14 +1,27 @@
+# Python
 __pycache__/
-*.pyc
-*.pyo
-.pytest_cache/
-.hypothesis/
-node_modules/
+*.py[cod]
+*$py.class
+*.so
 *.egg-info/
 dist/
 build/
-*.bak
-*.backup
-*.windsurf_backup
+*.egg
+
+# Frappe
+*.pyc
+node_modules/
+.pytest_cache/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
 .DS_Store
-*.sql.gz
+Thumbs.db
+
+# Logs
+*.log

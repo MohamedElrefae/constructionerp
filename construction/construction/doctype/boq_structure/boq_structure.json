@@ -142,7 +142,7 @@
   "links": [],
   "modified": "2026-04-10 01:00:00.000000",
   "modified_by": "Administrator",
-  "module": "construction",
+  "module": "Construction",
   "name": "BOQ Structure",
   "naming_rule": "By fieldname",
   "title_field": "title",

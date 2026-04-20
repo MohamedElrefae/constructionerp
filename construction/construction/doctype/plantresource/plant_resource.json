@@ -18,7 +18,7 @@
   "links": [],
   "modified": "2026-04-01 12:00:00.000000",
   "modified_by": "Administrator",
-  "module": "construction",
+  "module": "Construction",
   "name": "PlantResource",
   "naming_rule": "By fieldname",
   "owner": "Administrator",
