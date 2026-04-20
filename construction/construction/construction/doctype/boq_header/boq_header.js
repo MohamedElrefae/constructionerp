@@ -6,7 +6,7 @@ frappe.ui.form.on("BOQ Header", {
 				() => {
 					frappe.set_route("Tree", "BOQ Structure", { boq_header: frm.doc.name });
 				},
-				"Actions",
+				"Actions"
 			);
 
 			frm.add_custom_button(
@@ -34,7 +34,7 @@ frappe.ui.form.on("BOQ Header", {
 						});
 					});
 				},
-				"Actions",
+				"Actions"
 			);
 
 			frm.add_custom_button(
@@ -50,7 +50,7 @@ frappe.ui.form.on("BOQ Header", {
 						},
 					});
 				},
-				"Actions",
+				"Actions"
 			);
 
 			if (frm.doc.status === "Draft") {
@@ -87,7 +87,7 @@ frappe.ui.form.on("BOQ Header", {
 						});
 						d.show();
 					},
-					"Actions",
+					"Actions"
 				);
 			}
 		}

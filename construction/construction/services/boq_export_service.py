@@ -124,7 +124,7 @@ class BOQExportService:
 				node_type = "Section" if item.get("is_group") else "Item"
 
 				ws.cell(row=row_idx, column=1, value=wbs_code)
-				ws.cell(row=row_idx, column=2, value=f"{indent}{item.get('title', '')}")
+				ws.cell(row=row_idx, column=2, value=f"{indent}{item.get("title", "")}")
 				ws.cell(row=row_idx, column=3, value=node_type)
 				ws.cell(row=row_idx, column=4, value=item.get("unit", ""))
 				ws.cell(row=row_idx, column=5, value=item.get("quantity"))
@@ -155,7 +155,7 @@ class BOQExportService:
 
 			from frappe.utils import get_files_path
 
-			file_name = f"BOQ_{boq_header}_{frappe.utils.now_datetime().strftime('%Y%m%d_%H%M%S')}.xlsx"
+			file_name = f"BOQ_{boq_header}_{frappe.utils.now_datetime().strftime("%Y%m%d_%H%M%S")}.xlsx"
 			file_path = os.path.join(get_files_path(), file_name)
 
 			wb.save(file_path)
@@ -235,10 +235,10 @@ class BOQExportService:
 			# Get total from BOQ Items for these structures
 			total = frappe.db.sql(
 				"""
-                SELECT COALESCE(SUM(line_total), 0) as total
-                FROM `tabBOQ Item`
-                WHERE structure IN %(structures)s
-            """,
+				SELECT COALESCE(SUM(line_total), 0) as total
+				FROM `tabBOQ Item`
+				WHERE structure IN %(structures)s
+			""",
 				{"structures": descendant_names},
 			)
 

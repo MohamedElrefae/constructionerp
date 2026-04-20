@@ -1,15 +1,18 @@
 # Copyright (c) 2026, Mohamed Elrefae and contributors
 # For license information, please see license.txt
 
-import frappe
 from typing import Optional
+
+import frappe
 
 
 class WBSGenerator:
 	"""Hierarchical WBS code generation for BOQ Structure tree."""
 
 	@staticmethod
-	def generate_code_for_node(boq_header: str, parent_structure: str = None, node_type: str = "Section") -> str:
+	def generate_code_for_node(
+		boq_header: str, parent_structure: str = None, node_type: str = "Section"
+	) -> str:
 		"""Generate WBS code for a new node."""
 		sibling_count = WBSGenerator._count_siblings(boq_header, parent_structure)
 		seq = sibling_count + 1
@@ -51,9 +54,8 @@ class WBSGenerator:
 		frappe.db.set_value("BOQ Structure", node.name, "wbs_code", new_code)
 
 		# Recursively update children
-		children = frappe.get_all("BOQ Structure",
-			filters={"parent_structure": node.name, "boq_header": boq_header},
-			order_by="lft"
+		children = frappe.get_all(
+			"BOQ Structure", filters={"parent_structure": node.name, "boq_header": boq_header}, order_by="lft"
 		)
 
 		for child in children:
@@ -63,9 +65,8 @@ class WBSGenerator:
 	def regenerate_all(boq_header: str):
 		"""Regenerate all WBS codes for a BOQ header."""
 		# Get all root nodes
-		roots = frappe.get_all("BOQ Structure",
-			filters={"boq_header": boq_header, "parent_structure": ["=", ""]},
-			order_by="lft"
+		roots = frappe.get_all(
+			"BOQ Structure", filters={"boq_header": boq_header, "parent_structure": ["=", ""]}, order_by="lft"
 		)
 
 		for root in roots:
@@ -95,10 +96,7 @@ class WBSGenerator:
 	@staticmethod
 	def validate_wbs_unique(wbs_code: str, boq_header: str, exclude: str = None) -> bool:
 		"""Check if WBS code is unique within BOQ header."""
-		filters = {
-			"boq_header": boq_header,
-			"wbs_code": wbs_code
-		}
+		filters = {"boq_header": boq_header, "wbs_code": wbs_code}
 		if exclude:
 			filters["name"] = ["!=", exclude]
 
@@ -115,10 +113,7 @@ class WBSGenerator:
 		descendants = get_descendants("BOQ Structure", node.name)
 
 		# Get all BOQ Items for these structures
-		items = frappe.get_all("BOQ Item",
-			filters={"structure": ["in", descendants]},
-			fields=["line_total"]
-		)
+		items = frappe.get_all("BOQ Item", filters={"structure": ["in", descendants]}, fields=["line_total"])
 
 		return sum(item.line_total for item in items if item.line_total)
 
@@ -128,15 +123,11 @@ class WBSGenerator:
 		from frappe.utils.nestedset import get_descendants
 
 		descendants = get_descendants("BOQ Structure", section_name)
-		leaf_nodes = frappe.get_all("BOQ Structure",
-			filters={"name": ["in", descendants], "is_group": 0},
-			fields=["name"]
+		leaf_nodes = frappe.get_all(
+			"BOQ Structure", filters={"name": ["in", descendants], "is_group": 0}, fields=["name"]
 		)
 
 		leaf_item_names = [node.name for node in leaf_nodes]
-		items = frappe.get_all("BOQ Item",
-			filters={"structure": ["in", leaf_item_names]},
-			fields=["*"]
-		)
+		items = frappe.get_all("BOQ Item", filters={"structure": ["in", leaf_item_names]}, fields=["*"])
 
 		return items

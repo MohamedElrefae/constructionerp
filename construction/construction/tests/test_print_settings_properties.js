@@ -70,7 +70,7 @@ describe("Property 1: Default Initialization Preserves Descriptors", function ()
 				assert.equal(
 					config.length,
 					descriptors.length,
-					"Config length must equal descriptors length",
+					"Config length must equal descriptors length"
 				);
 
 				// Build a lookup from descriptors by field_key for easy comparison
@@ -84,31 +84,31 @@ describe("Property 1: Default Initialization Preserves Descriptors", function ()
 					var desc = descMap[col.field_key];
 					assert.ok(
 						desc,
-						'Config entry field_key "' + col.field_key + '" must exist in descriptors',
+						'Config entry field_key "' + col.field_key + '" must exist in descriptors'
 					);
 					assert.equal(
 						col.visible,
 						desc.default_visible,
-						"visible must match default_visible for " + col.field_key,
+						"visible must match default_visible for " + col.field_key
 					);
 					assert.equal(
 						col.width,
 						desc.default_width,
-						"width must match default_width for " + col.field_key,
+						"width must match default_width for " + col.field_key
 					);
 					assert.equal(
 						col.sort_order,
 						desc.default_sort_order,
-						"sort_order must match default_sort_order for " + col.field_key,
+						"sort_order must match default_sort_order for " + col.field_key
 					);
 					assert.equal(
 						col.label,
 						desc.label,
-						"label must match descriptor label for " + col.field_key,
+						"label must match descriptor label for " + col.field_key
 					);
 				});
 			}),
-			{ numRuns: 100 },
+			{ numRuns: 100 }
 		);
 	});
 
@@ -132,10 +132,10 @@ describe("Property 1: Default Initialization Preserves Descriptors", function ()
 				assert.deepEqual(
 					configKeys,
 					descKeys,
-					"Config field_keys must exactly match descriptor field_keys",
+					"Config field_keys must exactly match descriptor field_keys"
 				);
 			}),
-			{ numRuns: 100 },
+			{ numRuns: 100 }
 		);
 	});
 
@@ -148,11 +148,11 @@ describe("Property 1: Default Initialization Preserves Descriptors", function ()
 				for (var i = 1; i < config.length; i++) {
 					assert.ok(
 						config[i].sort_order >= config[i - 1].sort_order,
-						"Config must be sorted by sort_order",
+						"Config must be sorted by sort_order"
 					);
 				}
 			}),
-			{ numRuns: 100 },
+			{ numRuns: 100 }
 		);
 	});
 });
@@ -217,7 +217,7 @@ describe("Property 2: Saved Settings Override Defaults", function () {
 						width: fc.integer({ min: 1, max: 100 }),
 						visible: fc.boolean(),
 						sort_order: fc.integer({ min: 0, max: 50 }),
-					}),
+					})
 				);
 			}
 
@@ -260,7 +260,7 @@ describe("Property 2: Saved Settings Override Defaults", function () {
 					assert.equal(
 						config.length,
 						descriptors.length,
-						"Config length must equal descriptors length, extras in saved settings are ignored",
+						"Config length must equal descriptors length, extras in saved settings are ignored"
 					);
 
 					config.forEach(function (col) {
@@ -273,40 +273,40 @@ describe("Property 2: Saved Settings Override Defaults", function () {
 							assert.equal(
 								col.width,
 								savedEntry.width,
-								"width must use saved value for " + col.field_key,
+								"width must use saved value for " + col.field_key
 							);
 							assert.equal(
 								col.visible,
 								savedEntry.visible,
-								"visible must use saved value for " + col.field_key,
+								"visible must use saved value for " + col.field_key
 							);
 							assert.equal(
 								col.sort_order,
 								savedEntry.sort_order,
-								"sort_order must use saved value for " + col.field_key,
+								"sort_order must use saved value for " + col.field_key
 							);
 						} else {
 							// No saved entry — must fall back to descriptor defaults
 							assert.equal(
 								col.width,
 								desc.default_width,
-								"width must fall back to default for " + col.field_key,
+								"width must fall back to default for " + col.field_key
 							);
 							assert.equal(
 								col.visible,
 								desc.default_visible,
-								"visible must fall back to default for " + col.field_key,
+								"visible must fall back to default for " + col.field_key
 							);
 							assert.equal(
 								col.sort_order,
 								desc.default_sort_order,
-								"sort_order must fall back to default for " + col.field_key,
+								"sort_order must fall back to default for " + col.field_key
 							);
 						}
 					});
-				},
+				}
 			),
-			{ numRuns: 100 },
+			{ numRuns: 100 }
 		);
 	});
 
@@ -339,11 +339,11 @@ describe("Property 2: Saved Settings Override Defaults", function () {
 					assert.deepEqual(
 						configKeys,
 						descKeys,
-						"Config field_keys must exactly match descriptor field_keys — no extras from saved settings",
+						"Config field_keys must exactly match descriptor field_keys — no extras from saved settings"
 					);
-				},
+				}
 			),
-			{ numRuns: 100 },
+			{ numRuns: 100 }
 		);
 	});
 
@@ -374,7 +374,7 @@ describe("Property 2: Saved Settings Override Defaults", function () {
 				assert.equal(
 					config.length,
 					descriptors.length,
-					"Config length must equal descriptors length",
+					"Config length must equal descriptors length"
 				);
 
 				var descMap = {};
@@ -387,24 +387,23 @@ describe("Property 2: Saved Settings Override Defaults", function () {
 					assert.equal(
 						col.width,
 						desc.default_width,
-						"width must be default when no matching saved setting for " +
-							col.field_key,
+						"width must be default when no matching saved setting for " + col.field_key
 					);
 					assert.equal(
 						col.visible,
 						desc.default_visible,
 						"visible must be default when no matching saved setting for " +
-							col.field_key,
+							col.field_key
 					);
 					assert.equal(
 						col.sort_order,
 						desc.default_sort_order,
 						"sort_order must be default when no matching saved setting for " +
-							col.field_key,
+							col.field_key
 					);
 				});
 			}),
-			{ numRuns: 100 },
+			{ numRuns: 100 }
 		);
 	});
 });
@@ -463,7 +462,7 @@ describe("Property 3: Visibility Toggle Correctness", function () {
 					assert.equal(
 						configAfter.length,
 						configBefore.length,
-						"Column count must not change after visibility toggle",
+						"Column count must not change after visibility toggle"
 					);
 
 					configAfter.forEach(function (col) {
@@ -475,16 +474,14 @@ describe("Property 3: Visibility Toggle Correctness", function () {
 							assert.equal(
 								col.visible,
 								newVisible,
-								"Target column visible must be " + newVisible,
+								"Target column visible must be " + newVisible
 							);
 						} else {
 							// Other columns: everything must be unchanged
 							assert.equal(
 								col.visible,
 								before.visible,
-								"Non-target column " +
-									col.field_key +
-									" visible must be unchanged",
+								"Non-target column " + col.field_key + " visible must be unchanged"
 							);
 						}
 
@@ -492,22 +489,22 @@ describe("Property 3: Visibility Toggle Correctness", function () {
 						assert.equal(
 							col.label,
 							before.label,
-							"label must be unchanged for " + col.field_key,
+							"label must be unchanged for " + col.field_key
 						);
 						assert.equal(
 							col.width,
 							before.width,
-							"width must be unchanged for " + col.field_key,
+							"width must be unchanged for " + col.field_key
 						);
 						assert.equal(
 							col.sort_order,
 							before.sort_order,
-							"sort_order must be unchanged for " + col.field_key,
+							"sort_order must be unchanged for " + col.field_key
 						);
 					});
-				},
+				}
 			),
-			{ numRuns: 100 },
+			{ numRuns: 100 }
 		);
 	});
 
@@ -533,11 +530,11 @@ describe("Property 3: Visibility Toggle Correctness", function () {
 					assert.equal(
 						col.visible,
 						false,
-						"Column must be hidden after set_visibility(key, false)",
+						"Column must be hidden after set_visibility(key, false)"
 					);
-				},
+				}
 			),
-			{ numRuns: 100 },
+			{ numRuns: 100 }
 		);
 	});
 
@@ -563,11 +560,11 @@ describe("Property 3: Visibility Toggle Correctness", function () {
 					assert.equal(
 						col.visible,
 						true,
-						"Column must be visible after set_visibility(key, true)",
+						"Column must be visible after set_visibility(key, true)"
 					);
-				},
+				}
 			),
-			{ numRuns: 100 },
+			{ numRuns: 100 }
 		);
 	});
 });
@@ -606,7 +603,7 @@ describe("Property 4: Width Validation", function () {
 					assert.equal(
 						result,
 						true,
-						"set_width must return true for valid width " + newWidth,
+						"set_width must return true for valid width " + newWidth
 					);
 
 					var col = mgr.get_config().find(function (c) {
@@ -615,11 +612,11 @@ describe("Property 4: Width Validation", function () {
 					assert.equal(
 						col.width,
 						newWidth,
-						"Column width must be updated to " + newWidth,
+						"Column width must be updated to " + newWidth
 					);
-				},
+				}
 			),
-			{ numRuns: 100 },
+			{ numRuns: 100 }
 		);
 	});
 
@@ -631,7 +628,7 @@ describe("Property 4: Width Validation", function () {
 					// Generate invalid widths: negative, zero, or > 100
 					var invalidWidth = fc.oneof(
 						fc.integer({ min: -1000, max: 0 }),
-						fc.integer({ min: 101, max: 10000 }),
+						fc.integer({ min: 101, max: 10000 })
 					);
 					return fc.tuple(fc.constant(descriptors), idx, invalidWidth);
 				}),
@@ -650,7 +647,7 @@ describe("Property 4: Width Validation", function () {
 					assert.equal(
 						result,
 						false,
-						"set_width must return false for invalid width " + invalidWidth,
+						"set_width must return false for invalid width " + invalidWidth
 					);
 
 					var col = mgr.get_config().find(function (c) {
@@ -662,11 +659,11 @@ describe("Property 4: Width Validation", function () {
 						"Column width must remain unchanged at " +
 							widthBefore +
 							" after rejected width " +
-							invalidWidth,
+							invalidWidth
 					);
-				},
+				}
 			),
-			{ numRuns: 100 },
+			{ numRuns: 100 }
 		);
 	});
 
@@ -682,7 +679,7 @@ describe("Property 4: Width Validation", function () {
 						fc.constant(undefined),
 						fc.constant(true),
 						fc.constant(false),
-						fc.constant({}),
+						fc.constant({})
 					);
 					return fc.tuple(fc.constant(descriptors), idx, nonNumber);
 				}),
@@ -706,11 +703,11 @@ describe("Property 4: Width Validation", function () {
 					assert.equal(
 						col.width,
 						widthBefore,
-						"Column width must remain unchanged after rejected non-number type",
+						"Column width must remain unchanged after rejected non-number type"
 					);
-				},
+				}
 			),
-			{ numRuns: 100 },
+			{ numRuns: 100 }
 		);
 	});
 
@@ -755,7 +752,7 @@ describe("Property 4: Width Validation", function () {
 					assert.equal(
 						configAfter.length,
 						configBefore.length,
-						"Column count must not change after set_width",
+						"Column count must not change after set_width"
 					);
 
 					configAfter.forEach(function (col) {
@@ -765,32 +762,30 @@ describe("Property 4: Width Validation", function () {
 							assert.equal(
 								col.width,
 								before.width,
-								"Non-target column " + col.field_key + " width must be unchanged",
+								"Non-target column " + col.field_key + " width must be unchanged"
 							);
 							assert.equal(
 								col.visible,
 								before.visible,
-								"Non-target column " +
-									col.field_key +
-									" visible must be unchanged",
+								"Non-target column " + col.field_key + " visible must be unchanged"
 							);
 							assert.equal(
 								col.label,
 								before.label,
-								"Non-target column " + col.field_key + " label must be unchanged",
+								"Non-target column " + col.field_key + " label must be unchanged"
 							);
 							assert.equal(
 								col.sort_order,
 								before.sort_order,
 								"Non-target column " +
 									col.field_key +
-									" sort_order must be unchanged",
+									" sort_order must be unchanged"
 							);
 						}
 					});
-				},
+				}
 			),
-			{ numRuns: 100 },
+			{ numRuns: 100 }
 		);
 	});
 });
@@ -824,9 +819,9 @@ describe("Property 5: Width Total Invariant", function () {
 					type: fc.constant("width"),
 					colIndex: fc.integer({ min: 0, max: Math.max(0, maxColumns - 1) }),
 					value: fc.integer({ min: 1, max: 100 }),
-				}),
+				})
 			),
-			{ minLength: 0, maxLength: 30 },
+			{ minLength: 0, maxLength: 30 }
 		);
 	}
 
@@ -869,11 +864,11 @@ describe("Property 5: Width Total Invariant", function () {
 					assert.equal(
 						mgr.get_width_total(),
 						expectedTotal,
-						"get_width_total() must equal arithmetic sum of visible column widths",
+						"get_width_total() must equal arithmetic sum of visible column widths"
 					);
-				},
+				}
 			),
-			{ numRuns: 100 },
+			{ numRuns: 100 }
 		);
 	});
 
@@ -890,10 +885,10 @@ describe("Property 5: Width Total Invariant", function () {
 				assert.equal(
 					mgr.get_width_total(),
 					0,
-					"get_width_total() must be 0 when all columns are hidden",
+					"get_width_total() must be 0 when all columns are hidden"
 				);
 			}),
-			{ numRuns: 100 },
+			{ numRuns: 100 }
 		);
 	});
 
@@ -912,10 +907,10 @@ describe("Property 5: Width Total Invariant", function () {
 				assert.equal(
 					mgr.get_width_total(),
 					expectedTotal,
-					"get_width_total() must equal sum of default widths for default-visible columns",
+					"get_width_total() must equal sum of default widths for default-visible columns"
 				);
 			}),
-			{ numRuns: 100 },
+			{ numRuns: 100 }
 		);
 	});
 });
@@ -978,7 +973,7 @@ describe("Property 6: Reorder Preserves Columns", function () {
 					assert.deepEqual(
 						keysAfter,
 						keysBefore,
-						"Reorder must preserve the same set of field_keys",
+						"Reorder must preserve the same set of field_keys"
 					);
 
 					// 2. Consecutive sort_order starting from 0
@@ -991,7 +986,7 @@ describe("Property 6: Reorder Preserves Columns", function () {
 								" at position " +
 								i +
 								" but got " +
-								configAfter[i].sort_order,
+								configAfter[i].sort_order
 						);
 					}
 
@@ -1005,11 +1000,11 @@ describe("Property 6: Reorder Preserves Columns", function () {
 							toIndex +
 							' but found "' +
 							configAfter[toIndex].field_key +
-							'"',
+							'"'
 					);
-				},
+				}
 			),
-			{ numRuns: 100 },
+			{ numRuns: 100 }
 		);
 	});
 
@@ -1042,34 +1037,34 @@ describe("Property 6: Reorder Preserves Columns", function () {
 					assert.equal(
 						configAfter.length,
 						configBefore.length,
-						"Column count must not change on same-position reorder",
+						"Column count must not change on same-position reorder"
 					);
 
 					for (var i = 0; i < configAfter.length; i++) {
 						assert.equal(
 							configAfter[i].field_key,
 							configBefore[i].field_key,
-							"field_key at position " + i + " must be unchanged",
+							"field_key at position " + i + " must be unchanged"
 						);
 						assert.equal(
 							configAfter[i].sort_order,
 							configBefore[i].sort_order,
-							"sort_order at position " + i + " must be unchanged",
+							"sort_order at position " + i + " must be unchanged"
 						);
 						assert.equal(
 							configAfter[i].width,
 							configBefore[i].width,
-							"width at position " + i + " must be unchanged",
+							"width at position " + i + " must be unchanged"
 						);
 						assert.equal(
 							configAfter[i].visible,
 							configBefore[i].visible,
-							"visible at position " + i + " must be unchanged",
+							"visible at position " + i + " must be unchanged"
 						);
 					}
-				},
+				}
 			),
-			{ numRuns: 100 },
+			{ numRuns: 100 }
 		);
 	});
 
@@ -1110,7 +1105,7 @@ describe("Property 6: Reorder Preserves Columns", function () {
 					assert.equal(
 						configAfter.length,
 						descriptors.length,
-						"Column count must be preserved after reorder",
+						"Column count must be preserved after reorder"
 					);
 
 					// Each column's label, width, visible must be unchanged
@@ -1120,22 +1115,22 @@ describe("Property 6: Reorder Preserves Columns", function () {
 						assert.equal(
 							col.label,
 							before.label,
-							"label must be unchanged for " + col.field_key,
+							"label must be unchanged for " + col.field_key
 						);
 						assert.equal(
 							col.width,
 							before.width,
-							"width must be unchanged for " + col.field_key,
+							"width must be unchanged for " + col.field_key
 						);
 						assert.equal(
 							col.visible,
 							before.visible,
-							"visible must be unchanged for " + col.field_key,
+							"visible must be unchanged for " + col.field_key
 						);
 					});
-				},
+				}
 			),
-			{ numRuns: 100 },
+			{ numRuns: 100 }
 		);
 	});
 });
@@ -1176,9 +1171,9 @@ describe("Property 7: Reset Restores Defaults", function () {
 					type: fc.constant("reorder"),
 					fromIndex: fc.integer({ min: 0, max: Math.max(0, maxColumns - 1) }),
 					toIndex: fc.integer({ min: 0, max: Math.max(0, maxColumns - 1) }),
-				}),
+				})
 			),
-			{ minLength: 1, maxLength: 30 },
+			{ minLength: 1, maxLength: 30 }
 		);
 	}
 
@@ -1233,7 +1228,7 @@ describe("Property 7: Reset Restores Defaults", function () {
 					assert.equal(
 						resetConfig.length,
 						freshConfig.length,
-						"Reset config length must equal fresh config length",
+						"Reset config length must equal fresh config length"
 					);
 
 					// Each column must be identical
@@ -1241,32 +1236,32 @@ describe("Property 7: Reset Restores Defaults", function () {
 						assert.equal(
 							resetConfig[i].field_key,
 							freshConfig[i].field_key,
-							"field_key at position " + i + " must match after reset",
+							"field_key at position " + i + " must match after reset"
 						);
 						assert.equal(
 							resetConfig[i].label,
 							freshConfig[i].label,
-							"label at position " + i + " must match after reset",
+							"label at position " + i + " must match after reset"
 						);
 						assert.equal(
 							resetConfig[i].width,
 							freshConfig[i].width,
-							"width at position " + i + " must match after reset",
+							"width at position " + i + " must match after reset"
 						);
 						assert.equal(
 							resetConfig[i].visible,
 							freshConfig[i].visible,
-							"visible at position " + i + " must match after reset",
+							"visible at position " + i + " must match after reset"
 						);
 						assert.equal(
 							resetConfig[i].sort_order,
 							freshConfig[i].sort_order,
-							"sort_order at position " + i + " must match after reset",
+							"sort_order at position " + i + " must match after reset"
 						);
 					}
-				},
+				}
 			),
-			{ numRuns: 100 },
+			{ numRuns: 100 }
 		);
 	});
 
@@ -1294,11 +1289,11 @@ describe("Property 7: Reset Restores Defaults", function () {
 					assert.equal(
 						mgr.get_width_total(),
 						freshTotal,
-						"get_width_total() after reset must equal fresh initialization total",
+						"get_width_total() after reset must equal fresh initialization total"
 					);
-				},
+				}
 			),
-			{ numRuns: 100 },
+			{ numRuns: 100 }
 		);
 	});
 
@@ -1326,11 +1321,11 @@ describe("Property 7: Reset Restores Defaults", function () {
 					assert.equal(
 						mgr.to_json(),
 						freshJson,
-						"to_json() after reset must equal fresh initialization JSON",
+						"to_json() after reset must equal fresh initialization JSON"
 					);
-				},
+				}
 			),
-			{ numRuns: 100 },
+			{ numRuns: 100 }
 		);
 	});
 });
@@ -1370,9 +1365,9 @@ describe("Property 9: Serialization Round-Trip", function () {
 					type: fc.constant("reorder"),
 					fromIndex: fc.integer({ min: 0, max: Math.max(0, maxColumns - 1) }),
 					toIndex: fc.integer({ min: 0, max: Math.max(0, maxColumns - 1) }),
-				}),
+				})
 			),
-			{ minLength: 0, maxLength: 30 },
+			{ minLength: 0, maxLength: 30 }
 		);
 	}
 
@@ -1427,39 +1422,39 @@ describe("Property 9: Serialization Round-Trip", function () {
 					assert.equal(
 						parsed.length,
 						config.length,
-						"Parsed config length must equal get_config() length",
+						"Parsed config length must equal get_config() length"
 					);
 
 					for (var i = 0; i < config.length; i++) {
 						assert.equal(
 							parsed[i].field_key,
 							config[i].field_key,
-							"field_key at position " + i + " must match",
+							"field_key at position " + i + " must match"
 						);
 						assert.equal(
 							parsed[i].visible,
 							config[i].visible,
-							"visible at position " + i + " must match",
+							"visible at position " + i + " must match"
 						);
 						assert.equal(
 							parsed[i].width,
 							config[i].width,
-							"width at position " + i + " must match",
+							"width at position " + i + " must match"
 						);
 						assert.equal(
 							parsed[i].sort_order,
 							config[i].sort_order,
-							"sort_order at position " + i + " must match",
+							"sort_order at position " + i + " must match"
 						);
 						assert.equal(
 							parsed[i].label,
 							config[i].label,
-							"label at position " + i + " must match",
+							"label at position " + i + " must match"
 						);
 					}
-				},
+				}
 			),
-			{ numRuns: 100 },
+			{ numRuns: 100 }
 		);
 	});
 
@@ -1485,9 +1480,9 @@ describe("Property 9: Serialization Round-Trip", function () {
 
 					// Must be an array
 					assert.ok(Array.isArray(parsed), "Parsed JSON must be an array");
-				},
+				}
 			),
-			{ numRuns: 100 },
+			{ numRuns: 100 }
 		);
 	});
 
@@ -1520,34 +1515,34 @@ describe("Property 9: Serialization Round-Trip", function () {
 					assert.equal(
 						config2.length,
 						config1.length,
-						"Reconstructed config length must match original",
+						"Reconstructed config length must match original"
 					);
 
 					for (var i = 0; i < config1.length; i++) {
 						assert.equal(
 							config2[i].field_key,
 							config1[i].field_key,
-							"field_key at position " + i + " must match after round-trip",
+							"field_key at position " + i + " must match after round-trip"
 						);
 						assert.equal(
 							config2[i].visible,
 							config1[i].visible,
-							"visible at position " + i + " must match after round-trip",
+							"visible at position " + i + " must match after round-trip"
 						);
 						assert.equal(
 							config2[i].width,
 							config1[i].width,
-							"width at position " + i + " must match after round-trip",
+							"width at position " + i + " must match after round-trip"
 						);
 						assert.equal(
 							config2[i].sort_order,
 							config1[i].sort_order,
-							"sort_order at position " + i + " must match after round-trip",
+							"sort_order at position " + i + " must match after round-trip"
 						);
 					}
-				},
+				}
 			),
-			{ numRuns: 100 },
+			{ numRuns: 100 }
 		);
 	});
 });
@@ -1642,11 +1637,11 @@ describe("PreviewPanel Rendering", function () {
 
 		assert.ok(
 			container.innerHTML.indexOf("width:15%") !== -1,
-			"Should contain width:15% for first column",
+			"Should contain width:15% for first column"
 		);
 		assert.ok(
 			container.innerHTML.indexOf("width:40%") !== -1,
-			"Should contain width:40% for second column",
+			"Should contain width:40% for second column"
 		);
 	});
 
@@ -1717,11 +1712,11 @@ describe("PreviewPanel Rendering", function () {
 		// Placeholder cells should contain column labels
 		assert.ok(
 			tbodyMatch[1].indexOf("WBS Code") !== -1,
-			'Placeholder row should contain "WBS Code" label',
+			'Placeholder row should contain "WBS Code" label'
 		);
 		assert.ok(
 			tbodyMatch[1].indexOf("Title") !== -1,
-			'Placeholder row should contain "Title" label',
+			'Placeholder row should contain "Title" label'
 		);
 	});
 
@@ -1742,12 +1737,12 @@ describe("PreviewPanel Rendering", function () {
 		assert.equal(
 			tbodyTrCount,
 			1,
-			"Should render 1 placeholder row when sample_data is undefined",
+			"Should render 1 placeholder row when sample_data is undefined"
 		);
 
 		assert.ok(
 			tbodyMatch[1].indexOf("Quantity") !== -1,
-			'Placeholder row should contain "Quantity" label',
+			'Placeholder row should contain "Quantity" label'
 		);
 	});
 
@@ -1788,12 +1783,12 @@ describe("PreviewPanel Rendering", function () {
 		assert.ok(tdMatches[0].indexOf("1.0") !== -1, 'First cell should contain "1.0"');
 		assert.ok(
 			tdMatches[1].indexOf("Foundation") !== -1,
-			'Second cell should contain "Foundation"',
+			'Second cell should contain "Foundation"'
 		);
 		assert.equal(
 			tdMatches[2],
 			"<td></td>",
-			"Third cell should be empty for missing field_key",
+			"Third cell should be empty for missing field_key"
 		);
 	});
 
