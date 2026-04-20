@@ -110,19 +110,19 @@ def run():
     Creates or updates the 4 Phase 1 themes in Construction Theme DocType.
     """
     frappe.logger().info("[Theme Migration] Starting Phase 1 to Phase 2 migration")
-    
+
     created_count = 0
     updated_count = 0
     skipped_count = 0
-    
+
     for theme_data in FIXTURE_THEMES:
         theme_name = theme_data["theme_name"]
-        
+
         try:
             if frappe.db.exists("Construction Theme", theme_name):
                 # Update existing
                 doc = frappe.get_doc("Construction Theme", theme_name)
-                
+
                 # Only update if it's a system theme (protect user customizations)
                 if doc.is_system_theme:
                     for key, value in theme_data.items():
@@ -143,13 +143,13 @@ def run():
                 doc.insert(ignore_permissions=True)
                 created_count += 1
                 click.echo(f"  Created: {theme_name}")
-                
+
         except Exception as e:
             frappe.log_error(f"Error migrating theme {theme_name}: {str(e)}")
             click.echo(f"  Error: {theme_name} - {str(e)}")
-    
+
     frappe.db.commit()
-    
+
     # Log results
     summary = f"""
 [Theme Migration] Complete:
@@ -160,7 +160,7 @@ def run():
 """
     frappe.logger().info(summary)
     click.echo(summary)
-    
+
     return {
         "created": created_count,
         "updated": updated_count,
@@ -174,35 +174,35 @@ def rollback():
     Clears caches and resets to Frappe defaults.
     """
     click.echo("Starting rollback...")
-    
+
     # 1. Clear all server-side CSS caches
     frappe.cache().delete_keys("theme_css:*")
     click.echo("  Cleared CSS caches")
-    
+
     # 2. Reset active users to Frappe default theme
     try:
         frappe.db.sql("""
-            UPDATE `tabUser` 
-            SET desk_theme = 'Light' 
+            UPDATE `tabUser`
+            SET desk_theme = 'Light'
             WHERE desk_theme IN ('construction_light', 'construction_dark')
         """)
         click.echo("  Reset user themes to Light")
     except Exception as e:
         click.echo(f"  Warning: Could not reset user themes: {e}")
-    
+
     # 3. Clear data-modern-theme from User Desk Theme records
     try:
         frappe.db.sql("""
-            UPDATE `tabUser Desk Theme` 
+            UPDATE `tabUser Desk Theme`
             SET light_theme = NULL, dark_theme = NULL
             WHERE light_theme LIKE 'construction_%' OR dark_theme LIKE 'construction_%'
         """)
         click.echo("  Cleared User Desk Theme custom themes")
     except Exception as e:
         click.echo(f"  Warning: Could not clear User Desk Theme: {e}")
-    
+
     frappe.db.commit()
-    
+
     click.echo("Rollback complete. Clear browser cache and refresh.")
     click.echo("The v2 JS loader should take over if v3 is disabled.")
 
@@ -212,35 +212,35 @@ def verify():
     Verify that all 4 Phase 1 themes exist and have correct values.
     """
     click.echo("Verifying Phase 1 theme migration...")
-    
+
     all_valid = True
-    
+
     for theme_data in FIXTURE_THEMES:
         theme_name = theme_data["theme_name"]
-        
+
         if not frappe.db.exists("Construction Theme", theme_name):
             click.echo(f"  MISSING: {theme_name}")
             all_valid = False
             continue
-        
+
         doc = frappe.get_doc("Construction Theme", theme_name)
-        
+
         # Check critical fields
         checks = [
             ("is_system_theme", 1),
             ("is_active", 1),
             ("theme_type", theme_data["theme_type"]),
         ]
-        
+
         for field, expected in checks:
             actual = getattr(doc, field)
             if actual != expected:
                 click.echo(f"  MISMATCH {theme_name}.{field}: expected {expected}, got {actual}")
                 all_valid = False
-    
+
     if all_valid:
         click.echo("  All themes verified successfully!")
     else:
         click.echo("  Verification FAILED - run migration again")
-    
+
     return all_valid

@@ -1,0 +1,13 @@
+# Force LF line endings for all text files
+* text=auto eol=lf
+
+# Explicitly mark binary files
+*.png binary
+*.jpg binary
+*.gif binary
+*.ico binary
+*.xlsx binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary

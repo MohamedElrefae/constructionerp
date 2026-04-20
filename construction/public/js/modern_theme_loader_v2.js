@@ -273,15 +273,15 @@
           }
 
           self.updateNavbarIndicator(mode);
-          
+
           // Apply feature toggles from API response
           self.applyFeatureToggles(r.message.feature_toggles || {});
-          
+
           // Load dynamic CSS for non-hardcoded themes
           if (r.message.needs_css_injection) {
             self.fetchAndApplyCSSVariables(theme_name);
           }
-          
+
           window.dispatchEvent(new CustomEvent('modern-theme-applied', {
             detail: { theme_name: theme_name, mode: mode, source: source }
           }));
@@ -380,11 +380,11 @@
         // Skip for hardcoded construction themes - they use inline CSS
         return;
       }
-      
+
       // Check if we already loaded CSS for this theme
       var cssId = 'dynamic-theme-css-' + themeName;
       if (document.getElementById(cssId)) return;
-      
+
       // Fetch dynamic CSS from API
       frappe.call({
         method: 'construction.api.theme_api.get_theme_css',
@@ -596,7 +596,7 @@
       render_themes() {
         // Clear existing themes
         this.$body.empty();
-        
+
         // Render each theme using our data format
         this.themes.forEach(function (theme) {
           var $item = $(`
@@ -608,22 +608,22 @@
               <div class="theme-info">${theme.info || ''}</div>
             </div>
           `);
-          
+
           $item.on('click', function () {
             this.switch_theme(theme.name);
           }.bind(this));
-          
+
           this.$body.append($item);
         }.bind(this));
-        
+
         // Mark current theme as checked
         this.themes.forEach(function (theme) {
           var current = document.documentElement.getAttribute('data-theme');
           var modern = document.documentElement.getAttribute('data-modern-theme');
-          var isActive = theme.name === modern || 
+          var isActive = theme.name === modern ||
                          (theme.name === 'dark' && current === 'dark' && !modern) ||
                          (theme.name === 'light' && current === 'light' && !modern);
-          
+
           if (isActive) {
             this.$body.find(`[data-theme="${theme.name}"]`).addClass('active');
           }
@@ -644,7 +644,7 @@
 
         // Check if it's a construction theme (case-insensitive)
         var isConstructionTheme = theme_name.toLowerCase().indexOf('construction') !== -1;
-        
+
         if (isConstructionTheme) {
           var normalizedTheme = _norm(theme_name);
           document.documentElement.setAttribute('data-modern-theme', normalizedTheme);

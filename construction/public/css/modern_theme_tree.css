@@ -315,7 +315,7 @@
   .modern-tree-node {
     grid-template-columns: auto auto 8px 80px 120px 100px 60px 60px 1fr;
   }
-  
+
   [dir="rtl"] .modern-tree-view__header,
   [dir="rtl"] .modern-tree-node {
     grid-template-columns: 1fr 60px 60px 100px 120px 80px 8px auto auto;
@@ -327,12 +327,12 @@
   .modern-tree-node {
     grid-template-columns: auto auto 8px 1fr auto auto;
   }
-  
+
   .modern-tree-node__type,
   .modern-tree-node__level {
     display: none;
   }
-  
+
   [dir="rtl"] .modern-tree-view__header,
   [dir="rtl"] .modern-tree-node {
     grid-template-columns: auto auto 1fr 8px auto auto;
@@ -344,7 +344,7 @@
     flex-direction: column;
     align-items: flex-start;
   }
-  
+
   .modern-tree-toolbar__right {
     width: 100%;
     justify-content: flex-start;

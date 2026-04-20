@@ -12,21 +12,21 @@ def get_form_config(doctype):
     """
     Get form configuration for a DocType
     Returns field definitions, layout info, and validation rules
-    
+
     Args:
         doctype: str - The DocType name
-    
+
     Returns:
         dict: Form configuration
     """
     try:
         meta = frappe.get_meta(doctype)
-        
+
         fields = []
         for field in meta.fields:
             if field.hidden:
                 continue
-                
+
             field_config = {
                 "id": field.fieldname,
                 "type": map_field_type(field.fieldtype),
@@ -40,7 +40,7 @@ def get_form_config(doctype):
                 "mandatory_depends_on": field.mandatory_depends_on,
                 "read_only_depends_on": field.read_only_depends_on,
             }
-            
+
             # Add options for select/link fields
             if field.fieldtype in ["Select", "Link", "Table MultiSelect"]:
                 if field.fieldtype == "Select" and field.options:
@@ -51,12 +51,12 @@ def get_form_config(doctype):
                 elif field.fieldtype == "Link":
                     field_config["link_doctype"] = field.options
                     field_config["searchable"] = True
-            
+
             # Add validation rules
             field_config["validation"] = build_validation_rules(field)
-            
+
             fields.append(field_config)
-        
+
         return {
             "success": True,
             "doctype": doctype,
@@ -65,7 +65,7 @@ def get_form_config(doctype):
             "is_submittable": meta.is_submittable,
             "is_tree": hasattr(meta, 'is_tree') and meta.is_tree,
         }
-        
+
     except Exception as e:
         frappe.log_error(f"Error getting form config for {doctype}: {str(e)}")
         return {
@@ -78,25 +78,25 @@ def get_form_config(doctype):
 def get_document(doctype, name):
     """
     Get a single document by name
-    
+
     Args:
         doctype: str
         name: str
-    
+
     Returns:
         dict: Document data
     """
     try:
         doc = frappe.get_doc(doctype, name)
-        
+
         # Build response
         data = {}
         meta = frappe.get_meta(doctype)
-        
+
         for field in meta.fields:
             if not field.hidden:
                 data[field.fieldname] = doc.get(field.fieldname)
-        
+
         # Add standard fields
         data["name"] = doc.name
         data["owner"] = doc.owner
@@ -104,12 +104,12 @@ def get_document(doctype, name):
         data["modified"] = str(doc.modified) if doc.modified else None
         data["modified_by"] = doc.modified_by
         data["docstatus"] = doc.docstatus
-        
+
         return {
             "success": True,
             "data": data
         }
-        
+
     except frappe.DoesNotExistError:
         return {
             "success": False,
@@ -127,11 +127,11 @@ def get_document(doctype, name):
 def create_document(doctype, data):
     """
     Create a new document
-    
+
     Args:
         doctype: str
         data: dict - Field values
-    
+
     Returns:
         dict: Created document or errors
     """
@@ -143,19 +143,19 @@ def create_document(doctype, data):
                 "success": False,
                 "validation_errors": validation_result["errors"]
             }
-        
+
         # Create document
         doc = frappe.new_doc(doctype)
-        
+
         # Set field values
         for fieldname, value in data.items():
             if hasattr(doc, fieldname):
                 doc.set(fieldname, value)
-        
+
         # Save
         doc.insert()
         frappe.db.commit()
-        
+
         return {
             "success": True,
             "data": {
@@ -163,7 +163,7 @@ def create_document(doctype, data):
                 "message": _(f"{doctype} created successfully")
             }
         }
-        
+
     except frappe.ValidationError as e:
         return {
             "success": False,
@@ -181,25 +181,25 @@ def create_document(doctype, data):
 def update_document(doctype, name, data):
     """
     Update an existing document
-    
+
     Args:
         doctype: str
         name: str
         data: dict - Field values to update
-    
+
     Returns:
         dict: Updated document or errors
     """
     try:
         doc = frappe.get_doc(doctype, name)
-        
+
         # Check permissions
         if not doc.has_permission("write"):
             return {
                 "success": False,
                 "error": _("Not permitted to update this document")
             }
-        
+
         # Validate before update
         validation_result = validate_document_data(doctype, data, is_new=False)
         if not validation_result["valid"]:
@@ -207,16 +207,16 @@ def update_document(doctype, name, data):
                 "success": False,
                 "validation_errors": validation_result["errors"]
             }
-        
+
         # Update field values
         for fieldname, value in data.items():
             if hasattr(doc, fieldname):
                 doc.set(fieldname, value)
-        
+
         # Save
         doc.save()
         frappe.db.commit()
-        
+
         return {
             "success": True,
             "data": {
@@ -224,7 +224,7 @@ def update_document(doctype, name, data):
                 "message": _(f"{doctype} updated successfully")
             }
         }
-        
+
     except frappe.DoesNotExistError:
         return {
             "success": False,
@@ -247,32 +247,32 @@ def update_document(doctype, name, data):
 def delete_document(doctype, name):
     """
     Delete a document
-    
+
     Args:
         doctype: str
         name: str
-    
+
     Returns:
         dict: Success or error
     """
     try:
         doc = frappe.get_doc(doctype, name)
-        
+
         # Check permissions
         if not doc.has_permission("delete"):
             return {
                 "success": False,
                 "error": _("Not permitted to delete this document")
             }
-        
+
         doc.delete()
         frappe.db.commit()
-        
+
         return {
             "success": True,
             "message": _(f"{doctype} '{name}' deleted successfully")
         }
-        
+
     except frappe.DoesNotExistError:
         return {
             "success": False,
@@ -290,32 +290,32 @@ def delete_document(doctype, name):
 def validate_field(doctype, fieldname, value, context=None):
     """
     Validate a single field value
-    
+
     Args:
         doctype: str
         fieldname: str
         value: any
         context: dict - Other field values for conditional validation
-    
+
     Returns:
         dict: Validation result
     """
     try:
         meta = frappe.get_meta(doctype)
         field = meta.get_field(fieldname)
-        
+
         if not field:
             return {
                 "valid": False,
                 "error": f"Field '{fieldname}' not found"
             }
-        
+
         errors = []
-        
+
         # Required check
         if field.reqd and not value:
             errors.append(_("{0} is required").format(field.label))
-        
+
         # Data type validation
         if value:
             if field.fieldtype in ["Int", "Float", "Currency"]:
@@ -323,23 +323,23 @@ def validate_field(doctype, fieldname, value, context=None):
                     float(value)
                 except ValueError:
                     errors.append(_("{0} must be a number").format(field.label))
-            
+
             elif field.fieldtype == "Date":
                 if not is_valid_date(value):
                     errors.append(_("{0} must be a valid date").format(field.label))
-            
+
             elif field.fieldtype == "Email":
                 if not is_valid_email(value):
                     errors.append(_("{0} must be a valid email").format(field.label))
-        
+
         # Custom validation (if any)
         # Could call hooks here for custom validation logic
-        
+
         return {
             "valid": len(errors) == 0,
             "errors": errors
         }
-        
+
     except Exception as e:
         frappe.log_error(f"Error validating field {doctype}.{fieldname}: {str(e)}")
         return {
@@ -352,13 +352,13 @@ def validate_field(doctype, fieldname, value, context=None):
 def search_link(doctype, txt, filters=None, page_length=20):
     """
     Search for link field values
-    
+
     Args:
         doctype: str - Target DocType
         txt: str - Search text
         filters: dict - Additional filters
         page_length: int
-    
+
     Returns:
         list: Matching documents
     """
@@ -374,7 +374,7 @@ def search_link(doctype, txt, filters=None, page_length=20):
             },
             limit_page_length=page_length
         )
-        
+
         return {
             "success": True,
             "results": [
@@ -385,7 +385,7 @@ def search_link(doctype, txt, filters=None, page_length=20):
                 for r in results
             ]
         }
-        
+
     except Exception as e:
         frappe.log_error(f"Error searching link {doctype}: {str(e)}")
         return {
@@ -438,29 +438,29 @@ def map_field_type(frappe_fieldtype):
         "Tab Break": "tab-break",
         "Heading": "heading",
     }
-    
+
     return mapping.get(frappe_fieldtype, "text")
 
 
 def build_validation_rules(field):
     """Build validation rules for a field"""
     rules = {}
-    
+
     if field.fieldtype in ["Int", "Float", "Currency"]:
         rules["type"] = "number"
         if field.fieldtype == "Int":
             rules["integer"] = True
-    
+
     if field.fieldtype == "Date":
         rules["type"] = "date"
-    
+
     if field.fieldtype == "Email":
         rules["type"] = "email"
-    
+
     if field.fieldtype in ["Data", "Text"]:
         if field.length:
             rules["maxLength"] = field.length
-    
+
     return rules
 
 
@@ -468,26 +468,26 @@ def validate_document_data(doctype, data, is_new=True):
     """Validate all document data before save"""
     errors = {}
     meta = frappe.get_meta(doctype)
-    
+
     for field in meta.fields:
         if field.hidden or field.read_only:
             continue
-        
+
         fieldname = field.fieldname
         value = data.get(fieldname)
-        
+
         # Required check
         if field.reqd and not value:
             errors[fieldname] = _("{0} is required").format(field.label)
             continue
-        
+
         # Field type validation
         if value and field.fieldtype in ["Int", "Float", "Currency"]:
             try:
                 float(value)
             except ValueError:
                 errors[fieldname] = _("{0} must be a number").format(field.label)
-    
+
     return {
         "valid": len(errors) == 0,
         "errors": errors

@@ -11,20 +11,20 @@ from frappe import _
 def switch_theme(theme):
     """
     Override Frappe's theme switcher to handle custom Construction themes.
-    
+
     Args:
         theme: Theme name (light, dark, automatic, construction_light, construction_dark)
-    
+
     Returns:
         dict: Success status and applied theme info
     """
     user = frappe.session.user
-    
+
     # Handle standard Frappe themes
     if theme in ["light", "dark", "automatic"]:
         # Call original Frappe function
         frappe.db.set_value("User", user, "desk_theme", theme, update_modified=False)
-        
+
         # Also save in our custom system if user theme exists
         user_theme = frappe.db.get_value("User Desk Theme", {"user": user}, "name")
         if user_theme:
@@ -33,18 +33,18 @@ def switch_theme(theme):
                 "dark_theme": theme if theme == "dark" else "",
                 "inherit_from_site": 0
             })
-        
+
         return {
             "success": True,
             "theme": theme,
             "mode": _get_mode_from_theme(theme),
             "source": "frappe_native"
         }
-    
+
     # Handle custom Construction themes
     if theme.startswith("construction_"):
         mode = "dark" if theme == "construction_dark" else "light"
-        
+
         # Get the corresponding Modern Theme Settings
         theme_doc = frappe.db.get_value(
             "Modern Theme Settings",
@@ -52,14 +52,14 @@ def switch_theme(theme):
             ["name", "theme_name"],
             as_dict=True
         )
-        
+
         if not theme_doc:
             # Fallback to creating user theme preference
             theme_doc = {"name": theme, "theme_name": theme}
-        
+
         # Save user theme preference
         user_theme_name = frappe.db.get_value("User Desk Theme", {"user": user}, "name")
-        
+
         if user_theme_name:
             # Update existing
             frappe.db.set_value("User Desk Theme", user_theme_name, {
@@ -75,17 +75,17 @@ def switch_theme(theme):
             user_theme.light_theme = theme_doc.name if mode == "light" else None
             user_theme.dark_theme = theme_doc.name if mode == "dark" else None
             user_theme.save(ignore_permissions=True)
-        
+
         # Also update Frappe's native field for consistency
         frappe.db.set_value("User", user, "desk_theme", mode, update_modified=False)
-        
+
         return {
             "success": True,
             "theme": theme_doc.theme_name,
             "mode": mode,
             "source": "construction_custom"
         }
-    
+
     # Unknown theme
     return {
         "success": False,
@@ -109,15 +109,15 @@ def get_user_theme_with_construction():
     """
     Get user theme with Construction theme support.
     Combines Frappe native theme with Construction custom themes.
-    
+
     Returns:
         dict: Theme configuration
     """
     user = frappe.session.user
-    
+
     # Get Frappe native theme
     frappe_theme = frappe.db.get_value("User", user, "desk_theme") or "light"
-    
+
     # Get Construction custom theme
     user_theme = frappe.db.get_value(
         "User Desk Theme",
@@ -125,31 +125,31 @@ def get_user_theme_with_construction():
         ["light_theme", "dark_theme", "inherit_from_site"],
         as_dict=True
     )
-    
+
     if not user_theme or user_theme.inherit_from_site:
         # Use site defaults
         site_settings = frappe.get_doc("Modern Theme Settings")
-        
+
         mode = "light" if frappe_theme != "dark" else "dark"
         if frappe_theme == "automatic":
             mode = "light"  # Would check system preference
-        
+
         return {
             "theme": site_settings.theme_name,
             "mode": mode,
             "frappe_theme": frappe_theme,
             "source": "site_default"
         }
-    
+
     # Determine current mode and theme
     mode = "light" if frappe_theme != "dark" else "dark"
     theme_name = user_theme.light_theme if mode == "light" else user_theme.dark_theme
-    
+
     if not theme_name:
         # Fallback to site default
         site_settings = frappe.get_doc("Modern Theme Settings")
         theme_name = site_settings.theme_name
-    
+
     return {
         "theme": theme_name,
         "mode": mode,

@@ -113,14 +113,14 @@ def run():
     Idempotent migration using direct SQL - safe to re-run.
     """
     frappe.logger().info("[Theme Migration Simple] Starting Phase 1 to Phase 2 migration")
-    
+
     created_count = 0
     updated_count = 0
     skipped_count = 0
-    
+
     for theme_data in FIXTURE_THEMES:
         theme_name = theme_data["theme_name"]
-        
+
         try:
             # Check if exists using SQL
             exists = frappe.db.sql(
@@ -128,7 +128,7 @@ def run():
                 (theme_name,),
                 as_dict=True
             )
-            
+
             if exists:
                 # Update existing using SQL
                 frappe.db.sql("""
@@ -217,13 +217,13 @@ def run():
                 ))
                 created_count += 1
                 click.echo(f"  Created: {theme_name}")
-                
+
         except Exception as e:
             frappe.logger().error(f"[Theme Migration] Error migrating {theme_name}: {str(e)}")
             click.echo(f"  Error: {theme_name} - {str(e)}")
-    
+
     frappe.db.commit()
-    
+
     # Log results
     summary = f"""
 [Theme Migration] Complete:
@@ -234,7 +234,7 @@ def run():
 """
     frappe.logger().info(summary)
     click.echo(summary)
-    
+
     return {
         "created": created_count,
         "updated": updated_count,

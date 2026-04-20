@@ -14,14 +14,14 @@ import subprocess
 
 def execute(dry_run=True):
     """Run the full uninstall process.
-    
+
     Args:
         dry_run: If True, only audit and report. If False, actually uninstall.
     """
     print("=" * 60)
     print("frappe_desk_theme Uninstall Process")
     print("=" * 60)
-    
+
     # Step 1: Dependency audit
     print("\n--- Step 1: Dependency Audit ---")
     refs = _audit_dependencies()
@@ -36,7 +36,7 @@ def execute(dry_run=True):
             return {"success": False, "reason": "active_references", "refs": refs}
     else:
         print("  No external references found. Safe to proceed.")
-    
+
     # Step 2: Verify Construction Theme feature parity
     print("\n--- Step 2: Feature Parity Check ---")
     parity = _check_feature_parity()
@@ -51,7 +51,7 @@ def execute(dry_run=True):
         print("\n--- DRY RUN COMPLETE ---")
         print("Run with dry_run=False to actually uninstall.")
         return {"success": True, "dry_run": True, "refs": refs, "parity": parity}
-    
+
     # Step 3: Backup
     print("\n--- Step 3: Creating Backup ---")
     try:
@@ -66,7 +66,7 @@ def execute(dry_run=True):
             print(f"  Backup warning: {result.stderr[:200]}")
     except Exception as e:
         print(f"  Backup error: {e}. Proceeding anyway.")
-    
+
     # Step 4: Uninstall
     print("\n--- Step 4: Uninstalling frappe_desk_theme ---")
     try:
@@ -83,15 +83,15 @@ def execute(dry_run=True):
     except Exception as e:
         print(f"  Uninstall error: {e}")
         return {"success": False, "reason": "uninstall_exception", "error": str(e)}
-    
+
     # Step 5: Verify
     print("\n--- Step 5: Post-Uninstall Verification ---")
     _verify_post_uninstall()
-    
+
     # Step 6: Cleanup orphaned records
     print("\n--- Step 6: Orphan Cleanup ---")
     _cleanup_orphans()
-    
+
     print("\n" + "=" * 60)
     print("Uninstall complete!")
     print("=" * 60)
@@ -103,7 +103,7 @@ def _audit_dependencies():
     refs = []
     bench_path = frappe.utils.get_bench_path()
     apps_dir = os.path.join(bench_path, "apps")
-    
+
     for app_name in os.listdir(apps_dir):
         if app_name in ("frappe_desk_theme", ".git", "node_modules", "__pycache__"):
             continue
@@ -163,7 +163,7 @@ def _verify_post_uninstall():
 def _cleanup_orphans():
     """Find and report orphaned records referencing desk_theme."""
     orphans = frappe.db.sql("""
-        SELECT doctype, field, value FROM tabSingles 
+        SELECT doctype, field, value FROM tabSingles
         WHERE value LIKE '%%desk_theme%%' OR field LIKE '%%desk_theme%%'
     """, as_dict=True)
     if orphans:
