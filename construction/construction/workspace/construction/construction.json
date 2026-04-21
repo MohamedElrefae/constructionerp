@@ -101,7 +101,7 @@
  "public": 1,
  "restrict_to_domain": "",
  "roles": [],
- "sequence_id": 30,
+ "sequence_id": 30.0,
  "shortcuts": [
   {
    "color": "Blue",
