@@ -81,7 +81,10 @@ override_whitelisted_methods = {
 }
 
 # Fixtures - Phase 2: Construction Theme records
-fixtures = [{"doctype": "Construction Theme", "filters": [["is_system_theme", "=", 1]]}]
+fixtures = [
+	{"doctype": "Construction Theme", "filters": [["is_system_theme", "=", 1]]},
+	{"doctype": "Workspace Sidebar", "filters": [["name", "=", "Construction"]]},
+]
 
 # After install - create system themes
 after_install = "construction.install.create_system_themes"
