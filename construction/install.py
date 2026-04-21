@@ -126,7 +126,7 @@ def setup_workspace_sidebar():
 
 	# Load configuration from JSON fixture
 	config_path = os.path.join(
-		frappe.get_app_path("construction"), "fixtures", "workspace_sidebar_items.json"
+		frappe.get_app_path("construction"), "config", "workspace_sidebar_items.json"
 	)
 	if not os.path.exists(config_path):
 		frappe.log_error(
