@@ -7,6 +7,17 @@ app_description = "Construction ERP App for BOQ, Cost Estimation, and Project Ma
 app_email = "melrefa3@hotmail.com"
 app_license = "MIT"
 
+# v16 Desktop icon registration
+# Displays the Construction app icon on the Desktop grid and in the Apps screen
+add_to_apps_screen = [
+	{
+		"name": "construction",
+		"logo": "/assets/construction/images/construction_logo.svg",
+		"title": "Construction",
+		"route": "/app/construction",
+	}
+]
+
 module_app = {
 	"Construction": "construction",
 }
@@ -75,5 +86,10 @@ fixtures = [{"doctype": "Construction Theme", "filters": [["is_system_theme", "=
 # After install - create system themes
 after_install = "construction.install.create_system_themes"
 
-# After migrate - ensure system themes exist
-after_migrate = "construction.install.create_system_themes"
+# After migrate - ensure system themes and workspace sidebar exist
+# Order matters: themes first, then sidebar, then health check
+after_migrate = [
+	"construction.install.create_system_themes",
+	"construction.install.setup_workspace_sidebar",
+	"construction.install.verify_workspace_visibility",
+]

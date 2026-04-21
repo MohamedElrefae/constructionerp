@@ -5,27 +5,104 @@
   "doctype": "DocType",
   "engine": "InnoDB",
   "field_order": [
-    "project", "project_name", "boq_type", "status", "version", "title",
-    "total_contract_value", "total_estimated_value", "total_budgeted_cost", "locked_by", "locked_date"
+    "project",
+    "project_name",
+    "boq_type",
+    "status",
+    "version",
+    "title",
+    "total_contract_value",
+    "total_estimated_value",
+    "total_budgeted_cost",
+    "locked_by",
+    "locked_date"
   ],
   "fields": [
-    {"fieldname": "project", "fieldtype": "Link", "in_list_view": 1, "label": "Project", "options": "Project", "reqd": 1},
-    {"fieldname": "project_name", "fieldtype": "Data", "label": "Project Name", "fetch_from": "project.project_name", "read_only": 1, "in_list_view": 1},
-    {"default": "Tender", "fieldname": "boq_type", "fieldtype": "Select", "in_list_view": 1, "label": "BOQ Type", "options": "Tender\nContract\nVariation"},
-    {"default": "Draft", "fieldname": "status", "fieldtype": "Select", "in_list_view": 1, "label": "Status", "options": "Draft\nPricing\nFrozen\nLocked"},
-    {"default": "1", "fieldname": "version", "fieldtype": "Int", "label": "Version", "non_negative": 1},
-    {"fieldname": "title", "fieldtype": "Data", "label": "Title"},
-    {"fieldname": "total_contract_value", "fieldtype": "Currency", "in_list_view": 1, "label": "Total Contract Value", "read_only": 1},
-    {"fieldname": "total_estimated_value", "fieldtype": "Currency", "in_list_view": 1, "label": "Total Estimated Value", "read_only": 1},
-    {"fieldname": "total_budgeted_cost", "fieldtype": "Currency", "label": "Total Budgeted Cost", "read_only": 1},
-    {"fieldname": "locked_by", "fieldtype": "Link", "label": "Locked By", "options": "User", "read_only": 1, "hidden": 1},
-    {"fieldname": "locked_date", "fieldtype": "Datetime", "label": "Locked Date", "read_only": 1, "hidden": 1}
+    {
+      "fieldname": "project",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "label": "Project",
+      "options": "Project",
+      "reqd": 1
+    },
+    {
+      "fieldname": "project_name",
+      "fieldtype": "Data",
+      "label": "Project Name",
+      "fetch_from": "project.project_name",
+      "read_only": 1,
+      "in_list_view": 1
+    },
+    {
+      "default": "Tender",
+      "fieldname": "boq_type",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "label": "BOQ Type",
+      "options": "Tender\nContract\nVariation"
+    },
+    {
+      "default": "Draft",
+      "fieldname": "status",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "label": "Status",
+      "options": "Draft\nPricing\nFrozen\nLocked"
+    },
+    {
+      "default": "1",
+      "fieldname": "version",
+      "fieldtype": "Int",
+      "label": "Version",
+      "non_negative": 1
+    },
+    {
+      "fieldname": "title",
+      "fieldtype": "Data",
+      "label": "Title"
+    },
+    {
+      "fieldname": "total_contract_value",
+      "fieldtype": "Currency",
+      "in_list_view": 1,
+      "label": "Total Contract Value",
+      "read_only": 1
+    },
+    {
+      "fieldname": "total_estimated_value",
+      "fieldtype": "Currency",
+      "in_list_view": 1,
+      "label": "Total Estimated Value",
+      "read_only": 1
+    },
+    {
+      "fieldname": "total_budgeted_cost",
+      "fieldtype": "Currency",
+      "label": "Total Budgeted Cost",
+      "read_only": 1
+    },
+    {
+      "fieldname": "locked_by",
+      "fieldtype": "Link",
+      "label": "Locked By",
+      "options": "User",
+      "read_only": 1,
+      "hidden": 1
+    },
+    {
+      "fieldname": "locked_date",
+      "fieldtype": "Datetime",
+      "label": "Locked Date",
+      "read_only": 1,
+      "hidden": 1
+    }
   ],
   "index_web_pages_for_search": 1,
   "links": [],
   "modified": "2026-04-20 00:00:00.000000",
   "modified_by": "Administrator",
-  "module": "Construction",
+  "module": "construction",
   "name": "BOQ Header",
   "naming_rule": "Expression",
   "title_field": "title",
@@ -33,12 +110,61 @@
   "search_fields": "project_name",
   "owner": "Administrator",
   "permissions": [
-    {"create": 1, "delete": 1, "email": 1, "export": 1, "print": 1, "read": 1, "report": 1, "role": "System Manager", "share": 1, "write": 1},
-    {"create": 1, "delete": 1, "email": 1, "export": 1, "print": 1, "read": 1, "report": 1, "role": "Construction Owner", "share": 1, "write": 1},
-    {"create": 1, "email": 1, "export": 1, "print": 1, "read": 1, "report": 1, "role": "Project Manager", "share": 1, "write": 1},
-    {"email": 1, "export": 1, "print": 1, "read": 1, "report": 1, "role": "Site Engineer"},
-    {"email": 1, "export": 1, "print": 1, "read": 1, "report": 1, "role": "Accountant"},
-    {"read": 1, "role": "Read-Only"}
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Construction Owner",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "create": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Project Manager",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Site Engineer"
+    },
+    {
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Accountant"
+    },
+    {
+      "read": 1,
+      "role": "Read-Only"
+    }
   ],
   "sort_field": "modified",
   "sort_order": "DESC",
