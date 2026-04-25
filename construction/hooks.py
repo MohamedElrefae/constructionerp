@@ -7,84 +7,105 @@ app_description = "Construction ERP App for BOQ, Cost Estimation, and Project Ma
 app_email = "melrefa3@hotmail.com"
 app_license = "MIT"
 
+# v16 Desktop icon registration
+# Displays the Construction app icon on the Desktop grid and in the Apps screen
+add_to_apps_screen = [
+	{
+		"name": "construction",
+		"logo": "/assets/construction/images/construction_logo.svg",
+		"title": "Construction",
+		"route": "/app/construction",
+	}
+]
+
 module_app = {
-    "Construction": "construction",
+	"Construction": "construction",
 }
 
 # Module configuration - makes DocTypes visible in the Construction module menu
 # These will appear in the Construction module's left sidebar
 desk_links = {
-    "Construction": [
-        {
-            "type": "doctype",
-            "name": "Construction Theme",
-            "label": "Theme Configuration",
-            "description": "Manage construction themes and colors"
-        },
-        {
-            "type": "doctype",
-            "name": "Modern Theme Settings",
-            "label": "Theme Settings",
-            "description": "Configure site-wide theme settings"
-        }
-    ]
+	"Construction": [
+		{
+			"type": "doctype",
+			"name": "Construction Theme",
+			"label": "Theme Configuration",
+			"description": "Manage construction themes and colors",
+		},
+		{
+			"type": "doctype",
+			"name": "Modern Theme Settings",
+			"label": "Theme Settings",
+			"description": "Configure site-wide theme settings",
+		},
+		{
+			"type": "doctype",
+			"name": "User Scope Context",
+			"label": "User Scope Context",
+			"description": "Manage user company, branch, project scope",
+		},
+	]
 }
 
 # Doctype-specific JavaScript files
 # Paths are relative to the app module folder (construction/construction/)
-doctype_js = {
-    "BOQ Header": "construction/doctype/boq_header/boq_header.js"
-}
+doctype_js = {"BOQ Header": "construction/doctype/boq_header/boq_header.js"}
 
-doctype_tree_js = {
-    "BOQ Structure": "construction/doctype/boq_structure/boq_structure_tree.js"
-}
+doctype_tree_js = {"BOQ Structure": "construction/doctype/boq_structure/boq_structure_tree.js"}
 
 # Global JS includes (raw asset path — loaded directly, not bundled)
 # Phase 2: v3 is API-driven, v2 kept as fallback
+# Version bumped for theme normalization fix (display name vs key mismatch)
 app_include_js = [
-    "/assets/construction/js/print_settings_dialog.js",
-    "/assets/construction/js/construction_export_menu.js",
-    "/assets/construction/js/modern_theme_loader_v2.js?v=52",  # v5.2 - Dark theme + layout fix
-    "/assets/construction/js/components/index.js"
+	"/assets/construction/js/print_settings_dialog.js",
+	"/assets/construction/js/construction_export_menu.js",
+	"/assets/construction/js/modern_theme_loader_v2.js?v=110",
+	"/assets/construction/js/navbar_theme_dropdown.js?v=110",  # P0 theme sync fix - UI fixes
+	"/assets/construction/js/components/index.js",
 ]
 
 # Global CSS includes for Modern Theme
 app_include_css = [
-    "/assets/construction/css/modern_theme_tokens.css",
-    "/assets/construction/css/modern_theme_light.css",
-    "/assets/construction/css/modern_theme_dark.css",
-    "/assets/construction/css/modern_theme_base.css",
-    "/assets/construction/css/modern_theme_components.css",
-    "/assets/construction/css/modern_theme_forms.css",
-    "/assets/construction/css/modern_theme_tree.css",
-    "/assets/construction/css/modern_theme_sidebar.css",
-    "/assets/construction/css/modern_theme_layout.css",
-    "/assets/construction/css/modern_theme_switcher.css",
-    "/assets/construction/css/construction_theme_components.css"
+	"/assets/construction/css/modern_theme_tokens.css",
+	"/assets/construction/css/modern_theme_light.css",
+	"/assets/construction/css/modern_theme_dark.css",
+	"/assets/construction/css/modern_theme_base.css",
+	"/assets/construction/css/modern_theme_components.css",
+	"/assets/construction/css/modern_theme_forms.css",
+	"/assets/construction/css/modern_theme_tree.css",
+	"/assets/construction/css/modern_theme_sidebar.css",
+	"/assets/construction/css/modern_theme_layout.css",
+	"/assets/construction/css/modern_theme_switcher.css",
+	"/assets/construction/css/construction_theme_components.css",
 ]
 
 # CSS includes for unauthenticated pages (login, etc.)
-web_include_css = [
-    "/assets/construction/css/login_theme.css"
-]
+web_include_css = ["/assets/construction/css/login_theme.css"]
 
 # Override Frappe's theme switcher for custom integration
 # Using simplified SQL-based version to avoid Python controller import issues
 override_whitelisted_methods = {
-    "frappe.core.doctype.user.user.switch_theme": "construction.overrides.switch_theme_simple.switch_theme"
+	"frappe.core.doctype.user.user.switch_theme": "construction.overrides.switch_theme_simple.switch_theme"
 }
+
+# Boot session hook - inject user's theme into frappe.boot
+# This ensures the correct theme is available immediately on page load
+boot_session = "construction.api.theme_api.add_theme_to_boot"
 
 # Fixtures - Phase 2: Construction Theme records
 fixtures = [
-    {
-        "doctype": "Construction Theme",
-        "filters": [["is_system_theme", "=", 1]]
-    }
+	{"doctype": "Construction Theme", "filters": [["is_system_theme", "=", 1]]},
+	{"doctype": "Workspace Sidebar", "filters": [["name", "=", "Construction"]]},
 ]
 
 # After install - create system themes
 after_install = "construction.install.create_system_themes"
 
-# After migrate - ensure system themes exist
-after_migrate = "construction.install.create_system_themes"
+# After migrate - ensure system themes and workspace sidebar exist
+# Order matters: themes first, then sidebar, then health check
+after_migrate = [
+	"construction.install.create_system_themes",
+	"construction.install.setup_workspace_sidebar",
+	"construction.install.setup_construction_workspace_page",
+	"construction.install.verify_workspace_visibility",
+]

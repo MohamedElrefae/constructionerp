@@ -3,4 +3,4 @@
 
 from .construction_theme import ConstructionTheme
 
-__all__ = ['ConstructionTheme']
+__all__ = ["ConstructionTheme"]
