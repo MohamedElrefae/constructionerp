@@ -482,13 +482,241 @@ def save_user_mode(mode):
 		return {"success": False, "message": str(e)}
 
 
+def _get_theme_css_template(theme_name, normalized_key):
+	"""
+	Generate comprehensive CSS template that applies Construction theme variables.
+	This CSS uses the CSS variables defined in generate_css_variables() to override Frappe styles.
+	"""
+	is_dark = 'dark' in normalized_key
+	
+	# Base template with CSS that actually applies the variables
+	template = f"""
+/* ===== CONSTRUCTION THEME CSS TEMPLATE ===== */
+/* Theme: {theme_name} | Key: {normalized_key} */
+
+/* --- Root scope with data attribute --- */
+[data-modern-theme="{normalized_key}"] {{
+  /* Apply body background */
+  background-color: var(--ct-body-bg) !important;
+}}
+
+/* --- Navbar styling --- */
+[data-modern-theme="{normalized_key}"] .navbar,
+[data-modern-theme="{normalized_key}"] .navbar.navbar-expand,
+[data-modern-theme="{normalized_key}"] header.navbar {{
+  background: var(--ct-navbar-bg) !important;
+  border-bottom: 1px solid var(--ct-border-color) !important;
+}}
+
+[data-modern-theme="{normalized_key}"] .navbar .nav-link,
+[data-modern-theme="{normalized_key}"] .navbar .navbar-brand {{
+  color: var(--ct-text-primary) !important;
+}}
+
+/* --- Sidebar styling --- */
+[data-modern-theme="{normalized_key}"] .layout-side-section,
+[data-modern-theme="{normalized_key}"] .sidebar,
+[data-modern-theme="{normalized_key}"] .desk-sidebar,
+[data-modern-theme="{normalized_key}"] .form-sidebar {{
+  background: var(--ct-sidebar-bg) !important;
+  border-right: 1px solid var(--ct-border-color) !important;
+}}
+
+[data-modern-theme="{normalized_key}"] .layout-side-section .sidebar-item,
+[data-modern-theme="{normalized_key}"] .desk-sidebar .sidebar-item {{
+  color: var(--ct-text-primary) !important;
+}}
+
+[data-modern-theme="{normalized_key}"] .layout-side-section .sidebar-item:hover,
+[data-modern-theme="{normalized_key}"] .desk-sidebar .sidebar-item:hover {{
+  background: var(--ct-accent-hover) !important;
+  color: var(--ct-text-primary) !important;
+}}
+
+/* --- Main content area --- */
+[data-modern-theme="{normalized_key}"] .layout-main-section,
+[data-modern-theme="{normalized_key}"] .content,
+[data-modern-theme="{normalized_key}"] .page-wrapper,
+[data-modern-theme="{normalized_key}"] .page-container {{
+  background: var(--ct-body-bg) !important;
+}}
+
+/* --- Cards and surfaces --- */
+[data-modern-theme="{normalized_key}"] .card,
+[data-modern-theme="{normalized_key}"] .widget,
+[data-modern-theme="{normalized_key}"] .section-head,
+[data-modern-theme="{normalized_key}"] .form-section,
+[data-modern-theme="{normalized_key}"] .dialog {{
+  background: var(--ct-surface-bg) !important;
+  border-color: var(--ct-border-color) !important;
+}}
+
+/* --- Text colors --- */
+[data-modern-theme="{normalized_key}"] body,
+[data-modern-theme="{normalized_key}"] .text-color,
+[data-modern-theme="{normalized_key}"] .text-muted,
+[data-modern-theme="{normalized_key}"] h1, [data-modern-theme="{normalized_key}"] h2, 
+[data-modern-theme="{normalized_key}"] h3, [data-modern-theme="{normalized_key}"] h4,
+[data-modern-theme="{normalized_key}"] h5, [data-modern-theme="{normalized_key}"] h6 {{
+  color: var(--ct-text-primary) !important;
+}}
+
+/* --- Buttons --- */
+[data-modern-theme="{normalized_key}"] .btn-primary {{
+  background: var(--ct-primary-btn-bg) !important;
+  border-color: var(--ct-primary-btn-bg) !important;
+  color: var(--ct-primary-btn-text) !important;
+}}
+
+[data-modern-theme="{normalized_key}"] .btn-primary:hover {{
+  background: var(--ct-primary-btn-hover-bg) !important;
+  border-color: var(--ct-primary-btn-hover-bg) !important;
+}}
+
+[data-modern-theme="{normalized_key}"] .btn-secondary {{
+  background: var(--ct-secondary-btn-bg) !important;
+  border-color: var(--ct-secondary-btn-bg) !important;
+  color: var(--ct-secondary-btn-text) !important;
+}}
+
+/* --- Links --- */
+[data-modern-theme="{normalized_key}"] a,
+[data-modern-theme="{normalized_key}"] .link-primary {{
+  color: var(--ct-accent-primary) !important;
+}}
+
+[data-modern-theme="{normalized_key}"] a:hover {{
+  color: var(--ct-accent-hover) !important;
+}}
+
+/* --- Form elements --- */
+[data-modern-theme="{normalized_key}"] input,
+[data-modern-theme="{normalized_key}"] select,
+[data-modern-theme="{normalized_key}"] textarea,
+[data-modern-theme="{normalized_key}"] .form-control {{
+  background: var(--ct-surface-bg) !important;
+  border-color: var(--ct-border-color) !important;
+  color: var(--ct-text-primary) !important;
+}}
+
+/* --- Tables --- */
+[data-modern-theme="{normalized_key}"] .table,
+[data-modern-theme="{normalized_key}"] .datatable,
+[data-modern-theme="{normalized_key}"] .list-row {{
+  background: var(--ct-surface-bg) !important;
+  color: var(--ct-text-primary) !important;
+}}
+
+[data-modern-theme="{normalized_key}"] .table thead th,
+[data-modern-theme="{normalized_key}"] .datatable-header {{
+  background: var(--ct-navbar-bg) !important;
+  color: var(--ct-text-primary) !important;
+  border-color: var(--ct-border-color) !important;
+}}
+
+/* --- Dropdown menus --- */
+[data-modern-theme="{normalized_key}"] .dropdown-menu {{
+  background: var(--ct-surface-bg) !important;
+  border-color: var(--ct-border-color) !important;
+}}
+
+[data-modern-theme="{normalized_key}"] .dropdown-item {{
+  color: var(--ct-text-primary) !important;
+}}
+
+[data-modern-theme="{normalized_key}"] .dropdown-item:hover {{
+  background: var(--ct-accent-hover) !important;
+}}
+
+/* --- Modals --- */
+[data-modern-theme="{normalized_key}"] .modal-content,
+[data-modern-theme="{normalized_key}"] .modal-header,
+[data-modern-theme="{normalized_key}"] .modal-footer {{
+  background: var(--ct-surface-bg) !important;
+  border-color: var(--ct-border-color) !important;
+  color: var(--ct-text-primary) !important;
+}}
+"""
+	
+	return template
+
+
+def _resolve_frontend_theme_to_doc(theme_key, mode):
+	"""
+	Resolve frontend theme key to Construction Theme DocType name.
+	
+	Resolution priority:
+	1. 'light' / 'construction_light' -> Construction Light (is_default_light=1)
+	2. 'dark' / 'construction_dark'    -> Construction Dark (is_default_dark=1)
+	3. Custom theme name               -> exact name match (is_active=1)
+	4. No match                        -> None (fallback to Frappe native)
+	"""
+	if not theme_key:
+		return None
+	
+	key_lower = theme_key.lower().replace(" ", "_")
+	
+	# Map all light variants to the default light Construction theme
+	if key_lower in ("light", "construction_light"):
+		default_light = frappe.db.get_value(
+			"Construction Theme",
+			{"is_system_theme": 1, "is_default_light": 1, "is_active": 1},
+			"name"
+		)
+		if default_light:
+			return default_light
+		# Fallback: find any active Construction Light
+		return frappe.db.get_value(
+			"Construction Theme",
+			{"name": "Construction Light", "is_active": 1},
+			"name"
+		)
+	
+	# Map all dark variants to the default dark Construction theme
+	if key_lower in ("dark", "construction_dark"):
+		default_dark = frappe.db.get_value(
+			"Construction Theme",
+			{"is_system_theme": 1, "is_default_dark": 1, "is_active": 1},
+			"name"
+		)
+		if default_dark:
+			return default_dark
+		# Fallback: find any active Construction Dark
+		return frappe.db.get_value(
+			"Construction Theme",
+			{"name": "Construction Dark", "is_active": 1},
+			"name"
+		)
+	
+	# Custom themes: exact name match (case-insensitive)
+	existing = frappe.db.get_value(
+		"Construction Theme",
+		{"name": theme_key, "is_active": 1},
+		"name"
+	)
+	if existing:
+		return existing
+	
+	# Try case-insensitive match for custom themes
+	all_active = frappe.get_all(
+		"Construction Theme",
+		filters={"is_active": 1},
+		fields=["name"]
+	)
+	for t in all_active:
+		if t.name.lower() == key_lower:
+			return t.name
+	
+	return None
+
+
 @frappe.whitelist()
 def set_user_theme(theme, mode):
 	"""
 	Set user theme preference
 
 	Args:
-	    theme: str - Theme name
+	    theme: str - Theme name (frontend key or DocType name)
 	    mode: str - "light" or "dark"
 
 	Returns:
@@ -496,6 +724,26 @@ def set_user_theme(theme, mode):
 	"""
 	try:
 		user = frappe.session.user
+
+		# Resolve frontend key to DocType name
+		theme_doc = _resolve_frontend_theme_to_doc(theme, mode)
+		
+		# If no theme_doc, it's a basic theme (light/dark) - just save mode
+		if not theme_doc:
+			# Update User.desk_theme for mode
+			desk_theme_value = "Dark" if mode == "dark" else "Light"
+			frappe.db.set_value("User", user, "desk_theme", desk_theme_value, update_modified=False)
+			
+			# CRITICAL: Set User Desk Theme to inherit from site so it doesn't override
+			# When user selects basic theme, we don't want User Desk Theme to provide construction themes
+			user_theme_name = frappe.db.get_value("User Desk Theme", {"user": user}, "name")
+			if user_theme_name:
+				frappe.db.set_value("User Desk Theme", user_theme_name, "inherit_from_site", 1)
+				frappe.db.set_value("User Desk Theme", user_theme_name, "light_theme", None)
+				frappe.db.set_value("User Desk Theme", user_theme_name, "dark_theme", None)
+			
+			frappe.db.commit()
+			return {"success": True, "message": f"Mode saved: {mode}", "basic_theme": True}
 
 		# Get or create User Desk Theme
 		user_theme_name = frappe.db.get_value("User Desk Theme", {"user": user}, "name")
@@ -506,21 +754,25 @@ def set_user_theme(theme, mode):
 			user_theme = frappe.new_doc("User Desk Theme")
 			user_theme.user = user
 
-		# Set theme based on mode
+		# Set theme based on mode (using actual DocType name)
 		if mode == "light":
-			user_theme.light_theme = theme
+			user_theme.light_theme = theme_doc
+			user_theme.dark_theme = None  # Clear opposite mode
 		else:
-			user_theme.dark_theme = theme
+			user_theme.dark_theme = theme_doc
+			user_theme.light_theme = None  # Clear opposite mode
 
-		user_theme.inherit_from_site = 0
+		user_theme.inherit_from_site = 0  # User has custom theme, don't inherit
 		user_theme.save(ignore_permissions=True)
 		frappe.db.commit()
 
-		return {"success": True, "message": "Theme preference saved"}
+		return {"success": True, "message": "Theme preference saved", "theme_doc": theme_doc}
 
 	except Exception as e:
-		frappe.log_error(f"Error setting user theme: {str(e)}")
-		return {"success": False, "message": str(e)}
+		# Log short error message to avoid truncation
+		error_msg = str(e)[:100] if len(str(e)) > 100 else str(e)
+		frappe.log_error(f"Theme save error: {error_msg}")
+		return {"success": False, "message": error_msg}
 
 
 @frappe.whitelist()
@@ -610,7 +862,7 @@ def get_theme_css(theme_name):
 	Uses generate_css_variables() method to produce CSS variable block.
 
 	Args:
-	    theme_name: str - Name of the Construction Theme
+	    theme_name: str - Name of the Construction Theme (or frontend key like 'construction_light')
 
 	Returns:
 	    dict: { css: str, theme_name: str, cached: bool, version: str }
@@ -625,34 +877,70 @@ def get_theme_css(theme_name):
 				"error": "Theme name is required",
 			}
 
+		# Resolve frontend theme keys to actual Construction Theme DocType names
+		# This handles 'light', 'dark', 'construction_light', 'construction_dark' and custom names
+		theme_name_normalized = theme_name.lower().replace(" ", "_")
+		actual_theme_name = theme_name
+
+		if theme_name_normalized in ("light", "dark", "construction_light", "construction_dark"):
+			# Use _resolve_frontend_theme_to_doc for consistent resolution
+			mode = "dark" if theme_name_normalized in ("dark", "construction_dark") else "light"
+			resolved = _resolve_frontend_theme_to_doc(theme_name, mode)
+			if resolved:
+				actual_theme_name = resolved
+			else:
+				# Final fallback: return empty CSS (inline CSS handles this)
+				return {
+					"css": "",
+					"theme_name": theme_name,
+					"cached": False,
+					"version": "2",
+					"hardcoded": True,
+					"message": f"Theme {theme_name} uses inline CSS",
+				}
+
 		# Check cache first
-		cache_key = f"construction_theme_css:{theme_name}"
+		cache_key = f"construction_theme_css:{actual_theme_name}"
 		cached_css = frappe.cache().get_value(cache_key)
 
 		if cached_css:
 			return {
 				"css": cached_css,
-				"theme_name": theme_name,
+				"theme_name": actual_theme_name,
 				"cached": True,
 				"version": "2",
 				"generated_at": None,
 			}
 
 		# Get theme document
-		theme_doc = frappe.get_doc("Construction Theme", theme_name)
+		theme_doc = frappe.get_doc("Construction Theme", actual_theme_name)
 
 		# Generate CSS using generate_css_variables()
 		css = theme_doc.generate_css_variables()
+
+		# Add comprehensive CSS template that applies the variables to override Frappe styles
+		css += _get_theme_css_template(actual_theme_name, theme_name_normalized)
+
+		# Append custom_css if present (from the DocType's custom_css field)
+		if hasattr(theme_doc, 'custom_css') and theme_doc.custom_css:
+			css += "\n/* ===== CUSTOM CSS ===== */\n" + theme_doc.custom_css
+
+		# Build feature toggles dict
+		feature_toggles = {}
+		for field in ["hide_help_button", "hide_search_bar", "hide_sidebar", "hide_like_comment", "mobile_card_view"]:
+			if hasattr(theme_doc, field):
+				feature_toggles[field] = theme_doc.get(field, 0)
 
 		# Cache the result
 		frappe.cache().set_value(cache_key, css, expires_in_sec=3600)
 
 		return {
 			"css": css,
-			"theme_name": theme_name,
+			"theme_name": actual_theme_name,
 			"cached": False,
 			"version": "2",
 			"generated_at": frappe.utils.now(),
+			"feature_toggles": feature_toggles,
 		}
 
 	except Exception as e:
@@ -888,3 +1176,148 @@ def get_user_construction_theme():
 	except Exception as e:
 		frappe.log_error(f"Error getting user construction theme: {str(e)}")
 		return None
+
+
+def _get_frontend_theme_key(theme_doc_name, mode):
+	"""
+	Convert a Construction Theme DocType name to a frontend theme key.
+	
+	Args:
+	    theme_doc_name: Name of the Construction Theme DocType
+	    mode: 'light' or 'dark'
+	
+	Returns:
+	    Frontend key like 'light', 'dark', 'construction_light', 'construction_dark'
+	"""
+	if not theme_doc_name:
+		return mode
+
+	# Check if it's a system/hardcoded theme
+	is_system = frappe.db.get_value("Construction Theme", theme_doc_name, "is_system_theme")
+
+	if is_system:
+		# System themes map to construction_light/construction_dark
+		return f"construction_{mode}"
+
+	# For custom themes, return the actual DocType name
+	# The frontend will handle it as a custom construction theme
+	return theme_doc_name
+
+
+@frappe.whitelist(allow_guest=True)
+def get_user_theme_for_boot():
+	"""
+	Get the user's theme for boot injection.
+	Called during frappe.boot to determine the initial theme for the user.
+
+	Single Source of Truth: For logged-in users, master is User Desk Theme + User.desk_theme
+	For guests, master is Modern Theme Settings (site default).
+
+	Returns:
+	    dict: {
+	        theme: str,        # Frontend key (light/dark/construction_light/construction_dark/custom_name)
+	        mode: str,         # 'light' or 'dark'
+	        source: str,       # Where the value came from
+	        css_url: str       # Optional CSS URL for dynamic themes
+	    }
+	"""
+	try:
+		user = frappe.session.user
+
+		# Guest user - use site defaults
+		if user == "Guest":
+			site_settings = frappe.db.get_value(
+				"Modern Theme Settings",
+				{"name": "Modern Theme Settings"},
+				["default_light_theme", "default_dark_theme", "allow_user_override"],
+				as_dict=True,
+			)
+
+			if site_settings:
+				# Check if default is a system theme or custom
+				theme_doc = site_settings.default_light_theme or "light"
+				if theme_doc and frappe.db.exists("Construction Theme", theme_doc):
+					theme = _get_frontend_theme_key(theme_doc, "light")
+				else:
+					theme = "light"
+				mode = "light"
+				return {
+					"theme": theme,
+					"mode": mode,
+					"source": "site_default_guest",
+				}
+
+			return {"theme": "light", "mode": "light", "source": "hardcoded_guest"}
+
+		# Logged-in user - check User Desk Theme first (master source)
+		user_theme = frappe.db.get_value(
+			"User Desk Theme",
+			{"user": user},
+			["light_theme", "dark_theme", "inherit_from_site"],
+			as_dict=True,
+		)
+
+		# Get user's mode preference from User.desk_theme
+		desk_theme = frappe.db.get_value("User", user, "desk_theme") or "Light"
+		mode = "dark" if desk_theme == "Dark" else "light"
+
+		# If user has custom theme settings and not inheriting from site
+		if user_theme and not user_theme.inherit_from_site:
+			theme_doc = user_theme.dark_theme if mode == "dark" else user_theme.light_theme
+			if theme_doc:
+				# Convert DocType name to frontend key
+				frontend_key = _get_frontend_theme_key(theme_doc, mode)
+				return {
+					"theme": frontend_key,
+					"mode": mode,
+					"source": "user_desk_theme",
+					"doc_name": theme_doc,  # Original DocType name for reference
+				}
+
+		# User inherits from site or no custom theme set - check site defaults
+		site_settings = frappe.db.get_value(
+			"Modern Theme Settings",
+			{"name": "Modern Theme Settings"},
+			["default_light_theme", "default_dark_theme"],
+			as_dict=True,
+		)
+
+		if site_settings:
+			theme_doc = (
+				site_settings.default_dark_theme
+				if mode == "dark"
+				else site_settings.default_light_theme
+			)
+			if theme_doc:
+				frontend_key = _get_frontend_theme_key(theme_doc, mode)
+				return {"theme": frontend_key, "mode": mode, "source": "site_default", "doc_name": theme_doc}
+
+		# Fall back to basic light/dark based on mode
+		return {"theme": mode, "mode": mode, "source": "mode_fallback"}
+
+	except Exception as e:
+		frappe.log_error(f"Error getting theme for boot: {str(e)}")
+		return {"theme": "light", "mode": "light", "source": "error_fallback"}
+
+
+def add_theme_to_boot(bootinfo):
+	"""
+	Hook function called during frappe.boot to inject theme into bootinfo.
+	Added to hooks.py as boot_session = 'construction.api.theme_api.add_theme_to_boot'
+
+	This ensures the theme is available immediately on page load without extra API calls.
+	"""
+	try:
+		theme_data = get_user_theme_for_boot()
+		bootinfo.construction_theme = theme_data
+
+		# Also set the standard frappe.boot.theme for compatibility
+		bootinfo.theme = theme_data.get("mode", "light")
+
+		frappe.logger().debug(f"[Theme Boot] Injected theme for {frappe.session.user}: {theme_data}")
+
+	except Exception as e:
+		frappe.log_error(f"Error adding theme to boot: {str(e)}")
+		# Ensure we always have a fallback
+		bootinfo.construction_theme = {"theme": "light", "mode": "light", "source": "boot_error"}
+		bootinfo.theme = "light"

@@ -14,10 +14,36 @@
 (function () {
 	"use strict";
 
-	var VERSION = "5.2";
+	// ─── 0a. DEFENSIVE: Intercept localStorage.clear to preserve theme keys ──
+	// The Frappe asset pipeline may call localStorage.clear() on reload,
+	// which wipes theme persistence keys. This interceptor preserves them.
+	(function() {
+		var originalClear = Storage.prototype.clear;
+		var themeKeys = ['theme', 'modern_theme', 'construction_theme', 'construction_active_theme',
+			'construction_mode', 'data-modern-theme', 'data-theme', 'ct_last_theme', 'frappe_theme'];
+
+		Storage.prototype.clear = function() {
+			var preserved = {};
+			var self = this;
+			themeKeys.forEach(function(k) {
+				var v = self.getItem(k);
+				if (v !== null) preserved[k] = v;
+			});
+
+			originalClear.apply(this, arguments);
+
+			Object.keys(preserved).forEach(function(k) {
+				self.setItem(k, preserved[k]);
+			});
+
+			// Silent: localStorage.clear intercepted, theme keys preserved
+		};
+	})();
+
+	var VERSION = "5.4";
 	console.log(
-		"%c[Modern Theme] LOADER v" + VERSION + " — Hybrid API+Inline — 20260418",
-		"background:#2E7D32;color:#fff;padding:4px 8px;border-radius:4px;font-weight:bold"
+		"%c[Construction Theme] v" + VERSION + " — Theme System",
+		"background:#4CAF50;color:#fff;padding:2px 6px;border-radius:3px;font-size:11px"
 	);
 
 	// ─── 0. THEME NAME NORMALIZER ─────────────────────────────────────
@@ -219,7 +245,7 @@
 		version: VERSION,
 
 		init: function () {
-			console.log("[Modern Theme v" + this.version + "] Initializing...");
+			// Initialization complete silently
 			if (typeof frappe === "undefined") {
 				setTimeout(function () {
 					ModernThemeLoader.init();
@@ -227,19 +253,107 @@
 				return;
 			}
 
-			// Restore construction theme from localStorage (persists across page reloads)
-			try {
-				var saved = localStorage.getItem("construction_theme");
-				if (saved && saved.toLowerCase().indexOf("construction") !== -1) {
-					var normalized = _norm(saved);
-					document.documentElement.setAttribute("data-modern-theme", normalized);
-					this.currentTheme = normalized;
+			// PHASE 2: Server-driven initialization
+			// Order: 1. Server boot (master), 2. DOM, 3. localStorage, 4. System preference
+			var initialTheme = null;
+			var initialMode = null;
+			var source = "unknown";
+
+			// 1. Check server boot first (Single Source of Truth)
+			if (frappe.boot && frappe.boot.construction_theme) {
+				initialTheme = frappe.boot.construction_theme.theme;
+				initialMode = frappe.boot.construction_theme.mode;
+				source = "boot_" + (frappe.boot.construction_theme.source || "unknown");
+				// Theme loaded from boot
+			}
+
+			// 2. If no boot theme, check DOM attributes (from server-rendered HTML)
+			if (!initialTheme) {
+				var domModern = document.documentElement.getAttribute("data-modern-theme");
+				var domBase = document.documentElement.getAttribute("data-theme");
+				if (domModern) {
+					initialTheme = domModern;
+					initialMode = domBase || (domModern.includes("dark") ? "dark" : "light");
+					source = "dom_attr";
+				} else if (domBase) {
+					initialTheme = domBase;
+					initialMode = domBase;
+					source = "dom_base";
 				}
+			}
+
+			// 3. If still no theme, check localStorage (cache layer)
+			if (!initialTheme) {
+				try {
+					var savedTheme = localStorage.getItem("construction_active_theme");
+					var savedMode = localStorage.getItem("construction_mode");
+					if (savedTheme) {
+						initialTheme = savedTheme;
+						initialMode = savedMode || (savedTheme.includes("dark") ? "dark" : "light");
+						source = "localStorage";
+					} else if (savedMode) {
+						initialTheme = savedMode;
+						initialMode = savedMode;
+						source = "localStorage_mode_only";
+					}
+					// Backward compatibility: also check old key
+					if (!initialTheme) {
+						var oldSaved = localStorage.getItem("construction_theme");
+						if (oldSaved) {
+							initialTheme = oldSaved;
+							initialMode = oldSaved.includes("dark") ? "dark" : "light";
+							source = "localStorage_legacy";
+						}
+					}
+				} catch (e) {
+					/* non-critical, localStorage may be disabled */
+				}
+			}
+
+			// 4. Final fallback: system preference (not hardcoded dark)
+			if (!initialTheme) {
+				if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+					initialTheme = "dark";
+					initialMode = "dark";
+					source = "system_preference_dark";
+				} else {
+					initialTheme = "light";
+					initialMode = "light";
+					source = "system_preference_light";
+				}
+			}
+
+			// Apply the initial theme
+			this.currentTheme = initialTheme;
+			this.currentMode = initialMode;
+
+			// Set DOM attributes
+			document.documentElement.setAttribute("data-theme", initialMode);
+			if (initialTheme.includes("construction")) {
+				document.documentElement.setAttribute("data-modern-theme", _norm(initialTheme));
+			}
+
+			// Sync to localStorage (cache layer mirrors master)
+			try {
+				localStorage.setItem("construction_active_theme", initialTheme);
+				localStorage.setItem("construction_mode", initialMode);
 			} catch (e) {
 				/* non-critical */
 			}
 
-			this.applyTheme();
+			// Only call applyTheme if we didn't get theme from boot
+			// (applyTheme calls API which may return different theme)
+			if (source.indexOf("boot_") !== 0) {
+				this.applyTheme();
+			} else {
+				// Just update the navbar indicator for boot-loaded themes
+				this.updateNavbarIndicator(initialMode);
+				// Always load full CSS from API for construction themes (including hardcoded)
+				if (initialTheme.includes("construction")) {
+					this.loadThemeCSS(initialTheme);
+				}
+			}
+
 			this.watchThemeChanges();
 			this.injectCSSVariables();
 		},
@@ -269,16 +383,14 @@
 					self.currentTheme = theme_name;
 					self.currentMode = mode;
 
-					document.documentElement.setAttribute("data-theme", mode);
-
-					// Preserve data-modern-theme if set by switch_theme
-					var existing = document.documentElement.getAttribute("data-modern-theme");
+					// Normalize DOM attributes atomically
 					if (theme_name !== "Standard") {
 						var normalized = _norm(theme_name);
-						document.documentElement.setAttribute("data-modern-theme", normalized);
-						localStorage.setItem("construction_theme", theme_name);
-					} else if (!existing) {
-						document.documentElement.removeAttribute("data-modern-theme");
+						self._normalizeDOMAttributes(normalized, mode);
+						localStorage.setItem("construction_active_theme", theme_name);
+						localStorage.setItem("construction_theme", theme_name); // Backward compat
+					} else {
+						self._normalizeDOMAttributes(null, mode);
 					}
 
 					self.updateNavbarIndicator(mode);
@@ -286,8 +398,8 @@
 					// Apply feature toggles from API response
 					self.applyFeatureToggles(r.message.feature_toggles || {});
 
-					// Load dynamic CSS for non-hardcoded themes
-					if (r.message.needs_css_injection) {
+					// Always load full CSS from API for construction themes
+					if (r.message.needs_css_injection || (theme_name !== "Standard" && theme_name.toLowerCase().indexOf("construction") !== -1)) {
 						self.fetchAndApplyCSSVariables(theme_name);
 					}
 
@@ -323,13 +435,15 @@
 					if (mutations[i].attributeName === "data-theme") {
 						var rawMode = document.documentElement.getAttribute("data-theme");
 						var oldMode = self.currentMode;
+						var modernTheme = document.documentElement.getAttribute("data-modern-theme");
+
+						// Theme mutation handled silently
 
 						// Normalize construction themes → set data-modern-theme + rewrite to light/dark
 						var rawNorm = _norm(rawMode);
 						if (rawNorm === "construction_light" || rawNorm === "construction_dark") {
 							var baseMode = rawNorm === "construction_light" ? "light" : "dark";
-							document.documentElement.setAttribute("data-modern-theme", rawNorm);
-							document.documentElement.setAttribute("data-theme", baseMode);
+							self._normalizeDOMAttributes(rawNorm, baseMode);
 							return; // will re-trigger observer with normalized value
 						}
 
@@ -351,9 +465,7 @@
 				method: "construction.api.theme_api.save_user_mode",
 				args: { mode: mode },
 				callback: function (r) {
-					if (r.message && r.message.success) {
-						console.log("[Modern Theme] Persisted mode: " + mode);
-					}
+					// Mode persistence handled silently
 				},
 				error: function () {
 					/* non-critical */
@@ -390,56 +502,39 @@
 
 		injectCSSVariables: function () {
 			document.body.classList.add("modern-theme-loaded");
-			this.injectNavbarIndicator();
+			// Old indicator disabled - using navbar_theme_dropdown.js instead
+			// this.injectNavbarIndicator();
 		},
 
 		// ─── 3b. DYNAMIC CSS LOADING (for new themes from DocType) ─────────
 		// Enhancement: Load additional CSS from API for themes not in inline CSS
 		fetchAndApplyCSSVariables: function (themeName) {
-			if (!themeName || themeName.toLowerCase().indexOf("construction") !== -1) {
-				// Skip for hardcoded construction themes - they use inline CSS
-				return;
-			}
-
-			// Check if we already loaded CSS for this theme
-			var cssId = "dynamic-theme-css-" + themeName;
-			if (document.getElementById(cssId)) return;
-
-			// Fetch dynamic CSS from API
-			frappe.call({
-				method: "construction.api.theme_api.get_theme_css",
-				args: { theme_name: themeName },
-				callback: function (r) {
-					if (r.message && r.message.css) {
-						var style = document.createElement("style");
-						style.id = cssId;
-						style.textContent = r.message.css;
-						document.head.appendChild(style);
-						console.log("[Modern Theme] Dynamic CSS loaded for:", themeName);
-					}
-				},
-				error: function () {
-					// Silently fail - inline CSS is the fallback
-					console.log(
-						"[Modern Theme] Dynamic CSS failed for:",
-						themeName,
-						"- using inline fallback"
-					);
-				},
-			});
+			// Always load full CSS from API for ALL themes.
+			// The API returns CSS variables + template CSS + custom_css field content.
+			// This was previously skipped for hardcoded themes, causing missing effects.
+			this.loadThemeCSS(themeName);
 		},
 
 		// ─── 4. NAVBAR INDICATOR ───────────────────────────────────────────
 
 		injectNavbarIndicator: function () {
 			var self = this;
+			// Persistent check - re-inject if navbar is re-rendered (SPA navigation)
 			var check = setInterval(function () {
 				var nav =
 					document.querySelector(".navbar-nav") ||
 					document.querySelector(".nav.navbar-right");
-				if (nav && !document.getElementById("modern-theme-indicator")) {
-					clearInterval(check);
-
+				
+				if (!nav) return; // Navbar not yet available
+				
+				// Always check and re-inject if missing (handles SPA navigation)
+				var existingIndicator = document.getElementById("modern-theme-indicator");
+				if (existingIndicator && existingIndicator.parentElement !== nav) {
+					// Indicator exists but is in wrong place (old navbar from previous page)
+					existingIndicator.remove();
+				}
+				
+				if (!document.getElementById("modern-theme-indicator")) {
 					var mt = document.documentElement.getAttribute("data-modern-theme");
 					var isCon = mt && mt.toLowerCase().indexOf("construction") !== -1;
 					var isDark = self.currentMode === "dark";
@@ -473,7 +568,7 @@
 					} else {
 						nav.appendChild(li);
 					}
-					console.log("[Modern Theme] Navbar indicator injected");
+					// Navbar indicator ready
 
 					// Aria-live announcer for screen readers
 					if (!document.getElementById("theme-change-announcer")) {
@@ -486,10 +581,8 @@
 						document.body.appendChild(ann);
 					}
 				}
-			}, 500);
-			setTimeout(function () {
-				clearInterval(check);
-			}, 10000);
+			}, 1000); // Check every 1 second
+			// No setTimeout - this runs forever to handle SPA navigation
 		},
 
 		updateNavbarIndicator: function (mode) {
@@ -536,7 +629,7 @@
 			this.applyTheme();
 		},
 
-		injectDynamicCSS: function (css) {
+		injectDynamicCSS: function (css, themeName) {
 			if (!css) return;
 			var el = document.getElementById("modern-theme-dynamic");
 			if (el) el.remove();
@@ -544,31 +637,180 @@
 			el.id = "modern-theme-dynamic";
 			el.textContent = css;
 			document.head.appendChild(el);
+			// CSS injected: (themeName || "unknown") + " (" + css.length + " bytes)"
+		},
+
+		_resolveToDocTypeName: function (themeKey) {
+			// Already a DocType name?
+			if (themeKey === 'Construction Light' || themeKey === 'Construction Dark') {
+				return themeKey;
+			}
+
+			// Frontend key mapping
+			var map = {
+				'construction_light': 'Construction Light',
+				'light': 'Construction Light',
+				'construction_dark': 'Construction Dark',
+				'dark': 'Construction Dark'
+			};
+
+			if (map[themeKey]) {
+				return map[themeKey];
+			}
+
+			// Custom themes: assume key matches name (or fetch from server)
+			return themeKey;
 		},
 
 		loadThemeCSS: function (themeName) {
 			var self = this;
+
+			// Resolve frontend key to actual DocType name
+			// e.g. "construction_dark" -> "Construction Dark"
+			var docName = this._resolveToDocTypeName(themeName);
+
+			if (!docName) {
+				console.warn('[ModernTheme] Could not resolve theme to DocType:', themeName);
+				return;
+			}
+
 			frappe.call({
 				method: "construction.api.theme_api.get_theme_css",
-				args: { theme_name: themeName },
+				args: { theme_name: docName },
 				callback: function (r) {
 					if (r.message && r.message.css) {
-						self.injectDynamicCSS(r.message.css);
+						// Inject the FULL CSS (variables + templates + custom_css field)
+						// Pass the original themeKey for proper CSS scoping
+						self.injectDynamicCSS(r.message.css, themeName);
+
+						// Also inject feature toggle classes if provided
+						if (r.message.feature_toggles) {
+							self.applyFeatureToggles(r.message.feature_toggles);
+						}
+
 						console.log(
-							"[Modern Theme] Dynamic CSS loaded for:",
-							themeName,
+							"[ModernTheme] Full CSS loaded for:",
+							docName,
 							"(" + r.message.css.length + " bytes)"
 						);
+					} else {
+						console.warn('[ModernTheme] No CSS returned for:', docName);
 					}
 				},
-				error: function () {
-					console.log("[Modern Theme] Dynamic CSS failed for:", themeName);
+				error: function (err) {
+					console.error('[ModernTheme] Failed to load CSS:', err);
 				},
 			});
 		},
 
-		fetchAndApplyCSSVariables: function (themeName) {
-			this.loadThemeCSS(themeName);
+		// ─── 5b. SET THEME (for external components like navbar dropdown) ───
+
+		/**
+		 * Set theme from external component (e.g., navbar dropdown)
+		 * This is the single entry point for theme changes from UI components
+		 *
+		 * @param {string} themeName - Theme key: 'light', 'dark', 'construction_light', 'construction_dark'
+		 */
+		setTheme: function (themeName) {
+			if (!themeName) {
+				return;
+			}
+
+			var oldTheme = this.currentTheme;
+			this.currentTheme = themeName;
+
+			// Determine mode from theme name
+			var targetMode = "light";
+			var themeLower = themeName.toLowerCase();
+			if (themeLower === "dark" || themeLower.indexOf("dark") !== -1) {
+				targetMode = "dark";
+			}
+
+			// Handle construction themes
+			var isConstructionTheme = themeLower.indexOf("construction") !== -1;
+			var normalized = _norm(themeName);
+
+			if (isConstructionTheme) {
+				document.documentElement.setAttribute("data-modern-theme", normalized);
+				localStorage.setItem("construction_active_theme", themeName);
+				localStorage.setItem("construction_theme", themeName); // Backward compat
+				
+				// Hardcoded theme handling complete
+			} else {
+				document.documentElement.removeAttribute("data-modern-theme");
+				localStorage.removeItem("construction_active_theme");
+				localStorage.removeItem("construction_theme");
+			}
+
+			// Set base data-theme attribute and normalize DOM
+			var frappeMode = targetMode;
+			if (isConstructionTheme) {
+				this._normalizeDOMAttributes(normalized, frappeMode);
+			} else {
+				this._normalizeDOMAttributes(null, frappeMode);
+			}
+			this.currentMode = targetMode;
+			localStorage.setItem("construction_mode", targetMode);
+
+			// Update navbar indicator
+			this.updateNavbarIndicator(targetMode);
+
+			// Always load full CSS from API for ALL themes (including hardcoded).
+			// Inline CSS serves as immediate visual feedback while API CSS loads.
+			// The API-loaded CSS overrides inline rules because it's inserted later in DOM.
+			if (isConstructionTheme) {
+				this.loadThemeCSS(themeName);
+			}
+
+			// Trigger theme change event for other components
+			window.dispatchEvent(
+				new CustomEvent("modern-theme-applied", {
+					detail: {
+						theme_name: themeName,
+						mode: targetMode,
+						source: "setTheme",
+						old_theme: oldTheme,
+					},
+				})
+			);
+
+			// Theme applied
+		},
+
+		/**
+		 * Normalize DOM attributes so both systems always agree.
+		 * Sets data-modern-theme and data-theme atomically.
+		 */
+		_normalizeDOMAttributes: function (constructionTheme, frappeTheme) {
+			var html = document.documentElement;
+			var body = document.body;
+
+			// 1. Set Construction theme identifier
+			if (constructionTheme) {
+				html.setAttribute("data-modern-theme", constructionTheme);
+			}
+
+			// 2. Set Frappe theme identifier (light/dark)
+			var mode = frappeTheme || (constructionTheme && constructionTheme.includes("dark") ? "dark" : "light");
+			html.setAttribute("data-theme", mode);
+
+			// 3. Ensure body has the modern-theme-loaded class
+			if (body) {
+				body.classList.add("modern-theme-loaded");
+
+				// 4. Clean up stale/conflicting classes
+				body.classList.remove("ct-theme-basic");
+			}
+
+			// DOM normalized
+		},
+
+		/**
+		 * Check if theme is one of the hardcoded construction themes
+		 */
+		_isHardcodedConstructionTheme: function (themeName) {
+			var hardcoded = ["construction_light", "construction_dark"];
+			return hardcoded.indexOf(_norm(themeName)) !== -1;
 		},
 	};
 
@@ -594,7 +836,7 @@
 						frappe.call({
 							method: "construction.api.theme_api.list_available_themes",
 							callback: function (r) {
-								console.log("[Modern Theme] API response:", r.message);
+								// API response processed
 								if (
 									r.message &&
 									r.message.success &&
@@ -611,7 +853,6 @@
 											);
 										})
 										.map(function (t) {
-											console.log("[Modern Theme] Processing theme:", t);
 											return {
 												name: t.name,
 												label: t.label || t.theme_name || "Unknown",

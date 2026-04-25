@@ -8,6 +8,8 @@
 		{"label": "BOQ Header", "link_type": "DocType", "icon": "file", "type": "Link", "link_to": "BOQ Header"},
 		{"label": "BOQ Structure", "link_type": "DocType", "icon": "list", "type": "Link", "link_to": "BOQ Structure"},
 		{"label": "BOQ Item", "link_type": "DocType", "icon": "list", "type": "Link", "link_to": "BOQ Item"},
+		{"label": "Scope Management", "link_type": "DocType", "icon": "user", "type": "Section Break", "link_to": null},
+		{"label": "User Scope Context", "link_type": "DocType", "icon": "user", "type": "Link", "link_to": "User Scope Context"},
 		{"label": "Theme Settings", "link_type": "DocType", "icon": "settings", "type": "Section Break", "link_to": null},
 		{"label": "Construction Theme", "link_type": "DocType", "icon": "color", "type": "Link", "link_to": "Construction Theme"},
 		{"label": "Modern Theme Settings", "link_type": "DocType", "icon": "settings", "type": "Link", "link_to": "Modern Theme Settings"}

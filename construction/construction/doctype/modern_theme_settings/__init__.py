@@ -1,1 +1,0 @@
-# Modern Theme Settings DocType
