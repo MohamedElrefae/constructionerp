@@ -9,7 +9,7 @@
 
 const FormLayoutControls = (props) => {
   const { fields, layout, onChange } = props;
-  
+
   const [activeTab, setActiveTab] = React.useState('columns'); // 'columns' | 'fields' | 'arrange'
   const [draggedItem, setDraggedItem] = React.useState(null);
 
@@ -27,7 +27,7 @@ const FormLayoutControls = (props) => {
     const newVisibleFields = isVisible
       ? layout.visibleFields.filter(id => id !== fieldId)
       : [...layout.visibleFields, fieldId];
-    
+
     onChange({
       ...layout,
       visibleFields: newVisibleFields
@@ -40,7 +40,7 @@ const FormLayoutControls = (props) => {
     const newFullWidthFields = isFullWidth
       ? layout.fullWidthFields.filter(id => id !== fieldId)
       : [...layout.fullWidthFields, fieldId];
-    
+
     onChange({
       ...layout,
       fullWidthFields: newFullWidthFields
@@ -79,13 +79,13 @@ const FormLayoutControls = (props) => {
   const moveField = (fieldId, direction) => {
     const newOrder = [...layout.fieldOrder];
     const index = newOrder.indexOf(fieldId);
-    
+
     if (direction === 'up' && index > 0) {
       [newOrder[index], newOrder[index - 1]] = [newOrder[index - 1], newOrder[index]];
     } else if (direction === 'down' && index < newOrder.length - 1) {
       [newOrder[index], newOrder[index + 1]] = [newOrder[index + 1], newOrder[index]];
     }
-    
+
     onChange({
       ...layout,
       fieldOrder: newOrder
@@ -116,7 +116,7 @@ const FormLayoutControls = (props) => {
       <p style={{ marginBottom: '16px', color: 'var(--text-secondary)', fontSize: 'var(--font-size-sm)' }}>
         {__('Choose how many columns to display:')}
       </p>
-      
+
       <div className="layout-preview">
         {[1, 2, 3].map(colCount => (
           <div
@@ -145,7 +145,7 @@ const FormLayoutControls = (props) => {
         {fields.map(field => {
           const isVisible = layout.visibleFields.includes(field.id);
           const isFullWidth = layout.fullWidthFields.includes(field.id);
-          
+
           return (
             <li key={field.id} className="field-visibility-item">
               <div className="field-visibility-item__info">
@@ -154,7 +154,7 @@ const FormLayoutControls = (props) => {
                 </span>
                 <span className="field-visibility-item__label">{field.label}</span>
               </div>
-              
+
               <div className="field-visibility-item__toggle">
                 <label className="field-visibility-item__full-width">
                   <input
@@ -164,7 +164,7 @@ const FormLayoutControls = (props) => {
                   />
                   {__('Full width')}
                 </label>
-                
+
                 <label className="modern-checkbox-wrapper" style={{ margin: 0 }}>
                   <input
                     type="checkbox"
@@ -188,12 +188,12 @@ const FormLayoutControls = (props) => {
       <p style={{ marginBottom: '16px', color: 'var(--text-secondary)', fontSize: 'var(--font-size-sm)' }}>
         {__('Drag and drop to reorder fields:')}
       </p>
-      
+
       <ul className="field-order-list">
         {layout.fieldOrder.map((fieldId, index) => {
           const field = fields.find(f => f.id === fieldId);
           if (!field) return null;
-          
+
           return (
             <li
               key={field.id}
@@ -237,7 +237,7 @@ const FormLayoutControls = (props) => {
           <i className="fa fa-th-large"></i> {__('Layout Settings')}
         </span>
       </div>
-      
+
       <div className="layout-controls__tabs">
         <button
           className={`layout-controls__tab ${activeTab === 'columns' ? 'layout-controls__tab--active' : ''}`}
@@ -258,11 +258,11 @@ const FormLayoutControls = (props) => {
           {__('Arrange')}
         </button>
       </div>
-      
+
       {activeTab === 'columns' && renderColumnsTab()}
       {activeTab === 'fields' && renderFieldsTab()}
       {activeTab === 'arrange' && renderArrangeTab()}
-      
+
       <div className="layout-controls__footer">
         <button
           type="button"

@@ -32,7 +32,7 @@ frappe.ui.form.on("BOQ Structure", {
 		if (frm.doc.__islocal) return;
 		if (frm.doc.is_group == 1) {
 			frm.add_custom_button(__("Convert to Non-Group"), () =>
-				frm.events.convert_to_ledger(frm),
+				frm.events.convert_to_ledger(frm)
 			);
 		} else if (frm.doc.is_group == 0) {
 			frm.add_custom_button(__("Convert to Group"), () => frm.events.convert_to_group(frm));

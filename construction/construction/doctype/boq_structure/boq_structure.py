@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Mohamed Elrefae and contributors
+# For license information, please see license.txt
+
 import frappe
 from frappe import _
 from frappe.utils.nestedset import NestedSet

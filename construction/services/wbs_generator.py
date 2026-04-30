@@ -11,7 +11,7 @@ class WBSGenerator:
 
 	@staticmethod
 	def generate_code_for_node(
-		boq_header: str, parent_structure: str | None = None, node_type: str = "Section"
+		boq_header: str, parent_structure: str = None, node_type: str = "Section"
 	) -> str:
 		"""Generate WBS code for a new node."""
 		sibling_count = WBSGenerator._count_siblings(boq_header, parent_structure)
@@ -73,7 +73,7 @@ class WBSGenerator:
 			WBSGenerator.regenerate_subtree(root.name, boq_header)
 
 	@staticmethod
-	def _count_siblings(boq_header: str, parent_structure: str | None = None) -> int:
+	def _count_siblings(boq_header: str, parent_structure: str = None) -> int:
 		"""Count siblings for a given parent."""
 		filters = {"boq_header": boq_header}
 		if parent_structure:
@@ -94,7 +94,7 @@ class WBSGenerator:
 		return ".".join(segments)
 
 	@staticmethod
-	def validate_wbs_unique(wbs_code: str, boq_header: str, exclude: str | None = None) -> bool:
+	def validate_wbs_unique(wbs_code: str, boq_header: str, exclude: str = None) -> bool:
 		"""Check if WBS code is unique within BOQ header."""
 		filters = {"boq_header": boq_header, "wbs_code": wbs_code}
 		if exclude:

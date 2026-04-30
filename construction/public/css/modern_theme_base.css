@@ -29,7 +29,13 @@
 .modern-theme-loaded .navbar {
   background-color: var(--topbar_bg) !important;
   border-bottom: 1px solid var(--border-color) !important;
-  box-shadow: var(--shadow-sm) !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06) !important;
+}
+
+/* Construction dark mode navbar tint */
+html[data-modern-theme="construction_dark"] .modern-theme-loaded .navbar {
+  background: linear-gradient(rgba(46, 125, 50, 0.08), rgba(46, 125, 50, 0.08)), var(--topbar_bg) !important;
+  border-bottom-color: rgba(46, 125, 50, 0.3) !important;
 }
 
 .modern-theme-loaded .navbar .nav-link {
@@ -39,6 +45,8 @@
 .modern-theme-loaded .navbar .nav-link:hover {
   color: var(--accent-primary) !important;
   background-color: var(--hover-bg) !important;
+  border-radius: 8px;
+  transition: all 0.2s ease;
 }
 
 /* ============================================
@@ -50,22 +58,32 @@
   border-right: 1px solid var(--border-color) !important;
 }
 
-.modern-theme-loaded .sidebar-menu .sidebar-item {
+.modern-theme-loaded .desk-sidebar-item.standard-sidebar-item a.item-anchor {
   color: var(--text-primary) !important;
-  padding: var(--sidebar-item-padding) !important;
-  border-radius: var(--sidebar-item-radius) !important;
+  padding: 12px 16px !important;
+  border-radius: 8px !important;
   margin: 4px 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  text-decoration: none !important;
 }
 
-.modern-theme-loaded .sidebar-menu .sidebar-item:hover {
+.modern-theme-loaded .desk-sidebar-item.standard-sidebar-item a.item-anchor:hover {
   background-color: var(--hover-bg) !important;
   color: var(--heading-text) !important;
+  transition: all 0.2s ease;
 }
 
-.modern-theme-loaded .sidebar-menu .sidebar-item.active {
+.modern-theme-loaded .desk-sidebar-item.standard-sidebar-item.selected a.item-anchor {
   background-color: var(--selected_bg) !important;
   color: var(--accent-primary) !important;
-  font-weight: var(--font-weight-medium) !important;
+  font-weight: 500 !important;
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+/* Construction dark mode sidebar tint */
+html[data-modern-theme="construction_dark"] .modern-theme-loaded .layout-side-section {
+  background: linear-gradient(rgba(46, 125, 50, 0.06), rgba(46, 125, 50, 0.06)), var(--sidebar_bg) !important;
 }
 
 /* ============================================
@@ -275,4 +293,41 @@
   background-color: var(--info-bg) !important;
   color: var(--info-strong) !important;
   border-left: 3px solid var(--info) !important;
+}
+
+
+/* ============================================
+   ACCESSIBILITY — KEYBOARD FOCUS INDICATORS
+   ============================================ */
+
+.modern-theme-loaded .page-head .btn-default:focus-visible,
+.modern-theme-loaded .tree-node-toolbar .tree-toolbar-button:focus-visible,
+.modern-theme-loaded .navbar .nav-link:focus-visible,
+.modern-theme-loaded .desk-sidebar-item a.item-anchor:focus-visible,
+.modern-theme-loaded .theme-item:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   ACCESSIBILITY — REDUCED MOTION
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .modern-theme-loaded,
+  .modern-theme-loaded *,
+  .modern-theme-loaded *::before,
+  .modern-theme-loaded *::after {
+    transition-duration: 0.001ms !important;
+    animation-duration: 0.001ms !important;
+  }
+
+  .modern-theme-loaded .page-head .btn-default:hover,
+  .modern-theme-loaded .tree-node-toolbar .tree-toolbar-button:hover {
+    transform: none !important;
+  }
+
+  #theme-mode-dot {
+    box-shadow: none !important;
+  }
 }

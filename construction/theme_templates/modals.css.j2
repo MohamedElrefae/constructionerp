@@ -1,0 +1,38 @@
+/* ===== MODALS: {{ theme_name }} ===== */
+html[data-modern-theme="{{ theme_name }}"] .modal-content {
+    background: {{ surface_bg }} !important;
+    border-color: {{ border_color }} !important;
+{% if is_dark_mode %}
+    box-shadow: 0 8px 24px rgba(0,0,0,.4) !important;
+{% else %}
+    box-shadow: 0 8px 24px rgba(0,0,0,.15) !important;
+{% endif %}
+    border-radius: 12px !important;
+}
+
+html[data-modern-theme="{{ theme_name }}"] .modal-header {
+    border-bottom: 1px solid {{ border_color }} !important;
+}
+
+html[data-modern-theme="{{ theme_name }}"] .modal-title {
+    color: {{ text_primary }} !important;
+    font-weight: 600 !important;
+}
+
+html[data-modern-theme="{{ theme_name }}"] .modal-body {
+    color: {{ text_secondary }} !important;
+}
+
+html[data-modern-theme="{{ theme_name }}"] .modal-footer {
+    border-top: 1px solid {{ border_color }} !important;
+}
+
+html[data-modern-theme="{{ theme_name }}"] .modal .close {
+    color: {{ text_secondary }} !important;
+    opacity: 0.7 !important;
+}
+
+html[data-modern-theme="{{ theme_name }}"] .modal .close:hover {
+    color: {{ text_primary }} !important;
+    opacity: 1 !important;
+}

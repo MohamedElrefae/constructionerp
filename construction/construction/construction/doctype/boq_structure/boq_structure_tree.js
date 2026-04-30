@@ -47,7 +47,7 @@ frappe.treeview_settings["BOQ Structure"] = {
 					frappe.set_route("Form", "BOQ Header", boq);
 				}
 			},
-			__("View"),
+			__("View")
 		);
 
 		treeview.page.add_inner_button(
@@ -57,7 +57,7 @@ frappe.treeview_settings["BOQ Structure"] = {
 					boq_header: get_boq_header(),
 				});
 			},
-			__("View"),
+			__("View")
 		);
 	},
 };

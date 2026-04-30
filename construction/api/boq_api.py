@@ -20,17 +20,17 @@ def get_children(doctype, parent="", boq_header=None, is_root=False, **filters):
 
 	nodes = frappe.db.sql(
 		f"""
-        SELECT
-            `name` as value,
-            CONCAT(IFNULL(`wbs_code`,''), ' — ', `title`) as title,
-            `is_group` as expandable
-            {parent_fields}
-        FROM `tabBOQ Structure`
-        WHERE IFNULL(`parent_structure`, '') = %(parent)s
-        AND `docstatus` < 2
-        {conditions}
-        ORDER BY `lft`
-    """,
+		SELECT
+			`name` as value,
+			CONCAT(IFNULL(`wbs_code`,''), ' — ', `title`) as title,
+			`is_group` as expandable
+			{parent_fields}
+		FROM `tabBOQ Structure`
+		WHERE IFNULL(`parent_structure`, '') = %(parent)s
+		AND `docstatus` < 2
+		{conditions}
+		ORDER BY `lft`
+	""",
 		{"parent": parent_value, "boq_header": boq_header},
 		as_dict=True,
 	)
@@ -79,7 +79,7 @@ def create_boq_node(boq_header, parent_structure=None, title=None, is_group=0):
 
 		return {"success": True, "name": doc.name}
 	except Exception as e:
-		frappe.log_error(f"Error creating BOQ node: {e!s}")
+		frappe.log_error(f"Error creating BOQ node: {str(e)}")
 		return {"success": False, "error": str(e)}
 
 
@@ -107,7 +107,7 @@ def advance_boq_status(boq_header, target_status):
 
 		return {"success": True, "message": f"Status updated to {target_status}"}
 	except Exception as e:
-		frappe.log_error(f"Error advancing BOQ status: {e!s}")
+		frappe.log_error(f"Error advancing BOQ status: {str(e)}")
 		return {"success": False, "error": str(e)}
 
 
@@ -131,7 +131,7 @@ def export_boq_header_pdf(boq_header, column_config=None):
 			return result
 
 	except Exception as e:
-		frappe.log_error(f"PDF export error: {e!s}")
+		frappe.log_error(f"PDF export error: {str(e)}")
 		return {"success": False, "error": str(e)}
 
 
@@ -155,7 +155,7 @@ def export_boq_header_excel(boq_header, column_config=None):
 			return result
 
 	except Exception as e:
-		frappe.log_error(f"Excel export error: {e!s}")
+		frappe.log_error(f"Excel export error: {str(e)}")
 		return {"success": False, "error": str(e)}
 
 
@@ -179,7 +179,7 @@ def export_boq_excel(boq_header, column_config=None):
 			return result
 
 	except Exception as e:
-		frappe.log_error(f"Excel export error: {e!s}")
+		frappe.log_error(f"Excel export error: {str(e)}")
 		return {"success": False, "error": str(e)}
 
 
@@ -203,7 +203,7 @@ def export_boq_pdf(boq_header, column_config=None):
 			return result
 
 	except Exception as e:
-		frappe.log_error(f"PDF export error: {e!s}")
+		frappe.log_error(f"PDF export error: {str(e)}")
 		return {"success": False, "error": str(e)}
 
 
@@ -217,5 +217,5 @@ def import_boq_excel(file_url, boq_header):
 
 		return result
 	except Exception as e:
-		frappe.log_error(f"Excel import error: {e!s}")
+		frappe.log_error(f"Excel import error: {str(e)}")
 		return {"success": False, "error": str(e)}

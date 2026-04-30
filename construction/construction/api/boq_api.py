@@ -15,17 +15,17 @@ def get_children(doctype, parent="", boq_header=None, is_root=False, **filters):
 
 	nodes = frappe.db.sql(
 		f"""
-        SELECT
-            `name` as value,
-            CONCAT(IFNULL(`wbs_code`,''), ' — ', `title`) as title,
-            `is_group` as expandable
-            {parent_fields}
-        FROM `tabBOQ Structure`
-        WHERE IFNULL(`parent_structure`, '') = %(parent)s
-        AND `docstatus` < 2
-        {conditions}
-        ORDER BY `lft`
-    """,
+		SELECT
+			`name` as value,
+			CONCAT(IFNULL(`wbs_code`,''), ' — ', `title`) as title,
+			`is_group` as expandable
+			{parent_fields}
+		FROM `tabBOQ Structure`
+		WHERE IFNULL(`parent_structure`, '') = %(parent)s
+		AND `docstatus` < 2
+		{conditions}
+		ORDER BY `lft`
+	""",
 		{"parent": parent_value, "boq_header": boq_header},
 		as_dict=True,
 	)

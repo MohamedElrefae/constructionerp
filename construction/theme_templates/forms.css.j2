@@ -1,0 +1,65 @@
+/* ===== FORMS: {{ theme_name }} ===== */
+html[data-modern-theme="{{ theme_name }}"] .form-control {
+    background: {{ surface_bg }} !important;
+    border-color: {{ border_color }} !important;
+    color: {{ text_primary }} !important;
+    border-radius: 8px !important;
+    transition: all .2s ease !important;
+}
+
+html[data-modern-theme="{{ theme_name }}"] .form-control:focus {
+    border-color: {{ accent_primary }} !important;
+{% if is_dark_mode %}
+    box-shadow: 0 0 0 3px {{ accent_primary }}26 !important;
+{% else %}
+    box-shadow: 0 0 0 3px {{ accent_primary }}1f !important;
+{% endif %}
+}
+
+html[data-modern-theme="{{ theme_name }}"] .form-group label {
+    color: {{ text_primary }} !important;
+    font-weight: 500 !important;
+}
+
+html[data-modern-theme="{{ theme_name }}"] .form-section .section-head {
+    color: {{ accent_primary }} !important;
+    border-bottom: 1px solid {{ border_color }} !important;
+}
+
+html[data-modern-theme="{{ theme_name }}"] .dropdown-menu {
+    background: {{ surface_bg }} !important;
+    border-color: {{ border_color }} !important;
+{% if is_dark_mode %}
+    box-shadow: 0 4px 12px rgba(0,0,0,.3) !important;
+{% else %}
+    box-shadow: 0 4px 12px rgba(0,0,0,.1) !important;
+{% endif %}
+}
+
+html[data-modern-theme="{{ theme_name }}"] .dropdown-item {
+    color: {{ text_primary }} !important;
+}
+
+html[data-modern-theme="{{ theme_name }}"] .dropdown-item:hover {
+    background: {{ accent_primary }}19 !important;
+    color: {{ accent_primary }} !important;
+}
+
+html[data-modern-theme="{{ theme_name }}"] a {
+    color: {{ accent_primary }} !important;
+    transition: color .2s ease !important;
+}
+
+html[data-modern-theme="{{ theme_name }}"] a:hover {
+    color: {{ accent_primary_hover }} !important;
+}
+
+html[data-modern-theme="{{ theme_name }}"] h1,
+html[data-modern-theme="{{ theme_name }}"] h2,
+html[data-modern-theme="{{ theme_name }}"] h3 {
+    color: {{ text_primary }} !important;
+}
+
+html[data-modern-theme="{{ theme_name }}"] .control-label {
+    color: {{ text_secondary }} !important;
+}

@@ -1,0 +1,93 @@
+/* ===== BUTTONS: {{ theme_name }} ===== */
+html[data-modern-theme="{{ theme_name }}"] .btn-primary {
+    background: {{ accent_primary }} !important;
+    border-color: {{ accent_primary }} !important;
+    color: #fff !important;
+    border-radius: 10px !important;
+    transition: all .25s cubic-bezier(.4,0,.2,1) !important;
+}
+
+html[data-modern-theme="{{ theme_name }}"] .btn-primary:hover {
+    background: {{ accent_primary_hover }} !important;
+    border-color: {{ accent_primary_hover }} !important;
+    transform: translateY(-1px) !important;
+{% if is_dark_mode %}
+    box-shadow: 0 4px 12px {{ accent_primary }}4d !important;
+{% else %}
+    box-shadow: 0 4px 12px {{ accent_primary }}33 !important;
+{% endif %}
+}
+
+html[data-modern-theme="{{ theme_name }}"] .btn-default {
+    background: {{ surface_bg }} !important;
+    border: 1px solid {{ border_color }} !important;
+    color: {{ text_primary }} !important;
+    border-radius: 10px !important;
+    transition: all .25s cubic-bezier(.4,0,.2,1) !important;
+}
+
+html[data-modern-theme="{{ theme_name }}"] .btn-default:hover {
+    background: {{ accent_primary }}19 !important;
+    border-color: {{ accent_primary }} !important;
+    color: {{ accent_primary }} !important;
+    transform: translateY(-1px) !important;
+}
+
+html[data-modern-theme="{{ theme_name }}"] .page-head .btn-default.ellipsis,
+html[data-modern-theme="{{ theme_name }}"] .page-head .inner-group-button .btn-default,
+html[data-modern-theme="{{ theme_name }}"] .page-head .page-actions .btn-default {
+    border: 1px solid {{ border_color }} !important;
+    border-radius: 10px !important;
+    font-size: .8rem !important;
+    font-weight: 500 !important;
+    padding: 6px 14px !important;
+    min-height: 36px !important;
+    transition: all .25s cubic-bezier(.4,0,.2,1) !important;
+    background: {{ surface_bg }} !important;
+    color: {{ text_primary }} !important;
+{% if is_dark_mode %}
+    box-shadow: 0 1px 3px rgba(0,0,0,.06) !important;
+{% else %}
+    box-shadow: 0 1px 3px rgba(0,0,0,.06) !important;
+{% endif %}
+}
+
+html[data-modern-theme="{{ theme_name }}"] .page-head .btn-default.ellipsis:hover,
+html[data-modern-theme="{{ theme_name }}"] .page-head .inner-group-button .btn-default:hover,
+html[data-modern-theme="{{ theme_name }}"] .page-head .page-actions .btn-default:hover {
+    background: {{ accent_primary }}19 !important;
+    border-color: {{ accent_primary }} !important;
+    color: {{ accent_primary }} !important;
+    transform: translateY(-1px) !important;
+{% if is_dark_mode %}
+    box-shadow: 0 4px 12px rgba(0,0,0,.1) !important;
+{% else %}
+    box-shadow: 0 4px 12px rgba(0,0,0,.1) !important;
+{% endif %}
+}
+
+html[data-modern-theme="{{ theme_name }}"] .tree-toolbar-button {
+    border: 1px solid {{ border_color }} !important;
+    border-radius: 8px !important;
+    font-size: .78rem !important;
+    font-weight: 500 !important;
+    padding: 4px 12px !important;
+    min-height: 28px !important;
+    transition: all .2s ease !important;
+    background: {{ surface_bg }} !important;
+    color: {{ text_primary }} !important;
+    margin: 0 3px !important;
+}
+
+html[data-modern-theme="{{ theme_name }}"] .tree-toolbar-button:hover {
+    background: {{ accent_primary }}19 !important;
+    border-color: {{ accent_primary }} !important;
+    color: {{ accent_primary }} !important;
+    transform: translateY(-1px) !important;
+}
+
+html[data-modern-theme="{{ theme_name }}"] .tree-toolbar-button:last-child:hover {
+    border-color: {{ error_color }} !important;
+    color: {{ error_color }} !important;
+    background: {{ error_color }}0f !important;
+}

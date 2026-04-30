@@ -343,14 +343,14 @@ class PrintSettingsDialog {
 			function () {
 				self._save_settings();
 			},
-			"btn-secondary-dark",
+			"btn-secondary-dark"
 		);
 		this.dialog.add_custom_action(
 			__("Reset to Defaults"),
 			function () {
 				self._reset_defaults();
 			},
-			"btn-secondary-dark",
+			"btn-secondary-dark"
 		);
 
 		this.dialog.show();
@@ -562,7 +562,7 @@ class PrintSettingsDialog {
 			!this.config_manager.has_visible_columns()
 		) {
 			this._show_warning_message(
-				__("All columns are hidden. At least one column must be visible to export."),
+				__("All columns are hidden. At least one column must be visible to export.")
 			);
 			this._set_export_enabled(false);
 		} else if (this.columns && this.columns.length > 0) {
@@ -648,7 +648,7 @@ class PrintSettingsDialog {
 			frappe.msgprint({
 				title: __("Error"),
 				message: __(
-					"Failed to save print settings. Your current configuration is still active and you can proceed with the export.",
+					"Failed to save print settings. Your current configuration is still active and you can proceed with the export."
 				),
 				indicator: "red",
 			});
@@ -799,7 +799,7 @@ class PrintSettingsDialog {
 			$btn.attr("data-original-text", $btn.text());
 			$btn.html(
 				'<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> ' +
-					__("Exporting..."),
+					__("Exporting...")
 			);
 		} else {
 			var original = $btn.attr("data-original-text") || __("Export");

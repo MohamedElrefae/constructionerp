@@ -42,7 +42,7 @@ const FormField = (props) => {
           txt: searchText
         }
       });
-      
+
       if (result.message) {
         setSearchResults(result.message.results || []);
         setShowDropdown(true);
@@ -253,7 +253,7 @@ const FormField = (props) => {
         <label className={`modern-form-field__label ${field.required ? 'modern-form-field__label--required' : ''}`}>
           {field.label}
           {helpText && (
-            <span 
+            <span
               className="modern-tooltip modern-help-icon"
               data-tooltip={helpText}
             >
@@ -268,17 +268,17 @@ const FormField = (props) => {
           )}
         </label>
       )}
-      
+
       <div className="modern-form-field__input-wrapper">
         {renderInput()}
       </div>
-      
+
       {dependencyMessage && (
         <div className="modern-form-field__dependency">
           <i className="fa fa-lock"></i> {dependencyMessage}
         </div>
       )}
-      
+
       {error && (
         <div className="modern-form-field__error">
           <i className="fa fa-exclamation-circle"></i>

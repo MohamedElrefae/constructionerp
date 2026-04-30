@@ -16,9 +16,9 @@ const ExportButtons = (props) => {
 
   const handleExport = async (type) => {
     if (loading || disabled) return;
-    
+
     setActiveButton(type);
-    
+
     try {
       if (type === 'excel' && onExportExcel) {
         await onExportExcel();

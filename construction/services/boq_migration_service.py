@@ -29,11 +29,11 @@ class BOQMigrationService:
 
 			return {"success": True, "results": results}
 		except Exception as e:
-			frappe.log_error(f"Migration error: {e!s}")
+			frappe.log_error(f"Migration error: {str(e)}")
 			return {"success": False, "error": str(e)}
 
 	@staticmethod
-	def migrate_header(boq_header: str) -> dict[str, Any]:
+	def migrate_header(boq_header: str) -> Dict[str, Any]:
 		"""Migrate a single BOQ Header from old to new structure."""
 		try:
 			# Get old BOQ Node records
@@ -112,11 +112,11 @@ class BOQMigrationService:
 			}
 
 		except Exception as e:
-			frappe.log_error(f"Migration failed for {boq_header}: {e!s}")
+			frappe.log_error(f"Migration failed for {boq_header}: {str(e)}")
 			return {"success": False, "error": str(e)}
 
 	@staticmethod
-	def validate_migration(boq_header: str) -> dict[str, Any]:
+	def validate_migration(boq_header: str) -> Dict[str, Any]:
 		"""Validate that migration was successful."""
 		try:
 			# Count old nodes

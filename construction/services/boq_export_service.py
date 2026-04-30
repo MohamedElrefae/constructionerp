@@ -11,7 +11,9 @@ class BOQExportService:
 	"""BOQ export service for PDF and Excel exports."""
 
 	@staticmethod
-	def apply_column_config(default_columns: list[dict], column_config_json: str | None = None) -> list[dict]:
+	def apply_column_config(
+		default_columns: List[Dict], column_config_json: Optional[str] = None
+	) -> List[Dict]:
 		"""
 		Merge user column_config with default columns.
 		Returns ordered list of {key, label, width} dicts.
@@ -48,7 +50,7 @@ class BOQExportService:
 		return result
 
 	@staticmethod
-	def get_boq_header_data(boq_header: str) -> dict:
+	def get_boq_header_data(boq_header: str) -> Dict:
 		"""Get BOQ Header information."""
 		boq = frappe.get_doc("BOQ Header", boq_header)
 		project = frappe.get_doc("Project", boq.project) if boq.project else None
@@ -68,7 +70,7 @@ class BOQExportService:
 		}
 
 	@staticmethod
-	def get_tree_data(boq_header: str) -> list[dict]:
+	def get_tree_data(boq_header: str) -> List[Dict]:
 		"""Get complete tree data for export including all BOQ Structure and Items."""
 		# Get all BOQ Structure nodes for this header
 		structures = frappe.get_all(
@@ -177,7 +179,7 @@ class BOQExportService:
 		return depth
 
 	@staticmethod
-	def export_header_to_excel(boq_header: str, column_config: str | None = None) -> dict:
+	def export_header_to_excel(boq_header: str, column_config: Optional[str] = None) -> Dict:
 		"""Export BOQ Header information only (summary view like print format)."""
 		try:
 			import openpyxl
@@ -217,7 +219,7 @@ class BOQExportService:
 
 			# Title
 			ws.merge_cells("A1:B1")
-			title_cell = ws.cell(row=1, column=1, value=f"BOQ Header: {header_data['title']}")
+			title_cell = ws.cell(row=1, column=1, value=f"BOQ Header: {header_data["title"]}")
 			title_cell.font = title_font
 			title_cell.alignment = Alignment(horizontal="center", vertical="center")
 			ws.row_dimensions[1].height = 25
@@ -260,7 +262,7 @@ class BOQExportService:
 
 			from frappe.utils import get_files_path, now_datetime
 
-			file_name = f"BOQ_Header_{boq_header}_{now_datetime().strftime('%Y%m%d_%H%M%S')}.xlsx"
+			file_name = f"BOQ_Header_{boq_header}_{now_datetime().strftime("%Y%m%d_%H%M%S")}.xlsx"
 			file_path = os.path.join(get_files_path(), file_name)
 
 			wb.save(file_path)
@@ -287,11 +289,11 @@ class BOQExportService:
 			}
 
 		except Exception as e:
-			frappe.log_error(f"Excel export error: {e!s}", "BOQ Export")
+			frappe.log_error(f"Excel export error: {str(e)}", "BOQ Export")
 			return {"success": False, "error": str(e)}
 
 	@staticmethod
-	def export_to_excel(boq_header: str, column_config: str | None = None) -> dict:
+	def export_to_excel(boq_header: str, column_config: Optional[str] = None) -> Dict:
 		"""Export complete BOQ (Header + Structure + Items) to Excel format."""
 		try:
 			import openpyxl
@@ -339,7 +341,7 @@ class BOQExportService:
 			# Write BOQ Header info
 			last_col_letter = get_column_letter(len(effective_columns)) if effective_columns else "K"
 			ws.merge_cells(f"A1:{last_col_letter}1")
-			ws.cell(row=1, column=1, value=f"Bill of Quantities: {header_data['title']}")
+			ws.cell(row=1, column=1, value=f"Bill of Quantities: {header_data["title"]}")
 			ws.cell(row=1, column=1).font = title_font
 			ws.cell(row=1, column=1).alignment = Alignment(horizontal="center")
 
@@ -360,7 +362,7 @@ class BOQExportService:
 			row_idx = 5
 
 			# Build column headers from effective columns
-			len(effective_columns)
+			num_cols = len(effective_columns)
 
 			# Map column keys to data accessors and formatting
 			currency_keys = {"contract_unit_price", "line_total"}
@@ -388,7 +390,7 @@ class BOQExportService:
 				# Build a data dict for this node to look up by column key
 				node_values = {
 					"wbs_code": node.get("wbs_code", ""),
-					"title": f"{indent}{node.get('title', '')}",
+					"title": f"{indent}{node.get("title", "")}",
 					"type": node_type,
 					"unit": node.get("unit", ""),
 					"quantity": node.get("quantity"),
@@ -429,7 +431,7 @@ class BOQExportService:
 
 			# Grand total row
 			row_idx += 1
-			len(effective_columns)
+			last_col = len(effective_columns)
 			# Find the line_total column index (if present)
 			line_total_col_idx = None
 			for col_idx, col in enumerate(effective_columns, start=1):
@@ -455,7 +457,7 @@ class BOQExportService:
 
 			from frappe.utils import get_files_path, now_datetime
 
-			file_name = f"BOQ_{boq_header}_{now_datetime().strftime('%Y%m%d_%H%M%S')}.xlsx"
+			file_name = f"BOQ_{boq_header}_{now_datetime().strftime("%Y%m%d_%H%M%S")}.xlsx"
 			file_path = os.path.join(get_files_path(), file_name)
 
 			wb.save(file_path)
@@ -482,7 +484,7 @@ class BOQExportService:
 			}
 
 		except Exception as e:
-			frappe.log_error(f"Excel export error: {e!s}", "BOQ Export")
+			frappe.log_error(f"Excel export error: {str(e)}", "BOQ Export")
 			return {"success": False, "error": str(e)}
 
 	@staticmethod
@@ -493,12 +495,12 @@ class BOQExportService:
 		# Get the absolute path to the templates directory
 		app_path = frappe.get_app_path("construction")
 		template_path = os.path.join(app_path, "templates", template_name)
-		with open(template_path) as f:
+		with open(template_path, "r") as f:
 			template_str = f.read()
 		return frappe.render_template(template_str, context)
 
 	@staticmethod
-	def export_to_pdf(boq_header: str, column_config: str | None = None) -> dict:
+	def export_to_pdf(boq_header: str, column_config: Optional[str] = None) -> Dict:
 		"""Export complete BOQ to HTML for browser printing (wkhtmltopdf not required)."""
 		try:
 			from frappe.utils import now_datetime
@@ -536,7 +538,7 @@ class BOQExportService:
 
 			from frappe.utils import get_files_path
 
-			file_name = f"BOQ_{boq_header}_{now_datetime().strftime('%Y%m%d_%H%M%S')}.html"
+			file_name = f"BOQ_{boq_header}_{now_datetime().strftime("%Y%m%d_%H%M%S")}.html"
 			file_path = os.path.join(get_files_path(), file_name)
 			with open(file_path, "w", encoding="utf-8") as f:
 				f.write(html)
@@ -562,11 +564,11 @@ class BOQExportService:
 			}
 
 		except Exception as e:
-			frappe.log_error(f"PDF export error: {e!s}", "BOQ Export")
+			frappe.log_error(f"PDF export error: {str(e)}", "BOQ Export")
 			return {"success": False, "error": str(e)}
 
 	@staticmethod
-	def export_header_to_pdf(boq_header: str, column_config: str | None = None) -> dict:
+	def export_header_to_pdf(boq_header: str, column_config: Optional[str] = None) -> Dict:
 		"""Export BOQ Header summary to HTML for browser printing (wkhtmltopdf not required)."""
 		try:
 			from frappe.utils import now_datetime
@@ -599,7 +601,7 @@ class BOQExportService:
 
 			from frappe.utils import get_files_path
 
-			file_name = f"BOQ_Header_{boq_header}_{now_datetime().strftime('%Y%m%d_%H%M%S')}.html"
+			file_name = f"BOQ_Header_{boq_header}_{now_datetime().strftime("%Y%m%d_%H%M%S")}.html"
 			file_path = os.path.join(get_files_path(), file_name)
 			with open(file_path, "w", encoding="utf-8") as f:
 				f.write(html)
@@ -625,7 +627,7 @@ class BOQExportService:
 			}
 
 		except Exception as e:
-			frappe.log_error(f"PDF export error: {e!s}", "BOQ Export")
+			frappe.log_error(f"PDF export error: {str(e)}", "BOQ Export")
 			return {"success": False, "error": str(e)}
 
 	@staticmethod
@@ -654,15 +656,15 @@ class BOQExportService:
 			# Get total from BOQ Items for these structures
 			total = frappe.db.sql(
 				"""
-                SELECT COALESCE(SUM(line_total), 0) as total
-                FROM `tabBOQ Item`
-                WHERE structure IN %(structures)s
-            """,
+				SELECT COALESCE(SUM(line_total), 0) as total
+				FROM `tabBOQ Item`
+				WHERE structure IN %(structures)s
+			""",
 				{"structures": tuple(descendant_names)},
 			)
 
 			return total[0][0] if total else 0
 
 		except Exception as e:
-			frappe.log_error(f"Rollup calculation error: {e!s}", "BOQ Export")
+			frappe.log_error(f"Rollup calculation error: {str(e)}", "BOQ Export")
 			return 0

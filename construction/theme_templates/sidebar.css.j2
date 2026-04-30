@@ -1,0 +1,50 @@
+/* ===== SIDEBAR: {{ theme_name }} ===== */
+html[data-modern-theme="{{ theme_name }}"] .layout-side-section {
+    background: {{ sidebar_bg }} !important;
+    border-right: 1px solid {{ border_color }} !important;
+}
+
+html[data-modern-theme="{{ theme_name }}"] .desk-sidebar .standard-sidebar-item a,
+html[data-modern-theme="{{ theme_name }}"] .desk-sidebar .standard-sidebar-item a *,
+html[data-modern-theme="{{ theme_name }}"] .desk-sidebar .standard-sidebar-item .sidebar-item-label,
+html[data-modern-theme="{{ theme_name }}"] .desk-sidebar .sidebar-item-icon,
+html[data-modern-theme="{{ theme_name }}"] .desk-sidebar .sidebar-item-icon svg,
+html[data-modern-theme="{{ theme_name }}"] .desk-sidebar .sidebar-item-icon .icon {
+    color: {{ text_primary }} !important;
+    fill: {{ text_primary }} !important;
+    stroke: {{ text_primary }} !important;
+    font-size: 13.5px !important;
+}
+
+html[data-modern-theme="{{ theme_name }}"] .desk-sidebar .standard-sidebar-item a:hover,
+html[data-modern-theme="{{ theme_name }}"] .desk-sidebar .standard-sidebar-item a:hover *,
+html[data-modern-theme="{{ theme_name }}"] .desk-sidebar .standard-sidebar-item a:hover .icon {
+    color: {{ accent_primary }} !important;
+    fill: {{ accent_primary }} !important;
+    stroke: {{ accent_primary }} !important;
+    background: {{ accent_primary }}19 !important;
+    border-radius: 8px !important;
+}
+
+html[data-modern-theme="{{ theme_name }}"] .desk-sidebar .standard-sidebar-item.selected a,
+html[data-modern-theme="{{ theme_name }}"] .desk-sidebar .standard-sidebar-item.selected a *,
+html[data-modern-theme="{{ theme_name }}"] .desk-sidebar .standard-sidebar-item.selected .icon {
+    color: {{ accent_primary }} !important;
+    fill: {{ accent_primary }} !important;
+    stroke: {{ accent_primary }} !important;
+    font-weight: 600 !important;
+}
+
+html[data-modern-theme="{{ theme_name }}"] .desk-sidebar .standard-sidebar-item.selected a {
+    background: {{ accent_primary }}33 !important;
+    box-shadow: inset 3px 0 0 {{ accent_primary }} !important;
+    border-radius: 8px !important;
+}
+
+html[data-modern-theme="{{ theme_name }}"] .sidebar-label,
+html[data-modern-theme="{{ theme_name }}"] .desk-sidebar .sidebar-section-head {
+    color: {{ accent_primary }} !important;
+    font-size: .7rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+}

@@ -20,8 +20,8 @@ const Sidebar = (props) => {
 
   // Toggle section expand/collapse
   const toggleSection = (index) => {
-    setExpandedSections(prev => 
-      prev.includes(index) 
+    setExpandedSections(prev =>
+      prev.includes(index)
         ? prev.filter(i => i !== index)
         : [...prev, index]
     );
@@ -41,7 +41,7 @@ const Sidebar = (props) => {
           <span className="modern-sidebar__title">
             <i className="fa fa-th-large"></i> {__('Menu')}
           </span>
-          <div 
+          <div
             className="modern-sidebar__close"
             onClick={onClose}
           >
@@ -52,7 +52,7 @@ const Sidebar = (props) => {
         {/* Content */}
         <div className="modern-sidebar__content">
           {sections.map((section, index) => (
-            <div 
+            <div
               key={section.id || index}
               className={[
                 'modern-sidebar__section',
@@ -60,7 +60,7 @@ const Sidebar = (props) => {
               ].filter(Boolean).join(' ')}
             >
               {/* Section Header */}
-              <div 
+              <div
                 className="modern-sidebar__section-header"
                 onClick={() => toggleSection(index)}
               >
@@ -129,7 +129,7 @@ const Sidebar = (props) => {
 
       {/* Toggle Button (when sidebar is closed) */}
       {!isOpen && (
-        <div 
+        <div
           className="modern-sidebar-toggle"
           onClick={() => onClose && onClose()}
         >
@@ -141,7 +141,7 @@ const Sidebar = (props) => {
 
       {/* Overlay (for mobile) */}
       {isOpen && (
-        <div 
+        <div
           className="modern-sidebar-overlay modern-sidebar-overlay--visible"
           onClick={onClose}
         />

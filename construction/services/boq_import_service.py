@@ -45,11 +45,11 @@ class BOQImportService:
 			}
 
 		except Exception as e:
-			frappe.log_error(f"BOQ import error: {e!s}")
+			frappe.log_error(f"BOQ import error: {str(e)}")
 			return {"success": False, "error": str(e)}
 
 	@staticmethod
-	def validate_import_data(rows: list[dict], boq_header: str) -> list[str]:
+	def validate_import_data(rows: List[Dict], boq_header: str) -> List[str]:
 		"""Validate import data before creation."""
 		errors = []
 		seen_wbs = set()

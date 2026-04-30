@@ -91,7 +91,7 @@ html[data-theme='dark'] {
   --error: #DE3F3F;
   --success: #21C197;
   --warning: #FFC048;
-  
+
   /* Field backgrounds */
   --field_bg: #23272F;
   --selected_bg: #343940;
@@ -153,7 +153,7 @@ html[data-theme='light'] {
   --error: #DE3F3F;
   --success: #21C197;
   --warning: #FFC048;
-  
+
   /* Field backgrounds */
   --field_bg: #FFFFFF;
   --selected_bg: #E8F4FD;
@@ -212,7 +212,7 @@ html[data-theme='light'] {
   --btn-padding-sm: 8px 12px;
   --btn-padding-md: 12px 16px;
   --btn-padding-lg: 16px 24px;
-  
+
   /* Ultimate Button (from old app) */
   --ultimate-btn-min-height: 36px;
   --ultimate-btn-min-width: 85px;
@@ -307,8 +307,8 @@ html[data-theme='light'] {
 
 /* Base hover transition */
 .hoverable {
-  transition: background-color var(--transition-fast), 
-              border-color var(--transition-fast), 
+  transition: background-color var(--transition-fast),
+              border-color var(--transition-fast),
               color var(--transition-fast),
               transform var(--transition-fast),
               box-shadow var(--transition-fast);

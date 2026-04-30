@@ -10,6 +10,7 @@ import unittest
 import frappe
 import hypothesis.strategies as st
 from hypothesis import HealthCheck, assume, given, seed, settings
+from hypothesis import strategies as st
 
 
 class TestBOQProperties(unittest.TestCase):
@@ -174,7 +175,7 @@ class TestBOQProperties(unittest.TestCase):
 			# Create a BOQ Structure leaf node
 			structure = frappe.new_doc("BOQ Structure")
 			structure.boq_header = self.boq_header.name
-			structure.title = f"Test Item {i + 1}"
+			structure.title = f"Test Item {i+1}"
 			structure.node_type = "Item"
 			structure.insert()
 
@@ -377,8 +378,8 @@ if __name__ == "__main__":
 		child.insert()
 
 		# Get initial WBS codes
-		frappe.db.get_value("BOQ Structure", parent.name, "wbs_code")
-		frappe.db.get_value("BOQ Structure", child.name, "wbs_code")
+		parent_wbs_before = frappe.db.get_value("BOQ Structure", parent.name, "wbs_code")
+		child_wbs_before = frappe.db.get_value("BOQ Structure", child.name, "wbs_code")
 
 		# Regenerate WBS codes
 		from construction.services.wbs_generator import WBSGenerator
@@ -412,7 +413,7 @@ if __name__ == "__main__":
 			child = frappe.new_doc("BOQ Structure")
 			child.boq_header = self.boq_header.name
 			child.parent_structure = parent.name
-			child.title = f"Item {i + 1}"
+			child.title = f"Item {i+1}"
 			child.node_type = "Item"
 			child.insert()
 			items.append(child)

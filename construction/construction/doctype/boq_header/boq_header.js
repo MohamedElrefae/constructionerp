@@ -1,5 +1,5 @@
 // PrintSettingsDialog, ColumnConfigManager, PreviewPanel are registered globally via hooks.py
-// ConstructionExportMenu, ConstructionViewMenu are registered globally via hooks.py
+// ConstructionExportMenu, ConstructionViewMenu are registered globally via bundle
 
 frappe.ui.form.on("BOQ Header", {
 	refresh(frm) {
@@ -157,8 +157,8 @@ frappe.ui.form.on("BOQ Header", {
 				},
 			];
 
-			// ظ¤ظ¤ Helper: build export callback for frappe.call ظ¤ظ¤
-			var make_export_callback = function (method, args_fn, success_msg) {
+			// ── Helper: build export callback for frappe.call ──
+			function make_export_callback(method, args_fn, success_msg) {
 				return function (column_config) {
 					return new Promise(function (resolve, reject) {
 						frappe.call({
@@ -188,11 +188,11 @@ frappe.ui.form.on("BOQ Header", {
 						});
 					});
 				};
-			};
+			}
 
-			var header_args = function (column_config) {
+			function header_args(column_config) {
 				return { boq_header: frm.doc.name, column_config: JSON.stringify(column_config) };
-			};
+			}
 
 			var header_sample_data = [
 				{
@@ -204,7 +204,7 @@ frappe.ui.form.on("BOQ Header", {
 				},
 			];
 
-			// ظ¤ظ¤ View Menu (standalone button with Tree / Table options) ظ¤ظ¤
+			// ── View Menu (standalone button with Tree / Table options) ──
 			new ConstructionViewMenu(
 				frm,
 				[
@@ -229,10 +229,10 @@ frappe.ui.form.on("BOQ Header", {
 						},
 					},
 				],
-				"tree",
+				"tree"
 			);
 
-			// ظ¤ظ¤ Export Menu (standalone dropdown with icon) ظ¤ظ¤
+			// ── Export Menu (standalone dropdown with icon) ──
 			new ConstructionExportMenu(frm, [
 				{
 					label: __("Excel - Header Only"),
@@ -245,7 +245,7 @@ frappe.ui.form.on("BOQ Header", {
 							export_callback: make_export_callback(
 								"construction.api.boq_api.export_boq_header_excel",
 								header_args,
-								"Header exported successfully",
+								"Header exported successfully"
 							),
 						}).show();
 					},
@@ -261,7 +261,7 @@ frappe.ui.form.on("BOQ Header", {
 							export_callback: make_export_callback(
 								"construction.api.boq_api.export_boq_excel",
 								header_args,
-								"BOQ exported successfully",
+								"BOQ exported successfully"
 							),
 						}).show();
 					},
@@ -278,7 +278,7 @@ frappe.ui.form.on("BOQ Header", {
 							export_callback: make_export_callback(
 								"construction.api.boq_api.export_boq_header_pdf",
 								header_args,
-								"Header PDF exported successfully",
+								"Header PDF exported successfully"
 							),
 						}).show();
 					},
@@ -294,7 +294,7 @@ frappe.ui.form.on("BOQ Header", {
 							export_callback: make_export_callback(
 								"construction.api.boq_api.export_boq_pdf",
 								header_args,
-								"BOQ PDF exported successfully",
+								"BOQ PDF exported successfully"
 							),
 						}).show();
 					},
@@ -340,7 +340,7 @@ frappe.ui.form.on("BOQ Header", {
 				},
 			]);
 
-			// ظ¤ظ¤ Actions group (non-export actions only) ظ¤ظ¤
+			// ── Actions group (non-export actions only) ──
 			frm.add_custom_button(
 				__("Advance Status"),
 				() => {
@@ -358,7 +358,7 @@ frappe.ui.form.on("BOQ Header", {
 								if (r.message && r.message.success) {
 									frm.reload_doc();
 									frappe.show_alert({
-										message: `Status ظْ ${next}`,
+										message: `Status → ${next}`,
 										indicator: "green",
 									});
 								}
@@ -366,7 +366,7 @@ frappe.ui.form.on("BOQ Header", {
 						});
 					});
 				},
-				__("Actions"),
+				__("Actions")
 			);
 
 			if (frm.doc.status === "Draft") {
@@ -403,7 +403,7 @@ frappe.ui.form.on("BOQ Header", {
 						});
 						d.show();
 					},
-					__("Actions"),
+					__("Actions")
 				);
 			}
 		}

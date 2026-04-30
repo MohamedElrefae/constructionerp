@@ -29,7 +29,7 @@ class ConstructionExportMenu {
 		this.frm.page.custom_actions.find(".construction-export-menu").remove();
 
 		var $group = $(
-			'<div class="btn-group construction-export-menu" style="margin-left:8px;"></div>',
+			'<div class="btn-group construction-export-menu" style="margin-left:8px;"></div>'
 		);
 
 		// Main button
@@ -41,11 +41,11 @@ class ConstructionExportMenu {
 				"</span>" +
 				'<span class="visible-xs"><i class="fa fa-download"></i></span>' +
 				' <span class="caret"></span>' +
-				"</button>",
+				"</button>"
 		);
 
 		var $menu = $(
-			'<ul class="dropdown-menu dropdown-menu-right" style="min-width:220px;"></ul>',
+			'<ul class="dropdown-menu dropdown-menu-right" style="min-width:220px;"></ul>'
 		);
 
 		var self = this;
@@ -55,14 +55,14 @@ class ConstructionExportMenu {
 			}
 			var icon_html = item.icon
 				? '<i class="' +
-					item.icon +
-					'" style="width:18px;margin-right:6px;text-align:center;"></i>'
+				  item.icon +
+				  '" style="width:18px;margin-right:6px;text-align:center;"></i>'
 				: "";
 			var $li = $(
 				'<li><a href="#" style="display:flex;align-items:center;padding:6px 16px;">' +
 					icon_html +
 					item.label +
-					"</a></li>",
+					"</a></li>"
 			);
 			$li.find("a").on("click", function (e) {
 				e.preventDefault();
@@ -73,7 +73,8 @@ class ConstructionExportMenu {
 
 		$group.append($btn).append($menu);
 
-		// Prepend to custom_actions so it appears in the toolbar
+		// Insert after the Rename button area (before Actions dropdown)
+		// We prepend to custom_actions so it appears in the toolbar
 		this.frm.page.custom_actions.prepend($group);
 
 		this._$btn_group = $group;
@@ -123,7 +124,7 @@ class ConstructionViewMenu {
 		var current_label = current_item ? current_item.label : __("View");
 
 		var $group = $(
-			'<div class="btn-group construction-view-menu" style="margin-left:8px;"></div>',
+			'<div class="btn-group construction-view-menu" style="margin-left:8px;"></div>'
 		);
 
 		var $btn = $(
@@ -138,18 +139,18 @@ class ConstructionViewMenu {
 				current_icon +
 				'"></i></span>' +
 				' <span class="caret"></span>' +
-				"</button>",
+				"</button>"
 		);
 
 		var $menu = $(
-			'<ul class="dropdown-menu dropdown-menu-right" style="min-width:180px;"></ul>',
+			'<ul class="dropdown-menu dropdown-menu-right" style="min-width:180px;"></ul>'
 		);
 
 		this.items.forEach(function (item) {
 			var icon_html = item.icon
 				? '<i class="' +
-					item.icon +
-					'" style="width:18px;margin-right:6px;text-align:center;"></i>'
+				  item.icon +
+				  '" style="width:18px;margin-right:6px;text-align:center;"></i>'
 				: "";
 			var active_class =
 				item.value === self.current_view
@@ -166,7 +167,7 @@ class ConstructionViewMenu {
 					icon_html +
 					item.label +
 					check_html +
-					"</a></li>",
+					"</a></li>"
 			);
 			$li.find("a").on("click", function (e) {
 				e.preventDefault();
