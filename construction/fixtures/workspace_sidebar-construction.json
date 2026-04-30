@@ -42,6 +42,15 @@
 			"type": "Link",
 			"link_to": "BOQ Item",
 			"idx": 4
+		},
+		{
+			"doctype": "Workspace Sidebar Item",
+			"label": "User Scope Context",
+			"link_type": "DocType",
+			"icon": "user",
+			"type": "Link",
+			"link_to": "User Scope Context",
+			"idx": 5
 		}
 	]
 }
