@@ -187,6 +187,86 @@ def _invalidate_workspace_caches():
 # ---------------------------------------------------------------------------
 
 
+def setup_construction_workspace_page():
+	"""Create/update the Construction workspace page (main view with cards).
+	
+	This is different from the sidebar - it creates the actual workspace page
+	that shows cards/links when you click on Construction app.
+	"""
+	if not frappe.db.exists("Workspace", "Construction"):
+		# Create new workspace
+		workspace = frappe.new_doc("Workspace")
+		workspace.name = "Construction"
+		workspace.title = "Construction ERP"
+		workspace.label = "Construction"
+		workspace.module = "construction"
+		workspace.type = "Workspace"
+		workspace.public = 1
+		workspace.is_hidden = 0
+	else:
+		workspace = frappe.get_doc("Workspace", "Construction")
+	
+	# Ensure workspace has content showing User Scope Context
+	workspace.content = """<div class='workspace-content'>
+<h3>Construction ERP</h3>
+<p>BOQ Management, Cost Estimation, and Project Management</p>
+</div>"""
+	
+	# Add shortcut cards - clear and rebuild
+	workspace.shortcuts = []
+	
+	# BOQ Management Section
+	workspace.append("shortcuts", {
+		"type": "DocType",
+		"label": "BOQ Header",
+		"link_to": "BOQ Header",
+		"icon": "file",
+		"count": 1
+	})
+	workspace.append("shortcuts", {
+		"type": "DocType",
+		"label": "BOQ Structure",
+		"link_to": "BOQ Structure",
+		"icon": "list",
+		"count": 1
+	})
+	workspace.append("shortcuts", {
+		"type": "DocType",
+		"label": "BOQ Item",
+		"link_to": "BOQ Item",
+		"icon": "list",
+		"count": 1
+	})
+	
+	# User Scope Context - NEW
+	workspace.append("shortcuts", {
+		"type": "DocType",
+		"label": "User Scope Context",
+		"link_to": "User Scope Context",
+		"icon": "user",
+		"count": 1
+	})
+	
+	# Theme Settings Section
+	workspace.append("shortcuts", {
+		"type": "DocType",
+		"label": "Construction Theme",
+		"link_to": "Construction Theme",
+		"icon": "color",
+		"count": 1
+	})
+	workspace.append("shortcuts", {
+		"type": "DocType",
+		"label": "Modern Theme Settings",
+		"link_to": "Modern Theme Settings",
+		"icon": "settings",
+		"count": 1
+	})
+	
+	workspace.save(ignore_permissions=True)
+	frappe.logger().info("Construction workspace page updated with User Scope Context")
+
+
 def verify_workspace_visibility():
 	"""Post-migrate health check for workspace visibility.
 
