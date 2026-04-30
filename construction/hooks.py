@@ -38,6 +38,12 @@ desk_links = {
 			"label": "Theme Settings",
 			"description": "Configure site-wide theme settings",
 		},
+		{
+			"type": "doctype",
+			"name": "User Scope Context",
+			"label": "User Scope Context",
+			"description": "Manage user company, branch, project scope",
+		},
 	]
 }
 
@@ -49,11 +55,20 @@ doctype_tree_js = {"BOQ Structure": "construction/doctype/boq_structure/boq_stru
 
 # Global JS includes (raw asset path — loaded directly, not bundled)
 # Phase 2: v3 is API-driven, v2 kept as fallback
+# Version bumped for theme normalization fix (display name vs key mismatch)
 app_include_js = [
 	"/assets/construction/js/print_settings_dialog.js",
 	"/assets/construction/js/construction_export_menu.js",
-	"/assets/construction/js/modern_theme_loader_v2.js?v=52",  # v5.2 - Dark theme + layout fix
+	"/assets/construction/js/modern_theme_loader_v2.js?v=120",
+	"/assets/construction/js/navbar_theme_dropdown.js?v=120",  # P0 theme sync fix - UI fixes
 	"/assets/construction/js/components/index.js",
+	# Searchable Dropdown Module (Week 1)
+	"/assets/construction/js/searchable_dropdown/utils.js",
+	"/assets/construction/js/searchable_dropdown/searchable_dropdown.js",
+	# Searchable Dropdown Form Scripts (Week 2/3)
+	"/assets/construction/js/searchable_dropdown/config/journal_entry.js",
+	"/assets/construction/js/searchable_dropdown/config/sales_invoice.js",
+	"/assets/construction/js/searchable_dropdown/config/customer_supplier.js",
 ]
 
 # Global CSS includes for Modern Theme
@@ -69,6 +84,8 @@ app_include_css = [
 	"/assets/construction/css/modern_theme_layout.css",
 	"/assets/construction/css/modern_theme_switcher.css",
 	"/assets/construction/css/construction_theme_components.css",
+	# Searchable Dropdown Module (Week 2)
+	"/assets/construction/css/searchable_dropdown.css",
 ]
 
 # CSS includes for unauthenticated pages (login, etc.)
@@ -79,6 +96,10 @@ web_include_css = ["/assets/construction/css/login_theme.css"]
 override_whitelisted_methods = {
 	"frappe.core.doctype.user.user.switch_theme": "construction.overrides.switch_theme_simple.switch_theme"
 }
+
+# Boot session hook - inject user's theme into frappe.boot
+# This ensures the correct theme is available immediately on page load
+boot_session = "construction.api.theme_api.add_theme_to_boot"
 
 # Fixtures - Phase 2: Construction Theme records
 fixtures = [
@@ -94,5 +115,6 @@ after_install = "construction.install.create_system_themes"
 after_migrate = [
 	"construction.install.create_system_themes",
 	"construction.install.setup_workspace_sidebar",
+	"construction.install.setup_construction_workspace_page",
 	"construction.install.verify_workspace_visibility",
 ]
