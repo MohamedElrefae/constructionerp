@@ -10,7 +10,7 @@
 const { describe, it } = require("node:test");
 const assert = require("node:assert/strict");
 const fc = require("fast-check");
-const { ColumnConfigManager } = require("../../public/js/print_settings_dialog.js");
+const { ColumnConfigManager } = require("../public/js/print_settings_dialog.js");
 
 // ---------------------------------------------------------------------------
 // Generators
