@@ -1551,7 +1551,7 @@ describe("Property 9: Serialization Round-Trip", function () {
 // Unit Tests: PreviewPanel Rendering
 // ---------------------------------------------------------------------------
 
-const { PreviewPanel } = require("../../public/js/print_settings_dialog.js");
+const { PreviewPanel } = require("../public/js/print_settings_dialog.js");
 
 describe("PreviewPanel Rendering", function () {
 	/**
