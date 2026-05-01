@@ -1,11 +1,27 @@
-.DS_Store
-*.pyc
-*.egg-info
-*.swp
-tags
-node_modules
-__pycache____pycache__/
-.hypothesis/
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
 *.egg-info/
-*.backup
-*.backup
+dist/
+build/
+*.egg
+
+# Frappe
+*.pyc
+node_modules/
+.pytest_cache/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

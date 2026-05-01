@@ -1,0 +1,333 @@
+/**
+ * Modern Theme Base Styles
+ * Core styling that applies across all ERPNext pages
+ */
+
+/* ============================================
+   BASE RESET & GLOBAL STYLES
+   ============================================ */
+
+.modern-theme-loaded {
+  /* Ensure smooth transitions */
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Override Frappe's default background */
+.modern-theme-loaded .layout-main-section {
+  background-color: var(--background) !important;
+}
+
+.modern-theme-loaded .page-head {
+  background-color: var(--surface) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+}
+
+/* ============================================
+   NAVBAR / TOPBAR STYLING
+   ============================================ */
+
+.modern-theme-loaded .navbar {
+  background-color: var(--topbar_bg) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06) !important;
+}
+
+/* Construction dark mode navbar tint */
+html[data-modern-theme="construction_dark"] .modern-theme-loaded .navbar {
+  background: linear-gradient(rgba(46, 125, 50, 0.08), rgba(46, 125, 50, 0.08)), var(--topbar_bg) !important;
+  border-bottom-color: rgba(46, 125, 50, 0.3) !important;
+}
+
+.modern-theme-loaded .navbar .nav-link {
+  color: var(--text-primary) !important;
+}
+
+.modern-theme-loaded .navbar .nav-link:hover {
+  color: var(--accent-primary) !important;
+  background-color: var(--hover-bg) !important;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+/* ============================================
+   SIDEBAR STYLING
+   ============================================ */
+
+.modern-theme-loaded .layout-side-section {
+  background-color: var(--sidebar_bg) !important;
+  border-right: 1px solid var(--border-color) !important;
+}
+
+.modern-theme-loaded .desk-sidebar-item.standard-sidebar-item a.item-anchor {
+  color: var(--text-primary) !important;
+  padding: 12px 16px !important;
+  border-radius: 8px !important;
+  margin: 4px 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  text-decoration: none !important;
+}
+
+.modern-theme-loaded .desk-sidebar-item.standard-sidebar-item a.item-anchor:hover {
+  background-color: var(--hover-bg) !important;
+  color: var(--heading-text) !important;
+  transition: all 0.2s ease;
+}
+
+.modern-theme-loaded .desk-sidebar-item.standard-sidebar-item.selected a.item-anchor {
+  background-color: var(--selected_bg) !important;
+  color: var(--accent-primary) !important;
+  font-weight: 500 !important;
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+/* Construction dark mode sidebar tint */
+html[data-modern-theme="construction_dark"] .modern-theme-loaded .layout-side-section {
+  background: linear-gradient(rgba(46, 125, 50, 0.06), rgba(46, 125, 50, 0.06)), var(--sidebar_bg) !important;
+}
+
+/* ============================================
+   FORM STYLING
+   ============================================ */
+
+.modern-theme-loaded .form-control {
+  background-color: var(--field_bg) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--input-radius) !important;
+  color: var(--text-primary) !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.modern-theme-loaded .form-control:hover {
+  border-color: var(--accent) !important;
+}
+
+.modern-theme-loaded .form-control:focus {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 3px rgba(32, 118, 255, 0.1) !important;
+  outline: none !important;
+}
+
+.modern-theme-loaded .form-label {
+  color: var(--text-primary) !important;
+  font-weight: var(--font-weight-medium) !important;
+}
+
+.modern-theme-loaded .form-section {
+  background-color: var(--surface) !important;
+  border-radius: var(--card-radius) !important;
+  padding: var(--card-padding) !important;
+  box-shadow: var(--card-shadow) !important;
+  margin-bottom: var(--section-gap) !important;
+}
+
+.modern-theme-loaded .form-section-heading {
+  color: var(--heading-text) !important;
+  font-weight: var(--font-weight-semibold) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+  padding-bottom: 12px !important;
+  margin-bottom: 16px !important;
+}
+
+/* ============================================
+   BUTTON STYLING
+   ============================================ */
+
+.modern-theme-loaded .btn {
+  border-radius: var(--btn-radius) !important;
+  font-weight: var(--font-weight-medium) !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.modern-theme-loaded .btn-primary {
+  background-color: var(--button_bg) !important;
+  border-color: var(--button_bg) !important;
+  color: var(--button_text) !important;
+}
+
+.modern-theme-loaded .btn-primary:hover {
+  background-color: var(--accent-primary-hover) !important;
+  border-color: var(--accent-primary-hover) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(32, 118, 255, 0.3) !important;
+}
+
+.modern-theme-loaded .btn-secondary {
+  background-color: var(--surface) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
+.modern-theme-loaded .btn-secondary:hover {
+  background-color: var(--hover-bg) !important;
+  border-color: var(--accent) !important;
+}
+
+/* ============================================
+   TABLE STYLING
+   ============================================ */
+
+.modern-theme-loaded .table {
+  background-color: var(--surface) !important;
+}
+
+.modern-theme-loaded .table thead th {
+  background-color: var(--table_header_bg) !important;
+  color: var(--heading-text) !important;
+  font-weight: var(--font-weight-semibold) !important;
+  border-bottom: 2px solid var(--border-color) !important;
+  padding: 12px 16px !important;
+}
+
+.modern-theme-loaded .table tbody td {
+  background-color: var(--table_row_bg) !important;
+  color: var(--text-primary) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+  padding: 12px 16px !important;
+}
+
+.modern-theme-loaded .table tbody tr:hover td {
+  background-color: var(--hover-bg) !important;
+}
+
+/* Alternate row colors */
+.modern-theme-loaded .table tbody tr:nth-child(even) td {
+  background-color: var(--row-alt-bg) !important;
+}
+
+/* ============================================
+   MODAL STYLING
+   ============================================ */
+
+.modern-theme-loaded .modal-content {
+  background-color: var(--modal_bg) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--card-radius) !important;
+  box-shadow: var(--shadow-lg) !important;
+}
+
+.modern-theme-loaded .modal-header {
+  background-color: var(--surface) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+  border-radius: var(--card-radius) var(--card-radius) 0 0 !important;
+}
+
+.modern-theme-loaded .modal-footer {
+  background-color: var(--surface) !important;
+  border-top: 1px solid var(--border-color) !important;
+  border-radius: 0 0 var(--card-radius) var(--card-radius) !important;
+}
+
+/* ============================================
+   DROPDOWN / SELECT STYLING
+   ============================================ */
+
+.modern-theme-loaded .dropdown-menu {
+  background-color: var(--surface) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-md) !important;
+  box-shadow: var(--shadow-lg) !important;
+}
+
+.modern-theme-loaded .dropdown-item {
+  color: var(--text-primary) !important;
+  padding: 10px 16px !important;
+}
+
+.modern-theme-loaded .dropdown-item:hover {
+  background-color: var(--hover-bg) !important;
+  color: var(--heading-text) !important;
+}
+
+/* ============================================
+   TAB STYLING
+   ============================================ */
+
+.modern-theme-loaded .nav-tabs .nav-link {
+  color: var(--text-secondary) !important;
+  border: none !important;
+  border-bottom: 2px solid transparent !important;
+  padding: 12px 20px !important;
+  font-weight: var(--font-weight-medium) !important;
+}
+
+.modern-theme-loaded .nav-tabs .nav-link:hover {
+  color: var(--text-primary) !important;
+  border-bottom-color: var(--border-color) !important;
+}
+
+.modern-theme-loaded .nav-tabs .nav-link.active {
+  color: var(--accent-primary) !important;
+  background-color: var(--active_tab_bg) !important;
+  border-bottom-color: var(--accent-primary) !important;
+}
+
+/* ============================================
+   ALERT / MESSAGE STYLING
+   ============================================ */
+
+.modern-theme-loaded .alert {
+  border-radius: var(--radius-md) !important;
+  border: none !important;
+}
+
+.modern-theme-loaded .alert-success {
+  background-color: rgba(33, 193, 151, 0.1) !important;
+  color: var(--success) !important;
+  border-left: 3px solid var(--success) !important;
+}
+
+.modern-theme-loaded .alert-warning {
+  background-color: rgba(255, 192, 72, 0.1) !important;
+  color: var(--warning) !important;
+  border-left: 3px solid var(--warning) !important;
+}
+
+.modern-theme-loaded .alert-danger {
+  background-color: rgba(222, 63, 63, 0.1) !important;
+  color: var(--error) !important;
+  border-left: 3px solid var(--error) !important;
+}
+
+.modern-theme-loaded .alert-info {
+  background-color: var(--info-bg) !important;
+  color: var(--info-strong) !important;
+  border-left: 3px solid var(--info) !important;
+}
+
+
+/* ============================================
+   ACCESSIBILITY — KEYBOARD FOCUS INDICATORS
+   ============================================ */
+
+.modern-theme-loaded .page-head .btn-default:focus-visible,
+.modern-theme-loaded .tree-node-toolbar .tree-toolbar-button:focus-visible,
+.modern-theme-loaded .navbar .nav-link:focus-visible,
+.modern-theme-loaded .desk-sidebar-item a.item-anchor:focus-visible,
+.modern-theme-loaded .theme-item:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   ACCESSIBILITY — REDUCED MOTION
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .modern-theme-loaded,
+  .modern-theme-loaded *,
+  .modern-theme-loaded *::before,
+  .modern-theme-loaded *::after {
+    transition-duration: 0.001ms !important;
+    animation-duration: 0.001ms !important;
+  }
+
+  .modern-theme-loaded .page-head .btn-default:hover,
+  .modern-theme-loaded .tree-node-toolbar .tree-toolbar-button:hover {
+    transform: none !important;
+  }
+
+  #theme-mode-dot {
+    box-shadow: none !important;
+  }
+}

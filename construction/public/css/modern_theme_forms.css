@@ -1,0 +1,441 @@
+/**
+ * Modern Theme Form Styles
+ * Styling for hybrid React forms and Frappe form overrides
+ */
+
+/* ============================================
+   UNIFIED CRUD FORM CONTAINER
+   ============================================ */
+
+.modern-crud-form {
+  background-color: var(--surface);
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+}
+
+.modern-crud-form__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-md) var(--space-lg);
+  background-color: var(--surface);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.modern-crud-form__title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--heading-text);
+  margin: 0;
+}
+
+.modern-crud-form__actions {
+  display: flex;
+  gap: var(--toolbar-gap);
+}
+
+.modern-crud-form__body {
+  padding: var(--space-lg);
+}
+
+.modern-crud-form__footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--toolbar-gap);
+  padding: var(--space-md) var(--space-lg);
+  background-color: var(--sidebar_bg);
+  border-top: 1px solid var(--border-color);
+}
+
+/* ============================================
+   FORM LAYOUT GRID
+   ============================================ */
+
+.modern-form-grid {
+  display: grid;
+  gap: var(--section-gap);
+}
+
+.modern-form-grid--1-col {
+  grid-template-columns: 1fr;
+}
+
+.modern-form-grid--2-col {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.modern-form-grid--3-col {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+@media (max-width: 768px) {
+  .modern-form-grid--2-col,
+  .modern-form-grid--3-col {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================
+   FORM FIELD CONTAINER
+   ============================================ */
+
+.modern-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.modern-form-field--full-width {
+  grid-column: 1 / -1;
+}
+
+.modern-form-field__label {
+  display: flex;
+  align-items: center;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-primary);
+}
+
+.modern-form-field__label--required::after {
+  content: '*';
+  color: var(--error);
+  margin-left: 4px;
+}
+
+.modern-form-field__input-wrapper {
+  position: relative;
+}
+
+.modern-form-field__help {
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.modern-form-field__error {
+  font-size: var(--font-size-xs);
+  color: var(--error);
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Auto-fill indicator */
+.modern-form-field__autofill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  background-color: var(--info-bg);
+  border-radius: var(--radius-sm);
+  font-size: 10px;
+  color: var(--info-strong);
+  margin-left: auto;
+}
+
+/* Dependency indicator */
+.modern-form-field__dependency {
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+/* ============================================
+   INPUT STYLES
+   ============================================ */
+
+.modern-input {
+  width: 100%;
+  padding: var(--input-padding);
+  background-color: var(--field_bg);
+  border: var(--input-border-width) solid var(--border-color);
+  border-radius: var(--input-radius);
+  color: var(--text-primary);
+  font-size: var(--font-size-base);
+  transition: all 0.2s ease;
+}
+
+.modern-input:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+
+.modern-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 var(--input-focus-ring-width) rgba(32, 118, 255, 0.1);
+}
+
+.modern-input:disabled {
+  background-color: var(--row-alt-bg);
+  color: var(--text-disabled);
+  cursor: not-allowed;
+}
+
+.modern-input--error {
+  border-color: var(--error) !important;
+  box-shadow: 0 0 0 var(--input-focus-ring-width) rgba(222, 63, 63, 0.1) !important;
+}
+
+/* Textarea */
+.modern-textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* Select */
+.modern-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236B7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  padding-right: 40px;
+}
+
+/* Checkbox */
+.modern-checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.modern-checkbox {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--border-color);
+  border-radius: 4px;
+  background-color: var(--field_bg);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  appearance: none;
+}
+
+.modern-checkbox:checked {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='white' d='M10 3L4.5 8.5 2 6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.modern-checkbox:hover:not(:checked):not(:disabled) {
+  border-color: var(--accent);
+}
+
+/* Searchable Select */
+.modern-searchable-select {
+  position: relative;
+}
+
+.modern-searchable-select__input {
+  width: 100%;
+  padding: var(--input-padding);
+  padding-right: 40px;
+  background-color: var(--field_bg);
+  border: var(--input-border-width) solid var(--border-color);
+  border-radius: var(--input-radius);
+  color: var(--text-primary);
+  font-size: var(--font-size-base);
+}
+
+.modern-searchable-select__dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 4px;
+  background-color: var(--surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  max-height: 250px;
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+.modern-searchable-select__option {
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.modern-searchable-select__option:hover {
+  background-color: var(--hover-bg);
+}
+
+.modern-searchable-select__option--selected {
+  background-color: var(--selected_bg);
+  color: var(--accent-primary);
+}
+
+/* Date input */
+.modern-date-input {
+  font-family: var(--font-family-base);
+}
+
+/* ============================================
+   FORM SECTIONS
+   ============================================ */
+
+.modern-form-section {
+  margin-bottom: var(--space-xl);
+}
+
+.modern-form-section__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-md) 0;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: var(--space-md);
+  cursor: pointer;
+}
+
+.modern-form-section__title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--heading-text);
+  margin: 0;
+}
+
+.modern-form-section__toggle {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  transition: transform 0.2s ease;
+}
+
+.modern-form-section--collapsed .modern-form-section__toggle {
+  transform: rotate(-90deg);
+}
+
+.modern-form-section__content {
+  transition: all 0.3s ease;
+}
+
+.modern-form-section--collapsed .modern-form-section__content {
+  display: none;
+}
+
+/* ============================================
+   VALIDATION MESSAGES
+   ============================================ */
+
+.modern-validation-summary {
+  padding: var(--space-md);
+  background-color: rgba(222, 63, 63, 0.05);
+  border: 1px solid var(--error);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-lg);
+}
+
+.modern-validation-summary__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--error);
+  margin-bottom: var(--space-sm);
+}
+
+.modern-validation-summary__list {
+  margin: 0;
+  padding-left: var(--space-lg);
+  color: var(--error);
+}
+
+.modern-validation-summary__list li {
+  margin-bottom: 4px;
+}
+
+/* ============================================
+   FORM LAYOUT CONTROLS
+   ============================================ */
+
+.modern-layout-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--toolbar-gap);
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: var(--space-md);
+}
+
+.modern-layout-controls__label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-secondary);
+}
+
+.modern-layout-controls__options {
+  display: flex;
+  gap: 6px;
+}
+
+.modern-layout-option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background-color: var(--field_bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.modern-layout-option:hover {
+  border-color: var(--accent);
+  background-color: var(--hover-bg);
+}
+
+.modern-layout-option--active {
+  background-color: var(--selected_bg);
+  border-color: var(--accent);
+  color: var(--accent-primary);
+}
+
+/* ============================================
+   FROPPA FORM OVERRIDES
+   ============================================ */
+
+/* Override Frappe's form sections */
+.modern-theme-loaded .form-section {
+  background-color: var(--surface);
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
+  margin-bottom: var(--space-xl);
+}
+
+.modern-theme-loaded .form-section-head {
+  padding: var(--space-md) var(--space-lg);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.modern-theme-loaded .section-head {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--heading-text);
+}
+
+.modern-theme-loaded .form-section-body {
+  padding: var(--space-lg);
+}
+
+/* Override form grid */
+.modern-theme-loaded .form-grid {
+  display: grid;
+  gap: var(--section-gap);
+}
+
+.modern-theme-loaded .form-column {
+  padding: 0;
+}

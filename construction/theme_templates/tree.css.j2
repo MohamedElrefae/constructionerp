@@ -1,0 +1,44 @@
+/* ===== TREE VIEW: {{ theme_name }} ===== */
+html[data-modern-theme="{{ theme_name }}"] .tree {
+    background: {{ surface_bg }} !important;
+}
+
+html[data-modern-theme="{{ theme_name }}"] .tree-node {
+    color: {{ text_primary }} !important;
+}
+
+html[data-modern-theme="{{ theme_name }}"] .tree-node .tree-link {
+    color: {{ text_primary }} !important;
+}
+
+html[data-modern-theme="{{ theme_name }}"] .tree-node .tree-link:hover {
+    background: {{ accent_primary }}19 !important;
+    color: {{ accent_primary }} !important;
+}
+
+html[data-modern-theme="{{ theme_name }}"] .tree-node.selected .tree-link {
+    background: {{ accent_primary }}33 !important;
+    color: {{ accent_primary }} !important;
+    font-weight: 600 !important;
+}
+
+html[data-modern-theme="{{ theme_name }}"] .tree-children {
+    border-left: 1px solid {{ border_color }} !important;
+}
+
+html[data-modern-theme="{{ theme_name }}"] .tree-node .icon {
+    color: {{ accent_primary }} !important;
+}
+
+html[data-modern-theme="{{ theme_name }}"] .tree-node .toggle-icon {
+    color: {{ text_secondary }} !important;
+}
+
+html[data-modern-theme="{{ theme_name }}"] .tree-node .toggle-icon:hover {
+    color: {{ accent_primary }} !important;
+}
+
+html[data-modern-theme="{{ theme_name }}"] .tree-footer {
+    background: {{ navbar_bg }} !important;
+    border-top: 1px solid {{ border_color }} !important;
+}

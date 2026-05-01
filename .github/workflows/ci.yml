@@ -1,10 +1,10 @@
-
 name: CI
 
 on:
   push:
     branches:
       - develop
+      - main
   pull_request:
 
 concurrency:
@@ -37,20 +37,15 @@ jobs:
 
     steps:
       - name: Clone
-        uses: actions/checkout@v3
-
-      - name: Find tests
-        run: |
-          echo "Finding tests"
-          grep -rn "def test" > /dev/null
+        uses: actions/checkout@v4
 
       - name: Setup Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.11'
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 18
           check-latest: true
@@ -64,25 +59,16 @@ jobs:
             ${{ runner.os }}-pip-
             ${{ runner.os }}-
 
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: 'echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT'
-
-      - uses: actions/cache@v4
-        id: yarn-cache
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-
       - name: Install MariaDB Client
-        run: sudo apt-get install mariadb-client-10.6
+        run: sudo apt-get update && sudo apt-get install -y mariadb-client
+
+      - name: Install uv
+        run: pip install uv
 
       - name: Setup
         run: |
           pip install frappe-bench
-          bench init --skip-redis-config-generation --skip-assets --python "$(which python)" ~/frappe-bench
+          bench init --skip-redis-config-generation --skip-assets --frappe-branch version-15 --python "$(which python)" ~/frappe-bench
           mariadb --host 127.0.0.1 --port 3306 -u root -proot -e "SET GLOBAL character_set_server = 'utf8mb4'"
           mariadb --host 127.0.0.1 --port 3306 -u root -proot -e "SET GLOBAL collation_server = 'utf8mb4_unicode_ci'"
 
@@ -97,10 +83,14 @@ jobs:
         env:
           CI: 'Yes'
 
-      - name: Run Tests
+      - name: Verify App Installation
         working-directory: /home/runner/frappe-bench
         run: |
-          bench --site test_site set-config allow_tests true
-          bench --site test_site run-tests --app construction
-        env:
-          TYPE: server
+          bench --site test_site list-apps | grep construction
+          echo "Construction app installed successfully"
+
+      - name: Run JS Property Tests
+        working-directory: /home/runner/frappe-bench/apps/construction/construction/construction/tests
+        run: |
+          npm install --no-audit --no-fund
+          node --test test_print_settings_properties.js

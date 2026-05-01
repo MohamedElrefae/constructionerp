@@ -1,0 +1,45 @@
+/* ===== TOASTS/ALERTS: {{ theme_name }} ===== */
+html[data-modern-theme="{{ theme_name }}"] .toast {
+    background: {{ surface_bg }} !important;
+    border: 1px solid {{ border_color }} !important;
+{% if is_dark_mode %}
+    box-shadow: 0 4px 12px rgba(0,0,0,.3) !important;
+{% else %}
+    box-shadow: 0 4px 12px rgba(0,0,0,.1) !important;
+{% endif %}
+    border-radius: 8px !important;
+}
+
+html[data-modern-theme="{{ theme_name }}"] .toast .toast-header {
+    color: {{ text_primary }} !important;
+    border-bottom: 1px solid {{ border_color }} !important;
+}
+
+html[data-modern-theme="{{ theme_name }}"] .toast .toast-body {
+    color: {{ text_secondary }} !important;
+}
+
+html[data-modern-theme="{{ theme_name }}"] .alert-success {
+    background: {{ success_color }}1a !important;
+    border-color: {{ success_color }} !important;
+    color: {{ success_color }} !important;
+}
+
+html[data-modern-theme="{{ theme_name }}"] .alert-warning {
+    background: {{ warning_color }}1a !important;
+    border-color: {{ warning_color }} !important;
+    color: {{ warning_color }} !important;
+}
+
+html[data-modern-theme="{{ theme_name }}"] .alert-danger,
+html[data-modern-theme="{{ theme_name }}"] .alert-error {
+    background: {{ error_color }}1a !important;
+    border-color: {{ error_color }} !important;
+    color: {{ error_color }} !important;
+}
+
+html[data-modern-theme="{{ theme_name }}"] .msgprint {
+    background: {{ surface_bg }} !important;
+    border: 1px solid {{ border_color }} !important;
+    color: {{ text_primary }} !important;
+}

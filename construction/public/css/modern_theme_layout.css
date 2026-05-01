@@ -1,0 +1,557 @@
+/**
+ * Modern Theme Layout Control Styles
+ * Styling for draggable panels, layout controls, and form configuration
+ */
+
+/* ============================================
+   DRAGGABLE RESIZABLE PANEL
+   ============================================ */
+
+.draggable-panel {
+  position: fixed;
+  background-color: var(--surface);
+  border: var(--panel-border);
+  border-radius: var(--panel-radius);
+  box-shadow: var(--panel-shadow);
+  backdrop-filter: blur(var(--panel-backdrop-blur));
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 1050;
+  min-width: 400px;
+  min-height: 300px;
+  transition: box-shadow 0.2s ease;
+}
+
+.draggable-panel:hover {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+.draggable-panel--maximized {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  border-radius: 0 !important;
+  z-index: 1100 !important;
+}
+
+.draggable-panel--docked-left {
+  left: 0 !important;
+  right: auto !important;
+  height: 100vh !important;
+  border-radius: 0 var(--panel-radius) var(--panel-radius) 0 !important;
+}
+
+.draggable-panel--docked-right {
+  right: 0 !important;
+  left: auto !important;
+  height: 100vh !important;
+  border-radius: var(--panel-radius) 0 0 var(--panel-radius) !important;
+}
+
+/* ============================================
+   PANEL HEADER (DRAG HANDLE)
+   ============================================ */
+
+.draggable-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-md) var(--space-lg);
+  background-color: var(--sidebar_bg);
+  border-bottom: 1px solid var(--border-color);
+  cursor: move;
+  user-select: none;
+}
+
+.draggable-panel__header:active {
+  cursor: grabbing;
+}
+
+.draggable-panel__title {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--heading-text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.draggable-panel__actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.draggable-panel__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background-color: transparent;
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.draggable-panel__btn:hover {
+  background-color: var(--hover-bg);
+  color: var(--text-primary);
+}
+
+.draggable-panel__btn--close:hover {
+  background-color: var(--error);
+  color: var(--on-error);
+}
+
+/* ============================================
+   PANEL BODY
+   ============================================ */
+
+.draggable-panel__body {
+  flex: 1;
+  overflow: auto;
+  padding: var(--space-lg);
+}
+
+/* ============================================
+   RESIZE HANDLES
+   ============================================ */
+
+.draggable-panel__resize-handle {
+  position: absolute;
+  z-index: 10;
+}
+
+.draggable-panel__resize-handle--n {
+  top: 0;
+  left: 8px;
+  right: 8px;
+  height: 6px;
+  cursor: ns-resize;
+}
+
+.draggable-panel__resize-handle--s {
+  bottom: 0;
+  left: 8px;
+  right: 8px;
+  height: 6px;
+  cursor: ns-resize;
+}
+
+.draggable-panel__resize-handle--e {
+  right: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 6px;
+  cursor: ew-resize;
+}
+
+.draggable-panel__resize-handle--w {
+  left: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 6px;
+  cursor: ew-resize;
+}
+
+.draggable-panel__resize-handle--ne {
+  top: 0;
+  right: 0;
+  width: 12px;
+  height: 12px;
+  cursor: nesw-resize;
+}
+
+.draggable-panel__resize-handle--nw {
+  top: 0;
+  left: 0;
+  width: 12px;
+  height: 12px;
+  cursor: nwse-resize;
+}
+
+.draggable-panel__resize-handle--se {
+  bottom: 0;
+  right: 0;
+  width: 12px;
+  height: 12px;
+  cursor: nwse-resize;
+}
+
+.draggable-panel__resize-handle--sw {
+  bottom: 0;
+  left: 0;
+  width: 12px;
+  height: 12px;
+  cursor: nesw-resize;
+}
+
+/* Hover effects on resize handles */
+.draggable-panel__resize-handle:hover {
+  background-color: var(--accent);
+  opacity: 0.3;
+}
+
+/* ============================================
+   FORM LAYOUT CONTROLS
+   ============================================ */
+
+.layout-controls {
+  background-color: var(--surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+}
+
+.layout-controls__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-md) var(--space-lg);
+  background-color: var(--sidebar_bg);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.layout-controls__title {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--heading-text);
+}
+
+.layout-controls__tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.layout-controls__tab {
+  flex: 1;
+  padding: var(--space-md);
+  background-color: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.layout-controls__tab:hover {
+  color: var(--text-primary);
+  background-color: var(--hover-bg);
+}
+
+.layout-controls__tab--active {
+  color: var(--accent-primary);
+  border-bottom-color: var(--accent);
+  background-color: var(--selected_bg);
+}
+
+.layout-controls__content {
+  padding: var(--space-lg);
+}
+
+/* ============================================
+   COLUMN LAYOUT PREVIEW
+   ============================================ */
+
+.layout-preview {
+  display: flex;
+  gap: var(--control-gap);
+  margin-bottom: var(--space-lg);
+}
+
+.layout-preview__option {
+  flex: 1;
+  padding: var(--space-md);
+  background-color: var(--field_bg);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.layout-preview__option:hover {
+  border-color: var(--accent);
+  background-color: var(--hover-bg);
+}
+
+.layout-preview__option--active {
+  border-color: var(--accent);
+  background-color: var(--selected_bg);
+}
+
+.layout-preview__visual {
+  display: grid;
+  gap: 4px;
+  height: 40px;
+  margin-bottom: 8px;
+}
+
+.layout-preview__visual--1-col {
+  grid-template-columns: 1fr;
+}
+
+.layout-preview__visual--2-col {
+  grid-template-columns: 1fr 1fr;
+}
+
+.layout-preview__visual--3-col {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.layout-preview__block {
+  background-color: var(--border-color);
+  border-radius: 2px;
+}
+
+.layout-preview__option--active .layout-preview__block {
+  background-color: var(--accent);
+}
+
+.layout-preview__label {
+  text-align: center;
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+}
+
+.layout-preview__option--active .layout-preview__label {
+  color: var(--accent-primary);
+  font-weight: var(--font-weight-medium);
+}
+
+/* ============================================
+   FIELD VISIBILITY LIST
+   ============================================ */
+
+.field-visibility-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.field-visibility-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.field-visibility-item:last-child {
+  border-bottom: none;
+}
+
+.field-visibility-item__info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.field-visibility-item__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  color: var(--text-secondary);
+}
+
+.field-visibility-item__label {
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
+}
+
+.field-visibility-item__toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.field-visibility-item__full-width {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.field-visibility-item__full-width:hover {
+  color: var(--accent);
+}
+
+/* ============================================
+   DRAG-DROP FIELD ORDERING
+   ============================================ */
+
+.field-order-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.field-order-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  background-color: var(--field_bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-sm);
+  cursor: grab;
+  transition: all 0.2s ease;
+}
+
+.field-order-item:hover {
+  border-color: var(--accent);
+  background-color: var(--hover-bg);
+}
+
+.field-order-item:active {
+  cursor: grabbing;
+}
+
+.field-order-item--dragging {
+  opacity: 0.5;
+  transform: scale(1.02);
+  box-shadow: var(--shadow-md);
+}
+
+.field-order-item__handle {
+  display: flex;
+  align-items: center;
+  color: var(--text-secondary);
+  cursor: grab;
+}
+
+.field-order-item__label {
+  flex: 1;
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
+}
+
+.field-order-item__actions {
+  display: flex;
+  gap: 4px;
+}
+
+.field-order-item__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background-color: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.field-order-item__btn:hover {
+  background-color: var(--hover-bg);
+  color: var(--text-primary);
+}
+
+.field-order-item__btn--up:hover {
+  color: var(--success);
+}
+
+.field-order-item__btn--down:hover {
+  color: var(--accent);
+}
+
+/* ============================================
+   LAYOUT CONTROL BUTTONS
+   ============================================ */
+
+.layout-controls__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--toolbar-gap);
+  padding: var(--space-md) var(--space-lg);
+  background-color: var(--sidebar_bg);
+  border-top: 1px solid var(--border-color);
+}
+
+.layout-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background-color: var(--field_bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.layout-btn:hover {
+  background-color: var(--hover-bg);
+  border-color: var(--accent);
+}
+
+.layout-btn--primary {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+}
+
+.layout-btn--primary:hover {
+  background-color: var(--accent-primary-hover);
+  border-color: var(--accent-primary-hover);
+  box-shadow: 0 4px 12px rgba(32, 118, 255, 0.3);
+}
+
+.layout-btn--danger:hover {
+  background-color: var(--error);
+  border-color: var(--error);
+  color: var(--on-error);
+}
+
+/* ============================================
+   RTL SUPPORT
+   ============================================ */
+
+[dir="rtl"] .draggable-panel__resize-handle--e {
+  cursor: ew-resize;
+}
+
+[dir="rtl"] .draggable-panel__resize-handle--w {
+  cursor: ew-resize;
+}
+
+[dir="rtl"] .draggable-panel__resize-handle--ne {
+  cursor: nwse-resize;
+}
+
+[dir="rtl"] .draggable-panel__resize-handle--nw {
+  cursor: nesw-resize;
+}
+
+[dir="rtl"] .draggable-panel__resize-handle--se {
+  cursor: nesw-resize;
+}
+
+[dir="rtl"] .draggable-panel__resize-handle--sw {
+  cursor: nwse-resize;
+}
+
+[dir="rtl"] .field-visibility-item__toggle {
+  flex-direction: row-reverse;
+}
