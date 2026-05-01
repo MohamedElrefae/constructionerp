@@ -19,13 +19,13 @@ add_to_apps_screen = [
 ]
 
 module_app = {
-	"Construction": "construction",
+	"construction": "construction",
 }
 
 # Module configuration - makes DocTypes visible in the Construction module menu
 # These will appear in the Construction module's left sidebar
 desk_links = {
-	"Construction": [
+	"construction": [
 		{
 			"type": "doctype",
 			"name": "Construction Theme",
