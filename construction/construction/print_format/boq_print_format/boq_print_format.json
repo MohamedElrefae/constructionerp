@@ -22,7 +22,7 @@
  "print_format_builder_beta": 0,
  "print_format_type": "Jinja",
  "raw_printing": 0,
- "raw_commands": [],
+ "raw_commands": null,
  "show_section_headings": 0,
  "standard": "No"
 }
