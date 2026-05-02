@@ -9,6 +9,169 @@
     padding: 12px;
 }
 
+/* Ensure dropdown is visible and clickable */
+#construction-theme-dropdown {
+    z-index: 9999 !important;
+}
+
+/* Fix for greyed out / non-clickable dropdown items - ensure all dropdowns are interactive */
+.dropdown-menu,
+.dropdown-menu .dropdown-item,
+.dropdown-menu li,
+.dropdown-menu a,
+.dropdown-navbar-user .dropdown-menu a,
+.dropdown-navbar-user .dropdown-menu .dropdown-item,
+.nav-user-dropdown .dropdown-item {
+    pointer-events: auto !important;
+    opacity: 1 !important;
+    cursor: pointer !important;
+}
+
+/* Fix specifically for user menu items that might be greyed out */
+.dropdown-navbar-user .dropdown-item,
+.dropdown-navbar-user button.dropdown-item,
+.dropdown-navbar-user .btn-reset.dropdown-item,
+.nav-user-dropdown a,
+#toolbar-user .dropdown-item,
+#toolbar-user button,
+#toolbar-user a,
+#navbar-user a,
+.navbar-nav .dropdown-menu a,
+.navbar-nav .dropdown-menu button {
+    pointer-events: auto !important;
+    opacity: 1 !important;
+    color: inherit !important;
+    cursor: pointer !important;
+}
+
+/* Ensure Frappe user menu buttons are not disabled */
+#toolbar-user .btn-reset,
+.dropdown-navbar-user .btn-reset {
+    pointer-events: auto !important;
+    opacity: 1 !important;
+    cursor: pointer !important;
+    background: transparent !important;
+}
+
+/* Aggressive fix for all user menu items */
+#toolbar-user .dropdown-item,
+#toolbar-user button,
+#toolbar-user a,
+.dropdown-navbar-user .dropdown-menu > *,
+.dropdown-navbar-user .dropdown-menu > li > *,
+#toolbar-user .dropdown-item:not(.disabled),
+#toolbar-user .dropdown-item:disabled,
+#toolbar-user button:not(:disabled),
+#toolbar-user button:disabled {
+    pointer-events: auto !important;
+    opacity: 1 !important;
+    cursor: pointer !important;
+    visibility: visible !important;
+    color: var(--text-primary, inherit) !important;
+    background-color: transparent !important;
+}
+
+/* Override Frappe Bootstrap disabled styles with ultra-high specificity */
+html body #toolbar-user .dropdown-item.disabled,
+html body #toolbar-user .dropdown-item:disabled,
+html body #toolbar-user button.disabled,
+html body #toolbar-user button:disabled,
+html body .dropdown-navbar-user .dropdown-item.disabled,
+html body .dropdown-navbar-user .dropdown-item:disabled {
+    pointer-events: auto !important;
+    opacity: 1 !important;
+    cursor: pointer !important;
+    color: var(--text-primary, inherit) !important;
+    background-color: transparent !important;
+}
+
+/* Extreme reset - force all properties to be re-enabled */
+#toolbar-user * {
+    pointer-events: auto !important;
+}
+
+/* Target the specific disabled state from Bootstrap */
+.dropdown-item.disabled,
+.dropdown-item:disabled,
+button.dropdown-item:disabled,
+button.dropdown-item.disabled {
+    pointer-events: auto !important;
+    opacity: 1 !important;
+    cursor: pointer !important;
+}
+
+/* Fix for modal dialogs (Theme Switcher, Logout confirmation) */
+.modal-content,
+.modal-dialog,
+.modal-body,
+.modal-header,
+.modal-footer {
+    pointer-events: auto !important;
+    z-index: 1055 !important;
+}
+
+.modal-backdrop {
+    pointer-events: none !important;
+}
+
+/* Ensure modal is above backdrop */
+.modal.show .modal-dialog {
+    z-index: 1060 !important;
+}
+
+.modal {
+    pointer-events: none;
+}
+
+.modal.show {
+    pointer-events: auto;
+}
+
+/* Ensure hover works */
+#toolbar-user .dropdown-item:hover,
+#toolbar-user button:hover,
+#toolbar-user a:hover,
+#toolbar-user .dropdown-item:not(.disabled):hover,
+#toolbar-user button:not(:disabled):hover {
+    background-color: var(--hover-bg, rgba(0,0,0,0.05)) !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    cursor: pointer !important;
+}
+
+/* Ensure disabled items are only visually distinct but still allow events if needed */
+.dropdown-menu .disabled,
+.dropdown-menu .dropdown-item.disabled {
+    pointer-events: none !important;
+    opacity: 0.5 !important;
+}
+
+#construction-theme-dropdown .nav-link,
+#construction-theme-dropdown .dropdown-toggle {
+    cursor: pointer !important;
+    pointer-events: auto !important;
+    display: flex !important;
+    align-items: center !important;
+    padding: 8px 12px !important;
+}
+
+#construction-theme-dropdown .dropdown-menu {
+    display: none !important;
+    position: absolute !important;
+    right: 0 !important;
+    left: auto !important;
+    z-index: 10000 !important;
+    background: var(--surface-bg, #fff) !important;
+    border: 1px solid var(--border-color, #e2e8f0) !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+    min-width: 180px !important;
+}
+
+#construction-theme-dropdown .dropdown-menu.show {
+    display: block !important;
+}
+
 /* Individual Theme Item */
 .theme-item {
     display: flex;
