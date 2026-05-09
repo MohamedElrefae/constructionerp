@@ -3043,7 +3043,33 @@ def whitelabel_patch():
 		doc.description = ""
 		doc.flags.ignore_mandatory = True
 		doc.flags.ignore_links = True
+		# Sanitize legacy onboarding actions for v16 compatibility
+		if doc.get("action"):
+			doc.action = _sanitize_onboarding_action(doc.action)
 		doc.save(ignore_permissions=True)
+
+
+# ── Onboarding Action Sanitizer ──
+# v16 removed "Watch Video" from the Onboarding Step action options.
+# This helper remaps legacy values to valid v16 alternatives.
+_VALID_ONBOARDING_ACTIONS = {
+	"Create Entry", "Update Settings", "Show Form Tour",
+	"View Report", "Go to Page", "View Docs",
+}
+
+_LEGACY_ACTION_MAP = {
+	"Watch Video": "View Docs",
+}
+
+
+def _sanitize_onboarding_action(action):
+	"""Return a valid v16 onboarding action. Falls back to 'View Docs'."""
+	if not action:
+		return action
+	if action in _VALID_ONBOARDING_ACTIONS:
+		return action
+	return _LEGACY_ACTION_MAP.get(action, "View Docs")
+
 
 @frappe.whitelist()
 def ignore_update_popup():
