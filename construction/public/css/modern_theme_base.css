@@ -3550,9 +3550,9 @@ html[data-theme="dark"] .page-actions .btn-primary:hover {
   transform: translateY(-1px) !important;
 }
 
-html[data-theme="light"] .page-actions .primary-action,
-html[data-theme="light"] .page-head-actions .primary-action,
-html[data-theme="light"] .page-actions .btn-primary {
+html[data-theme="light"] .page-actions .primary-action:not(:empty),
+html[data-theme="light"] .page-head-actions .primary-action:not(:empty),
+html[data-theme="light"] .page-actions .btn-primary:not(:empty) {
   background-color: var(--primary) !important;
   border-color: var(--primary) !important;
   color: #ffffff !important;
@@ -3560,9 +3560,9 @@ html[data-theme="light"] .page-actions .btn-primary {
   box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
 }
 
-html[data-theme="light"] .page-actions .primary-action:hover,
-html[data-theme="light"] .page-head-actions .primary-action:hover,
-html[data-theme="light"] .page-actions .btn-primary:hover {
+html[data-theme="light"] .page-actions .primary-action:not(:empty):hover,
+html[data-theme="light"] .page-head-actions .primary-action:not(:empty):hover,
+html[data-theme="light"] .page-actions .btn-primary:not(:empty):hover {
   background-color: var(--primary-hover) !important;
   border-color: var(--primary-hover) !important;
   box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
@@ -4253,7 +4253,7 @@ html[data-theme="dark"] [role="button"]:not(.btn-primary):not(.primary-action) {
   border: 2px solid var(--border) !important;
   color: var(--text) !important;
   opacity: 1 !important;
-  visibility: visible !important;
+  /* REMOVED: visibility: visible — was overriding Frappe's .hide class */
 }
 
 html[data-theme="dark"] button:not(.btn-primary):not(.primary-action):not([class*="primary"]):hover,
@@ -4287,8 +4287,8 @@ html[data-theme="dark"] .page-actions .btn-secondary,
 html[data-theme="dark"] .page-head-actions .btn-secondary,
 html[data-theme="dark"] .page-actions [class*="btn"]:not(.primary-action):not(.btn-primary),
 html[data-theme="dark"] .page-head-actions [class*="btn"]:not(.primary-action):not(.btn-primary),
-html[data-theme="dark"] .navbar .btn,
-html[data-theme="dark"] .navbar button {
+html[data-theme="dark"] .navbar .btn:not(.btn-reset),
+html[data-theme="dark"] .navbar button:not(.btn-reset) {
   background: var(--surface) !important;
   background-color: var(--surface) !important;
   border: 2px solid var(--border) !important;
@@ -4296,12 +4296,12 @@ html[data-theme="dark"] .navbar button {
   font-weight: 600 !important;
   transition: var(--t) !important;
   opacity: 1 !important;
-  visibility: visible !important;
+  /* REMOVED: visibility: visible — was overriding Frappe's .hide class */
 }
 
-/* Ensure primary actions stay primary (coloured) */
-html[data-theme="dark"] .primary-action,
-html[data-theme="dark"] .btn-primary,
+/* Ensure primary actions stay primary (coloured) - only non-empty buttons */
+html[data-theme="dark"] .primary-action:not(:empty),
+html[data-theme="dark"] .btn-primary:not(:empty),
 html[data-theme="dark"] [data-label="Save"],
 html[data-theme="dark"] [data-label="New"],
 html[data-theme="dark"] [data-label="Edit"],
@@ -4311,7 +4311,7 @@ html[data-theme="dark"] [data-label="+ New"] {
   border: 2px solid var(--primary) !important;
   color: #ffffff !important;
   opacity: 1 !important;
-  visibility: visible !important;
+  /* REMOVED: visibility: visible — was overriding Frappe's .hide class */
 }
 
 html[data-theme="dark"] .page-actions button:hover,
@@ -4376,15 +4376,15 @@ html[data-theme="light"] .page-actions .btn:not(.btn-primary):not(.primary-actio
 html[data-theme="light"] .page-head-actions .btn:not(.btn-primary):not(.primary-action),
 html[data-theme="light"] .page-actions [class*="btn"],
 html[data-theme="light"] .page-head-actions [class*="btn"],
-html[data-theme="light"] .page-actions .icon-btn,
-html[data-theme="light"] .page-head-actions .icon-btn,
-html[data-theme="light"] .page-actions .btn-icon-only,
-html[data-theme="light"] .page-head-actions .btn-icon-only,
-html[data-theme="light"] .navbar .btn,
-html[data-theme="light"] .navbar button,
-html[data-theme="light"] .navbar [class*="btn"],
-html[data-theme="light"] .navbar-nav .btn,
-html[data-theme="light"] .navbar-nav button {
+html[data-theme="light"] .page-actions .icon-btn:not(.hide):not(:empty),
+html[data-theme="light"] .page-head-actions .icon-btn:not(.hide):not(:empty),
+html[data-theme="light"] .page-actions .btn-icon-only:not(.hide):not(:empty),
+html[data-theme="light"] .page-head-actions .btn-icon-only:not(.hide):not(:empty),
+html[data-theme="light"] .navbar .btn:not(.btn-reset),
+html[data-theme="light"] .navbar button:not(.btn-reset),
+html[data-theme="light"] .navbar [class*="btn"]:not(.btn-reset),
+html[data-theme="light"] .navbar-nav .btn:not(.btn-reset),
+html[data-theme="light"] .navbar-nav button:not(.btn-reset) {
   background: var(--surface) !important;
   background-color: var(--surface) !important;
   border: 2px solid var(--border) !important;
@@ -4392,7 +4392,7 @@ html[data-theme="light"] .navbar-nav button {
   font-weight: 600 !important;
   transition: var(--t) !important;
   opacity: 1 !important;
-  visibility: visible !important;
+  /* REMOVED: visibility: visible — was overriding Frappe's .hide class */
 }
 
 html[data-theme="light"] .page-actions button:hover,
@@ -4477,15 +4477,15 @@ html[data-theme="dark"] .standard-actions {
   gap: 8px !important;
 }
 
-/* Icon-only buttons in page actions - ensure visibility */
-html[data-theme="dark"] .page-actions .btn-icon-only,
-html[data-theme="dark"] .page-head-actions .btn-icon-only,
-html[data-theme="dark"] .custom-actions .btn-icon-only,
-html[data-theme="dark"] .standard-actions .btn-icon-only,
-html[data-theme="dark"] .page-actions .icon-btn,
-html[data-theme="dark"] .page-head-actions .icon-btn,
-html[data-theme="dark"] .custom-actions .icon-btn,
-html[data-theme="dark"] .standard-actions .icon-btn {
+/* Icon-only buttons in page actions - ensure visibility - exclude hidden/empty buttons */
+html[data-theme="dark"] .page-actions .btn-icon-only:not(.hide):not(:empty),
+html[data-theme="dark"] .page-head-actions .btn-icon-only:not(.hide):not(:empty),
+html[data-theme="dark"] .custom-actions .btn-icon-only:not(.hide):not(:empty),
+html[data-theme="dark"] .standard-actions .btn-icon-only:not(.hide):not(:empty),
+html[data-theme="dark"] .page-actions .icon-btn:not(.hide):not(:empty),
+html[data-theme="dark"] .page-head-actions .icon-btn:not(.hide):not(:empty),
+html[data-theme="dark"] .custom-actions .icon-btn:not(.hide):not(:empty),
+html[data-theme="dark"] .standard-actions .icon-btn:not(.hide):not(:empty) {
   min-width: 36px !important;
   min-height: 36px !important;
   padding: 6px !important;
@@ -5113,7 +5113,7 @@ html[data-theme="dark"] a.btn:not(.btn-primary):not(.primary-action):not([class*
   border: 2px solid var(--border) !important;
   color: var(--text) !important;
   opacity: 1 !important;
-  visibility: visible !important;
+  /* REMOVED: visibility: visible — was overriding Frappe's .hide class */
   font-weight: 600 !important;
 }
 
@@ -5124,4 +5124,95 @@ html[data-theme="dark"] a.btn:not(.btn-primary):not(.primary-action):not([class*
   border-color: var(--primary) !important;
   color: #ffffff !important;
   transform: translateY(-1px) !important;
+}
+
+/* ── CONSTRUCTION THEME: Always respect Frappe's .hide class ──
+   Prevents construction CSS from making empty placeholder buttons visible.
+   This must be last to win the cascade. */
+html[data-theme="dark"] .page-head .hide,
+html[data-theme="dark"] .page-actions .hide,
+html[data-theme="dark"] .standard-actions .hide,
+html[data-theme="dark"] .custom-actions .hide,
+html[data-theme="light"] .page-head .hide,
+html[data-theme="light"] .page-actions .hide,
+html[data-theme="light"] .standard-actions .hide,
+html[data-theme="light"] .custom-actions .hide {
+  display: none !important;
+}
+
+/* ── E30: v16 SIDEBAR — .sidebar-container (Frappe v16 workspace sidebar) ── */
+
+html[data-theme="dark"] .sidebar-container,
+html[data-theme="light"] .sidebar-container {
+  background: var(--surface) !important;
+  border-right: 1px solid var(--border) !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+html[data-theme="dark"] .sidebar-container .sidebar-item-group,
+html[data-theme="light"] .sidebar-container .sidebar-item-group {
+  margin-bottom: 8px !important;
+}
+
+html[data-theme="dark"] .sidebar-container .sidebar-item-group-label,
+html[data-theme="light"] .sidebar-container .sidebar-item-group-label {
+  font-size: 0.6875rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1.2px !important;
+  color: var(--text-3) !important;
+  padding: 8px 12px 4px !important;
+  font-weight: 700 !important;
+}
+
+html[data-theme="dark"] .sidebar-container .sidebar-item,
+html[data-theme="light"] .sidebar-container .sidebar-item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  padding: 8px 12px !important;
+  border-radius: var(--radius-sm) !important;
+  color: var(--text-2) !important;
+  cursor: pointer !important;
+  transition: var(--t) !important;
+  margin-bottom: 2px !important;
+  min-height: 44px !important;
+}
+
+html[data-theme="dark"] .sidebar-container .sidebar-item:hover,
+html[data-theme="light"] .sidebar-container .sidebar-item:hover {
+  background: var(--surface-hover) !important;
+  color: var(--text) !important;
+}
+
+html[data-theme="dark"] .sidebar-container .sidebar-item.active,
+html[data-theme="light"] .sidebar-container .sidebar-item.active {
+  background: var(--primary) !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+}
+
+html[data-theme="dark"] .sidebar-container .sidebar-link,
+html[data-theme="light"] .sidebar-container .sidebar-link {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  text-decoration: none !important;
+  color: inherit !important;
+  flex: 1 !important;
+}
+
+html[data-theme="dark"] .sidebar-container .sidebar-item-label,
+html[data-theme="light"] .sidebar-container .sidebar-item-label {
+  flex: 1 !important;
+  color: inherit !important;
+  font-size: 0.875rem !important;
+}
+
+html[data-theme="dark"] .sidebar-container .sidebar-item-icon,
+html[data-theme="light"] .sidebar-container .sidebar-item-icon {
+  width: 20px !important;
+  text-align: center !important;
+  font-size: 1rem !important;
+  flex-shrink: 0 !important;
 }
