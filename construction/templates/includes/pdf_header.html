@@ -1,0 +1,12 @@
+<div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #2563eb; padding-bottom: 10px;">
+    <div>
+        {% if frappe.boot.construction_theme and frappe.boot.construction_theme.logo_url %}
+            <img src="{{ frappe.boot.construction_theme.logo_url }}" style="height: 40px;">
+        {% else %}
+            <img src="/assets/construction/images/construction_logo.svg" style="height: 40px;">
+        {% endif %}
+    </div>
+    <div style="text-align: right;">
+        <h2 style="margin: 0; color: #2563eb;">{{ (frappe.boot.construction_theme and frappe.boot.construction_theme.app_title) or "Construction ERP" }}</h2>
+    </div>
+</div>

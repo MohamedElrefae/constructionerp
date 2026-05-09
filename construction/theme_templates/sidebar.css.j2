@@ -1,50 +1,50 @@
 /* ===== SIDEBAR: {{ theme_name }} ===== */
-html[data-modern-theme="{{ theme_name }}"] .layout-side-section {
-    background: {{ sidebar_bg }} !important;
-    border-right: 1px solid {{ border_color }} !important;
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .layout-side-section {
+    background: {{ sidebar_bg }};
+    border-right: 1px solid {{ border_color }};
 }
 
-html[data-modern-theme="{{ theme_name }}"] .desk-sidebar .standard-sidebar-item a,
-html[data-modern-theme="{{ theme_name }}"] .desk-sidebar .standard-sidebar-item a *,
-html[data-modern-theme="{{ theme_name }}"] .desk-sidebar .standard-sidebar-item .sidebar-item-label,
-html[data-modern-theme="{{ theme_name }}"] .desk-sidebar .sidebar-item-icon,
-html[data-modern-theme="{{ theme_name }}"] .desk-sidebar .sidebar-item-icon svg,
-html[data-modern-theme="{{ theme_name }}"] .desk-sidebar .sidebar-item-icon .icon {
-    color: {{ text_primary }} !important;
-    fill: {{ text_primary }} !important;
-    stroke: {{ text_primary }} !important;
-    font-size: 13.5px !important;
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .desk-sidebar .standard-sidebar-item a,
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .desk-sidebar .standard-sidebar-item a *,
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .desk-sidebar .standard-sidebar-item .sidebar-item-label,
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .desk-sidebar .sidebar-item-icon,
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .desk-sidebar .sidebar-item-icon svg,
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .desk-sidebar .sidebar-item-icon .icon {
+    color: {{ text_primary }};
+    fill: {{ text_primary }};
+    stroke: {{ text_primary }};
+    font-size: 13.5px;
 }
 
-html[data-modern-theme="{{ theme_name }}"] .desk-sidebar .standard-sidebar-item a:hover,
-html[data-modern-theme="{{ theme_name }}"] .desk-sidebar .standard-sidebar-item a:hover *,
-html[data-modern-theme="{{ theme_name }}"] .desk-sidebar .standard-sidebar-item a:hover .icon {
-    color: {{ accent_primary }} !important;
-    fill: {{ accent_primary }} !important;
-    stroke: {{ accent_primary }} !important;
-    background: {{ accent_primary }}19 !important;
-    border-radius: 8px !important;
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .desk-sidebar .standard-sidebar-item a:hover,
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .desk-sidebar .standard-sidebar-item a:hover *,
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .desk-sidebar .standard-sidebar-item a:hover .icon {
+    color: {{ accent_primary }};
+    fill: {{ accent_primary }};
+    stroke: {{ accent_primary }};
+    background: {{ accent_primary }}19;
+    border-radius: 8px;
 }
 
-html[data-modern-theme="{{ theme_name }}"] .desk-sidebar .standard-sidebar-item.selected a,
-html[data-modern-theme="{{ theme_name }}"] .desk-sidebar .standard-sidebar-item.selected a *,
-html[data-modern-theme="{{ theme_name }}"] .desk-sidebar .standard-sidebar-item.selected .icon {
-    color: {{ accent_primary }} !important;
-    fill: {{ accent_primary }} !important;
-    stroke: {{ accent_primary }} !important;
-    font-weight: 600 !important;
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .desk-sidebar .standard-sidebar-item.selected a,
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .desk-sidebar .standard-sidebar-item.selected a *,
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .desk-sidebar .standard-sidebar-item.selected .icon {
+    color: {{ accent_primary }};
+    fill: {{ accent_primary }};
+    stroke: {{ accent_primary }};
+    font-weight: 600;
 }
 
-html[data-modern-theme="{{ theme_name }}"] .desk-sidebar .standard-sidebar-item.selected a {
-    background: {{ accent_primary }}33 !important;
-    box-shadow: inset 3px 0 0 {{ accent_primary }} !important;
-    border-radius: 8px !important;
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .desk-sidebar .standard-sidebar-item.selected a {
+    background: {{ accent_primary }}33;
+    box-shadow: inset 3px 0 0 {{ accent_primary }};
+    border-radius: 8px;
 }
 
-html[data-modern-theme="{{ theme_name }}"] .sidebar-label,
-html[data-modern-theme="{{ theme_name }}"] .desk-sidebar .sidebar-section-head {
-    color: {{ accent_primary }} !important;
-    font-size: .7rem !important;
-    text-transform: uppercase !important;
-    letter-spacing: 1px !important;
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .sidebar-label,
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .desk-sidebar .sidebar-section-head {
+    color: {{ accent_primary }};
+    font-size: .7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }

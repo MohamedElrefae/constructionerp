@@ -1,0 +1,195 @@
+/* ERPNext Modern Login - Construction Light Theme */
+/* Full modern glassmorphism login experience */
+
+:root {
+  --bg: #f5f7fb;
+  --bg-accent: radial-gradient(circle at top left, rgba(37,99,235,0.08), transparent 28%);
+  --surface: rgba(255,255,255,0.95);
+  --surface-solid: #ffffff;
+  --text: #0F172A;
+  --muted: #64748B;
+  --border: rgba(16,24,40,0.10);
+  --primary: #2563EB;
+  --primary-hover: #1D4ED8;
+  --ring: rgba(37,99,235,0.14);
+  --shadow: 0 20px 50px rgba(16,24,40,0.12);
+  --radius: 20px;
+}
+
+/* Base login page */
+body.for-login,
+body[data-path="login"] {
+  min-height: 100vh;
+  background: var(--bg-accent), linear-gradient(180deg, var(--bg) 0%, #eef2f8 100%) !important;
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', system-ui, sans-serif;
+}
+
+/* Hide default navbar/footer on login */
+.navbar, .web-footer, .navbar-brand, header.navbar {
+  display: none !important;
+}
+
+/* Login card container */
+.page-card,
+.login-content.page-card {
+  width: min(440px, calc(100vw - 40px)) !important;
+  max-width: 440px !important;
+  margin: 8vh auto !important;
+  padding: 36px 32px !important;
+  border-radius: var(--radius) !important;
+  border: 1px solid var(--border) !important;
+  background: var(--surface) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  box-shadow: var(--shadow) !important;
+}
+
+/* Heading styling */
+.login-content .page-card-head h4,
+.login-content h4 {
+  color: var(--primary) !important;
+  font-size: 1.85rem !important;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  font-weight: 700 !important;
+  margin-bottom: 8px !important;
+}
+
+/* Subtitle/muted text */
+.login-content .text-muted,
+.login-content .small,
+.login-content p,
+.login-content .form-title {
+  color: var(--muted) !important;
+  font-size: 0.95rem !important;
+  line-height: 1.5;
+}
+
+/* Input fields */
+.login-content .form-control,
+.login-content input[type="text"],
+.login-content input[type="email"],
+.login-content input[type="password"],
+.login-content input[type="tel"],
+.login-content .input-cell {
+  min-height: 52px !important;
+  border-radius: 12px !important;
+  border: 1px solid var(--border) !important;
+  background: #f9fafb !important;
+  color: var(--text) !important;
+  font-size: 1rem !important;
+  padding: 12px 16px !important;
+  transition: all 0.2s ease !important;
+}
+
+.login-content .form-control:focus,
+.login-content input:focus {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 4px var(--ring) !important;
+  outline: none !important;
+}
+
+.login-content .form-control::placeholder {
+  color: var(--muted) !important;
+  opacity: 0.7 !important;
+}
+
+/* Primary button - Login button */
+.btn-primary,
+.login-content .btn-primary,
+.btn-login.btn-primary {
+  min-height: 52px !important;
+  border-radius: 12px !important;
+  border: 0 !important;
+  background: var(--primary) !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  font-size: 1.05rem !important;
+  letter-spacing: 0.01em;
+  box-shadow: 0 8px 24px rgba(37,99,235,0.25) !important;
+  transition: all 0.2s ease !important;
+}
+
+.btn-primary:hover,
+.login-content .btn-primary:hover,
+.btn-login.btn-primary:hover {
+  background: var(--primary-hover) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 12px 32px rgba(37,99,235,0.35) !important;
+}
+
+.btn-primary:active,
+.login-content .btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Links */
+.login-content a,
+.login-content .btn-link {
+  color: var(--primary) !important;
+  font-weight: 500 !important;
+}
+
+.login-content a:hover {
+  color: var(--primary-hover) !important;
+}
+
+/* Divider */
+.login-content .login-divider,
+.text-muted.login-divider {
+  color: var(--muted) !important;
+  opacity: 0.6;
+}
+
+/*Forgot password link*/
+.login-content .forgot-link {
+  color: var(--muted) !important;
+  font-size: 0.875rem !important;
+}
+
+.login-content .forgot-link:hover {
+  color: var(--primary) !important;
+}
+
+/* Social Login buttons */
+.btn-social {
+  background: var(--surface-solid) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text) !important;
+}
+
+.btn-social:hover {
+  background: var(--surface) !important;
+  border-color: var(--primary) !important;
+}
+
+/* Brand row / Logo */
+.login-content .brand-row {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.login-content .brand-row img {
+  max-height: 48px;
+  object-fit: contain;
+}
+
+/* Responsive mobile */
+@media (max-width: 480px) {
+  .page-card,
+  .login-content.page-card {
+    margin: 24px 16px !important;
+    padding: 28px 20px !important;
+    border-radius: 16px !important;
+  }
+  
+  .login-content .form-control,
+  .login-content .btn-primary {
+    min-height: 48px !important;
+  }
+  
+  .login-content h4 {
+    font-size: 1.5rem !important;
+  }
+}

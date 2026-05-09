@@ -1,0 +1,14 @@
+<div class="navbar-brand-area" style="display: flex; align-items: center; gap: 10px;">
+    {% if frappe.boot.construction_theme and frappe.boot.construction_theme.logo_url %}
+        <img src="{{ frappe.boot.construction_theme.logo_url }}" 
+             style="height: 32px; width: auto; object-fit: contain;" 
+             alt="{{ frappe.boot.construction_theme.app_title or 'Construction ERP' }}">
+    {% else %}
+        <img src="/assets/construction/images/construction_logo.svg" 
+             style="height: 32px; width: auto; object-fit: contain;" 
+             alt="Construction ERP">
+    {% endif %}
+    <span class="navbar-brand-title" style="font-weight: 700; font-size: 1.1rem; letter-spacing: -0.02em;">
+        {{ (frappe.boot.construction_theme and frappe.boot.construction_theme.app_title) or "Construction ERP" }}
+    </span>
+</div>

@@ -1,0 +1,114 @@
+/* ===== KANBAN & CALENDAR VIEWS ===== */
+/* Theme: {{ theme_name }} */
+
+/* Kanban Board */
+.kanban-board {
+  background: {{ body_bg }};
+}
+
+.kanban-column {
+  background: {{ surface_bg }};
+  border: 1px solid {{ border_color }};
+  border-radius: 8px;
+  transition: box-shadow 0.2s ease;
+}
+
+.kanban-column:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.kanban-card {
+  background: {{ surface_bg }};
+  border: 1px solid {{ border_color }};
+  color: {{ text_primary }};
+  border-radius: 6px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.kanban-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  background: {{ accent_primary }}15;
+}
+
+.kanban-card.dragging {
+  opacity: 0.8;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.kanban-column-header {
+  color: {{ text_primary }};
+  border-bottom: 2px solid {{ accent_primary }};
+}
+
+/* Calendar (FullCalendar) */
+.fc {
+  background: {{ body_bg }};
+  color: {{ text_primary }};
+}
+
+.fc-daygrid-day {
+  background: {{ surface_bg }};
+  border-color: {{ border_color }};
+}
+
+.fc-daygrid-day.fc-day-today {
+  background: {{ accent_primary }}20;
+}
+
+.fc-daygrid-day.fc-day-today .fc-daygrid-day-number {
+  background: {{ accent_primary }};
+  color: #ffffff;
+  border-radius: 50%;
+}
+
+.fc-event {
+  background: {{ accent_primary }};
+  border-color: {{ accent_primary_hover }};
+  color: #ffffff;
+  border-radius: 4px;
+}
+
+.fc-event:hover {
+  background: {{ accent_primary_hover }};
+}
+
+.fc-toolbar-title {
+  color: {{ text_primary }};
+}
+
+.fc-button {
+  background: {{ surface_bg }};
+  color: {{ text_primary }};
+  border: 1px solid {{ border_color }};
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.fc-button:hover {
+  background: {{ accent_primary }}15;
+  border-color: {{ accent_primary }};
+}
+
+.fc-button-primary {
+  background: {{ accent_primary }};
+  border-color: {{ accent_primary }};
+  color: #ffffff;
+}
+
+.fc-button-primary:hover {
+  background: {{ accent_primary_hover }};
+}
+
+.fc-col-header-cell {
+  color: {{ text_secondary }};
+  border-color: {{ border_color }};
+}
+
+.fc-scrollgrid {
+  border-color: {{ border_color }};
+}
+
+.fc-scrollgrid td, .fc-scrollgrid th {
+  border-color: {{ border_color }};
+}

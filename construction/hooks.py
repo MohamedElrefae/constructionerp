@@ -19,7 +19,7 @@ add_to_apps_screen = [
 ]
 
 module_app = {
-	"Construction": "construction",
+	"construction": "construction",
 }
 
 # Module configuration - makes DocTypes visible in the Construction module menu
@@ -38,6 +38,12 @@ desk_links = {
 			"label": "Theme Settings",
 			"description": "Configure site-wide theme settings",
 		},
+		{
+			"type": "doctype",
+			"name": "User Scope Context",
+			"label": "User Scope Context",
+			"description": "Manage user company, branch, project scope",
+		},
 	]
 }
 
@@ -48,43 +54,88 @@ doctype_js = {"BOQ Header": "construction/doctype/boq_header/boq_header.js"}
 doctype_tree_js = {"BOQ Structure": "construction/doctype/boq_structure/boq_structure_tree.js"}
 
 # Global JS includes (raw asset path — loaded directly, not bundled)
-# Phase 2: v3 is API-driven, v2 kept as fallback
+# v10/v12: Native Frappe data-theme architecture (removed data-modern-theme hybrid)
 app_include_js = [
 	"/assets/construction/js/print_settings_dialog.js",
 	"/assets/construction/js/construction_export_menu.js",
-	"/assets/construction/js/modern_theme_loader_v2.js?v=52",  # v5.2 - Dark theme + layout fix
-	"/assets/construction/js/components/index.js",
+	"/assets/construction/js/theme_patch.js?v=12",
+	"/assets/construction/js/theme_loader.js?v=25",
+	"/assets/construction/js/components/index.js?v=4.5",
+	# Searchable Dropdown Module (Week 1)
+	"/assets/construction/js/searchable_dropdown/utils.js",
+	"/assets/construction/js/searchable_dropdown/searchable_dropdown.js",
+	# Searchable Dropdown Form Scripts (Week 2/3)
+	"/assets/construction/js/searchable_dropdown/config/journal_entry.js",
+	"/assets/construction/js/searchable_dropdown/config/sales_invoice.js",
+	"/assets/construction/js/searchable_dropdown/config/customer_supplier.js",
 ]
 
 # Global CSS includes for Modern Theme
+# v8: Native Frappe data-theme architecture (single source of truth)
+# Uses html[data-theme="dark"] / html[data-theme="light"] selectors only.
+# All theme logic flows through Frappe's native theme system.
 app_include_css = [
-	"/assets/construction/css/modern_theme_tokens.css",
-	"/assets/construction/css/modern_theme_light.css",
-	"/assets/construction/css/modern_theme_dark.css",
-	"/assets/construction/css/modern_theme_base.css",
-	"/assets/construction/css/modern_theme_components.css",
-	"/assets/construction/css/modern_theme_forms.css",
-	"/assets/construction/css/modern_theme_tree.css",
-	"/assets/construction/css/modern_theme_sidebar.css",
-	"/assets/construction/css/modern_theme_layout.css",
-	"/assets/construction/css/modern_theme_switcher.css",
-	"/assets/construction/css/construction_theme_components.css",
+	# Core tokens: CSS variables with !important for white-label override
+	"/assets/construction/css/modern_theme_tokens.css?v=16",
+	# Component overrides using native data-theme selectors - HIGH SPECIFICITY VERSION
+	# Merged: modern_theme_base.css + modern_theme_components_extra.css
+	"/assets/construction/css/modern_theme_base.css?v=27",
+	# Searchable Dropdown Module
+	"/assets/construction/css/searchable_dropdown.css?v=6",
+	# v16 structural adapter — loads LAST to ensure specificity
+	"/assets/construction/css/modern_theme_v16_adapter.css?v=17",
 ]
 
 # CSS includes for unauthenticated pages (login, etc.)
-web_include_css = ["/assets/construction/css/login_theme.css"]
+# Both light and dark themes loaded - JS toggles between them
+web_include_css = [
+	"/assets/construction/css/login_theme.css",
+	"/assets/construction/css/login_theme_light.css",
+	"/assets/construction/css/email_theme.css"
+]
+
+# Add JS to handle login page theme toggle
+web_include_js = "/assets/construction/js/login_theme_toggle.js"
+
+# ─── BRAND OVERRIDES & WEBSITE CONTEXT ───
+brand_html = "construction/templates/includes/navbar_brand.html"
+login_page_title = "Construction ERP — Login"
+
+website_context = {
+    "favicon": "/assets/construction/images/construction_logo.svg",
+    "splash_image": "/assets/construction/images/construction_logo.svg",
+    "brand_html": brand_html,
+}
+
+email_css = [
+    "/assets/construction/css/email_theme.css"
+]
+
+# ─── PDF & PRINT STYLING ───
+print_css = "/assets/construction/css/print_theme.css"
+pdf_header_html = "construction.api.theme_api.get_pdf_header"
+pdf_footer_html = "construction.api.theme_api.get_pdf_footer"
+
+
 
 # Override Frappe's theme switcher for custom integration
 # Using simplified SQL-based version to avoid Python controller import issues
 override_whitelisted_methods = {
-	"frappe.core.doctype.user.user.switch_theme": "construction.overrides.switch_theme_simple.switch_theme"
+	"frappe.core.doctype.user.user.switch_theme": "construction.overrides.switch_theme_simple.switch_theme",
+	"frappe.utils.change_log.show_update_popup": "construction.api.theme_api.ignore_update_popup"
 }
+
+# Boot session hook - inject user's theme into frappe.boot
+# This ensures the correct theme is available immediately on page load
+boot_session = "construction.api.theme_api.add_theme_to_boot"
 
 # Fixtures - Phase 2: Construction Theme records
 fixtures = [
 	{"doctype": "Construction Theme", "filters": [["is_system_theme", "=", 1]]},
-	{"doctype": "Workspace Sidebar", "filters": [["name", "=", "Construction"]]},
 ]
+
+# Note: Workspace Sidebar is created via after_migrate hook, not fixture
+# (DocType may not exist in all Frappe versions)
 
 # After install - create system themes
 after_install = "construction.install.create_system_themes"
@@ -92,7 +143,9 @@ after_install = "construction.install.create_system_themes"
 # After migrate - ensure system themes and workspace sidebar exist
 # Order matters: themes first, then sidebar, then health check
 after_migrate = [
+	"construction.api.theme_api.whitelabel_patch",
 	"construction.install.create_system_themes",
 	"construction.install.setup_workspace_sidebar",
+	"construction.install.setup_construction_workspace_page",
 	"construction.install.verify_workspace_visibility",
 ]

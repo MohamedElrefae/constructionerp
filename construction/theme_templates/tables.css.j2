@@ -1,52 +1,121 @@
 /* ===== TABLES: {{ theme_name }} ===== */
-html[data-modern-theme="{{ theme_name }}"] .datatable {
-    background: {{ surface_bg }} !important;
+
+/* Base table styling */
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .datatable {
+    background: {{ surface_bg }};
 }
 
-html[data-modern-theme="{{ theme_name }}"] .datatable .dt-header {
-    background: {{ navbar_bg }} !important;
-    border-bottom: 1px solid {{ border_color }} !important;
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .datatable .dt-header {
+    background: {{ navbar_bg }};
+    border-bottom: 1px solid {{ border_color }};
 }
 
-html[data-modern-theme="{{ theme_name }}"] .datatable .dt-row {
-    border-bottom: 1px solid {{ border_color }}33 !important;
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .datatable .dt-row {
+    border-bottom: 1px solid {{ border_color }}33;
+    transition: background-color var(--t-fast);
 }
 
-html[data-modern-theme="{{ theme_name }}"] .datatable .dt-row:hover {
-    background: {{ accent_primary }}0d !important;
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .datatable .dt-row:hover {
+    background: var(--row-hover-bg);
 }
 
-html[data-modern-theme="{{ theme_name }}"] .datatable .dt-cell {
-    color: {{ text_primary }} !important;
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .datatable .dt-cell {
+    color: {{ text_primary }};
 }
 
-html[data-modern-theme="{{ theme_name }}"] .datatable .dt-cell--header {
-    color: {{ text_primary }} !important;
-    font-weight: 600 !important;
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .datatable .dt-cell--header {
+    color: {{ text_primary }};
+    font-weight: 600;
 }
 
-html[data-modern-theme="{{ theme_name }}"] .list-row-head {
-    background: {{ navbar_bg }} !important;
-    border-bottom: 1px solid {{ border_color }} !important;
+/* List View - header */
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .list-row-head {
+    background: {{ navbar_bg }};
+    border-bottom: 1px solid {{ border_color }};
 }
 
-html[data-modern-theme="{{ theme_name }}"] .list-row {
-    border-bottom: 1px solid {{ border_color }}33 !important;
+/* List View - rows */
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .list-row {
+    border-bottom: 1px solid {{ border_color }}33;
+    transition: background-color var(--t-fast), box-shadow var(--t-fast);
 }
 
-html[data-modern-theme="{{ theme_name }}"] .list-row:hover {
-    background: {{ accent_primary }}0d !important;
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .list-row:hover {
+    background: var(--row-hover-bg);
 }
 
-html[data-modern-theme="{{ theme_name }}"] .list-row .level-item {
-    color: {{ text_primary }} !important;
+/* Interactive rows - full shadow on hover */
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] tr.interactive:hover td,
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .list-row.interactive:hover {
+    box-shadow: var(--row-hover-shadow);
 }
 
-html[data-modern-theme="{{ theme_name }}"] .list-row-head .list-subject {
-    color: {{ text_primary }} !important;
-    font-weight: 600 !important;
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .list-row .level-item {
+    color: {{ text_primary }};
 }
 
-html[data-modern-theme="{{ theme_name }}"] .result {
-    background: {{ surface_bg }} !important;
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .list-row-head .list-subject {
+    color: {{ text_primary }};
+    font-weight: 600;
+}
+
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .result {
+    background: {{ surface_bg }};
+}
+
+/* Row selected state */
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] tr.selected td,
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .list-row.selected {
+    background: {{ accent_primary }}1a;
+}
+
+/* Cell hover outline - outline + column indicator via :has() */
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] tr.interactive td:hover {
+    outline: 2px solid {{ accent_primary }}40;
+    outline-offset: -2px;
+    z-index: 1;
+}
+
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] tr.interactive td:focus-within {
+    outline: 2px solid {{ accent_primary }};
+    outline-offset: -2px;
+    z-index: 1;
+}
+
+/* Column highlighting - when a cell is hovered, highlight its column header */
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] table:has(tr.interactive td:nth-child(1):hover) td:nth-child(1),
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] table:has(tr.interactive td:nth-child(2):hover) td:nth-child(2),
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] table:has(tr.interactive td:nth-child(3):hover) td:nth-child(3),
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] table:has(tr.interactive td:nth-child(4):hover) td:nth-child(4),
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] table:has(tr.interactive td:nth-child(5):hover) td:nth-child(5),
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] table:has(tr.interactive td:nth-child(6):hover) td:nth-child(6),
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] table:has(tr.interactive td:nth-child(7):hover) td:nth-child(7),
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] table:has(tr.interactive td:nth-child(8):hover) td:nth-child(8),
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] table:has(tr.interactive td:nth-child(9):hover) td:nth-child(9),
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] table:has(tr.interactive td:nth-child(10):hover) td:nth-child(10) {
+    background: {{ accent_primary }}0d;
+}
+
+/* Table general - Frappe standard table */
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] table.table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] table.table thead th {
+    background: var(--col-header-bg);
+    color: #fff;
+    font-weight: 700;
+    font-size: .85rem;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    padding: 14px 16px;
+    border-bottom: 2px solid {{ border_color }};
+}
+
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] table.table tbody td {
+    padding: 14px 16px;
+    border-bottom: 1px solid {{ border_color }}33;
+    color: {{ text_primary }};
+    transition: background-color var(--t-fast);
 }

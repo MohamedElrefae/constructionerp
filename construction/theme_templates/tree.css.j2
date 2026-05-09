@@ -1,44 +1,312 @@
 /* ===== TREE VIEW: {{ theme_name }} ===== */
-html[data-modern-theme="{{ theme_name }}"] .tree {
-    background: {{ surface_bg }} !important;
+
+/* Container */
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .tree {
+    background: {{ surface_bg }};
 }
 
-html[data-modern-theme="{{ theme_name }}"] .tree-node {
-    color: {{ text_primary }} !important;
+/* Tree node base */
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .tree-node {
+    color: {{ text_primary }};
 }
 
-html[data-modern-theme="{{ theme_name }}"] .tree-node .tree-link {
-    color: {{ text_primary }} !important;
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .tree-node .tree-link {
+    color: {{ text_primary }};
+    transition: background-color var(--t-fast);
 }
 
-html[data-modern-theme="{{ theme_name }}"] .tree-node .tree-link:hover {
-    background: {{ accent_primary }}19 !important;
-    color: {{ accent_primary }} !important;
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .tree-node .tree-link:hover {
+    background: var(--tree-row-hover-bg);
+    color: {{ accent_primary }};
 }
 
-html[data-modern-theme="{{ theme_name }}"] .tree-node.selected .tree-link {
-    background: {{ accent_primary }}33 !important;
-    color: {{ accent_primary }} !important;
-    font-weight: 600 !important;
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .tree-node.selected .tree-link {
+    background: {{ accent_primary }}33;
+    color: {{ accent_primary }};
+    font-weight: 600;
 }
 
-html[data-modern-theme="{{ theme_name }}"] .tree-children {
-    border-left: 1px solid {{ border_color }} !important;
+/* Tree children indentation */
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .tree-children {
+    border-left: 1px solid {{ border_color }};
 }
 
-html[data-modern-theme="{{ theme_name }}"] .tree-node .icon {
-    color: {{ accent_primary }} !important;
+/* Tree node icons */
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .tree-node .icon {
+    color: {{ accent_primary }};
 }
 
-html[data-modern-theme="{{ theme_name }}"] .tree-node .toggle-icon {
-    color: {{ text_secondary }} !important;
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .tree-node .toggle-icon {
+    color: {{ text_secondary }};
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: all var(--t-fast);
 }
 
-html[data-modern-theme="{{ theme_name }}"] .tree-node .toggle-icon:hover {
-    color: {{ accent_primary }} !important;
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .tree-node .toggle-icon:hover {
+    color: {{ accent_primary }};
+    background: {{ accent_primary }}10;
 }
 
-html[data-modern-theme="{{ theme_name }}"] .tree-footer {
-    background: {{ navbar_bg }} !important;
-    border-top: 1px solid {{ border_color }} !important;
+/* Tree footer */
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .tree-footer {
+    background: {{ navbar_bg }};
+    border-top: 1px solid {{ border_color }};
+}
+
+/* ══════════════════════════════════════════════
+   Tree Grid View: Enhanced from theme_test_lab
+   ══════════════════════════════════════════════ */
+
+/* Tree header */
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .tree-header {
+    background: var(--col-header-bg);
+    color: #fff;
+    font-weight: 700;
+    font-size: .85rem;
+    border-bottom: 2px solid {{ border_color }};
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+}
+
+/* Tree row */
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .tree-row {
+    border-bottom: 1px solid {{ border_color }}33;
+    font-size: .875rem;
+    white-space: nowrap;
+    transition: background-color var(--t-fast), box-shadow var(--t-fast);
+}
+
+/* Tree row hover */
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .tree-row:hover {
+    background: var(--tree-row-hover-bg);
+}
+
+/* Tree row with interactive shadow */
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .tree-row.interactive:hover {
+    box-shadow: 0 0 0 2px var(--tree-row-hover-border), 0 4px 16px var(--shadow-color);
+}
+
+/* Tree row inactive */
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .tree-row.inactive {
+    opacity: .65;
+}
+
+/* Expand arrow */
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .tree-exp {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: {{ text_secondary }};
+    border-radius: 4px;
+    transition: all var(--t-fast);
+    font-size: 12px;
+}
+
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .tree-exp:hover {
+    background: {{ accent_primary }}10;
+    color: {{ accent_primary }};
+}
+
+/* Tree icon (folder/file) */
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .tree-icon {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+}
+
+/* Tree status indicator */
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .tree-status {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .tree-status.active {
+    background: {{ success_color }};
+    box-shadow: 0 0 6px {{ success_color }}66;
+}
+
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .tree-status.inactive {
+    background: {{ error_color }};
+    box-shadow: 0 0 6px {{ error_color }}66;
+}
+
+/* Tree code column */
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .tree-code {
+    color: {{ accent_primary }};
+    font-weight: 600;
+    font-size: .8rem;
+}
+
+/* Tree account name */
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .tree-name {
+    color: {{ text_primary }};
+    font-weight: 500;
+}
+
+/* Tree level badge */
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .tree-level {
+    padding: 2px 10px;
+    background: {{ surface_bg }};
+    color: {{ text_secondary }};
+    border-radius: 999px;
+    font-size: .75rem;
+    font-weight: 600;
+    border: 1px solid {{ border_color }};
+}
+
+/* Tree action buttons container */
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .tree-actions {
+    display: flex;
+    gap: 6px;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+/* Tree action button base */
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .tree-actions .act {
+    padding: 0 10px;
+    height: 28px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all .3s cubic-bezier(0.4,0,0.2,1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    font-size: 12px;
+    line-height: 1;
+    flex-shrink: 0;
+    color: #fff;
+}
+
+/* Action button: Edit (blue) */
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .tree-actions .act.act-edit {
+    background: {{ accent_primary }};
+}
+
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .tree-actions .act.act-edit:hover {
+    background: {{ accent_primary_hover }};
+    transform: translateY(-1px);
+{% if is_dark_mode %}
+    box-shadow: 0 4px 12px {{ accent_primary }}4d;
+{% else %}
+    box-shadow: 0 4px 12px {{ accent_primary }}33;
+{% endif %}
+}
+
+/* Action button: Add (green) */
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .tree-actions .act.act-add {
+    background: {{ success_color }};
+}
+
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .tree-actions .act.act-add:hover {
+    background: {{ success_color }};
+    filter: brightness(1.15);
+    transform: translateY(-1px);
+{% if is_dark_mode %}
+    box-shadow: 0 4px 12px {{ success_color }}4d;
+{% else %}
+    box-shadow: 0 4px 12px {{ success_color }}33;
+{% endif %}
+}
+
+/* Action button: Toggle (amber) */
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .tree-actions .act.act-toggle {
+    background: {{ warning_color }};
+    color: #333;
+    width: 28px;
+    padding: 0;
+}
+
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .tree-actions .act.act-toggle:hover {
+    filter: brightness(1.15);
+    transform: translateY(-1px);
+}
+
+/* Action button: Delete (red) */
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .tree-actions .act.act-delete {
+    background: {{ error_color }};
+}
+
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .tree-actions .act.act-delete:hover {
+    background: {{ error_color }};
+    filter: brightness(1.15);
+    transform: translateY(-1px);
+{% if is_dark_mode %}
+    box-shadow: 0 4px 12px {{ error_color }}4d;
+{% else %}
+    box-shadow: 0 4px 12px {{ error_color }}33;
+{% endif %}
+}
+
+/* Disabled action button */
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .tree-actions .act:disabled,
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .tree-actions .act.disabled {
+    opacity: .4;
+    cursor: not-allowed;
+    filter: grayscale(0.5);
+    transform: none;
+    box-shadow: none;
+}
+
+/* Disabled button wrapper with tooltip */
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .dtw {
+    position: relative;
+    display: inline-flex;
+}
+
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .dtw .dtip {
+    display: none;
+    position: absolute;
+    bottom: 110%;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    background: {{ surface_bg }};
+    color: {{ text_primary }};
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: .72rem;
+    border: 1px solid {{ border_color }};
+    z-index: 999;
+{% if is_dark_mode %}
+    box-shadow: 0 4px 12px rgba(0,0,0,.3);
+{% else %}
+    box-shadow: 0 4px 12px rgba(0,0,0,.1);
+{% endif %}
+}
+
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .dtw:hover .dtip {
+    display: block;
+}
+
+/* Focus visible for accessibility */
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .tree-actions .act:focus-visible {
+    outline: 2px solid {{ accent_primary }};
+    outline-offset: 2px;
+}
+
+/* Tree row with icon before name */
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .tree-row-icon {
+    font-size: 16px;
+    width: 24px;
+    text-align: center;
 }

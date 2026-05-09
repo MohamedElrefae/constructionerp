@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Construction ERP · Theme Test Lab</title>
+<style>
+/* ─── 1. TOKENS ─── */
+:root {
+  --primary: #2563eb; --primary-hover: #1d4ed8; --primary-light: rgba(37,99,235,0.15);
+  --accent:  #f59e0b; --accent-hover:  #d97706; --accent-light:  rgba(245,158,11,0.15);
+  --danger:  #dc2626; --danger-hover:  #b91c1c; --danger-light:  rgba(220,38,38,0.15);
+  --success: #16a34a; --success-light: rgba(22,163,74,0.15);
+  --bg: #0b1020; --bg-2: #111827;
+  --surface: #1e293b; --surface-hover: #334155; --surface-active: #475569;
+  --text: #f8fafc; --text-2: #94a3b8; --text-3: #64748b; --text-disabled: #475569;
+  --border: rgba(148,163,184,0.18); --border-hover: rgba(148,163,184,0.28); --divider: rgba(148,163,184,0.10);
+  --shadow-sm: 0 2px 8px rgba(0,0,0,.40); --shadow: 0 8px 24px rgba(0,0,0,.48);
+  --shadow-lg: 0 16px 48px rgba(0,0,0,.56);
+  --radius-sm:6px; --radius:10px; --radius-lg:16px; --radius-xl:24px;
+  --t-fast: 0.15s ease; --t: 0.2s cubic-bezier(0.4,0,0.2,1); --t-slow: 0.3s cubic-bezier(0.4,0,0.2,1);
+  /* tree tokens */
+  --row-hover-bg: rgba(37,99,235,0.06); --row-hover-border: rgba(37,99,235,0.25); --row-focus-ring: #2563eb;
+  --col-header-bg: linear-gradient(135deg, #2563eb, #1d4ed8);
+  /* card tokens */
+  --card-hover-border: #16a34a;
+}
+[data-theme="light"] {
+  --bg: #f8fafc; --bg-2: #f1f5f9;
+  --surface: #ffffff; --surface-hover: #f1f5f9; --surface-active: #e2e8f0;
+  --text: #0f172a; --text-2: #475569; --text-3: #94a3b8; --text-disabled: #cbd5e1;
+  --border: rgba(15,23,42,0.10); --border-hover: rgba(15,23,42,0.18); --divider: rgba(15,23,42,0.08);
+  --shadow-sm: 0 2px 8px rgba(0,0,0,.06); --shadow: 0 8px 24px rgba(0,0,0,.08);
+  --shadow-lg: 0 16px 48px rgba(0,0,0,.12);
+  --col-header-bg: linear-gradient(135deg, #2563eb, #1d4ed8);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:var(--bg); color:var(--text); line-height:1.5; min-height:100vh; }
+
+/* ─── 2. LAYOUT ─── */
+.app { display:flex; flex-direction:column; min-height:100vh; }
+.navbar { background:var(--surface); border-bottom:1px solid var(--border); padding:0 24px; height:64px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; box-shadow:var(--shadow-sm); }
+.nb-brand { font-size:1.25rem; font-weight:700; color:var(--text); display:flex; align-items:center; gap:10px; }
+.nb-logo { width:36px; height:36px; background:linear-gradient(135deg,var(--primary),var(--accent)); border-radius:var(--radius); display:flex; align-items:center; justify-content:center; font-size:1.25rem; }
+.nb-nav { display:flex; gap:8px; align-items:center; }
+.main { display:flex; flex:1; }
+
+/* Sidebar */
+.sidebar { width:260px; background:var(--surface); border-right:1px solid var(--border); padding:16px 12px; overflow-y:auto; }
+.sb-section { margin-bottom:24px; }
+.sb-label { font-size:.6875rem; text-transform:uppercase; letter-spacing:1.2px; color:var(--text-3); padding:0 12px; margin-bottom:8px; font-weight:700; }
+.sb-item { display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:var(--radius-sm); color:var(--text-2); cursor:pointer; transition:var(--t); margin-bottom:2px; border:1px solid transparent; font-size:.875rem; position:relative; }
+.sb-item:hover { background:var(--surface-hover); color:var(--text); border-color:var(--border-hover); transform:translateX(4px); box-shadow:0 4px 12px rgba(0,0,0,.15); }
+.sb-item.active { background:var(--primary); color:#fff; font-weight:600; }
+.sb-item.active::before { content:''; position:absolute; top:0; left:0; width:3px; height:100%; background:linear-gradient(180deg, #fff 0%, rgba(255,255,255,.8) 100%); border-radius:0 2px 2px 0; }
+.sb-item.active:hover { background:var(--primary-hover); transform:translateX(2px); }
+.sb-item .ico { font-size:1.1rem; width:24px; text-align:center; }
+.content { flex:1; padding:32px; overflow-y:auto; max-width:1400px; }
+
+/* ─── 3. BUTTONS ─── */
+.btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:10px 20px; border-radius:var(--radius-sm); font-size:.875rem; font-weight:600; border:1px solid transparent; cursor:pointer; transition:var(--t); }
+.btn-primary { background:var(--primary); color:#fff; box-shadow:0 2px 8px rgba(37,99,235,.30); }
+.btn-primary:hover { background:var(--primary-hover); transform:translateY(-2px); box-shadow:0 6px 20px rgba(37,99,235,.40); }
+.btn-secondary { background:var(--surface); color:var(--text); border-color:var(--border); }
+.btn-secondary:hover { background:var(--surface-hover); border-color:var(--border-hover); transform:translateY(-1px); box-shadow:var(--shadow-sm); }
+.btn-accent { background:var(--accent); color:#fff; box-shadow:0 2px 8px rgba(245,158,11,.30); }
+.btn-accent:hover { background:var(--accent-hover); transform:translateY(-2px); box-shadow:0 6px 20px rgba(245,158,11,.40); }
+.btn-danger { background:var(--danger); color:#fff; box-shadow:0 2px 8px rgba(220,38,38,.30); }
+.btn-danger:hover { background:var(--danger-hover); transform:translateY(-2px); box-shadow:0 6px 20px rgba(220,38,38,.40); }
+.btn-ghost { background:transparent; color:var(--text-2); }
+.btn-ghost:hover { background:var(--surface-hover); color:var(--text); border-color:var(--border); }
+.btn-sm { padding:6px 14px; font-size:.8125rem; }
+.btn-lg { padding:14px 28px; font-size:1rem; }
+.btn-icon { padding:10px; border-radius:var(--radius-sm); }
+.btn:disabled { opacity:.5; cursor:not-allowed; transform:none!important; box-shadow:none!important; }
+
+/* ─── 4. CARDS ─── */
+.card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:24px; margin-bottom:20px; transition:var(--t); }
+.card:hover { border-color:var(--card-hover-border); box-shadow:var(--shadow); transform:translateY(-1px); }
+.card-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--divider); }
+.card-title { font-size:1.125rem; font-weight:700; }
+
+/* ─── 5. FORMS ─── */
+.fg { margin-bottom:20px; }
+.fl { display:block; font-size:.875rem; font-weight:600; margin-bottom:6px; color:var(--text); }
+.fc { width:100%; padding:10px 14px; background:var(--bg-2); border:1.5px solid var(--border); border-radius:var(--radius-sm); color:var(--text); font-size:.875rem; transition:var(--t); }
+.fc:focus { outline:none; border-color:var(--primary); box-shadow:0 0 0 4px var(--primary-light); background:var(--surface); }
+.fc:hover:not(:focus) { border-color:var(--border-hover); }
+.fc::placeholder { color:var(--text-3); }
+textarea.fc { resize:vertical; min-height:100px; }
+.fcheck { display:flex; align-items:center; gap:10px; margin-bottom:10px; cursor:pointer; }
+.fcheck input[type="checkbox"], .fcheck input[type="radio"] { width:18px; height:18px; accent-color:var(--primary); cursor:pointer; }
+
+/* Switch */
+.switch { position:relative; display:inline-block; width:48px; height:26px; }
+.switch input { opacity:0; width:0; height:0; }
+.slider { position:absolute; cursor:pointer; top:0;left:0;right:0;bottom:0; background:var(--surface-hover); border:2px solid var(--border); transition:var(--t); border-radius:26px; }
+.slider:before { position:absolute; content:""; height:20px; width:20px; left:2px; bottom:2px; background:white; transition:var(--t); border-radius:50%; box-shadow:0 2px 4px rgba(0,0,0,.2); }
+input:checked+.slider { background:var(--primary); border-color:var(--primary); }
+input:checked+.slider:before { transform:translateX(22px); }
+
+/* ─── 6. TABLES ─── */
+.table-wrap { overflow-x:auto; border-radius:var(--radius); border:1px solid var(--border); background:var(--surface); }
+table { width:100%; border-collapse:separate; border-spacing:0; font-size:.875rem; }
+th { padding:14px 16px; text-align:left; font-weight:700; color:#fff; border-bottom:2px solid var(--border); white-space:nowrap; font-size:.8125rem; text-transform:uppercase; letter-spacing:.5px; background:var(--col-header-bg); }
+td { padding:14px 16px; border-bottom:1px solid var(--divider); color:var(--text); }
+/* hover row + column + cell – visible border */
+tr:hover td { background:var(--row-hover-bg); }
+tr.interactive:hover td { box-shadow:0 0 0 2px var(--row-hover-border), 0 4px 16px rgba(0,0,0,.18); }
+tr.selected td { background:var(--primary-light); }
+
+/* cell-level hover with outline + column indicator via :has() */
+tr.interactive td:focus-within { outline:2px solid var(--row-focus-ring); outline-offset:-2px; z-index:1; }
+tr.interactive td:hover { outline:2px solid var(--row-hover-border); outline-offset:-2px; z-index:1; }
+table:has(tr.interactive td:nth-child(1):hover) td:nth-child(1),
+table:has(tr.interactive td:nth-child(2):hover) td:nth-child(2),
+table:has(tr.interactive td:nth-child(3):hover) td:nth-child(3),
+table:has(tr.interactive td:nth-child(4):hover) td:nth-child(4),
+table:has(tr.interactive td:nth-child(5):hover) td:nth-child(5),
+table:has(tr.interactive td:nth-child(6):hover) td:nth-child(6),
+table:has(tr.interactive td:nth-child(7):hover) td:nth-child(7),
+table:has(tr.interactive td:nth-child(8):hover) td:nth-child(8)
+{ background:var(--row-hover-bg); }
+
+/* ─── 7. BADGES / TAGS ─── */
+.badge { display:inline-flex; align-items:center; gap:6px; padding:5px 14px; border-radius:100px; font-size:.75rem; font-weight:700; letter-spacing:.3px; }
+.badge-s { background:var(--success-light); color:var(--success); }
+.badge-w { background:var(--accent-light); color:var(--accent-hover); }
+.badge-e { background:var(--danger-light); color:var(--danger); }
+.badge-p { background:var(--primary-light); color:var(--primary); }
+.tag { display:inline-flex; align-items:center; gap:6px; padding:5px 14px; border-radius:100px; font-size:.8125rem; font-weight:500; background:var(--bg-2); border:1px solid var(--border); color:var(--text-2); transition:var(--t); }
+.tag:hover { border-color:var(--border-hover); color:var(--text); }
+.tag-x { cursor:pointer; opacity:.5; font-size:1rem; line-height:1; }
+.tag-x:hover { opacity:1; color:var(--danger); }
+
+/* ─── 8. ALERTS ─── */
+.alert { padding:16px 20px; border-radius:var(--radius-sm); margin-bottom:16px; display:flex; align-items:flex-start; gap:14px; font-size:.875rem; border:1.5px solid transparent; }
+.alert-s { background:var(--success-light); color:var(--success); border-color:rgba(22,163,74,.30); }
+.alert-w { background:var(--accent-light); color:var(--accent-hover); border-color:rgba(245,158,11,.30); }
+.alert-e { background:var(--danger-light); color:var(--danger); border-color:rgba(220,38,38,.30); }
+.alert-i { background:var(--primary-light); color:var(--primary); border-color:rgba(37,99,235,.30); }
+
+/* ─── 9. MODAL ─── */
+.modal-ov { position:fixed; inset:0; background:rgba(0,0,0,.70); backdrop-filter:blur(6px); display:flex; align-items:center; justify-content:center; z-index:1000; padding:24px; }
+.modal { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-xl); width:100%; max-width:520px; max-height:90vh; overflow:hidden; box-shadow:var(--shadow-lg); }
+.modal-hd { padding:24px 28px; border-bottom:1px solid var(--divider); display:flex; justify-content:space-between; align-items:center; }
+.modal-title { font-size:1.25rem; font-weight:700; }
+.modal-bd { padding:28px; }
+.modal-ft { padding:20px 28px; border-top:1px solid var(--divider); display:flex; justify-content:flex-end; gap:12px; }
+
+/* ─── 10. DROPDOWN ─── */
+.dropdown { position:relative; display:inline-block; }
+.drop-menu { position:absolute; top:100%; right:0; margin-top:8px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); min-width:220px; box-shadow:var(--shadow-lg); z-index:50; padding:6px; }
+.drop-item { padding:10px 14px; border-radius:var(--radius-sm); cursor:pointer; font-size:.875rem; color:var(--text); transition:var(--t); display:flex; align-items:center; gap:10px; }
+.drop-item:hover { background:var(--surface-hover); }
+.drop-item.danger { color:var(--danger); }
+.drop-item.danger:hover { background:var(--danger-light); }
+.drop-div { height:1px; background:var(--divider); margin:6px 0; }
+
+/* ─── 11. TABS ─── */
+.tabs { display:flex; gap:4px; border-bottom:2px solid var(--border); margin-bottom:24px; }
+.tab { padding:12px 20px; font-size:.875rem; font-weight:600; color:var(--text-2); cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px; transition:var(--t); }
+.tab:hover { color:var(--text); background:var(--surface-hover); border-radius:var(--radius-sm) var(--radius-sm) 0 0; }
+.tab.active { color:var(--primary); border-bottom-color:var(--primary); }
+
+/* ─── 12. PAGINATION ─── */
+.pagination { display:flex; gap:6px; align-items:center; }
+.pg-btn { padding:10px 16px; border-radius:var(--radius-sm); font-size:.875rem; font-weight:600; color:var(--text-2); background:var(--surface); border:1px solid var(--border); cursor:pointer; transition:var(--t); }
+.pg-btn:hover { background:var(--surface-hover); color:var(--text); border-color:var(--border-hover); }
+.pg-btn.active { background:var(--primary); color:#fff; border-color:var(--primary); box-shadow:0 2px 8px rgba(37,99,235,.30); }
+
+/* ─── 13. TREE VIEW GRID ─── */
+.tree-container { border:1px solid var(--border); border-radius:var(--radius-lg); overflow:auto; background:var(--surface); }
+.tree-header { display:grid; grid-template-columns:auto auto auto 12px 120px 1fr 130px 80px 220px; align-items:center; padding:14px 20px; background:var(--col-header-bg); color:#fff; font-weight:700; font-size:.85rem; border-bottom:2px solid var(--border); position:sticky; top:0; z-index:10; text-transform:uppercase; letter-spacing:.5px; }
+.tree-row { display:grid; grid-template-columns:auto auto auto 12px 120px 1fr 130px 80px 220px; align-items:center; padding:12px 20px; border-bottom:1px solid var(--divider); font-size:.875rem; gap:0; white-space:nowrap; transition:background-color .15s ease, box-shadow .15s ease; }
+.tree-row:hover { background:var(--surface-hover); box-shadow:0 0 0 2px rgba(37,99,235,.25), 0 4px 16px rgba(0,0,0,.18); }
+.tree-row:focus-within { outline:2px solid var(--row-focus-ring); outline-offset:-2px; }
+.tree-row.inactive { opacity:.7; background:rgba(239,68,68,.05); }
+
+.tree-exp { width:20px; height:20px; display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--text-2); border-radius:4px; transition:var(--t); font-size:12px; }
+.tree-exp:hover { background:var(--surface-hover); color:var(--primary); }
+.tree-icon { width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:16px; }
+
+.tree-status { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+.tree-status.active { background:var(--success); box-shadow:0 0 6px var(--success); }
+.tree-status.inactive { background:var(--danger); box-shadow:0 0 6px var(--danger); }
+
+.tree-code { font-weight:600; font-family:'SF Mono',Consolas,monospace; font-size:.85em; letter-spacing:.5px; }
+.tree-name { color:var(--text); font-weight:500; min-width:0; cursor:pointer; }
+
+/* tree action buttons – proper size for column with labels */
+.tree-actions { display:flex; gap:6px; justify-content:flex-start; align-items:center; }
+.act { padding:0 10px; height:28px; border:none; border-radius:6px; cursor:pointer; transition:all .3s cubic-bezier(0.4,0,0.2,1); display:inline-flex; align-items:center; justify-content:center; gap:4px; font-size:12px; line-height:1; flex-shrink:0; color:#fff; }
+.act-edit { background:var(--primary); color:#fff; }
+.act-edit:hover { background:var(--primary-hover); transform:translateY(-2px); }
+.act-add { background:var(--success); color:#fff; }
+.act-add:hover { background:#15803d; transform:translateY(-2px); }
+.act-toggle { background:var(--accent); color:#fff; }
+.act-toggle:hover { background:var(--accent-hover); transform:translateY(-2px); }
+.act-delete { background:var(--danger); color:#fff; }
+.act-delete:hover { background:var(--danger-hover); transform:translateY(-2px); }
+.act:disabled { background:var(--text-disabled); color:var(--text-3); cursor:not-allowed; opacity:.6; transform:none!important; }
+
+/* disabled button tooltip wrapper */
+.dtw { position:relative; display:inline-block; }
+.dtw .dtip { visibility:hidden; opacity:0; position:absolute; bottom:120%; left:50%; transform:translateX(-50%); background:rgba(0,0,0,.92); color:#fff; padding:8px 14px; border-radius:6px; font-size:.8125rem; white-space:nowrap; transition:var(--t); z-index:100; }
+.dtw:hover .dtip { visibility:visible; opacity:1; }
+
+/* ─── 14. MORE COMPONENTS ─── */
+.progress { height:10px; background:var(--bg-2); border-radius:100px; overflow:hidden; border:1px solid var(--border); }
+.progress-bar { height:100%; background:linear-gradient(90deg,var(--primary),#3b82f6); border-radius:100px; transition:width .5s ease; }
+.avatar { width:40px; height:40px; border-radius:50%; background:var(--primary); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.875rem; border:2px solid var(--surface); }
+.avatar-g { display:flex; }
+.avatar-g .avatar { margin-left:-12px; }
+.avatar-g .avatar:first-child { margin-left:0; }
+
+.datepicker { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:20px; width:300px; box-shadow:var(--shadow); }
+.dp-hdr { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; font-weight:700; font-size:1rem; }
+.dp-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; text-align:center; }
+.dp-day { padding:10px; border-radius:var(--radius-sm); font-size:.8125rem; cursor:pointer; color:var(--text-2); transition:var(--t); }
+.dp-day:hover { background:var(--surface-hover); color:var(--text); }
+.dp-day.today { background:var(--primary); color:#fff; font-weight:700; }
+.dp-day.selected { background:var(--primary-light); color:var(--primary); font-weight:600; }
+
+.kanban { display:flex; gap:20px; overflow-x:auto; padding-bottom:8px; }
+.kb-col { min-width:300px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:20px; }
+.kb-col-hdr { font-weight:700; margin-bottom:16px; padding-bottom:12px; border-bottom:2px solid var(--divider); display:flex; justify-content:space-between; align-items:center; }
+.kb-card { background:var(--bg-2); border:1.5px solid var(--border); border-radius:var(--radius); padding:16px; margin-bottom:12px; cursor:pointer; transition:var(--t); }
+.kb-card:hover { border-color:var(--border-hover); box-shadow:var(--shadow-sm); transform:translateY(-2px); }
+
+.timeline { position:relative; padding-left:36px; }
+.timeline::before { content:''; position:absolute; left:12px; top:0; bottom:0; width:2px; background:var(--border); }
+.tl-item { position:relative; padding-bottom:28px; }
+.tl-badge { position:absolute; left:-36px; width:28px; height:28px; border-radius:50%; background:var(--primary); display:flex; align-items:center; justify-content:center; font-size:.75rem; color:#fff; border:3px solid var(--bg); }
+.tl-content { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:20px; }
+
+.empty-state { text-align:center; padding:64px 24px; }
+.empty-icon { font-size:4rem; margin-bottom:20px; opacity:.25; }
+.empty-title { font-size:1.25rem; font-weight:700; margin-bottom:8px; }
+.empty-text { color:var(--text-2); margin-bottom:24px; max-width:400px; margin-left:auto; margin-right:auto; }
+
+.skeleton { background:linear-gradient(90deg,var(--bg-2) 25%,var(--surface-hover) 50%,var(--bg-2) 75%); background-size:200% 100%; animation:skel 1.5s infinite; border-radius:var(--radius-sm); }
+@keyframes skel { 0%{background-position:200% 0;} 100%{background-position:-200% 0;} }
+
+.tooltip-ct { position:relative; display:inline-block; }
+.tooltip { position:absolute; bottom:100%; left:50%; transform:translateX(-50%); margin-bottom:10px; padding:10px 16px; background:var(--bg-2); color:var(--text); font-size:.8125rem; font-weight:500; border-radius:var(--radius-sm); white-space:nowrap; opacity:0; visibility:hidden; transition:var(--t); border:1px solid var(--border); box-shadow:var(--shadow); z-index:100; }
+.tooltip-ct:hover .tooltip { opacity:1; visibility:visible; }
+
+.breadcrumbs { display:flex; gap:10px; align-items:center; font-size:.875rem; margin-bottom:20px; flex-wrap:wrap; }
+.bc-item { color:var(--text-2); transition:var(--t); cursor:pointer; }
+.bc-item:hover { color:var(--primary); }
+.bc-item.active { color:var(--text); font-weight:600; }
+.bc-sep { color:var(--text-3); }
+
+.skeleton-title { height:20px; width:60%; margin-bottom:16px; }
+.skeleton-text { height:12px; margin-bottom:8px; }
+
+/* ─── 15. RTL ─── */
+[dir="rtl"] { direction:rtl; }
+[dir="rtl"] .sb-item:hover { transform:translateX(-4px); }
+[dir="rtl"] .sb-item.active::before { left:auto; right:0; border-radius:2px 0 0 2px; }
+[dir="rtl"] .sb-item.active:hover { transform:translateX(-2px); }
+[dir="rtl"] .sidebar { border-right:none; border-left:1px solid var(--border); }
+
+/* ─── 16. WIDGETS ─── */
+.wg-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:20px; margin-bottom:32px; }
+.wg { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:24px; transition:var(--t); }
+.wg:hover { border-color:var(--card-hover-border); box-shadow:var(--shadow); transform:translateY(-1px); }
+.wg-val { font-size:2.25rem; font-weight:800; margin-bottom:4px; letter-spacing:-.02em; }
+.wg-label { font-size:.875rem; color:var(--text-2); font-weight:500; }
+.wg-change { font-size:.8125rem; margin-top:12px; font-weight:700; display:flex; align-items:center; gap:4px; }
+
+/* ─── 17. LAB LAYOUT ─── */
+.cs { margin-bottom:48px; }
+.cs-title { font-size:.6875rem; text-transform:uppercase; letter-spacing:1.5px; color:var(--text-3); margin-bottom:20px; font-weight:800; }
+.cgrid { display:grid; grid-template-columns:repeat(auto-fill,minmax(340px,1fr)); gap:20px; }
+.cdemo { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:24px; transition:var(--t); }
+.cdemo:hover { border-color:var(--border-hover); }
+.clabel { font-size:.6875rem; color:var(--text-3); margin-bottom:16px; text-transform:uppercase; letter-spacing:1px; font-weight:700; }
+
+/* Theme Toggle */
+.theme-tg { position:fixed; bottom:28px; right:28px; background:var(--surface); border:1px solid var(--border); border-radius:100px; padding:6px; display:flex; gap:4px; box-shadow:var(--shadow-lg); z-index:1000; }
+.theme-tg button { padding:10px 20px; border-radius:100px; border:none; background:transparent; color:var(--text-2); cursor:pointer; font-size:.875rem; font-weight:600; transition:var(--t); }
+.theme-tg button.actv { background:var(--primary); color:#fff; box-shadow:0 2px 8px rgba(37,99,235,.30); }
+.theme-tg button:hover:not(.actv) { color:var(--text); background:var(--surface-hover); }
+
+/* color reference */
+.csw { display:flex; align-items:center; gap:14px; padding:10px 14px; background:var(--bg-2); border-radius:var(--radius-sm); margin-bottom:8px; border:1px solid var(--border); }
+.cdot { width:28px; height:28px; border-radius:8px; border:2px solid var(--border); box-shadow:inset 0 2px 4px rgba(0,0,0,.1); }
+.cinfo { flex:1; }
+.cn { font-size:.8125rem; font-weight:700; }
+.cv { font-size:.75rem; color:var(--text-3); font-family:'SF Mono',monospace; }
+
+/* spinner */
+@keyframes spin { to{transform:rotate(360deg);} }
+.spin { width:40px; height:40px; border:3px solid var(--bg-2); border-top-color:var(--primary); border-radius:50%; animation:spin 1s linear infinite; }
+</style>
+</head>
+<body>
+<div class="app">
+<!-- NAVBAR -->
+<header class="navbar">
+  <div class="nb-brand"><div class="nb-logo">🏗️</div><span>Construction ERP</span></div>
+  <div class="nb-nav">
+    <button class="btn btn-ghost btn-icon">🔍</button>
+    <button class="btn btn-ghost btn-icon">🔔</button>
+    <div class="dropdown">
+      <button class="btn btn-secondary btn-sm" onclick="toggleDropdown(this)">👤 Admin ▼</button>
+      <div class="drop-menu" style="display:none;">
+        <div class="drop-item">👤 Profile</div>
+        <div class="drop-item">⚙️ Settings</div>
+        <div class="drop-div"></div>
+        <div class="drop-item danger">🚪 Logout</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="main">
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sb-section">
+    <div class="sb-label">Main Menu</div>
+    <div class="sb-item active"><span class="ico">🏠</span><span>Dashboard</span></div>
+    <div class="sb-item"><span class="ico">📊</span><span>Projects</span></div>
+    <div class="sb-item"><span class="ico">📁</span><span>Documents</span></div>
+    <div class="sb-item"><span class="ico">👥</span><span>Team</span></div>
+  </div>
+  <div class="sb-section">
+    <div class="sb-label">Modules</div>
+    <div class="sb-item"><span class="ico">📦</span><span>Inventory</span></div>
+    <div class="sb-item"><span class="ico">💰</span><span>Finance</span></div>
+    <div class="sb-item"><span class="ico">🏭</span><span>Manufacturing</span></div>
+  </div>
+</aside>
+
+<main class="content">
+  <!-- BREADCRUMB -->
+  <div class="breadcrumbs">
+    <span class="bc-item">Home</span><span class="bc-sep">/</span>
+    <span class="bc-item">Projects</span><span class="bc-sep">/</span>
+    <span class="bc-item active">Theme Laboratory</span>
+  </div>
+  <h1 style="font-size:1.875rem;font-weight:800;margin-bottom:6px;letter-spacing:-.025em;">Theme Test Laboratory</h1>
+  <p style="color:var(--text-2);font-size:.9375rem;margin-bottom:32px;">Enterprise component preview · Blue + Amber · All 14 UI-spec fixes applied</p>
+
+  <!-- WIDGETS -->
+  <div class="cs">
+    <div class="cs-title">Dashboard Widgets</div>
+    <div class="wg-grid">
+      <div class="wg"><div class="wg-val" style="color:var(--primary);">128</div><div class="wg-label">Active Projects</div><div class="wg-change" style="color:var(--success);">↑ 12% from last month</div></div>
+      <div class="wg"><div class="wg-val" style="color:var(--accent);">$2.4M</div><div class="wg-label">Total Revenue</div><div class="wg-change" style="color:var(--success);">↑ 8% from last month</div></div>
+      <div class="wg"><div class="wg-val" style="color:var(--success);">98%</div><div class="wg-label">On-Time Rate</div><div class="wg-change">→ No change</div></div>
+      <div class="wg"><div class="wg-val" style="color:var(--danger);">3</div><div class="wg-label">Critical Issues</div><div class="wg-change" style="color:var(--danger);">↑ 2 new today</div></div>
+    </div>
+  </div>
+
+  <!-- BUTTONS -->
+  <div class="cs">
+    <div class="cs-title">Buttons · Enterprise Hierarchy</div>
+    <div class="cgrid">
+      <div class="cdemo"><div class="clabel">Primary (Blue) · Save / Create</div><div style="display:flex;flex-wrap:wrap;gap:10px;"><button class="btn btn-primary">Save Changes</button><button class="btn btn-primary">➕ Create New</button><button class="btn btn-primary btn-sm">Small</button><button class="btn btn-primary btn-lg">Large</button></div></div>
+      <div class="cdemo"><div class="clabel">Secondary · Cancel / Close</div><div style="display:flex;flex-wrap:wrap;gap:10px;"><button class="btn btn-secondary">Cancel</button><button class="btn btn-secondary">📋 Duplicate</button><button class="btn btn-ghost">Dismiss</button></div></div>
+      <div class="cdemo"><div class="clabel">Warning / Accent (Amber Only)</div><div style="display:flex;flex-wrap:wrap;gap:10px;"><button class="btn btn-accent">⚠️ Review</button><button class="btn btn-accent">Flag for Review</button></div></div>
+      <div class="cdemo"><div class="clabel">Destructive (Red) · Delete / Remove</div><div style="display:flex;flex-wrap:wrap;gap:10px;"><button class="btn btn-danger">🗑️ Delete</button><button class="btn btn-danger">Remove Item</button><button class="btn btn-danger btn-sm" disabled>Archive</button></div></div>
+    </div>
+  </div>
+
+  <!-- FORMS -->
+  <div class="cs">
+    <div class="cs-title">Form Controls</div>
+    <div class="cgrid">
+      <div class="cdemo"><div class="clabel">Text Inputs</div>
+        <div class="fg"><label class="fl">Project Name *</label><input type="text" class="fc" placeholder="Enter project name" value="Site Alpha Construction"></div>
+        <div class="fg"><label class="fl">Description</label><textarea class="fc" placeholder="Enter description">Foundation work for commercial building...</textarea></div>
+      </div>
+      <div class="cdemo"><div class="clabel">Select & Options</div>
+        <div class="fg"><label class="fl">Status</label><select class="fc"><option>In Progress</option><option selected>Active</option><option>On Hold</option></select></div>
+        <div class="fg"><label class="fl">Priority Level</label>
+          <div class="fcheck"><input type="radio" name="p" checked><span>High Priority</span></div>
+          <div class="fcheck"><input type="radio" name="p"><span>Medium Priority</span></div>
+          <div class="fcheck"><input type="radio" name="p"><span>Low Priority</span></div></div>
+      </div>
+      <div class="cdemo"><div class="clabel">Toggles & Checkboxes</div>
+        <div class="fcheck"><input type="checkbox" checked><span>Email notifications enabled</span></div>
+        <div class="fcheck"><input type="checkbox"><span>SMS alerts</span></div>
+        <div style="margin-top:20px;"><span class="fl" style="margin-bottom:10px;">Project Active</span><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
+      </div>
+      <div class="cdemo"><div class="clabel">File Upload Zone</div>
+        <div style="border:2px dashed var(--border); border-radius:var(--radius-lg); padding:48px; text-align:center; cursor:pointer; transition:var(--t); background:var(--bg-2);">
+          <div style="font-size:2.5rem;margin-bottom:12px;">📁</div>
+          <div style="font-weight:700;margin-bottom:6px;">Drop files here</div>
+          <div style="font-size:.8125rem;color:var(--text-3);">or click to browse from computer</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ALERTS -->
+  <div class="cs">
+    <div class="cs-title">Alerts & Notifications</div>
+    <div class="cgrid">
+      <div class="cdemo"><div class="clabel">Alert Variants</div>
+        <div class="alert alert-s"><span style="font-size:1.25rem;">✅</span><div><strong>Success!</strong> Project has been saved successfully.</div></div>
+        <div class="alert alert-w"><span style="font-size:1.25rem;">⚠️</span><div><strong>Warning!</strong> Deadline approaching in 3 days.</div></div>
+        <div class="alert alert-e"><span style="font-size:1.25rem;">❌</span><div><strong>Error!</strong> Failed to connect to server. Please retry.</div></div>
+        <div class="alert alert-i"><span style="font-size:1.25rem;">ℹ️</span><div><strong>Info:</strong> New team members can be added in settings.</div></div>
+      </div>
+      <div class="cdemo"><div class="clabel">Status Badges</div>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px;"><span class="badge badge-s">● Active</span><span class="badge badge-w">● Pending</span><span class="badge badge-e">● Critical</span><span class="badge badge-p">● New</span></div>
+        <div class="clabel">Filter Tags</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;"><span class="tag">Construction <span class="tag-x">✕</span></span><span class="tag">Q2-2026 <span class="tag-x">✕</span></span><span class="tag">Urgent <span class="tag-x">✕</span></span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DATA TABLE -->
+  <div class="cs">
+    <div class="cs-title">Data Table · Hover Border</div>
+    <div class="card" style="margin-bottom:0;">
+      <div class="card-header"><div class="card-title">Recent Projects</div><button class="btn btn-primary btn-sm">+ Add Project</button></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Project Name</th><th>Status</th><th>Progress</th><th>Deadline</th><th>Budget</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr class="interactive"><td><strong>Site Alpha Foundation</strong></td><td><span class="badge badge-s">Active</span></td><td><div class="progress" style="width:120px;"><div class="progress-bar" style="width:75%;"></div></div></td><td>Jun 15, 2026</td><td>$450K</td><td><button class="btn btn-ghost btn-sm">Edit</button></td></tr>
+            <tr class="interactive selected"><td><strong>Warehouse B Construction</strong></td><td><span class="badge badge-w">Pending</span></td><td><div class="progress" style="width:120px;"><div class="progress-bar" style="width:30%;"></div></div></td><td>Aug 30, 2026</td><td>$1.2M</td><td><button class="btn btn-ghost btn-sm">Edit</button></td></tr>
+            <tr class="interactive"><td><strong>Office Renovation</strong></td><td><span class="badge badge-p">New</span></td><td><div class="progress" style="width:120px;"><div class="progress-bar" style="width:5%;"></div></div></td><td>Sep 10, 2026</td><td>$85K</td><td><button class="btn btn-ghost btn-sm">Edit</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABS & PAGINATION -->
+  <div class="cs">
+    <div class="cs-title">Tabs & Pagination</div>
+    <div class="cgrid">
+      <div class="cdemo"><div class="clabel">Tab Navigation</div>
+        <div class="tabs"><div class="tab active">Overview</div><div class="tab">Tasks (12)</div><div class="tab">Team</div><div class="tab">Files</div></div>
+        <div style="padding:24px;background:var(--bg-2);border-radius:var(--radius);border:1px solid var(--border);">Tab content area with overview information displayed here.</div>
+      </div>
+      <div class="cdemo"><div class="clabel">Pagination</div>
+        <div class="pagination"><button class="pg-btn">← Prev</button><button class="pg-btn active">1</button><button class="pg-btn">2</button><button class="pg-btn">3</button><button class="pg-btn">...</button><button class="pg-btn">10</button><button class="pg-btn">Next →</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL -->
+  <div class="cs">
+    <div class="cs-title">Modal Dialog · Delete Confirmation</div>
+    <div class="cdemo">
+      <div class="modal" style="position:relative; margin:0 auto; max-width:480px;">
+        <div class="modal-hd"><div class="modal-title">⚠️ Confirm Deletion</div><button class="btn btn-ghost btn-icon">✕</button></div>
+        <div class="modal-bd"><p style="color:var(--text-2);line-height:1.6;">Are you sure you want to delete <strong>Site Alpha Foundation</strong>? This action cannot be undone and all associated data will be permanently removed.</p></div>
+        <div class="modal-ft"><button class="btn btn-secondary">Cancel</button><button class="btn btn-danger">🗑️ Delete Project</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DATE PICKER -->
+  <div class="cs">
+    <div class="cs-title">Date Picker</div>
+    <div class="cdemo" style="display:flex;justify-content:center;">
+      <div class="datepicker">
+        <div class="dp-hdr"><span style="cursor:pointer;">←</span><span>May 2026</span><span style="cursor:pointer;">→</span></div>
+        <div class="dp-grid">
+          <div style="color:var(--text-3);font-size:.75rem;font-weight:700;">Su</div><div style="color:var(--text-3);font-size:.75rem;font-weight:700;">Mo</div><div style="color:var(--text-3);font-size:.75rem;font-weight:700;">Tu</div><div style="color:var(--text-3);font-size:.75rem;font-weight:700;">We</div><div style="color:var(--text-3);font-size:.75rem;font-weight:700;">Th</div><div style="color:var(--text-3);font-size:.75rem;font-weight:700;">Fr</div><div style="color:var(--text-3);font-size:.75rem;font-weight:700;">Sa</div>
+          <div class="dp-day"></div><div class="dp-day"></div><div class="dp-day"></div><div class="dp-day"></div><div class="dp-day">1</div><div class="dp-day">2</div><div class="dp-day">3</div>
+          <div class="dp-day today">4</div><div class="dp-day selected">5</div><div class="dp-day">6</div><div class="dp-day">7</div><div class="dp-day">8</div><div class="dp-day">9</div><div class="dp-day">10</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TREE VIEW -->
+  <div class="cs">
+    <div class="cs-title">Tree View · Grid Layout · Colored Actions</div>
+    <div class="tree-container">
+      <div class="tree-header">
+        <div></div><div></div><div></div><div style="width:12px;"></div>
+        <div>Code</div><div>Account Name</div><div>Type</div><div style="text-align:center;">Level</div><div style="text-align:center;">Actions</div>
+      </div>
+      <div class="tree-row">
+        <div class="tree-exp">▶</div>
+        <div class="tree-icon">📁</div>
+        <div class="tree-status active"></div><div style="width:12px;"></div>
+        <div class="tree-code">ACC-001</div><div class="tree-name">Construction Revenue</div><div style="color:var(--text-2);">Income</div>
+        <div style="text-align:center;"><span style="padding:2px 10px;background:var(--bg-2);color:var(--text-2);border-radius:999px;font-size:.75rem;font-weight:600;border:1px solid var(--border);">1</span></div>
+        <div class="tree-actions">
+          <button class="act act-edit">✏️ Edit</button><button class="act act-add">➕ Add</button><button class="act act-toggle">⏯️</button>
+          <div class="dtw"><button class="act act-delete" disabled>🗑️</button><span class="dtip">Cannot delete: has sub-accounts</span></div>
+        </div>
+      </div>
+      <div class="tree-row">
+        <div class="tree-exp">▼</div>
+        <div class="tree-icon">📂</div>
+        <div class="tree-status active"></div><div style="width:12px;"></div>
+        <div class="tree-code">ACC-002</div><div class="tree-name">Material Expenses</div><div style="color:var(--text-2);">Expense</div>
+        <div style="text-align:center;"><span style="padding:2px 10px;background:var(--bg-2);color:var(--text-2);border-radius:999px;font-size:.75rem;font-weight:600;border:1px solid var(--border);">1</span></div>
+        <div class="tree-actions">
+          <button class="act act-edit">✏️ Edit</button><button class="act act-add">➕ Add</button><button class="act act-toggle">⏯️</button>
+          <button class="act act-delete">🗑️ Delete</button>
+        </div>
+      </div>
+      <div class="tree-row inactive">
+        <div class="tree-exp"></div>
+        <div class="tree-icon">📄</div>
+        <div class="tree-status inactive"></div><div style="width:12px;"></div>
+        <div class="tree-code">ACC-003</div><div class="tree-name">Deprecated Account <span style="color:var(--danger);font-style:italic;font-size:.85rem;opacity:.8;">(Inactive)</span></div><div style="color:var(--text-2);">Expense</div>
+        <div style="text-align:center;"><span style="padding:2px 10px;background:var(--bg-2);color:var(--text-2);border-radius:999px;font-size:.75rem;font-weight:600;border:1px solid var(--border);">2</span></div>
+        <div class="tree-actions">
+          <button class="act act-edit">✏️ Edit</button>
+          <div class="dtw"><button class="act act-add" disabled>➕ Add</button><span class="dtip">Cannot add: max level reached</span></div>
+          <button class="act act-toggle">▶️</button>
+          <button class="act act-delete">🗑️ Delete</button>
+        </div>
+      </div>
+    </div>
+
+  <!-- KANBAN -->
+  <div class="cs">
+    <div class="cs-title">Kanban Board</div>
+    <div class="kanban">
+      <div class="kb-col">
+        <div class="kb-col-hdr"><span>To Do</span><span style="color:var(--text-3);font-size:.875rem;">3</span></div>
+        <div class="kb-card"><div style="font-weight:700;margin-bottom:8px;">Foundation excavation</div><div style="font-size:.8125rem;color:var(--text-3);margin-bottom:12px;">Site Alpha · Due in 5 days</div><div style="display:flex;gap:8px;"><span class="badge badge-w">High</span><span class="badge badge-p">New</span></div></div>
+        <div class="kb-card"><div style="font-weight:700;margin-bottom:8px;">Material delivery schedule</div><div style="font-size:.8125rem;color:var(--text-3);">Warehouse B</div></div>
+      </div>
+      <div class="kb-col">
+        <div class="kb-col-hdr"><span>In Progress</span><span style="color:var(--text-3);font-size:.875rem;">2</span></div>
+        <div class="kb-card"><div style="font-weight:700;margin-bottom:8px;">Steel framework assembly</div><div style="font-size:.8125rem;color:var(--text-3);margin-bottom:12px;">Site Alpha · 75% complete</div><div class="progress" style="margin-bottom:12px;"><div class="progress-bar" style="width:75%;"></div></div><div style="display:flex;gap:8px;"><span class="badge badge-s">On Track</span></div></div>
+      </div>
+      <div class="kb-col">
+        <div class="kb-col-hdr"><span>Done</span><span style="color:var(--text-3);font-size:.875rem;">5</span></div>
+        <div class="kb-card"><div style="font-weight:700;margin-bottom:8px;">Site survey completed</div><div style="font-size:.8125rem;color:var(--text-3);">Completed May 1</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TIMELINE -->
+  <div class="cs">
+    <div class="cs-title">Activity Timeline</div>
+    <div class="cdemo">
+      <div class="timeline">
+        <div class="tl-item"><div class="tl-badge">✓</div><div class="tl-content"><div style="font-weight:700;margin-bottom:4px;">Project Created</div><div style="font-size:.8125rem;color:var(--text-3);">May 1, 2026 at 10:30 AM by John Doe</div></div></div>
+        <div class="tl-item"><div class="tl-badge" style="background:var(--accent);">📎</div><div class="tl-content"><div style="font-weight:700;margin-bottom:4px;">Files Uploaded</div><div style="font-size:.8125rem;color:var(--text-3);margin-bottom:10px;">May 2, 2026 at 2:15 PM</div><div style="padding:12px;background:var(--bg-2);border-radius:var(--radius-sm);font-size:.8125rem;border:1px solid var(--border);"><div style="margin-bottom:6px;">📄 blueprint_v2.pdf</div><div>📄 site_photos.zip (24 MB)</div></div></div></div>
+        <div class="tl-item"><div class="tl-badge" style="background:var(--success);">👤</div><div class="tl-content"><div style="font-weight:700;margin-bottom:4px;">Team Member Added</div><div style="font-size:.8125rem;color:var(--text-3);">May 3, 2026 at 9:00 AM</div><div style="margin-top:10px;display:flex;align-items:center;gap:10px;"><div class="avatar" style="width:32px;height:32px;font-size:.75rem;">MK</div><span>Mike Johnson (Engineer)</span></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOADING -->
+  <div class="cs">
+    <div class="cs-title">Loading States</div>
+    <div class="cgrid">
+      <div class="cdemo"><div class="clabel">Skeleton Loading</div>
+        <div class="skeleton skeleton-title" style="width:60%;margin-bottom:16px;"></div>
+        <div class="skeleton skeleton-text" style="width:90%;margin-bottom:10px;"></div>
+        <div class="skeleton skeleton-text" style="width:75%;margin-bottom:10px;"></div>
+        <div class="skeleton skeleton-text" style="width:85%;margin-bottom:10px;"></div>
+        <div class="skeleton skeleton-text" style="width:40%;"></div>
+      </div>
+      <div class="cdemo"><div class="clabel">Spinners</div>
+        <div style="display:flex;gap:24px;align-items:center;padding:20px;">
+          <div class="spin"></div>
+          <div style="width:32px;height:32px;border:3px solid var(--bg-2);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite;"></div>
+          <div style="width:24px;height:24px;border:2px solid var(--bg-2);border-top-color:var(--success);border-radius:50%;animation:spin 1s linear infinite;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EMPTY STATE -->
+  <div class="cs">
+    <div class="cs-title">Empty State</div>
+    <div class="cdemo"><div class="empty-state"><div class="empty-icon">📭</div><div class="empty-title">No notifications yet</div><div class="empty-text">When you receive project updates, mentions, or alerts, they will appear here in your notification center.</div><button class="btn btn-primary">Refresh</button></div></div>
+  </div>
+
+  <!-- TOOLTIPS -->
+  <div class="cs">
+    <div class="cs-title">Tooltips</div>
+    <div class="cdemo">
+      <div style="display:flex;gap:30px;padding:30px;justify-content:center;">
+        <div class="tooltip-ct"><button class="btn btn-secondary">Hover Me</button><div class="tooltip">This is a helpful tooltip!</div></div>
+        <div class="tooltip-ct"><span style="cursor:help;color:var(--primary);text-decoration:underline;font-weight:600;">Help Text</span><div class="tooltip">More information about this feature</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AVATARS -->
+  <div class="cs">
+    <div class="cs-title">Avatars</div>
+    <div class="cdemo">
+      <div style="display:flex;gap:24px;align-items:center;padding:10px;">
+        <div class="avatar">JD</div><div class="avatar" style="background:var(--accent);">MK</div><div class="avatar" style="background:var(--success);">AL</div><div class="avatar" style="background:var(--danger);">SR</div>
+        <div style="width:1px;height:40px;background:var(--border);"></div>
+        <div class="avatar-g"><div class="avatar" style="background:var(--primary);">JD</div><div class="avatar" style="background:var(--accent);">MK</div><div class="avatar" style="background:var(--success);">AL</div><div class="avatar" style="background:var(--text-disabled);color:var(--text-2);">+5</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COLOR REFERENCE -->
+  <div class="cs">
+    <div class="cs-title">Color Variables</div>
+    <div class="card" style="margin-bottom:0;">
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px;">
+        <div class="csw"><div class="cdot" style="background:var(--bg);"></div><div class="cinfo"><div class="cn">Background</div><div class="cv" id="vbg">--bg</div></div></div>
+        <div class="csw"><div class="cdot" style="background:var(--surface);"></div><div class="cinfo"><div class="cn">Surface</div><div class="cv" id="vsf">--surface</div></div></div>
+        <div class="csw"><div class="cdot" style="background:var(--primary);margin-left:1px;"></div><div class="cinfo"><div class="cn">Primary</div><div class="cv">#2563eb</div></div></div>
+        <div class="csw"><div class="cdot" style="background:var(--accent);"></div><div class="cinfo"><div class="cn">Accent</div><div class="cv">#f59e0b</div></div></div>
+        <div class="csw"><div class="cdot" style="background:var(--danger);"></div><div class="cinfo"><div class="cn">Danger</div><div class="cv">#dc2626</div></div></div>
+        <div class="csw"><div class="cdot" style="background:var(--success);"></div><div class="cinfo"><div class="cn">Success</div><div class="cv">#16a34a</div></div></div>
+        <div class="csw"><div class="cdot" style="background:var(--text);"></div><div class="cinfo"><div class="cn">Text</div><div class="cv" id="vtx">--text</div></div></div>
+        <div class="csw"><div class="cdot" style="background:var(--border);border:1px solid var(--text-3);"></div><div class="cinfo"><div class="cn">Border</div><div class="cv" id="vbd">--border</div></div></div>
+      </div>
+      <div style="margin-top:20px;padding:16px;background:var(--bg-2);border-radius:var(--radius);border:1px solid var(--border);">
+        <div class="clabel" style="margin-bottom:12px;">Row Hover Tokens</div>
+        <div style="display:flex;flex-wrap:wrap;gap:12px;">
+          <div style="padding:8px 16px;background:var(--row-hover-bg);color:var(--text);border-radius:var(--radius-sm);border:1px solid var(--row-hover-border);font-size:.8125rem;">row-hover-bg + border</div>
+          <div style="padding:8px 16px;background:var(--primary-light);color:var(--primary);border-radius:var(--radius-sm);font-size:.8125rem;font-weight:600;">primary-light</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+</div>
+
+<!-- THEME TOGGLE -->
+<div class="theme-tg">
+  <button class="actv" onclick="setTheme('dark',this)">🌙 Dark</button>
+  <button onclick="setTheme('light',this)">☀️ Light</button>
+  <button onclick="setDir('rtl',this)">↔ RTL</button>
+</div>
+
+<script>
+function setTheme(t,btn){
+  document.documentElement.setAttribute('data-theme',t);
+  document.querySelectorAll('.theme-tg button').forEach(function(b){if(!b.onclick.toString().includes('setDir'))b.classList.remove('actv');});
+  btn.classList.add('actv');
+  updateColors();
+}
+function setDir(d,btn){
+  document.documentElement.setAttribute('dir',d);
+  updateColors();
+}
+function toggleDropdown(btn){var m=btn.nextElementSibling;m.style.display=m.style.display==='none'?'block':'none';}
+function updateColors(){
+  var isDark=document.documentElement.getAttribute('data-theme')==='dark';
+  document.getElementById('vbg').textContent=isDark?'#0b1020':'#f8fafc';
+  document.getElementById('vsf').textContent=isDark?'#1e293b':'#ffffff';
+  document.getElementById('vtx').textContent=isDark?'#f8fafc':'#0f172a';
+  document.getElementById('vbd').textContent=isDark?'rgba(148,163,184,0.18)':'rgba(15,23,42,0.10)';
+}
+updateColors();
+document.addEventListener('click',function(e){if(!e.target.closest('.dropdown'))document.querySelectorAll('.drop-menu').forEach(function(m){m.style.display='none';});});
+</script>
+</div>
+</body>
+</html>

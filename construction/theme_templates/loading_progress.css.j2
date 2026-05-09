@@ -1,0 +1,97 @@
+/* ===== LOADING, PROGRESS & SKELETONS ===== */
+/* Theme: {{ theme_name }} */
+
+/* Spinner */
+.spinner-border {
+  color: {{ accent_primary }};
+}
+
+.spinner-grow {
+  color: {{ accent_primary }};
+}
+
+.loading-spinner {
+  color: {{ accent_primary }};
+}
+
+/* Progress Bars */
+.progress {
+  background: {{ surface_bg }};
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  background: {{ accent_primary }};
+  transition: width 0.3s ease;
+}
+
+.progress-bar-striped {
+  background-image: linear-gradient(
+    45deg,
+    {{ accent_primary }}25 25%,
+    transparent 25%,
+    transparent 50%,
+    {{ accent_primary }}25 50%,
+    {{ accent_primary }}25 75%,
+    transparent 75%,
+    transparent
+  );
+  background-size: 1rem 1rem;
+}
+
+/* Skeleton Loaders */
+.skeleton,
+.skeleton-text,
+.skeleton-card {
+  position: relative;
+  overflow: hidden;
+  background: {{ border_color }}20;
+  border-radius: 4px;
+}
+
+.skeleton::before,
+.skeleton-text::before,
+.skeleton-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    {{ border_color }}10 50%,
+    transparent 100%
+  );
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes skeleton-shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* Loading Overlay */
+.msg-overlay {
+  background: {{ surface_bg }}ee;
+  backdrop-filter: blur(4px);
+}
+
+.msgprint {
+  background: {{ surface_bg }};
+  color: {{ text_primary }};
+  border: 1px solid {{ border_color }};
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Disabled State */
+.btn:disabled,
+.btn.disabled,
+.form-control:disabled,
+.form-control[readonly] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

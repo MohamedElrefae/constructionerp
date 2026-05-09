@@ -41,8 +41,11 @@ class ModernThemeSettings(Document):
 	def on_update(self):
 		"""Clear cache when settings are updated"""
 		frappe.cache().delete_key("modern_theme_settings")
-		# Invalidate all theme CSS caches
-		frappe.cache().delete_key("theme_css:*")
+		# Invalidate all construction theme CSS caches
+		# Uses get_keys + delete_value pattern since delete_key treats "*" as literal
+		keys = frappe.cache().get_keys("construction_theme_css:*")
+		for key in keys:
+			frappe.cache().delete_value(key)
 
 	@staticmethod
 	def get_settings():

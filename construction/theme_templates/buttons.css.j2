@@ -1,93 +1,93 @@
 /* ===== BUTTONS: {{ theme_name }} ===== */
-html[data-modern-theme="{{ theme_name }}"] .btn-primary {
-    background: {{ accent_primary }} !important;
-    border-color: {{ accent_primary }} !important;
-    color: #fff !important;
-    border-radius: 10px !important;
-    transition: all .25s cubic-bezier(.4,0,.2,1) !important;
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .btn-primary {
+    background: {{ accent_primary }};
+    border-color: {{ accent_primary }};
+    color: #fff;
+    border-radius: 10px;
+    transition: all .25s cubic-bezier(.4,0,.2,1);
 }
 
-html[data-modern-theme="{{ theme_name }}"] .btn-primary:hover {
-    background: {{ accent_primary_hover }} !important;
-    border-color: {{ accent_primary_hover }} !important;
-    transform: translateY(-1px) !important;
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .btn-primary:hover {
+    background: {{ accent_primary_hover }};
+    border-color: {{ accent_primary_hover }};
+    transform: translateY(-1px);
 {% if is_dark_mode %}
-    box-shadow: 0 4px 12px {{ accent_primary }}4d !important;
+    box-shadow: 0 4px 12px {{ accent_primary }}4d;
 {% else %}
-    box-shadow: 0 4px 12px {{ accent_primary }}33 !important;
+    box-shadow: 0 4px 12px {{ accent_primary }}33;
 {% endif %}
 }
 
-html[data-modern-theme="{{ theme_name }}"] .btn-default {
-    background: {{ surface_bg }} !important;
-    border: 1px solid {{ border_color }} !important;
-    color: {{ text_primary }} !important;
-    border-radius: 10px !important;
-    transition: all .25s cubic-bezier(.4,0,.2,1) !important;
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .btn-default {
+    background: {{ surface_bg }};
+    border: 1px solid {{ border_color }};
+    color: {{ text_primary }};
+    border-radius: 10px;
+    transition: all .25s cubic-bezier(.4,0,.2,1);
 }
 
-html[data-modern-theme="{{ theme_name }}"] .btn-default:hover {
-    background: {{ accent_primary }}19 !important;
-    border-color: {{ accent_primary }} !important;
-    color: {{ accent_primary }} !important;
-    transform: translateY(-1px) !important;
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .btn-default:hover {
+    background: {{ accent_primary }}19;
+    border-color: {{ accent_primary }};
+    color: {{ accent_primary }};
+    transform: translateY(-1px);
 }
 
-html[data-modern-theme="{{ theme_name }}"] .page-head .btn-default.ellipsis,
-html[data-modern-theme="{{ theme_name }}"] .page-head .inner-group-button .btn-default,
-html[data-modern-theme="{{ theme_name }}"] .page-head .page-actions .btn-default {
-    border: 1px solid {{ border_color }} !important;
-    border-radius: 10px !important;
-    font-size: .8rem !important;
-    font-weight: 500 !important;
-    padding: 6px 14px !important;
-    min-height: 36px !important;
-    transition: all .25s cubic-bezier(.4,0,.2,1) !important;
-    background: {{ surface_bg }} !important;
-    color: {{ text_primary }} !important;
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .page-head .btn-default.ellipsis,
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .page-head .inner-group-button .btn-default,
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .page-head .page-actions .btn-default {
+    border: 1px solid {{ border_color }};
+    border-radius: 10px;
+    font-size: .8rem;
+    font-weight: 500;
+    padding: 6px 14px;
+    min-height: 36px;
+    transition: all .25s cubic-bezier(.4,0,.2,1);
+    background: {{ surface_bg }};
+    color: {{ text_primary }};
 {% if is_dark_mode %}
-    box-shadow: 0 1px 3px rgba(0,0,0,.06) !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06);
 {% else %}
-    box-shadow: 0 1px 3px rgba(0,0,0,.06) !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06);
 {% endif %}
 }
 
-html[data-modern-theme="{{ theme_name }}"] .page-head .btn-default.ellipsis:hover,
-html[data-modern-theme="{{ theme_name }}"] .page-head .inner-group-button .btn-default:hover,
-html[data-modern-theme="{{ theme_name }}"] .page-head .page-actions .btn-default:hover {
-    background: {{ accent_primary }}19 !important;
-    border-color: {{ accent_primary }} !important;
-    color: {{ accent_primary }} !important;
-    transform: translateY(-1px) !important;
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .page-head .btn-default.ellipsis:hover,
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .page-head .inner-group-button .btn-default:hover,
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .page-head .page-actions .btn-default:hover {
+    background: {{ accent_primary }}19;
+    border-color: {{ accent_primary }};
+    color: {{ accent_primary }};
+    transform: translateY(-1px);
 {% if is_dark_mode %}
-    box-shadow: 0 4px 12px rgba(0,0,0,.1) !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,.1);
 {% else %}
-    box-shadow: 0 4px 12px rgba(0,0,0,.1) !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,.1);
 {% endif %}
 }
 
-html[data-modern-theme="{{ theme_name }}"] .tree-toolbar-button {
-    border: 1px solid {{ border_color }} !important;
-    border-radius: 8px !important;
-    font-size: .78rem !important;
-    font-weight: 500 !important;
-    padding: 4px 12px !important;
-    min-height: 28px !important;
-    transition: all .2s ease !important;
-    background: {{ surface_bg }} !important;
-    color: {{ text_primary }} !important;
-    margin: 0 3px !important;
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .tree-toolbar-button {
+    border: 1px solid {{ border_color }};
+    border-radius: 8px;
+    font-size: .78rem;
+    font-weight: 500;
+    padding: 4px 12px;
+    min-height: 28px;
+    transition: all .2s ease;
+    background: {{ surface_bg }};
+    color: {{ text_primary }};
+    margin: 0 3px;
 }
 
-html[data-modern-theme="{{ theme_name }}"] .tree-toolbar-button:hover {
-    background: {{ accent_primary }}19 !important;
-    border-color: {{ accent_primary }} !important;
-    color: {{ accent_primary }} !important;
-    transform: translateY(-1px) !important;
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .tree-toolbar-button:hover {
+    background: {{ accent_primary }}19;
+    border-color: {{ accent_primary }};
+    color: {{ accent_primary }};
+    transform: translateY(-1px);
 }
 
-html[data-modern-theme="{{ theme_name }}"] .tree-toolbar-button:last-child:hover {
-    border-color: {{ error_color }} !important;
-    color: {{ error_color }} !important;
-    background: {{ error_color }}0f !important;
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .tree-toolbar-button:last-child:hover {
+    border-color: {{ error_color }};
+    color: {{ error_color }};
+    background: {{ error_color }}0f;
 }

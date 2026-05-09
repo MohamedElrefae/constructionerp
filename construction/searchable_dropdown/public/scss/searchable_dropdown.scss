@@ -1,0 +1,177 @@
+/**
+ * Searchable Dropdown Styles
+ * Scoped under .searchable-dropdown to avoid conflicts
+ */
+
+// CSS Variables
+.searchable-dropdown {
+  --sd-accent: var(--primary, #3b82f6);
+  --sd-accent-light: rgba(59, 130, 246, 0.1);
+  --sd-accent-medium: rgba(59, 130, 246, 0.2);
+  --sd-text: var(--text-color, #f1f5f9);
+  --sd-muted: var(--text-muted, #94a3b8);
+  --sd-border: var(--border-color, #475569);
+}
+
+// ============================================
+// Hover Effect (P0)
+// ============================================
+.searchable-dropdown .awesomplete-list-item:hover,
+.searchable-dropdown ul li:hover {
+  background: var(--sd-accent-light) !important;
+  border-left: 3px solid var(--sd-accent) !important;
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+
+// ============================================
+// Selected State (P0)
+// ============================================
+.searchable-dropdown .awesomplete-list-item[aria-selected="true"],
+.searchable-dropdown ul li[aria-selected="true"] {
+  background: var(--sd-accent-medium) !important;
+  font-weight: 600 !important;
+  border-left: 3px solid var(--sd-accent) !important;
+  
+  &::after {
+    content: '✓';
+    float: right;
+    color: var(--sd-accent);
+    margin-left: 8px;
+    font-weight: bold;
+  }
+}
+
+// ============================================
+// RTL Support (P0)
+// ============================================
+body.rtl .searchable-dropdown {
+  .awesomplete-list-item:hover,
+  ul li:hover,
+  .awesomplete-list-item[aria-selected="true"],
+  ul li[aria-selected="true"] {
+    border-left: none !important;
+    border-right: 3px solid var(--sd-accent) !important;
+  }
+  
+  .awesomplete-list-item[aria-selected="true"]::after,
+  ul li[aria-selected="true"]::after {
+    float: left;
+    margin-left: 0;
+    margin-right: 8px;
+  }
+}
+
+// ============================================
+// Clear Option (P1)
+// ============================================
+.searchable-dropdown .clear-option {
+  color: var(--sd-muted) !important;
+  font-style: italic;
+  border-top: 1px solid var(--sd-border);
+  margin-top: 4px;
+  padding-top: 8px;
+  
+  &:hover {
+    background: rgba(148, 163, 184, 0.1) !important;
+    border-left-color: var(--sd-muted) !important;
+  }
+}
+
+// ============================================
+// Input Field Styling
+// ============================================
+.searchable-dropdown-wrapper {
+  .form-control {
+    &:focus {
+      border-color: var(--sd-accent);
+      box-shadow: 0 0 0 2px var(--sd-accent-light);
+    }
+  }
+}
+
+// ============================================
+// Focused / Active Option State
+// ============================================
+.searchable-dropdown .awesomplete-list-item[aria-selected="true"]:hover,
+.searchable-dropdown ul li[aria-selected="true"]:hover {
+  background: var(--sd-accent-medium) !important;
+  border-left-color: var(--sd-accent) !important;
+}
+
+// ============================================
+// Base List Item Styling
+// ============================================
+.searchable-dropdown .awesomplete-list-item,
+.searchable-dropdown ul li {
+  padding: 10px 12px;
+  border-left: 3px solid transparent;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+// ============================================
+// No Results State
+// ============================================
+.searchable-dropdown .no-results {
+  color: var(--sd-muted);
+  font-style: italic;
+  padding: 12px;
+  text-align: center;
+}
+
+// ============================================
+// RTL: Clear Option Override
+// ============================================
+body.rtl .searchable-dropdown .clear-option:hover {
+  border-left: none !important;
+  border-right-color: var(--sd-muted) !important;
+}
+
+// ============================================
+// Dropdown Menu Container
+// ============================================
+.searchable-dropdown .awesomplete > ul {
+  background: var(--bg-color);
+  border: 1px solid var(--sd-border);
+  border-radius: 6px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+// ============================================
+// Loading State
+// ============================================
+.searchable-dropdown .awesomplete-loading {
+  &::after {
+    content: '';
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border: 2px solid var(--sd-accent);
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: sd-spin 0.8s linear infinite;
+    margin-left: 8px;
+  }
+}
+
+@keyframes sd-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// ============================================
+// Mark / Highlight (Optional Enhancement)
+// ============================================
+.searchable-dropdown mark {
+  background: var(--sd-accent-light);
+  color: var(--sd-accent);
+  font-weight: 600;
+  padding: 0 2px;
+  border-radius: 2px;
+}

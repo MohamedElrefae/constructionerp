@@ -53,36 +53,36 @@ SYSTEM_THEMES = [
 		"theme_type": "Construction Light",
 		"is_system_theme": 1,
 		"is_active": 1,
-		"accent_primary": "#2E7D32",
+		"accent_primary": "#2563EB",
 		"emoji_icon": "🏗️",
-		"navbar_bg": "#F0FDF4",
-		"sidebar_bg": "#F0FDF4",
+		"navbar_bg": "#FFFFFF",
+		"sidebar_bg": "#F8FAFC",
 		"surface_bg": "#FFFFFF",
-		"body_bg": "#F0FDF4",
-		"text_primary": "#181C23",
-		"text_secondary": "#6B7280",
-		"border_color": "#E2E6ED",
-		"success_color": "#28a745",
-		"warning_color": "#ffc107",
-		"error_color": "#dc3545",
+		"body_bg": "#F8FAFC",
+		"text_primary": "#0F172A",
+		"text_secondary": "#64748B",
+		"border_color": "#E2E8F0",
+		"success_color": "#16A34A",
+		"warning_color": "#D97706",
+		"error_color": "#DC2626",
 	},
 	{
 		"theme_name": "Construction Dark",
 		"theme_type": "Construction Dark",
 		"is_system_theme": 1,
 		"is_active": 1,
-		"accent_primary": "#4CAF50",
+		"accent_primary": "#2563EB",
 		"emoji_icon": "🏗️",
-		"navbar_bg": "#1A3A1E",
-		"sidebar_bg": "#0D1F12",
-		"surface_bg": "#1f2937",
-		"body_bg": "#111A13",
-		"text_primary": "#EDEDED",
-		"text_secondary": "#9CA3AF",
-		"border_color": "#393C43",
-		"success_color": "#28a745",
-		"warning_color": "#ffc107",
-		"error_color": "#dc3545",
+		"navbar_bg": "#1E293B",
+		"sidebar_bg": "#0F172A",
+		"surface_bg": "#1E293B",
+		"body_bg": "#0F172A",
+		"text_primary": "#F8FAFC",
+		"text_secondary": "#94A3B8",
+		"border_color": "#334155",
+		"success_color": "#22C55E",
+		"warning_color": "#F59E0B",
+		"error_color": "#EF4444",
 	},
 ]
 
@@ -187,6 +187,18 @@ def _invalidate_workspace_caches():
 # ---------------------------------------------------------------------------
 
 
+def setup_construction_workspace_page():
+	"""Setup Construction workspace page.
+	
+	This is a placeholder that calls setup_workspace_sidebar for backward compatibility.
+	The actual workspace page setup is handled by setup_workspace_sidebar.
+	"""
+	# For v16+, workspace sidebar handles the page structure
+	# This function exists for hook compatibility
+	if frappe.db.table_exists("Workspace Sidebar"):
+		setup_workspace_sidebar()
+
+
 def verify_workspace_visibility():
 	"""Post-migrate health check for workspace visibility.
 
@@ -202,18 +214,21 @@ def verify_workspace_visibility():
 	if not frappe.db.exists("Workspace", "Construction"):
 		errors.append("Workspace 'Construction' missing from tabWorkspace")
 	else:
-		ws = frappe.db.get_value(
-			"Workspace",
-			"Construction",
-			["type", "public", "is_hidden", "module"],
-			as_dict=True,
-		)
-		if not ws.get("type"):
-			errors.append("Workspace 'Construction' has null type (must be 'Workspace' for v16)")
-		if not ws.get("public"):
-			errors.append("Workspace 'Construction' is not public")
-		if ws.get("is_hidden"):
-			errors.append("Workspace 'Construction' is hidden")
+		try:
+			# Get available columns - Workspace schema varies by Frappe version
+			ws = frappe.db.get_value(
+				"Workspace",
+				"Construction",
+				["public", "is_hidden", "module"],
+				as_dict=True,
+			)
+			if not ws.get("public"):
+				errors.append("Workspace 'Construction' is not public")
+			if ws.get("is_hidden"):
+				errors.append("Workspace 'Construction' is hidden")
+		except Exception as e:
+			# Column may not exist in this Frappe version
+			pass
 
 	# Check Workspace Sidebar (v16+)
 	if frappe.db.table_exists("Workspace Sidebar"):

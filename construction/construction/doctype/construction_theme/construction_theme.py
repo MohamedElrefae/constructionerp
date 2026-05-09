@@ -448,12 +448,12 @@ class ConstructionTheme(Document):
 
 			from jinja2 import Environment, FileSystemLoader
 
-			# Get template directory
-			template_dir = os.path.join(os.path.dirname(__file__), "..", "..", "theme_templates")
+			# Get template directory (3 levels up from this file to reach app root)
+			template_dir = os.path.join(os.path.dirname(__file__), "..", "..", "..", "theme_templates")
 
 			env = Environment(loader=FileSystemLoader(template_dir))
 
-			# Template order: base → navbar → sidebar → buttons → forms → tables → modals → toasts → tree
+			# Template order: base → navbar → sidebar → buttons → forms → tables → cards → modals → toasts → tree
 			template_names = [
 				"base.css.j2",
 				"navbar.css.j2",
@@ -461,6 +461,7 @@ class ConstructionTheme(Document):
 				"buttons.css.j2",
 				"forms.css.j2",
 				"tables.css.j2",
+				"cards.css.j2",
 				"modals.css.j2",
 				"toasts.css.j2",
 				"tree.css.j2",
@@ -469,8 +470,10 @@ class ConstructionTheme(Document):
 			css_parts = []
 
 			# Theme context for templates
+			# Use normalized identifier (lowercase, underscores) to match JS data-modern-theme attribute
+			theme_identifier = self.theme_name.lower().replace(" ", "_")
 			context = {
-				"theme_name": self.theme_name,
+				"theme_name": theme_identifier,
 				"is_dark_mode": "Dark" in self.theme_type,
 				"accent_primary": self.accent_primary,
 				"accent_primary_hover": self.accent_primary_hover or self.accent_primary,
@@ -576,11 +579,12 @@ class ConstructionTheme(Document):
 		if not variables:
 			return ""
 
-		# Generate theme identifier: lowercase, replace spaces with underscores
-		identifier = self.theme_name.lower().replace(" ", "_")
+		# Determine if theme is dark or light
+		is_dark = "Dark" in (self.theme_type or "")
+		theme_attr = "dark" if is_dark else "light"
 
 		# Wrap in scoped CSS block with concise formatting
-		css_block = f'html[data-modern-theme="{identifier}"]{{' + ";".join(variables) + ";}"
+		css_block = f'[data-theme="{theme_attr}"]{{' + ";".join(variables) + ";}"
 
 		return css_block
 
@@ -735,16 +739,16 @@ class ConstructionTheme(Document):
 					fallback_css = """
 /* Fallback Login Theme CSS */
 .login-page {
-  background-color: #f5f5f5;
+  background-color: #0F172A;
 }
 .login-page .btn-primary {
-  background-color: #2E7D32;
-  border-color: #2E7D32;
+  background-color: #2563EB;
+  border-color: #2563EB;
   color: #fff;
 }
 .login-page .btn-primary:hover {
-  background-color: #388E3C;
-  border-color: #388E3C;
+  background-color: #3B82F6;
+  border-color: #3B82F6;
 }
 """
 					with open(login_css_path, "w") as f:

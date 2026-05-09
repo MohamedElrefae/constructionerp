@@ -1,5 +1,5 @@
 /* ===== BASE CSS VARIABLES: {{ theme_name }} ===== */
-html[data-modern-theme="{{ theme_name }}"] {
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] {
   /* Layout Colors */
   --navbar-bg: {{ navbar_bg }};
   --sidebar-bg: {{ sidebar_bg }};
@@ -26,10 +26,72 @@ html[data-modern-theme="{{ theme_name }}"] {
 {% if is_dark_mode %}
   /* Dark Mode Specific */
   --hover-bg: rgba(255, 255, 255, 0.08);
-  --shadow-color: rgba(0, 0, 0, 0.4);
+  --shadow-color: rgba(0, 0, 0, 0.5);
+  --shadow-sm: 0 2px 8px rgba(0,0,0,.45);
+  --shadow: 0 8px 24px rgba(0,0,0,.55);
+  --shadow-lg: 0 16px 48px rgba(0,0,0,.65);
 {% else %}
   /* Light Mode Specific */
-  --hover-bg: rgba(0, 0, 0, 0.04);
-  --shadow-color: rgba(0, 0, 0, 0.1);
+  --hover-bg: rgba(0, 0, 0, 0.06);
+  --shadow-color: rgba(0, 0, 0, 0.12);
+  --shadow-sm: 0 2px 8px rgba(0,0,0,.10);
+  --shadow: 0 8px 24px rgba(0,0,0,.15);
+  --shadow-lg: 0 16px 48px rgba(0,0,0,.20);
 {% endif %}
+
+  /* Design Tokens */
+  --radius-sm: 6px;
+  --radius: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --t-fast: 0.15s ease;
+  --t: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --t-slow: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Table/Row Tokens */
+  --row-hover-bg: {{ accent_primary }}25;
+  --row-hover-shadow: 0 0 0 2px {{ accent_primary }}60, 0 4px 16px var(--shadow-color);
+  --row-focus-ring: {{ accent_primary }};
+  --col-header-bg: linear-gradient(135deg, {{ accent_primary }}, {{ accent_primary_hover }});
+
+  /* Card Tokens */
+  --card-hover-border: {{ success_color }};
+
+  /* Tree Tokens */
+  --tree-row-hover-bg: {{ accent_primary }}30;
+  --tree-row-hover-border: {{ accent_primary }}50;
+  --tree-focus-ring: {{ accent_primary }};
+}
+
+/* ===== AGGRESSIVE BODY/HTML OVERRIDES ===== */
+/* These override Frappe's desk.bundle.css with maximum specificity */
+
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"],
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] body,
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .page-container,
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .content.page-container,
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .layout-main-section,
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] #page-container {
+  background-color: {{ body_bg }} !important;
+  color: {{ text_primary }} !important;
+}
+
+/* Override Frappe's CSS variables at root level */
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] {
+  --bg-color: {{ body_bg }};
+  --navbar-bg: {{ navbar_bg }};
+  --sidebar-bg: {{ sidebar_bg }};
+  --surface-bg: {{ surface_bg }};
+  --text-color: {{ text_primary }};
+  --text-muted: {{ text_secondary }};
+  --border-color: {{ border_color }};
+  --primary: {{ accent_primary }};
+  --accent: {{ accent_primary }};
+  --error: {{ error_color }};
+  --success: {{ success_color }};
+  --warning: {{ warning_color }};
+  --bg-light: {{ surface_bg }};
+  --bg-dark: {{ surface_bg }};
+  --fg-color: {{ text_primary }};
+  --body-bg: {{ body_bg }};
 }

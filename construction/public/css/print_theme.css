@@ -1,0 +1,44 @@
+/**
+ * Print/PDF Theme for Construction ERP
+ */
+
+@media print {
+    body {
+        font-family: "Inter", sans-serif !important;
+        color: #0f172a !important;
+    }
+
+    .print-heading {
+        color: #2563eb !important;
+        border-bottom: 2px solid #2563eb !important;
+        padding-bottom: 10px !important;
+        margin-bottom: 20px !important;
+    }
+
+    table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+    }
+
+    th {
+        background-color: #f1f5f9 !important;
+        color: #1e293b !important;
+        padding: 10px !important;
+        border: 1px solid #e2e8f0 !important;
+    }
+
+    td {
+        padding: 10px !important;
+        border: 1px solid #e2e8f0 !important;
+    }
+
+    .print-footer {
+        position: fixed !important;
+        bottom: 0 !important;
+        width: 100% !important;
+        font-size: 10px !important;
+        color: #94a3b8 !important;
+        border-top: 1px solid #e2e8f0 !important;
+        padding-top: 5px !important;
+    }
+}

@@ -1,38 +1,38 @@
 /* ===== MODALS: {{ theme_name }} ===== */
-html[data-modern-theme="{{ theme_name }}"] .modal-content {
-    background: {{ surface_bg }} !important;
-    border-color: {{ border_color }} !important;
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .modal-content {
+    background: {{ surface_bg }};
+    border-color: {{ border_color }};
 {% if is_dark_mode %}
-    box-shadow: 0 8px 24px rgba(0,0,0,.4) !important;
+    box-shadow: 0 8px 24px rgba(0,0,0,.4);
 {% else %}
-    box-shadow: 0 8px 24px rgba(0,0,0,.15) !important;
+    box-shadow: 0 8px 24px rgba(0,0,0,.15);
 {% endif %}
-    border-radius: 12px !important;
+    border-radius: 12px;
 }
 
-html[data-modern-theme="{{ theme_name }}"] .modal-header {
-    border-bottom: 1px solid {{ border_color }} !important;
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .modal-header {
+    border-bottom: 1px solid {{ border_color }};
 }
 
-html[data-modern-theme="{{ theme_name }}"] .modal-title {
-    color: {{ text_primary }} !important;
-    font-weight: 600 !important;
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .modal-title {
+    color: {{ text_primary }};
+    font-weight: 600;
 }
 
-html[data-modern-theme="{{ theme_name }}"] .modal-body {
-    color: {{ text_secondary }} !important;
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .modal-body {
+    color: {{ text_secondary }};
 }
 
-html[data-modern-theme="{{ theme_name }}"] .modal-footer {
-    border-top: 1px solid {{ border_color }} !important;
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .modal-footer {
+    border-top: 1px solid {{ border_color }};
 }
 
-html[data-modern-theme="{{ theme_name }}"] .modal .close {
-    color: {{ text_secondary }} !important;
-    opacity: 0.7 !important;
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .modal .close {
+    color: {{ text_secondary }};
+    opacity: 0.7;
 }
 
-html[data-modern-theme="{{ theme_name }}"] .modal .close:hover {
-    color: {{ text_primary }} !important;
-    opacity: 1 !important;
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .modal .close:hover {
+    color: {{ text_primary }};
+    opacity: 1;
 }
