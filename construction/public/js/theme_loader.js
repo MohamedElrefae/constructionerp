@@ -80,11 +80,11 @@
                 setTimeout(() => this.colorTreeToolbarButtons(), 1000);
                 setTimeout(() => this.colorTreeToolbarButtons(), 3000);
                 
+                // 5c. Remove ghost header buttons
+                this.removeGhostButtons();
+                
                 // 6. Fetch full theme CSS
                 this.fetchAndApplyCSS(initialMode);
-
-                // 7. Nuclear fix: force white sidebar text in dark mode (bypasses CSS cascade)
-                setTimeout(() => this.forceSidebarText(), 100);
 
                 const end = performance.now();
                 console.log(`[ConstructionTheme] Initialized in ${initialMode} mode. Boot time: ${(end - start).toFixed(2)}ms`);
@@ -164,54 +164,6 @@
                     color: #0f172a !important;
                 }
             `;
-        },
-
-        forceSidebarText: function() {
-            const styleId = 'nuclear-sidebar-fix';
-            const existing = document.getElementById(styleId);
-
-            if (this.currentMode !== 'dark' && this.currentMode !== 'light') {
-                if (existing) existing.remove();
-                if (this._sidebarObserver) {
-                    this._sidebarObserver.disconnect();
-                    this._sidebarObserver = null;
-                }
-                return;
-            }
-
-            let style = existing;
-            if (!style) {
-                style = document.createElement('style');
-                style.id = styleId;
-                document.head.appendChild(style);
-            }
-
-            style.textContent = this.getSidebarTextOverrideCSS(this.currentMode);
-            console.log('[ConstructionTheme] Sidebar text color override applied');
-
-            if (this._sidebarObserver) this._sidebarObserver.disconnect();
-            this._sidebarObserver = new MutationObserver((mutations) => {
-                let shouldReapply = false;
-                mutations.forEach((m) => {
-                    m.addedNodes.forEach((node) => {
-                        if (node.nodeType !== 1) return;
-                        const cls = node.classList;
-                        if (cls && (
-                            cls.contains('desk-sidebar') ||
-                            cls.contains('standard-sidebar') ||
-                            cls.contains('sidebar-item-label') ||
-                            cls.contains('layout-side-section')
-                        )) {
-                            shouldReapply = true;
-                        }
-                        if (node.querySelector && node.querySelector('.desk-sidebar, .standard-sidebar, .sidebar-item-label')) {
-                            shouldReapply = true;
-                        }
-                    });
-                });
-                if (shouldReapply) this.forceSidebarText();
-            });
-            this._sidebarObserver.observe(document.body, { childList: true, subtree: true });
         },
 
         applyEmergencyFallback: function() {
@@ -345,7 +297,6 @@
                             this.currentMode = newMode;
                             this.updateNavbarLabel(newMode);
                             this.fetchAndApplyCSS(newMode);
-                            this.forceSidebarText();
                         }
                     }
                 });
@@ -422,6 +373,9 @@
                 if (needsTreeButtonColor) {
                     this.colorTreeToolbarButtons();
                 }
+
+                // Periodic ghost button cleanup
+                this.removeGhostButtons();
             });
             
             this._mutationObserver.observe(document.body, { childList: true, subtree: true });
@@ -447,6 +401,48 @@
             `;
             root.appendChild(style);
             this._shadowRootsInjected.add(root);
+        },
+
+        removeGhostButtons: function() {
+            /**
+             * Surgical cleanup of empty or non-functional Construction header buttons.
+             * Addresses "ghost" squares appearing in the header across all pages.
+             */
+            if (typeof $ === 'undefined' || !window.jQuery) return;
+
+            const cleanup = () => {
+                // Remove buttons with specific construction classes if they have no dropdown items
+                $('.construction-export-menu, .construction-view-menu').each(function() {
+                    const $menu = $(this);
+                    const items = $menu.find('.dropdown-menu li');
+                    // If no items or only dividers, it's a ghost button
+                    if (items.length === 0 || items.text().trim() === "") {
+                        $menu.remove();
+                    }
+                });
+
+                // Also hide any truly empty button groups in the header
+                $('.page-head .btn-group:empty, .page-header .btn-group:empty').remove();
+
+                // Remove .icon-btn buttons whose inner SVG/icon is empty (no visible content).
+                // This catches add_action_icon() calls with invalid icon names (e.g. "Print")
+                // which produce <button class="icon-btn"> with empty frappe.utils.icon() output.
+                $('.page-head .icon-btn, .page-header .icon-btn').each(function() {
+                    var $btn = $(this);
+                    // Check if the button has no meaningful visible content
+                    var svgUse = $btn.find('svg use');
+                    var hasValidIcon = svgUse.length > 0 && svgUse.attr('href');
+                    var hasText = $btn.text().trim().length > 0;
+                    if (!hasValidIcon && !hasText) {
+                        $btn.remove();
+                    }
+                });
+            };
+
+            cleanup();
+            // Run again after a short delay to catch late-renders from Frappe's page loading
+            setTimeout(cleanup, 500);
+            setTimeout(cleanup, 1500);
         },
 
         colorTreeToolbarButtons: function() {
@@ -535,7 +531,6 @@
             
             this.updateNavbarLabel(mode);
             this.fetchAndApplyCSS(mode);
-            this.forceSidebarText();
             this.persist(mode);
         },
 

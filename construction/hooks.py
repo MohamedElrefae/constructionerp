@@ -75,6 +75,9 @@ app_include_js = [
 # Uses html[data-theme="dark"] / html[data-theme="light"] selectors only.
 # All theme logic flows through Frappe's native theme system.
 app_include_css = [
+	# Phase 1: v16 variable bridge — overrides 591 Espresso variables with Construction tokens
+	# Loads FIRST so all subsequent CSS uses these values
+	"/assets/construction/css/modern_theme_variables_v16.css?v=1",
 	# Core tokens: CSS variables with !important for white-label override
 	"/assets/construction/css/modern_theme_tokens.css?v=16",
 	# Component overrides using native data-theme selectors - HIGH SPECIFICITY VERSION
@@ -82,8 +85,14 @@ app_include_css = [
 	"/assets/construction/css/modern_theme_base.css?v=27",
 	# Searchable Dropdown Module
 	"/assets/construction/css/searchable_dropdown.css?v=6",
-	# v16 structural adapter — loads LAST to ensure specificity
-	"/assets/construction/css/modern_theme_v16_adapter.css?v=17",
+	# v16 DOM adapter — component patches for v16 selectors
+	# loads AFTER base.css so adapter rules win specificity
+	"/assets/construction/css/modern_theme_v16_adapter.css?v=18",
+]
+
+# JS includes for v16 runtime safety net
+app_include_js = [
+	"/assets/construction/js/theme_loader_v16.js",
 ]
 
 # CSS includes for unauthenticated pages (login, etc.)

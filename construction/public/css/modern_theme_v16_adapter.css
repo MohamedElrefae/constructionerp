@@ -1,1167 +1,1092 @@
-/* ═══════════════════════════════════════════════════════════════════════
-   CONSTRUCTION ERP · ENTERPRISE THEME v16.0 — FINAL ADAPTER
-   Architecture: v15 Colors (Sky-500) + v16 Structural Selectors
-   Scope: ERPNext v16 Cloud Production
-   Load Order: LAST (after frappe bundles, after tokens, after base)
+/* ==========================================================================
+   Construction Theme for Frappe v16 — DOM Component Adapter
+   Phase 2: Component-specific patches for surfaces CSS variables can't reach
+   Load AFTER modern_theme_variables_v16.css and base.css
+   ========================================================================== */
 
-   REVISION NOTES (vs agent draft):
-   - Includes .kanban-add-card and .kanban-empty-state (agent incorrectly excluded)
-   - DataTable selectors: both scoped (.dt-scrollable) and unscoped (.datatable) for safety
-   - Sidebar selectors: both scoped (.sidebar-container) and unscoped fallback
-   - Reduced-motion: kept as END block (agent wanted to merge into base.css — too risky)
-   - All other agent suggestions accepted as-is
-   ═══════════════════════════════════════════════════════════════════════ */
+/* ==========================================================================
+   T1: CORE DESK — v16 Sidebar (Espresso Design System)
+   Selectors confirmed on v16 cloud: .body-sidebar-container, .body-sidebar
+   ========================================================================== */
 
-/* ─── 0. TOKEN REINFORCEMENT (v15 Sky-500 preserved) ─── */
-html[data-theme="dark"],
-html[data-theme="light"] {
-  --primary: #0ea5e9;
-  --primary-hover: #0284c7;
-  --primary-light: rgba(14,165,233,0.15);
-  --accent: #f59e0b;
-  --accent-hover: #d97706;
-  --danger: #dc2626;
-  --danger-hover: #b91c1c;
-  --success: #16a34a;
-  --row-hover-bg: rgba(14,165,233,0.06);
-  --row-hover-border: rgba(14,165,233,0.25);
-  --row-focus-ring: #0ea5e9;
-  --col-header-bg: linear-gradient(135deg, #0ea5e9, #0284c7);
-  --card-hover-border: #16a34a;
-}
-
-/* ─── 1. v16 SIDEBAR STRUCTURE ───
-   Scoped to .sidebar-container (v16) + unscoped fallback */
-
-html[data-theme="dark"] .sidebar-container,
-html[data-theme="light"] .sidebar-container {
-  background: var(--surface) !important;
+.body-sidebar-container {
+  background-color: var(--bg) !important;
   border-right: 1px solid var(--border) !important;
-  padding: 16px 12px !important;
-  width: 260px !important;
-  min-width: 260px !important;
-  flex-shrink: 0 !important;
-  display: flex !important;
-  flex-direction: column !important;
+  width: 240px !important;
+  transition: var(--transition) !important;
 }
 
-/* Scoped (v16) + unscoped fallback */
-html[data-theme="dark"] .sidebar-container .sidebar-item,
-html[data-theme="light"] .sidebar-container .sidebar-item,
-html[data-theme="dark"] .sidebar-item,
-html[data-theme="light"] .sidebar-item {
+.body-sidebar-container.collapsed,
+.body-sidebar-container.sidebar-collapsed {
+  width: 60px !important;
+}
+
+.body-sidebar {
+  background-color: var(--bg) !important;
+  color: var(--text-2) !important;
+}
+
+.body-sidebar .sidebar-items {
+  padding: 8px 0 !important;
+}
+
+.standard-sidebar-item {
   display: flex !important;
   align-items: center !important;
-  gap: 12px !important;
-  padding: 10px 12px !important;
-  border-radius: var(--radius-sm) !important;
-  color: var(--text) !important;
+  padding: 8px 16px !important;
+  margin: 2px 8px !important;
+  border-radius: 8px !important;
+  color: var(--text-2) !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
   cursor: pointer !important;
-  transition: var(--t) !important;
-  margin-bottom: 2px !important;
-  border: 1px solid transparent !important;
-  font-size: 0.875rem !important;
-  position: relative !important;
+  transition: var(--transition) !important;
+  text-decoration: none !important;
+  border: none !important;
+  background: transparent !important;
 }
 
-html[data-theme="dark"] .sidebar-container .sidebar-item:hover,
-html[data-theme="light"] .sidebar-container .sidebar-item:hover,
-html[data-theme="dark"] .sidebar-item:hover,
-html[data-theme="light"] .sidebar-item:hover {
-  background: var(--surface-hover) !important;
+.standard-sidebar-item:hover {
+  background-color: var(--surface-hover) !important;
   color: var(--text) !important;
-  border-color: var(--border-hover) !important;
-  transform: translateX(4px) !important;
-  box-shadow: 0 4px 12px rgba(0,0,0,.15) !important;
 }
 
-html[data-theme="dark"] .sidebar-container .sidebar-item.active,
-html[data-theme="light"] .sidebar-container .sidebar-item.active,
-html[data-theme="dark"] .sidebar-item.active,
-html[data-theme="light"] .sidebar-item.active {
-  background: var(--primary) !important;
-  color: #fff !important;
+.standard-sidebar-item.active,
+.standard-sidebar-item.selected,
+.standard-sidebar-item.router-link-active {
+  background-color: rgba(14,165,233,0.12) !important;
+  color: var(--primary-light) !important;
   font-weight: 600 !important;
 }
 
-html[data-theme="dark"] .sidebar-container .sidebar-item.active::before,
-html[data-theme="light"] .sidebar-container .sidebar-item.active::before,
-html[data-theme="dark"] .sidebar-item.active::before,
-html[data-theme="light"] .sidebar-item.active::before {
-  content: '' !important;
+.standard-sidebar-item.active::before,
+.standard-sidebar-item.selected::before {
+  content: "" !important;
   position: absolute !important;
-  top: 0 !important;
   left: 0 !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
   width: 3px !important;
-  height: 100% !important;
-  background: linear-gradient(180deg, #fff 0%, rgba(255,255,255,.8) 100%) !important;
-  border-radius: 0 2px 2px 0 !important;
+  height: 20px !important;
+  background: var(--primary) !important;
+  border-radius: 0 3px 3px 0 !important;
 }
 
-html[data-theme="dark"] .sidebar-container .sidebar-item.active:hover,
-html[data-theme="light"] .sidebar-container .sidebar-item.active:hover,
-html[data-theme="dark"] .sidebar-item.active:hover,
-html[data-theme="light"] .sidebar-item.active:hover {
-  background: var(--primary-hover) !important;
-  transform: translateX(2px) !important;
-}
-
-html[data-theme="dark"] .sidebar-container .sidebar-item-icon,
-html[data-theme="light"] .sidebar-container .sidebar-item-icon,
-html[data-theme="dark"] .sidebar-item-icon,
-html[data-theme="light"] .sidebar-item-icon {
-  font-size: 1.1rem !important;
-  width: 24px !important;
-  text-align: center !important;
-}
-
-html[data-theme="dark"] .sidebar-container .sidebar-item-label,
-html[data-theme="light"] .sidebar-container .sidebar-item-label,
-html[data-theme="dark"] .sidebar-item-label,
-html[data-theme="light"] .sidebar-item-label {
-  flex: 1 !important;
-  color: inherit !important;
-}
-
-html[data-theme="dark"] .sidebar-item-group-label,
-html[data-theme="light"] .sidebar-item-group-label {
-  font-size: 0.6875rem !important;
-  text-transform: uppercase !important;
-  letter-spacing: 1.2px !important;
+.standard-sidebar-item .icon,
+.standard-sidebar-item svg,
+.standard-sidebar-item i {
   color: var(--text-3) !important;
-  padding: 0 12px !important;
-  margin-bottom: 8px !important;
-  font-weight: 700 !important;
-}
-
-html[data-theme="dark"] .sidebar-standard-item,
-html[data-theme="light"] .sidebar-standard-item {
-  display: flex !important;
-  align-items: center !important;
-  gap: 12px !important;
-  padding: 10px 12px !important;
-  border-radius: var(--radius-sm) !important;
-  color: var(--text) !important;
-  cursor: pointer !important;
-  transition: var(--t) !important;
-}
-
-html[data-theme="dark"] .sidebar-standard-item:hover,
-html[data-theme="light"] .sidebar-standard-item:hover {
-  background: var(--surface-hover) !important;
-  color: var(--text) !important;
-}
-
-html[data-theme="dark"] .sidebar-notification .badge-count,
-html[data-theme="light"] .sidebar-notification .badge-count {
-  position: absolute !important;
-  top: 6px !important;
-  right: 6px !important;
+  fill: var(--text-3) !important;
+  margin-right: 12px !important;
   width: 18px !important;
   height: 18px !important;
-  background: var(--danger) !important;
-  color: #fff !important;
-  font-size: 0.625rem !important;
-  font-weight: 700 !important;
-  border-radius: 50% !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  border: 2px solid var(--surface) !important;
+  flex-shrink: 0 !important;
 }
 
-html[data-theme="dark"] .workspace-search,
-html[data-theme="light"] .workspace-search {
-  padding: 10px 14px !important;
-  background: var(--bg-2) !important;
-  border: 1px solid var(--border) !important;
-  border-radius: var(--radius-sm) !important;
+.standard-sidebar-item:hover .icon,
+.standard-sidebar-item:hover svg,
+.standard-sidebar-item:hover i {
   color: var(--text) !important;
-  font-size: 0.875rem !important;
-  width: 100% !important;
-  margin-bottom: 16px !important;
+  fill: var(--text) !important;
 }
 
-html[data-theme="dark"] .workspace-search:focus,
-html[data-theme="light"] .workspace-search:focus {
-  outline: none !important;
-  border-color: var(--primary) !important;
-  box-shadow: 0 0 0 4px var(--primary-light) !important;
-}
-
-/* ─── 2. v16 FORM SIDEBAR (RIGHT-ALIGNED) ─── */
-
-html[data-theme="dark"] .form-sidebar,
-html[data-theme="light"] .form-sidebar {
-  width: 300px !important;
-  background: var(--surface) !important;
-  border-left: 1px solid var(--border) !important;
-  border-right: none !important;
-  padding: 24px !important;
-  overflow-y: auto !important;
-}
-
-html[data-theme="dark"] .form-sidebar-section,
-html[data-theme="light"] .form-sidebar-section {
-  margin-bottom: 24px !important;
-}
-
-html[data-theme="dark"] .form-sidebar-title,
-html[data-theme="light"] .form-sidebar-title {
-  font-size: 0.6875rem !important;
-  text-transform: uppercase !important;
-  letter-spacing: 1.2px !important;
-  color: var(--text-3) !important;
-  margin-bottom: 12px !important;
-  font-weight: 700 !important;
-}
-
-html[data-theme="dark"] .form-sidebar-item,
-html[data-theme="light"] .form-sidebar-item {
-  display: flex !important;
-  align-items: center !important;
-  gap: 10px !important;
-  padding: 10px 12px !important;
-  border-radius: var(--radius-sm) !important;
-  color: var(--text) !important;
-  cursor: pointer !important;
-  transition: var(--t) !important;
-  margin-bottom: 4px !important;
-}
-
-html[data-theme="dark"] .form-sidebar-item:hover,
-html[data-theme="light"] .form-sidebar-item:hover {
-  background: var(--surface-hover) !important;
-  color: var(--text) !important;
-}
-
-html[data-theme="dark"] .tag-item,
-html[data-theme="light"] .tag-item {
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 6px !important;
-  padding: 5px 14px !important;
-  border-radius: 100px !important;
-  font-size: 0.8125rem !important;
-  font-weight: 500 !important;
-  background: var(--bg-2) !important;
-  border: 1px solid var(--border) !important;
-  color: var(--text-2) !important;
-}
-
-html[data-theme="dark"] .tag-item:hover,
-html[data-theme="light"] .tag-item:hover {
-  border-color: var(--border-hover) !important;
-  color: var(--text) !important;
-}
-
-html[data-theme="dark"] .assignment-pill,
-html[data-theme="light"] .assignment-pill {
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 6px !important;
-  padding: 5px 14px !important;
-  border-radius: 100px !important;
-  font-size: 0.8125rem !important;
-  font-weight: 500 !important;
-  background: var(--primary-light) !important;
+.standard-sidebar-item.active .icon,
+.standard-sidebar-item.active svg,
+.standard-sidebar-item.active i {
   color: var(--primary) !important;
+  fill: var(--primary) !important;
 }
 
-html[data-theme="dark"] .attachment-item,
-html[data-theme="light"] .attachment-item {
-  display: flex !important;
-  align-items: center !important;
-  gap: 10px !important;
-  padding: 10px 12px !important;
-  background: var(--bg-2) !important;
-  border: 1px solid var(--border) !important;
-  border-radius: var(--radius-sm) !important;
-  margin-bottom: 8px !important;
-  color: var(--text-2) !important;
-  font-size: 0.875rem !important;
+.standard-sidebar-item .sidebar-item-label,
+.standard-sidebar-item span:not(.icon) {
+  color: inherit !important;
+  font-size: 13px !important;
 }
 
-html[data-theme="dark"] .attachment-item:hover,
-html[data-theme="light"] .attachment-item:hover {
-  border-color: var(--border-hover) !important;
-  color: var(--text) !important;
-}
-
-/* ─── 3. v16 LIST VIEW STICKY HEADER ─── */
-
-html[data-theme="dark"] .list-header,
-html[data-theme="light"] .list-header {
-  display: flex !important;
-  align-items: center !important;
-  padding: 14px 16px !important;
-  background: var(--col-header-bg) !important;
-  color: #fff !important;
+.sidebar-header,
+.body-sidebar .sidebar-header {
+  padding: 16px 16px 8px !important;
+  font-size: 10px !important;
   font-weight: 700 !important;
-  font-size: 0.8125rem !important;
   text-transform: uppercase !important;
-  letter-spacing: 0.5px !important;
-  position: sticky !important;
-  top: 0 !important;
-  z-index: 10 !important;
-  border-radius: var(--radius-sm) var(--radius-sm) 0 0 !important;
-}
-
-/* ─── 4. v16 GRID / CHILD TABLE ─── */
-
-html[data-theme="dark"] .dt-scrollable,
-html[data-theme="light"] .dt-scrollable {
-  overflow-x: auto !important;
-  background: var(--surface) !important;
-}
-
-html[data-theme="dark"] .dt-scrollable::-webkit-scrollbar,
-html[data-theme="light"] .dt-scrollable::-webkit-scrollbar {
-  height: 8px !important;
-}
-
-html[data-theme="dark"] .dt-scrollable::-webkit-scrollbar-track,
-html[data-theme="light"] .dt-scrollable::-webkit-scrollbar-track {
-  background: var(--bg) !important;
-}
-
-html[data-theme="dark"] .dt-scrollable::-webkit-scrollbar-thumb,
-html[data-theme="light"] .dt-scrollable::-webkit-scrollbar-thumb {
-  background: var(--surface-hover) !important;
-  border-radius: 4px !important;
-}
-
-html[data-theme="dark"] .grid-heading-row,
-html[data-theme="light"] .grid-heading-row {
-  position: sticky !important;
-  top: 0 !important;
-  z-index: 10 !important;
-}
-
-/* ─── 5. v16 DATATABLE CELL OUTLINE HOVER ───
-   Both scoped (.dt-scrollable) and unscoped (.datatable) for safety */
-
-html[data-theme="dark"] .dt-scrollable .dt-cell:hover .dt-cell__content,
-html[data-theme="light"] .dt-scrollable .dt-cell:hover .dt-cell__content,
-html[data-theme="dark"] .datatable .dt-cell:hover .dt-cell__content,
-html[data-theme="light"] .datatable .dt-cell:hover .dt-cell__content {
-  outline: 2px solid var(--row-hover-border) !important;
-  outline-offset: -2px !important;
-  z-index: 1 !important;
-}
-
-html[data-theme="dark"] .dt-scrollable .dt-row:hover,
-html[data-theme="light"] .dt-scrollable .dt-row:hover,
-html[data-theme="dark"] .datatable .dt-row:hover,
-html[data-theme="light"] .datatable .dt-row:hover {
-  box-shadow: 0 0 0 2px var(--row-hover-border), 0 4px 16px rgba(0,0,0,.18) !important;
-  position: relative !important;
-  z-index: 1 !important;
-}
-
-/* ─── 6. v16 NEW COMPONENTS ─── */
-
-/* App Drawer */
-html[data-theme="dark"] .apps-menu,
-html[data-theme="light"] .apps-menu {
-  background: var(--surface) !important;
-  border: 1px solid var(--border) !important;
-  border-radius: var(--radius-lg) !important;
-  padding: 24px !important;
-  box-shadow: var(--shadow-lg) !important;
-  display: grid !important;
-  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)) !important;
-  gap: 16px !important;
-}
-
-html[data-theme="dark"] .app-icon,
-html[data-theme="light"] .app-icon {
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  gap: 8px !important;
-  padding: 16px !important;
-  border-radius: var(--radius) !important;
-  cursor: pointer !important;
-  transition: var(--t) !important;
-  color: var(--text-2) !important;
-}
-
-html[data-theme="dark"] .app-icon:hover,
-html[data-theme="light"] .app-icon:hover {
-  background: var(--surface-hover) !important;
-  color: var(--text) !important;
-  transform: translateY(-2px) !important;
-}
-
-/* Print Format Builder */
-html[data-theme="dark"] .print-format-container,
-html[data-theme="light"] .print-format-container {
-  background: var(--surface) !important;
-  border: 1px solid var(--border) !important;
-  border-radius: var(--radius-lg) !important;
-  padding: 32px !important;
-  box-shadow: var(--shadow) !important;
-  max-width: 800px !important;
-  margin: 0 auto !important;
-}
-
-/* Data Masking */
-html[data-theme="dark"] .masked-field,
-html[data-theme="light"] .masked-field {
-  position: relative !important;
-  background: var(--bg-2) !important;
-  border: 1px solid var(--border) !important;
-  border-radius: var(--radius-sm) !important;
-  padding: 10px 14px !important;
+  letter-spacing: 0.08em !important;
   color: var(--text-3) !important;
+  border-bottom: none !important;
 }
 
-/* Kanban Add Card / Empty State — CORRECTED: includes both selectors */
-html[data-theme="dark"] .kanban-add-card,
-html[data-theme="light"] .kanban-add-card {
-  padding: 12px !important;
-  text-align: center !important;
-  color: var(--text-3) !important;
-  border: 2px dashed var(--border) !important;
-  border-radius: var(--radius-sm) !important;
-  cursor: pointer !important;
-  transition: var(--t) !important;
-  font-size: 0.875rem !important;
+.body-sidebar-bottom {
+  border-top: 1px solid var(--border) !important;
+  background-color: var(--bg) !important;
+  padding: 8px !important;
 }
 
-html[data-theme="dark"] .kanban-add-card:hover,
-html[data-theme="light"] .kanban-add-card:hover {
-  border-color: var(--primary) !important;
-  color: var(--primary) !important;
-  background: var(--primary-light) !important;
+.body-sidebar-bottom .standard-sidebar-item {
+  margin: 2px 0 !important;
 }
 
-html[data-theme="dark"] .kanban-empty-state,
-html[data-theme="light"] .kanban-empty-state {
-  text-align: center !important;
-  padding: 32px !important;
-  color: var(--text-3) !important;
-  font-size: 0.875rem !important;
-}
-
-/* ─── 7. TAILWIND UTILITY OVERRIDE SHIELD ─── */
-
-html[data-theme="dark"] .bg-white,
-html[data-theme="dark"] .bg-gray-50,
-html[data-theme="dark"] .bg-gray-100,
-html[data-theme="dark"] .bg-gray-200 {
-  background-color: var(--surface) !important;
-}
-
-html[data-theme="dark"] .hover\:bg-gray-100:hover,
-html[data-theme="dark"] .hover\:bg-gray-50:hover {
+.sidebar-toggle-btn,
+.body-sidebar-container .collapse-btn {
   background-color: var(--surface-hover) !important;
+  color: var(--text-2) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 6px !important;
+  padding: 6px !important;
+  transition: var(--transition) !important;
 }
 
-html[data-theme="dark"] .text-gray-900,
-html[data-theme="dark"] .text-gray-800,
-html[data-theme="dark"] .text-gray-700,
-html[data-theme="dark"] .text-gray-600 {
+.sidebar-toggle-btn:hover {
+  background-color: var(--surface-active) !important;
   color: var(--text) !important;
 }
 
-html[data-theme="dark"] .text-gray-500,
-html[data-theme="dark"] .text-gray-400 {
-  color: var(--text-2) !important;
+.sidebar-search,
+.body-sidebar .sidebar-filter {
+  background-color: var(--surface-hover) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 8px !important;
+  color: var(--text) !important;
+  padding: 8px 12px !important;
+  font-size: 13px !important;
 }
 
-html[data-theme="dark"] .text-gray-300,
-html[data-theme="dark"] .text-gray-200 {
+.sidebar-search::placeholder,
+.body-sidebar .sidebar-filter::placeholder {
   color: var(--text-3) !important;
 }
 
-html[data-theme="dark"] .border-gray-200,
-html[data-theme="dark"] .border-gray-300 {
-  border-color: var(--border) !important;
+.sidebar-search:focus,
+.body-sidebar .sidebar-filter:focus {
+  border-color: var(--primary) !important;
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(14,165,233,0.2) !important;
 }
 
-html[data-theme="dark"] .shadow-sm {
+/* ==========================================================================
+   T12: v16 DELTA — Desktop, App Switcher, Workspace
+   ========================================================================== */
+
+.desktop-app-icon {
+  background-color: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+  padding: 16px !important;
+  transition: var(--transition) !important;
   box-shadow: var(--shadow-sm) !important;
 }
 
-html[data-theme="dark"] .shadow,
-html[data-theme="dark"] .shadow-md {
-  box-shadow: var(--shadow) !important;
+.desktop-app-icon:hover {
+  background-color: var(--surface-hover) !important;
+  border-color: var(--primary) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: var(--shadow-md) !important;
 }
 
-html[data-theme="dark"] .shadow-lg,
-html[data-theme="dark"] .shadow-xl {
+.desktop-app-icon .app-icon-svg,
+.desktop-app-icon svg {
+  fill: var(--primary) !important;
+  color: var(--primary) !important;
+}
+
+.desktop-app-icon .app-label {
+  color: var(--text) !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  margin-top: 8px !important;
+}
+
+.app-switcher,
+.app-switcher-menu {
+  background-color: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
   box-shadow: var(--shadow-lg) !important;
 }
 
-html[data-theme="dark"] .focus\:border-blue-500:focus,
-html[data-theme="dark"] .focus\:ring-blue-500:focus {
-  border-color: var(--primary) !important;
-  --tw-ring-color: var(--primary) !important;
-}
-
-html[data-theme="dark"] .focus\:ring-2:focus {
-  --tw-ring-offset-color: var(--bg) !important;
-}
-
-html[data-theme="light"] .bg-white {
-  background-color: #ffffff !important;
-}
-
-html[data-theme="light"] .bg-gray-50 {
-  background-color: #f8fafc !important;
-}
-
-html[data-theme="light"] .bg-gray-100 {
-  background-color: #f1f5f9 !important;
-}
-
-html[data-theme="light"] .text-gray-900 {
-  color: #0f172a !important;
-}
-
-html[data-theme="light"] .border-gray-200 {
-  border-color: #e2e8f0 !important;
-}
-
-/* ─── 8. RESPONSIVE: TOUCH TARGETS FOR CONSTRUCTION ─── */
-
-@media (max-width: 1024px) {
-  html[data-theme="dark"] .sidebar-item,
-  html[data-theme="light"] .sidebar-item,
-  html[data-theme="dark"] .sidebar-standard-item,
-  html[data-theme="light"] .sidebar-standard-item,
-  html[data-theme="dark"] .btn,
-  html[data-theme="light"] .btn,
-  html[data-theme="dark"] .form-control,
-  html[data-theme="light"] .form-control,
-  html[data-theme="dark"] .kanban-card,
-  html[data-theme="light"] .kanban-card {
-    min-height: 44px !important;
-  }
-}
-
-/* ─── 9. REDUCED MOTION — END BLOCK (not merged into base.css) ─── */
-
-@media (prefers-reduced-motion: reduce) {
-  html[data-theme="dark"] .sidebar-item,
-  html[data-theme="light"] .sidebar-item,
-  html[data-theme="dark"] .sidebar-standard-item,
-  html[data-theme="light"] .sidebar-standard-item,
-  html[data-theme="dark"] .btn,
-  html[data-theme="light"] .btn,
-  html[data-theme="dark"] .kanban-card,
-  html[data-theme="light"] .kanban-card,
-  html[data-theme="dark"] .app-icon,
-  html[data-theme="light"] .app-icon {
-    transition: none !important;
-    transform: none !important;
-  }
-}
-
-/* ═══════════════════════════════════════════════════════════════════════
-   POST-DEPLOY HOTFIXES — 2026-05-08
-   Fixes discovered during visual QA on v15 bench
-   Specificity must match base.css (.desk-sidebar .standard-sidebar-item)
-   ═══════════════════════════════════════════════════════════════════════ */
-
-/* ─── FIX 1: Sidebar hover on .standard-sidebar-item (v15) ─── */
-html[data-theme="dark"] .desk-sidebar .standard-sidebar-item:hover,
-html[data-theme="light"] .desk-sidebar .standard-sidebar-item:hover,
-html[data-theme="dark"] .standard-sidebar .standard-sidebar-item:hover,
-html[data-theme="light"] .standard-sidebar .standard-sidebar-item:hover {
-  background: var(--surface-hover) !important;
-  color: var(--text) !important;
-  border-color: var(--border-hover) !important;
-  transform: translateX(4px) !important;
-  box-shadow: 0 4px 12px rgba(0,0,0,.15) !important;
-}
-
-html[data-theme="dark"] .desk-sidebar .standard-sidebar-item:hover > a.item-anchor,
-html[data-theme="light"] .desk-sidebar .standard-sidebar-item:hover > a.item-anchor,
-html[data-theme="dark"] .standard-sidebar .standard-sidebar-item:hover > a.item-anchor,
-html[data-theme="light"] .standard-sidebar .standard-sidebar-item:hover > a.item-anchor,
-html[data-theme="dark"] .desk-sidebar .standard-sidebar-item:hover .sidebar-item-label,
-html[data-theme="light"] .desk-sidebar .standard-sidebar-item:hover .sidebar-item-label,
-html[data-theme="dark"] .standard-sidebar .standard-sidebar-item:hover .sidebar-item-label,
-html[data-theme="light"] .standard-sidebar .standard-sidebar-item:hover .sidebar-item-label {
-  color: var(--text) !important;
-}
-
-html[data-theme="dark"] .desk-sidebar .standard-sidebar-item.selected:hover,
-html[data-theme="light"] .desk-sidebar .standard-sidebar-item.selected:hover,
-html[data-theme="dark"] .standard-sidebar .standard-sidebar-item.selected:hover,
-html[data-theme="light"] .standard-sidebar .standard-sidebar-item.selected:hover {
-  background: var(--primary-hover) !important;
-  transform: translateX(2px) !important;
-}
-
-/* ─── FIX 2: Tab background white leak — entire tab strip area ─── */
-html[data-theme="dark"] .form-tabs,
-html[data-theme="dark"] .nav-tabs,
-html[data-theme="dark"] .form-tabs .nav-tabs,
-html[data-theme="light"] .form-tabs .nav-tabs,
-html[data-theme="dark"] .tab-strip,
-html[data-theme="light"] .tab-strip {
-  background: var(--surface) !important;
-  background-color: var(--surface) !important;
-}
-
-html[data-theme="dark"] .nav-tabs .nav-link,
-html[data-theme="dark"] .form-tabs .nav-tabs .nav-link {
-  background: var(--surface) !important;
-  background-color: var(--surface) !important;
+.app-switcher .app-item,
+.app-switcher-menu .dropdown-item {
   color: var(--text-2) !important;
-  border: none !important;
-  border-bottom: 2px solid transparent !important;
+  padding: 10px 16px !important;
+  transition: var(--transition) !important;
 }
 
-html[data-theme="dark"] .nav-tabs .nav-link:hover,
-html[data-theme="dark"] .form-tabs .nav-tabs .nav-link:hover {
-  background: var(--surface-hover) !important;
+.app-switcher .app-item:hover,
+.app-switcher-menu .dropdown-item:hover {
+  background-color: var(--surface-hover) !important;
   color: var(--text) !important;
-  border-radius: var(--radius-sm) var(--radius-sm) 0 0 !important;
 }
 
-html[data-theme="dark"] .nav-tabs .nav-link.active,
-html[data-theme="dark"] .form-tabs .nav-tabs .nav-link.active {
-  color: var(--primary) !important;
-  border-bottom-color: var(--primary) !important;
-  background: var(--surface) !important;
+.app-switcher .app-item.active,
+.app-switcher-menu .dropdown-item.active {
+  background-color: rgba(14,165,233,0.12) !important;
+  color: var(--primary-light) !important;
 }
 
-/* ─── FIX 3: Rich text editor toolbar white leak ─── */
-html[data-theme="dark"] .ql-toolbar,
-html[data-theme="light"] .ql-toolbar,
-html[data-theme="dark"] .editor-toolbar,
-html[data-theme="light"] .editor-toolbar {
-  background: var(--surface) !important;
-  border-color: var(--border) !important;
+.workspace-sidebar {
+  background-color: var(--bg) !important;
+  border-right: 1px solid var(--border) !important;
 }
 
-html[data-theme="dark"] .ql-toolbar button,
-html[data-theme="light"] .ql-toolbar button,
-html[data-theme="dark"] .editor-toolbar button,
-html[data-theme="light"] .editor-toolbar button {
+.workspace-sidebar .workspace-item {
   color: var(--text-2) !important;
+  padding: 8px 16px !important;
+  border-radius: 8px !important;
+  transition: var(--transition) !important;
 }
 
-html[data-theme="dark"] .ql-toolbar button:hover,
-html[data-theme="light"] .ql-toolbar button:hover {
-  color: var(--text) !important;
-  background: var(--surface-hover) !important;
-}
-
-html[data-theme="dark"] .ql-editor,
-html[data-theme="light"] .ql-editor {
-  background: var(--bg-2) !important;
+.workspace-sidebar .workspace-item:hover {
+  background-color: var(--surface-hover) !important;
   color: var(--text) !important;
 }
 
-/* ═══════════════════════════════════════════════════════════════════════
-   FIX 4: Sidebar text must be WHITE in dark mode, BLACK in light mode
-   Must override base.css line 236: [data-theme="dark"] .desk-sidebar-item { color: var(--text-2) }
-   Must override base.css line 2628: html[data-theme="dark"] .desk-sidebar .sidebar-item-label
-   Target BOTH parent .desk-sidebar-item AND child .sidebar-item-label
-   ═══════════════════════════════════════════════════════════════════════ */
-
-/* v15 desk sidebar — parent element + children */
-html[data-theme="dark"] body .desk-sidebar .desk-sidebar-item,
-html[data-theme="dark"] body .desk-sidebar .standard-sidebar-item,
-html[data-theme="dark"] body .desk-sidebar .standard-sidebar-item .sidebar-item-label,
-html[data-theme="dark"] body .desk-sidebar .standard-sidebar-item > a.item-anchor,
-html[data-theme="dark"] body .desk-sidebar .sidebar-item-label,
-html[data-theme="dark"] body .desk-sidebar .standard-sidebar-label,
-html[data-theme="dark"] body .standard-sidebar .desk-sidebar-item,
-html[data-theme="dark"] body .standard-sidebar .standard-sidebar-item,
-html[data-theme="dark"] body .standard-sidebar .standard-sidebar-item .sidebar-item-label,
-html[data-theme="dark"] body .standard-sidebar .standard-sidebar-item > a.item-anchor,
-html[data-theme="dark"] body .standard-sidebar .sidebar-item-label,
-html[data-theme="dark"] body .standard-sidebar .standard-sidebar-label,
-html[data-theme="dark"] body .layout-side-section .desk-sidebar-item,
-html[data-theme="dark"] body .layout-side-section .desk-sidebar-item.standard-sidebar-item,
-html[data-theme="dark"] body .layout-side-section .desk-sidebar-item.standard-sidebar-item .sidebar-item-label,
-html[data-theme="dark"] body .layout-side-section .desk-sidebar-item .sidebar-item-label,
-html[data-theme="dark"] body .layout-side-section .standard-sidebar-item,
-html[data-theme="dark"] body .layout-side-section .standard-sidebar-item .sidebar-item-label,
-html[data-theme="dark"] body .layout-side-section .sidebar-item-label,
-html[data-theme="dark"] body .layout-side-section .item-anchor,
-html[data-theme="dark"] body .layout-side-section .standard-sidebar-label,
-html[data-theme="dark"] body .sidebar-container .sidebar-item,
-html[data-theme="dark"] body .sidebar-container .sidebar-item-label,
-html[data-theme="dark"] body .sidebar-container .sidebar-standard-item,
-html[data-theme="dark"] body .sidebar-container .sidebar-item-group-label {
-  color: var(--text) !important;
+.workspace-sidebar .workspace-item.active {
+  background-color: rgba(14,165,233,0.12) !important;
+  color: var(--primary-light) !important;
 }
 
-/* Light mode — black text */
-html[data-theme="light"] body .desk-sidebar .desk-sidebar-item,
-html[data-theme="light"] body .desk-sidebar .standard-sidebar-item,
-html[data-theme="light"] body .desk-sidebar .standard-sidebar-item .sidebar-item-label,
-html[data-theme="light"] body .desk-sidebar .standard-sidebar-item > a.item-anchor,
-html[data-theme="light"] body .desk-sidebar .sidebar-item-label,
-html[data-theme="light"] body .desk-sidebar .standard-sidebar-label,
-html[data-theme="light"] body .standard-sidebar .desk-sidebar-item,
-html[data-theme="light"] body .standard-sidebar .standard-sidebar-item,
-html[data-theme="light"] body .standard-sidebar .standard-sidebar-item .sidebar-item-label,
-html[data-theme="light"] body .standard-sidebar .standard-sidebar-item > a.item-anchor,
-html[data-theme="light"] body .standard-sidebar .sidebar-item-label,
-html[data-theme="light"] body .standard-sidebar .standard-sidebar-label,
-html[data-theme="light"] body .layout-side-section .desk-sidebar-item,
-html[data-theme="light"] body .layout-side-section .desk-sidebar-item.standard-sidebar-item,
-html[data-theme="light"] body .layout-side-section .desk-sidebar-item.standard-sidebar-item .sidebar-item-label,
-html[data-theme="light"] body .layout-side-section .desk-sidebar-item .sidebar-item-label,
-html[data-theme="light"] body .layout-side-section .standard-sidebar-item,
-html[data-theme="light"] body .layout-side-section .standard-sidebar-item .sidebar-item-label,
-html[data-theme="light"] body .layout-side-section .sidebar-item-label,
-html[data-theme="light"] body .layout-side-section .item-anchor,
-html[data-theme="light"] body .layout-side-section .standard-sidebar-label,
-html[data-theme="light"] body .sidebar-container .sidebar-item,
-html[data-theme="light"] body .sidebar-container .sidebar-item-label,
-html[data-theme="light"] body .sidebar-container .sidebar-standard-item,
-html[data-theme="light"] body .sidebar-container .sidebar-item-group-label {
-  color: var(--text) !important;
-}
-
-/* Light mode — black text */
-html[data-theme="light"] body .desk-sidebar .desk-sidebar-item,
-html[data-theme="light"] body .desk-sidebar .standard-sidebar-item,
-html[data-theme="light"] body .desk-sidebar .standard-sidebar-item .sidebar-item-label,
-html[data-theme="light"] body .desk-sidebar .standard-sidebar-item > a.item-anchor,
-html[data-theme="light"] body .desk-sidebar .sidebar-item-label,
-html[data-theme="light"] body .desk-sidebar .standard-sidebar-label,
-html[data-theme="light"] body .standard-sidebar .desk-sidebar-item,
-html[data-theme="light"] body .standard-sidebar .standard-sidebar-item,
-html[data-theme="light"] body .standard-sidebar .standard-sidebar-item .sidebar-item-label,
-html[data-theme="light"] body .standard-sidebar .standard-sidebar-item > a.item-anchor,
-html[data-theme="light"] body .standard-sidebar .sidebar-item-label,
-html[data-theme="light"] body .standard-sidebar .standard-sidebar-label,
-html[data-theme="light"] body .layout-side-section .desk-sidebar-item,
-html[data-theme="light"] body .layout-side-section .desk-sidebar-item.standard-sidebar-item,
-html[data-theme="light"] body .layout-side-section .desk-sidebar-item.standard-sidebar-item .sidebar-item-label,
-html[data-theme="light"] body .layout-side-section .desk-sidebar-item .sidebar-item-label,
-html[data-theme="light"] body .layout-side-section .standard-sidebar-item,
-html[data-theme="light"] body .layout-side-section .standard-sidebar-item .sidebar-item-label,
-html[data-theme="light"] body .layout-side-section .sidebar-item-label,
-html[data-theme="light"] body .layout-side-section .item-anchor,
-html[data-theme="light"] body .layout-side-section .standard-sidebar-label,
-html[data-theme="light"] body .sidebar-container .sidebar-item,
-html[data-theme="light"] body .sidebar-container .sidebar-item-label,
-html[data-theme="light"] body .sidebar-container .sidebar-standard-item,
-html[data-theme="light"] body .sidebar-container .sidebar-item-group-label {
-  color: var(--text) !important;
-}
-
-/* Light mode — black text */
-html[data-theme="light"] body .desk-sidebar .desk-sidebar-item,
-html[data-theme="light"] body .desk-sidebar .standard-sidebar-item,
-html[data-theme="light"] body .desk-sidebar .standard-sidebar-item .sidebar-item-label,
-html[data-theme="light"] body .desk-sidebar .standard-sidebar-item > a.item-anchor,
-html[data-theme="light"] body .desk-sidebar .sidebar-item-label,
-html[data-theme="light"] body .desk-sidebar .standard-sidebar-label,
-html[data-theme="light"] body .standard-sidebar .desk-sidebar-item,
-html[data-theme="light"] body .standard-sidebar .standard-sidebar-item,
-html[data-theme="light"] body .standard-sidebar .standard-sidebar-item .sidebar-item-label,
-html[data-theme="light"] body .standard-sidebar .standard-sidebar-item > a.item-anchor,
-html[data-theme="light"] body .standard-sidebar .sidebar-item-label,
-html[data-theme="light"] body .standard-sidebar .standard-sidebar-label,
-html[data-theme="light"] body .layout-side-section .desk-sidebar-item,
-html[data-theme="light"] body .layout-side-section .desk-sidebar-item.standard-sidebar-item,
-html[data-theme="light"] body .layout-side-section .desk-sidebar-item.standard-sidebar-item .sidebar-item-label,
-html[data-theme="light"] body .layout-side-section .desk-sidebar-item .sidebar-item-label,
-html[data-theme="light"] body .layout-side-section .standard-sidebar-item,
-html[data-theme="light"] body .layout-side-section .standard-sidebar-item .sidebar-item-label,
-html[data-theme="light"] body .layout-side-section .sidebar-item-label,
-html[data-theme="light"] body .layout-side-section .item-anchor,
-html[data-theme="light"] body .layout-side-section .standard-sidebar-label,
-html[data-theme="light"] body .sidebar-container .sidebar-item,
-html[data-theme="light"] body .sidebar-container .sidebar-item-label,
-html[data-theme="light"] body .sidebar-container .sidebar-standard-item,
-html[data-theme="light"] body .sidebar-container .sidebar-item-group-label {
-  color: var(--text) !important;
-}
-
-/* Light mode — black text */
-html[data-theme="light"] body .desk-sidebar .desk-sidebar-item,
-html[data-theme="light"] body .desk-sidebar .standard-sidebar-item,
-html[data-theme="light"] body .desk-sidebar .standard-sidebar-item .sidebar-item-label,
-html[data-theme="light"] body .desk-sidebar .standard-sidebar-item > a.item-anchor,
-html[data-theme="light"] body .desk-sidebar .sidebar-item-label,
-html[data-theme="light"] body .desk-sidebar .standard-sidebar-label,
-html[data-theme="light"] body .standard-sidebar .desk-sidebar-item,
-html[data-theme="light"] body .standard-sidebar .standard-sidebar-item,
-html[data-theme="light"] body .standard-sidebar .standard-sidebar-item .sidebar-item-label,
-html[data-theme="light"] body .standard-sidebar .standard-sidebar-item > a.item-anchor,
-html[data-theme="light"] body .standard-sidebar .sidebar-item-label,
-html[data-theme="light"] body .standard-sidebar .standard-sidebar-label,
-html[data-theme="light"] body .layout-side-section .desk-sidebar-item,
-html[data-theme="light"] body .layout-side-section .desk-sidebar-item.standard-sidebar-item,
-html[data-theme="light"] body .layout-side-section .desk-sidebar-item.standard-sidebar-item .sidebar-item-label,
-html[data-theme="light"] body .layout-side-section .desk-sidebar-item .sidebar-item-label,
-html[data-theme="light"] body .layout-side-section .standard-sidebar-item,
-html[data-theme="light"] body .layout-side-section .standard-sidebar-item .sidebar-item-label,
-html[data-theme="light"] body .layout-side-section .sidebar-item-label,
-html[data-theme="light"] body .layout-side-section .item-anchor,
-html[data-theme="light"] body .layout-side-section .standard-sidebar-label,
-html[data-theme="light"] body .sidebar-container .sidebar-item,
-html[data-theme="light"] body .sidebar-container .sidebar-item-label,
-html[data-theme="light"] body .sidebar-container .sidebar-standard-item,
-html[data-theme="light"] body .sidebar-container .sidebar-item-group-label {
-  color: var(--text) !important;
-}
-
-/* Light mode — black text */
-html[data-theme="light"] body .desk-sidebar .desk-sidebar-item,
-html[data-theme="light"] body .desk-sidebar .standard-sidebar-item,
-html[data-theme="light"] body .desk-sidebar .standard-sidebar-item .sidebar-item-label,
-html[data-theme="light"] body .desk-sidebar .standard-sidebar-item > a.item-anchor,
-html[data-theme="light"] body .desk-sidebar .sidebar-item-label,
-html[data-theme="light"] body .desk-sidebar .standard-sidebar-label,
-html[data-theme="light"] body .standard-sidebar .desk-sidebar-item,
-html[data-theme="light"] body .standard-sidebar .standard-sidebar-item,
-html[data-theme="light"] body .standard-sidebar .standard-sidebar-item .sidebar-item-label,
-html[data-theme="light"] body .standard-sidebar .standard-sidebar-item > a.item-anchor,
-html[data-theme="light"] body .standard-sidebar .sidebar-item-label,
-html[data-theme="light"] body .standard-sidebar .standard-sidebar-label,
-html[data-theme="light"] body .layout-side-section .desk-sidebar-item,
-html[data-theme="light"] body .layout-side-section .desk-sidebar-item.standard-sidebar-item,
-html[data-theme="light"] body .layout-side-section .desk-sidebar-item.standard-sidebar-item .sidebar-item-label,
-html[data-theme="light"] body .layout-side-section .standard-sidebar-item,
-html[data-theme="light"] body .layout-side-section .standard-sidebar-item .sidebar-item-label,
-html[data-theme="light"] body .layout-side-section .sidebar-item-label,
-html[data-theme="light"] body .layout-side-section .item-anchor,
-html[data-theme="light"] body .layout-side-section .standard-sidebar-label,
-html[data-theme="light"] body .sidebar-container .sidebar-item,
-html[data-theme="light"] body .sidebar-container .sidebar-item-label,
-html[data-theme="light"] body .sidebar-container .sidebar-standard-item,
-html[data-theme="light"] body .sidebar-container .sidebar-item-group-label {
-  color: var(--text) !important;
-}
-
-/* Light mode — black text */
-html[data-theme="light"] body .desk-sidebar .desk-sidebar-item,
-html[data-theme="light"] body .desk-sidebar .standard-sidebar-item,
-html[data-theme="light"] body .desk-sidebar .standard-sidebar-item .sidebar-item-label,
-html[data-theme="light"] body .desk-sidebar .standard-sidebar-item > a.item-anchor,
-html[data-theme="light"] body .desk-sidebar .sidebar-item-label,
-html[data-theme="light"] body .desk-sidebar .standard-sidebar-label,
-html[data-theme="light"] body .standard-sidebar .desk-sidebar-item,
-html[data-theme="light"] body .standard-sidebar .standard-sidebar-item,
-html[data-theme="light"] body .standard-sidebar .standard-sidebar-item .sidebar-item-label,
-html[data-theme="light"] body .standard-sidebar .standard-sidebar-item > a.item-anchor,
-html[data-theme="light"] body .standard-sidebar .sidebar-item-label,
-html[data-theme="light"] body .standard-sidebar .standard-sidebar-label,
-html[data-theme="light"] body .layout-side-section .desk-sidebar-item,
-html[data-theme="light"] body .layout-side-section .desk-sidebar-item.standard-sidebar-item,
-html[data-theme="light"] body .layout-side-section .desk-sidebar-item.standard-sidebar-item .sidebar-item-label,
-html[data-theme="light"] body .layout-side-section .standard-sidebar-item,
-html[data-theme="light"] body .layout-side-section .standard-sidebar-item .sidebar-item-label,
-html[data-theme="light"] body .layout-side-section .sidebar-item-label,
-html[data-theme="light"] body .layout-side-section .item-anchor,
-html[data-theme="light"] body .layout-side-section .standard-sidebar-label,
-html[data-theme="light"] body .sidebar-container .sidebar-item,
-html[data-theme="light"] body .sidebar-container .sidebar-item-label,
-html[data-theme="light"] body .sidebar-container .sidebar-standard-item,
-html[data-theme="light"] body .sidebar-container .sidebar-item-group-label {
-  color: var(--text) !important;
-}
-
-html[data-theme="dark"] body .desk-sidebar .standard-sidebar-item:hover > a.item-anchor,
-html[data-theme="dark"] body .standard-sidebar .standard-sidebar-item:hover > a.item-anchor,
-html[data-theme="dark"] body .desk-sidebar .standard-sidebar-item:hover .sidebar-item-label,
-html[data-theme="dark"] body .standard-sidebar .standard-sidebar-item:hover .sidebar-item-label,
-html[data-theme="dark"] body .layout-side-section .desk-sidebar-item.standard-sidebar-item:hover .sidebar-item-label,
-html[data-theme="dark"] body .layout-side-section .standard-sidebar-item:hover .sidebar-item-label {
-  color: #fff !important;
-}
-
-html[data-theme="dark"] body .desk-sidebar .standard-sidebar-item.selected > a.item-anchor,
-html[data-theme="dark"] body .standard-sidebar .standard-sidebar-item.selected > a.item-anchor,
-html[data-theme="dark"] body .desk-sidebar .standard-sidebar-item.selected .sidebar-item-label,
-html[data-theme="dark"] body .standard-sidebar .standard-sidebar-item.selected .sidebar-item-label,
-html[data-theme="dark"] body .layout-side-section .desk-sidebar-item.standard-sidebar-item.selected .sidebar-item-label,
-html[data-theme="dark"] body .layout-side-section .standard-sidebar-item.selected .sidebar-item-label {
-  color: #fff !important;
-}
-
-/* v16 sidebar items — ensure white text in dark mode */
-html[data-theme="dark"] body .sidebar-container .sidebar-item,
-html[data-theme="dark"] body .sidebar-container .sidebar-item-label,
-html[data-theme="dark"] body .sidebar-container .sidebar-standard-item {
-  color: var(--text) !important;
-}
-
-html[data-theme="dark"] body .sidebar-container .sidebar-item:hover,
-html[data-theme="dark"] body .sidebar-container .sidebar-item:hover .sidebar-item-label {
-  color: #fff !important;
-}
-
-html[data-theme="dark"] body .sidebar-container .sidebar-item.active,
-html[data-theme="dark"] body .sidebar-container .sidebar-item.active .sidebar-item-label {
-  color: #fff !important;
-}
-
-html[data-theme="dark"] body .sidebar-container .sidebar-item-group-label {
-  color: var(--text-2) !important;
-}
-
-/* ═══════════════════════════════════════════════════════════════════════
-   FIX 5: White background gaps in dark mode form views
-   Frappe uses --neutral-white (#ffffff) and various bg-white/bg-gray
-   classes that leak white in dark mode on new item creation.
-   ═══════════════════════════════════════════════════════════════════════ */
-
-html[data-theme="dark"] .form-layout .frappe-control,
-html[data-theme="dark"] .form-layout .form-group,
-html[data-theme="dark"] .form-layout .section-break,
-html[data-theme="dark"] .form-layout .column-break,
-html[data-theme="dark"] .form-layout .section-body,
-html[data-theme="dark"] .form-layout .form-column {
-  background: transparent !important;
-  background-color: transparent !important;
-}
-
-html[data-theme="dark"] .frappe-control,
-html[data-theme="dark"] .form-group {
-  background: transparent !important;
-  background-color: transparent !important;
-}
-
-html[data-theme="dark"] .doc-field,
-html[data-theme="dark"] .frappe-control .doc-field,
-html[data-theme="dark"] .data-field,
-html[data-theme="dark"] .section-break,
-html[data-theme="dark"] .column-break {
-  background: transparent !important;
-  background-color: transparent !important;
-}
-
-html[data-theme="dark"] .card-body,
-html[data-theme="dark"] .panel-body,
-html[data-theme="dark"] .panel-default,
-html[data-theme="dark"] .panel-default > .panel-body,
-html[data-theme="dark"] .panel,
-html[data-theme="dark"] .well {
-  background: var(--surface) !important;
-  background-color: var(--surface) !important;
-  border-color: var(--border) !important;
-  color: var(--text) !important;
-}
-
-html[data-theme="dark"] .page-container,
-html[data-theme="dark"] .page-body,
-html[data-theme="dark"] .page-content,
-html[data-theme="dark"] .page-form,
-html[data-theme="dark"] .form-page,
-html[data-theme="dark"] .main-section,
-html[data-theme="dark"] .layout-main-section,
-html[data-theme="dark"] .layout-side-section {
-  background: var(--bg) !important;
+.workspace-widgets,
+.widget-group {
   background-color: var(--bg) !important;
 }
 
-html[data-theme="dark"] .form-dashboard-section,
-html[data-theme="dark"] .form-sidebar-section,
-html[data-theme="dark"] .form-links,
-html[data-theme="dark"] .form-view-header,
-html[data-theme="dark"] .form-header {
-  background: var(--surface) !important;
+.widget {
   background-color: var(--surface) !important;
-  border-color: var(--border) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+  box-shadow: var(--shadow-sm) !important;
+  transition: var(--transition) !important;
+}
+
+.widget:hover {
+  box-shadow: var(--shadow-md) !important;
+  border-color: rgba(14,165,233,0.2) !important;
+}
+
+.widget .widget-head {
   color: var(--text) !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  border-bottom: 1px solid var(--border) !important;
+  padding: 12px 16px !important;
 }
 
-html[data-theme="dark"] .document-link-badge,
-html[data-theme="dark"] .document-link-badge .count,
-html[data-theme="dark"] .report-link-badge,
-html[data-theme="dark"] .report-link-badge .count {
-  background-color: var(--bg-2) !important;
-  color: var(--text) !important;
-}
-
-html[data-theme="dark"] [style*="background-color: white"],
-html[data-theme="dark"] [style*="background-color: #fff"],
-html[data-theme="dark"] [style*="background-color: #ffffff"],
-html[data-theme="dark"] [style*="background: white"],
-html[data-theme="dark"] [style*="background: #fff"],
-html[data-theme="dark"] [style*="background: #ffffff"] {
-  background-color: var(--surface) !important;
-  background: var(--surface) !important;
-}
-
-html[data-theme="dark"] .form-message,
-html[data-theme="dark"] .form-message-row .form-message {
-  background: var(--bg-2) !important;
+.widget .widget-body {
   color: var(--text-2) !important;
-  border-radius: var(--radius-sm) !important;
+  padding: 16px !important;
 }
 
-html[data-theme="dark"] .timeline-head,
-html[data-theme="dark"] .timeline-item,
-html[data-theme="dark"] .communication-item {
-  background: var(--surface) !important;
-  border-color: var(--border) !important;
+.widget .widget-footer {
+  border-top: 1px solid var(--border) !important;
+  padding: 12px 16px !important;
+}
+
+.widget.shortcut-widget .widget-icon {
+  background-color: rgba(14,165,233,0.1) !important;
+  border-radius: 8px !important;
+  padding: 8px !important;
+}
+
+.widget.shortcut-widget .widget-icon svg {
+  fill: var(--primary) !important;
+  color: var(--primary) !important;
+}
+
+.widget.number-widget .widget-number {
+  color: var(--primary) !important;
+  font-size: 28px !important;
+  font-weight: 700 !important;
+}
+
+.widget.number-widget .widget-label {
+  color: var(--text-2) !important;
+  font-size: 12px !important;
+}
+
+/* ==========================================================================
+   T10: CHARTS & SVG OVERLAYS
+   ========================================================================== */
+
+.apexcharts-tooltip {
+  background-color: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 8px !important;
+  box-shadow: var(--shadow-md) !important;
+}
+
+.apexcharts-tooltip-title {
+  background-color: var(--surface-hover) !important;
+  color: var(--text) !important;
+  border-bottom: 1px solid var(--border) !important;
+  font-family: inherit !important;
+}
+
+.apexcharts-text {
+  fill: var(--text-2) !important;
+  font-family: inherit !important;
+}
+
+.apexcharts-title-text {
+  fill: var(--text) !important;
+  font-weight: 600 !important;
+}
+
+.apexcharts-legend-text {
+  fill: var(--text-2) !important;
+  color: var(--text-2) !important;
+}
+
+.apexcharts-legend-marker {
+  border-radius: 50% !important;
+}
+
+.apexcharts-xaxis-label,
+.apexcharts-yaxis-label {
+  fill: var(--text-3) !important;
+}
+
+.apexcharts-gridline {
+  stroke: var(--border) !important;
+  stroke-opacity: 0.5 !important;
+}
+
+.apexcharts-toolbar {
+  background-color: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 6px !important;
+}
+
+.apexcharts-toolbar svg {
+  fill: var(--text-2) !important;
+}
+
+.apexcharts-menu {
+  background-color: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 6px !important;
+  box-shadow: var(--shadow-md) !important;
+}
+
+.apexcharts-menu-item:hover {
+  background-color: var(--surface-hover) !important;
   color: var(--text) !important;
 }
 
-html[data-theme="dark"] .frappe-control .help-box,
-html[data-theme="dark"] .frappe-control .desc,
-html[data-theme="dark"] .frappe-control .control-description {
+.graph-svg-tip {
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 8px !important;
+  box-shadow: var(--shadow-md) !important;
+  font-family: inherit !important;
+}
+
+.graph-svg-tip ul li .tooltip-label {
+  color: var(--text-2) !important;
+}
+
+.graph-svg-tip ul li .tooltip-value {
+  color: var(--text) !important;
+  font-weight: 600 !important;
+}
+
+.frappe-chart .y-axis text,
+.frappe-chart .x-axis text {
+  fill: var(--text-3) !important;
+  font-size: 11px !important;
+}
+
+.frappe-chart .y-axis .line-vertical,
+.frappe-chart .x-axis .line-horizontal {
+  stroke: var(--border) !important;
+  stroke-opacity: 0.3 !important;
+}
+
+/* ==========================================================================
+   T5: GRID / DATATABLE ENHANCEMENTS
+   ========================================================================== */
+
+.datatable {
+  background-color: transparent !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+  overflow: hidden !important;
+}
+
+.datatable-header {
+  background-color: var(--surface-hover) !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+.datatable-header .datatable-cell {
+  color: var(--text) !important;
+  font-weight: 600 !important;
+  font-size: 12px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.03em !important;
+  padding: 10px 12px !important;
+}
+
+.datatable-row {
+  border-bottom: 1px solid var(--border) !important;
+  transition: background-color 0.15s ease !important;
+}
+
+.datatable-row:hover {
+  background-color: var(--surface-hover) !important;
+}
+
+.datatable-row.selected {
+  background-color: rgba(14,165,233,0.08) !important;
+}
+
+.datatable-cell {
+  color: var(--text) !important;
+  font-size: 13px !important;
+  padding: 8px 12px !important;
+}
+
+.datatable-cell .text-muted {
   color: var(--text-3) !important;
-  background: transparent !important;
 }
 
-/* Final sidebar label color guard.
-   Keep this at EOF so it wins over earlier token-based sidebar rules.
-   Text/anchor selectors only; do not recolor SVG icons. */
-html[data-theme="dark"] body .layout-side-section .desk-sidebar-item,
-html[data-theme="dark"] body .layout-side-section .standard-sidebar-item,
-html[data-theme="dark"] body .layout-side-section .desk-sidebar-item > a,
-html[data-theme="dark"] body .layout-side-section .standard-sidebar-item > a,
-html[data-theme="dark"] body .layout-side-section a.item-anchor,
-html[data-theme="dark"] body .layout-side-section .sidebar-item-label,
-html[data-theme="dark"] body .desk-sidebar .desk-sidebar-item,
-html[data-theme="dark"] body .desk-sidebar .standard-sidebar-item,
-html[data-theme="dark"] body .desk-sidebar .standard-sidebar-item > a.item-anchor,
-html[data-theme="dark"] body .desk-sidebar .sidebar-item-label,
-html[data-theme="dark"] body .standard-sidebar .desk-sidebar-item,
-html[data-theme="dark"] body .standard-sidebar .standard-sidebar-item,
-html[data-theme="dark"] body .standard-sidebar .standard-sidebar-item > a.item-anchor,
-html[data-theme="dark"] body .standard-sidebar .sidebar-item-label,
-html[data-theme="dark"] body .sidebar-container a.item-anchor,
-html[data-theme="dark"] body .sidebar-container .sidebar-item-label {
+.datatable-header .sort-indicator svg {
+  fill: var(--text-3) !important;
+}
+
+.datatable-header .sort-indicator.asc svg,
+.datatable-header .sort-indicator.desc svg {
+  fill: var(--primary) !important;
+}
+
+.datatable .checkbox-container input[type="checkbox"] {
+  accent-color: var(--primary) !important;
+}
+
+.datatable-pagination {
+  background-color: var(--surface) !important;
+  border-top: 1px solid var(--border) !important;
+  padding: 10px 16px !important;
+}
+
+.datatable-pagination .pagination-btn {
+  background-color: var(--surface-hover) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text-2) !important;
+  border-radius: 6px !important;
+  padding: 4px 10px !important;
+  transition: var(--transition) !important;
+}
+
+.datatable-pagination .pagination-btn:hover {
+  background-color: var(--surface-active) !important;
   color: var(--text) !important;
 }
 
-html[data-theme="light"] body .layout-side-section .desk-sidebar-item,
-html[data-theme="light"] body .layout-side-section .standard-sidebar-item,
-html[data-theme="light"] body .layout-side-section .desk-sidebar-item > a,
-html[data-theme="light"] body .layout-side-section .standard-sidebar-item > a,
-html[data-theme="light"] body .layout-side-section a.item-anchor,
-html[data-theme="light"] body .layout-side-section .sidebar-item-label,
-html[data-theme="light"] body .desk-sidebar .desk-sidebar-item,
-html[data-theme="light"] body .desk-sidebar .standard-sidebar-item,
-html[data-theme="light"] body .desk-sidebar .standard-sidebar-item > a.item-anchor,
-html[data-theme="light"] body .desk-sidebar .sidebar-item-label,
-html[data-theme="light"] body .standard-sidebar .desk-sidebar-item,
-html[data-theme="light"] body .standard-sidebar .standard-sidebar-item,
-html[data-theme="light"] body .standard-sidebar .standard-sidebar-item > a.item-anchor,
-html[data-theme="light"] body .standard-sidebar .sidebar-item-label,
-html[data-theme="light"] body .sidebar-container a.item-anchor,
-html[data-theme="light"] body .sidebar-container .sidebar-item-label {
-  color: #0f172a !important;
-}
-
-/* FINAL SIDEBAR VISIBILITY GUARD — text + icons */
-html[data-theme="dark"] .layout-side-section,
-html[data-theme="dark"] .layout-side-section a,
-html[data-theme="dark"] .layout-side-section span,
-html[data-theme="dark"] .layout-side-section div,
-html[data-theme="dark"] .layout-side-section .desk-sidebar-item,
-html[data-theme="dark"] .layout-side-section .standard-sidebar-item,
-html[data-theme="dark"] .layout-side-section .sidebar-item-label,
-html[data-theme="dark"] .layout-side-section .standard-sidebar-label,
-html[data-theme="dark"] .desk-sidebar,
-html[data-theme="dark"] .desk-sidebar a,
-html[data-theme="dark"] .desk-sidebar span,
-html[data-theme="dark"] .desk-sidebar .desk-sidebar-item,
-html[data-theme="dark"] .desk-sidebar .standard-sidebar-item,
-html[data-theme="dark"] .desk-sidebar .sidebar-item-label,
-html[data-theme="dark"] .standard-sidebar,
-html[data-theme="dark"] .standard-sidebar a,
-html[data-theme="dark"] .standard-sidebar span,
-html[data-theme="dark"] .standard-sidebar .standard-sidebar-item,
-html[data-theme="dark"] .standard-sidebar .sidebar-item-label {
-  color: var(--text) !important;
-  opacity: 1 !important;
-  filter: none !important;
-}
-
-/* Icons: allow natural colors by removing strict monochrome forcing.
-   Only force opacity and filter to ensure visibility. */
-html[data-theme="dark"] .layout-side-section svg,
-html[data-theme="dark"] .layout-side-section svg *,
-html[data-theme="dark"] .layout-side-section .icon,
-html[data-theme="dark"] .layout-side-section .es-icon,
-html[data-theme="dark"] .layout-side-section use,
-html[data-theme="dark"] .layout-side-section path,
-html[data-theme="dark"] .desk-sidebar svg,
-html[data-theme="dark"] .desk-sidebar svg *,
-html[data-theme="dark"] .desk-sidebar .icon,
-html[data-theme="dark"] .desk-sidebar .es-icon,
-html[data-theme="dark"] .desk-sidebar use,
-html[data-theme="dark"] .desk-sidebar path,
-html[data-theme="dark"] .standard-sidebar svg,
-html[data-theme="dark"] .standard-sidebar svg *,
-html[data-theme="dark"] .standard-sidebar .icon,
-html[data-theme="dark"] .standard-sidebar .es-icon,
-html[data-theme="dark"] .standard-sidebar use,
-html[data-theme="dark"] .standard-sidebar path {
-  opacity: 1 !important;
-  filter: none !important;
-}
-
-/* Icons: restore natural colours by removing monochrome forcing */
-html[data-theme="dark"] .sidebar-item-icon {
-  /* color: var(--text) !important; -- REMOVED to allow coloured icons */
-}
-
-/* Button Consistency Guard */
-html[data-theme="dark"] .btn-primary,
-html[data-theme="dark"] .primary-action,
-html[data-theme="dark"] .btn-save,
-html[data-theme="dark"] .btn-new,
-html[data-theme="dark"] [data-label="Save"],
-html[data-theme="dark"] [data-label="New"],
-html[data-theme="dark"] [data-label="Edit"],
-html[data-theme="dark"] [data-label="+ New"] {
-  background-color: #2563eb !important; /* var(--accent-primary) */
+.datatable-pagination .pagination-btn.active {
+  background-color: var(--primary) !important;
   color: #ffffff !important;
-  border-color: #2563eb !important;
+  border-color: var(--primary) !important;
 }
 
-/* FINAL SIDEBAR VISIBILITY GUARD ... (existing code) ... */
+/* ==========================================================================
+   T6: DIALOG / MODAL ENHANCEMENTS
+   ========================================================================== */
 
-/* ─── GHOST BUTTON & HEADER HEIGHT HOTFIXES ─── */
-
-/* ─── HEADER LAYOUT REFINEMENTS ─── */
-.page-head, .page-header {
-  height: 48px !important;
-  min-height: 48px !important;
-  padding: 0 15px !important;
+.modal.show .modal-dialog {
+  box-shadow: var(--shadow-lg) !important;
 }
 
-/* Tighten breadcrumb and title area to reduce 'depth' */
-.page-head .breadcrumb-area {
+.modal-content {
+  background-color: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+}
+
+.modal-header {
+  background-color: var(--surface) !important;
+  border-bottom: 1px solid var(--border) !important;
+  padding: 16px 20px !important;
+}
+
+.modal-title {
+  color: var(--text) !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+}
+
+.modal-header .close {
+  color: var(--text-3) !important;
+  opacity: 1 !important;
+  font-size: 20px !important;
+  transition: var(--transition) !important;
+}
+
+.modal-header .close:hover {
+  color: var(--text) !important;
+}
+
+.modal-body {
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+  padding: 20px !important;
+}
+
+.modal-footer {
+  background-color: var(--surface) !important;
+  border-top: 1px solid var(--border) !important;
+  padding: 12px 20px !important;
+}
+
+.popover {
+  background-color: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+  box-shadow: var(--shadow-lg) !important;
+}
+
+.popover-header {
+  background-color: var(--surface-hover) !important;
+  color: var(--text) !important;
+  border-bottom: 1px solid var(--border) !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  padding: 10px 14px !important;
+}
+
+.popover-body {
+  color: var(--text-2) !important;
+  padding: 12px 14px !important;
+}
+
+.dropdown-menu {
+  background-color: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+  box-shadow: var(--shadow-lg) !important;
+  padding: 6px !important;
+}
+
+.dropdown-item {
+  color: var(--text-2) !important;
+  border-radius: 6px !important;
+  padding: 8px 12px !important;
+  font-size: 13px !important;
+  transition: var(--transition) !important;
+}
+
+.dropdown-item:hover {
+  background-color: var(--surface-hover) !important;
+  color: var(--text) !important;
+}
+
+.dropdown-item.active,
+.dropdown-item:active {
+  background-color: rgba(14,165,233,0.12) !important;
+  color: var(--primary-light) !important;
+}
+
+.dropdown-divider {
+  border-top: 1px solid var(--border) !important;
+  margin: 6px 4px !important;
+}
+
+/* ==========================================================================
+   T3: FORM ENHANCEMENTS
+   ========================================================================== */
+
+.form-section {
+  background-color: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+  padding: 20px !important;
+  margin-bottom: 16px !important;
+}
+
+.form-section .section-head {
+  color: var(--text) !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  margin-bottom: 16px !important;
+  padding-bottom: 10px !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+.form-group label {
+  color: var(--text-2) !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  margin-bottom: 6px !important;
+}
+
+.form-control {
+  background-color: var(--surface-hover) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 8px !important;
+  color: var(--text) !important;
+  font-size: 13px !important;
+  padding: 8px 12px !important;
+  transition: var(--transition) !important;
+}
+
+.form-control:focus {
+  background-color: var(--surface-hover) !important;
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 3px rgba(14,165,233,0.15) !important;
+  outline: none !important;
+  color: var(--text) !important;
+}
+
+.form-control::placeholder {
+  color: var(--text-3) !important;
+  opacity: 0.7 !important;
+}
+
+.form-control:disabled,
+.form-control[readonly] {
+  background-color: var(--surface-active) !important;
+  color: var(--text-3) !important;
+  cursor: not-allowed !important;
+}
+
+select.form-control {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 10px center !important;
+  padding-right: 30px !important;
+  appearance: none !important;
+}
+
+textarea.form-control {
+  resize: vertical !important;
+  min-height: 80px !important;
+}
+
+.input-with-feedback .badge,
+.frappe-control .control-input .badge {
+  background-color: rgba(14,165,233,0.12) !important;
+  color: var(--primary-light) !important;
+  border-radius: 6px !important;
+  font-weight: 500 !important;
+  font-size: 11px !important;
+  padding: 3px 8px !important;
+}
+
+/* ==========================================================================
+   T4: LIST VIEW ENHANCEMENTS
+   ========================================================================== */
+
+.list-row-container {
+  background-color: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
   margin-bottom: 4px !important;
-  margin-top: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  transition: var(--transition) !important;
 }
 
-.page-head .page-title {
-  margin-top: 0 !important;
-  line-height: 1.2 !important;
+.list-row-container:hover {
+  background-color: var(--surface-hover) !important;
+  border-color: rgba(14,165,233,0.2) !important;
 }
 
-.page-head .container {
-  padding-top: 4px !important;
-  padding-bottom: 4px !important;
+.list-row {
+  padding: 12px 16px !important;
+  color: var(--text) !important;
+  font-size: 13px !important;
 }
 
-/* Ensure no minimum height is forcing the header to be too tall */
-.page-head, .page-header, .page-head .container {
-  min-height: 0 !important;
-  height: 48px !important;
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
+.list-row-head {
+  background-color: var(--surface-hover) !important;
+  border-bottom: 1px solid var(--border) !important;
+  font-weight: 600 !important;
+  font-size: 11px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em !important;
+  color: var(--text-2) !important;
+  padding: 10px 16px !important;
 }
 
-.page-head .page-head-content {
-  display: flex !important;
-  align-items: center !important;
-  height: 100% !important;
+.list-row .list-row-subject {
+  color: var(--text) !important;
+  font-weight: 500 !important;
 }
 
-.page-head .breadcrumb-area {
-  display: none !important; /* Hide breadcrumbs to save space if requested */
+.list-row .text-muted {
+  color: var(--text-3) !important;
+}
+
+.filter-area {
+  background-color: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+  padding: 12px 16px !important;
+  margin-bottom: 12px !important;
+}
+
+.filter-area .filter-label {
+  color: var(--text-2) !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+}
+
+.filter-area .filter-field input {
+  background-color: var(--surface-hover) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 6px !important;
+  color: var(--text) !important;
+}
+
+/* ==========================================================================
+   T7: TOAST / NOTIFICATION ENHANCEMENTS
+   ========================================================================== */
+
+.toast-container .toast {
+  background-color: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+  box-shadow: var(--shadow-lg) !important;
+  color: var(--text) !important;
+}
+
+.toast-container .toast .toast-header {
+  background-color: var(--surface-hover) !important;
+  border-bottom: 1px solid var(--border) !important;
+  color: var(--text) !important;
+  font-weight: 500 !important;
+}
+
+.toast-container .toast .toast-body {
+  color: var(--text-2) !important;
+}
+
+.toast-container .toast.toast-success {
+  border-color: rgba(22,163,74,0.3) !important;
+}
+
+.toast-container .toast.toast-error {
+  border-color: rgba(220,38,38,0.3) !important;
+}
+
+.toast-container .toast.toast-warning {
+  border-color: rgba(217,119,6,0.3) !important;
+}
+
+.toast-container .toast.toast-info {
+  border-color: rgba(14,165,233,0.3) !important;
+}
+
+/* ==========================================================================
+   T8: KANBAN ENHANCEMENTS
+   ========================================================================== */
+
+.kanban-board {
+  background-color: var(--bg) !important;
+}
+
+.kanban-column {
+  background-color: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+  margin-right: 12px !important;
+}
+
+.kanban-column-header {
+  background-color: var(--surface-hover) !important;
+  border-bottom: 1px solid var(--border) !important;
+  padding: 12px 16px !important;
+  font-weight: 600 !important;
+  color: var(--text) !important;
+  font-size: 13px !important;
+}
+
+.kanban-card {
+  background-color: var(--surface-hover) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 8px !important;
+  padding: 12px !important;
+  margin: 8px !important;
+  transition: var(--transition) !important;
+  cursor: pointer !important;
+}
+
+.kanban-card:hover {
+  background-color: var(--surface-active) !important;
+  border-color: rgba(14,165,233,0.2) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: var(--shadow-sm) !important;
+}
+
+.kanban-card .kanban-title {
+  color: var(--text) !important;
+  font-weight: 500 !important;
+  font-size: 13px !important;
+}
+
+.kanban-card .kanban-text {
+  color: var(--text-2) !important;
+  font-size: 12px !important;
+}
+
+.kanban-add-card {
+  background-color: transparent !important;
+  border: 1px dashed var(--border) !important;
+  color: var(--text-3) !important;
+  border-radius: 8px !important;
+  padding: 10px !important;
+  margin: 8px !important;
+  text-align: center !important;
+  transition: var(--transition) !important;
+  cursor: pointer !important;
+}
+
+.kanban-add-card:hover {
+  border-color: var(--primary) !important;
+  color: var(--primary) !important;
+  background-color: rgba(14,165,233,0.05) !important;
+}
+
+/* ==========================================================================
+   T9: REPORT VIEW ENHANCEMENTS
+   ========================================================================== */
+
+.report-wrapper {
+  background-color: var(--bg) !important;
+}
+
+.report-view {
+  background-color: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+  padding: 20px !important;
+}
+
+.report-header {
+  background-color: var(--surface) !important;
+  border-bottom: 1px solid var(--border) !important;
+  padding: 16px 20px !important;
+}
+
+.report-header h2 {
+  color: var(--text) !important;
+  font-size: 18px !important;
+  font-weight: 600 !important;
+}
+
+.report-summary {
+  background-color: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+  padding: 16px !important;
+  margin-bottom: 16px !important;
+}
+
+.report-summary-item {
+  color: var(--text-2) !important;
+  font-size: 13px !important;
+}
+
+.report-summary-item .value {
+  color: var(--primary) !important;
+  font-weight: 600 !important;
+  font-size: 20px !important;
+}
+
+.report-filter-area {
+  background-color: var(--surface-hover) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+  padding: 16px !important;
+  margin-bottom: 16px !important;
+}
+
+/* ==========================================================================
+   T11: INJECTED / DYNAMIC CONTENT
+   ========================================================================== */
+
+.email-composition .ql-editor {
+  background-color: var(--surface-hover) !important;
+  color: var(--text) !important;
+}
+
+.email-composition .ql-toolbar {
+  background-color: var(--surface) !important;
+  border-color: var(--border) !important;
+}
+
+.timeline-item {
+  border-left: 2px solid var(--border) !important;
+  padding-left: 20px !important;
+  margin-left: 8px !important;
+}
+
+.timeline-item .timeline-dot {
+  background-color: var(--surface-active) !important;
+  border: 2px solid var(--border) !important;
+}
+
+.timeline-item.active .timeline-dot {
+  background-color: var(--primary) !important;
+  border-color: var(--primary) !important;
+}
+
+.timeline-item .timeline-content {
+  background-color: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+  padding: 12px 16px !important;
+}
+
+.timeline-item .timeline-content .text-color {
+  color: var(--text) !important;
+}
+
+.activity-feed .activity-item {
+  border-bottom: 1px solid var(--border) !important;
+  padding: 10px 0 !important;
+}
+
+.activity-feed .activity-item .activity-message {
+  color: var(--text-2) !important;
+  font-size: 13px !important;
+}
+
+.activity-feed .activity-item .activity-time {
+  color: var(--text-3) !important;
+  font-size: 11px !important;
+}
+
+/* ==========================================================================
+   GLOBAL FIXES & SAFETY NETS
+   ========================================================================== */
+
+hr, .divider {
+  border-color: var(--border) !important;
+  border-top: 1px solid var(--border) !important;
+}
+
+table, .table, .table-bordered {
+  border-color: var(--border) !important;
+}
+
+.table th, .table td {
+  border-color: var(--border) !important;
+}
+
+.table thead th {
+  background-color: var(--surface-hover) !important;
+  color: var(--text) !important;
+  font-weight: 600 !important;
+  font-size: 11px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.03em !important;
+}
+
+.table tbody tr:hover {
+  background-color: var(--surface-hover) !important;
+}
+
+.card, .panel, .panel-default {
+  background-color: var(--surface) !important;
+  border-color: var(--border) !important;
+}
+
+.card-header, .panel-heading {
+  background-color: var(--surface-hover) !important;
+  border-bottom-color: var(--border) !important;
+  color: var(--text) !important;
+}
+
+.nav-tabs {
+  border-bottom-color: var(--border) !important;
+}
+
+.nav-tabs .nav-link {
+  color: var(--text-2) !important;
+  border-color: transparent !important;
+}
+
+.nav-tabs .nav-link:hover {
+  color: var(--text) !important;
+  border-color: transparent !important;
+}
+
+.nav-tabs .nav-link.active {
+  color: var(--text) !important;
+  background-color: transparent !important;
+  border-color: var(--primary) !important;
+  border-bottom-color: var(--surface) !important;
+}
+
+.breadcrumb {
+  background-color: transparent !important;
+}
+
+.breadcrumb-item a {
+  color: var(--primary) !important;
+}
+
+.breadcrumb-item.active {
+  color: var(--text-2) !important;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+  color: var(--text-3) !important;
+}
+
+.pagination .page-link {
+  background-color: var(--surface) !important;
+  border-color: var(--border) !important;
+  color: var(--text-2) !important;
+}
+
+.pagination .page-link:hover {
+  background-color: var(--surface-hover) !important;
+  color: var(--text) !important;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: var(--primary) !important;
+  border-color: var(--primary) !important;
+  color: #ffffff !important;
+}
+
+.pagination .page-item.disabled .page-link {
+  background-color: var(--surface-active) !important;
+  color: var(--text-3) !important;
+}
+
+.progress {
+  background-color: var(--surface-hover) !important;
+  border-radius: 4px !important;
+}
+
+.progress-bar {
+  background-color: var(--primary) !important;
+}
+
+.progress-bar-success { background-color: var(--success) !important; }
+.progress-bar-danger  { background-color: var(--danger) !important; }
+.progress-bar-warning { background-color: var(--warning) !important; }
+
+.tooltip-inner {
+  background-color: var(--surface-active) !important;
+  color: var(--text) !important;
+  border-radius: 6px !important;
+  font-size: 12px !important;
+}
+
+.tooltip .arrow::before {
+  border-top-color: var(--surface-active) !important;
+}
+
+@media print {
+  html, body {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+  }
+  .body-sidebar-container,
+  .navbar {
+    display: none !important;
+  }
 }

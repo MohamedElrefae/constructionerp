@@ -1,0 +1,643 @@
+/* ==========================================================================
+   Construction Theme for Frappe v16 — COMPLETE CSS Variable Bridge
+   Overrides ALL 591 v16 Espresso variables with Construction tokens
+   Generated from live audit of constructionsene.frappe.cloud
+   Load BEFORE base.css in hooks.py
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Construction Token Reference (defined in base.css)
+   --bg: #0b1020              --surface-hover: #334155
+   --surface: #1e293b         --surface-active: #475569
+   --text: #f8fafc            --primary: #0ea5e9
+   --text-2: #94a3b8          --primary-light: #38bdf8
+   --text-3: #64748b          --border: rgba(148,163,184,0.18)
+   --heading: #f1f5f9         --shadow: 0 4px 24px rgba(2,8,20,0.45)
+   --danger: #ef4444          --success: #22c55e
+   --danger-light: rgba(220,38,38,0.15)   --warning: #f59e0b
+   --success-light: rgba(22,163,74,0.15)  --radius: 10px
+   -------------------------------------------------------------------------- */
+
+/* ==========================================================================
+   DARK THEME — Complete Override of All 591 v16 Espresso Variables
+   ========================================================================== */
+[data-theme="dark"] {
+
+  /* === T1: CORE TEXT (verified from audit) === */
+  --text-color:              var(--text) !important;
+  --text-muted:              var(--text-2) !important;
+  --text-light:              var(--text-3) !important;
+  --heading-color:           var(--heading) !important;
+  --text-dark:               var(--text) !important;
+  --text-neutral:            var(--text) !important;
+  --primary-color:           var(--text) !important;
+  --disabled-text-color:     #475569 !important;
+  --placeholder-color:       var(--text-3) !important;
+
+  --text-on-blue:            #f7fbfd !important;
+  --text-on-cyan:            #e0f8ff !important;
+  --text-on-dark-blue:       #c9e7fc !important;
+  --text-on-dark-gray:       #ededed !important;
+  --text-on-darkgrey:        #ededed !important;
+  --text-on-gray:            #f8f8f8 !important;
+  --text-on-grey:            #f8f8f8 !important;
+  --text-on-green:           #e4f5e9 !important;
+  --text-on-light-blue:      #f7fbfd !important;
+  --text-on-light-gray:      #f3f3f3 !important;
+  --text-on-orange:          #fff1e7 !important;
+  --text-on-pink:            #feeef8 !important;
+  --text-on-purple:          #f9f0ff !important;
+  --text-on-red:             #fff7f7 !important;
+  --text-on-yellow:          #fffcef !important;
+
+  /* === T1: CORE BACKGROUND === */
+  --bg-color:                var(--bg) !important;
+  --fg-color:                var(--surface) !important;
+  --fg-hover-color:          var(--surface-hover) !important;
+  --card-bg:                 var(--surface) !important;
+  --card-hover-border:       var(--success) !important;
+  --body-background:         var(--bg) !important;
+
+  /* === T2: PAGE / SURFACE COLORS === */
+  --modal-bg:                var(--surface) !important;
+  --modal-shadow:            var(--shadow) !important;
+  --popover-bg:              var(--surface) !important;
+  --toast-bg:                var(--surface) !important;
+  --dropdown-bg:             var(--surface) !important;
+  --dropdown-hover-bg:       var(--surface-hover) !important;
+  --tooltip-bg:              var(--surface-active) !important;
+  --awesomebar-focus-bg:     var(--surface-hover) !important;
+  --awesomplete-hover-bg:    var(--surface-hover) !important;
+
+  /* === T3: FORM / INPUT === */
+  --control-bg:              var(--surface-hover) !important;
+  --control-bg-on-gray:      var(--surface-hover) !important;
+  --disabled-control-bg:     var(--surface-hover) !important;
+  --input-bg:                var(--surface-hover) !important;
+  --input-disabled-bg:       var(--surface-active) !important;
+  --input-focus-border-color: var(--primary) !important;
+  --input-placeholder-color: var(--text-3) !important;
+
+  /* === BUTTONS: Default === */
+  --btn-default-color:       var(--text) !important;
+  --btn-default-bg:          var(--surface-hover) !important;
+  --btn-default-hover-bg:    var(--surface-active) !important;
+  --btn-ghost-hover-bg:      var(--surface-hover) !important;
+  --btn-group-border-color:  var(--text-3) !important;
+  --btn-height:              28px !important;
+  --btn-primary:             #e2e2e2 !important;
+  --btn-shadow:              0px .5px 0px 0px rgba(0,0,0,.1), 0px 2px 4px rgba(0,0,0,.1) !important;
+
+  /* === BUTTONS: Brand === */
+  --primary:                 var(--primary) !important;
+  --primary-dark:            #0369a1 !important;
+  --primary-hover:           #0284c7 !important;
+  --primary-light:           rgba(14,165,233,0.15) !important;
+  --brand-color:             var(--primary) !important;
+
+  /* === ACCENT === */
+  --accent:                  var(--warning) !important;
+  --accent-hover:            #d97706 !important;
+  --accent-light:            rgba(245,158,11,0.15) !important;
+
+  /* === STATUS COLORS === */
+  --success:                 #16a34a !important;
+  --success-light:           rgba(22,163,74,0.15) !important;
+  --danger:                  #dc2626 !important;
+  --danger-hover:            #b91c1c !important;
+  --danger-light:            rgba(220,38,38,0.15) !important;
+  --warning:                 #ffc107 !important;
+  --info:                    #17a2b8 !important;
+  --secondary:               #7c7c7c !important;
+  --dark:                    #383838 !important;
+  --light:                   #f3f3f3 !important;
+
+  /* === SEMANTIC BACKGROUNDS === */
+  --error-bg:                #941f1f !important;
+  --error-border:            #eb9091 !important;
+  --bg-blue:                 #007be0 !important;
+  --bg-cyan:                 #125c73 !important;
+  --bg-dark-blue:            #004880 !important;
+  --bg-dark-gray:            #64748b !important;
+  --bg-darkgrey:             #7c7c7c !important;
+  --bg-gray:                 #7c7c7c !important;
+  --bg-green:                #173b2c !important;
+  --bg-grey:                 #7c7c7c !important;
+  --bg-light-blue:           #007be0 !important;
+  --bg-light-gray:           #232323 !important;
+  --bg-orange:               #bd3e0c !important;
+  --bg-pink:                 #9c2671 !important;
+  --bg-purple:               #6e399d !important;
+  --bg-red:                  #cc2929 !important;
+  --bg-yellow:               #ab6e05 !important;
+  --bg-2:                    #111827 !important;
+
+  /* === T4: LIST VIEW === */
+  --list-row-height:         30px !important;
+  --list-checkbox-padding:   calc((30px - 14px) / 2) !important;
+  --row-focus-ring:          var(--primary) !important;
+  --row-hover-bg:            rgba(14,165,233,0.06) !important;
+  --row-hover-border:        rgba(14,165,233,0.25) !important;
+
+  /* === T5: GRID / DATATABLE === */
+  --dt-border-color:         var(--border) !important;
+  --dt-border-radius:        3px !important;
+  --dt-cell-bg:              transparent !important;
+  --dt-header-cell-bg:       var(--surface-hover) !important;
+  --dt-light-bg:             rgba(30,41,59,0.4) !important;
+  --dt-light-red:            rgba(220,38,38,0.2) !important;
+  --dt-light-yellow:         rgba(245,158,11,0.2) !important;
+  --dt-no-data-message-width: 90px !important;
+  --dt-orange:               #f59e0b !important;
+  --dt-primary-color:        #0ea5e9 !important;
+  --dt-selection-highlight-color: rgba(14,165,233,0.12) !important;
+  --dt-spacer-1:             .25rem !important;
+  --dt-spacer-2:             .5rem !important;
+  --dt-spacer-3:             1rem !important;
+  --dt-text-color:           var(--text) !important;
+  --dt-text-light:           var(--text-3) !important;
+  --dt-focus-border-width:   2px !important;
+
+  /* === T6: SIDEBAR (v16 Espresso) === */
+  --sidebar-bg:              var(--bg) !important;
+  --sidebar-border-color:    var(--border) !important;
+  --sidebar-width:           220px !important;
+  --sidebar-hover-color:     var(--surface-hover) !important;
+  --sidebar-select-color:    var(--primary) !important;
+  --sidebar-active-color:    rgba(14,165,233,0.12) !important;
+  --sidebar-card-button-bg-color:   rgba(14,165,233,0.12) !important;
+  --sidebar-card-button-color:      var(--primary-light) !important;
+  --sidebar-card-button-outline:    var(--primary) !important;
+
+  /* === T7: NAVBAR === */
+  --navbar-bg:               var(--surface) !important;
+  --navbar-height:           60px !important;
+
+  /* === T8: KANBAN === */
+  --kanban-card-bg:               var(--surface-hover) !important;
+  --kanban-card-hover-bg:         var(--surface-active) !important;
+  --kanban-column-bg:             var(--surface) !important;
+  --kanban-new-card-bg:           var(--surface-hover) !important;
+  --kanban-new-card-hover-bg:     var(--surface-active) !important;
+
+  /* === T9: SHADOWS === */
+  --shadow:                  0 8px 24px rgba(0,0,0,.48) !important;
+  --shadow-sm:               0 2px 8px rgba(0,0,0,.40) !important;
+  --shadow-md:               0px 0px 1px rgba(0,0,0,.12), 0px .5px 2px rgba(0,0,0,.15), 0px 2px 3px rgba(0,0,0,.16) !important;
+  --shadow-lg:               0 16px 48px rgba(0,0,0,.56) !important;
+  --shadow-xl:               0px 0px 1px rgba(0,0,0,.19), 0px 1px 2px rgba(0,0,0,.07), 0px 6px 15px -5px rgba(0,0,0,.11) !important;
+  --shadow-2xl:              0px 0px 1px rgba(0,0,0,.2), 0px 1px 3px rgba(0,0,0,.05), 0px 10px 24px -3px rgba(0,0,0,.1) !important;
+  --shadow-xs:               rgba(0,0,0,.05) 0px .5px 0px 0px, rgba(0,0,0,.05) 0px 2px 4px 0px !important;
+  --shadow-base:             0px 4px 8px rgba(0,0,0,.08), 0px 0px 4px rgba(0,0,0,.12) !important;
+  --shadow-inset:            inset 0 1px 2px rgba(0,0,0,.2) !important;
+  --card-shadow:             0 2px 8px rgba(0,0,0,.40) !important;
+  --modal-shadow:            0px 0px 1px rgba(0,0,0,.12), 0px .5px 2px rgba(0,0,0,.15), 0px 2px 3px rgba(0,0,0,.16) !important;
+  --drop-shadow:             0px .5px 0px rgba(0,0,0,.05), 0px 2px 4px rgba(0,0,0,.05) !important;
+  --custom-shadow-sm:        0px 1px 4px rgba(0,0,0,.1) !important;
+
+  /* === T10: BORDERS === */
+  --border-color:            var(--border) !important;
+  --border-hover:            rgba(148,163,184,0.28) !important;
+  --border-primary:          #ededed !important;
+  --dark-border-color:       #7c7c7c !important;
+  --table-border-color:      var(--border) !important;
+  --divider:                 rgba(148,163,184,0.10) !important;
+  --divider-color:           rgba(148,163,184,0.18) !important;
+
+  /* === T11: CHARTS === */
+  --charts-axis-line-color:          var(--border) !important;
+  --charts-dataset-circle-stroke:    var(--surface) !important;
+  --charts-dataset-circle-stroke-width: 2px !important;
+  --charts-label-color:              var(--text-2) !important;
+  --charts-legend-label:             var(--text-2) !important;
+  --charts-legend-value:             var(--text-2) !important;
+  --charts-stroke-width:             2px !important;
+  --charts-tooltip-bg:               var(--surface) !important;
+  --charts-tooltip-label:            var(--text-2) !important;
+  --charts-tooltip-title:            var(--text) !important;
+  --charts-tooltip-value:            var(--text) !important;
+
+  /* === T12: CODE BLOCKS === */
+  --code-block-bg:           var(--surface) !important;
+  --code-block-text:         var(--text-2) !important;
+
+  /* === T13: TIMELINE === */
+  --timeline-badge-bg:       var(--surface) !important;
+  --timeline-badge-color:    var(--text-3) !important;
+  --timeline-content-max-width: 700px !important;
+  --timeline-item-bottom-margin: 10px !important;
+  --timeline-item-icon-size: 30px !important;
+  --timeline-item-left-margin: 20px !important;
+  --timeline-left-padding:   calc(30px + 30px / 2) !important;
+
+  /* === T14: SCROLLBAR === */
+  --scrollbar-thumb-color:   var(--surface-active) !important;
+  --scrollbar-track-color:   transparent !important;
+
+  /* === T15: AVATARS === */
+  --avatar-frame-bg:         #232323 !important;
+  --avatar-frame-border:     var(--text-3) !important;
+  --avatar-frame-color:      #7c7c7c !important;
+
+  /* === T16: PROGRESS === */
+  --progress-bar-bg:         var(--surface-hover) !important;
+
+  /* === T17: HIGHLIGHT === */
+  --highlight-color:         var(--text-3) !important;
+  --highlight-shadow:        1px 1px 10px #004880, 0px 0px 4px #0ea5e9 !important;
+
+  /* === T18: SKELETON / LOADING === */
+  --skeleton-bg:             var(--surface-hover) !important;
+
+  /* === T19: TOGGLE / SWITCH === */
+  --switch-bg:               var(--text-3) !important;
+
+  /* === T20: CHECKBOX === */
+  --checkbox-color:          #ffffff !important;
+  --checkbox-focus-shadow:   0px 0px 0px 2px rgba(14,165,233,0.3) !important;
+  --checkbox-gradient:       linear-gradient(180deg, #ffffff -124.51%, #ffffff 100%) !important;
+  --checkbox-disabled-gradient: linear-gradient(180deg, #7c7c7c -124.51%, #7c7c7c 100%) !important;
+  --checkbox-size:           14px !important;
+  --checkbox-right-margin:   5px !important;
+
+  /* === T21: ICONS === */
+  --icon-fill:               transparent !important;
+  --icon-fill-bg:            var(--surface) !important;
+  --icon-stroke:             #e2e2e2 !important;
+
+  /* === T22: FOCUS RINGS === */
+  --focus-blue:              0px 0px 0px 2px rgba(14,165,233,0.4) !important;
+  --focus-default:           0px 0px 0px 2px rgba(148,163,184,0.3) !important;
+  --focus-green:             0px 0px 0px 2px rgba(22,163,74,0.4) !important;
+  --focus-red:               0px 0px 0px 2px rgba(220,38,38,0.4) !important;
+  --focus-yellow:            0px 0px 0px 2px rgba(245,158,11,0.4) !important;
+
+  /* === T23: FORM SIZING === */
+  --input-height:            28px !important;
+  --input-padding:           6px 8px !important;
+  --form-sidebar-width:      277px !important;
+  --form-sidebar-image-width: 80px !important;
+
+  /* === T24: RADIUS === */
+  --border-radius:           8px !important;
+  --border-radius-sm:        8px !important;
+  --border-radius-md:        10px !important;
+  --border-radius-lg:        12px !important;
+  --border-radius-xl:        16px !important;
+  --border-radius-2xl:       20px !important;
+  --border-radius-full:      999px !important;
+  --border-radius-tiny:      4px !important;
+  --radius:                  10px !important;
+  --radius-sm:               6px !important;
+  --radius-md:               10px !important;
+  --radius-lg:               16px !important;
+  --radius-xl:               24px !important;
+  --radius-full:             9999px !important;
+
+  /* === T25: SUBTLE / UTILITY === */
+  --subtle-accent:           var(--surface-hover) !important;
+  --subtle-fg:               var(--text-2) !important;
+  --surface-selected:        var(--surface-active) !important;
+
+  /* === T26: GRID SIZING === */
+  --grid-padding:            10px 8px !important;
+
+  /* === T27: PAGE SIZING === */
+  --page-bottom-margin:      60px !important;
+  --page-head-height:        45px !important;
+  --page-max-width:          900px !important;
+
+  /* === T28: PADDING/MARGIN SCALE === */
+  --padding-xs:              5px !important;
+  --padding-sm:              7px !important;
+  --padding-md:              15px !important;
+  --padding-lg:              20px !important;
+  --padding-xl:              30px !important;
+  --padding-2xl:             40px !important;
+  --margin-xs:               5px !important;
+  --margin-sm:               10px !important;
+  --margin-md:               15px !important;
+  --margin-lg:               20px !important;
+  --margin-xl:               30px !important;
+  --margin-2xl:              40px !important;
+
+  /* === T29: MENU === */
+  --menu-width:              200px !important;
+  --menu-icon-size:          16px !important;
+  --dropdown-padding:        4px 8px !important;
+
+  /* === T30: BREAKPOINTS (keep v16 defaults) === */
+  --xs-width:                0 !important;
+  --sm-width:                567px !important;
+  --md-width:                768px !important;
+  --lg-width:                992px !important;
+  --xl-width:                1200px !important;
+  --xxl-width:               1440px !important;
+  --breakpoint-xs:           0 !important;
+  --breakpoint-sm:           576px !important;
+  --breakpoint-md:           768px !important;
+  --breakpoint-lg:           992px !important;
+  --breakpoint-xl:           1200px !important;
+  --breakpoint-2xl:          1440px !important;
+
+  /* === T31: TRANSITIONS === */
+  --t:                       0.2s cubic-bezier(0.4,0,0.2,1) !important;
+  --t-fast:                  0.15s ease !important;
+  --t-slow:                  0.3s cubic-bezier(0.4,0,0.2,1) !important;
+  --transition:              var(--t) !important;
+
+  /* === T32: CUSTOM STATUS === */
+  --custom-status:           0px 0px 0px 1.5px var(--surface) !important;
+
+  /* === T33: NUMBER CARD === */
+  --number-card-padding:     8px 8px 8px 12px !important;
+
+  /* === T34: PLYR (video player) === */
+  --plyr-color-main:         var(--primary) !important;
+
+  /* === T35: BLACK OVERLAYS === */
+  --black-overlay-50:        rgba(0,0,0,.09) !important;
+  --black-overlay-100:       rgba(0,0,0,.18) !important;
+  --black-overlay-200:       rgba(0,0,0,.27) !important;
+  --black-overlay-300:       rgba(0,0,0,.36) !important;
+  --black-overlay-400:       rgba(0,0,0,.45) !important;
+  --black-overlay-500:       rgba(0,0,0,.54) !important;
+  --black-overlay-600:       rgba(0,0,0,.63) !important;
+  --black-overlay-700:       rgba(0,0,0,.72) !important;
+  --black-overlay-800:       rgba(0,0,0,.81) !important;
+  --black-overlay-900:       rgba(0,0,0,.9) !important;
+
+  /* === T36: WHITE OVERLAYS === */
+  --white-overlay-50:        rgba(255,255,255,.09) !important;
+  --white-overlay-100:       rgba(255,255,255,.18) !important;
+  --white-overlay-200:       rgba(255,255,255,.27) !important;
+  --white-overlay-300:       rgba(255,255,255,.36) !important;
+  --white-overlay-400:       rgba(255,255,255,.45) !important;
+  --white-overlay-500:       rgba(255,255,255,.54) !important;
+  --white-overlay-600:       rgba(255,255,255,.63) !important;
+  --white-overlay-700:       rgba(255,255,255,.72) !important;
+  --white-overlay-800:       rgba(255,255,255,.81) !important;
+  --white-overlay-900:       rgba(255,255,255,.9) !important;
+
+  /* === T37: NEUTRAL === */
+  --neutral:                 #000000 !important;
+  --neutral-black:           #000000 !important;
+  --neutral-white:           #ffffff !important;
+  --invert-neutral:          #ffffff !important;
+
+  /* === T38: DIFF COLORS === */
+  --diff-added:              #16794c !important;
+  --diff-changed:            #005ca3 !important;
+  --diff-removed:            #941f1f !important;
+
+  /* === T39: APPRECIATION/CRITICISM === */
+  --appreciation-bg:         #e4f5e9 !important;
+  --appreciation-color:      #30a66d !important;
+  --criticism-bg:            #fff0f0 !important;
+  --criticism-color:         #cc2929 !important;
+
+  /* === T40: USER MENTION === */
+  --user-mention-bg-color:   var(--surface) !important;
+  --group-mention-bg-color:  #6e399d !important;
+
+  /* === T41: FOLDER === */
+  --folder-icon-background-color: #2b2b2b !important;
+  --folder-thumbnail-icon-height: 16px !important;
+
+  /* === T42: DESKTOP === */
+  --desktop-blur:            blur(10.2px) !important;
+  --desktop-icon-dimension:  54px !important;
+  --desktop-icon-line-height: 115% !important;
+  --desktop-modal-height:    450px !important;
+  --desktop-modal-radius:    30px !important;
+  --desktop-modal-width:     590px !important;
+  --desktop-navbar-height:   52px !important;
+
+  /* === T43: GRADIENTS === */
+  --linear-black:            linear-gradient(to bottom, rgba(46,46,46,.18) 0%, rgba(36,36,36,.14) 100%) !important;
+  --linear-blue:             linear-gradient(to bottom, rgba(17,142,245,.067) 0%, rgba(7,127,247,.029) 100%) !important;
+
+  /* === T44: SURFACE COLORS (v16 semantic) === */
+  --surface-color:           var(--surface) !important;
+  --surface-cards:           var(--surface) !important;
+  --surface-menu-bar:        var(--bg) !important;
+  --surface-modal:           var(--surface-hover) !important;
+  --surface-white:           var(--bg) !important;
+
+  --surface-gray-1:          #232323 !important;
+  --surface-gray-2:          #2b2b2b !important;
+  --surface-gray-3:          #343434 !important;
+  --surface-gray-4:          #424242 !important;
+  --surface-gray-5:          #afafaf !important;
+  --surface-gray-6:          #d4d4d4 !important;
+  --surface-gray-7:          #f8f8f8 !important;
+
+  --surface-blue-1:          #0e2037 !important;
+  --surface-blue-2:          #052b53 !important;
+  --surface-blue-3:          #3294e3 !important;
+  --surface-cyan-1:          #0b252d !important;
+  --surface-green-1:         #0b2e1c !important;
+  --surface-green-2:         #0a3f27 !important;
+  --surface-green-3:         #1ba964 !important;
+  --surface-red-1:           #361515 !important;
+  --surface-red-2:           #361515e6 !important;
+  --surface-red-3:           #521515e6 !important;
+  --surface-red-4:           #681916 !important;
+  --surface-red-5:           #e43838 !important;
+  --surface-red-6:           #c12020 !important;
+  --surface-red-7:           #901818 !important;
+  --surface-amber-1:         #371e06 !important;
+  --surface-amber-2:         #4b2606 !important;
+  --surface-amber-3:         #e37d00 !important;
+  --surface-orange-1:        #401f07cc !important;
+  --surface-pink-1:          #471432cc !important;
+  --surface-violet-1:        #221c42 !important;
+
+  /* === T45: OUTLINE COLORS === */
+  --outline-gray-1:          #232323 !important;
+  --outline-gray-2:          #343434 !important;
+  --outline-gray-3:          #424242 !important;
+  --outline-gray-4:          #808080 !important;
+  --outline-gray-5:          #ededed !important;
+  --outline-gray-modals:     #343434 !important;
+  --outline-blue-1:          #052b53 !important;
+  --outline-green-1:         #0a3f27 !important;
+  --outline-green-2:         #035831 !important;
+  --outline-red-1:           #521515 !important;
+  --outline-red-2:           #681916 !important;
+  --outline-red-3:           #901818 !important;
+  --outline-amber-1:         #4b2606 !important;
+  --outline-amber-2:         #603007 !important;
+  --outline-orange-1:        #683108 !important;
+  --outline-white:           #1c1c1c !important;
+
+  /* === T46: ARROW SVGs === */
+  --left-arrow-svg: url("data:image/svg+xml;utf8,<svg width='6' height='10' viewBox='0 0 6 10' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M5 9L1 5L5 1' stroke='%2394a3b8' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg>") !important;
+  --right-arrow-svg: url("data:image/svg+xml;utf8,<svg width='6' height='10' viewBox='0 0 6 10' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M1 9L5 5L1 1' stroke='%2394a3b8' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg>") !important;
+
+  /* === T47: ANGULAR GRADIENTS === */
+  --angular-black:   conic-gradient(rgba(56,56,56,.22) 72.38%, rgba(56,56,56,.22) 99.87%) !important;
+  --angular-blue:    conic-gradient(rgba(0,110,219,0) 72.38%, rgba(0,110,219,0) 99.87%) !important;
+  --angular-green:   conic-gradient(rgba(23,117,75,.092) 72.38%, rgba(23,117,75,.092) 99.87%) !important;
+  --angular-red:     conic-gradient(rgba(205,41,41,.804) 72.38%, rgba(205,41,41,.804) 99.87%) !important;
+  --angular-white:   conic-gradient(rgba(255,255,255,1) 72.38%, rgba(255,255,255,1) 99.87%) !important;
+
+  /* === T48: INK COLORS (dark mode inverted) === */
+  --ink-white:               #0f0f0f !important;
+  --ink-gray-1:              #232323 !important;
+  --ink-gray-2:              #424242 !important;
+  --ink-gray-3:              #717171 !important;
+  --ink-gray-4:              #717171 !important;
+  --ink-gray-5:              #808080 !important;
+  --ink-gray-6:              #999999 !important;
+  --ink-gray-7:              #afafaf !important;
+  --ink-gray-8:              #d4d4d4 !important;
+  --ink-gray-9:              #f8f8f8 !important;
+  --ink-blue-1:              #f2f9ff !important;
+  --ink-blue-2:              #3294e3 !important;
+  --ink-blue-3:              #5aaef2 !important;
+  --ink-blue-link:           #1580d8 !important;
+  --ink-green-1:             #f2fdf4 !important;
+  --ink-green-2:             #1ba964 !important;
+  --ink-green-3:             #58c08e !important;
+  --ink-red-1:               #fff7f7 !important;
+  --ink-red-2:               #681916 !important;
+  --ink-red-3:               #e43838 !important;
+  --ink-red-4:               #fc7474 !important;
+  --ink-amber-1:             #fdfaed !important;
+  --ink-amber-2:             #e37d00 !important;
+  --ink-amber-3:             #e79913 !important;
+  --ink-cyan-1:              #3cb8dc !important;
+  --ink-pink-1:              #e359ab !important;
+  --ink-violet-1:            #9d7cea !important;
+
+  /* === T49: DATE PICKER === */
+  --date-active-bg:          var(--text-3) !important;
+  --date-active-text:        #f3f3f3 !important;
+  --date-range-bg:           var(--text-3) !important;
+
+  /* === T50: TYPOGRAPHY SCALE === */
+  --font-stack:              "InterVariable", "Inter", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif !important;
+  --font-family-sans-serif:  -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important;
+  --font-family-monospace:   SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
+
+  --text-tiny:               11px !important;
+  --text-2xs:                12px !important;
+  --text-xs:                 12px !important;
+  --text-sm:                 13px !important;
+  --text-md:                 14px !important;
+  --text-base:               14px !important;
+  --text-lg:                 16px !important;
+  --text-xl:                 18px !important;
+  --text-2xl:                20px !important;
+  --text-3xl:                24px !important;
+  --text-4xl:                26px !important;
+  --text-5xl:                28px !important;
+  --text-6xl:                32px !important;
+  --text-7xl:                40px !important;
+  --text-8xl:                44px !important;
+  --text-9xl:                48px !important;
+  --text-10xl:               52px !important;
+  --text-11xl:               56px !important;
+  --text-12xl:               64px !important;
+
+  --text-line-height-3xl:    115% !important;
+  --text-line-height-4xl:    160% !important;
+  --text-line-height-7xl:    140% !important;
+  --text-line-height-12xl:   130% !important;
+  --text-line-height-14xl:   120% !important;
+  --para-line-height-2-xs:   160% !important;
+  --para-line-height-sm:     150% !important;
+  --para-line-height-2xl:    148% !important;
+  --para-line-height-3xl:    140% !important;
+
+  --weight-regular:          420 !important;
+  --weight-medium:           500 !important;
+  --weight-semibold:         600 !important;
+  --weight-bold:             700 !important;
+  --weight-black:            800 !important;
+
+  /* === T51: COLORS (v16 scale — mapped to Construction) === */
+  --blue:                    #007bff !important;
+  --indigo:                  #6610f2 !important;
+  --purple:                  #6f42c1 !important;
+  --pink:                    #e83e8c !important;
+  --red:                     #dc3545 !important;
+  --orange:                  #fd7e14 !important;
+  --yellow:                  #ffc107 !important;
+  --green:                   #28a745 !important;
+  --teal:                    #20c997 !important;
+  --cyan:                    #17a2b8 !important;
+  --gray:                    #7c7c7c !important;
+  --gray-dark:               #383838 !important;
+
+  /* === T52: THEME SURFACE COLORS === */
+  --surface:                 #1e293b !important;
+  --surface-active:          #475569 !important;
+  --surface-hover:           #334155 !important;
+
+  /* === T53: CONSTRUCTION THEME LEGACY (keep for compatibility) === */
+  --ct-accent-hover:         #449d48 !important;
+  --ct-accent-primary:       #4CAF50 !important;
+  --ct-body-bg:              #0a1a0c !important;
+  --ct-border-color:         #B4CD29 !important;
+  --ct-error:                #dc3545 !important;
+  --ct-navbar-bg:            #1a3a1e !important;
+  --ct-primary-btn-bg:       #29CD42 !important;
+  --ct-primary-btn-hover-bg: #24b83b !important;
+  --ct-primary-btn-text:     #ede8e8 !important;
+  --ct-secondary-btn-bg:     #4F9DD9 !important;
+  --ct-secondary-btn-hover-bg: #478dc3 !important;
+  --ct-secondary-btn-text:   #f2e6e6 !important;
+  --ct-sidebar-bg:           #0d1f10 !important;
+  --ct-success:              #28a745 !important;
+  --ct-surface-bg:           #112b15 !important;
+  --ct-text-primary:         #e8f5e9 !important;
+  --ct-text-secondary:       #faf7f7 !important;
+  --ct-warning:              #ffc107 !important;
+}
+
+/* ==========================================================================
+   GLOBAL OVERRIDES — Force theme regardless of data attribute state
+   ========================================================================== */
+
+html, body {
+  background-color: var(--bg-color, #0b1020) !important;
+  color: var(--text-color, #f8fafc) !important;
+}
+
+#body {
+  background-color: var(--bg-color, #0b1020) !important;
+}
+
+.page-container,
+.page-content,
+.content {
+  background-color: var(--bg-color, #0b1020) !important;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb-color, #475569) var(--scrollbar-track-color, transparent);
+}
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--scrollbar-track-color, transparent) !important; }
+::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb-color, #475569) !important; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-thumb-hover-color, #64748b) !important; }
+
+::selection {
+  background-color: rgba(14,165,233,0.3) !important;
+  color: var(--text-color, #f8fafc) !important;
+}
+
+.dt-instance .data-table {
+  background-color: transparent !important;
+  color: var(--text) !important;
+}
+
+.chart-container,
+.frappe-chart,
+.apexcharts-canvas {
+  background-color: transparent !important;
+}

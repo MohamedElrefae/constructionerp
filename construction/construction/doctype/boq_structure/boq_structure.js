@@ -64,13 +64,15 @@ frappe.ui.form.on("BOQ Structure", {
 				__("Export")
 			);
 
-			frm.page.add_action_icon(
+			// NOTE: add_action_icon is intentionally NOT used here.
+			// In Frappe v16, add_action_icon(icon, ...) requires a valid icon identifier
+			// (e.g. "printer"). Passing __("Print") produces an empty button square.
+			frm.add_custom_button(
 				__("Print"),
 				function () {
 					frappe.set_route("print", "BOQ Header", frm.doc.boq_header);
 				},
-				null,
-				"Print"
+				__("Export")
 			);
 		}
 	},

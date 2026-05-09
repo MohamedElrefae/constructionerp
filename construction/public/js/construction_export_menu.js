@@ -28,6 +28,11 @@ class ConstructionExportMenu {
 		// Remove any existing export menu
 		this.frm.page.custom_actions.find(".construction-export-menu").remove();
 
+		// Guard: Don't render if there are no items
+		if (!this.items || this.items.length === 0) {
+			return;
+		}
+
 		var $group = $(
 			'<div class="btn-group construction-export-menu" style="margin-left:8px;"></div>'
 		);
@@ -115,6 +120,11 @@ class ConstructionViewMenu {
 	render() {
 		// Remove any existing view menu
 		this.frm.page.custom_actions.find(".construction-view-menu").remove();
+
+		// Guard: Don't render if there are no items
+		if (!this.items || this.items.length === 0) {
+			return;
+		}
 
 		var self = this;
 		var current_item = this.items.find(function (i) {
