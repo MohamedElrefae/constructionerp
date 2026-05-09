@@ -3033,6 +3033,7 @@ def whitelabel_patch():
 		doc = frappe.get_doc("Module Onboarding", module.name)
 		doc.documentation_url = ""
 		doc.flags.ignore_mandatory = True
+		doc.flags.ignore_links = True
 		doc.save(ignore_permissions=True)
 	
 	# Clear onboarding steps
@@ -3041,6 +3042,7 @@ def whitelabel_patch():
 		doc.intro_video_url = ""
 		doc.description = ""
 		doc.flags.ignore_mandatory = True
+		doc.flags.ignore_links = True
 		doc.save(ignore_permissions=True)
 
 @frappe.whitelist()
