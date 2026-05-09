@@ -5140,6 +5140,38 @@ html[data-theme="light"] .custom-actions .hide {
   display: none !important;
 }
 
+/* ── E32: v16 ROUTE-SCOPED FULL-WIDTH — Desktop, Workspace, Tree pages ── */
+/* Expands content to full width on specific page types without affecting forms/reports/print */
+
+body[data-route="desktop"] .container,
+body[data-route="desktop"] #page-container,
+[data-theme="dark"] body[data-route="desktop"] .page-body,
+[data-theme="light"] body[data-route="desktop"] .page-body {
+  max-width: 100% !important;
+  width: 100% !important;
+  padding-left: 24px !important;
+  padding-right: 24px !important;
+}
+
+body[data-route^="Tree/"] .container,
+body[data-route^="Tree/"] #page-container,
+[data-theme="dark"] body[data-route^="Tree/"] .page-body,
+[data-theme="light"] body[data-route^="Tree/"] .page-body {
+  max-width: 100% !important;
+  width: 100% !important;
+  padding-left: 24px !important;
+  padding-right: 24px !important;
+}
+
+/* Workspace pages — covers /app/<workspace-name> routes */
+[data-theme="dark"] body[data-route]:not([data-route="desktop"]):not([data-route^="Form/"]):not([data-route^="List/"]):not([data-route^="Tree/"]):not([data-route^="reports"]) .page-body .container,
+[data-theme="light"] body[data-route]:not([data-route="desktop"]):not([data-route^="Form/"]):not([data-route^="List/"]):not([data-route^="Tree/"]):not([data-route^="reports"]) .page-body .container {
+  max-width: 100% !important;
+  width: 100% !important;
+  padding-left: 24px !important;
+  padding-right: 24px !important;
+}
+
 /* ── E30: v16 SIDEBAR — .sidebar-container (Frappe v16 workspace sidebar) ── */
 
 html[data-theme="dark"] .sidebar-container,
