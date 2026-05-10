@@ -53,6 +53,14 @@ doctype_js = {"BOQ Header": "construction/doctype/boq_header/boq_header.js"}
 
 doctype_tree_js = {"BOQ Structure": "construction/doctype/boq_structure/boq_structure_tree.js"}
 
+# CSS includes for authenticated users (desk)
+# Load order is critical: tokens → base → adapter → overrides
+app_include_css = [
+	"/assets/construction/css/modern_theme_tokens.css?v=18",
+	"/assets/construction/css/modern_theme_base.css?v=29",
+	"/assets/construction/css/modern_theme_v16_adapter.css?v=20",
+]
+
 # Global JS includes (raw asset path — loaded directly, not bundled)
 # v10/v12: Native Frappe data-theme architecture (removed data-modern-theme hybrid)
 app_include_js = [
