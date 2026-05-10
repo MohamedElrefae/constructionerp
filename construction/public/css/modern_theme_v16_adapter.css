@@ -51,7 +51,6 @@
   cursor: pointer !important;
   transition: var(--t-motion, 0.25s cubic-bezier(0.4,0,0.2,1)) !important;
   text-decoration: none !important;
-  border: none !important;
   background: transparent !important;
   border-left: 3px solid transparent !important;
   white-space: nowrap;
@@ -1389,6 +1388,91 @@ tr:hover {
 .sidebar-container.sidebar-collapsed .icon {
   margin: 0;
   font-size: 1.25rem;
+}
+
+/* ==========================================================================
+    T19: LIGHT THEME OVERRIDES — Unified Hover + New Components
+    Ensures all new styles use light-mode token values when [data-theme="light"]
+    ========================================================================== */
+
+[data-theme="light"] .body-sidebar-container,
+[data-theme="light"] .sidebar-container {
+  background-color: var(--surface) !important;
+  border-right-color: var(--border) !important;
+}
+
+[data-theme="light"] .standard-sidebar-item:hover,
+[data-theme="light"] .sidebar-item:hover {
+  background-color: var(--surface-hover) !important;
+  color: var(--text) !important;
+  border-left-color: var(--primary) !important;
+}
+
+[data-theme="light"] .standard-sidebar-item.active,
+[data-theme="light"] .standard-sidebar-item.selected,
+[data-theme="light"] .standard-sidebar-item.router-link-active,
+[data-theme="light"] .sidebar-item.active,
+[data-theme="light"] .sidebar-item.selected {
+  background-color: var(--primary) !important;
+  color: #ffffff !important;
+  border-left-color: var(--accent) !important;
+}
+
+[data-theme="light"] .drop-item:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+  border-left-color: var(--primary);
+}
+
+[data-theme="light"] .drop-item.danger:hover {
+  background: var(--danger);
+  color: #fff;
+  border-left-color: var(--danger);
+}
+
+[data-theme="light"] .drop-menu {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+[data-theme="light"] .filter-chip:hover,
+[data-theme="light"] .filter-tag:hover,
+[data-theme="light"] .filter-pill:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+  border-left-color: var(--primary);
+}
+
+[data-theme="light"] .breadcrumb-item a:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+  border-left-color: var(--primary);
+}
+
+[data-theme="light"] tr:hover {
+  background: var(--surface-hover);
+  border-left-color: var(--primary);
+}
+
+[data-theme="light"] tr.selected td {
+  background: var(--primary-light);
+}
+
+[data-theme="light"] .datatable td:hover,
+[data-theme="light"] .table td:hover,
+[data-theme="light"] table td:hover {
+  background: var(--surface-hover);
+  outline-color: rgba(14,165,233,0.25);
+}
+
+[data-theme="light"] .tree-row:hover {
+  background: var(--surface-hover);
+  border-left-color: var(--primary);
+}
+
+[data-theme="light"] .tree-row.selected {
+  background: var(--row-selected-bg);
+  border-left-color: var(--accent);
 }
 
 @media print {
