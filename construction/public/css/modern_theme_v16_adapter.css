@@ -5,102 +5,120 @@
    ========================================================================== */
 
 /* ==========================================================================
-   T1: CORE DESK — v16 Sidebar (Espresso Design System)
-   Selectors confirmed on v16 cloud: .body-sidebar-container, .body-sidebar
-   ========================================================================== */
+    T1: DESK SIDEBAR — v15 (.sidebar-container) + v16 (.body-sidebar-container)
+    Compatible with both Frappe v15 and v16 DOM structures
+    ========================================================================== */
 
-.body-sidebar-container {
-  background-color: var(--bg) !important;
+.body-sidebar-container,
+.sidebar-container {
+  background-color: var(--surface) !important;
   border-right: 1px solid var(--border) !important;
-  width: 240px !important;
-  transition: var(--transition) !important;
+  width: var(--sidebar-width, 260px);
+  transition: width 0.35s cubic-bezier(0.4,0,0.2,1);
+  flex-shrink: 0;
 }
 
 .body-sidebar-container.collapsed,
-.body-sidebar-container.sidebar-collapsed {
-  width: 60px !important;
+.body-sidebar-container.sidebar-collapsed,
+.sidebar-container.collapsed,
+.sidebar-container.sidebar-collapsed {
+  width: var(--sidebar-collapsed, 60px);
 }
 
-.body-sidebar {
-  background-color: var(--bg) !important;
-  color: var(--text-2) !important;
+.body-sidebar,
+.sidebar-container .sidebar,
+.desk-sidebar {
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
 }
 
-.body-sidebar .sidebar-items {
+.body-sidebar .sidebar-items,
+.sidebar-container .sidebar-items {
   padding: 8px 0 !important;
 }
 
-.standard-sidebar-item {
+/* v15 (.sidebar-item) + v16 (.standard-sidebar-item) — unified hover */
+.standard-sidebar-item,
+.sidebar-item {
   display: flex !important;
   align-items: center !important;
   padding: 8px 16px !important;
   margin: 2px 8px !important;
   border-radius: 8px !important;
-  color: var(--text-2) !important;
+  color: var(--text) !important;
   font-size: 13px !important;
   font-weight: 500 !important;
   cursor: pointer !important;
-  transition: var(--transition) !important;
+  transition: var(--t-motion, 0.25s cubic-bezier(0.4,0,0.2,1)) !important;
   text-decoration: none !important;
   border: none !important;
   background: transparent !important;
+  border-left: 3px solid transparent !important;
+  white-space: nowrap;
+  min-height: 38px;
 }
 
-.standard-sidebar-item:hover {
+.standard-sidebar-item:hover,
+.sidebar-item:hover {
   background-color: var(--surface-hover) !important;
   color: var(--text) !important;
+  border-left-color: var(--primary) !important;
+  letter-spacing: 0.3px;
+}
+
+.standard-sidebar-item:hover .sidebar-item-label,
+.sidebar-item:hover .sidebar-item-label {
+  transform: translateX(4px);
+}
+
+.standard-sidebar-item:hover .icon,
+.standard-sidebar-item:hover i,
+.sidebar-item:hover .icon,
+.sidebar-item:hover i {
+  transform: scale(1.15);
 }
 
 .standard-sidebar-item.active,
 .standard-sidebar-item.selected,
-.standard-sidebar-item.router-link-active {
-  background-color: rgba(14,165,233,0.12) !important;
-  color: var(--primary-light) !important;
+.standard-sidebar-item.router-link-active,
+.sidebar-item.active,
+.sidebar-item.selected {
+  background-color: var(--primary) !important;
+  color: #ffffff !important;
   font-weight: 600 !important;
+  border-left-color: var(--accent) !important;
+}
+
+.standard-sidebar-item.active:hover,
+.standard-sidebar-item.selected:hover,
+.standard-sidebar-item.router-link-active:hover,
+.sidebar-item.active:hover,
+.sidebar-item.selected:hover {
+  background-color: var(--primary-hover) !important;
+  color: #ffffff !important;
 }
 
 .standard-sidebar-item.active::before,
 .standard-sidebar-item.selected::before {
-  content: "" !important;
-  position: absolute !important;
-  left: 0 !important;
-  top: 50% !important;
-  transform: translateY(-50%) !important;
-  width: 3px !important;
-  height: 20px !important;
-  background: var(--primary) !important;
-  border-radius: 0 3px 3px 0 !important;
+  content: none !important;
 }
 
 .standard-sidebar-item .icon,
 .standard-sidebar-item svg,
 .standard-sidebar-item i {
-  color: var(--text-3) !important;
-  fill: var(--text-3) !important;
+  color: inherit !important;
   margin-right: 12px !important;
   width: 18px !important;
   height: 18px !important;
   flex-shrink: 0 !important;
-}
-
-.standard-sidebar-item:hover .icon,
-.standard-sidebar-item:hover svg,
-.standard-sidebar-item:hover i {
-  color: var(--text) !important;
-  fill: var(--text) !important;
-}
-
-.standard-sidebar-item.active .icon,
-.standard-sidebar-item.active svg,
-.standard-sidebar-item.active i {
-  color: var(--primary) !important;
-  fill: var(--primary) !important;
+  transition: var(--t, 0.2s cubic-bezier(0.4,0,0.2,1));
 }
 
 .standard-sidebar-item .sidebar-item-label,
 .standard-sidebar-item span:not(.icon) {
   color: inherit !important;
   font-size: 13px !important;
+  transition: var(--t-motion, 0.25s cubic-bezier(0.4,0,0.2,1));
 }
 
 .sidebar-header,
@@ -116,7 +134,7 @@
 
 .body-sidebar-bottom {
   border-top: 1px solid var(--border) !important;
-  background-color: var(--bg) !important;
+  background-color: var(--surface) !important;
   padding: 8px !important;
 }
 
@@ -1078,6 +1096,299 @@ table, .table, .table-bordered {
 
 .tooltip .arrow::before {
   border-top-color: var(--surface-active) !important;
+}
+
+/* ==========================================================================
+    T13: CUSTOM DROPDOWNS — Drop Trigger + Menu (Unified Hover)
+    ========================================================================== */
+
+.drop-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: var(--input-bg, var(--bg-2));
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--t, 0.2s cubic-bezier(0.4,0,0.2,1));
+  white-space: nowrap;
+  font-family: inherit;
+  line-height: 1.4;
+  width: 100%;
+}
+.drop-trigger:hover {
+  border-color: var(--border-hover);
+  background: var(--surface-hover);
+}
+.drop-trigger:focus,
+.drop-trigger.active {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px var(--primary-light);
+}
+.drop-trigger::after {
+  content: "";
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  margin-left: 4px;
+  transition: transform 0.2s;
+}
+.drop-trigger.active::after {
+  transform: rotate(180deg);
+}
+
+.drop-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 6px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius, 10px);
+  min-width: 200px;
+  box-shadow: var(--shadow-lg);
+  z-index: 50;
+  padding: 6px;
+  overflow: hidden;
+}
+
+.drop-item {
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 0.875rem;
+  color: var(--text);
+  transition: var(--t-motion, 0.25s cubic-bezier(0.4,0,0.2,1));
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+  line-height: 1.4;
+  border-left: 3px solid transparent;
+}
+.drop-item:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+  border-left-color: var(--primary);
+  letter-spacing: 0.3px;
+  transform: translateX(4px);
+}
+.drop-item.danger { color: var(--danger); }
+.drop-item.danger:hover {
+  background: var(--danger);
+  color: #fff;
+  border-left-color: var(--danger);
+  transform: translateX(4px);
+}
+.drop-div {
+  height: 1px;
+  background: var(--divider);
+  margin: 6px 0;
+}
+
+/* ==========================================================================
+    T14: FILTER CHIPS (Unified Hover)
+    ========================================================================== */
+
+.filter-chip,
+.filter-tag,
+.filter-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 0.8125rem;
+  color: var(--text);
+  transition: var(--t-motion, 0.25s cubic-bezier(0.4,0,0.2,1));
+  cursor: pointer;
+  border-left: 3px solid transparent;
+}
+.filter-chip:hover,
+.filter-tag:hover,
+.filter-pill:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+  border-left-color: var(--primary);
+  letter-spacing: 0.3px;
+  transform: translateX(3px);
+}
+
+/* ==========================================================================
+    T15: BREADCRUMBS (Unified Hover)
+    ========================================================================== */
+
+.breadcrumb-item a {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  border-left: 3px solid transparent;
+  transition: var(--t-motion, 0.25s cubic-bezier(0.4,0,0.2,1));
+}
+.breadcrumb-item a:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+  border-left-color: var(--primary);
+  letter-spacing: 0.3px;
+}
+
+/* ==========================================================================
+    T16: CELL-ONLY TABLE HOVER
+    ========================================================================== */
+
+.datatable td,
+.table td,
+table td {
+  position: relative;
+  transition: background-color 0.15s ease, outline 0.15s ease, box-shadow 0.15s ease;
+}
+.datatable td:hover,
+.table td:hover,
+table td:hover {
+  outline: 2px solid rgba(14,165,233,0.25);
+  outline-offset: -2px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+  z-index: 2;
+  background: var(--surface-hover);
+}
+
+tr {
+  border-left: 3px solid transparent;
+  transition: background-color 0.15s ease, border-left-color var(--t-motion, 0.25s cubic-bezier(0.4,0,0.2,1));
+}
+tr:hover {
+  background: var(--surface-hover);
+  border-left-color: var(--primary);
+}
+
+/* ==========================================================================
+    T17: RTL SUPPORT (v15 + v16)
+    ========================================================================== */
+
+[dir="rtl"] .standard-sidebar-item,
+[dir="rtl"] .sidebar-item {
+  border-left: none;
+  border-right: 3px solid transparent;
+}
+[dir="rtl"] .standard-sidebar-item:hover,
+[dir="rtl"] .sidebar-item:hover {
+  border-right-color: var(--primary);
+  border-left-color: transparent;
+  transform: translateX(-4px);
+}
+[dir="rtl"] .standard-sidebar-item.active,
+[dir="rtl"] .standard-sidebar-item.selected,
+[dir="rtl"] .sidebar-item.active,
+[dir="rtl"] .sidebar-item.selected {
+  border-right-color: var(--accent);
+  border-left-color: transparent;
+}
+[dir="rtl"] .sidebar-item-label {
+  padding-right: 0;
+  padding-left: 12px;
+}
+[dir="rtl"] .drop-item {
+  border-left: none;
+  border-right: 3px solid transparent;
+}
+[dir="rtl"] .drop-item:hover {
+  border-right-color: var(--primary);
+  transform: translateX(-4px);
+}
+[dir="rtl"] .filter-chip {
+  border-left: none;
+  border-right: 3px solid transparent;
+}
+[dir="rtl"] .filter-chip:hover {
+  border-right-color: var(--primary);
+  transform: translateX(-3px);
+}
+[dir="rtl"] tr {
+  border-left: none;
+  border-right: 3px solid transparent;
+}
+[dir="rtl"] tr:hover {
+  border-right-color: var(--primary);
+}
+[dir="rtl"] .breadcrumb-item a {
+  border-left: none;
+  border-right: 3px solid transparent;
+}
+[dir="rtl"] .breadcrumb-item a:hover {
+  border-right-color: var(--primary);
+}
+[dir="rtl"] .drop-menu {
+  right: auto;
+  left: 0;
+}
+[dir="rtl"] .drop-trigger::after {
+  margin-left: 0;
+  margin-right: 4px;
+}
+
+/* ==========================================================================
+    T18: SIDEBAR COLLAPSED STATE (v15 + v16 compatibility)
+    ========================================================================== */
+
+.body-sidebar-container.collapsed .standard-sidebar-item,
+.body-sidebar-container.collapsed .sidebar-item,
+.body-sidebar-container.sidebar-collapsed .standard-sidebar-item,
+.body-sidebar-container.sidebar-collapsed .sidebar-item,
+.sidebar-container.collapsed .standard-sidebar-item,
+.sidebar-container.collapsed .sidebar-item,
+.sidebar-container.sidebar-collapsed .standard-sidebar-item,
+.sidebar-container.sidebar-collapsed .sidebar-item {
+  padding: 8px 0;
+  justify-content: center;
+}
+.body-sidebar-container.collapsed .standard-sidebar-item .sidebar-item-label,
+.body-sidebar-container.collapsed .standard-sidebar-item span:not(.icon),
+.body-sidebar-container.collapsed .sidebar-item .sidebar-item-label,
+.body-sidebar-container.collapsed .sidebar-item span:not(.icon),
+.body-sidebar-container.sidebar-collapsed .standard-sidebar-item .sidebar-item-label,
+.body-sidebar-container.sidebar-collapsed .standard-sidebar-item span:not(.icon),
+.body-sidebar-container.sidebar-collapsed .sidebar-item .sidebar-item-label,
+.body-sidebar-container.sidebar-collapsed .sidebar-item span:not(.icon),
+.sidebar-container.collapsed .standard-sidebar-item .sidebar-item-label,
+.sidebar-container.collapsed .standard-sidebar-item span:not(.icon),
+.sidebar-container.collapsed .sidebar-item .sidebar-item-label,
+.sidebar-container.collapsed .sidebar-item span:not(.icon),
+.sidebar-container.sidebar-collapsed .sidebar-item-label,
+.sidebar-container.sidebar-collapsed span:not(.icon) {
+  display: none;
+}
+.body-sidebar-container.collapsed .sidebar-header,
+.body-sidebar-container.collapsed .sb-label,
+.body-sidebar-container.sidebar-collapsed .sidebar-header,
+.body-sidebar-container.sidebar-collapsed .sb-label,
+.sidebar-container.collapsed .sidebar-header,
+.sidebar-container.collapsed .sb-label,
+.sidebar-container.sidebar-collapsed .sidebar-header,
+.sidebar-container.sidebar-collapsed .sb-label {
+  opacity: 0;
+  height: 0;
+  margin: 0;
+  overflow: hidden;
+}
+.body-sidebar-container.collapsed .standard-sidebar-item .icon,
+.body-sidebar-container.collapsed .sidebar-item .icon,
+.body-sidebar-container.sidebar-collapsed .standard-sidebar-item .icon,
+.body-sidebar-container.sidebar-collapsed .sidebar-item .icon,
+.sidebar-container.collapsed .standard-sidebar-item .icon,
+.sidebar-container.collapsed .sidebar-item .icon,
+.sidebar-container.sidebar-collapsed .icon {
+  margin: 0;
+  font-size: 1.25rem;
 }
 
 @media print {

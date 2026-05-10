@@ -97,16 +97,27 @@ html[data-theme="light"] {
   /* Transitions */
   --t-fast: 0.15s ease;
   --t: 0.2s cubic-bezier(0.4,0,0.2,1);
+  --t-motion: 0.25s cubic-bezier(0.4,0,0.2,1);
   --t-slow: 0.3s cubic-bezier(0.4,0,0.2,1);
   
+  /* Sidebar */
+  --sidebar-width: 260px;
+  --sidebar-collapsed: 60px;
+
   /* Tree & Table */
   --row-hover-bg: rgba(14,165,233,0.06);
   --row-hover-border: rgba(14,165,233,0.25);
   --row-focus-ring: #0ea5e9;
+  --row-selected-bg: rgba(245,158,11,0.12);
+  --row-selected-border: rgba(245,158,11,0.45);
   --col-header-bg: linear-gradient(135deg, #0ea5e9, #0284c7);
   
   /* Card */
   --card-hover-border: #16a34a;
+
+  /* Inputs */
+  --input-bg: var(--bg-2);
+  --input-focus-bg: var(--surface);
 }
 
 /* === FRAPPE VARIABLE OVERRIDE (highest priority) === */

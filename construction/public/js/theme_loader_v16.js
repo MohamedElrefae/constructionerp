@@ -58,60 +58,10 @@
   }
 
   /* =======================================================================
-     SECTION 2: Sidebar Force-Text Function
+     SECTION 2: Removed — forceSidebarText() now handled by CSS only
+     All sidebar styling is in modern_theme_v16_adapter.css (T1, T18)
+     No inline styles needed — CSS classes control hover, active, collapse
      ======================================================================= */
-
-  function forceSidebarText() {
-    document.querySelectorAll('.body-sidebar-container').forEach(container => {
-      container.style.backgroundColor = TOKENS.bg;
-      container.style.borderRight = `1px solid ${TOKENS.border}`;
-    });
-    document.querySelectorAll('.body-sidebar').forEach(sidebar => {
-      sidebar.style.backgroundColor = TOKENS.bg;
-      sidebar.style.color = TOKENS.text2;
-    });
-    document.querySelectorAll('.standard-sidebar-item').forEach(item => {
-      const computedBg = window.getComputedStyle(item).backgroundColor;
-      const isTransparent = computedBg === 'rgba(0, 0, 0, 0)' || computedBg === 'transparent';
-      if (isTransparent || item.getAttribute('data-theme-fixed')) return;
-      item.setAttribute('data-theme-fixed', 'true');
-      item.style.color = TOKENS.text2;
-      item.style.backgroundColor = 'transparent';
-      item.style.borderRadius = '8px';
-      item.style.margin = '2px 8px';
-      item.style.padding = '8px 16px';
-      item.style.transition = 'all 0.2s cubic-bezier(0.4,0,0.2,1)';
-      item.addEventListener('mouseenter', () => {
-        item.style.backgroundColor = TOKENS.surfaceHover;
-        item.style.color = TOKENS.text;
-      });
-      item.addEventListener('mouseleave', () => {
-        const isActive = item.classList.contains('active') ||
-                         item.classList.contains('selected') ||
-                         item.classList.contains('router-link-active');
-        if (!isActive) {
-          item.style.backgroundColor = 'transparent';
-          item.style.color = TOKENS.text2;
-        }
-      });
-      if (item.classList.contains('active') || item.classList.contains('selected') || item.classList.contains('router-link-active')) {
-        item.style.backgroundColor = 'rgba(14,165,233,0.12)';
-        item.style.color = TOKENS.primaryLight;
-      }
-    });
-    document.querySelectorAll('.sidebar-header').forEach(header => {
-      header.style.color = TOKENS.text3;
-      header.style.fontSize = '10px';
-      header.style.fontWeight = '700';
-      header.style.textTransform = 'uppercase';
-      header.style.letterSpacing = '0.08em';
-    });
-    document.querySelectorAll('.body-sidebar-bottom').forEach(bottom => {
-      bottom.style.backgroundColor = TOKENS.bg;
-      bottom.style.borderTop = `1px solid ${TOKENS.border}`;
-    });
-    log('forceSidebarText() executed');
-  }
 
   /* =======================================================================
      SECTION 3: SVG Chart Theming
@@ -148,16 +98,7 @@
   function handleInjectedNodes(nodes) {
     nodes.forEach(node => {
       if (node.nodeType !== Node.ELEMENT_NODE) return;
-      if (node.matches && (
-        node.matches('.body-sidebar-container') ||
-        node.matches('.body-sidebar') ||
-        node.matches('.standard-sidebar-item')
-      )) {
-        forceSidebarText();
-        return;
-      }
       if (node.querySelector) {
-        if (node.querySelector('.standard-sidebar-item, .body-sidebar-container')) forceSidebarText();
         if (node.querySelector('.apexcharts-canvas, .frappe-chart')) forceChartTheme();
         if (node.querySelector('.widget, .widget-group')) forceWidgetTheme();
       }
@@ -229,13 +170,11 @@
      ======================================================================= */
 
   window.constructionTheme = {
-    forceSidebar: forceSidebarText,
     forceCharts: forceChartTheme,
     forceWidgets: forceWidgetTheme,
     forceDocument: forceDocumentTheme,
     forceAll() {
       forceDocumentTheme();
-      forceSidebarText();
       forceChartTheme();
       forceWidgetTheme();
     },
@@ -251,7 +190,6 @@
     log('Initializing Construction Theme v16 adapter');
     forceDocumentTheme();
     waitForSidebar(() => {
-      forceSidebarText();
       forceChartTheme();
       forceWidgetTheme();
     });
@@ -263,7 +201,6 @@
           obs.disconnect();
           forceDocumentTheme();
           waitForSidebar(() => {
-            forceSidebarText();
             forceChartTheme();
             forceWidgetTheme();
           });
@@ -276,7 +213,6 @@
       $(document).on('page-change', () => {
         setTimeout(() => {
           forceDocumentTheme();
-          forceSidebarText();
           forceChartTheme();
           forceWidgetTheme();
         }, 300);

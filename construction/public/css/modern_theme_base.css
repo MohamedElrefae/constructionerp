@@ -71,14 +71,14 @@ body {
    LAYOUT FIXES - Sidebar visibility and full page width
    ============================================ */
 
-/* Ensure sidebar has proper width and doesn't collapse - HIGH SPECIFICITY */
+/* Sidebar width — uses CSS variable, v15/v16 compatible, !important for v15 override */
 html[data-theme="dark"] .layout-side-section,
 html[data-theme="light"] .layout-side-section,
 body .layout-side-section {
-  min-width: 260px !important;
-  width: 260px !important;
+  width: var(--sidebar-width, 260px) !important;
+  min-width: var(--sidebar-width, 260px) !important;
   flex-shrink: 0 !important;
-  max-width: 260px !important;
+  transition: width 0.35s cubic-bezier(0.4,0,0.2,1);
 }
 
 /* Ensure main content fills remaining space - HIGH SPECIFICITY */
@@ -239,6 +239,8 @@ html[data-theme="light"] .desk-sidebar .standard-sidebar-item .sidebar-item-labe
   margin: 0.125rem 0.75rem !important;
   color: var(--text) !important;
   position: relative !important;
+  border-left: 3px solid transparent !important;
+  transition: var(--t-motion) !important;
 }
 
 [data-theme="dark"] .sidebar-item:hover,
@@ -247,7 +249,8 @@ html[data-theme="light"] .desk-sidebar .standard-sidebar-item .sidebar-item-labe
 [data-theme="light"] .desk-sidebar-item:hover {
   background: var(--surface-hover) !important;
   color: var(--text) !important;
-  box-shadow: 0 4px 12px rgba(0,0,0,.15) !important;
+  border-left-color: var(--primary) !important;
+  letter-spacing: 0.3px !important;
 }
 
 [data-theme="dark"] .sidebar-item.selected,
@@ -296,8 +299,28 @@ html[data-theme="light"] .desk-sidebar .standard-sidebar-item .sidebar-item-labe
 }
 
 /* ============================================
-   1b. BUTTONS (Migrated from old dark/light CSS)
-   ============================================ */
+    1b. BUTTONS (Enterprise Hierarchy)
+    ============================================ */
+
+[data-theme="dark"] .btn,
+[data-theme="light"] .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-weight: 600 !important;
+  border-radius: var(--radius-sm) !important;
+  transition: var(--t) !important;
+  white-space: nowrap;
+  line-height: 1.4;
+}
+[data-theme="dark"] .btn:disabled,
+[data-theme="light"] .btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
 
 [data-theme="dark"] .btn-primary,
 [data-theme="light"] .btn-primary,
@@ -307,7 +330,8 @@ html[data-theme="light"] .desk-sidebar .standard-sidebar-item .sidebar-item-labe
   color: white !important;
   border-color: var(--primary) !important;
   border-radius: var(--radius-sm) !important;
-  transition: var(--t-fast) !important;
+  transition: var(--t) !important;
+  box-shadow: 0 2px 8px rgba(14,165,233,0.30);
 }
 
 [data-theme="dark"] .btn-primary:hover,
@@ -316,11 +340,13 @@ html[data-theme="light"] .desk-sidebar .standard-sidebar-item .sidebar-item-labe
 [data-theme="light"] .btn-dark:hover {
   background: var(--primary-hover) !important;
   border-color: var(--primary-hover) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(14,165,233,0.40);
 }
 
 [data-theme="dark"] .btn-secondary,
 [data-theme="light"] .btn-secondary {
-  background: var(--surface-hover) !important;
+  background: var(--surface) !important;
   color: var(--text) !important;
   border-color: var(--border) !important;
   border-radius: var(--radius-sm) !important;
@@ -328,8 +354,22 @@ html[data-theme="light"] .desk-sidebar .standard-sidebar-item .sidebar-item-labe
 
 [data-theme="dark"] .btn-secondary:hover,
 [data-theme="light"] .btn-secondary:hover {
-  background: var(--surface-active) !important;
+  background: var(--surface-hover) !important;
   border-color: var(--border-hover) !important;
+  transform: translateY(-1px);
+}
+
+[data-theme="dark"] .btn-accent,
+[data-theme="light"] .btn-accent {
+  background: var(--accent) !important;
+  color: white !important;
+  border-color: var(--accent) !important;
+  box-shadow: 0 2px 8px rgba(245,158,11,0.30);
+}
+[data-theme="dark"] .btn-accent:hover,
+[data-theme="light"] .btn-accent:hover {
+  background: var(--accent-hover) !important;
+  transform: translateY(-1px);
 }
 
 [data-theme="dark"] .btn-danger,
@@ -337,12 +377,14 @@ html[data-theme="light"] .desk-sidebar .standard-sidebar-item .sidebar-item-labe
   background: var(--danger) !important;
   color: white !important;
   border-color: var(--danger) !important;
+  box-shadow: 0 2px 8px rgba(220,38,38,0.30);
 }
 
 [data-theme="dark"] .btn-danger:hover,
 [data-theme="light"] .btn-danger:hover {
   background: var(--danger-hover) !important;
   border-color: var(--danger-hover) !important;
+  transform: translateY(-1px);
 }
 
 [data-theme="dark"] .btn-success,
@@ -350,7 +392,34 @@ html[data-theme="light"] .desk-sidebar .standard-sidebar-item .sidebar-item-labe
   background: var(--success) !important;
   color: white !important;
   border-color: var(--success) !important;
+  box-shadow: 0 2px 8px rgba(22,163,74,0.30);
 }
+[data-theme="dark"] .btn-success:hover,
+[data-theme="light"] .btn-success:hover {
+  background: var(--success-hover, #15803d) !important;
+  transform: translateY(-1px);
+}
+
+[data-theme="dark"] .btn-ghost,
+[data-theme="light"] .btn-ghost {
+  background: transparent;
+  color: var(--text-2);
+  border-color: var(--border);
+}
+[data-theme="dark"] .btn-ghost:hover,
+[data-theme="light"] .btn-ghost:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+  border-color: var(--border-hover);
+}
+
+/* Button sizes */
+[data-theme="dark"] .btn-sm,
+[data-theme="light"] .btn-sm { padding: 6px 12px; font-size: 0.75rem; }
+[data-theme="dark"] .btn-lg,
+[data-theme="light"] .btn-lg { padding: 10px 20px; font-size: 0.9375rem; }
+[data-theme="dark"] .btn-icon,
+[data-theme="light"] .btn-icon { padding: 8px; min-width: 36px; min-height: 36px; }
 
 /* ============================================
    1c. FORM INPUTS (Migrated from old CSS)
@@ -627,6 +696,11 @@ html[data-theme="light"] .desk-sidebar .standard-sidebar-item .sidebar-item-labe
 [data-theme="light"] .breadcrumb li {
   font-size: 0.8125rem !important;
   color: var(--text-3) !important;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  border-left: 3px solid transparent;
+  transition: var(--t-motion);
 }
 
 [data-theme="dark"] .breadcrumb-item a,
@@ -634,15 +708,25 @@ html[data-theme="light"] .desk-sidebar .standard-sidebar-item .sidebar-item-labe
 [data-theme="dark"] .breadcrumb li a,
 [data-theme="light"] .breadcrumb li a {
   color: var(--text-3) !important;
-  transition: var(--t-fast) !important;
+  transition: var(--t-motion) !important;
 }
 
 [data-theme="dark"] .breadcrumb-item a:hover,
 [data-theme="light"] .breadcrumb-item a:hover,
 [data-theme="dark"] .breadcrumb li a:hover,
 [data-theme="light"] .breadcrumb li a:hover {
-  color: var(--primary) !important;
+  color: var(--text) !important;
   text-decoration: none !important;
+}
+
+[data-theme="dark"] .breadcrumb-item:hover,
+[data-theme="light"] .breadcrumb-item:hover,
+[data-theme="dark"] .breadcrumb li:hover,
+[data-theme="light"] .breadcrumb li:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+  border-left-color: var(--primary);
+  letter-spacing: 0.3px;
 }
 
 .breadcrumb-item + .breadcrumb-item::before {
@@ -741,15 +825,17 @@ html[data-theme="light"] .desk-sidebar .standard-sidebar-item .sidebar-item-labe
 [data-theme="dark"] .grid-row,
 [data-theme="light"] .grid-row {
   border-bottom: 1px solid var(--divider) !important;
-  transition: var(--t-fast) !important;
+  transition: var(--t-motion) !important;
   background: var(--surface) !important;
+  border-left: 3px solid transparent !important;
 }
 
 [data-theme="dark"] .list-row:hover,
 [data-theme="light"] .list-row:hover,
 [data-theme="dark"] .grid-row:hover,
 [data-theme="light"] .grid-row:hover {
-  background: var(--row-hover-bg) !important;
+  background: var(--surface-hover) !important;
+  border-left-color: var(--primary) !important;
 }
 
 [data-theme="dark"] .list-row.active,
@@ -1129,8 +1215,8 @@ html[data-theme="light"] .frappe-control .control-label {
 }
 
 /* ============================================
-   7. BUTTONS
-   ============================================ */
+    7. BUTTONS (Enterprise Hierarchy duplicate — merged)
+    ============================================ */
 
 [data-theme="dark"] .btn,
 [data-theme="light"] .btn {
@@ -1142,19 +1228,22 @@ html[data-theme="light"] .frappe-control .control-label {
   justify-content: center !important;
   gap: 0.5rem !important;
 }
+[data-theme="dark"] .btn:disabled,
+[data-theme="light"] .btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
 
 [data-theme="dark"] .btn-primary,
 [data-theme="light"] .btn-primary,
 [data-theme="dark"] .primary-action,
-[data-theme="light"] .primary-action,
-[data-theme="dark"] .btn-primary.disabled,
-[data-theme="light"] .btn-primary.disabled,
-[data-theme="dark"] .btn-primary:disabled,
-[data-theme="light"] .btn-primary:disabled {
+[data-theme="light"] .primary-action {
   background: var(--primary) !important;
   border: none !important;
   color: white !important;
-  box-shadow: var(--shadow-sm) !important;
+  box-shadow: 0 2px 8px rgba(14,165,233,0.30);
 }
 
 [data-theme="dark"] .btn-primary:hover,
@@ -1163,7 +1252,7 @@ html[data-theme="light"] .frappe-control .control-label {
 [data-theme="light"] .primary-action:hover {
   background: var(--primary-hover) !important;
   transform: translateY(-1px) !important;
-  box-shadow: var(--shadow) !important;
+  box-shadow: 0 6px 20px rgba(14,165,233,0.40);
 }
 
 [data-theme="dark"] .btn-secondary,
@@ -1181,6 +1270,7 @@ html[data-theme="light"] .frappe-control .control-label {
 [data-theme="light"] .btn-default:hover {
   background: var(--surface-hover) !important;
   border-color: var(--border-hover) !important;
+  transform: translateY(-1px);
 }
 
 /* ============================================
