@@ -58,7 +58,7 @@ doctype_tree_js = {"BOQ Structure": "construction/doctype/boq_structure/boq_stru
 app_include_css = [
 	"/assets/construction/css/modern_theme_tokens.css?v=18",
 	"/assets/construction/css/modern_theme_base.css?v=29",
-	"/assets/construction/css/modern_theme_v16_adapter.css?v=20",
+	"/assets/construction/css/modern_theme_v16_adapter.css?v=21",
 ]
 
 # Global JS includes (raw asset path — loaded directly, not bundled)
@@ -67,7 +67,7 @@ app_include_js = [
 	"/assets/construction/js/print_settings_dialog.js",
 	"/assets/construction/js/construction_export_menu.js",
 	"/assets/construction/js/theme_patch.js?v=12",
-	"/assets/construction/js/theme_loader.js?v=26",
+	"/assets/construction/js/theme_loader.js?v=27",
 	"/assets/construction/js/components/index.js?v=4.5",
 	# Searchable Dropdown Module (Week 1)
 	"/assets/construction/js/searchable_dropdown/utils.js",
