@@ -350,7 +350,9 @@
             if (this._navbarDropdownPending) return;
             this._navbarDropdownPending = true;
 
-            const navbar = document.querySelector(".navbar .navbar-collapse .navbar-nav");
+            const navbar = document.querySelector(".navbar-nav") 
+                || document.querySelector(".navbar .navbar-collapse .navbar-nav") 
+                || document.querySelector(".navbar .container .navbar-nav");
             if (!navbar) {
                 setTimeout(() => {
                     this._navbarDropdownPending = false;

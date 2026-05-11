@@ -1492,6 +1492,46 @@ tr:hover {
   border-left-color: var(--accent);
 }
 
+/* ==========================================================================
+    T20: THEME SELECTOR DROPDOWN IN NAVBAR
+    ========================================================================== */
+
+#construction-theme-dropdown {
+  z-index: 9999 !important;
+}
+
+#construction-theme-dropdown .nav-link,
+#construction-theme-dropdown .dropdown-toggle {
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  display: flex !important;
+  align-items: center !important;
+  padding: 8px 12px !important;
+}
+
+#construction-theme-dropdown .dropdown-menu {
+  display: none !important;
+  position: absolute !important;
+  right: 0 !important;
+  left: auto !important;
+  z-index: 10000 !important;
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 8px !important;
+  box-shadow: var(--shadow-lg) !important;
+  min-width: 180px !important;
+}
+
+#construction-theme-dropdown .dropdown-menu.show {
+  display: block !important;
+}
+
+.theme-label {
+  font-weight: 500;
+  color: var(--text);
+  font-size: 0.875rem;
+}
+
 @media print {
   html, body {
     background-color: #ffffff !important;
