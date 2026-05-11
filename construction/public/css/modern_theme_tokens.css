@@ -8,10 +8,10 @@
 /* === BASE FALLBACK === */
 :root, html {
   /* Colors */
-  --primary: #0ea5e9;
-  --primary-hover: #0284c7;
-  --primary-light: rgba(14,165,233,0.15);
-  --primary-dark: #0369a1;
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --primary-light: rgba(37,99,235,0.15);
+  --primary-dark: #1e40af;
   --accent:  #f59e0b;
   --accent-hover:  #d97706;
   --accent-light:  rgba(245,158,11,0.15);
@@ -105,12 +105,12 @@ html[data-theme="light"] {
   --sidebar-collapsed: 60px;
 
   /* Tree & Table */
-  --row-hover-bg: rgba(14,165,233,0.06);
-  --row-hover-border: rgba(14,165,233,0.25);
-  --row-focus-ring: #0ea5e9;
+  --row-hover-bg: rgba(37,99,235,0.06);
+  --row-hover-border: rgba(37,99,235,0.25);
+  --row-focus-ring: #2563eb;
   --row-selected-bg: rgba(245,158,11,0.12);
   --row-selected-border: rgba(245,158,11,0.45);
-  --col-header-bg: linear-gradient(135deg, #0ea5e9, #0284c7);
+  --col-header-bg: linear-gradient(135deg, #2563eb, #1d4ed8);
   
   /* Card */
   --card-hover-border: #16a34a;

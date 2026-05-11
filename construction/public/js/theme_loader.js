@@ -219,47 +219,20 @@
 
         colorTreeToolbarButtons: function() {
             var buttons = document.querySelectorAll('.tree-node-toolbar .btn, .tree-node-toolbar .tree-toolbar-button, .tree-node-toolbar button');
-            var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
 
             buttons.forEach(function(btn) {
                 var text = (btn.textContent || '').trim().toLowerCase();
                 btn.classList.remove('btn-edit', 'btn-add', 'btn-delete', 'btn-view');
                 btn.classList.remove('btn-default', 'btn-xs');
 
-                btn.style.removeProperty('background');
-                btn.style.removeProperty('background-color');
-                btn.style.removeProperty('border-color');
-                btn.style.removeProperty('color');
-                btn.style.removeProperty('box-shadow');
-
                 if (text.includes('edit') || text.includes('modify')) {
                     btn.classList.add('btn-edit');
-                    if (isDark) {
-                        btn.style.setProperty('background', 'var(--primary)', 'important');
-                        btn.style.setProperty('border-color', 'var(--primary)', 'important');
-                        btn.style.setProperty('color', '#ffffff', 'important');
-                    }
                 } else if (text.includes('add') || text.includes('child') || text.includes('new')) {
                     btn.classList.add('btn-add');
-                    if (isDark) {
-                        btn.style.setProperty('background', 'var(--success)', 'important');
-                        btn.style.setProperty('border-color', 'var(--success)', 'important');
-                        btn.style.setProperty('color', '#ffffff', 'important');
-                    }
                 } else if (text.includes('delete') || text.includes('remove')) {
                     btn.classList.add('btn-delete');
-                    if (isDark) {
-                        btn.style.setProperty('background', 'var(--danger)', 'important');
-                        btn.style.setProperty('border-color', 'var(--danger)', 'important');
-                        btn.style.setProperty('color', '#ffffff', 'important');
-                    }
                 } else if (text.includes('view') || text.includes('ledger') || text.includes('open')) {
                     btn.classList.add('btn-view');
-                    if (isDark) {
-                        btn.style.setProperty('background', 'var(--accent)', 'important');
-                        btn.style.setProperty('border-color', 'var(--accent)', 'important');
-                        btn.style.setProperty('color', '#ffffff', 'important');
-                    }
                 }
             });
         },

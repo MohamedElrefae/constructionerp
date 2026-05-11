@@ -6,16 +6,15 @@
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
-   Construction Token Reference (defined in base.css)
-   --bg: #0b1020              --surface-hover: #334155
-   --surface: #1e293b         --surface-active: #475569
-   --text: #f8fafc            --primary: #0ea5e9
-   --text-2: #94a3b8          --primary-light: #38bdf8
-   --text-3: #64748b          --border: rgba(148,163,184,0.18)
-   --heading: #f1f5f9         --shadow: 0 4px 24px rgba(2,8,20,0.45)
-   --danger: #ef4444          --success: #22c55e
-   --danger-light: rgba(220,38,38,0.15)   --warning: #f59e0b
-   --success-light: rgba(22,163,74,0.15)  --radius: 10px
+   Construction Token Reference (defined in modern_theme_tokens.css)
+   --primary: var(--primary)    --primary-hover: var(--primary-hover)
+   --primary-light: var(--primary-light)
+   --bg: #0b1020                --surface-hover: #334155
+   --surface: #1e293b           --surface-active: #475569
+   --text: #f8fafc              --text-2: #94a3b8
+   --text-3: #64748b            --border: rgba(148,163,184,0.18)
+   --danger: #dc2626            --success: #16a34a
+   --accent: #f59e0b            --warning: #ca8a04
    -------------------------------------------------------------------------- */
 
 /* ==========================================================================
@@ -91,8 +90,8 @@
   /* === BUTTONS: Brand === */
   --primary:                 var(--primary) !important;
   --primary-dark:            #0369a1 !important;
-  --primary-hover:           #0284c7 !important;
-  --primary-light:           rgba(14,165,233,0.15) !important;
+  --primary-hover:           var(--primary-hover) !important;
+  --primary-light:           var(--primary-light) !important;
   --brand-color:             var(--primary) !important;
 
   /* === ACCENT === */
@@ -136,8 +135,8 @@
   --list-row-height:         30px !important;
   --list-checkbox-padding:   calc((30px - 14px) / 2) !important;
   --row-focus-ring:          var(--primary) !important;
-  --row-hover-bg:            rgba(14,165,233,0.06) !important;
-  --row-hover-border:        rgba(14,165,233,0.25) !important;
+  --row-hover-bg:            var(--row-hover-bg) !important;
+  --row-hover-border:        var(--row-hover-border) !important;
 
   /* === T5: GRID / DATATABLE === */
   --dt-border-color:         var(--border) !important;
@@ -149,8 +148,8 @@
   --dt-light-yellow:         rgba(245,158,11,0.2) !important;
   --dt-no-data-message-width: 90px !important;
   --dt-orange:               #f59e0b !important;
-  --dt-primary-color:        #0ea5e9 !important;
-  --dt-selection-highlight-color: rgba(14,165,233,0.12) !important;
+  --dt-primary-color:        var(--primary) !important;
+  --dt-selection-highlight-color: var(--primary-light) !important;
   --dt-spacer-1:             .25rem !important;
   --dt-spacer-2:             .5rem !important;
   --dt-spacer-3:             1rem !important;
@@ -164,8 +163,8 @@
   --sidebar-width:           220px !important;
   --sidebar-hover-color:     var(--surface-hover) !important;
   --sidebar-select-color:    var(--primary) !important;
-  --sidebar-active-color:    rgba(14,165,233,0.12) !important;
-  --sidebar-card-button-bg-color:   rgba(14,165,233,0.12) !important;
+  --sidebar-active-color:    var(--primary-light) !important;
+  --sidebar-card-button-bg-color:   var(--primary-light) !important;
   --sidebar-card-button-color:      var(--primary-light) !important;
   --sidebar-card-button-outline:    var(--primary) !important;
 
@@ -244,7 +243,7 @@
 
   /* === T17: HIGHLIGHT === */
   --highlight-color:         var(--text-3) !important;
-  --highlight-shadow:        1px 1px 10px #004880, 0px 0px 4px #0ea5e9 !important;
+  --highlight-shadow:        1px 1px 10px #004880, 0px 0px 4px var(--primary) !important;
 
   /* === T18: SKELETON / LOADING === */
   --skeleton-bg:             var(--surface-hover) !important;
@@ -254,7 +253,7 @@
 
   /* === T20: CHECKBOX === */
   --checkbox-color:          #ffffff !important;
-  --checkbox-focus-shadow:   0px 0px 0px 2px rgba(14,165,233,0.3) !important;
+  --checkbox-focus-shadow:   0px 0px 0px 2px var(--primary-light) !important;
   --checkbox-gradient:       linear-gradient(180deg, #ffffff -124.51%, #ffffff 100%) !important;
   --checkbox-disabled-gradient: linear-gradient(180deg, #7c7c7c -124.51%, #7c7c7c 100%) !important;
   --checkbox-size:           14px !important;
@@ -266,7 +265,7 @@
   --icon-stroke:             #e2e2e2 !important;
 
   /* === T22: FOCUS RINGS === */
-  --focus-blue:              0px 0px 0px 2px rgba(14,165,233,0.4) !important;
+  --focus-blue:              0px 0px 0px 2px rgba(37,99,235,0.4) !important;
   --focus-default:           0px 0px 0px 2px rgba(148,163,184,0.3) !important;
   --focus-green:             0px 0px 0px 2px rgba(22,163,74,0.4) !important;
   --focus-red:               0px 0px 0px 2px rgba(220,38,38,0.4) !important;
@@ -627,7 +626,7 @@ html, body {
 ::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-thumb-hover-color, #64748b) !important; }
 
 ::selection {
-  background-color: rgba(14,165,233,0.3) !important;
+  background-color: var(--primary-light) !important;
   color: var(--text-color, #f8fafc) !important;
 }
 

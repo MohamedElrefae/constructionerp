@@ -54,20 +54,20 @@ doctype_js = {"BOQ Header": "construction/doctype/boq_header/boq_header.js"}
 doctype_tree_js = {"BOQ Structure": "construction/doctype/boq_structure/boq_structure_tree.js"}
 
 # CSS includes for authenticated users (desk)
-# Load order is critical: tokens → base → adapter → overrides
+# Load order is critical: tokens → variables_v16 → base → adapter
 app_include_css = [
-	"/assets/construction/css/modern_theme_tokens.css?v=18",
-	"/assets/construction/css/modern_theme_base.css?v=29",
-	"/assets/construction/css/modern_theme_v16_adapter.css?v=22",
+	"/assets/construction/css/modern_theme_tokens.css?v=19",
+	"/assets/construction/css/modern_theme_variables_v16.css?v=1",
+	"/assets/construction/css/modern_theme_base.css?v=30",
+	"/assets/construction/css/modern_theme_v16_adapter.css?v=24",
 ]
 
 # Global JS includes (raw asset path — loaded directly, not bundled)
-# v10/v12: Native Frappe data-theme architecture (removed data-modern-theme hybrid)
+# CSS-only theming: theme_loader handles sync/navbar dropdown; theme_loader_v16 is a no-op safety net
 app_include_js = [
 	"/assets/construction/js/print_settings_dialog.js",
 	"/assets/construction/js/construction_export_menu.js",
-	"/assets/construction/js/theme_patch.js?v=12",
-	"/assets/construction/js/theme_loader.js?v=27",
+	"/assets/construction/js/theme_loader.js?v=28",
 	"/assets/construction/js/components/index.js?v=4.5",
 	# Searchable Dropdown Module (Week 1)
 	"/assets/construction/js/searchable_dropdown/utils.js",
@@ -83,7 +83,6 @@ app_include_js = [
 # CSS includes for unauthenticated pages (login, etc.)
 # Both light and dark themes loaded - JS toggles between them
 web_include_css = [
-	"/assets/construction/css/login_theme.css",
 	"/assets/construction/css/login_theme_light.css",
 	"/assets/construction/css/email_theme.css"
 ]
