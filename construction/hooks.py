@@ -67,7 +67,7 @@ app_include_js = [
 	"/assets/construction/js/print_settings_dialog.js",
 	"/assets/construction/js/construction_export_menu.js",
 	"/assets/construction/js/theme_patch.js?v=12",
-	"/assets/construction/js/theme_loader.js?v=25",
+	"/assets/construction/js/theme_loader.js?v=26",
 	"/assets/construction/js/components/index.js?v=4.5",
 	# Searchable Dropdown Module (Week 1)
 	"/assets/construction/js/searchable_dropdown/utils.js",
@@ -76,8 +76,8 @@ app_include_js = [
 	"/assets/construction/js/searchable_dropdown/config/journal_entry.js",
 	"/assets/construction/js/searchable_dropdown/config/sales_invoice.js",
 	"/assets/construction/js/searchable_dropdown/config/customer_supplier.js",
-	# v16 runtime safety net — MutationObserver + dynamic content theming
-	"/assets/construction/js/theme_loader_v16.js",
+	# v16 runtime safety net — no-op (CSS handles all styling)
+	"/assets/construction/js/theme_loader_v16.js?v=2",
 ]
 
 # CSS includes for unauthenticated pages (login, etc.)
