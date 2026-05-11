@@ -59,7 +59,7 @@ app_include_css = [
 	"/assets/construction/css/modern_theme_tokens.css?v=20",
 	"/assets/construction/css/modern_theme_variables_v16.css?v=2",
 	"/assets/construction/css/modern_theme_base.css?v=31",
-	"/assets/construction/css/modern_theme_v16_adapter.css?v=26",
+	"/assets/construction/css/modern_theme_v16_adapter.css?v=27",
 ]
 
 # Global JS includes (raw asset path — loaded directly, not bundled)
@@ -67,7 +67,7 @@ app_include_css = [
 app_include_js = [
 	"/assets/construction/js/print_settings_dialog.js",
 	"/assets/construction/js/construction_export_menu.js",
-	"/assets/construction/js/theme_loader.js?v=28",
+	"/assets/construction/js/theme_loader.js?v=29",
 	"/assets/construction/js/components/index.js?v=4.5",
 	# Searchable Dropdown Module (Week 1)
 	"/assets/construction/js/searchable_dropdown/utils.js",

@@ -271,21 +271,29 @@
 
             const hideBranding = () => {
                 try {
+                    // Hide Frappe branding links inside help dropdown
                     $('.dropdown-help [href*="frappe.io"]').closest('li').hide();
                     $('.dropdown-help [href*="github.com/frappe"]').closest('li').hide();
 
+                    // Hide powered-by footer
                     $('.web-footer-powered-by, .footer-powered').hide();
 
                     if (config.app_title) {
                         $('.navbar-brand-title').text(config.app_title);
                     }
+
+                    // v16: Ensure chat/help/notification widgets remain visible
+                    // Our CSS must not accidentally hide these
+                    $('.navbar-notifications, .navbar-help, .chat-dropdown, .dropdown-notifications, .dropdown-help').show();
+                    $('.navbar-right .dropdown, .desktop-navbar .dropdown').show();
                 } catch (e) {
-                    console.warn('[ConstructionTheme] Error hiding branding:', e);
+                    console.warn('[ConstructionTheme] Error in branding/showing widgets:', e);
                 }
             };
 
             hideBranding();
             setTimeout(hideBranding, 2000);
+            setTimeout(hideBranding, 5000);
         },
 
         swapLogo: function(logoUrl) {
@@ -323,14 +331,19 @@
             if (this._navbarDropdownPending) return;
             this._navbarDropdownPending = true;
 
-            const navbar = document.querySelector(".navbar-nav") 
-                || document.querySelector(".navbar .navbar-collapse .navbar-nav") 
-                || document.querySelector(".navbar .container .navbar-nav");
+            // v15: .navbar-nav, v16: .navbar-right, .desktop-navbar .navbar-nav
+            const navbar = document.querySelector(".navbar-nav")
+                || document.querySelector(".navbar .navbar-collapse .navbar-nav")
+                || document.querySelector(".navbar .container .navbar-nav")
+                || document.querySelector(".desktop-navbar .navbar-right")
+                || document.querySelector(".navbar-container .navbar-right")
+                || document.querySelector(".desktop-navbar .navbar-nav")
+                || document.querySelector(".navbar-right");
             if (!navbar) {
                 setTimeout(() => {
                     this._navbarDropdownPending = false;
                     this.renderNavbarDropdown(mode);
-                }, 100);
+                }, 500);
                 return;
             }
 
@@ -344,15 +357,22 @@
             li.id = "construction-theme-dropdown";
             li.className = "nav-item dropdown dropdown-notifications";
             li.innerHTML = `
-                <a class="nav-link" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding-top: 12px;">
-                   <span class="theme-label">${mode === "dark" ? "\uD83C\uDFD7\uFE0F Construction Dark" : "\u2600\uFE0F Construction Light"}</span>
+                <a class="nav-link" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding-top: 12px; cursor: pointer;">
+                   <span class="theme-label">${mode === "dark" ? "🏗️ Construction Dark" : "☀️ Construction Light"}</span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right">
-                    <a class="dropdown-item" href="#" onclick="ConstructionTheme.setMode('light'); return false;">\u2600\uFE0F Construction Light</a>
-                    <a class="dropdown-item" href="#" onclick="ConstructionTheme.setMode('dark'); return false;">\uD83C\uDFD7\uFE0F Construction Dark</a>
+                    <a class="dropdown-item" href="#" onclick="ConstructionTheme.setMode('light'); return false;">☀️ Construction Light</a>
+                    <a class="dropdown-item" href="#" onclick="ConstructionTheme.setMode('dark'); return false;">🏗️ Construction Dark</a>
                 </div>
             `;
             navbar.prepend(li);
+
+            // v16: Bootstrap dropdown requires data-bs-toggle
+            const toggle = li.querySelector('.nav-link');
+            if (toggle && window.bootstrap && bootstrap.Dropdown) {
+                new bootstrap.Dropdown(toggle);
+            }
+
             this._navbarDropdownPending = false;
             console.log("[ConstructionTheme] Navbar dropdown rendered");
         },

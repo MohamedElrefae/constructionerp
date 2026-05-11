@@ -966,3 +966,43 @@ li.tree-node.hover-active > .tree-link > .tree-node-toolbar,
 [data-theme="light"] .desk-sidebar .desk-sidebar-item.selected, [data-theme="light"] .desk-sidebar .desk-sidebar-item.active { background: var(--primary) !important; color: #fff !important; }
 [data-theme="light"] .list-row-container:hover { background: var(--row-hover-bg) !important; border-left-color: var(--primary) !important; }
 [data-theme="light"] .form-sidebar .btn-reset:hover, [data-theme="light"] .form-sidebar .btn-icon:hover { background: var(--surface-hover) !important; }
+
+/* ════════════════════════════════════════════════════════════
+   FIX: THEME SELECTOR & CHAT/WIDGET VISIBILITY
+   Ensure the construction theme dropdown and Frappe's chat/help
+   widgets are always visible in the navbar.
+   ════════════════════════════════════════════════════════════ */
+
+/* Theme selector dropdown */
+#construction-theme-dropdown {
+  display: list-item !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+#construction-theme-dropdown .nav-link {
+  color: var(--text-2) !important;
+  padding: 8px 12px !important;
+  border-radius: var(--radius-sm) !important;
+  transition: var(--t) !important;
+  cursor: pointer !important;
+}
+#construction-theme-dropdown .nav-link:hover {
+  background: var(--surface-hover) !important;
+  color: var(--text) !important;
+}
+
+/* v16 navbar: ensure chat, help, notifications, search stay visible */
+.navbar-notifications,
+.navbar-help,
+.navbar-icon-btn,
+.dropdown-help,
+.dropdown-notifications,
+.chat-dropdown,
+#chat-widget,
+.navbar-search,
+.desktop-navbar .navbar-right > * {
+  visibility: visible !important;
+  display: revert !important;
+  opacity: 1 !important;
+}
