@@ -654,11 +654,11 @@ html[data-theme="light"] .desk-sidebar .standard-sidebar-item .sidebar-item-labe
 /* Page Header - Scoped to data-theme */
 [data-theme="dark"] .page-head,
 [data-theme="light"] .page-head {
-  background: var(--bg) !important;
+  background: var(--surface) !important;
   border-bottom: 1px solid var(--border) !important;
-  padding: 0px 20px !important; /* Minimal padding */
-  height: 48px !important; /* Force a slim height */
-  min-height: 48px !important;
+  padding: 12px 24px !important;
+  min-height: auto !important;
+  height: auto !important;
   display: flex !important;
   align-items: center !important;
 }
@@ -4740,303 +4740,116 @@ html[data-theme="light"] .construction-view-menu .dropdown-menu .divider {
 
 /* ============================================
     15. TREE VIEW TOOLBAR BUTTONS (Chart of Accounts)
-    Matches test lab colored action buttons pattern
+    FIX: Toolbar always on same row as label, always clickable
+    Uses visibility+opacity for smooth fade, pointer-events for clickability
     ============================================ */
 
-/* Tree node toolbar - hidden by default, Frappe shows via JS hover-active class */
-html[data-theme="dark"] .tree-node-toolbar {
-  display: none !important;
-  opacity: 0 !important;
-  visibility: hidden !important;
-  transition: none !important;
+/* ── TREE NODE LAYOUT: label + toolbar on ONE row ── */
+.tree-link {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  width: 100% !important;
+  padding: 6px 12px !important;
+  cursor: pointer !important;
 }
 
-/* Show toolbar only on directly hovered node via Frappe's hover-active class */
-html[data-theme="dark"] li.tree-node.hover-active > .tree-node-toolbar {
+.tree-label {
+  flex: 1 !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+/* Toolbar inline with label, always in flow */
+.tree-node-toolbar {
   display: inline-flex !important;
-  opacity: 1 !important;
-  visibility: visible !important;
   align-items: center !important;
   gap: 4px !important;
+  flex-shrink: 0 !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  transition: opacity 0.2s ease !important;
+  margin-left: auto !important;
 }
 
-html[data-theme="dark"] .tree-node-toolbar .btn:not(.btn-edit):not(.btn-add):not(.btn-delete):not(.btn-view),
-html[data-theme="dark"] .tree-node-toolbar .tree-toolbar-button:not(.btn-edit):not(.btn-add):not(.btn-delete):not(.btn-view),
-html[data-theme="dark"] .tree-node-toolbar .btn-default:not(.btn-edit):not(.btn-add):not(.btn-delete):not(.btn-view),
-html[data-theme="dark"] .tree-node-toolbar .btn-xs:not(.btn-edit):not(.btn-add):not(.btn-delete):not(.btn-view),
-html[data-theme="dark"] .tree-node-toolbar button:not(.btn-edit):not(.btn-add):not(.btn-delete):not(.btn-view):not(.btn.btn-edit):not(.btn.btn-add):not(.btn.btn-delete):not(.btn.btn-view) {
-  background: var(--surface) !important;
-  background-color: var(--surface) !important;
-  border: 1px solid var(--border) !important;
-  border-color: var(--border) !important;
-  color: var(--text) !important;
-  font-weight: 500 !important;
-  font-size: 0.625rem !important;
-  padding: 2px 6px !important;
+/* Show toolbar on hover of the tree-link row */
+li.tree-node:hover > .tree-link > .tree-node-toolbar,
+li.tree-node.hover-active > .tree-link > .tree-node-toolbar,
+.tree-link:hover > .tree-node-toolbar,
+.tree-row:hover > .tree-node-toolbar {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+/* ── BUTTON BASE ── */
+.tree-node-toolbar .btn,
+.tree-node-toolbar .tree-toolbar-button,
+.tree-node-toolbar button,
+.tree-node-toolbar a {
+  font-size: 0.75rem !important;
+  padding: 3px 8px !important;
+  height: 24px !important;
+  line-height: 1 !important;
   border-radius: 4px !important;
-  transition: all 0.2s cubic-bezier(0.4,0,0.2,1) !important;
+  font-weight: 600 !important;
+  white-space: nowrap !important;
+  min-width: auto !important;
   box-shadow: none !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-  height: 22px !important;
-  line-height: 1 !important;
-  min-width: auto !important;
+  transition: all 0.15s ease !important;
+  text-decoration: none !important;
 }
 
-html[data-theme="dark"] .tree-node-toolbar .btn:not(.btn-edit):not(.btn-add):not(.btn-delete):not(.btn-view):hover,
-html[data-theme="dark"] .tree-node-toolbar .tree-toolbar-button:not(.btn-edit):not(.btn-add):not(.btn-delete):not(.btn-view):hover,
-html[data-theme="dark"] .tree-node-toolbar button:not(.btn-edit):not(.btn-add):not(.btn-delete):not(.btn-view):not(.btn.btn-edit):not(.btn.btn-add):not(.btn.btn-delete):not(.btn.btn-view):hover {
-  background: var(--surface-hover) !important;
-  border-color: var(--border-hover) !important;
-  color: var(--text) !important;
-  transform: translateY(-1px) !important;
-}
-
-/* Colored variants - applied via JS classes */
-html[data-theme="dark"] .tree-node-toolbar .btn.btn-edit,
-html[data-theme="dark"] .tree-node-toolbar button.btn-edit,
-html[data-theme="dark"] .tree-node-toolbar .btn-edit {
-  background: var(--primary) !important;
-  background-color: var(--primary) !important;
-  border-color: var(--primary) !important;
-  color: #ffffff !important;
-  font-size: 0.625rem !important;
-  padding: 2px 6px !important;
-  height: 22px !important;
-  line-height: 1 !important;
-  transition: all 0.2s cubic-bezier(0.4,0,0.2,1) !important;
-}
-
-html[data-theme="dark"] .tree-node-toolbar .btn.btn-edit:hover,
-html[data-theme="dark"] .tree-node-toolbar button.btn-edit:hover,
-html[data-theme="dark"] .tree-node-toolbar .btn-edit:hover {
-  background: var(--primary-hover) !important;
-  background-color: var(--primary-hover) !important;
-  border-color: var(--primary-hover) !important;
-  transform: translateY(-1px) !important;
-}
-
-html[data-theme="dark"] .tree-node-toolbar .btn.btn-add,
-html[data-theme="dark"] .tree-node-toolbar button.btn-add,
-html[data-theme="dark"] .tree-node-toolbar .btn-add {
-  background: var(--success) !important;
-  background-color: var(--success) !important;
-  border-color: var(--success) !important;
-  color: #ffffff !important;
-  font-size: 0.625rem !important;
-  padding: 2px 6px !important;
-  height: 22px !important;
-  line-height: 1 !important;
-  transition: all 0.2s cubic-bezier(0.4,0,0.2,1) !important;
-}
-
-html[data-theme="dark"] .tree-node-toolbar .btn.btn-add:hover,
-html[data-theme="dark"] .tree-node-toolbar button.btn-add:hover,
-html[data-theme="dark"] .tree-node-toolbar .btn-add:hover {
-  background: #15803d !important;
-  background-color: #15803d !important;
-  border-color: #15803d !important;
-  transform: translateY(-1px) !important;
-}
-
-html[data-theme="dark"] .tree-node-toolbar .btn.btn-delete,
-html[data-theme="dark"] .tree-node-toolbar button.btn-delete,
-html[data-theme="dark"] .tree-node-toolbar .btn-delete {
-  background: var(--danger) !important;
-  background-color: var(--danger) !important;
-  border-color: var(--danger) !important;
-  color: #ffffff !important;
-  font-size: 0.625rem !important;
-  padding: 2px 6px !important;
-  height: 22px !important;
-  line-height: 1 !important;
-  transition: all 0.2s cubic-bezier(0.4,0,0.2,1) !important;
-}
-
-html[data-theme="dark"] .tree-node-toolbar .btn.btn-delete:hover,
-html[data-theme="dark"] .tree-node-toolbar button.btn-delete:hover,
-html[data-theme="dark"] .tree-node-toolbar .btn-delete:hover {
-  background: var(--danger-hover) !important;
-  background-color: var(--danger-hover) !important;
-  border-color: var(--danger-hover) !important;
-  transform: translateY(-1px) !important;
-}
-
-html[data-theme="dark"] .tree-node-toolbar .btn.btn-view,
-html[data-theme="dark"] .tree-node-toolbar button.btn-view,
-html[data-theme="dark"] .tree-node-toolbar .btn-view {
-  background: var(--accent) !important;
-  background-color: var(--accent) !important;
-  border-color: var(--accent) !important;
-  color: #ffffff !important;
-  font-size: 0.625rem !important;
-  padding: 2px 6px !important;
-  height: 22px !important;
-  line-height: 1 !important;
-  transition: all 0.2s cubic-bezier(0.4,0,0.2,1) !important;
-}
-
-html[data-theme="dark"] .tree-node-toolbar .btn.btn-view:hover,
-html[data-theme="dark"] .tree-node-toolbar button.btn-view:hover,
-html[data-theme="dark"] .tree-node-toolbar .btn-view:hover {
-  background: var(--accent-hover) !important;
-  background-color: var(--accent-hover) !important;
-  border-color: var(--accent-hover) !important;
-  transform: translateY(-1px) !important;
-}
-
-/* Light mode tree toolbar buttons - hidden by default, Frappe shows via JS hover-active class */
-html[data-theme="light"] .tree-node-toolbar {
-  display: none !important;
-  opacity: 0 !important;
-  visibility: hidden !important;
-  transition: none !important;
-}
-
-html[data-theme="light"] li.tree-node.hover-active > .tree-node-toolbar {
-  display: inline-flex !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-  align-items: center !important;
-  gap: 4px !important;
-}
-
-html[data-theme="light"] .tree-node-toolbar .btn:not(.btn-edit):not(.btn-add):not(.btn-delete):not(.btn-view),
-html[data-theme="light"] .tree-node-toolbar .tree-toolbar-button:not(.btn-edit):not(.btn-add):not(.btn-delete):not(.btn-view),
-html[data-theme="light"] .tree-node-toolbar .btn-default:not(.btn-edit):not(.btn-add):not(.btn-delete):not(.btn-view),
-html[data-theme="light"] .tree-node-toolbar .btn-xs:not(.btn-edit):not(.btn-add):not(.btn-delete):not(.btn-view),
-html[data-theme="light"] .tree-node-toolbar button:not(.btn-edit):not(.btn-add):not(.btn-delete):not(.btn-view):not(.btn.btn-edit):not(.btn.btn-add):not(.btn.btn-delete):not(.btn.btn-view) {
+/* ── Default button ── */
+.tree-node-toolbar .btn:not(.btn-edit):not(.btn-add):not(.btn-delete):not(.btn-view),
+.tree-node-toolbar .btn-default:not(.btn-edit):not(.btn-add):not(.btn-delete):not(.btn-view),
+.tree-node-toolbar button:not(.btn-edit):not(.btn-add):not(.btn-delete):not(.btn-view) {
   background: var(--surface) !important;
-  background-color: var(--surface) !important;
   border: 1px solid var(--border) !important;
-  border-color: var(--border) !important;
   color: var(--text) !important;
-  font-weight: 500 !important;
-  font-size: 0.625rem !important;
-  padding: 2px 6px !important;
-  border-radius: 4px !important;
-  transition: all 0.2s cubic-bezier(0.4,0,0.2,1) !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-  height: 22px !important;
-  line-height: 1 !important;
-  min-width: auto !important;
 }
-
-html[data-theme="light"] .tree-node-toolbar .btn:not(.btn-edit):not(.btn-add):not(.btn-delete):not(.btn-view):hover,
-html[data-theme="light"] .tree-node-toolbar .tree-toolbar-button:not(.btn-edit):not(.btn-add):not(.btn-delete):not(.btn-view):hover,
-html[data-theme="light"] .tree-node-toolbar button:not(.btn-edit):not(.btn-add):not(.btn-delete):not(.btn-view):not(.btn.btn-edit):not(.btn.btn-add):not(.btn.btn-delete):not(.btn.btn-view):hover {
+.tree-node-toolbar .btn:not(.btn-edit):not(.btn-add):not(.btn-delete):not(.btn-view):hover,
+.tree-node-toolbar .btn-default:not(.btn-edit):not(.btn-add):not(.btn-delete):not(.btn-view):hover {
   background: var(--surface-hover) !important;
-  border-color: var(--border-hover) !important;
-  transform: translateY(-1px) !important;
-}
-
-html[data-theme="light"] .tree-node-toolbar .btn.btn-edit,
-html[data-theme="light"] .tree-node-toolbar button.btn-edit,
-html[data-theme="light"] .tree-node-toolbar .btn-edit {
-  background: var(--primary) !important;
-  background-color: var(--primary) !important;
   border-color: var(--primary) !important;
-  color: #ffffff !important;
-  font-size: 0.625rem !important;
-  padding: 2px 6px !important;
-  height: 22px !important;
-  line-height: 1 !important;
-  transition: all 0.2s cubic-bezier(0.4,0,0.2,1) !important;
 }
 
-html[data-theme="light"] .tree-node-toolbar .btn.btn-edit:hover,
-html[data-theme="light"] .tree-node-toolbar button.btn-edit:hover,
-html[data-theme="light"] .tree-node-toolbar .btn-edit:hover {
-  background: var(--primary-hover) !important;
-  transform: translateY(-1px) !important;
+/* ── Colored variants ── */
+.tree-node-toolbar .btn-edit {
+  background: var(--primary) !important; border-color: var(--primary) !important; color: #fff !important;
 }
+.tree-node-toolbar .btn-edit:hover { background: var(--primary-hover) !important; }
 
-html[data-theme="light"] .tree-node-toolbar .btn.btn-add,
-html[data-theme="light"] .tree-node-toolbar button.btn-add,
-html[data-theme="light"] .tree-node-toolbar .btn-add {
-  background: var(--success) !important;
-  background-color: var(--success) !important;
-  border-color: var(--success) !important;
-  color: #ffffff !important;
-  font-size: 0.625rem !important;
-  padding: 2px 6px !important;
-  height: 22px !important;
-  line-height: 1 !important;
-  transition: all 0.2s cubic-bezier(0.4,0,0.2,1) !important;
+.tree-node-toolbar .btn-add {
+  background: var(--success) !important; border-color: var(--success) !important; color: #fff !important;
 }
+.tree-node-toolbar .btn-add:hover { background: var(--success-hover) !important; }
 
-html[data-theme="light"] .tree-node-toolbar .btn.btn-add:hover,
-html[data-theme="light"] .tree-node-toolbar button.btn-add:hover,
-html[data-theme="light"] .tree-node-toolbar .btn-add:hover {
-  background: #15803d !important;
-  transform: translateY(-1px) !important;
+.tree-node-toolbar .btn-delete {
+  background: var(--danger) !important; border-color: var(--danger) !important; color: #fff !important;
 }
+.tree-node-toolbar .btn-delete:hover { background: var(--danger-hover) !important; }
 
-html[data-theme="light"] .tree-node-toolbar .btn.btn-delete,
-html[data-theme="light"] .tree-node-toolbar button.btn-delete,
-html[data-theme="light"] .tree-node-toolbar .btn-delete {
-  background: var(--danger) !important;
-  background-color: var(--danger) !important;
-  border-color: var(--danger) !important;
-  color: #ffffff !important;
-  font-size: 0.625rem !important;
-  padding: 2px 6px !important;
-  height: 22px !important;
-  line-height: 1 !important;
-  transition: all 0.2s cubic-bezier(0.4,0,0.2,1) !important;
+.tree-node-toolbar .btn-view {
+  background: var(--accent) !important; border-color: var(--accent) !important; color: #fff !important;
 }
-
-html[data-theme="light"] .tree-node-toolbar .btn.btn-delete:hover,
-html[data-theme="light"] .tree-node-toolbar button.btn-delete:hover,
-html[data-theme="light"] .tree-node-toolbar .btn-delete:hover {
-  background: var(--danger-hover) !important;
-  transform: translateY(-1px) !important;
-}
-
-html[data-theme="light"] .tree-node-toolbar .btn.btn-view,
-html[data-theme="light"] .tree-node-toolbar button.btn-view,
-html[data-theme="light"] .tree-node-toolbar .btn-view {
-  background: var(--accent) !important;
-  background-color: var(--accent) !important;
-  border-color: var(--accent) !important;
-  color: #ffffff !important;
-  font-size: 0.625rem !important;
-  padding: 2px 6px !important;
-  height: 22px !important;
-  line-height: 1 !important;
-  transition: all 0.2s cubic-bezier(0.4,0,0.2,1) !important;
-}
-
-html[data-theme="light"] .tree-node-toolbar .btn.btn-view:hover,
-html[data-theme="light"] .tree-node-toolbar button.btn-view:hover,
-html[data-theme="light"] .tree-node-toolbar .btn-view:hover {
-  background: var(--accent-hover) !important;
-  transform: translateY(-1px) !important;
-}
+.tree-node-toolbar .btn-view:hover { background: var(--accent-hover) !important; }
 
 /* ============================================
-    16. TREE VIEW ROW HOVER & ARROWS (Chart of Accounts)
-    Individual node hover (not parent container) + arrow icons
+    16. TREE VIEW ROW — Single-node hover, no cascade
+    FIX: Only the DIRECTLY hovered node highlights, not parent/child
     ============================================ */
 
-/* Tree expander arrows - force visibility for Frappe SVG icons */
-html[data-theme="dark"] .tree-link .node-parent,
-html[data-theme="dark"] .tree-link .node-leaf,
-html[data-theme="dark"] .tree-link .node-parent svg,
-html[data-theme="dark"] .tree-link .node-leaf svg,
-html[data-theme="dark"] .tree-link .node-parent svg path,
-html[data-theme="dark"] .tree-link .node-leaf svg path,
-html[data-theme="dark"] .tree-link .node-parent svg use,
-html[data-theme="dark"] .tree-link .node-leaf svg use,
-html[data-theme="dark"] .tree-link span:not(.tree-node-toolbar):not(.balance-area),
-html[data-theme="dark"] .tree-link span:not(.tree-node-toolbar):not(.balance-area) svg,
-html[data-theme="dark"] .tree-link span:not(.tree-node-toolbar):not(.balance-area) svg path,
-html[data-theme="dark"] .tree-expander,
-html[data-theme="dark"] .tree-expander svg,
-html[data-theme="dark"] .tree-expander svg path,
-html[data-theme="dark"] .tree-node .tree-expander,
-html[data-theme="dark"] .tree-node .balance-btn svg {
+/* ── Tree arrows: always visible ── */
+.tree-link .node-parent,
+.tree-link .node-leaf,
+.tree-link .node-parent svg,
+.tree-link .node-leaf svg,
+.tree-expander,
+.tree-expander svg {
   color: var(--text-2) !important;
   fill: var(--text-2) !important;
   stroke: var(--text-2) !important;
@@ -5044,9 +4857,8 @@ html[data-theme="dark"] .tree-node .balance-btn svg {
   visibility: visible !important;
 }
 
-html[data-theme="dark"] .tree-link .node-parent,
-html[data-theme="dark"] .tree-link .node-leaf,
-html[data-theme="dark"] .tree-link span:not(.tree-node-toolbar):not(.balance-area) {
+.tree-link .node-parent,
+.tree-link .node-leaf {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -5056,136 +4868,59 @@ html[data-theme="dark"] .tree-link span:not(.tree-node-toolbar):not(.balance-are
   flex-shrink: 0 !important;
 }
 
-html[data-theme="dark"] .tree-link .node-parent svg,
-html[data-theme="dark"] .tree-link .node-leaf svg,
-html[data-theme="dark"] .tree-link span:not(.tree-node-toolbar):not(.balance-area) svg {
+.tree-link .node-parent svg,
+.tree-link .node-leaf svg {
   width: 16px !important;
   height: 16px !important;
   display: block !important;
 }
 
-html[data-theme="dark"] .tree-expander:hover,
-html[data-theme="dark"] .tree-node .tree-expander:hover,
-html[data-theme="dark"] .tree-link .node-parent:hover {
+.tree-expander:hover,
+.tree-link .node-parent:hover {
   color: var(--primary) !important;
   fill: var(--primary) !important;
   stroke: var(--primary) !important;
 }
 
-/* Individual tree node hover - only the hovered node, not parents or children */
-html[data-theme="dark"] .tree-node {
-  transition: background-color 0.15s ease, box-shadow 0.15s ease !important;
+/* ── Tree node: smooth transition, no flash ── */
+.tree-node {
+  transition: background 0.15s ease, box-shadow 0.15s ease !important;
   border-radius: 6px !important;
   margin: 2px 0 !important;
+  position: relative !important;
 }
 
-/* Only apply hover to directly hovered node */
-html[data-theme="dark"] li.tree-node:hover,
-html[data-theme="dark"] .tree-node:hover {
+/* ── DIRECT hover only — use .tree-link:hover for the clickable row ── */
+.tree-link:hover {
   background: var(--surface-hover) !important;
   border-radius: 6px !important;
-  box-shadow: 0 0 0 2px rgba(37,99,235,.25), 0 4px 16px rgba(0,0,0,.18) !important;
-  position: relative !important;
-  z-index: 1 !important;
+  box-shadow: 0 0 0 2px rgba(37,99,235,.15) !important;
 }
 
-/* Reset child nodes - they should never show parent hover */
-html[data-theme="dark"] .tree-children .tree-node {
-  background: transparent !important;
-  box-shadow: none !important;
-}
-
-/* When hovering a child, reset the parent's hover state */
-html[data-theme="dark"] .tree-node:has(.tree-node:hover) {
-  background: transparent !important;
-  box-shadow: none !important;
-}
-
-/* Tree link text hover */
-html[data-theme="dark"] .tree-link:hover .tree-label {
+/* ── Label color on hover ── */
+.tree-link:hover .tree-label {
   color: var(--primary) !important;
 }
 
-html[data-theme="dark"] .tree-label {
+.tree-label {
   color: var(--text) !important;
 }
 
-/* Tree children indentation lines */
-html[data-theme="dark"] .tree-children {
-  border-left: 1px solid var(--border) !important;
-  margin-left: 12px !important;
-  padding-left: 12px !important;
-}
-
-/* Light mode tree arrows */
-html[data-theme="light"] .tree-link .node-parent,
-html[data-theme="light"] .tree-link .node-leaf,
-html[data-theme="light"] .tree-link .node-parent svg,
-html[data-theme="light"] .tree-link .node-leaf svg,
-html[data-theme="light"] .tree-link .node-parent svg path,
-html[data-theme="light"] .tree-link .node-leaf svg path,
-html[data-theme="light"] .tree-link .node-parent svg use,
-html[data-theme="light"] .tree-link .node-leaf svg use,
-html[data-theme="light"] .tree-link span:not(.tree-node-toolbar):not(.balance-area),
-html[data-theme="light"] .tree-link span:not(.tree-node-toolbar):not(.balance-area) svg,
-html[data-theme="light"] .tree-link span:not(.tree-node-toolbar):not(.balance-area) svg path,
-html[data-theme="light"] .tree-expander,
-html[data-theme="light"] .tree-expander svg,
-html[data-theme="light"] .tree-expander svg path,
-html[data-theme="light"] .tree-node .tree-expander,
-html[data-theme="light"] .tree-node .balance-btn svg {
-  color: var(--text-2) !important;
-  fill: var(--text-2) !important;
-  stroke: var(--text-2) !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-}
-
-html[data-theme="light"] .tree-link .node-parent,
-html[data-theme="light"] .tree-link .node-leaf,
-html[data-theme="light"] .tree-link span:not(.tree-node-toolbar):not(.balance-area) {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  width: 18px !important;
-  height: 18px !important;
-  margin-right: 6px !important;
-  flex-shrink: 0 !important;
-}
-
-html[data-theme="light"] .tree-link .node-parent svg,
-html[data-theme="light"] .tree-link .node-leaf svg,
-html[data-theme="light"] .tree-link span:not(.tree-node-toolbar):not(.balance-area) svg {
-  width: 16px !important;
-  height: 16px !important;
-  display: block !important;
-}
-
-html[data-theme="light"] li.tree-node:hover,
-html[data-theme="light"] .tree-node:hover {
-  background: var(--surface-hover) !important;
-  border-radius: 6px !important;
-  box-shadow: 0 0 0 2px rgba(37,99,235,.25), 0 4px 16px rgba(0,0,0,.18) !important;
-  position: relative !important;
-  z-index: 1 !important;
-  transition: background-color 0.15s ease, box-shadow 0.15s ease !important;
-}
-
-html[data-theme="light"] .tree-children .tree-node {
+/* ── PREVENT parent hover propagation ── */
+/* li.tree-node:hover highlights ALL ancestors — suppress it */
+li.tree-node:hover > ul.tree-children > li.tree-node {
   background: transparent !important;
   box-shadow: none !important;
 }
 
-html[data-theme="light"] .tree-node:has(.tree-node:hover) {
+/* When child is hovered, suppress parent highlight */
+li.tree-node:has(> ul.tree-children > li.tree-node:hover) > .tree-link {
   background: transparent !important;
   box-shadow: none !important;
 }
 
-html[data-theme="light"] .tree-link:hover .tree-label {
-  color: var(--primary) !important;
-}
-
-html[data-theme="light"] .tree-children {
+/* ── Tree children indentation ── */
+.tree-children {
   border-left: 1px solid var(--border) !important;
   margin-left: 12px !important;
   padding-left: 12px !important;

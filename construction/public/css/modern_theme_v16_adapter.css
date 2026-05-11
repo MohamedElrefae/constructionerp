@@ -185,7 +185,7 @@ body {
 }
 
 /* ════════════════════════════════════════════════════════════
-   NAVBAR
+   NAVBAR — Single top bar only. Hide duplicate desktop-navbar on tree/list pages
    ════════════════════════════════════════════════════════════ */
 
 .navbar {
@@ -229,12 +229,22 @@ body {
 .form-inline .form-control::placeholder { color: var(--text-3) !important; }
 
 /* ════════════════════════════════════════════════════════════
-   PAGE HEAD
+   PAGE HEAD — Merge into single bar, remove gap
    ════════════════════════════════════════════════════════════ */
 
 .page-head {
-  background: var(--surface) !important; border-bottom: 1px solid var(--border) !important;
-  padding: 16px 24px !important; min-height: auto !important;
+  background: var(--surface) !important;
+  border-bottom: 1px solid var(--border) !important;
+  padding: 12px 24px !important;
+  min-height: auto !important;
+  height: auto !important;
+  margin: 0 !important;
+}
+.page-head .container { width: 100% !important; max-width: none !important; padding: 0 !important; }
+.page-head .row {
+  display: flex !important; justify-content: space-between !important;
+  align-items: center !important; flex-wrap: wrap !important; gap: 12px !important;
+  margin: 0 !important;
 }
 .page-head .container { width: 100% !important; max-width: none !important; padding: 0 !important; }
 .page-head .row {
@@ -790,6 +800,160 @@ textarea.form-control { resize: vertical !important; min-height: 80px !important
 .like-action, .favourite-action { color: var(--text-3) !important; cursor: pointer !important; transition: var(--t) !important; }
 .like-action:hover, .favourite-action:hover { color: var(--danger) !important; }
 .like-action.liked, .favourite-action.favourited { color: var(--danger) !important; }
+
+/* ════════════════════════════════════════════════════════════
+   FIX: DOUBLE TOP BAR — Hide duplicate .desktop-navbar on pages with .page-head
+   ════════════════════════════════════════════════════════════ */
+
+/* v16 has both .desktop-navbar and .page-head on workspace/list/tree pages.
+   Hide the desktop-navbar's bottom content area when page-head exists below it,
+   preventing the visual "two bars" effect. */
+.navbar + .page-head,
+.desktop-navbar + .page-head { margin-top: 0 !important; }
+
+/* Remove gap between navbar and content area */
+.main-section,
+.layout-main-section,
+.page-container { margin-top: 0 !important; padding-top: 0 !important; }
+
+/* Remove any top margin/padding on the first child inside page-container */
+.page-container > :first-child,
+.page-content > :first-child,
+.layout-main-section > :first-child { margin-top: 0 !important; }
+
+/* ════════════════════════════════════════════════════════════
+   FIX: FULL-WIDTH LAYOUT — Tree, workspace, list pages
+   ════════════════════════════════════════════════════════════ */
+
+/* Tree & workspace pages should be full width */
+body[data-route^="Tree/"] .layout-main-section,
+body[data-route="desktop"] .layout-main-section,
+body[data-route^="List/"] .layout-main-section {
+  max-width: 100% !important;
+  width: 100% !important;
+  padding: 0 !important;
+}
+
+/* Remove container max-width constraint */
+body[data-route^="Tree/"] .container,
+body[data-route="desktop"] .container,
+body[data-route^="List/"] .container {
+  max-width: 100% !important;
+  width: 100% !important;
+  padding-left: 24px !important;
+  padding-right: 24px !important;
+}
+
+/* Frappe-card full width on tree/list pages */
+body[data-route^="Tree/"] .frappe-card,
+body[data-route^="List/"] .frappe-card {
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
+/* ════════════════════════════════════════════════════════════
+   FIX: TREE VIEW — Single-line rows with inline buttons
+   ════════════════════════════════════════════════════════════ */
+
+/* Tree link: flex row so label + buttons are on same line */
+.tree-link {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  width: 100% !important;
+  padding: 6px 12px !important;
+  cursor: pointer !important;
+  min-height: 36px !important;
+  position: relative !important;
+}
+
+/* Tree label takes available space */
+.tree-label {
+  flex: 1 !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  color: var(--text) !important;
+}
+.tree-link:hover .tree-label { color: var(--primary) !important; }
+
+/* Tree toolbar: inline and clickable */
+.tree-node-toolbar {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  flex-shrink: 0 !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  transition: opacity 0.15s ease !important;
+  margin-left: auto !important;
+}
+
+/* Show toolbar on row hover */
+li.tree-node:hover > .tree-link > .tree-node-toolbar,
+li.tree-node.hover-active > .tree-link > .tree-node-toolbar,
+.tree-link:hover > .tree-node-toolbar {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+/* Tree row: only highlight directly hovered node */
+.tree-node {
+  transition: background 0.15s ease !important;
+  border-radius: 6px !important;
+  margin: 2px 0 !important;
+  position: relative !important;
+}
+
+.tree-link:hover {
+  background: var(--surface-hover) !important;
+  border-radius: 6px !important;
+}
+
+/* Suppress parent/child cascade — only show hover on the row you're actually on */
+.tree-children .tree-node { background: transparent !important; }
+.tree-children { border-left: 1px solid var(--border) !important; margin-left: 12px !important; padding-left: 12px !important; }
+
+/* Tree toolbar buttons */
+.tree-node-toolbar .btn,
+.tree-node-toolbar .tree-toolbar-button,
+.tree-node-toolbar button,
+.tree-node-toolbar a {
+  font-size: 0.75rem !important;
+  padding: 3px 8px !important;
+  height: 24px !important;
+  line-height: 1 !important;
+  border-radius: 4px !important;
+  font-weight: 600 !important;
+  white-space: nowrap !important;
+  min-width: auto !important;
+  box-shadow: none !important;
+  transition: all 0.15s ease !important;
+  text-decoration: none !important;
+}
+.tree-node-toolbar .btn-edit { background: var(--primary) !important; border-color: var(--primary) !important; color: #fff !important; }
+.tree-node-toolbar .btn-edit:hover { background: var(--primary-hover) !important; }
+.tree-node-toolbar .btn-add { background: var(--success) !important; border-color: var(--success) !important; color: #fff !important; }
+.tree-node-toolbar .btn-add:hover { background: var(--success-hover) !important; }
+.tree-node-toolbar .btn-delete { background: var(--danger) !important; border-color: var(--danger) !important; color: #fff !important; }
+.tree-node-toolbar .btn-delete:hover { background: var(--danger-hover) !important; }
+.tree-node-toolbar .btn-view { background: var(--accent) !important; border-color: var(--accent) !important; color: #fff !important; }
+.tree-node-toolbar .btn-view:hover { background: var(--accent-hover) !important; }
+.tree-node-toolbar .btn:not(.btn-edit):not(.btn-add):not(.btn-delete):not(.btn-view),
+.tree-node-toolbar button:not(.btn-edit):not(.btn-add):not(.btn-delete):not(.btn-view) {
+  background: var(--surface) !important; border: 1px solid var(--border) !important; color: var(--text) !important;
+}
+.tree-node-toolbar .btn:not(.btn-edit):not(.btn-add):not(.btn-delete):not(.btn-view):hover {
+  background: var(--surface-hover) !important; border-color: var(--primary) !important;
+}
+
+/* Tree expander arrows */
+.tree-node-toggle,
+.tree-expander { color: var(--text-2) !important; fill: var(--text-2) !important; stroke: var(--text-2) !important; }
+.tree-node-toggle:hover, .tree-expander:hover { color: var(--primary) !important; }
 
 /* ─── LIGHT THEME OVERRIDES for v16 selectors ─── */
 [data-theme="light"] .layout-side-section { background: #ffffff !important; }
