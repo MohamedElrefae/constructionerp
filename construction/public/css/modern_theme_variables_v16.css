@@ -89,7 +89,7 @@
 
   /* === BUTTONS: Brand === */
   --primary:                 var(--primary) !important;
-  --primary-dark:            #0369a1 !important;
+  --primary-dark:            var(--primary-dark) !important;
   --primary-hover:           var(--primary-hover) !important;
   --primary-light:           var(--primary-light) !important;
   --brand-color:             var(--primary) !important;
@@ -160,7 +160,7 @@
   /* === T6: SIDEBAR (v16 Espresso) === */
   --sidebar-bg:              var(--bg) !important;
   --sidebar-border-color:    var(--border) !important;
-  --sidebar-width:           220px !important;
+  --sidebar-width:           var(--sidebar-width) !important;
   --sidebar-hover-color:     var(--surface-hover) !important;
   --sidebar-select-color:    var(--primary) !important;
   --sidebar-active-color:    var(--primary-light) !important;
