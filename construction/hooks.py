@@ -58,7 +58,7 @@ doctype_tree_js = {"BOQ Structure": "construction/doctype/boq_structure/boq_stru
 app_include_css = [
 	"/assets/construction/css/modern_theme_tokens.css?v=18",
 	"/assets/construction/css/modern_theme_base.css?v=29",
-	"/assets/construction/css/modern_theme_v16_adapter.css?v=21",
+	"/assets/construction/css/modern_theme_v16_adapter.css?v=22",
 ]
 
 # Global JS includes (raw asset path — loaded directly, not bundled)
