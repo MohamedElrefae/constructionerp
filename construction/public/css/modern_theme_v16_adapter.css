@@ -13,7 +13,7 @@
 .sidebar-container {
   background-color: var(--surface) !important;
   border-right: 1px solid var(--border) !important;
-  width: var(--sidebar-width, 260px);
+  width: var(--sidebar-width, 260px) !important;
   transition: width 0.35s cubic-bezier(0.4,0,0.2,1);
   flex-shrink: 0;
 }
@@ -22,7 +22,7 @@
 .body-sidebar-container.sidebar-collapsed,
 .sidebar-container.collapsed,
 .sidebar-container.sidebar-collapsed {
-  width: var(--sidebar-collapsed, 60px);
+  width: var(--sidebar-collapsed, 60px) !important;
 }
 
 .body-sidebar,
@@ -46,6 +46,7 @@
   margin: 2px 8px !important;
   border-radius: 8px !important;
   color: var(--text) !important;
+  opacity: 1 !important;
   font-size: 13px !important;
   font-weight: 500 !important;
   cursor: pointer !important;
@@ -505,7 +506,23 @@
 }
 
 /* ==========================================================================
-   T6: DIALOG / MODAL ENHANCEMENTS
+    T5b: DATATABLE COMPACT ROWS
+    ========================================================================== */
+
+.dt-cell {
+  padding: 6px 10px !important;
+}
+
+.dt-cell .dt-cell__content {
+  padding: 6px 10px !important;
+}
+
+.dt-row {
+  min-height: 38px !important;
+}
+
+/* ==========================================================================
+    T6: DIALOG / MODAL ENHANCEMENTS
    ========================================================================== */
 
 .modal.show .modal-dialog {
