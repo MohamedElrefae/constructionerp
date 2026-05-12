@@ -188,7 +188,8 @@ body {
    NAVBAR — Single top bar only. Hide duplicate desktop-navbar on tree/list pages
    ════════════════════════════════════════════════════════════ */
 
-.navbar {
+.navbar,
+.desktop-navbar {
   background: var(--surface) !important;
   border-bottom: 1px solid var(--border) !important;
   height: 56px !important; padding: 0 20px !important;
@@ -201,7 +202,12 @@ body {
 .navbar-brand { color: var(--text) !important; font-size: 1.1rem !important; font-weight: 700 !important; text-decoration: none !important; }
 .navbar-brand:hover { color: var(--primary) !important; }
 
-.navbar-nav { display: flex !important; align-items: center !important; gap: 4px !important; list-style: none !important; margin: 0 !important; padding: 0 !important; }
+.navbar-nav,
+.desktop-navbar .navbar-right,
+.navbar-container .navbar-right {
+  display: flex !important; align-items: center !important; gap: 4px !important; list-style: none !important; margin: 0 !important; padding: 0 !important; }
+.navbar-container,
+.navbar-expand { display: flex !important; align-items: center !important; width: 100% !important; }
 .nav-item { position: relative !important; list-style: none !important; }
 .nav-link {
   color: var(--text-2) !important; padding: 8px 12px !important; border-radius: var(--radius-sm) !important;
@@ -1006,3 +1012,116 @@ li.tree-node.hover-active > .tree-link > .tree-node-toolbar,
   display: revert !important;
   opacity: 1 !important;
 }
+
+/* ════════════════════════════════════════════════════════════
+   v16 DOM GAP FIXES — Selectors verified by live DOM audit
+   ════════════════════════════════════════════════════════════ */
+
+/* ─── Form Dashboard ─── */
+.form-dashboard { background: var(--surface) !important; border-bottom: 1px solid var(--border) !important; padding: 12px 24px !important; }
+.form-dashboard-section { margin-bottom: 8px !important; }
+.form-dashboard-section .section-body { display: flex !important; gap: 8px !important; flex-wrap: wrap !important; }
+
+/* ─── Form Links ─── */
+.form-links { background: var(--surface) !important; }
+.form-link-title { font-size: .8125rem !important; font-weight: 600 !important; color: var(--text) !important; margin-bottom: 4px !important; }
+
+/* ─── Document Link Badges ─── */
+.document-link-badge, .badge-link { display: inline-flex !important; align-items: center !important; gap: 4px !important; padding: 4px 10px !important; border-radius: var(--radius-sm) !important; font-size: .75rem !important; color: var(--primary) !important; background: var(--primary-light) !important; }
+.badge-link:hover, .document-link-badge:hover { background: var(--primary) !important; color: #fff !important; text-decoration: none !important; }
+.badge-hover { transition: var(--t) !important; }
+.pill-label { font-size: .6875rem !important; color: var(--text-2) !important; }
+
+/* ─── Collapse Indicator ─── */
+.collapse-indicator { color: var(--text-3) !important; cursor: pointer !important; transition: var(--t) !important; font-size: .75rem !important; margin-right: 6px !important; }
+.collapse-indicator:hover { color: var(--primary) !important; }
+
+/* ─── Child Table / Grid ─── */
+.grid-row { display: flex !important; align-items: center !important; border-bottom: 1px solid var(--divider) !important; transition: var(--t) !important; min-height: 38px !important; }
+.grid-row:hover { background: var(--row-hover-bg) !important; }
+.grid-row-check, .row-check { accent-color: var(--primary) !important; width: 16px !important; height: 16px !important; }
+.sortable-handle { color: var(--text-3) !important; cursor: grab !important; }
+
+/* ─── Form Stats & Viewers ─── */
+.form-stats { display: flex !important; gap: 16px !important; padding: 8px 0 !important; color: var(--text-2) !important; font-size: .8125rem !important; }
+.form-viewers { display: flex !important; align-items: center !important; gap: 4px !important; color: var(--text-3) !important; font-size: .75rem !important; }
+
+/* ─── Form Clickable Section ─── */
+.form-clickable-section { cursor: pointer !important; transition: var(--t) !important; }
+.form-clickable-section:hover { background: var(--surface-hover) !important; }
+
+/* ─── Overlay Sidebar ─── */
+.overlay-sidebar { background: var(--surface) !important; border: 1px solid var(--border) !important; border-radius: var(--radius) !important; box-shadow: var(--shadow-lg) !important; }
+
+/* ─── Sidebar Image ─── */
+.sidebar-image-section { padding: 16px !important; text-align: center !important; }
+.sidebar-image-wrapper { display: inline-block !important; position: relative !important; }
+.sidebar-image { width: 120px !important; height: 120px !important; border-radius: var(--radius) !important; object-fit: cover !important; border: 2px solid var(--border) !important; }
+.sidebar-standard-image { width: 120px !important; height: 120px !important; border-radius: var(--radius) !important; display: flex !important; align-items: center !important; justify-content: center !important; background: var(--bg-2) !important; font-size: 2.5rem !important; color: var(--text-2) !important; }
+.sidebar-image-actions { display: flex !important; gap: 8px !important; justify-content: center !important; margin-top: 8px !important; }
+
+/* ─── Sidebar Header ─── */
+.sidebar-header { padding: 12px 16px !important; border-bottom: 1px solid var(--border) !important; display: flex !important; align-items: center !important; gap: 8px !important; }
+
+/* ─── Sidebar Notification ─── */
+.sidebar-notification { padding: 8px 16px !important; border-bottom: 1px solid var(--divider) !important; cursor: pointer !important; transition: var(--t) !important; }
+.sidebar-notification:hover { background: var(--surface-hover) !important; }
+
+/* ─── Sidebar Items ─── */
+.sidebar-items { padding: 8px 0 !important; }
+.sidebar-item-container { display: flex !important; align-items: center !important; gap: 8px !important; padding: 6px 16px !important; cursor: pointer !important; transition: var(--t) !important; }
+.sidebar-item-container:hover { background: var(--surface-hover) !important; }
+.sidebar-item-control { padding: 6px 16px !important; display: flex !important; align-items: center !important; gap: 8px !important; }
+.sidebar-item-edit-controls { padding: 4px 16px !important; display: flex !important; gap: 4px !important; }
+.sidebar-child-item { padding: 4px 16px 4px 36px !important; font-size: .8125rem !important; color: var(--text-2) !important; cursor: pointer !important; transition: var(--t) !important; }
+.sidebar-child-item:hover { color: var(--primary) !important; }
+.sidebar-rating { padding: 8px 16px !important; }
+.sidebar-meta-details { padding: 8px 16px !important; font-size: .75rem !important; color: var(--text-3) !important; }
+.sidebar-bottom-actions { padding: 12px 16px !important; border-top: 1px solid var(--border) !important; display: flex !important; gap: 8px !important; }
+
+/* ─── Form Sidebar Label ─── */
+.form-sidebar-label { font-size: .8125rem !important; font-weight: 600 !important; color: var(--text) !important; margin-bottom: 8px !important; }
+
+/* ─── Attachments ─── */
+.attachments-actions { display: flex !important; gap: 8px !important; }
+
+/* ─── Tags ─── */
+.tags-input, .tags-label { display: inline-flex !important; align-items: center !important; gap: 4px !important; padding: 2px 8px !important; border-radius: var(--radius-sm) !important; font-size: .75rem !important; color: var(--text-2) !important; cursor: pointer !important; transition: var(--t) !important; }
+.tags-input:hover, .tags-label:hover { background: var(--surface-hover) !important; color: var(--primary) !important; }
+
+/* ─── Comments ─── */
+.comment-input-container { display: flex !important; gap: 12px !important; align-items: flex-start !important; }
+.comment-input-wrapper { flex: 1 !important; }
+.comment-input-header { margin-bottom: 8px !important; font-size: .8125rem !important; font-weight: 600 !important; color: var(--text) !important; }
+.activity-title { font-size: .8125rem !important; font-weight: 600 !important; color: var(--text-2) !important; margin-bottom: 8px !important; }
+
+/* ─── Timeline ─── */
+.timeline-items { position: relative !important; }
+.timeline-dot { width: 10px !important; height: 10px !important; border-radius: 50% !important; background: var(--border) !important; flex-shrink: 0 !important; }
+.timeline-actions { display: flex !important; gap: 8px !important; align-items: center !important; }
+.new-timeline { padding: 12px 0 !important; }
+
+/* ─── Progress Area ─── */
+.progress-area { display: flex !important; align-items: center !important; gap: 8px !important; }
+
+/* ─── No Indicator Dot ─── */
+.no-indicator-dot { display: none !important; }
+
+/* ─── Action Buttons ─── */
+.action-btn { display: inline-flex !important; align-items: center !important; justify-content: center !important; width: 28px !important; height: 28px !important; background: var(--bg-2) !important; border: 1px solid var(--border) !important; border-radius: var(--radius-sm) !important; color: var(--text-2) !important; cursor: pointer !important; transition: var(--t) !important; }
+.action-btn:hover { background: var(--surface-hover) !important; color: var(--text) !important; border-color: var(--primary) !important; }
+
+/* ─── Button Variants ─── */
+.btn-clear { background: transparent !important; border: none !important; color: var(--text-2) !important; cursor: pointer !important; }
+.btn-clear:hover { color: var(--danger) !important; }
+.btn-link { background: transparent !important; border: none !important; color: var(--primary) !important; cursor: pointer !important; text-decoration: none !important; }
+.btn-link:hover { text-decoration: underline !important; }
+.btn-new { color: var(--primary) !important; font-weight: 600 !important; }
+.btn-open, .btn-open-row { color: var(--text-2) !important; }
+.btn-open:hover, .btn-open-row:hover { color: var(--text) !important; background: var(--surface-hover) !important; }
+.btn-comment { background: var(--primary) !important; color: #fff !important; border: none !important; border-radius: var(--radius-sm) !important; padding: 6px 16px !important; font-size: .8125rem !important; cursor: pointer !important; }
+.btn-comment:hover { background: var(--primary-hover) !important; }
+
+/* ─── Open Notification ─── */
+.open-notification { background: var(--surface) !important; border: 1px solid var(--border) !important; border-radius: var(--radius) !important; padding: 12px !important; margin-bottom: 4px !important; cursor: pointer !important; transition: var(--t) !important; }
+.open-notification:hover { border-color: var(--primary) !important; }
