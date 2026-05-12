@@ -3,7 +3,7 @@
    1,703 lines | 194 new selectors from 14-page DOM audit
    Covers: Desktop, List, Form, Tree, Report, Kanban, Dashboard,
            File, Gantt, Profile, Workflow, Settings, Login
-   Version: 5.0-prod | Compatible: Frappe Bench v15 + Cloud v16
+   Version: 6.0-prod | Visual regression fixes applied | 19 fixes for 23 issues
    ════════════════════════════════════════════════════════════ */
 
 /* ─── 1. TOKENS (defined in modern_theme_tokens.css with !important) ─── */
@@ -58,10 +58,24 @@ body {
 .sidebar-overlay { display: none !important; }
 .sidebar-skeleton { display: none !important; }
 
-/* Sidebar toggle — hide the floating one, use Frappe's native */
+/* Sidebar toggle — restored and styled */
 .sidebar-toggle-btn,
-.btn-sidebar-toggle {
-  display: none !important;
+.btn-sidebar-toggle,
+.toggle-sidebar-button,
+.sidebar-collapse-btn {
+  display: flex !important;
+  align-items: center !important; justify-content: center !important;
+  width: 40px !important; height: 40px !important;
+  background: transparent !important; border: none !important;
+  color: var(--text) !important; cursor: pointer !important;
+  font-size: 1.25rem !important; border-radius: var(--radius-sm) !important;
+  transition: var(--t) !important; flex-shrink: 0 !important;
+}
+.sidebar-toggle-btn:hover,
+.btn-sidebar-toggle:hover,
+.toggle-sidebar-button:hover,
+.sidebar-collapse-btn:hover {
+  background: var(--surface-hover) !important;
 }
 
 .body-sidebar-container,
@@ -142,7 +156,7 @@ body {
 }
 
 /* Sidebar item label */
-.sidebar-item-label { transition: var(--t-motion) !important; display: inline-block !important; color: inherit !important; }
+.sidebar-item-label { transition: var(--t-motion) !important; display: inline-block !important; color: var(--text) !important; }
 .standard-sidebar-item:hover .sidebar-item-label,
 .sidebar-item:hover .sidebar-item-label { transform: translateX(2px) !important; }
 
@@ -214,7 +228,9 @@ body {
 .desktop-navbar {
   background: var(--surface) !important;
   border-bottom: 1px solid var(--border) !important;
-  height: 56px !important; padding: 0 20px !important;
+  height: auto !important;
+  min-height: 48px !important;
+  padding: 0 16px !important;
   display: flex !important; align-items: center !important;
   justify-content: space-between !important;
   position: sticky !important; top: 0 !important; z-index: 100 !important;
@@ -262,7 +278,7 @@ body {
 
 .page-head {
   background: var(--surface) !important; border-bottom: 1px solid var(--border) !important;
-  padding: 16px 24px !important; min-height: auto !important;
+  padding: 12px 16px !important; min-height: auto !important;
 }
 .page-head .container { width: 100% !important; max-width: none !important; padding: 0 !important; }
 .page-head .row {
@@ -386,7 +402,7 @@ body {
    FORM LAYOUT
    ════════════════════════════════════════════════════════════ */
 
-.layout-main-section { padding: 24px !important; }
+.layout-main-section { padding: 16px !important; max-width: 100% !important; width: 100% !important; }
 .form-layout { max-width: 100% !important; }
 
 /* Form sections */
@@ -543,13 +559,13 @@ textarea.form-control { resize: vertical !important; min-height: 80px !important
 .dropdown-toggle::after { content: " ▾" !important; font-size: .75rem !important; }
 
 .dropdown-menu {
-  position: absolute !important; top: 100% !important; right: 0 !important; margin-top: 6px !important;
+  position: absolute !important; top: 100% !important; right: 0 !important; margin-top: 2px !important;
   background: var(--surface) !important;
-  border: 1px solid var(--border) !important;
+  border: none !important;
   border-radius: var(--radius) !important;
   min-width: 200px !important; max-width: 320px !important;
   box-shadow: var(--shadow-lg) !important;
-  z-index: 1000 !important; padding: 6px !important; overflow: hidden !important;
+  z-index: 9999 !important; padding: 6px !important; overflow: hidden !important;
   display: none !important; list-style: none !important;
 }
 .dropdown-menu.show,
@@ -1674,3 +1690,90 @@ textarea.form-control { resize: vertical !important; min-height: 80px !important
 [data-theme="light"] .activity-item { color: #475569 !important; }
 [data-theme="light"] .attachment-row:hover { background: #f1f5f9 !important; }
 
+
+
+/* ════════════════════════════════════════════════════════════
+   v6 VISUAL REGRESSION FIXES — 10 new rule blocks
+   Date: 2026-05-13 | Screenshots: 7 | Issues: 23
+   ════════════════════════════════════════════════════════════ */
+
+/* FIX 3: Empty sidebar collapse — no dead space */
+.body-sidebar-container:empty,
+.body-sidebar-container:not(:has(.standard-sidebar-item)):not(:has(.desk-sidebar-item)),
+.sidebar-container:empty,
+.sidebar-container:not(:has(.standard-sidebar-item)):not(:has(.desk-sidebar-item)) {
+  flex: 0 0 0px !important;
+  width: 0px !important;
+  min-width: 0px !important;
+  max-width: 0px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  overflow: hidden !important;
+}
+
+/* FIX 4: Flex layout only when sidebar exists */
+.main-section:has(.body-sidebar-container) > .row,
+.main-section:has(.sidebar-container) > .row {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+}
+
+/* FIX 10: Workspace header styling */
+.desk-header {
+  background: var(--surface) !important;
+  border-bottom: 1px solid var(--border) !important;
+  color: var(--text) !important;
+}
+
+/* FIX 11: Hide duplicate sidebars */
+.body-sidebar-container ~ .body-sidebar-container,
+.sidebar-container ~ .sidebar-container {
+  display: none !important;
+}
+
+/* FIX 12: Form view with right sidebar */
+.page-container:has(.form-sidebar) .layout-main-section {
+  width: auto !important;
+  flex: 1 !important;
+}
+
+/* FIX 14: Notification dropdown force opaque */
+.dropdown-notifications,
+.notifications-list,
+.notification-list-body {
+  background: var(--surface) !important;
+  border: none !important;
+  box-shadow: var(--shadow-lg) !important;
+}
+.notification-list-header {
+  background: var(--bg-2) !important;
+  border-bottom: 1px solid var(--border) !important;
+  padding: 10px 14px !important;
+}
+
+/* FIX 15: Filter bar consistency */
+.filter-section,
+.filter-area {
+  background: var(--bg-2) !important;
+  border-bottom: 1px solid var(--border) !important;
+  padding: 8px 16px !important;
+}
+
+/* FIX 16: Button group — no gaps */
+.btn-group { display: flex !important; gap: 0 !important; }
+
+/* FIX 17: Full viewport height */
+#body, .main-section { min-height: 100vh !important; background: var(--bg) !important; }
+
+/* ════════════════════════════════════════════════════════════
+   v6 LIGHT THEME OVERRIDES
+   ════════════════════════════════════════════════════════════ */
+
+[data-theme="light"] .dropdown-menu { background: #ffffff !important; }
+[data-theme="light"] .page-head { background: #ffffff !important; }
+[data-theme="light"] .form-sidebar { background: #ffffff !important; }
+[data-theme="light"] .filter-section { background: #f1f5f9 !important; }
+[data-theme="light"] .desk-header { background: #ffffff !important; }
+[data-theme="light"] .dropdown-notifications { background: #ffffff !important; }
+[data-theme="light"] #body, [data-theme="light"] .main-section { background: #f8fafc !important; }
