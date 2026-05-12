@@ -59,7 +59,7 @@ app_include_css = [
 	"/assets/construction/css/modern_theme_tokens.css?v=20",
 	"/assets/construction/css/modern_theme_variables_v16.css?v=2",
 	"/assets/construction/css/modern_theme_base.css?v=31",
-	"/assets/construction/css/modern_theme_v16_adapter.css?v=28",
+	"/assets/construction/css/modern_theme_v16_adapter.css?v=29",
 ]
 
 # Global JS includes (raw asset path — loaded directly, not bundled)

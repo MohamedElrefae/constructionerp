@@ -25,3 +25,5 @@ Thumbs.db
 
 # Logs
 *.log
+*.v4.backup
+modern_theme_v16_adapter_v5.css
