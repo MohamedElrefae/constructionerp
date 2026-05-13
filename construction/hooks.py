@@ -67,7 +67,7 @@ app_include_css = [
 app_include_js = [
 	"/assets/construction/js/print_settings_dialog.js",
 	"/assets/construction/js/construction_export_menu.js",
-	"/assets/construction/js/theme_loader.js?v=29",
+	"/assets/construction/js/theme_loader.js?v=30",
 	"/assets/construction/js/components/index.js?v=4.5",
 	# Searchable Dropdown Module (Week 1)
 	"/assets/construction/js/searchable_dropdown/utils.js",

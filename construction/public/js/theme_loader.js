@@ -63,6 +63,9 @@
 
                 this.removeGhostButtons();
 
+                // PATH B: Inject critical overrides as inline <style> — bypasses ALL CSS specificity wars
+                this.injectCriticalOverrides();
+
                 const end = performance.now();
                 console.log(`[ConstructionTheme] Initialized in ${initialMode} mode. Boot time: ${(end - start).toFixed(2)}ms`);
             } catch (err) {
@@ -382,6 +385,89 @@
             if (label) {
                 label.textContent = mode === "dark" ? "\uD83C\uDFD7\uFE0F Construction Dark" : "\u2600\uFE0F Construction Light";
             }
+        },
+
+        /**
+         * PATH B: Inject critical visual fixes as inline <style> element.
+         * Inline <style> injected at runtime overrides ALL linked stylesheets,
+         * including Frappe's internal desk.bundle.css — NO specificity war.
+         * This is the nuclear option. GUARANTEED to work.
+         */
+        injectCriticalOverrides: function () {
+            if (document.getElementById("ct-critical-overrides")) return;
+            var style = document.createElement("style");
+            style.id = "ct-critical-overrides";
+            style.textContent = [
+                '/* Navbar: auto height, min 48px */',
+                'html[data-theme="dark"] .navbar, html[data-theme="dark"] .desktop-navbar,',
+                'html[data-theme="light"] .navbar, html[data-theme="light"] .desktop-navbar {',
+                '  height: auto !important; min-height: 48px !important;',
+                '  padding: 0 16px !important;',
+                '}',
+                '/* Dropdown: no border, shadow only */',
+                'html[data-theme="dark"] .dropdown-menu, html[data-theme="light"] .dropdown-menu {',
+                '  border: none !important;',
+                '  box-shadow: 0 12px 32px rgba(0,0,0,.50), 0 0 0 1px rgba(148,163,184,0.08) !important;',
+                '  z-index: 9999 !important;',
+                '}',
+                '/* Sidebar: collapse when Frappe adds sidebar-collapsed class */',
+                'html[data-theme="dark"] .layout-side-section.sidebar-collapsed,',
+                'html[data-theme="light"] .layout-side-section.sidebar-collapsed,',
+                'html[data-theme="dark"] .sidebar-collapsed .layout-side-section,',
+                'html[data-theme="light"] .sidebar-collapsed .layout-side-section {',
+                '  width: 60px !important; min-width: 60px !important; max-width: 60px !important;',
+                '  flex: 0 0 60px !important;',
+                '}',
+                '/* Sidebar: empty collapse to zero */',
+                'html[data-theme="dark"] .layout-side-section:empty,',
+                'html[data-theme="light"] .layout-side-section:empty {',
+                '  width: 0 !important; min-width: 0 !important; max-width: 0 !important;',
+                '  flex: 0 0 0 !important; padding: 0 !important; margin: 0 !important;',
+                '}',
+                '/* Hamburger / sidebar toggle: always visible */',
+                'html[data-theme="dark"] .sidebar-toggle-btn, html[data-theme="light"] .sidebar-toggle-btn,',
+                'html[data-theme="dark"] .btn-sidebar-toggle, html[data-theme="light"] .btn-sidebar-toggle {',
+                '  display: flex !important; align-items: center !important; justify-content: center !important;',
+                '  width: 40px !important; height: 40px !important;',
+                '  background: transparent !important; border: none !important;',
+                '  color: var(--text) !important; cursor: pointer !important;',
+                '  font-size: 1.25rem !important;',
+                '}',
+                '/* Page head: tighter padding */',
+                'html[data-theme="dark"] .page-head, html[data-theme="light"] .page-head {',
+                '  padding: 12px 16px !important;',
+                '}',
+                '/* Layout: full width */',
+                'html[data-theme="dark"] .layout-main-section, html[data-theme="light"] .layout-main-section,',
+                'html[data-theme="dark"] .page-content, html[data-theme="light"] .page-content {',
+                '  max-width: 100% !important; width: 100% !important;',
+                '}',
+                '/* Button group: no gap */',
+                'html[data-theme="dark"] .btn-group, html[data-theme="light"] .btn-group {',
+                '  gap: 0 !important;',
+                '}',
+                '/* Filter bar: consistent bg */',
+                'html[data-theme="dark"] .filter-section, html[data-theme="light"] .filter-section {',
+                '  background: var(--bg-2) !important;',
+                '}',
+                '/* Notification dropdown: opaque bg */',
+                'html[data-theme="dark"] .dropdown-notifications, html[data-theme="light"] .dropdown-notifications {',
+                '  background: var(--surface) !important; border: none !important;',
+                '  box-shadow: 0 12px 32px rgba(0,0,0,.5) !important;',
+                '}',
+                '/* Form sidebar: reduced padding */',
+                'html[data-theme="dark"] .form-sidebar .sidebar-section,',
+                'html[data-theme="light"] .form-sidebar .sidebar-section {',
+                '  padding: 8px 12px !important;',
+                '}',
+                '/* Full height */',
+                'html[data-theme="dark"] #body, html[data-theme="light"] #body,',
+                'html[data-theme="dark"] .main-section, html[data-theme="light"] .main-section {',
+                '  min-height: 100vh !important;',
+                '}'
+            ].join('\n');
+            document.head.appendChild(style);
+            console.log("[ConstructionTheme] Critical override <style> injected (Path B)");
         }
     };
 
