@@ -1785,3 +1785,360 @@ textarea.form-control { resize: vertical !important; min-height: 80px !important
 [data-theme="light"] .desk-header { background: #ffffff !important; }
 [data-theme="light"] .dropdown-notifications { background: #ffffff !important; }
 [data-theme="light"] #body, [data-theme="light"] .main-section { background: #f8fafc !important; }
+/* ════════════════════════════════════════════════════════════
+   FRAPPE v16 ADAPTER v7 — SPECIFICITY MATCH FIX
+   
+   PROBLEM: base.css uses `html[data-theme="dark"] .selector`
+   which has specificity (0,2,1). Our adapter uses plain
+   `.selector` with specificity (0,1,0). base.css WINS.
+   
+   SOLUTION: Prefix ALL conflicting selectors with
+   `html[data-theme="dark"]` and `html[data-theme="light"]`
+   to match base.css's specificity. Since adapter loads LAST,
+   same specificity = adapter wins.
+   
+   Version: 7.0 | Date: 2026-05-14
+   ════════════════════════════════════════════════════════════ */
+
+/* ──────────────────────────────────────────────────────────
+   TOKENS — used by rules below
+   ────────────────────────────────────────────────────────── */
+
+:root {
+  --shadow-dropdown: 0 12px 32px rgba(0,0,0,.50), 0 0 0 1px rgba(148,163,184,0.08);
+  --sidebar-collapsed: 60px;
+}
+
+[data-theme="light"] {
+  --shadow-dropdown: 0 12px 32px rgba(0,0,0,.10), 0 0 0 1px rgba(15,23,42,0.06);
+}
+
+/* ════════════════════════════════════════════════════════════
+   CRITICAL FIX 1: DROPDOWN — Remove double border
+   Base.css has: html[data-theme] .dropdown-menu { ... }
+   Specificity: (0,2,1) — must match
+   ════════════════════════════════════════════════════════════ */
+
+html[data-theme="dark"] .dropdown-menu,
+html[data-theme="light"] .dropdown-menu {
+  background: var(--surface) !important;
+  border: none !important;
+  box-shadow: var(--shadow-dropdown) !important;
+  z-index: 9999 !important;
+}
+
+/* Dropdown items */
+html[data-theme="dark"] .dropdown-item,
+html[data-theme="light"] .dropdown-item {
+  color: var(--text) !important;
+  border-left: 3px solid transparent !important;
+  transition: 0.25s cubic-bezier(0.4,0,0.2,1) !important;
+}
+html[data-theme="dark"] .dropdown-item:hover,
+html[data-theme="light"] .dropdown-item:hover {
+  background: var(--surface-hover) !important;
+  border-left-color: var(--primary) !important;
+  letter-spacing: 0.2px !important;
+  transform: translateX(4px) !important;
+}
+
+/* ════════════════════════════════════════════════════════════
+   CRITICAL FIX 2: SIDEBAR TOGGLE — Restore hamburger
+   Base.css hides it. We must show it with matching specificity.
+   ════════════════════════════════════════════════════════════ */
+
+html[data-theme="dark"] .sidebar-toggle-btn,
+html[data-theme="light"] .sidebar-toggle-btn,
+html[data-theme="dark"] .btn-sidebar-toggle,
+html[data-theme="light"] .btn-sidebar-toggle {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 40px !important;
+  height: 40px !important;
+  background: transparent !important;
+  border: none !important;
+  color: var(--text) !important;
+  cursor: pointer !important;
+  font-size: 1.25rem !important;
+  border-radius: 6px !important;
+}
+html[data-theme="dark"] .sidebar-toggle-btn:hover,
+html[data-theme="light"] .sidebar-toggle-btn:hover {
+  background: var(--surface-hover) !important;
+}
+
+/* ════════════════════════════════════════════════════════════
+   CRITICAL FIX 3: SIDEBAR — Collapse when empty
+   Base.css locks width at 260px. We must override with
+   matching specificity.
+   ════════════════════════════════════════════════════════════ */
+
+/* When sidebar is collapsed — match base.css specificity */
+html[data-theme="dark"] .layout-side-section.sidebar-collapsed,
+html[data-theme="light"] .layout-side-section.sidebar-collapsed,
+html[data-theme="dark"] .sidebar-collapsed .layout-side-section,
+html[data-theme="light"] .sidebar-collapsed .layout-side-section {
+  width: var(--sidebar-collapsed) !important;
+  min-width: var(--sidebar-collapsed) !important;
+  max-width: var(--sidebar-collapsed) !important;
+  flex: 0 0 var(--sidebar-collapsed) !important;
+}
+
+/* When sidebar is empty — collapse to zero */
+html[data-theme="dark"] .layout-side-section:empty,
+html[data-theme="light"] .layout-side-section:empty {
+  width: 0px !important;
+  min-width: 0px !important;
+  max-width: 0px !important;
+  flex: 0 0 0px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  overflow: hidden !important;
+}
+
+/* Inner sidebar container — also collapse */
+html[data-theme="dark"] .body-sidebar-container.sidebar-collapsed,
+html[data-theme="light"] .body-sidebar-container.sidebar-collapsed,
+html[data-theme="dark"] .sidebar-collapsed .body-sidebar-container,
+html[data-theme="light"] .sidebar-collapsed .sidebar-container {
+  width: var(--sidebar-collapsed) !important;
+  min-width: var(--sidebar-collapsed) !important;
+  max-width: var(--sidebar-collapsed) !important;
+}
+
+/* ════════════════════════════════════════════════════════════
+   CRITICAL FIX 4: NAVBAR — Height auto
+   Base.css may set height. We override with matching spec.
+   ════════════════════════════════════════════════════════════ */
+
+html[data-theme="dark"] .navbar,
+html[data-theme="light"] .navbar,
+html[data-theme="dark"] .desktop-navbar,
+html[data-theme="light"] .desktop-navbar {
+  height: auto !important;
+  min-height: 48px !important;
+  padding: 0 16px !important;
+  background: var(--surface) !important;
+  border-bottom: 1px solid var(--border) !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,.40) !important;
+}
+
+/* ════════════════════════════════════════════════════════════
+   CRITICAL FIX 5: PAGE LAYOUT — Full width
+   Base.css may constrain page-content width.
+   ════════════════════════════════════════════════════════════ */
+
+html[data-theme="dark"] .page-content,
+html[data-theme="light"] .page-content {
+  width: 100% !important;
+  max-width: 100% !important;
+  flex: 1 !important;
+  min-width: 0 !important;
+}
+
+html[data-theme="dark"] .page-container,
+html[data-theme="light"] .page-container {
+  margin-left: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-height: 100vh !important;
+  background: var(--bg) !important;
+}
+
+/* ════════════════════════════════════════════════════════════
+   CRITICAL FIX 6: SIDEBAR TEXT — White not grey
+   ════════════════════════════════════════════════════════════ */
+
+html[data-theme="dark"] .sidebar-item-label,
+html[data-theme="light"] .sidebar-item-label,
+html[data-theme="dark"] .standard-sidebar-item .sidebar-item-label,
+html[data-theme="light"] .standard-sidebar-item .sidebar-item-label {
+  color: var(--text) !important;
+  font-size: 0.875rem !important;
+}
+
+/* ════════════════════════════════════════════════════════════
+   CRITICAL FIX 7: FORM SIDEBAR — Reduce padding
+   ════════════════════════════════════════════════════════════ */
+
+html[data-theme="dark"] .form-sidebar,
+html[data-theme="light"] .form-sidebar {
+  background: var(--surface) !important;
+  border-left: 1px solid var(--border) !important;
+}
+
+html[data-theme="dark"] .form-sidebar .sidebar-section,
+html[data-theme="light"] .form-sidebar .sidebar-section {
+  padding: 8px 12px !important;
+  border-bottom: 1px solid var(--divider) !important;
+}
+
+html[data-theme="dark"] .form-sidebar .btn-reset,
+html[data-theme="light"] .form-sidebar .btn-reset {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 24px !important;
+  height: 24px !important;
+  background: transparent !important;
+  border: none !important;
+  color: var(--text-2) !important;
+  cursor: pointer !important;
+  border-radius: 6px !important;
+}
+html[data-theme="dark"] .form-sidebar .btn-reset:hover,
+html[data-theme="light"] .form-sidebar .btn-reset:hover {
+  background: var(--surface-hover) !important;
+  color: var(--text) !important;
+}
+
+/* ════════════════════════════════════════════════════════════
+   CRITICAL FIX 8: PAGE HEAD — Tighter padding
+   ════════════════════════════════════════════════════════════ */
+
+html[data-theme="dark"] .page-head,
+html[data-theme="light"] .page-head {
+  background: var(--surface) !important;
+  border-bottom: 1px solid var(--border) !important;
+  padding: 12px 16px !important;
+}
+
+/* ════════════════════════════════════════════════════════════
+   CRITICAL FIX 9: LAYOUT MAIN SECTION — Full width
+   ════════════════════════════════════════════════════════════ */
+
+html[data-theme="dark"] .layout-main-section,
+html[data-theme="light"] .layout-main-section {
+  max-width: 100% !important;
+  width: 100% !important;
+  padding: 16px !important;
+  background: var(--bg) !important;
+}
+
+/* ════════════════════════════════════════════════════════════
+   CRITICAL FIX 10: WORKSPACE HEADER
+   ════════════════════════════════════════════════════════════ */
+
+html[data-theme="dark"] .desk-header,
+html[data-theme="light"] .desk-header {
+  background: var(--surface) !important;
+  border-bottom: 1px solid var(--border) !important;
+  color: var(--text) !important;
+}
+
+/* ════════════════════════════════════════════════════════════
+   CRITICAL FIX 11: DUPLICATE SIDEBAR HIDE
+   ════════════════════════════════════════════════════════════ */
+
+html[data-theme="dark"] .layout-side-section ~ .layout-side-section,
+html[data-theme="light"] .layout-side-section ~ .layout-side-section,
+html[data-theme="dark"] .body-sidebar-container ~ .body-sidebar-container,
+html[data-theme="light"] .body-sidebar-container ~ .body-sidebar-container {
+  display: none !important;
+}
+
+/* ════════════════════════════════════════════════════════════
+   CRITICAL FIX 12: LIST VIEW — Filter bar
+   ════════════════════════════════════════════════════════════ */
+
+html[data-theme="dark"] .filter-section,
+html[data-theme="light"] .filter-section,
+html[data-theme="dark"] .filter-area,
+html[data-theme="light"] .filter-area {
+  background: var(--bg-2) !important;
+  border-bottom: 1px solid var(--border) !important;
+  padding: 8px 16px !important;
+}
+
+/* ════════════════════════════════════════════════════════════
+   CRITICAL FIX 13: BUTTON GROUP — No gaps
+   ════════════════════════════════════════════════════════════ */
+
+html[data-theme="dark"] .btn-group,
+html[data-theme="light"] .btn-group {
+  display: flex !important;
+  gap: 0 !important;
+}
+
+/* ════════════════════════════════════════════════════════════
+   CRITICAL FIX 14: NOTIFICATION DROPDOWN
+   ════════════════════════════════════════════════════════════ */
+
+html[data-theme="dark"] .dropdown-notifications,
+html[data-theme="light"] .dropdown-notifications,
+html[data-theme="dark"] .notifications-list,
+html[data-theme="light"] .notifications-list {
+  background: var(--surface) !important;
+  border: none !important;
+  box-shadow: var(--shadow-dropdown) !important;
+}
+
+html[data-theme="dark"] .notification-list-header,
+html[data-theme="light"] .notification-list-header {
+  background: var(--bg-2) !important;
+  border-bottom: 1px solid var(--border) !important;
+  padding: 10px 14px !important;
+}
+
+/* ════════════════════════════════════════════════════════════
+   CRITICAL FIX 15: FULL VIEWPORT HEIGHT
+   ════════════════════════════════════════════════════════════ */
+
+html[data-theme="dark"] #body,
+html[data-theme="light"] #body,
+html[data-theme="dark"] .main-section,
+html[data-theme="light"] .main-section {
+  min-height: 100vh !important;
+  background: var(--bg) !important;
+}
+
+/* ════════════════════════════════════════════════════════════
+   CRITICAL FIX 16: LIST FILTER DROPDOWN — Force opaque
+   The "Created On" transparent menu fix
+   ════════════════════════════════════════════════════════════ */
+
+html[data-theme="dark"] .list-filter-dropdown,
+html[data-theme="light"] .list-filter-dropdown,
+html[data-theme="dark"] .filter-popover .dropdown-menu,
+html[data-theme="light"] .filter-popover .dropdown-menu {
+  background: var(--surface) !important;
+  border: none !important;
+  box-shadow: var(--shadow-dropdown) !important;
+  z-index: 9999 !important;
+}
+
+/* ════════════════════════════════════════════════════════════
+   CRITICAL FIX 17: SCROLLBAR
+   ════════════════════════════════════════════════════════════ */
+
+html[data-theme="dark"] ::-webkit-scrollbar,
+html[data-theme="light"] ::-webkit-scrollbar {
+  width: 8px !important;
+  height: 8px !important;
+}
+html[data-theme="dark"] ::-webkit-scrollbar-track,
+html[data-theme="light"] ::-webkit-scrollbar-track {
+  background: var(--bg) !important;
+}
+html[data-theme="dark"] ::-webkit-scrollbar-thumb,
+html[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: var(--surface-hover) !important;
+  border-radius: 4px !important;
+}
+
+/* ════════════════════════════════════════════════════════════
+   v7 LIGHT THEME OVERRIDES
+   ════════════════════════════════════════════════════════════ */
+
+html[data-theme="light"] .dropdown-menu {
+  background: #ffffff !important;
+  box-shadow: 0 12px 32px rgba(0,0,0,.10), 0 0 0 1px rgba(15,23,42,0.06) !important;
+}
+html[data-theme="light"] .page-head { background: #ffffff !important; }
+html[data-theme="light"] .form-sidebar { background: #ffffff !important; }
+html[data-theme="light"] .filter-section { background: #f1f5f9 !important; }
+html[data-theme="light"] .desk-header { background: #ffffff !important; }
+html[data-theme="light"] .dropdown-notifications { background: #ffffff !important; }
+html[data-theme="light"] .navbar { background: #ffffff !important; }
