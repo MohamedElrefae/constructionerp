@@ -58,7 +58,7 @@ doctype_tree_js = {"BOQ Structure": "construction/doctype/boq_structure/boq_stru
 app_include_css = [
 	"/assets/construction/css/modern_theme_tokens.css?v=20",
 	"/assets/construction/css/modern_theme_variables_v16.css?v=2",
-	"/assets/construction/css/modern_theme_base.css?v=31",
+	"/assets/construction/css/modern_theme_base.css?v=32",
 	"/assets/construction/css/modern_theme_v16_adapter.css?v=32",
 ]
 

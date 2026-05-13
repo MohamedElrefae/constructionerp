@@ -51,7 +51,9 @@ body {
 [data-theme="dark"] .navbar,
 [data-theme="light"] .navbar,
 [data-theme="dark"] .navbar-default,
-[data-theme="light"] .navbar-default {
+[data-theme="light"] .navbar-default,
+[data-theme="dark"] .desktop-navbar,
+[data-theme="light"] .desktop-navbar {
   height: var(--navbar-height) !important;
   background: var(--surface) !important;
   border-bottom: 1px solid var(--border) !important;
@@ -79,6 +81,30 @@ body .layout-side-section {
   min-width: var(--sidebar-width, 260px) !important;
   flex-shrink: 0 !important;
   transition: width 0.35s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* Sidebar collapsed — collapse outer wrapper to 60px */
+html[data-theme="dark"] .layout-side-section.sidebar-collapsed,
+html[data-theme="light"] .layout-side-section.sidebar-collapsed,
+html[data-theme="dark"] .sidebar-collapsed .layout-side-section,
+html[data-theme="light"] .sidebar-collapsed .layout-side-section {
+  width: 60px !important;
+  min-width: 60px !important;
+  max-width: 60px !important;
+  flex: 0 0 60px !important;
+}
+
+/* Sidebar empty — collapse to 0 */
+html[data-theme="dark"] .layout-side-section:empty,
+html[data-theme="light"] .layout-side-section:empty {
+  width: 0px !important;
+  min-width: 0px !important;
+  max-width: 0px !important;
+  flex: 0 0 0px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  overflow: hidden !important;
 }
 
 /* Ensure main content fills remaining space - HIGH SPECIFICITY */
