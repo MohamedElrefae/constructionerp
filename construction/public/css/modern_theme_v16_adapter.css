@@ -161,6 +161,10 @@ body {
 .sidebar-item:hover .sidebar-item-label { transform: translateX(2px) !important; }
 
 /* Sidebar collapsed — Frappe adds .sidebar-collapsed class */
+html[data-theme="dark"] .layout-side-section.sidebar-collapsed,
+html[data-theme="light"] .layout-side-section.sidebar-collapsed,
+html[data-theme="dark"] .sidebar-collapsed .layout-side-section,
+html[data-theme="light"] .sidebar-collapsed .layout-side-section,
 .body-sidebar-container.sidebar-collapsed,
 .sidebar-container.sidebar-collapsed,
 .sidebar-collapsed .body-sidebar-container,
@@ -170,6 +174,10 @@ body {
   min-width: var(--sidebar-collapsed) !important;
   max-width: var(--sidebar-collapsed) !important;
 }
+html[data-theme="dark"] .layout-side-section.sidebar-collapsed .sidebar-item-label,
+html[data-theme="light"] .layout-side-section.sidebar-collapsed .sidebar-item-label,
+html[data-theme="dark"] .sidebar-collapsed .layout-side-section .sidebar-item-label,
+html[data-theme="light"] .sidebar-collapsed .layout-side-section .sidebar-item-label,
 .body-sidebar-container.sidebar-collapsed .sidebar-item-label,
 .sidebar-container.sidebar-collapsed .sidebar-item-label,
 .sidebar-collapsed .body-sidebar-container .sidebar-item-label,
