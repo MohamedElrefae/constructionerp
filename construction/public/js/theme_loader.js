@@ -10,7 +10,15 @@
 
         init: function () {
             const start = performance.now();
-            console.log(`%c[ConstructionTheme] v7.0 — CSS-Only Theming`, "color: #3b82f6; font-weight: bold;");
+            console.log(`%c[ConstructionTheme] v2.1 — Namespace Architecture`, "color: #3b82f6; font-weight: bold;");
+
+            // v2.1: Inject ct-enterprise namespace class for Desk routes
+            if (!document.documentElement.classList.contains("ct-enterprise")) {
+                var path = window.location.pathname;
+                if (path.startsWith("/desk") || path.startsWith("/app")) {
+                    document.documentElement.classList.add("ct-enterprise");
+                }
+            }
 
             try {
                 var savedPreference = null;
@@ -45,8 +53,6 @@
                 const config = (window.frappe && frappe.boot && frappe.boot.construction_theme) || {};
                 this.currentMode = initialMode;
 
-                this.injectCSSVariables(config);
-
                 document.documentElement.setAttribute("data-theme", initialMode);
 
                 this.setupThemeObserver();
@@ -55,7 +61,6 @@
                 this.renderNavbarDropdown(initialMode);
                 this.hideFrappeBranding(config);
                 this.swapLogo(config.logo_url);
-                this.pierceShadowDOM();
 
                 this.colorTreeToolbarButtons();
                 setTimeout(() => this.colorTreeToolbarButtons(), 1000);
@@ -63,30 +68,11 @@
 
                 this.removeGhostButtons();
 
-                // PATH B: Inject critical overrides as inline <style> — bypasses ALL CSS specificity wars
-                this.injectCriticalOverrides();
-
                 const end = performance.now();
                 console.log(`[ConstructionTheme] Initialized in ${initialMode} mode. Boot time: ${(end - start).toFixed(2)}ms`);
             } catch (err) {
                 console.error("[ConstructionTheme] Initialization failed", err);
             }
-        },
-
-        injectCSSVariables: function(config) {
-            if (!config || !config.primary_color) return;
-
-            const root = document.documentElement;
-            const vars = {
-                '--primary': config.primary_color,
-                '--accent': config.accent_color,
-                '--danger': config.danger_color,
-                '--success': config.success_color,
-            };
-
-            Object.entries(vars).forEach(([key, value]) => {
-                if (value) root.style.setProperty(key, value);
-            });
         },
 
         setupThemeObserver: function() {
@@ -155,7 +141,7 @@
                 });
 
                 if (newShadowRoots.length > 0) {
-                    newShadowRoots.forEach(root => this.injectShadowTokens(root));
+                    needsTreeButtonColor = true;
                 }
 
                 if (needsTreeButtonColor) {
@@ -166,105 +152,6 @@
             });
 
             this._mutationObserver.observe(document.body, { childList: true, subtree: true });
-        },
-
-        injectShadowTokens: function(root) {
-            if (!root || this._shadowRootsInjected.has(root)) return;
-            if (root.querySelector('#construction-shadow-tokens')) return;
-
-            const style = document.createElement('style');
-            style.id = 'construction-shadow-tokens';
-            style.textContent = `
-                :host {
-                    --primary-color: var(--primary, #0ea5e9);
-                    --danger-color: var(--danger, #dc2626);
-                    --success-color: var(--success, #16a34a);
-                    --warning-color: var(--accent, #f59e0b);
-                    --text-color: var(--text, #f8fafc);
-                    --bg-color: var(--bg, #0b1020);
-                    --fg-color: var(--surface, #1e293b);
-                    --border-color: var(--border, rgba(148,163,184,0.18));
-                }
-            `;
-            root.appendChild(style);
-            this._shadowRootsInjected.add(root);
-        },
-
-        removeGhostButtons: function() {
-            if (typeof $ === 'undefined' || !window.jQuery) return;
-
-            const cleanup = () => {
-                $('.construction-export-menu, .construction-view-menu').each(function() {
-                    const $menu = $(this);
-                    const items = $menu.find('.dropdown-menu li');
-                    if (items.length === 0 || items.text().trim() === "") {
-                        $menu.remove();
-                    }
-                });
-
-                $('.page-head .btn-group:empty, .page-header .btn-group:empty').remove();
-
-                $('.page-head .icon-btn, .page-header .icon-btn').each(function() {
-                    var $btn = $(this);
-                    var svgUse = $btn.find('svg use');
-                    var hasValidIcon = svgUse.length > 0 && svgUse.attr('href');
-                    var hasText = $btn.text().trim().length > 0;
-                    if (!hasValidIcon && !hasText) {
-                        $btn.remove();
-                    }
-                });
-            };
-
-            cleanup();
-            setTimeout(cleanup, 500);
-            setTimeout(cleanup, 1500);
-        },
-
-        colorTreeToolbarButtons: function() {
-            var buttons = document.querySelectorAll('.tree-node-toolbar .btn, .tree-node-toolbar .tree-toolbar-button, .tree-node-toolbar button');
-
-            buttons.forEach(function(btn) {
-                var text = (btn.textContent || '').trim().toLowerCase();
-                btn.classList.remove('btn-edit', 'btn-add', 'btn-delete', 'btn-view');
-                btn.classList.remove('btn-default', 'btn-xs');
-
-                if (text.includes('edit') || text.includes('modify')) {
-                    btn.classList.add('btn-edit');
-                } else if (text.includes('add') || text.includes('child') || text.includes('new')) {
-                    btn.classList.add('btn-add');
-                } else if (text.includes('delete') || text.includes('remove')) {
-                    btn.classList.add('btn-delete');
-                } else if (text.includes('view') || text.includes('ledger') || text.includes('open')) {
-                    btn.classList.add('btn-view');
-                }
-            });
-        },
-
-        setMode: function (mode) {
-            mode = mode === "dark" ? "dark" : "light";
-
-            var now = Date.now();
-            if (this._lastSetMode && (now - this._lastSetMode) < 1000) return;
-            this._lastSetMode = now;
-
-            console.log("[ConstructionTheme] Setting mode:", mode);
-
-            this.isInternalChange = true;
-            this.currentMode = mode;
-
-            document.documentElement.setAttribute("data-theme", mode);
-            try {
-                sessionStorage.setItem("construction_theme_mode", mode);
-            } catch (e) {}
-
-            this.updateNavbarLabel(mode);
-            this.persist(mode);
-        },
-
-        pierceShadowDOM: function() {
-            document.querySelectorAll('*').forEach(el => {
-                if (el.shadowRoot) this.injectShadowTokens(el.shadowRoot);
-            });
         },
 
         hideFrappeBranding: function(config) {
@@ -387,87 +274,6 @@
             }
         },
 
-        /**
-         * PATH B: Inject critical visual fixes as inline <style> element.
-         * Inline <style> injected at runtime overrides ALL linked stylesheets,
-         * including Frappe's internal desk.bundle.css — NO specificity war.
-         * This is the nuclear option. GUARANTEED to work.
-         */
-        injectCriticalOverrides: function () {
-            if (document.getElementById("ct-critical-overrides")) return;
-            var style = document.createElement("style");
-            style.id = "ct-critical-overrides";
-            style.textContent = [
-                '/* Navbar: auto height, min 48px */',
-                'html[data-theme="dark"] .navbar, html[data-theme="dark"] .desktop-navbar,',
-                'html[data-theme="light"] .navbar, html[data-theme="light"] .desktop-navbar {',
-                '  height: auto !important; min-height: 48px !important;',
-                '  padding: 0 16px !important;',
-                '}',
-                '/* Dropdown: no border, shadow only */',
-                'html[data-theme="dark"] .dropdown-menu, html[data-theme="light"] .dropdown-menu {',
-                '  border: none !important;',
-                '  box-shadow: 0 12px 32px rgba(0,0,0,.50), 0 0 0 1px rgba(148,163,184,0.08) !important;',
-                '  z-index: 9999 !important;',
-                '}',
-                '/* Sidebar: collapse when Frappe adds sidebar-collapsed class */',
-                'html[data-theme="dark"] .layout-side-section.sidebar-collapsed,',
-                'html[data-theme="light"] .layout-side-section.sidebar-collapsed,',
-                'html[data-theme="dark"] .sidebar-collapsed .layout-side-section,',
-                'html[data-theme="light"] .sidebar-collapsed .layout-side-section {',
-                '  width: 60px !important; min-width: 60px !important; max-width: 60px !important;',
-                '  flex: 0 0 60px !important;',
-                '}',
-                '/* Sidebar: empty collapse to zero */',
-                'html[data-theme="dark"] .layout-side-section:empty,',
-                'html[data-theme="light"] .layout-side-section:empty {',
-                '  width: 0 !important; min-width: 0 !important; max-width: 0 !important;',
-                '  flex: 0 0 0 !important; padding: 0 !important; margin: 0 !important;',
-                '}',
-                '/* Hamburger / sidebar toggle: always visible */',
-                'html[data-theme="dark"] .sidebar-toggle-btn, html[data-theme="light"] .sidebar-toggle-btn,',
-                'html[data-theme="dark"] .btn-sidebar-toggle, html[data-theme="light"] .btn-sidebar-toggle {',
-                '  display: flex !important; align-items: center !important; justify-content: center !important;',
-                '  width: 40px !important; height: 40px !important;',
-                '  background: transparent !important; border: none !important;',
-                '  color: var(--text) !important; cursor: pointer !important;',
-                '  font-size: 1.25rem !important;',
-                '}',
-                '/* Page head: tighter padding */',
-                'html[data-theme="dark"] .page-head, html[data-theme="light"] .page-head {',
-                '  padding: 12px 16px !important;',
-                '}',
-                '/* Layout: full width */',
-                'html[data-theme="dark"] .layout-main-section, html[data-theme="light"] .layout-main-section,',
-                'html[data-theme="dark"] .page-content, html[data-theme="light"] .page-content {',
-                '  max-width: 100% !important; width: 100% !important;',
-                '}',
-                '/* Button group: no gap */',
-                'html[data-theme="dark"] .btn-group, html[data-theme="light"] .btn-group {',
-                '  gap: 0 !important;',
-                '}',
-                '/* Filter bar: consistent bg */',
-                'html[data-theme="dark"] .filter-section, html[data-theme="light"] .filter-section {',
-                '  background: var(--bg-2) !important;',
-                '}',
-                '/* Notification dropdown: opaque bg */',
-                'html[data-theme="dark"] .dropdown-notifications, html[data-theme="light"] .dropdown-notifications {',
-                '  background: var(--surface) !important; border: none !important;',
-                '  box-shadow: 0 12px 32px rgba(0,0,0,.5) !important;',
-                '}',
-                '/* Form sidebar: reduced padding */',
-                'html[data-theme="dark"] .form-sidebar .sidebar-section,',
-                'html[data-theme="light"] .form-sidebar .sidebar-section {',
-                '  padding: 8px 12px !important;',
-                '}',
-                '/* Full height */',
-                'html[data-theme="dark"] #body, html[data-theme="light"] #body,',
-                'html[data-theme="dark"] .main-section, html[data-theme="light"] .main-section {',
-                '  min-height: 100vh !important;',
-                '}'
-            ].join('\n');
-            document.head.appendChild(style);
-            console.log("[ConstructionTheme] Critical override <style> injected (Path B)");
         }
     };
 

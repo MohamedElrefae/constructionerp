@@ -54,13 +54,16 @@ doctype_js = {"BOQ Header": "construction/doctype/boq_header/boq_header.js"}
 doctype_tree_js = {"BOQ Structure": "construction/doctype/boq_structure/boq_structure_tree.js"}
 
 # CSS includes for authenticated users (desk)
-# Load order is critical: tokens → variables_v16 → base → adapter
+# v2.1: Single unified file with html.ct-enterprise namespace
 app_include_css = [
-	"/assets/construction/css/modern_theme_tokens.css?v=20",
-	"/assets/construction/css/modern_theme_variables_v16.css?v=2",
-	"/assets/construction/css/modern_theme_base.css?v=32",
-	"/assets/construction/css/modern_theme_v16_adapter.css?v=32",
+	"/assets/construction/css/modern_theme.css?v=1",
 ]
+
+# OLD CSS FILES REMOVED (kept on disk for reference):
+# /assets/construction/css/modern_theme_tokens.css
+# /assets/construction/css/modern_theme_variables_v16.css
+# /assets/construction/css/modern_theme_base.css
+# /assets/construction/css/modern_theme_v16_adapter.css
 
 # Global JS includes (raw asset path — loaded directly, not bundled)
 # CSS-only theming: theme_loader handles sync/navbar dropdown; theme_loader_v16 is a no-op safety net
