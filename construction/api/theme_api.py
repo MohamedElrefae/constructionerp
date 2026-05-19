@@ -838,7 +838,6 @@ html[data-theme="{ 'dark' if is_dark else 'light' }"] .desk-sidebar use {{
 /* --- Shortcut Widget Box Hover Effects --- */
 [data-theme="{ 'dark' if is_dark else 'light' }"] .shortcut-widget-box:hover {{
   border-color: var(--ct-accent) !important;
-  border-width: 2px !important;
   box-shadow: 0 1px 3px rgba(0,0,0,0.3) !important;
   transform: translateY(-1px) !important;
 }}
@@ -853,12 +852,12 @@ html[data-theme="{ 'dark' if is_dark else 'light' }"] .desk-sidebar use {{
   box-shadow: 0 1px 3px rgba(0,0,0,0.3) !important;
   transition: all 0.2s ease !important;
   padding: 16px 20px !important;
+  box-sizing: border-box !important;
 }}
 
 [data-theme="{ 'dark' if is_dark else 'light' }"] .number-card:hover,
 [data-theme="{ 'dark' if is_dark else 'light' }"] .widget.number-widget-box:hover {{
   border-color: var(--ct-accent) !important;
-  border-width: 2px !important;
   box-shadow: 0 1px 3px rgba(0,0,0,0.3) !important;
   transform: translateY(-1px) !important;
 }}
@@ -898,7 +897,6 @@ html[data-theme="{ 'dark' if is_dark else 'light' }"] .desk-sidebar use {{
 [data-theme="{ 'dark' if is_dark else 'light' }"] .widget.chart-widget-box:hover,
 [data-theme="{ 'dark' if is_dark else 'light' }"] .dashboard-chart-wrapper:hover {{
   border-color: var(--ct-accent) !important;
-  border-width: 2px !important;
   box-shadow: 0 1px 3px rgba(0,0,0,0.3) !important;
   transform: translateY(-1px) !important;
 }}
@@ -952,7 +950,6 @@ html[data-theme="{ 'dark' if is_dark else 'light' }"] .desk-sidebar use {{
 [data-theme="{ 'dark' if is_dark else 'light' }"] .widget-group:hover,
 [data-theme="{ 'dark' if is_dark else 'light' }"] .modules-card-container:hover {{
   border-color: var(--ct-accent) !important;
-  border-width: 2px !important;
   box-shadow: 0 1px 3px rgba(0,0,0,0.3) !important;
   transform: translateY(-1px) !important;
 }}
@@ -997,7 +994,6 @@ html[data-theme="{ 'dark' if is_dark else 'light' }"] .desk-sidebar use {{
 
 [data-theme="{ 'dark' if is_dark else 'light' }"] .kanban-card-wrapper:hover .kanban-card.content {{
   border-color: var(--ct-accent) !important;
-  border-width: 2px !important;
   box-shadow: 0 1px 3px rgba(0,0,0,0.3) !important;
   transform: translateY(-1px) !important;
 }}
@@ -1829,23 +1825,7 @@ html[data-theme="{ 'dark' if is_dark else 'light' }"] .desk-sidebar use {{
   text-shadow: none !important;
 }}
 
-/* --- Card Border Effect (Reverted to simple but visible) --- */
-[data-theme="{ 'dark' if is_dark else 'light' }"] .widget,
-[data-theme="{ 'dark' if is_dark else 'light' }"] .card.widget,
-[data-theme="{ 'dark' if is_dark else 'light' }"] .shortcut-widget-box {{
-  border: 1px solid var(--ct-border) !important;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2) !important;
-  transition: all 0.3s ease !important;
-}}
 
-[data-theme="{ 'dark' if is_dark else 'light' }"] .widget:hover,
-[data-theme="{ 'dark' if is_dark else 'light' }"] .card.widget:hover,
-[data-theme="{ 'dark' if is_dark else 'light' }"] .shortcut-widget-box:hover {{
-  border-color: var(--ct-accent) !important;
-  border-width: 2px !important;
-  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.3) !important;
-  transform: translateY(-4px) !important;
-}}
 [data-theme="{ 'dark' if is_dark else 'light' }"] .btn,
 [data-theme="{ 'dark' if is_dark else 'light' }"] .btn-primary,
 [data-theme="{ 'dark' if is_dark else 'light' }"] .btn-secondary,
@@ -1915,60 +1895,11 @@ html[data-theme="{ 'dark' if is_dark else 'light' }"] .desk-sidebar use {{
   color: var(--ct-text-muted) !important;
 }}
 
-/* --- Animated Gradient Border (Issue #3) --- */
-[data-theme="{ 'dark' if is_dark else 'light' }"] .widget,
-[data-theme="{ 'dark' if is_dark else 'light' }"] .card.widget,
-[data-theme="{ 'dark' if is_dark else 'light' }"] .shortcut-widget-box {{
-  position: relative !important;
-  border: 2px solid transparent !important;
-  background: var(--ct-surface) !important;
-  background-clip: padding-box !important;
-  transition: transform 0.3s ease, box-shadow 0.3s ease !important;
-}}
-
-[data-theme="{ 'dark' if is_dark else 'light' }"] .widget::before,
-[data-theme="{ 'dark' if is_dark else 'light' }"] .card.widget::before,
-[data-theme="{ 'dark' if is_dark else 'light' }"] .shortcut-widget-box::before {{
-  content: "" !important;
-  position: absolute !important;
-  top: -2px !important;
-  left: -2px !important;
-  right: -2px !important;
-  bottom: -2px !important;
-  background: linear-gradient(45deg, var(--ct-accent), var(--ct-accent-hover), var(--ct-accent)) !important;
-  background-size: 200% 200% !important;
-  border-radius: 6px !important;
-  z-index: -1 !important;
-  opacity: 0 !important;
-  transition: opacity 0.3s ease !important;
-  animation: none !important;
-}}
-
-[data-theme="{ 'dark' if is_dark else 'light' }"] .widget:hover::before,
-[data-theme="{ 'dark' if is_dark else 'light' }"] .card.widget:hover::before,
-[data-theme="{ 'dark' if is_dark else 'light' }"] .shortcut-widget-box:hover::before {{
-  opacity: 1 !important;
-  animation: gradientRotate 3s linear infinite !important;
-}}
-
-[data-theme="{ 'dark' if is_dark else 'light' }"] .widget:hover,
-[data-theme="{ 'dark' if is_dark else 'light' }"] .card.widget:hover,
-[data-theme="{ 'dark' if is_dark else 'light' }"] .shortcut-widget-box:hover {{
-  transform: translateY(-4px) !important;
-  box-shadow: 0 12px 24px rgba(37, 99, 235, 0.3) !important;
-}}
-
-@keyframes gradientRotate {{
-  0% {{ background-position: 0% 50%; }}
-  50% {{ background-position: 100% 50%; }}
-  100% {{ background-position: 0% 50%; }}
-}}
-
-/* --- Card Hover Effects with Border (Issue #5) --- */
+/* --- Card Hover Effects --- */
 [data-theme="{ 'dark' if is_dark else 'light' }"] .widget,
 [data-theme="{ 'dark' if is_dark else 'light' }"] .widget.shortcut-widget-box,
 [data-theme="{ 'dark' if is_dark else 'light' }"] .card.widget {{
-  transition: all 0.3s ease !important;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease !important;
   border: 1px solid var(--ct-border) !important;
 }}
 
@@ -2969,30 +2900,44 @@ def add_theme_to_boot(bootinfo):
 	bootinfo.theme = theme_config.get("color_scheme", "dark")
 
 def get_theme_config():
-	"""Fetch from Construction Theme DocType with safe defaults."""
+	"""Fetch from Construction Theme DocType with safe defaults.
+	Fallback to defaults if DocType/controller is missing."""
 	try:
-		# Try to get the default theme based on some logic or just the first active one
+		# Check if table exists and has records (avoid controller import)
+		if not frappe.db.table_exists("Construction Theme"):
+			return get_default_theme_vals()
+
 		default_theme = frappe.db.get_value("Construction Theme", {"is_active": 1, "is_system_theme": 1}, "name")
 		if not default_theme:
 			default_theme = frappe.db.get_value("Construction Theme", {"is_active": 1}, "name")
-			
+
 		if not default_theme:
 			return get_default_theme_vals()
 
-		doc = frappe.get_doc("Construction Theme", default_theme)
-	except frappe.DoesNotExistError:
+		# Use get_values to avoid controller import
+		vals = frappe.db.get_values(
+			"Construction Theme",
+			default_theme,
+			["primary_color", "accent_color", "danger_color", "success_color", "theme_type", "custom_css"],
+			as_dict=True
+		)
+		if not vals:
+			return get_default_theme_vals()
+		doc = vals[0]
+	except Exception:
+		# Any error (ImportError, DoesNotExistError, etc.) → return defaults
 		return get_default_theme_vals()
-	
+
 	return {
 		"app_title": "Construction ERP",
 		"logo_url": "/assets/construction/images/construction_logo.svg",
 		"favicon": "/assets/construction/images/construction_logo.svg",
-		"primary_color": getattr(doc, "primary_color", None) or "#0ea5e9",
-		"accent_color": getattr(doc, "accent_color", None) or "#f59e0b",
-		"danger_color": getattr(doc, "danger_color", None) or "#dc2626",
-		"success_color": getattr(doc, "success_color", None) or "#16a34a",
-		"color_scheme": "dark" if getattr(doc, "theme_type", "Light") == "Dark" else "light",
-		"custom_css": getattr(doc, "custom_css", None) or "",
+		"primary_color": doc.get("primary_color") or "#0ea5e9",
+		"accent_color": doc.get("accent_color") or "#f59e0b",
+		"danger_color": doc.get("danger_color") or "#dc2626",
+		"success_color": doc.get("success_color") or "#16a34a",
+		"color_scheme": "dark" if (doc.get("theme_type") or "Light") == "Dark" else "light",
+		"custom_css": doc.get("custom_css") or "",
 		"custom_js": "",
 		"hide_help_menu": 1,
 		"disable_update_popup": 1,

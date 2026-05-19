@@ -274,6 +274,28 @@
             }
         },
 
+        setMode: function (mode) {
+            if (this.isInternalChange) return;
+            this.isInternalChange = true;
+            this.currentMode = mode;
+            document.documentElement.setAttribute("data-theme", mode);
+            try { sessionStorage.setItem("construction_theme_mode", mode); } catch (e) {}
+            this.updateNavbarLabel(mode);
+            this.persist(mode);
+        },
+
+        colorTreeToolbarButtons: function () {
+            document.querySelectorAll('.tree-node-actions .btn, .tree-actions .btn').forEach(function(btn) {
+                btn.style.color = 'var(--text-2)';
+                btn.style.background = 'transparent';
+                btn.style.border = 'none';
+            });
+        },
+
+        removeGhostButtons: function () {
+            document.querySelectorAll('.modern-sidebar, .theme-sidebar, .duplicate-sidebar').forEach(function(el) {
+                el.style.display = 'none';
+            });
         }
     };
 

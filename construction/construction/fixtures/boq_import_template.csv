@@ -1,8 +1,0 @@
-WBS Code,Parent WBS,Title,Type,Unit,Quantity,Unit Price,Factor,Notes,Owner Page,Owner Ref No,Owner File Ref
-01,,Site Preparation,Section,,,,,,
-01.01,01,Excavation,Item,CUM,100,50.00,1.0,Excavation for foundation,1,EXC-001,DRG-001
-01.02,01,Concrete,Section,,,,,,
-01.02.001,01.02,Concrete Foundation,Item,CUM,50,200.00,1.0,Foundation concrete,2,CON-001,DRG-002
-01.02.002,01.02,Concrete Slab,Item,CUM,30,150.00,1.0,Slab concrete,3,CON-002,DRG-002
-02,,Superstructure,Section,,,,,,
-02.01,02,Structural Steel,Item,MT,10,500.00,1.0,Structural steel work,4,STEEL-001,DRG-003

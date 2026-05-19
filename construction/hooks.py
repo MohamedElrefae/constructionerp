@@ -7,6 +7,17 @@ app_description = "Construction ERP App for BOQ, Cost Estimation, and Project Ma
 app_email = "melrefa3@hotmail.com"
 app_license = "MIT"
 
+# Module registration (fixes DocType import resolution)
+modules = [
+	{
+		"module_name": "Construction",
+		"color": "#3498db",
+		"icon": "octicon octicon-file-directory",
+		"type": "module",
+		"label": "Construction"
+	}
+]
+
 # v16 Desktop icon registration
 # Displays the Construction app icon on the Desktop grid and in the Apps screen
 add_to_apps_screen = [
@@ -54,24 +65,18 @@ doctype_js = {"BOQ Header": "construction/doctype/boq_header/boq_header.js"}
 doctype_tree_js = {"BOQ Structure": "construction/doctype/boq_structure/boq_structure_tree.js"}
 
 # CSS includes for authenticated users (desk)
-# v2.1: Single unified file with html.ct-enterprise namespace
+# v2.2: Single-file theme — tokens + 1,180 selectors, html.ct-enterprise[data-theme] namespace
 app_include_css = [
-	"/assets/construction/css/modern_theme.css?v=1",
+    "/assets/construction/css/modern_theme.css?v=292",
 ]
-
-# OLD CSS FILES REMOVED (kept on disk for reference):
-# /assets/construction/css/modern_theme_tokens.css
-# /assets/construction/css/modern_theme_variables_v16.css
-# /assets/construction/css/modern_theme_base.css
-# /assets/construction/css/modern_theme_v16_adapter.css
 
 # Global JS includes (raw asset path — loaded directly, not bundled)
 # CSS-only theming: theme_loader handles sync/navbar dropdown; theme_loader_v16 is a no-op safety net
 app_include_js = [
 	"/assets/construction/js/print_settings_dialog.js",
 	"/assets/construction/js/construction_export_menu.js",
-	"/assets/construction/js/theme_loader.js?v=30",
-	"/assets/construction/js/components/index.js?v=4.5",
+	"/assets/construction/js/theme_loader_v24.js?v=4.2",
+	"/assets/construction/js/components/index.js?v=4.6",
 	# Searchable Dropdown Module (Week 1)
 	"/assets/construction/js/searchable_dropdown/utils.js",
 	"/assets/construction/js/searchable_dropdown/searchable_dropdown.js",
@@ -84,14 +89,14 @@ app_include_js = [
 ]
 
 # CSS includes for unauthenticated pages (login, etc.)
-# Both light and dark themes loaded - JS toggles between them
+# v2.4-r3: modern_theme.css handles all theming including login
 web_include_css = [
-	"/assets/construction/css/login_theme_light.css",
+	"/assets/construction/css/modern_theme.css?v=292",
 	"/assets/construction/css/email_theme.css"
 ]
 
-# Add JS to handle login page theme toggle
-web_include_js = "/assets/construction/js/login_theme_toggle.js"
+# v2.4-r3: theme_loader_v24 handles namespace injection and theming for all pages
+web_include_js = "/assets/construction/js/theme_loader_v24.js?v=4.2"
 
 # ─── BRAND OVERRIDES & WEBSITE CONTEXT ───
 brand_html = "construction/templates/includes/navbar_brand.html"
@@ -145,3 +150,16 @@ after_migrate = [
 	"construction.install.setup_construction_workspace_page",
 	"construction.install.verify_workspace_visibility",
 ]
+
+# Translations
+translated_doctypes = {
+	"BOQ Header": ["ar"],
+	"BOQ Item": ["ar"],
+	"BOQ Structure": ["ar"],
+	"CostItem": ["ar"],
+	"PlantResource": ["ar"],
+	"Construction Theme": ["ar"],
+	"Modern Theme Settings": ["ar"],
+	"User Desk Theme": ["ar"],
+	"User Scope Context": ["ar"],
+}

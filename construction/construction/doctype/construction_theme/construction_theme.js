@@ -42,12 +42,20 @@ frappe.ui.form.on("Construction Theme", {
 	},
 
 	after_save: function (frm) {
-		// Clear client cache when theme is saved
-		if (window.ModernThemeLoader) {
-			// Clear localStorage cache
-			localStorage.removeItem("modern_theme_cache");
-			localStorage.removeItem("modern_theme_mode");
+		// Clear client CSS cache when theme is saved (force fresh load)
+		if (window.ModernThemeLoader && window.ModernThemeLoader._cssCache) {
+			window.ModernThemeLoader._cssCache = {};
 		}
+		// Clear localStorage cache entries
+		var prefix = 'construction_theme_css:';
+		var keysToRemove = [];
+		for (var i = 0; i < localStorage.length; i++) {
+			var key = localStorage.key(i);
+			if (key && key.indexOf(prefix) === 0) {
+				keysToRemove.push(key);
+			}
+		}
+		keysToRemove.forEach(function(k) { localStorage.removeItem(k); });
 
 		// Reload page to apply new theme
 		setTimeout(function () {
@@ -280,8 +288,8 @@ frappe.ui.form.on("Construction Theme", {
 			clearTimeout(debounceTimer);
 			debounceTimer = setTimeout(function () {
 				frm.update_preview_colors();
-			}, 500);
-		};
+				frm.update_live_preview();
+			}, 300); // Phase 2: 300ms debounce
 
 		// Update preview colors display
 		frm.update_preview_colors = function () {
@@ -318,5 +326,79 @@ frappe.ui.form.on("Construction Theme", {
 					);
 			}
 		};
+
+		// Live preview in sidebar - real-time components
+		frm.update_live_preview = function () {
+			var previewContainer = frm.page.wrapper.find(".live-preview-section");
+			if (!previewContainer.length) return;
+
+			// Generate live preview HTML with current colors
+			var css = frm.generate_inline_css();
+			previewContainer.html(
+				'<div style="padding:15px;background:var(--surface-bg, #fff);border-radius:8px;border:1px solid var(--border-color);">' +
+					'<style>' + css + '</style>' +
+					// Navbar
+					'<div class="live-navbar" style="background:var(--navbar-bg);color:var(--text-primary);padding:12px 16px;border-radius:8px 8px 0 0;margin:-15px -15px 15px -15px;">' +
+						'<strong>Navbar</strong>' +
+					'</div>' +
+					// Buttons
+					'<div style="margin-bottom:15px;">' +
+						'<button class="btn-preview-primary" style="background:var(--accent-primary);color:#fff;padding:8px 16px;border:none;border-radius:6px;margin-right:8px;cursor:pointer;">Primary</button>' +
+						'<button class="btn-preview-secondary" style="background:transparent;color:var(--accent-primary);padding:8px 16px;border:1px solid var(--accent-primary);border-radius:6px;margin-right:8px;cursor:pointer;">Secondary</button>' +
+						'<button class="btn-preview-default" style="background:var(--surface-bg);color:var(--text-primary);padding:8px 16px;border:1px solid var(--border-color);border-radius:6px;cursor:pointer;">Default</button>' +
+					'</div>' +
+					// Inputs
+					'<div style="margin-bottom:15px;">' +
+						'<input type="text" placeholder="Input field..." style="display:block;width:100%;padding:8px 12px;margin-bottom:8px;background:var(--field-bg);color:var(--text-primary);border:1px solid var(--border-color);border-radius:6px;">' +
+						'<select style="display:block;width:100%;padding:8px 12px;background:var(--field-bg);color:var(--text-primary);border:1px solid var(--border-color);border-radius:6px;"><option>Select option</option></select>' +
+					'</div>' +
+					// Alerts
+					'<div style="margin-bottom:15px;">' +
+						'<div style="background:rgba(16,185,129,0.15);color:#10B981;padding:10px;border-radius:6px;margin-bottom:8px;">✓ Success alert</div>' +
+						'<div style="background:rgba(245,158,11,0.15);color:#F59E0B;padding:10px;border-radius:6px;margin-bottom:8px;">⚠ Warning alert</div>' +
+						'<div style="background:rgba(239,68,68,0.15);color:#EF4444;padding:10px;border-radius:6px;">✕ Error alert</div>' +
+					'</div>' +
+				'</div>'
+			);
+		};
+
+		// Generate inline CSS for live preview
+		frm.generate_inline_css = function () {
+			return [
+				'.live-navbar { background: ' + (frm.doc.navbar_bg || '#fff') + '; color: ' + (frm.doc.text_primary || '#333') + '; }',
+				'.btn-preview-primary { background: ' + (frm.doc.accent_primary || '#2563EB') + ' !important; color: #fff !important; }',
+				'.btn-preview-primary:hover { background: ' + (frm.doc.accent_primary_hover || '#1D4ED8') + ' !important; }',
+				'.btn-preview-secondary { color: ' + (frm.doc.accent_primary || '#2563EB') + ' !important; border-color: ' + (frm.doc.accent_primary || '#2563EB') + ' !important; }',
+				'.btn-preview-default { background: ' + (frm.doc.surface_bg || '#fff') + ' !important; color: ' + (frm.doc.text_primary || '#333') + ' !important; }',
+				'.live-preview-section input, .live-preview-section select { background: ' + (frm.doc.input_bg || '#fff') + ' !important; color: ' + (frm.doc.input_text || '#333') + ' !important; border-color: ' + (frm.doc.input_border || '#ddd') + ' !important; }',
+			].join('\n');
+		};
+
+		// Toggle live preview section
+		frm.toggle_live_preview = function (show) {
+			var container = frm.page.wrapper.find(".live-preview-section");
+			if (show) {
+				if (!container.length) {
+					container = $('<div class="live-preview-section" style="margin-top:20px;padding:15px;background:var(--bg-light);border-radius:8px;"></div>');
+					frm.page.body.append(container);
+				}
+				container.show();
+				frm.update_live_preview();
+			} else if (container.length) {
+				container.hide();
+			}
+		};
+
+		// Initialize live preview toggle button
+		if (!frm.page.wrapper.find(".toggle-live-preview").length) {
+			frm.page.add_action_item(
+				__("Live Preview"),
+				function () {
+					frm.live_preview_visible = !frm.live_preview_visible;
+					frm.toggle_live_preview(frm.live_preview_visible);
+				},
+				{ icon: "eye" }
+			);
+		}
 	},
 });

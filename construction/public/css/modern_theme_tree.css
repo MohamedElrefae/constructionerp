@@ -357,112 +357,103 @@
    to match the Vite app's "ultimate button" style
    ============================================ */
 
-/* Toolbar buttons (Collapse All, Expand All, etc.) */
-.modern-theme-loaded .page-head .page-actions .btn-default,
-.modern-theme-loaded .page-head .btn-default.ellipsis,
-.modern-theme-loaded .page-head .inner-group-button .btn-default,
-.modern-theme-loaded .page-head .page-actions .btn-secondary {
+/* Toolbar buttons (Collapse All, Expand All, etc.) — matches index.html */
+html.ct-enterprise .page-head .page-actions .btn-default,
+html.ct-enterprise .page-head .btn-default.ellipsis,
+html.ct-enterprise .page-head .inner-group-button .btn-default,
+html.ct-enterprise .page-head .page-actions .btn-secondary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-height: 36px;
   padding: 0.5rem 0.75rem;
-  border: 1px solid var(--border-color);
-  border-radius: 10px;
+  border: 1px solid var(--ct-border);
+  border-radius: var(--ct-border-radius);
   font-size: 0.8rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  background-color: var(--surface, #fff);
-  color: var(--text-primary);
+  transition: var(--ct-motion);
+  background: var(--ct-surface);
+  color: var(--ct-text-secondary);
 }
 
-.modern-theme-loaded .page-head .page-actions .btn-default:hover,
-.modern-theme-loaded .page-head .btn-default.ellipsis:hover,
-.modern-theme-loaded .page-head .inner-group-button .btn-default:hover,
-.modern-theme-loaded .page-head .page-actions .btn-secondary:hover {
-  background-color: var(--hover-bg);
-  border-color: var(--accent);
-  color: var(--accent);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+html.ct-enterprise .page-head .page-actions .btn-default:hover,
+html.ct-enterprise .page-head .btn-default.ellipsis:hover,
+html.ct-enterprise .page-head .inner-group-button .btn-default:hover,
+html.ct-enterprise .page-head .page-actions .btn-secondary:hover {
+  background: var(--ct-surface-hover);
+  border-color: var(--ct-accent);
+  color: var(--ct-accent);
 }
 
-/* Tree node action buttons (Edit, Add Child, Delete) */
-.modern-theme-loaded .tree-node-toolbar .btn.btn-default.btn-xs.tree-toolbar-button,
-.modern-theme-loaded .tree-node-toolbar .btn-link,
-.modern-theme-loaded .tree-node-toolbar a,
-.modern-theme-loaded .tree-node-toolbar button {
+/* Tree node action buttons (Edit, Add Child, Delete) — matches index.html */
+html.ct-enterprise .tree-node-toolbar .btn.btn-default.btn-xs.tree-toolbar-button,
+html.ct-enterprise .tree-node-toolbar .btn-link,
+html.ct-enterprise .tree-node-toolbar a,
+html.ct-enterprise .tree-node-toolbar button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-height: 30px;
   padding: 4px 12px;
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
+  border: 1px solid var(--ct-border);
+  border-radius: var(--ct-border-radius-sm);
   font-size: 0.8rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
-  background-color: var(--surface, #fff);
-  color: var(--text-primary);
+  transition: var(--ct-motion);
+  background: var(--ct-surface);
+  color: var(--ct-text-secondary);
   text-decoration: none;
   margin: 0 2px;
 }
 
-.modern-theme-loaded .tree-node-toolbar .btn.btn-default.btn-xs.tree-toolbar-button:hover,
-.modern-theme-loaded .tree-node-toolbar .btn-link:hover,
-.modern-theme-loaded .tree-node-toolbar a:hover,
-.modern-theme-loaded .tree-node-toolbar button:hover {
-  background-color: var(--hover-bg);
-  border-color: var(--accent);
-  color: var(--accent);
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+html.ct-enterprise .tree-node-toolbar .btn.btn-default.btn-xs.tree-toolbar-button:hover,
+html.ct-enterprise .tree-node-toolbar .btn-link:hover,
+html.ct-enterprise .tree-node-toolbar a:hover,
+html.ct-enterprise .tree-node-toolbar button:hover {
+  background: var(--ct-surface-hover);
+  border-color: var(--ct-accent);
+  color: var(--ct-accent);
   text-decoration: none;
 }
 
-/* Delete action — icon-based :has() detection with :last-child positional fallback */
-.modern-theme-loaded .tree-node-toolbar .tree-toolbar-button:has(.icon-trash):hover,
-.modern-theme-loaded .tree-node-toolbar .tree-toolbar-button:has([class*="trash"]):hover,
-.modern-theme-loaded .tree-node-toolbar .btn.btn-default.btn-xs.tree-toolbar-button:last-child:hover,
-.modern-theme-loaded .tree-node-toolbar .btn-link:last-child:hover,
-.modern-theme-loaded .tree-node-toolbar a:last-child:hover {
-  border-color: var(--error, #DE3F3F);
-  color: var(--error, #DE3F3F);
-  background-color: rgba(222, 63, 63, 0.06);
+/* Delete action — icon-based :has() detection */
+html.ct-enterprise .tree-node-toolbar .tree-toolbar-button:has(.icon-trash):hover,
+html.ct-enterprise .tree-node-toolbar .tree-toolbar-button:has([class*="trash"]):hover {
+  border-color: var(--ct-danger);
+  color: var(--ct-danger);
+  background: var(--ct-danger-light);
 }
 
 /* Dropdown toggle buttons in toolbar (View, Export) */
-.modern-theme-loaded .page-head .inner-group-button .dropdown-toggle {
-  border-radius: 10px;
-  border: 1px solid var(--border-color);
-  background-color: var(--surface, #fff);
-  color: var(--text-primary);
+html.ct-enterprise .page-head .inner-group-button .dropdown-toggle {
+  border-radius: var(--ct-border-radius);
+  border: 1px solid var(--ct-border);
+  background: var(--ct-surface);
+  color: var(--ct-text-secondary);
   font-size: 0.8rem;
   font-weight: 500;
   padding: 0.5rem 0.75rem;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: var(--ct-motion);
 }
 
-.modern-theme-loaded .page-head .inner-group-button .dropdown-toggle:hover {
-  background-color: var(--hover-bg);
-  border-color: var(--accent);
-  color: var(--accent);
-  transform: translateY(-1px);
+html.ct-enterprise .page-head .inner-group-button .dropdown-toggle:hover {
+  background: var(--ct-surface-hover);
+  border-color: var(--ct-accent);
+  color: var(--ct-accent);
 }
 
-/* Primary action button (+ New) — already matches, ensure consistency */
-.modern-theme-loaded .page-head .primary-action {
-  border-radius: 10px !important;
+/* Primary action button (+ New) */
+html.ct-enterprise .page-head .primary-action {
+  border-radius: var(--ct-border-radius) !important;
   min-height: 36px;
   font-size: 0.8rem;
   font-weight: 500;
   padding: 0.5rem 0.75rem;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: var(--ct-motion);
 }
 
-.modern-theme-loaded .page-head .primary-action:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+html.ct-enterprise .page-head .primary-action:hover {
+  box-shadow: var(--ct-shadow-md);
 }

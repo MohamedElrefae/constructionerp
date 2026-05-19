@@ -1,1 +1,1 @@
-# doctype module
+# DocType module for Construction app

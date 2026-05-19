@@ -1,1 +1,1 @@
-# construction module
+"""Construction module."""

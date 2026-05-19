@@ -11,6 +11,18 @@
     "emoji_icon",
     "is_active",
     "theme_type",
+    "branding_section",
+    "app_title",
+    "logo_url",
+    "favicon",
+    "column_break_branding_1",
+    "primary_color",
+    "accent_color",
+    "danger_color",
+    "color_scheme",
+    "features_section",
+    "disable_update_popup",
+    "hide_help_menu",
     "column_break_1",
     "is_system_theme",
     "is_default_light",
@@ -122,6 +134,73 @@
       "options": "Construction Light\nConstruction Dark\nCustom Light\nCustom Dark",
       "reqd": 1,
       "description": "Determines base styling and CSS generation"
+    },
+    {
+      "fieldname": "branding_section",
+      "fieldtype": "Section Break",
+      "label": "Branding"
+    },
+    {
+      "fieldname": "app_title",
+      "fieldtype": "Data",
+      "label": "App Title",
+      "default": "Construction ERP"
+    },
+    {
+      "fieldname": "logo_url",
+      "fieldtype": "Attach Image",
+      "label": "Logo URL"
+    },
+    {
+      "fieldname": "favicon",
+      "fieldtype": "Attach Image",
+      "label": "Favicon"
+    },
+    {
+      "fieldname": "column_break_branding_1",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "primary_color",
+      "fieldtype": "Color",
+      "label": "Primary Color",
+      "default": "#2563eb"
+    },
+    {
+      "fieldname": "accent_color",
+      "fieldtype": "Color",
+      "label": "Accent Color",
+      "default": "#f59e0b"
+    },
+    {
+      "fieldname": "danger_color",
+      "fieldtype": "Color",
+      "label": "Danger Color",
+      "default": "#dc2626"
+    },
+    {
+      "fieldname": "color_scheme",
+      "fieldtype": "Select",
+      "label": "Color Scheme",
+      "options": "light\ndark",
+      "default": "dark"
+    },
+    {
+      "fieldname": "features_section",
+      "fieldtype": "Section Break",
+      "label": "Features"
+    },
+    {
+      "fieldname": "disable_update_popup",
+      "fieldtype": "Check",
+      "label": "Disable Update Popup",
+      "default": 1
+    },
+    {
+      "fieldname": "hide_help_menu",
+      "fieldtype": "Check",
+      "label": "Hide Help Menu",
+      "default": 1
     },
     {
       "fieldname": "column_break_1",

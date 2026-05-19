@@ -14,6 +14,12 @@ class ConstructionTheme(Document):
 
 	# Field-to-CSS-Variable mapping for all 40+ theme fields
 	FIELD_VAR_MAP = {
+		"primary_color": "--ct-primary",
+		"accent_color": "--ct-accent",
+		"danger_color": "--ct-danger",
+		"success_color": "--ct-success",
+		"warning_color": "--ct-warning",
+		"error_color": "--ct-error",
 		# Core colors (existing fields)
 		"accent_primary": "--ct-accent-primary",
 		"accent_primary_hover": "--ct-accent-hover",
@@ -25,9 +31,6 @@ class ConstructionTheme(Document):
 		"text_primary": "--ct-text-primary",
 		"text_secondary": "--ct-text-secondary",
 		"border_color": "--ct-border-color",
-		"success_color": "--ct-success",
-		"warning_color": "--ct-warning",
-		"error_color": "--ct-error",
 		# Buttons (new fields)
 		"primary_btn_bg": "--ct-primary-btn-bg",
 		"primary_btn_text": "--ct-primary-btn-text",
@@ -424,12 +427,22 @@ class ConstructionTheme(Document):
 
 	def on_update(self):
 		"""Invalidate CSS cache when theme changes."""
+		# Clear per-theme CSS cache
 		frappe.cache().delete_value(f"construction_theme_css:{self.name}")
+		
+		# Clear site-wide theme config cache
+		cache_key = f"construction_theme:{frappe.local.site}"
+		frappe.cache().delete_value(cache_key)
+		
 		frappe.publish_realtime("theme_updated", {"theme": self.name})
+
 
 		# Regenerate login theme file if this is the system default
 		if self.is_system_theme or self.is_default_light or self.is_default_dark:
 			self._regenerate_login_theme_file()
+
+		# Write static CSS fallback
+		self._write_static_css_file()
 
 	def on_trash(self):
 		"""Prevent deletion of system themes."""
@@ -448,12 +461,12 @@ class ConstructionTheme(Document):
 
 			from jinja2 import Environment, FileSystemLoader
 
-			# Get template directory (3 levels up from this file to reach app root)
-			template_dir = os.path.join(os.path.dirname(__file__), "..", "..", "..", "theme_templates")
+			# Get template directory
+			template_dir = os.path.join(os.path.dirname(__file__), "..", "..", "theme_templates")
 
 			env = Environment(loader=FileSystemLoader(template_dir))
 
-			# Template order: base → navbar → sidebar → buttons → forms → tables → cards → modals → toasts → tree
+			# Template order: base → navbar → sidebar → buttons → forms → tables → modals → toasts → tree → new components
 			template_names = [
 				"base.css.j2",
 				"navbar.css.j2",
@@ -461,19 +474,20 @@ class ConstructionTheme(Document):
 				"buttons.css.j2",
 				"forms.css.j2",
 				"tables.css.j2",
-				"cards.css.j2",
 				"modals.css.j2",
 				"toasts.css.j2",
 				"tree.css.j2",
+				"kanban_calendar.css.j2",
+				"navigation_tabs.css.j2",
+				"loading_progress.css.j2",
+				"dropdowns_menus.css.j2",
 			]
 
 			css_parts = []
 
 			# Theme context for templates
-			# Use normalized identifier (lowercase, underscores) to match JS data-modern-theme attribute
-			theme_identifier = self.theme_name.lower().replace(" ", "_")
 			context = {
-				"theme_name": theme_identifier,
+				"theme_name": self.theme_name,
 				"is_dark_mode": "Dark" in self.theme_type,
 				"accent_primary": self.accent_primary,
 				"accent_primary_hover": self.accent_primary_hover or self.accent_primary,
@@ -579,12 +593,13 @@ class ConstructionTheme(Document):
 		if not variables:
 			return ""
 
-		# Determine if theme is dark or light
-		is_dark = "Dark" in (self.theme_type or "")
-		theme_attr = "dark" if is_dark else "light"
+		# Generate theme identifier: lowercase, replace spaces with underscores
+		identifier = self.theme_name.lower().replace(" ", "_")
 
 		# Wrap in scoped CSS block with concise formatting
-		css_block = f'[data-theme="{theme_attr}"]{{' + ";".join(variables) + ";}"
+		is_dark = "dark" in self.theme_type.lower() or (self.body_bg and self.body_bg.startswith("#1"))
+		mode = "dark" if is_dark else "light"
+		css_block = f'html[data-theme="{mode}"]{{' + ";".join(variables) + ";}"
 
 		return css_block
 
@@ -623,11 +638,7 @@ class ConstructionTheme(Document):
 	def generate_login_css(self) -> str:
 		"""Generate static CSS for login page theming.
 
-		Uses Frappe's actual login page selectors:
-		- .login-content.page-card for the login box
-		- .btn-login.btn-primary for the login button
-		- body[data-path="login"] for page-level styles
-
+		Uses high-specificity selectors instead of !important for maintainability.
 		HTML-escapes login_page_title to prevent XSS.
 		"""
 		import html
@@ -637,49 +648,87 @@ class ConstructionTheme(Document):
 		# Login button colors
 		if self.login_btn_bg:
 			css_rules.append(
-				f".btn-login.btn-primary {{ background-color: {self.login_btn_bg} !important; border-color: {self.login_btn_bg} !important; }}"
+				f"body[data-path='login'] .login-content .btn-login.btn-primary {{\n"
+				f"  background-color: {self.login_btn_bg};\n"
+				f"  border-color: {self.login_btn_bg};\n"
+				f"}}"
 			)
 
 		if self.login_btn_text:
-			css_rules.append(f".btn-login.btn-primary {{ color: {self.login_btn_text} !important; }}")
+			css_rules.append(
+				f"body[data-path='login'] .login-content .btn-login.btn-primary {{\n"
+				f"  color: {self.login_btn_text};\n"
+				f"}}"
+			)
 
 		if self.login_btn_hover_bg:
 			css_rules.append(
-				f".btn-login.btn-primary:hover {{ background-color: {self.login_btn_hover_bg} !important; border-color: {self.login_btn_hover_bg} !important; }}"
+				f"body[data-path='login'] .login-content .btn-login.btn-primary:hover {{\n"
+				f"  background-color: {self.login_btn_hover_bg};\n"
+				f"  border-color: {self.login_btn_hover_bg};\n"
+				f"}}"
 			)
 
 		if self.login_btn_hover_text:
 			css_rules.append(
-				f".btn-login.btn-primary:hover {{ color: {self.login_btn_hover_text} !important; }}"
+				f"body[data-path='login'] .login-content .btn-login.btn-primary:hover {{\n"
+				f"  color: {self.login_btn_hover_text};\n"
+				f"}}"
 			)
 
 		# Page background
 		bg_type = self.get("login_page_bg_type")
 		if bg_type == "Background Image" and self.login_page_bg_image:
 			css_rules.append(
-				f"body[data-path='login'] {{ background-image: url('{self.login_page_bg_image}'); background-size: cover; background-position: center; }}"
+				f"body[data-path='login'] {{\n"
+				f"  background-image: url('{self.login_page_bg_image}');\n"
+				f"  background-size: cover;\n"
+				f"  background-position: center;\n"
+				f"}}"
 			)
 		elif bg_type == "Solid Color" and self.login_page_bg_color:
 			css_rules.append(
-				f"body[data-path='login'] {{ background-color: {self.login_page_bg_color} !important; }}"
+				f"body[data-path='login'] {{\n"
+				f"  background-color: {self.login_page_bg_color};\n"
+				f"}}"
 			)
 
 		# Login box position
 		box_position = self.get("login_box_position")
 		if box_position == "Left":
-			css_rules.append(".login-content.page-card { margin-left: 5%; margin-right: auto; }")
+			css_rules.append(
+				f"body[data-path='login'] .login-content.page-card {{\n"
+				f"  margin-left: 5%;\n"
+				f"  margin-right: auto;\n"
+				f"}}"
+			)
 		elif box_position == "Right":
-			css_rules.append(".login-content.page-card { margin-left: auto; margin-right: 5%; }")
+			css_rules.append(
+				f"body[data-path='login'] .login-content.page-card {{\n"
+				f"  margin-left: auto;\n"
+				f"  margin-right: 5%;\n"
+				f"}}"
+			)
 
 		# Heading text color
 		if self.login_heading_text_color:
-			css_rules.append(f".page-card-head {{ color: {self.login_heading_text_color} !important; }}")
-			css_rules.append(f".page-card-head h4 {{ color: {self.login_heading_text_color} !important; }}")
+			css_rules.append(
+				f"body[data-path='login'] .page-card-head {{\n"
+				f"  color: {self.login_heading_text_color};\n"
+				f"}}"
+			)
+			css_rules.append(
+				f"body[data-path='login'] .page-card-head h4 {{\n"
+				f"  color: {self.login_heading_text_color};\n"
+				f"}}"
+			)
 
 		# Tab background color
 		if self.login_tab_bg_color:
 			css_rules.append(
-				f".login-content .nav-tabs {{ background-color: {self.login_tab_bg_color} !important; }}"
+				f"body[data-path='login'] .login-content .nav-tabs {{\n"
+				f"  background-color: {self.login_tab_bg_color};\n"
+				f"}}"
 			)
 
 		# Login page title comment (HTML-escaped)
@@ -739,16 +788,16 @@ class ConstructionTheme(Document):
 					fallback_css = """
 /* Fallback Login Theme CSS */
 .login-page {
-  background-color: #0F172A;
+  background-color: #f5f5f5;
 }
 .login-page .btn-primary {
-  background-color: #2563EB;
-  border-color: #2563EB;
+  background-color: #2E7D32;
+  border-color: #2E7D32;
   color: #fff;
 }
 .login-page .btn-primary:hover {
-  background-color: #3B82F6;
-  border-color: #3B82F6;
+  background-color: #388E3C;
+  border-color: #388E3C;
 }
 """
 					with open(login_css_path, "w") as f:
@@ -756,6 +805,56 @@ class ConstructionTheme(Document):
 					frappe.logger().info("Fallback login theme CSS written")
 			except Exception as fallback_error:
 				frappe.log_error(f"Error writing fallback login CSS: {str(fallback_error)}")
+
+	def _write_static_css_file(self):
+		"""Write theme CSS to public/css/ as fallback for API-driven injection.
+
+		Only writes when theme is active or default to avoid unused files.
+		Atomic write pattern: .tmp -> rename.
+		"""
+		import os
+
+		# Only write for active/default/system themes
+		if not (self.is_active or self.is_default_light or self.is_default_dark or self.is_system_theme):
+			return
+
+		try:
+			css_variables = self.generate_css_variables()
+			css_content = self.generate_css()
+
+			full_css = f"/* Construction Theme: {self.theme_name} */\n"
+			full_css += css_variables + "\n"
+			full_css += css_content + "\n"
+
+			if self.custom_css:
+				full_css += f"/* Custom CSS */\n{self.custom_css}\n"
+
+			# Write to construction/public/css/ (served via /assets/construction/css/)
+			app_path = frappe.get_app_path("construction")
+			css_dir = os.path.join(app_path, "public", "css")
+			os.makedirs(css_dir, exist_ok=True)
+
+			css_path = os.path.join(css_dir, f"theme_{self.name}.css")
+
+			# Atomic write: write to .tmp then rename
+			tmp_path = css_path + ".tmp"
+			with open(tmp_path, "w") as f:
+				f.write(full_css)
+
+			if os.path.exists(css_path):
+				os.remove(css_path)
+			os.rename(tmp_path, css_path)
+
+			# Update theme_current.css if this is the active default
+			if self.is_default_light or self.is_default_dark:
+				current_path = os.path.join(css_dir, "theme_current.css")
+				with open(current_path, "w") as f:
+					f.write(full_css)
+
+			frappe.logger().info(f"Static CSS written for {self.name}")
+
+		except Exception as e:
+			frappe.log_error(f"Error writing static CSS for {self.name}: {str(e)}")
 
 	@staticmethod
 	def get_system_default():
