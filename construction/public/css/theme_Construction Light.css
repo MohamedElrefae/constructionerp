@@ -1,3 +1,14 @@
 /* Construction Theme: Construction Light */
-html[data-theme="light"]{--ct-success:#28a745;--ct-warning:#ffc107;--ct-error:#dc3545;--ct-accent-primary:#2E7D32;--ct-accent-hover:#29702d;--ct-navbar-bg:#e8f5e9;--ct-sidebar-bg:#f1f8e9;--ct-surface-bg:#ffffff;--ct-body-bg:#f1f8e9;--ct-text-primary:#1b5e20;--ct-border-color:#2E7D3233;}
-
+html[data-theme="light"] {
+	--ct-success: #28a745;
+	--ct-warning: #ffc107;
+	--ct-error: #dc3545;
+	--ct-accent-primary: #2e7d32;
+	--ct-accent-hover: #29702d;
+	--ct-navbar-bg: #e8f5e9;
+	--ct-sidebar-bg: #f1f8e9;
+	--ct-surface-bg: #ffffff;
+	--ct-body-bg: #f1f8e9;
+	--ct-text-primary: #1b5e20;
+	--ct-border-color: #2e7d3233;
+}

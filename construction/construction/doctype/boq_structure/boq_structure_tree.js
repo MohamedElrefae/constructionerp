@@ -90,7 +90,7 @@ frappe.treeview_settings["BOQ Structure"] = {
 				var boq = get_boq_header();
 				if (boq) frappe.set_route("Form", "BOQ Header", boq);
 			},
-			__("View")
+			__("View"),
 		);
 
 		treeview.page.add_inner_button(
@@ -98,7 +98,7 @@ frappe.treeview_settings["BOQ Structure"] = {
 			function () {
 				frappe.set_route("List", "BOQ Item", { boq_header: get_boq_header() });
 			},
-			__("View")
+			__("View"),
 		);
 
 		treeview.page.add_inner_button(
@@ -120,7 +120,7 @@ frappe.treeview_settings["BOQ Structure"] = {
 					},
 				});
 			},
-			__("Export")
+			__("Export"),
 		);
 
 		treeview.page.add_inner_button(
@@ -145,7 +145,7 @@ frappe.treeview_settings["BOQ Structure"] = {
 					},
 				});
 			},
-			__("Export")
+			__("Export"),
 		);
 	},
 };

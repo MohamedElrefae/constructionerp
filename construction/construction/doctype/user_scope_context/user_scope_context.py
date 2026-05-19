@@ -6,6 +6,7 @@ DEL-001: Real implementation with automated hooks
 import frappe
 from frappe.model.document import Document
 from frappe.utils import now_datetime
+
 from construction.construction.utils.scope_validation import validate_scope_dimensions
 
 
@@ -23,7 +24,7 @@ class UserScopeContext(Document):
         if not self.scope_version:
             self.scope_version = 0
         self.scope_version += 1
-        
+
         # Update last active timestamp
         self.last_active_at = now_datetime()
 
@@ -38,7 +39,7 @@ class UserScopeContext(Document):
                     f"You can only modify your own User Scope Context. "
                     f"Current user: {frappe.session.user}, Record owner: {self.user}"
                 )
-        
+
         # Cross-dimension validation
         if self.company and self.branch:
             validate_scope_dimensions(
@@ -48,11 +49,11 @@ class UserScopeContext(Document):
                 department=self.department,
                 throw=True
             )
-        
+
         # Validate user exists
         if self.user and not frappe.db.exists("User", self.user):
             frappe.throw(f"User '{self.user}' does not exist")
-        
+
         # Validate company exists
         if self.company and not frappe.db.exists("Company", self.company):
             frappe.throw(f"Company '{self.company}' does not exist")

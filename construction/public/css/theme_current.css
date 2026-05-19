@@ -1,3 +1,21 @@
 /* Construction Theme: Construction Dark */
-html[data-theme="dark"]{--ct-success:#28a745;--ct-warning:#ffc107;--ct-error:#dc3545;--ct-accent-primary:#4CAF50;--ct-accent-hover:#449d48;--ct-navbar-bg:#1a3a1e;--ct-sidebar-bg:#0d1f10;--ct-surface-bg:#112b15;--ct-body-bg:#0a1a0c;--ct-text-primary:#e8f5e9;--ct-text-secondary:#faf7f7;--ct-border-color:#B4CD29;--ct-primary-btn-bg:#29CD42;--ct-primary-btn-text:#ede8e8;--ct-primary-btn-hover-bg:#24b83b;--ct-secondary-btn-bg:#4F9DD9;--ct-secondary-btn-text:#f2e6e6;--ct-secondary-btn-hover-bg:#478dc3;}
-
+html[data-theme="dark"] {
+	--ct-success: #28a745;
+	--ct-warning: #ffc107;
+	--ct-error: #dc3545;
+	--ct-accent-primary: #4caf50;
+	--ct-accent-hover: #449d48;
+	--ct-navbar-bg: #1a3a1e;
+	--ct-sidebar-bg: #0d1f10;
+	--ct-surface-bg: #112b15;
+	--ct-body-bg: #0a1a0c;
+	--ct-text-primary: #e8f5e9;
+	--ct-text-secondary: #faf7f7;
+	--ct-border-color: #b4cd29;
+	--ct-primary-btn-bg: #29cd42;
+	--ct-primary-btn-text: #ede8e8;
+	--ct-primary-btn-hover-bg: #24b83b;
+	--ct-secondary-btn-bg: #4f9dd9;
+	--ct-secondary-btn-text: #f2e6e6;
+	--ct-secondary-btn-hover-bg: #478dc3;
+}

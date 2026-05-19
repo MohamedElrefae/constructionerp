@@ -1,3 +1,14 @@
 /* Construction Theme: Light */
-html[data-theme="light"]{--ct-success:#28a745;--ct-warning:#ffc107;--ct-error:#dc3545;--ct-accent-primary:#2076FF;--ct-accent-hover:#1c6ae5;--ct-navbar-bg:#f8fafc;--ct-sidebar-bg:#f1f5f9;--ct-surface-bg:#ffffff;--ct-body-bg:#f8fafc;--ct-text-primary:#111827;--ct-border-color:#2076FF33;}
-
+html[data-theme="light"] {
+	--ct-success: #28a745;
+	--ct-warning: #ffc107;
+	--ct-error: #dc3545;
+	--ct-accent-primary: #2076ff;
+	--ct-accent-hover: #1c6ae5;
+	--ct-navbar-bg: #f8fafc;
+	--ct-sidebar-bg: #f1f5f9;
+	--ct-surface-bg: #ffffff;
+	--ct-body-bg: #f8fafc;
+	--ct-text-primary: #111827;
+	--ct-border-color: #2076ff33;
+}

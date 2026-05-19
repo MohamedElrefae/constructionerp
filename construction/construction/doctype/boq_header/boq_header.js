@@ -229,7 +229,7 @@ frappe.ui.form.on("BOQ Header", {
 						},
 					},
 				],
-				"tree"
+				"tree",
 			);
 
 			// ── Export Menu (standalone dropdown with icon) ──
@@ -245,7 +245,7 @@ frappe.ui.form.on("BOQ Header", {
 							export_callback: make_export_callback(
 								"construction.api.boq_api.export_boq_header_excel",
 								header_args,
-								"Header exported successfully"
+								"Header exported successfully",
 							),
 						}).show();
 					},
@@ -261,7 +261,7 @@ frappe.ui.form.on("BOQ Header", {
 							export_callback: make_export_callback(
 								"construction.api.boq_api.export_boq_excel",
 								header_args,
-								"BOQ exported successfully"
+								"BOQ exported successfully",
 							),
 						}).show();
 					},
@@ -278,7 +278,7 @@ frappe.ui.form.on("BOQ Header", {
 							export_callback: make_export_callback(
 								"construction.api.boq_api.export_boq_header_pdf",
 								header_args,
-								"Header PDF exported successfully"
+								"Header PDF exported successfully",
 							),
 						}).show();
 					},
@@ -294,7 +294,7 @@ frappe.ui.form.on("BOQ Header", {
 							export_callback: make_export_callback(
 								"construction.api.boq_api.export_boq_pdf",
 								header_args,
-								"BOQ PDF exported successfully"
+								"BOQ PDF exported successfully",
 							),
 						}).show();
 					},
@@ -366,7 +366,7 @@ frappe.ui.form.on("BOQ Header", {
 						});
 					});
 				},
-				__("Actions")
+				__("Actions"),
 			);
 
 			if (frm.doc.status === "Draft") {
@@ -403,7 +403,7 @@ frappe.ui.form.on("BOQ Header", {
 						});
 						d.show();
 					},
-					__("Actions")
+					__("Actions"),
 				);
 			}
 		}
