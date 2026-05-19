@@ -204,7 +204,7 @@ def test_login_title_length_validation_property(title):
 			# Should raise validation error
 			try:
 				theme.insert()
-				assert False, f"Expected validation error for title length {len(title)}, but insert succeeded"
+				raise AssertionError(f"Expected validation error for title length {len(title)}, but insert succeeded")
 			except frappe.ValidationError:
 				# Expected behavior
 				pass

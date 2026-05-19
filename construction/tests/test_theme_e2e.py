@@ -111,7 +111,7 @@ def test_api_endpoints():
 
 	# Test list_available_themes
 	result = theme_api.list_available_themes()
-	assert result.get("success") == True, "list_available_themes failed"
+	assert result.get("success"), "list_available_themes failed"
 	assert len(result.get("themes", [])) >= 4, "Should have at least 4 themes"
 
 	# Test get_theme_css
@@ -226,10 +226,10 @@ def test_validation():
 	assert theme.contrast_ratio < 2.0, "White on white should have low contrast"
 
 	# Test hex validation
-	assert theme._is_valid_hex_color("#FF0000") == True, "Valid hex should pass"
-	assert theme._is_valid_hex_color("#FFF") == True, "3-char hex should pass"
-	assert theme._is_valid_hex_color("not-a-color") == False, "Invalid hex should fail"
-	assert theme._is_valid_hex_color("") == True, "Empty should pass (optional)"
+	assert theme._is_valid_hex_color("#FF0000"), "Valid hex should pass"
+	assert theme._is_valid_hex_color("#FFF"), "3-char hex should pass"
+	assert not theme._is_valid_hex_color("not-a-color"), "Invalid hex should fail"
+	assert theme._is_valid_hex_color(""), "Empty should pass (optional)"
 
 	print("  ✓ Validation rules working (contrast, hex colors)")
 

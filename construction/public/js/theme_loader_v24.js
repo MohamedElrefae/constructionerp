@@ -288,7 +288,7 @@
           deleteBtn.parentNode.insertBefore(wrap, deleteBtn);
           wrap.appendChild(deleteBtn);
 
-          var tip = document.createElement('span');
+          tip = document.createElement('span');
           tip.className = 'dtip';
           tip.textContent = 'Has sub-accounts';
           tip.style.cssText = 'visibility:hidden;opacity:0;position:absolute;bottom:120%;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.92);color:#fff;padding:6px 12px;border-radius:6px;font-size:0.75rem;white-space:nowrap;transition:all 0.2s ease;z-index:100;pointer-events:none;';

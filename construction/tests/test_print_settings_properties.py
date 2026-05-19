@@ -145,7 +145,7 @@ class TestServerColumnConfigFiltering(unittest.TestCase):
 
 		# Each result column must match expected key, label from defaults, and width from config
 		defaults_map = {c["key"]: c for c in defaults}
-		for res, exp in zip(result, expected_visible):
+		for res, exp in zip(result, expected_visible, strict=True):
 			self.assertEqual(res["key"], exp["field_key"])
 			self.assertEqual(res["label"], defaults_map[exp["field_key"]]["label"])
 			self.assertEqual(res["width"], exp["width"])

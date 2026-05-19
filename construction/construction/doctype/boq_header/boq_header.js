@@ -158,7 +158,7 @@ frappe.ui.form.on("BOQ Header", {
 			];
 
 			// ── Helper: build export callback for frappe.call ──
-			function make_export_callback(method, args_fn, success_msg) {
+			var make_export_callback = function (method, args_fn, success_msg) {
 				return function (column_config) {
 					return new Promise(function (resolve, reject) {
 						frappe.call({
@@ -190,7 +190,7 @@ frappe.ui.form.on("BOQ Header", {
 				};
 			}
 
-			function header_args(column_config) {
+			var header_args = function (column_config) {
 				return { boq_header: frm.doc.name, column_config: JSON.stringify(column_config) };
 			}
 

@@ -327,7 +327,7 @@ class ConstructionTheme(Document):
 
 				# Warn if below WCAG AA (4.5:1 for normal text)
 				if ratio < 4.5:
-					warnings.append("  • {0}: {1:.1f}:1 (below 4.5:1)".format(pair_name, ratio))
+					warnings.append(f"  • {pair_name}: {ratio:.1f}:1 (below 4.5:1)")
 
 		# Display warning if any pair fails
 		if warnings:
@@ -697,17 +697,17 @@ class ConstructionTheme(Document):
 		box_position = self.get("login_box_position")
 		if box_position == "Left":
 			css_rules.append(
-				f"body[data-path='login'] .login-content.page-card {{\n"
-				f"  margin-left: 5%;\n"
-				f"  margin-right: auto;\n"
-				f"}}"
-			)
-		elif box_position == "Right":
-			css_rules.append(
-				f"body[data-path='login'] .login-content.page-card {{\n"
-				f"  margin-left: auto;\n"
-				f"  margin-right: 5%;\n"
-				f"}}"
+			"body[data-path='login'] .login-content.page-card {\n"
+			"  margin-left: 5%;\n"
+			"  margin-right: auto;\n"
+			"}"
+		)
+	elif box_position == "Right":
+		css_rules.append(
+			"body[data-path='login'] .login-content.page-card {\n"
+			"  margin-left: auto;\n"
+			"  margin-right: 5%;\n"
+			"}"
 			)
 
 		# Heading text color

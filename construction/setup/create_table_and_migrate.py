@@ -211,7 +211,7 @@ def run():
 
 	frappe.db.commit()
 
-	print(f"\n✓ Migration Complete:")
+	print("\n✓ Migration Complete:")
 	print(f"  Created: {created}")
 	print(f"  Updated: {updated}")
 	print(f"  Total: {created + updated}")

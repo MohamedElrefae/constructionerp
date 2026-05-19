@@ -10,7 +10,6 @@ import unittest
 import frappe
 import hypothesis.strategies as st
 from hypothesis import HealthCheck, assume, given, seed, settings
-from hypothesis import strategies as st
 
 
 class TestBOQProperties(unittest.TestCase):
