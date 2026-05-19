@@ -2603,12 +2603,12 @@ html[data-theme="light"] .wg-grid {
     z-index: 1040 !important;
     transition: left 0.3s ease !important;
   }
-  
+
   .layout-side-section.open {
     left: 0 !important;
     box-shadow: var(--shadow-lg) !important;
   }
-  
+
   .sidebar-overlay {
     display: none !important;
     position: fixed !important;
@@ -2616,7 +2616,7 @@ html[data-theme="light"] .wg-grid {
     background: rgba(0, 0, 0, 0.5) !important;
     z-index: 1035 !important;
   }
-  
+
   .sidebar-overlay.show {
     display: block !important;
   }
@@ -2626,27 +2626,27 @@ html[data-theme="light"] .wg-grid {
   .page-head {
     padding: 0.75rem 1rem !important;
   }
-  
+
   .page-title {
     font-size: 1rem !important;
   }
-  
+
   .nav-tabs .nav-link {
     padding: 0.5rem 0.75rem !important;
     font-size: 0.875rem !important;
   }
-  
+
   .pagination {
     flex-wrap: wrap !important;
     justify-content: center !important;
   }
-  
+
   .bulk-actions {
     flex-direction: column !important;
     align-items: stretch !important;
     gap: 0.5rem !important;
   }
-  
+
   .calendar-day {
     min-height: 60px !important;
   }
@@ -2664,7 +2664,7 @@ html[data-theme="light"] .wg-grid {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-  
+
   .skeleton {
     animation: none !important;
     background: var(--bg-2) !important;
@@ -2682,7 +2682,7 @@ html[data-theme="light"] .wg-grid {
   .btn-primary {
     border: 2px solid white !important;
   }
-  
+
   .nav-tabs .nav-link.active {
     border-width: 3px !important;
   }
@@ -4147,21 +4147,21 @@ html[data-theme="light"] .card:not(.no-hover):hover {
   [data-theme="dark"] .kanban-board {
     flex-direction: column !important;
   }
-  
+
   [data-theme="dark"] .kanban-column {
     width: 100% !important;
     margin-bottom: 1rem !important;
   }
-  
+
   [data-theme="dark"] .datepicker {
     width: 100% !important;
     max-width: 320px !important;
   }
-  
+
   [data-theme="dark"] .timeline-content {
     margin-left: 2rem !important;
   }
-  
+
   [data-theme="dark"] .avatar-large {
     width: 48px !important;
     height: 48px !important;
@@ -4180,7 +4180,7 @@ html[data-theme="light"] .card:not(.no-hover):hover {
   [data-theme="dark"] .kanban-column {
     min-width: 300px !important;
   }
-  
+
   [data-theme="dark"] .datepicker {
     min-width: 280px !important;
   }
@@ -4246,7 +4246,7 @@ html[data-theme="light"] .card:not(.no-hover):hover {
     animation: none !important;
     background: var(--surface) !important;
   }
-  
+
   [data-theme="dark"] .kanban-card,
   [data-theme="dark"] .avatar,
   [data-theme="dark"] .tooltip,

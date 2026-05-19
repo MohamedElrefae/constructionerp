@@ -48,7 +48,7 @@ def execute():
             "language": "ar",
             "source_text": source_text
         })
-        
+
         if not exists:
             doc = frappe.get_doc({
                 "doctype": "Translation",
@@ -70,6 +70,6 @@ def execute():
 
     frappe.db.commit()
     print(f"Successfully processed {count} translations.")
-    
+
     # Reload frappe message cache
     frappe.cache().delete_key('lang_full_dict')

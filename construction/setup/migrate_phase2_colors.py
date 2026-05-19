@@ -5,7 +5,7 @@ import frappe
 
 def after_migrate():
     """Update Construction theme records with enterprise color palette."""
-    
+
     # ─── Construction Dark (Enterprise) ───
     dark_theme = frappe.db.get_value("Construction Theme", "Construction Dark", "name")
     if dark_theme:

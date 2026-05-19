@@ -1,7 +1,7 @@
 /**
  * Sales Invoice - Searchable Dropdown Enhancement
  * Enhances the Item field in Sales Invoice Item child table
- * 
+ *
  * Features:
  * - Multi-field search (item_code, item_name, item_name_ar)
  * - Code-Name display format

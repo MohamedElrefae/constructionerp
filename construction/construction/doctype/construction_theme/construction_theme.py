@@ -429,11 +429,11 @@ class ConstructionTheme(Document):
 		"""Invalidate CSS cache when theme changes."""
 		# Clear per-theme CSS cache
 		frappe.cache().delete_value(f"construction_theme_css:{self.name}")
-		
+
 		# Clear site-wide theme config cache
 		cache_key = f"construction_theme:{frappe.local.site}"
 		frappe.cache().delete_value(cache_key)
-		
+
 		frappe.publish_realtime("theme_updated", {"theme": self.name})
 
 

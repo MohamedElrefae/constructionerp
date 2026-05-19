@@ -439,16 +439,16 @@ def get_theme_css_variables(theme_name, version=None):
 			"light": "Construction Light",
 			"dark": "Construction Dark",
 		}
-		
+
 		# Resolve frontend key to actual theme name
 		actual_theme_name = frontend_key_map.get(theme_name.lower(), theme_name)
-		
+
 		# Try to get by name first, then by theme_name field
 		if frappe.db.exists("Construction Theme", actual_theme_name):
 			theme = frappe.get_doc("Construction Theme", actual_theme_name)
 		else:
 			# Try looking up by theme_name field
-			theme_name_from_db = frappe.db.get_value("Construction Theme", 
+			theme_name_from_db = frappe.db.get_value("Construction Theme",
 				{"theme_name": actual_theme_name, "is_active": 1}, "name")
 			if theme_name_from_db:
 				theme = frappe.get_doc("Construction Theme", theme_name_from_db)
@@ -522,41 +522,41 @@ def _create_system_theme_on_fly(theme_name):
 	This is a fallback for when theme records haven't been created yet.
 	"""
 	is_dark = theme_name == "Construction Dark"
-	
+
 	theme = frappe.new_doc("Construction Theme")
 	theme.name = theme_name
 	theme.theme_name = theme_name
 	theme.theme_type = "Dark" if is_dark else "Light"
 	theme.is_system_theme = 1
 	theme.is_active = 1
-	
+
 	if is_dark:
 		theme.is_default_dark = 1
 	else:
 		theme.is_default_light = 1
-	
+
 	# Set default colors
 	theme.primary_color = "#0ea5e9"
 	theme.accent_color = "#f59e0b"
 	theme.danger_color = "#dc2626"
 	theme.success_color = "#16a34a"
-	
+
 	# Set background colors
 	theme.background_color = "#0b1020" if is_dark else "#f8fafc"
 	theme.surface_color = "#1e293b" if is_dark else "#ffffff"
-	
+
 	# Set text colors
 	theme.text_color = "#f8fafc" if is_dark else "#1e293b"
 	theme.secondary_text_color = "#94a3b8" if is_dark else "#64748b"
-	
+
 	# Set border and shadow
 	theme.border_color = "rgba(148,163,184,0.18)" if is_dark else "#e5e7eb"
-	
+
 	theme.insert(ignore_if_duplicate=True)
 	frappe.db.commit()
-	
+
 	frappe.logger().info(f"[Theme API] Created system theme on the fly: {theme_name}")
-	
+
 	return theme
 
 
@@ -659,7 +659,7 @@ def _get_theme_css_template(theme_name, normalized_key):
 	This CSS uses the CSS variables defined in generate_css_variables() to override Frappe styles.
 	"""
 	is_dark = 'dark' in normalized_key
-	
+
 	# Base template with CSS that actually applies the variables
 	template = f"""
 /* ===== CONSTRUCTION THEME CSS TEMPLATE ===== */
@@ -1159,7 +1159,7 @@ html[data-theme="{ 'dark' if is_dark else 'light' }"] .desk-sidebar use {{
 [data-theme="{ 'dark' if is_dark else 'light' }"] body,
 [data-theme="{ 'dark' if is_dark else 'light' }"] .text-color,
 [data-theme="{ 'dark' if is_dark else 'light' }"] .text-muted,
-[data-theme="{ 'dark' if is_dark else 'light' }"] h1, [data-theme="{ 'dark' if is_dark else 'light' }"] h2, 
+[data-theme="{ 'dark' if is_dark else 'light' }"] h1, [data-theme="{ 'dark' if is_dark else 'light' }"] h2,
 [data-theme="{ 'dark' if is_dark else 'light' }"] h3, [data-theme="{ 'dark' if is_dark else 'light' }"] h4,
 [data-theme="{ 'dark' if is_dark else 'light' }"] h5, [data-theme="{ 'dark' if is_dark else 'light' }"] h6 {{
   color: var(--ct-text-primary) !important;
@@ -2210,14 +2210,14 @@ html[data-theme="{ 'dark' if is_dark else 'light' }"] .desk-sidebar use {{
   color: var(--ct-accent) !important;
 }}
 """
-	
+
 	return template
 
 
 def _resolve_frontend_theme_to_doc(theme_key, mode):
 	"""
 	Resolve frontend theme key to Construction Theme DocType name.
-	
+
 	Resolution priority:
 	1. 'light' / 'construction_light' -> Construction Light (is_default_light=1)
 	2. 'dark' / 'construction_dark'    -> Construction Dark (is_default_dark=1)
@@ -2226,9 +2226,9 @@ def _resolve_frontend_theme_to_doc(theme_key, mode):
 	"""
 	if not theme_key:
 		return None
-	
+
 	key_lower = theme_key.lower().replace(" ", "_")
-	
+
 	# PRIORITY 1: Check if current user has a specific theme set for this mode in User Desk Theme
 	if frappe.session.user != "Guest":
 		user_theme = frappe.db.get_value(
@@ -2257,10 +2257,10 @@ def _resolve_frontend_theme_to_doc(theme_key, mode):
 	# PRIORITY 3: Hardcoded system defaults
 	if key_lower in ("light", "construction_light"):
 		return frappe.db.get_value("Construction Theme", {"is_system_theme": 1, "is_default_light": 1}, "name") or "Construction Light"
-	
+
 	if key_lower in ("dark", "construction_dark"):
 		return frappe.db.get_value("Construction Theme", {"is_system_theme": 1, "is_default_dark": 1}, "name") or "Construction Dark"
-	
+
 	# Custom themes: exact name match (case-insensitive)
 	existing = frappe.db.get_value(
 		"Construction Theme",
@@ -2269,7 +2269,7 @@ def _resolve_frontend_theme_to_doc(theme_key, mode):
 	)
 	if existing:
 		return existing
-	
+
 	# Try case-insensitive match for custom themes
 	all_active = frappe.get_all(
 		"Construction Theme",
@@ -2279,7 +2279,7 @@ def _resolve_frontend_theme_to_doc(theme_key, mode):
 	for t in all_active:
 		if t.name.lower() == key_lower:
 			return t.name
-	
+
 	return None
 
 
@@ -2300,13 +2300,13 @@ def set_user_theme(theme, mode):
 
 		# Resolve frontend key to DocType name
 		theme_doc = _resolve_frontend_theme_to_doc(theme, mode)
-		
+
 		# If no theme_doc, it's a basic theme (light/dark) - just save mode
 		if not theme_doc:
 			# Update User.desk_theme for mode
 			desk_theme_value = "Dark" if mode == "dark" else "Light"
 			frappe.db.set_value("User", user, "desk_theme", desk_theme_value, update_modified=False)
-			
+
 			# CRITICAL: Set User Desk Theme to inherit from site so it doesn't override
 			# When user selects basic theme, we don't want User Desk Theme to provide construction themes
 			user_theme_name = frappe.db.get_value("User Desk Theme", {"user": user}, "name")
@@ -2314,7 +2314,7 @@ def set_user_theme(theme, mode):
 				frappe.db.set_value("User Desk Theme", user_theme_name, "inherit_from_site", 1)
 				frappe.db.set_value("User Desk Theme", user_theme_name, "light_theme", None)
 				frappe.db.set_value("User Desk Theme", user_theme_name, "dark_theme", None)
-			
+
 			frappe.db.commit()
 			return {"success": True, "message": f"Mode saved: {mode}", "basic_theme": True}
 
@@ -2340,7 +2340,7 @@ def set_user_theme(theme, mode):
 		# Also update User doc desk_theme for mode consistency
 		desk_theme_value = "Dark" if mode == "dark" else "Light"
 		frappe.db.set_value("User", user, "desk_theme", desk_theme_value, update_modified=False)
-		
+
 		frappe.db.commit()
 
 		return {"success": True, "message": "Theme preference saved", "theme_doc": theme_doc}
@@ -2758,11 +2758,11 @@ def get_user_construction_theme():
 def _get_frontend_theme_key(theme_doc_name, mode):
 	"""
 	Convert a Construction Theme DocType name to a frontend theme key.
-	
+
 	Args:
 	    theme_doc_name: Name of the Construction Theme DocType
 	    mode: 'light' or 'dark'
-	
+
 	Returns:
 	    Frontend key like 'light', 'dark', 'construction_light', 'construction_dark'
 	"""
@@ -2886,15 +2886,15 @@ def add_theme_to_boot(bootinfo):
 	"""
 	if frappe.session.user == 'Guest':
 		return
-	
+
 	# Cache theme config for 1 hour to avoid repeated DB hits
 	cache_key = f"construction_theme:{frappe.local.site}"
 	theme_config = frappe.cache().get_value(cache_key)
-	
+
 	if not theme_config:
 		theme_config = get_theme_config()
 		frappe.cache().set_value(cache_key, theme_config, expires_in_sec=3600)
-	
+
 	bootinfo.construction_theme = theme_config
 	# Also set the standard frappe.boot.theme for compatibility
 	bootinfo.theme = theme_config.get("color_scheme", "dark")
@@ -2968,11 +2968,11 @@ def whitelabel_patch():
 	"""
 	# Remove welcome page
 	frappe.delete_doc_if_exists('Page', 'welcome-to-erpnext', force=1)
-	
+
 	# Clear onboarding content
 	if frappe.db.exists("Blog Post", "Welcome"):
 		frappe.db.set_value("Blog Post", "Welcome", "content", "")
-	
+
 	# Clear module onboarding docs
 	for module in frappe.get_all("Module Onboarding", fields=["name"]):
 		doc = frappe.get_doc("Module Onboarding", module.name)
@@ -2980,7 +2980,7 @@ def whitelabel_patch():
 		doc.flags.ignore_mandatory = True
 		doc.flags.ignore_links = True
 		doc.save(ignore_permissions=True)
-	
+
 	# Clear onboarding steps
 	for step in frappe.get_all("Onboarding Step", fields=["name"]):
 		doc = frappe.get_doc("Onboarding Step", step.name)

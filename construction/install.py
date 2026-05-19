@@ -189,7 +189,7 @@ def _invalidate_workspace_caches():
 
 def setup_construction_workspace_page():
 	"""Setup Construction workspace page.
-	
+
 	This is a placeholder that calls setup_workspace_sidebar for backward compatibility.
 	The actual workspace page setup is handled by setup_workspace_sidebar.
 	"""

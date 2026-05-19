@@ -183,12 +183,12 @@ body[data-path="login"] {
     padding: 28px 20px !important;
     border-radius: 16px !important;
   }
-  
+
   .login-content .form-control,
   .login-content .btn-primary {
     min-height: 48px !important;
   }
-  
+
   .login-content h4 {
     font-size: 1.5rem !important;
   }

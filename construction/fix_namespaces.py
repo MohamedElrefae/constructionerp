@@ -9,14 +9,14 @@ template_dir = os.path.join(base_dir, 'theme_templates')
 for filepath in glob.glob(os.path.join(template_dir, '*.css.j2')):
     with open(filepath, 'r') as f:
         content = f.read()
-    
+
     # Replace data-modern-theme="{{ theme_name }}" with data-theme="{{ 'dark' if is_dark_mode else 'light' }}"
     # Some templates might use data-modern-theme="{{ normalized_key }}" or similar
     content = re.sub(r'\[data-modern-theme="\{\{\s*[^}]+\s*\}\}"\]', '[data-theme="{{ \'dark\' if is_dark_mode else \'light\' }}"]', content)
-    
+
     with open(filepath, 'w') as f:
         f.write(content)
-        
+
 print("Updated jinja templates")
 
 # 2. Update api/theme_api.py
@@ -33,7 +33,7 @@ print("Updated theme_api.py")
 doctype_path = os.path.join(base_dir, 'doctype', 'construction_theme', 'construction_theme.py')
 with open(doctype_path, 'r') as f:
     doctype_content = f.read()
-    
+
 old_block = 'css_block = f\'html[data-modern-theme="{identifier}"]{{\' + ";".join(variables) + ";}"'
 new_block = 'mode = "dark" if is_dark_theme else "light"\n\t\tcss_block = f\'html[data-theme="{mode}"]{{\' + ";".join(variables) + ";}"'
 doctype_content = doctype_content.replace(old_block, new_block)

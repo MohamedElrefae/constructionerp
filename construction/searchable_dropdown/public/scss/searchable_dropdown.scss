@@ -32,7 +32,7 @@
   background: var(--sd-accent-medium) !important;
   font-weight: 600 !important;
   border-left: 3px solid var(--sd-accent) !important;
-  
+
   &::after {
     content: '✓';
     float: right;
@@ -53,7 +53,7 @@ body.rtl .searchable-dropdown {
     border-left: none !important;
     border-right: 3px solid var(--sd-accent) !important;
   }
-  
+
   .awesomplete-list-item[aria-selected="true"]::after,
   ul li[aria-selected="true"]::after {
     float: left;
@@ -71,7 +71,7 @@ body.rtl .searchable-dropdown {
   border-top: 1px solid var(--sd-border);
   margin-top: 4px;
   padding-top: 8px;
-  
+
   &:hover {
     background: rgba(148, 163, 184, 0.1) !important;
     border-left-color: var(--sd-muted) !important;

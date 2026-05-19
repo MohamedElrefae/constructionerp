@@ -18,7 +18,7 @@ def searchable_link_search(
 ):
     """
     Enhanced search for searchable dropdown wrapper.
-    
+
     Args:
         doctype: Target DocType (e.g., 'Account')
         txt: Search string
@@ -26,11 +26,11 @@ def searchable_link_search(
         page_length: Max results (default 20)
         search_fields: List of fields to search (default: ['name'])
         display_format: Format string, e.g. '{account_code} - {account_name}'
-    
+
     Returns:
         List of dicts: [{value, label, description}, ...]
     """
-    
+
     # Default values
     if not search_fields:
         search_fields = ['name']
@@ -38,18 +38,18 @@ def searchable_link_search(
         display_format = '{name}'
     if not filters:
         filters = {}
-    
+
     # Build OR filters for search
     or_filters = []
     search_txt = txt.strip() if txt else ''
-    
+
     if search_txt:
         for field in search_fields:
             if field != 'name' and frappe.get_meta(doctype).has_field(field):
                 or_filters.append([field, 'like', f'%{search_txt}%'])
         # Always include name field
         or_filters.append(['name', 'like', f'%{search_txt}%'])
-    
+
     try:
         # Use frappe.get_list for automatic permission checking
         results = frappe.get_list(
@@ -60,7 +60,7 @@ def searchable_link_search(
             limit_page_length=page_length,
             order_by='modified desc'
         )
-        
+
         # Format output
         formatted_results = []
         for doc in results:
@@ -70,9 +70,9 @@ def searchable_link_search(
                 'label': label,
                 'description': doc.get('description', '')
             })
-        
+
         return formatted_results
-        
+
     except frappe.PermissionError:
         # Return empty list if user lacks permissions
         return []
@@ -84,32 +84,32 @@ def searchable_link_search(
 def _format_label(doc: dict, display_format: str, search_fields: list) -> str:
     """
     Format label using display_format template.
-    
+
     Args:
         doc: Document dict with field values
         display_format: Format string with {field_name} placeholders
         search_fields: Available fields for fallback
-    
+
     Returns:
         Formatted label string
     """
     try:
         # Prepare format kwargs
         format_kwargs = {'name': doc.get('name', '')}
-        
+
         for field in search_fields:
             format_kwargs[field] = doc.get(field, '')
-        
+
         # Try to format with available fields
         label = display_format.format(**format_kwargs)
-        
+
         # If result is empty or just separators, fallback to name
         clean_label = label.replace('-', '').strip()
         if not clean_label:
             return doc.get('name', '')
-        
+
         return label
-        
+
     except (KeyError, ValueError):
         # Fallback to name if format fails
         return doc.get('name', '')
@@ -120,11 +120,11 @@ def get_recent_items(doctype: str, limit: int = 5):
     """
     Get recently used items for a doctype.
     Optional: for empty search state.
-    
+
     Args:
         doctype: Target DocType
         limit: Number of items to return
-    
+
     Returns:
         List of recent items
     """
@@ -135,8 +135,8 @@ def get_recent_items(doctype: str, limit: int = 5):
             limit_page_length=limit,
             order_by='modified desc'
         )
-        
+
         return [{'value': d.name, 'label': d.name} for d in results]
-        
+
     except frappe.PermissionError:
         return []

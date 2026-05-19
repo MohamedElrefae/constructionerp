@@ -23,7 +23,7 @@
                 const mode = theme === "dark" ? "dark" : "light";
                 document.documentElement.setAttribute("data-theme", mode);
                 console.log("[ThemePatch A] Intercepted set_theme →", mode);
-                
+
                 // If ConstructionTheme is ready, fetch CSS
                 if (window.ConstructionTheme && window.ConstructionTheme.setMode) {
                     // Just fetch CSS without re-persisting if it's a native call
@@ -40,7 +40,7 @@
     // ── PATCH B: Replace frappe.ui.ThemeSwitcher ──────────────────────────────
     function patchThemeSwitcher() {
         if (window.frappe && window.frappe.ui && window.frappe.ui.ThemeSwitcher) {
-            
+
             // 1. Override fetch_themes to show Construction themes
             window.frappe.ui.ThemeSwitcher.prototype.fetch_themes = function () {
                 console.log("[ThemePatch B] Providing Construction themes to switcher");
@@ -66,12 +66,12 @@
                 // Map construction theme names to mode
                 const mode = (theme === "dark" || theme === "construction_dark") ? "dark" : "light";
                 console.log("[ThemePatch B] Switcher selected theme:", theme, "-> mode:", mode);
-                
+
                 // Prevent infinite loop - mark as internal change
                 if (window.ConstructionTheme) {
                     window.ConstructionTheme.isInternalChange = true;
                 }
-                
+
                 if (window.ConstructionTheme && window.ConstructionTheme.setMode) {
                     window.ConstructionTheme.setMode(mode);
                     if (window.frappe.show_alert) frappe.show_alert("Theme Changed to Construction " + (mode === "dark" ? "Dark" : "Light"), 2);
@@ -102,26 +102,26 @@
             window.frappe.ui.set_theme = function(theme) {
                 // Call original first (reads data-theme, sets data-theme)
                 original.apply(this, arguments);
-                
+
                 // ── Guard: prevent duplicate application ──
                 // Read requested from DOM after original.apply() already set it correctly.
                 // When called from Frappe's observer/startup with no argument,
                 // the 'theme' parameter is undefined so we must NOT derive from it.
                 var requested = document.documentElement.getAttribute("data-theme") || "light";
                 var current = document.documentElement.getAttribute("data-theme") || "light";
-                
+
                 if (window.ConstructionTheme && window.ConstructionTheme.isInternalChange) {
                     window.ConstructionTheme.isInternalChange = false;
                     return;
                 }
-                
+
                 if (requested === current) {
                     return;
                 }
-                
+
                 // Ensure data-theme is explicitly set
                 document.documentElement.setAttribute("data-theme", requested);
-                
+
                 // Sync ConstructionTheme state without re-persisting
                 if (window.ConstructionTheme) {
                     window.ConstructionTheme.currentMode = requested;

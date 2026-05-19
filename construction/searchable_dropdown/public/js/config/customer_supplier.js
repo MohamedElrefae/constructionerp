@@ -1,7 +1,7 @@
 /**
  * Customer & Supplier - Searchable Dropdown Enhancement
  * Enhances the Customer and Supplier fields in transaction forms
- * 
+ *
  * Features:
  * - Multi-field search (customer_code/customer_name, or name)
  * - Code-Name display format
@@ -32,7 +32,7 @@ frappe.ui.form.on('Customer', {
 });
 
 // ============================================
-// Supplier Enhancement  
+// Supplier Enhancement
 // ============================================
 
 frappe.ui.form.on('Supplier', {

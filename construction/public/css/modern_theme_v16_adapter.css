@@ -1787,16 +1787,16 @@ textarea.form-control { resize: vertical !important; min-height: 80px !important
 [data-theme="light"] #body, [data-theme="light"] .main-section { background: #f8fafc !important; }
 /* ════════════════════════════════════════════════════════════
    FRAPPE v16 ADAPTER v7 — SPECIFICITY MATCH FIX
-   
+
    PROBLEM: base.css uses `html[data-theme="dark"] .selector`
    which has specificity (0,2,1). Our adapter uses plain
    `.selector` with specificity (0,1,0). base.css WINS.
-   
+
    SOLUTION: Prefix ALL conflicting selectors with
    `html[data-theme="dark"]` and `html[data-theme="light"]`
    to match base.css's specificity. Since adapter loads LAST,
    same specificity = adapter wins.
-   
+
    Version: 7.0 | Date: 2026-05-14
    ════════════════════════════════════════════════════════════ */
 

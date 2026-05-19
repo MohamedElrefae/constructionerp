@@ -1,7 +1,7 @@
 /**
  * Journal Entry - Searchable Dropdown Enhancement
  * Enhances the Account field in Journal Entry Account child table
- * 
+ *
  * Features:
  * - Multi-field search (account_code, account_name, account_name_ar)
  * - Code-Name display format
@@ -41,7 +41,7 @@ frappe.ui.form.on('Journal Entry', {
             doctype: 'Account',
             display_format: '{account_code} - {account_name}',
             search_fields: ['account_code', 'account_name', 'account_name_ar'],
-            filters: { 
+            filters: {
                 is_group: 0  // Only leaf accounts (postable)
             },
             clear_option: true

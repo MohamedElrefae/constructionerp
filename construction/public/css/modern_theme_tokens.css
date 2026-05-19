@@ -122,18 +122,18 @@ html[data-theme="dark"] {
   --surface: #1e293b !important;
   --surface-hover: #334155 !important;
   --surface-active: #475569 !important;
-  
+
   /* Text - LIGHT for contrast */
   --text: #f8fafc !important;
   --text-2: #94a3b8 !important;
   --text-3: #64748b !important;
   --text-disabled: #475569 !important;
-  
+
   /* Borders */
   --border: rgba(148, 163, 184, 0.18) !important;
   --border-hover: rgba(148,163,184,0.28) !important;
   --divider: rgba(148,163,184,0.10) !important;
-  
+
   /* Shadows */
   --shadow-sm: 0 2px 8px rgba(0,0,0,.40) !important;
   --shadow: 0 8px 24px rgba(0,0,0,.48) !important;
@@ -209,18 +209,18 @@ html[data-theme="light"] {
   --surface: #ffffff !important;
   --surface-hover: #f1f5f9 !important;
   --surface-active: #e2e8f0 !important;
-  
+
   /* Text - DARK for contrast */
   --text: #0f172a !important;
   --text-2: #475569 !important;
   --text-3: #94a3b8 !important;
   --text-disabled: #cbd5e1 !important;
-  
+
   /* Borders */
   --border: rgba(15, 23, 42, 0.1) !important;
   --border-hover: rgba(15,23,42,0.18) !important;
   --divider: rgba(15,23,42,0.08) !important;
-  
+
   /* Shadows */
   --shadow-sm: 0 2px 8px rgba(0,0,0,.06) !important;
   --shadow: 0 8px 24px rgba(0,0,0,.08) !important;
