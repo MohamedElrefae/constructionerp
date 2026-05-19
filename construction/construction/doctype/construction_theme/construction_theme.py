@@ -693,21 +693,21 @@ class ConstructionTheme(Document):
 				f"}}"
 			)
 
-		# Login box position
+# Login box position
 		box_position = self.get("login_box_position")
 		if box_position == "Left":
 			css_rules.append(
-			"body[data-path='login'] .login-content.page-card {\n"
-			"  margin-left: 5%;\n"
-			"  margin-right: auto;\n"
-			"}"
-		)
-	elif box_position == "Right":
-		css_rules.append(
-			"body[data-path='login'] .login-content.page-card {\n"
-			"  margin-left: auto;\n"
-			"  margin-right: 5%;\n"
-			"}"
+				"body[data-path='login'] .login-content.page-card {\n"
+				"  margin-left: 5%;\n"
+				"  margin-right: auto;\n"
+				"}"
+			)
+		elif box_position == "Right":
+			css_rules.append(
+				"body[data-path='login'] .login-content.page-card {\n"
+				"  margin-left: auto;\n"
+				"  margin-right: 5%;\n"
+				"}"
 			)
 
 		# Heading text color
