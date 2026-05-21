@@ -67,7 +67,7 @@ doctype_tree_js = {"BOQ Structure": "construction/doctype/boq_structure/boq_stru
 # CSS includes for authenticated users (desk)
 # v2.2: Single-file theme — tokens + 1,180 selectors, html.ct-enterprise[data-theme] namespace
 app_include_css = [
-    "/assets/construction/css/modern_theme.css?v=292",
+    "/assets/construction/css/modern_theme.css?v=2.5.2",
 ]
 
 # Global JS includes (raw asset path — loaded directly, not bundled)
@@ -75,7 +75,7 @@ app_include_css = [
 app_include_js = [
 	"/assets/construction/js/print_settings_dialog.js",
 	"/assets/construction/js/construction_export_menu.js",
-	"/assets/construction/js/theme_loader_v24.js?v=4.2",
+	"/assets/construction/js/theme_loader_v24.js?v=2.5.2",
 	"/assets/construction/js/components/index.js?v=4.6",
 	# Searchable Dropdown Module (Week 1)
 	"/assets/construction/js/searchable_dropdown/utils.js",
@@ -86,17 +86,20 @@ app_include_js = [
 	"/assets/construction/js/searchable_dropdown/config/customer_supplier.js",
 	# v16 runtime safety net — no-op (CSS handles all styling)
 	"/assets/construction/js/theme_loader_v16.js?v=2",
+	# Filter fix — injected AFTER Frappe bundle to win cascade order
+	# Must be LAST to guarantee it loads after desk.bundle.css
+	"/assets/construction/js/filter_fix.js?v=4.1",
 ]
 
 # CSS includes for unauthenticated pages (login, etc.)
 # v2.4-r3: modern_theme.css handles all theming including login
 web_include_css = [
-	"/assets/construction/css/modern_theme.css?v=292",
+    "/assets/construction/css/modern_theme.css?v=2.5.2",
 	"/assets/construction/css/email_theme.css"
 ]
 
 # v2.4-r3: theme_loader_v24 handles namespace injection and theming for all pages
-web_include_js = "/assets/construction/js/theme_loader_v24.js?v=4.2"
+web_include_js = "/assets/construction/js/theme_loader_v24.js?v=2.5.2"
 
 # ─── BRAND OVERRIDES & WEBSITE CONTEXT ───
 brand_html = "construction/templates/includes/navbar_brand.html"

@@ -3,7 +3,7 @@
    Strategy: Cooperate with Frappe, never fight layout
    Only visual properties: colors, backgrounds, borders, shadows
    NO layout: position, display, flex, width, height, margin, padding, transform, order
-    Version: 2.4.0-r7 | 2026-05-19
+   Version: 2.5.2 | 2026-05-21
    ════════════════════════════════════════════════════════════ */
 
 /* ─── ROOT FALLBACKS (prevent FOUC before JS loads) ─── */
@@ -724,6 +724,20 @@ html.ct-enterprise .navbar-nav .nav-link {
 
 html.ct-enterprise .navbar-nav .nav-link:hover {
   color: var(--ct-primary);
+}
+
+/* TopbarManager: .ct-topbar-item, .ct-theme-wrapper, .ct-topbar-zone
+   now defined in the v5.15 section at end of file */
+
+html.ct-enterprise .ct-theme-wrapper .ct-theme-btn:hover {
+  color: var(--ct-primary);
+}
+
+html.ct-enterprise .page-head .ct-theme-wrapper .ct-theme-btn {
+  height: 28px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
 }
 
 /* ─── Layout ─── */
@@ -3379,21 +3393,47 @@ html.ct-enterprise .filter-x-button:hover {
   color: #fff;
 }
 
-/* ─── Filter field containers ─── */
+/* ─── Filter field containers - prevent duplicate appearance ─── */
 html.ct-enterprise .filter-field {
-  background: var(--ct-bg-elevated);
-  border: 1px solid var(--ct-border);
-  border-radius: var(--ct-border-radius-sm);
-  transition: var(--ct-transition);
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Style the actual input/select inside filter-field instead */
+html.ct-enterprise .filter-field .form-control,
+html.ct-enterprise .filter-field input,
+html.ct-enterprise .filter-field select,
+html.ct-enterprise .filter-field .link-field {
+  background: var(--ct-bg-elevated) !important;
+  border: 1px solid var(--ct-border) !important;
+  border-radius: var(--ct-border-radius-sm) !important;
+  transition: var(--ct-transition) !important;
+}
+
+html.ct-enterprise .filter-field .form-control:hover,
+html.ct-enterprise .filter-field input:hover,
+html.ct-enterprise .filter-field select:hover,
+html.ct-enterprise .filter-field .link-field:hover {
+  border-color: var(--ct-border-hover) !important;
+}
+
+html.ct-enterprise .filter-field .form-control:focus,
+html.ct-enterprise .filter-field input:focus,
+html.ct-enterprise .filter-field select:focus,
+html.ct-enterprise .filter-field .link-field:focus-within {
+  border-color: var(--ct-primary) !important;
+  box-shadow: 0 0 0 3px var(--ct-primary-light) !important;
 }
 
 html.ct-enterprise .filter-field:hover {
-  border-color: var(--ct-border-hover);
+  border-color: transparent !important;
 }
 
 html.ct-enterprise .filter-field:focus-within {
-  border-color: var(--ct-primary);
-  box-shadow: 0 0 0 3px var(--ct-primary-light);
+  border-color: transparent !important;
+  box-shadow: none !important;
 }
 
 /* ─── Filter box inside popover ─── */
@@ -3672,7 +3712,7 @@ html.ct-enterprise .page-form {
 
 /* ─── Standard filter section ─── */
 html.ct-enterprise .standard-filter-section {
-  background: var(--ct-surface) !important;
+  background: transparent;
 }
 
 /* ─── Filter selector button ─── */
@@ -3736,57 +3776,6 @@ html.ct-enterprise .frappe-control[data-fieldtype="Select"] .placeholder {
   display: none !important;
 }
 
-/* ─── ALL <select> elements — adaptive themed ─── */
-html.ct-enterprise select,
-html.ct-enterprise select.form-control,
-html.ct-enterprise select.input-with-feedback,
-html.ct-enterprise select.input-xs,
-html.ct-enterprise .form-select,
-html.ct-enterprise .page-form select,
-html.ct-enterprise .filter-area select,
-html.ct-enterprise .report-filter select,
-html.ct-enterprise .filter-field select,
-html.ct-enterprise .frappe-control[data-fieldtype="Select"] select {
-  background-color: var(--ct-bg-3) !important;
-  color: var(--ct-text) !important;
-  border-top: 1px solid var(--ct-border) !important;
-  border-right: 1px solid var(--ct-border) !important;
-  border-bottom: 1px solid var(--ct-border) !important;
-  border-left: 3px solid var(--ct-primary) !important;
-  border-radius: 6px !important;
-  padding: 5px 26px 5px 10px !important;
-  font-size: 0.75rem !important;
-  font-weight: 500 !important;
-  transition: all 0.2s ease !important;
-  cursor: pointer !important;
-  appearance: none !important;
-  -webkit-appearance: none !important;
-  -moz-appearance: none !important;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='8' viewBox='0 0 10 8'%3E%3Cpath d='M1 1l4 5 4-5' fill='none' stroke='%232563eb' stroke-width='1.5'/%3E%3C/svg%3E") !important;
-  background-repeat: no-repeat !important;
-  background-position: right 8px center !important;
-  background-size: 10px !important;
-}
-
-html.ct-enterprise select:hover,
-html.ct-enterprise select.form-control:hover,
-html.ct-enterprise .page-form select:hover {
-  background-color: var(--ct-surface-hover) !important;
-  border-top-color: var(--ct-primary) !important;
-  border-right-color: var(--ct-primary) !important;
-  border-bottom-color: var(--ct-primary) !important;
-  box-shadow: 0 0 0 1px var(--ct-primary-light) !important;
-}
-
-html.ct-enterprise select:focus,
-html.ct-enterprise select.form-control:focus {
-  background-color: var(--ct-surface-hover) !important;
-  border-color: var(--ct-primary) !important;
-  border-left-color: var(--ct-accent) !important;
-  box-shadow: 0 0 0 3px var(--ct-primary-light) !important;
-  outline: none !important;
-}
-
 html.ct-enterprise select option {
   background: var(--ct-surface) !important;
   color: var(--ct-text) !important;
@@ -3843,10 +3832,10 @@ html.ct-enterprise .form-control::placeholder {
 
 /* ─── Link field wrapper ─── */
 html.ct-enterprise .link-field {
-  background: var(--ct-surface) !important;
-  border: 1px solid var(--ct-border) !important;
-  border-radius: var(--ct-border-radius) !important;
-  box-shadow: var(--ct-shadow-lg) !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
 }
 
 /* ─── Date picker ─── */
@@ -3959,23 +3948,6 @@ html.ct-enterprise .dropdown-container:focus-within {
   box-shadow: 0 0 0 3px var(--ct-primary-light) !important;
 }
 
-/* ─── Filter field containers ─── */
-html.ct-enterprise .filter-field {
-  background: var(--ct-bg-elevated) !important;
-  border: 1px solid var(--ct-border) !important;
-  border-radius: var(--ct-border-radius-sm) !important;
-  transition: var(--ct-transition) !important;
-}
-
-html.ct-enterprise .filter-field:hover {
-  border-color: var(--ct-border-hover) !important;
-}
-
-html.ct-enterprise .filter-field:focus-within {
-  border-color: var(--ct-primary) !important;
-  box-shadow: 0 0 0 3px var(--ct-primary-light) !important;
-}
-
 /* ─── Filter box inside popover ─── */
 html.ct-enterprise .filter-popover .filter-box {
   background: var(--ct-surface) !important;
@@ -4035,3 +4007,124 @@ html.ct-enterprise .input-with-icon input:focus {
 /* ════════════════════════════════════════════════════════════
    END OF CONSTRUCTION ERP THEME v2.4-r5
    ════════════════════════════════════════════════════════════ */
+
+/* ════════════════════════════════════════════════════════════
+   FILTER SYSTEM — handled by filter_fix.js (JS-injected)
+   All filter styling is now injected via JavaScript after
+   Frappe's desk.bundle.css to win the cascade.
+   See construction/public/js/filter_fix.js
+   ════════════════════════════════════════════════════════════ */
+
+/* ════════════════════════════════════════════════════════════
+   v5.15 — Theme Toggle (Isolated Zones — no Frappe container injection)
+   Zones persist across navigations:
+   - Desk: <ul.ct-topbar-zone.ct-zone--desk> at end of .desktop-navbar
+   - Standard: <div.ct-topbar-zone.ct-topbar-zone--standard> at end of .page-head
+   Both use flex + margin-left:auto for natural right-edge alignment
+   ════════════════════════════════════════════════════════════ */
+
+/* ─── Desk Zone (last flex child of .desktop-navbar) ─── */
+html.ct-enterprise .ct-topbar-zone.ct-zone--desk {
+  display: flex !important;
+  align-items: center;
+  height: 100%;
+  list-style: none;
+  margin: 0 0 0 auto !important;
+  padding: 0 4px 0 12px;
+  flex-shrink: 0;
+  border-left: 1px solid var(--ct-border);
+}
+
+html.ct-enterprise .ct-topbar-zone.ct-zone--desk .ct-topbar-item {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+/* ─── Standard Zone (last flex child of .page-head) ─── */
+html.ct-enterprise .ct-topbar-zone.ct-topbar-zone--standard {
+  display: flex !important;
+  align-items: center;
+  margin: 0 0 0 auto !important;
+  flex-shrink: 0;
+  gap: 4px;
+  padding: 0 4px;
+}
+
+html.ct-enterprise .ct-topbar-zone.ct-topbar-zone--standard .ct-topbar-item {
+  display: flex;
+  align-items: center;
+}
+
+/* ─── Actions Zone (fallback, prepended to .page-actions) ─── */
+html.ct-enterprise .ct-topbar-zone.ct-topbar-zone--actions {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 8px;
+  gap: 4px;
+}
+
+html.ct-enterprise .ct-topbar-zone.ct-topbar-zone--actions .ct-topbar-item {
+  display: flex;
+  align-items: center;
+}
+
+/* ─── Base Wrapper ─── */
+html.ct-enterprise .ct-theme-wrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+html.ct-enterprise .ct-theme-wrapper .ct-theme-btn {
+  color: var(--ct-text-secondary);
+  font-size: 0.82rem;
+  white-space: nowrap;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: var(--ct-motion);
+  padding: 0 8px;
+  line-height: 1;
+}
+
+html.ct-enterprise .ct-theme-wrapper .ct-theme-btn:hover {
+  color: var(--ct-primary);
+}
+
+/* ─── Dropdown menu ─── */
+html.ct-enterprise .ct-theme-wrapper .dropdown-menu {
+  position: fixed;
+  z-index: 11000;
+  min-width: 200px;
+  padding: 0.375rem 0;
+  border-radius: 8px;
+  box-shadow: var(--ct-shadow-lg);
+  border: 1px solid var(--ct-border);
+  background: var(--ct-surface);
+}
+
+html.ct-enterprise .ct-theme-wrapper .dropdown-item {
+  padding: 0.5rem 1rem;
+  font-size: 0.8125rem;
+  color: var(--ct-text);
+  background: transparent;
+}
+
+html.ct-enterprise .ct-theme-wrapper .dropdown-item:hover {
+  background: var(--ct-surface-hover);
+  color: var(--ct-text);
+}
+
+/* ─── MOBILE ─── */
+@media (max-width: 768px) {
+  html.ct-enterprise .ct-topbar-zone.ct-zone--desk {
+    padding-left: 6px;
+  }
+
+  html.ct-enterprise .ct-theme-wrapper .ct-theme-btn {
+    font-size: 0;
+    padding: 0 6px;
+    width: auto;
+  }
+}
