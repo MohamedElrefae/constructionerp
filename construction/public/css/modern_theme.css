@@ -4128,3 +4128,8 @@ html.ct-enterprise .ct-theme-wrapper .dropdown-item:hover {
     width: auto;
   }
 }
+
+/* ─── SIDEBAR TOGGLE BUTTON (visible on desktop toolbar) ─── */
+.page-title .sidebar-toggle-btn {
+  display: flex !important;
+}
