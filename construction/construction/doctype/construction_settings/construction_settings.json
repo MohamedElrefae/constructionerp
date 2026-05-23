@@ -1,0 +1,111 @@
+{
+  "actions": [],
+  "allow_rename": 0,
+  "creation": "2026-05-22 12:00:00",
+  "doctype": "DocType",
+  "editable_grid": 1,
+  "engine": "InnoDB",
+  "field_order": [
+    "enable_scope_context",
+    "scope_dimensions_section",
+    "enable_scope_company",
+    "enable_scope_cost_center",
+    "enable_scope_project",
+    "enable_scope_department",
+    "section_break_2",
+    "scope_context_settings_help",
+    "scope_hierarchy_section",
+    "scope_hierarchy_ui"
+  ],
+  "fields": [
+    {
+      "default": "0",
+      "fieldname": "enable_scope_context",
+      "fieldtype": "Check",
+      "label": "Enable Scope Context",
+      "description": "Enable user scope context feature (Company/Branch/Project/Department filtering and form defaults)"
+    },
+    {
+      "fieldname": "scope_dimensions_section",
+      "fieldtype": "Section Break",
+      "label": "Scope Dimensions",
+      "depends_on": "enable_scope_context"
+    },
+    {
+      "default": "1",
+      "fieldname": "enable_scope_company",
+      "fieldtype": "Check",
+      "label": "Enable Scope Company",
+      "depends_on": "enable_scope_context"
+    },
+    {
+      "default": "1",
+      "fieldname": "enable_scope_cost_center",
+      "fieldtype": "Check",
+      "label": "Enable Scope Cost Center",
+      "depends_on": "enable_scope_context"
+    },
+    {
+      "default": "1",
+      "fieldname": "enable_scope_project",
+      "fieldtype": "Check",
+      "label": "Enable Scope Project",
+      "depends_on": "enable_scope_context"
+    },
+    {
+      "default": "0",
+      "fieldname": "enable_scope_department",
+      "fieldtype": "Check",
+      "label": "Enable Scope Department",
+      "depends_on": "enable_scope_context"
+    },
+    {
+      "fieldname": "section_break_2",
+      "fieldtype": "Section Break"
+    },
+    {
+      "fieldname": "scope_context_settings_help",
+      "fieldtype": "HTML",
+      "label": "Scope Context Settings Help",
+      "options": "<div class=\"text-muted small\">\n  <p><strong>Scope Context</strong> controls how users interact with multi-company, multi-cost-center environments.</p>\n  <ul>\n    <li>When enabled, users see Company/Cost Center/Project/Department selectors in the top bar.</li>\n    <li>List views and form defaults respect the active scope.</li>\n    <li>Use the Scope Dimensions section to choose which dimensions appear in the UI.</li>\n    <li>Disable this to restore default Frappe behavior without uninstalling.</li>\n  </ul>\n</div>"
+    },
+    {
+      "fieldname": "scope_hierarchy_section",
+      "fieldtype": "Section Break",
+      "label": "Scope Hierarchy Management",
+      "depends_on": "enable_scope_context"
+    },
+    {
+      "fieldname": "scope_hierarchy_ui",
+      "fieldtype": "HTML",
+      "label": "Scope Hierarchy",
+      "options": "<p class=\"text-muted\">Loading scope hierarchy...</p>"
+    }
+  ],
+  "index_web_pages_for_search": 1,
+  "issingle": 1,
+  "links": [],
+  "modified": "2026-05-22 12:00:00",
+  "modified_by": "Administrator",
+  "module": "Construction",
+  "name": "Construction Settings",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": [],
+  "track_changes": 1
+}

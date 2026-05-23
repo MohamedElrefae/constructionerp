@@ -1,0 +1,6 @@
+// Show sidebar toggle button on desktop (moved from navbar to page toolbar)
+.page-title {
+	.sidebar-toggle-btn {
+		display: flex !important;
+	}
+}

@@ -41,10 +41,10 @@ class UserScopeContext(Document):
 				)
 
 		# Cross-dimension validation
-		if self.company and self.branch:
+		if self.company and self.cost_center:
 			validate_scope_dimensions(
 				company=self.company,
-				branch=self.branch,
+				cost_center=self.cost_center,
 				project=self.project,
 				department=self.department,
 				throw=True

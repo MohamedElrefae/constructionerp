@@ -101,6 +101,31 @@ def create_system_themes():
 
 
 # ---------------------------------------------------------------------------
+# Branch.company Custom Field (required for HR integrity)
+# ---------------------------------------------------------------------------
+
+
+def setup_branch_company_field():
+	"""Create Branch.company Custom Field if missing.
+
+	Called by after_install hook and by patch.
+	Does NOT call frappe.db.commit() — caller manages the transaction.
+	"""
+	if not frappe.db.exists("Custom Field", {"dt": "Branch", "fieldname": "company"}):
+		frappe.get_doc({
+			"doctype": "Custom Field",
+			"dt": "Branch",
+			"fieldname": "company",
+			"label": "Company",
+			"fieldtype": "Link",
+			"options": "Company",
+			"insert_after": "branch",
+			"in_list_view": 1,
+			"in_standard_filter": 1,
+		}).insert()
+
+
+# ---------------------------------------------------------------------------
 # Workspace Sidebar Reconciler (v16+)
 # ---------------------------------------------------------------------------
 
