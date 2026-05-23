@@ -221,7 +221,7 @@ class PreviewPanel {
 		var cols = visible_columns || [];
 		var rows = sample_data && sample_data.length > 0 ? sample_data.slice(0, 5) : null;
 
-		var html = '<table class="preview-table" style="width:100%;border-collapse:collapse;">';
+		var html = '<table class="preview-table">';
 
 		// Header row
 		html += "<thead><tr>";
@@ -375,13 +375,33 @@ class PrintSettingsDialog {
 	 */
 	_build_body_html() {
 		var config = this.config_manager.get_config();
-		var html = '<div class="print-settings-container">';
+		var html =
+			'<div class="print-settings-container">' +
+			// Inline stylesheet for theming — uses CSS custom properties so it adapts to dark mode
+			"<style>" +
+			".print-settings-container .column-config-panel { margin-bottom:15px; }" +
+			".print-settings-container .column-config-panel h6 { margin-bottom:10px; }" +
+			".print-settings-container .column-config-message { display:none; margin-bottom:10px; }" +
+			".print-settings-container .width-total-display { margin-top:10px; padding:5px 10px; background:var(--print-settings-bg, #f5f5f5); border-radius:4px; }" +
+			".print-settings-container .preview-panel-section { margin-top:15px; }" +
+			".print-settings-container .preview-panel-section h6 { margin-bottom:10px; }" +
+			".print-settings-container .preview-panel-container { overflow-x:auto; border:1px solid var(--print-settings-border, #d1d8dd); border-radius:4px; padding:10px; }" +
+			".print-settings-container .column-config-row { display:flex; align-items:center; padding:6px 8px; margin-bottom:4px; border:1px solid var(--print-settings-border, #d1d8dd); border-radius:4px; background:var(--print-settings-card-bg, #fff); }" +
+			".print-settings-container .drag-handle { cursor:grab; margin-right:10px; color:var(--print-settings-muted, #8d99a6); }" +
+			".print-settings-container .col-visible-check { margin-right:10px; }" +
+			".print-settings-container .col-label { flex:1; font-size:13px; }" +
+			".print-settings-container .col-width-input { width:60px; text-align:center; margin-left:10px; }" +
+			".print-settings-container .col-validation-msg { color:var(--print-settings-error, #e53e3e); font-size:11px; margin-left:8px; display:none; }" +
+			".print-settings-container .preview-table { width:100%; border-collapse:collapse; }" +
+			"@media (prefers-color-scheme: dark) {" +
+			".print-settings-container { --print-settings-bg: #2d3748; --print-settings-border: #4a5568; --print-settings-card-bg: #1a202c; --print-settings-muted: #a0aec0; --print-settings-error: #fc8181; }" +
+			"}" +
+			"</style>";
 
 		// Column configuration panel
-		html += '<div class="column-config-panel" style="margin-bottom:15px;">';
-		html += '<h6 style="margin-bottom:10px;">' + __("Column Configuration") + "</h6>";
-		html +=
-			'<div class="column-config-message" style="display:none;margin-bottom:10px;"></div>';
+		html += '<div class="column-config-panel">';
+		html += "<h6>" + __("Column Configuration") + "</h6>";
+		html += '<div class="column-config-message"></div>';
 		html += '<div class="column-config-list">';
 
 		for (var i = 0; i < config.length; i++) {
@@ -391,8 +411,7 @@ class PrintSettingsDialog {
 		html += "</div>"; // .column-config-list
 
 		// Width total display
-		html +=
-			'<div class="width-total-display" style="margin-top:10px;padding:5px 10px;background:#f5f5f5;border-radius:4px;">';
+		html += '<div class="width-total-display">';
 		html += "<strong>" + __("Total Width") + ":</strong> ";
 		html +=
 			'<span class="width-total-value">' +
@@ -403,10 +422,9 @@ class PrintSettingsDialog {
 		html += "</div>"; // .column-config-panel
 
 		// Preview panel
-		html += '<div class="preview-panel-section" style="margin-top:15px;">';
-		html += '<h6 style="margin-bottom:10px;">' + __("Preview") + "</h6>";
-		html +=
-			'<div class="preview-panel-container" style="overflow-x:auto;border:1px solid #d1d8dd;border-radius:4px;padding:10px;"></div>';
+		html += '<div class="preview-panel-section">';
+		html += "<h6>" + __("Preview") + "</h6>";
+		html += '<div class="preview-panel-container"></div>';
 		html += "</div>";
 
 		html += "</div>"; // .print-settings-container
@@ -423,14 +441,11 @@ class PrintSettingsDialog {
 		var html =
 			'<div class="column-config-row" data-field-key="' +
 			col.field_key +
-			'" ' +
-			'style="display:flex;align-items:center;padding:6px 8px;margin-bottom:4px;' +
-			'border:1px solid #d1d8dd;border-radius:4px;background:#fff;">';
+			'">';
 
 		// Drag handle
 		html +=
-			'<span class="drag-handle" style="cursor:grab;margin-right:10px;color:#8d99a6;">' +
-			'<i class="fa fa-bars"></i></span>';
+			'<span class="drag-handle"><i class="fa fa-bars"></i></span>';
 
 		// Visibility checkbox
 		html +=
@@ -438,10 +453,10 @@ class PrintSettingsDialog {
 			col.field_key +
 			'"' +
 			checked +
-			' style="margin-right:10px;" />';
+			' />';
 
 		// Label
-		html += '<span class="col-label" style="flex:1;font-size:13px;">' + col.label + "</span>";
+		html += '<span class="col-label">' + col.label + "</span>";
 
 		// Width input
 		html +=
@@ -450,15 +465,13 @@ class PrintSettingsDialog {
 			'" ' +
 			'value="' +
 			col.width +
-			'" min="1" max="100" ' +
-			'style="width:60px;text-align:center;margin-left:10px;" />';
+			'" min="1" max="100" />';
 
 		// Validation message area
 		html +=
 			'<span class="col-validation-msg" data-field-key="' +
 			col.field_key +
-			'" ' +
-			'style="color:red;font-size:11px;margin-left:8px;display:none;"></span>';
+			'"></span>';
 
 		html += "</div>";
 		return html;

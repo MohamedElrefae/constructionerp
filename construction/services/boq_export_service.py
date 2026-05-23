@@ -501,9 +501,10 @@ class BOQExportService:
 
 	@staticmethod
 	def export_to_pdf(boq_header: str, column_config: Optional[str] = None) -> Dict:
-		"""Export complete BOQ to HTML for browser printing (wkhtmltopdf not required)."""
+		"""Export complete BOQ to PDF."""
 		try:
 			from frappe.utils import now_datetime
+			from frappe.utils.pdf import get_pdf
 
 			# Default columns for full BOQ export
 			default_columns = [
@@ -533,15 +534,16 @@ class BOQExportService:
 				"company": frappe.defaults.get_user_default("Company") or "Company",
 			}
 			html = BOQExportService._render_template("boq_print_format.html", context)
+			pdf_data = get_pdf(html)
 
 			import os
 
 			from frappe.utils import get_files_path
 
-			file_name = f"BOQ_{boq_header}_{now_datetime().strftime("%Y%m%d_%H%M%S")}.html"
+			file_name = f"BOQ_{boq_header}_{now_datetime().strftime("%Y%m%d_%H%M%S")}.pdf"
 			file_path = os.path.join(get_files_path(), file_name)
-			with open(file_path, "w", encoding="utf-8") as f:
-				f.write(html)
+			with open(file_path, "wb") as f:
+				f.write(pdf_data)
 
 			file_doc = frappe.get_doc(
 				{
@@ -558,7 +560,7 @@ class BOQExportService:
 
 			return {
 				"success": True,
-				"message": "BOQ print view ready",
+				"message": "BOQ PDF exported successfully",
 				"file_url": f"/files/{file_name}",
 				"file_name": file_name,
 			}
@@ -569,9 +571,10 @@ class BOQExportService:
 
 	@staticmethod
 	def export_header_to_pdf(boq_header: str, column_config: Optional[str] = None) -> Dict:
-		"""Export BOQ Header summary to HTML for browser printing (wkhtmltopdf not required)."""
+		"""Export BOQ Header summary to PDF."""
 		try:
 			from frappe.utils import now_datetime
+			from frappe.utils.pdf import get_pdf
 
 			# Default columns for header-only export
 			default_columns = [
@@ -596,15 +599,16 @@ class BOQExportService:
 				"company": frappe.defaults.get_user_default("Company") or "Company",
 			}
 			html = BOQExportService._render_template("boq_header_print.html", context)
+			pdf_data = get_pdf(html)
 
 			import os
 
 			from frappe.utils import get_files_path
 
-			file_name = f"BOQ_Header_{boq_header}_{now_datetime().strftime("%Y%m%d_%H%M%S")}.html"
+			file_name = f"BOQ_Header_{boq_header}_{now_datetime().strftime("%Y%m%d_%H%M%S")}.pdf"
 			file_path = os.path.join(get_files_path(), file_name)
-			with open(file_path, "w", encoding="utf-8") as f:
-				f.write(html)
+			with open(file_path, "wb") as f:
+				f.write(pdf_data)
 
 			file_doc = frappe.get_doc(
 				{
@@ -621,7 +625,7 @@ class BOQExportService:
 
 			return {
 				"success": True,
-				"message": "BOQ Header print view ready",
+				"message": "BOQ Header PDF exported successfully",
 				"file_url": f"/files/{file_name}",
 				"file_name": file_name,
 			}

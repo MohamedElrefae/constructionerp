@@ -1,10 +1,27 @@
 {% set logo_url = "/assets/construction/images/construction_logo.svg" %}
 {% set app_title = "Construction ERP" %}
-<div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #2563eb; padding-bottom: 10px;">
-    <div>
-        <img src="{{ logo_url }}" style="height: 40px;" onerror="this.style.display='none'">
+<style>
+    .pdf-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 2px solid var(--print-heading-border, #2563eb);
+        padding-bottom: 10px;
+    }
+    .pdf-header-logo img {
+        height: 40px;
+    }
+    .pdf-header-title {
+        text-align: right;
+        margin: 0;
+        color: var(--print-heading-color, #2563eb);
+    }
+</style>
+<div class="pdf-header">
+    <div class="pdf-header-logo">
+        <img src="{{ logo_url }}" onerror="this.style.display='none'">
     </div>
-    <div style="text-align: right;">
-        <h2 style="margin: 0; color: #2563eb;">{{ app_title }}</h2>
+    <div>
+        <h2 class="pdf-header-title">{{ app_title }}</h2>
     </div>
 </div>

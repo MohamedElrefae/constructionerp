@@ -45,6 +45,17 @@
     function enhanceLink(el) {
         if (!el || el.getAttribute(CT_ATTR)) return;
 
+        const $el = $(el);
+        if ($el.hasClass('hasDatepicker') || $el.attr('data-fieldtype') === 'Date' || 
+            $el.attr('type') === 'date' || 
+            $el.closest('.frappe-control[data-fieldtype="Date"]').length || 
+            $el.closest('.frappe-control[data-fieldtype="DateRange"]').length || 
+            $el.closest('.frappe-control[data-fieldtype="Datetime"]').length ||
+            /date/i.test($el.attr('name') || '') || 
+            /date/i.test($el.attr('data-fieldname') || '')) {
+            return;
+        }
+
         const field = getControlInstance(el);
         if (!field || field.df.fieldtype !== "Link") return;
 

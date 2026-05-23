@@ -8,6 +8,12 @@ frappe.treeview_settings["BOQ Structure"] = {
 	add_tree_node: "construction.api.boq_api.add_node",
 	filters: [
 		{
+			fieldname: "project",
+			fieldtype: "Link",
+			options: "Project",
+			label: __("Project"),
+		},
+		{
 			fieldname: "boq_header",
 			fieldtype: "Link",
 			options: "BOQ Header",
@@ -15,10 +21,12 @@ frappe.treeview_settings["BOQ Structure"] = {
 			reqd: 1,
 			get_query: function() {
 				var filters = {};
-				if (window.scopeContext && window.scopeContext.current && window.scopeContext.current.project) {
-					filters.project = window.scopeContext.current.project;
-				} else if (window.scopeContext && window.scopeContext.current && window.scopeContext.current.company) {
-					filters.company = window.scopeContext.current.company;
+				var project = $('.page-form [data-fieldname="project"] input').val();
+				if (!project && window.scopeContext && window.scopeContext.current && window.scopeContext.current.project) {
+					project = window.scopeContext.current.project;
+				}
+				if (project) {
+					filters.project = project;
 				}
 				return { filters: filters };
 			}
@@ -56,25 +64,47 @@ frappe.treeview_settings["BOQ Structure"] = {
 		}
 	},
 	onload: function(treeview) {
+		// Hide local project filter and sync with global Scope Context
+		setTimeout(function() {
+			let proj_field = treeview.page.fields_dict.project;
+			if (proj_field) {
+				proj_field.$wrapper.hide();
+				if (window.scopeContext && window.scopeContext.current && window.scopeContext.current.project) {
+					proj_field.set_value(window.scopeContext.current.project);
+				}
+			}
+		}, 100);
+
 		// Sync with global scope context changes
 		$(document).off("scope:changed.boqStructureTreePublic").on("scope:changed.boqStructureTreePublic", function() {
-			if (treeview.page && treeview.page.fields_dict && treeview.page.fields_dict.boq_header) {
-				var field = treeview.page.fields_dict.boq_header;
-				var boq = field.get_value();
-				if (boq) {
-					var project = window.scopeContext && window.scopeContext.current && window.scopeContext.current.project;
-					var company = window.scopeContext && window.scopeContext.current && window.scopeContext.current.company;
-					
-					frappe.db.get_value("BOQ Header", boq, ["project", "company"]).then(function(r) {
+			if (treeview.page && treeview.page.fields_dict) {
+				var proj_field = treeview.page.fields_dict.project;
+				var boq_field = treeview.page.fields_dict.boq_header;
+				var project = window.scopeContext && window.scopeContext.current && window.scopeContext.current.project;
+				var company = window.scopeContext && window.scopeContext.current && window.scopeContext.current.company;
+
+				if (proj_field && project && proj_field.get_value() !== project) {
+					proj_field.set_value(project);
+				}
+
+				var boq = boq_field ? boq_field.get_value() : null;
+				if (boq && boq_field) {
+					frappe.db.get_value("BOQ Header", boq, "project").then(function(r) {
 						if (r && r.message) {
-							var match = true;
-							if (project && r.message.project !== project) match = false;
-							if (company && r.message.company !== company) match = false;
-							
-							if (!match) {
-								field.set_value("").then(function() {
-									field.$input.val("");
-									field.$input.trigger("change");
+							var boq_project = r.message.project;
+							if (project && boq_project !== project) {
+								boq_field.set_value("").then(function() {
+									boq_field.$input.val("");
+									boq_field.$input.trigger("change");
+								});
+							} else if (company) {
+								frappe.db.get_value("Project", boq_project, "company").then(function(p_res) {
+									if (p_res && p_res.message && p_res.message.company !== company) {
+										boq_field.set_value("").then(function() {
+											boq_field.$input.val("");
+											boq_field.$input.trigger("change");
+										});
+									}
 								});
 							}
 						}

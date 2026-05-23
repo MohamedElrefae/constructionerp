@@ -4,37 +4,54 @@
     <meta charset="utf-8">
     <title>BOQ Header - {{ header.title }}</title>
     <style>
+        :root {
+            --print-border-color: #ddd;
+            --print-text-primary: #333;
+            --print-text-secondary: #666;
+            --print-text-muted: #999;
+            --print-section-bg: #f9f9f9;
+            --print-body-bg: #fff;
+            --print-body-text: #000;
+        }
+
         body {
             font-family: Arial, sans-serif;
             font-size: 11px;
             margin: 0;
             padding: 20px;
+            background-color: var(--print-body-bg);
+            color: var(--print-body-text);
         }
 
         .header {
             text-align: center;
             margin-bottom: 30px;
-            border-bottom: 3px solid #333;
+            border-bottom: 3px solid var(--print-text-primary);
             padding-bottom: 20px;
         }
 
         .header h1 {
             font-size: 20px;
             margin: 0 0 10px 0;
-            color: #333;
+            color: var(--print-text-primary);
         }
 
         .header h2 {
             font-size: 14px;
             margin: 0 0 15px 0;
-            color: #666;
+            color: var(--print-text-secondary);
         }
 
         .info-section {
             margin: 20px 0;
             padding: 15px;
-            background-color: #f9f9f9;
-            border-left: 4px solid #333;
+            background-color: var(--print-section-bg);
+            border-left: 4px solid var(--print-text-primary);
+        }
+
+        .info-section h3 {
+            margin-top: 0;
+            color: var(--print-text-primary);
         }
 
         .info-row {
@@ -46,12 +63,12 @@
 
         .info-label {
             font-weight: bold;
-            color: #333;
+            color: var(--print-text-primary);
             width: 30%;
         }
 
         .info-value {
-            color: #666;
+            color: var(--print-text-secondary);
             width: 70%;
             text-align: left;
         }
@@ -64,8 +81,8 @@
             margin-top: 40px;
             text-align: center;
             font-size: 9px;
-            color: #999;
-            border-top: 1px solid #ddd;
+            color: var(--print-text-muted);
+            border-top: 1px solid var(--print-border-color);
             padding-top: 15px;
         }
 
@@ -99,7 +116,7 @@
     } %}
 
     <div class="info-section">
-        <h3 style="margin-top: 0; color: #333;">BOQ Information</h3>
+        <h3>BOQ Information</h3>
         {% for col in columns %}
         <div class="info-row">
             <span class="info-label">{{ col.label }}:</span>

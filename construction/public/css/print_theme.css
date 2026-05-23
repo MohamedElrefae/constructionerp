@@ -1,16 +1,41 @@
 /**
  * Print/PDF Theme for Construction ERP
+ * Uses CSS custom properties so it adapts to both light and dark modes.
  */
+
+:root {
+    --print-body-color: #0f172a;
+    --print-heading-color: #2563eb;
+    --print-heading-border: #2563eb;
+    --print-th-bg: #f1f5f9;
+    --print-th-color: #1e293b;
+    --print-border-color: #e2e8f0;
+    --print-footer-color: #94a3b8;
+    --print-footer-border: #e2e8f0;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --print-body-color: #e2e8f0;
+        --print-heading-color: #60a5fa;
+        --print-heading-border: #60a5fa;
+        --print-th-bg: #1e293b;
+        --print-th-color: #e2e8f0;
+        --print-border-color: #334155;
+        --print-footer-color: #64748b;
+        --print-footer-border: #334155;
+    }
+}
 
 @media print {
     body {
         font-family: "Inter", sans-serif !important;
-        color: #0f172a !important;
+        color: var(--print-body-color) !important;
     }
 
     .print-heading {
-        color: #2563eb !important;
-        border-bottom: 2px solid #2563eb !important;
+        color: var(--print-heading-color) !important;
+        border-bottom: 2px solid var(--print-heading-border) !important;
         padding-bottom: 10px !important;
         margin-bottom: 20px !important;
     }
@@ -21,15 +46,15 @@
     }
 
     th {
-        background-color: #f1f5f9 !important;
-        color: #1e293b !important;
+        background-color: var(--print-th-bg) !important;
+        color: var(--print-th-color) !important;
         padding: 10px !important;
-        border: 1px solid #e2e8f0 !important;
+        border: 1px solid var(--print-border-color) !important;
     }
 
     td {
         padding: 10px !important;
-        border: 1px solid #e2e8f0 !important;
+        border: 1px solid var(--print-border-color) !important;
     }
 
     .print-footer {
@@ -37,8 +62,8 @@
         bottom: 0 !important;
         width: 100% !important;
         font-size: 10px !important;
-        color: #94a3b8 !important;
-        border-top: 1px solid #e2e8f0 !important;
+        color: var(--print-footer-color) !important;
+        border-top: 1px solid var(--print-footer-border) !important;
         padding-top: 5px !important;
     }
 }

@@ -164,11 +164,11 @@ class ConstructionViewMenu {
 				: "";
 			var active_class =
 				item.value === self.current_view
-					? ' style="display:flex;align-items:center;padding:6px 16px;font-weight:bold;background:#f0f4f7;"'
+					? ' style="display:flex;align-items:center;padding:6px 16px;font-weight:bold;background:var(--view-active-bg, #f0f4f7);"'
 					: ' style="display:flex;align-items:center;padding:6px 16px;"';
 			var check_html =
 				item.value === self.current_view
-					? '<i class="fa fa-check" style="margin-left:auto;color:#36b37e;"></i>'
+					? '<i class="fa fa-check" style="margin-left:auto;color:var(--view-check-color, #36b37e);"></i>'
 					: "";
 			var $li = $(
 				'<li><a href="#"' +

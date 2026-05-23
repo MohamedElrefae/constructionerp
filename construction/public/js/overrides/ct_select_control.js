@@ -50,6 +50,15 @@
         if (el.disabled || el.getAttribute("data-fieldtype") === "docstatus") return;
 
         const $select = $(el);
+        if ($select.hasClass('hasDatepicker') || $select.attr('data-fieldtype') === 'Date' || 
+            $select.attr('type') === 'date' || 
+            $select.closest('.frappe-control[data-fieldtype="Date"]').length || 
+            $select.closest('.frappe-control[data-fieldtype="DateRange"]').length || 
+            $select.closest('.frappe-control[data-fieldtype="Datetime"]').length ||
+            /date/i.test($select.attr('name') || '') || 
+            /date/i.test($select.attr('data-fieldname') || '')) {
+            return;
+        }
 
         // Skip check fields and hidden selects
         if ($select.closest("[data-fieldtype='Check']").length) return;

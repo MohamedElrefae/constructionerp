@@ -4,17 +4,31 @@
     <meta charset="utf-8">
     <title>Bill of Quantities - {{ header.title }}</title>
     <style>
+        :root {
+            --print-border-color: #ddd;
+            --print-text-primary: #333;
+            --print-text-secondary: #666;
+            --print-text-muted: #999;
+            --print-header-bg: #333;
+            --print-header-text: #fff;
+            --print-section-bg: #f0f0f0;
+            --print-body-bg: #fff;
+            --print-body-text: #000;
+        }
+
         body {
             font-family: Arial, sans-serif;
             font-size: 10px;
             margin: 0;
             padding: 20px;
+            background-color: var(--print-body-bg);
+            color: var(--print-body-text);
         }
 
         .header {
             text-align: center;
             margin-bottom: 20px;
-            border-bottom: 2px solid #333;
+            border-bottom: 2px solid var(--print-text-primary);
             padding-bottom: 15px;
         }
 
@@ -26,7 +40,7 @@
         .header h2 {
             font-size: 14px;
             margin: 0 0 10px 0;
-            color: #666;
+            color: var(--print-text-secondary);
         }
 
         .header-info {
@@ -49,7 +63,7 @@
 
         .header-info .label {
             font-weight: bold;
-            color: #333;
+            color: var(--print-text-primary);
         }
 
         table {
@@ -59,8 +73,8 @@
         }
 
         th {
-            background-color: #333;
-            color: white;
+            background-color: var(--print-header-bg);
+            color: var(--print-header-text);
             padding: 8px 5px;
             text-align: left;
             font-size: 9px;
@@ -68,11 +82,11 @@
 
         td {
             padding: 5px;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid var(--print-border-color);
         }
 
         .section-row {
-            background-color: #f0f0f0;
+            background-color: var(--print-section-bg);
             font-weight: bold;
         }
 
@@ -89,8 +103,8 @@
         }
 
         .total-row {
-            background-color: #333;
-            color: white;
+            background-color: var(--print-header-bg);
+            color: var(--print-header-text);
             font-weight: bold;
         }
 
@@ -102,8 +116,8 @@
             margin-top: 30px;
             text-align: center;
             font-size: 8px;
-            color: #999;
-            border-top: 1px solid #ddd;
+            color: var(--print-text-muted);
+            border-top: 1px solid var(--print-border-color);
             padding-top: 10px;
         }
 
