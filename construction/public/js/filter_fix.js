@@ -294,6 +294,240 @@ var css=`
   background: var(--ct-bg-hover, rgba(255,255,255,0.08)) !important;
   color: var(--ct-text, #f8fafc) !important;
 }
+
+/* 21. Custom Unified Dropdown styling (for selectors/links override) */
+.ct-unified-dropdown {
+  position: relative !important;
+  width: 100% !important;
+  display: inline-block !important;
+}
+
+.ct-dropdown-btn {
+  width: 100% !important;
+  height: 30px !important;
+  background-color: var(--ct-bg-elevated, #111827) !important;
+  color: var(--ct-text, #f8fafc) !important;
+  border-top: 1px solid var(--ct-border, rgba(148,163,184,0.18)) !important;
+  border-right: 1px solid var(--ct-border, rgba(148,163,184,0.18)) !important;
+  border-bottom: 1px solid var(--ct-border, rgba(148,163,184,0.18)) !important;
+  border-left: 3px solid var(--ct-primary, #2563eb) !important;
+  border-radius: 6px !important;
+  padding: 4px 10px 4px 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 6px !important;
+  cursor: pointer !important;
+  font-size: 0.8125rem !important;
+  font-weight: 500 !important;
+  text-align: left !important;
+  transition: all 0.2s ease !important;
+  user-select: none !important;
+}
+
+.ct-dropdown-btn:hover {
+  background-color: var(--ct-surface-hover, rgba(148,163,184,0.08)) !important;
+  border-color: var(--ct-primary, #2563eb) !important;
+  box-shadow: 0 0 0 1px var(--ct-primary-light, rgba(37,99,235,0.15)) !important;
+}
+
+.ct-dropdown-menu {
+  display: none;
+  position: fixed !important;
+  z-index: 10000 !important;
+  min-width: 220px !important;
+  max-width: 380px !important;
+  background: var(--ct-surface-bg, #112b15) !important;
+  border: 1px solid var(--ct-border, rgba(148,163,184,0.18)) !important;
+  border-left: 3px solid var(--ct-primary, #2563eb) !important;
+  border-radius: 8px !important;
+  padding: 6px !important;
+  box-shadow: var(--ct-shadow-lg, 0 8px 32px rgba(0,0,0,0.45)) !important;
+}
+
+.ct-dropdown-search-wrapper {
+  padding: 0 0 6px !important;
+  border-bottom: 1px solid var(--ct-border, rgba(148,163,184,0.1)) !important;
+  margin-bottom: 4px !important;
+}
+
+.ct-dropdown-search {
+  width: 100% !important;
+  padding: 5px 8px !important;
+  background: var(--ct-bg-elevated, #0f172a) !important;
+  color: var(--ct-text, #f8fafc) !important;
+  border: 1px solid var(--ct-border, rgba(148,163,184,0.2)) !important;
+  border-left: 2px solid var(--ct-primary, #2563eb) !important;
+  border-radius: 5px !important;
+  font-size: 0.8rem !important;
+  outline: none !important;
+}
+
+.ct-dropdown-list {
+  max-height: 220px !important;
+  overflow-y: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+}
+
+.ct-dropdown-list .dropdown-item {
+  display: block !important;
+  width: 100% !important;
+  padding: 7px 10px !important;
+  border-radius: 5px !important;
+  font-size: 0.8125rem !important;
+  color: var(--ct-text, #f8fafc) !important;
+  text-decoration: none !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  background: transparent !important;
+  cursor: pointer !important;
+  transition: all 0.12s ease !important;
+}
+
+.ct-dropdown-list .dropdown-item:hover {
+  background: var(--ct-surface-hover, rgba(148,163,184,0.08)) !important;
+  color: var(--ct-primary, #2563eb) !important;
+  transform: translateY(-1px) !important;
+}
+
+.ct-dropdown-list .dropdown-item.active {
+  color: var(--ct-primary, #2563eb) !important;
+  background: var(--ct-primary-light, rgba(37,99,235,0.12)) !important;
+  font-weight: 600 !important;
+}
+
+.ct-dropdown-list .ct-dropdown-divider {
+  height: 1px;
+  background: var(--ct-border, rgba(148,163,184,0.1));
+  margin: 4px 0;
+}
+
+/* 22. MultiSelectList custom styling */
+.multiselect-list .form-control {
+  position: relative !important;
+  background-color: var(--ct-bg-elevated, #111827) !important;
+  color: var(--ct-text, #f8fafc) !important;
+  border-top: 1px solid var(--ct-border, rgba(148,163,184,0.18)) !important;
+  border-right: 1px solid var(--ct-border, rgba(148,163,184,0.18)) !important;
+  border-bottom: 1px solid var(--ct-border, rgba(148,163,184,0.18)) !important;
+  border-left: 3px solid var(--ct-primary, #2563eb) !important;
+  border-radius: 6px !important;
+  height: 30px !important;
+  padding: 4px 26px 4px 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  cursor: pointer !important;
+  font-size: 0.8125rem !important;
+  font-weight: 500 !important;
+  text-align: left !important;
+  transition: all 0.2s ease !important;
+  box-shadow: none !important;
+}
+
+[dir="rtl"] .multiselect-list .form-control {
+  padding: 4px 8px 4px 26px !important;
+}
+
+.multiselect-list .form-control:hover {
+  background-color: var(--ct-surface-hover, rgba(148,163,184,0.08)) !important;
+  border-color: var(--ct-primary, #2563eb) !important;
+}
+
+.multiselect-list .dropdown-menu {
+  background: var(--ct-surface-bg, #112b15) !important;
+  border: 1px solid var(--ct-border, rgba(148,163,184,0.18)) !important;
+  border-left: 3px solid var(--ct-primary, #2563eb) !important;
+  border-radius: 8px !important;
+  padding: 6px !important;
+  box-shadow: var(--ct-shadow-lg, 0 8px 32px rgba(0,0,0,0.45)) !important;
+}
+
+.multiselect-list .dropdown-input-wrapper {
+  padding: 0 0 6px !important;
+  border-bottom: 1px solid var(--ct-border, rgba(148,163,184,0.1)) !important;
+  margin-bottom: 4px !important;
+}
+
+.multiselect-list .dropdown-input-wrapper input {
+  width: 100% !important;
+  height: 28px !important;
+  padding: 5px 8px !important;
+  background: var(--ct-bg-elevated, #0f172a) !important;
+  color: var(--ct-text, #f8fafc) !important;
+  border: 1px solid var(--ct-border, rgba(148,163,184,0.2)) !important;
+  border-left: 2px solid var(--ct-primary, #2563eb) !important;
+  border-radius: 5px !important;
+  font-size: 0.8rem !important;
+  outline: none !important;
+}
+
+.multiselect-list .selectable-items {
+  max-height: 220px !important;
+  overflow-y: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+  margin-bottom: 6px !important;
+}
+
+.multiselect-list .selectable-item {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 7px 10px !important;
+  border-radius: 5px !important;
+  font-size: 0.8125rem !important;
+  color: var(--ct-text, #f8fafc) !important;
+  cursor: pointer !important;
+  transition: all 0.12s ease !important;
+  border-bottom: none !important;
+}
+
+.multiselect-list .selectable-item:hover {
+  background: var(--ct-surface-hover, rgba(148,163,184,0.08)) !important;
+  color: var(--ct-primary, #2563eb) !important;
+  transform: translateY(-1px) !important;
+}
+
+.multiselect-list .selectable-item.selected {
+  color: var(--ct-primary, #2563eb) !important;
+  background: var(--ct-primary-light, rgba(37,99,235,0.12)) !important;
+  font-weight: 600 !important;
+}
+
+.multiselect-list .selectable-item .multiselect-check {
+  display: flex !important;
+  align-items: center !important;
+  color: var(--ct-primary, #2563eb) !important;
+}
+
+.multiselect-list .dropdown-menu li.d-flex {
+  padding: 4px 4px 0 4px !important;
+  border-top: 1px solid var(--ct-border, rgba(148,163,184,0.1)) !important;
+  gap: 6px !important;
+}
+
+.multiselect-list .dropdown-menu button.btn {
+  height: 24px !important;
+  font-size: 0.75rem !important;
+  padding: 2px 8px !important;
+  border-radius: 4px !important;
+  border: 1px solid var(--ct-border, rgba(148,163,184,0.18)) !important;
+}
+
+.multiselect-list .dropdown-menu button.btn-secondary {
+  background: var(--ct-bg-elevated, #111827) !important;
+  color: var(--ct-text-secondary, #94a3b8) !important;
+}
+
+.multiselect-list .dropdown-menu button.btn-primary {
+  background: var(--ct-primary, #2563eb) !important;
+  color: #fff !important;
+}
+
 `;
 
 var style=document.createElement('style');

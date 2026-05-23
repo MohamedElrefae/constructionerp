@@ -111,6 +111,8 @@ def setup_branch_company_field():
 	Called by after_install hook and by patch.
 	Does NOT call frappe.db.commit() — caller manages the transaction.
 	"""
+	if not frappe.db.exists("DocType", "Branch"):
+		return
 	if not frappe.db.exists("Custom Field", {"dt": "Branch", "fieldname": "company"}):
 		frappe.get_doc({
 			"doctype": "Custom Field",

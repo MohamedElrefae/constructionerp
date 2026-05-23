@@ -10,6 +10,15 @@ frappe.treeview_settings["BOQ Structure"] = {
 			label: __("Select BOQ Header"),
 			placeholder: __("Choose a BOQ to view its structure..."),
 			reqd: true,
+			get_query: function() {
+				var filters = {};
+				if (window.scopeContext && window.scopeContext.current && window.scopeContext.current.project) {
+					filters.project = window.scopeContext.current.project;
+				} else if (window.scopeContext && window.scopeContext.current && window.scopeContext.current.company) {
+					filters.company = window.scopeContext.current.company;
+				}
+				return { filters: filters };
+			}
 		},
 	],
 	get_tree_nodes: "construction.api.boq_api.get_children",
@@ -66,6 +75,33 @@ frappe.treeview_settings["BOQ Structure"] = {
 		function get_boq_header() {
 			return treeview.page.fields_dict.boq_header.get_value();
 		}
+
+		// Sync with global scope context changes
+		$(document).off("scope:changed.boqStructureTree").on("scope:changed.boqStructureTree", function() {
+			if (treeview.page && treeview.page.fields_dict && treeview.page.fields_dict.boq_header) {
+				var field = treeview.page.fields_dict.boq_header;
+				var boq = field.get_value();
+				if (boq) {
+					var project = window.scopeContext && window.scopeContext.current && window.scopeContext.current.project;
+					var company = window.scopeContext && window.scopeContext.current && window.scopeContext.current.company;
+					
+					frappe.db.get_value("BOQ Header", boq, ["project", "company"]).then(function(r) {
+						if (r && r.message) {
+							var match = true;
+							if (project && r.message.project !== project) match = false;
+							if (company && r.message.company !== company) match = false;
+							
+							if (!match) {
+								field.set_value("").then(function() {
+									field.$input.val("");
+									field.$input.trigger("change");
+								});
+							}
+						}
+					});
+				}
+			}
+		});
 
 		var boq_from_url = frappe.route_options && frappe.route_options.boq_header;
 		if (!boq_from_url) {

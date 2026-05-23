@@ -87,13 +87,15 @@ app_include_js = [
 	"/assets/construction/js/construction_export_menu.js",
 	"/assets/construction/js/theme_loader_v24.js?v=2.5.2",
 	"/assets/construction/js/components/index.js?v=4.6",
-	# Searchable Dropdown Module (Week 1)
+	# Searchable Dropdown Module — base class (must load before overrides)
 	"/assets/construction/js/searchable_dropdown/utils.js",
 	"/assets/construction/js/searchable_dropdown/searchable_dropdown.js",
-	# Searchable Dropdown Form Scripts (Week 2/3)
-	"/assets/construction/js/searchable_dropdown/config/journal_entry.js",
-	"/assets/construction/js/searchable_dropdown/config/sales_invoice.js",
-	"/assets/construction/js/searchable_dropdown/config/customer_supplier.js",
+	# Phase 2: Global ControlSelect override — searchable themed dropdown for all <select> fields
+	# Replaces native HTML <select> app-wide (forms + report filters confirmed by diagnostic)
+	"/assets/construction/js/overrides/ct_select_control.js?v=2",
+	# Phase 3: Global ControlLink auto-enhancer — replaces 3 manual config files
+	# Auto-applies SearchableDropdownEnhancer to all Link fields on every page
+	"/assets/construction/js/overrides/ct_link_control.js?v=2",
 	# v16 runtime safety net — no-op (CSS handles all styling)
 	"/assets/construction/js/theme_loader_v16.js?v=2",
 	# Scope Context — core class for managing user company/cost_center/project/dept scope
@@ -110,6 +112,7 @@ app_include_js = [
 	# Must be LAST to guarantee it loads after desk.bundle.css
 	"/assets/construction/js/filter_fix.js?v=4.1",
 ]
+
 
 # CSS includes for unauthenticated pages (login, etc.)
 # v2.4-r3: modern_theme.css handles all theming including login
