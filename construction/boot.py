@@ -1,9 +1,33 @@
 import frappe
 
 
+def _translate_sidebar_labels(bootinfo):
+    """Translate sidebar titles and labels that Frappe sends in bootinfo."""
+    sidebar_items = bootinfo.get("workspace_sidebar_item") or {}
+
+    for sidebar in sidebar_items.values():
+        label = sidebar.get("label")
+        if label:
+            sidebar["label"] = frappe._(label)
+
+        for item in sidebar.get("items") or []:
+            _translate_sidebar_item(item)
+
+
+def _translate_sidebar_item(item):
+    label = item.get("label")
+    if label:
+        item["label"] = frappe._(label)
+
+    for child in item.get("nested_items") or []:
+        _translate_sidebar_item(child)
+
+
 def extend_bootinfo(bootinfo):
     if not frappe.session.user or frappe.session.user == "Guest":
         return bootinfo
+
+    _translate_sidebar_labels(bootinfo)
 
     user = frappe.session.user
 

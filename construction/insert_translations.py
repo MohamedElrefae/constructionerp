@@ -16,6 +16,27 @@ CRITICAL_OVERRIDES = {
 	"Submit": "ترحيل",
 	"Submitted": "تم الترحيل",
 	"Save and Submit": "حفظ وترحيل",
+	"Home": "الرئيسية",
+	"Projects": "المشاريع",
+	"Reports & Masters": "التقارير والبيانات الرئيسية",
+	"Reports &amp; Masters": "التقارير والبيانات الرئيسية",
+	"Masters & Reports": "البيانات الرئيسية والتقارير",
+	"Masters &amp; Reports": "البيانات الرئيسية والتقارير",
+	"Quick Access": "وصول سريع",
+	"Shortcuts": "الاختصارات",
+	"Your Shortcuts": "اختصاراتك",
+	"BOQ Management": "إدارة جدول الكميات",
+	"Theme Settings": "إعدادات السمة",
+	"Scope Context": "سياق النطاق",
+	"Scope Management": "إدارة النطاق",
+	"User Scope Context": "سياق نطاق المستخدم",
+	"Construction Settings": "إعدادات المقاولات",
+	'<span class="h4"><b>Reports & Masters</b></span>': '<span class="h4"><b>التقارير والبيانات الرئيسية</b></span>',
+	'<span class="h4"><b>Reports &amp; Masters</b></span>': '<span class="h4"><b>التقارير والبيانات الرئيسية</b></span>',
+	'<span class="h4"><b>Masters &amp; Reports</b></span>': '<span class="h4"><b>البيانات الرئيسية والتقارير</b></span>',
+	'<span class="h4"><b>Quick Access</b></span>': '<span class="h4"><b>وصول سريع</b></span>',
+	'<span class="h4"><b>Shortcuts</b></span>': '<span class="h4"><b>الاختصارات</b></span>',
+	'<span class="h4"><b>Your Shortcuts</b></span>': '<span class="h4"><b>اختصاراتك</b></span>',
 }
 
 
@@ -124,12 +145,33 @@ def execute(commit=False):
 def get_arabic_translation_seed_status():
 	seed = _load_reviewed_translations()
 	samples = {}
-	for source_text in ("Submit", "Sales Invoice", "Purchase Invoice", "Construction Settings"):
+	for source_text in (
+		"Submit",
+		"Sales Invoice",
+		"Purchase Invoice",
+		"Construction Settings",
+		"Home",
+		"Projects",
+		"Reports & Masters",
+		'<span class="h4"><b>Reports &amp; Masters</b></span>',
+		"Scope Management",
+		"User Scope Context",
+	):
 		samples[source_text] = frappe.db.get_value(
 			"Translation",
 			{"language": "ar", "source_text": source_text},
 			["translated_text", "context"],
 			as_dict=True,
+		)
+
+	sidebar_items = []
+	if frappe.db.table_exists("Workspace Sidebar Item"):
+		sidebar_items = frappe.get_all(
+			"Workspace Sidebar Item",
+			filters={"parent": "Construction"},
+			fields=["label", "type", "link_to", "idx"],
+			order_by="idx asc",
+			limit_page_length=0,
 		)
 
 	return {
@@ -138,5 +180,9 @@ def get_arabic_translation_seed_status():
 		"patch_v6_3": bool(
 			frappe.db.exists("Patch Log", "construction.patches.v6_3.seed_reviewed_arabic_translation_files")
 		),
+		"patch_v6_4": bool(
+			frappe.db.exists("Patch Log", "construction.patches.v6_4.reconcile_sidebar_and_arabic_translations")
+		),
 		"samples": samples,
+		"construction_sidebar_items": sidebar_items,
 	}
