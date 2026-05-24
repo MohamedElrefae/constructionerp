@@ -1,314 +1,84 @@
+import csv
+from pathlib import Path
+
 import frappe
 from frappe.translate import MERGED_TRANSLATION_KEY, USER_TRANSLATION_KEY
 
 
+REVIEW_FILES = (
+	"docs/arabic_db_translation_review.csv",
+	"docs/arabic_po_review.csv",
+	"docs/erpnext_ar_missing_review_filled.csv",
+	"docs/frappe_ar_missing_review.csv",
+)
+
+CRITICAL_OVERRIDES = {
+	"Submit": "ترحيل",
+	"Submitted": "تم الترحيل",
+	"Save and Submit": "حفظ وترحيل",
+}
+
+
+def _repo_root():
+	return Path(__file__).resolve().parents[1]
+
+
+def _row_value(row, *keys):
+	for key in keys:
+		value = (row.get(key) or "").strip()
+		if value:
+			return value
+	return ""
+
+
+def _load_reviewed_translations():
+	translations = {}
+	root = _repo_root()
+
+	for relative_path in REVIEW_FILES:
+		path = root / relative_path
+		if not path.exists():
+			continue
+
+		with path.open(newline="", encoding="utf-8") as handle:
+			reader = csv.DictReader(handle)
+			for row in reader:
+				if _row_value(row, "skip").lower() in {"1", "yes", "true"}:
+					continue
+
+				source_text = _row_value(row, "source_text", "msgid", "source")
+				translated_text = _row_value(row, "translated_text", "msgstr", "translation")
+				context = _row_value(row, "context")
+
+				if not source_text or not translated_text:
+					continue
+
+				translations[(source_text, context)] = translated_text
+
+	for source_text, translated_text in CRITICAL_OVERRIDES.items():
+		translations[(source_text, "")] = translated_text
+
+	return translations
+
+
+def _clear_translation_caches():
+	frappe.cache.hdel(USER_TRANSLATION_KEY, "ar")
+	frappe.cache.hdel(MERGED_TRANSLATION_KEY, "ar")
+	frappe.cache.delete_value(keys=["bootinfo", USER_TRANSLATION_KEY, MERGED_TRANSLATION_KEY])
+	frappe.clear_cache()
+
+
 def execute(commit=False):
-	translations = {
-		'About': 'حول',
-		'Accepted': 'مقبول',
-		'Account': 'الحساب',
-		'Accounting': 'المحاسبة',
-		'Accounts': 'الحسابات',
-		'Actions': 'إجراءات',
-		'Active': 'نشط',
-		'Actual Qty': 'الكمية الفعلية',
-		'Add': 'إضافة',
-		'Add Filter': 'إضافة عامل تصفية',
-		'Add Row': 'إضافة صف',
-		'Address': 'العنوان',
-		'Allow': 'سماح',
-		'Amend': 'تعديل بعد الإلغاء',
-		'Amount': 'المبلغ',
-		'Apply': 'تطبيق',
-		'Approve': 'موافقة',
-		'Approved': 'معتمد',
-		'Archive': 'أرشفة',
-		'Asset': 'أصل',
-		'Assets': 'الأصول',
-		'Assign': 'إسناد',
-		'Attachment': 'مرفق',
-		'Attachments': 'المرفقات',
-		'Attendance': 'الحضور',
-		'Available Qty': 'الكمية المتاحة',
-		'BOM': 'قائمة المواد',
-		'Back': 'رجوع',
-		'Balance': 'الرصيد',
-		'Bank': 'البنك',
-		'Bank Account': 'حساب بنكي',
-		'Bank Reconciliation': 'تسوية بنكية',
-		'Barcode': 'باركود',
-		'Batch': 'دفعة',
-		'Batch No': 'رقم الدفعة',
-		'Billed Qty': 'الكمية المفوترة',
-		'Branch': 'الفرع',
-		'Buying': 'المشتريات',
-		'CRM': 'إدارة علاقات العملاء',
-		'Calendar': 'تقويم',
-		'Campaign': 'حملة',
-		'Cancel': 'إلغاء',
-		'Cancelled': 'ملغى',
-		'Chart of Accounts': 'دليل الحسابات',
-		'Clear': 'مسح',
-		'Close': 'إغلاق',
-		'Closed': 'مغلق',
-		'Comment': 'تعليق',
-		'Comments': 'التعليقات',
-		'Company': 'الشركة',
-		'Completed': 'مكتمل',
-		'Contact': 'جهة الاتصال',
-		'Continue': 'متابعة',
-		'Copy': 'نسخ',
-		'Cost Center': 'مركز التكلفة',
-		'Cost Centers': 'مراكز التكلفة',
-		'Create': 'إنشاء',
-		'Created': 'تم الإنشاء',
-		'Credit': 'دائن',
-		'Currency': 'العملة',
-		'Customer': 'العميل',
-		'Customer Group': 'مجموعة العملاء',
-		'Customize': 'تخصيص',
-		'Customize Form': 'تخصيص النموذج',
-		'Dashboard': 'لوحة المعلومات',
-		'Date': 'التاريخ',
-		'Debit': 'مدين',
-		'Default': 'افتراضي',
-		'Delete': 'حذف',
-		'Delivered Qty': 'الكمية المسلمة',
-		'Delivery Note': 'إذن تسليم',
-		'Deny': 'رفض',
-		'Department': 'القسم',
-		'Description': 'الوصف',
-		'Deselect All': 'إلغاء تحديد الكل',
-		'Designation': 'المسمى الوظيفي',
-		'Details': 'التفاصيل',
-		'Disable': 'تعطيل',
-		'Disabled': 'معطل',
-		'Discount': 'خصم',
-		'Discount Amount': 'مبلغ الخصم',
-		'Discount Percentage': 'نسبة الخصم',
-		'Download': 'تنزيل',
-		'Draft': 'مسودة',
-		'Due Date': 'تاريخ الاستحقاق',
-		'Duplicate': 'تكرار',
-		'Edit': 'تعديل',
-		'Email': 'بريد إلكتروني',
-		'Employee': 'الموظف',
-		'Employees': 'الموظفون',
-		'Enable': 'تمكين',
-		'Enabled': 'مفعل',
-		'End Date': 'تاريخ الانتهاء',
-		'Exchange Rate': 'سعر الصرف',
-		'Export': 'تصدير',
-		'File': 'ملف',
-		'Files': 'الملفات',
-		'Filter By...': 'تصفية حسب...',
-		'Filters': 'عوامل التصفية',
-		'Finance': 'المالية',
-		'First': 'الأول',
-		'Fiscal Year': 'السنة المالية',
-		'Follow': 'متابعة',
-		'Form': 'نموذج',
-		'From': 'من',
-		'General': 'عام',
-		'Grand Total': 'الإجمالي النهائي',
-		'Group By': 'تجميع حسب',
-		'HR': 'الموارد البشرية',
-		'Help': 'مساعدة',
-		'Hidden': 'مخفي',
-		'Import': 'استيراد',
-		'In Progress': 'قيد التنفيذ',
-		'Inactive': 'غير نشط',
-		'Inbox': 'الوارد',
-		'Information': 'معلومات',
-		'Inventory': 'المخزون',
-		'Is Return': 'مرتجع',
-		'Issue': 'مشكلة',
-		'Issues': 'المشكلات',
-		'Item': 'الصنف',
-		'Item Code': 'كود الصنف',
-		'Item Group': 'مجموعة الأصناف',
-		'Item Name': 'اسم الصنف',
-		'Items': 'الأصناف',
-		'Journal Entry': 'قيد يومية',
-		'Kanban': 'كانبان',
-		'Language': 'اللغة',
-		'Last': 'الأخير',
-		'Lead': 'عميل محتمل',
-		'Leave': 'إجازة',
-		'Less': 'أقل',
-		'Letter Head': 'ترويسة',
-		'List': 'قائمة',
-		'Loading...': 'جار التحميل...',
-		'Loan': 'قرض',
-		'Loans': 'القروض',
-		'Maintenance': 'صيانة',
-		'Mandatory': 'إلزامي',
-		'Manufacturing': 'التصنيع',
-		'Material Request': 'طلب مواد',
-		'Menu': 'القائمة',
-		'Merge': 'دمج',
-		'Message': 'رسالة',
-		'Messages': 'الرسائل',
-		'Missing field': 'حقل مفقود',
-		'Modified': 'تم التعديل',
-		'Modified By': 'تم التعديل بواسطة',
-		'More': 'المزيد',
-		'Name': 'الاسم',
-		'Net Total': 'الصافي الإجمالي',
-		'New': 'جديد',
-		'Next': 'التالي',
-		'No': 'لا',
-		'Not permitted': 'غير مسموح',
-		'Notes': 'ملاحظات',
-		'Notification': 'إشعار',
-		'Notifications': 'الإشعارات',
-		'On Hold': 'معلق مؤقتا',
-		'Open': 'مفتوح',
-		'Opening Stock': 'مخزون افتتاحي',
-		'Operation': 'عملية',
-		'Operations': 'العمليات',
-		'Opportunity': 'فرصة',
-		'Optional': 'اختياري',
-		'Ordered Qty': 'الكمية المطلوبة',
-		'Outstanding Amount': 'المبلغ المستحق',
-		'Overdue': 'متأخر',
-		'Owner': 'المالك',
-		'Paid': 'مدفوع',
-		'Paid Amount': 'المبلغ المدفوع',
-		'Partly Paid': 'مدفوع جزئيا',
-		'Party': 'الطرف',
-		'Party Type': 'نوع الطرف',
-		'Paste': 'لصق',
-		'Payment Entry': 'قيد دفع',
-		'Payroll': 'الرواتب',
-		'Pending': 'معلق',
-		'Pending Qty': 'الكمية المعلقة',
-		'Period': 'الفترة',
-		'Permission': 'صلاحية',
-		'Permissions': 'الصلاحيات',
-		'Posting Date': 'تاريخ القيد',
-		'Preview': 'معاينة',
-		'Previous': 'السابق',
-		'Price': 'السعر',
-		'Print': 'طباعة',
-		'Print Format': 'تنسيق الطباعة',
-		'Project': 'المشروع',
-		'Projects': 'المشاريع',
-		'Purchase': 'شراء',
-		'Purchase Invoice': 'فاتورة شراء',
-		'Purchase Order': 'أمر شراء',
-		'Purchase Receipt': 'إيصال شراء',
-		'Purchasing': 'المشتريات',
-		'Qty': 'الكمية',
-		'Quality': 'الجودة',
-		'Quantity': 'الكمية',
-		'Quotation': 'عرض سعر',
-		'Rate': 'السعر',
-		'Read': 'مقروء',
-		'Read Only': 'للقراءة فقط',
-		'Received Amount': 'المبلغ المستلم',
-		'Received Qty': 'الكمية المستلمة',
-		'Reference': 'مرجع',
-		'Reference Date': 'تاريخ المرجع',
-		'Reference No': 'رقم المرجع',
-		'Refresh': 'تحديث',
-		'Reject': 'رفض',
-		'Rejected': 'مرفوض',
-		'Reload': 'إعادة تحميل',
-		'Rename': 'إعادة تسمية',
-		'Report': 'تقرير',
-		'Reports': 'التقارير',
-		'Required': 'مطلوب',
-		'Reserved Qty': 'الكمية المحجوزة',
-		'Reset': 'إعادة تعيين',
-		'Restore': 'استعادة',
-		'Retry': 'إعادة المحاولة',
-		'Return': 'مرتجع',
-		'Role': 'الدور',
-		'Roles': 'الأدوار',
-		'Rounded Total': 'الإجمالي المقرب',
-		'Salary': 'راتب',
-		'Salary Slip': 'قسيمة راتب',
-		'Sales': 'المبيعات',
-		'Sales Invoice': 'فاتورة مبيعات',
-		'Sales Order': 'أمر بيع',
-		'Save': 'حفظ',
-		'Save and Submit': 'حفظ وترحيل',
-		'Search': 'بحث',
-		'Seen': 'تمت المشاهدة',
-		'Select': 'تحديد',
-		'Select All': 'تحديد الكل',
-		'Selling': 'البيع',
-		'Serial No': 'رقم تسلسلي',
-		'Set': 'تعيين',
-		'Settings': 'إعدادات',
-		'Share': 'مشاركة',
-		'Sort Ascending': 'ترتيب تصاعدي',
-		'Sort Descending': 'ترتيب تنازلي',
-		'Start Date': 'تاريخ البدء',
-		'Status': 'الحالة',
-		'Stock': 'المخزون',
-		'Stock Balance': 'رصيد المخزون',
-		'Stock Entry': 'قيد مخزون',
-		'Stock Ledger': 'دفتر أستاذ المخزون',
-		'Stopped': 'متوقف',
-		'Submit': 'ترحيل',
-		'Submitted': 'تم الترحيل',
-		'Subscription': 'اشتراك',
-		'Subscriptions': 'الاشتراكات',
-		'Supplier': 'المورد',
-		'Supplier Group': 'مجموعة الموردين',
-		'Supplier Quotation': 'عرض سعر مورد',
-		'Support': 'الدعم',
-		'Task': 'مهمة',
-		'Tasks': 'المهام',
-		'Tax': 'ضريبة',
-		'Tax Amount': 'مبلغ الضريبة',
-		'Taxes': 'الضرائب',
-		'Territory': 'المنطقة',
-		'Timesheet': 'جدول ساعات',
-		'Title': 'العنوان',
-		'To': 'إلى',
-		'To Bill': 'بانتظار الفوترة',
-		'To Deliver': 'بانتظار التسليم',
-		'To Receive': 'بانتظار الاستلام',
-		'Tools': 'الأدوات',
-		'Total': 'الإجمالي',
-		'Translation': 'ترجمة',
-		'Translations': 'الترجمات',
-		'Tree': 'شجرة',
-		'Type': 'النوع',
-		'UOM': 'وحدة القياس',
-		'Unarchive': 'إلغاء الأرشفة',
-		'Unfollow': 'إلغاء المتابعة',
-		'Unit of Measure': 'وحدة القياس',
-		'Unpaid': 'غير مدفوع',
-		'Unread': 'غير مقروء',
-		'Unset': 'إلغاء التعيين',
-		'Update': 'تحديث',
-		'Upload': 'رفع',
-		'User': 'المستخدم',
-		'Users': 'المستخدمون',
-		'Valuation Rate': 'سعر التقييم',
-		'Warehouse': 'المستودع',
-		'Warehouses': 'المستودعات',
-		'Website': 'الموقع',
-		'Work Order': 'أمر عمل',
-		'Workflow': 'سير العمل',
-		'Workspace': 'مساحة العمل',
-		'Workstation': 'محطة عمل',
-		'Yes': 'نعم',
-	}
+	translations = _load_reviewed_translations()
 
 	count = 0
-	for source_text, translated_text in translations.items():
-		exists = frappe.db.exists(
-			"Translation",
-			{
-				"language": "ar",
-				"source_text": source_text,
-			},
-		)
+	for (source_text, context), translated_text in translations.items():
+		filters = {
+			"language": "ar",
+			"source_text": source_text,
+			"context": context,
+		}
+		exists = frappe.db.exists("Translation", filters)
 
 		if not exists:
 			doc = frappe.get_doc(
@@ -316,6 +86,7 @@ def execute(commit=False):
 					"doctype": "Translation",
 					"language": "ar",
 					"source_text": source_text,
+					"context": context,
 					"translated_text": translated_text,
 				}
 			)
@@ -334,8 +105,6 @@ def execute(commit=False):
 
 	if commit:
 		frappe.db.commit()
-	print(f"Successfully processed {count} translations.")
 
-	frappe.cache.hdel(USER_TRANSLATION_KEY, "ar")
-	frappe.cache.hdel(MERGED_TRANSLATION_KEY, "ar")
-	frappe.cache.delete_value(keys=["bootinfo"])
+	_clear_translation_caches()
+	print(f"Successfully processed {count} translations from {len(translations)} reviewed Arabic entries.")
