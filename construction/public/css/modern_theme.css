@@ -3,7 +3,7 @@
    Strategy: Cooperate with Frappe, never fight layout
    Only visual properties: colors, backgrounds, borders, shadows
    NO layout: position, display, flex, width, height, margin, padding, transform, order
-   Version: 2.5.2 | 2026-05-21
+   Version: 2.5.3 | 2026-05-24
    ════════════════════════════════════════════════════════════ */
 
 /* ─── ROOT FALLBACKS (prevent FOUC before JS loads) ─── */
@@ -4114,6 +4114,129 @@ html.ct-enterprise .ct-theme-wrapper .dropdown-item {
 html.ct-enterprise .ct-theme-wrapper .dropdown-item:hover {
   background: var(--ct-surface-hover);
   color: var(--ct-text);
+}
+
+/* ════════════════════════════════════════════════════════════
+   v2.5.3 — Sidebar/Menu Hover Parity
+   Mirrors the topbar option menu interaction on workspace sidebars.
+   ════════════════════════════════════════════════════════════ */
+
+html.ct-enterprise .desk-sidebar .standard-sidebar-item,
+html.ct-enterprise .standard-sidebar .standard-sidebar-item,
+html.ct-enterprise .sidebar-container .sidebar-item,
+html.ct-enterprise .body-sidebar .sidebar-item-container {
+  background: transparent !important;
+  border-radius: 6px !important;
+  color: var(--ct-text) !important;
+  font-family: inherit !important;
+  font-size: 0.8125rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 0 !important;
+  transition: var(--ct-motion) !important;
+}
+
+html.ct-enterprise .desk-sidebar .standard-sidebar-item > a.item-anchor,
+html.ct-enterprise .standard-sidebar .standard-sidebar-item > a.item-anchor,
+html.ct-enterprise .sidebar-container .sidebar-link,
+html.ct-enterprise .body-sidebar .sidebar-item-container a {
+  color: var(--ct-text) !important;
+  font-family: inherit !important;
+  font-size: 0.8125rem !important;
+  line-height: 1.35 !important;
+  text-decoration: none !important;
+}
+
+html.ct-enterprise .desk-sidebar .sidebar-item-label,
+html.ct-enterprise .standard-sidebar .sidebar-item-label,
+html.ct-enterprise .sidebar-container .sidebar-item-label,
+html.ct-enterprise .body-sidebar .sidebar-item-label {
+  color: inherit !important;
+  font-family: inherit !important;
+  font-size: 0.8125rem !important;
+  font-weight: inherit !important;
+  letter-spacing: 0 !important;
+  transition: var(--ct-motion) !important;
+  transform: translateX(0);
+}
+
+html.ct-enterprise .desk-sidebar .sidebar-item-icon,
+html.ct-enterprise .standard-sidebar .sidebar-item-icon,
+html.ct-enterprise .sidebar-container .sidebar-item-icon,
+html.ct-enterprise .body-sidebar .sidebar-item-icon {
+  color: var(--ct-text-secondary) !important;
+  transition: var(--ct-motion) !important;
+  transform: scale(1);
+}
+
+html.ct-enterprise .desk-sidebar .standard-sidebar-item:hover,
+html.ct-enterprise .standard-sidebar .standard-sidebar-item:hover,
+html.ct-enterprise .sidebar-container .sidebar-item:hover,
+html.ct-enterprise .body-sidebar .sidebar-item-container:hover:not(:has(.sidebar-item-container:hover)) {
+  background: var(--ct-surface-hover) !important;
+  color: var(--ct-text) !important;
+  border-color: transparent transparent transparent var(--ct-primary) !important;
+  letter-spacing: 0 !important;
+}
+
+html.ct-enterprise .desk-sidebar .standard-sidebar-item:hover > a.item-anchor,
+html.ct-enterprise .standard-sidebar .standard-sidebar-item:hover > a.item-anchor,
+html.ct-enterprise .sidebar-container .sidebar-item:hover .sidebar-link,
+html.ct-enterprise .body-sidebar .sidebar-item-container:hover:not(:has(.sidebar-item-container:hover)) a {
+  color: var(--ct-text) !important;
+}
+
+html.ct-enterprise .desk-sidebar .standard-sidebar-item:hover .sidebar-item-label,
+html.ct-enterprise .standard-sidebar .standard-sidebar-item:hover .sidebar-item-label,
+html.ct-enterprise .sidebar-container .sidebar-item:hover .sidebar-item-label,
+html.ct-enterprise .body-sidebar .sidebar-item-container:hover:not(:has(.sidebar-item-container:hover)) .sidebar-item-label {
+  transform: translateX(4px) !important;
+}
+
+html.ct-enterprise .desk-sidebar .standard-sidebar-item:hover .sidebar-item-icon,
+html.ct-enterprise .standard-sidebar .standard-sidebar-item:hover .sidebar-item-icon,
+html.ct-enterprise .sidebar-container .sidebar-item:hover .sidebar-item-icon,
+html.ct-enterprise .body-sidebar .sidebar-item-container:hover:not(:has(.sidebar-item-container:hover)) .sidebar-item-icon {
+  color: var(--ct-text) !important;
+  transform: scale(1.12) !important;
+}
+
+html.ct-enterprise .desk-sidebar .standard-sidebar-item.selected,
+html.ct-enterprise .desk-sidebar .standard-sidebar-item.active,
+html.ct-enterprise .desk-sidebar .standard-sidebar-item.active-sidebar,
+html.ct-enterprise .standard-sidebar .standard-sidebar-item.selected,
+html.ct-enterprise .standard-sidebar .standard-sidebar-item.active,
+html.ct-enterprise .standard-sidebar .standard-sidebar-item.active-sidebar,
+html.ct-enterprise .sidebar-container .sidebar-item.selected,
+html.ct-enterprise .sidebar-container .sidebar-item.active {
+  background: var(--ct-surface-hover) !important;
+  color: var(--ct-text) !important;
+  border-color: transparent transparent transparent var(--ct-primary) !important;
+  font-weight: 600 !important;
+}
+
+html.ct-enterprise .desk-sidebar .standard-sidebar-item.selected .sidebar-item-icon,
+html.ct-enterprise .desk-sidebar .standard-sidebar-item.active .sidebar-item-icon,
+html.ct-enterprise .desk-sidebar .standard-sidebar-item.active-sidebar .sidebar-item-icon,
+html.ct-enterprise .standard-sidebar .standard-sidebar-item.selected .sidebar-item-icon,
+html.ct-enterprise .standard-sidebar .standard-sidebar-item.active .sidebar-item-icon,
+html.ct-enterprise .standard-sidebar .standard-sidebar-item.active-sidebar .sidebar-item-icon,
+html.ct-enterprise .sidebar-container .sidebar-item.selected .sidebar-item-icon,
+html.ct-enterprise .sidebar-container .sidebar-item.active .sidebar-item-icon {
+  color: var(--ct-text) !important;
+}
+
+html.ct-enterprise[dir="rtl"] .desk-sidebar .standard-sidebar-item:hover .sidebar-item-label,
+html.ct-enterprise[dir="rtl"] .standard-sidebar .standard-sidebar-item:hover .sidebar-item-label,
+html.ct-enterprise[dir="rtl"] .sidebar-container .sidebar-item:hover .sidebar-item-label,
+html.ct-enterprise[dir="rtl"] .body-sidebar .sidebar-item-container:hover:not(:has(.sidebar-item-container:hover)) .sidebar-item-label {
+  transform: translateX(-4px) !important;
+}
+
+html.ct-enterprise[dir="rtl"] .desk-sidebar .standard-sidebar-item:hover,
+html.ct-enterprise[dir="rtl"] .standard-sidebar .standard-sidebar-item:hover,
+html.ct-enterprise[dir="rtl"] .sidebar-container .sidebar-item:hover,
+html.ct-enterprise[dir="rtl"] .body-sidebar .sidebar-item-container:hover:not(:has(.sidebar-item-container:hover)) {
+  border-color: transparent var(--ct-primary) transparent transparent !important;
 }
 
 /* ─── MOBILE ─── */
