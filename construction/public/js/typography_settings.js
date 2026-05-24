@@ -421,6 +421,9 @@
 				});
 			},
 		});
+		if (dialog.$wrapper) {
+			dialog.$wrapper.attr("data-ct-native-selects", "1");
+		}
 
 		dialog.set_secondary_action_label(__("Reset"));
 		dialog.set_secondary_action(function () {

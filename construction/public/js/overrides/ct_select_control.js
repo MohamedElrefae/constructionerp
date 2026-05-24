@@ -63,6 +63,7 @@
         // Skip check fields and hidden selects
         if ($select.closest("[data-fieldtype='Check']").length) return;
         if (!$select.is(":visible") && !$select.closest(".page-form, .filters-form").length) return;
+        if ($select.closest("[data-ct-native-selects='1']").length) return;
 
         el.setAttribute(CT_ATTR, "1");
 
