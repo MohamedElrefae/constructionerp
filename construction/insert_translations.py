@@ -68,17 +68,26 @@ def _clear_translation_caches():
 	frappe.clear_cache()
 
 
+def _get_existing_arabic_translation_map():
+	existing = {}
+	for row in frappe.get_all(
+		"Translation",
+		filters={"language": "ar"},
+		fields=["name", "source_text", "context"],
+		limit_page_length=0,
+	):
+		key = (row.source_text, row.context or "")
+		existing.setdefault(key, row.name)
+	return existing
+
+
 def execute(commit=False):
 	translations = _load_reviewed_translations()
+	existing_translations = _get_existing_arabic_translation_map()
 
 	count = 0
 	for (source_text, context), translated_text in translations.items():
-		filters = {
-			"language": "ar",
-			"source_text": source_text,
-			"context": context,
-		}
-		exists = frappe.db.exists("Translation", filters)
+		exists = existing_translations.get((source_text, context))
 
 		if not exists:
 			doc = frappe.get_doc(
@@ -92,6 +101,7 @@ def execute(commit=False):
 			)
 			doc.flags.ignore_permissions = True
 			doc.insert(ignore_permissions=True)
+			existing_translations[(source_text, context)] = doc.name
 			count += 1
 			print(f"Added translation for: {source_text}")
 		else:
@@ -108,3 +118,25 @@ def execute(commit=False):
 
 	_clear_translation_caches()
 	print(f"Successfully processed {count} translations from {len(translations)} reviewed Arabic entries.")
+
+
+@frappe.whitelist()
+def get_arabic_translation_seed_status():
+	seed = _load_reviewed_translations()
+	samples = {}
+	for source_text in ("Submit", "Sales Invoice", "Purchase Invoice", "Construction Settings"):
+		samples[source_text] = frappe.db.get_value(
+			"Translation",
+			{"language": "ar", "source_text": source_text},
+			["translated_text", "context"],
+			as_dict=True,
+		)
+
+	return {
+		"seed_count": len(seed),
+		"db_count": frappe.db.count("Translation", {"language": "ar"}),
+		"patch_v6_3": bool(
+			frappe.db.exists("Patch Log", "construction.patches.v6_3.seed_reviewed_arabic_translation_files")
+		),
+		"samples": samples,
+	}
