@@ -2,14 +2,15 @@ import frappe
 
 
 def _translate_sidebar_labels(bootinfo):
-    """Translate sidebar titles and labels that Frappe sends in bootinfo."""
+    """Translate sidebar item labels that Frappe sends in bootinfo.
+
+    Frappe v16 uses the top-level sidebar label as a lookup key in
+    sidebar.js. Translating that title breaks Arabic sessions because the
+    translated label no longer matches frappe.boot.workspace_sidebar_item.
+    """
     sidebar_items = bootinfo.get("workspace_sidebar_item") or {}
 
     for sidebar in sidebar_items.values():
-        label = sidebar.get("label")
-        if label:
-            sidebar["label"] = frappe._(label)
-
         for item in sidebar.get("items") or []:
             _translate_sidebar_item(item)
 

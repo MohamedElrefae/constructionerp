@@ -188,6 +188,38 @@
 			"html.ct-enterprise .body-sidebar-container:not(.expanded) .ct-typography-user-menu span:not(.ct-typography-icon) {",
 			"  display: none;",
 			"}",
+			"html.ct-enterprise .ct-typography-form .section-body {",
+			"  display: grid;",
+			"  grid-template-columns: repeat(2, minmax(260px, 1fr));",
+			"  column-gap: 24px;",
+			"  row-gap: 12px;",
+			"}",
+			"html.ct-enterprise .ct-typography-form .section-body > .form-column {",
+			"  width: 100%;",
+			"}",
+			"html.ct-enterprise .ct-typography-form .frappe-control[data-fieldtype='Select'] {",
+			"  min-height: 70px;",
+			"}",
+			"html.ct-enterprise .ct-typography-form .ct-dropdown-btn {",
+			"  min-height: 36px !important;",
+			"  font-size: 13px !important;",
+			"}",
+			"html.ct-enterprise .ct-typography-form .ct-dropdown-menu {",
+			"  min-width: 280px !important;",
+			"  max-width: min(420px, calc(100vw - 24px)) !important;",
+			"}",
+			"html.ct-enterprise .ct-typography-form .ct-dropdown-list {",
+			"  max-height: 300px !important;",
+			"}",
+			"html.ct-enterprise .ct-typography-form .ct-dropdown-list .dropdown-item {",
+			"  padding: 9px 12px !important;",
+			"  line-height: 1.4 !important;",
+			"}",
+			"@media (max-width: 767px) {",
+			"  html.ct-enterprise .ct-typography-form .section-body {",
+			"    display: block;",
+			"  }",
+			"}",
 		].join("\n");
 		document.head.appendChild(style);
 		return style;
@@ -246,7 +278,13 @@
 	}
 
 	function showDialog() {
-		var current = normalize(window.ctTypographySettings || frappe.boot.construction_typography);
+		loadSettings(function (current) {
+			buildDialog(current);
+		});
+	}
+
+	function buildDialog(current) {
+		current = normalize(current);
 		var dialog = new frappe.ui.Dialog({
 			title: __("Typography Settings"),
 			fields: [
@@ -394,13 +432,23 @@
 				frappe.call({
 					method: "construction.api.theme_api.save_user_typography_settings",
 					args: settings,
+					freeze: true,
+					freeze_message: __("Saving typography settings..."),
 					callback: function (response) {
 						if (response.message) {
 							frappe.boot.construction_typography = response.message;
 							applyTypography(response.message);
+							if (window.jQuery) {
+								$(document).trigger("ct-typography-saved", [response.message]);
+							}
 						}
 						dialog.hide();
 						frappe.show_alert({ message: __("Typography settings saved"), indicator: "green" });
+					},
+					error: function () {
+						loadSettings(function (serverSettings) {
+							applyTypography(serverSettings);
+						});
 					},
 				});
 			},
@@ -421,6 +469,26 @@
 
 		dialog.show();
 		updatePreview(dialog);
+	}
+
+	function loadSettings(callback) {
+		var fallback = normalize(window.ctTypographySettings || (frappe.boot && frappe.boot.construction_typography));
+		if (!frappe.call) {
+			callback(fallback);
+			return;
+		}
+		frappe.call({
+			method: "construction.api.theme_api.get_user_typography_settings",
+			callback: function (response) {
+				var settings = normalize((response && response.message) || fallback);
+				if (frappe.boot) frappe.boot.construction_typography = settings;
+				applyTypography(settings);
+				callback(settings);
+			},
+			error: function () {
+				callback(fallback);
+			},
+		});
 	}
 
 	function patchSidebarHeaderMenu() {
@@ -497,6 +565,16 @@
 			});
 		}
 		window.ctShowTypographySettings = showDialog;
+		window.ctTypography = {
+			defaults: defaults,
+			fontOptions: fontOptions,
+			componentFontOptions: componentFontOptions,
+			deskFontOptions: deskFontOptions,
+			normalize: normalize,
+			apply: applyTypography,
+			showDialog: showDialog,
+			load: loadSettings,
+		};
 		patchSidebarHeaderMenu();
 		injectToolbarUserItem();
 		injectSidebarUserItem();

@@ -118,6 +118,7 @@ class UserDeskTheme(Document):
 	def on_update(self):
 		"""Clear cache when user theme is updated"""
 		frappe.cache().delete_key(f"user_desk_theme:{self.user}")
+		frappe.cache().hdel("bootinfo", self.user)
 
 	@staticmethod
 	def get_user_theme(user=None):

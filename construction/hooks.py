@@ -75,6 +75,7 @@ desk_links = {
 doctype_js = {
     "BOQ Header": "construction/doctype/boq_header/boq_header.js",
     "Construction Settings": "construction/doctype/construction_settings/construction_settings.js",
+    "User Desk Theme": "construction/doctype/user_desk_theme/user_desk_theme.js",
 }
 
 doctype_tree_js = {"BOQ Structure": "construction/doctype/boq_structure/boq_structure_tree.js"}
@@ -92,7 +93,7 @@ app_include_js = [
 	"/assets/construction/js/print_settings_dialog.js",
 	"/assets/construction/js/construction_export_menu.js",
 	"/assets/construction/js/theme_loader_v24.js?v=2.5.2",
-	"/assets/construction/js/typography_settings.js?v=1",
+	"/assets/construction/js/typography_settings.js?v=2",
 	"/assets/construction/js/components/index.js?v=4.6",
 	# Searchable Dropdown Module — base class (must load before overrides)
 	"/assets/construction/js/searchable_dropdown/utils.js",
