@@ -185,6 +185,7 @@ fixtures = [
 after_install = [
 	"construction.install.create_system_themes",
 	"construction.install.setup_branch_company_field",
+	"construction.insert_translations.execute",
 ]
 
 # After migrate - ensure system themes and workspace sidebar exist
@@ -196,6 +197,7 @@ after_migrate = [
 	"construction.install.setup_construction_workspace_page",
 	"construction.install.verify_workspace_visibility",
 	"construction.install.setup_branch_company_field",
+	"construction.insert_translations.execute",
 ]
 
 # Translations
@@ -205,6 +207,7 @@ translated_doctypes = {
 	"BOQ Structure": ["ar"],
 	"CostItem": ["ar"],
 	"PlantResource": ["ar"],
+	"Construction Settings": ["ar"],
 	"Construction Theme": ["ar"],
 	"Modern Theme Settings": ["ar"],
 	"User Desk Theme": ["ar"],
