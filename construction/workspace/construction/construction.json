@@ -1,6 +1,6 @@
 {
   "charts": [],
-  "content": "[{\"type\": \"header\", \"data\": {\"text\": \"<span class='h4'><b>Construction ERP</b></span>\", \"col\": 12}}, {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Theme Configuration\", \"col\": 3}}, {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Theme Settings\", \"col\": 3}}]",
+  "content": "[{\"id\":\"ct-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class='h4'><b>Construction ERP</b></span>\",\"col\":12}},{\"id\":\"ct-boq-management\",\"type\":\"card\",\"data\":{\"card_name\":\"BOQ Management\",\"col\":4}},{\"id\":\"ct-theme-settings\",\"type\":\"card\",\"data\":{\"card_name\":\"Theme Settings\",\"col\":4}},{\"id\":\"ct-scope-management\",\"type\":\"card\",\"data\":{\"card_name\":\"Scope Management\",\"col\":4}}]",
   "custom_blocks": [],
   "docstatus": 0,
   "doctype": "Workspace",
@@ -13,7 +13,7 @@
     {
       "hidden": 0,
       "is_query_report": 0,
-      "label": "Theme Settings",
+      "label": "BOQ Management",
       "link_count": 0,
       "onboard": 0,
       "type": "Card Break"
@@ -21,9 +21,29 @@
     {
       "hidden": 0,
       "is_query_report": 0,
-      "label": "Theme Configuration",
+      "label": "BOQ Header",
       "link_count": 0,
-      "link_to": "Construction Theme",
+      "link_to": "BOQ Header",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "BOQ Structure",
+      "link_count": 0,
+      "link_to": "BOQ Structure",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "BOQ Item",
+      "link_count": 0,
+      "link_to": "BOQ Item",
       "link_type": "DocType",
       "onboard": 0,
       "type": "Link"
@@ -33,7 +53,63 @@
       "is_query_report": 0,
       "label": "Theme Settings",
       "link_count": 0,
+      "onboard": 0,
+      "type": "Card Break"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Construction Theme",
+      "link_count": 0,
+      "link_to": "Construction Theme",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Modern Theme Settings",
+      "link_count": 0,
       "link_to": "Modern Theme Settings",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "User Desk Theme",
+      "link_count": 0,
+      "link_to": "User Desk Theme",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Scope Management",
+      "link_count": 0,
+      "onboard": 0,
+      "type": "Card Break"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "User Scope Context",
+      "link_count": 0,
+      "link_to": "User Scope Context",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Scope Context Settings",
+      "link_count": 0,
+      "link_to": "Construction Settings",
       "link_type": "DocType",
       "onboard": 0,
       "type": "Link"
@@ -50,25 +126,6 @@
   "quick_lists": [],
   "roles": [],
   "sequence_id": 1,
-  "shortcuts": [
-    {
-      "color": "Green",
-      "doc_view": "List",
-      "format": null,
-      "label": "Theme Configuration",
-      "link_to": "Construction Theme",
-      "stats_filter": "[]",
-      "type": "DocType"
-    },
-    {
-      "color": "Blue",
-      "doc_view": "List",
-      "format": null,
-      "label": "Theme Settings",
-      "link_to": "Modern Theme Settings",
-      "stats_filter": "[]",
-      "type": "DocType"
-    }
-  ],
+  "shortcuts": [],
   "title": "Construction"
 }

@@ -9,7 +9,27 @@
     "inherit_from_site",
     "section_break_1",
     "light_theme",
-    "dark_theme"
+    "dark_theme",
+    "typography_section",
+    "desk_font_family",
+    "desk_font_size",
+    "desk_font_weight",
+    "component_typography_section",
+    "sidebar_font_family",
+    "sidebar_font_size",
+    "sidebar_font_weight",
+    "navbar_font_family",
+    "navbar_font_size",
+    "navbar_font_weight",
+    "form_font_family",
+    "form_font_size",
+    "form_font_weight",
+    "list_font_family",
+    "list_font_size",
+    "list_font_weight",
+    "menu_font_family",
+    "menu_font_size",
+    "menu_font_weight"
   ],
   "fields": [
     {
@@ -50,6 +70,145 @@
       "depends_on": "inherit_from_site",
       "mandatory_depends_on": "eval:doc.inherit_from_site == 0",
       "description": "Custom Construction Theme for Dark mode"
+    },
+    {
+      "fieldname": "typography_section",
+      "fieldtype": "Section Break",
+      "label": "Typography"
+    },
+    {
+      "default": "System Default",
+      "fieldname": "desk_font_family",
+      "fieldtype": "Select",
+      "label": "Desk Font Family",
+      "options": "System Default\nInter\nArial\nHelvetica\nTahoma\nVerdana\nTrebuchet MS\nGeorgia\nTimes New Roman\nCourier New\nRoboto\nOpen Sans\nLato\nMontserrat\nPoppins\nNoto Sans\nNoto Sans Arabic\nCairo\nTajawal\nAlmarai",
+      "description": "Font family used across Desk for this user"
+    },
+    {
+      "default": "14",
+      "fieldname": "desk_font_size",
+      "fieldtype": "Int",
+      "label": "Desk Font Size",
+      "description": "Base Desk font size in pixels"
+    },
+    {
+      "default": "400",
+      "fieldname": "desk_font_weight",
+      "fieldtype": "Select",
+      "label": "Desk Font Weight",
+      "options": "300\n400\n500\n600\n700",
+      "description": "Base Desk font weight"
+    },
+    {
+      "fieldname": "component_typography_section",
+      "fieldtype": "Section Break",
+      "label": "Component Typography"
+    },
+    {
+      "default": "Inherit",
+      "fieldname": "sidebar_font_family",
+      "fieldtype": "Select",
+      "label": "Sidebar Font Family",
+      "options": "Inherit\nSystem Default\nInter\nArial\nHelvetica\nTahoma\nVerdana\nTrebuchet MS\nGeorgia\nTimes New Roman\nCourier New\nRoboto\nOpen Sans\nLato\nMontserrat\nPoppins\nNoto Sans\nNoto Sans Arabic\nCairo\nTajawal\nAlmarai"
+    },
+    {
+      "default": "13",
+      "fieldname": "sidebar_font_size",
+      "fieldtype": "Int",
+      "label": "Sidebar Font Size",
+      "description": "Sidebar font size in pixels"
+    },
+    {
+      "default": "500",
+      "fieldname": "sidebar_font_weight",
+      "fieldtype": "Select",
+      "label": "Sidebar Font Weight",
+      "options": "300\n400\n500\n600\n700",
+      "description": "Sidebar font weight"
+    },
+    {
+      "default": "Inherit",
+      "fieldname": "navbar_font_family",
+      "fieldtype": "Select",
+      "label": "Navbar Font Family",
+      "options": "Inherit\nSystem Default\nInter\nArial\nHelvetica\nTahoma\nVerdana\nTrebuchet MS\nGeorgia\nTimes New Roman\nCourier New\nRoboto\nOpen Sans\nLato\nMontserrat\nPoppins\nNoto Sans\nNoto Sans Arabic\nCairo\nTajawal\nAlmarai"
+    },
+    {
+      "default": "14",
+      "fieldname": "navbar_font_size",
+      "fieldtype": "Int",
+      "label": "Navbar Font Size",
+      "description": "Navbar font size in pixels"
+    },
+    {
+      "default": "500",
+      "fieldname": "navbar_font_weight",
+      "fieldtype": "Select",
+      "label": "Navbar Font Weight",
+      "options": "300\n400\n500\n600\n700"
+    },
+    {
+      "default": "Inherit",
+      "fieldname": "form_font_family",
+      "fieldtype": "Select",
+      "label": "Form Font Family",
+      "options": "Inherit\nSystem Default\nInter\nArial\nHelvetica\nTahoma\nVerdana\nTrebuchet MS\nGeorgia\nTimes New Roman\nCourier New\nRoboto\nOpen Sans\nLato\nMontserrat\nPoppins\nNoto Sans\nNoto Sans Arabic\nCairo\nTajawal\nAlmarai"
+    },
+    {
+      "default": "14",
+      "fieldname": "form_font_size",
+      "fieldtype": "Int",
+      "label": "Form Font Size",
+      "description": "Form font size in pixels"
+    },
+    {
+      "default": "400",
+      "fieldname": "form_font_weight",
+      "fieldtype": "Select",
+      "label": "Form Font Weight",
+      "options": "300\n400\n500\n600\n700"
+    },
+    {
+      "default": "Inherit",
+      "fieldname": "list_font_family",
+      "fieldtype": "Select",
+      "label": "List Font Family",
+      "options": "Inherit\nSystem Default\nInter\nArial\nHelvetica\nTahoma\nVerdana\nTrebuchet MS\nGeorgia\nTimes New Roman\nCourier New\nRoboto\nOpen Sans\nLato\nMontserrat\nPoppins\nNoto Sans\nNoto Sans Arabic\nCairo\nTajawal\nAlmarai"
+    },
+    {
+      "default": "13",
+      "fieldname": "list_font_size",
+      "fieldtype": "Int",
+      "label": "List Font Size",
+      "description": "List and report row font size in pixels"
+    },
+    {
+      "default": "400",
+      "fieldname": "list_font_weight",
+      "fieldtype": "Select",
+      "label": "List Font Weight",
+      "options": "300\n400\n500\n600\n700"
+    },
+    {
+      "default": "Inherit",
+      "fieldname": "menu_font_family",
+      "fieldtype": "Select",
+      "label": "Menu Font Family",
+      "options": "Inherit\nSystem Default\nInter\nArial\nHelvetica\nTahoma\nVerdana\nTrebuchet MS\nGeorgia\nTimes New Roman\nCourier New\nRoboto\nOpen Sans\nLato\nMontserrat\nPoppins\nNoto Sans\nNoto Sans Arabic\nCairo\nTajawal\nAlmarai"
+    },
+    {
+      "default": "13",
+      "fieldname": "menu_font_size",
+      "fieldtype": "Int",
+      "label": "Menu Font Size",
+      "description": "Dropdown menu font size in pixels"
+    },
+    {
+      "default": "400",
+      "fieldname": "menu_font_weight",
+      "fieldtype": "Select",
+      "label": "Menu Font Weight",
+      "options": "300\n400\n500\n600\n700"
     }
   ],
   "index_web_pages_for_search": 1,

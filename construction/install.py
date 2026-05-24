@@ -215,13 +215,44 @@ def _invalidate_workspace_caches():
 
 
 def setup_construction_workspace_page():
-	"""Setup Construction workspace page.
+	"""Reconcile the Construction workspace page and sidebar.
 
-	This is a placeholder that calls setup_workspace_sidebar for backward compatibility.
-	The actual workspace page setup is handled by setup_workspace_sidebar.
+	The Workspace document controls the main Construction home page. The
+	Workspace Sidebar document controls the left navigation. Both must be
+	reconciled from source files so cloud deployments do not depend on local
+	database edits.
 	"""
-	# For v16+, workspace sidebar handles the page structure
-	# This function exists for hook compatibility
+	workspace_path = os.path.join(
+		frappe.get_app_path("construction"), "workspace", "construction", "construction.json"
+	)
+	if os.path.exists(workspace_path):
+		with open(workspace_path) as f:
+			workspace_data = json.load(f)
+
+		if frappe.db.exists("Workspace", "Construction"):
+			workspace = frappe.get_doc("Workspace", "Construction")
+			for fieldname in (
+				"label",
+				"title",
+				"module",
+				"icon",
+				"public",
+				"is_hidden",
+				"content",
+				"parent_page",
+			):
+				if fieldname in workspace_data:
+					workspace.set(fieldname, workspace_data[fieldname])
+			for child_table in ("links", "shortcuts", "charts", "number_cards", "quick_lists", "custom_blocks"):
+				if child_table in workspace_data:
+					workspace.set(child_table, [])
+					for row in workspace_data.get(child_table) or []:
+						workspace.append(child_table, row)
+		else:
+			workspace = frappe.get_doc(workspace_data)
+
+		workspace.save(ignore_permissions=True)
+
 	if frappe.db.table_exists("Workspace Sidebar"):
 		setup_workspace_sidebar()
 

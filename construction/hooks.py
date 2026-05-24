@@ -51,6 +51,12 @@ desk_links = {
 		},
 		{
 			"type": "doctype",
+			"name": "User Desk Theme",
+			"label": "User Desk Theme",
+			"description": "Manage per-user Desk theme and typography settings",
+		},
+		{
+			"type": "doctype",
 			"name": "User Scope Context",
 			"label": "User Scope Context",
 			"description": "Manage user company, cost center, project scope",
@@ -86,6 +92,7 @@ app_include_js = [
 	"/assets/construction/js/print_settings_dialog.js",
 	"/assets/construction/js/construction_export_menu.js",
 	"/assets/construction/js/theme_loader_v24.js?v=2.5.2",
+	"/assets/construction/js/typography_settings.js?v=1",
 	"/assets/construction/js/components/index.js?v=4.6",
 	# Searchable Dropdown Module — base class (must load before overrides)
 	"/assets/construction/js/searchable_dropdown/utils.js",

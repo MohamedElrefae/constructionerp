@@ -2896,8 +2896,211 @@ def add_theme_to_boot(bootinfo):
 		frappe.cache().set_value(cache_key, theme_config, expires_in_sec=3600)
 
 	bootinfo.construction_theme = theme_config
+	bootinfo.construction_typography = get_user_typography_settings()
 	# Also set the standard frappe.boot.theme for compatibility
 	bootinfo.theme = theme_config.get("color_scheme", "dark")
+
+
+def _default_typography_settings():
+	return {
+		"desk_font_family": "System Default",
+		"desk_font_size": 14,
+		"desk_font_weight": "400",
+		"sidebar_font_family": "Inherit",
+		"sidebar_font_size": 13,
+		"sidebar_font_weight": "500",
+		"navbar_font_family": "Inherit",
+		"navbar_font_size": 14,
+		"navbar_font_weight": "500",
+		"form_font_family": "Inherit",
+		"form_font_size": 14,
+		"form_font_weight": "400",
+		"list_font_family": "Inherit",
+		"list_font_size": 13,
+		"list_font_weight": "400",
+		"menu_font_family": "Inherit",
+		"menu_font_size": 13,
+		"menu_font_weight": "400",
+	}
+
+
+def _normalize_typography_settings(values):
+	settings = _default_typography_settings()
+	if values:
+		settings.update({key: values.get(key) for key in settings if values.get(key) is not None})
+
+	allowed_fonts = {
+		"Inherit",
+		"System Default",
+		"Inter",
+		"Arial",
+		"Helvetica",
+		"Tahoma",
+		"Verdana",
+		"Trebuchet MS",
+		"Georgia",
+		"Times New Roman",
+		"Courier New",
+		"Roboto",
+		"Open Sans",
+		"Lato",
+		"Montserrat",
+		"Poppins",
+		"Noto Sans",
+		"Noto Sans Arabic",
+		"Cairo",
+		"Tajawal",
+		"Almarai",
+	}
+	for fieldname in (
+		"desk_font_family",
+		"sidebar_font_family",
+		"navbar_font_family",
+		"form_font_family",
+		"list_font_family",
+		"menu_font_family",
+	):
+		if settings[fieldname] not in allowed_fonts:
+			settings[fieldname] = "System Default" if fieldname == "desk_font_family" else "Inherit"
+	if settings["desk_font_family"] == "Inherit":
+		settings["desk_font_family"] = "System Default"
+
+	size_defaults = (
+		("desk_font_size", 14),
+		("sidebar_font_size", 13),
+		("navbar_font_size", 14),
+		("form_font_size", 14),
+		("list_font_size", 13),
+		("menu_font_size", 13),
+	)
+	for fieldname, default_value in size_defaults:
+		try:
+			value = int(settings[fieldname])
+		except (TypeError, ValueError):
+			value = default_value
+		settings[fieldname] = max(11, min(20, value))
+
+	weight_defaults = (
+		("desk_font_weight", "400"),
+		("sidebar_font_weight", "500"),
+		("navbar_font_weight", "500"),
+		("form_font_weight", "400"),
+		("list_font_weight", "400"),
+		("menu_font_weight", "400"),
+	)
+	for fieldname, default_value in weight_defaults:
+		value = str(settings.get(fieldname) or default_value)
+		if value not in {"300", "400", "500", "600", "700"}:
+			value = default_value
+		settings[fieldname] = value
+
+	return settings
+
+
+@frappe.whitelist()
+def get_user_typography_settings():
+	"""Return current user's Desk typography preferences."""
+	if frappe.session.user == "Guest":
+		return _default_typography_settings()
+
+	try:
+		if not frappe.db.table_exists("User Desk Theme"):
+			return _default_typography_settings()
+
+		values = frappe.db.get_value(
+			"User Desk Theme",
+			{"user": frappe.session.user},
+			[
+				"desk_font_family",
+				"desk_font_size",
+				"desk_font_weight",
+				"sidebar_font_family",
+				"sidebar_font_size",
+				"sidebar_font_weight",
+				"navbar_font_family",
+				"navbar_font_size",
+				"navbar_font_weight",
+				"form_font_family",
+				"form_font_size",
+				"form_font_weight",
+				"list_font_family",
+				"list_font_size",
+				"list_font_weight",
+				"menu_font_family",
+				"menu_font_size",
+				"menu_font_weight",
+			],
+			as_dict=True,
+		)
+		return _normalize_typography_settings(values)
+	except Exception:
+		return _default_typography_settings()
+
+
+@frappe.whitelist()
+def save_user_typography_settings(
+	desk_font_family=None,
+	desk_font_size=None,
+	desk_font_weight=None,
+	sidebar_font_family=None,
+	sidebar_font_size=None,
+	sidebar_font_weight=None,
+	navbar_font_family=None,
+	navbar_font_size=None,
+	navbar_font_weight=None,
+	form_font_family=None,
+	form_font_size=None,
+	form_font_weight=None,
+	list_font_family=None,
+	list_font_size=None,
+	list_font_weight=None,
+	menu_font_family=None,
+	menu_font_size=None,
+	menu_font_weight=None,
+):
+	"""Persist current user's Desk typography preferences."""
+	if frappe.session.user == "Guest":
+		frappe.throw(_("Login required"))
+
+	settings = _normalize_typography_settings(
+		{
+			"desk_font_family": desk_font_family,
+			"desk_font_size": desk_font_size,
+			"desk_font_weight": desk_font_weight,
+			"sidebar_font_family": sidebar_font_family,
+			"sidebar_font_size": sidebar_font_size,
+			"sidebar_font_weight": sidebar_font_weight,
+			"navbar_font_family": navbar_font_family,
+			"navbar_font_size": navbar_font_size,
+			"navbar_font_weight": navbar_font_weight,
+			"form_font_family": form_font_family,
+			"form_font_size": form_font_size,
+			"form_font_weight": form_font_weight,
+			"list_font_family": list_font_family,
+			"list_font_size": list_font_size,
+			"list_font_weight": list_font_weight,
+			"menu_font_family": menu_font_family,
+			"menu_font_size": menu_font_size,
+			"menu_font_weight": menu_font_weight,
+		}
+	)
+
+	existing = frappe.db.get_value("User Desk Theme", {"user": frappe.session.user}, "name")
+	if existing:
+		doc = frappe.get_doc("User Desk Theme", existing)
+	else:
+		doc = frappe.new_doc("User Desk Theme")
+		doc.user = frappe.session.user
+		doc.inherit_from_site = 1
+
+	doc.update(settings)
+	doc.save(ignore_permissions=True)
+	frappe.db.commit()
+	frappe.cache().delete_key(f"user_desk_theme:{frappe.session.user}")
+	frappe.cache().hdel("bootinfo", frappe.session.user)
+
+	return settings
+
 
 def get_theme_config():
 	"""Fetch from Construction Theme DocType with safe defaults.
@@ -3031,5 +3234,3 @@ def get_pdf_header():
 def get_pdf_footer():
 	"""Returns branded PDF footer HTML."""
 	return frappe.get_template("construction/templates/includes/pdf_footer.html").render()
-
-

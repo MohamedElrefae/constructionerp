@@ -988,3 +988,6 @@ msgstr "يجب أن يكون {0} تاريخا صالحا"
 msgid "{0} must be a valid email"
 msgstr "يجب أن يكون {0} بريدا إلكترونيا صالحا"
 
+#. Label of a Workspace Sidebar Item and Workspace Link
+msgid "Scope Context Settings"
+msgstr "إعدادات سياق النطاق"
