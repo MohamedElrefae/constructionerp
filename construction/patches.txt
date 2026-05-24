@@ -2,3 +2,4 @@ construction.patches.v6_0.set_default_new_theme_fields
 construction.patches.v6_1.add_branch_company_field
 construction.patches.v6_1.rename_enable_scope_branch
 construction.patches.v6_1.migrate_branch_to_cost_center
+construction.patches.v6_2.seed_arabic_translations
