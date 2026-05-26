@@ -6,7 +6,7 @@ from babel.messages.pofile import read_po
 
 ARABIC_PLURAL_FORMS = (
 	"nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : "
-	"n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5);"
+	"n%100>=3 && n%100<=10 ? 3 : n%100>=0 && n%100<=2 ? 4 : 5);"
 )
 
 
@@ -18,6 +18,7 @@ def execute():
 	_check_po(package_root / "locale" / "ar.po", issues)
 	_check_extractors(app_root / "babel_extractors.csv", issues)
 	_check_translated_doctypes(issues)
+	_check_required_db_translations(issues)
 	_check_language_record(issues)
 
 	result = {
@@ -58,6 +59,7 @@ def _check_translated_doctypes(issues):
 	required = {
 		"BOQ Header",
 		"BOQ Item",
+		"BOQ Item Stage",
 		"BOQ Structure",
 		"Construction Settings",
 		"Construction Theme",
@@ -70,6 +72,20 @@ def _check_translated_doctypes(issues):
 	missing = sorted(doctype for doctype in required if "ar" not in hooks.get(doctype, []))
 	if missing:
 		issues.append(f"Missing translated_doctypes Arabic coverage: {', '.join(missing)}")
+
+
+def _check_required_db_translations(issues):
+	required = {
+		"BOQ Item Stage": "مراحل تنفيذ البنود",
+	}
+	for source_text, expected in required.items():
+		actual = frappe.db.get_value(
+			"Translation",
+			{"language": "ar", "source_text": source_text, "context": ""},
+			"translated_text",
+		)
+		if actual != expected:
+			issues.append(f"Missing reviewed Arabic DB translation: {source_text}")
 
 
 def _check_language_record(issues):

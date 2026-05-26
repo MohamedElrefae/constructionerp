@@ -111,6 +111,14 @@ msgstr "يحسب تلقائيا إذا كان فارغا"
 msgid "BOQ Header"
 msgstr "رأس جدول الكميات"
 
+#. Name of a DocType and Workspace Link
+msgid "BOQ Item"
+msgstr "بند جدول الكميات"
+
+#. Name of a DocType and Workspace Link
+msgid "BOQ Item Stage"
+msgstr "مراحل تنفيذ البنود"
+
 #: construction/public/js/boq_structure_tree.js:6
 msgid "BOQ Structure"
 msgstr "هيكل جدول الكميات"

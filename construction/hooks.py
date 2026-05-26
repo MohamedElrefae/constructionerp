@@ -95,7 +95,7 @@ app_include_js = [
 	"/assets/construction/js/print_settings_dialog.js",
 	"/assets/construction/js/construction_export_menu.js",
 	"/assets/construction/js/theme_loader_v24.js?v=2.5.2",
-	"/assets/construction/js/typography_settings.js?v=2",
+	"/assets/construction/js/typography_settings.js?v=6",
 	"/assets/construction/js/components/index.js?v=4.6",
 	# Searchable Dropdown Module — base class (must load before overrides)
 	"/assets/construction/js/searchable_dropdown/utils.js",

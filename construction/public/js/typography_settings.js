@@ -25,29 +25,32 @@
 	var fontStacks = {
 		Inherit: null,
 		"System Default": "",
-		Inter: "Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif",
+		Inter: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
 		Arial: "Arial, Helvetica, sans-serif",
-		Helvetica: "Helvetica Neue, Helvetica, Arial, sans-serif",
+		Helvetica: '"Helvetica Neue", Helvetica, Arial, sans-serif',
 		Tahoma: "Tahoma, Arial, sans-serif",
 		Verdana: "Verdana, Geneva, sans-serif",
-		"Trebuchet MS": "Trebuchet MS, Arial, sans-serif",
-		Georgia: "Georgia, Times New Roman, serif",
-		"Times New Roman": "Times New Roman, Times, serif",
-		"Courier New": "Courier New, Courier, monospace",
-		Roboto: "Roboto, Arial, sans-serif",
-		"Open Sans": "Open Sans, Arial, sans-serif",
-		Lato: "Lato, Arial, sans-serif",
-		Montserrat: "Montserrat, Arial, sans-serif",
-		Poppins: "Poppins, Arial, sans-serif",
-		"Noto Sans": "Noto Sans, Arial, sans-serif",
-		"Noto Sans Arabic": "Noto Sans Arabic, Tahoma, Arial, sans-serif",
-		Cairo: "Cairo, Tahoma, Arial, sans-serif",
-		Tajawal: "Tajawal, Tahoma, Arial, sans-serif",
-		Almarai: "Almarai, Tahoma, Arial, sans-serif",
+		"Trebuchet MS": '"Trebuchet MS", Arial, sans-serif',
+		Georgia: 'Georgia, "Times New Roman", serif',
+		"Times New Roman": '"Times New Roman", Times, serif',
+		"Courier New": '"Courier New", Courier, monospace',
+		Roboto: '"Roboto", Arial, sans-serif',
+		"Open Sans": '"Open Sans", Arial, sans-serif',
+		Lato: '"Lato", Arial, sans-serif',
+		Montserrat: '"Montserrat", Arial, sans-serif',
+		Poppins: '"Poppins", Arial, sans-serif',
+		"Noto Sans": '"Noto Sans", Arial, sans-serif',
+		"Noto Sans Arabic": '"Noto Sans Arabic", Tahoma, Arial, sans-serif',
+		Cairo: '"Cairo", Tahoma, Arial, sans-serif',
+		Tajawal: '"Tajawal", Tahoma, Arial, sans-serif',
+		Almarai: '"Almarai", Tahoma, Arial, sans-serif',
 	};
 	var fontOptions = Object.keys(fontStacks);
 	var componentFontOptions = fontOptions.join("\n");
 	var deskFontOptions = fontOptions.filter(function (font) { return font !== "Inherit"; }).join("\n");
+	var styleOrderObserverStarted = false;
+	var domObserverStarted = false;
+	var inlineApplyTimer = null;
 
 	function normalize(settings) {
 		settings = Object.assign({}, defaults, settings || {});
@@ -93,23 +96,43 @@
 	function ensureStyleTag() {
 		var id = "ct-typography-style";
 		var style = document.getElementById(id);
-		if (style) return style;
+		if (style) {
+			// Keep typography overrides after late-injected theme/filter styles.
+			document.head.appendChild(style);
+			startStyleOrderObserver(style);
+			return style;
+		}
 
 		style = document.createElement("style");
 		style.id = id;
 		style.textContent = [
+			"html.ct-enterprise,",
 			"html.ct-enterprise body {",
 			"  font-family: var(--ct-desk-font-family, inherit) !important;",
 			"  font-size: var(--ct-desk-font-size, 14px) !important;",
-			"  font-weight: var(--ct-desk-font-weight, 400);",
+			"  font-weight: var(--ct-desk-font-weight, 400) !important;",
+			"}",
+			"html.ct-enterprise body *:not(svg):not(path):not(use):not(i):not(.icon):not([class^='icon-']):not([class*=' icon-']):not(.fa):not([class^='fa-']):not([class*=' fa-']):not(.octicon) {",
+			"  font-family: var(--ct-desk-font-family, inherit) !important;",
+			"  font-size: var(--ct-desk-font-size, 14px) !important;",
+			"  font-weight: var(--ct-desk-font-weight, 400) !important;",
 			"}",
 			"html.ct-enterprise .body-sidebar .sidebar-item-label,",
 			"html.ct-enterprise .body-sidebar .item-anchor,",
 			"html.ct-enterprise .body-sidebar .collapse-sidebar-link,",
 			"html.ct-enterprise .body-sidebar .onboarding-sidebar,",
+			"html.ct-enterprise .desk-sidebar .standard-sidebar-item,",
+			"html.ct-enterprise .standard-sidebar .standard-sidebar-item,",
+			"html.ct-enterprise .desk-sidebar .standard-sidebar-item > a.item-anchor,",
+			"html.ct-enterprise .standard-sidebar .standard-sidebar-item > a.item-anchor,",
+			"html.ct-enterprise .desk-sidebar .sidebar-item-label,",
+			"html.ct-enterprise .standard-sidebar .sidebar-item-label,",
 			"html.ct-enterprise .sidebar-container .sidebar-item-label,",
 			"html.ct-enterprise .sidebar-container .sidebar-link,",
+			"html.ct-enterprise .sidebar-container .sidebar-item,",
 			"html.ct-enterprise .standard-sidebar-item,",
+			"html.ct-enterprise .body-sidebar .sidebar-item-container,",
+			"html.ct-enterprise .body-sidebar .sidebar-item-container a,",
 			"html.ct-enterprise .standard-sidebar-item a {",
 			"  font-family: var(--ct-sidebar-font-family, var(--ct-desk-font-family, inherit)) !important;",
 			"  font-size: var(--ct-sidebar-font-size, 13px) !important;",
@@ -118,6 +141,9 @@
 			"html.ct-enterprise .navbar,",
 			"html.ct-enterprise .navbar .nav-link,",
 			"html.ct-enterprise .navbar .navbar-brand,",
+			"html.ct-enterprise .navbar *:not(svg):not(path):not(use):not(i):not(.icon):not([class^='icon-']):not([class*=' icon-']),",
+			"html.ct-enterprise .desktop-navbar,",
+			"html.ct-enterprise .desktop-navbar *:not(svg):not(path):not(use):not(i):not(.icon):not([class^='icon-']):not([class*=' icon-']),",
 			"html.ct-enterprise .ct-topbar-zone {",
 			"  font-family: var(--ct-navbar-font-family, var(--ct-desk-font-family, inherit)) !important;",
 			"  font-size: var(--ct-navbar-font-size, 14px) !important;",
@@ -127,27 +153,48 @@
 			"html.ct-enterprise .form-section,",
 			"html.ct-enterprise .frappe-control,",
 			"html.ct-enterprise .form-control,",
+			"html.ct-enterprise .control-input,",
+			"html.ct-enterprise .control-input-wrapper,",
+			"html.ct-enterprise .like-disabled-input,",
+			"html.ct-enterprise .page-form .frappe-control,",
+			"html.ct-enterprise .page-form .form-control,",
+			"html.ct-enterprise .page-form input,",
+			"html.ct-enterprise .page-form select,",
+			"html.ct-enterprise .page-form .btn,",
 			"html.ct-enterprise .control-label {",
 			"  font-family: var(--ct-form-font-family, var(--ct-desk-font-family, inherit)) !important;",
 			"  font-size: var(--ct-form-font-size, 14px) !important;",
-			"  font-weight: var(--ct-form-font-weight, 400);",
+			"  font-weight: var(--ct-form-font-weight, 400) !important;",
 			"}",
 			"html.ct-enterprise .list-row,",
 			"html.ct-enterprise .list-row-head,",
+			"html.ct-enterprise .list-row *,",
+			"html.ct-enterprise .list-row-head *,",
+			"html.ct-enterprise .frappe-list,",
+			"html.ct-enterprise .frappe-list *,",
+			"html.ct-enterprise .list-paging-area,",
+			"html.ct-enterprise .list-paging-area *,",
 			"html.ct-enterprise .datatable,",
+			"html.ct-enterprise .datatable *,",
 			"html.ct-enterprise .dt-cell,",
 			"html.ct-enterprise .report-wrapper {",
 			"  font-family: var(--ct-list-font-family, var(--ct-desk-font-family, inherit)) !important;",
 			"  font-size: var(--ct-list-font-size, 13px) !important;",
-			"  font-weight: var(--ct-list-font-weight, 400);",
+			"  font-weight: var(--ct-list-font-weight, 400) !important;",
 			"}",
 			"html.ct-enterprise .dropdown-menu,",
+			"html.ct-enterprise .dropdown-menu *,",
 			"html.ct-enterprise .dropdown-item,",
 			"html.ct-enterprise .awesomplete ul,",
+			"html.ct-enterprise .awesomplete ul *,",
+			"html.ct-enterprise .ct-dropdown-list,",
+			"html.ct-enterprise .ct-dropdown-list *,",
+			"html.ct-enterprise .ct-unified-dropdown,",
+			"html.ct-enterprise .ct-unified-dropdown *,",
 			"html.ct-enterprise .search-dialog {",
 			"  font-family: var(--ct-menu-font-family, var(--ct-desk-font-family, inherit)) !important;",
 			"  font-size: var(--ct-menu-font-size, 13px) !important;",
-			"  font-weight: var(--ct-menu-font-weight, 400);",
+			"  font-weight: var(--ct-menu-font-weight, 400) !important;",
 			"}",
 			"html.ct-enterprise .ct-typography-preview {",
 			"  border: 1px solid var(--border-color, #d1d8dd);",
@@ -190,7 +237,26 @@
 			"}",
 		].join("\n");
 		document.head.appendChild(style);
+		startStyleOrderObserver(style);
 		return style;
+	}
+
+	function startStyleOrderObserver(style) {
+		if (styleOrderObserverStarted || !window.MutationObserver) return;
+		styleOrderObserverStarted = true;
+
+		var pending = false;
+		var observer = new MutationObserver(function () {
+			if (pending || !style.isConnected) return;
+			pending = true;
+			setTimeout(function () {
+				pending = false;
+				if (style.isConnected && document.head.lastElementChild !== style) {
+					document.head.appendChild(style);
+				}
+			}, 0);
+		});
+		observer.observe(document.head, { childList: true });
 	}
 
 	function applyTypography(settings) {
@@ -209,11 +275,98 @@
 			root.style.setProperty("--ct-" + component + "-font-weight", settings[component + "_font_weight"]);
 		});
 
-		window.ctTypographySettings = settings;
-		try {
-			localStorage.setItem("ct-typography-settings", JSON.stringify(settings));
-		} catch (e) {}
-		return settings;
+			window.ctTypographySettings = settings;
+			window.ctTypographyLastAppliedAt = new Date().toISOString();
+			applyInlineTypography(settings);
+			startDomTypographyObserver();
+			try {
+				localStorage.setItem("ct-typography-settings", JSON.stringify(settings));
+			} catch (e) {}
+			return settings;
+		}
+
+	function startDomTypographyObserver() {
+		if (domObserverStarted || !window.MutationObserver || !document.body) return;
+		domObserverStarted = true;
+
+		var observer = new MutationObserver(function (mutations) {
+			var shouldApply = mutations.some(function (mutation) {
+				return mutation.addedNodes && mutation.addedNodes.length;
+			});
+			if (!shouldApply) return;
+
+			clearTimeout(inlineApplyTimer);
+			inlineApplyTimer = setTimeout(function () {
+				if (window.ctTypographySettings) {
+					applyInlineTypography(window.ctTypographySettings);
+				}
+			}, 100);
+		});
+		observer.observe(document.body, { childList: true, subtree: true });
+	}
+
+	function applyInlineTypography(settings) {
+		if (!document.body) return;
+		settings = normalize(settings);
+
+		var rules = [
+			{
+				selector: "body, .page-container, .layout-main, .page-content, .workspace, .widget, .widget *",
+				component: "desk",
+			},
+			{
+				selector: ".body-sidebar, .body-sidebar *, .desk-sidebar, .desk-sidebar *, .standard-sidebar, .standard-sidebar *, .sidebar-container, .sidebar-container *",
+				component: "sidebar",
+			},
+			{
+				selector: ".navbar, .navbar *, .desktop-navbar, .desktop-navbar *, .ct-topbar-zone, .ct-topbar-zone *",
+				component: "navbar",
+			},
+			{
+				selector: ".form-layout, .form-layout *, .form-section, .form-section *, .frappe-control, .frappe-control *, .form-control, .control-input, .control-input-wrapper, .page-form, .page-form *",
+				component: "form",
+			},
+			{
+				selector: ".frappe-list, .frappe-list *, .list-row, .list-row *, .list-row-head, .list-row-head *, .datatable, .datatable *, .dt-cell, .report-wrapper, .report-wrapper *",
+				component: "list",
+			},
+			{
+				selector: ".dropdown-menu, .dropdown-menu *, .dropdown-item, .awesomplete ul, .awesomplete ul *, .ct-dropdown-list, .ct-dropdown-list *, .ct-unified-dropdown, .ct-unified-dropdown *, .search-dialog, .search-dialog *",
+				component: "menu",
+			},
+		];
+
+		rules.forEach(function (rule) {
+			document.querySelectorAll(rule.selector).forEach(function (el) {
+				if (shouldSkipInlineTypography(el)) return;
+				setInlineFont(el, rule.component, settings);
+			});
+		});
+
+		window.ctTypographyInlineAppliedAt = new Date().toISOString();
+	}
+
+	function shouldSkipInlineTypography(el) {
+		if (!el || !el.style || !el.tagName) return true;
+		var tag = el.tagName.toLowerCase();
+		if (["svg", "path", "use", "img", "canvas", "video", "style", "script"].indexOf(tag) !== -1) return true;
+		var className = typeof el.className === "string" ? el.className : "";
+		return /(^|\s)(icon|octicon|fa|avatar|indicator)(\s|$)/.test(className) ||
+			/(^|\s)(icon-|fa-)/.test(className);
+	}
+
+	function setInlineFont(el, component, settings) {
+		var family = fontStacks[settings[component + "_font_family"]];
+		if (!family && component !== "desk") {
+			family = fontStacks[settings.desk_font_family];
+		}
+		if (family) {
+			el.style.setProperty("font-family", family, "important");
+		} else {
+			el.style.removeProperty("font-family");
+		}
+		el.style.setProperty("font-size", settings[component + "_font_size"] + "px", "important");
+		el.style.setProperty("font-weight", settings[component + "_font_weight"], "important");
 	}
 
 	function setFontVariable(root, component, selectedFont) {
@@ -555,6 +708,12 @@
 				applyTypography(window.ctTypographySettings || frappe.boot.construction_typography);
 			});
 		}
+
+		[0, 250, 1000].forEach(function (delay) {
+			setTimeout(function () {
+				applyTypography(window.ctTypographySettings || (frappe.boot && frappe.boot.construction_typography));
+			}, delay);
+		});
 	}
 
 	function readLocalSettings() {
