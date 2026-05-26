@@ -155,11 +155,94 @@
         }
         syncLabel();
 
+        function syncGridQuery() {
+            const cascadeFields = ["boq_header", "boq_structure", "boq_item", "boq_item_stage"];
+            if (!cascadeFields.includes(field.df.fieldname)) return;
+
+            const $gridRow = $input.closest(".grid-row");
+            const gridRow = $gridRow.data("grid_row");
+            const grid = gridRow && gridRow.grid;
+            if (!grid || !grid.get_field) return;
+
+            const gridField = grid.get_field(field.df.fieldname);
+            if (gridField && gridField.get_query) {
+                field.get_query = gridField.get_query;
+            }
+        }
+
+        function getScope() {
+            if (window.scopeContext && window.scopeContext.enabled) {
+                return window.scopeContext.getCurrentScope() || {};
+            }
+            return (frappe.boot.scope_context && frappe.boot.scope_context.current) || {};
+        }
+
+        function withScope(filters) {
+            const mode = frappe.boot.enable_boq_cascade_filtering || "Off";
+            if (!["On", "Strict"].includes(mode)) return filters;
+
+            const scope = getScope();
+            ["company", "cost_center", "project"].forEach((fieldname) => {
+                if (scope[fieldname] && !filters[fieldname]) {
+                    filters[fieldname] = scope[fieldname];
+                }
+            });
+            filters.enforce_scope = true;
+            return filters;
+        }
+
+        function getCurrentGridRowDoc() {
+            const $gridRow = $input.closest(".grid-row");
+            const gridRow = $gridRow.data("grid_row");
+            return (gridRow && gridRow.doc) || field.doc || null;
+        }
+
+        function getBoqCascadeSearchArgs(searchTerm) {
+            const row = getCurrentGridRowDoc();
+            const fieldname = field.df.fieldname;
+            const cascadeFields = ["boq_header", "boq_structure", "boq_item", "boq_item_stage"];
+            if (!cascadeFields.includes(fieldname)) return null;
+
+            const args = {
+                txt: searchTerm || "",
+                doctype: field.df.options,
+                reference_doctype: (row && row.doctype) || field.doctype || "",
+                page_length: cint(frappe.boot.sysdefaults?.link_field_results_limit) || 10,
+                link_fieldname: fieldname,
+            };
+            const filters = {};
+
+            if (fieldname === "boq_header") {
+                args.query = "construction.api.boq_link_queries.get_boq_headers";
+            } else if (fieldname === "boq_structure") {
+                args.query = "construction.api.boq_link_queries.get_boq_structures";
+                if (row && row.boq_header) filters.boq_header = row.boq_header;
+            } else if (fieldname === "boq_item") {
+                args.query = "construction.api.boq_link_queries.get_boq_items";
+                if (row && row.project) filters.project = row.project;
+                if (row && row.boq_header) filters.boq_header = row.boq_header;
+                if (row && row.boq_structure) filters.structure = row.boq_structure;
+                filters.require_boq_header = true;
+                filters.require_structure = true;
+                filters.allowed_statuses = ["Frozen", "Locked"];
+            } else if (fieldname === "boq_item_stage") {
+                args.query = "construction.api.boq_link_queries.get_boq_item_stages";
+                if (row && row.boq_item) filters.boq_item = row.boq_item;
+                if (row && row.boq_header) filters.boq_header = row.boq_header;
+                if (row && row.boq_structure) filters.structure = row.boq_structure;
+                filters.require_boq_item = true;
+            }
+
+            args.filters = withScope(filters);
+            return args;
+        }
+
         // Render search options from database
         function renderOptions(searchTerm) {
             $list.html(`<div style="padding: 10px; text-align: center; color: var(--ct-text-muted);"><i class="fa fa-spinner fa-spin"></i> ${__("Loading...")}</div>`);
 
-            const args = field.get_search_args(searchTerm || "");
+            syncGridQuery();
+            const args = getBoqCascadeSearchArgs(searchTerm) || field.get_search_args(searchTerm || "");
             if (!args) {
                 $list.html(`<div style="padding: 10px; color: var(--ct-text-muted); font-style: italic;">${__("No options available")}</div>`);
                 return;

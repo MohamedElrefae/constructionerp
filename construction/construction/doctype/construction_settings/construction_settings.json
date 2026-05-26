@@ -12,6 +12,9 @@
     "enable_scope_cost_center",
     "enable_scope_project",
     "enable_scope_department",
+    "boq_cascade_section",
+    "enable_boq_cascade_filtering",
+    "direct_labor_designations",
     "section_break_2",
     "scope_context_settings_help",
     "scope_hierarchy_section",
@@ -58,6 +61,26 @@
       "fieldtype": "Check",
       "label": "Enable Scope Department",
       "depends_on": "enable_scope_context"
+    },
+    {
+      "fieldname": "boq_cascade_section",
+      "fieldtype": "Section Break",
+      "label": "BOQ Cascade Filtering"
+    },
+    {
+      "default": "Off",
+      "description": "Controls preventive BOQ dropdown cascade filtering. Off keeps existing behavior, On enables guided filtering, Strict enforces rollout gates after data quality approval.",
+      "fieldname": "enable_boq_cascade_filtering",
+      "fieldtype": "Select",
+      "label": "Enable BOQ Cascade Filtering",
+      "options": "Off\nOn\nStrict"
+    },
+    {
+      "description": "Employee designations whose Timesheet rows require BOQ attribution as direct labor.",
+      "fieldname": "direct_labor_designations",
+      "fieldtype": "Table",
+      "label": "Direct Labor Designations",
+      "options": "Direct Labor Designation"
     },
     {
       "fieldname": "section_break_2",

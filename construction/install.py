@@ -25,31 +25,74 @@ BOQ_TRANSACTION_CHILD_DOCTYPES = (
 	"Material Request Item",
 )
 
-BOQ_OPERATIONAL_CUSTOM_FIELDS = (
-	{
-		"fieldname": "boq_item",
-		"fieldtype": "Link",
-		"options": "BOQ Item",
-		"label": "BOQ Item",
-		"insert_after": "project",
-		"depends_on": "eval:doc.expense_category == 'Direct'",
-	},
-	{
-		"fieldname": "boq_item_stage",
-		"fieldtype": "Link",
-		"options": "BOQ Item Stage",
-		"label": "BOQ Item Stage",
-		"insert_after": "boq_item",
-		"depends_on": "eval:doc.boq_item && doc.expense_category == 'Direct'",
-	},
-	{
-		"fieldname": "expense_category",
-		"fieldtype": "Select",
-		"options": "\nDirect\nIndirect\nOverhead\nCapital",
-		"label": "Expense Category",
-		"default": "Direct",
-		"insert_after": "boq_item_stage",
-	},
+BOQ_CASCADE_INSERT_AFTER = {
+	"Purchase Order Item": "expense_category",
+	"Purchase Receipt Item": "expense_category",
+	"Purchase Invoice Item": "expense_category",
+	"Stock Entry Detail": "expense_category",
+	"Timesheet Detail": "activity_type",
+	"Journal Entry Account": "account",
+	"Sales Invoice Item": "is_progress_billing",
+	"Material Request Item": "expense_category",
+}
+
+BOQ_EXPENSE_CATEGORY_INSERT_AFTER = {
+	"Purchase Order Item": "item_code",
+	"Purchase Receipt Item": "item_code",
+	"Purchase Invoice Item": "cost_center",
+	"Stock Entry Detail": "item_code",
+	"Journal Entry Account": "account",
+	"Material Request Item": "item_code",
+}
+
+BOQ_CASCADE_DEPENDS_ON = {
+	"Purchase Order Item": "eval:doc.expense_category == 'Direct'",
+	"Purchase Receipt Item": "eval:doc.expense_category == 'Direct'",
+	"Purchase Invoice Item": "eval:doc.expense_category == 'Direct'",
+	"Stock Entry Detail": "eval:doc.expense_category == 'Direct'",
+	"Journal Entry Account": "eval:doc.expense_category == 'Direct'",
+	"Material Request Item": "eval:doc.expense_category == 'Direct'",
+	"Sales Invoice Item": "eval:doc.is_progress_billing",
+	"Timesheet Detail": (
+		"eval:frappe.boot.direct_labor_designations "
+		"&& frappe.boot.direct_labor_designations.includes(doc.designation)"
+	),
+}
+
+BOQ_EXPENSE_CATEGORY_DOCTYPES = {
+	"Purchase Order Item",
+	"Purchase Receipt Item",
+	"Purchase Invoice Item",
+	"Stock Entry Detail",
+	"Journal Entry Account",
+	"Material Request Item",
+}
+
+BOQ_LEGACY_EXPENSE_CATEGORY_HIDE_DOCTYPES = {
+	"Sales Invoice Item",
+	"Timesheet Detail",
+}
+
+BOQ_CASCADE_FIELDNAMES = (
+	"boq_header",
+	"boq_structure",
+	"boq_item",
+	"boq_item_stage",
+	"boq_selection_scope_type",
+)
+
+DIRECT_LABOR_DESIGNATION_DEFAULTS = (
+	("Site Worker", "Mandatory"),
+	("Mason", "Mandatory"),
+	("Carpenter", "Mandatory"),
+	("Steel Fixer", "Mandatory"),
+	("Operator", "Mandatory"),
+	("Electrician", "Mandatory"),
+	("Plumber", "Mandatory"),
+	("Site Engineer", "Optional"),
+	("Site Supervisor", "Optional"),
+	("Foreman", "Optional"),
+	("Project Manager", "Not Applicable"),
 )
 
 
@@ -57,6 +100,9 @@ def setup_boq_integration():
 	"""Idempotently provision BOQ accounting and operational fields."""
 	setup_boq_accounting_dimension()
 	setup_boq_custom_fields()
+	setup_boq_indexes()
+	setup_boq_rollout_mode()
+	setup_direct_labor_designations()
 
 
 def setup_boq_accounting_dimension():
@@ -113,19 +159,183 @@ def setup_boq_custom_fields():
 			continue
 
 		meta = frappe.get_meta(doctype, cached=False)
-		for field in BOQ_OPERATIONAL_CUSTOM_FIELDS:
-			if meta.has_field(field["fieldname"]):
-				continue
-
+		for field in _get_boq_custom_fields_for_doctype(doctype):
 			field_def = field.copy()
-			field_def["insert_after"] = _resolve_insert_after(meta, field_def["insert_after"])
-			create_custom_field(doctype, field_def, ignore_validate=True)
+			field_def["insert_after"] = _resolve_insert_after(meta, field_def.get("insert_after"))
+			_sync_custom_field(doctype, field_def, create_custom_field)
 			frappe.clear_cache(doctype=doctype)
 			meta = frappe.get_meta(doctype, cached=False)
+		_hide_legacy_expense_category_field(doctype)
+
+
+def _get_boq_custom_fields_for_doctype(doctype):
+	fields = []
+	if doctype in BOQ_EXPENSE_CATEGORY_DOCTYPES:
+		fields.append(
+			{
+				"fieldname": "expense_category",
+				"fieldtype": "Select",
+				"options": "\nDirect\nIndirect\nOverhead\nCapital",
+				"label": "Expense Category",
+				"default": "" if doctype == "Journal Entry Account" else "Direct",
+				"insert_after": BOQ_EXPENSE_CATEGORY_INSERT_AFTER.get(doctype),
+				"hidden": 0,
+				"read_only": 0,
+				"description": "Set to Direct to unlock BOQ attribution fields.",
+			}
+		)
+	elif doctype == "Sales Invoice Item":
+		fields.append(
+			{
+				"fieldname": "is_progress_billing",
+				"fieldtype": "Check",
+				"label": "Progress Billing",
+				"default": "0",
+				"insert_after": "item_code",
+				"hidden": 0,
+				"read_only": 0,
+			}
+		)
+	elif doctype == "Timesheet Detail":
+		fields.append(
+			{
+				"fieldname": "designation",
+				"fieldtype": "Data",
+				"label": "Employee Designation",
+				"insert_after": "activity_type",
+				"hidden": 1,
+				"read_only": 1,
+				"no_copy": 1,
+			}
+		)
+
+	base_gate = BOQ_CASCADE_DEPENDS_ON.get(doctype, "eval:doc.expense_category == 'Direct'")
+	base_expr = _strip_eval(base_gate)
+
+	fields.extend(
+		[
+			{
+				"fieldname": "boq_header",
+				"fieldtype": "Link",
+				"options": "BOQ Header",
+				"label": "BOQ Header",
+				"insert_after": BOQ_CASCADE_INSERT_AFTER.get(doctype),
+				"depends_on": None,
+				"read_only_depends_on": f"eval:!({base_expr})",
+				"hidden": 0,
+				"read_only": 0,
+				"description": "Locked until the row is applicable for direct BOQ attribution.",
+			},
+			{
+				"fieldname": "boq_structure",
+				"fieldtype": "Link",
+				"options": "BOQ Structure",
+				"label": "BOQ Structure",
+				"insert_after": "boq_header",
+				"depends_on": None,
+				"read_only_depends_on": f"eval:!doc.boq_header || !({base_expr})",
+				"hidden": 0,
+				"read_only": 0,
+				"description": "Locked until a BOQ Header is selected.",
+			},
+			{
+				"fieldname": "boq_item",
+				"fieldtype": "Link",
+				"options": "BOQ Item",
+				"label": "BOQ Item",
+				"insert_after": "boq_structure",
+				"depends_on": None,
+				"read_only_depends_on": f"eval:!doc.boq_header || !doc.boq_structure || !({base_expr})",
+				"hidden": 0,
+				"read_only": 0,
+				"description": "Locked until BOQ Header and BOQ Structure are selected.",
+			},
+			{
+				"fieldname": "boq_item_stage",
+				"fieldtype": "Link",
+				"options": "BOQ Item Stage",
+				"label": "BOQ Item Stage",
+				"insert_after": "boq_item",
+				"depends_on": None,
+				"read_only_depends_on": f"eval:!doc.boq_item || !({base_expr})",
+				"hidden": 0,
+				"read_only": 0,
+				"description": "Locked until a BOQ Item is selected.",
+			},
+			{
+				"fieldname": "boq_selection_scope_type",
+				"fieldtype": "Select",
+				"options": "\nProject-Scoped\nCompany-CostCenter-Scoped",
+				"label": "BOQ Selection Scope Type",
+				"insert_after": "boq_item_stage",
+				"hidden": 1,
+				"read_only": 1,
+				"no_copy": 1,
+			},
+		]
+	)
+	return fields
+
+
+def _sync_custom_field(doctype, field_def, create_custom_field):
+	meta = frappe.get_meta(doctype, cached=False)
+	fieldname = field_def["fieldname"]
+	custom_field_name = frappe.db.get_value(
+		"Custom Field", {"dt": doctype, "fieldname": fieldname}, "name"
+	)
+
+	if not custom_field_name and meta.has_field(fieldname):
+		return
+
+	if not custom_field_name:
+		create_custom_field(doctype, field_def, ignore_validate=True)
+		return
+
+	doc = frappe.get_doc("Custom Field", custom_field_name)
+	changed = False
+	for key, value in field_def.items():
+		if getattr(doc, key, None) != value:
+			setattr(doc, key, value)
+			changed = True
+	if changed:
+		doc.save(ignore_permissions=True)
+
+
+def _hide_legacy_expense_category_field(doctype):
+	if doctype not in BOQ_LEGACY_EXPENSE_CATEGORY_HIDE_DOCTYPES:
+		return
+
+	custom_field_name = frappe.db.get_value(
+		"Custom Field", {"dt": doctype, "fieldname": "expense_category"}, "name"
+	)
+	if not custom_field_name:
+		return
+
+	doc = frappe.get_doc("Custom Field", custom_field_name)
+	changed = False
+	for key, value in {
+		"hidden": 1,
+		"read_only": 1,
+		"no_copy": 1,
+		"description": "Legacy BOQ expense gate hidden; this DocType uses its own BOQ cascade gate.",
+	}.items():
+		if getattr(doc, key, None) != value:
+			setattr(doc, key, value)
+			changed = True
+	if changed:
+		doc.save(ignore_permissions=True)
+
+
+def _default_insert_anchor(doctype):
+	return BOQ_CASCADE_INSERT_AFTER.get(doctype) or "project"
+
+
+def _strip_eval(expression):
+	return (expression or "").replace("eval:", "", 1)
 
 
 def _resolve_insert_after(meta, preferred_field):
-	if meta.has_field(preferred_field):
+	if preferred_field and meta.has_field(preferred_field):
 		return preferred_field
 
 	for fallback in ("project", "item_code", "account", "activity_type"):
@@ -134,6 +344,122 @@ def _resolve_insert_after(meta, preferred_field):
 
 	fields = meta.get("fields") or []
 	return fields[-1].fieldname if fields else None
+
+
+def setup_boq_indexes():
+	indexes = (
+		("BOQ Header", ["project"], "idx_boq_header_project"),
+		("BOQ Structure", ["boq_header", "is_group"], "idx_boq_structure_header_group"),
+		("BOQ Item", ["boq_header", "structure"], "idx_boq_item_header_structure"),
+		("BOQ Item Stage", ["boq_item"], "idx_boq_item_stage_item"),
+	)
+	for doctype, fields, index_name in indexes:
+		if not frappe.db.table_exists(doctype):
+			continue
+		if not all(frappe.db.has_column(doctype, field) for field in fields):
+			continue
+		if _index_exists(doctype, index_name):
+			continue
+		try:
+			frappe.db.add_index(doctype, fields, index_name)
+		except Exception:
+			frappe.log_error(
+				frappe.get_traceback(),
+				f"Failed to add BOQ cascade index {index_name}",
+			)
+
+
+def _index_exists(doctype, index_name):
+	return bool(
+		frappe.db.sql(
+			"""
+			SELECT 1
+			FROM information_schema.statistics
+			WHERE table_schema = DATABASE()
+			  AND table_name = %(table_name)s
+			  AND index_name = %(index_name)s
+			LIMIT 1
+			""",
+			{"table_name": f"tab{doctype}", "index_name": index_name},
+		)
+	)
+
+
+def setup_direct_labor_designations():
+	if not frappe.db.exists("DocType", "Construction Settings"):
+		return
+	if not frappe.db.table_exists("Direct Labor Designation"):
+		return
+	if not frappe.get_meta("Construction Settings", cached=False).has_field("direct_labor_designations"):
+		return
+
+	settings = frappe.get_single("Construction Settings")
+	existing = {
+		row.designation for row in (settings.get("direct_labor_designations") or []) if row.designation
+	}
+	available_designations = {
+		row.name
+		for row in frappe.get_all(
+			"Designation",
+			filters={"name": ["in", [item[0] for item in DIRECT_LABOR_DESIGNATION_DEFAULTS]]},
+			fields=["name"],
+		)
+	}
+	changed = False
+	for designation, requirement in DIRECT_LABOR_DESIGNATION_DEFAULTS:
+		if designation in existing or designation not in available_designations:
+			continue
+		settings.append(
+			"direct_labor_designations",
+			{"designation": designation, "boq_requirement": requirement},
+		)
+		changed = True
+	if changed:
+		settings.save(ignore_permissions=True)
+
+
+def setup_boq_rollout_mode():
+	if not frappe.db.exists("DocType", "Construction Settings"):
+		return
+	if not frappe.get_meta("Construction Settings", cached=False).has_field(
+		"enable_boq_cascade_filtering"
+	):
+		return
+
+	current = frappe.db.sql(
+		"""
+		SELECT value
+		FROM `tabSingles`
+		WHERE doctype = %(doctype)s
+		  AND field = %(field)s
+		""",
+		{
+			"doctype": "Construction Settings",
+			"field": "enable_boq_cascade_filtering",
+		},
+		as_dict=True,
+	)
+	current_value = current[0].value if current else None
+	if current_value in {"Off", "On", "Strict"}:
+		return
+	if current:
+		frappe.db.sql(
+			"""
+			UPDATE `tabSingles`
+			SET value = %(value)s
+			WHERE doctype = %(doctype)s
+			  AND field = %(field)s
+			""",
+			{
+				"value": "Off",
+				"doctype": "Construction Settings",
+				"field": "enable_boq_cascade_filtering",
+			},
+		)
+	else:
+		frappe.db.set_single_value(
+			"Construction Settings", "enable_boq_cascade_filtering", "Off"
+		)
 
 
 # ---------------------------------------------------------------------------

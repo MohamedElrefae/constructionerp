@@ -105,7 +105,7 @@ app_include_js = [
 	"/assets/construction/js/overrides/ct_select_control.js?v=2",
 	# Phase 3: Global ControlLink auto-enhancer — replaces 3 manual config files
 	# Auto-applies SearchableDropdownEnhancer to all Link fields on every page
-	"/assets/construction/js/overrides/ct_link_control.js?v=2",
+	"/assets/construction/js/overrides/ct_link_control.js?v=4",
 	# v16 runtime safety net — no-op (CSS handles all styling)
 	"/assets/construction/js/theme_loader_v16.js?v=2",
 	# Scope Context — core class for managing user company/cost_center/project/dept scope
@@ -123,7 +123,7 @@ app_include_js = [
 	# Translation workflow helpers (Arabic backlog + filters)
 	"/assets/construction/js/translation_list_tools.js?v=1",
 	# BOQ integration filters for transaction child rows
-	"/assets/construction/js/boq_filters.js?v=1",
+	"/assets/construction/js/boq_filters.js?v=3",
 	# Filter fix — injected AFTER Frappe bundle to win cascade order
 	# Must be LAST to guarantee it loads after desk.bundle.css
 	"/assets/construction/js/filter_fix.js?v=4.1",
@@ -256,6 +256,7 @@ translated_doctypes = {
 	"PlantResource": ["ar"],
 	"Construction Settings": ["ar"],
 	"Construction Theme": ["ar"],
+	"Direct Labor Designation": ["ar"],
 	"Modern Theme Settings": ["ar"],
 	"User Desk Theme": ["ar"],
 	"User Scope Context": ["ar"],

@@ -6,6 +6,7 @@ from construction.services.boq_lookups import (
 	get_project_for_header,
 	get_status_for_header,
 )
+from construction.services.boq_scope_filters import ALLOWED_TRANSACTION_BOQ_STATUSES
 
 
 def validate_transaction_row(row, parent_doc):
@@ -19,8 +20,14 @@ def validate_transaction_row(row, parent_doc):
 		frappe.throw(_("Row {0}: BOQ Item does not exist").format(row.idx))
 
 	boq_header = get_header_for_item(row.boq_item)
+	boq_structure = frappe.db.get_value("BOQ Item", row.boq_item, "structure")
+	if row.get("boq_header") != boq_header:
+		row.boq_header = boq_header
+	if row.get("boq_structure") != boq_structure:
+		row.boq_structure = boq_structure
+
 	header_status = get_status_for_header(boq_header)
-	if header_status in ("Draft", "Pricing"):
+	if header_status not in ALLOWED_TRANSACTION_BOQ_STATUSES:
 		frappe.throw(
 			_("Row {0}: BOQ Header is {1}. Transaction attribution not allowed.").format(
 				row.idx, header_status

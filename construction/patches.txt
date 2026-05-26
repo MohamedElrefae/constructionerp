@@ -6,3 +6,4 @@ construction.patches.v6_2.seed_arabic_translations
 construction.patches.v6_3.seed_reviewed_arabic_translation_files
 construction.patches.v6_4.reconcile_sidebar_and_arabic_translations
 construction.patches.v6_5.harden_boq_item_stage_arabic_translation
+construction.patches.v6_6.add_boq_cascade_transaction_fields

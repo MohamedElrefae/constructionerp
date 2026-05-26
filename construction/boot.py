@@ -36,6 +36,12 @@ def extend_bootinfo(bootinfo):
 
     scope_enabled = bool(settings.enable_scope_context or False)
     bootinfo["scope_context_enabled"] = scope_enabled
+    bootinfo["enable_boq_cascade_filtering"] = getattr(settings, "enable_boq_cascade_filtering", "Off") or "Off"
+    bootinfo["direct_labor_designations"] = [
+        row.designation
+        for row in (settings.get("direct_labor_designations") or [])
+        if row.designation and row.boq_requirement == "Mandatory"
+    ]
 
     bootinfo["scope_context_enabled_dimensions"] = {
         "company": bool(settings.enable_scope_company if scope_enabled else False),
