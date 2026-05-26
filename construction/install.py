@@ -8,6 +8,135 @@ import frappe
 
 
 # ---------------------------------------------------------------------------
+# BOQ Integration Setup
+# ---------------------------------------------------------------------------
+
+BOQ_DIMENSION_NAME = "BOQ Item"
+BOQ_DIMENSION_DOCTYPE = "BOQ Item"
+
+BOQ_TRANSACTION_CHILD_DOCTYPES = (
+	"Purchase Order Item",
+	"Purchase Receipt Item",
+	"Purchase Invoice Item",
+	"Stock Entry Detail",
+	"Timesheet Detail",
+	"Journal Entry Account",
+	"Sales Invoice Item",
+	"Material Request Item",
+)
+
+BOQ_OPERATIONAL_CUSTOM_FIELDS = (
+	{
+		"fieldname": "boq_item",
+		"fieldtype": "Link",
+		"options": "BOQ Item",
+		"label": "BOQ Item",
+		"insert_after": "project",
+		"depends_on": "eval:doc.expense_category == 'Direct'",
+	},
+	{
+		"fieldname": "boq_item_stage",
+		"fieldtype": "Link",
+		"options": "BOQ Item Stage",
+		"label": "BOQ Item Stage",
+		"insert_after": "boq_item",
+		"depends_on": "eval:doc.boq_item && doc.expense_category == 'Direct'",
+	},
+	{
+		"fieldname": "expense_category",
+		"fieldtype": "Select",
+		"options": "\nDirect\nIndirect\nOverhead\nCapital",
+		"label": "Expense Category",
+		"default": "Direct",
+		"insert_after": "boq_item_stage",
+	},
+)
+
+
+def setup_boq_integration():
+	"""Idempotently provision BOQ accounting and operational fields."""
+	setup_boq_accounting_dimension()
+	setup_boq_custom_fields()
+
+
+def setup_boq_accounting_dimension():
+	if not frappe.db.exists("DocType", BOQ_DIMENSION_DOCTYPE):
+		return
+	if not frappe.db.exists("DocType", "Accounting Dimension"):
+		return
+
+	dimension_name = frappe.db.get_value(
+		"Accounting Dimension", {"document_type": BOQ_DIMENSION_DOCTYPE}, "name"
+	)
+
+	if dimension_name:
+		dimension = frappe.get_doc("Accounting Dimension", dimension_name)
+		if dimension.disabled:
+			dimension.disabled = 0
+			dimension.save(ignore_permissions=True)
+	else:
+		dimension = frappe.new_doc("Accounting Dimension")
+		dimension.document_type = BOQ_DIMENSION_DOCTYPE
+		dimension.label = BOQ_DIMENSION_NAME
+		dimension.insert(ignore_permissions=True)
+
+	_sync_boq_dimension_fields(dimension)
+
+
+def _sync_boq_dimension_fields(dimension):
+	try:
+		from erpnext.accounts.doctype.accounting_dimension.accounting_dimension import (
+			make_dimension_in_accounting_doctypes,
+		)
+	except Exception:
+		frappe.log_error(
+			"ERPNext Accounting Dimension sync function could not be imported",
+			"BOQ Integration Setup",
+		)
+		return
+
+	make_dimension_in_accounting_doctypes(doc=dimension)
+
+
+def setup_boq_custom_fields():
+	if not frappe.db.exists("DocType", "Custom Field"):
+		return
+
+	try:
+		from frappe.custom.doctype.custom_field.custom_field import create_custom_field
+	except Exception:
+		frappe.log_error("Custom Field API could not be imported", "BOQ Integration Setup")
+		return
+
+	for doctype in BOQ_TRANSACTION_CHILD_DOCTYPES:
+		if not frappe.db.exists("DocType", doctype):
+			continue
+
+		meta = frappe.get_meta(doctype, cached=False)
+		for field in BOQ_OPERATIONAL_CUSTOM_FIELDS:
+			if meta.has_field(field["fieldname"]):
+				continue
+
+			field_def = field.copy()
+			field_def["insert_after"] = _resolve_insert_after(meta, field_def["insert_after"])
+			create_custom_field(doctype, field_def, ignore_validate=True)
+			frappe.clear_cache(doctype=doctype)
+			meta = frappe.get_meta(doctype, cached=False)
+
+
+def _resolve_insert_after(meta, preferred_field):
+	if meta.has_field(preferred_field):
+		return preferred_field
+
+	for fallback in ("project", "item_code", "account", "activity_type"):
+		if meta.has_field(fallback):
+			return fallback
+
+	fields = meta.get("fields") or []
+	return fields[-1].fieldname if fields else None
+
+
+# ---------------------------------------------------------------------------
 # System Themes
 # ---------------------------------------------------------------------------
 

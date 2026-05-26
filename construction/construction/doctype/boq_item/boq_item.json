@@ -19,6 +19,7 @@
     "quantity",
     "unit",
     "factor",
+    "has_stages",
     "cb_quantity",
     "est_unit_cost",
     "est_unit_price",
@@ -115,6 +116,12 @@
       "fieldtype": "Float",
       "label": "Factor",
       "non_negative": 1
+    },
+    {
+      "default": "0",
+      "fieldname": "has_stages",
+      "fieldtype": "Check",
+      "label": "Has Stages"
     },
     {
       "fieldname": "cb_quantity",
@@ -232,7 +239,12 @@
     }
   ],
   "index_web_pages_for_search": 1,
-  "links": [],
+  "links": [
+    {
+      "link_doctype": "BOQ Item Stage",
+      "link_fieldname": "boq_item"
+    }
+  ],
   "modified": "2026-04-20 00:00:00.000000",
   "modified_by": "Administrator",
   "module": "construction",

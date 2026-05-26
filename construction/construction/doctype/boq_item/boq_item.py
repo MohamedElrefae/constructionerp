@@ -1,6 +1,9 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
+from frappe.utils import cint, flt
+
+from construction.services.boq_operational import validate_boq_item_stage_distribution
 
 
 class BOQItem(Document):
@@ -16,6 +19,7 @@ class BOQItem(Document):
 			"owner_page",
 			"owner_ref_no",
 			"owner_file_ref",
+			"has_stages",
 		}
 	)
 
@@ -23,6 +27,7 @@ class BOQItem(Document):
 		"validate_leaf_only",
 		"enforce_boq_status",
 		"validate_input_guards",
+		"validate_stage_distribution",
 		"fetch_cost_item_data",
 		"calculate_cost_buildup",
 		"calculate_line_total",
@@ -88,13 +93,24 @@ class BOQItem(Document):
 					continue
 				old_val = old_doc.get(field)
 				new_val = self.get(field)
-				if str(old_val or "") != str(new_val or ""):
+				if self._field_value_changed(field, old_val, new_val):
 					frappe.throw(
 						_(
 							"Cannot modify field '{0}': BOQ is in Pricing status. "
 							"Only pricing-related fields can be edited."
 						).format(field)
 					)
+
+	def _field_value_changed(self, fieldname, old_val, new_val):
+		df = self.meta.get_field(fieldname)
+		fieldtype = df.fieldtype if df else None
+
+		if fieldtype in ("Float", "Currency", "Percent"):
+			return abs(flt(old_val) - flt(new_val)) > 0.000001
+		if fieldtype in ("Int", "Check"):
+			return cint(old_val) != cint(new_val)
+
+		return (old_val or "") != (new_val or "")
 
 	# --- Step 3: Input guards ---
 	def validate_input_guards(self):
@@ -107,14 +123,17 @@ class BOQItem(Document):
 			"contract_unit_price",
 		]
 		for field in non_negative_fields:
-			val = self.get(field) or 0
+			val = flt(self.get(field))
 			if val < 0:
 				frappe.throw(_("Field '{0}' must be non-negative. Got: {1}").format(field, val))
 		pct_fields = ["overhead_pct", "profit_pct"]
 		for field in pct_fields:
-			val = self.get(field) or 0
+			val = flt(self.get(field))
 			if val < 0 or val > 100:
 				frappe.throw(_("Field '{0}' must be between 0 and 100. Got: {1}").format(field, val))
+
+	def validate_stage_distribution(self):
+		validate_boq_item_stage_distribution(self)
 
 	# --- Step 4: Fetch CostItem data ---
 	def fetch_cost_item_data(self):
@@ -136,11 +155,11 @@ class BOQItem(Document):
 	# --- Step 5: Cost buildup ---
 	def calculate_cost_buildup(self):
 		"""Compute overhead, profit, calculated sell price, and estimated line total."""
-		est_unit_cost = self.est_unit_cost or 0
-		overhead_pct = self.overhead_pct or 0
-		profit_pct = self.profit_pct or 0
-		quantity = self.quantity or 0
-		factor = self.factor or 1.0
+		est_unit_cost = flt(self.est_unit_cost)
+		overhead_pct = flt(self.overhead_pct)
+		profit_pct = flt(self.profit_pct)
+		quantity = flt(self.quantity)
+		factor = flt(self.factor) or 1.0
 
 		self.overhead_amount = est_unit_cost * overhead_pct / 100
 		self.profit_amount = (est_unit_cost + self.overhead_amount) * profit_pct / 100
@@ -150,9 +169,9 @@ class BOQItem(Document):
 	# --- Step 6: Line total ---
 	def calculate_line_total(self):
 		"""Compute line_total = quantity × contract_unit_price × factor."""
-		quantity = self.quantity or 0
-		price = self.contract_unit_price or 0
-		factor = self.factor or 1.0
+		quantity = flt(self.quantity)
+		price = flt(self.contract_unit_price)
+		factor = flt(self.factor) or 1.0
 		self.line_total = quantity * price * factor
 
 	# --- Step 7: Output guards ---

@@ -74,6 +74,8 @@ desk_links = {
 # Paths are relative to the app module folder (construction/construction/)
 doctype_js = {
     "BOQ Header": "construction/doctype/boq_header/boq_header.js",
+    "BOQ Item": "construction/doctype/boq_item/boq_item.js",
+    "BOQ Item Stage": "construction/doctype/boq_item_stage/boq_item_stage.js",
     "Construction Settings": "construction/doctype/construction_settings/construction_settings.js",
     "User Desk Theme": "construction/doctype/user_desk_theme/user_desk_theme.js",
 }
@@ -108,6 +110,8 @@ app_include_js = [
 	"/assets/construction/js/theme_loader_v16.js?v=2",
 	# Scope Context — core class for managing user company/cost_center/project/dept scope
 	"/assets/construction/js/scope_context.js?v=1",
+	# Frappe Desk compatibility fixes that must run before list views initialize
+	"/assets/construction/js/frappe_compat_patches.js?v=1",
 	# Scope Context — navbar UI selectors (cascading company/cost_center/project/dept dropdowns)
 	"/assets/construction/js/scope_context_ui.js?v=1",
 	# Scope Context — list view auto-filtering
@@ -116,6 +120,10 @@ app_include_js = [
 	"/assets/construction/js/scope_context_form_defaults.js?v=1",
 	# Sidebar accordion — only one section stays expanded at a time
 	"/assets/construction/js/sidebar_accordion.js?v=1",
+	# Translation workflow helpers (Arabic backlog + filters)
+	"/assets/construction/js/translation_list_tools.js?v=1",
+	# BOQ integration filters for transaction child rows
+	"/assets/construction/js/boq_filters.js?v=1",
 	# Filter fix — injected AFTER Frappe bundle to win cascade order
 	# Must be LAST to guarantee it loads after desk.bundle.css
 	"/assets/construction/js/filter_fix.js?v=4.1",
@@ -157,7 +165,8 @@ pdf_footer_html = "construction.api.theme_api.get_pdf_footer"
 # Using simplified SQL-based version to avoid Python controller import issues
 override_whitelisted_methods = {
 	"frappe.core.doctype.user.user.switch_theme": "construction.overrides.switch_theme_simple.switch_theme",
-	"frappe.utils.change_log.show_update_popup": "construction.api.theme_api.ignore_update_popup"
+	"frappe.utils.change_log.show_update_popup": "construction.api.theme_api.ignore_update_popup",
+	"frappe.translate.update_translations_for_source": "construction.api.translation_tools.update_translations_for_source_safe",
 }
 
 # Boot session hook - inject user's theme into frappe.boot
@@ -172,7 +181,34 @@ extend_bootinfo = "construction.boot.extend_bootinfo"
 doc_events = {
     "*": {
         "validate": "construction.overrides.scope_enforcement.validate"
-    }
+    },
+    "Purchase Order": {
+        "validate": "construction.services.boq_transaction_validation.validate_document"
+    },
+    "Purchase Receipt": {
+        "validate": "construction.services.boq_transaction_validation.validate_document"
+    },
+    "Purchase Invoice": {
+        "validate": "construction.services.boq_transaction_validation.validate_document"
+    },
+    "Stock Entry": {
+        "validate": "construction.services.boq_transaction_validation.validate_document"
+    },
+    "Timesheet": {
+        "validate": "construction.services.boq_transaction_validation.validate_document"
+    },
+    "Journal Entry": {
+        "validate": "construction.services.boq_transaction_validation.validate_document"
+    },
+    "Sales Invoice": {
+        "validate": "construction.services.boq_transaction_validation.validate_document"
+    },
+    "Material Request": {
+        "validate": "construction.services.boq_transaction_validation.validate_document"
+    },
+    "BOQ Item Stage": {
+        "before_delete": "construction.services.boq_lifecycle.before_delete_boq_item_stage"
+    },
 }
 
 # Server-side query injection: applies scope filters to ALL database queries
@@ -192,6 +228,7 @@ fixtures = [
 # After install - create system themes and setup Custom Fields
 after_install = [
 	"construction.install.create_system_themes",
+	"construction.install.setup_boq_integration",
 	"construction.install.setup_branch_company_field",
 	"construction.insert_translations.execute",
 ]
@@ -204,6 +241,7 @@ after_migrate = [
 	"construction.install.setup_workspace_sidebar",
 	"construction.install.setup_construction_workspace_page",
 	"construction.install.verify_workspace_visibility",
+	"construction.install.setup_boq_integration",
 	"construction.install.setup_branch_company_field",
 	"construction.insert_translations.execute",
 ]
@@ -212,6 +250,7 @@ after_migrate = [
 translated_doctypes = {
 	"BOQ Header": ["ar"],
 	"BOQ Item": ["ar"],
+	"BOQ Item Stage": ["ar"],
 	"BOQ Structure": ["ar"],
 	"CostItem": ["ar"],
 	"PlantResource": ["ar"],

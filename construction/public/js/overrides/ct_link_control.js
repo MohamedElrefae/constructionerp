@@ -17,6 +17,12 @@
         const $el = $(el);
         const $control_wrapper = $el.closest('.frappe-control');
         if ($control_wrapper.length) {
+            // 1. Direct DOM node reference (Gold Standard)
+            if ($control_wrapper[0].fieldobj) {
+                return $control_wrapper[0].fieldobj;
+            }
+
+            // 2. Fallbacks for other context environments
             const fieldname = $control_wrapper.attr('data-fieldname');
             if (fieldname) {
                 const $grid_row = $el.closest('.grid-row');
@@ -31,6 +37,9 @@
                 }
                 if (window.cur_dialog && cur_dialog.fields_dict && cur_dialog.fields_dict[fieldname]) {
                     return cur_dialog.fields_dict[fieldname];
+                }
+                if (window.cur_list && cur_list.page && cur_list.page.fields_dict && cur_list.page.fields_dict[fieldname]) {
+                    return cur_list.page.fields_dict[fieldname];
                 }
             }
         }
@@ -92,6 +101,14 @@
                         <input type="text" class="ct-dropdown-search" placeholder="${__("Search…")}" autocomplete="off">
                     </div>
                     <div class="ct-dropdown-list"></div>
+                    <div class="ct-dropdown-footer d-flex justify-content-end">
+                        <button class="btn btn-secondary btn-xs ct-btn-select-all text-nowrap">
+                            ${__("Select All")}
+                        </button>
+                        <button class="btn btn-primary btn-xs ct-btn-clear-all text-nowrap">
+                            ${__("Clear All")}
+                        </button>
+                    </div>
                 </div>
             </div>
         `);
@@ -103,6 +120,31 @@
         const $menu = $dropdown.find(".ct-dropdown-menu");
         const $search = $dropdown.find(".ct-dropdown-search");
         const $list = $dropdown.find(".ct-dropdown-list");
+        const $selectAllBtn = $dropdown.find(".ct-btn-select-all");
+        const $clearAllBtn = $dropdown.find(".ct-btn-clear-all");
+
+        $clearAllBtn.on("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const promise = field.set_value("");
+            if (promise && promise.then) {
+                promise.then(() => { syncLabel(); closeDropdown(); });
+            } else {
+                syncLabel();
+                closeDropdown();
+            }
+        });
+
+        $selectAllBtn.on("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const $firstItem = $list.find('.dropdown-item[data-value]').first();
+            if ($firstItem.length) {
+                $firstItem.trigger('click');
+            } else {
+                closeDropdown();
+            }
+        });
 
         // Sync label from current select value
         function syncLabel() {
@@ -302,4 +344,14 @@
     frappe.provide("construction.ct_link_enhancer");
     construction.ct_link_enhancer.scan = scanAndEnhance;
     construction.ct_link_enhancer.enhanceLink = enhanceLink;
+
+    // Dynamic DOM mutation scanning to enhance dynamic filters/fields
+    if (typeof MutationObserver !== "undefined") {
+        const observer = new MutationObserver(function () {
+            try { scanAndEnhance(); } catch (e) { /* silent */ }
+        });
+        $(document).ready(function () {
+            observer.observe(document.body, { childList: true, subtree: true });
+        });
+    }
 })();

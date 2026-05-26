@@ -528,6 +528,53 @@ var css=`
   color: #fff !important;
 }
 
+/* 23. Gold Standard Dropdown Footer & Buttons */
+.ct-dropdown-footer {
+  display: flex !important;
+  justify-content: flex-end !important;
+  padding: 6px 8px !important;
+  border-top: 1px solid var(--ct-border, rgba(148,163,184,0.1)) !important;
+  gap: 6px !important;
+  background: var(--ct-bg-elevated, #111827) !important;
+  border-bottom-left-radius: 6px !important;
+  border-bottom-right-radius: 6px !important;
+  margin-top: 4px !important;
+}
+
+.ct-dropdown-footer .btn {
+  height: 24px !important;
+  font-size: 0.75rem !important;
+  font-weight: 500 !important;
+  padding: 2px 8px !important;
+  border-radius: 4px !important;
+  border: 1px solid var(--ct-border, rgba(148,163,184,0.18)) !important;
+  transition: all 0.15s ease !important;
+  cursor: pointer !important;
+  box-shadow: none !important;
+}
+
+.ct-dropdown-footer .ct-btn-select-all {
+  background: var(--ct-bg-elevated, #111827) !important;
+  color: var(--ct-text-secondary, #94a3b8) !important;
+}
+
+.ct-dropdown-footer .ct-btn-select-all:hover {
+  background: var(--ct-bg-hover, rgba(255,255,255,0.08)) !important;
+  border-color: var(--ct-primary, #2563eb) !important;
+  color: var(--ct-text, #f8fafc) !important;
+}
+
+.ct-dropdown-footer .ct-btn-clear-all {
+  background: var(--ct-primary, #2563eb) !important;
+  color: #fff !important;
+  border-color: var(--ct-primary, #2563eb) !important;
+}
+
+.ct-dropdown-footer .ct-btn-clear-all:hover {
+  background: var(--ct-primary-hover, #1d4ed8) !important;
+  box-shadow: 0 0 8px rgba(37,99,235,0.3) !important;
+}
+
 `;
 
 var style=document.createElement('style');

@@ -1,0 +1,216 @@
+{
+  "actions": [],
+  "allow_rename": 1,
+  "autoname": "format:BOQ-STG-{#####}",
+  "creation": "2026-05-25 00:00:00.000000",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "sb_identity",
+    "project",
+    "boq_header",
+    "boq_structure",
+    "boq_item",
+    "cb_identity",
+    "stage_code",
+    "stage_name",
+    "stage_status",
+    "sb_quantities",
+    "planned_qty",
+    "measured_executed_qty",
+    "certified_qty",
+    "percent_complete",
+    "sb_notes",
+    "description"
+  ],
+  "fields": [
+    {
+      "fieldname": "sb_identity",
+      "fieldtype": "Section Break",
+      "label": "Identity"
+    },
+    {
+      "fieldname": "boq_item",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "BOQ Item",
+      "options": "BOQ Item",
+      "reqd": 1,
+      "search_index": 1
+    },
+    {
+      "fieldname": "boq_header",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "BOQ Header",
+      "options": "BOQ Header",
+      "reqd": 1,
+      "search_index": 1
+    },
+    {
+      "fieldname": "project",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Project",
+      "options": "Project",
+      "reqd": 1,
+      "search_index": 1
+    },
+    {
+      "fieldname": "boq_structure",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "BOQ Structure",
+      "options": "BOQ Structure",
+      "reqd": 1,
+      "search_index": 1
+    },
+    {
+      "fieldname": "cb_identity",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "stage_code",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Stage Code",
+      "search_index": 1
+    },
+    {
+      "fieldname": "stage_name",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Stage Name",
+      "reqd": 1
+    },
+    {
+      "default": "Not Started",
+      "fieldname": "stage_status",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "label": "Stage Status",
+      "options": "Not Started\nIn Progress\nCompleted\nCertified\nOn Hold",
+      "reqd": 1
+    },
+    {
+      "fieldname": "sb_quantities",
+      "fieldtype": "Section Break",
+      "label": "Quantities"
+    },
+    {
+      "default": "0",
+      "fieldname": "planned_qty",
+      "fieldtype": "Float",
+      "in_list_view": 1,
+      "label": "Planned Qty",
+      "non_negative": 1
+    },
+    {
+      "default": "0",
+      "fieldname": "measured_executed_qty",
+      "fieldtype": "Float",
+      "label": "Measured Executed Qty",
+      "non_negative": 1
+    },
+    {
+      "default": "0",
+      "fieldname": "certified_qty",
+      "fieldtype": "Float",
+      "label": "Certified Qty",
+      "non_negative": 1
+    },
+    {
+      "default": "0",
+      "fieldname": "percent_complete",
+      "fieldtype": "Percent",
+      "label": "Percent Complete"
+    },
+    {
+      "fieldname": "sb_notes",
+      "fieldtype": "Section Break",
+      "label": "Notes"
+    },
+    {
+      "fieldname": "description",
+      "fieldtype": "Small Text",
+      "label": "Description"
+    }
+  ],
+  "index_web_pages_for_search": 1,
+  "links": [],
+  "modified": "2026-05-25 00:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "construction",
+  "name": "BOQ Item Stage",
+  "naming_rule": "Expression",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Construction Owner",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "create": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Project Manager",
+      "write": 1
+    },
+    {
+      "create": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Site Engineer",
+      "write": 1
+    },
+    {
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Accountant"
+    },
+    {
+      "read": 1,
+      "role": "Read-Only"
+    }
+  ],
+  "search_fields": "stage_code,stage_name,boq_item,boq_header,project",
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": [],
+  "title_field": "stage_name",
+  "track_changes": 1
+}
