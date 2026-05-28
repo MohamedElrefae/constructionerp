@@ -109,7 +109,9 @@
 
       // Retrieve the form's layout root
       // frm.layout.wrapper is a jQuery object containing .form-layout
-      const layoutRoot = frm.layout?.wrapper?.find(".form-layout")?.[0];
+      const layoutRoot = frm.layout?.wrapper?.hasClass("form-layout")
+        ? frm.layout.wrapper[0]
+        : (frm.layout?.wrapper?.find(".form-layout")?.[0] || frm.layout?.wrapper?.[0]);
       if (!layoutRoot) {
         console.warn(`[LE] Cannot find .form-layout for ${dt}`);
         return;
@@ -195,6 +197,9 @@
           // Move the native field wrapper into our cell
           const nativeEl = wrapper instanceof jQuery ? wrapper[0] : wrapper;
           if (nativeEl && nativeEl.parentNode) {
+            if (!fieldObj._native_parent) {
+              fieldObj._native_parent = nativeEl.parentNode;
+            }
             cell.appendChild(nativeEl);
           }
 

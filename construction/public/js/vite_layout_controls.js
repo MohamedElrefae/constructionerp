@@ -255,6 +255,9 @@
           <div class="vfc-tab" data-vfc-tab="fields" data-panel="${panelId}">
             ${ICON_EYE} ${__("Fields")}
           </div>
+          <div class="vfc-tab" data-vfc-tab="sections" data-panel="${panelId}">
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:text-bottom;margin-right:2px"><rect x="1" y="1" width="14" height="14" rx="2"/><line x1="1" y1="5" x2="15" y2="5"/><line x1="1" y1="10" x2="15" y2="10"/></svg> ${__("Sections")}
+          </div>
           ${hasPresets ? `
           <div class="vfc-tab" data-vfc-tab="presets" data-panel="${panelId}">
             ${ICON_PRE} ${__("Presets")}
@@ -310,6 +313,19 @@
             <div id="vfc-vis-list-${dtId}"></div>
           </div>
 
+          <!-- Tab: Sections -->
+          <div class="vfc-tab-pane" data-vfc-pane="sections" style="display:none">
+            <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--ct-text-muted);margin-bottom:8px;display:flex;align-items:center;gap:6px">
+              <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="1" width="14" height="14" rx="2"/><line x1="1" y1="5" x2="15" y2="5"/><line x1="1" y1="10" x2="15" y2="10"/></svg>
+              ${__("Manage Sections")}
+              <button class="btn btn-default btn-xs vfc-btn-add-section" id="vfc-add-sec-btn-${dtId}" style="margin-left:auto;padding:2px 8px;font-size:10px">${__("+ Add Section")}</button>
+            </div>
+            <div style="font-size:10px;color:var(--ct-text-muted);margin-bottom:12px;line-height:1.6">
+              ${__("Drag sections to reorder. Drag fields inside/between sections to arrange columns. Set 1, 2, or 3 columns per section.")}
+            </div>
+            <div id="vfc-sec-list-${dtId}" class="vfc-sec-list-container" style="display:flex;flex-direction:column;gap:12px;max-height:300px;overflow-y:auto;padding-right:4px"></div>
+          </div>
+
           <!-- Tab: Presets -->
           ${hasPresets ? `
           <div class="vfc-tab-pane" data-vfc-pane="presets" style="display:none">
@@ -358,6 +374,7 @@
           if (name === "fields") this._renderFieldList(frm, dtId, fields);
           if (name === "presets") this._renderPresetList(frm, dtId);
           if (name === "layout") this._renderDensityPreview(dtId, loadDensity(dt));
+          if (name === "sections") this._renderSectionsTab(frm, dtId);
         });
       });
 
@@ -369,6 +386,12 @@
           this._renderDensityPreview(dtId, n);
         });
       });
+
+      // Add section button
+      const addSecBtn = panel.querySelector(`#vfc-add-sec-btn-${dtId}`);
+      if (addSecBtn) {
+        addSecBtn.addEventListener("click", () => this._addSectionPrompt(frm, dtId));
+      }
 
       // Apply & Save button
       const applyBtn = panel.querySelector(`[data-vfc-apply="${dtId}"]`);
@@ -599,6 +622,33 @@
         saveUserSettings(dt, "vfc_preset", key);
       }
 
+      // 4. Save sections layout if modified (System Manager only)
+      const isSystemManager = frappe.user_roles.includes("System Manager") || frappe.session.user === "Administrator";
+      if (isSystemManager && frm._vfc_temp_layout) {
+        frappe.call({
+          method: "construction.api.layout_api.save_layout",
+          args: {
+            doctype: dt,
+            profile_name: "Default",
+            is_default: 1,
+            priority: 10,
+            sections_json: JSON.stringify({
+              version: 1,
+              unassigned_policy: "append",
+              sections: frm._vfc_temp_layout
+            })
+          },
+          callback(r) {
+            if (r.message && r.message.status) {
+              if (window.VFCLayoutEngine) {
+                window.VFCLayoutEngine.invalidateCache(dt);
+                window.VFCLayoutEngine.attach(frm);
+              }
+            }
+          }
+        });
+      }
+
       frappe.show_alert({ message: __("Form Config saved"), indicator: "green" }, 3);
       this._togglePanel(frm, false);
     },
@@ -696,6 +746,267 @@
       const SKIP = ["Section Break", "Column Break", "Tab Break", "HTML", "Heading"];
       const all = this._getFormFields(frm).filter((f) => !SKIP.includes(f.fieldtype));
       return all.filter((f) => !hidden.includes(f.fieldname)).length;
+    },
+
+    /* ─────────────────────────────────────────────────────────
+       Sections Editor Tab Handlers
+    ───────────────────────────────────────────────────────── */
+    async _renderSectionsTab(frm, dtId) {
+      const container = document.getElementById(`vfc-sec-list-${dtId}`);
+      if (!container) return;
+
+      container.innerHTML = `<div style="text-align:center;padding:20px;color:var(--ct-text-muted)">${__("Loading sections...")}</div>`;
+
+      // Load SortableJS dynamically if not already present
+      if (typeof Sortable === "undefined") {
+        await frappe.require("https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js");
+      }
+
+      // Fetch active profile or build default
+      let profile = null;
+      try {
+        profile = window.VFCLayoutEngine ? await window.VFCLayoutEngine._fetchProfile(frm.doctype) : null;
+      } catch (err) {
+        console.warn("[VFC] Error fetching profile:", err);
+      }
+
+      if (!profile || !profile.sections || !profile.sections.length) {
+        profile = {
+          sections: [
+            {
+              id: "sec_default_1",
+              label: "General Info",
+              column_count: 2,
+              sort_order: 1,
+              visible: true,
+              collapsible: false,
+              collapsed_by_default: false,
+              fields: this._getFormFields(frm).map((f, idx) => ({
+                fieldname: f.fieldname,
+                col: (idx % 2) + 1,
+                sort_order: idx + 1,
+                visible: true
+              }))
+            }
+          ]
+        };
+      }
+
+      frm._vfc_temp_layout = JSON.parse(JSON.stringify(profile.sections));
+      this._renderSectionsListHTML(frm, dtId);
+    },
+
+    _renderSectionsListHTML(frm, dtId) {
+      const container = document.getElementById(`vfc-sec-list-${dtId}`);
+      if (!container) return;
+
+      const sections = frm._vfc_temp_layout || [];
+      if (!sections.length) {
+        container.innerHTML = `<div style="text-align:center;padding:20px;color:var(--ct-text-muted)">${__("No sections defined.")}</div>`;
+        return;
+      }
+
+      let html = "";
+      sections.forEach((sec, sIdx) => {
+        const fieldsHtml = (sec.fields || []).map((fld) => {
+          return `
+            <div class="vfc-sec-field-item" data-fieldname="${fld.fieldname}" style="display:flex;align-items:center;background:var(--ct-bg-3);border:1px solid var(--ct-border);padding:6px 8px;border-radius:4px;font-size:11px;cursor:grab;margin-bottom:4px;gap:6px">
+              <span class="vfc-sort-handle" style="color:var(--ct-text-muted);cursor:grab">☰</span>
+              <span style="font-weight:600;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${__(fld.fieldname)}</span>
+              <select onchange="window._VFC._onFieldColChange(this, '${frm.doctype}', ${sIdx}, '${fld.fieldname}')" style="background:var(--ct-surface);border:1px solid var(--ct-border);border-radius:3px;font-size:9px;padding:1px 3px">
+                <option value="1" ${fld.col == 1 ? "selected" : ""}>Col 1</option>
+                <option value="2" ${fld.col == 2 ? "selected" : ""}>Col 2</option>
+                <option value="3" ${fld.col == 3 ? "selected" : ""}>Col 3</option>
+              </select>
+            </div>
+          `;
+        }).join("");
+
+        html += `
+          <div class="vfc-sec-item" data-section-idx="${sIdx}" style="border:1px solid var(--ct-border);border-radius:6px;background:var(--ct-bg-elevated);padding:10px;display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;align-items:center;gap:6px">
+              <span class="vfc-sec-sort-handle" style="color:var(--ct-text-muted);cursor:grab;font-size:14px">☰</span>
+              <input type="text" value="${sec.label || ''}" placeholder="${__('Section Name')}" onchange="window._VFC._onSecLabelChange(this, '${frm.doctype}', ${sIdx})" style="font-size:12px;font-weight:700;background:transparent;border:none;border-bottom:1px dashed var(--ct-border);color:var(--ct-text);flex:1;padding:2px" />
+              
+              <select onchange="window._VFC._onSecColCountChange(this, '${frm.doctype}', ${sIdx})" style="background:var(--ct-surface);border:1px solid var(--ct-border);border-radius:3px;font-size:10px;padding:2px 4px">
+                <option value="1" ${sec.column_count == 1 ? "selected" : ""}>1 Col</option>
+                <option value="2" ${sec.column_count == 2 ? "selected" : ""}>2 Cols</option>
+                <option value="3" ${sec.column_count == 3 ? "selected" : ""}>3 Cols</option>
+              </select>
+
+              <label style="display:inline-flex;align-items:center;font-size:10px;color:var(--ct-text-secondary);gap:2px;cursor:pointer;user-select:none;margin:0">
+                <input type="checkbox" ${sec.collapsible ? "checked" : ""} onchange="window._VFC._onSecCollapsibleChange(this, '${frm.doctype}', ${sIdx})" style="width:12px;height:12px" />
+                Colps
+              </label>
+
+              <button class="btn btn-default btn-xs" onclick="window._VFC._deleteSection('${frm.doctype}', ${sIdx})" style="padding:2px 5px;color:var(--ct-danger);border-color:transparent;background:transparent" title="${__('Delete Section')}">✕</button>
+            </div>
+
+            <div class="vfc-sec-fields-list" data-section-idx="${sIdx}" style="min-height:30px;background:rgba(0,0,0,0.02);border:1px dashed var(--ct-border);border-radius:4px;padding:6px 6px 2px">
+              ${fieldsHtml || `<div style="text-align:center;padding:8px;font-size:10px;color:var(--ct-text-muted);font-style:italic">${__('Drag fields here')}</div>`}
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+
+      // Initialize SortableJS
+      if (typeof Sortable !== "undefined") {
+        new Sortable(container, {
+          handle: ".vfc-sec-sort-handle",
+          animation: 150,
+          onEnd: (evt) => {
+            const newOrder = [];
+            container.querySelectorAll(".vfc-sec-item").forEach((el) => {
+              const idx = parseInt(el.getAttribute("data-section-idx"), 10);
+              newOrder.push(frm._vfc_temp_layout[idx]);
+            });
+            newOrder.forEach((sec, idx) => {
+              sec.sort_order = idx + 1;
+            });
+            frm._vfc_temp_layout = newOrder;
+            this._renderSectionsListHTML(frm, dtId);
+          }
+        });
+
+        container.querySelectorAll(".vfc-sec-fields-list").forEach((listEl) => {
+          new Sortable(listEl, {
+            group: `vfc-fields-${dtId}`,
+            handle: ".vfc-sort-handle",
+            animation: 150,
+            onEnd: (evt) => {
+              const updatedLayout = [];
+              container.querySelectorAll(".vfc-sec-item").forEach((secEl) => {
+                const sIdx = parseInt(secEl.getAttribute("data-section-idx"), 10);
+                const originalSec = frm._vfc_temp_layout[sIdx];
+                const newFields = [];
+                
+                secEl.querySelectorAll(".vfc-sec-field-item").forEach((fieldEl, fIdx) => {
+                  const fieldname = fieldEl.getAttribute("data-fieldname");
+                  let originalField = null;
+                  for (let s of frm._vfc_temp_layout) {
+                    let found = (s.fields || []).find((f) => f.fieldname === fieldname);
+                    if (found) {
+                      originalField = found;
+                      break;
+                    }
+                  }
+                  newFields.push({
+                    fieldname: fieldname,
+                    col: originalField ? originalField.col : 1,
+                    sort_order: fIdx + 1,
+                    visible: true
+                  });
+                });
+                
+                originalSec.fields = newFields;
+                updatedLayout.push(originalSec);
+              });
+              
+              frm._vfc_temp_layout = updatedLayout;
+              this._renderSectionsListHTML(frm, dtId);
+            }
+          });
+        });
+      }
+    },
+
+    _onFieldColChange(select, doctype, sIdx, fieldname) {
+      if (cur_frm && cur_frm.doctype === doctype && cur_frm._vfc_temp_layout) {
+        const field = (cur_frm._vfc_temp_layout[sIdx].fields || []).find((f) => f.fieldname === fieldname);
+        if (field) {
+          field.col = parseInt(select.value, 10);
+        }
+      }
+    },
+
+    _onSecLabelChange(input, doctype, sIdx) {
+      if (cur_frm && cur_frm.doctype === doctype && cur_frm._vfc_temp_layout) {
+        cur_frm._vfc_temp_layout[sIdx].label = input.value;
+      }
+    },
+
+    _onSecColCountChange(select, doctype, sIdx) {
+      if (cur_frm && cur_frm.doctype === doctype && cur_frm._vfc_temp_layout) {
+        cur_frm._vfc_temp_layout[sIdx].column_count = parseInt(select.value, 10);
+      }
+    },
+
+    _onSecCollapsibleChange(checkbox, doctype, sIdx) {
+      if (cur_frm && cur_frm.doctype === doctype && cur_frm._vfc_temp_layout) {
+        cur_frm._vfc_temp_layout[sIdx].collapsible = checkbox.checked;
+      }
+    },
+
+    _deleteSection(doctype, sIdx) {
+      if (cur_frm && cur_frm.doctype === doctype && cur_frm._vfc_temp_layout) {
+        const deletedSec = cur_frm._vfc_temp_layout[sIdx];
+        const fieldsToMove = deletedSec.fields || [];
+        
+        cur_frm._vfc_temp_layout.splice(sIdx, 1);
+        
+        if (fieldsToMove.length) {
+          if (!cur_frm._vfc_temp_layout.length) {
+            cur_frm._vfc_temp_layout.push({
+              id: "sec_default_moved",
+              label: "General Info",
+              column_count: 2,
+              sort_order: 1,
+              visible: true,
+              collapsible: false,
+              collapsed_by_default: false,
+              fields: []
+            });
+          }
+          cur_frm._vfc_temp_layout[0].fields = (cur_frm._vfc_temp_layout[0].fields || []).concat(fieldsToMove);
+        }
+        
+        const dtId = doctype.replace(/\s/g, "-");
+        this._renderSectionsListHTML(cur_frm, dtId);
+      }
+    },
+
+    _addSectionPrompt(frm, dtId) {
+      frappe.prompt(
+        [
+          {
+            label: "Section Label",
+            fieldname: "label",
+            fieldtype: "Data",
+            reqd: 1
+          },
+          {
+            label: "Columns",
+            fieldname: "column_count",
+            fieldtype: "Select",
+            options: "1\n2\n3",
+            default: "2"
+          },
+          {
+            label: "Collapsible",
+            fieldname: "collapsible",
+            fieldtype: "Check",
+            default: 0
+          }
+        ],
+        (values) => {
+          const newSec = {
+            id: "sec_" + Math.random().toString(36).substring(2, 9),
+            label: values.label,
+            column_count: parseInt(values.column_count, 10),
+            sort_order: frm._vfc_temp_layout.length + 1,
+            visible: true,
+            collapsible: !!values.collapsible,
+            collapsed_by_default: false,
+            fields: []
+          };
+          frm._vfc_temp_layout.push(newSec);
+          this._renderSectionsListHTML(frm, dtId);
+        },
+        __("Add New Section"),
+        __("Add")
+      );
     },
   };
 
