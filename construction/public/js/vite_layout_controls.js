@@ -154,6 +154,7 @@
        Called on every form refresh. Idempotent.
     ───────────────────────────────────────────────────────── */
     attach(frm) {
+      console.log("[VFC] attach() called for:", frm.doctype);
       // Idempotency: only inject once per frm instance
       if (frm._vfc_attached) {
         // On subsequent refreshes, just re-apply saved state
