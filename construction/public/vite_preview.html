@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Form Config — Live Demo</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════ TOKENS */
+:root {
+  --p:#2563eb; --p-h:#1d4ed8; --p-l:rgba(37,99,235,.13);
+  --ok:#16a34a; --wa:#d97706; --er:#dc2626;
+  --r-sm:6px; --r-md:8px; --r-lg:12px; --r-xl:16px;
+  --anim:200ms cubic-bezier(.4,0,.2,1);
+  --focus:0 0 0 3px rgba(37,99,235,.20);
+  --btn-g:linear-gradient(135deg,#2563eb 0%,#1558cc 100%);
+  --sec-bar:4px solid var(--p);
+}
+[data-theme=dark]{
+  --bg:#0b1020; --bg2:#111827; --bg3:#1a2332;
+  --sf:#1e293b; --sf2:#334155; --sf3:#1e293b;
+  --tx:#f8fafc; --tx2:#94a3b8; --tx3:#64748b;
+  --bd:rgba(148,163,184,.16); --bd2:rgba(148,163,184,.28);
+  --sh:0 2px 8px rgba(0,0,0,.40); --sh2:0 8px 24px rgba(0,0,0,.50); --sh3:0 20px 60px rgba(0,0,0,.65);
+  color-scheme:dark;
+}
+[data-theme=light]{
+  --bg:#f1f5f9; --bg2:#f8fafc; --bg3:#e2e8f0;
+  --sf:#fff; --sf2:#f1f5f9; --sf3:#fff;
+  --tx:#0f172a; --tx2:#475569; --tx3:#94a3b8;
+  --bd:rgba(15,23,42,.10); --bd2:rgba(15,23,42,.20);
+  --sh:0 2px 8px rgba(0,0,0,.06); --sh2:0 8px 24px rgba(0,0,0,.09); --sh3:0 20px 60px rgba(0,0,0,.14);
+  color-scheme:light;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter','Segoe UI',sans-serif;background:var(--bg);color:var(--tx);font-size:14px;line-height:1.5;min-height:100vh;transition:background .25s,color .25s;overflow-x:hidden}
+
+/* ══════════════════════════════════════════════ LAYOUT */
+.shell{display:flex;flex-direction:column;height:100vh;overflow:hidden}
+.body{display:flex;flex:1;overflow:hidden}
+.scroll-main{flex:1;overflow-y:auto;min-width:0;transition:margin-right .3s cubic-bezier(.4,0,.2,1)}
+.scroll-main.panel-open{margin-right:340px}
+
+/* ══════════════════════════════════════════════ TOPBAR */
+.topbar{
+  background:var(--sf);border-bottom:1px solid var(--bd);
+  box-shadow:var(--sh);height:50px;display:flex;align-items:center;
+  gap:8px;padding:0 20px;flex-shrink:0;position:relative;z-index:110;
+}
+.brand{font-size:15px;font-weight:800;color:var(--p);display:flex;align-items:center;gap:8px}
+.brand em{font-weight:400;color:var(--tx3);font-style:normal;font-size:13px}
+.t-space{flex:1}
+.theme-tog{display:flex;background:var(--bg3);border:1px solid var(--bd);border-radius:99px;padding:3px;gap:2px}
+.tt{padding:4px 10px;border-radius:99px;font-size:11px;font-weight:700;cursor:pointer;color:var(--tx3);transition:all var(--anim);user-select:none}
+.tt.on{background:var(--p);color:#fff}
+
+/* ══════════════════════════════════════════════ PAGE HEAD */
+.page-head{
+  background:var(--sf);border-bottom:1px solid var(--bd);
+  padding:10px 20px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;
+  position:sticky;top:50px;z-index:100;box-shadow:var(--sh);flex-shrink:0;
+}
+.doc-title{font-size:15px;font-weight:700;color:var(--tx)}
+.ph-gap{flex:1}
+
+/* ══════════════════════════════════════════════ BUTTONS */
+.btn{
+  display:inline-flex;align-items:center;gap:5px;padding:6px 13px;
+  border-radius:var(--r-md);font-size:12px;font-weight:600;font-family:inherit;
+  cursor:pointer;border:none;transition:all var(--anim);white-space:nowrap;text-decoration:none;
+}
+.btn-primary{background:var(--btn-g);color:#fff;box-shadow:0 2px 6px rgba(37,99,235,.3)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(37,99,235,.4)}
+.btn-secondary{background:var(--bg3);color:var(--tx);border:1px solid var(--bd)}
+.btn-secondary:hover{background:var(--sf2);border-color:var(--bd2);transform:translateY(-1px)}
+.btn-ghost{background:transparent;color:var(--tx2);border:1px solid var(--bd)}
+.btn-ghost:hover{background:var(--sf2);color:var(--tx)}
+
+/* ── Form Config button — special state ── */
+.btn-fcfg{
+  background:transparent;color:var(--tx2);border:1.5px solid var(--bd);
+  position:relative;
+}
+.btn-fcfg:hover{background:var(--sf2);color:var(--tx);border-color:var(--bd2)}
+.btn-fcfg.active{
+  background:var(--p-l);color:var(--p);border-color:var(--p);
+  box-shadow:0 0 0 3px rgba(37,99,235,.12);
+}
+/* little badge showing active field count / preset */
+.fcfg-badge{
+  position:absolute;top:-6px;right:-6px;
+  background:var(--p);color:#fff;border-radius:99px;
+  padding:0 5px;font-size:9px;font-weight:800;min-width:16px;
+  height:16px;display:flex;align-items:center;justify-content:center;
+  border:2px solid var(--sf);
+  transition:transform .2s;
+}
+.btn-fcfg.active .fcfg-badge{transform:scale(1.1)}
+
+/* ══════════════════════════════════════════════ STATUS BANNER */
+.sbanner{
+  padding:9px 20px;display:flex;align-items:center;gap:10px;
+  font-size:12px;font-weight:500;border-bottom:1px solid;transition:all .3s;flex-shrink:0;
+}
+.sbanner.draft  {background:rgba(100,116,139,.09);border-color:rgba(100,116,139,.22);color:var(--tx2)}
+.sbanner.pricing{background:var(--p-l);border-color:rgba(37,99,235,.22);color:var(--p)}
+.sbanner.frozen {background:rgba(217,119,6,.09);border-color:rgba(217,119,6,.22);color:var(--wa)}
+.sbanner.locked {background:rgba(22,163,74,.09);border-color:rgba(22,163,74,.22);color:var(--ok)}
+.sdot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.draft .sdot  {background:var(--tx3)}
+.pricing .sdot{background:var(--p);animation:pulse 2s infinite}
+.frozen .sdot {background:var(--wa)}
+.locked .sdot {background:var(--ok)}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 2px rgba(37,99,235,.25)}50%{box-shadow:0 0 0 5px rgba(37,99,235,.08)}}
+.smeta{margin-left:auto;display:flex;gap:6px;flex-shrink:0}
+.schip{background:var(--bg3);border:1px solid var(--bd);border-radius:99px;padding:2px 8px;font-size:10px;color:var(--tx3)}
+
+/* ══════════════════════════════════════════════ FORM */
+.form-page{padding:16px 20px;flex:1}
+.form-body{display:flex;flex-direction:column;gap:14px;max-width:1060px;margin:0 auto}
+
+/* section cards */
+.fsec{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r-lg);box-shadow:var(--sh);overflow:hidden;transition:box-shadow var(--anim);animation:fadeUp .22s backwards}
+.fsec:hover{box-shadow:var(--sh2)}
+.fsec:nth-child(2){animation-delay:.05s}
+.fsec:nth-child(3){animation-delay:.10s}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.fsec-head{padding:10px 16px;border-bottom:1px solid var(--bd);border-left:var(--sec-bar);display:flex;align-items:center;gap:8px;background:rgba(37,99,235,.035)}
+.fsec-title{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.09em;color:var(--tx2)}
+.fsec-body{padding:16px}
+
+/* field row / col */
+.frow{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:12px}
+.frow:last-child{margin-bottom:0}
+.fcol{flex:1 1 180px;min-width:0;transition:flex .22s,max-width .22s,opacity .18s,transform .18s}
+
+/* density */
+.fb-d1 .fcol{flex:0 0 100%!important;max-width:100%!important}
+.fb-d3 .fcol{flex:0 0 calc(33.333% - 8px)!important}
+@media(max-width:768px){.fb-d3 .fcol{flex:0 0 calc(50% - 6px)!important}}
+@media(max-width:480px){.fb-d3 .fcol{flex:0 0 100%!important}}
+
+/* hide/show animation */
+.fcol.fhide{animation:colOut .18s forwards}
+.fcol.fshow{animation:colIn .22s forwards}
+.fcol.gone{display:none}
+@keyframes colOut{from{opacity:1;transform:scale(1)}to{opacity:0;transform:scale(.96)}}
+@keyframes colIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+
+/* labels + inputs */
+.clabel{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--tx3);margin-bottom:5px}
+.creq{color:var(--er);margin-left:1px}
+.cinput{width:100%;padding:8px 12px;background:var(--bg3);border:1.5px solid var(--bd);border-radius:var(--r-md);color:var(--tx);font-size:13px;font-family:inherit;outline:none;transition:border-color var(--anim),box-shadow var(--anim),background var(--anim)}
+.cinput:hover{border-color:var(--bd2);background:var(--sf2)}
+.cinput:focus{border-color:var(--p);box-shadow:var(--focus);background:var(--sf)}
+.cinput.ro{background:var(--bg);color:var(--tx2);cursor:default}
+.cinput.money{font-size:14px;font-weight:700;color:var(--p)}
+.cinput.ok{color:var(--ok)}
+
+/* child table */
+.child-wrap{overflow:auto;border-radius:var(--r-md);border:1px solid var(--bd)}
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead th{background:var(--bg3);color:var(--tx3);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;padding:9px 11px;text-align:left;border-bottom:1px solid var(--bd);white-space:nowrap;position:sticky;top:0}
+tbody tr{transition:background var(--anim)}
+tbody tr:nth-child(even){background:rgba(148,163,184,.03)}
+tbody tr:hover{background:var(--sf2)}
+tbody td{padding:8px 11px;border-bottom:1px solid var(--bd);color:var(--tx)}
+tbody tr:last-child td{border-bottom:none}
+.num{font-variant-numeric:tabular-nums;text-align:right}
+.total{font-weight:700;color:var(--p)}
+.pill{display:inline-flex;align-items:center;padding:2px 7px;border-radius:99px;font-size:10px;font-weight:700}
+.p-draft  {background:rgba(100,116,139,.14);color:var(--tx2)}
+.p-pricing{background:var(--p-l);color:var(--p)}
+.p-frozen {background:rgba(217,119,6,.12);color:var(--wa)}
+.p-locked {background:rgba(22,163,74,.12);color:var(--ok)}
+
+/* ══════════════════════════════════════════════
+   FORM CONFIG PANEL  (slides in from right)
+══════════════════════════════════════════════ */
+.cfg-panel{
+  position:fixed;top:50px;right:0;bottom:0;width:340px;
+  background:var(--sf);border-left:1px solid var(--bd);
+  box-shadow:var(--sh3);z-index:105;
+  display:flex;flex-direction:column;
+  transform:translateX(100%);
+  transition:transform .3s cubic-bezier(.4,0,.2,1);
+  overflow:hidden;
+}
+.cfg-panel.open{transform:translateX(0)}
+
+/* panel header */
+.cfg-head{
+  padding:14px 16px;border-bottom:1px solid var(--bd);
+  display:flex;align-items:center;gap:10px;flex-shrink:0;
+  background:var(--sf);
+}
+.cfg-head-icon{
+  width:32px;height:32px;border-radius:var(--r-md);
+  background:var(--p-l);color:var(--p);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.cfg-head-title{font-size:14px;font-weight:800;color:var(--tx);flex:1}
+.cfg-head-sub{font-size:11px;color:var(--tx3);margin-top:1px}
+.cfg-close{
+  width:28px;height:28px;border-radius:var(--r-sm);background:transparent;
+  border:1px solid var(--bd);cursor:pointer;display:flex;align-items:center;
+  justify-content:center;color:var(--tx3);transition:all var(--anim);flex-shrink:0;
+  font-size:14px;
+}
+.cfg-close:hover{background:var(--sf2);color:var(--tx);border-color:var(--bd2)}
+
+/* panel tabs */
+.cfg-tabs{
+  display:flex;border-bottom:1px solid var(--bd);flex-shrink:0;
+  background:var(--bg2);
+}
+.cfg-tab{
+  flex:1;padding:9px 4px;text-align:center;font-size:11px;font-weight:700;
+  color:var(--tx3);cursor:pointer;border-bottom:2px solid transparent;
+  transition:all var(--anim);user-select:none;
+}
+.cfg-tab:hover{color:var(--tx);background:var(--sf2)}
+.cfg-tab.on{color:var(--p);border-bottom-color:var(--p);background:var(--sf)}
+
+/* panel body */
+.cfg-body{flex:1;overflow-y:auto;padding:16px}
+.cfg-section{margin-bottom:20px}
+.cfg-section:last-child{margin-bottom:0}
+.cfg-section-title{
+  font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.09em;
+  color:var(--tx3);margin-bottom:10px;display:flex;align-items:center;gap:6px;
+}
+
+/* ── Density segment control ── */
+.den-seg{
+  display:grid;grid-template-columns:1fr 1fr 1fr;
+  gap:0;border-radius:var(--r-md);overflow:hidden;
+  border:1.5px solid var(--bd);
+}
+.den-opt{
+  padding:10px 6px;text-align:center;cursor:pointer;
+  font-size:11px;font-weight:700;color:var(--tx2);
+  background:var(--bg3);border-right:1px solid var(--bd);
+  transition:all var(--anim);display:flex;flex-direction:column;
+  align-items:center;gap:6px;
+}
+.den-opt:last-child{border-right:none}
+.den-opt:hover{background:var(--sf2);color:var(--tx)}
+.den-opt.on{background:var(--p);color:#fff;border-right-color:var(--p-h)}
+.den-opt.on + .den-opt{border-left:1px solid var(--p-h)}
+.den-icon{display:flex;flex-direction:column;gap:2px;align-items:center}
+.den-icon span{background:currentColor;border-radius:1px;height:3px;opacity:.8}
+
+/* ── Preset list ── */
+.pre-list{display:flex;flex-direction:column;gap:6px}
+.pre-item{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 12px;border-radius:var(--r-md);
+  border:1.5px solid var(--bd);cursor:pointer;transition:all var(--anim);
+}
+.pre-item:hover{background:var(--sf2);border-color:var(--bd2)}
+.pre-item.on{background:var(--p-l);border-color:var(--p)}
+.pre-dot{width:8px;height:8px;border-radius:50%;background:var(--bd2);flex-shrink:0;transition:background var(--anim),box-shadow var(--anim)}
+.pre-item.on .pre-dot{background:var(--p);box-shadow:0 0 0 3px rgba(37,99,235,.2)}
+.pre-name{font-size:12px;font-weight:700;color:var(--tx)}
+.pre-desc{font-size:10px;color:var(--tx3);margin-top:1px}
+
+/* ── Visibility list ── */
+.vis-list{display:flex;flex-direction:column;gap:2px}
+.vis-item{
+  display:flex;align-items:center;gap:10px;
+  padding:7px 10px;border-radius:var(--r-sm);cursor:pointer;
+  transition:background var(--anim);
+}
+.vis-item:hover{background:var(--sf2)}
+.vis-item input[type=checkbox]{accent-color:var(--p);width:14px;height:14px;cursor:pointer;flex-shrink:0}
+.vi-lbl{font-size:12px;font-weight:500;color:var(--tx);flex:1;cursor:pointer}
+.vi-type{font-size:9px;color:var(--tx3);background:var(--bg3);border:1px solid var(--bd);border-radius:3px;padding:1px 5px;white-space:nowrap}
+.vis-sep{height:1px;background:var(--bd);margin:6px 0}
+
+/* panel footer */
+.cfg-foot{
+  padding:12px 16px;border-top:1px solid var(--bd);flex-shrink:0;
+  display:flex;gap:8px;justify-content:flex-end;align-items:center;
+  background:var(--sf);
+}
+.cfg-foot-hint{font-size:10px;color:var(--tx3);flex:1}
+
+/* btn sm */
+.btn-sm{padding:6px 13px;font-size:12px}
+
+/* ══════════════════════════════════════════════ TOAST */
+.toast{
+  position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(12px);
+  background:var(--sf);border:1px solid var(--bd);border-radius:var(--r-md);
+  box-shadow:var(--sh2);padding:9px 18px;font-size:12px;font-weight:600;
+  color:var(--tx);display:flex;align-items:center;gap:8px;
+  opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;z-index:9999;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.t-ok{color:var(--ok)}
+
+/* ══════════════════════════════════════════════ TAB PANE */
+.tab-pane{display:none}
+.tab-pane.on{display:block}
+
+/* scrollbar */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:99px}
+
+/* reduced motion */
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<!-- ══════════════════════════════════════════════ TOPBAR -->
+<nav class="topbar">
+  <div class="brand">🏗 <strong>Construction ERP</strong> <em>/ ERPNext v16</em></div>
+  <div class="t-space"></div>
+  <select id="sPick" onchange="setStatus(this.value)"
+    style="background:var(--bg3);border:1px solid var(--bd);color:var(--tx2);border-radius:6px;padding:4px 9px;font-size:11px;font-family:inherit;cursor:pointer">
+    <option>Draft</option><option selected>Pricing</option><option>Frozen</option><option>Locked</option>
+  </select>
+  <div class="theme-tog">
+    <div class="tt on" id="td" onclick="setTheme('dark')">🌙 Dark</div>
+    <div class="tt"    id="tl" onclick="setTheme('light')">☀️ Light</div>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════════ BODY -->
+<div class="body">
+
+<!-- ══ Scrollable main ══ -->
+<div class="scroll-main" id="scrollMain">
+
+  <!-- PAGE HEAD -->
+  <div class="page-head" id="pageHead">
+    <div>
+      <div class="doc-title">BOQ-2026-0042</div>
+      <div id="sttPill" style="margin-top:3px"></div>
+    </div>
+    <div class="ph-gap"></div>
+
+    <!-- Standard Frappe buttons -->
+    <button class="btn btn-ghost btn-sm">💾 Save</button>
+    <button class="btn btn-ghost btn-sm">🖨 Print</button>
+    <button class="btn btn-secondary btn-sm">⚙ Actions ▾</button>
+    <button class="btn btn-primary btn-sm">📤 Export ▾</button>
+
+    <!-- ★ FORM CONFIG BUTTON — the single entry point ★ -->
+    <button class="btn btn-fcfg btn-sm" id="cfgBtn" onclick="togglePanel()" title="Form Config — column density, field visibility, layout presets">
+      <!-- Grid config icon (matches Frappe child table column config style) -->
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <rect x="1" y="1" width="6" height="6" rx="1.5"/>
+        <rect x="9" y="1" width="6" height="6" rx="1.5"/>
+        <rect x="1" y="9" width="6" height="6" rx="1.5"/>
+        <rect x="9" y="9" width="6" height="6" rx="1.5"/>
+      </svg>
+      Form Config
+      <span class="fcfg-badge" id="cfgBadge">9</span>
+    </button>
+  </div>
+
+  <!-- STATUS BANNER -->
+  <div id="sbanner"></div>
+
+  <!-- FORM PAGE -->
+  <div class="form-page">
+  <div class="form-body" id="fb">
+
+    <!-- Section: Project Details -->
+    <div class="fsec">
+      <div class="fsec-head">
+        <span style="font-size:13px">📁</span>
+        <span class="fsec-title">Project Details</span>
+      </div>
+      <div class="fsec-body">
+        <div class="frow">
+          <div class="fcol" data-field="project">
+            <div class="clabel">Project <span class="creq">*</span></div>
+            <input class="cinput" value="PROJ-00023 — Nile Tower (Cairo)" />
+          </div>
+          <div class="fcol" data-field="project_name">
+            <div class="clabel">Project Name</div>
+            <input class="cinput ro" value="Nile Tower (Cairo)" readonly />
+          </div>
+        </div>
+        <div class="frow">
+          <div class="fcol" data-field="boq_type">
+            <div class="clabel">BOQ Type</div>
+            <select class="cinput"><option>Tender</option><option>Contract</option><option>Variation</option></select>
+          </div>
+          <div class="fcol" data-field="status">
+            <div class="clabel">Status</div>
+            <select class="cinput" id="sfld" onchange="setStatus(this.value);document.getElementById('sPick').value=this.value">
+              <option>Draft</option><option selected>Pricing</option><option>Frozen</option><option>Locked</option>
+            </select>
+          </div>
+        </div>
+        <div class="frow">
+          <div class="fcol" data-field="title">
+            <div class="clabel">Title</div>
+            <input class="cinput" value="Phase 1 Structural Works — Rev 3" />
+          </div>
+          <div class="fcol" data-field="version">
+            <div class="clabel">Version</div>
+            <input class="cinput" type="number" value="3" style="max-width:110px"/>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section: Financial Summary -->
+    <div class="fsec">
+      <div class="fsec-head">
+        <span style="font-size:13px">💰</span>
+        <span class="fsec-title">Financial Summary</span>
+      </div>
+      <div class="fsec-body">
+        <div class="frow">
+          <div class="fcol" data-field="total_contract_value">
+            <div class="clabel">Total Contract Value</div>
+            <input class="cinput money" value="EGP  12,450,000.00" readonly />
+          </div>
+          <div class="fcol" data-field="total_estimated_value">
+            <div class="clabel">Total Estimated Value</div>
+            <input class="cinput money" value="EGP  11,890,500.00" readonly />
+          </div>
+          <div class="fcol" data-field="total_budgeted_cost">
+            <div class="clabel">Total Budgeted Cost</div>
+            <input class="cinput money ok" value="EGP  10,200,000.00" readonly />
+          </div>
+        </div>
+        <div class="frow">
+          <div class="fcol" data-field="locked_by">
+            <div class="clabel">Locked By</div>
+            <input class="cinput ro" value="—" readonly />
+          </div>
+          <div class="fcol" data-field="locked_date">
+            <div class="clabel">Locked Date</div>
+            <input class="cinput ro" value="—" readonly />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section: BOQ Items -->
+    <div class="fsec">
+      <div class="fsec-head">
+        <span style="font-size:13px">📝</span>
+        <span class="fsec-title">BOQ Items</span>
+        <span style="margin-left:auto;font-size:10px;color:var(--tx3)">5 rows</span>
+      </div>
+      <div class="fsec-body" style="padding:0">
+        <div class="child-wrap">
+          <table>
+            <thead><tr>
+              <th>#</th><th>WBS</th><th>Description</th><th>Unit</th>
+              <th class="num">Qty</th><th class="num">Unit Price</th><th class="num">Total</th>
+            </tr></thead>
+            <tbody>
+              <tr><td>1</td><td><span class="pill p-pricing">A.1.1</span></td><td>Excavation &amp; Earthworks</td><td>m³</td><td class="num">2,400</td><td class="num">850.00</td><td class="num total">2,040,000</td></tr>
+              <tr><td>2</td><td><span class="pill p-pricing">A.1.2</span></td><td>Concrete — Foundation</td><td>m³</td><td class="num">1,800</td><td class="num">1,200.00</td><td class="num total">2,160,000</td></tr>
+              <tr><td>3</td><td><span class="pill p-draft">B.2.1</span></td><td>Structural Steel — Columns</td><td>ton</td><td class="num">320</td><td class="num">18,500.00</td><td class="num total">5,920,000</td></tr>
+              <tr><td>4</td><td><span class="pill p-frozen">B.2.2</span></td><td>Formwork — Standard</td><td>m²</td><td class="num">5,600</td><td class="num">125.00</td><td class="num total" style="color:var(--wa)">700,000</td></tr>
+              <tr><td>5</td><td><span class="pill p-locked">C.1.1</span></td><td>MEP Rough-In</td><td>LS</td><td class="num">1</td><td class="num">1,250,000</td><td class="num total" style="color:var(--ok)">1,250,000</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /form-body -->
+  </div><!-- /form-page -->
+</div><!-- /scroll-main -->
+
+<!-- ══════════════════════════════════════════════
+     ★ FORM CONFIG PANEL (slides in from right)
+══════════════════════════════════════════════ -->
+<div class="cfg-panel" id="cfgPanel">
+
+  <!-- Header -->
+  <div class="cfg-head">
+    <div class="cfg-head-icon">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="1" width="6" height="6" rx="1.5"/><rect x="9" y="1" width="6" height="6" rx="1.5"/><rect x="1" y="9" width="6" height="6" rx="1.5"/><rect x="9" y="9" width="6" height="6" rx="1.5"/></svg>
+    </div>
+    <div>
+      <div class="cfg-head-title">Form Config</div>
+      <div class="cfg-head-sub" id="cfgDocLabel">BOQ Header — BOQ-2026-0042</div>
+    </div>
+    <button class="cfg-close" onclick="closePanel()" title="Close">✕</button>
+  </div>
+
+  <!-- Tabs -->
+  <div class="cfg-tabs">
+    <div class="cfg-tab on" id="tab-layout"     onclick="switchTab('layout')">⊞ Layout</div>
+    <div class="cfg-tab"    id="tab-fields"     onclick="switchTab('fields')">👁 Fields</div>
+    <div class="cfg-tab"    id="tab-presets"    onclick="switchTab('presets')">🎛 Presets</div>
+  </div>
+
+  <!-- Body -->
+  <div class="cfg-body">
+
+    <!-- ── TAB: Layout ── -->
+    <div class="tab-pane on" id="pane-layout">
+      <div class="cfg-section">
+        <div class="cfg-section-title">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="1" width="14" height="14" rx="2"/><line x1="8" y1="1" x2="8" y2="15"/></svg>
+          Column Density
+        </div>
+        <div class="den-seg">
+          <!-- 1-col -->
+          <div class="den-opt" id="den1" onclick="setDensity(1)" title="Stack all fields vertically">
+            <div class="den-icon">
+              <span style="width:28px"></span>
+              <span style="width:28px"></span>
+              <span style="width:28px"></span>
+            </div>
+            <span>1 Column</span>
+          </div>
+          <!-- 2-col (default) -->
+          <div class="den-opt on" id="den2" onclick="setDensity(2)" title="Two columns — balanced default">
+            <div class="den-icon" style="flex-direction:row;gap:3px">
+              <div style="display:flex;flex-direction:column;gap:2px"><span style="width:13px"></span><span style="width:13px"></span><span style="width:13px"></span></div>
+              <div style="display:flex;flex-direction:column;gap:2px"><span style="width:13px"></span><span style="width:13px"></span><span style="width:13px"></span></div>
+            </div>
+            <span>2 Columns</span>
+          </div>
+          <!-- 3-col -->
+          <div class="den-opt" id="den3" onclick="setDensity(3)" title="Three columns — wide screens">
+            <div class="den-icon" style="flex-direction:row;gap:2px">
+              <div style="display:flex;flex-direction:column;gap:2px"><span style="width:8px"></span><span style="width:8px"></span></div>
+              <div style="display:flex;flex-direction:column;gap:2px"><span style="width:8px"></span><span style="width:8px"></span></div>
+              <div style="display:flex;flex-direction:column;gap:2px"><span style="width:8px"></span><span style="width:8px"></span></div>
+            </div>
+            <span>3 Columns</span>
+          </div>
+        </div>
+        <div style="font-size:10px;color:var(--tx3);margin-top:8px;line-height:1.6">
+          Changes how form fields are arranged per row. Saved to <code style="background:var(--bg3);padding:1px 4px;border-radius:3px">localStorage</code> for this browser.
+        </div>
+      </div>
+
+      <div class="cfg-section" style="border-top:1px solid var(--bd);padding-top:16px">
+        <div class="cfg-section-title">Preview</div>
+        <!-- Mini live density preview -->
+        <div id="denPreview" style="border:1px solid var(--bd);border-radius:var(--r-md);padding:10px;background:var(--bg2)">
+          <div id="dpRows" style="display:flex;flex-direction:column;gap:6px"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB: Fields ── -->
+    <div class="tab-pane" id="pane-fields">
+      <div class="cfg-section">
+        <div class="cfg-section-title">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="3"/><path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z"/></svg>
+          Field Visibility
+          <span style="margin-left:auto;background:var(--p);color:#fff;border-radius:99px;padding:0 7px;font-size:9px;font-weight:800" id="visCntBadge">9</span>
+        </div>
+        <div style="font-size:10px;color:var(--tx3);margin-bottom:10px;line-height:1.6">Toggle which fields appear on the form. Required fields (★) cannot be hidden. Changes apply instantly.</div>
+        <div class="vis-list" id="visList"></div>
+      </div>
+    </div>
+
+    <!-- ── TAB: Presets ── -->
+    <div class="tab-pane" id="pane-presets">
+      <div class="cfg-section">
+        <div class="cfg-section-title">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 4h12M4 8h8M6 12h4"/></svg>
+          Layout Presets
+        </div>
+        <div style="font-size:10px;color:var(--tx3);margin-bottom:10px;line-height:1.6">Presets control which fields are visible. Select a preset then click <strong>Apply</strong>. Saved via <code style="background:var(--bg3);padding:1px 4px;border-radius:3px">frappe.model.user_settings</code> — syncs across devices.</div>
+        <div class="pre-list" id="preList"></div>
+      </div>
+    </div>
+
+  </div><!-- /cfg-body -->
+
+  <!-- Footer -->
+  <div class="cfg-foot">
+    <span class="cfg-foot-hint">Auto-attaches to every form in the app</span>
+    <button class="btn btn-ghost btn-sm" onclick="closePanel()">Close</button>
+    <button class="btn btn-primary btn-sm" id="applyBtn" onclick="applyAndSave()">Apply & Save</button>
+  </div>
+</div>
+
+</div><!-- /body -->
+</div><!-- /shell -->
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span class="t-ok">✔</span>
+  <span id="toastMsg"></span>
+</div>
+
+<script>
+/* ════════════════════════ DATA */
+const FIELDS = [
+  {n:'project',               l:'Project',               t:'Link',     req:true},
+  {n:'project_name',          l:'Project Name',           t:'Data',     req:false},
+  {n:'boq_type',              l:'BOQ Type',               t:'Select',   req:false},
+  {n:'status',                l:'Status',                 t:'Select',   req:false},
+  {n:'title',                 l:'Title',                  t:'Data',     req:false},
+  {n:'version',               l:'Version',                t:'Int',      req:false},
+  {n:'total_contract_value',  l:'Total Contract Value',   t:'Currency', req:false},
+  {n:'total_estimated_value', l:'Total Estimated Value',  t:'Currency', req:false},
+  {n:'total_budgeted_cost',   l:'Total Budgeted Cost',    t:'Currency', req:false},
+  {n:'locked_by',             l:'Locked By',              t:'Link',     req:false},
+  {n:'locked_date',           l:'Locked Date',            t:'Datetime', req:false},
+];
+
+const PRESETS = [
+  {key:'Default',    name:'Default (All Fields)',          desc:'All fields — Admin / Power User',              fields:['project','project_name','boq_type','status','title','version','total_contract_value','total_estimated_value','total_budgeted_cost','locked_by','locked_date']},
+  {key:'Manager',    name:'Manager View',                  desc:'Summary: Project, Status, Totals, Lock info',  fields:['project','status','title','total_contract_value','total_estimated_value','total_budgeted_cost','locked_by','locked_date','version']},
+  {key:'Engineer',   name:'Engineer View',                  desc:'Quantities + Stages — hides financial totals', fields:['project','project_name','title','status','boq_type']},
+  {key:'Accountant', name:'Accountant View',               desc:'Costs + Values — hides engineering fields',    fields:['project','title','total_contract_value','total_estimated_value','total_budgeted_cost','status']},
+  {key:'Compact',    name:'Compact (Minimal)',              desc:'Project, Title, Status only',                  fields:['project','title','status']},
+];
+
+const STATUS = {
+  Draft:   {cls:'draft',   lbl:'Draft',                  note:'No changes locked yet.',               pill:'p-draft'},
+  Pricing: {cls:'pricing', lbl:'Pricing in Progress',    note:'Rev 3 — Awaiting cost sign-off.',      pill:'p-pricing'},
+  Frozen:  {cls:'frozen',  lbl:'Frozen — Awaiting Lock', note:'All items priced. Pending PM approval.',pill:'p-frozen'},
+  Locked:  {cls:'locked',  lbl:'Locked',                 note:'Locked by Ahmed Hassan · 2026-05-27.', pill:'p-locked'},
+};
+
+/* ════════════════════════ STATE */
+let vis       = Object.fromEntries(FIELDS.map(f=>[f.n,true]));
+let density   = 2;
+let selPreset = 'Default';
+let activeTab = 'layout';
+let panelOpen = false;
+
+/* ════════════════════════ INIT */
+function init(){
+  renderVis(); renderPresets(); renderDenPreview();
+  setStatus('Pricing');
+  document.getElementById('sPick').value = 'Pricing';
+}
+
+/* ════════════════════════ STATUS */
+function setStatus(v){
+  const s = STATUS[v]||STATUS.Pricing;
+  document.getElementById('sPick').value = v;
+  document.getElementById('sfld').value  = v;
+  document.getElementById('sttPill').innerHTML =
+    `<span class="pill ${s.pill}" style="font-size:10px">${s.lbl}</span>`;
+  document.getElementById('sbanner').innerHTML = `
+    <div class="sbanner ${s.cls}">
+      <div class="sdot"></div>
+      <strong>${s.lbl}</strong>
+      <span style="font-weight:400;color:var(--tx3);font-size:11px">${s.note}</span>
+      <div class="smeta">
+        <span class="schip">Rev 3</span>
+        <span class="schip">BOQ-2026-0042</span>
+        <span class="schip">Modified 2h ago</span>
+      </div>
+    </div>`;
+}
+
+/* ════════════════════════ PANEL */
+function togglePanel(){
+  panelOpen ? closePanel() : openPanel();
+}
+function openPanel(){
+  panelOpen = true;
+  document.getElementById('cfgPanel').classList.add('open');
+  document.getElementById('scrollMain').classList.add('panel-open');
+  document.getElementById('cfgBtn').classList.add('active');
+}
+function closePanel(){
+  panelOpen = false;
+  document.getElementById('cfgPanel').classList.remove('open');
+  document.getElementById('scrollMain').classList.remove('panel-open');
+  document.getElementById('cfgBtn').classList.remove('active');
+}
+
+/* ════════════════════════ TABS */
+function switchTab(t){
+  activeTab = t;
+  document.querySelectorAll('.cfg-tab').forEach(el=>el.classList.remove('on'));
+  document.querySelectorAll('.tab-pane').forEach(el=>el.classList.remove('on'));
+  document.getElementById('tab-'+t).classList.add('on');
+  document.getElementById('pane-'+t).classList.add('on');
+}
+
+/* ════════════════════════ DENSITY */
+function setDensity(n){
+  density = n;
+  const fb = document.getElementById('fb');
+  fb.classList.remove('fb-d1','fb-d3');
+  if(n===1) fb.classList.add('fb-d1');
+  if(n===3) fb.classList.add('fb-d3');
+  [1,2,3].forEach(i=>{
+    document.getElementById('den'+i).classList.toggle('on', i===n);
+  });
+  renderDenPreview();
+}
+
+function renderDenPreview(){
+  // mini schematic of the grid
+  const container = document.getElementById('dpRows');
+  const cols = density===1?1:density===3?3:2;
+  const rows = 3;
+  let html = '';
+  for(let r=0;r<rows;r++){
+    html += '<div style="display:flex;gap:4px">';
+    for(let c=0;c<cols;c++){
+      const w = (100/cols).toFixed(1)+'%';
+      html += `<div style="flex:0 0 calc(${w} - ${(cols-1)*4/cols}px);height:18px;background:var(--p-l);border:1px solid rgba(37,99,235,.25);border-radius:3px"></div>`;
+    }
+    html += '</div>';
+  }
+  container.innerHTML = html;
+}
+
+/* ════════════════════════ VISIBILITY */
+function renderVis(){
+  const req   = FIELDS.filter(f=>f.req);
+  const nreq  = FIELDS.filter(f=>!f.req);
+  let html = '';
+  req.forEach(f=>{
+    html += `<label class="vis-item">
+      <input type="checkbox" checked disabled style="opacity:.5;cursor:not-allowed" />
+      <span class="vi-lbl">★ ${f.l}</span>
+      <span class="vi-type">${f.t}</span>
+    </label>`;
+  });
+  html += '<div class="vis-sep"></div>';
+  nreq.forEach(f=>{
+    html += `<label class="vis-item">
+      <input type="checkbox" id="vc_${f.n}" ${vis[f.n]?'checked':''} onchange="toggleField('${f.n}',this.checked)" />
+      <span class="vi-lbl">${f.l}</span>
+      <span class="vi-type">${f.t}</span>
+    </label>`;
+  });
+  document.getElementById('visList').innerHTML = html;
+  updateBadge();
+}
+
+function toggleField(name, show){
+  vis[name] = show;
+  const cols = document.querySelectorAll(`.fcol[data-field="${name}"]`);
+  cols.forEach(col=>{
+    if(show){
+      col.classList.remove('gone');
+      col.classList.add('fshow');
+      setTimeout(()=>col.classList.remove('fshow'),250);
+    } else {
+      col.classList.add('fhide');
+      setTimeout(()=>{col.classList.add('gone');col.classList.remove('fhide');},180);
+    }
+  });
+  // If user manually changed, deselect preset
+  selPreset = null;
+  renderPresets();
+  updateBadge();
+}
+
+function updateBadge(){
+  const cnt = Object.values(vis).filter(Boolean).length;
+  document.getElementById('cfgBadge').textContent = cnt;
+  document.getElementById('visCntBadge').textContent = cnt;
+}
+
+/* ════════════════════════ PRESETS */
+function renderPresets(){
+  document.getElementById('preList').innerHTML = PRESETS.map(p=>`
+    <div class="pre-item${selPreset===p.key?' on':''}" onclick="selectPreset('${p.key}')">
+      <div class="pre-dot"></div>
+      <div>
+        <div class="pre-name">${p.name}</div>
+        <div class="pre-desc">${p.desc}</div>
+      </div>
+    </div>`).join('');
+}
+
+function selectPreset(key){
+  selPreset = key;
+  renderPresets();
+  // Preview the effect on checkboxes immediately
+  const p = PRESETS.find(x=>x.key===key);
+  FIELDS.filter(f=>!f.req).forEach(f=>{
+    const cb = document.getElementById('vc_'+f.n);
+    if(cb) cb.checked = p.fields.includes(f.n);
+  });
+}
+
+function applyAndSave(){
+  if(selPreset){
+    // Apply preset
+    const p = PRESETS.find(x=>x.key===selPreset);
+    FIELDS.filter(f=>!f.req).forEach(f=>{
+      const show = p.fields.includes(f.n);
+      vis[f.n] = show;
+      const cb = document.getElementById('vc_'+f.n);
+      if(cb) cb.checked = show;
+      const cols = document.querySelectorAll(`.fcol[data-field="${f.n}"]`);
+      cols.forEach(col=>{
+        if(show){
+          col.classList.remove('gone');
+          col.classList.add('fshow');
+          setTimeout(()=>col.classList.remove('fshow'),250);
+        } else {
+          col.classList.add('fhide');
+          setTimeout(()=>{col.classList.add('gone');col.classList.remove('fhide');},180);
+        }
+      });
+    });
+    updateBadge();
+    toast(`Preset "${p.name}" applied & saved via user_settings`);
+  } else {
+    // Just save visibility
+    toast('Field visibility saved via frappe.model.user_settings');
+  }
+  closePanel();
+}
+
+/* ════════════════════════ THEME */
+function setTheme(t){
+  document.documentElement.setAttribute('data-theme',t);
+  document.getElementById('td').classList.toggle('on',t==='dark');
+  document.getElementById('tl').classList.toggle('on',t==='light');
+}
+
+/* ════════════════════════ TOAST */
+let toastT;
+function toast(msg){
+  const el = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastT);
+  toastT = setTimeout(()=>el.classList.remove('show'),2800);
+}
+
+/* ════════════════════════ BOOT */
+init();
+</script>
+</body>
+</html>

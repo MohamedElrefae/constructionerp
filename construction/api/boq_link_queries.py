@@ -48,6 +48,14 @@ def _attach_scope_response(scope):
 		)
 
 
+def _truthy(value):
+	return value in (True, 1, "1", "true", "True", "yes", "Yes")
+
+
+def _gate_is_closed(filters):
+	return _truthy(filters.get("require_gate")) and not _truthy(filters.get("gate_open"))
+
+
 @frappe.whitelist()
 def get_boq_scope_token():
 	"""Return current BOQ scope details for client-side drift checks."""
@@ -64,6 +72,9 @@ def get_allowed_transaction_boq_statuses():
 def get_boq_headers(doctype, txt, searchfield, start, page_len, filters, enforce_scope=None):
 	filters = _as_dict(filters)
 	enforce_scope = _extract_enforce_scope(filters, enforce_scope)
+	if _gate_is_closed(filters):
+		return []
+
 	conditions = ["h.docstatus < 2"]
 	values = _limit_values(txt, start, page_len)
 	join_project = apply_header_filters(conditions, values, filters, "h")
@@ -96,6 +107,9 @@ def get_boq_headers(doctype, txt, searchfield, start, page_len, filters, enforce
 def get_boq_structures(doctype, txt, searchfield, start, page_len, filters, enforce_scope=None):
 	filters = _as_dict(filters)
 	enforce_scope = _extract_enforce_scope(filters, enforce_scope)
+	if _gate_is_closed(filters):
+		return []
+
 	conditions = ["s.docstatus < 2", "s.is_group = 0"]
 	values = _limit_values(txt, start, page_len)
 	join_header = False
@@ -141,6 +155,8 @@ def get_boq_structures(doctype, txt, searchfield, start, page_len, filters, enfo
 def get_boq_items(doctype, txt, searchfield, start, page_len, filters, enforce_scope=None):
 	filters = _as_dict(filters)
 	enforce_scope = _extract_enforce_scope(filters, enforce_scope)
+	if _gate_is_closed(filters):
+		return []
 	if filters.get("require_boq_header") and not filters.get("boq_header"):
 		return []
 	if filters.get("require_structure") and not filters.get("structure"):
@@ -187,6 +203,8 @@ def get_boq_items(doctype, txt, searchfield, start, page_len, filters, enforce_s
 def get_boq_item_stages(doctype, txt, searchfield, start, page_len, filters, enforce_scope=None):
 	filters = _as_dict(filters)
 	enforce_scope = _extract_enforce_scope(filters, enforce_scope)
+	if _gate_is_closed(filters):
+		return []
 	if filters.get("require_boq_item") and not filters.get("boq_item"):
 		return []
 

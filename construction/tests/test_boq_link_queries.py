@@ -6,6 +6,7 @@ from construction.api.boq_link_queries import (
 	get_boq_items,
 	get_boq_scope_token,
 	get_boq_structures,
+	get_boq_item_stages,
 )
 from construction.services.scope_resolution import get_scope_token
 
@@ -132,3 +133,25 @@ class TestBOQLinkQueries(FrappeTestCase):
 		item_names = {row[0] for row in items}
 		self.assertIn(self.item_a.name, item_names)
 		self.assertNotIn(self.item_b.name, item_names)
+
+	def test_closed_row_gate_returns_no_boq_dropdown_options(self):
+		closed_gate = {"require_gate": 1, "gate_open": 0}
+
+		self.assertEqual(
+			get_boq_headers("BOQ Header", "_Test", "name", 0, 20, closed_gate, enforce_scope=True),
+			[],
+		)
+		self.assertEqual(
+			get_boq_structures("BOQ Structure", "_Test", "name", 0, 20, closed_gate, enforce_scope=True),
+			[],
+		)
+		self.assertEqual(
+			get_boq_items("BOQ Item", "", "name", 0, 20, closed_gate, enforce_scope=True),
+			[],
+		)
+		self.assertEqual(
+			get_boq_item_stages(
+				"BOQ Item Stage", "", "name", 0, 20, closed_gate, enforce_scope=True
+			),
+			[],
+		)

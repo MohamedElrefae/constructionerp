@@ -85,6 +85,13 @@
 		return filters;
 	}
 
+	function withGate(frm, row, filters) {
+		if (!cascadeEnabled()) return filters;
+		filters.require_gate = true;
+		filters.gate_open = gateOpen(frm, row) ? 1 : 0;
+		return filters;
+	}
+
 	function gateOpen(frm, row) {
 		if (!row) return false;
 		if (expenseGateDoctypes.includes(row.doctype)) {
@@ -153,14 +160,14 @@
 		if (tableField) frm.refresh_field(tableField);
 	}
 
-	function buildHeaderFilters() {
-		return withScope({});
+	function buildHeaderFilters(frm, row) {
+		return withScope(withGate(frm, row, {}));
 	}
 
-	function buildStructureFilters(row) {
+	function buildStructureFilters(frm, row) {
 		const filters = {};
 		if (row && row.boq_header) filters.boq_header = row.boq_header;
-		return withScope(filters);
+		return withScope(withGate(frm, row, filters));
 	}
 
 	function buildItemFilters(frm, row) {
@@ -172,16 +179,16 @@
 		filters.require_boq_header = true;
 		filters.require_structure = true;
 		filters.allowed_statuses = ["Frozen", "Locked"];
-		return withScope(filters);
+		return withScope(withGate(frm, row, filters));
 	}
 
-	function buildStageFilters(row) {
+	function buildStageFilters(frm, row) {
 		const filters = {};
 		if (row && row.boq_item) filters.boq_item = row.boq_item;
 		if (row && row.boq_header) filters.boq_header = row.boq_header;
 		if (row && row.boq_structure) filters.structure = row.boq_structure;
 		filters.require_boq_item = true;
-		return withScope(filters);
+		return withScope(withGate(frm, row, filters));
 	}
 
 	function queryArgs(query, filters) {
@@ -198,14 +205,17 @@
 		const grid = frm.fields_dict[tableField] && frm.fields_dict[tableField].grid;
 		if (!grid) return;
 
-		frm.set_query("boq_header", tableField, function () {
-			return queryArgs("construction.api.boq_link_queries.get_boq_headers", buildHeaderFilters());
+		frm.set_query("boq_header", tableField, function (doc, cdt, cdn) {
+			return queryArgs(
+				"construction.api.boq_link_queries.get_boq_headers",
+				buildHeaderFilters(frm, getGridRow(grid, cdt, cdn))
+			);
 		});
 
 		frm.set_query("boq_structure", tableField, function (doc, cdt, cdn) {
 			return queryArgs(
 				"construction.api.boq_link_queries.get_boq_structures",
-				buildStructureFilters(getGridRow(grid, cdt, cdn))
+				buildStructureFilters(frm, getGridRow(grid, cdt, cdn))
 			);
 		});
 
@@ -219,14 +229,17 @@
 		frm.set_query("boq_item_stage", tableField, function (doc, cdt, cdn) {
 			return queryArgs(
 				"construction.api.boq_link_queries.get_boq_item_stages",
-				buildStageFilters(getGridRow(grid, cdt, cdn))
+				buildStageFilters(frm, getGridRow(grid, cdt, cdn))
 			);
 		});
 
 		const boqHeaderField = grid.get_field("boq_header");
 		if (boqHeaderField) {
-			boqHeaderField.get_query = function () {
-				return queryArgs("construction.api.boq_link_queries.get_boq_headers", buildHeaderFilters());
+			boqHeaderField.get_query = function (doc, cdt, cdn) {
+				return queryArgs(
+					"construction.api.boq_link_queries.get_boq_headers",
+					buildHeaderFilters(frm, getGridRow(grid, cdt, cdn))
+				);
 			};
 		}
 
@@ -235,7 +248,7 @@
 			boqStructureField.get_query = function (doc, cdt, cdn) {
 				return queryArgs(
 					"construction.api.boq_link_queries.get_boq_structures",
-					buildStructureFilters(getGridRow(grid, cdt, cdn))
+					buildStructureFilters(frm, getGridRow(grid, cdt, cdn))
 				);
 			};
 		}
@@ -255,7 +268,7 @@
 			boqStageField.get_query = function (doc, cdt, cdn) {
 				return queryArgs(
 					"construction.api.boq_link_queries.get_boq_item_stages",
-					buildStageFilters(getGridRow(grid, cdt, cdn))
+					buildStageFilters(frm, getGridRow(grid, cdt, cdn))
 				);
 			};
 		}

@@ -499,12 +499,13 @@ Your scope context has changed. Reloading form to prevent invalid attribution.
 ### 6.9 Test Sales Invoice Gate
 
 1. Open Sales Invoice.
-2. In an item row, confirm BOQ fields are hidden/read-only until `is_progress_billing` is checked.
-3. Check `is_progress_billing`.
-4. Confirm BOQ cascade fields become available.
-5. Test Header → Structure → Item → Stage chain.
-6. Uncheck `is_progress_billing`.
-7. Confirm BOQ fields clear.
+2. In an item row, confirm the `Progress Billing` check field is available.
+3. Confirm BOQ fields are hidden/read-only and their dropdowns return no options while `Progress Billing` is unchecked.
+4. Check `Progress Billing`.
+5. Confirm BOQ cascade fields become available.
+6. Test Header → Structure → Item → Stage chain.
+7. Uncheck `Progress Billing`.
+8. Confirm BOQ fields clear.
 
 ### 6.10 Test Timesheet Gate
 

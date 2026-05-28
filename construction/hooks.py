@@ -117,16 +117,17 @@ app_include_js = [
 	# Scope Context — list view auto-filtering
 	"/assets/construction/js/scope_context_list_filter.js?v=1",
 	# Scope Context — form default population for new documents
-	"/assets/construction/js/scope_context_form_defaults.js?v=1",
+	"/assets/construction/js/scope_context_form_defaults.js?v=2",
 	# Sidebar accordion — only one section stays expanded at a time
 	"/assets/construction/js/sidebar_accordion.js?v=1",
 	# Translation workflow helpers (Arabic backlog + filters)
 	"/assets/construction/js/translation_list_tools.js?v=1",
 	# BOQ integration filters for transaction child rows
-	"/assets/construction/js/boq_filters.js?v=3",
+	"/assets/construction/js/boq_filters.js?v=4",
 	# Filter fix — injected AFTER Frappe bundle to win cascade order
-	# Must be LAST to guarantee it loads after desk.bundle.css
 	"/assets/construction/js/filter_fix.js?v=4.1",
+	# Must load last: native Frappe affordances remain available after theme styling
+	"/assets/construction/js/native_frappe_controls_compat.js?v=9",
 ]
 
 
