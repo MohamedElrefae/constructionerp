@@ -10,7 +10,7 @@
    • @media print — section headers hidden, fields still render
    • [dir="rtl"] support — correct RTL flow
    • @media (pointer: coarse) — mobile-safe (no drag targets styled)
-   Version: 1.0 | 2026-05-28
+   Version: 1.3 | 2026-05-28
 ════════════════════════════════════════════════════════════════════════ */
 
 /* ─────────────────────────────────────────────────────────────────────
@@ -28,6 +28,10 @@
 
 .vfc-le-section:hover {
   box-shadow: var(--ct-shadow, 0 2px 8px rgba(0, 0, 0, 0.08));
+}
+
+.vfc-le-section[data-vfc-empty="1"] {
+  display: none !important;
 }
 
 /* Unassigned fields section — visually de-emphasised */
@@ -51,7 +55,7 @@
   font-weight: var(--ct-label-weight, 700);
   text-transform: var(--ct-label-transform, uppercase);
   letter-spacing: var(--ct-label-spacing, 0.07em);
-  color: var(--ct-text-secondary, #2d3748);
+  color: var(--ct-text, #000000);
   background: var(--ct-section-head-bg-dark, #f7fafc);
   border-left: var(--ct-section-accent-border);
   border-bottom: 1px solid var(--ct-border, #e2e8f0);

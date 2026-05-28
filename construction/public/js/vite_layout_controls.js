@@ -115,6 +115,8 @@
   const ICON_COL  = `<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="1" width="14" height="14" rx="2"/><line x1="8" y1="1" x2="8" y2="15"/></svg>`;
   const ICON_PRE  = `<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 4h12M4 8h8M6 12h4"/></svg>`;
   const ICON_X    = `<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><line x1="2" y1="2" x2="14" y2="14"/><line x1="14" y1="2" x2="2" y2="14"/></svg>`;
+  const ICON_MAXIMIZE = `<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="12" height="12" rx="1.5"/></svg>`;
+  const ICON_RESTORE = `<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="10" height="10" rx="1"/><path d="M2 6v8h8"/></svg>`;
 
   /* ══════════════════════════════════════════════════════════════
      STORAGE HELPERS
@@ -244,6 +246,7 @@
             <div class="vfc-panel-title">${__("Form Config")}</div>
             <div class="vfc-panel-sub">${__(dt)}</div>
           </div>
+          <button class="vfc-maximize-btn" title="${__("Maximize")}">${ICON_MAXIMIZE}</button>
           <button class="vfc-close-btn" data-vfc-close="${panelId}" title="${__("Close")}">${ICON_X}</button>
         </div>
 
@@ -268,7 +271,7 @@
         <div class="vfc-body">
 
           <!-- Tab: Layout -->
-          <div class="vfc-tab-pane" data-vfc-pane="layout" style="display:block">
+          <div class="vfc-tab-pane" data-vfc-pane="layout" style="display:flex">
             <div style="margin-bottom:16px">
               <div class="vfc-section-title" style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--ct-text-muted);margin-bottom:10px">
                 ${ICON_COL} ${__("Column Density")}
@@ -323,7 +326,7 @@
             <div style="font-size:10px;color:var(--ct-text-muted);margin-bottom:12px;line-height:1.6">
               ${__("Drag sections to reorder. Drag fields inside/between sections to arrange columns. Set 1, 2, or 3 columns per section.")}
             </div>
-            <div id="vfc-sec-list-${dtId}" class="vfc-sec-list-container" style="display:flex;flex-direction:column;gap:12px;max-height:300px;overflow-y:auto;padding-right:4px"></div>
+            <div id="vfc-sec-list-${dtId}" class="vfc-sec-list-container" style="display:flex;flex-direction:column;gap:12px;flex:1;overflow-y:auto;padding-right:4px"></div>
           </div>
 
           <!-- Tab: Presets -->
@@ -364,6 +367,33 @@
     ───────────────────────────────────────────────────────── */
     _wirePanel(frm, panel, dtId, fields) {
       const dt = frm.doctype;
+
+      // Maximize button
+      const maxBtn = panel.querySelector(`.vfc-maximize-btn`);
+      if (maxBtn) {
+        maxBtn.addEventListener("click", () => {
+          const isMax = panel.classList.toggle("vfc-panel-maximized");
+          maxBtn.innerHTML = isMax ? ICON_RESTORE : ICON_MAXIMIZE;
+          maxBtn.setAttribute("title", isMax ? __("Restore") : __("Maximize"));
+          
+          if (isMax) {
+            panel.dataset.prevLeft = panel.style.left;
+            panel.dataset.prevTop = panel.style.top;
+            panel.dataset.prevWidth = panel.style.width;
+            panel.dataset.prevHeight = panel.style.height;
+            
+            panel.style.left = "";
+            panel.style.top = "";
+            panel.style.width = "";
+            panel.style.height = "";
+          } else {
+            panel.style.left = panel.dataset.prevLeft || "";
+            panel.style.top = panel.dataset.prevTop || "";
+            panel.style.width = panel.dataset.prevWidth || "";
+            panel.style.height = panel.dataset.prevHeight || "";
+          }
+        });
+      }
 
       // Close buttons
       panel.querySelectorAll("[data-vfc-close]").forEach((el) => {
@@ -416,7 +446,7 @@
       panel.querySelectorAll(".vfc-tab").forEach((t) => t.classList.remove("vfc-tab-active"));
       panel.querySelectorAll(".vfc-tab-pane").forEach((p) => (p.style.display = "none"));
       panel.querySelector(`[data-vfc-tab="${name}"]`)?.classList.add("vfc-tab-active");
-      panel.querySelector(`[data-vfc-pane="${name}"]`).style.display = "block";
+      panel.querySelector(`[data-vfc-pane="${name}"]`).style.display = "flex";
     },
 
     /* ─────────────────────────────────────────────────────────
@@ -585,6 +615,11 @@
       container.classList.add(`vfc-density-${n}`);
       saveDensity(frm.doctype, n);
 
+      // Re-trigger layout engine to recalculate column widths live
+      if (window.VFCLayoutEngine) {
+        window.VFCLayoutEngine.attach(frm);
+      }
+
       if (!quiet) {
         frappe.show_alert({ message: __("Column density set to {0}", [n]), indicator: "blue" }, 2);
       }
@@ -717,6 +752,15 @@
         backdrop.classList.add("vfc-backdrop-open");
         frm._vfc_btn?.classList.add("vfc-open");
         frm._vfc_panel_open = true;
+
+        // Position panel in viewport center dynamically if not moved yet
+        if (!panel.dataset.wasMoved) {
+          panel.style.transform = "scale(1)";
+          const width = panel.offsetWidth || 420;
+          const height = panel.offsetHeight || 520;
+          panel.style.left = `${(window.innerWidth - width) / 2}px`;
+          panel.style.top = `${(window.innerHeight - height) / 2}px`;
+        }
       } else {
         panel.classList.remove("vfc-panel-open");
         backdrop.classList.remove("vfc-backdrop-open");
@@ -1035,26 +1079,24 @@
       const head = panel.querySelector(".vfc-panel-head");
       const handle = panel.querySelector(".vfc-resize-handle");
 
-      // Initialize positioning style properties to prevent transform translate bugs
-      panel.style.left = "50%";
-      panel.style.top = "50%";
-
       // Draggable logic
       head.addEventListener("mousedown", (e) => {
         if (e.target.closest("button") || e.target.closest("input") || e.target.closest("select")) return;
+        if (panel.classList.contains("vfc-panel-maximized")) return;
         e.preventDefault();
 
+        panel.dataset.wasMoved = "true";
+        panel.style.transition = "none"; // Disable transitions during drag
+
         const rect = panel.getBoundingClientRect();
-        if (panel.style.transform.includes("translate")) {
-          panel.style.transform = "none";
-          panel.style.left = `${rect.left}px`;
-          panel.style.top = `${rect.top}px`;
-        }
+        panel.style.transform = "scale(1)";
+        panel.style.left = `${rect.left}px`;
+        panel.style.top = `${rect.top}px`;
 
         const startX = e.clientX;
         const startY = e.clientY;
-        const startLeft = panel.offsetLeft;
-        const startTop = panel.offsetTop;
+        const startLeft = rect.left;
+        const startTop = rect.top;
 
         function onMouseMove(moveEvent) {
           const deltaX = moveEvent.clientX - startX;
@@ -1064,6 +1106,7 @@
         }
 
         function onMouseUp() {
+          panel.style.transition = ""; // Restore transitions
           document.removeEventListener("mousemove", onMouseMove);
           document.removeEventListener("mouseup", onMouseUp);
         }
@@ -1074,15 +1117,17 @@
 
       // Resizable logic
       handle.addEventListener("mousedown", (e) => {
+        if (panel.classList.contains("vfc-panel-maximized")) return;
         e.preventDefault();
         e.stopPropagation();
 
+        panel.dataset.wasMoved = "true";
+        panel.style.transition = "none"; // Disable transitions during resize
+
         const rect = panel.getBoundingClientRect();
-        if (panel.style.transform.includes("translate")) {
-          panel.style.transform = "none";
-          panel.style.left = `${rect.left}px`;
-          panel.style.top = `${rect.top}px`;
-        }
+        panel.style.transform = "scale(1)";
+        panel.style.left = `${rect.left}px`;
+        panel.style.top = `${rect.top}px`;
 
         const startWidth = rect.width;
         const startHeight = rect.height;
@@ -1097,6 +1142,7 @@
         }
 
         function onMouseUp() {
+          panel.style.transition = ""; // Restore transitions
           document.removeEventListener("mousemove", onMouseMove);
           document.removeEventListener("mouseup", onMouseUp);
         }

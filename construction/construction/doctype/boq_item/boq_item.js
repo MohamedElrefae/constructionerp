@@ -6,6 +6,11 @@ frappe.ui.form.on("BOQ Item", {
 			return;
 		}
 
+		// Hide the native dashboard/connections bar as the stages function already exists in the topbar
+		if (frm.dashboard) {
+			frm.dashboard.hide();
+		}
+
 		frm.add_custom_button(__("View Stages"), () => {
 			frappe.set_route("List", "BOQ Item Stage", {
 				boq_item: frm.doc.name,
