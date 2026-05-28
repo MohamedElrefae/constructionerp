@@ -3,9 +3,11 @@ Unit tests for searchable_link_search API
 Run with: bench --site [site] run-tests --module construction.searchable_dropdown.tests.test_search_api
 """
 
-import frappe
 import unittest
-from construction.searchable_dropdown.api.search import searchable_link_search, _format_label
+
+import frappe
+
+from construction.searchable_dropdown.api.search import _format_label, searchable_link_search
 
 
 class TestSearchableLinkSearch(unittest.TestCase):
@@ -28,7 +30,7 @@ class TestSearchableLinkSearch(unittest.TestCase):
             txt="1",  # Search for accounts starting with 1
             search_fields=["account_name", "account_number"],
             display_format="{account_number} - {account_name}",
-            page_length=10
+            page_length=10,
         )
 
         # Should return list (may be empty if no data, but shouldn't error)
@@ -46,7 +48,7 @@ class TestSearchableLinkSearch(unittest.TestCase):
             txt="Cash",  # Common account name
             search_fields=["account_name"],
             display_format="{account_name}",
-            page_length=5
+            page_length=5,
         )
 
         self.assertIsInstance(results, list)
@@ -64,9 +66,7 @@ class TestSearchableLinkSearch(unittest.TestCase):
 
         try:
             results = searchable_link_search(
-                doctype=self.test_doctype,
-                txt="test",
-                search_fields=["account_name"]
+                doctype=self.test_doctype, txt="test", search_fields=["account_name"]
             )
 
             # Should return empty list, not throw error
@@ -79,32 +79,18 @@ class TestSearchableLinkSearch(unittest.TestCase):
 
     def test_format_label_with_code_and_name(self):
         """Test label formatting with code and name"""
-        doc = {
-            "name": "ACC-001",
-            "account_code": "1000",
-            "account_name": "Cash Account"
-        }
+        doc = {"name": "ACC-001", "account_code": "1000", "account_name": "Cash Account"}
 
-        label = _format_label(
-            doc,
-            "{account_code} - {account_name}",
-            ["account_code", "account_name"]
-        )
+        label = _format_label(doc, "{account_code} - {account_name}", ["account_code", "account_name"])
 
         self.assertEqual(label, "1000 - Cash Account")
 
     def test_format_label_fallback_to_name(self):
         """Test label falls back to name if format fails"""
-        doc = {
-            "name": "ACC-001"
-        }
+        doc = {"name": "ACC-001"}
 
         # Try format with non-existent field
-        label = _format_label(
-            doc,
-            "{nonexistent} - {name}",
-            ["name"]
-        )
+        label = _format_label(doc, "{nonexistent} - {name}", ["name"])
 
         # Should return formatted string or name
         self.assertIsInstance(label, str)
@@ -114,11 +100,7 @@ class TestSearchableLinkSearch(unittest.TestCase):
         """Test label formatting with empty doc"""
         doc = {}
 
-        label = _format_label(
-            doc,
-            "{code} - {name}",
-            ["code", "name"]
-        )
+        label = _format_label(doc, "{code} - {name}", ["code", "name"])
 
         # Should handle gracefully
         self.assertIsInstance(label, str)
@@ -130,7 +112,7 @@ class TestSearchableLinkSearch(unittest.TestCase):
             txt="",
             filters={"is_group": 0},  # Only leaf accounts
             search_fields=["account_name"],
-            page_length=5
+            page_length=5,
         )
 
         self.assertIsInstance(results, list)
@@ -140,10 +122,7 @@ class TestSearchableLinkSearch(unittest.TestCase):
     def test_search_empty_txt_returns_results(self):
         """Test empty search text returns standard results"""
         results = searchable_link_search(
-            doctype=self.test_doctype,
-            txt="",
-            search_fields=["account_name"],
-            page_length=5
+            doctype=self.test_doctype, txt="", search_fields=["account_name"], page_length=5
         )
 
         self.assertIsInstance(results, list)
@@ -152,10 +131,7 @@ class TestSearchableLinkSearch(unittest.TestCase):
     def test_search_respects_page_length(self):
         """Test page_length parameter limits results"""
         results = searchable_link_search(
-            doctype=self.test_doctype,
-            txt="",
-            search_fields=["account_name"],
-            page_length=3
+            doctype=self.test_doctype, txt="", search_fields=["account_name"], page_length=3
         )
 
         self.assertIsInstance(results, list)
@@ -167,7 +143,7 @@ class TestSearchableLinkSearch(unittest.TestCase):
             doctype=self.test_doctype,
             txt="%_test'\"",  # SQL special characters
             search_fields=["account_name"],
-            page_length=5
+            page_length=5,
         )
 
         # Should not throw error

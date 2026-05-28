@@ -32,7 +32,9 @@ frappe.ui.form.on("BOQ Item Stage", {
 
 	onload(frm) {
 		if (!frm.is_new()) return;
-		const scope_project = window.scopeContext?.enabled ? window.scopeContext?.current?.project : null;
+		const scope_project = window.scopeContext?.enabled
+			? window.scopeContext?.current?.project
+			: null;
 		if (scope_project && !frm.doc.project) {
 			frm.set_value("project", scope_project);
 		}
@@ -55,14 +57,16 @@ frappe.ui.form.on("BOQ Item Stage", {
 
 	boq_item(frm) {
 		if (!frm.doc.boq_item) return;
-		frappe.db.get_value("BOQ Item", frm.doc.boq_item, ["boq_header", "structure"]).then((r) => {
-			const d = r?.message || {};
-			if (d.boq_header && frm.doc.boq_header !== d.boq_header) {
-				frm.set_value("boq_header", d.boq_header);
-			}
-			if (d.structure && frm.doc.boq_structure !== d.structure) {
-				frm.set_value("boq_structure", d.structure);
-			}
-		});
+		frappe.db
+			.get_value("BOQ Item", frm.doc.boq_item, ["boq_header", "structure"])
+			.then((r) => {
+				const d = r?.message || {};
+				if (d.boq_header && frm.doc.boq_header !== d.boq_header) {
+					frm.set_value("boq_header", d.boq_header);
+				}
+				if (d.structure && frm.doc.boq_structure !== d.structure) {
+					frm.set_value("boq_structure", d.structure);
+				}
+			});
 	},
 });

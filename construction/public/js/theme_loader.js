@@ -12,7 +12,7 @@
 			const start = performance.now();
 			console.log(
 				`%c[ConstructionTheme] v2.1 — Namespace Architecture`,
-				"color: #3b82f6; font-weight: bold;",
+				"color: #3b82f6; font-weight: bold;"
 			);
 
 			// v2.1: Inject ct-enterprise namespace class for Desk routes
@@ -34,14 +34,18 @@
 							savedPreference = "light";
 						}
 					}
-				} catch (e) { /* ignore */ }
+				} catch (e) {
+					/* ignore */
+				}
 
 				try {
 					var stored = sessionStorage.getItem("construction_theme_mode");
 					if (!savedPreference && stored) {
 						savedPreference = stored === "dark" ? "dark" : "light";
 					}
-				} catch (e) { /* ignore */ }
+				} catch (e) {
+					/* ignore */
+				}
 
 				let initialMode =
 					savedPreference ||
@@ -77,7 +81,9 @@
 
 				const end = performance.now();
 				console.log(
-					`[ConstructionTheme] Initialized in ${initialMode} mode. Boot time: ${(end - start).toFixed(2)}ms`,
+					`[ConstructionTheme] Initialized in ${initialMode} mode. Boot time: ${(
+						end - start
+					).toFixed(2)}ms`
 				);
 			} catch (err) {
 				console.error("[ConstructionTheme] Initialization failed", err);
@@ -96,7 +102,7 @@
 						if (newMode && newMode !== this.currentMode) {
 							console.log(
 								"[ConstructionTheme] External sync triggered for:",
-								newMode,
+								newMode
 							);
 							this.currentMode = newMode;
 							this.updateNavbarLabel(newMode);
@@ -193,7 +199,7 @@
 					// v16: Ensure chat/help/notification widgets remain visible
 					// Our CSS must not accidentally hide these
 					$(
-						".navbar-notifications, .navbar-help, .chat-dropdown, .dropdown-notifications, .dropdown-help",
+						".navbar-notifications, .navbar-help, .chat-dropdown, .dropdown-notifications, .dropdown-help"
 					).show();
 					$(".navbar-right .dropdown, .desktop-navbar .dropdown").show();
 				} catch (e) {
@@ -269,7 +275,9 @@
 			li.className = "nav-item dropdown dropdown-notifications";
 			li.innerHTML = `
                 <a class="nav-link" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding-top: 12px; cursor: pointer;">
-                   <span class="theme-label">${mode === "dark" ? "🏗️ Construction Dark" : "☀️ Construction Light"}</span>
+                   <span class="theme-label">${
+						mode === "dark" ? "🏗️ Construction Dark" : "☀️ Construction Light"
+					}</span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right">
                     <a class="dropdown-item" href="#" onclick="ConstructionTheme.setMode('light'); return false;">☀️ Construction Light</a>
@@ -305,7 +313,9 @@
 			document.documentElement.setAttribute("data-theme", mode);
 			try {
 				sessionStorage.setItem("construction_theme_mode", mode);
-			} catch (e) { /* ignore */ }
+			} catch (e) {
+				/* ignore */
+			}
 			this.updateNavbarLabel(mode);
 			this.persist(mode);
 		},

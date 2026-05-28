@@ -6,8 +6,10 @@ Run with:
     bench --site [site] run-tests --module construction.searchable_dropdown.tests.test_integration
 """
 
-import frappe
 import unittest
+
+import frappe
+
 from construction.searchable_dropdown.api.search import searchable_link_search
 
 
@@ -39,7 +41,7 @@ class TestSearchableDropdownIntegration(unittest.TestCase):
                 "account_name_ar": "حساب النقدية للاختبار",
                 "account_number": "9991",
                 "account_type": "Cash",
-                "is_group": 0
+                "is_group": 0,
             },
             {
                 "doctype": "Account",
@@ -47,15 +49,15 @@ class TestSearchableDropdownIntegration(unittest.TestCase):
                 "account_name_ar": "حساب البنك للاختبار",
                 "account_number": "9992",
                 "account_type": "Bank",
-                "is_group": 0
+                "is_group": 0,
             },
             {
                 "doctype": "Account",
                 "account_name": "Test Group Account",
                 "account_number": "9990",
                 "account_type": "",
-                "is_group": 1
-            }
+                "is_group": 1,
+            },
         ]
 
         for acc in test_accounts:
@@ -65,12 +67,14 @@ class TestSearchableDropdownIntegration(unittest.TestCase):
                 try:
                     # Create company first if needed
                     if not frappe.db.exists("Company", "_Test Company"):
-                        frappe.get_doc({
-                            "doctype": "Company",
-                            "company_name": "_Test Company",
-                            "abbr": "_TC",
-                            "default_currency": "USD"
-                        }).insert()
+                        frappe.get_doc(
+                            {
+                                "doctype": "Company",
+                                "company_name": "_Test Company",
+                                "abbr": "_TC",
+                                "default_currency": "USD",
+                            }
+                        ).insert()
 
                     acc["company"] = "_Test Company"
                     doc = frappe.get_doc(acc)
@@ -87,7 +91,7 @@ class TestSearchableDropdownIntegration(unittest.TestCase):
             txt="النقدية",
             search_fields=["account_name", "account_name_ar", "account_number"],
             display_format="{account_number} - {account_name_ar}",
-            page_length=10
+            page_length=10,
         )
 
         self.assertIsInstance(results, list)
@@ -111,7 +115,7 @@ class TestSearchableDropdownIntegration(unittest.TestCase):
             filters={"company": "_Test Company", "is_group": 0},
             search_fields=["account_name", "account_number"],
             display_format="{account_number} - {account_name}",
-            page_length=10
+            page_length=10,
         )
 
         self.assertIsInstance(results, list)
@@ -119,12 +123,7 @@ class TestSearchableDropdownIntegration(unittest.TestCase):
         # All results should be from _Test Company and not groups
         for result in results:
             # Verify account exists with these properties
-            account = frappe.db.get_value(
-                "Account",
-                result["value"],
-                ["company", "is_group"],
-                as_dict=True
-            )
+            account = frappe.db.get_value("Account", result["value"], ["company", "is_group"], as_dict=True)
             if account:
                 self.assertEqual(account.company, "_Test Company")
                 self.assertEqual(account.is_group, 0)
@@ -135,10 +134,7 @@ class TestSearchableDropdownIntegration(unittest.TestCase):
 
         start = time.time()
         results = searchable_link_search(
-            doctype="Account",
-            txt="test",
-            search_fields=["account_name", "account_name_ar"],
-            page_length=20
+            doctype="Account", txt="test", search_fields=["account_name", "account_name_ar"], page_length=20
         )
         end = time.time()
 
@@ -158,7 +154,7 @@ class TestSearchableDropdownIntegration(unittest.TestCase):
                 doctype="Account",
                 txt=term,
                 search_fields=["account_name", "account_name_ar", "account_number"],
-                page_length=10
+                page_length=10,
             )
 
             self.assertIsInstance(results, list)
@@ -166,10 +162,7 @@ class TestSearchableDropdownIntegration(unittest.TestCase):
     def test_search_returns_empty_for_no_matches(self):
         """Test empty result set for non-existent search"""
         results = searchable_link_search(
-            doctype="Account",
-            txt="xyznonexistent12345",
-            search_fields=["account_name"],
-            page_length=10
+            doctype="Account", txt="xyznonexistent12345", search_fields=["account_name"], page_length=10
         )
 
         self.assertEqual(len(results), 0, "Should return empty list for no matches")
@@ -182,19 +175,20 @@ class TestSearchableDropdownPermissions(unittest.TestCase):
         """Test user without read permission gets empty results"""
         # Create a test user with no Account permissions
         if not frappe.db.exists("User", "test_no_account_perm@example.com"):
-            user = frappe.get_doc({
-                "doctype": "User",
-                "email": "test_no_account_perm@example.com",
-                "first_name": "Test",
-                "enabled": 1
-            })
+            user = frappe.get_doc(
+                {
+                    "doctype": "User",
+                    "email": "test_no_account_perm@example.com",
+                    "first_name": "Test",
+                    "enabled": 1,
+                }
+            )
             user.insert(ignore_permissions=True)
 
             # Remove all Account permissions
-            for perm in frappe.get_all("User Permission", filters={
-                "user": "test_no_account_perm@example.com",
-                "allow": "Account"
-            }):
+            for perm in frappe.get_all(
+                "User Permission", filters={"user": "test_no_account_perm@example.com", "allow": "Account"}
+            ):
                 frappe.delete_doc("User Permission", perm.name)
 
             frappe.db.commit()
@@ -203,11 +197,7 @@ class TestSearchableDropdownPermissions(unittest.TestCase):
         frappe.set_user("test_no_account_perm@example.com")
 
         try:
-            results = searchable_link_search(
-                doctype="Account",
-                txt="cash",
-                search_fields=["account_name"]
-            )
+            results = searchable_link_search(doctype="Account", txt="cash", search_fields=["account_name"])
 
             # Should return empty list
             self.assertEqual(len(results), 0)

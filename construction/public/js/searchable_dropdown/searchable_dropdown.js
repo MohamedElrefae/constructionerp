@@ -31,14 +31,14 @@ class SearchableDropdownEnhancer {
 		if (typeof this.field === "string") {
 			console.error(
 				"SearchableDropdownEnhancer: field must be a field object, not a string. Got:",
-				this.field,
+				this.field
 			);
 			return;
 		}
 
 		if (!this.field.$input) {
 			console.error(
-				"SearchableDropdownEnhancer: field must have $input property. Is this a child table field?",
+				"SearchableDropdownEnhancer: field must have $input property. Is this a child table field?"
 			);
 			return;
 		}

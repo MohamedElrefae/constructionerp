@@ -80,12 +80,12 @@ construction.searchable_dropdown.utils.getDefaultFormat = function (doctype) {
 
 	// Check for code field
 	const codeField = meta.fields.find(
-		(f) => f.fieldname.includes("code") || f.fieldname.includes("_code"),
+		(f) => f.fieldname.includes("code") || f.fieldname.includes("_code")
 	);
 
 	// Check for name field
 	const nameField = meta.fields.find(
-		(f) => f.fieldname.includes("name") && f.fieldname !== "name",
+		(f) => f.fieldname.includes("name") && f.fieldname !== "name"
 	);
 
 	if (codeField && nameField) {

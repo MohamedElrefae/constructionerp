@@ -1,12 +1,13 @@
-(function(){'use strict';
+(function () {
+	"use strict";
 
-// Inject comprehensive filter CSS
-var styleId='ct-filter-ground-up';
-if(document.getElementById(styleId)){
-  document.getElementById(styleId).remove();
-}
+	// Inject comprehensive filter CSS
+	var styleId = "ct-filter-ground-up";
+	if (document.getElementById(styleId)) {
+		document.getElementById(styleId).remove();
+	}
 
-var css=`
+	var css = `
 /* === CT Filter Ground-Up Fix v4.1 === */
 
 /* 1. Reset ALL filter wrappers to invisible */
@@ -577,36 +578,35 @@ var css=`
 
 `;
 
-var style=document.createElement('style');
-style.id=styleId;
-style.textContent=css;
-document.head.appendChild(style);
+	var style = document.createElement("style");
+	style.id = styleId;
+	style.textContent = css;
+	document.head.appendChild(style);
 
-// Minimal JS for SPA navigation re-application
-function reapply(){
-  // Re-apply CSS variables if theme changed
-  var root=document.documentElement;
-  if(!getComputedStyle(root).getPropertyValue('--ct-bg-elevated')){
-    // Theme not loaded yet, retry
-    setTimeout(reapply,500);
-    return;
-  }
-  console.log('[CT-Filter] CSS injected, variables available');
-}
+	// Minimal JS for SPA navigation re-application
+	function reapply() {
+		// Re-apply CSS variables if theme changed
+		var root = document.documentElement;
+		if (!getComputedStyle(root).getPropertyValue("--ct-bg-elevated")) {
+			// Theme not loaded yet, retry
+			setTimeout(reapply, 500);
+			return;
+		}
+		console.log("[CT-Filter] CSS injected, variables available");
+	}
 
-// Run on load
-if(document.readyState==='loading'){
-  document.addEventListener('DOMContentLoaded',reapply);
-}else{
-  reapply();
-}
+	// Run on load
+	if (document.readyState === "loading") {
+		document.addEventListener("DOMContentLoaded", reapply);
+	} else {
+		reapply();
+	}
 
-// Observe for SPA navigation
-var observer=new MutationObserver(function(){
-  if(!document.getElementById(styleId)){
-    document.head.appendChild(style);
-  }
-});
-observer.observe(document.head,{childList:true});
-
+	// Observe for SPA navigation
+	var observer = new MutationObserver(function () {
+		if (!document.getElementById(styleId)) {
+			document.head.appendChild(style);
+		}
+	});
+	observer.observe(document.head, { childList: true });
 })();

@@ -9,7 +9,7 @@
 
 	// 1. Check if theme CSS is loaded
 	const themeCss = [...document.styleSheets].find(
-		(s) => s.href && s.href.includes("modern_theme.css"),
+		(s) => s.href && s.href.includes("modern_theme.css")
 	);
 	console.log("\n%c1. THEME CSS", "font-weight:bold;color:#f59e0b");
 	console.log("  Loaded:", !!themeCss);
@@ -43,7 +43,7 @@
 			style.display,
 			"\n    parent:",
 			el.parentElement?.tagName,
-			el.parentElement?.className?.substring(0, 50),
+			el.parentElement?.className?.substring(0, 50)
 		);
 
 		// List items
@@ -55,14 +55,14 @@
 				`    First item computed bg:`,
 				itemStyle.backgroundColor,
 				"color:",
-				itemStyle.color,
+				itemStyle.color
 			);
 		}
 	});
 
 	// Bootstrap dropdowns
 	const dropdownMenus = document.querySelectorAll(
-		".dropdown-menu.show, .dropdown.open .dropdown-menu, .dropdown-menu",
+		".dropdown-menu.show, .dropdown.open .dropdown-menu, .dropdown-menu"
 	);
 	console.log("\n  .dropdown-menu found:", dropdownMenus.length);
 	dropdownMenus.forEach((el, i) => {
@@ -79,7 +79,7 @@
 			"\n    computed display:",
 			style.display,
 			"\n    z-index:",
-			style.zIndex,
+			style.zIndex
 		);
 	});
 
@@ -104,7 +104,7 @@
 			style.color,
 			"\n    computed border-left:",
 			style.borderLeftWidth,
-			style.borderLeftColor,
+			style.borderLeftColor
 		);
 	});
 
@@ -122,7 +122,7 @@
 					"   ",
 					r.selectorText.substring(0, 80),
 					"->",
-					r.style.cssText.substring(0, 100),
+					r.style.cssText.substring(0, 100)
 				);
 			});
 		} catch (e) {

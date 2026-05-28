@@ -275,14 +275,20 @@ html.ct-enterprise .form-grid .grid-heading-row .grid-static-col.pointer {
 
 		proto.get_menu_items = function () {
 			const items = originalGetMenuItems.apply(this, arguments) || [];
-			const hasListSettings = items.some((item) => item && item.label === __("List Settings"));
+			const hasListSettings = items.some(
+				(item) => item && item.label === __("List Settings")
+			);
 			if (hasListSettings) return items;
 
 			items.push({
 				label: __("List Settings"),
 				standard: true,
 				action: () => {
-					if (frappe.user && frappe.user.has_role && frappe.user.has_role("System Manager")) {
+					if (
+						frappe.user &&
+						frappe.user.has_role &&
+						frappe.user.has_role("System Manager")
+					) {
 						this.show_list_settings();
 					} else {
 						frappe.msgprint({
@@ -327,10 +333,7 @@ html.ct-enterprise .form-grid .grid-heading-row .grid-static-col.pointer {
 			"data-ct-native-menu",
 			"1"
 		);
-		$(".grid-heading-row .grid-static-col.pointer").attr(
-			"title",
-			__("Configure Columns")
-		);
+		$(".grid-heading-row .grid-static-col.pointer").attr("title", __("Configure Columns"));
 	}
 
 	function canUseSystemListSettings() {
@@ -407,7 +410,9 @@ html.ct-enterprise .form-grid .grid-heading-row .grid-static-col.pointer {
 			return;
 		}
 
-		const button = listview.page.add_inner_button(label, () => openCurrentListSettings(listview));
+		const button = listview.page.add_inner_button(label, () =>
+			openCurrentListSettings(listview)
+		);
 		button &&
 			button
 				.addClass("ct-native-list-settings")
@@ -430,7 +435,9 @@ html.ct-enterprise .form-grid .grid-heading-row .grid-static-col.pointer {
 
 	function getStoredListWidths(listview) {
 		try {
-			return JSON.parse(localStorage.getItem(getListWidthStorageKey(listview)) || "{}") || {};
+			return (
+				JSON.parse(localStorage.getItem(getListWidthStorageKey(listview)) || "{}") || {}
+			);
 		} catch (e) {
 			return {};
 		}
@@ -516,7 +523,8 @@ html.ct-enterprise .form-grid .grid-heading-row .grid-static-col.pointer {
 				event.stopPropagation();
 				const startX = event.pageX;
 				const startWidth = headerCell.outerWidth();
-				const isRtl = $("html").attr("dir") === "rtl" || $("body").css("direction") === "rtl";
+				const isRtl =
+					$("html").attr("dir") === "rtl" || $("body").css("direction") === "rtl";
 				$(this).addClass("ct-active");
 				$("html").addClass("ct-list-resizing");
 
@@ -543,7 +551,9 @@ html.ct-enterprise .form-grid .grid-heading-row .grid-static-col.pointer {
 		const label = __("Column Widths");
 		const encoded = encodeURIComponent(label);
 		const exists = listview.page.menu
-			.find(`li > a.grey-link > span[data-label="${encoded}"], li > a.grey-link > .menu-item-label`)
+			.find(
+				`li > a.grey-link > span[data-label="${encoded}"], li > a.grey-link > .menu-item-label`
+			)
 			.filter(function () {
 				return ($(this).text() || "").trim() === label;
 			});
@@ -562,11 +572,11 @@ html.ct-enterprise .form-grid .grid-heading-row .grid-static-col.pointer {
 		);
 		if (exists.length) return;
 
-		const button = listview.page.add_inner_button(label, () => showListColumnWidthsDialog(listview));
+		const button = listview.page.add_inner_button(label, () =>
+			showListColumnWidthsDialog(listview)
+		);
 		button &&
-			button
-				.addClass("ct-native-column-widths")
-				.attr("title", __("Set list column widths"));
+			button.addClass("ct-native-column-widths").attr("title", __("Set list column widths"));
 		if (listview.page.inner_toolbar) {
 			listview.page.inner_toolbar.removeClass("hide hidden").css({
 				display: "",

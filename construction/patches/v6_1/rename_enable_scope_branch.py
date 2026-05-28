@@ -20,9 +20,7 @@ def execute():
     if not frappe.db.has_column("Construction Settings", "enable_scope_branch"):
         return
 
-    old_val = frappe.db.get_value(
-        "Construction Settings", "Construction Settings", "enable_scope_branch"
-    )
+    old_val = frappe.db.get_value("Construction Settings", "Construction Settings", "enable_scope_branch")
     if not old_val:
         return
 

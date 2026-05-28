@@ -7,7 +7,7 @@
 		"Purchase Invoice": "items",
 		"Sales Invoice": "items",
 		"Stock Entry": "items",
-		"Timesheet": "time_logs",
+		Timesheet: "time_logs",
 		"Journal Entry": "accounts",
 		"Material Request": "items",
 	};
@@ -57,9 +57,12 @@
 		let row = getRow(cdt, cdn);
 		if (row) return row;
 
-		const gridRow = grid && grid.grid_rows && grid.grid_rows.find((candidate) => {
-			return candidate && candidate.doc && candidate.doc.name === cdn;
-		});
+		const gridRow =
+			grid &&
+			grid.grid_rows &&
+			grid.grid_rows.find((candidate) => {
+				return candidate && candidate.doc && candidate.doc.name === cdn;
+			});
 		return (gridRow && gridRow.doc) || null;
 	}
 
@@ -359,7 +362,12 @@
 		const row = getRow(cdt, cdn);
 		if (!row) return;
 		if (!gateOpen(frm, row)) {
-			clearAllBoqFields(frm, cdt, cdn, "All BOQ fields have been cleared. Re-select if needed.");
+			clearAllBoqFields(
+				frm,
+				cdt,
+				cdn,
+				"All BOQ fields have been cleared. Re-select if needed."
+			);
 		}
 	}
 
@@ -411,20 +419,20 @@
 					clearDownstream(frm, cdt, cdn, "boq_item");
 				},
 				expense_category(frm, cdt, cdn) {
-				const row = getRow(cdt, cdn);
-				if (row && row.expense_category !== "Direct") {
-					if (cascadeEnabled()) {
-						clearAllBoqFields(
-							frm,
-							cdt,
-							cdn,
-							"All BOQ fields have been cleared. Re-select if needed."
-						);
-					} else {
-						clearFields(cdt, cdn, ["boq_item", "boq_item_stage"]);
+					const row = getRow(cdt, cdn);
+					if (row && row.expense_category !== "Direct") {
+						if (cascadeEnabled()) {
+							clearAllBoqFields(
+								frm,
+								cdt,
+								cdn,
+								"All BOQ fields have been cleared. Re-select if needed."
+							);
+						} else {
+							clearFields(cdt, cdn, ["boq_item", "boq_item_stage"]);
+						}
 					}
-				}
-			},
+				},
 				is_progress_billing(frm, cdt, cdn) {
 					applyGateClearing(frm, cdt, cdn);
 				},

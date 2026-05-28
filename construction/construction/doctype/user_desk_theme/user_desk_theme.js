@@ -31,11 +31,13 @@
 	});
 
 	function hide_raw_typography_fields(frm) {
-		["typography_section", "component_typography_section"].concat(typography_fields).forEach(function (fieldname) {
-			if (frm.fields_dict[fieldname]) {
-				frm.toggle_display(fieldname, false);
-			}
-		});
+		["typography_section", "component_typography_section"]
+			.concat(typography_fields)
+			.forEach(function (fieldname) {
+				if (frm.fields_dict[fieldname]) {
+					frm.toggle_display(fieldname, false);
+				}
+			});
 	}
 
 	function add_open_typography_button(frm) {

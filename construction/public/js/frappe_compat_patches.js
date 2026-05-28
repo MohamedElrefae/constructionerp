@@ -1,6 +1,11 @@
 (function () {
 	function patchTreeViewNewNodeGuard() {
-		if (!window.frappe || !frappe.views || !frappe.views.TreeView || !frappe.views.TreeView.prototype) {
+		if (
+			!window.frappe ||
+			!frappe.views ||
+			!frappe.views.TreeView ||
+			!frappe.views.TreeView.prototype
+		) {
 			return false;
 		}
 

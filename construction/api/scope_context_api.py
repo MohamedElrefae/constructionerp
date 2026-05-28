@@ -5,10 +5,10 @@ from frappe import _
 
 from construction.construction.utils.scope_validation import validate_scope_dimensions
 
-
 # ═══════════════════════════════════════════════════════════════
 # Internal Helpers
 # ═══════════════════════════════════════════════════════════════
+
 
 def get_user_scope_context(user=None):
     """
@@ -100,9 +100,17 @@ def invalidate_scope_cache(user=None):
 # Whitelisted APIs
 # ═══════════════════════════════════════════════════════════════
 
+
 @frappe.whitelist()
-def set_scope_context(company=None, cost_center=None, branch=None, project=None, department=None,
-                      source="erpnext", client_id=None):
+def set_scope_context(
+    company=None,
+    cost_center=None,
+    branch=None,
+    project=None,
+    department=None,
+    source="erpnext",
+    client_id=None,
+):
     """
     Dual-write API: writes to User Scope Context DocType (canonical),
     then syncs to Session Defaults (convenience layer).
@@ -172,7 +180,7 @@ def set_scope_context(company=None, cost_center=None, branch=None, project=None,
         branch_comp = frappe.db.get_value("Branch", scope_doc.branch, "company")
         if branch_comp != scope_doc.company:
             scope_doc.branch = None
-            
+
     if scope_doc.cost_center and scope_doc.company:
         cc_comp = frappe.db.get_value("Cost Center", scope_doc.cost_center, "company")
         if cc_comp != scope_doc.company:
@@ -252,40 +260,59 @@ def get_scope_hierarchy_detail():
             cc._projects = [p for p in c_projects if p.cost_center == cc.name]
             cc._depts = [d for d in c_depts if d.cost_center == cc.name]
 
-        tree.append({
-            "name": c.name,
-            "title": c.company_name or c.name,
-            "cost_centers": [{
-                "name": cc.name,
-                "label": cc.cost_center_name or cc.name,
-                "is_group": bool(cc.is_group),
-                "linked": bool(cc.company),
-                "projects": [{
-                    "name": p.name,
-                    "label": p.project_name or p.name,
-                    "company_ok": bool(p.company),
-                    "cost_center_ok": bool(p.cost_center),
-                } for p in cc._projects],
-                "departments": [{
-                    "name": d.name,
-                    "label": d.department_name or d.name,
-                    "company_ok": bool(d.company),
-                    "cost_center_ok": bool(d.cost_center),
-                } for d in cc._depts],
-            } for cc in c_cost_centers],
-            "orphan_projects": [{
-                "name": p.name,
-                "label": p.project_name or p.name,
-                "company_ok": bool(p.company),
-                "cost_center_ok": bool(p.cost_center),
-            } for p in c_projects if not p.cost_center or not any(cc.name == p.cost_center for cc in c_cost_centers)],
-            "orphan_depts": [{
-                "name": d.name,
-                "label": d.department_name or d.name,
-                "company_ok": bool(d.company),
-                "cost_center_ok": bool(d.cost_center),
-            } for d in c_depts if not d.cost_center or not any(cc.name == d.cost_center for cc in c_cost_centers)],
-        })
+        tree.append(
+            {
+                "name": c.name,
+                "title": c.company_name or c.name,
+                "cost_centers": [
+                    {
+                        "name": cc.name,
+                        "label": cc.cost_center_name or cc.name,
+                        "is_group": bool(cc.is_group),
+                        "linked": bool(cc.company),
+                        "projects": [
+                            {
+                                "name": p.name,
+                                "label": p.project_name or p.name,
+                                "company_ok": bool(p.company),
+                                "cost_center_ok": bool(p.cost_center),
+                            }
+                            for p in cc._projects
+                        ],
+                        "departments": [
+                            {
+                                "name": d.name,
+                                "label": d.department_name or d.name,
+                                "company_ok": bool(d.company),
+                                "cost_center_ok": bool(d.cost_center),
+                            }
+                            for d in cc._depts
+                        ],
+                    }
+                    for cc in c_cost_centers
+                ],
+                "orphan_projects": [
+                    {
+                        "name": p.name,
+                        "label": p.project_name or p.name,
+                        "company_ok": bool(p.company),
+                        "cost_center_ok": bool(p.cost_center),
+                    }
+                    for p in c_projects
+                    if not p.cost_center or not any(cc.name == p.cost_center for cc in c_cost_centers)
+                ],
+                "orphan_depts": [
+                    {
+                        "name": d.name,
+                        "label": d.department_name or d.name,
+                        "company_ok": bool(d.company),
+                        "cost_center_ok": bool(d.cost_center),
+                    }
+                    for d in c_depts
+                    if not d.cost_center or not any(cc.name == d.cost_center for cc in c_cost_centers)
+                ],
+            }
+        )
 
     return tree
 

@@ -1,3 +1,4 @@
+/* eslint-disable */
 (function () {
 	"use strict";
 
@@ -47,7 +48,11 @@
 	};
 	var fontOptions = Object.keys(fontStacks);
 	var componentFontOptions = fontOptions.join("\n");
-	var deskFontOptions = fontOptions.filter(function (font) { return font !== "Inherit"; }).join("\n");
+	var deskFontOptions = fontOptions
+		.filter(function (font) {
+			return font !== "Inherit";
+		})
+		.join("\n");
 	var styleOrderObserverStarted = false;
 	var domObserverStarted = false;
 	var inlineApplyTimer = null;
@@ -271,19 +276,25 @@
 		root.style.setProperty("--ct-desk-font-size", settings.desk_font_size + "px");
 		root.style.setProperty("--ct-desk-font-weight", settings.desk_font_weight);
 		["sidebar", "navbar", "form", "list", "menu"].forEach(function (component) {
-			root.style.setProperty("--ct-" + component + "-font-size", settings[component + "_font_size"] + "px");
-			root.style.setProperty("--ct-" + component + "-font-weight", settings[component + "_font_weight"]);
+			root.style.setProperty(
+				"--ct-" + component + "-font-size",
+				settings[component + "_font_size"] + "px"
+			);
+			root.style.setProperty(
+				"--ct-" + component + "-font-weight",
+				settings[component + "_font_weight"]
+			);
 		});
 
-			window.ctTypographySettings = settings;
-			window.ctTypographyLastAppliedAt = new Date().toISOString();
-			applyInlineTypography(settings);
-			startDomTypographyObserver();
-			try {
-				localStorage.setItem("ct-typography-settings", JSON.stringify(settings));
-			} catch (e) {}
-			return settings;
-		}
+		window.ctTypographySettings = settings;
+		window.ctTypographyLastAppliedAt = new Date().toISOString();
+		applyInlineTypography(settings);
+		startDomTypographyObserver();
+		try {
+			localStorage.setItem("ct-typography-settings", JSON.stringify(settings));
+		} catch (e) {}
+		return settings;
+	}
 
 	function startDomTypographyObserver() {
 		if (domObserverStarted || !window.MutationObserver || !document.body) return;
@@ -311,27 +322,33 @@
 
 		var rules = [
 			{
-				selector: "body, .page-container, .layout-main, .page-content, .workspace, .widget, .widget *",
+				selector:
+					"body, .page-container, .layout-main, .page-content, .workspace, .widget, .widget *",
 				component: "desk",
 			},
 			{
-				selector: ".body-sidebar, .body-sidebar *, .desk-sidebar, .desk-sidebar *, .standard-sidebar, .standard-sidebar *, .sidebar-container, .sidebar-container *",
+				selector:
+					".body-sidebar, .body-sidebar *, .desk-sidebar, .desk-sidebar *, .standard-sidebar, .standard-sidebar *, .sidebar-container, .sidebar-container *",
 				component: "sidebar",
 			},
 			{
-				selector: ".navbar, .navbar *, .desktop-navbar, .desktop-navbar *, .ct-topbar-zone, .ct-topbar-zone *",
+				selector:
+					".navbar, .navbar *, .desktop-navbar, .desktop-navbar *, .ct-topbar-zone, .ct-topbar-zone *",
 				component: "navbar",
 			},
 			{
-				selector: ".form-layout, .form-layout *, .form-section, .form-section *, .frappe-control, .frappe-control *, .form-control, .control-input, .control-input-wrapper, .page-form, .page-form *",
+				selector:
+					".form-layout, .form-layout *, .form-section, .form-section *, .frappe-control, .frappe-control *, .form-control, .control-input, .control-input-wrapper, .page-form, .page-form *",
 				component: "form",
 			},
 			{
-				selector: ".frappe-list, .frappe-list *, .list-row, .list-row *, .list-row-head, .list-row-head *, .datatable, .datatable *, .dt-cell, .report-wrapper, .report-wrapper *",
+				selector:
+					".frappe-list, .frappe-list *, .list-row, .list-row *, .list-row-head, .list-row-head *, .datatable, .datatable *, .dt-cell, .report-wrapper, .report-wrapper *",
 				component: "list",
 			},
 			{
-				selector: ".dropdown-menu, .dropdown-menu *, .dropdown-item, .awesomplete ul, .awesomplete ul *, .ct-dropdown-list, .ct-dropdown-list *, .ct-unified-dropdown, .ct-unified-dropdown *, .search-dialog, .search-dialog *",
+				selector:
+					".dropdown-menu, .dropdown-menu *, .dropdown-item, .awesomplete ul, .awesomplete ul *, .ct-dropdown-list, .ct-dropdown-list *, .ct-unified-dropdown, .ct-unified-dropdown *, .search-dialog, .search-dialog *",
 				component: "menu",
 			},
 		];
@@ -349,10 +366,15 @@
 	function shouldSkipInlineTypography(el) {
 		if (!el || !el.style || !el.tagName) return true;
 		var tag = el.tagName.toLowerCase();
-		if (["svg", "path", "use", "img", "canvas", "video", "style", "script"].indexOf(tag) !== -1) return true;
+		if (
+			["svg", "path", "use", "img", "canvas", "video", "style", "script"].indexOf(tag) !== -1
+		)
+			return true;
 		var className = typeof el.className === "string" ? el.className : "";
-		return /(^|\s)(icon|octicon|fa|avatar|indicator)(\s|$)/.test(className) ||
-			/(^|\s)(icon-|fa-)/.test(className);
+		return (
+			/(^|\s)(icon|octicon|fa|avatar|indicator)(\s|$)/.test(className) ||
+			/(^|\s)(icon-|fa-)/.test(className)
+		);
 	}
 
 	function setInlineFont(el, component, settings) {
@@ -542,7 +564,7 @@
 					fieldname: "preview",
 					options:
 						'<div class="ct-typography-preview">' +
-						'<div>Desk text preview for forms, lists, and reports</div>' +
+						"<div>Desk text preview for forms, lists, and reports</div>" +
 						'<div class="sidebar-sample">Sidebar item preview</div>' +
 						"</div>",
 				},
@@ -564,7 +586,10 @@
 							}
 						}
 						dialog.hide();
-						frappe.show_alert({ message: __("Typography settings saved"), indicator: "green" });
+						frappe.show_alert({
+							message: __("Typography settings saved"),
+							indicator: "green",
+						});
 					},
 					error: function () {
 						loadSettings(function (serverSettings) {
@@ -593,7 +618,9 @@
 	}
 
 	function loadSettings(callback) {
-		var fallback = normalize(window.ctTypographySettings || (frappe.boot && frappe.boot.construction_typography));
+		var fallback = normalize(
+			window.ctTypographySettings || (frappe.boot && frappe.boot.construction_typography)
+		);
 		if (!frappe.call) {
 			callback(fallback);
 			return;
@@ -613,7 +640,11 @@
 	}
 
 	function patchSidebarHeaderMenu() {
-		if (!frappe.ui || !frappe.ui.SidebarHeader || frappe.ui.SidebarHeader.prototype._ctTypographyPatched) {
+		if (
+			!frappe.ui ||
+			!frappe.ui.SidebarHeader ||
+			frappe.ui.SidebarHeader.prototype._ctTypographyPatched
+		) {
 			return;
 		}
 
@@ -622,7 +653,11 @@
 
 		frappe.ui.SidebarHeader.prototype.get_display_siblings = function () {
 			var items = original.apply(this, arguments) || [];
-			if (!items.some(function (item) { return item.name === "typography-settings"; })) {
+			if (
+				!items.some(function (item) {
+					return item.name === "typography-settings";
+				})
+			) {
 				items.push({
 					name: "typography-settings",
 					label: __("Typography Settings"),
@@ -660,7 +695,9 @@
 		item.href = "#";
 		item.innerHTML =
 			'<span class="ct-typography-icon" aria-hidden="true">Aa</span>' +
-			"<span>" + __("Typography Settings") + "</span>";
+			"<span>" +
+			__("Typography Settings") +
+			"</span>";
 		item.addEventListener("click", function (event) {
 			event.preventDefault();
 			event.stopPropagation();
@@ -672,7 +709,10 @@
 	function init() {
 		if (typeof frappe === "undefined") return;
 
-		var initialSettings = (frappe.boot && frappe.boot.construction_typography) || readLocalSettings() || defaults;
+		var initialSettings =
+			(frappe.boot && frappe.boot.construction_typography) ||
+			readLocalSettings() ||
+			defaults;
 		applyTypography(initialSettings);
 		if (frappe.call) {
 			frappe.call({
@@ -705,13 +745,18 @@
 				patchSidebarHeaderMenu();
 				injectToolbarUserItem();
 				injectSidebarUserItem();
-				applyTypography(window.ctTypographySettings || frappe.boot.construction_typography);
+				applyTypography(
+					window.ctTypographySettings || frappe.boot.construction_typography
+				);
 			});
 		}
 
 		[0, 250, 1000].forEach(function (delay) {
 			setTimeout(function () {
-				applyTypography(window.ctTypographySettings || (frappe.boot && frappe.boot.construction_typography));
+				applyTypography(
+					window.ctTypographySettings ||
+						(frappe.boot && frappe.boot.construction_typography)
+				);
 			}, delay);
 		});
 	}

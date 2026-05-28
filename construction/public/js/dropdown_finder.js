@@ -21,7 +21,7 @@ console.clear();
 			"class=" + (el.className || "none"),
 			"role=" + (el.getAttribute("role") || "none"),
 			"items=" + items.length,
-			'firstItem="' + firstText + '"',
+			'firstItem="' + firstText + '"'
 		);
 	});
 
@@ -36,7 +36,7 @@ console.clear();
 			i + ":",
 			el.className,
 			"parent:",
-			el.parentElement?.className?.substring(0, 40),
+			el.parentElement?.className?.substring(0, 40)
 		);
 	});
 
@@ -51,7 +51,7 @@ console.clear();
 					el.tagName,
 					"class=" + (el.className || "none"),
 					"items=" + items.length,
-					"text=" + items[0].textContent.trim().substring(0, 30),
+					"text=" + items[0].textContent.trim().substring(0, 30)
 				);
 			}
 		}

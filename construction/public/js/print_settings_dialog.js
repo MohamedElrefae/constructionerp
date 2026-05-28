@@ -438,14 +438,10 @@ class PrintSettingsDialog {
 	 */
 	_build_column_row_html(col) {
 		var checked = col.visible ? " checked" : "";
-		var html =
-			'<div class="column-config-row" data-field-key="' +
-			col.field_key +
-			'">';
+		var html = '<div class="column-config-row" data-field-key="' + col.field_key + '">';
 
 		// Drag handle
-		html +=
-			'<span class="drag-handle"><i class="fa fa-bars"></i></span>';
+		html += '<span class="drag-handle"><i class="fa fa-bars"></i></span>';
 
 		// Visibility checkbox
 		html +=
@@ -453,7 +449,7 @@ class PrintSettingsDialog {
 			col.field_key +
 			'"' +
 			checked +
-			' />';
+			" />";
 
 		// Label
 		html += '<span class="col-label">' + col.label + "</span>";
@@ -468,10 +464,7 @@ class PrintSettingsDialog {
 			'" min="1" max="100" />';
 
 		// Validation message area
-		html +=
-			'<span class="col-validation-msg" data-field-key="' +
-			col.field_key +
-			'"></span>';
+		html += '<span class="col-validation-msg" data-field-key="' + col.field_key + '"></span>';
 
 		html += "</div>";
 		return html;

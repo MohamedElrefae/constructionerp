@@ -9,7 +9,7 @@ frappe.ui.form.on("Construction Theme", {
 			function () {
 				frm.preview_theme();
 			},
-			__("Actions"),
+			__("Actions")
 		);
 
 		// Add contrast check indicator
@@ -154,7 +154,7 @@ frappe.ui.form.on("Construction Theme", {
                             </div>
                             <div style="margin-top: 10px; color: var(--text-muted);">
                                 ${__(
-									"Preview shows approximate rendering. Save and apply theme to see full effect.",
+									"Preview shows approximate rendering. Save and apply theme to see full effect."
 								)}
                             </div>
                         `,
@@ -325,7 +325,7 @@ frappe.ui.form.on("Construction Theme", {
 					.append(
 						'<span class="theme-preview-swatches" style="margin-left:15px;vertical-align:middle;">' +
 							swatches +
-							"</span>",
+							"</span>"
 					);
 			}
 		};
@@ -363,7 +363,7 @@ frappe.ui.form.on("Construction Theme", {
 					'<div style="background:rgba(245,158,11,0.15);color:#F59E0B;padding:10px;border-radius:6px;margin-bottom:8px;">⚠ Warning alert</div>' +
 					'<div style="background:rgba(239,68,68,0.15);color:#EF4444;padding:10px;border-radius:6px;">✕ Error alert</div>' +
 					"</div>" +
-					"</div>",
+					"</div>"
 			);
 		};
 
@@ -407,7 +407,7 @@ frappe.ui.form.on("Construction Theme", {
 			if (show) {
 				if (!container.length) {
 					container = $(
-						'<div class="live-preview-section" style="margin-top:20px;padding:15px;background:var(--bg-light);border-radius:8px;"></div>',
+						'<div class="live-preview-section" style="margin-top:20px;padding:15px;background:var(--bg-light);border-radius:8px;"></div>'
 					);
 					frm.page.body.append(container);
 				}
@@ -426,7 +426,7 @@ frappe.ui.form.on("Construction Theme", {
 					frm.live_preview_visible = !frm.live_preview_visible;
 					frm.toggle_live_preview(frm.live_preview_visible);
 				},
-				{ icon: "eye" },
+				{ icon: "eye" }
 			);
 		}
 	},

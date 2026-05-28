@@ -15,6 +15,7 @@ Validation rules (per HoE approval):
 """
 
 import json
+
 import frappe
 from frappe import _
 from frappe.model.document import Document
@@ -73,8 +74,7 @@ class FormLayoutProfile(Document):
         if existing:
             frappe.throw(
                 _(
-                    "A default profile ({0}) already exists for {1}. "
-                    "Disable the existing default first."
+                    "A default profile ({0}) already exists for {1}. " "Disable the existing default first."
                 ).format(existing, self.reference_doctype),
                 frappe.ValidationError,
             )
@@ -87,9 +87,7 @@ class FormLayoutProfile(Document):
         """
         try:
             data = (
-                json.loads(self.sections_json)
-                if isinstance(self.sections_json, str)
-                else self.sections_json
+                json.loads(self.sections_json) if isinstance(self.sections_json, str) else self.sections_json
             )
         except json.JSONDecodeError as exc:
             frappe.throw(_("sections_json is not valid JSON: {0}").format(str(exc)))
@@ -122,9 +120,11 @@ class FormLayoutProfile(Document):
             for fld in sec.get("fields", []):
                 fn = fld.get("fieldname")
                 if not fn:
-                    errors.append(_("A field entry in section '{0}' is missing 'fieldname'.").format(
-                        sec.get("label", "?")
-                    ))
+                    errors.append(
+                        _("A field entry in section '{0}' is missing 'fieldname'.").format(
+                            sec.get("label", "?")
+                        )
+                    )
                     continue
 
                 # Unknown field: warn, don't block save
@@ -138,9 +138,7 @@ class FormLayoutProfile(Document):
 
                 # Duplicate within layout
                 if fn in seen_fieldnames:
-                    errors.append(
-                        _("Fieldname '{0}' appears more than once in the layout.").format(fn)
-                    )
+                    errors.append(_("Fieldname '{0}' appears more than once in the layout.").format(fn))
                     continue
                 seen_fieldnames.add(fn)
 

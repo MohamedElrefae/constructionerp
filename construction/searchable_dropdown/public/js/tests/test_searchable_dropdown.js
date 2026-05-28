@@ -167,7 +167,7 @@ const SearchableDropdownTests = {
 		this.assertEqual(enhancer.doctype, "Account", "Doctype stored correctly");
 		this.assertTrue(
 			mockField.$input_area.hasClass("searchable-dropdown"),
-			"CSS class applied",
+			"CSS class applied"
 		);
 	},
 
@@ -220,11 +220,11 @@ const SearchableDropdownTests = {
 
 		this.assertFalse(
 			mockField.$input_area.hasClass("searchable-dropdown"),
-			"CSS class removed",
+			"CSS class removed"
 		);
 		this.assertFalse(
 			mockField.$wrapper.hasClass("searchable-dropdown-wrapper"),
-			"Wrapper class removed",
+			"Wrapper class removed"
 		);
 		this.assertEqual(mockField.get_query, null, "get_query reset to null");
 	},

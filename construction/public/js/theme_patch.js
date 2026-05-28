@@ -16,7 +16,7 @@
 
 	console.log(
 		"%c[Construction Theme Patch] v5.0 Native Architecture...",
-		"color: #3b82f6; font-weight: bold; font-size: 14px;",
+		"color: #3b82f6; font-weight: bold; font-size: 14px;"
 	);
 
 	// ── PATCH A: Neutralise frappe.ui.Theme.prototype.set_theme ──────────────
@@ -85,7 +85,7 @@
 						frappe.show_alert(
 							"Theme Changed to Construction " +
 								(mode === "dark" ? "Dark" : "Light"),
-							2,
+							2
 						);
 				} else {
 					document.documentElement.setAttribute("data-theme", mode);

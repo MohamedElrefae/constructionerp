@@ -1,8 +1,9 @@
 import frappe
+
 from construction.api.scope_context_api import (
-    set_scope_context,
     get_user_scope_context,
     get_user_scope_hierarchy,
+    set_scope_context,
 )
 from construction.boot import extend_bootinfo
 
@@ -131,7 +132,7 @@ def test_authorization():
 
     try:
         set_scope_context(company="__NONEXISTENT__", source="test")
-        assert False, "Should have thrown"
+        raise AssertionError("Should have thrown")
     except Exception:
         pass
 
@@ -146,15 +147,15 @@ def test_bootinfo_scope_context():
     assert result["success"] is True
 
     bootinfo = extend_bootinfo({})
-    assert bootinfo.get("scope_context_enabled") is True, (
-        f"scope_context_enabled should be True, got {bootinfo.get('scope_context_enabled')}"
-    )
+    assert (
+        bootinfo.get("scope_context_enabled") is True
+    ), f"scope_context_enabled should be True, got {bootinfo.get('scope_context_enabled')}"
     sc = bootinfo.get("scope_context")
     assert sc is not None, f"scope_context missing from bootinfo: {bootinfo}"
     assert sc.get("current") is not None, f"current missing: {sc}"
-    assert sc["current"]["company"] == "Elrefae", (
-        f"Expected company=Elrefae, got {sc['current'].get('company')}"
-    )
+    assert (
+        sc["current"]["company"] == "Elrefae"
+    ), f"Expected company=Elrefae, got {sc['current'].get('company')}"
 
 
 # === T-007 ===
@@ -213,7 +214,9 @@ def test_first_time_user():
 # === T-011 ===
 def test_defaults_cleared_on_switch():
     _cleanup()
-    set_scope_context(company="Elrefae", cost_center=_COST_CENTER, project=None, department=None, source="test")
+    set_scope_context(
+        company="Elrefae", cost_center=_COST_CENTER, project=None, department=None, source="test"
+    )
     frappe.db.commit()
     frappe.clear_cache(user="Administrator")
 
@@ -234,8 +237,7 @@ def test_nestedset_expansion():
     assert group_cc["is_group"] == 1 or group_cc["is_group"] is True
 
     descendants = [
-        cc["name"] for cc in cost_centers
-        if cc["lft"] >= group_cc["lft"] and cc["rgt"] <= group_cc["rgt"]
+        cc["name"] for cc in cost_centers if cc["lft"] >= group_cc["lft"] and cc["rgt"] <= group_cc["rgt"]
     ]
     assert _GROUP_CC in descendants, "Group should include itself"
     assert _COST_CENTER in descendants, (
@@ -246,8 +248,7 @@ def test_nestedset_expansion():
     non_group = next((cc for cc in cost_centers if cc["name"] == _COST_CENTER), None)
     assert non_group is not None
     child_descendants = [
-        cc["name"] for cc in cost_centers
-        if cc["lft"] >= non_group["lft"] and cc["rgt"] <= non_group["rgt"]
+        cc["name"] for cc in cost_centers if cc["lft"] >= non_group["lft"] and cc["rgt"] <= non_group["rgt"]
     ]
     assert len(child_descendants) == 1, "Non-group should have no children beyond itself"
     assert child_descendants[0] == _COST_CENTER
@@ -287,10 +288,8 @@ def test_server_side_injection():
     for key in ("company", "cost_center", "project", "department"):
         frappe.defaults.clear_user_default(key, "test_nobody")
     none_result = add_scope_conditions("test_nobody", "Sales Invoice")
-    assert "cost_center" not in none_result, \
-        f"cost_center should not appear for unscoped user: {none_result}"
-    assert "project" not in none_result, \
-        f"project should not appear for unscoped user: {none_result}"
+    assert "cost_center" not in none_result, f"cost_center should not appear for unscoped user: {none_result}"
+    assert "project" not in none_result, f"project should not appear for unscoped user: {none_result}"
 
 
 if __name__ == "__main__":

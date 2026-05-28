@@ -7,10 +7,10 @@ from construction.install import setup_construction_workspace_page, setup_worksp
 
 
 def execute():
-	seed_translations()
+    seed_translations()
 
-	if frappe.db.table_exists("Workspace Sidebar"):
-		setup_workspace_sidebar()
-		setup_construction_workspace_page()
+    if frappe.db.table_exists("Workspace Sidebar"):
+        setup_workspace_sidebar()
+        setup_construction_workspace_page()
 
-	frappe.clear_cache()
+    frappe.clear_cache()

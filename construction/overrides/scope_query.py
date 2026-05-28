@@ -1,6 +1,5 @@
 import frappe
 
-
 # Per-request cache so we don't hit information_schema repeatedly
 _column_cache = {}
 
@@ -29,13 +28,29 @@ def add_scope_conditions(user, doctype=None):
 
     # 2. Skip system doctypes that never carry scope dimensions
     SKIP_DOCTYPES = {
-        "User", "Role", "DocType", "DocField", "DocPerm",
-        "File", "Version", "Email Queue", "Activity Log",
-        "Error Log", "Scheduled Job Log", "Server Script",
-        "Custom Field", "Property Setter", "Workflow",
-        "Workflow State", "Workflow Action", "DocShare",
-        "Comment", "Communication", "ToDo",
-        "Prepared Report", "Document Naming Rule",
+        "User",
+        "Role",
+        "DocType",
+        "DocField",
+        "DocPerm",
+        "File",
+        "Version",
+        "Email Queue",
+        "Activity Log",
+        "Error Log",
+        "Scheduled Job Log",
+        "Server Script",
+        "Custom Field",
+        "Property Setter",
+        "Workflow",
+        "Workflow State",
+        "Workflow Action",
+        "DocShare",
+        "Comment",
+        "Communication",
+        "ToDo",
+        "Prepared Report",
+        "Document Naming Rule",
     }
     if doctype in SKIP_DOCTYPES:
         return ""
@@ -53,15 +68,11 @@ def add_scope_conditions(user, doctype=None):
     clauses = []
 
     if company and _has_column(doctype, "company"):
-        clauses.append(
-            f"`tab{doctype}`.`company` = {frappe.db.escape(company)}"
-        )
+        clauses.append(f"`tab{doctype}`.`company` = {frappe.db.escape(company)}")
 
     if cost_center and _has_column(doctype, "cost_center"):
         # NestedSet expansion: include the selected node AND all descendants
-        lft, rgt = frappe.db.get_value(
-            "Cost Center", cost_center, ["lft", "rgt"]
-        )
+        lft, rgt = frappe.db.get_value("Cost Center", cost_center, ["lft", "rgt"])
         clauses.append(
             f"`tab{doctype}`.`cost_center` IN ("
             f"  SELECT `name` FROM `tabCost Center`"
@@ -70,13 +81,9 @@ def add_scope_conditions(user, doctype=None):
         )
 
     if project and _has_column(doctype, "project"):
-        clauses.append(
-            f"`tab{doctype}`.`project` = {frappe.db.escape(project)}"
-        )
+        clauses.append(f"`tab{doctype}`.`project` = {frappe.db.escape(project)}")
 
     if department and _has_column(doctype, "department"):
-        clauses.append(
-            f"`tab{doctype}`.`department` = {frappe.db.escape(department)}"
-        )
+        clauses.append(f"`tab{doctype}`.`department` = {frappe.db.escape(department)}")
 
     return " AND ".join(clauses)

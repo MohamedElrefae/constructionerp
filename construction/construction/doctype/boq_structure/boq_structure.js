@@ -28,7 +28,7 @@ frappe.ui.form.on("BOQ Structure", {
 						boq_header: frm.doc.boq_header,
 					});
 				},
-				__("View"),
+				__("View")
 			);
 
 			// Export actions
@@ -45,7 +45,7 @@ frappe.ui.form.on("BOQ Structure", {
 						},
 					});
 				},
-				__("Export"),
+				__("Export")
 			);
 
 			frm.add_custom_button(
@@ -61,7 +61,7 @@ frappe.ui.form.on("BOQ Structure", {
 						},
 					});
 				},
-				__("Export"),
+				__("Export")
 			);
 
 			frm.add_custom_button(
@@ -69,7 +69,7 @@ frappe.ui.form.on("BOQ Structure", {
 				function () {
 					frappe.set_route("print", "BOQ Header", frm.doc.boq_header);
 				},
-				__("Export"),
+				__("Export")
 			);
 		}
 	},
@@ -77,7 +77,7 @@ frappe.ui.form.on("BOQ Structure", {
 		if (frm.doc.__islocal) return;
 		if (frm.doc.is_group == 1) {
 			frm.add_custom_button(__("Convert to Non-Group"), () =>
-				frm.events.convert_to_ledger(frm),
+				frm.events.convert_to_ledger(frm)
 			);
 		} else if (frm.doc.is_group == 0) {
 			frm.add_custom_button(__("Convert to Group"), () => frm.events.convert_to_group(frm));

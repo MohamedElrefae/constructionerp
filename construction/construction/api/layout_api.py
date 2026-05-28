@@ -21,13 +21,14 @@ Resolver priority (get_active_layout)
 """
 
 import json
+
 import frappe
 from frappe import _
-
 
 # ──────────────────────────────────────────────────────────────────────
 # get_active_layout
 # ──────────────────────────────────────────────────────────────────────
+
 
 @frappe.whitelist()
 def get_active_layout(doctype: str) -> dict | None:
@@ -44,8 +45,15 @@ def get_active_layout(doctype: str) -> dict | None:
     profiles = frappe.get_all(
         "Form Layout Profile",
         filters={"reference_doctype": doctype, "enabled": 1},
-        fields=["name", "profile_name", "for_role", "priority", "is_default",
-                "layout_version", "sections_json"],
+        fields=[
+            "name",
+            "profile_name",
+            "for_role",
+            "priority",
+            "is_default",
+            "layout_version",
+            "sections_json",
+        ],
         order_by="priority desc",
     )
 
@@ -86,6 +94,7 @@ def _profile_response(profile: dict) -> dict:
 # ──────────────────────────────────────────────────────────────────────
 # save_layout
 # ──────────────────────────────────────────────────────────────────────
+
 
 @frappe.whitelist()
 def save_layout(
@@ -148,6 +157,7 @@ def save_layout(
 # list_layouts
 # ──────────────────────────────────────────────────────────────────────
 
+
 @frappe.whitelist()
 def list_layouts(doctype: str) -> list[dict]:
     """
@@ -160,8 +170,7 @@ def list_layouts(doctype: str) -> list[dict]:
     return frappe.get_all(
         "Form Layout Profile",
         filters={"reference_doctype": doctype, "enabled": 1},
-        fields=["name", "profile_name", "for_role", "is_default",
-                "priority", "is_system", "layout_version"],
+        fields=["name", "profile_name", "for_role", "is_default", "priority", "is_system", "layout_version"],
         order_by="priority desc",
     )
 
@@ -169,6 +178,7 @@ def list_layouts(doctype: str) -> list[dict]:
 # ──────────────────────────────────────────────────────────────────────
 # delete_layout
 # ──────────────────────────────────────────────────────────────────────
+
 
 @frappe.whitelist()
 def delete_layout(name: str) -> dict:
@@ -193,6 +203,7 @@ def delete_layout(name: str) -> dict:
 # ──────────────────────────────────────────────────────────────────────
 # validate_layout
 # ──────────────────────────────────────────────────────────────────────
+
 
 @frappe.whitelist()
 def validate_layout(doctype: str, sections_json: str | dict) -> dict:
@@ -251,6 +262,7 @@ def validate_layout(doctype: str, sections_json: str | dict) -> dict:
 # ──────────────────────────────────────────────────────────────────────
 # Private helpers
 # ──────────────────────────────────────────────────────────────────────
+
 
 def _require_system_manager():
     if frappe.session.user == "Administrator":

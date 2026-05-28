@@ -15,14 +15,14 @@ console.clear();
 				"bg:",
 				style.backgroundColor,
 				"display:",
-				style.display,
+				style.display
 			);
 			// List first 3 items
 			var items = ul.querySelectorAll("li");
 			console.log(
 				"  Items:",
 				items.length,
-				items[0] ? items[0].textContent.substring(0, 30) : "",
+				items[0] ? items[0].textContent.substring(0, 30) : ""
 			);
 		}
 	});
@@ -37,7 +37,7 @@ console.clear();
 				"bg:",
 				style.backgroundColor,
 				"parent:",
-				el.parentElement?.className?.substring(0, 50),
+				el.parentElement?.className?.substring(0, 50)
 			);
 		}
 	});
@@ -51,7 +51,7 @@ console.clear();
 			el.tagName,
 			el.className,
 			"display:",
-			getComputedStyle(el).display,
+			getComputedStyle(el).display
 		);
 	});
 

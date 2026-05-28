@@ -4,4 +4,4 @@ from construction.insert_translations import execute as seed_translations
 
 
 def execute():
-	seed_translations()
+    seed_translations()

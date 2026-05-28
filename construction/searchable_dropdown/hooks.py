@@ -19,7 +19,5 @@ desk_include_css = [
 
 # Whitelist APIs
 whitelisted_methods = {
-    "construction.searchable_dropdown.api.search.searchable_link_search": {
-        "allow_guest": False
-    }
+    "construction.searchable_dropdown.api.search.searchable_link_search": {"allow_guest": False}
 }

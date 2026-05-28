@@ -9,6 +9,7 @@ since patches manage their own transaction boundary.
 """
 
 import frappe
+
 from construction.install import setup_branch_company_field
 
 

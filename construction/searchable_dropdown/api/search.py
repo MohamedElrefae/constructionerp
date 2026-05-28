@@ -46,11 +46,11 @@ def searchable_link_search(
     # --- Robust coercion for search_fields ---
     # When sent as GET params, ["name"] may collapse to just "name"
     if search_fields is None:
-        search_fields = ['name']
+        search_fields = ["name"]
     elif isinstance(search_fields, str):
         # Could be a JSON string '["name", "account_name"]' or plain 'name'
         s = search_fields.strip()
-        if s.startswith('['):
+        if s.startswith("["):
             try:
                 search_fields = json.loads(s)
             except Exception:
@@ -62,7 +62,7 @@ def searchable_link_search(
 
     # --- Robust coercion for display_format ---
     if not display_format:
-        display_format = '{name}'
+        display_format = "{name}"
 
     # --- Robust coercion for filters ---
     # May arrive as None, dict, or JSON string
@@ -70,7 +70,7 @@ def searchable_link_search(
         filters = {}
     elif isinstance(filters, str):
         s = filters.strip()
-        if s.startswith('{'):
+        if s.startswith("{"):
             try:
                 filters = json.loads(s)
             except Exception:
@@ -83,47 +83,44 @@ def searchable_link_search(
 
     # Strip out internal keys injected by SearchableDropdownEnhancer
     # (these are meta-keys for our API, not actual DB filters)
-    for internal_key in ('doctype', 'search_fields', 'display_format'):
+    for internal_key in ("doctype", "search_fields", "display_format"):
         filters.pop(internal_key, None)
 
     # --- Build OR search filters ---
     or_filters = []
-    search_txt = txt.strip() if txt else ''
+    search_txt = txt.strip() if txt else ""
 
     if search_txt:
         for field in search_fields:
-            if field != 'name' and frappe.get_meta(doctype).has_field(field):
-                or_filters.append([field, 'like', f'%{search_txt}%'])
+            if field != "name" and frappe.get_meta(doctype).has_field(field):
+                or_filters.append([field, "like", f"%{search_txt}%"])
         # Always include name field
-        or_filters.append(['name', 'like', f'%{search_txt}%'])
+        or_filters.append(["name", "like", f"%{search_txt}%"])
 
     try:
         results = frappe.get_list(
             doctype,
             filters=filters,
             or_filters=or_filters if or_filters else None,
-            fields=['name'] + [f for f in search_fields if f != 'name'],
+            fields=["name"] + [f for f in search_fields if f != "name"],
             limit_page_length=int(page_length),
-            order_by='modified desc'
+            order_by="modified desc",
         )
 
         formatted_results = []
         for doc in results:
             label = _format_label(doc, display_format, search_fields)
-            formatted_results.append({
-                'value': doc.name,
-                'label': label,
-                'description': doc.get('description', '')
-            })
+            formatted_results.append(
+                {"value": doc.name, "label": label, "description": doc.get("description", "")}
+            )
 
         return formatted_results
 
     except frappe.PermissionError:
         return []
     except Exception as e:
-        frappe.log_error(f'Searchable dropdown search error: {str(e)}')
+        frappe.log_error(f"Searchable dropdown search error: {str(e)}")
         return []
-
 
 
 def _format_label(doc: dict, display_format: str, search_fields: list) -> str:
@@ -140,24 +137,24 @@ def _format_label(doc: dict, display_format: str, search_fields: list) -> str:
     """
     try:
         # Prepare format kwargs
-        format_kwargs = {'name': doc.get('name', '')}
+        format_kwargs = {"name": doc.get("name", "")}
 
         for field in search_fields:
-            format_kwargs[field] = doc.get(field, '')
+            format_kwargs[field] = doc.get(field, "")
 
         # Try to format with available fields
         label = display_format.format(**format_kwargs)
 
         # If result is empty or just separators, fallback to name
-        clean_label = label.replace('-', '').strip()
+        clean_label = label.replace("-", "").strip()
         if not clean_label:
-            return doc.get('name', '')
+            return doc.get("name", "")
 
         return label
 
     except (KeyError, ValueError):
         # Fallback to name if format fails
-        return doc.get('name', '')
+        return doc.get("name", "")
 
 
 @frappe.whitelist()
@@ -174,14 +171,9 @@ def get_recent_items(doctype: str, limit: int = 5):
         List of recent items
     """
     try:
-        results = frappe.get_list(
-            doctype,
-            fields=['name'],
-            limit_page_length=limit,
-            order_by='modified desc'
-        )
+        results = frappe.get_list(doctype, fields=["name"], limit_page_length=limit, order_by="modified desc")
 
-        return [{'value': d.name, 'label': d.name} for d in results]
+        return [{"value": d.name, "label": d.name} for d in results]
 
     except frappe.PermissionError:
         return []
