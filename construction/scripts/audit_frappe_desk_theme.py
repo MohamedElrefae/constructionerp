@@ -62,22 +62,22 @@ def generate_report(results):
     print("FRAPPE_DESK_THEME DEPENDENCY AUDIT REPORT")
     print("=" * 80 + "\n")
 
-    print(f"Total References Found: {results["total_references"]}\n")
+    print(f"Total References Found: {results['total_references']}\n")
 
     if results["python_files"]:
         print("Python Files:")
         for item in results["python_files"]:
-            print(f"  - {item["file"]} ({item["count"]} references)")
+            print(f"  - {item['file']} ({item['count']} references)")
 
     if results["javascript_files"]:
         print("\nJavaScript Files:")
         for item in results["javascript_files"]:
-            print(f"  - {item["file"]} ({item["count"]} references)")
+            print(f"  - {item['file']} ({item['count']} references)")
 
     if results["json_files"]:
         print("\nJSON Files:")
         for item in results["json_files"]:
-            print(f"  - {item["file"]} ({item["count"]} references)")
+            print(f"  - {item['file']} ({item['count']} references)")
 
     if results["total_references"] == 0:
         print("✓ No references to frappe_desk_theme found!")

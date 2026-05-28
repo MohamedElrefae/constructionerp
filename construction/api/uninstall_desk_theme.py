@@ -43,7 +43,7 @@ def execute(dry_run=True):
     print("\n--- Step 2: Feature Parity Check ---")
     parity = _check_feature_parity()
     if not parity["ready"]:
-        print(f"  Missing features: {parity["missing"]}")
+        print(f"  Missing features: {parity['missing']}")
         if not dry_run:
             return {"success": False, "reason": "missing_features", "missing": parity["missing"]}
     else:
@@ -165,7 +165,7 @@ def _verify_post_uninstall():
 
         for mode in ("light", "dark"):
             result = get_effective_desk_theme(mode)
-            print(f"  {mode} mode: theme={result.get("theme_name")}, source={result.get("source")}")
+            print(f"  {mode} mode: theme={result.get('theme_name')}, source={result.get('source')}")
     except Exception as e:
         print(f"  Verification error: {e}")
 

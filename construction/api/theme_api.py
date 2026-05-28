@@ -2403,7 +2403,7 @@ def list_available_themes():
         for t in themes_data:
             theme = {
                 "name": t.theme_name,
-                "label": f"{t.emoji_icon or "🎨"} {t.theme_name}",
+                "label": f"{t.emoji_icon or '🎨'} {t.theme_name}",
                 "info": t.description or t.theme_type,
                 "is_construction": True,
                 "theme_doc": t.name,

@@ -174,7 +174,7 @@ def run():
                 ),
             )
             updated += 1
-            print(f"  Updated: {theme["name"]}")
+            print(f"  Updated: {theme['name']}")
         else:
             # Insert
             frappe.db.sql(
@@ -207,7 +207,7 @@ def run():
                 ),
             )
             created += 1
-            print(f"  Created: {theme["name"]}")
+            print(f"  Created: {theme['name']}")
 
     frappe.db.commit()
 

@@ -219,7 +219,7 @@ class BOQExportService:
 
             # Title
             ws.merge_cells("A1:B1")
-            title_cell = ws.cell(row=1, column=1, value=f"BOQ Header: {header_data["title"]}")
+            title_cell = ws.cell(row=1, column=1, value=f"BOQ Header: {header_data['title']}")
             title_cell.font = title_font
             title_cell.alignment = Alignment(horizontal="center", vertical="center")
             ws.row_dimensions[1].height = 25
@@ -262,7 +262,7 @@ class BOQExportService:
 
             from frappe.utils import get_files_path, now_datetime
 
-            file_name = f"BOQ_Header_{boq_header}_{now_datetime().strftime("%Y%m%d_%H%M%S")}.xlsx"
+            file_name = f"BOQ_Header_{boq_header}_{now_datetime().strftime('%Y%m%d_%H%M%S')}.xlsx"
             file_path = os.path.join(get_files_path(), file_name)
 
             wb.save(file_path)
@@ -341,7 +341,7 @@ class BOQExportService:
             # Write BOQ Header info
             last_col_letter = get_column_letter(len(effective_columns)) if effective_columns else "K"
             ws.merge_cells(f"A1:{last_col_letter}1")
-            ws.cell(row=1, column=1, value=f"Bill of Quantities: {header_data["title"]}")
+            ws.cell(row=1, column=1, value=f"Bill of Quantities: {header_data['title']}")
             ws.cell(row=1, column=1).font = title_font
             ws.cell(row=1, column=1).alignment = Alignment(horizontal="center")
 
@@ -390,7 +390,7 @@ class BOQExportService:
                 # Build a data dict for this node to look up by column key
                 node_values = {
                     "wbs_code": node.get("wbs_code", ""),
-                    "title": f"{indent}{node.get("title", "")}",
+                    "title": f"{indent}{node.get('title', '')}",
                     "type": node_type,
                     "unit": node.get("unit", ""),
                     "quantity": node.get("quantity"),
@@ -457,7 +457,7 @@ class BOQExportService:
 
             from frappe.utils import get_files_path, now_datetime
 
-            file_name = f"BOQ_{boq_header}_{now_datetime().strftime("%Y%m%d_%H%M%S")}.xlsx"
+            file_name = f"BOQ_{boq_header}_{now_datetime().strftime('%Y%m%d_%H%M%S')}.xlsx"
             file_path = os.path.join(get_files_path(), file_name)
 
             wb.save(file_path)
@@ -540,7 +540,7 @@ class BOQExportService:
 
             from frappe.utils import get_files_path
 
-            file_name = f"BOQ_{boq_header}_{now_datetime().strftime("%Y%m%d_%H%M%S")}.pdf"
+            file_name = f"BOQ_{boq_header}_{now_datetime().strftime('%Y%m%d_%H%M%S')}.pdf"
             file_path = os.path.join(get_files_path(), file_name)
             with open(file_path, "wb") as f:
                 f.write(pdf_data)
@@ -605,7 +605,7 @@ class BOQExportService:
 
             from frappe.utils import get_files_path
 
-            file_name = f"BOQ_Header_{boq_header}_{now_datetime().strftime("%Y%m%d_%H%M%S")}.pdf"
+            file_name = f"BOQ_Header_{boq_header}_{now_datetime().strftime('%Y%m%d_%H%M%S')}.pdf"
             file_path = os.path.join(get_files_path(), file_name)
             with open(file_path, "wb") as f:
                 f.write(pdf_data)
