@@ -499,23 +499,50 @@ html.ct-enterprise .vfc-btn.vfc-open .vfc-badge {
 /* The slide-in panel */
 html.ct-enterprise .vfc-panel {
   position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: var(--ct-cfg-panel-width, 340px);
+  top: 50%;
+  left: 50%;
+  width: 420px;
+  max-width: 90vw;
+  height: 520px;
+  max-height: 85vh;
   background: var(--ct-surface);
-  border-left: 1px solid var(--ct-border);
-  box-shadow: var(--ct-shadow-lg);
+  border: 1px solid var(--ct-border);
+  border-radius: 12px;
+  box-shadow: var(--ct-shadow-lg), 0 20px 25px -5px rgba(0, 0, 0, 0.15);
   z-index: 200;
   display: flex;
   flex-direction: column;
-  transform: translateX(100%);
-  transition: transform var(--ct-cfg-panel-transition, 0.28s cubic-bezier(0.4, 0, 0.2, 1));
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%) scale(0.95);
+  transition: transform var(--ct-cfg-panel-transition, 0.22s cubic-bezier(0.16, 1, 0.3, 1)), opacity 0.22s;
   overflow: hidden;
 }
 
 html.ct-enterprise .vfc-panel.vfc-panel-open {
-  transform: translateX(0);
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Background backdrop */
+html.ct-enterprise .vfc-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(2px);
+  z-index: 199;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.22s;
+}
+
+html.ct-enterprise .vfc-backdrop.vfc-backdrop-open {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 /* Panel header */

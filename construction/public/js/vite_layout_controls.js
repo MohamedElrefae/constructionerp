@@ -625,14 +625,25 @@
       const isOpen = panel.classList.contains("vfc-panel-open");
       const shouldOpen = forceState !== undefined ? forceState : !isOpen;
 
+      let backdrop = document.getElementById("vfc-backdrop");
+      if (!backdrop) {
+        backdrop = document.createElement("div");
+        backdrop.id = "vfc-backdrop";
+        backdrop.className = "vfc-backdrop";
+        document.body.appendChild(backdrop);
+        backdrop.addEventListener("click", () => VFC._closeAll());
+      }
+
       if (shouldOpen) {
         // Close any other open panels first
         VFC._closeAll();
         panel.classList.add("vfc-panel-open");
+        backdrop.classList.add("vfc-backdrop-open");
         frm._vfc_btn?.classList.add("vfc-open");
         frm._vfc_panel_open = true;
       } else {
         panel.classList.remove("vfc-panel-open");
+        backdrop.classList.remove("vfc-backdrop-open");
         frm._vfc_btn?.classList.remove("vfc-open");
         frm._vfc_panel_open = false;
       }
@@ -645,6 +656,7 @@
       document.querySelectorAll(".vfc-btn.vfc-open").forEach((b) => {
         b.classList.remove("vfc-open");
       });
+      document.getElementById("vfc-backdrop")?.classList.remove("vfc-backdrop-open");
     },
 
     /* ─────────────────────────────────────────────────────────
