@@ -19,15 +19,15 @@
 .vfc-le-section {
   margin-bottom: 18px;
   border: 1px solid var(--ct-border, #e2e8f0);
-  border-radius: 8px;
+  border-radius: var(--ct-border-radius, 10px);
   overflow: hidden;
-  background: var(--ct-bg-elevated, #ffffff);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  transition: box-shadow 0.15s ease;
+  background: var(--ct-surface, #ffffff);
+  box-shadow: var(--ct-shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.05));
+  transition: box-shadow var(--ct-anim-form, 220ms);
 }
 
 .vfc-le-section:hover {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--ct-shadow, 0 2px 8px rgba(0, 0, 0, 0.08));
 }
 
 /* Unassigned fields section — visually de-emphasised */
@@ -46,15 +46,20 @@
    Section Header
 ───────────────────────────────────────────────────────────────────── */
 .vfc-le-section-head {
-  padding: 8px 14px;
-  font-size: 10px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--ct-text-muted, #718096);
-  background: var(--ct-bg-surface, #f8fafc);
+  padding: 10px 16px;
+  font-size: var(--ct-label-size, 10px);
+  font-weight: var(--ct-label-weight, 700);
+  text-transform: var(--ct-label-transform, uppercase);
+  letter-spacing: var(--ct-label-spacing, 0.07em);
+  color: var(--ct-text-secondary, #2d3748);
+  background: var(--ct-section-head-bg-dark, #f7fafc);
+  border-left: var(--ct-section-accent-border);
   border-bottom: 1px solid var(--ct-border, #e2e8f0);
   user-select: none;
+}
+
+html[data-theme="light"] .vfc-le-section-head {
+  background: var(--ct-section-head-bg-light, #f8fafc);
 }
 
 /* Collapsible header — shows pointer and chevron */

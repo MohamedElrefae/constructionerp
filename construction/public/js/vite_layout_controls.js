@@ -238,7 +238,7 @@
 
       panel.innerHTML = `
         <!-- Head -->
-        <div class="vfc-panel-head">
+        <div class="vfc-panel-head" style="cursor:move;user-select:none">
           <div class="vfc-panel-icon">${ICON_GRID}</div>
           <div>
             <div class="vfc-panel-title">${__("Form Config")}</div>
@@ -346,10 +346,14 @@
           <button class="btn btn-default btn-sm" data-vfc-close="${panelId}">${__("Close")}</button>
           <button class="btn btn-primary btn-sm" data-vfc-apply="${dtId}">${__("Apply & Save")}</button>
         </div>
+        <div class="vfc-resize-handle" style="position:absolute;right:0;bottom:0;width:15px;height:15px;cursor:se-resize;background:transparent;z-index:201"></div>
       `;
 
       document.body.appendChild(panel);
       frm._vfc_panel = panel;
+
+      // Make panel draggable and resizable
+      this._makeDraggableAndResizable(panel);
 
       // Wire up events
       this._wirePanel(frm, panel, dtId, fields);
@@ -834,9 +838,14 @@
                 <option value="3" ${sec.column_count == 3 ? "selected" : ""}>3 Cols</option>
               </select>
 
-              <label style="display:inline-flex;align-items:center;font-size:10px;color:var(--ct-text-secondary);gap:2px;cursor:pointer;user-select:none;margin:0">
+              <label style="display:inline-flex;align-items:center;font-size:10px;color:var(--ct-text-secondary);gap:2px;cursor:pointer;user-select:none;margin:0" title="${__('Allow section to be collapsed')}">
                 <input type="checkbox" ${sec.collapsible ? "checked" : ""} onchange="window._VFC._onSecCollapsibleChange(this, '${frm.doctype}', ${sIdx})" style="width:12px;height:12px" />
                 Colps
+              </label>
+
+              <label style="display:inline-flex;align-items:center;font-size:10px;color:var(--ct-text-secondary);gap:2px;cursor:pointer;user-select:none;margin:0" title="${__('Collapse by default initially')}">
+                <input type="checkbox" ${sec.collapsed_by_default ? "checked" : ""} onchange="window._VFC._onSecCollapsedByDefaultChange(this, '${frm.doctype}', ${sIdx})" style="width:12px;height:12px" ${sec.collapsible ? "" : "disabled"} />
+                Clpsd
               </label>
 
               <button class="btn btn-default btn-xs" onclick="window._VFC._deleteSection('${frm.doctype}', ${sIdx})" style="padding:2px 5px;color:var(--ct-danger);border-color:transparent;background:transparent" title="${__('Delete Section')}">✕</button>
@@ -988,6 +997,13 @@
             fieldname: "collapsible",
             fieldtype: "Check",
             default: 0
+          },
+          {
+            label: "Collapsed by Default",
+            fieldname: "collapsed_by_default",
+            fieldtype: "Check",
+            default: 0,
+            depends_on: "eval:doc.collapsible"
           }
         ],
         (values) => {
@@ -998,7 +1014,7 @@
             sort_order: frm._vfc_temp_layout.length + 1,
             visible: true,
             collapsible: !!values.collapsible,
-            collapsed_by_default: false,
+            collapsed_by_default: !!values.collapsed_by_default,
             fields: []
           };
           frm._vfc_temp_layout.push(newSec);
@@ -1007,6 +1023,87 @@
         __("Add New Section"),
         __("Add")
       );
+    },
+
+    _onSecCollapsedByDefaultChange(checkbox, doctype, sIdx) {
+      if (cur_frm && cur_frm.doctype === doctype && cur_frm._vfc_temp_layout) {
+        cur_frm._vfc_temp_layout[sIdx].collapsed_by_default = checkbox.checked;
+      }
+    },
+
+    _makeDraggableAndResizable(panel) {
+      const head = panel.querySelector(".vfc-panel-head");
+      const handle = panel.querySelector(".vfc-resize-handle");
+
+      // Initialize positioning style properties to prevent transform translate bugs
+      panel.style.left = "50%";
+      panel.style.top = "50%";
+
+      // Draggable logic
+      head.addEventListener("mousedown", (e) => {
+        if (e.target.closest("button") || e.target.closest("input") || e.target.closest("select")) return;
+        e.preventDefault();
+
+        const rect = panel.getBoundingClientRect();
+        if (panel.style.transform.includes("translate")) {
+          panel.style.transform = "none";
+          panel.style.left = `${rect.left}px`;
+          panel.style.top = `${rect.top}px`;
+        }
+
+        const startX = e.clientX;
+        const startY = e.clientY;
+        const startLeft = panel.offsetLeft;
+        const startTop = panel.offsetTop;
+
+        function onMouseMove(moveEvent) {
+          const deltaX = moveEvent.clientX - startX;
+          const deltaY = moveEvent.clientY - startY;
+          panel.style.left = `${startLeft + deltaX}px`;
+          panel.style.top = `${startTop + deltaY}px`;
+        }
+
+        function onMouseUp() {
+          document.removeEventListener("mousemove", onMouseMove);
+          document.removeEventListener("mouseup", onMouseUp);
+        }
+
+        document.addEventListener("mousemove", onMouseMove);
+        document.addEventListener("mouseup", onMouseUp);
+      });
+
+      // Resizable logic
+      handle.addEventListener("mousedown", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const rect = panel.getBoundingClientRect();
+        if (panel.style.transform.includes("translate")) {
+          panel.style.transform = "none";
+          panel.style.left = `${rect.left}px`;
+          panel.style.top = `${rect.top}px`;
+        }
+
+        const startWidth = rect.width;
+        const startHeight = rect.height;
+        const startX = e.clientX;
+        const startY = e.clientY;
+
+        function onMouseMove(moveEvent) {
+          const newWidth = Math.max(340, startWidth + (moveEvent.clientX - startX));
+          const newHeight = Math.max(400, startHeight + (moveEvent.clientY - startY));
+          panel.style.width = `${newWidth}px`;
+          panel.style.height = `${newHeight}px`;
+        }
+
+        function onMouseUp() {
+          document.removeEventListener("mousemove", onMouseMove);
+          document.removeEventListener("mouseup", onMouseUp);
+        }
+
+        document.addEventListener("mousemove", onMouseMove);
+        document.addEventListener("mouseup", onMouseUp);
+      });
     },
   };
 
