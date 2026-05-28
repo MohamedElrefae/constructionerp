@@ -73,15 +73,17 @@
       {
         key: "Engineer",
         name: __("Engineer View"),
-        desc: __("Quantities, WBS, type — hides cost fields"),
-        fields: ["boq_header", "wbs_code", "title", "type", "unit", "quantity", "stage"],
+        desc: __("Structure, header, type, quantities — hides pricing fields"),
+        // Verified against boq_item.json 2026-05-28
+        fields: ["boq_header", "structure", "item_type", "quantity", "unit", "factor", "has_stages"],
       },
       {
         key: "Accountant",
         name: __("Accountant View"),
-        desc: __("Pricing and totals — hides WBS/stage"),
+        desc: __("Pricing and totals — hides engineering fields"),
+        // Verified against boq_item.json 2026-05-28
         fields: [
-          "boq_header", "title", "unit", "quantity",
+          "boq_header", "unit", "quantity",
           "contract_unit_price", "factor", "line_total",
           "owner_ref_no",
         ],
@@ -98,8 +100,9 @@
       {
         key: "Site",
         name: __("Site View"),
-        desc: __("Stage name, completion % — hides cost fields"),
-        fields: ["boq_item", "stage_name", "completion_percentage", "remarks"],
+        desc: __("Stage identity and completion — hides notes"),
+        // Verified against boq_item_stage.json 2026-05-28
+        fields: ["boq_item", "boq_header", "project", "stage_name", "stage_status", "percent_complete"],
       },
     ],
   };
@@ -399,6 +402,16 @@
 
       const settings = loadUserSettings(frm.doctype);
       const hiddenFields = settings.vfc_hidden_fields || [];
+      const knownFieldnames = new Set(
+        (frm.meta?.fields || []).map((f) => f.fieldname)
+      );
+
+      // Unknown-field guard: warn once per unknown field, then skip
+      hiddenFields.forEach((fn) => {
+        if (!knownFieldnames.has(fn)) {
+          console.warn(`[VFC] _renderFieldList: unknown fieldname "${fn}" on ${frm.doctype} — skipping`);
+        }
+      });
 
       const SKIP_TYPES = ["Section Break", "Column Break", "Tab Break", "HTML", "Heading"];
       const renderable = fields.filter((f) => !SKIP_TYPES.includes(f.fieldtype));
@@ -597,15 +610,22 @@
     _restoreState(frm) {
       const dt = frm.doctype;
       const dtId = dt.replace(/\s/g, "-");
+      const knownFieldnames = new Set(
+        (frm.meta?.fields || []).map((f) => f.fieldname)
+      );
 
       // 1. Restore density
       const den = loadDensity(dt);
       this._applyDensity(frm, den, true);
 
-      // 2. Restore field visibility
+      // 2. Restore field visibility (unknown-field guard: skip + single warn)
       const settings = loadUserSettings(dt);
       const hiddenFields = settings.vfc_hidden_fields || [];
       hiddenFields.forEach((fn) => {
+        if (!knownFieldnames.has(fn)) {
+          console.warn(`[VFC] _restoreState: unknown fieldname "${fn}" on ${dt} — skipping`);
+          return;
+        }
         frm.toggle_display(fn, false);
       });
 

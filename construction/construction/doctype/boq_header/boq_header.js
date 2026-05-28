@@ -1,13 +1,10 @@
 // PrintSettingsDialog, ColumnConfigManager, PreviewPanel are registered globally via hooks.py
 // ConstructionExportMenu, ConstructionViewMenu are registered globally via bundle
+// ViteFormConfig is attached globally via frappe.ui.form.on('*') in vite_layout_controls.js
+// Do NOT call ViteFormConfig.attach(frm) here — it causes duplicate attach.
 
 frappe.ui.form.on("BOQ Header", {
 	refresh(frm) {
-		frappe.require("/assets/construction/js/vite_layout_controls.js", function() {
-			if (window.ViteFormConfig) {
-				window.ViteFormConfig.attach(frm);
-			}
-		});
 		if (!frm.is_new()) {
 			var BOQ_FULL_COLUMNS = [
 				{
