@@ -92,6 +92,8 @@ app_include_css = [
     "/assets/construction/css/vite_extensions.css?v=1.3",
     "/assets/construction/css/vite_form_override.css?v=1.3",
     "/assets/construction/css/vite_list_override.css?v=1.3",
+    # Phase 2: Form Layout Engine section card styles
+    "/assets/construction/css/vfc_sections.css?v=1.0",
 ]
 
 # Global JS includes (raw asset path — loaded directly, not bundled)
@@ -135,6 +137,9 @@ app_include_js = [
 	"/assets/construction/js/native_frappe_controls_compat.js?v=9",
 	# ─── Vite UI Phase 2: Form Config — auto-attaches to every form. MUST load LAST ───
 	"/assets/construction/js/vite_layout_controls.js?v=1.3",
+	# Phase 2: Generic Layout Engine — re-parents field wrappers per Form Layout Profile.
+	# Must load AFTER vite_layout_controls.js (engine fires at 250ms, controls at 150ms).
+	"/assets/construction/js/vfc_layout_engine.js?v=1.0",
 ]
 
 

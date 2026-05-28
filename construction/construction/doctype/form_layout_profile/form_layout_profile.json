@@ -1,0 +1,131 @@
+{
+ "actions": [],
+ "autoname": "format:{reference_doctype}-{profile_name}",
+ "creation": "2026-05-28 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "reference_doctype",
+  "profile_name",
+  "cb_meta",
+  "enabled",
+  "is_default",
+  "is_system",
+  "sb_targeting",
+  "for_role",
+  "priority",
+  "layout_version",
+  "sb_layout",
+  "sections_json"
+ ],
+ "fields": [
+  {
+   "fieldname": "reference_doctype",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Target DocType",
+   "options": "DocType",
+   "reqd": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "profile_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Profile Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "cb_meta",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "1",
+   "fieldname": "enabled",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Enabled"
+  },
+  {
+   "fieldname": "is_default",
+   "fieldtype": "Check",
+   "label": "Is Default",
+   "description": "Applies to all users who do not have a role-specific profile"
+  },
+  {
+   "fieldname": "is_system",
+   "fieldtype": "Check",
+   "label": "Is System (Seed)",
+   "read_only": 1,
+   "description": "Seeded profiles cannot be deleted \u2014 only disabled"
+  },
+  {
+   "fieldname": "sb_targeting",
+   "fieldtype": "Section Break",
+   "label": "Role Targeting"
+  },
+  {
+   "fieldname": "for_role",
+   "fieldtype": "Link",
+   "label": "Target Role",
+   "options": "Role",
+   "description": "If set, this profile is auto-applied to users with this role"
+  },
+  {
+   "default": "10",
+   "fieldname": "priority",
+   "fieldtype": "Int",
+   "label": "Priority",
+   "description": "Higher number wins when multiple profiles match a user. Default: 10"
+  },
+  {
+   "default": "1",
+   "fieldname": "layout_version",
+   "fieldtype": "Int",
+   "label": "Layout Schema Version",
+   "reqd": 1,
+   "description": "JSON schema version. v1 = current. Increment when sections_json structure changes."
+  },
+  {
+   "fieldname": "sb_layout",
+   "fieldtype": "Section Break",
+   "label": "Layout Definition"
+  },
+  {
+   "fieldname": "sections_json",
+   "fieldtype": "JSON",
+   "label": "Sections JSON",
+   "description": "Serialised FormSection[] array. See layout_api.py for schema documentation."
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "links": [],
+ "modified": "2026-05-28 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Construction",
+ "name": "Form Layout Profile",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "All"
+  }
+ ],
+ "sort_field": "priority",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

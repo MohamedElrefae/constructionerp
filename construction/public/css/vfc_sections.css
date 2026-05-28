@@ -1,0 +1,168 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   vfc_sections.css — Form Layout Engine Section Styles
+   ─────────────────────────────────────────────────────────────────────
+   Styles for the VFC section cards injected by vfc_layout_engine.js
+   and the Sections tab in the Config panel (vfc_sections_tab.js, Phase 4).
+
+   Principles:
+   • Scoped to .vfc-le-* classes — zero bleed into native Frappe
+   • Uses var(--ct-*) variables — inherits dark/light mode automatically
+   • @media print — section headers hidden, fields still render
+   • [dir="rtl"] support — correct RTL flow
+   • @media (pointer: coarse) — mobile-safe (no drag targets styled)
+   Version: 1.0 | 2026-05-28
+════════════════════════════════════════════════════════════════════════ */
+
+/* ─────────────────────────────────────────────────────────────────────
+   VFC Section Card
+───────────────────────────────────────────────────────────────────── */
+.vfc-le-section {
+  margin-bottom: 18px;
+  border: 1px solid var(--ct-border, #e2e8f0);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--ct-bg-elevated, #ffffff);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.15s ease;
+}
+
+.vfc-le-section:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Unassigned fields section — visually de-emphasised */
+.vfc-le-section.vfc-le-unassigned {
+  border-style: dashed;
+  opacity: 0.85;
+}
+
+.vfc-le-section.vfc-le-unassigned .vfc-le-section-head {
+  background: transparent;
+  color: var(--ct-text-muted, #718096);
+  font-style: italic;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   Section Header
+───────────────────────────────────────────────────────────────────── */
+.vfc-le-section-head {
+  padding: 8px 14px;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ct-text-muted, #718096);
+  background: var(--ct-bg-surface, #f8fafc);
+  border-bottom: 1px solid var(--ct-border, #e2e8f0);
+  user-select: none;
+}
+
+/* Collapsible header — shows pointer and chevron */
+.vfc-le-section-head.vfc-le-collapsible {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.vfc-le-section-head.vfc-le-collapsible::after {
+  content: "▾";
+  margin-left: auto;
+  font-size: 12px;
+  transition: transform 0.2s ease;
+}
+
+.vfc-le-section[data-vfc-collapsed="1"] .vfc-le-section-head.vfc-le-collapsible::after {
+  transform: rotate(-90deg);
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   Field Grid
+   column count is set inline as grid-template-columns: repeat(N, 1fr)
+───────────────────────────────────────────────────────────────────── */
+.vfc-le-grid {
+  display: grid;
+  gap: 0;
+  padding: 6px 10px 10px;
+  align-items: start;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   Field Cell
+───────────────────────────────────────────────────────────────────── */
+.vfc-le-cell {
+  padding: 4px 6px;
+  min-width: 0; /* prevent grid overflow */
+}
+
+/* Ensure native Frappe field wrappers fill the cell */
+.vfc-le-cell > .frappe-control,
+.vfc-le-cell > [data-fieldtype] {
+  width: 100%;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   RTL Support
+───────────────────────────────────────────────────────────────────── */
+[dir="rtl"] .vfc-le-section {
+  direction: rtl;
+  text-align: right;
+}
+
+[dir="rtl"] .vfc-le-section-head.vfc-le-collapsible::after {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   Print Mode — hide section headers, keep fields
+───────────────────────────────────────────────────────────────────── */
+@media print {
+  .vfc-le-section {
+    border: none;
+    box-shadow: none;
+    margin-bottom: 8px;
+  }
+
+  .vfc-le-section-head {
+    display: none;
+  }
+
+  .vfc-le-grid {
+    padding: 0;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   Mobile — pointer: coarse (touch devices)
+   Drag handles are hidden; up/down arrows shown instead (Phase 4)
+───────────────────────────────────────────────────────────────────── */
+@media (pointer: coarse) {
+  .vfc-le-section {
+    border-radius: 6px;
+  }
+
+  .vfc-le-grid {
+    padding: 4px 6px 8px;
+  }
+
+  /* Phase 4: sortable drag handles hidden on touch */
+  .vfc-sort-handle {
+    display: none;
+  }
+
+  .vfc-arrow-controls {
+    display: flex;
+  }
+}
+
+@media (pointer: fine) {
+  .vfc-arrow-controls {
+    display: none;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   Dark Mode — all colours via CSS variables (automatic)
+   Nothing to override here — var(--ct-*) covers both modes.
+───────────────────────────────────────────────────────────────────── */
