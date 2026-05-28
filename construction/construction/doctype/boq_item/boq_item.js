@@ -1,5 +1,10 @@
 frappe.ui.form.on("BOQ Item", {
 	refresh(frm) {
+		frappe.require("/assets/construction/js/vite_layout_controls.js", function() {
+			if (window.ViteFormConfig) {
+				window.ViteFormConfig.attach(frm);
+			}
+		});
 		if (frm.is_new()) {
 			return;
 		}
