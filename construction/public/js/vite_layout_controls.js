@@ -208,11 +208,6 @@
           badge.textContent = this._countVisibleFields(frm);
           btn.style.position = "relative";
           btn.appendChild(badge);
-
-          btn.addEventListener("click", (e) => {
-            e.stopPropagation();
-            this._togglePanel(frm);
-          });
         }
       }, 100);
     },
