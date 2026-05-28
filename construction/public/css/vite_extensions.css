@@ -1,0 +1,70 @@
+/* ═══════════════════════════════════════════════════════════════════
+   vite_extensions.css  — Additive token extensions for Vite UI
+   Strategy: Extend the existing --ct-* system with net-new tokens.
+   NO color changes. NO overrides to existing --ct-* values.
+   Scoped to html.ct-enterprise to match modern_theme.css namespace.
+   Load order: AFTER modern_theme.css, BEFORE vite_form_override.css
+   Version: 1.0 | 2026-05-28
+═══════════════════════════════════════════════════════════════════ */
+
+@layer construction-vite {
+
+  /* ─── Section accent tokens ─── */
+  html.ct-enterprise {
+    --ct-section-accent-border: 4px solid var(--ct-primary);
+    --ct-section-head-bg-dark: rgba(37, 99, 235, 0.04);
+    --ct-section-head-bg-light: rgba(37, 99, 235, 0.03);
+  }
+
+  /* ─── Form label tokens ─── */
+  html.ct-enterprise {
+    --ct-label-size: 10px;
+    --ct-label-weight: 700;
+    --ct-label-transform: uppercase;
+    --ct-label-spacing: 0.07em;
+  }
+
+  /* ─── Input enhancement tokens ─── */
+  html.ct-enterprise {
+    --ct-input-padding: 8px 12px;
+    --ct-input-radius: var(--ct-border-radius-sm, 6px);
+    --ct-focus-ring: 0 0 0 3px rgba(37, 99, 235, 0.18);
+    --ct-input-border-width: 1.5px;
+  }
+
+  /* ─── Button gradient token ─── */
+  html.ct-enterprise {
+    --ct-btn-gradient: linear-gradient(135deg, var(--ct-primary) 0%, #1558cc 100%);
+    --ct-btn-primary-shadow: 0 2px 6px rgba(37, 99, 235, 0.30);
+    --ct-btn-primary-shadow-hover: 0 6px 16px rgba(37, 99, 235, 0.42);
+    --ct-btn-hover-lift: translateY(-2px);
+  }
+
+  /* ─── Form Config panel token ─── */
+  html.ct-enterprise {
+    --ct-cfg-panel-width: 340px;
+    --ct-cfg-panel-transition: 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* ─── Animation tokens ─── */
+  html.ct-enterprise {
+    --ct-anim-form: 220ms cubic-bezier(0.4, 0, 0.2, 1);
+    --ct-anim-in: fadeSlideIn 220ms cubic-bezier(0.4, 0, 0.2, 1) backwards;
+  }
+
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes colFadeOut {
+    from { opacity: 1; transform: scale(1); }
+    to   { opacity: 0; transform: scale(0.97); }
+  }
+
+  @keyframes colFadeIn {
+    from { opacity: 0; transform: scale(0.97); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+} /* end @layer construction-vite */

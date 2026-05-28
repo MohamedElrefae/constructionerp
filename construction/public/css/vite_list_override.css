@@ -1,0 +1,251 @@
+/* ═══════════════════════════════════════════════════════════════════
+   vite_list_override.css — Global list view visual skin (Vite UI)
+   Strategy: Consume --ct-* variables only. Zero hardcoded hex.
+   Scope: html.ct-enterprise[data-theme] — auto dark/light.
+   Print: @media screen — never bleeds into print.
+   Cascade: @layer construction-vite — clean Tailwind coexistence.
+   Version: 1.0 | 2026-05-28
+═══════════════════════════════════════════════════════════════════ */
+
+@media screen {
+@layer construction-vite {
+
+/* ════════════════════════════════════════════════════════════════
+   1. LIST CONTAINER
+════════════════════════════════════════════════════════════════ */
+
+html.ct-enterprise .list-row-container {
+  background: var(--ct-bg);
+}
+
+html.ct-enterprise .result-list {
+  background: var(--ct-surface);
+  border: 1px solid var(--ct-border);
+  border-radius: var(--ct-border-radius, 10px);
+  overflow: hidden;
+  box-shadow: var(--ct-shadow-sm);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   2. LIST HEADER
+════════════════════════════════════════════════════════════════ */
+
+html.ct-enterprise .list-row-head {
+  background: var(--ct-bg-3);
+  border-bottom: 1px solid var(--ct-border);
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--ct-text-muted);
+}
+
+html.ct-enterprise .list-header-subject {
+  color: var(--ct-text-muted);
+}
+
+/* Sort indicator */
+html.ct-enterprise .list-header-subject.sortable:hover {
+  color: var(--ct-primary);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   3. LIST ROWS
+════════════════════════════════════════════════════════════════ */
+
+html.ct-enterprise .list-row {
+  border-bottom: 1px solid var(--ct-border);
+  transition: background var(--ct-anim-form, 220ms);
+}
+
+html.ct-enterprise .list-row:last-child {
+  border-bottom: none;
+}
+
+html.ct-enterprise .list-row:nth-child(even) {
+  background: rgba(148, 163, 184, 0.025);
+}
+
+html.ct-enterprise .list-row:hover {
+  background: var(--ct-surface-hover);
+}
+
+html.ct-enterprise .list-row.checked {
+  background: var(--ct-primary-light);
+  border-color: rgba(37, 99, 235, 0.15);
+}
+
+/* List row subject (the main link) */
+html.ct-enterprise .list-subject .level-item.bold {
+  font-weight: 700;
+  color: var(--ct-text);
+  font-size: 13px;
+}
+
+html.ct-enterprise .list-subject .level-item.bold:hover {
+  color: var(--ct-primary);
+}
+
+/* Tags / indicators in rows */
+html.ct-enterprise .list-row .indicator-pill {
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 99px;
+  padding: 2px 8px;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   4. LIST FILTERS / FILTER BAR
+════════════════════════════════════════════════════════════════ */
+
+html.ct-enterprise .filter-section {
+  background: var(--ct-surface);
+  border-bottom: 1px solid var(--ct-border);
+  padding: 8px 16px;
+}
+
+html.ct-enterprise .filter-tag {
+  background: var(--ct-primary-light);
+  color: var(--ct-primary);
+  border: 1px solid rgba(37, 99, 235, 0.25);
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+html.ct-enterprise .filter-tag .remove {
+  color: var(--ct-primary);
+  opacity: 0.6;
+}
+
+html.ct-enterprise .filter-tag .remove:hover {
+  opacity: 1;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   5. LIST TOOLBAR (sort, columns, actions bar)
+════════════════════════════════════════════════════════════════ */
+
+html.ct-enterprise .list-toolbar-wrapper {
+  background: var(--ct-surface);
+  border-bottom: 1px solid var(--ct-border);
+}
+
+html.ct-enterprise .list-toolbar .page-actions .btn {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   6. EMPTY STATE
+════════════════════════════════════════════════════════════════ */
+
+html.ct-enterprise .list-empty-state,
+html.ct-enterprise .no-result {
+  background: var(--ct-surface);
+  border-radius: var(--ct-border-radius, 10px);
+  border: 1px solid var(--ct-border);
+  padding: 48px 24px;
+  text-align: center;
+}
+
+html.ct-enterprise .list-empty-state .text-muted {
+  color: var(--ct-text-muted);
+  font-size: 14px;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   7. PAGINATION
+════════════════════════════════════════════════════════════════ */
+
+html.ct-enterprise .list-paging-area {
+  background: var(--ct-surface);
+  border-top: 1px solid var(--ct-border);
+  padding: 10px 16px;
+}
+
+html.ct-enterprise .btn-paging {
+  background: var(--ct-bg-3);
+  border: 1px solid var(--ct-border);
+  color: var(--ct-text-secondary);
+  border-radius: var(--ct-border-radius-sm, 6px);
+  font-weight: 600;
+  transition: all var(--ct-anim-form, 220ms);
+}
+
+html.ct-enterprise .btn-paging:hover {
+  background: var(--ct-surface-hover);
+  color: var(--ct-primary);
+  border-color: var(--ct-primary);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   8. LIST ROW CHECKBOX
+════════════════════════════════════════════════════════════════ */
+
+html.ct-enterprise .list-check-all input[type="checkbox"],
+html.ct-enterprise .list-row-checkbox input[type="checkbox"] {
+  accent-color: var(--ct-primary);
+  width: 14px;
+  height: 14px;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   9. KANBAN VIEW (if used)
+════════════════════════════════════════════════════════════════ */
+
+html.ct-enterprise .kanban-column {
+  background: var(--ct-bg-3);
+  border: 1px solid var(--ct-border);
+  border-radius: var(--ct-border-radius, 10px);
+}
+
+html.ct-enterprise .kanban-card {
+  background: var(--ct-surface);
+  border: 1px solid var(--ct-border);
+  border-radius: var(--ct-border-radius-sm, 6px);
+  box-shadow: var(--ct-shadow-sm);
+  transition: box-shadow var(--ct-anim-form, 220ms), transform var(--ct-anim-form, 220ms);
+}
+
+html.ct-enterprise .kanban-card:hover {
+  box-shadow: var(--ct-shadow);
+  transform: translateY(-2px);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   10. REPORT VIEW TABLE
+════════════════════════════════════════════════════════════════ */
+
+html.ct-enterprise .datatable {
+  border: 1px solid var(--ct-border);
+  border-radius: var(--ct-border-radius-sm, 6px);
+  overflow: hidden;
+}
+
+html.ct-enterprise .datatable .dt-header {
+  background: var(--ct-bg-3);
+}
+
+html.ct-enterprise .datatable .dt-header .dt-cell__content {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--ct-text-muted);
+}
+
+html.ct-enterprise .datatable .dt-row:hover .dt-cell {
+  background: var(--ct-surface-hover);
+}
+
+html.ct-enterprise .datatable .dt-row:nth-child(even) .dt-cell {
+  background: rgba(148, 163, 184, 0.025);
+}
+
+} /* end @layer */
+} /* end @media screen */
