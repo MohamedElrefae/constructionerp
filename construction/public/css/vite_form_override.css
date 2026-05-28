@@ -7,8 +7,7 @@
    Version: 1.0 | 2026-05-28
 ═══════════════════════════════════════════════════════════════════ */
 
-@media screen {
-@layer construction-vite {
+
 
 /* ════════════════════════════════════════════════════════════════
    1. PAGE / FORM CONTAINER
@@ -899,5 +898,3 @@ html.ct-enterprise[dir="rtl"] .form-column {
   html.ct-enterprise .form-section:nth-child(5) { animation-delay: 160ms; }
 }
 
-} /* end @layer */
-} /* end @media screen */

@@ -89,9 +89,9 @@ app_include_css = [
     "/assets/construction/css/scope_context.css?v=2",
     # ─── Vite UI — MUST load LAST to win cascade ───
     # Phase 1: Visual Foundation
-    "/assets/construction/css/vite_extensions.css?v=1.1",
-    "/assets/construction/css/vite_form_override.css?v=1.1",
-    "/assets/construction/css/vite_list_override.css?v=1.1",
+    "/assets/construction/css/vite_extensions.css?v=1.2",
+    "/assets/construction/css/vite_form_override.css?v=1.2",
+    "/assets/construction/css/vite_list_override.css?v=1.2",
 ]
 
 # Global JS includes (raw asset path — loaded directly, not bundled)
@@ -134,7 +134,7 @@ app_include_js = [
 	# Must load last: native Frappe affordances remain available after theme styling
 	"/assets/construction/js/native_frappe_controls_compat.js?v=9",
 	# ─── Vite UI Phase 2: Form Config — auto-attaches to every form. MUST load LAST ───
-	"/assets/construction/js/vite_layout_controls.js?v=1.1",
+	"/assets/construction/js/vite_layout_controls.js?v=1.2",
 ]
 
 

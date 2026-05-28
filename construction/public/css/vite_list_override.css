@@ -7,8 +7,7 @@
    Version: 1.0 | 2026-05-28
 ═══════════════════════════════════════════════════════════════════ */
 
-@media screen {
-@layer construction-vite {
+
 
 /* ════════════════════════════════════════════════════════════════
    1. LIST CONTAINER
@@ -247,5 +246,3 @@ html.ct-enterprise .datatable .dt-row:nth-child(even) .dt-cell {
   background: rgba(148, 163, 184, 0.025);
 }
 
-} /* end @layer */
-} /* end @media screen */
