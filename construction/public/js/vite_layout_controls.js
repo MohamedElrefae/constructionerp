@@ -626,7 +626,7 @@
       const isSystemManager = frappe.user_roles.includes("System Manager") || frappe.session.user === "Administrator";
       if (isSystemManager && frm._vfc_temp_layout) {
         frappe.call({
-          method: "construction.api.layout_api.save_layout",
+          method: "construction.construction.api.layout_api.save_layout",
           args: {
             doctype: dt,
             profile_name: "Default",

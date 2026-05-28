@@ -90,7 +90,7 @@
       }
 
       const result = await frappe.call({
-        method: "construction.api.layout_api.get_active_layout",
+        method: "construction.construction.api.layout_api.get_active_layout",
         args: { doctype },
         freeze: false,
       });
