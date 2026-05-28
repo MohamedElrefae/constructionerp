@@ -538,14 +538,16 @@
     /* ─────────────────────────────────────────────────────────
        _applyDensity — CSS class on layout container + save
     ───────────────────────────────────────────────────────── */
-    _applyDensity(frm, n) {
+    _applyDensity(frm, n, quiet) {
       const container = frm.layout?.wrapper?.[0] || frm.$wrapper?.find(".form-layout")?.[0];
       if (!container) return;
       container.classList.remove("vfc-density-1", "vfc-density-2", "vfc-density-3");
       container.classList.add(`vfc-density-${n}`);
       saveDensity(frm.doctype, n);
 
-      frappe.show_alert({ message: __("Column density set to {0}", [n]), indicator: "blue" }, 2);
+      if (!quiet) {
+        frappe.show_alert({ message: __("Column density set to {0}", [n]), indicator: "blue" }, 2);
+      }
     },
 
     /* ─────────────────────────────────────────────────────────
@@ -571,7 +573,7 @@
 
       // 1. Apply density
       const den = loadDensity(dt); // already saved on click
-      this._applyDensity(frm, den);
+      this._applyDensity(frm, den, true);
 
       // 2. Apply visibility + save hidden list
       const hiddenFields = this._applyVisibility(frm, dtId);
@@ -598,7 +600,7 @@
 
       // 1. Restore density
       const den = loadDensity(dt);
-      this._applyDensity(frm, den);
+      this._applyDensity(frm, den, true);
 
       // 2. Restore field visibility
       const settings = loadUserSettings(dt);
