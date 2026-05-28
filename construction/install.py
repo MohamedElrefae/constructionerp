@@ -394,6 +394,8 @@ def setup_direct_labor_designations():
 		return
 	if not frappe.get_meta("Construction Settings", cached=False).has_field("direct_labor_designations"):
 		return
+	if not frappe.db.exists("DocType", "Designation"):
+		return
 
 	settings = frappe.get_single("Construction Settings")
 	existing = {
