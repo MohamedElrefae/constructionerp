@@ -29,7 +29,7 @@ memorygraph --version
 |------|------------------|-----------------|
 | 1 | `test -f AGENTS.md && echo "exists"` | `exists` |
 | 2 | `grep -c "Project Identity" AGENTS.md` | `>= 1` |
-| 3 | `grep -c "BOQ Item has NO" AGENTS.md` | `>= 1` |
+| 3 | `grep -c "NO item_code or item_name" AGENTS.md` | `>= 1` |
 | 4 | `grep -c "Only 6 CSS files" AGENTS.md` | `>= 1` |
 | 5 | `grep -c "ADR.md.*7" AGENTS.md` | `>= 1` |
 | 6 | `wc -l < AGENTS.md` | Between 100–200 |
@@ -396,7 +396,7 @@ Copy this table and fill in results:
 | 5 | T5.2 Source-of-Truth Rule | ⬜ Pass / ⬜ Fail |
 | 5 | T5.3 Git Integration | ⬜ Pass / ⬜ Fail |
 
-**Overall Result:** `___ / 23 tests passed`
+**Overall Result:** `___ / 22 tests passed`
 
 ---
 
