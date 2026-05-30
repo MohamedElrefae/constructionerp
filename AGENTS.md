@@ -106,10 +106,54 @@
 3. If you need schema details, read `docs/ai/SCHEMA_FACTS.md`.
 4. If you need code patterns, read `docs/ai/CODING_PATTERNS.md`.
 
-### For MCP-Enabled Agents (If Available)
-- MCP memory is a **cache**, not authority. If recalled memory conflicts with live repo files, **live repo files win**.
-- Always verify critical facts (BOQ Item schema, CSS registration list, endpoint counts) against the live repo before acting.
-- At session end, update `SESSION_MEMORY.md` as fallback for agents without MCP.
+### For MCP-Enabled Agents (Auto-Capture)
+
+**MCP memory is a cache, not authority.** If recalled memory conflicts with live repo files, **live repo files win**.
+
+#### Session Start (MANDATORY)
+1. Execute `recall_memories` with query "construction erp current state"
+2. Summarize recalled context before starting work
+3. Verify critical facts against the live repo before acting
+
+#### During Work (Automatic — No Prompting Needed)
+Store memory on ANY of these events:
+- **Git commit**: what changed and why
+- **Bug fix**: problem description + solution applied
+- **Architecture decision**: decision + rationale
+- **Pattern discovery**: reusable code pattern found
+- **Error encountered**: error message + how it was fixed
+
+Use these helpers when available:
+```bash
+# Store a memory manually
+python3 scripts/mcp_store.py --type fix --title "..." --content "..." --tag python --importance 0.9
+
+# Recall memories
+python3 scripts/mcp_recall.py "BOQ Item schema" --limit 3
+```
+
+#### Session End (MANDATORY)
+1. Store summary of what was accomplished
+2. Update `SESSION_MEMORY.md` §3 and §6 as fallback
+
+```bash
+# Interactive session capture
+python3 scripts/session_end.py
+```
+
+### External Auto-Capture (Git Hooks)
+A `post-commit` git hook is installed. Every commit automatically stores a memory to MCP with:
+- Commit hash, author, message
+- List of changed files
+- Type: `code_pattern` | Importance: 0.6
+
+To install/reinstall hooks:
+```bash
+bash scripts/install_git_hooks.sh
+```
+
+### Conflict Resolution
+If MCP memory conflicts with any live repo file (`AGENTS.md`, `SESSION_MEMORY.md`, DocType JSON), **the repo file wins.** Always re-run `scripts/ai_context_check.py` when schemas change.
 
 ---
 *Last updated: 2026-05-31*  

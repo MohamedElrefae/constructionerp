@@ -68,15 +68,17 @@
 ### Current Sprint: Form Layout Engine Phase 3+ / BOQ Accounting
 #### Task 1: AI Memory Architecture Implementation — Status: In Progress
 - **Started:** 2026-05-31
-- **Files being modified:** `AGENTS.md`, `SESSION_MEMORY.md` (new), `docs/ai/*` (new), `scripts/ai_context_check.py` (new)
+- **Files being modified:** `AGENTS.md`, `SESSION_MEMORY.md`, `docs/ai/*`, `scripts/*`, `construction-erp-coder/*`
 - **Decisions made:**
   - Repo files are source of truth; MCP/skills are adapters only
   - `AGENTS.md` rewritten from dev report to agent context
   - `SESSION_MEMORY.md` created as living sprint document
   - `docs/ai/` created for deep references (schemas, patterns, index)
   - Validation script created to prevent stale memory
+  - Git post-commit hook installed for auto-capture
+  - `mcp_store.py`, `mcp_recall.py`, `session_end.py` helpers created
 - **Blockers:** None
-- **Next action:** Run `scripts/ai_context_check.py` to lock ground truth; then proceed to Phase 2 (MCP seeding) only after static memory is proven stable
+- **Next action:** Phase 2 MCP auto-capture operational; proceed to Phase 3 (ERPNext read-only MCP server) when needed
 
 #### Task 2: Form Layout Engine Phase 3+ — Status: In Progress
 - **Started:** Prior to 2026-05-30
@@ -125,7 +127,29 @@
 
 ## 6. Session Log (Append-Only — Most Recent First)
 
-### Session 2026-05-31 — Agent: Kimi Code
+### Session 2026-05-31 — Agent: Kimi Code (Phase 2)
+- **Worked on:** MCP auto-capture infrastructure (Phase 2)
+- **Decisions:**
+  - Created `scripts/mcp_store.py` — CLI to store memories via MCP stdio
+  - Created `scripts/mcp_recall.py` — CLI to recall memories via MCP stdio
+  - Created `scripts/session_end.py` — interactive session summary capture
+  - Created `scripts/install_git_hooks.sh` + `.git/hooks/post-commit` — auto-capture on every commit
+  - Updated `AGENTS.md` §7 with auto-capture protocol and helper script references
+  - Verified `mcp_store.py` and `mcp_recall.py` work end-to-end
+  - Verified git post-commit hook stores commit memory automatically
+- **Issues found:**
+  - Plain `python3` cannot import memorygraph's pydantic due to ABI mismatch
+  - Fix: all MCP scripts and hooks use `/home/mohamed/.local/share/pipx/venvs/memorygraphmcp/bin/python`
+- **Files changed:**
+  - `scripts/mcp_store.py` (created)
+  - `scripts/mcp_recall.py` (created)
+  - `scripts/session_end.py` (created)
+  - `scripts/install_git_hooks.sh` (created)
+  - `.git/hooks/post-commit` (installed)
+  - `AGENTS.md` (updated §7)
+- **Next steps:** Use `session_end.py` after every session; commits auto-capture via hook
+
+### Session 2026-05-31 — Agent: Kimi Code (Phase 1)
 - **Worked on:** Engineering review + Phase 1A–D implementation
 - **Decisions:**
   - Approved revised architecture: repo files authoritative, MCP/skills are adapters
