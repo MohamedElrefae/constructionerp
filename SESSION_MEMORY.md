@@ -127,6 +127,25 @@
 
 ## 6. Session Log (Append-Only — Most Recent First)
 
+### Session 2026-05-31 — Agent: Kimi Code (Phase 3)
+- **Worked on:** ERPNext read-only MCP server (Phase 3)
+- **Decisions:**
+  - Created `erpnext-mcp-server/server.py` with 9 read-only tools
+  - Tools: get_boq_header, get_boq_structure_tree, get_scope_context, list_construction_themes, get_form_layout_profile, get_doctype_schema, get_document, get_doctype_list, run_safe_select
+  - Safety: DocType allowlist (30 DocTypes), SQL injection guard (blocks INSERT/UPDATE/DELETE/DROP/ALTER), audit logging to logs/ai_mcp_audit.log
+  - Frappe contextvar isolation solved via dedicated ThreadPoolExecutor (avoids asyncio.to_thread context copy issues)
+  - Registered with Kimi, Codex, Antigravity, Windsurf
+  - Installed `mcp` package in bench venv (`/home/mohamed/frappe-bench/env`)
+- **Issues found:**
+  - Frappe's `contextvars.ContextVar` based Local storage incompatible with `asyncio.to_thread()` context copying
+  - Fix: use `loop.run_in_executor()` with custom ThreadPoolExecutor that preserves per-thread Frappe state
+  - Frappe logger requires site/logs/ directory relative to cwd
+  - Fix: `os.chdir(BENCH_PATH)` + `mkdir(parents=True, exist_ok=True)` in init_frappe()
+- **Files changed:**
+  - `erpnext-mcp-server/server.py` (created)
+  - Agent MCP configs updated (Kimi, Codex, Antigravity, Windsurf)
+- **Next steps:** Use natural language to query ERPNext data through MCP-enabled agents
+
 ### Session 2026-05-31 — Agent: Kimi Code (Phase 2)
 - **Worked on:** MCP auto-capture infrastructure (Phase 2)
 - **Decisions:**

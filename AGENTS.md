@@ -97,6 +97,7 @@
 | **Session state** | `SESSION_MEMORY.md` (living document) |
 | **Schema facts** | `docs/ai/SCHEMA_FACTS.md` |
 | **Coding patterns** | `docs/ai/CODING_PATTERNS.md` |
+| **ERPNext MCP bridge** | `erpnext-mcp-server/server.py` (read-only DocType queries) |
 
 ## 7. Memory Protocol
 
