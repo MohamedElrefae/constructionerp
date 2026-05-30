@@ -1,0 +1,126 @@
+{
+  "format_version": "2.0",
+  "export_version": "1.0",
+  "export_date": "2026-05-30T22:14:33.162022+00:00",
+  "backend_type": "sqlite",
+  "memory_count": 5,
+  "relationship_count": 0,
+  "memories": [
+    {
+      "id": "3372d53b-e631-4112-a33d-5b0cb81f7d3a",
+      "type": "project",
+      "title": "Construction ERP \u2014 Project Architecture Overview",
+      "content": "Construction ERP is a Frappe/ERPNext app at /home/mohamed/frappe-bench/apps/construction. Four main systems: (1) Theme System \u2014 22 CSS files, 14884 lines, 54-token CSS variable system, server-side resolution via boot_session hook. (2) Scope Context \u2014 multi-dim access control via permission_query_conditions hook, NestedSet lft/rgt, Redis 5-min TTL. (3) BOQ System \u2014 Header -> Structure(NestedSet) -> Item, 12 service modules, 9 whitelisted API endpoints in boq_api.py. (4) Form Layout Engine (VFC) \u2014 Form Layout Profile DocType + JS re-parenting at runtime.",
+      "summary": "Frappe app with theme, scope, BOQ, and layout engine systems",
+      "tags": [
+        "construction",
+        "architecture",
+        "frappe",
+        "overview"
+      ],
+      "importance": 0.95,
+      "confidence": 1.0,
+      "context": {
+        "project_path": "/home/mohamed/frappe-bench/apps/construction",
+        "git_branch": "feature/vite-ui-v1",
+        "languages": [
+          "python",
+          "javascript",
+          "css"
+        ],
+        "frameworks": [
+          "frappe",
+          "erpnext"
+        ]
+      }
+    },
+    {
+      "id": "1716fc72-9fb9-4f3d-ac4f-f76a9d111d22",
+      "type": "code_pattern",
+      "title": "BOQ Item DocType Schema \u2014 CRITICAL: No item_code field",
+      "content": "BOQ Item fields: structure (Link->BOQ Structure), boq_header, item_type (Measured Work/Provisional Sum/Prime Cost/Daywork/Contingency/TBD), cost_item (Data \u2014 free text, NOT Link->Item), owner_page, owner_ref_no, owner_file_ref, quantity (Float), unit (Link->UOM), factor (Float), has_stages (Check), est_unit_cost (Currency), est_unit_price (Currency), contract_unit_price (Currency), line_total (Currency), overhead_pct (Percent), profit_pct (Percent), overhead_amount, profit_amount, calculated_sell_price, est_line_total, quantity_executed, quantity_certified. WARNING: BOQ Item has NO item_code or item_name. It is a specification line, not an ERPNext Item link.",
+      "summary": "BOQ Item uses cost_item (Data), not item_code. Never assume ERPNext Item link.",
+      "tags": [
+        "construction",
+        "boq",
+        "doctype",
+        "schema",
+        "critical"
+      ],
+      "importance": 0.95,
+      "confidence": 1.0,
+      "context": {
+        "project_path": "/home/mohamed/frappe-bench/apps/construction",
+        "files_involved": [
+          "construction/construction/doctype/boq_item/boq_item.json"
+        ]
+      }
+    },
+    {
+      "id": "b1f31fee-4c8f-46ce-9843-73cb40cb6c92",
+      "type": "fix",
+      "title": "CSS Registration Rule \u2014 Only 6 files in app_include_css",
+      "content": "Only 6 CSS files are registered in hooks.py app_include_css: modern_theme.css, scope_context.css, vite_extensions.css, vite_form_override.css, vite_list_override.css, vfc_sections.css. The remaining 16 CSS files are generated themes, login/email/print themes, or test files. After adding a new production CSS file: (1) add path to app_include_css in hooks.py, (2) increment the ?v= version param to bust browser cache, (3) run bench build or bench clear-cache.",
+      "summary": "Only 6 CSS files are registered. Generated/special files load conditionally.",
+      "tags": [
+        "css",
+        "frappe",
+        "hooks",
+        "gotcha",
+        "critical"
+      ],
+      "importance": 0.9,
+      "confidence": 1.0,
+      "context": {
+        "project_path": "/home/mohamed/frappe-bench/apps/construction",
+        "files_involved": [
+          "construction/hooks.py"
+        ]
+      }
+    },
+    {
+      "id": "9c1609dd-a08c-41a6-a8a6-4df89598c159",
+      "type": "fix",
+      "title": "TimestampMismatchError Prevention for Theme Writes",
+      "content": "Frappe's User DocType uses optimistic locking. Concurrent theme switches from multiple tabs cause TimestampMismatchError. FIX: Use frappe.db.set_value('User Desk Theme', user, 'theme', value, update_modified=False) instead of doc.save() for high-frequency user preference updates. This bypasses Frappe validation hooks but avoids locking conflicts.",
+      "summary": "Use frappe.db.set_value with update_modified=False for theme hot-path updates",
+      "tags": [
+        "frappe",
+        "theme",
+        "gotcha",
+        "locking"
+      ],
+      "importance": 0.85,
+      "confidence": 1.0,
+      "context": {
+        "project_path": "/home/mohamed/frappe-bench/apps/construction",
+        "files_involved": [
+          "construction/api/theme_api.py"
+        ]
+      }
+    },
+    {
+      "id": "d4cee11a-ad15-4eb8-9784-4bc910350575",
+      "type": "code_pattern",
+      "title": "Scope Context Query Injection Pattern",
+      "content": "add_scope_conditions() in overrides/scope_query.py injects SQL WHERE clauses via permission_query_conditions hook. Uses NestedSet lft/rgt for cost center descendant expansion. Column-existence guards prevent SQL errors on doctypes without scope columns. Administrator bypasses all filters. Redis cache (5-min TTL) for scope hierarchy. ALWAYS test scope features as non-admin user \u2014 admin bypasses all filters.",
+      "summary": "Permission query injection with NestedSet, column guards, admin bypass, Redis cache",
+      "tags": [
+        "construction",
+        "scope",
+        "security",
+        "frappe"
+      ],
+      "importance": 0.9,
+      "confidence": 1.0,
+      "context": {
+        "project_path": "/home/mohamed/frappe-bench/apps/construction",
+        "files_involved": [
+          "construction/overrides/scope_query.py",
+          "construction/boot.py"
+        ]
+      }
+    }
+  ],
+  "relationships": []
+}
