@@ -72,6 +72,21 @@
 			console.log(`[LE] attach() triggered for: ${frm.doctype}`);
 			const dt = frm.doctype;
 
+			const layoutRoot = this._getLayoutRoot(frm);
+
+			// Non-default density → render with density profile (bypasses PILOT/tab gates)
+			if (layoutRoot) {
+				const denClass = [...layoutRoot.classList].find((c) => /^vfc-density-\d+$/.test(c));
+				if (denClass) {
+					const density = parseInt(denClass.split("-").pop(), 10);
+					if (density !== 2) {
+						console.log(`[LE] Non-default density (${density}) — density rendering.`);
+						this.renderWithDensity(frm, density);
+						return;
+					}
+				}
+			}
+
 			// Pilot gate — only known flat-layout DocTypes
 			if (!PILOT_DOCTYPES.has(dt)) {
 				console.log(`[LE] ${dt} not in PILOT_DOCTYPES, skipping.`);
@@ -116,9 +131,6 @@
 					console.log(`[LE] No profile found for ${dt}. Aborting VFC layout.`);
 					return;
 				}
-
-				// Retrieve the form's layout root
-				const layoutRoot = this._getLayoutRoot(frm);
 
 				if (!layoutRoot || !layoutRoot.isConnected) {
 					const retries = this._retryCounts.get(key) || 0;
@@ -855,8 +867,167 @@
        Call this after saving a profile to force re-fetch on next
        form open.
     ───────────────────────────────────────────────────────────── */
-		invalidateCache(doctype) {
+		_invalidateCache(doctype) {
 			this._cache.delete(doctype);
+		},
+
+		/* ─────────────────────────────────────────────────────────────
+       renderWithDensity(frm, colCount)
+       Renders the form with a dynamic (virtual) profile at the
+       specified column count.  Bypasses PILOT / tab gates so that
+       density works on EVERY DocType.
+    ───────────────────────────────────────────────────────────── */
+		renderWithDensity(frm, colCount) {
+			const layoutRoot = this._getLayoutRoot(frm);
+			if (!layoutRoot) return;
+
+			this._clearSections(frm);
+			layoutRoot.classList.add("vfc-active");
+
+			// Build a virtual profile from the current form meta fields
+			const profile = this._buildDensityProfile(frm, colCount);
+			if (!profile) return;
+
+			// Hide ALL native shells INCLUDING tab structure
+			this._hideNativeLayoutShells(layoutRoot);
+			layoutRoot.querySelectorAll(".nav-tabs, .tab-content, .tab-pane").forEach((el) => {
+				if (el.closest(".vfc-le-section")) return;
+				el.style.setProperty("display", "none", "important");
+				el.setAttribute("data-vfc-hidden", "1");
+			});
+
+			const knownFieldnames = new Set((frm.meta?.fields || []).map((f) => f.fieldname));
+			const SKIP_TYPES = new Set(["Section Break", "Column Break", "Tab Break", "HTML", "Heading"]);
+			const metaFieldTypeMap = {};
+			(frm.meta?.fields || []).forEach((mf) => {
+				if (mf.fieldname) metaFieldTypeMap[mf.fieldname] = mf.fieldtype;
+			});
+
+			const injectedContainers = [];
+
+			profile.sections.forEach((sec) => {
+				if (sec.visible === false) return;
+
+				const sectionEl = this._buildSectionEl(sec, frm, colCount);
+				const gridEl = sectionEl.querySelector(".vfc-le-grid");
+
+				const fields = [...(sec.fields || [])].sort(
+					(a, b) => (a.sort_order || 0) - (b.sort_order || 0)
+				);
+				let hasVisibleField = false;
+
+				fields.forEach((fld) => {
+					const fn = fld.fieldname;
+					if (!knownFieldnames.has(fn)) return;
+					if (SKIP_TYPES.has(metaFieldTypeMap[fn])) return;
+
+					const fieldObj = frm.fields_dict[fn];
+					if (!fieldObj) return;
+
+					if (fld.visible === false) {
+						frm.toggle_display(fn, false);
+						return;
+					}
+
+					if (fieldObj.df && (fieldObj.df.hidden || fieldObj.df.invisible)) return;
+
+					const wrapper = fieldObj.wrapper;
+					if (!wrapper) return;
+
+					const cell = document.createElement("div");
+					cell.className = "vfc-le-cell";
+					cell.style.gridColumn = "1";
+					cell.setAttribute("data-vfc-field", fn);
+
+					const nativeEl = wrapper instanceof jQuery ? wrapper[0] : wrapper;
+					if (nativeEl && nativeEl.parentNode) {
+						if (!fieldObj._native_parent) {
+							fieldObj._native_parent = nativeEl.parentNode;
+						}
+						cell.appendChild(nativeEl);
+						this._restoreVisibleFieldWrapper(nativeEl);
+					}
+
+					gridEl.appendChild(cell);
+					hasVisibleField = true;
+				});
+
+				if (hasVisibleField || sec.collapsible) {
+					layoutRoot.appendChild(sectionEl);
+					injectedContainers.push(sectionEl);
+				}
+			});
+
+			this._activeSections.set(frm.doctype + "__" + frm.docname, injectedContainers);
+		},
+
+		/* ─────────────────────────────────────────────────────────────
+       restoreNative(frm)
+       Removes all VFC sections and restores Frappe's native layout.
+    ───────────────────────────────────────────────────────────── */
+		restoreNative(frm) {
+			this._clearSections(frm);
+		},
+
+		/* ─────────────────────────────────────────────────────────────
+       _buildDensityProfile(frm, colCount) → profile object
+       Groups frm.meta.fields by Section Break into a virtual profile.
+    ───────────────────────────────────────────────────────────── */
+		_buildDensityProfile(frm, colCount) {
+			const fields = frm.meta?.fields || [];
+			if (!fields.length) return null;
+
+			const sections = [];
+			let currentSection = null;
+			const SKIP_TYPES = new Set(["Section Break", "Column Break", "Tab Break"]);
+
+			fields.forEach((df, i) => {
+				if (df.fieldtype === "Tab Break" || df.fieldtype === "HTML" || df.fieldtype === "Heading") return;
+
+				if (df.fieldtype === "Section Break") {
+					currentSection = {
+						fieldname: df.fieldname || `sec_${i}`,
+						id: df.fieldname || `sec_${i}`,
+						label: df.label || "",
+						column_count: colCount || 2,
+						visible: true,
+						collapsible: !!df.collapsible,
+						collapsed_by_default: !!df.collapsed_by_default,
+						fields: [],
+					};
+					sections.push(currentSection);
+					return;
+				}
+
+				if (SKIP_TYPES.has(df.fieldtype)) return;
+
+				if (!currentSection) {
+					currentSection = {
+						fieldname: "_default",
+						id: "_default",
+						label: "",
+						column_count: colCount || 2,
+						visible: true,
+						collapsible: false,
+						fields: [],
+					};
+					sections.push(currentSection);
+				}
+
+				currentSection.fields.push({
+					fieldname: df.fieldname,
+					visible: !df.hidden,
+					sort_order: i,
+					col: 1,
+				});
+			});
+
+			return {
+				profile_name: "_density",
+				column_count: colCount || 2,
+				sections: sections.filter((s) => s.fields.length > 0),
+				unassigned_policy: "discard",
+			};
 		},
 	};
 

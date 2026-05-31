@@ -707,18 +707,13 @@
 			container.classList.add(`vfc-density-${n}`);
 			saveDensity(frm.doctype, n);
 
-			this._applyInlineDensity(container, n);
-
-			// Live-update VFC grids when engine is active
-			if (container.classList.contains("vfc-active")) {
-				container.querySelectorAll(".vfc-le-grid").forEach((grid) => {
-					grid.style.gridTemplateColumns = `repeat(${n}, 1fr)`;
-				});
-			}
-
-			// Re-trigger layout engine to recalculate column widths live
+			// Delegate to VFC engine for proper layout restructuring
 			if (window.VFCLayoutEngine) {
-				window.VFCLayoutEngine.attach(frm);
+				if (n === 2) {
+					window.VFCLayoutEngine.restoreNative(frm);
+				} else {
+					window.VFCLayoutEngine.renderWithDensity(frm, n);
+				}
 			}
 
 			if (!quiet) {
@@ -727,44 +722,6 @@
 					2
 				);
 			}
-		},
-
-		/* ─────────────────────────────────────────────────────────
-       _applyInlineDensity — set/clear inline grid styles
-       on .form-column > form and full-width spanning fields
-    ────────────────────────────────────────────────────────── */
-		_applyInlineDensity(container, n) {
-			const cols = this._densityCols(n);
-
-			container.querySelectorAll(".form-column > form").forEach((form) => {
-				if (cols <= 1) {
-					form.style.display = "";
-					form.style.gridTemplateColumns = "";
-					form.style.gap = "";
-				} else {
-					form.style.display = "grid";
-					form.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
-					form.style.gap = "12px 24px";
-				}
-			});
-
-			const span = cols > 1 ? cols : 0;
-			const spanTypes = ["Table", "Text Editor", "Code", "HTML", "Text"];
-			spanTypes.forEach((t) => {
-				container.querySelectorAll(`.form-column > form > .frappe-control[data-fieldtype="${t}"]`).forEach((ctrl) => {
-					ctrl.style.gridColumn = span ? `span ${span}` : "";
-				});
-			});
-		},
-
-		/* ─────────────────────────────────────────────────────────
-       _densityCols — effective column count with responsive rules
-    ────────────────────────────────────────────────────────── */
-		_densityCols(n) {
-			const w = window.innerWidth;
-			if (w <= 768 && n > 1) return 1;
-			if (w <= 1200 && n === 3) return 2;
-			return n;
 		},
 
 		/* ─────────────────────────────────────────────────────────
@@ -1493,24 +1450,6 @@
 			});
 		},
 	};
-
-	/* ─────────────────────────────────────────────────────────
-     ONE-TIME: responsive density media query listener
-  ────────────────────────────────────────────────────────── */
-	let _densityMQsetup = false;
-	function _setupDensityMQ() {
-		if (_densityMQsetup) return;
-		_densityMQsetup = true;
-		const reapply = () => {
-			document.querySelectorAll(".form-layout").forEach((el) => {
-				const cls = [...el.classList].find((c) => /^vfc-density-\d+$/.test(c));
-				if (cls) VFC._applyInlineDensity(el, parseInt(cls.split("-").pop(), 10));
-			});
-		};
-		window.matchMedia("(max-width: 768px)").addEventListener("change", reapply);
-		window.matchMedia("(max-width: 1200px)").addEventListener("change", reapply);
-	}
-	_setupDensityMQ();
 
 	/* ══════════════════════════════════════════════════════════════
      GLOBAL ATTACH HOOK — fires on EVERY form in the app
