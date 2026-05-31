@@ -856,38 +856,38 @@ html.ct-enterprise .form-column {
 }
 
 /* 1-column: stacked fields */
-html.ct-enterprise .vfc-density-1 .form-column > form {
+html.ct-enterprise .vfc-active.vfc-density-1 .form-column > form {
   display: block !important;
 }
 
 /* 2-column: fields flow in 2-column grid within columns */
-html.ct-enterprise .vfc-density-2 .form-column > form {
+html.ct-enterprise .vfc-active.vfc-density-2 .form-column > form {
   display: grid !important;
   grid-template-columns: repeat(2, 1fr) !important;
   gap: 12px 24px !important;
 }
 
 /* 3-column: fields flow in 3-column grid within columns */
-html.ct-enterprise .vfc-density-3 .form-column > form {
+html.ct-enterprise .vfc-active.vfc-density-3 .form-column > form {
   display: grid !important;
   grid-template-columns: repeat(3, 1fr) !important;
   gap: 12px 24px !important;
 }
 
 /* Full-width spanning fields for grids/tables/long text fields */
-html.ct-enterprise .vfc-density-2 .form-column > form > .frappe-control[data-fieldtype="Table"],
-html.ct-enterprise .vfc-density-2 .form-column > form > .frappe-control[data-fieldtype="Text Editor"],
-html.ct-enterprise .vfc-density-2 .form-column > form > .frappe-control[data-fieldtype="Code"],
-html.ct-enterprise .vfc-density-2 .form-column > form > .frappe-control[data-fieldtype="HTML"],
-html.ct-enterprise .vfc-density-2 .form-column > form > .frappe-control[data-fieldtype="Text"] {
+html.ct-enterprise .vfc-active.vfc-density-2 .form-column > form > .frappe-control[data-fieldtype="Table"],
+html.ct-enterprise .vfc-active.vfc-density-2 .form-column > form > .frappe-control[data-fieldtype="Text Editor"],
+html.ct-enterprise .vfc-active.vfc-density-2 .form-column > form > .frappe-control[data-fieldtype="Code"],
+html.ct-enterprise .vfc-active.vfc-density-2 .form-column > form > .frappe-control[data-fieldtype="HTML"],
+html.ct-enterprise .vfc-active.vfc-density-2 .form-column > form > .frappe-control[data-fieldtype="Text"] {
   grid-column: span 2 !important;
 }
 
-html.ct-enterprise .vfc-density-3 .form-column > form > .frappe-control[data-fieldtype="Table"],
-html.ct-enterprise .vfc-density-3 .form-column > form > .frappe-control[data-fieldtype="Text Editor"],
-html.ct-enterprise .vfc-density-3 .form-column > form > .frappe-control[data-fieldtype="Code"],
-html.ct-enterprise .vfc-density-3 .form-column > form > .frappe-control[data-fieldtype="HTML"],
-html.ct-enterprise .vfc-density-3 .form-column > form > .frappe-control[data-fieldtype="Text"] {
+html.ct-enterprise .vfc-active.vfc-density-3 .form-column > form > .frappe-control[data-fieldtype="Table"],
+html.ct-enterprise .vfc-active.vfc-density-3 .form-column > form > .frappe-control[data-fieldtype="Text Editor"],
+html.ct-enterprise .vfc-active.vfc-density-3 .form-column > form > .frappe-control[data-fieldtype="Code"],
+html.ct-enterprise .vfc-active.vfc-density-3 .form-column > form > .frappe-control[data-fieldtype="HTML"],
+html.ct-enterprise .vfc-active.vfc-density-3 .form-column > form > .frappe-control[data-fieldtype="Text"] {
   grid-column: span 3 !important;
 }
 
@@ -898,22 +898,22 @@ html.ct-enterprise[dir="rtl"] .form-column > form {
 
 /* Tablet: 3-col → 2-col */
 @media (max-width: 1200px) {
-  html.ct-enterprise .vfc-density-3 .form-column > form {
+  html.ct-enterprise .vfc-active.vfc-density-3 .form-column > form {
     grid-template-columns: repeat(2, 1fr) !important;
   }
-  html.ct-enterprise .vfc-density-3 .form-column > form > .frappe-control[data-fieldtype="Table"],
-  html.ct-enterprise .vfc-density-3 .form-column > form > .frappe-control[data-fieldtype="Text Editor"],
-  html.ct-enterprise .vfc-density-3 .form-column > form > .frappe-control[data-fieldtype="Code"],
-  html.ct-enterprise .vfc-density-3 .form-column > form > .frappe-control[data-fieldtype="HTML"],
-  html.ct-enterprise .vfc-density-3 .form-column > form > .frappe-control[data-fieldtype="Text"] {
+  html.ct-enterprise .vfc-active.vfc-density-3 .form-column > form > .frappe-control[data-fieldtype="Table"],
+  html.ct-enterprise .vfc-active.vfc-density-3 .form-column > form > .frappe-control[data-fieldtype="Text Editor"],
+  html.ct-enterprise .vfc-active.vfc-density-3 .form-column > form > .frappe-control[data-fieldtype="Code"],
+  html.ct-enterprise .vfc-active.vfc-density-3 .form-column > form > .frappe-control[data-fieldtype="HTML"],
+  html.ct-enterprise .vfc-active.vfc-density-3 .form-column > form > .frappe-control[data-fieldtype="Text"] {
     grid-column: span 2 !important;
   }
 }
 
 /* Mobile: all densities → 1-col */
 @media (max-width: 768px) {
-  html.ct-enterprise .vfc-density-2 .form-column > form,
-  html.ct-enterprise .vfc-density-3 .form-column > form {
+  html.ct-enterprise .vfc-active.vfc-density-2 .form-column > form,
+  html.ct-enterprise .vfc-active.vfc-density-3 .form-column > form {
     display: block !important;
   }
 }

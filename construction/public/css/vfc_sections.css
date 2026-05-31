@@ -2,7 +2,7 @@
    vfc_sections.css — Form Layout Engine Section Styles
    ─────────────────────────────────────────────────────────────────────
    Styles for the VFC section cards injected by vfc_layout_engine.js
-   and the Sections tab in the Config panel (vfc_sections_tab.js, Phase 4).
+   and the Sections tab in the Config panel (vite_layout_controls.js).
 
    Principles:
    • Scoped to .vfc-le-* classes — zero bleed into native Frappe
@@ -144,7 +144,7 @@ html[data-theme="light"] .vfc-le-section-head {
 
 /* ─────────────────────────────────────────────────────────────────────
    Mobile — pointer: coarse (touch devices)
-   Drag handles are hidden; up/down arrows shown instead (Phase 4)
+   Drag handles hidden; arrow controls shown for reordering (Phase 4)
 ───────────────────────────────────────────────────────────────────── */
 @media (pointer: coarse) {
   .vfc-le-section {
@@ -155,20 +155,35 @@ html[data-theme="light"] .vfc-le-section-head {
     padding: 4px 6px 8px;
   }
 
-  /* Phase 4: sortable drag handles hidden on touch */
+  /* Drag handles hidden on touch — users rely on arrow buttons */
   .vfc-sort-handle {
-    display: none;
+    display: none !important;
   }
 
   .vfc-arrow-controls {
-    display: flex;
+    display: inline-flex !important;
   }
 }
 
 @media (pointer: fine) {
   .vfc-arrow-controls {
-    display: none;
+    display: none !important;
   }
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   Sections Editor — Unassigned Fields style
+───────────────────────────────────────────────────────────────────── */
+.vfc-sec-item.vfc-sec-item-unassigned {
+  border-style: dashed !important;
+  opacity: 0.85;
+}
+
+.vfc-sec-item.vfc-sec-item-unassigned .vfc-sec-sort-handle,
+.vfc-sec-item.vfc-sec-item-unassigned > div > .btn-default[onclick*="deleteSection"],
+.vfc-sec-item.vfc-sec-item-unassigned input[type="text"] {
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 /* ─────────────────────────────────────────────────────────────────────

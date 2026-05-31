@@ -460,6 +460,90 @@ def setup_boq_rollout_mode():
 
 
 # ---------------------------------------------------------------------------
+# Form Layout Profile Seeds
+# ---------------------------------------------------------------------------
+
+DEFAULT_BOQ_HEADER_LAYOUT = {
+    "version": 1,
+    "unassigned_policy": "append",
+    "sections": [
+        {
+            "id": "sec_identity",
+            "label": "Identity",
+            "column_count": 2,
+            "sort_order": 1,
+            "visible": True,
+            "collapsible": False,
+            "fields": [
+                {"fieldname": "project", "col": 1, "sort_order": 1, "visible": True},
+                {"fieldname": "project_name", "col": 2, "sort_order": 2, "visible": True},
+                {"fieldname": "boq_type", "col": 1, "sort_order": 3, "visible": True},
+                {"fieldname": "status", "col": 2, "sort_order": 4, "visible": True},
+                {"fieldname": "title", "col": 1, "sort_order": 5, "visible": True},
+                {"fieldname": "version", "col": 2, "sort_order": 6, "visible": True},
+            ],
+        },
+        {
+            "id": "sec_financial",
+            "label": "Financial Summary",
+            "column_count": 3,
+            "sort_order": 2,
+            "visible": True,
+            "collapsible": True,
+            "fields": [
+                {"fieldname": "total_contract_value", "col": 1, "sort_order": 1, "visible": True},
+                {"fieldname": "total_estimated_value", "col": 2, "sort_order": 2, "visible": True},
+                {"fieldname": "total_budgeted_cost", "col": 3, "sort_order": 3, "visible": True},
+            ],
+        },
+        {
+            "id": "sec_audit",
+            "label": "Audit Trail",
+            "column_count": 2,
+            "sort_order": 3,
+            "visible": True,
+            "collapsible": True,
+            "collapsed_by_default": True,
+            "fields": [
+                {"fieldname": "locked_by", "col": 1, "sort_order": 1, "visible": True},
+                {"fieldname": "locked_date", "col": 2, "sort_order": 2, "visible": True},
+            ],
+        },
+    ],
+}
+
+
+def seed_form_layout_profiles():
+    """Seed default Form Layout Profiles for construction DocTypes.
+
+    Called by after_migrate hook. Idempotent — skips existing profiles.
+    """
+    profiles = [
+        {
+            "reference_doctype": "BOQ Header",
+            "profile_name": "Default",
+            "is_default": 1,
+            "is_system": 1,
+            "priority": 10,
+            "sections_json": json.dumps(DEFAULT_BOQ_HEADER_LAYOUT),
+        },
+    ]
+
+    for data in profiles:
+        name = frappe.db.get_value(
+            "Form Layout Profile",
+            {"reference_doctype": data["reference_doctype"], "profile_name": data["profile_name"]},
+            "name",
+        )
+        if name:
+            continue
+
+        doc = frappe.get_doc({"doctype": "Form Layout Profile", **data})
+        doc.flags.ignore_permissions = True
+        doc.insert(ignore_permissions=True)
+
+
+# ---------------------------------------------------------------------------
 # System Themes
 # ---------------------------------------------------------------------------
 

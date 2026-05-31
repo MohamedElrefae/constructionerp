@@ -1,234 +1,161 @@
-# Construction App — Development Report
+# Construction ERP — AI Agent Context File
+> READ THIS FIRST at the start of every session.
 
-## Overview
+## 1. Project Identity
+- **Name:** Construction ERP (Frappe/ERPNext custom app)
+- **App name:** `construction` (used in imports: `from construction.xxx import yyy`)
+- **Repo root:** `/home/mohamed/frappe-bench/apps/construction`
+- **Author:** Mohamed Elrefae (solo civil engineer developer)
+- **License:** MIT
+- **Current branch:** `feature/vite-ui-v1`
+- **Total commits:** 117
+- **Latest commit:** `d7b5186` — fix: f-strings compatible with Python 3.10 quote nesting rules
 
-Implementation of the **Scope Context** subsystem across 5 phases. This feature provides multi-dimensional scoping (company, cost center, project, department) for user-level data access in Frappe/ERPNext, replacing the legacy single-company model.
+## 2. Tech Stack
+- **Backend:** Python 3.14 (venv), Frappe Framework (v15/v16 dual-compat); code must remain Python 3.10 quote-nesting compatible
+- **Frontend:** Vanilla JS + JSX components (Vite bundle), CSS Variables
+- **Database:** MariaDB 10.6+, Redis (scope hierarchy cache, 5-min TTL)
+- **Bundler:** Vite (`construction.bundle.XR6HIDAQ.js`)
+- **Testing:** Python `unittest` (12 top-level + 8 DocType test files), `fast-check` (JS property tests)
 
----
+## 3. Architecture — Four Core Systems
 
-## Phase 1: Foundation — Scope Context DocType & API
+### 3A. Theme System
+- **22 CSS files** exist in `public/css/`, **14,884 total lines**
+- **Only 6 CSS files are registered in `hooks.py` `app_include_css`** (see §6). The rest are generated themes, login/email/print themes, or test files.
+- Three-layer cascade:
+  1. `modern_theme_tokens.css` (284 lines, 54 CSS variables)
+  2. `modern_theme_base.css` (5,101 lines, component overrides)
+  3. `modern_theme_v16_adapter.css` (2,144 lines, v16 DOM mapping)
+- Combined file: `modern_theme.css` (4,258 lines) — this is what Frappe actually loads
+- Dark mode namespace: `html.ct-enterprise[data-theme="dark"]`
+- Server-side resolution via `boot_session` hook (`construction.api.theme_api.add_theme_to_boot`) — no FOUC
+- **17 whitelisted endpoints** / **34 functions total** in `api/theme_api.py`
+- Per-user: **User Desk Theme** DocType (25 fields); site-wide: **Construction Theme** DocType (94 fields) + **Modern Theme Settings** DocType
 
-### Objective
-Create the core data model and CRUD API for user scope management.
+### 3B. Scope Context System
+- **User Scope Context** DocType: company, cost_center, project, department, branch
+- Query injection via `permission_query_conditions` hook (`overrides/scope_query.py`)
+- NestedSet `lft`/`rgt` expansion for cost center descendants
+- Redis cache (5-min TTL), column-existence guards, admin bypass
+- Integration tests: 13 passed (documented in prior report)
 
-### Deliverables
+### 3C. BOQ System (Bill of Quantities)
+- **BOQ Header** (master) → **BOQ Structure** (WBS tree, NestedSet) → **BOQ Item** (line item)
+- **CRITICAL — BOQ Item schema:**
+  - Uses `cost_item` (Data field — free text), **NOT** `item_code` (Link→Item)
+  - Uses `structure` (Link→BOQ Structure), `quantity`, `unit` (Link→UOM)
+  - Cost fields: `est_unit_cost`, `est_unit_price`, `contract_unit_price`, `line_total`
+  - Margin fields: `overhead_pct`, `profit_pct`, `overhead_amount`, `profit_amount`, `calculated_sell_price`
+  - Progress fields: `quantity_executed`, `quantity_certified`
+  - **There is NO `item_code` or `item_name` field.** BOQ items are specification lines, not ERPNext Items.
+- 12 service modules in `services/` (lifecycle, accounting, export, import, migration, operational, lookups, scope filters, transaction validation, scope resolution, WBS generator)
+- BOQ API (`api/boq_api.py`): 9 whitelisted endpoints
+- BOQ Structure uses NestedSet (`lft`, `rgt`, `old_parent`, `is_group`, `wbs_code`)
 
-| Artifact | Path |
-|---|---|
-| DocType JSON | `construction/doctype/user_scope_context/user_scope_context.json` |
-| Python Controller | `construction/doctype/user_scope_context/user_scope_context.py` |
-| API Module | `api/scope_context_api.py` |
+### 3D. Form Layout Engine (VFC)
+- **Form Layout Profile** DocType: stores `sections_json` for each `reference_doctype`
+- `vfc_layout_engine.js` (847 lines): runtime field re-parenting into custom sections
+- `vite_layout_controls.js` (dynamic): drag/resize panel + Sections Editor tab
+- `vfc_sections.css` (177 lines): section card styles
+- Status: Phase 1+2 complete (drag/resize + section editor), Phase 3+ in progress
 
-### DocType Fields
-- `user` (Link → User, reqd, unique, autoname field)
-- `company` (Link → Company, reqd)
-- `cost_center` (Link → Cost Center)
-- `project` (Link → Project)
-- `department` (Link → Department)
-- `scope_version` (Int, auto-incremented on each save)
-- `last_active_at` (Datetime, auto-set via `now_datetime()`)
-- `client_id` (Data, for multi-tab browser support)
-- `track_changes` enabled for version history
+## 4. Critical Conventions (Non-Negotiable)
+1. **All SQL:** parameterized queries ONLY — never f-string SQL injection
+   - ✅ `frappe.db.sql("SELECT * FROM \`tabBOQ Item\` WHERE name = %(name)s", {"name": name})`
+   - ❌ `frappe.db.sql(f"SELECT * FROM \`tabBOQ Item\` WHERE name = '{name}'")`
+2. **All API endpoints:** `@frappe.whitelist()` decorator required
+3. **CSS:** always `!important` for Frappe cascade override
+4. **New CSS file?** Register in `hooks.py` `app_include_css` AND bump `?v=` param to bust cache
+5. **DOM selectors:** must work on both v15 AND v16 (dual-compat)
+6. **Theme writes:** use `frappe.db.set_value(..., update_modified=False)` not `doc.save()` (avoids TimestampMismatchError)
+7. **Scope tests:** always test as non-admin user (admin bypasses all scope filters)
+8. **Python compatibility:** venv is Python 3.14, but code must remain Python 3.10 quote-nesting safe
 
-### API Endpoints (whitelisted)
-- `set_scope_context()` — Dual-write: canonical DocType + session defaults sync
-- `get_scope_hierarchy_detail()` — Full hierarchy tree for management UI
-- `quick_create()` — Generic quick-add for management UI
-- `get_active_scope_summary()` — Active sessions (System Manager only)
+## 5. Active Workstreams
+> Read `SESSION_MEMORY.md` for the current sprint state.
+>
+> As of last update (2026-05-30):
+> - Form Layout Engine Phase 3+ — in progress
+> - BOQ Accounting Integration — in progress
+> - Cost Estimation (CostItem) — not started
+> - Procurement (PlantResource) — not started
 
-### Validation Rules
-- Cross-dimension validation via `scope_validation.py`
-- User existence check
-- Permission boundary: non-admins cannot create records for other users
+## 6. Key Files
+| Purpose | Path |
+|---------|------|
+| **All CSS/JS registrations** | `construction/hooks.py` (app_include_css has 6 files; app_include_js has 20+ files) |
+| **Boot session hook** | `construction/boot.py` |
+| **BOQ CRUD API** | `construction/api/boq_api.py` (9 whitelisted endpoints) |
+| **Theme API** | `construction/api/theme_api.py` (17 whitelisted endpoints) |
+| **Scope query injection** | `construction/overrides/scope_query.py` |
+| **Form Layout API** | `construction/construction/api/layout_api.py` |
+| **Architecture decisions** | `ADR.md` (7 accepted ADRs), `docs/ADR-001-accounting-dimension.md` |
+| **CSS token reference** | `docs/token_reference.md` (54 tokens) |
+| **Hook matrix** | `docs/hook_matrix.md` |
+| **Developer onboarding** | `docs/onboarding.md` |
+| **Session state** | `SESSION_MEMORY.md` (living document) |
+| **Schema facts** | `docs/ai/SCHEMA_FACTS.md` |
+| **Coding patterns** | `docs/ai/CODING_PATTERNS.md` |
+| **ERPNext MCP bridge** | `erpnext-mcp-server/server.py` (read-only DocType queries) |
 
----
+## 7. Memory Protocol
 
-## Phase 2: Overrides & Boot — Query Injection & Session Sync
+### For All Agents (Static Files)
+1. Read this file (`AGENTS.md`) first.
+2. Read `SESSION_MEMORY.md` for current sprint state.
+3. If you need schema details, read `docs/ai/SCHEMA_FACTS.md`.
+4. If you need code patterns, read `docs/ai/CODING_PATTERNS.md`.
 
-### Objective
-Integrate scope context into Frappe's query layer and boot sequence.
+### For MCP-Enabled Agents (Auto-Capture)
 
-### Deliverables
+**MCP memory is a cache, not authority.** If recalled memory conflicts with live repo files, **live repo files win**.
 
-| Artifact | Path |
-|---|---|
-| Query Override | `overrides/scope_query.py` |
-| Boot Extension | `boot.py` |
-| Validation Utility | `construction/utils/scope_validation.py` |
+#### Session Start (MANDATORY)
+1. Execute `recall_memories` with query "construction erp current state"
+2. Summarize recalled context before starting work
+3. Verify critical facts against the live repo before acting
 
-### `add_scope_conditions(user, doctype)`
-- Injects SQL WHERE clauses for ALL doctype queries via `permission_query_conditions` hook
-- NestedSet expansion: cost center filter includes descendants via `lft/rgt`
-- Column-existence guards prevent invalid SQL
-- Per-request column cache avoids repeated `information_schema` queries
-- Administrator bypasses all filters
-- System doctypes (User, Role, DocType, etc.) skipped
+#### During Work (Automatic — No Prompting Needed)
+Store memory on ANY of these events:
+- **Git commit**: what changed and why
+- **Bug fix**: problem description + solution applied
+- **Architecture decision**: decision + rationale
+- **Pattern discovery**: reusable code pattern found
+- **Error encountered**: error message + how it was fixed
 
-### Bootinfo Extension
-- `scope_context_enabled` flag from Construction Settings
-- `scope_context_enabled_dimensions` — per-dimension toggle
-- `scope_context.current` — user's current scope document
-- `scope_context.hierarchy` — permitted hierarchy (companies, cost centers, projects, departments)
-- `scope_context._version` — cache-busting version key
+Use these helpers when available:
+```bash
+# Store a memory manually
+python3 scripts/mcp_store.py --type fix --title "..." --content "..." --tag python --importance 0.9
 
-### Session Defaults Sync
-On scope change: `set_scope_context()` writes to User Scope Context DocType, then syncs to `frappe.defaults.set_user_default()` for company, cost_center, project, department. Cleared when null/unset.
-
----
-
-## Phase 3: NestedSet Expansion & Query Filters
-
-### Objective
-Implement NestedSet descendant expansion for cost center filtering.
-
-### Deliverables
-- Integrated into `add_scope_conditions()` in `overrides/scope_query.py`
-
-### Implementation
-```sql
-`tab{doctype}`.`cost_center` IN (
-    SELECT `name` FROM `tabCost Center`
-    WHERE `lft` >= {lft} AND `rgt` <= {rgt}
-)
-```
-- Selected cost center AND all descendants are included
-- Works with Frappe's NestedSet model (lft/rgt tree encoding)
-- Covers list views, reports, charts, dashboards, recent documents
-
-### Hierarchy API
-- `get_user_scope_hierarchy(user)` returns all permitted entities
-- Includes NestedSet `lft/rgt/is_group` for cost centers
-- Redis-cached with 5-minute TTL
-- Cache invalidation via `invalidate_scope_cache(user)` on User Permission changes
-
----
-
-## Phase 4: Unit Tests & Permission Model
-
-### Objective
-Comprehensive unit test suite for User Scope Context DocType.
-
-### Deliverables
-
-| Artifact | Path |
-|---|---|
-| Unit Tests | `construction/doctype/user_scope_context/test_user_scope_context.py` |
-
-### Test Cases
-
-| ID | Test | Description |
-|---|---|---|
-| AC-001 | `test_01_doctype_exists` | DocType registered in system |
-| AC-002 | `test_02_create_valid_record` | Valid user+company creation |
-| AC-003 | `test_03_duplicate_user_fails` | Unique constraint on user |
-| AC-004 | `test_04_scope_version_increments` | Auto-increment on save |
-| AC-005 | `test_05_last_active_at_populates` | Datetime auto-set |
-| AC-006 | `test_06_track_changes_enabled` | Version creation |
-| AC-007 | `test_07_non_admin_permission_restriction` | Non-admin cannot read others |
-| AC-008 | `test_08_cross_dimension_validation` | Mismatched cost_center/company rejected |
-| — | `test_owner_can_modify_own_record` | Record owner write access |
-| — | `test_required_fields` | Mandatory field metadata |
-
-### Permission Model
-DocType permission rules:
-- **System Manager**: Full read/write/create/delete
-- **All (including `__myself`)**: Read access to own record only
-- Owner-based access enforced via `__myself` rule
-- `validate()` method blocks cross-user creation for non-System Managers
-
----
-
-## Phase 5: Integration Tests & Documentation
-
-### Objective
-End-to-end integration tests + final documentation.
-
-### Deliverables
-
-| Artifact | Path |
-|---|---|
-| Integration Tests | `tests/test_scope_context.py` |
-
-### Integration Test Cases
-
-| ID | Test | Description |
-|---|---|---|
-| T-001 | `test_create_scope_context` | Full creation flow via API |
-| T-002 | `test_update_scope_context` | Update increments version |
-| T-003 | `test_session_defaults_sync` | Session defaults mirror DocType |
-| T-004 | `test_cross_validation` | Cross-dimension validation utility |
-| T-005 | `test_authorization` | Non-admin unauthorized access |
-| T-006 | `test_bootinfo_scope_context` | Bootinfo includes scope data |
-| T-007 | `test_bootinfo_hierarchy` | Bootinfo includes NestedSet hierarchy |
-| T-008 | `test_version_log` | Track Changes version log |
-| T-009 | `test_concurrent_writes` | Sequential updates |
-| T-010 | `test_first_time_user` | New user gets empty hierarchy |
-| T-011 | `test_defaults_cleared_on_switch` | Unset fields cleared in defaults |
-| T-012 | `test_nestedset_expansion` | NestedSet descendant logic verified |
-| T-013 | `test_server_side_injection` | Query injection: admin bypass, skip doctypes, column guards, unscoped user |
-
-### Replacement: Branch → Cost Center
-- Legacy `Branch` doctype references replaced with `Employee` (has company, no cost_center)
-- All dimension references normalized to cost_center throughout test suite
-
----
-
-## Test Results
-
-### Unit Tests (AC-001 through AC-008 + additional)
-```
-Ran 10 tests in 0.968s
-OK
+# Recall memories
+python3 scripts/mcp_recall.py "BOQ Item schema" --limit 3
 ```
 
-### Integration Tests (T-001 through T-013)
+#### Session End (MANDATORY)
+1. Store summary of what was accomplished
+2. Update `SESSION_MEMORY.md` §3 and §6 as fallback
+
+```bash
+# Interactive session capture
+python3 scripts/session_end.py
 ```
-Results: 13 passed, 0 failed, 13 total
-ALL TESTS PASSED
+
+### External Auto-Capture (Git Hooks)
+A `post-commit` git hook is installed. Every commit automatically stores a memory to MCP with:
+- Commit hash, author, message
+- List of changed files
+- Type: `code_pattern` | Importance: 0.6
+
+To install/reinstall hooks:
+```bash
+bash scripts/install_git_hooks.sh
 ```
+
+### Conflict Resolution
+If MCP memory conflicts with any live repo file (`AGENTS.md`, `SESSION_MEMORY.md`, DocType JSON), **the repo file wins.** Always re-run `scripts/ai_context_check.py` when schemas change.
 
 ---
-
-## Architecture Summary
-
-```
-User Action
-    │
-    ▼
-set_scope_context() [whitelisted API]
-    │
-    ├─► get_user_scope_hierarchy() → Redis-cached permitted entities
-    ├─► validate_scope_dimensions() → cross-dimension check
-    ├─► User Scope Context DocType [canonical store]
-    ├─► frappe.defaults.set_user_default() [session sync]
-    └─► Cache invalidation
-            │
-            ▼
-    add_scope_conditions() [on every DB query, via permission_query_conditions hook]
-            │
-            ├─► NestedSet expansion for cost_center → lft/rgt subquery
-            ├─► Column-existence guard
-            └─► Admin bypass + system doctype skip
-            │
-            ▼
-    extend_bootinfo() [on every page load]
-            │
-            ├─► scope_context.current → user's scope document
-            └─► scope_context.hierarchy → full permitted tree (lft/rgt for frontend expansion)
-```
-
-### Data Flow
-1. User selects dimensions in UI → `set_scope_context()` API call
-2. API validates authorization + cross-dimension consistency
-3. Canonical record saved to User Scope Context DocType
-4. Session defaults synced for immediate `frappe.defaults` reads
-5. All subsequent doctype queries filtered via `add_scope_conditions()`
-6. Bootinfo extended with scope + hierarchy for client-side rendering
-
-### Key Design Decisions
-- **Canonical + Cache**: DocType is source of truth; session defaults are convenience cache
-- **NestedSet at query level**: Descendant expansion in SQL, not application code
-- **Column-existence guard**: Prevents SQL errors on doctypes missing scope columns
-- **Admin bypass**: Administrator always sees all data; filtering only for non-admin users
-- **Per-request column cache**: Avoids repeated `information_schema` queries within same request
-- **Redis caching of hierarchy**: 5-minute TTL with explicit invalidation on User Permission changes
+*Last updated: 2026-05-31*  
+*Update this file only when project identity, tech stack, or core architecture changes.*

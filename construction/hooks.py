@@ -220,6 +220,7 @@ after_install = [
     "construction.install.create_system_themes",
     "construction.install.setup_boq_integration",
     "construction.install.setup_branch_company_field",
+    "construction.install.seed_form_layout_profiles",
     "construction.insert_translations.execute",
 ]
 
@@ -233,7 +234,13 @@ after_migrate = [
     "construction.install.verify_workspace_visibility",
     "construction.install.setup_boq_integration",
     "construction.install.setup_branch_company_field",
+    "construction.install.seed_form_layout_profiles",
     "construction.insert_translations.execute",
+]
+
+# Custom migration patches — applied by bench migrate
+patches = [
+    "construction.patches.v6_7.add_for_user_to_form_layout_profile",
 ]
 
 # Translations

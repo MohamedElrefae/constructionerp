@@ -15,9 +15,10 @@ Endpoints
 
 Resolver priority (get_active_layout)
 --------------------------------------
-  1. Profile matching user's HIGHEST-priority role (for_role) for this doctype
-  2. Default profile (is_default=1) for this doctype
-  3. None — JS falls back to native Frappe rendering
+  1. Personal override: for_user matches current user
+  2. Role match: for_role matches a role the user has (highest priority wins)
+  3. Default profile: is_default=1 for this doctype
+  4. None — JS falls back to native Frappe rendering
 """
 
 import json
@@ -39,33 +40,47 @@ def get_active_layout(doctype: str) -> dict | None:
     if not doctype:
         return None
 
-    user_roles = set(frappe.get_roles(frappe.session.user))
+    user = frappe.session.user
+    user_roles = set(frappe.get_roles(user))
+
+    # Check if for_user column exists (migration safety — column may not exist pre-migrate)
+    has_for_user = frappe.db.has_column("Form Layout Profile", "for_user")
 
     # Fetch all enabled profiles for this doctype, ordered by priority desc
+    fields = [
+        "name",
+        "profile_name",
+        "for_role",
+        "priority",
+        "is_default",
+        "layout_version",
+        "sections_json",
+    ]
+    if has_for_user:
+        fields.append("for_user")
+
     profiles = frappe.get_all(
         "Form Layout Profile",
         filters={"reference_doctype": doctype, "enabled": 1},
-        fields=[
-            "name",
-            "profile_name",
-            "for_role",
-            "priority",
-            "is_default",
-            "layout_version",
-            "sections_json",
-        ],
+        fields=fields,
         order_by="priority desc",
     )
 
     if not profiles:
         return None
 
-    # Step 1: match by role
+    # Step 1: personal override (highest priority, only if column exists)
+    if has_for_user:
+        for profile in profiles:
+            if profile.for_user and profile.for_user == user:
+                return _profile_response(profile)
+
+    # Step 2: match by role
     for profile in profiles:
         if profile.for_role and profile.for_role in user_roles:
             return _profile_response(profile)
 
-    # Step 2: fallback to default
+    # Step 3: fallback to default
     for profile in profiles:
         if profile.is_default:
             return _profile_response(profile)
@@ -88,6 +103,7 @@ def _profile_response(profile: dict) -> dict:
         "layout_version": profile.layout_version,
         "sections": sections_data.get("sections", []),
         "unassigned_policy": sections_data.get("unassigned_policy", "append"),
+        "unassigned_column_count": sections_data.get("unassigned_column_count", 2),
     }
 
 
@@ -102,6 +118,7 @@ def save_layout(
     profile_name: str,
     sections_json: str | dict,
     for_role: str = None,
+    for_user: str = None,
     is_default: int = 0,
     priority: int = 10,
 ) -> dict:
@@ -122,6 +139,9 @@ def save_layout(
     if isinstance(sections_json, dict):
         sections_json = json.dumps(sections_json)
 
+    # Check if for_user column exists (migration safety)
+    has_for_user = frappe.db.has_column("Form Layout Profile", "for_user")
+
     # Check if profile already exists
     existing = frappe.db.get_value(
         "Form Layout Profile",
@@ -133,6 +153,8 @@ def save_layout(
         doc = frappe.get_doc("Form Layout Profile", existing)
         doc.sections_json = sections_json
         doc.for_role = for_role
+        if has_for_user:
+            doc.for_user = for_user
         doc.is_default = is_default
         doc.priority = priority
         doc.save(ignore_permissions=True)
@@ -144,6 +166,8 @@ def save_layout(
         doc.profile_name = profile_name
         doc.sections_json = sections_json
         doc.for_role = for_role
+        if has_for_user:
+            doc.for_user = for_user
         doc.is_default = is_default
         doc.priority = priority
         doc.layout_version = 1
@@ -167,10 +191,14 @@ def list_layouts(doctype: str) -> list[dict]:
     if not doctype:
         return []
 
+    fields = ["name", "profile_name", "for_role", "is_default", "priority", "is_system", "layout_version"]
+    if frappe.db.has_column("Form Layout Profile", "for_user"):
+        fields.append("for_user")
+
     return frappe.get_all(
         "Form Layout Profile",
         filters={"reference_doctype": doctype, "enabled": 1},
-        fields=["name", "profile_name", "for_role", "is_default", "priority", "is_system", "layout_version"],
+        fields=fields,
         order_by="priority desc",
     )
 
