@@ -931,6 +931,10 @@
 			}
 
 			if (!profile || !profile.sections || !profile.sections.length) {
+				const fallbackFields = this._getFormFields(frm).filter((f) => {
+					const SKIP_TYPES = ["Section Break", "Column Break", "Tab Break", "HTML", "Heading"];
+					return !SKIP_TYPES.includes(f.fieldtype);
+				});
 				profile = {
 					sections: [
 						{
@@ -941,7 +945,7 @@
 							visible: true,
 							collapsible: false,
 							collapsed_by_default: false,
-							fields: this._getFormFields(frm).map((f, idx) => ({
+							fields: fallbackFields.map((f, idx) => ({
 								fieldname: f.fieldname,
 								col: (idx % 2) + 1,
 								sort_order: idx + 1,
@@ -952,7 +956,15 @@
 				};
 			}
 
-			frm._vfc_temp_layout = JSON.parse(JSON.stringify(profile.sections));
+			// Filter out layout-only field types from profile sections
+			const SKIP_TYPES = new Set(["Section Break", "Column Break", "Tab Break", "HTML", "Heading"]);
+			const cleanSections = JSON.parse(JSON.stringify(profile.sections)).map((sec) => {
+				sec.fields = (sec.fields || []).filter((f) => !SKIP_TYPES.has(
+					(frm.meta?.fields || []).find((mf) => mf.fieldname === f.fieldname)?.fieldtype
+				));
+				return sec;
+			});
+			frm._vfc_temp_layout = cleanSections;
 			this._appendUnassignedSection(frm, dtId, profile);
 			this._renderSectionsListHTML(frm, dtId);
 		},

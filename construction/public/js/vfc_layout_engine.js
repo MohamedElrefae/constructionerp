@@ -39,10 +39,9 @@
      PILOT GUARD
      Phase 3: expanded to all construction DocTypes. Without a Form
      Layout Profile record, the engine is a no-op (graceful fallback).
-     To activate for additional DocTypes:
-       1. Create a Form Layout Profile record via System Manager
-       2. Add the DocType name to PILOT_DOCTYPES below
-     (Phase 5: this list becomes redundant once gate is removed)
+     The engine works on flat-layout DocTypes. Tabbed DocTypes (those
+     with Tab Break fields) are automatically skipped regardless of
+     PILOT_DOCTYPES — this is a safety net.
   ═══════════════════════════════════════════════════════════════════ */
 	const PILOT_DOCTYPES = new Set([
 		"BOQ Header",
@@ -73,9 +72,17 @@
 			console.log(`[LE] attach() triggered for: ${frm.doctype}`);
 			const dt = frm.doctype;
 
-			// Pilot gate
+			// Pilot gate — only known flat-layout DocTypes
 			if (!PILOT_DOCTYPES.has(dt)) {
 				console.log(`[LE] ${dt} not in PILOT_DOCTYPES, skipping.`);
+				return;
+			}
+
+			// Tab detection — DocTypes with Tab Break fields use Frappe's native tab
+			// layout which the VFC engine would destroy. Skip them as a safety net.
+			const hasTabs = (frm.meta?.fields || []).some((f) => f.fieldtype === "Tab Break");
+			if (hasTabs) {
+				console.log(`[LE] ${dt} has Tab Break fields (tabbed layout) — VFC engine skipped.`);
 				return;
 			}
 
@@ -175,19 +182,27 @@
 			// Mark form as VFC-active so density CSS only applies here
 			layoutRoot.classList.add("vfc-active");
 
-			// Build a Set of fieldnames assigned in this profile
+			// Collect known fieldnames (guard against unknown field refs)
+			const knownFieldnames = new Set((frm.meta?.fields || []).map((f) => f.fieldname));
+
+			// Build type map for O(1) fieldtype lookup
+			const metaFieldTypeMap = {};
+			const SKIP_TYPES = new Set(["Section Break", "Column Break", "Tab Break", "HTML", "Heading"]);
+			(frm.meta?.fields || []).forEach((mf) => {
+				if (mf.fieldname) metaFieldTypeMap[mf.fieldname] = mf.fieldtype;
+			});
+
+			// Build a Set of fieldnames assigned in this profile (excluding layout-only types)
 			const assignedFieldnames = new Set();
 			const profileHiddenFieldnames = new Set();
 			(profile.sections || []).forEach((sec) => {
 				(sec.fields || []).forEach((f) => {
 					if (!f.fieldname) return;
+					if (SKIP_TYPES.has(metaFieldTypeMap[f.fieldname])) return;
 					assignedFieldnames.add(f.fieldname);
 					if (f.visible === false) profileHiddenFieldnames.add(f.fieldname);
 				});
 			});
-
-			// Collect known fieldnames (guard against unknown field refs)
-			const knownFieldnames = new Set((frm.meta?.fields || []).map((f) => f.fieldname));
 
 			// Sort sections by sort_order
 			const sections = [...(profile.sections || [])].sort(
@@ -224,6 +239,9 @@
 						);
 						return;
 					}
+
+					// Skip layout-only field types (breaks, tabs, HTML, headings)
+					if (SKIP_TYPES.has(metaFieldTypeMap[fn])) return;
 
 					const fieldObj = frm.fields_dict[fn];
 					if (!fieldObj) {
