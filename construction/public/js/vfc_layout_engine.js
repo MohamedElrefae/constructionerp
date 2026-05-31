@@ -37,13 +37,23 @@
 
 	/* ═══════════════════════════════════════════════════════════════════
      PILOT GUARD
-     Only activate for the two pilot DocTypes until Gate 2 is cleared.
+     Phase 3: expanded to all construction DocTypes. Without a Form
+     Layout Profile record, the engine is a no-op (graceful fallback).
      To activate for additional DocTypes:
        1. Create a Form Layout Profile record via System Manager
        2. Add the DocType name to PILOT_DOCTYPES below
      (Phase 5: this list becomes redundant once gate is removed)
   ═══════════════════════════════════════════════════════════════════ */
-	const PILOT_DOCTYPES = new Set(["BOQ Header", "BOQ Item"]);
+	const PILOT_DOCTYPES = new Set([
+		"BOQ Header",
+		"BOQ Item",
+		"BOQ Item Stage",
+		"BOQ Structure",
+		"User Scope Context",
+		"Construction Theme",
+		"Modern Theme Settings",
+		"User Desk Theme",
+	]);
 
 	/* ═══════════════════════════════════════════════════════════════════
      LAYOUT ENGINE — singleton
@@ -162,6 +172,9 @@
 			// Remove any previously injected VFC sections for this frm
 			this._clearSections(frm);
 
+			// Mark form as VFC-active so density CSS only applies here
+			layoutRoot.classList.add("vfc-active");
+
 			// Build a Set of fieldnames assigned in this profile
 			const assignedFieldnames = new Set();
 			const profileHiddenFieldnames = new Set();
@@ -218,9 +231,15 @@
 						return;
 					}
 
-					// Handle visibility
+					// Handle profile-level visibility
 					if (fld.visible === false) {
 						frm.toggle_display(fn, false);
+						return;
+					}
+
+					// Handle runtime visibility (user settings, permissions, depends_on)
+					if (fieldObj.df && (fieldObj.df.hidden || fieldObj.df.invisible)) {
+						console.log(`[LE] Skipping hidden field ${fn} (df.hidden=${fieldObj.df.hidden}, df.invisible=${fieldObj.df.invisible})`);
 						return;
 					}
 
@@ -229,9 +248,6 @@
 						console.log(`[LE] Wrapper missing for ${fn}`);
 						return;
 					}
-
-					const isHidden = fieldObj.df && (fieldObj.df.hidden || fieldObj.df.invisible);
-					console.log(`[LE] Processing field ${fn}. hidden=${isHidden}`);
 
 					// Determine column span
 					const colCount = Math.min(Math.max(sec.column_count || 2, 1), 3);
@@ -266,7 +282,7 @@
 
 			// ── Append unassigned fields at bottom (unassigned_policy: append) ──
 			if (profile.unassigned_policy !== "discard") {
-				this._appendUnassigned(frm, layoutRoot, knownFieldnames, assignedFieldnames);
+				this._appendUnassigned(frm, layoutRoot, knownFieldnames, assignedFieldnames, profile);
 			}
 
 			// Store for cleanup on next render
@@ -563,7 +579,7 @@
 			nativeEl.classList.remove("hide-control", "hidden", "d-none");
 			nativeEl.removeAttribute("hidden");
 			nativeEl.setAttribute("data-vfc-managed", "1");
-			nativeEl.style.setProperty("display", "block", "important");
+			nativeEl.style.setProperty("display", "block");
 			nativeEl.style.setProperty("visibility", "visible", "important");
 			nativeEl.style.setProperty("opacity", "1", "important");
 			nativeEl.style.removeProperty("height");
@@ -635,8 +651,9 @@
        _appendUnassigned
        Any field that is in frm.meta but NOT in the profile gets
        appended to a trailing "Other Fields" section so nothing is lost.
+       Column count is read from profile.unassigned_column_count (default 2).
     ───────────────────────────────────────────────────────────── */
-		_appendUnassigned(frm, layoutRoot, knownFieldnames, assignedFieldnames) {
+		_appendUnassigned(frm, layoutRoot, knownFieldnames, assignedFieldnames, profile) {
 			const SKIP_TYPES = new Set([
 				"Section Break",
 				"Column Break",
@@ -653,6 +670,7 @@
 
 			if (!unassigned.length) return;
 
+			const colCount = Math.min(Math.max((profile.unassigned_column_count || 2), 1), 3);
 			const secEl = document.createElement("div");
 			secEl.className = "vfc-le-section vfc-le-unassigned";
 
@@ -663,12 +681,15 @@
 
 			const grid = document.createElement("div");
 			grid.className = "vfc-le-grid";
-			grid.style.gridTemplateColumns = "repeat(2, 1fr)";
+			grid.style.gridTemplateColumns = `repeat(${colCount}, 1fr)`;
 			secEl.appendChild(grid);
 
 			unassigned.forEach((f) => {
 				const fieldObj = frm.fields_dict[f.fieldname];
 				if (!fieldObj || !fieldObj.wrapper) return;
+
+				// Skip fields hidden by user settings, permissions, or depends_on
+				if (fieldObj.df && (fieldObj.df.hidden || fieldObj.df.invisible)) return;
 
 				const cell = document.createElement("div");
 				cell.className = "vfc-le-cell";
@@ -698,6 +719,7 @@
 			const layoutRoot = this._getLayoutRoot(frm);
 
 			if (layoutRoot) {
+				layoutRoot.classList.remove("vfc-active");
 				layoutRoot.querySelectorAll(".vfc-le-section").forEach((el) => {
 					// Move field wrappers back to their native parent before removing section
 					el.querySelectorAll(".vfc-le-cell").forEach((cell) => {

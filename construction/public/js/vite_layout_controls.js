@@ -646,6 +646,20 @@
 			const preset = PRESET_REGISTRY[doctype]?.find((p) => p.key === key);
 			if (!preset) return;
 
+			const fieldnames = new Set(
+				[...document.querySelectorAll(`[id^="vfc_vc_${dtId}_"]`)]
+					.filter((cb) => !cb.disabled)
+					.map((cb) => cb.getAttribute("data-field"))
+			);
+
+			if (preset.fields) {
+				preset.fields.forEach((fn) => {
+					if (!fieldnames.has(fn)) {
+						console.warn(`[VFC] Preset '${key}' references unknown field '${fn}' on ${doctype} — skipping`);
+					}
+				});
+			}
+
 			document.querySelectorAll(`[id^="vfc_vc_${dtId}_"]`).forEach((cb) => {
 				if (cb.disabled) return;
 				const fn = cb.getAttribute("data-field");
@@ -745,6 +759,23 @@
 				frappe.user_roles.includes("System Manager") ||
 				frappe.session.user === "Administrator";
 			if (isSystemManager && frm._vfc_temp_layout) {
+				// Extract unassigned column count before filtering out the virtual section
+				let unassignedColCount = 2;
+				const saveableSections = frm._vfc_temp_layout.filter((sec) => {
+					if (sec._unassigned) {
+						unassignedColCount = sec.column_count || 2;
+						return false;
+					}
+					return true;
+				});
+
+				const sectionsPayload = {
+					version: 1,
+					unassigned_policy: frm._vfc_unassigned_policy || "append",
+					unassigned_column_count: unassignedColCount,
+					sections: saveableSections,
+				};
+
 				frappe.call({
 					method: "construction.construction.api.layout_api.save_layout",
 					args: {
@@ -752,11 +783,7 @@
 						profile_name: "Default",
 						is_default: 1,
 						priority: 10,
-						sections_json: JSON.stringify({
-							version: 1,
-							unassigned_policy: "append",
-							sections: frm._vfc_temp_layout,
-						}),
+						sections_json: JSON.stringify(sectionsPayload),
 					},
 					callback(r) {
 						if (r.message && r.message.status) {
@@ -926,7 +953,51 @@
 			}
 
 			frm._vfc_temp_layout = JSON.parse(JSON.stringify(profile.sections));
+			this._appendUnassignedSection(frm, dtId, profile);
 			this._renderSectionsListHTML(frm, dtId);
+		},
+
+		_appendUnassignedSection(frm, dtId, profile) {
+			const SKIP_TYPES = new Set(["Section Break", "Column Break", "Tab Break", "HTML", "Heading"]);
+			const assignedFieldnames = new Set();
+			(frm._vfc_temp_layout || []).forEach((sec) => {
+				(sec.fields || []).forEach((f) => {
+					if (f.fieldname) assignedFieldnames.add(f.fieldname);
+				});
+			});
+
+			const unassigned = (frm.meta?.fields || [])
+				.filter((f) => f.fieldname && !assignedFieldnames.has(f.fieldname) && !SKIP_TYPES.has(f.fieldtype))
+				.map((f, idx) => ({
+					fieldname: f.fieldname,
+					col: (idx % 2) + 1,
+					sort_order: idx + 1,
+					visible: true,
+				}));
+
+			if (!unassigned.length) {
+				frm._vfc_unassigned_idx = -1;
+				return;
+			}
+
+			const unassignedColCount = profile.unassigned_column_count || 2;
+
+			// Store the unassigned policy for the save step
+			frm._vfc_unassigned_policy = profile.unassigned_policy || "append";
+
+			const unassignedSec = {
+				id: "_unassigned",
+				label: __("Unassigned Fields"),
+				column_count: unassignedColCount,
+				sort_order: (frm._vfc_temp_layout.length || 0) + 1,
+				visible: true,
+				collapsible: false,
+				_unassigned: true,
+				fields: unassigned,
+			};
+
+			frm._vfc_temp_layout.push(unassignedSec);
+			frm._vfc_unassigned_idx = frm._vfc_temp_layout.length - 1;
 		},
 
 		_renderSectionsListHTML(frm, dtId) {
@@ -943,13 +1014,20 @@
 
 			let html = "";
 			sections.forEach((sec, sIdx) => {
+				const totalFields = (sec.fields || []).length;
 				const fieldsHtml = (sec.fields || [])
-					.map((fld) => {
+					.map((fld, fIdx) => {
+						const first = fIdx === 0;
+						const last = fIdx === totalFields - 1;
 						return `
             <div class="vfc-sec-field-item" data-fieldname="${
 				fld.fieldname
 			}" style="display:flex;align-items:center;background:var(--ct-bg-3);border:1px solid var(--ct-border);padding:6px 8px;border-radius:4px;font-size:11px;cursor:grab;margin-bottom:4px;gap:6px">
               <span class="vfc-sort-handle" style="color:var(--ct-text-muted);cursor:grab">☰</span>
+              <span class="vfc-arrow-controls" style="display:inline-flex;gap:2px">
+                <button class="btn btn-default btn-xs" onclick="window._VFC._moveFieldUp('${frm.doctype}', ${sIdx}, '${fld.fieldname}')" ${first ? "disabled style='opacity:0.3'" : ""} style="padding:0 4px;font-size:10px;line-height:1.4" title="${__("Move Up")}">▲</button>
+                <button class="btn btn-default btn-xs" onclick="window._VFC._moveFieldDown('${frm.doctype}', ${sIdx}, '${fld.fieldname}')" ${last ? "disabled style='opacity:0.3'" : ""} style="padding:0 4px;font-size:10px;line-height:1.4" title="${__("Move Down")}">▼</button>
+              </span>
               <span style="font-weight:600;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${__(
 					fld.fieldname
 				)}</span>
@@ -965,10 +1043,19 @@
 					})
 					.join("");
 
+				const totalSections = sections.length;
+				const secFirst = sIdx === 0;
+				const secLast = sIdx === totalSections - 1;
+
+				const unassignedCls = sec._unassigned ? " vfc-sec-item-unassigned" : "";
 				html += `
-          <div class="vfc-sec-item" data-section-idx="${sIdx}" style="border:1px solid var(--ct-border);border-radius:6px;background:var(--ct-bg-elevated);padding:10px;display:flex;flex-direction:column;gap:8px">
+          <div class="vfc-sec-item${unassignedCls}" data-section-idx="${sIdx}" style="border:1px solid var(--ct-border);border-radius:6px;background:var(--ct-bg-elevated);padding:10px;display:flex;flex-direction:column;gap:8px">
             <div style="display:flex;align-items:center;gap:6px">
               <span class="vfc-sec-sort-handle" style="color:var(--ct-text-muted);cursor:grab;font-size:14px">☰</span>
+              <span class="vfc-arrow-controls" style="display:inline-flex;gap:2px">
+                <button class="btn btn-default btn-xs" onclick="window._VFC._moveSectionUp('${frm.doctype}', ${sIdx})" ${secFirst ? "disabled style='opacity:0.3'" : ""} style="padding:0 4px;font-size:10px;line-height:1.4" title="${__("Move Up")}">▲</button>
+                <button class="btn btn-default btn-xs" onclick="window._VFC._moveSectionDown('${frm.doctype}', ${sIdx})" ${secLast ? "disabled style='opacity:0.3'" : ""} style="padding:0 4px;font-size:10px;line-height:1.4" title="${__("Move Down")}">▼</button>
+              </span>
               <input type="text" value="${sec.label || ""}" placeholder="${__(
 					"Section Name"
 				)}" onchange="window._VFC._onSecLabelChange(this, '${
@@ -1026,11 +1113,19 @@
         `;
 			});
 
+			// Store Sortable instances keyed by container for cleanup
+			if (!window._vfc_sortables) window._vfc_sortables = new Map();
+			const sortableKey = `vfc-sec-list-${dtId}`;
+			if (window._vfc_sortables.has(sortableKey)) {
+				window._vfc_sortables.get(sortableKey).forEach((s) => s.destroy());
+			}
+			const instances = [];
+
 			container.innerHTML = html;
 
 			// Initialize SortableJS
 			if (typeof Sortable !== "undefined") {
-				new Sortable(container, {
+				instances.push(new Sortable(container, {
 					handle: ".vfc-sec-sort-handle",
 					animation: 150,
 					onEnd: (evt) => {
@@ -1045,10 +1140,10 @@
 						frm._vfc_temp_layout = newOrder;
 						this._renderSectionsListHTML(frm, dtId);
 					},
-				});
+				}));
 
 				container.querySelectorAll(".vfc-sec-fields-list").forEach((listEl) => {
-					new Sortable(listEl, {
+					instances.push(new Sortable(listEl, {
 						group: `vfc-fields-${dtId}`,
 						handle: ".vfc-sort-handle",
 						animation: 150,
@@ -1088,8 +1183,12 @@
 							frm._vfc_temp_layout = updatedLayout;
 							this._renderSectionsListHTML(frm, dtId);
 						},
-					});
+					}));
 				});
+			}
+
+			if (instances.length) {
+				window._vfc_sortables.set(sortableKey, instances);
 			}
 		},
 
@@ -1106,6 +1205,7 @@
 
 		_onSecLabelChange(input, doctype, sIdx) {
 			if (cur_frm && cur_frm.doctype === doctype && cur_frm._vfc_temp_layout) {
+				if (cur_frm._vfc_temp_layout[sIdx]._unassigned) return;
 				cur_frm._vfc_temp_layout[sIdx].label = input.value;
 			}
 		},
@@ -1124,6 +1224,7 @@
 
 		_deleteSection(doctype, sIdx) {
 			if (cur_frm && cur_frm.doctype === doctype && cur_frm._vfc_temp_layout) {
+				if (cur_frm._vfc_temp_layout[sIdx]._unassigned) return;
 				const deletedSec = cur_frm._vfc_temp_layout[sIdx];
 				const fieldsToMove = deletedSec.fields || [];
 
@@ -1205,6 +1306,48 @@
 			if (cur_frm && cur_frm.doctype === doctype && cur_frm._vfc_temp_layout) {
 				cur_frm._vfc_temp_layout[sIdx].collapsed_by_default = checkbox.checked;
 			}
+		},
+
+		/* ─────────────────────────────────────────────────────────
+        Field and Section move handlers (Phase 4 — touch arrow controls)
+     ───────────────────────────────────────────────────────── */
+
+		_moveFieldUp(doctype, sIdx, fieldname) {
+			if (!cur_frm || cur_frm.doctype !== doctype || !cur_frm._vfc_temp_layout) return;
+			const fields = cur_frm._vfc_temp_layout[sIdx].fields || [];
+			const idx = fields.findIndex((f) => f.fieldname === fieldname);
+			if (idx <= 0) return;
+			[fields[idx - 1], fields[idx]] = [fields[idx], fields[idx - 1]];
+			fields.forEach((f, i) => (f.sort_order = i + 1));
+			this._renderSectionsListHTML(cur_frm, doctype.replace(/\s/g, "-"));
+		},
+
+		_moveFieldDown(doctype, sIdx, fieldname) {
+			if (!cur_frm || cur_frm.doctype !== doctype || !cur_frm._vfc_temp_layout) return;
+			const fields = cur_frm._vfc_temp_layout[sIdx].fields || [];
+			const idx = fields.findIndex((f) => f.fieldname === fieldname);
+			if (idx < 0 || idx >= fields.length - 1) return;
+			[fields[idx], fields[idx + 1]] = [fields[idx + 1], fields[idx]];
+			fields.forEach((f, i) => (f.sort_order = i + 1));
+			this._renderSectionsListHTML(cur_frm, doctype.replace(/\s/g, "-"));
+		},
+
+		_moveSectionUp(doctype, sIdx) {
+			if (!cur_frm || cur_frm.doctype !== doctype || !cur_frm._vfc_temp_layout) return;
+			if (sIdx <= 0) return;
+			const layout = cur_frm._vfc_temp_layout;
+			[layout[sIdx - 1], layout[sIdx]] = [layout[sIdx], layout[sIdx - 1]];
+			layout.forEach((s, i) => (s.sort_order = i + 1));
+			this._renderSectionsListHTML(cur_frm, doctype.replace(/\s/g, "-"));
+		},
+
+		_moveSectionDown(doctype, sIdx) {
+			if (!cur_frm || cur_frm.doctype !== doctype || !cur_frm._vfc_temp_layout) return;
+			const layout = cur_frm._vfc_temp_layout;
+			if (sIdx < 0 || sIdx >= layout.length - 1) return;
+			[layout[sIdx], layout[sIdx + 1]] = [layout[sIdx + 1], layout[sIdx]];
+			layout.forEach((s, i) => (s.sort_order = i + 1));
+			this._renderSectionsListHTML(cur_frm, doctype.replace(/\s/g, "-"));
 		},
 
 		_makeDraggableAndResizable(panel) {

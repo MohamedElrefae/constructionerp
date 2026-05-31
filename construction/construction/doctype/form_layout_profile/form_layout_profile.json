@@ -5,20 +5,21 @@
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
- "field_order": [
-  "reference_doctype",
-  "profile_name",
-  "cb_meta",
-  "enabled",
-  "is_default",
-  "is_system",
-  "sb_targeting",
-  "for_role",
-  "priority",
-  "layout_version",
-  "sb_layout",
-  "sections_json"
- ],
+  "field_order": [
+   "reference_doctype",
+   "profile_name",
+   "cb_meta",
+   "enabled",
+   "is_default",
+   "is_system",
+   "sb_targeting",
+   "for_role",
+   "for_user",
+   "priority",
+   "layout_version",
+   "sb_layout",
+   "sections_json"
+  ],
  "fields": [
   {
    "fieldname": "reference_doctype",
@@ -71,6 +72,13 @@
    "label": "Target Role",
    "options": "Role",
    "description": "If set, this profile is auto-applied to users with this role"
+  },
+  {
+   "fieldname": "for_user",
+   "fieldtype": "Link",
+   "label": "Target User",
+   "options": "User",
+   "description": "Personal override — this profile applies only to this user, highest priority"
   },
   {
    "default": "10",
