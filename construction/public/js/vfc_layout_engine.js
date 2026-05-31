@@ -215,11 +215,17 @@
 			// We'll reconstruct the visual layout ourselves.
 			this._hideNativeLayoutShells(layoutRoot);
 
+			// Determine effective column count from density override (if set)
+			const densityOverride = layoutRoot.classList.contains("vfc-density-1") ? 1
+				: layoutRoot.classList.contains("vfc-density-3") ? 3
+				: layoutRoot.classList.contains("vfc-density-2") ? 2 : 0;
+
 			// ── Build VFC section containers ──
 			sections.forEach((sec) => {
 				if (sec.visible === false) return;
 
-				const sectionEl = this._buildSectionEl(sec, frm);
+				const effectiveColCount = densityOverride || Math.min(Math.max(sec.column_count || 2, 1), 3);
+				const sectionEl = this._buildSectionEl(sec, frm, effectiveColCount);
 				const gridEl = sectionEl.querySelector(".vfc-le-grid");
 
 				// Sort fields within section
@@ -616,11 +622,12 @@
 		},
 
 		/* ─────────────────────────────────────────────────────────────
-       _buildSectionEl(sec, frm) → HTMLElement
-       Builds the VFC section card with header and CSS grid body.
-    ───────────────────────────────────────────────────────────── */
-		_buildSectionEl(sec, frm) {
-			const colCount = Math.min(Math.max(sec.column_count || 2, 1), 3);
+        _buildSectionEl(sec, frm, colCount) → HTMLElement
+        Builds the VFC section card with header and CSS grid body.
+        colCount is the effective column count (density override > profile).
+     ───────────────────────────────────────────────────────────── */
+		_buildSectionEl(sec, frm, colCount) {
+			colCount = colCount || Math.min(Math.max(sec.column_count || 2, 1), 3);
 			const secEl = document.createElement("div");
 			secEl.className = "vfc-le-section";
 			secEl.setAttribute("data-vfc-section-id", sec.id || "");

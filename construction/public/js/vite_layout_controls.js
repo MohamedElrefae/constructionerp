@@ -705,6 +705,13 @@
 			container.classList.add(`vfc-density-${n}`);
 			saveDensity(frm.doctype, n);
 
+			// Live-update VFC grids when engine is active
+			if (container.classList.contains("vfc-active")) {
+				container.querySelectorAll(".vfc-le-grid").forEach((grid) => {
+					grid.style.gridTemplateColumns = `repeat(${n}, 1fr)`;
+				});
+			}
+
 			// Re-trigger layout engine to recalculate column widths live
 			if (window.VFCLayoutEngine) {
 				window.VFCLayoutEngine.attach(frm);
