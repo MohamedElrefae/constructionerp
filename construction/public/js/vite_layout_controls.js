@@ -696,28 +696,13 @@
 		},
 
 		/* ─────────────────────────────────────────────────────────
-       _hasTabs — true if doc type uses Tab Break fields
-    ───────────────────────────────────────────────────────── */
-		_hasTabs(frm) {
-			return (frm.meta?.fields || []).some((f) => f.fieldtype === "Tab Break");
-		},
-
-		/* ─────────────────────────────────────────────────────────
        _applyDensity — CSS class on layout container + save
-       Density grid only applies to flat (non-tabbed) forms.
-       Density value is always saved for cross-form persistence.
     ───────────────────────────────────────────────────────── */
 		_applyDensity(frm, n, quiet) {
 			const container = frm.layout?.wrapper?.[0] || frm.$wrapper?.find(".form-layout")?.[0];
 			if (!container) return;
-			container.classList.remove("vfc-density-1", "vfc-density-2", "vfc-density-3", "vfc-flat");
-
-			const isFlat = !this._hasTabs(frm);
-			if (isFlat) {
-				container.classList.add("vfc-flat");
-				container.classList.add(`vfc-density-${n}`);
-			}
-
+			container.classList.remove("vfc-density-1", "vfc-density-2", "vfc-density-3");
+			container.classList.add(`vfc-density-${n}`);
 			saveDensity(frm.doctype, n);
 
 			// Live-update VFC grids when engine is active
