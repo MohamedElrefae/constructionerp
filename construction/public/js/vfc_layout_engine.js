@@ -879,14 +879,23 @@
     ───────────────────────────────────────────────────────────── */
 		renderWithDensity(frm, colCount) {
 			const layoutRoot = this._getLayoutRoot(frm);
-			if (!layoutRoot) return;
+			if (!layoutRoot) {
+				console.warn("[LE] renderWithDensity: no layoutRoot");
+				return;
+			}
 
 			this._clearSections(frm);
 			layoutRoot.classList.add("vfc-active");
 
 			// Build a virtual profile from the current form meta fields
 			const profile = this._buildDensityProfile(frm, colCount);
-			if (!profile) return;
+			if (!profile) {
+				console.warn("[LE] renderWithDensity: no profile built");
+				return;
+			}
+			console.log(
+				`[LE] renderWithDensity: colCount=${colCount}, profile sections=${profile.sections.length}`
+			);
 
 			// Hide ALL native shells INCLUDING tab structure
 			this._hideNativeLayoutShells(layoutRoot);
@@ -905,6 +914,8 @@
 
 			const injectedContainers = [];
 
+			let totalFieldsRendered = 0;
+
 			profile.sections.forEach((sec) => {
 				if (sec.visible === false) return;
 
@@ -915,6 +926,7 @@
 					(a, b) => (a.sort_order || 0) - (b.sort_order || 0)
 				);
 				let hasVisibleField = false;
+				let colIdx = 0;
 
 				fields.forEach((fld) => {
 					const fn = fld.fieldname;
@@ -934,9 +946,12 @@
 					const wrapper = fieldObj.wrapper;
 					if (!wrapper) return;
 
+					colIdx = (colIdx + 1) % colCount;
+					const gridCol = colIdx || colCount;
+
 					const cell = document.createElement("div");
 					cell.className = "vfc-le-cell";
-					cell.style.gridColumn = "1";
+					cell.style.gridColumn = String(gridCol);
 					cell.setAttribute("data-vfc-field", fn);
 
 					const nativeEl = wrapper instanceof jQuery ? wrapper[0] : wrapper;
@@ -950,14 +965,21 @@
 
 					gridEl.appendChild(cell);
 					hasVisibleField = true;
+					totalFieldsRendered++;
 				});
 
 				if (hasVisibleField || sec.collapsible) {
 					layoutRoot.appendChild(sectionEl);
 					injectedContainers.push(sectionEl);
+					console.log(
+						`[LE] renderWithDensity: section "${sec.label || sec.fieldname}" → ${fields.length} fields`
+					);
 				}
 			});
 
+			console.log(
+				`[LE] renderWithDensity: rendered ${totalFieldsRendered} fields across ${injectedContainers.length} sections`
+			);
 			this._activeSections.set(frm.doctype + "__" + frm.docname, injectedContainers);
 		},
 
