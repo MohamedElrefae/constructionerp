@@ -186,6 +186,10 @@
 		}
 	}
 
+	function isTabbedForm(frm) {
+		return (frm.meta?.fields || []).some((f) => f.fieldtype === "Tab Break");
+	}
+
 	/* ══════════════════════════════════════════════════════════════
      ViteFormConfig — main controller class
   ══════════════════════════════════════════════════════════════ */
@@ -696,24 +700,22 @@
 		},
 
 		/* ─────────────────────────────────────────────────────────
-       _applyDensity — apply column grid via inline styles + save
-       Uses JS inline styles (not CSS) to avoid conflicts with
-       Frappe's tab visibility system. Works on ALL forms.
+       _applyDensity — apply density and save.
+       Tabbed forms keep native tab navigation, but the VFC engine can
+       still mount configured sections inside each native tab pane.
     ───────────────────────────────────────────────────────── */
 		_applyDensity(frm, n, quiet) {
 			const container = frm.layout?.wrapper?.[0] || frm.$wrapper?.find(".form-layout")?.[0];
 			if (!container) return;
+			const hasTabs = isTabbedForm(frm);
 			container.classList.remove("vfc-density-1", "vfc-density-2", "vfc-density-3");
 			container.classList.add(`vfc-density-${n}`);
+			container.classList.toggle("vfc-native-density", hasTabs);
 			saveDensity(frm.doctype, n);
 
-			// Delegate to VFC engine for proper layout restructuring
 			if (window.VFCLayoutEngine) {
-				if (n === 2) {
-					window.VFCLayoutEngine.restoreNative(frm);
-				} else {
-					window.VFCLayoutEngine.renderWithDensity(frm, n);
-				}
+				window.VFCLayoutEngine.restoreNative(frm);
+				window.VFCLayoutEngine.attach?.(frm);
 			}
 
 			if (!quiet) {
@@ -794,8 +796,8 @@
 					callback(r) {
 						if (r.message && r.message.status) {
 							if (window.VFCLayoutEngine) {
-								window.VFCLayoutEngine.invalidateCache(dt);
-								window.VFCLayoutEngine.attach(frm);
+								window.VFCLayoutEngine.invalidateCache?.(dt);
+								window.VFCLayoutEngine.attach?.(frm);
 							}
 						}
 					},
@@ -915,6 +917,12 @@
 			const container = document.getElementById(`vfc-sec-list-${dtId}`);
 			if (!container) return;
 
+			const addBtn = document.getElementById(`vfc-add-sec-btn-${dtId}`);
+			if (addBtn) {
+				addBtn.disabled = false;
+				addBtn.style.display = "";
+			}
+
 			container.innerHTML = `<div style="text-align:center;padding:20px;color:var(--ct-text-muted)">${__(
 				"Loading sections..."
 			)}</div>`;
@@ -936,30 +944,11 @@
 				console.warn("[VFC] Error fetching profile:", err);
 			}
 
+			const nativeProfile = this._buildNativeSectionsProfile(frm);
 			if (!profile || !profile.sections || !profile.sections.length) {
-				const fallbackFields = this._getFormFields(frm).filter((f) => {
-					const SKIP_TYPES = ["Section Break", "Column Break", "Tab Break", "HTML", "Heading"];
-					return !SKIP_TYPES.includes(f.fieldtype);
-				});
-				profile = {
-					sections: [
-						{
-							id: "sec_default_1",
-							label: "General Info",
-							column_count: 2,
-							sort_order: 1,
-							visible: true,
-							collapsible: false,
-							collapsed_by_default: false,
-							fields: fallbackFields.map((f, idx) => ({
-								fieldname: f.fieldname,
-								col: (idx % 2) + 1,
-								sort_order: idx + 1,
-								visible: true,
-							})),
-						},
-					],
-				};
+				profile = nativeProfile;
+			} else {
+				profile = this._mergeProfileWithNativeSections(profile, nativeProfile);
 			}
 
 			// Filter out layout-only field types from profile sections
@@ -973,6 +962,169 @@
 			frm._vfc_temp_layout = cleanSections;
 			this._appendUnassignedSection(frm, dtId, profile);
 			this._renderSectionsListHTML(frm, dtId);
+		},
+
+		_buildNativeSectionsProfile(frm) {
+			const SKIP_TYPES = new Set(["Section Break", "Column Break", "Tab Break", "HTML", "Heading"]);
+			const sections = [];
+			let currentSection = null;
+			let currentTabFieldname = "";
+			let sortOrder = 1;
+
+			(frm.meta?.fields || []).forEach((df, idx) => {
+				if (df.fieldtype === "Tab Break") {
+					currentTabFieldname = df.fieldname || `tab_${idx}`;
+				}
+				if (df.fieldtype === "Tab Break" || df.fieldtype === "Section Break") {
+					const isTab = df.fieldtype === "Tab Break";
+					const fallbackId = isTab ? `tab_${idx}` : `sec_${idx}`;
+					currentSection = {
+						id: df.fieldname || fallbackId,
+						fieldname: df.fieldname || fallbackId,
+						label: df.label || (isTab ? __("General") : ""),
+						column_count: 2,
+						sort_order: sortOrder++,
+						visible: true,
+						collapsible: df.fieldtype === "Section Break" ? !!df.collapsible : false,
+						collapsed_by_default: false,
+						fields: [],
+						_native_section: true,
+						_native_fieldtype: df.fieldtype,
+						tab_fieldname: currentTabFieldname,
+					};
+					sections.push(currentSection);
+					return;
+				}
+
+				if (SKIP_TYPES.has(df.fieldtype) || !df.fieldname) return;
+
+				if (!currentSection) {
+					currentSection = {
+						id: "_default",
+						fieldname: "_default",
+						label: __("General"),
+						column_count: 2,
+						sort_order: sortOrder++,
+						visible: true,
+						collapsible: false,
+						collapsed_by_default: false,
+						fields: [],
+						_native_section: true,
+					};
+					sections.push(currentSection);
+				}
+
+				currentSection.fields.push({
+					fieldname: df.fieldname,
+					col: ((currentSection.fields.length || 0) % 2) + 1,
+					sort_order: currentSection.fields.length + 1,
+					visible: !df.hidden,
+				});
+			});
+
+			return {
+				sections,
+				unassigned_policy: "append",
+				unassigned_column_count: 2,
+			};
+		},
+
+		_mergeProfileWithNativeSections(profile, nativeProfile) {
+			const nativeSections = nativeProfile.sections || [];
+			const nativeById = new Map(nativeSections.map((sec) => [sec.id, sec]));
+			const nativeFieldOrder = new Map();
+
+			nativeSections.forEach((sec) => {
+				(sec.fields || []).forEach((field, idx) => {
+					nativeFieldOrder.set(field.fieldname, idx + 1);
+				});
+			});
+
+			const usedFields = new Set();
+			const merged = (profile.sections || []).map((section, idx) => {
+				const nativeMatch = nativeById.get(section.id || section.fieldname || "");
+				const fields = (section.fields || []).filter((field) => {
+					if (!field.fieldname) return false;
+					usedFields.add(field.fieldname);
+					return true;
+				});
+
+				return {
+					...section,
+					id: section.id || section.fieldname || `sec_profile_${idx}`,
+					fieldname: section.fieldname || section.id,
+					label: section.label || nativeMatch?.label || __("General"),
+					column_count: section.column_count || nativeMatch?.column_count || 2,
+					sort_order: section.sort_order || idx + 1,
+					visible: section.visible !== false,
+					collapsible:
+						section.collapsible !== undefined
+							? !!section.collapsible
+							: !!nativeMatch?.collapsible,
+					collapsed_by_default:
+						section.collapsed_by_default !== undefined
+							? !!section.collapsed_by_default
+							: !!nativeMatch?.collapsed_by_default,
+					fields,
+					tab_fieldname: section.tab_fieldname || nativeMatch?.tab_fieldname || "",
+				};
+			});
+
+			nativeSections.forEach((nativeSec) => {
+				const sectionAlreadyExists = merged.some(
+					(sec) => sec.id === nativeSec.id || sec.fieldname === nativeSec.fieldname
+				);
+				const nativeFields = (nativeSec.fields || []).filter((field) => field.fieldname);
+				const missingFields = nativeFields.filter((field) => !usedFields.has(field.fieldname));
+				if (!missingFields.length && sectionAlreadyExists) return;
+
+				if (sectionAlreadyExists) {
+					const existing = merged.find(
+						(sec) => sec.id === nativeSec.id || sec.fieldname === nativeSec.fieldname
+					);
+					const baseLen = existing.fields?.length || 0;
+					existing.fields = (existing.fields || []).concat(
+						missingFields.map((field, idx) => ({
+							...field,
+							col: field.col || ((baseLen + idx) % (existing.column_count || 2)) + 1,
+							sort_order: baseLen + idx + 1,
+						}))
+					);
+					missingFields.forEach((field) => usedFields.add(field.fieldname));
+					return;
+				}
+
+				const nativeFieldnames = new Set(nativeFields.map((field) => field.fieldname));
+				merged.forEach((section) => {
+					section.fields = (section.fields || []).filter(
+						(field) => !nativeFieldnames.has(field.fieldname)
+					);
+				});
+
+				merged.push({
+					...nativeSec,
+					sort_order: merged.length + 1,
+					fields: nativeFields.map((field, idx) => ({
+						...field,
+						col: field.col || (idx % (nativeSec.column_count || 2)) + 1,
+						sort_order: nativeFieldOrder.get(field.fieldname) || idx + 1,
+					})),
+					tab_fieldname: nativeSec.tab_fieldname || "",
+				});
+				nativeFields.forEach((field) => usedFields.add(field.fieldname));
+			});
+
+			merged.forEach((section, idx) => {
+				section.sort_order = idx + 1;
+			});
+
+			return {
+				...profile,
+				sections: merged,
+				unassigned_policy: profile.unassigned_policy || nativeProfile.unassigned_policy,
+				unassigned_column_count:
+					profile.unassigned_column_count || nativeProfile.unassigned_column_count,
+			};
 		},
 
 		_appendUnassignedSection(frm, dtId, profile) {
@@ -1237,6 +1389,10 @@
 		_onSecCollapsibleChange(checkbox, doctype, sIdx) {
 			if (cur_frm && cur_frm.doctype === doctype && cur_frm._vfc_temp_layout) {
 				cur_frm._vfc_temp_layout[sIdx].collapsible = checkbox.checked;
+				if (!checkbox.checked) {
+					cur_frm._vfc_temp_layout[sIdx].collapsed_by_default = false;
+				}
+				this._renderSectionsListHTML(cur_frm, doctype.replace(/\s/g, "-"));
 			}
 		},
 

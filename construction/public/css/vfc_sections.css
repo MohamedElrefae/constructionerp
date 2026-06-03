@@ -118,6 +118,15 @@ html[data-theme="light"] .vfc-le-section-head {
   text-align: right;
 }
 
+[dir="rtl"] .vfc-le-section-head {
+  border-left: 0;
+  border-right: var(--ct-section-accent-border);
+}
+
+[dir="rtl"] .vfc-le-grid {
+  direction: rtl;
+}
+
 [dir="rtl"] .vfc-le-section-head.vfc-le-collapsible::after {
   margin-left: 0;
   margin-right: auto;
@@ -190,3 +199,58 @@ html[data-theme="light"] .vfc-le-section-head {
    Dark Mode — all colours via CSS variables (automatic)
    Nothing to override here — var(--ct-*) covers both modes.
 ───────────────────────────────────────────────────────────────────── */
+
+/* ─────────────────────────────────────────────────────────────────────
+   Native Density For Tabbed Forms
+   Tabbed DocTypes stay on Frappe's native DOM. Density only changes the
+   native form-column layout, so tab visibility and depends_on stay stable.
+───────────────────────────────────────────────────────────────────── */
+.form-layout.vfc-native-density.vfc-density-1 .section-body > .form-column:not(.hide-control),
+.form-layout.vfc-native-density.vfc-density-3 .section-body > .form-column:not(.hide-control) {
+  width: 100% !important;
+  max-width: 100% !important;
+  flex: 0 0 100% !important;
+  min-width: 0;
+}
+
+.form-layout.vfc-native-density.vfc-density-1 .form-column > form {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr);
+  column-gap: 12px;
+  align-items: start;
+}
+
+.form-layout.vfc-native-density.vfc-density-3 .form-column > form {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: 12px;
+  align-items: start;
+}
+
+.form-layout.vfc-native-density .form-column > form > .frappe-control {
+  min-width: 0;
+}
+
+/* Stable VFC mount point inside native Frappe tab panes. */
+.form-layout .tab-pane > .vfc-tab-pane-host {
+  display: block;
+  width: 100%;
+  min-height: 1px;
+  clear: both;
+}
+
+.form-layout .tab-pane.active > .vfc-tab-pane-host,
+.form-layout .tab-pane.show > .vfc-tab-pane-host {
+  display: block !important;
+  visibility: visible !important;
+}
+
+.form-layout .tab-pane:not(.active):not(.show) > .vfc-tab-pane-host {
+  display: none;
+}
+
+@media (max-width: 991px) {
+  .form-layout.vfc-native-density.vfc-density-3 .form-column > form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

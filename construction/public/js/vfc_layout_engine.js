@@ -74,18 +74,6 @@
 
 			const layoutRoot = this._getLayoutRoot(frm);
 
-			// Non-default density → render with density profile (bypasses PILOT/tab gates)
-			if (layoutRoot) {
-				const denClass = [...layoutRoot.classList].find((c) => /^vfc-density-\d+$/.test(c));
-				if (denClass) {
-					const density = parseInt(denClass.split("-").pop(), 10);
-					if (density !== 2) {
-						console.log(`[LE] Non-default density (${density}) — density rendering.`);
-						this.renderWithDensity(frm, density);
-						return;
-					}
-				}
-			}
 
 			// Pilot gate — only known flat-layout DocTypes
 			if (!PILOT_DOCTYPES.has(dt)) {
@@ -126,8 +114,20 @@
 					return;
 				}
 
-				// No profile → native rendering, do nothing
+				// No profile → check density override or fallback to native
 				if (!profile) {
+					if (layoutRoot) {
+						const denClass = [...layoutRoot.classList].find((c) => /^vfc-density-\d+$/.test(c));
+						if (denClass) {
+							const density = parseInt(denClass.split("-").pop(), 10);
+							if (density !== 2 && !hasTabs) {
+								console.log(`[LE] No profile, non-default density (${density}) — density rendering.`);
+								this.renderWithDensity(frm, density);
+								return;
+							}
+						}
+					}
+
 					console.log(`[LE] No profile found for ${dt}. Aborting VFC layout.`);
 					return;
 				}
@@ -229,8 +229,8 @@
 
 			// Determine effective column count from density override (if set)
 			const densityOverride = layoutRoot.classList.contains("vfc-density-1") ? 1
-				: layoutRoot.classList.contains("vfc-density-3") ? 3
-				: layoutRoot.classList.contains("vfc-density-2") ? 2 : 0;
+				: layoutRoot.classList.contains("vfc-density-2") ? 2
+				: layoutRoot.classList.contains("vfc-density-3") ? 3 : 0;
 
 			// ── Build VFC section containers ──
 			sections.forEach((sec) => {
@@ -246,6 +246,7 @@
 				);
 
 				let hasVisibleField = false;
+				let colIdx = 0;
 
 				fields.forEach((fld) => {
 					const fn = fld.fieldname;
@@ -286,8 +287,14 @@
 					}
 
 					// Determine column span
-					const colCount = Math.min(Math.max(sec.column_count || 2, 1), 3);
-					const col = Math.min(Math.max(fld.col || 1, 1), colCount);
+					let col;
+					if (densityOverride > 0) {
+						colIdx = (colIdx + 1) % densityOverride;
+						col = colIdx || densityOverride;
+					} else {
+						const colCount = Math.min(Math.max(sec.column_count || 2, 1), 3);
+						col = Math.min(Math.max(fld.col || 1, 1), colCount);
+					}
 
 					// Create a cell div for this field
 					const cell = document.createElement("div");
@@ -559,15 +566,16 @@
 					const painted = cells.filter((cell) => {
 						const field = cell.querySelector("[data-vfc-managed='1']");
 						if (!field) return false;
-						const style = window.getComputedStyle(field);
-						const rect = field.getBoundingClientRect();
-						return (
-							style.display !== "none" &&
-							style.visibility !== "hidden" &&
-							Number(style.opacity) !== 0 &&
-							rect.width > 1 &&
-							rect.height > 1
-						);
+						if (
+							field.classList.contains("hide-control") ||
+							field.classList.contains("hidden") ||
+							field.classList.contains("d-none") ||
+							field.hasAttribute("hidden") ||
+							field.style.display === "none"
+						) {
+							return false;
+						}
+						return true;
 					}).length;
 					return `${label}:${painted}/${managed}/${cells.length}`;
 				})
@@ -580,24 +588,31 @@
 			let hidden = 0;
 			layoutRoot.querySelectorAll(".vfc-le-section").forEach((section) => {
 				const cells = [...section.querySelectorAll(".vfc-le-cell")];
-				const managed = cells.filter((cell) =>
-					cell.querySelector("[data-vfc-managed='1']")
-				).length;
+
+				// Sections with NO cells are truly empty (no fields were ever placed here) → hide them.
+				// Sections with cells where NOT ALL cells are tagged with data-vfc-managed are still
+				// being rendered — skip them to avoid premature hiding during render transitions.
+				if (cells.length > 0) {
+					const allCellsProcessed = cells.every((cell) => cell.querySelector("[data-vfc-managed='1']"));
+					if (!allCellsProcessed) return; // render still in progress, skip
+				}
+
 				const painted = cells.filter((cell) => {
 					const field = cell.querySelector("[data-vfc-managed='1']");
 					if (!field) return false;
-					const style = window.getComputedStyle(field);
-					const rect = field.getBoundingClientRect();
-					return (
-						style.display !== "none" &&
-						style.visibility !== "hidden" &&
-						Number(style.opacity) !== 0 &&
-						rect.width > 1 &&
-						rect.height > 1
-					);
+					if (
+						field.classList.contains("hide-control") ||
+						field.classList.contains("hidden") ||
+						field.classList.contains("d-none") ||
+						field.hasAttribute("hidden") ||
+						field.style.display === "none"
+					) {
+						return false;
+					}
+					return true;
 				}).length;
 
-				if (managed > 0 && painted === 0) {
+				if (painted === 0) {
 					section.setAttribute("data-vfc-empty", "1");
 					section.style.setProperty("display", "none", "important");
 					hidden += 1;
@@ -653,8 +668,10 @@
 
 				if (sec.collapsible) {
 					head.classList.add("vfc-le-collapsible");
-					const initCollapsed = sec.collapsed_by_default;
-					if (initCollapsed) secEl.setAttribute("data-vfc-collapsed", "1");
+					const initCollapsed = !!sec.collapsed_by_default;
+					// Always set the attribute explicitly so state is unambiguous
+					secEl.setAttribute("data-vfc-collapsed", initCollapsed ? "1" : "0");
+					console.log(`[LE] Section "${sec.label || sec.id}": collapsible=true, collapsed_by_default=${sec.collapsed_by_default}, initCollapsed=${initCollapsed}`);
 
 					head.addEventListener("click", () => {
 						const collapsed = secEl.getAttribute("data-vfc-collapsed") === "1";
@@ -663,7 +680,7 @@
 						if (grid) grid.style.display = collapsed ? "" : "none";
 					});
 
-					if (sec.collapsed_by_default) {
+					if (initCollapsed) {
 						// Defer hide so DOM is built first
 						setTimeout(() => {
 							const grid = secEl.querySelector(".vfc-le-grid");
@@ -1014,7 +1031,7 @@
 						column_count: colCount || 2,
 						visible: true,
 						collapsible: !!df.collapsible,
-						collapsed_by_default: !!df.collapsed_by_default,
+						collapsed_by_default: false,
 						fields: [],
 					};
 					sections.push(currentSection);

@@ -43,6 +43,8 @@ def darken_hex(hex_color, factor=0.1):
     b = int(int(h[4:6], 16) * (1 - factor))
     return f"#{r:02x}{g:02x}{b:02x}"
 
+_darken_hex = darken_hex
+
 
 def lighten_hex(hex_color, factor=0.1):
     if not hex_color or not hex_color.startswith("#"):
@@ -54,6 +56,29 @@ def lighten_hex(hex_color, factor=0.1):
     g = int(int(h[2:4], 16) + (255 - int(h[2:4], 16)) * factor)
     b = int(int(h[4:6], 16) + (255 - int(h[4:6], 16)) * factor)
     return f"#{r:02x}{g:02x}{b:02x}"
+
+_lighten_hex = lighten_hex
+
+
+def _is_valid_hex_color(color):
+    if not color or not isinstance(color, str):
+        return False
+    if not color.startswith("#"):
+        return False
+    h = color.lstrip("#")
+    if len(h) not in (3, 6):
+        return False
+    try:
+        int(h, 16)
+        return True
+    except ValueError:
+        return False
+
+
+def _is_dark_theme(body_bg):
+    if not body_bg or not isinstance(body_bg, str):
+        return False
+    return body_bg.startswith("#1")
 
 
 def execute():

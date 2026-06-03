@@ -10,22 +10,27 @@ import sys
 import unittest
 from unittest.mock import MagicMock, patch
 
-# Mock the frappe module before importing the service
-frappe_mock = MagicMock()
-frappe_mock.parse_json = lambda s: json.loads(s)
-frappe_mock.log_error = MagicMock()
-# Make @frappe.whitelist() a pass-through decorator so API functions stay callable
-frappe_mock.whitelist = lambda *args, **kwargs: (lambda fn: fn)
-frappe_mock._ = lambda s: s
-sys.modules["frappe"] = frappe_mock
-sys.modules["frappe.utils"] = MagicMock()
-sys.modules["frappe.desk"] = MagicMock()
-sys.modules["frappe.desk.treeview"] = MagicMock()
+_is_mocked = False
+if "frappe" not in sys.modules or not hasattr(sys.modules["frappe"], "get_doc"):
+    frappe_mock = MagicMock()
+    frappe_mock.parse_json = lambda s: json.loads(s)
+    frappe_mock.log_error = MagicMock()
+    # Make @frappe.whitelist() a pass-through decorator so API functions stay callable
+    frappe_mock.whitelist = lambda *args, **kwargs: (lambda fn: fn)
+    frappe_mock._ = lambda s: s
+    sys.modules["frappe"] = frappe_mock
+    sys.modules["frappe.utils"] = MagicMock()
+    sys.modules["frappe.desk"] = MagicMock()
+    sys.modules["frappe.desk.treeview"] = MagicMock()
+    _is_mocked = True
+else:
+    import frappe
+    frappe_mock = frappe
 
 from hypothesis import assume, given, settings
 from hypothesis import strategies as st
 
-from construction.construction.services.boq_export_service import BOQExportService
+from construction.services.boq_export_service import BOQExportService
 
 # --- Strategies ---
 
@@ -83,7 +88,19 @@ class TestServerColumnConfigFiltering(unittest.TestCase):
 
     def setUp(self):
         """Reset frappe mock state before each test."""
-        frappe_mock.log_error.reset_mock()
+        if not _is_mocked:
+            self.log_error_patcher = patch('frappe.log_error')
+            self.mock_log_error = self.log_error_patcher.start()
+            self.original_parse_json = frappe.parse_json
+            frappe.parse_json = lambda s: json.loads(s)
+        else:
+            frappe_mock.log_error.reset_mock()
+
+    def tearDown(self):
+        """Clean up mock state after each test."""
+        if not _is_mocked:
+            self.log_error_patcher.stop()
+            frappe.parse_json = self.original_parse_json
 
     # --- Property 8a: None config returns defaults unchanged ---
     @given(defaults=default_columns_strategy())
@@ -159,7 +176,8 @@ class TestServerColumnConfigFiltering(unittest.TestCase):
         Config entries with field_keys not in default_columns are skipped
         and a warning is logged.
         """
-        frappe_mock.log_error.reset_mock()
+        log_error_mock = frappe_mock.log_error if _is_mocked else self.mock_log_error
+        log_error_mock.reset_mock()
 
         field_keys = [c["key"] for c in defaults]
 
@@ -193,7 +211,7 @@ class TestServerColumnConfigFiltering(unittest.TestCase):
         self.assertEqual(len(result), 0)
 
         # frappe.log_error should have been called for each unknown key
-        self.assertEqual(frappe_mock.log_error.call_count, len(unknown_keys))
+        self.assertEqual(log_error_mock.call_count, len(unknown_keys))
 
     # --- Property 8d: Invalid JSON falls back to defaults ---
     @given(defaults=default_columns_strategy())
@@ -204,18 +222,24 @@ class TestServerColumnConfigFiltering(unittest.TestCase):
         When column_config_json is invalid JSON, apply_column_config
         falls back to default_columns.
         """
-        frappe_mock.log_error.reset_mock()
+        if _is_mocked:
+            frappe_mock.log_error.reset_mock()
 
-        # Make frappe.parse_json raise on bad input
-        original_parse = frappe_mock.parse_json
-        frappe_mock.parse_json = MagicMock(side_effect=ValueError("bad json"))
+            # Make frappe.parse_json raise on bad input
+            original_parse = frappe_mock.parse_json
+            frappe_mock.parse_json = MagicMock(side_effect=ValueError("bad json"))
 
-        try:
-            result = BOQExportService.apply_column_config(defaults, "{not valid json!!")
-            self.assertEqual(result, defaults)
-            frappe_mock.log_error.assert_called()
-        finally:
-            frappe_mock.parse_json = original_parse
+            try:
+                result = BOQExportService.apply_column_config(defaults, "{not valid json!!")
+                self.assertEqual(result, defaults)
+                frappe_mock.log_error.assert_called()
+            finally:
+                frappe_mock.parse_json = original_parse
+        else:
+            with patch('frappe.parse_json', side_effect=ValueError("bad json")):
+                result = BOQExportService.apply_column_config(defaults, "{not valid json!!")
+                self.assertEqual(result, defaults)
+                self.mock_log_error.assert_called()
 
 
 if __name__ == "__main__":
@@ -230,10 +254,9 @@ if __name__ == "__main__":
 #   from construction.services.boq_export_service import BOQExportService
 # We create a mock module at that path so the local import resolves to our mock.
 _mock_export_module = MagicMock()
-sys.modules["construction.services"] = MagicMock()
 sys.modules["construction.services.boq_export_service"] = _mock_export_module
 
-from construction.construction.api.boq_api import (
+from construction.api.boq_api import (
     export_boq_excel,
     export_boq_header_excel,
     export_boq_header_pdf,
