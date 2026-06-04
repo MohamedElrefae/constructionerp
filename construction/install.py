@@ -470,17 +470,18 @@ DEFAULT_BOQ_HEADER_LAYOUT = {
         {
             "id": "sec_identity",
             "label": "Identity",
-            "column_count": 2,
+            "column_count": 3,
             "sort_order": 1,
             "visible": True,
             "collapsible": False,
+            "collapsed_by_default": False,
             "fields": [
                 {"fieldname": "project", "col": 1, "sort_order": 1, "visible": True},
                 {"fieldname": "project_name", "col": 2, "sort_order": 2, "visible": True},
-                {"fieldname": "boq_type", "col": 1, "sort_order": 3, "visible": True},
-                {"fieldname": "status", "col": 2, "sort_order": 4, "visible": True},
-                {"fieldname": "title", "col": 1, "sort_order": 5, "visible": True},
-                {"fieldname": "version", "col": 2, "sort_order": 6, "visible": True},
+                {"fieldname": "boq_type", "col": 3, "sort_order": 3, "visible": True},
+                {"fieldname": "status", "col": 1, "sort_order": 4, "visible": True},
+                {"fieldname": "title", "col": 2, "sort_order": 5, "visible": True},
+                {"fieldname": "version", "col": 3, "sort_order": 6, "visible": True},
             ],
         },
         {
@@ -490,6 +491,7 @@ DEFAULT_BOQ_HEADER_LAYOUT = {
             "sort_order": 2,
             "visible": True,
             "collapsible": True,
+            "collapsed_by_default": False,
             "fields": [
                 {"fieldname": "total_contract_value", "col": 1, "sort_order": 1, "visible": True},
                 {"fieldname": "total_estimated_value", "col": 2, "sort_order": 2, "visible": True},
@@ -498,7 +500,7 @@ DEFAULT_BOQ_HEADER_LAYOUT = {
         },
         {
             "id": "sec_audit",
-            "label": "Audit Trail",
+            "label": "Lock Information",
             "column_count": 2,
             "sort_order": 3,
             "visible": True,
@@ -512,11 +514,214 @@ DEFAULT_BOQ_HEADER_LAYOUT = {
     ],
 }
 
+DEFAULT_BOQ_ITEM_STAGE_LAYOUT = {
+    "version": 1,
+    "unassigned_policy": "append",
+    "sections": [
+        {
+            "id": "sec_identity",
+            "label": "Identity",
+            "column_count": 2,
+            "sort_order": 1,
+            "visible": True,
+            "collapsible": False,
+            "collapsed_by_default": False,
+            "fields": [
+                {"fieldname": "project", "col": 1, "sort_order": 1, "visible": True},
+                {"fieldname": "boq_header", "col": 2, "sort_order": 2, "visible": True},
+                {"fieldname": "boq_structure", "col": 1, "sort_order": 3, "visible": True},
+                {"fieldname": "boq_item", "col": 2, "sort_order": 4, "visible": True},
+                {"fieldname": "stage_code", "col": 1, "sort_order": 5, "visible": True},
+                {"fieldname": "stage_name", "col": 2, "sort_order": 6, "visible": True},
+                {"fieldname": "stage_status", "col": 1, "sort_order": 7, "visible": True},
+            ],
+        },
+        {
+            "id": "sec_quantities",
+            "label": "Quantities",
+            "column_count": 2,
+            "sort_order": 2,
+            "visible": True,
+            "collapsible": True,
+            "collapsed_by_default": False,
+            "fields": [
+                {"fieldname": "planned_qty", "col": 1, "sort_order": 1, "visible": True},
+                {"fieldname": "percent_complete", "col": 2, "sort_order": 2, "visible": True},
+                {"fieldname": "measured_executed_qty", "col": 1, "sort_order": 3, "visible": True},
+                {"fieldname": "certified_qty", "col": 2, "sort_order": 4, "visible": True},
+            ],
+        },
+        {
+            "id": "sec_notes",
+            "label": "Notes",
+            "column_count": 1,
+            "sort_order": 3,
+            "visible": True,
+            "collapsible": True,
+            "collapsed_by_default": False,
+            "fields": [
+                {"fieldname": "description", "col": 1, "sort_order": 1, "visible": True},
+            ],
+        },
+    ],
+}
+
+DEFAULT_BOQ_STRUCTURE_LAYOUT = {
+    "version": 1,
+    "unassigned_policy": "append",
+    "sections": [
+        {
+            "id": "sec_identity",
+            "label": "Identity",
+            "column_count": 2,
+            "sort_order": 1,
+            "visible": True,
+            "collapsible": False,
+            "collapsed_by_default": False,
+            "fields": [
+                {"fieldname": "title", "col": 1, "sort_order": 1, "visible": True},
+                {"fieldname": "wbs_code", "col": 2, "sort_order": 2, "visible": True},
+                {"fieldname": "boq_header", "col": 1, "sort_order": 3, "visible": True},
+                {"fieldname": "project", "col": 2, "sort_order": 4, "visible": True},
+                {"fieldname": "parent_structure", "col": 1, "sort_order": 5, "visible": True},
+                {"fieldname": "is_group", "col": 2, "sort_order": 6, "visible": True},
+                {"fieldname": "description", "col": 1, "sort_order": 7, "visible": True},
+            ],
+        },
+        {
+            "id": "sec_owner_refs",
+            "label": "Owner References",
+            "column_count": 3,
+            "sort_order": 2,
+            "visible": True,
+            "collapsible": True,
+            "collapsed_by_default": False,
+            "fields": [
+                {"fieldname": "owner_page", "col": 1, "sort_order": 1, "visible": True},
+                {"fieldname": "owner_ref_no", "col": 2, "sort_order": 2, "visible": True},
+                {"fieldname": "owner_file_ref", "col": 3, "sort_order": 3, "visible": True},
+            ],
+        },
+    ],
+}
+
+DEFAULT_COST_ITEM_LAYOUT = {
+    "version": 1,
+    "unassigned_policy": "append",
+    "sections": [
+        {
+            "id": "sec_identity",
+            "label": "Item Details",
+            "column_count": 2,
+            "sort_order": 1,
+            "visible": True,
+            "collapsible": False,
+            "collapsed_by_default": False,
+            "fields": [
+                {"fieldname": "cost_item_code", "col": 1, "sort_order": 1, "visible": True},
+                {"fieldname": "category", "col": 2, "sort_order": 2, "visible": True},
+                {"fieldname": "title", "col": 1, "sort_order": 3, "visible": True},
+                {"fieldname": "status", "col": 2, "sort_order": 4, "visible": True},
+                {"fieldname": "unit", "col": 1, "sort_order": 5, "visible": True},
+                {"fieldname": "total_direct_cost", "col": 2, "sort_order": 6, "visible": True},
+                {"fieldname": "description", "col": 1, "sort_order": 7, "visible": True},
+            ],
+        },
+        {
+            "id": "sec_productivity",
+            "label": "Productivity",
+            "column_count": 2,
+            "sort_order": 2,
+            "visible": True,
+            "collapsible": True,
+            "collapsed_by_default": False,
+            "fields": [
+                {"fieldname": "base_productivity", "col": 1, "sort_order": 1, "visible": True},
+                {"fieldname": "default_wastage_pct", "col": 2, "sort_order": 2, "visible": True},
+            ],
+        },
+    ],
+}
+
+DEFAULT_PLANT_RESOURCE_LAYOUT = {
+    "version": 1,
+    "unassigned_policy": "append",
+    "sections": [
+        {
+            "id": "sec_identity",
+            "label": "Resource Details",
+            "column_count": 2,
+            "sort_order": 1,
+            "visible": True,
+            "collapsible": False,
+            "collapsed_by_default": False,
+            "fields": [
+                {"fieldname": "resource_code", "col": 1, "sort_order": 1, "visible": True},
+                {"fieldname": "equipment_type", "col": 2, "sort_order": 2, "visible": True},
+            ],
+        },
+        {
+            "id": "sec_costs",
+            "label": "Cost Rates",
+            "column_count": 2,
+            "sort_order": 2,
+            "visible": True,
+            "collapsible": True,
+            "collapsed_by_default": False,
+            "fields": [
+                {"fieldname": "ownership_cost_hourly", "col": 1, "sort_order": 1, "visible": True},
+                {"fieldname": "operating_cost_hourly", "col": 2, "sort_order": 2, "visible": True},
+                {"fieldname": "mobilization_cost", "col": 1, "sort_order": 3, "visible": True},
+            ],
+        },
+    ],
+}
+
+DEFAULT_USER_SCOPE_CONTEXT_LAYOUT = {
+    "version": 1,
+    "unassigned_policy": "append",
+    "sections": [
+        {
+            "id": "sec_scope",
+            "label": "Scope Context",
+            "column_count": 2,
+            "sort_order": 1,
+            "visible": True,
+            "collapsible": False,
+            "collapsed_by_default": False,
+            "fields": [
+                {"fieldname": "user", "col": 1, "sort_order": 1, "visible": True},
+                {"fieldname": "company", "col": 2, "sort_order": 2, "visible": True},
+                {"fieldname": "project", "col": 1, "sort_order": 3, "visible": True},
+                {"fieldname": "cost_center", "col": 2, "sort_order": 4, "visible": True},
+                {"fieldname": "department", "col": 1, "sort_order": 5, "visible": True},
+                {"fieldname": "branch", "col": 2, "sort_order": 6, "visible": True},
+            ],
+        },
+        {
+            "id": "sec_meta",
+            "label": "Session Metadata",
+            "column_count": 2,
+            "sort_order": 2,
+            "visible": True,
+            "collapsible": True,
+            "collapsed_by_default": True,
+            "fields": [
+                {"fieldname": "scope_version", "col": 1, "sort_order": 1, "visible": True},
+                {"fieldname": "last_active_at", "col": 2, "sort_order": 2, "visible": True},
+                {"fieldname": "client_id", "col": 1, "sort_order": 3, "visible": True},
+            ],
+        },
+    ],
+}
+
 
 def seed_form_layout_profiles():
-    """Seed default Form Layout Profiles for construction DocTypes.
+    """Seed default Form Layout Profiles for all flat-layout construction DocTypes.
 
     Called by after_migrate hook. Idempotent — skips existing profiles.
+    Covers: BOQ Header, BOQ Item Stage, BOQ Structure, CostItem,
+            PlantResource, User Scope Context.
     """
     profiles = [
         {
@@ -527,9 +732,53 @@ def seed_form_layout_profiles():
             "priority": 10,
             "sections_json": json.dumps(DEFAULT_BOQ_HEADER_LAYOUT),
         },
+        {
+            "reference_doctype": "BOQ Item Stage",
+            "profile_name": "Default",
+            "is_default": 1,
+            "is_system": 1,
+            "priority": 10,
+            "sections_json": json.dumps(DEFAULT_BOQ_ITEM_STAGE_LAYOUT),
+        },
+        {
+            "reference_doctype": "BOQ Structure",
+            "profile_name": "Default",
+            "is_default": 1,
+            "is_system": 1,
+            "priority": 10,
+            "sections_json": json.dumps(DEFAULT_BOQ_STRUCTURE_LAYOUT),
+        },
+        {
+            "reference_doctype": "CostItem",
+            "profile_name": "Default",
+            "is_default": 1,
+            "is_system": 1,
+            "priority": 10,
+            "sections_json": json.dumps(DEFAULT_COST_ITEM_LAYOUT),
+        },
+        {
+            "reference_doctype": "PlantResource",
+            "profile_name": "Default",
+            "is_default": 1,
+            "is_system": 1,
+            "priority": 10,
+            "sections_json": json.dumps(DEFAULT_PLANT_RESOURCE_LAYOUT),
+        },
+        {
+            "reference_doctype": "User Scope Context",
+            "profile_name": "Default",
+            "is_default": 1,
+            "is_system": 1,
+            "priority": 10,
+            "sections_json": json.dumps(DEFAULT_USER_SCOPE_CONTEXT_LAYOUT),
+        },
     ]
 
     for data in profiles:
+        # Skip if the target DocType isn't registered yet (e.g. not yet migrated)
+        if not frappe.db.exists("DocType", data["reference_doctype"]):
+            continue
+
         name = frappe.db.get_value(
             "Form Layout Profile",
             {"reference_doctype": data["reference_doctype"], "profile_name": data["profile_name"]},
@@ -541,6 +790,7 @@ def seed_form_layout_profiles():
         doc = frappe.get_doc({"doctype": "Form Layout Profile", **data})
         doc.flags.ignore_permissions = True
         doc.insert(ignore_permissions=True)
+
 
 
 # ---------------------------------------------------------------------------
