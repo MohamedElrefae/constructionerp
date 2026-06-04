@@ -110,12 +110,44 @@
 				return;
 			}
 
-			// Tab detection — DocTypes with Tab Break fields use Frappe's native tab
-			// layout which the VFC engine would destroy. Skip them as a safety net.
+			// Tab detection — DocTypes with Tab Break fields use tab-aware rendering.
 			const hasTabs = (frm.meta?.fields || []).some((f) => f.fieldtype === "Tab Break");
-			if (hasTabs) {
-				console.log(`[LE] ${dt} has Tab Break fields (tabbed layout) — VFC engine skipped.`);
-				return;
+
+			if (hasTabs && frm.layout && frm.layout.tabs && frm.layout.tabs.length) {
+				const TabClass = frm.layout.tabs[0].constructor;
+				if (TabClass && !TabClass._vfc_patched) {
+					TabClass._vfc_patched = true;
+					TabClass.prototype.refresh = function () {
+						if (!this.df) return;
+
+						let hide = this.df.hidden || this.df.hidden_due_to_dependency;
+
+						if (!hide && this.frm && !this.frm.get_perm(this.df.permlevel || 0, "read")) {
+							hide = true;
+						}
+						if (!hide) {
+							hide = true;
+							const hasVfcHost = this.wrapper.find(".vfc-tab-pane-host").length > 0;
+							if (hasVfcHost) {
+								const hasVisibleFields = this.wrapper.find(".vfc-tab-pane-host .frappe-control:not(.hide-control)").length > 0;
+								if (hasVisibleFields) {
+									hide = false;
+								}
+							}
+							if (hide) {
+								if (
+									this.wrapper.find(
+										".form-section:not(.hide-control, .empty-section), .form-dashboard-section:not(.hide-control, .empty-section)"
+									).length
+								) {
+									hide = false;
+								}
+							}
+						}
+
+						this.toggle(!hide);
+					};
+				}
 			}
 
 			const key = frm.doctype + "__" + frm.docname;
@@ -261,6 +293,9 @@
 				: layoutRoot.classList.contains("vfc-density-2") ? 2
 				: layoutRoot.classList.contains("vfc-density-3") ? 3 : 0;
 
+			// Tab detection for rendering
+			const hasTabs = (frm.meta?.fields || []).some((f) => f.fieldtype === "Tab Break");
+
 			// ── Build VFC section containers ──
 			sections.forEach((sec) => {
 				if (sec.visible === false) return;
@@ -347,7 +382,18 @@
 
 				// Only append section if it has at least one field (or is collapsible)
 				if (hasVisibleField || sec.collapsible) {
-					layoutRoot.appendChild(sectionEl);
+					if (hasTabs) {
+						const tabFieldname = this._getSectionTab(sec, frm);
+						const tabPane = this._getTabPane(frm, tabFieldname);
+						if (tabPane) {
+							const host = this._getOrCreateTabHost(tabPane);
+							host.appendChild(sectionEl);
+						} else {
+							layoutRoot.appendChild(sectionEl);
+						}
+					} else {
+						layoutRoot.appendChild(sectionEl);
+					}
 					injectedContainers.push(sectionEl);
 				}
 			});
@@ -389,6 +435,59 @@
 			return frm.wrapper?.[0] || frm.page?.main?.[0] || layoutRoot;
 		},
 
+		_getSectionTab(sec, frm) {
+			if (sec.tab_fieldname) return sec.tab_fieldname;
+			if (sec.fields && sec.fields.length) {
+				for (const fld of sec.fields) {
+					const fn = fld.fieldname;
+					const metaField = (frm.meta?.fields || []).find((f) => f.fieldname === fn);
+					if (metaField) {
+						const layoutFields = frm.layout?.fields || frm.meta.fields;
+						const idx = layoutFields.indexOf(metaField);
+						for (let i = idx; i >= 0; i--) {
+							if (layoutFields[i].fieldtype === "Tab Break") {
+								return layoutFields[i].fieldname;
+							}
+						}
+					}
+				}
+			}
+			if (frm.layout?.tabs?.length) {
+				return frm.layout.tabs[0].df.fieldname;
+			}
+			return null;
+		},
+
+		_getFieldTab(df, frm) {
+			const fields = frm.layout?.fields || frm.meta?.fields || [];
+			const idx = fields.indexOf(df);
+			if (idx === -1) return null;
+			for (let i = idx; i >= 0; i--) {
+				if (fields[i].fieldtype === "Tab Break") {
+					return fields[i].fieldname;
+				}
+			}
+			return null;
+		},
+
+		_getTabPane(frm, tabFieldname) {
+			if (!tabFieldname) return null;
+			const dt = frappe.scrub(frm.doctype, "-");
+			const id = `${dt}-${tabFieldname}`;
+			return document.getElementById(id);
+		},
+
+		_getOrCreateTabHost(tabPane) {
+			if (!tabPane) return null;
+			let host = tabPane.querySelector(".vfc-tab-pane-host");
+			if (!host) {
+				host = document.createElement("div");
+				host.className = "vfc-tab-pane-host";
+				tabPane.appendChild(host);
+			}
+			return host;
+		},
+
 		_hideNativeLayoutShells(layoutRoot) {
 			if (!layoutRoot) return 0;
 
@@ -399,6 +498,7 @@
 				)
 				.forEach((el) => {
 					if (el.closest(".vfc-le-section")) return;
+					if (el.closest(".form-dashboard-section")) return; // Protect dashboard components
 					el.style.setProperty("display", "none", "important");
 					el.setAttribute("data-vfc-hidden", "1");
 					count += 1;
@@ -754,41 +854,94 @@
 			if (!unassigned.length) return;
 
 			const colCount = Math.min(Math.max((profile.unassigned_column_count || 2), 1), 3);
-			const secEl = document.createElement("div");
-			secEl.className = "vfc-le-section vfc-le-unassigned";
+			const hasTabs = (frm.meta?.fields || []).some((f) => f.fieldtype === "Tab Break");
 
-			const head = document.createElement("div");
-			head.className = "vfc-le-section-head";
-			head.textContent = __("Other Fields");
-			secEl.appendChild(head);
+			if (hasTabs) {
+				const grouped = {};
+				unassigned.forEach((f) => {
+					const tab = this._getFieldTab(f, frm);
+					if (tab) {
+						if (!grouped[tab]) grouped[tab] = [];
+						grouped[tab].push(f);
+					}
+				});
 
-			const grid = document.createElement("div");
-			grid.className = "vfc-le-grid";
-			grid.style.gridTemplateColumns = `repeat(${colCount}, 1fr)`;
-			secEl.appendChild(grid);
+				for (const [tabFieldname, fields] of Object.entries(grouped)) {
+					const tabPane = this._getTabPane(frm, tabFieldname);
+					if (!tabPane) continue;
+					const host = this._getOrCreateTabHost(tabPane);
 
-			unassigned.forEach((f) => {
-				const fieldObj = frm.fields_dict[f.fieldname];
-				if (!fieldObj || !fieldObj.wrapper) return;
+					const secEl = document.createElement("div");
+					secEl.className = "vfc-le-section vfc-le-unassigned";
 
-				// Skip fields hidden by user settings, permissions, or depends_on
-				if (fieldObj.df && (fieldObj.df.hidden || fieldObj.df.invisible)) return;
+					const head = document.createElement("div");
+					head.className = "vfc-le-section-head";
+					head.textContent = __("Other Fields");
+					secEl.appendChild(head);
 
-				const cell = document.createElement("div");
-				cell.className = "vfc-le-cell";
-				cell.setAttribute("data-vfc-field", f.fieldname);
+					const grid = document.createElement("div");
+					grid.className = "vfc-le-grid";
+					grid.style.gridTemplateColumns = `repeat(${colCount}, 1fr)`;
+					secEl.appendChild(grid);
 
-				const nativeEl =
-					fieldObj.wrapper instanceof jQuery ? fieldObj.wrapper[0] : fieldObj.wrapper;
-				if (nativeEl && nativeEl.parentNode) {
-					cell.appendChild(nativeEl);
-					this._restoreVisibleFieldWrapper(nativeEl);
+					fields.forEach((f) => {
+						const fieldObj = frm.fields_dict[f.fieldname];
+						if (!fieldObj || !fieldObj.wrapper) return;
+
+						if (fieldObj.df && (fieldObj.df.hidden || fieldObj.df.invisible)) return;
+
+						const cell = document.createElement("div");
+						cell.className = "vfc-le-cell";
+						cell.setAttribute("data-vfc-field", f.fieldname);
+
+						const nativeEl = fieldObj.wrapper instanceof jQuery ? fieldObj.wrapper[0] : fieldObj.wrapper;
+						if (nativeEl && nativeEl.parentNode) {
+							cell.appendChild(nativeEl);
+							this._restoreVisibleFieldWrapper(nativeEl);
+						}
+						grid.appendChild(cell);
+					});
+
+					if (grid.children.length > 0) {
+						host.appendChild(secEl);
+					}
 				}
-				grid.appendChild(cell);
-			});
+			} else {
+				const secEl = document.createElement("div");
+				secEl.className = "vfc-le-section vfc-le-unassigned";
 
-			if (grid.children.length > 0) {
-				layoutRoot.appendChild(secEl);
+				const head = document.createElement("div");
+				head.className = "vfc-le-section-head";
+				head.textContent = __("Other Fields");
+				secEl.appendChild(head);
+
+				const grid = document.createElement("div");
+				grid.className = "vfc-le-grid";
+				grid.style.gridTemplateColumns = `repeat(${colCount}, 1fr)`;
+				secEl.appendChild(grid);
+
+				unassigned.forEach((f) => {
+					const fieldObj = frm.fields_dict[f.fieldname];
+					if (!fieldObj || !fieldObj.wrapper) return;
+
+					if (fieldObj.df && (fieldObj.df.hidden || fieldObj.df.invisible)) return;
+
+					const cell = document.createElement("div");
+					cell.className = "vfc-le-cell";
+					cell.setAttribute("data-vfc-field", f.fieldname);
+
+					const nativeEl =
+						fieldObj.wrapper instanceof jQuery ? fieldObj.wrapper[0] : fieldObj.wrapper;
+					if (nativeEl && nativeEl.parentNode) {
+						cell.appendChild(nativeEl);
+						this._restoreVisibleFieldWrapper(nativeEl);
+					}
+					grid.appendChild(cell);
+				});
+
+				if (grid.children.length > 0) {
+					layoutRoot.appendChild(secEl);
+				}
 			}
 		},
 
@@ -826,6 +979,7 @@
 					});
 					el.remove();
 				});
+				layoutRoot.querySelectorAll(".vfc-tab-pane-host").forEach((el) => el.remove());
 			}
 
 			// Also clear any cached active sections for this doctype
