@@ -605,77 +605,6 @@ DEFAULT_BOQ_STRUCTURE_LAYOUT = {
     ],
 }
 
-DEFAULT_COST_ITEM_LAYOUT = {
-    "version": 1,
-    "unassigned_policy": "append",
-    "sections": [
-        {
-            "id": "sec_identity",
-            "label": "Item Details",
-            "column_count": 2,
-            "sort_order": 1,
-            "visible": True,
-            "collapsible": False,
-            "collapsed_by_default": False,
-            "fields": [
-                {"fieldname": "cost_item_code", "col": 1, "sort_order": 1, "visible": True},
-                {"fieldname": "category", "col": 2, "sort_order": 2, "visible": True},
-                {"fieldname": "title", "col": 1, "sort_order": 3, "visible": True},
-                {"fieldname": "status", "col": 2, "sort_order": 4, "visible": True},
-                {"fieldname": "unit", "col": 1, "sort_order": 5, "visible": True},
-                {"fieldname": "total_direct_cost", "col": 2, "sort_order": 6, "visible": True},
-                {"fieldname": "description", "col": 1, "sort_order": 7, "visible": True},
-            ],
-        },
-        {
-            "id": "sec_productivity",
-            "label": "Productivity",
-            "column_count": 2,
-            "sort_order": 2,
-            "visible": True,
-            "collapsible": True,
-            "collapsed_by_default": False,
-            "fields": [
-                {"fieldname": "base_productivity", "col": 1, "sort_order": 1, "visible": True},
-                {"fieldname": "default_wastage_pct", "col": 2, "sort_order": 2, "visible": True},
-            ],
-        },
-    ],
-}
-
-DEFAULT_PLANT_RESOURCE_LAYOUT = {
-    "version": 1,
-    "unassigned_policy": "append",
-    "sections": [
-        {
-            "id": "sec_identity",
-            "label": "Resource Details",
-            "column_count": 2,
-            "sort_order": 1,
-            "visible": True,
-            "collapsible": False,
-            "collapsed_by_default": False,
-            "fields": [
-                {"fieldname": "resource_code", "col": 1, "sort_order": 1, "visible": True},
-                {"fieldname": "equipment_type", "col": 2, "sort_order": 2, "visible": True},
-            ],
-        },
-        {
-            "id": "sec_costs",
-            "label": "Cost Rates",
-            "column_count": 2,
-            "sort_order": 2,
-            "visible": True,
-            "collapsible": True,
-            "collapsed_by_default": False,
-            "fields": [
-                {"fieldname": "ownership_cost_hourly", "col": 1, "sort_order": 1, "visible": True},
-                {"fieldname": "operating_cost_hourly", "col": 2, "sort_order": 2, "visible": True},
-                {"fieldname": "mobilization_cost", "col": 1, "sort_order": 3, "visible": True},
-            ],
-        },
-    ],
-}
 
 DEFAULT_USER_SCOPE_CONTEXT_LAYOUT = {
     "version": 1,
@@ -717,11 +646,13 @@ DEFAULT_USER_SCOPE_CONTEXT_LAYOUT = {
 
 
 def seed_form_layout_profiles():
-    """Seed default Form Layout Profiles for all flat-layout construction DocTypes.
+    """Seed default Form Layout Profiles for construction DocTypes.
 
     Called by after_migrate hook. Idempotent — skips existing profiles.
-    Covers: BOQ Header, BOQ Item Stage, BOQ Structure, CostItem,
-            PlantResource, User Scope Context.
+    Covers: BOQ Header, BOQ Item Stage, BOQ Structure, User Scope Context.
+
+    Stage 1: construction module doctypes only.
+    Future stages will expand to the full ERPNext app.
     """
     profiles = [
         {
@@ -747,22 +678,6 @@ def seed_form_layout_profiles():
             "is_system": 1,
             "priority": 10,
             "sections_json": json.dumps(DEFAULT_BOQ_STRUCTURE_LAYOUT),
-        },
-        {
-            "reference_doctype": "CostItem",
-            "profile_name": "Default",
-            "is_default": 1,
-            "is_system": 1,
-            "priority": 10,
-            "sections_json": json.dumps(DEFAULT_COST_ITEM_LAYOUT),
-        },
-        {
-            "reference_doctype": "PlantResource",
-            "profile_name": "Default",
-            "is_default": 1,
-            "is_system": 1,
-            "priority": 10,
-            "sections_json": json.dumps(DEFAULT_PLANT_RESOURCE_LAYOUT),
         },
         {
             "reference_doctype": "User Scope Context",

@@ -53,9 +53,6 @@
 		"Modern Theme Settings",
 		"User Desk Theme",
 		"Construction Settings",
-		// CostItem and PlantResource: registered in DB when migrated
-		"CostItem",
-		"PlantResource",
 	]);
 
 	/* ═══════════════════════════════════════════════════════════════════
