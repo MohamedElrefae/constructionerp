@@ -41,18 +41,47 @@
      Layout Profile record, the engine is a no-op (graceful fallback).
      The engine works on flat-layout DocTypes. Tabbed DocTypes (those
      with Tab Break fields) are automatically skipped regardless of
-     PILOT_DOCTYPES — this is a safety net.
+     BLOCKED_DOCTYPES - this is a safety net.
   ═══════════════════════════════════════════════════════════════════ */
-	const PILOT_DOCTYPES = new Set([
-		"BOQ Header",
-		"BOQ Item",
-		"BOQ Item Stage",
-		"BOQ Structure",
-		"User Scope Context",
-		"Construction Theme",
-		"Modern Theme Settings",
-		"User Desk Theme",
-		"Construction Settings",
+	const BLOCKED_DOCTYPES = new Set([
+		// Frappe core internals
+		"DocType",
+		"DocField",
+		"DocPerm",
+		"Custom Field",
+		"Property Setter",
+		"Client Script",
+		"Server Script",
+		"Report",
+		"Page",
+		"Patch Log",
+		"Error Log",
+		"Scheduled Job Log",
+		"Activity Log",
+		"Access Log",
+		"Version",
+		"Comment",
+		"Communication",
+		"File",
+		"ToDo",
+		"Tag",
+		"Tag Link",
+		"Email Queue",
+		"Email Queue Recipient",
+		"Notification Log",
+		"Workflow Action",
+		"Workflow Action Master",
+		"Workflow Transition",
+		"Translation",
+		"Language",
+		"Module Def",
+		"Print Format",
+		"Letter Head",
+		"Web Form",
+		"Web Page",
+		"Website Settings",
+		"System Settings",
+		"Domain Settings",
 	]);
 
 	/* ═══════════════════════════════════════════════════════════════════
@@ -76,9 +105,8 @@
 			const layoutRoot = this._getLayoutRoot(frm);
 
 
-			// Pilot gate — only known flat-layout DocTypes
-			if (!PILOT_DOCTYPES.has(dt)) {
-				console.log(`[LE] ${dt} not in PILOT_DOCTYPES, skipping.`);
+			// Blocked gate — skip internal/system-only doctypes
+			if (BLOCKED_DOCTYPES.has(dt)) {
 				return;
 			}
 

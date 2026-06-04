@@ -139,7 +139,7 @@ app_include_js = [
     "/assets/construction/js/vite_layout_controls.js?v=1.17",
     # Phase 2: Generic Layout Engine — re-parents field wrappers per Form Layout Profile.
     # Must load AFTER vite_layout_controls.js (engine fires at 250ms, controls at 150ms).
-    "/assets/construction/js/vfc_layout_engine.js?v=1.37",
+    "/assets/construction/js/vfc_layout_engine.js?v=1.38",
 ]
 
 
