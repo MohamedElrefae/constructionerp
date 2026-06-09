@@ -96,10 +96,10 @@ class TestUserScopeContext(FrappeTestCase):
         initial_version = doc.scope_version
         self.assertEqual(initial_version, 1, "Initial version should be 1")
 
-        doc.save(ignore_permissions=True)
+        doc.save(ignore_permissions=True, ignore_version=False)
         self.assertEqual(doc.scope_version, 2, "Version should increment to 2")
 
-        doc.save(ignore_permissions=True)
+        doc.save(ignore_permissions=True, ignore_version=False)
         self.assertEqual(doc.scope_version, 3, "Version should increment to 3")
 
     # =================================================================
@@ -130,8 +130,8 @@ class TestUserScopeContext(FrappeTestCase):
         )
         doc.insert(ignore_permissions=True)
 
-        doc.company = self.test_company
-        doc.save(ignore_permissions=True)
+        doc.client_id = "track-change-smoke"
+        doc.save(ignore_permissions=True, ignore_version=False)
 
         versions = frappe.get_all(
             "Version", filters={"ref_doctype": "User Scope Context", "docname": doc.name}, fields=["name"]

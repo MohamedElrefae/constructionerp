@@ -102,6 +102,56 @@ def setup_boq_integration():
     setup_boq_indexes()
     setup_boq_rollout_mode()
     setup_direct_labor_designations()
+    setup_boq_structure_constraints()
+    setup_boq_print_formats()
+
+
+def setup_boq_print_formats():
+    if not frappe.db.exists("DocType", "Print Format"):
+        return
+
+    print_format_path = os.path.join(
+        frappe.get_app_path("construction"),
+        "print_format",
+        "boq_print_format",
+        "boq_print_format.json",
+    )
+    if not os.path.exists(print_format_path):
+        return
+
+    with open(print_format_path) as f:
+        data = json.load(f)
+
+    data = {key: value for key, value in data.items() if not isinstance(value, list)}
+
+    name = data.get("name")
+    if not name:
+        return
+
+    if frappe.db.exists("Print Format", name):
+        doc = frappe.get_doc("Print Format", name)
+        changed = False
+        for fieldname, value in data.items():
+            if fieldname in {"doctype", "name", "creation", "modified", "modified_by", "owner", "idx"}:
+                continue
+            if hasattr(doc, fieldname) and getattr(doc, fieldname) != value:
+                setattr(doc, fieldname, value)
+                changed = True
+        if changed:
+            doc.save(ignore_permissions=True)
+        return
+
+    doc = frappe.get_doc(data)
+    doc.insert(ignore_permissions=True)
+
+
+def setup_boq_structure_constraints():
+    if not frappe.db.table_exists("tabBOQ Structure"):
+        return
+
+    from construction.services.boq_wbs_health import ensure_wbs_unique_constraint
+
+    ensure_wbs_unique_constraint()
 
 
 def setup_boq_accounting_dimension():

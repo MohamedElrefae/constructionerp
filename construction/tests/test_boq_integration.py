@@ -9,6 +9,8 @@ import unittest
 
 import frappe
 
+from construction.tests.test_boq_helpers import get_or_create_test_project
+
 
 class TestBOQIntegration(unittest.TestCase):
     """Integration tests for BOQ Tree Architecture"""
@@ -20,6 +22,7 @@ class TestBOQIntegration(unittest.TestCase):
             {
                 "doctype": "BOQ Header",
                 "title": "Test BOQ Integration",
+                "project": get_or_create_test_project(),
                 "status": "Draft",
                 "boq_type": "Tender",
             }
@@ -38,7 +41,7 @@ class TestBOQIntegration(unittest.TestCase):
                 "doctype": "BOQ Structure",
                 "boq_header": self.boq_header.name,
                 "title": "Root Section",
-                "node_type": "Section",
+                "is_group": 1,
                 "parent_structure": None,
             }
         )
@@ -50,7 +53,7 @@ class TestBOQIntegration(unittest.TestCase):
                 "doctype": "BOQ Structure",
                 "boq_header": self.boq_header.name,
                 "title": "Test Item",
-                "node_type": "Item",
+                "is_group": 0,
                 "parent_structure": root_section.name,
             }
         )
@@ -68,7 +71,7 @@ class TestBOQIntegration(unittest.TestCase):
                 "doctype": "BOQ Structure",
                 "boq_header": self.boq_header.name,
                 "title": "Test Leaf",
-                "node_type": "Item",
+                "is_group": 0,
             }
         )
         leaf_node.insert()
@@ -104,7 +107,7 @@ class TestBOQIntegration(unittest.TestCase):
                 "doctype": "BOQ Structure",
                 "boq_header": self.boq_header.name,
                 "title": "Root Section",
-                "node_type": "Section",
+                "is_group": 1,
             }
         )
         root.insert()
@@ -115,7 +118,7 @@ class TestBOQIntegration(unittest.TestCase):
                 "doctype": "BOQ Structure",
                 "boq_header": self.boq_header.name,
                 "title": "Test Item",
-                "node_type": "Item",
+                "is_group": 0,
                 "parent_structure": root.name,
             }
         )
@@ -145,7 +148,7 @@ class TestBOQIntegration(unittest.TestCase):
                 "doctype": "BOQ Structure",
                 "boq_header": self.boq_header.name,
                 "title": "Test Structure",
-                "node_type": "Section",
+                "is_group": 1,
             }
         )
         structure.insert()
@@ -181,7 +184,7 @@ class TestBOQIntegration(unittest.TestCase):
                     "doctype": "BOQ Structure",
                     "boq_header": self.boq_header.name,
                     "title": f"Section {i}",
-                    "node_type": "Section",
+                    "is_group": 1,
                 }
             )
             section.insert()
@@ -193,7 +196,7 @@ class TestBOQIntegration(unittest.TestCase):
                         "doctype": "BOQ Structure",
                         "boq_header": self.boq_header.name,
                         "title": f"Item {i}-{j}",
-                        "node_type": "Item",
+                        "is_group": 0,
                         "parent_structure": section.name,
                     }
                 )
@@ -217,13 +220,15 @@ class TestBOQIntegration(unittest.TestCase):
                 "doctype": "BOQ Structure",
                 "boq_header": header.name,
                 "title": "Test Structure",
-                "node_type": "Section",
+                "is_group": 1,
             }
         )
         structure.insert()
 
-        # Change to Pricing - should not allow structural changes
+        # Frozen should not allow structural changes.
         header.status = "Pricing"
+        header.save()
+        header.status = "Frozen"
         header.save()
 
         # Try to modify structure - should fail
@@ -245,7 +250,7 @@ class TestBOQIntegration(unittest.TestCase):
                     "doctype": "BOQ Structure",
                     "boq_header": self.boq_header.name,
                     "title": f"Test Item {i}",
-                    "node_type": "Item",
+                    "is_group": 0,
                 }
             )
             item.insert()

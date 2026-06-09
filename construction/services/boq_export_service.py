@@ -1,6 +1,7 @@
 # Copyright (c) 2026, Mohamed Elrefae and contributors
 # For license information, please see license.txt
 
+import os
 from typing import Any, Dict, List, Optional
 
 import frappe
@@ -9,6 +10,64 @@ from frappe import _
 
 class BOQExportService:
     """BOQ export service for PDF and Excel exports."""
+
+    AR_LABELS = {
+        "BOQ": "جدول الكميات",
+        "BOQ Header": "رأس جدول الكميات",
+        "BOQ ID": "رقم جدول الكميات",
+        "BOQ Item": "بند جدول الكميات",
+        "BOQ Item Stage": "مرحلة بند جدول الكميات",
+        "BOQ Scope Registry": "سجل نطاق جدول الكميات",
+        "BOQ Structure": "هيكل جدول الكميات",
+        "Bill of Quantities": "جدول الكميات",
+        "BOQ Type": "نوع جدول الكميات",
+        "Certified": "معتمد",
+        "Certified Qty": "الكمية المعتمدة",
+        "Certification": "الاعتماد",
+        "Company": "الشركة",
+        "Cost Center": "مركز التكلفة",
+        "Created On": "تاريخ الإنشاء",
+        "Department": "القسم",
+        "Export Date": "تاريخ التصدير",
+        "Factor": "المعامل",
+        "GRAND TOTAL": "الإجمالي الكلي",
+        "Grand Total": "الإجمالي الكلي",
+        "Has Stages": "له مراحل",
+        "Line Total": "إجمالي البند",
+        "Measured Executed Qty": "الكمية المنفذة المقاسة",
+        "Measurement": "القياس",
+        "Modified On": "تاريخ التعديل",
+        "Parent WBS": "كود الأب",
+        "Percent Complete": "نسبة الإنجاز",
+        "Planned Qty": "الكمية المخططة",
+        "Project": "المشروع",
+        "Quantity": "الكمية",
+        "Revised Qty": "الكمية المعدلة",
+        "VO Qty Delta": "فرق كمية أمر التغيير",
+        "VO Value Delta": "فرق قيمة أمر التغيير",
+        "Revised Value": "القيمة المعدلة",
+        "Quantity Certified": "الكمية المعتمدة",
+        "Ref": "المرجع",
+        "Scope": "النطاق",
+        "Scope Context": "سياق النطاق",
+        "Scope Type": "نوع النطاق",
+        "Section": "قسم",
+        "Stage Code": "كود المرحلة",
+        "Stage Measurement": "قياس المرحلة",
+        "Stage Name": "اسم المرحلة",
+        "Stage Status": "حالة المرحلة",
+        "Status": "الحالة",
+        "Title": "العنوان",
+        "Title / Description": "الوصف",
+        "Total Budgeted Cost": "إجمالي التكلفة التقديرية",
+        "Total Contract Value": "إجمالي قيمة التعاقد",
+        "Type": "النوع",
+        "Unit": "الوحدة",
+        "Unit Price": "سعر الوحدة",
+        "Version": "الإصدار",
+        "WBS Code": "كود البند",
+        "Item": "بند",
+    }
 
     @staticmethod
     def apply_column_config(
@@ -50,6 +109,73 @@ class BOQExportService:
         return result
 
     @staticmethod
+    def _is_arabic_mode() -> bool:
+        return getattr(frappe.local, "lang", None) == "ar"
+
+    @staticmethod
+    def _label(label: str) -> str:
+        if BOQExportService._is_arabic_mode():
+            return BOQExportService.AR_LABELS.get(label, _(label))
+        return _(label)
+
+    @staticmethod
+    def _worksheet_title(title: str) -> str:
+        if BOQExportService._is_arabic_mode():
+            return BOQExportService.AR_LABELS.get(title, title)[:31]
+        return title[:31]
+
+    @staticmethod
+    def _apply_excel_direction(ws) -> None:
+        if BOQExportService._is_arabic_mode():
+            ws.sheet_view.rightToLeft = True
+
+    @staticmethod
+    def _text_alignment() -> str:
+        return "right" if BOQExportService._is_arabic_mode() else "left"
+
+    @staticmethod
+    def _print_context() -> Dict[str, Any]:
+        is_arabic = BOQExportService._is_arabic_mode()
+        return {
+            "is_arabic": is_arabic,
+            "direction": "rtl" if is_arabic else "ltr",
+            "text_align": "right" if is_arabic else "left",
+            "opposite_align": "left" if is_arabic else "right",
+            "labels": {
+                key: BOQExportService._label(key)
+                for key in (
+                    "BOQ ID",
+                    "BOQ Type",
+                    "Company",
+                    "Bill of Quantities",
+                    "BOQ Header",
+                    "Created On",
+                    "Export Date",
+                    "Factor",
+                    "GRAND TOTAL",
+                    "Grand Total",
+                    "Item",
+                    "Line Total",
+                    "Modified On",
+                    "Project",
+                    "Quantity",
+                    "Ref",
+                    "Section",
+                    "Status",
+                    "Title",
+                    "Title / Description",
+                    "Total Budgeted Cost",
+                    "Total Contract Value",
+                    "Type",
+                    "Unit",
+                    "Unit Price",
+                    "Version",
+                    "WBS Code",
+                )
+            },
+        }
+
+    @staticmethod
     def get_boq_header_data(boq_header: str) -> Dict:
         """Get BOQ Header information."""
         boq = frappe.get_doc("BOQ Header", boq_header)
@@ -88,6 +214,7 @@ class BOQExportService:
                 "owner_page",
                 "owner_ref_no",
                 "owner_file_ref",
+                "is_variation_item",
             ],
             order_by="lft",
         )
@@ -98,6 +225,7 @@ class BOQExportService:
             filters={"boq_header": boq_header},
             fields=[
                 "structure",
+                "name",
                 "quantity",
                 "unit",
                 "contract_unit_price",
@@ -106,8 +234,12 @@ class BOQExportService:
                 "owner_page",
                 "owner_ref_no",
                 "owner_file_ref",
+                "is_variation_item",
             ],
         )
+        from construction.services.variation_orders import get_revised_boq_rows
+
+        revised_map = {row["boq_item"]: row for row in get_revised_boq_rows(boq_header)}
 
         # Create a map of structure to items
         item_map = {}
@@ -116,11 +248,12 @@ class BOQExportService:
                 item_map[item["structure"]] = []
             item_map[item["structure"]].append(item)
 
-        # Build tree structure with depth calculation
+        depth_by_structure = BOQExportService._calculate_depth_map(structures)
+
+        # Build tree structure with precomputed depth values
         tree_data = []
         for structure in structures:
-            # Calculate depth based on parent chain
-            depth = BOQExportService._calculate_depth(structure["name"])
+            depth = depth_by_structure.get(structure["name"], 0)
             indent = "  " * depth
 
             node_data = {
@@ -148,6 +281,16 @@ class BOQExportService:
                     node_data["contract_unit_price"] = item.get("contract_unit_price")
                     node_data["line_total"] = item.get("line_total")
                     node_data["factor"] = item.get("factor", 1.0)
+                    node_data["is_variation_item"] = item.get("is_variation_item") or structure.get("is_variation_item")
+                    revised = revised_map.get(item.get("name")) or {}
+                    node_data["contract_qty"] = revised.get("contract_qty", item.get("quantity"))
+                    node_data["vo_qty_delta"] = revised.get("vo_qty_delta", 0)
+                    node_data["revised_qty"] = revised.get("revised_qty", item.get("quantity"))
+                    node_data["contract_line_value"] = revised.get("contract_line_value", item.get("line_total") or 0)
+                    node_data["vo_value_delta"] = revised.get("vo_value_delta", 0)
+                    node_data["revised_value"] = revised.get("revised_value", item.get("line_total") or 0)
+                    node_data["measured_qty"] = revised.get("measured_qty", 0)
+                    node_data["certified_qty"] = revised.get("certified_qty", 0)
                     # Merge owner fields from item (item values override structure values)
                     if item.get("owner_ref_no"):
                         node_data["owner_ref_no"] = item.get("owner_ref_no")
@@ -159,6 +302,33 @@ class BOQExportService:
             tree_data.append(node_data)
 
         return tree_data
+
+    @staticmethod
+    def _calculate_depth_map(structures: List[Dict]) -> Dict[str, int]:
+        parent_by_name = {row["name"]: row.get("parent_structure") for row in structures}
+        depth_by_name = {}
+
+        def resolve_depth(name: str, visiting: set[str] | None = None) -> int:
+            if name in depth_by_name:
+                return depth_by_name[name]
+            visiting = visiting or set()
+            if name in visiting:
+                depth_by_name[name] = 0
+                return 0
+            visiting.add(name)
+            parent = parent_by_name.get(name)
+            if not parent or parent not in parent_by_name:
+                depth = 0
+            else:
+                depth = resolve_depth(parent, visiting) + 1
+            depth_by_name[name] = depth
+            visiting.remove(name)
+            return depth
+
+        for structure_name in parent_by_name:
+            resolve_depth(structure_name)
+
+        return depth_by_name
 
     @staticmethod
     def _calculate_depth(structure_name: str) -> int:
@@ -187,16 +357,16 @@ class BOQExportService:
 
             # Default columns for header-only export — each key maps to a header data field
             default_columns = [
-                {"key": "name", "label": "BOQ ID", "width": 15},
-                {"key": "title", "label": "Title", "width": 20},
-                {"key": "project_name", "label": "Project", "width": 20},
-                {"key": "boq_type", "label": "BOQ Type", "width": 10},
-                {"key": "status", "label": "Status", "width": 10},
-                {"key": "version", "label": "Version", "width": 8},
-                {"key": "total_contract_value", "label": "Total Contract Value", "width": 15},
-                {"key": "total_budgeted_cost", "label": "Total Budgeted Cost", "width": 15},
-                {"key": "created_on", "label": "Created On", "width": 12},
-                {"key": "modified_on", "label": "Modified On", "width": 12},
+                {"key": "name", "label": BOQExportService._label("BOQ ID"), "width": 15},
+                {"key": "title", "label": BOQExportService._label("Title"), "width": 20},
+                {"key": "project_name", "label": BOQExportService._label("Project"), "width": 20},
+                {"key": "boq_type", "label": BOQExportService._label("BOQ Type"), "width": 10},
+                {"key": "status", "label": BOQExportService._label("Status"), "width": 10},
+                {"key": "version", "label": BOQExportService._label("Version"), "width": 8},
+                {"key": "total_contract_value", "label": BOQExportService._label("Total Contract Value"), "width": 15},
+                {"key": "total_budgeted_cost", "label": BOQExportService._label("Total Budgeted Cost"), "width": 15},
+                {"key": "created_on", "label": BOQExportService._label("Created On"), "width": 12},
+                {"key": "modified_on", "label": BOQExportService._label("Modified On"), "width": 12},
             ]
             effective_columns = BOQExportService.apply_column_config(default_columns, column_config)
 
@@ -206,7 +376,8 @@ class BOQExportService:
             # Create workbook
             wb = openpyxl.Workbook()
             ws = wb.active
-            ws.title = "BOQ Header"
+            ws.title = BOQExportService._worksheet_title("BOQ Header")
+            BOQExportService._apply_excel_direction(ws)
 
             # Define styles
             label_font = Font(bold=True, size=11)
@@ -219,7 +390,11 @@ class BOQExportService:
 
             # Title
             ws.merge_cells("A1:B1")
-            title_cell = ws.cell(row=1, column=1, value=f"BOQ Header: {header_data['title']}")
+            title_cell = ws.cell(
+                row=1,
+                column=1,
+                value=f"{BOQExportService._label('BOQ Header')}: {header_data['title']}",
+            )
             title_cell.font = title_font
             title_cell.alignment = Alignment(horizontal="center", vertical="center")
             ws.row_dimensions[1].height = 25
@@ -245,11 +420,11 @@ class BOQExportService:
                 label_cell = ws.cell(row=row_idx, column=1, value=label)
                 label_cell.font = label_font
                 label_cell.fill = label_fill
-                label_cell.alignment = Alignment(horizontal="left", vertical="center")
+                label_cell.alignment = Alignment(horizontal=BOQExportService._text_alignment(), vertical="center")
 
                 # Value cell
                 value_cell = ws.cell(row=row_idx, column=2, value=value)
-                value_cell.alignment = Alignment(horizontal="left", vertical="center")
+                value_cell.alignment = Alignment(horizontal=BOQExportService._text_alignment(), vertical="center")
 
                 # Format currency fields
                 if key in currency_keys:
@@ -258,33 +433,19 @@ class BOQExportService:
                 row_idx += 1
 
             # Save file
-            import os
-
-            from frappe.utils import get_files_path, now_datetime
+            from frappe.utils import now_datetime
 
             file_name = f"BOQ_Header_{boq_header}_{now_datetime().strftime('%Y%m%d_%H%M%S')}.xlsx"
-            file_path = os.path.join(get_files_path(), file_name)
+            file_path = BOQExportService._private_export_path(file_name)
 
             wb.save(file_path)
 
-            # Create File document
-            file_doc = frappe.get_doc(
-                {
-                    "doctype": "File",
-                    "file_name": file_name,
-                    "file_url": f"/files/{file_name}",
-                    "attached_to_doctype": "BOQ Header",
-                    "attached_to_name": boq_header,
-                    "folder": "Home/Attachments",
-                    "is_private": 1,
-                }
-            )
-            file_doc.insert(ignore_permissions=True)
+            file_doc = BOQExportService._register_private_export_file(file_name, file_path, boq_header)
 
             return {
                 "success": True,
                 "message": "BOQ Header Excel file generated successfully",
-                "file_url": f"/files/{file_name}",
+                "file_url": file_doc.file_url,
                 "file_name": file_name,
             }
 
@@ -302,15 +463,19 @@ class BOQExportService:
 
             # Default columns for full BOQ export
             default_columns = [
-                {"key": "wbs_code", "label": "WBS Code", "width": 12},
-                {"key": "title", "label": "Title / Description", "width": 30},
-                {"key": "type", "label": "Type", "width": 6},
-                {"key": "unit", "label": "Unit", "width": 5},
-                {"key": "quantity", "label": "Quantity", "width": 8},
-                {"key": "contract_unit_price", "label": "Unit Price", "width": 10},
-                {"key": "factor", "label": "Factor", "width": 5},
-                {"key": "line_total", "label": "Line Total", "width": 10},
-                {"key": "owner_ref_no", "label": "Ref", "width": 9},
+                {"key": "wbs_code", "label": BOQExportService._label("WBS Code"), "width": 12},
+                {"key": "title", "label": BOQExportService._label("Title / Description"), "width": 30},
+                {"key": "type", "label": BOQExportService._label("Type"), "width": 6},
+                {"key": "unit", "label": BOQExportService._label("Unit"), "width": 5},
+                {"key": "quantity", "label": BOQExportService._label("Quantity"), "width": 8},
+                {"key": "vo_qty_delta", "label": BOQExportService._label("VO Qty Delta"), "width": 8},
+                {"key": "revised_qty", "label": BOQExportService._label("Revised Qty"), "width": 8},
+                {"key": "contract_unit_price", "label": BOQExportService._label("Unit Price"), "width": 10},
+                {"key": "factor", "label": BOQExportService._label("Factor"), "width": 5},
+                {"key": "line_total", "label": BOQExportService._label("Line Total"), "width": 10},
+                {"key": "vo_value_delta", "label": BOQExportService._label("VO Value Delta"), "width": 10},
+                {"key": "revised_value", "label": BOQExportService._label("Revised Value"), "width": 10},
+                {"key": "owner_ref_no", "label": BOQExportService._label("Ref"), "width": 9},
             ]
             effective_columns = BOQExportService.apply_column_config(default_columns, column_config)
 
@@ -323,7 +488,8 @@ class BOQExportService:
             # Create workbook
             wb = openpyxl.Workbook()
             ws = wb.active
-            ws.title = "BOQ"
+            ws.title = BOQExportService._worksheet_title("BOQ")
+            BOQExportService._apply_excel_direction(ws)
 
             # Define styles
             header_font = Font(bold=True, size=12)
@@ -341,22 +507,24 @@ class BOQExportService:
             # Write BOQ Header info
             last_col_letter = get_column_letter(len(effective_columns)) if effective_columns else "K"
             ws.merge_cells(f"A1:{last_col_letter}1")
-            ws.cell(row=1, column=1, value=f"Bill of Quantities: {header_data['title']}")
+            ws.cell(row=1, column=1, value=f"{BOQExportService._label('Bill of Quantities')}: {header_data['title']}")
             ws.cell(row=1, column=1).font = title_font
             ws.cell(row=1, column=1).alignment = Alignment(horizontal="center")
 
-            ws.cell(row=2, column=1, value="Project:")
+            ws.cell(row=2, column=1, value=f"{BOQExportService._label('Project')}:")
             ws.cell(row=2, column=2, value=header_data.get("project_name", header_data.get("project", "")))
-            ws.cell(row=2, column=4, value="BOQ Type:")
+            ws.cell(row=2, column=4, value=f"{BOQExportService._label('BOQ Type')}:")
             ws.cell(row=2, column=5, value=header_data.get("boq_type", ""))
-            ws.cell(row=2, column=7, value="Status:")
+            ws.cell(row=2, column=7, value=f"{BOQExportService._label('Status')}:")
             ws.cell(row=2, column=8, value=header_data.get("status", ""))
 
-            ws.cell(row=3, column=1, value="Version:")
+            ws.cell(row=3, column=1, value=f"{BOQExportService._label('Version')}:")
             ws.cell(row=3, column=2, value=header_data.get("version", 1))
-            ws.cell(row=3, column=4, value="Total Contract Value:")
+            ws.cell(row=3, column=4, value=f"{BOQExportService._label('Total Contract Value')}:")
             ws.cell(row=3, column=5, value=header_data.get("total_contract_value", 0))
             ws.cell(row=3, column=5).number_format = "#,##0.00"
+            for label_cell in ("A2", "D2", "G2", "A3", "D3"):
+                ws[label_cell].alignment = Alignment(horizontal=BOQExportService._text_alignment())
 
             # Empty row
             row_idx = 5
@@ -365,7 +533,7 @@ class BOQExportService:
             num_cols = len(effective_columns)
 
             # Map column keys to data accessors and formatting
-            currency_keys = {"contract_unit_price", "line_total"}
+            currency_keys = {"contract_unit_price", "line_total", "vo_value_delta", "revised_value"}
             factor_keys = {"factor"}
 
             # Write column headers
@@ -384,7 +552,7 @@ class BOQExportService:
             grand_total = 0
 
             for node in tree_data:
-                node_type = "Section" if node.get("is_group") else "Item"
+                node_type = BOQExportService._label("Section" if node.get("is_group") else "Item")
                 indent = node.get("indent", "")
 
                 # Build a data dict for this node to look up by column key
@@ -394,9 +562,13 @@ class BOQExportService:
                     "type": node_type,
                     "unit": node.get("unit", ""),
                     "quantity": node.get("quantity"),
+                    "vo_qty_delta": node.get("vo_qty_delta", 0),
+                    "revised_qty": node.get("revised_qty"),
                     "contract_unit_price": node.get("contract_unit_price"),
                     "factor": node.get("factor", 1.0),
                     "line_total": node.get("line_total") or 0,
+                    "vo_value_delta": node.get("vo_value_delta", 0),
+                    "revised_value": node.get("revised_value", node.get("line_total") or 0),
                     "owner_ref_no": node.get("owner_ref_no", ""),
                     "owner_page": node.get("owner_page", ""),
                     "owner_file_ref": node.get("owner_file_ref", ""),
@@ -414,6 +586,8 @@ class BOQExportService:
 
                     cell = ws.cell(row=row_idx, column=col_idx, value=value)
                     cell.border = thin_border
+                    if key in {"title", "type", "unit", "owner_ref_no", "wbs_code"}:
+                        cell.alignment = Alignment(horizontal=BOQExportService._text_alignment())
 
                     if node.get("is_group"):
                         cell.fill = section_fill
@@ -424,7 +598,7 @@ class BOQExportService:
                             cell.number_format = "#,##0.00"
                         elif key in factor_keys:
                             cell.number_format = "0.00"
-                        elif key == "quantity":
+                        elif key in {"quantity", "vo_qty_delta", "revised_qty"}:
                             cell.number_format = "#,##0.00"
 
                 row_idx += 1
@@ -442,9 +616,9 @@ class BOQExportService:
             if line_total_col_idx and line_total_col_idx > 1:
                 merge_end = line_total_col_idx - 1
                 ws.merge_cells(start_row=row_idx, start_column=1, end_row=row_idx, end_column=merge_end)
-            cell = ws.cell(row=row_idx, column=1, value="GRAND TOTAL")
+            cell = ws.cell(row=row_idx, column=1, value=BOQExportService._label("GRAND TOTAL"))
             cell.font = Font(bold=True, size=12)
-            cell.alignment = Alignment(horizontal="right")
+            cell.alignment = Alignment(horizontal=BOQExportService._text_alignment())
 
             if line_total_col_idx:
                 cell = ws.cell(row=row_idx, column=line_total_col_idx, value=grand_total)
@@ -453,33 +627,19 @@ class BOQExportService:
                 cell.border = thin_border
 
             # Save file
-            import os
-
-            from frappe.utils import get_files_path, now_datetime
+            from frappe.utils import now_datetime
 
             file_name = f"BOQ_{boq_header}_{now_datetime().strftime('%Y%m%d_%H%M%S')}.xlsx"
-            file_path = os.path.join(get_files_path(), file_name)
+            file_path = BOQExportService._private_export_path(file_name)
 
             wb.save(file_path)
 
-            # Create File document
-            file_doc = frappe.get_doc(
-                {
-                    "doctype": "File",
-                    "file_name": file_name,
-                    "file_url": f"/files/{file_name}",
-                    "attached_to_doctype": "BOQ Header",
-                    "attached_to_name": boq_header,
-                    "folder": "Home/Attachments",
-                    "is_private": 1,
-                }
-            )
-            file_doc.insert(ignore_permissions=True)
+            file_doc = BOQExportService._register_private_export_file(file_name, file_path, boq_header)
 
             return {
                 "success": True,
                 "message": "Excel file generated successfully",
-                "file_url": f"/files/{file_name}",
+                "file_url": file_doc.file_url,
                 "file_name": file_name,
             }
 
@@ -513,12 +673,18 @@ class BOQExportService:
                 {"key": "type", "label": "Type", "width": 6},
                 {"key": "unit", "label": "Unit", "width": 5},
                 {"key": "quantity", "label": "Quantity", "width": 8},
+                {"key": "vo_qty_delta", "label": "VO Qty Delta", "width": 8},
+                {"key": "revised_qty", "label": "Revised Qty", "width": 8},
                 {"key": "contract_unit_price", "label": "Unit Price", "width": 10},
                 {"key": "factor", "label": "Factor", "width": 5},
                 {"key": "line_total", "label": "Line Total", "width": 10},
+                {"key": "vo_value_delta", "label": "VO Value Delta", "width": 10},
+                {"key": "revised_value", "label": "Revised Value", "width": 10},
                 {"key": "owner_ref_no", "label": "Ref", "width": 9},
             ]
             effective_columns = BOQExportService.apply_column_config(default_columns, column_config)
+            for col in effective_columns:
+                col["label"] = BOQExportService._label(col["label"])
 
             header_data = BOQExportService.get_boq_header_data(boq_header)
             tree_data = BOQExportService.get_tree_data(boq_header)
@@ -532,36 +698,22 @@ class BOQExportService:
                 "columns": effective_columns,
                 "export_date": now_datetime().strftime("%Y-%m-%d %H:%M"),
                 "company": frappe.defaults.get_user_default("Company") or "Company",
+                **BOQExportService._print_context(),
             }
             html = BOQExportService._render_template("boq_print_format.html", context)
             pdf_data = get_pdf(html)
 
-            import os
-
-            from frappe.utils import get_files_path
-
             file_name = f"BOQ_{boq_header}_{now_datetime().strftime('%Y%m%d_%H%M%S')}.pdf"
-            file_path = os.path.join(get_files_path(), file_name)
+            file_path = BOQExportService._private_export_path(file_name)
             with open(file_path, "wb") as f:
                 f.write(pdf_data)
 
-            file_doc = frappe.get_doc(
-                {
-                    "doctype": "File",
-                    "file_name": file_name,
-                    "file_url": f"/files/{file_name}",
-                    "attached_to_doctype": "BOQ Header",
-                    "attached_to_name": boq_header,
-                    "folder": "Home/Attachments",
-                    "is_private": 0,
-                }
-            )
-            file_doc.insert(ignore_permissions=True)
+            file_doc = BOQExportService._register_private_export_file(file_name, file_path, boq_header)
 
             return {
                 "success": True,
                 "message": "BOQ PDF exported successfully",
-                "file_url": f"/files/{file_name}",
+                "file_url": file_doc.file_url,
                 "file_name": file_name,
             }
 
@@ -590,6 +742,8 @@ class BOQExportService:
                 {"key": "modified_on", "label": "Modified On", "width": 12},
             ]
             effective_columns = BOQExportService.apply_column_config(default_columns, column_config)
+            for col in effective_columns:
+                col["label"] = BOQExportService._label(col["label"])
 
             header_data = BOQExportService.get_boq_header_data(boq_header)
             context = {
@@ -597,42 +751,53 @@ class BOQExportService:
                 "columns": effective_columns,
                 "export_date": now_datetime().strftime("%Y-%m-%d %H:%M"),
                 "company": frappe.defaults.get_user_default("Company") or "Company",
+                **BOQExportService._print_context(),
             }
             html = BOQExportService._render_template("boq_header_print.html", context)
             pdf_data = get_pdf(html)
 
-            import os
-
-            from frappe.utils import get_files_path
-
             file_name = f"BOQ_Header_{boq_header}_{now_datetime().strftime('%Y%m%d_%H%M%S')}.pdf"
-            file_path = os.path.join(get_files_path(), file_name)
+            file_path = BOQExportService._private_export_path(file_name)
             with open(file_path, "wb") as f:
                 f.write(pdf_data)
 
-            file_doc = frappe.get_doc(
-                {
-                    "doctype": "File",
-                    "file_name": file_name,
-                    "file_url": f"/files/{file_name}",
-                    "attached_to_doctype": "BOQ Header",
-                    "attached_to_name": boq_header,
-                    "folder": "Home/Attachments",
-                    "is_private": 0,
-                }
-            )
-            file_doc.insert(ignore_permissions=True)
+            file_doc = BOQExportService._register_private_export_file(file_name, file_path, boq_header)
 
             return {
                 "success": True,
                 "message": "BOQ Header PDF exported successfully",
-                "file_url": f"/files/{file_name}",
+                "file_url": file_doc.file_url,
                 "file_name": file_name,
             }
 
         except Exception as e:
             frappe.log_error(f"PDF export error: {str(e)}", "BOQ Export")
             return {"success": False, "error": str(e)}
+
+    @staticmethod
+    def _private_export_path(file_name: str) -> str:
+        private_dir = frappe.get_site_path("private", "files")
+        os.makedirs(private_dir, exist_ok=True)
+        return os.path.join(private_dir, file_name)
+
+    @staticmethod
+    def _register_private_export_file(file_name: str, file_path: str, boq_header: str):
+        file_doc = frappe.get_doc(
+            {
+                "doctype": "File",
+                "file_name": file_name,
+                "file_url": f"/private/files/{file_name}",
+                "attached_to_doctype": "BOQ Header",
+                "attached_to_name": boq_header,
+                "folder": "Home/Attachments",
+                "is_private": 1,
+            }
+        )
+        file_doc.insert(ignore_permissions=True)
+        stored_path = frappe.get_site_path(file_doc.file_url.lstrip("/"))
+        if file_path != stored_path and os.path.exists(file_path):
+            os.remove(file_path)
+        return file_doc
 
     @staticmethod
     def get_section_rollup(structure_name: str) -> float:

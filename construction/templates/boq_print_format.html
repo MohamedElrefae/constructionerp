@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html dir="{{ direction or 'ltr' }}" lang="{% if is_arabic %}ar{% else %}en{% endif %}">
 <head>
     <meta charset="utf-8">
     <title>Bill of Quantities - {{ header.title }}</title>
@@ -17,7 +17,7 @@
         }
 
         body {
-            font-family: Arial, sans-serif;
+            font-family: "Noto Naskh Arabic", "Noto Kufi Arabic", Amiri, Arial, sans-serif;
             font-size: 10px;
             margin: 0;
             padding: 20px;
@@ -55,7 +55,7 @@
         }
 
         .header-info td {
-            text-align: left;
+            text-align: {{ text_align or 'left' }};
             border: none;
             padding: 2px 5px;
             width: 33%;
@@ -64,6 +64,7 @@
         .header-info .label {
             font-weight: bold;
             color: var(--print-text-primary);
+            white-space: nowrap;
         }
 
         table {
@@ -76,7 +77,7 @@
             background-color: var(--print-header-bg);
             color: var(--print-header-text);
             padding: 8px 5px;
-            text-align: left;
+            text-align: {{ text_align or 'left' }};
             font-size: 9px;
         }
 
@@ -99,7 +100,7 @@
         }
 
         .number {
-            text-align: right;
+            text-align: {{ opposite_align or 'right' }};
         }
 
         .total-row {
@@ -131,22 +132,22 @@
 </head>
 <body>
     <div class="header">
-        <h1>BILL OF QUANTITIES</h1>
+        <h1>{{ labels["Bill of Quantities"] }}</h1>
         <h2>{{ header.title }}</h2>
         <div class="header-info">
             <table>
                 <tr>
                     <td>
-                        <span class="label">Project:</span> {{ header.project_name or header.project }}<br>
-                        <span class="label">BOQ Type:</span> {{ header.boq_type }}
+                        <span class="label">{{ labels["Project"] }}:</span> {{ header.project_name or header.project }}<br>
+                        <span class="label">{{ labels["BOQ Type"] }}:</span> {{ header.boq_type }}
                     </td>
                     <td>
-                        <span class="label">Status:</span> {{ header.status }}<br>
-                        <span class="label">Version:</span> {{ header.version }}
+                        <span class="label">{{ labels["Status"] }}:</span> {{ header.status }}<br>
+                        <span class="label">{{ labels["Version"] }}:</span> {{ header.version }}
                     </td>
                     <td>
-                        <span class="label">Export Date:</span> {{ export_date }}<br>
-                        <span class="label">Company:</span> {{ company }}
+                        <span class="label">{{ labels["Export Date"] }}:</span> {{ export_date }}<br>
+                        <span class="label">{{ labels["Company"] }}:</span> {{ company }}
                     </td>
                 </tr>
             </table>
@@ -154,7 +155,7 @@
     </div>
 
     {# Numeric column keys that need %.2f formatting and right-alignment #}
-    {% set numeric_keys = ["quantity", "contract_unit_price", "factor", "line_total"] %}
+    {% set numeric_keys = ["quantity", "vo_qty_delta", "revised_qty", "contract_unit_price", "factor", "line_total", "vo_value_delta", "revised_value"] %}
 
     <table>
         <thead>
@@ -178,7 +179,7 @@
                     {% if key == "title" %}
                         {{ node.indent }}{{ node.title }}
                     {% elif key == "type" %}
-                        {% if node.is_group %}Section{% else %}Item{% endif %}
+                        {% if node.is_group %}{{ labels["Section"] }}{% else %}{{ labels["Item"] }}{% endif %}
                     {% elif key in numeric_keys %}
                         {% set val = node[key] %}
                         {% if val %}{{ "%.2f"|format(val) }}{% endif %}
@@ -199,7 +200,7 @@
             {% endfor %}
             <tr class="total-row">
                 {% if ns.line_total_idx > 0 %}
-                <td colspan="{{ ns.line_total_idx }}" style="text-align: right; padding-right: 20px;">GRAND TOTAL</td>
+                <td colspan="{{ ns.line_total_idx }}" style="text-align: {{ opposite_align or 'right' }}; padding-right: 20px;">{{ labels["GRAND TOTAL"] }}</td>
                 <td class="number">{{ "%.2f"|format(grand_total) }}</td>
                 {% if ns.line_total_idx < columns|length - 1 %}
                 <td colspan="{{ columns|length - ns.line_total_idx - 1 }}"></td>
@@ -211,15 +212,15 @@
                 {% endif %}
                 {% else %}
                 {# line_total column not present — span all columns #}
-                <td colspan="{{ columns|length }}" style="text-align: right; padding-right: 20px;">GRAND TOTAL: {{ "%.2f"|format(grand_total) }}</td>
+                <td colspan="{{ columns|length }}" style="text-align: {{ opposite_align or 'right' }}; padding-right: 20px;">{{ labels["GRAND TOTAL"] }}: {{ "%.2f"|format(grand_total) }}</td>
                 {% endif %}
             </tr>
         </tbody>
     </table>
 
     <div class="footer">
-        <p>Generated by Construction ERP - BOQ Management System</p>
-        <p>BOQ Reference: {{ header.name }} | Total Contract Value: {{ "%.2f"|format(header.total_contract_value) }}</p>
+        <p>Construction ERP - BOQ Management System</p>
+        <p>{{ labels["BOQ ID"] }}: {{ header.name }} | {{ labels["Total Contract Value"] }}: {{ "%.2f"|format(header.total_contract_value) }}</p>
     </div>
 </body>
 </html>

@@ -14,6 +14,14 @@
     "enable_scope_department",
     "boq_cascade_section",
     "enable_boq_cascade_filtering",
+    "improve_now_rollout_section",
+    "enable_boq_excel_import_preview",
+    "enable_boq_excel_import_commit",
+    "enable_boq_wbs_resequence",
+    "enable_stage_measurement_ui",
+    "enable_boq_scope_registry",
+    "enable_bilingual_boq_print",
+    "enable_variation_orders",
     "direct_labor_designations",
     "section_break_2",
     "scope_context_settings_help",
@@ -74,6 +82,61 @@
       "fieldtype": "Select",
       "label": "Enable BOQ Cascade Filtering",
       "options": "Off\nOn\nStrict"
+    },
+    {
+      "description": "Feature gates for the Improve Now implementation program. Keep disabled until each work package has verified evidence and approval.",
+      "fieldname": "improve_now_rollout_section",
+      "fieldtype": "Section Break",
+      "label": "Improve Now Rollout Flags"
+    },
+    {
+      "default": "0",
+      "description": "Allows BOQ Excel import preview and validation without committing records.",
+      "fieldname": "enable_boq_excel_import_preview",
+      "fieldtype": "Check",
+      "label": "Enable BOQ Excel Import Preview"
+    },
+    {
+      "default": "0",
+      "description": "Allows BOQ Excel import commit. Requires WBS stability and import preview verification first.",
+      "fieldname": "enable_boq_excel_import_commit",
+      "fieldtype": "Check",
+      "label": "Enable BOQ Excel Import Commit"
+    },
+    {
+      "default": "0",
+      "description": "Allows privileged Draft-only BOQ WBS resequence operations.",
+      "fieldname": "enable_boq_wbs_resequence",
+      "fieldtype": "Check",
+      "label": "Enable BOQ WBS Resequence"
+    },
+    {
+      "default": "0",
+      "description": "Allows the enhanced stage measurement and certification UI.",
+      "fieldname": "enable_stage_measurement_ui",
+      "fieldtype": "Check",
+      "label": "Enable Stage Measurement UI"
+    },
+    {
+      "default": "0",
+      "description": "Allows the registry-driven BOQ scope validation behavior for transaction DocTypes.",
+      "fieldname": "enable_boq_scope_registry",
+      "fieldtype": "Check",
+      "label": "Enable BOQ Scope Registry"
+    },
+    {
+      "default": "0",
+      "description": "Allows Arabic/English bilingual BOQ print and export output.",
+      "fieldname": "enable_bilingual_boq_print",
+      "fieldtype": "Check",
+      "label": "Enable Bilingual BOQ Print"
+    },
+    {
+      "default": "0",
+      "description": "Allows Variation Order workflow features after WP6 verification and approval.",
+      "fieldname": "enable_variation_orders",
+      "fieldtype": "Check",
+      "label": "Enable Variation Orders"
     },
     {
       "description": "Employee designations whose Timesheet rows require BOQ attribution as direct labor.",

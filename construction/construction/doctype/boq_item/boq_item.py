@@ -65,6 +65,8 @@ class BOQItem(Document):
         """
         if not self.boq_header:
             return
+        if self.flags.get("ignore_boq_status_for_variation") and self.is_variation_item:
+            return
         status = frappe.db.get_value("BOQ Header", self.boq_header, "status")
         if status == "Locked":
             frappe.throw(_("Cannot modify BOQ Item: BOQ is Locked."))

@@ -18,6 +18,63 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.16.0\n"
 
+msgid "Bill of Quantities"
+msgstr "جدول الكميات"
+
+msgid "BOQ"
+msgstr "جدول الكميات"
+
+msgid "BOQ ID"
+msgstr "رقم جدول الكميات"
+
+msgid "BOQ Type"
+msgstr "نوع جدول الكميات"
+
+msgid "Created On"
+msgstr "تاريخ الإنشاء"
+
+msgid "Factor"
+msgstr "المعامل"
+
+msgid "Grand Total"
+msgstr "الإجمالي الكلي"
+
+msgid "GRAND TOTAL"
+msgstr "الإجمالي الكلي"
+
+msgid "Item"
+msgstr "بند"
+
+msgid "Line Total"
+msgstr "إجمالي البند"
+
+msgid "Modified On"
+msgstr "تاريخ التعديل"
+
+msgid "Quantity"
+msgstr "الكمية"
+
+msgid "Ref"
+msgstr "المرجع"
+
+msgid "Section"
+msgstr "قسم"
+
+msgid "Title / Description"
+msgstr "الوصف"
+
+msgid "Total Budgeted Cost"
+msgstr "إجمالي التكلفة التقديرية"
+
+msgid "Total Contract Value"
+msgstr "إجمالي قيمة التعاقد"
+
+msgid "Unit Price"
+msgstr "سعر الوحدة"
+
+msgid "WBS Code"
+msgstr "كود البند"
+
 #. Header text in the Construction Workspace
 #: construction/workspace/construction/construction.json
 msgid "<span class='h4'><b>Construction ERP</b></span>"

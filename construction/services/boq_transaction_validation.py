@@ -1,18 +1,11 @@
 from construction.services.boq_accounting import validate_transaction_row
-
-CHILD_TABLE_BY_DOCTYPE = {
-    "Purchase Order": "items",
-    "Purchase Receipt": "items",
-    "Purchase Invoice": "items",
-    "Sales Invoice": "items",
-    "Stock Entry": "items",
-    "Timesheet": "time_logs",
-    "Journal Entry": "accounts",
-    "Material Request": "items",
-}
+from construction.services.boq_scope_registry import CHILD_TABLE_BY_DOCTYPE, get_transaction_scope_rule
 
 
 def validate_document(doc, method=None):
+    if not get_transaction_scope_rule(doc.doctype):
+        return
+
     child_table = get_child_table(doc)
     if not child_table:
         return

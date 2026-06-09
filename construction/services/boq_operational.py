@@ -27,14 +27,15 @@ def validate_boq_item_stage_distribution(boq_item):
     if not boq_item.get("has_stages") or not boq_item.name:
         return
 
-    parent_qty = flt(boq_item.quantity)
+    parent_qty = _get_parent_quantity_for_stage_distribution(boq_item.name)
     total_planned = sum(flt(stage.planned_qty) for stage in get_stages_for_item(boq_item.name))
     header_status = frappe.db.get_value("BOQ Header", boq_item.boq_header, "status")
     _enforce_distribution_rule(total_planned, parent_qty, header_status)
 
 
 def _validate_planned_distribution(doc):
-    parent_qty = flt(frappe.db.get_value("BOQ Item", doc.boq_item, "quantity"))
+    _acquire_stage_distribution_lock(doc.boq_item)
+    parent_qty = _get_parent_quantity_for_stage_distribution(doc.boq_item)
     header_status = frappe.db.get_value("BOQ Header", doc.boq_header, "status")
 
     frappe.db.sql(
@@ -42,12 +43,61 @@ def _validate_planned_distribution(doc):
         (doc.boq_item,),
     )
 
+    params = {"boq_item": doc.boq_item, "name": doc.name or ""}
     total_planned = sum(
-        flt(stage.planned_qty) for stage in get_stages_for_item(doc.boq_item, exclude_name=doc.name)
+        flt(row.planned_qty)
+        for row in frappe.db.sql(
+            """
+            SELECT name, planned_qty
+            FROM `tabBOQ Item Stage`
+            WHERE boq_item = %(boq_item)s
+              AND name != %(name)s
+            FOR UPDATE
+            """,
+            params,
+            as_dict=True,
+        )
     )
     total_planned += flt(doc.planned_qty)
 
     _enforce_distribution_rule(total_planned, parent_qty, header_status)
+
+
+def _get_parent_quantity_for_stage_distribution(boq_item):
+    try:
+        from construction.services.variation_orders import get_revised_qty
+
+        return flt(get_revised_qty(boq_item))
+    except Exception:
+        return flt(frappe.db.get_value("BOQ Item", boq_item, "quantity"))
+
+
+def _acquire_stage_distribution_lock(boq_item: str):
+    if not boq_item:
+        return
+
+    lock_name = f"construction:boq_stage_distribution:{boq_item}"
+    held_locks = getattr(frappe.flags, "boq_stage_distribution_locks", None) or set()
+    if lock_name in held_locks:
+        return
+
+    result = frappe.db.sql("SELECT GET_LOCK(%s, 10)", lock_name)
+    if not result or result[0][0] != 1:
+        frappe.throw(_("Could not acquire BOQ Item Stage distribution lock. Please retry."))
+
+    held_locks.add(lock_name)
+    frappe.flags.boq_stage_distribution_locks = held_locks
+
+    def release_lock():
+        try:
+            frappe.db.sql("SELECT RELEASE_LOCK(%s)", lock_name)
+        finally:
+            locks = getattr(frappe.flags, "boq_stage_distribution_locks", None) or set()
+            locks.discard(lock_name)
+            frappe.flags.boq_stage_distribution_locks = locks
+
+    frappe.db.after_commit.add(release_lock)
+    frappe.db.after_rollback.add(release_lock)
 
 
 def _enforce_distribution_rule(total_planned, parent_qty, header_status):

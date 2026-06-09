@@ -11,6 +11,8 @@ import frappe
 import hypothesis.strategies as st
 from hypothesis import HealthCheck, assume, given, seed, settings
 
+from construction.tests.test_boq_helpers import get_or_create_test_project
+
 
 class TestBOQProperties(unittest.TestCase):
     """Property-based tests for BOQ Structure and BOQ Item"""
@@ -19,7 +21,13 @@ class TestBOQProperties(unittest.TestCase):
         """Set up test data"""
         # Create a test BOQ Header
         self.boq_header = frappe.get_doc(
-            {"doctype": "BOQ Header", "title": "Test BOQ", "status": "Draft", "boq_type": "Tender"}
+            {
+                "doctype": "BOQ Header",
+                "title": "Test BOQ",
+                "project": get_or_create_test_project(),
+                "status": "Draft",
+                "boq_type": "Tender",
+            }
         )
         self.boq_header.insert()
 
@@ -87,35 +95,25 @@ class TestBOQProperties(unittest.TestCase):
         pass
 
     def test_property5_node_type_is_group_invariant(self):
-        """Property 5: node_type ↔ is_group Invariant"""
-        # Test that node_type and is_group are always in sync
-        # Section nodes should have is_group=1, Items should have is_group=0
+        """Property 5: is_group identifies sections vs leaf items."""
 
-        # Create a test BOQ Structure node
         structure = frappe.new_doc("BOQ Structure")
         structure.boq_header = self.boq_header.name
         structure.title = "Test Section"
-        structure.node_type = "Section"
-
-        # Before insert, sync_is_group should be called
-        structure.sync_is_group()
+        structure.is_group = 1
+        structure.insert()
         self.assertEqual(structure.is_group, 1, "Section nodes should have is_group=1")
+        self.assertFalse(frappe.db.exists("BOQ Item", {"structure": structure.name}))
 
-        # Test Item node
         structure2 = frappe.new_doc("BOQ Structure")
         structure2.boq_header = self.boq_header.name
         structure2.title = "Test Item"
-        structure2.node_type = "Item"
-
-        structure2.sync_is_group()
+        structure2.is_group = 0
+        structure2.insert()
         self.assertEqual(structure2.is_group, 0, "Item nodes should have is_group=0")
+        self.assertTrue(frappe.db.exists("BOQ Item", {"structure": structure2.name}))
 
-        # Test that the invariant holds after save
-        structure.insert()
-        self.assertEqual(structure.node_type, "Section")
-        self.assertEqual(structure.is_group, 1)
-
-        # Clean up
+        structure2.delete()
         structure.delete()
 
     def test_property6_line_total_calculation(self):
@@ -227,7 +225,7 @@ class TestBOQProperties(unittest.TestCase):
         leaf_structure = frappe.new_doc("BOQ Structure")
         leaf_structure.boq_header = self.boq_header.name
         leaf_structure.title = "Test Leaf Item"
-        leaf_structure.node_type = "Item"  # This should be is_group=0
+        leaf_structure.is_group = 0
         leaf_structure.insert()
 
         # Check that a BOQ Item was auto-created
@@ -245,7 +243,7 @@ class TestBOQProperties(unittest.TestCase):
         section_structure = frappe.new_doc("BOQ Structure")
         section_structure.boq_header = self.boq_header.name
         section_structure.title = "Test Section"
-        section_structure.node_type = "Section"  # This should be is_group=1
+        section_structure.is_group = 1
         section_structure.insert()
 
         # Check that NO BOQ Item was created for section
@@ -264,7 +262,7 @@ class TestBOQProperties(unittest.TestCase):
         leaf_structure = frappe.new_doc("BOQ Structure")
         leaf_structure.boq_header = self.boq_header.name
         leaf_structure.title = "Test Leaf for Delete"
-        leaf_structure.node_type = "Item"
+        leaf_structure.is_group = 0
         leaf_structure.insert()
 
         # Verify BOQ Item was created
@@ -282,7 +280,7 @@ class TestBOQProperties(unittest.TestCase):
         section_structure = frappe.new_doc("BOQ Structure")
         section_structure.boq_header = self.boq_header.name
         section_structure.title = "Test Section for Delete"
-        section_structure.node_type = "Section"
+        section_structure.is_group = 1
         section_structure.insert()
 
         # Delete the section (should not have any BOQ Item to delete)

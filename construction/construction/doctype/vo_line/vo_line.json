@@ -1,0 +1,161 @@
+{
+  "actions": [],
+  "creation": "2026-06-10 00:00:00.000000",
+  "doctype": "DocType",
+  "editable_grid": 1,
+  "engine": "InnoDB",
+  "field_order": [
+    "line_type",
+    "boq_item",
+    "wbs_code",
+    "title",
+    "unit",
+    "contract_qty",
+    "delta_qty",
+    "revised_qty",
+    "abs_change_pct",
+    "rate_change_triggered",
+    "contract_unit_price",
+    "revised_unit_price",
+    "rate_change_justification",
+    "contract_line_value",
+    "revised_line_value",
+    "line_delta_value",
+    "created_boq_structure",
+    "created_boq_item",
+    "notes"
+  ],
+  "fields": [
+    {
+      "fieldname": "line_type",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "label": "Line Type",
+      "options": "Quantity Change\nNew Item\nOmission",
+      "reqd": 1
+    },
+    {
+      "fieldname": "boq_item",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "label": "BOQ Item",
+      "options": "BOQ Item"
+    },
+    {
+      "fieldname": "wbs_code",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "WBS Code",
+      "read_only": 1
+    },
+    {
+      "fieldname": "title",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Title"
+    },
+    {
+      "fieldname": "unit",
+      "fieldtype": "Link",
+      "label": "Unit",
+      "options": "UOM"
+    },
+    {
+      "fieldname": "contract_qty",
+      "fieldtype": "Float",
+      "label": "Contract Qty",
+      "read_only": 1
+    },
+    {
+      "fieldname": "delta_qty",
+      "fieldtype": "Float",
+      "in_list_view": 1,
+      "label": "Delta Qty"
+    },
+    {
+      "fieldname": "revised_qty",
+      "fieldtype": "Float",
+      "in_list_view": 1,
+      "label": "Revised Qty",
+      "read_only": 1
+    },
+    {
+      "fieldname": "abs_change_pct",
+      "fieldtype": "Percent",
+      "label": "Abs Change %",
+      "read_only": 1
+    },
+    {
+      "fieldname": "rate_change_triggered",
+      "fieldtype": "Check",
+      "label": "Rate Change Triggered",
+      "read_only": 1
+    },
+    {
+      "fieldname": "contract_unit_price",
+      "fieldtype": "Currency",
+      "label": "Contract Unit Price",
+      "read_only": 1
+    },
+    {
+      "fieldname": "revised_unit_price",
+      "fieldtype": "Currency",
+      "in_list_view": 1,
+      "label": "Revised Unit Price"
+    },
+    {
+      "fieldname": "rate_change_justification",
+      "fieldtype": "Small Text",
+      "label": "Rate Change Justification"
+    },
+    {
+      "fieldname": "contract_line_value",
+      "fieldtype": "Currency",
+      "label": "Contract Line Value",
+      "read_only": 1
+    },
+    {
+      "fieldname": "revised_line_value",
+      "fieldtype": "Currency",
+      "label": "Revised Line Value",
+      "read_only": 1
+    },
+    {
+      "fieldname": "line_delta_value",
+      "fieldtype": "Currency",
+      "in_list_view": 1,
+      "label": "Line Delta Value",
+      "read_only": 1
+    },
+    {
+      "fieldname": "created_boq_structure",
+      "fieldtype": "Link",
+      "label": "Created BOQ Structure",
+      "options": "BOQ Structure",
+      "read_only": 1
+    },
+    {
+      "fieldname": "created_boq_item",
+      "fieldtype": "Link",
+      "label": "Created BOQ Item",
+      "options": "BOQ Item",
+      "read_only": 1
+    },
+    {
+      "fieldname": "notes",
+      "fieldtype": "Small Text",
+      "label": "Notes"
+    }
+  ],
+  "istable": 1,
+  "links": [],
+  "modified": "2026-06-10 00:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "construction",
+  "name": "VO Line",
+  "owner": "Administrator",
+  "permissions": [],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": []
+}

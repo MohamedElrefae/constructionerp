@@ -208,14 +208,77 @@ def export_boq_pdf(boq_header, column_config=None):
 
 
 @frappe.whitelist()
-def import_boq_excel(file_url, boq_header):
+def import_boq_excel(file_url, boq_header, dry_run=1, confirmed_import_mode=None, row_resolutions=None):
     """Import BOQ from Excel."""
     try:
         from construction.services.boq_import_service import BOQImportService
 
-        result = BOQImportService.import_from_excel(file_url, boq_header)
+        result = BOQImportService.import_from_excel(
+            file_url=file_url,
+            boq_header=boq_header,
+            dry_run=frappe.utils.cint(dry_run),
+            confirmed_import_mode=confirmed_import_mode,
+            row_resolutions=frappe.parse_json(row_resolutions) if row_resolutions else None,
+        )
 
         return result
     except Exception as e:
         frappe.log_error(f"Excel import error: {str(e)}")
+        return {"success": False, "error": str(e)}
+
+
+@frappe.whitelist()
+def generate_boq_import_error_report(file_url, boq_header=None, confirmed_import_mode=None, row_resolutions=None):
+    """Generate an Excel review workbook with import errors and warnings."""
+    try:
+        from construction.services.boq_import_service import BOQImportService
+
+        return BOQImportService.generate_import_error_report(
+            file_url=file_url,
+            boq_header=boq_header,
+            confirmed_import_mode=confirmed_import_mode,
+            row_resolutions=frappe.parse_json(row_resolutions) if row_resolutions else None,
+        )
+    except Exception as e:
+        frappe.log_error(f"BOQ import error report API error: {str(e)}")
+        return {"success": False, "error": str(e)}
+
+
+@frappe.whitelist()
+def bulk_update_boq_item_stages(updates):
+    """Bulk update BOQ Item Stage measurement/certification fields through normal validation."""
+    try:
+        from construction.services.feature_flags import is_enabled
+
+        if not is_enabled("enable_stage_measurement_ui"):
+            return {"success": False, "error": "Stage measurement UI is disabled by Construction Settings."}
+
+        allowed_fields = {
+            "stage_status",
+            "measured_executed_qty",
+            "certified_qty",
+            "percent_complete",
+            "description",
+        }
+        payload = frappe.parse_json(updates) if isinstance(updates, str) else updates
+        if not isinstance(payload, list):
+            return {"success": False, "error": "Updates must be a list."}
+
+        results = []
+        for row in payload:
+            stage_name = row.get("name")
+            if not stage_name:
+                results.append({"success": False, "error": "Missing stage name."})
+                continue
+
+            stage = frappe.get_doc("BOQ Item Stage", stage_name)
+            for fieldname in allowed_fields:
+                if fieldname in row:
+                    stage.set(fieldname, row.get(fieldname))
+            stage.save(ignore_permissions=True)
+            results.append({"success": True, "name": stage.name})
+
+        return {"success": all(row.get("success") for row in results), "results": results}
+    except Exception as e:
+        frappe.log_error(f"Bulk BOQ Item Stage update error: {str(e)}")
         return {"success": False, "error": str(e)}

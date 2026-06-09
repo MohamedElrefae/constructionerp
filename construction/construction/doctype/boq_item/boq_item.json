@@ -15,6 +15,15 @@
     "owner_page",
     "owner_ref_no",
     "owner_file_ref",
+    "is_variation_item",
+    "variation_order",
+    "sb_import_traceability",
+    "import_batch",
+    "import_batch_id",
+    "import_mode",
+    "source_sheet_name",
+    "source_row_no",
+    "source_item_ref",
     "sb_quantity",
     "quantity",
     "unit",
@@ -90,6 +99,64 @@
       "fieldname": "owner_file_ref",
       "fieldtype": "Data",
       "label": "Owner File Ref"
+    },
+    {
+      "default": "0",
+      "fieldname": "is_variation_item",
+      "fieldtype": "Check",
+      "label": "Is Variation Item",
+      "read_only": 1
+    },
+    {
+      "fieldname": "variation_order",
+      "fieldtype": "Link",
+      "label": "Variation Order",
+      "options": "Variation Order",
+      "read_only": 1
+    },
+    {
+      "fieldname": "sb_import_traceability",
+      "fieldtype": "Section Break",
+      "label": "Import Traceability",
+      "collapsible": 1
+    },
+    {
+      "fieldname": "import_batch",
+      "fieldtype": "Link",
+      "label": "Import Batch",
+      "options": "BOQ Import Batch",
+      "read_only": 1
+    },
+    {
+      "fieldname": "import_batch_id",
+      "fieldtype": "Data",
+      "label": "Import Batch ID",
+      "read_only": 1
+    },
+    {
+      "fieldname": "import_mode",
+      "fieldtype": "Select",
+      "label": "Import Mode",
+      "options": "\nManual\nStructured\nSemi-Structured\nFlat\nVariation",
+      "read_only": 1
+    },
+    {
+      "fieldname": "source_sheet_name",
+      "fieldtype": "Data",
+      "label": "Source Sheet Name",
+      "read_only": 1
+    },
+    {
+      "fieldname": "source_row_no",
+      "fieldtype": "Int",
+      "label": "Source Row No",
+      "read_only": 1
+    },
+    {
+      "fieldname": "source_item_ref",
+      "fieldtype": "Data",
+      "label": "Source Item Ref",
+      "read_only": 1
     },
     {
       "fieldname": "sb_quantity",

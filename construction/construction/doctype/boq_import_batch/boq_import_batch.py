@@ -1,0 +1,9 @@
+import secrets
+
+from frappe.utils import nowdate
+from frappe.model.document import Document
+
+
+class BOQImportBatch(Document):
+    def autoname(self):
+        self.name = f"BOQIMP-{nowdate().replace('-', '')}-{secrets.token_hex(4)}"

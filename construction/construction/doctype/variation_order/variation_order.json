@@ -1,0 +1,190 @@
+{
+  "actions": [],
+  "allow_rename": 0,
+  "autoname": "method",
+  "creation": "2026-06-10 00:00:00.000000",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "boq_header",
+    "project",
+    "vo_number",
+    "vo_date",
+    "status",
+    "cb_approval",
+    "description",
+    "reason",
+    "engineer_name",
+    "engineer_approval_date",
+    "client_approval_document",
+    "client_approval_ref",
+    "client_approval_date",
+    "sb_lines",
+    "lines",
+    "sb_totals",
+    "total_contract_delta",
+    "notes"
+  ],
+  "fields": [
+    {
+      "fieldname": "boq_header",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "BOQ Header",
+      "options": "BOQ Header",
+      "reqd": 1
+    },
+    {
+      "fetch_from": "boq_header.project",
+      "fieldname": "project",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "label": "Project",
+      "options": "Project",
+      "read_only": 1
+    },
+    {
+      "fieldname": "vo_number",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "VO Number",
+      "read_only": 1,
+      "search_index": 1
+    },
+    {
+      "default": "Today",
+      "fieldname": "vo_date",
+      "fieldtype": "Date",
+      "label": "VO Date",
+      "reqd": 1
+    },
+    {
+      "default": "Draft",
+      "fieldname": "status",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Status",
+      "options": "Draft\nSubmitted\nApproved by Engineer\nApproved by Client\nRejected",
+      "reqd": 1
+    },
+    {
+      "fieldname": "cb_approval",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "description",
+      "fieldtype": "Small Text",
+      "label": "Description"
+    },
+    {
+      "fieldname": "reason",
+      "fieldtype": "Small Text",
+      "label": "Reason"
+    },
+    {
+      "fieldname": "engineer_name",
+      "fieldtype": "Data",
+      "label": "Engineer Name"
+    },
+    {
+      "fieldname": "engineer_approval_date",
+      "fieldtype": "Date",
+      "label": "Engineer Approval Date",
+      "read_only": 1
+    },
+    {
+      "fieldname": "client_approval_document",
+      "fieldtype": "Attach",
+      "label": "Client Approval Document"
+    },
+    {
+      "fieldname": "client_approval_ref",
+      "fieldtype": "Data",
+      "label": "Client Approval Ref"
+    },
+    {
+      "fieldname": "client_approval_date",
+      "fieldtype": "Date",
+      "label": "Client Approval Date",
+      "read_only": 1
+    },
+    {
+      "fieldname": "sb_lines",
+      "fieldtype": "Section Break",
+      "label": "VO Lines"
+    },
+    {
+      "fieldname": "lines",
+      "fieldtype": "Table",
+      "label": "Lines",
+      "options": "VO Line",
+      "reqd": 1
+    },
+    {
+      "fieldname": "sb_totals",
+      "fieldtype": "Section Break",
+      "label": "Totals"
+    },
+    {
+      "fieldname": "total_contract_delta",
+      "fieldtype": "Currency",
+      "in_list_view": 1,
+      "label": "Total Contract Delta",
+      "read_only": 1
+    },
+    {
+      "fieldname": "notes",
+      "fieldtype": "Text Editor",
+      "label": "Notes"
+    }
+  ],
+  "index_web_pages_for_search": 1,
+  "links": [],
+  "modified": "2026-06-10 00:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "construction",
+  "name": "Variation Order",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "create": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Construction Owner",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "create": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Project Manager",
+      "share": 1,
+      "write": 1
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": [],
+  "track_changes": 1
+}
