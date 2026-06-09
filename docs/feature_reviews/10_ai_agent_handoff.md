@@ -408,16 +408,21 @@ Theme/migration test debt is deferred to post-release **WP7** (see tracker).
 - Deploy to production: ✅ APPROVED (after staging smoke green + 24h soak)
 - Enable flags G1–G6: ✅ APPROVED (one gate per 24–48h)
 
+## Post-Commit Status
+
+- `release/v6.8` branch created from `develop`.
+- Commit `ebc82f7` pushed: 144 files, 14087 insertions(+), 308 deletions(-).
+- Local post-commit smoke on `v16.localhost` passed (6/6 tests, documented in `EV-062`).
+
 ## Recommended Next Agent Steps
 
 1. Read `09_improve_now_task_tracker.md` and `evidence/evidence_log.md`.
-2. Create `release/v6.8` branch from `develop`.
-3. Commit with the structured message in `EV-060`.
-4. Deploy to Frappe Cloud staging per `EV-061`.
-5. Run post-deploy smoke and rollback drill; document in `EV-062`.
-6. After manager confirms staging is green, proceed to production deploy.
-7. Keep feature flags default `false`; enable one gate at a time (24–48h between each).
-8. Only start **WP7** (Theme & Migration Test Hardening) if explicitly asked, or after the BOQ/VO release is complete.
+2. Deploy `release/v6.8` to Frappe Cloud staging (`construction-staging.frappe.cloud`).
+3. Run post-deploy smoke and rollback drill on staging; update `EV-062`.
+4. Confirm backup retention with Cloud admin (Condition 4.1).
+5. After manager confirms staging is green + 24h soak, proceed to production deploy.
+6. Keep feature flags default `false`; enable one gate at a time (24–48h between each).
+7. Only start **WP7** (Theme & Migration Test Hardening) if explicitly asked, or after the BOQ/VO release is complete.
 
 ## Cautions for Next Agent
 

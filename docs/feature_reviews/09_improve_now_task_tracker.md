@@ -296,9 +296,24 @@ Theme/migration test debt (42 failures) is deferred to post-release WP7. It does
 - Deploy to Frappe Cloud production: ✅ APPROVED (after staging smoke green + 24h soak)
 - Enable flags G1–G6: ✅ APPROVED (one gate per 24–48h)
 
+### Post-Commit Status (2026-06-10)
+
+| Step | Status | Evidence |
+|------|--------|----------|
+| Create `release/v6.8` branch | ✅ Done | `git checkout -b release/v6.8` |
+| Commit with structured message | ✅ Done | Commit `ebc82f7`, 144 files, 14087 insertions(+), 308 deletions(-) |
+| Local post-commit smoke (v16.localhost) | ✅ Pass | `EV-062` — 6/6 smoke tests passed |
+| Frappe Cloud staging deploy | ⏳ Pending | Awaiting Cloud credentials / bench access |
+| Frappe Cloud rollback drill | ⏳ Pending | Requires staging site (Condition 4.2) |
+| Production deploy | ⏳ Pending | Awaiting staging green + 24h soak + manager confirmation |
+
 ### Next Step
 
-Proceed with `git commit` → create `release/v6.8` → staging deploy → run smoke + rollback drill → await manager confirmation for production deploy.
+1. Deploy `release/v6.8` to Frappe Cloud staging (`construction-staging.frappe.cloud`).
+2. Run post-deploy smoke on staging.
+3. Run rollback drill on staging; update `EV-062`.
+4. Confirm backup retention with Cloud admin (Condition 4.1).
+5. Notify manager with staging results → get production deploy sign-off.
 
 ## Work Package 7: Theme & Migration Test Hardening (Post-Release)
 
