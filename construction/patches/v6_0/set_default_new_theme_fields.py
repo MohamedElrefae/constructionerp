@@ -82,7 +82,7 @@ def _is_dark_theme(body_bg):
 
 
 def execute():
-    if not frappe.db.table_exists("tabConstruction Theme"):
+    if not frappe.db.table_exists("Construction Theme"):
         return
 
     themes = frappe.get_all(

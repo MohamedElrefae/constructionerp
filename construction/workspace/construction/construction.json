@@ -1,6 +1,6 @@
 {
   "charts": [],
-  "content": "[{\"id\":\"ct-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class='h4'><b>Construction ERP</b></span>\",\"col\":12}},{\"id\":\"ct-boq-management\",\"type\":\"card\",\"data\":{\"card_name\":\"BOQ Management\",\"col\":4}},{\"id\":\"ct-theme-settings\",\"type\":\"card\",\"data\":{\"card_name\":\"Theme Settings\",\"col\":4}},{\"id\":\"ct-scope-management\",\"type\":\"card\",\"data\":{\"card_name\":\"Scope Management\",\"col\":4}}]",
+  "content": "[{\"id\":\"ct-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class='h4'><b>Construction ERP</b></span>\",\"col\":12}},{\"id\":\"ct-boq-management\",\"type\":\"card\",\"data\":{\"card_name\":\"BOQ Management\",\"col\":4}},{\"id\":\"ct-variation-management\",\"type\":\"card\",\"data\":{\"card_name\":\"Variation Management\",\"col\":4}},{\"id\":\"ct-theme-settings\",\"type\":\"card\",\"data\":{\"card_name\":\"Theme Settings\",\"col\":4}},{\"id\":\"ct-scope-management\",\"type\":\"card\",\"data\":{\"card_name\":\"Scope Management\",\"col\":4}}]",
   "custom_blocks": [],
   "docstatus": 0,
   "doctype": "Workspace",
@@ -54,6 +54,24 @@
       "label": "BOQ Item Stage",
       "link_count": 0,
       "link_to": "BOQ Item Stage",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Variation Management",
+      "link_count": 0,
+      "onboard": 0,
+      "type": "Card Break"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Variation Order",
+      "link_count": 0,
+      "link_to": "Variation Order",
       "link_type": "DocType",
       "onboard": 0,
       "type": "Link"

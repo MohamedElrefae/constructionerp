@@ -149,7 +149,7 @@ def test_css_generation():
     css = theme_doc.generate_css()
 
     # Check CSS contains expected patterns
-    assert 'html[data-modern-theme="Construction Dark"]' in css, "Should have theme selector"
+    assert 'html[data-theme="dark"]' in css, "Should have theme selector"
     assert ".navbar" in css, "Should have navbar styles"
     assert ".btn-primary" in css, "Should have button styles"
     assert "#4CAF50" in css, "Should contain accent color"

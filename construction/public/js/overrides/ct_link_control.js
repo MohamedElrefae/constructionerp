@@ -240,13 +240,22 @@
 				args.query = "construction.api.boq_link_queries.get_boq_structures";
 				if (row && row.boq_header) filters.boq_header = row.boq_header;
 			} else if (fieldname === "boq_item") {
-				args.query = "construction.api.boq_link_queries.get_boq_items";
-				if (row && row.project) filters.project = row.project;
-				if (row && row.boq_header) filters.boq_header = row.boq_header;
-				if (row && row.boq_structure) filters.structure = row.boq_structure;
-				filters.require_boq_header = true;
-				filters.require_structure = true;
-				filters.allowed_statuses = ["Frozen", "Locked"];
+				if (args.reference_doctype === "VO Line") {
+					args.query = "construction.api.boq_link_queries.get_vo_line_boq_items";
+					const parent_doc = field.frm ? field.frm.doc : (cur_frm ? cur_frm.doc : null);
+					const boq_header = (parent_doc && parent_doc.boq_header) || (row && row.boq_header) || null;
+					if (boq_header) filters.boq_header = boq_header;
+					if (row && row.boq_structure) filters.structure = row.boq_structure;
+					filters.require_boq_header = true;
+				} else {
+					args.query = "construction.api.boq_link_queries.get_boq_items";
+					if (row && row.project) filters.project = row.project;
+					if (row && row.boq_header) filters.boq_header = row.boq_header;
+					if (row && row.boq_structure) filters.structure = row.boq_structure;
+					filters.require_boq_header = true;
+					filters.require_structure = true;
+					filters.allowed_statuses = ["Frozen", "Locked"];
+				}
 			} else if (fieldname === "boq_item_stage") {
 				args.query = "construction.api.boq_link_queries.get_boq_item_stages";
 				if (row && row.boq_item) filters.boq_item = row.boq_item;

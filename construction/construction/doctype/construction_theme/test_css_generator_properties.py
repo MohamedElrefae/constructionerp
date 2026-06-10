@@ -165,8 +165,9 @@ def _build_mock_theme(fields: dict):
                         variables.append(f"{vn}:{val}")
             if not variables:
                 return ""
-            ident = self.theme_name.lower().replace(" ", "_")
-            return f'html[data-modern-theme="{ident}"]{{' + ";".join(variables) + ";}"
+            is_dark = "dark" in self.theme_type.lower() or (self.get("body_bg", "") or "").startswith("#1")
+            mode = "dark" if is_dark else "light"
+            return f'html[data-theme="{mode}"]{{' + ";".join(variables) + ";}"
 
     return MockTheme(fields)
 
@@ -247,7 +248,7 @@ def test_property_1_css_variable_round_trip(
 def test_property_2_css_output_format(
     theme_name, accent_primary, navbar_bg, sidebar_bg, surface_bg, body_bg, text_primary
 ):
-    """Property 2: Output matches html[data-modern-theme="id"]{...} pattern."""
+    """Property 2: Output matches html[data-theme="light|dark"]{...} pattern."""
     fields = {
         "theme_name": theme_name,
         "theme_type": "Custom Light",
@@ -260,8 +261,9 @@ def test_property_2_css_output_format(
     }
     theme = _build_mock_theme(fields)
     css = theme.generate_css_variables()
-    identifier = theme_name.lower().replace(" ", "_")
-    assert css.startswith(f'html[data-modern-theme="{identifier}"]{{')
+    is_dark = "dark" in "Custom Light" or body_bg.startswith("#1")
+    mode = "dark" if is_dark else "light"
+    assert css.startswith(f'html[data-theme="{mode}"]{{')
     assert css.endswith("}")
     # Body should only contain --ct-* declarations
     body = re.search(r"\{(.+)\}", css).group(1)

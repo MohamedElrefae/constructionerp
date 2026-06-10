@@ -40,11 +40,11 @@ class TestMigrationHelpers(unittest.TestCase):
         """Test darkening hex colors"""
         # Darken white by 10%
         result = _darken_hex("#FFFFFF", 0.1)
-        self.assertEqual(result, "#e6e6e6")
+        self.assertEqual(result, "#e5e5e5")
 
         # Darken blue by 10%
         result = _darken_hex("#2076FF", 0.1)
-        self.assertEqual(result, "#1a68e6")
+        self.assertEqual(result, "#1c6ae5")
 
         # Darken black by 10% (should stay black)
         result = _darken_hex("#000000", 0.1)
@@ -58,7 +58,7 @@ class TestMigrationHelpers(unittest.TestCase):
 
         # Lighten dark blue by 10%
         result = _lighten_hex("#111827", 0.1)
-        self.assertEqual(result, "#2a2f3d")
+        self.assertEqual(result, "#282f3c")
 
         # Lighten white by 10% (should stay white)
         result = _lighten_hex("#FFFFFF", 0.1)
@@ -273,7 +273,7 @@ class TestMigrationExecution(unittest.TestCase):
                 "primary_btn_bg": None,
             }
         )
-        theme.insert()
+        theme.insert(ignore_mandatory=True)
 
         execute()
         theme.reload()

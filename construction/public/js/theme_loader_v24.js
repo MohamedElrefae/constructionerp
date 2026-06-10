@@ -226,6 +226,8 @@
 					return;
 				}
 				if (document.body.classList.contains("login-content")) return;
+				var path = window.location.pathname;
+				if (path.startsWith("/login") || path.startsWith("/reset_password")) return;
 
 				this._isRendering = true;
 				try {
@@ -337,10 +339,14 @@
 
 		window.ctTopbar = new ConstructionTopbarManager();
 
+		// Hide theme switcher on public pages (login, reset_password)
+		var isPublicPage = path.startsWith("/login") || path.startsWith("/reset_password");
+
 		window.ctTopbar.register({
 			id: "theme-switcher",
 			order: 10,
 			render: function () {
+				if (isPublicPage) return "";
 				var mode = html.getAttribute("data-theme") || "dark";
 				return (
 					'<div class="dropdown ct-theme-wrapper" id="ct-theme-toggle">' +

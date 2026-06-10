@@ -183,7 +183,7 @@ def update_boq_header_totals(boq_header):
     """Recompute BOQ Header total_revised_value from current items."""
     totals = frappe.db.sql("""
         SELECT 
-            COALESCE(SUM(current_revised_qty * COALESCE(current_revised_unit_price, contract_unit_price) * COALESCE(factor, 1.0)), 0)
+            COALESCE(SUM(COALESCE(current_revised_qty, quantity) * COALESCE(current_revised_unit_price, contract_unit_price) * COALESCE(factor, 1.0)), 0)
         FROM `tabBOQ Item`
         WHERE boq_header = %(boq_header)s
     """, {"boq_header": boq_header})

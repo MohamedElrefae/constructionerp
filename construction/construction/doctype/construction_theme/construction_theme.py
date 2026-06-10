@@ -194,7 +194,7 @@ class ConstructionTheme(Document):
         bg_color = self.get("login_page_bg_color")
         bg_image = self.get("login_page_bg_image")
 
-        has_any_login_config = any(
+        has_any_login_config = bg_type or any(
             [
                 self.get("login_btn_bg"),
                 self.get("login_btn_text"),
@@ -883,6 +883,7 @@ class ConstructionTheme(Document):
                 "preview_colors",
                 "is_default_light",
                 "is_default_dark",
+                "is_active",
             ],
             order_by="is_system_theme desc, theme_name asc",
             limit=limit,

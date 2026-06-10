@@ -81,7 +81,7 @@ class BOQHeader(Document):
 				COALESCE(SUM(CASE WHEN is_variation_item = 0 THEN line_total ELSE 0 END), 0),
 				COALESCE(SUM(CASE WHEN is_variation_item = 0 THEN est_line_total ELSE 0 END), 0),
 				COALESCE(SUM(CASE WHEN is_variation_item = 0 THEN quantity * est_unit_cost * COALESCE(factor, 1.0) ELSE 0 END), 0),
-				COALESCE(SUM(current_revised_qty * COALESCE(current_revised_unit_price, contract_unit_price) * COALESCE(factor, 1.0)), 0)
+                COALESCE(SUM(COALESCE(current_revised_qty, quantity) * COALESCE(current_revised_unit_price, contract_unit_price) * COALESCE(factor, 1.0)), 0)
 			FROM `tabBOQ Item`
 			WHERE boq_header = %s
 		""",

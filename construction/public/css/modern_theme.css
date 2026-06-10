@@ -2429,7 +2429,10 @@ html.ct-enterprise .notifications-category {
 }
 
 /* ════════════════════════════════════════════════════════════
-   LOGIN / AUTH PAGE
+   LOGIN / AUTH PAGE — Glassmorphism v2.5.4
+   Premium modern styling with backdrop-filter, gradients,
+   and smooth animations. Complements inline critical CSS
+   in construction/www/login.html.
    ════════════════════════════════════════════════════════════ */
 
 html.ct-enterprise .login-content,
@@ -2440,19 +2443,73 @@ html.ct-enterprise .login-page {
   color: var(--ct-text);
 }
 
-html.ct-enterprise .page-card-head,
-html.ct-enterprise .page-card-body {
-  background: var(--ct-surface);
-  border-color: var(--ct-border);
-  border-radius: var(--ct-border-radius-lg);
-  border-width: 1px;
-  border-style: solid;
-  box-shadow: var(--ct-shadow-md);
+/* ─── Glassmorphism card ─── */
+html.ct-enterprise .page-card {
+  background: rgba(15, 23, 42, 0.65) !important;
+  backdrop-filter: blur(20px) saturate(1.4) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(1.4) !important;
+  border: 1px solid rgba(148, 163, 184, 0.12) !important;
+  border-radius: 16px !important;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(148, 163, 184, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  overflow: hidden !important;
+}
+
+html.ct-enterprise .page-card:hover {
+  box-shadow:
+    0 12px 48px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(37, 99, 235, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(37, 99, 235, 0.2) !important;
+}
+
+/* ─── Card head — gradient accent ─── */
+html.ct-enterprise .page-card-head {
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.08) !important;
+  padding: 2rem 1.5rem 1.25rem !important;
+  position: relative !important;
+}
+
+html.ct-enterprise .page-card-head::before {
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 20% !important;
+  right: 20% !important;
+  height: 2px !important;
+  background: linear-gradient(90deg, transparent, var(--ct-primary), var(--ct-accent), transparent) !important;
+  border-radius: 0 0 2px 2px !important;
+  opacity: 0.7 !important;
 }
 
 html.ct-enterprise .page-card-head h4 {
-  color: var(--ct-text);
-  font-weight: 600;
+  color: var(--ct-text) !important;
+  font-weight: 600 !important;
+  font-size: 1.125rem !important;
+  letter-spacing: -0.01em !important;
+  margin-top: 0.75rem !important;
+}
+
+html.ct-enterprise .page-card-head .app-logo {
+  width: 48px !important;
+  height: 48px !important;
+  filter: drop-shadow(0 2px 8px rgba(37, 99, 235, 0.3)) !important;
+  transition: transform 0.3s ease !important;
+}
+
+html.ct-enterprise .page-card-head .app-logo:hover {
+  transform: scale(1.05) !important;
+}
+
+html.ct-enterprise .page-card-body {
+  background: transparent !important;
+  border: none !important;
+  padding: 1.5rem !important;
 }
 
 html.ct-enterprise .page-card-body .text-muted {
@@ -2471,38 +2528,263 @@ html.ct-enterprise .page-card-body a:hover {
   text-decoration: underline;
 }
 
+/* ─── Input fields — modern floating style ─── */
 html.ct-enterprise .login-content .form-control,
 html.ct-enterprise .page-card-body .form-control {
-  background: var(--ct-bg-elevated);
-  color: var(--ct-text);
-  border-color: var(--ct-border);
-  border-radius: var(--ct-border-radius-sm);
-  transition: var(--ct-transition);
+  background: rgba(30, 41, 59, 0.6) !important;
+  color: #e2e8f0 !important;
+  border: 1px solid rgba(148, 163, 184, 0.12) !important;
+  border-radius: 10px !important;
+  padding: 0.75rem 1rem 0.75rem 2.5rem !important;
+  font-size: 0.9375rem !important;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1) !important;
 }
 
 html.ct-enterprise .login-content .form-control:focus,
 html.ct-enterprise .page-card-body .form-control:focus {
-  border-color: var(--ct-primary);
-  box-shadow: 0 0 0 4px var(--ct-primary-light);
-  outline: none;
+  background: rgba(30, 41, 59, 0.8) !important;
+  border-color: var(--ct-primary) !important;
+  box-shadow:
+    0 0 0 3px rgba(37, 99, 235, 0.15),
+    inset 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+  outline: none !important;
 }
 
+html.ct-enterprise .login-content .form-control::placeholder,
+html.ct-enterprise .page-card-body .form-control::placeholder {
+  color: rgba(148, 163, 184, 0.5) !important;
+}
+
+/* ─── Field icons ─── */
+html.ct-enterprise .field-icon {
+  color: rgba(148, 163, 184, 0.5) !important;
+  transition: color 0.25s ease !important;
+}
+
+html.ct-enterprise .email-field:focus-within .email-icon,
+html.ct-enterprise .password-field:focus-within .password-icon {
+  color: var(--ct-primary) !important;
+}
+
+/* ─── Toggle password ─── */
+html.ct-enterprise .toggle-password {
+  color: rgba(148, 163, 184, 0.6) !important;
+  font-size: 0.8125rem !important;
+  font-weight: 500 !important;
+  padding: 0.25rem 0.75rem !important;
+  border-radius: 100px !important;
+  background: rgba(30, 41, 59, 0.5) !important;
+  transition: all 0.2s ease !important;
+}
+
+html.ct-enterprise .toggle-password:hover {
+  color: #f1f5f9 !important;
+  background: rgba(37, 99, 235, 0.15) !important;
+}
+
+/* ════════════════════════════════════════════════════════════
+   LOGIN BUTTON — Premium gradient with shimmer
+   Uses !important to beat Frappe login.bundle.css cascade.
+   ════════════════════════════════════════════════════════════ */
+
 html.ct-enterprise .login-content .btn-primary,
-html.ct-enterprise .page-card-body .btn-login {
-  background: var(--ct-primary);
-  color: #ffffff;
-  border-color: var(--ct-primary);
-  border-radius: var(--ct-border-radius-sm);
-  transition: var(--ct-motion);
-  font-weight: 500;
+html.ct-enterprise .page-card-body .btn-login,
+html.ct-enterprise .page-card-body .btn-primary,
+html.ct-enterprise .page-card-actions .btn-primary {
+  background: linear-gradient(135deg, var(--ct-primary) 0%, #1d4ed8 50%, #1e40af 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 10px !important;
+  padding: 0.75rem 1.5rem !important;
+  font-weight: 600 !important;
+  font-size: 0.9375rem !important;
+  letter-spacing: 0.01em !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow:
+    0 4px 16px rgba(37, 99, 235, 0.3),
+    0 0 0 1px rgba(37, 99, 235, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+/* Shimmer effect */
+html.ct-enterprise .login-content .btn-primary::after,
+html.ct-enterprise .page-card-body .btn-login::after,
+html.ct-enterprise .page-card-actions .btn-primary::after {
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: -100% !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent) !important;
+  transition: left 0.5s ease !important;
+}
+
+html.ct-enterprise .login-content .btn-primary:hover::after,
+html.ct-enterprise .page-card-body .btn-login:hover::after,
+html.ct-enterprise .page-card-actions .btn-primary:hover::after {
+  left: 100% !important;
 }
 
 html.ct-enterprise .login-content .btn-primary:hover,
-html.ct-enterprise .page-card-body .btn-login:hover {
-  background: var(--ct-primary-hover);
-  border-color: var(--ct-primary-hover);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.30);
+html.ct-enterprise .page-card-body .btn-login:hover,
+html.ct-enterprise .page-card-actions .btn-primary:hover {
+  background: linear-gradient(135deg, #3b82f6 0%, var(--ct-primary) 50%, #1d4ed8 100%) !important;
+  transform: translateY(-2px) !important;
+  box-shadow:
+    0 8px 24px rgba(37, 99, 235, 0.4),
+    0 0 0 1px rgba(37, 99, 235, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+html.ct-enterprise .login-content .btn-primary:active,
+html.ct-enterprise .page-card-body .btn-login:active,
+html.ct-enterprise .page-card-actions .btn-primary:active {
+  transform: translateY(0) !important;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3) !important;
+}
+
+/* ─── Secondary buttons ─── */
+html.ct-enterprise .btn-login-option,
+html.ct-enterprise .btn-default.btn-login-option {
+  background: rgba(30, 41, 59, 0.5) !important;
+  color: #cbd5e1 !important;
+  border: 1px solid rgba(148, 163, 184, 0.12) !important;
+  border-radius: 10px !important;
+  transition: all 0.25s ease !important;
+}
+
+html.ct-enterprise .btn-login-option:hover,
+html.ct-enterprise .btn-default.btn-login-option:hover {
+  background: rgba(30, 41, 59, 0.7) !important;
+  border-color: rgba(37, 99, 235, 0.3) !important;
+  color: #f1f5f9 !important;
+  transform: translateY(-1px) !important;
+}
+
+/* ─── Forgot password link ─── */
+html.ct-enterprise .forgot-password-message a {
+  color: #94a3b8 !important;
+  font-size: 0.8125rem !important;
+  font-weight: 500 !important;
+  transition: color 0.2s ease !important;
+  text-decoration: none !important;
+}
+
+html.ct-enterprise .forgot-password-message a:hover {
+  color: var(--ct-primary) !important;
+  text-decoration: underline !important;
+}
+
+/* ─── Divider "or" ─── */
+html.ct-enterprise .login-divider {
+  color: rgba(148, 163, 184, 0.4) !important;
+  font-size: 0.8125rem !important;
+  position: relative !important;
+}
+
+html.ct-enterprise .login-divider::before,
+html.ct-enterprise .login-divider::after {
+  content: "" !important;
+  position: absolute !important;
+  top: 50% !important;
+  width: 30% !important;
+  height: 1px !important;
+  background: rgba(148, 163, 184, 0.1) !important;
+}
+
+html.ct-enterprise .login-divider::before { left: 5% !important; }
+html.ct-enterprise .login-divider::after { right: 5% !important; }
+
+/* ─── Sign up message ─── */
+html.ct-enterprise .sign-up-message {
+  color: #64748b !important;
+  font-size: 0.875rem !important;
+}
+
+html.ct-enterprise .sign-up-message a {
+  color: var(--ct-primary) !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+}
+
+html.ct-enterprise .sign-up-message a:hover {
+  color: #3b82f6 !important;
+  text-decoration: underline !important;
+}
+
+/* ─── Disabled state ─── */
+html.ct-enterprise .btn-login:disabled,
+html.ct-enterprise .btn-primary:disabled {
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+}
+
+/* ─── Wider login card ─── */
+html.ct-enterprise .page-card {
+  max-width: 720px !important;
+  width: 92vw !important;
+}
+
+/* ─── Input fields — generous typing space ─── */
+html.ct-enterprise .page-card-body .form-control,
+html.ct-enterprise .login-content .form-control {
+  min-height: 52px !important;
+  font-size: 1rem !important;
+  padding: 0.875rem 1rem 0.875rem 2.75rem !important;
+}
+
+/* Password field: compact "Show" button so text has room */
+html.ct-enterprise .password-field {
+  position: relative !important;
+}
+
+html.ct-enterprise .password-field .form-control {
+  padding-right: 4rem !important;
+}
+
+html.ct-enterprise .password-field .toggle-password {
+  position: absolute !important;
+  right: 12px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  font-size: 0.75rem !important;
+  padding: 0.25rem 0.5rem !important;
+  white-space: nowrap !important;
+}
+
+html.ct-enterprise .page-card-actions .btn-login,
+html.ct-enterprise .page-card-actions .btn-primary {
+  min-height: 52px !important;
+  font-size: 1rem !important;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 780px) {
+  html.ct-enterprise .page-card {
+    border-radius: 12px !important;
+    margin: 0 1rem !important;
+    max-width: 100% !important;
+    width: calc(100vw - 2rem) !important;
+  }
+  html.ct-enterprise .page-card-body .form-control,
+  html.ct-enterprise .login-content .form-control {
+    padding: 0.75rem 1rem 0.75rem 2.5rem !important;
+    min-height: 48px !important;
+  }
+  html.ct-enterprise .password-field .form-control {
+    padding-right: 3.5rem !important;
+  }
+  html.ct-enterprise .page-card-head {
+    padding: 1.5rem 1rem 1rem !important;
+  }
+  html.ct-enterprise .page-card-body {
+    padding: 1rem !important;
+  }
 }
 
 /* ════════════════════════════════════════════════════════════
