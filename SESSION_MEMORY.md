@@ -1,6 +1,6 @@
 # Session Memory — Construction ERP
-**LAST UPDATED:** 2026-05-31
-**UPDATED BY:** Kimi Code (review + Phase 1A–D implementation)
+**LAST UPDATED:** 2026-06-11
+**UPDATED BY:** Kimi Code (VO Quantity Revision implementation + test fixes)
 
 ---
 
@@ -38,6 +38,15 @@
 - BOQ API (CRUD + tree operations) in `api/boq_api.py` (9 whitelisted endpoints)
 - **WARNING:** BOQ Item uses `cost_item` (Data), NOT `item_code` (Link→Item)
 
+### VO Quantity Revision ✅
+- New DocType: `BOQ Quantity Revision` (non-submittable, 7 auto-computed revision types)
+- Schema: `original_qty`, `current_revised_qty`, `current_revised_unit_price`, `last_quantity_revision` on BOQ Item; `total_revised_value` on BOQ Header; `previous_qty`, `delta_from_contract_qty`, `change_pct_from_contract`, `created_quantity_revision` on VO Line
+- Service layer: `services/quantity_revisions.py` (lock baseline, revision lifecycle, approval, idempotency)
+- Query layer: `services/revised_boq_queries.py` (5 report functions)
+- Controller hooks: `boq_header.py` (lock → baseline), `vo_line.py` (revised_qty primary, FIDIC from contract), `variation_order.py` (atomic approval, line edit blocking after Engineer)
+- 57/57 tests passing (custom runner)
+- Evidence: EV-065 (Schema), EV-066 (Tests), EV-067 (Manual QA) completed
+
 ### Searchable Dropdown ✅
 - Global override for all Link fields (`ct_link_control.js`)
 - Global override for all Select fields (`ct_select_control.js`)
@@ -65,8 +74,27 @@
 
 ## 3. In Progress (Active Work — Updated After Every Session)
 
-### Current Sprint: Form Layout Engine Phase 3+ / BOQ Accounting
-#### Task 1: AI Memory Architecture Implementation — Status: In Progress
+### Current Sprint: VO Quantity Revision / Form Layout Engine Phase 3+ / BOQ Accounting
+#### Task 1: VO Quantity Revision Implementation — Status: Completed (2026-06-11)
+- **Started:** 2026-06-11
+- **Files being modified:** `construction/construction/doctype/boq_item/boq_item.json`, `construction/construction/doctype/boq_header/boq_header.py`, `construction/construction/doctype/boq_quantity_revision/`, `construction/construction/doctype/vo_line/vo_line.py`, `construction/construction/doctype/variation_order/variation_order.py`, `construction/services/quantity_revisions.py`, `construction/services/revised_boq_queries.py`, `construction/tests/test_quantity_revisions.py`, `construction/tests/test_variation_orders.py`
+- **Decisions made:**
+  - `revised_qty` is primary input; `delta_qty` computed from it
+  - `rate_change_triggered` uses `change_pct_from_contract` (FIDIC >25% from original contract)
+  - `original_qty` is locked at baseline; `current_revised_qty` updated on approval
+  - `BOQ Quantity Revision` is non-submittable with custom status field
+  - `line_total` intentionally kept as contract value (not overwritten by revised value)
+  - `process_approved_vo_lines` now calls `update_boq_header_totals` for all line types including New Items
+  - `item_code` removed from VO Line
+  - VO line editing blocked after Engineer Approved (P0-1)
+  - Idempotent approval: `created_quantity_revision` check prevents duplicates (P0-4)
+- **Blockers:** None
+- **Test results:** 57/57 tests passing (custom runner)
+- **Migration:** `bench --site v16.localhost migrate` completed successfully
+- **Evidence:** EV-065 (Schema), EV-066 (Tests), EV-067 (Manual QA) filled with actual results
+- **Next action:** None — feature complete
+
+#### Task 2: AI Memory Architecture Implementation — Status: In Progress
 - **Started:** 2026-05-31
 - **Files being modified:** `AGENTS.md`, `SESSION_MEMORY.md`, `docs/ai/*`, `scripts/*`, `construction-erp-coder/*`
 - **Decisions made:**
@@ -80,13 +108,13 @@
 - **Blockers:** None
 - **Next action:** Phase 2 MCP auto-capture operational; proceed to Phase 3 (ERPNext read-only MCP server) when needed
 
-#### Task 2: Form Layout Engine Phase 3+ — Status: In Progress
+#### Task 3: Form Layout Engine Phase 3+ — Status: In Progress
 - **Started:** Prior to 2026-05-30
 - **Files being modified:** `vfc_layout_engine.js`, `vite_layout_controls.js`, `vfc_sections.css`
 - **Blockers:** None
 - **Next action:** Continue layout feature expansion
 
-#### Task 3: BOQ Accounting Integration — Status: In Progress
+#### Task 4: BOQ Accounting Integration — Status: In Progress
 - **Started:** Prior to 2026-05-30
 - **Files being modified:** `services/boq_accounting.py`, `services/boq_transaction_validation.py`
 - **Blockers:** None
@@ -126,6 +154,61 @@
 ---
 
 ## 6. Session Log (Append-Only — Most Recent First)
+
+### Session 2026-06-11 — Agent: Kimi Code (VO Quantity Revision)
+- **Worked on:** VO Quantity Revision model implementation — end-to-end completion
+- **Decisions:**
+  - `revised_qty` is primary input; `delta_qty` computed from it
+  - `rate_change_triggered` uses `change_pct_from_contract` (FIDIC >25% rule)
+  - `original_qty` locked at baseline; `current_revised_qty` updated on approval
+  - `line_total` intentionally kept as contract value (`quantity * contract_unit_price * factor`)
+  - `apply_approved_revision` corrected to NOT overwrite `line_total` with revised value
+  - `process_approved_vo_lines` now calls `update_boq_header_totals` for all line types including New Items
+  - `item_code` removed from VO Line
+  - VO line editing blocked after Engineer Approved (P0-1)
+  - Idempotent approval via `created_quantity_revision` check (P0-4)
+  - `BOQ Quantity Revision` is non-submittable with custom status field
+  - `compute_revision_type` auto-computes 7 revision types (skips "Original Lock" if explicitly set)
+  - `create_quantity_revision` uses placeholder "Increase Within 25%" to trigger auto-computation
+  - `rate_change_justification` propagated through revision creation and approval
+  - Variation items (`is_variation_item = 1`) excluded from `total_contract_value` but included in `total_revised_value`
+- **Issues found:**
+  - `test_create_lock_baseline_idempotent` had flawed logic comparing `result.get("created")` to DB count
+  - Fix: compare DB count before and after the second call
+  - `test_variation_item_revision_creates_approved_revision` passed non-existent `variation_order` name
+  - Fix: pass `variation_order=None`
+  - `test_transition_variation_order_happy_path` and `test_vo_line_revised_qty_synchronization` used old `delta_qty` primary input
+  - Fix: update tests to use `revised_qty` as primary input
+  - `test_create_material_request_for_vo` had `NameError` (`res` undefined) due to stale test code
+  - Fix: remove dead code after `assertRaises`
+  - Multiple tests used `revised_qty=1010` but expected results for `110`
+  - Fix: change `1010` to `110` in affected tests
+  - `apply_approved_revision` was overwriting `line_total` with revised value, breaking `get_revised_boq_rows` and `total_contract_value`
+  - Fix: remove `line_total` update from `apply_approved_revision`
+  - `process_approved_vo_lines` did not update BOQ Header totals for New Item lines
+  - Fix: add `update_boq_header_totals(vo.boq_header)` at end of function
+  - `frappe.db.count`/`frappe.db.get_all` do not see uncommitted changes within test transactions
+  - Fix: use `frappe.db.sql` for idempotency checks in `create_lock_baseline`
+- **Files changed:**
+  - `construction/construction/doctype/boq_item/boq_item.json` (new fields)
+  - `construction/construction/doctype/boq_header/boq_header.py` (lock hook, total_revised_value calculation)
+  - `construction/construction/doctype/boq_quantity_revision/boq_quantity_revision.json` (new DocType)
+  - `construction/construction/doctype/boq_quantity_revision/boq_quantity_revision.py` (revision logic)
+  - `construction/construction/doctype/vo_line/vo_line.py` (revised_qty primary, FIDIC logic)
+  - `construction/construction/doctype/variation_order/variation_order.py` (atomic approval, idempotency)
+  - `construction/services/quantity_revisions.py` (core service layer)
+  - `construction/services/revised_boq_queries.py` (report queries)
+  - `construction/tests/test_quantity_revisions.py` (24 test cases)
+  - `construction/tests/test_variation_orders.py` (updated existing tests)
+  - `construction/tests/test_boq_link_queries.py` (updated for exclude_zero_revised)
+  - `construction/tests/__init__.py` (custom test runner)
+  - `docs/feature_reviews/evidence/EV-065-vo-quantity-revision-schema.md` (filled)
+  - `docs/feature_reviews/evidence/EV-066-vo-quantity-revision-tests.md` (filled)
+  - `docs/feature_reviews/evidence/EV-067-vo-quantity-revision-manual-qa.md` (filled)
+  - `SESSION_MEMORY.md` (updated)
+- **Test results:** 57/57 tests passing (custom runner via `construction.tests.run_quantity_revision_tests`)
+- **Migration:** `bench --site v16.localhost migrate` completed successfully
+- **Next steps:** None — feature complete
 
 ### Session 2026-05-31 — Agent: Kimi Code (Phase 3)
 - **Worked on:** ERPNext read-only MCP server (Phase 3)

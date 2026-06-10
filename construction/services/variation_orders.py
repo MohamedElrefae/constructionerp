@@ -39,7 +39,7 @@ def get_revised_boq_rows(boq_header):
             item.unit
         from `tabBOQ Item` item
         inner join `tabBOQ Structure` structure on structure.name = item.structure
-        where item.boq_header = %s
+        where item.boq_header = %s and item.is_variation_item = 0
         order by structure.lft
         """,
         boq_header,
@@ -100,6 +100,32 @@ def _get_approved_line_deltas(item_names):
         as_dict=True,
     )
     return {row.boq_item: row for row in rows}
+
+
+def get_revised_variation_rows(boq_header):
+    """Return variation items created by approved New Item VOs."""
+    rows = frappe.db.sql(
+        """
+        select
+            item.name as boq_item,
+            item.structure,
+            item.quantity as delta_qty,
+            item.contract_unit_price as revised_unit_price,
+            item.line_total as revised_line_value,
+            structure.wbs_code,
+            structure.title,
+            structure.variation_order,
+            item.unit
+        from `tabBOQ Item` item
+        inner join `tabBOQ Structure` structure on structure.name = item.structure
+        where item.boq_header = %(boq_header)s
+          and item.is_variation_item = 1
+        order by structure.lft
+        """,
+        {"boq_header": boq_header},
+        as_dict=True,
+    )
+    return rows
 
 
 def _get_stage_totals(item_names):

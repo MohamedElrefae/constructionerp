@@ -6,14 +6,17 @@
   "engine": "InnoDB",
   "field_order": [
     "line_type",
+    "boq_structure",
     "boq_item",
     "wbs_code",
     "title",
     "unit",
     "contract_qty",
-    "delta_qty",
+    "previous_qty",
     "revised_qty",
-    "abs_change_pct",
+    "delta_qty",
+    "delta_from_contract_qty",
+    "change_pct_from_contract",
     "rate_change_triggered",
     "contract_unit_price",
     "revised_unit_price",
@@ -21,8 +24,12 @@
     "contract_line_value",
     "revised_line_value",
     "line_delta_value",
+    "owner_page",
+    "owner_ref_no",
+    "owner_file_ref",
     "created_boq_structure",
     "created_boq_item",
+    "created_quantity_revision",
     "notes"
   ],
   "fields": [
@@ -33,6 +40,13 @@
       "label": "Line Type",
       "options": "Quantity Change\nNew Item\nOmission",
       "reqd": 1
+    },
+    {
+      "fieldname": "boq_structure",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "label": "BOQ Structure",
+      "options": "BOQ Structure"
     },
     {
       "fieldname": "boq_item",
@@ -67,16 +81,35 @@
       "read_only": 1
     },
     {
-      "fieldname": "delta_qty",
+      "fieldname": "previous_qty",
       "fieldtype": "Float",
-      "in_list_view": 1,
-      "label": "Delta Qty"
+      "label": "Previous Qty",
+      "read_only": 1,
+      "description": "Reference: current revised qty at time of VO line creation"
     },
     {
       "fieldname": "revised_qty",
       "fieldtype": "Float",
       "in_list_view": 1,
-      "label": "Revised Qty",
+      "label": "Revised Qty"
+    },
+    {
+      "fieldname": "delta_qty",
+      "fieldtype": "Float",
+      "in_list_view": 1,
+      "label": "Delta Qty",
+      "read_only": 1
+    },
+    {
+      "fieldname": "delta_from_contract_qty",
+      "fieldtype": "Float",
+      "label": "Delta From Contract Qty",
+      "read_only": 1
+    },
+    {
+      "fieldname": "change_pct_from_contract",
+      "fieldtype": "Percent",
+      "label": "Change % From Contract",
       "read_only": 1
     },
     {
@@ -128,6 +161,21 @@
       "read_only": 1
     },
     {
+      "fieldname": "owner_page",
+      "fieldtype": "Data",
+      "label": "Owner Page"
+    },
+    {
+      "fieldname": "owner_ref_no",
+      "fieldtype": "Data",
+      "label": "Owner Ref No"
+    },
+    {
+      "fieldname": "owner_file_ref",
+      "fieldtype": "Data",
+      "label": "Owner File Ref"
+    },
+    {
       "fieldname": "created_boq_structure",
       "fieldtype": "Link",
       "label": "Created BOQ Structure",
@@ -139,6 +187,13 @@
       "fieldtype": "Link",
       "label": "Created BOQ Item",
       "options": "BOQ Item",
+      "read_only": 1
+    },
+    {
+      "fieldname": "created_quantity_revision",
+      "fieldtype": "Link",
+      "label": "Created Quantity Revision",
+      "options": "BOQ Quantity Revision",
       "read_only": 1
     },
     {

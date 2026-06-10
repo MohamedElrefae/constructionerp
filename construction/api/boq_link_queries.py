@@ -162,7 +162,13 @@ def get_boq_items(doctype, txt, searchfield, start, page_len, filters, enforce_s
     if filters.get("require_structure") and not filters.get("structure"):
         return []
 
-    conditions = ["i.docstatus < 2"]
+    conditions = [
+        "i.docstatus < 2",
+    ]
+    
+    # P1-2: Opt-in and null-safe filtering for omitted items
+    if filters.get("exclude_zero_revised"):
+        conditions.append("COALESCE(i.current_revised_qty, i.quantity) > 0")
     values = _limit_values(txt, start, page_len)
     join_project = apply_header_filters(conditions, values, filters, "h")
 
@@ -251,6 +257,183 @@ def get_boq_item_stages(doctype, txt, searchfield, start, page_len, filters, enf
 		WHERE {where_clause}
 			AND (st.name LIKE %(txt)s OR st.stage_code LIKE %(txt)s OR st.stage_name LIKE %(txt)s)
 		ORDER BY st.modified DESC
+		LIMIT %(start)s, %(page_len)s
+		""",
+        values,
+    )
+
+
+@frappe.whitelist()
+@frappe.validate_and_sanitize_search_inputs
+def get_variation_orders(doctype, txt, searchfield, start, page_len, filters, enforce_scope=None):
+    """Link-search for Variation Order DocType.
+
+    Filters:
+        boq_header: only return VOs for that BOQ Header (skips user scope)
+        project: scope to a project (joins BOQ Header)
+        status: restrict to a single status value
+    """
+    filters = _as_dict(filters)
+    enforce_scope = _extract_enforce_scope(filters, enforce_scope)
+    if _gate_is_closed(filters):
+        return []
+    if filters.get("require_boq_header") and not filters.get("boq_header"):
+        return []
+
+    conditions = ["vo.docstatus < 2"]
+    values = _limit_values(txt, start, page_len)
+    join_header = False
+    join_project = False
+
+    if filters.get("boq_header"):
+        conditions.append("vo.boq_header = %(boq_header)s")
+        values["boq_header"] = filters.get("boq_header")
+    if filters.get("status"):
+        conditions.append("vo.status = %(status)s")
+        values["status"] = filters.get("status")
+    if filters.get("project"):
+        join_header = True
+        conditions.append("h.project = %(project)s")
+        values["project"] = filters.get("project")
+
+    # Only apply user scope when the caller did not pin a specific BOQ Header
+    # (VOs raised against a Locked BOQ are an admin/PM workflow, not a
+    # project-scoped list view, so a pinned boq_header should win over scope).
+    scope = None if filters.get("boq_header") else resolve_query_scope(enforce_scope)
+    if scope:
+        _attach_scope_response(scope)
+        join_header = True
+        join_project = apply_header_scope(conditions, values, scope, "h") or join_project
+        append_allowed_status_filter(conditions, values, "h")
+
+    joins = []
+    if join_header or join_project:
+        joins.append("INNER JOIN `tabBOQ Header` h ON h.name = vo.boq_header")
+    if join_project:
+        joins.append("INNER JOIN `tabProject` p ON p.name = h.project")
+
+    where_clause = " AND ".join(conditions)
+    return frappe.db.sql(
+        f"""
+		SELECT vo.name, vo.vo_number, vo.status, vo.boq_header
+		FROM `tabVariation Order` vo
+		{' '.join(joins)}
+		WHERE {where_clause}
+			AND (vo.name LIKE %(txt)s OR vo.vo_number LIKE %(txt)s OR vo.boq_header LIKE %(txt)s)
+		ORDER BY vo.modified DESC
+		LIMIT %(start)s, %(page_len)s
+		""",
+        values,
+    )
+
+
+@frappe.whitelist()
+@frappe.validate_and_sanitize_search_inputs
+def get_vo_line_boq_items(doctype, txt, searchfield, start, page_len, filters, enforce_scope=None):
+    """Link-search for the BOQ Item field on VO Line (Quantity Change / Omission).
+
+    Restricts to leaves of the selected BOQ Header and excludes variation
+    items (a Quantity Change VO line must target a contract item). User
+    scope is skipped when a boq_header is pinned.
+    """
+    filters = _as_dict(filters)
+    enforce_scope = _extract_enforce_scope(filters, enforce_scope)
+    if _gate_is_closed(filters):
+        return []
+    if filters.get("require_boq_header") and not filters.get("boq_header"):
+        return []
+
+    conditions = ["i.docstatus < 2", "i.is_variation_item = 0"]
+    values = _limit_values(txt, start, page_len)
+    join_header = False
+    join_project = False
+
+    if filters.get("boq_header"):
+        conditions.append("i.boq_header = %(boq_header)s")
+        values["boq_header"] = filters.get("boq_header")
+    if filters.get("structure"):
+        conditions.append("i.structure = %(structure)s")
+        values["structure"] = filters.get("structure")
+    if filters.get("project"):
+        join_header = True
+        conditions.append("h.project = %(project)s")
+        values["project"] = filters.get("project")
+
+    scope = None if filters.get("boq_header") else resolve_query_scope(enforce_scope)
+    if scope:
+        _attach_scope_response(scope)
+        join_header = True
+        join_project = apply_header_scope(conditions, values, scope, "h") or join_project
+        append_allowed_status_filter(conditions, values, "h")
+
+    joins = []
+    if join_header or join_project:
+        joins.append("INNER JOIN `tabBOQ Header` h ON h.name = i.boq_header")
+    if join_project:
+        joins.append("INNER JOIN `tabProject` p ON p.name = h.project")
+
+    where_clause = " AND ".join(conditions)
+    select_header_title = ", h.title" if (join_header or join_project) else ""
+    return frappe.db.sql(
+        f"""
+		SELECT i.name, i.cost_item, i.quantity{select_header_title}
+		FROM `tabBOQ Item` i
+		{' '.join(joins)}
+		WHERE {where_clause}
+			AND (i.name LIKE %(txt)s OR i.cost_item LIKE %(txt)s)
+		ORDER BY i.modified DESC
+		LIMIT %(start)s, %(page_len)s
+		""",
+        values,
+    )
+
+
+@frappe.whitelist()
+@frappe.validate_and_sanitize_search_inputs
+def get_variation_structures(doctype, txt, searchfield, start, page_len, filters, enforce_scope=None):
+    """Link-search for VO Line.created_boq_structure (New Item VO line)."""
+    filters = _as_dict(filters)
+    enforce_scope = _extract_enforce_scope(filters, enforce_scope)
+    if _gate_is_closed(filters):
+        return []
+    if filters.get("require_boq_header") and not filters.get("boq_header"):
+        return []
+
+    conditions = ["s.docstatus < 2", "s.is_variation_item = 1"]
+    values = _limit_values(txt, start, page_len)
+    join_header = False
+    join_project = False
+
+    if filters.get("boq_header"):
+        conditions.append("s.boq_header = %(boq_header)s")
+        values["boq_header"] = filters.get("boq_header")
+    if filters.get("project"):
+        join_header = True
+        conditions.append("h.project = %(project)s")
+        values["project"] = filters.get("project")
+
+    scope = None if filters.get("boq_header") else resolve_query_scope(enforce_scope)
+    if scope:
+        _attach_scope_response(scope)
+        join_header = True
+        join_project = apply_header_scope(conditions, values, scope, "h") or join_project
+        append_allowed_status_filter(conditions, values, "h")
+
+    joins = []
+    if join_header or join_project:
+        joins.append("INNER JOIN `tabBOQ Header` h ON h.name = s.boq_header")
+    if join_project:
+        joins.append("INNER JOIN `tabProject` p ON p.name = h.project")
+
+    where_clause = " AND ".join(conditions)
+    return frappe.db.sql(
+        f"""
+		SELECT s.name, s.title, s.wbs_code, s.variation_order
+		FROM `tabBOQ Structure` s
+		{' '.join(joins)}
+		WHERE {where_clause}
+			AND (s.name LIKE %(txt)s OR s.title LIKE %(txt)s OR s.wbs_code LIKE %(txt)s)
+		ORDER BY s.modified DESC
 		LIMIT %(start)s, %(page_len)s
 		""",
         values,

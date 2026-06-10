@@ -27,7 +27,7 @@ class VariationOrder(Document):
 
     def on_update(self):
         if self.status == CLIENT_APPROVED_STATUS:
-            self.create_variation_items()
+            self.process_approved_vo_lines()
 
     def validate_boq_header(self):
         if not self.boq_header:
@@ -69,21 +69,53 @@ class VariationOrder(Document):
 
     def validate_lines(self):
         if not self.lines:
-            frappe.throw(_("At least one VO Line is required."))
+            # An empty Draft VO is allowed so users can launch a new VO and
+            # fill in lines afterwards. All non-Draft statuses must have at
+            # least one line so the VO is a meaningful artefact.
+            if (self.status or DRAFT_STATUS) != DRAFT_STATUS:
+                frappe.throw(_("At least one VO Line is required."))
+            return
         for line in self.lines:
             line.validate_against_parent(self)
+        
+        # P0-1: Block line edits after Engineer Approval
+        if self.status in (ENGINEER_APPROVED_STATUS, CLIENT_APPROVED_STATUS, REJECTED_STATUS):
+            self._validate_no_line_changes_after_approval()
+
+    def _validate_no_line_changes_after_approval(self):
+        """Ensure VO lines are not modified after Engineer Approval."""
+        if self.is_new():
+            return
+        
+        old_doc = self.get_doc_before_save()
+        if not old_doc:
+            return
+        
+        # Check if any line was modified
+        if len(old_doc.lines) != len(self.lines):
+            frappe.throw(_("Cannot add or remove VO lines after Engineer Approval. Return to Submitted status to edit."))
+        
+        for old_line, new_line in zip(old_doc.lines, self.lines):
+            if old_line.name != new_line.name:
+                frappe.throw(_("Cannot modify VO lines after Engineer Approval. Return to Submitted status to edit."))
+            
+            # Check key fields for changes
+            if (flt(old_line.revised_qty) != flt(new_line.revised_qty) or
+                flt(old_line.revised_unit_price) != flt(new_line.revised_unit_price) or
+                old_line.line_type != new_line.line_type or
+                old_line.boq_item != new_line.boq_item):
+                frappe.throw(_("Cannot modify VO lines after Engineer Approval. Return to Submitted status to edit."))
 
     def calculate_total_contract_delta(self):
         self.total_contract_delta = sum(flt(line.line_delta_value) for line in self.lines)
 
-    def create_variation_items(self):
-        for line in self.lines:
-            if line.line_type != "New Item" or line.created_boq_item:
-                continue
-            structure = create_variation_structure_and_item(self, line)
-            line.db_set("created_boq_structure", structure.name, update_modified=False)
-            item_name = frappe.db.get_value("BOQ Item", {"structure": structure.name}, "name")
-            line.db_set("created_boq_item", item_name, update_modified=False)
+    def process_approved_vo_lines(self):
+        """Process all VO lines atomically on Client Approval.
+        
+        Idempotent: skips lines that already have created_quantity_revision.
+        """
+        from construction.services.quantity_revisions import process_approved_vo_lines as service_process
+        service_process(self)
 
 
 def get_next_vo_number(boq_header):
@@ -113,6 +145,8 @@ def create_variation_structure_and_item(vo, line):
     structure.wbs_code = line.wbs_code
     structure.is_group = 0
     structure.is_variation_item = 1
+    if line.boq_structure:
+        structure.parent_structure = line.boq_structure
     structure.variation_order = vo.name
     structure.import_mode = "Variation"
     structure.insert(ignore_permissions=True)
@@ -121,10 +155,15 @@ def create_variation_structure_and_item(vo, line):
     item.flags.ignore_boq_status_for_variation = True
     item.is_variation_item = 1
     item.variation_order = vo.name
-    item.quantity = flt(line.delta_qty)
+    item.quantity = flt(line.revised_qty)
     item.unit = line.unit
     item.contract_unit_price = flt(line.revised_unit_price)
     item.import_mode = "Variation"
+    
+    item.owner_page = line.owner_page
+    item.owner_ref_no = line.owner_ref_no
+    item.owner_file_ref = line.owner_file_ref
+    
     item.save(ignore_permissions=True)
 
     rebuild_tree("BOQ Structure")

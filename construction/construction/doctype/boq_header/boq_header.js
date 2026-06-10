@@ -6,6 +6,7 @@
 frappe.ui.form.on("BOQ Header", {
 	refresh(frm) {
 		if (!frm.is_new()) {
+			render_vo_summary(frm);
 			var BOQ_FULL_COLUMNS = [
 				{
 					field_key: "wbs_code",
@@ -408,6 +409,214 @@ frappe.ui.form.on("BOQ Header", {
 					__("Actions")
 				);
 			}
+
+			// ── Variation Orders ──
+			frm.add_custom_button(
+				__("Variation Orders"),
+				() => {
+					frappe.set_route("List", "Variation Order", { boq_header: frm.doc.name });
+				},
+				__("Actions")
+			);
+
+			frappe.call({
+				method: "construction.api.boq_api.is_variation_orders_enabled",
+				callback(r) {
+					const flag_on = r.message && r.message.enabled === true;
+					if (!flag_on || frm.doc.status !== "Locked") {
+						return;
+					}
+					frm.add_custom_button(
+						__("New Variation Order"),
+						() => open_new_vo_dialog(frm),
+						__("Actions")
+					);
+				},
+			});
+
+			frm.add_custom_button(
+				__("Revised BOQ View"),
+				() => open_revised_boq_dialog(frm),
+				__("Actions")
+			);
 		}
 	},
 });
+
+function open_new_vo_dialog(frm) {
+	const d = new frappe.ui.Dialog({
+		title: __("New Variation Order for {0}", [frm.doc.name]),
+		fields: [
+			{
+				fieldname: "reason",
+				fieldtype: "Small Text",
+				label: __("Reason"),
+				reqd: 1,
+			},
+			{
+				fieldname: "description",
+				fieldtype: "Small Text",
+				label: __("Description"),
+			},
+			{
+				fieldname: "engineer_name",
+				fieldtype: "Data",
+				label: __("Engineer Name"),
+			},
+		],
+		primary_action_label: __("Create Draft VO"),
+		primary_action(values) {
+			frappe.call({
+				method: "construction.api.boq_api.create_variation_order",
+				args: {
+					boq_header: frm.doc.name,
+					reason: values.reason,
+					description: values.description,
+					engineer_name: values.engineer_name,
+				},
+				freeze: true,
+				freeze_message: __("Creating Variation Order..."),
+				callback(r) {
+					if (r.message && r.message.success) {
+						d.hide();
+						frappe.show_alert({
+							message: __("Created {0}", [r.message.vo_number || r.message.name]),
+							indicator: "green",
+						});
+						frappe.set_route("Form", "Variation Order", r.message.name);
+					} else if (r.message && r.message.error) {
+						frappe.msgprint({
+							title: __("Could not create VO"),
+							message: r.message.error,
+							indicator: "red",
+						});
+					}
+				},
+			});
+		},
+	});
+	d.show();
+}
+
+function render_vo_summary(frm) {
+	if (!frm.doc.name) return;
+	frappe.call({
+		method: "construction.api.boq_api.get_variation_order_summary",
+		args: { boq_header: frm.doc.name },
+		callback(r) {
+			const by_status = (r.message && r.message.by_status) || {};
+			const keys = Object.keys(by_status);
+			if (!keys.length) return;
+			const currency = frappe.defaults.get_default("currency") || "EGP";
+			keys.forEach((status) => {
+				const rec = by_status[status];
+				if (!rec || !rec.count) return;
+				const total = flt(rec.total_delta);
+				const label = total
+					? __("{0} VOs ({1}) — Δ {2}", [rec.count, status, format_currency(total, currency)])
+					: __("{0} VOs ({1})", [rec.count, status]);
+				const indicator = status === "Approved by Client"
+					? "green"
+					: status === "Rejected"
+						? "red"
+						: status === "Draft"
+							? "gray"
+							: "blue";
+				frm.dashboard.add_indicator(label, indicator);
+			});
+		},
+	});
+}
+
+function open_revised_boq_dialog(frm) {
+	frappe.call({
+		method: "construction.api.boq_api.get_revised_boq_view",
+		args: { boq_header: frm.doc.name },
+		freeze: true,
+		freeze_message: __("Loading revised BOQ view..."),
+		callback(r) {
+			const data = r.message || {};
+			const contract_rows = data.contract_rows || [];
+			const variation_rows = data.variation_rows || [];
+			if (!contract_rows.length && !variation_rows.length) {
+				frappe.msgprint({
+					title: __("No Data"),
+					message: __("No BOQ items found for this header."),
+					indicator: "blue",
+				});
+				return;
+			}
+			const currency = frm.doc.currency || frappe.defaults.get_default("currency") || "EGP";
+			let html = `<table class="table table-bordered table-hover">
+				<thead><tr>
+					<th>${__("WBS")}</th>
+					<th>${__("Title")}</th>
+					<th>${__("Contract Qty")}</th>
+					<th>${__("VO Delta")}</th>
+					<th>${__("Revised Qty")}</th>
+					<th>${__("Unit Price")}</th>
+					<th>${__("Contract Value")}</th>
+					<th>${__("VO Δ Value")}</th>
+					<th>${__("Revised Value")}</th>
+				</tr></thead><tbody>`;
+			let total_contract = 0, total_vo = 0, total_revised = 0;
+			contract_rows.forEach((row) => {
+				const cv = flt(row.contract_line_value);
+				const vd = flt(row.vo_value_delta);
+				const rv = flt(row.revised_value);
+				total_contract += cv;
+				total_vo += vd;
+				total_revised += rv;
+				html += `<tr>
+					<td>${row.wbs_code || ""}</td>
+					<td>${row.title || ""}</td>
+					<td class="text-right">${format_number(row.contract_qty, null, 2)}</td>
+					<td class="text-right">${format_number(row.vo_qty_delta, null, 2)}</td>
+					<td class="text-right">${format_number(row.revised_qty, null, 2)}</td>
+					<td class="text-right">${format_currency(row.contract_unit_price, currency)}</td>
+					<td class="text-right">${format_currency(cv, currency)}</td>
+					<td class="text-right">${format_currency(vd, currency)}</td>
+					<td class="text-right">${format_currency(rv, currency)}</td>
+				</tr>`;
+			});
+			if (variation_rows.length) {
+				html += `<tr><td colspan="9"><strong>${__("Variation Items (from approved VOs)")}</strong></td></tr>`;
+				variation_rows.forEach((row) => {
+					const rv = flt(row.revised_line_value);
+					total_revised += rv;
+					html += `<tr>
+						<td>${row.wbs_code || ""}</td>
+						<td>${row.title || ""} <span class="text-muted">(${__("VO Item")})</span></td>
+						<td class="text-right">—</td>
+						<td class="text-right">${format_number(row.delta_qty, null, 2)}</td>
+						<td class="text-right">${format_number(row.delta_qty, null, 2)}</td>
+						<td class="text-right">${format_currency(row.revised_unit_price, currency)}</td>
+						<td class="text-right">—</td>
+						<td class="text-right">${format_currency(rv, currency)}</td>
+						<td class="text-right">${format_currency(rv, currency)}</td>
+					</tr>`;
+				});
+			}
+			html += `</tbody>
+				<tfoot><tr>
+					<th colspan="6" class="text-right">${__("Totals")}</th>
+					<th class="text-right">${format_currency(total_contract, currency)}</th>
+					<th class="text-right">${format_currency(total_vo, currency)}</th>
+					<th class="text-right">${format_currency(total_revised, currency)}</th>
+				</tr></tfoot>
+			</table>`;
+			const d = new frappe.ui.Dialog({
+				title: __("Revised BOQ — {0}", [frm.doc.name]),
+				width: 900,
+				fields: [
+					{
+						fieldname: "html_content",
+						fieldtype: "HTML",
+						options: html,
+					},
+				],
+			});
+			d.show();
+		},
+	});
+}

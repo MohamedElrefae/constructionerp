@@ -12,6 +12,16 @@ frappe.ui.form.on("BOQ Item", {
 		}
 
 		frm.add_custom_button(
+			__("Variation Orders"),
+			() => {
+				frappe.set_route("List", "Variation Order", {
+					boq_header: frm.doc.boq_header,
+				});
+			},
+			__("View")
+		);
+
+		frm.add_custom_button(
 			__("View Stages"),
 			() => {
 				frappe.set_route("List", "BOQ Item Stage", {

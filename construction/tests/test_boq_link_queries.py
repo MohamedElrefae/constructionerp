@@ -103,7 +103,10 @@ class TestBOQLinkQueries(FrappeTestCase):
             }
         ).insert(ignore_permissions=True)
         item_name = frappe.db.get_value("BOQ Item", {"structure": structure.name}, "name")
-        return structure, frappe.get_doc("BOQ Item", item_name)
+        item = frappe.get_doc("BOQ Item", item_name)
+        item.quantity = 1.0
+        item.save(ignore_permissions=True)
+        return structure, item
 
     def _set_scope(self, project=None, cost_center=None):
         frappe.get_doc(

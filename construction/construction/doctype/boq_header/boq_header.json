@@ -14,6 +14,7 @@
     "total_contract_value",
     "total_estimated_value",
     "total_budgeted_cost",
+    "total_revised_value",
     "locked_by",
     "locked_date"
   ],
@@ -81,6 +82,14 @@
       "fieldtype": "Currency",
       "label": "Total Budgeted Cost",
       "read_only": 1
+    },
+    {
+      "fieldname": "total_revised_value",
+      "fieldtype": "Currency",
+      "in_list_view": 1,
+      "label": "Total Revised Value",
+      "read_only": 1,
+      "description": "Current revised value including all approved variations"
     },
     {
       "fieldname": "locked_by",

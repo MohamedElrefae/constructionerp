@@ -34,6 +34,12 @@
     "est_unit_price",
     "contract_unit_price",
     "line_total",
+    "sb_quantity_revisions",
+    "original_qty",
+    "current_revised_qty",
+    "current_revised_unit_price",
+    "last_quantity_revision",
+    "cb_quantity_revisions",
     "sb_cost_estimation",
     "overhead_pct",
     "profit_pct",
@@ -53,6 +59,7 @@
       "fieldname": "structure",
       "fieldtype": "Link",
       "in_list_view": 1,
+      "in_standard_filter": 1,
       "label": "Structure",
       "options": "BOQ Structure",
       "reqd": 1,
@@ -62,6 +69,7 @@
       "fieldname": "boq_header",
       "fieldtype": "Link",
       "in_list_view": 1,
+      "in_standard_filter": 1,
       "label": "BOQ Header",
       "options": "BOQ Header",
       "reqd": 1,
@@ -72,6 +80,7 @@
       "fieldname": "item_type",
       "fieldtype": "Select",
       "in_list_view": 1,
+      "in_standard_filter": 1,
       "label": "Item Type",
       "options": "Measured Work\nProvisional Sum\nPrime Cost\nDaywork\nContingency\nTBD"
     },
@@ -217,6 +226,44 @@
       "in_list_view": 1,
       "label": "Line Total",
       "read_only": 1
+    },
+    {
+      "fieldname": "sb_quantity_revisions",
+      "fieldtype": "Section Break",
+      "label": "Quantity Revisions",
+      "collapsible": 1
+    },
+    {
+      "fieldname": "original_qty",
+      "fieldtype": "Float",
+      "label": "Original Quantity",
+      "read_only": 1,
+      "description": "Contract baseline quantity captured at BOQ lock"
+    },
+    {
+      "fieldname": "current_revised_qty",
+      "fieldtype": "Float",
+      "label": "Current Revised Quantity",
+      "read_only": 1,
+      "description": "Latest approved revised quantity"
+    },
+    {
+      "fieldname": "current_revised_unit_price",
+      "fieldtype": "Currency",
+      "label": "Current Revised Unit Price",
+      "read_only": 1,
+      "description": "Latest approved unit price"
+    },
+    {
+      "fieldname": "last_quantity_revision",
+      "fieldtype": "Link",
+      "label": "Last Quantity Revision",
+      "options": "BOQ Quantity Revision",
+      "read_only": 1
+    },
+    {
+      "fieldname": "cb_quantity_revisions",
+      "fieldtype": "Column Break"
     },
     {
       "fieldname": "sb_cost_estimation",

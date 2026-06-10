@@ -22,6 +22,16 @@ frappe.ui.form.on("BOQ Structure", {
 
 		if (!frm.doc.__islocal) {
 			frm.add_custom_button(
+				__("Variation Orders"),
+				function () {
+					frappe.set_route("List", "Variation Order", {
+						boq_header: frm.doc.boq_header,
+					});
+				},
+				__("View")
+			);
+
+			frm.add_custom_button(
 				__("BOQ Structure Tree"),
 				function () {
 					frappe.set_route("Tree", "BOQ Structure", {

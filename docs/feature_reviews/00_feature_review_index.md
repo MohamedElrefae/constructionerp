@@ -15,6 +15,13 @@ This folder contains separate implementation review reports for the main Constru
 7. [Egypt/Gulf Construction ERP Feature Sensitivity Matrix](./07_egypt_gulf_enterprise_roi_review.md)
 8. [Improve Now Execution Plan](./08_improve_now_execution_plan.md)
 9. [Improve Now Implementation Task Tracker](./09_improve_now_task_tracker.md)
+10. [AI Agent Handoff: Construction ERP Improve Now Program](./10_ai_agent_handoff.md)
+11. [Manager Review Request](./11_manager_review_request.md)
+12. [AI Agent Handoff: VO Quantity Revision Model Implementation](./12_vo_quantity_revision_ai_agent_handoff.md)
+13. [Head of Engineering Review: VO Quantity Revision Model](./15_head_engineering_review_vo_quantity_revision.md)
+13. [Revised Implementation Plan: VO Quantity Revision (v2)](./13_vo_quantity_revision_implementation_plan.md)
+14. [Manager Review Request: VO Quantity Revision](./14_manager_review_request.md)
+15. [Engineering Review Response: VO Quantity Revision](./15_engineering_review_response.md)
 
 ## Current Implementation Snapshot
 

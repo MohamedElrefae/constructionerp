@@ -1,0 +1,311 @@
+{
+  "actions": [],
+  "creation": "2026-06-11 00:00:00.000000",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "sb_identity",
+    "boq_header",
+    "boq_structure",
+    "boq_item",
+    "variation_order",
+    "cb_identity",
+    "revision_date",
+    "revision_type",
+    "status",
+    "sb_quantity",
+    "previous_qty",
+    "revised_qty",
+    "delta_qty",
+    "delta_from_contract_qty",
+    "cb_quantity",
+    "change_pct",
+    "change_pct_from_contract",
+    "rate_change_triggered",
+    "sb_pricing",
+    "contract_unit_price",
+    "revised_unit_price",
+    "cb_pricing",
+    "previous_value",
+    "revised_value",
+    "delta_value",
+    "sb_reason",
+    "rate_change_justification",
+    "reason",
+    "cb_reason",
+    "owner_page",
+    "owner_ref_no",
+    "owner_file_ref",
+    "sb_approval",
+    "approved_by",
+    "approved_on"
+  ],
+  "fields": [
+    {
+      "fieldname": "sb_identity",
+      "fieldtype": "Section Break",
+      "label": "Identity"
+    },
+    {
+      "fieldname": "boq_header",
+      "fieldtype": "Link",
+      "label": "BOQ Header",
+      "options": "BOQ Header",
+      "reqd": 1
+    },
+    {
+      "fieldname": "boq_structure",
+      "fieldtype": "Link",
+      "label": "BOQ Structure",
+      "options": "BOQ Structure",
+      "reqd": 1
+    },
+    {
+      "fieldname": "boq_item",
+      "fieldtype": "Link",
+      "label": "BOQ Item",
+      "options": "BOQ Item",
+      "reqd": 1
+    },
+    {
+      "fieldname": "variation_order",
+      "fieldtype": "Link",
+      "label": "Variation Order",
+      "options": "Variation Order"
+    },
+    {
+      "fieldname": "cb_identity",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "revision_date",
+      "fieldtype": "Date",
+      "label": "Revision Date",
+      "reqd": 1
+    },
+    {
+      "fieldname": "revision_type",
+      "fieldtype": "Select",
+      "label": "Revision Type",
+      "options": "Original Lock\nNew Variation Item\nIncrease Within 25%\nDecrease Within 25%\nIncrease Above 25%\nDecrease Above 25%\nOmission",
+      "reqd": 1
+    },
+    {
+      "fieldname": "status",
+      "fieldtype": "Select",
+      "label": "Status",
+      "options": "Draft\nSubmitted\nApproved\nRejected",
+      "reqd": 1
+    },
+    {
+      "fieldname": "sb_quantity",
+      "fieldtype": "Section Break",
+      "label": "Quantity"
+    },
+    {
+      "fieldname": "previous_qty",
+      "fieldtype": "Float",
+      "label": "Previous Quantity",
+      "reqd": 1
+    },
+    {
+      "fieldname": "revised_qty",
+      "fieldtype": "Float",
+      "label": "Revised Quantity",
+      "reqd": 1
+    },
+    {
+      "fieldname": "delta_qty",
+      "fieldtype": "Float",
+      "label": "Delta Quantity",
+      "read_only": 1
+    },
+    {
+      "fieldname": "delta_from_contract_qty",
+      "fieldtype": "Float",
+      "label": "Delta From Contract Qty",
+      "read_only": 1
+    },
+    {
+      "fieldname": "cb_quantity",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "change_pct",
+      "fieldtype": "Percent",
+      "label": "Change %",
+      "read_only": 1
+    },
+    {
+      "fieldname": "change_pct_from_contract",
+      "fieldtype": "Percent",
+      "label": "Change % From Contract",
+      "read_only": 1
+    },
+    {
+      "default": "0",
+      "fieldname": "rate_change_triggered",
+      "fieldtype": "Check",
+      "label": "Rate Change Triggered",
+      "read_only": 1
+    },
+    {
+      "fieldname": "sb_pricing",
+      "fieldtype": "Section Break",
+      "label": "Pricing"
+    },
+    {
+      "fieldname": "contract_unit_price",
+      "fieldtype": "Currency",
+      "label": "Contract Unit Price"
+    },
+    {
+      "fieldname": "revised_unit_price",
+      "fieldtype": "Currency",
+      "label": "Revised Unit Price"
+    },
+    {
+      "fieldname": "cb_pricing",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "previous_value",
+      "fieldtype": "Currency",
+      "label": "Previous Value",
+      "read_only": 1
+    },
+    {
+      "fieldname": "revised_value",
+      "fieldtype": "Currency",
+      "label": "Revised Value",
+      "read_only": 1
+    },
+    {
+      "fieldname": "delta_value",
+      "fieldtype": "Currency",
+      "label": "Delta Value",
+      "read_only": 1
+    },
+    {
+      "fieldname": "sb_reason",
+      "fieldtype": "Section Break",
+      "label": "Reason and References"
+    },
+    {
+      "fieldname": "rate_change_justification",
+      "fieldtype": "Small Text",
+      "label": "Rate Change Justification"
+    },
+    {
+      "fieldname": "reason",
+      "fieldtype": "Small Text",
+      "label": "Reason"
+    },
+    {
+      "fieldname": "cb_reason",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "owner_page",
+      "fieldtype": "Data",
+      "label": "Owner Page"
+    },
+    {
+      "fieldname": "owner_ref_no",
+      "fieldtype": "Data",
+      "label": "Owner Ref No"
+    },
+    {
+      "fieldname": "owner_file_ref",
+      "fieldtype": "Data",
+      "label": "Owner File Ref"
+    },
+    {
+      "fieldname": "sb_approval",
+      "fieldtype": "Section Break",
+      "label": "Approval"
+    },
+    {
+      "fieldname": "approved_by",
+      "fieldtype": "Link",
+      "label": "Approved By",
+      "options": "User",
+      "read_only": 1
+    },
+    {
+      "fieldname": "approved_on",
+      "fieldtype": "Datetime",
+      "label": "Approved On",
+      "read_only": 1
+    }
+  ],
+  "index_web_pages_for_search": 1,
+  "is_submittable": 0,
+  "links": [],
+  "modified": "2026-06-11 00:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "construction",
+  "name": "BOQ Quantity Revision",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Construction Owner",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "create": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Project Manager",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Site Engineer"
+    },
+    {
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Accountant"
+    },
+    {
+      "read": 1,
+      "role": "Read-Only"
+    }
+  ],
+  "sort_field": "revision_date",
+  "sort_order": "DESC",
+  "states": [],
+  "track_changes": 1
+}

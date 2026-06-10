@@ -39,6 +39,12 @@ desk_links = {
     "Construction": [
         {
             "type": "doctype",
+            "name": "Variation Order",
+            "label": "Variation Order",
+            "description": "Manage post-lock BOQ scope changes (Variation Orders)",
+        },
+        {
+            "type": "doctype",
             "name": "Construction Theme",
             "label": "Theme Configuration",
             "description": "Manage construction themes and colors",
@@ -78,6 +84,12 @@ doctype_js = {
     "BOQ Item Stage": "construction/doctype/boq_item_stage/boq_item_stage.js",
     "Construction Settings": "construction/doctype/construction_settings/construction_settings.js",
     "User Desk Theme": "construction/doctype/user_desk_theme/user_desk_theme.js",
+    "Variation Order": "construction/doctype/variation_order/variation_order.js",
+}
+
+doctype_list_js = {
+    "BOQ Item": "construction/doctype/boq_item/boq_item_list.js",
+    "Variation Order": "construction/doctype/variation_order/variation_order_list.js",
 }
 
 doctype_tree_js = {"BOQ Structure": "construction/doctype/boq_structure/boq_structure_tree.js"}
@@ -85,7 +97,7 @@ doctype_tree_js = {"BOQ Structure": "construction/doctype/boq_structure/boq_stru
 # CSS includes for authenticated users (desk)
 # v2.2: Single-file theme — tokens + 1,180 selectors, html.ct-enterprise[data-theme] namespace
 app_include_css = [
-    "/assets/construction/css/modern_theme.css?v=2.5.3",
+    "/assets/construction/css/modern_theme.css?v=2.5.4",
     "/assets/construction/css/scope_context.css?v=2",
     # ─── Vite UI — MUST load LAST to win cascade ───
     # Phase 1: Visual Foundation
@@ -146,7 +158,7 @@ app_include_js = [
 # CSS includes for unauthenticated pages (login, etc.)
 # v2.4-r3: modern_theme.css handles all theming including login
 web_include_css = [
-    "/assets/construction/css/modern_theme.css?v=2.5.3",
+    "/assets/construction/css/modern_theme.css?v=2.5.4",
     "/assets/construction/css/email_theme.css",
 ]
 
@@ -217,6 +229,7 @@ fixtures = [
 
 # After install - create system themes and setup Custom Fields
 after_install = [
+    "construction.install.setup_website_branding",
     "construction.install.create_system_themes",
     "construction.install.setup_boq_integration",
     "construction.install.setup_branch_company_field",
@@ -257,4 +270,6 @@ translated_doctypes = {
     "Modern Theme Settings": ["ar"],
     "User Desk Theme": ["ar"],
     "User Scope Context": ["ar"],
+    "Variation Order": ["ar"],
+    "VO Line": ["ar"],
 }

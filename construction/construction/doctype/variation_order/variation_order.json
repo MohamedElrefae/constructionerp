@@ -119,8 +119,7 @@
       "fieldname": "lines",
       "fieldtype": "Table",
       "label": "Lines",
-      "options": "VO Line",
-      "reqd": 1
+      "options": "VO Line"
     },
     {
       "fieldname": "sb_totals",
