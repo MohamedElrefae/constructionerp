@@ -242,6 +242,7 @@ after_install = [
 # Order matters: themes first, then sidebar, then health check
 after_migrate = [
     "construction.api.theme_api.whitelabel_patch",
+    "construction.install.setup_website_branding",
     "construction.install.create_system_themes",
     "construction.install.setup_workspace_sidebar",
     "construction.install.setup_construction_workspace_page",
