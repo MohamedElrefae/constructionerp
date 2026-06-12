@@ -12,7 +12,24 @@ class BOQHeader(Document):
 
     def validate(self):
         self.validate_status_transition()
+        self.sync_project_name()
         self.calculate_total_value()
+
+    def sync_project_name(self):
+        if not self.project:
+            self.project_name = None
+            return
+
+        project = frappe.get_all(
+            "Project",
+            filters={"name": self.project},
+            fields=["project_name"],
+            limit=1,
+        )
+        if not project:
+            frappe.throw(_("Project {0} does not exist.").format(self.project))
+
+        self.project_name = project[0].project_name or self.project
 
     def on_update(self):
         if self.status == "Locked":

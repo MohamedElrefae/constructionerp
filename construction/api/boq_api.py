@@ -458,3 +458,22 @@ def create_material_request_for_vo(vo_name):
     mr.insert(ignore_permissions=True)
 
     return {"success": True, "name": mr.name, "material_request": mr.name}
+
+
+@frappe.whitelist()
+def get_boq_tree_summary(boq_header):
+    """Return WBS tree summary with structure nodes and item counts."""
+    structures = frappe.db.sql(
+        """
+        SELECT s.name, s.title, s.wbs_code, s.is_group, s.lft, s.rgt,
+               s.parent_structure, COUNT(i.name) as item_count
+        FROM `tabBOQ Structure` s
+        LEFT JOIN `tabBOQ Item` i ON i.structure = s.name AND i.docstatus < 2
+        WHERE s.boq_header = %(boq_header)s AND s.docstatus < 2
+        GROUP BY s.name
+        ORDER BY s.lft
+        """,
+        {"boq_header": boq_header},
+        as_dict=True,
+    )
+    return structures

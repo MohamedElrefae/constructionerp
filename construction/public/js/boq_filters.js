@@ -37,6 +37,147 @@
 	let lastKnownScopeToken = null;
 	let tokenFetchInFlight = null;
 
+	function debounce(fn, wait) {
+		let timer;
+		return function (...args) {
+			clearTimeout(timer);
+			timer = setTimeout(() => fn.apply(this, args), wait);
+		};
+	}
+
+	function setGridAccent(frm, cdt, cdn, fieldname, active, blocked) {
+		const grid = frm.fields_dict[tableFieldFor(frm)] && frm.fields_dict[tableFieldFor(frm)].grid;
+		if (!grid) return;
+		const gridRow = grid.grid_rows_by_docname && grid.grid_rows_by_docname[cdn];
+		if (!gridRow) return;
+		const $wrapper = gridRow.wrapper && $(gridRow.wrapper).find(`.frappe-control[data-fieldname="${fieldname}"]`);
+		if (!$wrapper || !$wrapper.length) return;
+		$wrapper.toggleClass("ct-boq-step-accent", !!active);
+		$wrapper.toggleClass("ct-boq-step-blocked", !!blocked);
+	}
+
+	function markGridFieldBlocked(frm, cdt, cdn, fieldname, blocked, hint) {
+		const tableField = tableFieldFor(frm);
+		if (!tableField) return;
+		const grid = frm.fields_dict[tableField] && frm.fields_dict[tableField].grid;
+		if (!grid) return;
+		const gridRow = grid.grid_rows_by_docname && grid.grid_rows_by_docname[cdn];
+		if (!gridRow || !gridRow.fields_dict) return;
+		const field = gridRow.fields_dict[fieldname];
+		if (!field) return;
+		field.df.only_select = !!blocked;
+		field.__ct_boq_blocked = !!blocked;
+		field.df.filter_description = blocked ? hint : "";
+		if (typeof field.set_description === "function") {
+			field.set_description(blocked ? hint : "");
+		}
+	}
+
+	function setGridInlineHint(frm, cdt, cdn, fieldname, hint, blocked) {
+		const grid = frm.fields_dict[tableFieldFor(frm)] && frm.fields_dict[tableFieldFor(frm)].grid;
+		if (!grid) return;
+		const gridRow = grid.grid_rows_by_docname && grid.grid_rows_by_docname[cdn];
+		if (!gridRow) return;
+		const $wrapper = gridRow.wrapper && $(gridRow.wrapper).find(`.frappe-control[data-fieldname="${fieldname}"]`);
+		if (!$wrapper || !$wrapper.length) return;
+		const $help = $wrapper.find(".help").first();
+		if (!$help.length) return;
+		$wrapper.toggleClass("ct-boq-has-inline-hint", !!hint);
+		$wrapper.toggleClass("ct-boq-inline-hint-blocked", !!blocked);
+		$help.find(".ct-boq-inline-hint").remove();
+		if (hint) {
+			$help.append(
+				$("<span>", {
+					class: "ct-boq-inline-hint",
+					text: hint,
+					title: hint,
+				})
+			);
+		}
+	}
+
+	function applyGridGuidance(frm, cdt, cdn) {
+		const row = getRow(cdt, cdn);
+		if (!row) return;
+		const gateIsOpen = gateOpen(frm, row);
+		const hasProject = Boolean(rowProject(frm, row));
+		const hasBoqHeader = Boolean(row.boq_header);
+		const hasBoqStructure = Boolean(row.boq_structure);
+		const hasBoqItem = Boolean(row.boq_item);
+		const hasBoqItemStage = Boolean(row.boq_item_stage);
+
+		// Gate closed → all BOQ fields muted (no accent, not blocked — just visually inert)
+		if (!gateIsOpen) {
+			["boq_header", "boq_structure", "boq_item", "boq_item_stage"].forEach((fn) => {
+				setGridAccent(frm, cdt, cdn, fn, false, false);
+				markGridFieldBlocked(frm, cdt, cdn, fn, false, "");
+				setGridInlineHint(frm, cdt, cdn, fn, null, false);
+			});
+			return;
+		}
+
+		// boq_header: accent when project set but header empty; blocked when project empty
+		setGridAccent(frm, cdt, cdn, "boq_header", !hasBoqHeader && hasProject, !hasProject);
+		markGridFieldBlocked(frm, cdt, cdn, "boq_header", !hasProject, __("Select Project first"));
+		setGridInlineHint(
+			frm,
+			cdt,
+			cdn,
+			"boq_header",
+			!hasProject ? __("Select Project first") : (!hasBoqHeader ? __("Select BOQ Header first") : null),
+			!hasProject
+		);
+
+		// boq_structure: blocked when header empty; accent when header set but structure empty
+		setGridAccent(frm, cdt, cdn, "boq_structure", !hasBoqStructure && hasBoqHeader, !hasBoqHeader);
+		markGridFieldBlocked(frm, cdt, cdn, "boq_structure", !hasBoqHeader, __("Select BOQ Header first"));
+		setGridInlineHint(
+			frm,
+			cdt,
+			cdn,
+			"boq_structure",
+			!hasBoqHeader ? __("Select BOQ Header first") : (!hasBoqStructure ? __("Select BOQ Structure first") : null),
+			!hasBoqHeader
+		);
+
+		// boq_item: blocked when structure empty; accent when structure set but item empty
+		setGridAccent(frm, cdt, cdn, "boq_item", !hasBoqItem && hasBoqStructure, !hasBoqStructure);
+		markGridFieldBlocked(frm, cdt, cdn, "boq_item", !hasBoqStructure, __("Select BOQ Structure first — items link to leaf structures only"));
+		setGridInlineHint(
+			frm,
+			cdt,
+			cdn,
+			"boq_item",
+			!hasBoqStructure ? __("Select BOQ Structure first") : (!hasBoqItem ? __("Select BOQ Item first") : null),
+			!hasBoqStructure
+		);
+		if (hasBoqStructure) {
+			const tableField = tableFieldFor(frm);
+			const grid = tableField && frm.fields_dict[tableField] && frm.fields_dict[tableField].grid;
+			const gridRow = grid && grid.grid_rows_by_docname && grid.grid_rows_by_docname[cdn];
+			const field = gridRow && gridRow.fields_dict && gridRow.fields_dict["boq_item"];
+			if (field && typeof field.set_description === "function") {
+				field.set_description(__("BOQ Items are linked to leaf Structure nodes only."));
+			}
+		}
+
+		// boq_item_stage: accented when item is set but stage not yet chosen; blocked when no item
+		setGridAccent(frm, cdt, cdn, "boq_item_stage", !hasBoqItemStage && hasBoqItem, !hasBoqItem);
+		markGridFieldBlocked(frm, cdt, cdn, "boq_item_stage", !hasBoqItem, __("Select BOQ Item first"));
+		setGridInlineHint(
+			frm,
+			cdt,
+			cdn,
+			"boq_item_stage",
+			!hasBoqItem ? __("Select BOQ Item first") : null,
+			!hasBoqItem
+		);
+	}
+
+	const applyGridGuidanceDebounced = debounce(function (frm, cdt, cdn) {
+		applyGridGuidance(frm, cdt, cdn);
+	}, 50);
+
 	function cascadeMode() {
 		return frappe.boot.enable_boq_cascade_filtering || "Off";
 	}
@@ -330,6 +471,17 @@
 						},
 						5
 					);
+					frappe.call({
+						method: "construction.api.boq_link_queries.log_boq_scope_drift",
+						args: {
+							form_doctype: frm.doc.doctype,
+							form_name: frm.doc.name,
+							previous_scope: lastKnownScopeToken,
+							current_scope: currentToken,
+						},
+						async: true,
+						freeze: false,
+					});
 					frm.reload_doc();
 					return Promise.reject("scope_drift");
 				}
@@ -402,6 +554,38 @@
 				setChildQueries(frm, tableField);
 				installSaveGuard(frm);
 				syncTimesheetDesignation(frm);
+				(frm.doc[tableField] || []).forEach((row) => {
+					applyGridGuidance(frm, row.doctype, row.name);
+				});
+				setTimeout(() => applyCollapsedRowsGuidance(frm), 200);
+			},
+			onload_post_render(frm) {
+				const tableField = tableFieldFor(frm);
+				const grid = frm.fields_dict[tableField] && frm.fields_dict[tableField].grid;
+				if (!grid) return;
+				(frm.doc[tableField] || []).forEach((row) => {
+					applyGridGuidance(frm, row.doctype, row.name);
+				});
+				setTimeout(() => {
+					(frm.doc[tableField] || []).forEach((row) => {
+						applyGridGuidance(frm, row.doctype, row.name);
+					});
+				}, 150);
+				setTimeout(() => {
+					(frm.doc[tableField] || []).forEach((row) => {
+						applyGridGuidance(frm, row.doctype, row.name);
+					});
+					applyCollapsedRowsGuidance(frm);
+				}, 600);
+			},
+			project(frm) {
+				const tableField = tableFieldFor(frm);
+				if (!tableField) return;
+				(frm.doc[tableField] || []).forEach((row) => {
+					clearFields(row.doctype, row.name, ["boq_header", "boq_structure", "boq_item", "boq_item_stage"]);
+					applyGridGuidance(frm, row.doctype, row.name);
+				});
+				frm.refresh_field(tableField);
 			},
 		});
 	}
@@ -409,14 +593,24 @@
 	function wireChildEvents() {
 		childDoctypes.forEach((childDoctype) => {
 			frappe.ui.form.on(childDoctype, {
+				form_render(frm, cdt, cdn) {
+					applyGridGuidance(frm, cdt, cdn);
+					setTimeout(() => applyCollapsedRowsGuidance(frm), 100);
+				},
 				boq_header(frm, cdt, cdn) {
 					clearDownstream(frm, cdt, cdn, "boq_header");
+					applyGridGuidance(frm, cdt, cdn);
 				},
 				boq_structure(frm, cdt, cdn) {
 					clearDownstream(frm, cdt, cdn, "boq_structure");
+					applyGridGuidance(frm, cdt, cdn);
 				},
 				boq_item(frm, cdt, cdn) {
 					clearDownstream(frm, cdt, cdn, "boq_item");
+					applyGridGuidance(frm, cdt, cdn);
+				},
+				boq_item_stage(frm, cdt, cdn) {
+					applyGridGuidance(frm, cdt, cdn);
 				},
 				expense_category(frm, cdt, cdn) {
 					const row = getRow(cdt, cdn);
@@ -432,15 +626,19 @@
 							clearFields(cdt, cdn, ["boq_item", "boq_item_stage"]);
 						}
 					}
+					applyGridGuidanceDebounced(frm, cdt, cdn);
 				},
 				is_progress_billing(frm, cdt, cdn) {
 					applyGateClearing(frm, cdt, cdn);
+					applyGridGuidance(frm, cdt, cdn);
 				},
 				employee(frm, cdt, cdn) {
 					applyGateClearing(frm, cdt, cdn);
+					applyGridGuidanceDebounced(frm, cdt, cdn);
 				},
 				designation(frm, cdt, cdn) {
 					applyGateClearing(frm, cdt, cdn);
+					applyGridGuidance(frm, cdt, cdn);
 				},
 			});
 		});
@@ -454,6 +652,27 @@
 			} else {
 				initializeScopeToken();
 			}
+		});
+	}
+
+	function applyCollapsedRowsGuidance(frm) {
+		const tableField = tableFieldFor(frm);
+		if (!tableField) return;
+		const $grid = $(frm.fields_dict[tableField] && frm.fields_dict[tableField].wrapper);
+		if (!$grid.length) return;
+		const rows = frm.doc[tableField] || [];
+		$grid.find(".grid-row:not(.open)").each(function () {
+			const $row = $(this);
+			const dataRowIndex = $row.attr("data-row-index");
+			const row = rows[parseInt(dataRowIndex, 10)];
+			if (!row) return;
+			const gateIsOpen = gateOpen(frm, row);
+			const hasProject = Boolean(rowProject(frm, row));
+			const hasBoqHeader = Boolean(row.boq_header);
+			const hasBoqStructure = Boolean(row.boq_structure);
+			const hasBoqItem = Boolean(row.boq_item);
+			const anyBlocked = gateIsOpen && (!hasProject || !hasBoqHeader || !hasBoqStructure || !hasBoqItem);
+			$row.toggleClass("ct-boq-row-blocked", !!anyBlocked);
 		});
 	}
 

@@ -27,6 +27,7 @@ def run_all_tests():
         ("T-011 Session Defaults cleared on switch", test_defaults_cleared_on_switch),
         ("T-012 NestedSet descendant expansion", test_nestedset_expansion),
         ("T-013 Server-side query injection", test_server_side_injection),
+        ("T-014 Scope drift detection", test_scope_drift_detection),
     ]
 
     passed = 0
@@ -290,6 +291,47 @@ def test_server_side_injection():
     none_result = add_scope_conditions("test_nobody", "Sales Invoice")
     assert "cost_center" not in none_result, f"cost_center should not appear for unscoped user: {none_result}"
     assert "project" not in none_result, f"project should not appear for unscoped user: {none_result}"
+
+
+# === T-014 ===
+def test_scope_drift_detection():
+    from construction.services.scope_resolution import get_scope_token
+
+    # Set initial scope
+    set_scope_context(
+        company="Elrefae",
+        cost_center=_COST_CENTER,
+        project=None,
+        department=None,
+        user="test_user2",
+    )
+
+    # Get initial token
+    token1 = get_scope_token("test_user2")
+    assert token1 is not None, "Scope token should be generated"
+    assert len(token1) == 64, f"Expected 64-char hex token, got {len(token1)} chars"
+
+    # Change scope
+    set_scope_context(
+        company="Elrefae",
+        cost_center=_GROUP_CC,
+        project=None,
+        department=None,
+        user="test_user2",
+    )
+
+    # Get new token — should differ
+    token2 = get_scope_token("test_user2")
+    assert token2 is not None, "Scope token should be generated"
+    assert token2 != token1, "Scope token should change when scope changes"
+
+    # Also verify the API endpoint
+    frappe.set_user("test_user2")
+    try:
+        result = frappe.call("construction.api.boq_link_queries.get_boq_scope_token")
+        assert result.get("scope_token") == token2, "API token should match direct call"
+    finally:
+        frappe.set_user("Administrator")
 
 
 if __name__ == "__main__":

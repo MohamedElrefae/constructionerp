@@ -13,6 +13,53 @@
 
 	const CT_ATTR = "data-ct-link-enhanced";
 
+	function isBoqStructureLink(field) {
+		return field && field.df && field.df.options === "BOQ Structure";
+	}
+
+	function isHierarchicalLink(field) {
+		return field && field.__ct_boq_blocked !== undefined;
+	}
+
+	function hasBoqHeader(field) {
+		const doc = (field && field.frm && field.frm.doc) || field.doc || null;
+		return Boolean(doc && doc.boq_header);
+	}
+
+	function syncBoqNativeCreateState(field) {
+		if (!isBoqStructureLink(field)) return;
+		const blocked = !hasBoqHeader(field);
+		field.__ct_boq_blocked = blocked;
+		field.df.only_select = blocked;
+		field.df.filter_description = blocked ? __("Select BOQ Header first") : "";
+	}
+
+	function patchNativeLinkControl() {
+		const ControlLink = frappe.ui && frappe.ui.form && frappe.ui.form.ControlLink;
+		if (!ControlLink || ControlLink.__ct_boq_patch_applied) return;
+
+		const originalSetCustomQuery = ControlLink.prototype.set_custom_query;
+		ControlLink.prototype.set_custom_query = function (args) {
+			syncBoqNativeCreateState(this);
+			if (originalSetCustomQuery) {
+				originalSetCustomQuery.call(this, args);
+			}
+			syncBoqNativeCreateState(this);
+			return args;
+		};
+
+		const originalOnInput = ControlLink.prototype.on_input;
+		ControlLink.prototype.on_input = function (e) {
+			syncBoqNativeCreateState(this);
+			return originalOnInput.call(this, e);
+		};
+
+		ControlLink.__ct_boq_patch_applied = true;
+	}
+
+	patchNativeLinkControl();
+	setTimeout(patchNativeLinkControl, 0);
+
 	function getControlInstance(el) {
 		const $el = $(el);
 		const $control_wrapper = $el.closest(".frappe-control");
@@ -66,7 +113,25 @@
 	}
 
 	function enhanceLink(el) {
-		if (!el || el.getAttribute(CT_ATTR)) return;
+		if (!el) return;
+
+		if (el.getAttribute(CT_ATTR)) {
+			// Always ensure the native input wrapper remains hidden
+			const $input = $(el);
+			const $linkFieldWrapper = $input.closest(".link-field");
+			if ($linkFieldWrapper.length) {
+				$linkFieldWrapper.css({
+					opacity: 0,
+					position: "absolute",
+					pointerEvents: "none",
+					zIndex: -1,
+					width: 0,
+					height: 0,
+					overflow: "hidden",
+				});
+			}
+			return;
+		}
 
 		const $el = $(el);
 		if (
@@ -142,6 +207,27 @@
 		const $selectAllBtn = $dropdown.find(".ct-btn-select-all");
 		const $clearAllBtn = $dropdown.find(".ct-btn-clear-all");
 
+		function updateBoqFirstStepAccent() {
+			const isFirstStep = field.df.fieldname === "boq_header";
+			const needsAccent = isFirstStep && !field.get_value();
+			$dropdown.toggleClass("ct-boq-first-step", needsAccent);
+			$btn.css({
+				"border-color": needsAccent
+					? "var(--ct-danger, #dc2626)"
+					: "var(--ct-border, rgba(148,163,184,0.18))",
+				"box-shadow": needsAccent ? "0 0 0 2px rgba(220,38,38,0.18)" : "none",
+			});
+			const isBlocked = isHierarchicalLink(field) && field.__ct_boq_blocked;
+			if (!isBlocked) {
+				$btn.attr(
+					"title",
+					needsAccent
+						? __("Start here: select BOQ Header first")
+						: __("Select {0}", [__(field.df.label || field.df.fieldname)])
+				);
+			}
+		}
+
 		$clearAllBtn.on("click", function (e) {
 			e.preventDefault();
 			e.stopPropagation();
@@ -173,9 +259,30 @@
 			const val = field.get_value() || "";
 			const text = field.get_label_value() || val;
 			const placeholder = field.df.label ? __(field.df.label) : __("Select…");
-			$label.text(text || placeholder);
+
+			const $wrapper = $input.closest(".frappe-control");
+			const isBlockedByFlag = isHierarchicalLink(field) && field.__ct_boq_blocked;
+			const isBlockedByClass = $wrapper.hasClass("ct-boq-step-blocked");
+			const isBlocked = isBlockedByFlag || isBlockedByClass;
+			$dropdown.toggleClass("ct-dropdown-blocked", !!isBlocked);
+
+			if (isBlocked && !text) {
+				var hint = field.df.filter_description; // already translated by form script
+				if (!hint) {
+					hint = $wrapper.find(".ct-boq-inline-hint").text().trim()
+						|| __("Select parent field first");
+				}
+				$label.text(hint);
+				$btn.attr("title", hint);
+			} else {
+				$label.text(text || placeholder);
+			}
+			updateBoqFirstStepAccent();
 		}
+		syncBoqNativeCreateState(field);
 		syncLabel();
+		setTimeout(function () { syncBoqNativeCreateState(field); syncLabel(); }, 200);
+		setTimeout(function () { syncBoqNativeCreateState(field); syncLabel(); }, 700);
 
 		function syncGridQuery() {
 			const cascadeFields = ["boq_header", "boq_structure", "boq_item", "boq_item_stage"];
@@ -216,7 +323,7 @@
 		function getCurrentGridRowDoc() {
 			const $gridRow = $input.closest(".grid-row");
 			const gridRow = $gridRow.data("grid_row");
-			return (gridRow && gridRow.doc) || field.doc || null;
+			return (gridRow && gridRow.doc) || (field.frm && field.frm.doc) || field.doc || null;
 		}
 
 		function getBoqCascadeSearchArgs(searchTerm) {
@@ -268,8 +375,19 @@
 			return args;
 		}
 
+		function getBoqPreconditionMessage() {
+			const row = getCurrentGridRowDoc();
+			const isStructureField =
+				field.df.fieldname === "boq_structure" || field.df.fieldname === "structure";
+			if (isStructureField && !(row && row.boq_header)) {
+				return __("Select BOQ Header first");
+			}
+			return null;
+		}
+
 		// Render search options from database
 		function renderOptions(searchTerm) {
+			syncBoqNativeCreateState(field);
 			$list.html(
 				`<div style="padding: 10px; text-align: center; color: var(--ct-text-muted);"><i class="fa fa-spinner fa-spin"></i> ${__(
 					"Loading..."
@@ -277,6 +395,15 @@
 			);
 
 			syncGridQuery();
+			const preconditionMessage = getBoqPreconditionMessage();
+			if (preconditionMessage) {
+				$list.html(
+					`<div style="padding: 10px; color: var(--ct-text-muted); font-style: italic;">${frappe.utils.escape_html(
+						preconditionMessage
+					)}</div>`
+				);
+				return;
+			}
 			const args =
 				getBoqCascadeSearchArgs(searchTerm) || field.get_search_args(searchTerm || "");
 			if (!args) {
@@ -355,7 +482,7 @@
 
 					// 3. Create New item (if allowed)
 					const doctype = df.options;
-					if (!df.only_select && frappe.model.can_create(doctype)) {
+					if (!df.only_select && !field.__ct_boq_blocked && frappe.model.can_create(doctype)) {
 						if (count > 0 && !df.reqd) {
 							$list.append('<div class="ct-dropdown-divider"></div>');
 						}
@@ -385,6 +512,9 @@
 
 		// Position and open dropdown
 		function openDropdown() {
+			if (field && isHierarchicalLink(field) && field.__ct_boq_blocked) {
+				return;
+			}
 			$(".ct-dropdown-menu:visible").hide();
 			const rect = $btn[0].getBoundingClientRect();
 			const spaceBelow = window.innerHeight - rect.bottom;
@@ -409,6 +539,8 @@
 		$btn.on("click", function (e) {
 			e.preventDefault();
 			e.stopPropagation();
+			syncBoqNativeCreateState(field);
+			syncLabel();
 			if ($menu.is(":visible")) {
 				closeDropdown();
 			} else {
@@ -436,7 +568,12 @@
 		// Native events synchronization
 		$input.on("change select-change", syncLabel);
 		$input.on("focus", function () {
-			openDropdown();
+			syncBoqNativeCreateState(field);
+			syncLabel();
+		});
+		$input.on("blur", function () {
+			syncBoqNativeCreateState(field);
+			syncLabel();
 		});
 
 		// Hide native input wrapper visually
@@ -449,6 +586,20 @@
 			height: 0,
 			overflow: "hidden",
 		});
+
+		// Watch for blocker class changes applied by form scripts
+		const $fw = $input.closest(".frappe-control");
+		if ($fw.length && typeof MutationObserver !== "undefined") {
+			const classObserver = new MutationObserver(function (mutations) {
+				for (const m of mutations) {
+					if (m.type === "attributes" && m.attributeName === "class") {
+						syncLabel();
+						break;
+					}
+				}
+			});
+			classObserver.observe($fw[0], { attributes: true, attributeFilter: ["class"] });
+		}
 	}
 
 	function scanAndEnhance() {

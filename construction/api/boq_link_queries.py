@@ -56,10 +56,60 @@ def _gate_is_closed(filters):
     return _truthy(filters.get("require_gate")) and not _truthy(filters.get("gate_open"))
 
 
+def _apply_allowed_statuses(conditions, values, filters, header_alias="h"):
+    if not filters.get("allowed_statuses"):
+        return
+    conditions.append(f"{header_alias}.status IN %(allowed_statuses)s")
+    values["allowed_statuses"] = tuple(filters.get("allowed_statuses"))
+
+
 @frappe.whitelist()
 def get_boq_scope_token():
     """Return current BOQ scope details for client-side drift checks."""
     return get_scope_payload(frappe.session.user)
+
+
+@frappe.whitelist()
+def log_boq_scope_drift(form_doctype, form_name, previous_scope, current_scope):
+    """Audit-log a scope drift event detected client-side during save."""
+    frappe.log_error(
+        title="BOQ Scope Drift",
+        message=(
+            f"User {frappe.session.user} attempted to save {form_doctype} {form_name} "
+            f"after scope changed from {previous_scope} to {current_scope}. "
+            f"Form was reloaded to prevent invalid attribution."
+        ),
+    )
+
+
+@frappe.whitelist()
+@frappe.validate_and_sanitize_search_inputs
+def get_scope_projects(doctype, txt, searchfield, start, page_len, filters, enforce_scope=None):
+    """Return the active scope project for link validation without requiring Project select perms."""
+    filters = _as_dict(filters)
+    enforce_scope = _extract_enforce_scope(filters, enforce_scope)
+
+    scope = resolve_query_scope(enforce_scope)
+    scope_project = filters.get("project") or (scope.project if scope else None)
+    if not scope_project:
+        return []
+
+    projects = frappe.get_all(
+        "Project",
+        filters={"name": scope_project},
+        fields=["name", "project_name"],
+        limit=1,
+        ignore_permissions=True,
+    )
+    if not projects:
+        return []
+    project = projects[0]
+
+    txt = (txt or "").strip().lower()
+    if txt and txt not in project.name.lower() and txt not in (project.project_name or "").lower():
+        return []
+
+    return [(project.name, project.project_name or project.name)]
 
 
 @frappe.whitelist()
@@ -82,10 +132,7 @@ def get_boq_headers(doctype, txt, searchfield, start, page_len, filters, enforce
     if scope:
         _attach_scope_response(scope)
         join_project = apply_header_scope(conditions, values, scope, "h") or join_project
-        append_allowed_status_filter(conditions, values, "h")
-    elif filters.get("allowed_statuses"):
-        conditions.append("h.status IN %(allowed_statuses)s")
-        values["allowed_statuses"] = tuple(filters.get("allowed_statuses"))
+    _apply_allowed_statuses(conditions, values, filters, "h")
 
     where_clause = " AND ".join(conditions)
     return frappe.db.sql(
@@ -109,6 +156,8 @@ def get_boq_structures(doctype, txt, searchfield, start, page_len, filters, enfo
     enforce_scope = _extract_enforce_scope(filters, enforce_scope)
     if _gate_is_closed(filters):
         return []
+    if filters.get("require_boq_header") and not filters.get("boq_header"):
+        return []
 
     conditions = ["s.docstatus < 2", "s.is_group = 0"]
     values = _limit_values(txt, start, page_len)
@@ -128,7 +177,7 @@ def get_boq_structures(doctype, txt, searchfield, start, page_len, filters, enfo
         _attach_scope_response(scope)
         join_header = True
         join_project = apply_header_scope(conditions, values, scope, "h") or join_project
-        append_allowed_status_filter(conditions, values, "h")
+    _apply_allowed_statuses(conditions, values, filters, "h")
 
     joins = []
     if join_header or join_project:
@@ -183,10 +232,7 @@ def get_boq_items(doctype, txt, searchfield, start, page_len, filters, enforce_s
     if scope:
         _attach_scope_response(scope)
         join_project = apply_header_scope(conditions, values, scope, "h") or join_project
-        append_allowed_status_filter(conditions, values, "h")
-    elif filters.get("allowed_statuses"):
-        conditions.append("h.status IN %(allowed_statuses)s")
-        values["allowed_statuses"] = tuple(filters.get("allowed_statuses"))
+    _apply_allowed_statuses(conditions, values, filters, "h")
 
     where_clause = " AND ".join(conditions)
     return frappe.db.sql(
@@ -238,7 +284,7 @@ def get_boq_item_stages(doctype, txt, searchfield, start, page_len, filters, enf
         join_item = True
         join_header = True
         join_project = apply_header_scope(conditions, values, scope, "h") or join_project
-        append_allowed_status_filter(conditions, values, "h")
+    _apply_allowed_statuses(conditions, values, filters, "h")
 
     joins = []
     if join_item or join_header or join_project:

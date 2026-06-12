@@ -3,12 +3,30 @@ import frappe
 # Per-request cache so we don't hit information_schema repeatedly
 _column_cache = {}
 
+# Per-request cache for dynamic scope filter exclusions
+_exclusions_cache = None
+
 
 def _has_column(doctype, fieldname):
     key = (doctype, fieldname)
     if key not in _column_cache:
         _column_cache[key] = frappe.db.has_column(doctype, fieldname)
     return _column_cache[key]
+
+
+def _get_dynamic_exclusions():
+    global _exclusions_cache
+    if _exclusions_cache is not None:
+        return _exclusions_cache
+    try:
+        custom = frappe.db.get_single_value("Construction Settings", "scope_filter_exclusions") or ""
+        if custom:
+            _exclusions_cache = {x.strip() for x in custom.replace("\n", ",").split(",") if x.strip()}
+        else:
+            _exclusions_cache = set()
+    except Exception:
+        _exclusions_cache = set()
+    return _exclusions_cache
 
 
 def add_scope_conditions(user, doctype=None):
@@ -51,8 +69,9 @@ def add_scope_conditions(user, doctype=None):
         "ToDo",
         "Prepared Report",
         "Document Naming Rule",
+        "Project",
     }
-    if doctype in SKIP_DOCTYPES:
+    if doctype in SKIP_DOCTYPES or doctype in _get_dynamic_exclusions():
         return ""
 
     # 3. Read scope from session defaults (zero DB round-trips)

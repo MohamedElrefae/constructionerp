@@ -346,3 +346,16 @@ def get_active_scope_summary():
         },
         order_by="last_active_at desc",
     )
+
+
+@frappe.whitelist()
+def get_project_display_name(project):
+    """Return the display label for a Project without requiring direct Project permissions."""
+    if not project:
+        return {"project_name": ""}
+
+    rows = frappe.get_all("Project", filters={"name": project}, fields=["project_name"], limit=1)
+    if not rows:
+        frappe.throw(_("Project {0} does not exist.").format(project))
+
+    return {"project_name": rows[0].project_name or project}

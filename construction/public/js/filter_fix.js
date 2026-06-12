@@ -332,6 +332,77 @@
   box-shadow: 0 0 0 1px var(--ct-primary-light, rgba(37,99,235,0.15)) !important;
 }
 
+/* Accent & Blocked states for custom dropdown buttons */
+html.ct-enterprise .frappe-control.ct-boq-step-accent .ct-dropdown-btn,
+html.ct-enterprise .frappe-control.ct-boq-first-step .ct-dropdown-btn,
+.ct-boq-first-step .ct-dropdown-btn {
+  border-top-color: var(--ct-danger, #dc2626) !important;
+  border-right-color: var(--ct-danger, #dc2626) !important;
+  border-bottom-color: var(--ct-danger, #dc2626) !important;
+  border-left-color: var(--ct-danger, #dc2626) !important;
+  box-shadow: 0 0 0 2px var(--ct-danger-light, rgba(220,38,38,0.18)) !important;
+}
+
+html.ct-enterprise .frappe-control.ct-boq-step-blocked .ct-dropdown-btn {
+  border-top-color: var(--ct-warning, #d97706) !important;
+  border-right-color: var(--ct-warning, #d97706) !important;
+  border-bottom-color: var(--ct-warning, #d97706) !important;
+  border-left-color: var(--ct-warning, #d97706) !important;
+  box-shadow: 0 0 0 2px var(--ct-warning-light, rgba(245,158,11,0.18)) !important;
+}
+
+/* Blocked dropdown styling */
+html.ct-enterprise .ct-unified-dropdown.ct-dropdown-blocked .ct-dropdown-btn {
+  cursor: not-allowed !important;
+  background-color: var(--ct-bg-3, #1e293b) !important;
+  opacity: 0.65 !important;
+  border-color: var(--ct-border, rgba(148,163,184,0.18)) !important;
+  color: var(--ct-text-muted, #64748b) !important;
+  box-shadow: none !important;
+}
+
+html.ct-enterprise .ct-unified-dropdown.ct-dropdown-blocked .ct-dropdown-btn:hover {
+  background-color: var(--ct-bg-3, #1e293b) !important;
+  border-color: var(--ct-border, rgba(148,163,184,0.18)) !important;
+  box-shadow: none !important;
+}
+
+/* Collapsed grid row blocker — applies to rows where BOQ fields are blocked but row is folded */
+html.ct-enterprise .grid-row.ct-boq-row-blocked {
+  opacity: 0.65 !important;
+}
+
+html.ct-enterprise .grid-row.ct-boq-row-blocked .grid-static-col,
+html.ct-enterprise .grid-row.ct-boq-row-blocked .row-data > .col:has([data-fieldname="boq_header"]),
+html.ct-enterprise .grid-row.ct-boq-row-blocked .row-data > .col:has([data-fieldname="boq_structure"]),
+html.ct-enterprise .grid-row.ct-boq-row-blocked .row-data > .col:has([data-fieldname="boq_item"]),
+html.ct-enterprise .grid-row.ct-boq-row-blocked .row-data > .col:has([data-fieldname="boq_item_stage"]) {
+  cursor: not-allowed !important;
+}
+
+/* Inline hint badges/pills for hierarchical field guidance */
+html.ct-enterprise .frappe-control .ct-boq-inline-hint {
+  display: inline-block;
+  min-width: 1.35rem;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--ct-primary-light, rgba(37,99,235,0.15));
+  border: 1px solid var(--ct-primary);
+  color: #ffffff !important;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+html.ct-enterprise .frappe-control.ct-boq-inline-hint-blocked .ct-boq-inline-hint {
+  color: #ffffff !important;
+  border-color: var(--ct-warning) !important;
+  background: var(--ct-warning-light, rgba(245,158,11,0.15)) !important;
+}
+
 .ct-dropdown-menu {
   display: none;
   position: fixed !important;

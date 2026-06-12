@@ -12,4 +12,13 @@ Use the evidence log:
 Administrator
 Admin@2026-temp
 
+The admin account is still enabled on v16.localhost, and I’ve reset it to a known password.
+
+Use:
+
+Username: Administrator
+Email: admin@example.com
+Password: Admin@12345
+I also confirmed the account still has full admin roles, including System Manager and Administrator.
+
 

@@ -23,6 +23,23 @@ The agent will immediately know:
 - Current branch is `feature/vite-ui-v1`
 - Active workstreams (Form Layout Engine Phase 3+, BOQ Accounting)
 
+## BOQ Entry Flow
+
+The BOQ screens follow one workflow everywhere, and that cue appears inside the BOQ pickers instead of taking extra space above the form:
+
+`BOQ Header` -> `BOQ Structure` -> `BOQ Item` -> `BOQ Item Stage`
+
+When creating or editing a `BOQ Item`, select the `BOQ Header` first.
+
+The `Structure` field only shows leaf BOQ Structure records (`is_group = 0`) that belong to that selected header. If `Structure` looks empty, it is usually a scope prompt, not a failure.
+
+In practice:
+- `BOQ Header` comes first
+- `BOQ Structure` comes second
+- `BOQ Item` comes after that
+
+This keeps BOQ scope filtering predictable and avoids showing structures from unrelated headers.
+
 ---
 
 ## Supported Agents & Starter Prompts

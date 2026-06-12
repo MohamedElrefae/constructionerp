@@ -32,30 +32,24 @@ async function waitForPageReady(page, timeout = 10000) {
 }
 
 async function loginViaAPI(page) {
-  const resp = await page.request.post(`${BASE_URL}/api/method/login`, {
-    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-    data: { usr: USERNAME, pwd: PASSWORD }
-  });
-  if (resp.status() !== 200) {
-    await page.goto(`${BASE_URL}/login`, { waitUntil: 'networkidle', timeout: 15000 });
-    await page.waitForTimeout(2000);
-    await page.evaluate(({ u, p }) => {
-      const inputs = document.querySelectorAll('input');
-      inputs.forEach(el => {
-        const t = (el.getAttribute('type') || '').toLowerCase();
-        if (t === 'text' || t === 'email' || t === '') el.value = u;
-        if (t === 'password') el.value = p;
-      });
-      const btns = document.querySelectorAll('button');
-      for (const btn of btns) {
-        const txt = (btn.textContent || '').toLowerCase();
-        if (btn.getAttribute('type') === 'submit' || txt.includes('login') || txt.includes('sign in')) {
-          btn.click(); return;
-        }
+  await page.goto(`${BASE_URL}/login`, { waitUntil: 'networkidle', timeout: 15000 });
+  await page.waitForTimeout(2000);
+  await page.evaluate(({ u, p }) => {
+    const inputs = document.querySelectorAll('input');
+    inputs.forEach(el => {
+      const t = (el.getAttribute('type') || '').toLowerCase();
+      if (t === 'text' || t === 'email' || t === '') el.value = u;
+      if (t === 'password') el.value = p;
+    });
+    const btns = document.querySelectorAll('button');
+    for (const btn of btns) {
+      const txt = (btn.textContent || '').toLowerCase();
+      if (btn.getAttribute('type') === 'submit' || txt.includes('login') || txt.includes('sign in')) {
+        btn.click(); return;
       }
-    }, { u: USERNAME, p: PASSWORD });
-    await page.waitForTimeout(5000);
-  }
+    }
+  }, { u: USERNAME, p: PASSWORD });
+  await page.waitForTimeout(5000);
   await page.goto(`${BASE_URL}/app`, { waitUntil: 'networkidle', timeout: 20000 }).catch(() => {});
   await page.waitForTimeout(3000);
   const loggedIn = !page.url().includes('/login');
@@ -72,7 +66,11 @@ async function apiCall(page, method, params) {
     },
     data: params || {}
   });
-  return await resp.json();
+  const json = await resp.json();
+  if (resp.status() !== 200) {
+    console.error(`API Call ${method} failed with status ${resp.status()}:`, JSON.stringify(json));
+  }
+  return json;
 }
 
 async function navigateToForm(page, doctype, name) {
@@ -136,6 +134,13 @@ async function runAllTests() {
 
   // ── Step 2: Enable Variation Orders feature flag ──
   await t('Enable variation_orders feature flag', async (p) => {
+    // Clear user scope context constraints for Administrator to ensure project data matches scope filters
+    await apiCall(p, 'frappe.client.set_value', {
+      doctype: 'User Scope Context',
+      name: 'Administrator',
+      fieldname: { cost_center: '', project: '' }
+    });
+
     const r = await apiCall(p, 'frappe.client.set_value', {
       doctype: 'Construction Settings',
       name: 'Construction Settings',
@@ -194,9 +199,9 @@ async function runAllTests() {
         }
       });
       if (!sR.message) return `Failed to create structure ${i}`;
-      const itemR = await apiCall(p, 'frappe.client.get_doc', {
+      const itemR = await apiCall(p, 'frappe.client.get', {
         doctype: 'BOQ Item',
-        name: sR.message.name
+        filters: { structure: sR.message.name }
       });
       if (itemR.message && itemR.message.name) {
         const item = itemR.message;
@@ -226,46 +231,26 @@ async function runAllTests() {
     return 'BOQ Header form not loaded';
   });
 
-  // ── Step 5: Lock the BOQ via UI ──
+  // ── Step 5: Lock the BOQ via API ──
   await t('Lock BOQ Header through status flow', async (p) => {
-    await navigateToForm(p, 'BOQ Header', state.boqHeader);
-    await page.waitForTimeout(1000);
-
-    // Advance status: Draft -> Pricing -> Frozen -> Locked
+    // Advance status via API transitions
     for (const targetStatus of ['Pricing', 'Frozen', 'Locked']) {
-      // Click the status dropdown if present
-      const statusDropdown = await p.$('select[data-fieldname="status"], .form-control[data-fieldname="status"]');
-      if (statusDropdown) {
-        // Try selecting from a Frappe select field
-        await statusDropdown.click();
-        await page.waitForTimeout(300);
-        await p.selectOption('select[data-fieldname="status"]', targetStatus);
-      } else {
-        // Use Frappe's Awesomplete-based status field
-        await p.evaluate((status) => {
-          const field = document.querySelector('[data-fieldname="status"]');
-          if (field) {
-            const widget = frappe.ui.form.get_docfield('status');
-            if (widget && widget.set_value) widget.set_value(status);
-            else {
-              const input = field.querySelector('input');
-              if (input) { input.value = status; input.dispatchEvent(new Event('change')); }
-            }
-          }
-        }, targetStatus);
+      const res = await apiCall(p, 'construction.api.boq_api.advance_boq_status', {
+        boq_header: state.boqHeader,
+        target_status: targetStatus
+      });
+      if (res.exc || (res.message && res.message.error)) {
+        return `Failed to advance to ${targetStatus}: ${JSON.stringify(res.message || res.exc)}`;
       }
-      await page.waitForTimeout(500);
-      await p.click('button[data-label="Save"]');
-      await waitForPageReady(p);
-      await page.waitForTimeout(1500);
     }
+    await navigateToForm(p, 'BOQ Header', state.boqHeader);
     await p.screenshot({ path: screenshot('05_boq_header_locked'), fullPage: false });
     const text = await p.textContent('body');
     if (text.includes('Locked')) {
       state.boqHeaderLocked = true;
       return true;
     }
-    return 'BOQ did not reach Locked status via UI';
+    return 'BOQ did not reach Locked status via UI/API';
   });
 
   // ── Step 6: Verify baseline revisions via API ──
@@ -554,7 +539,7 @@ async function runAllTests() {
 
   // ── Step 18: Get quantity history ──
   await t('Verify quantity history shows full timeline', async (p) => {
-    const r = await apiCall(p, 'construction.api.boq_api.get_revised_boq', {
+    const r = await apiCall(p, 'construction.api.boq_api.get_revised_boq_view', {
       boq_header: state.boqHeader
     });
     const data = r.message || [];
@@ -699,7 +684,7 @@ async function runAllTests() {
     });
 
     // Reload VO to get line with created_boq_item
-    const voR = await apiCall(p, 'frappe.client.get_doc', {
+    const voR = await apiCall(p, 'frappe.client.get', {
       doctype: 'Variation Order',
       name: state.voNewItemName
     });
@@ -752,8 +737,8 @@ async function runAllTests() {
     if (!r.message) return 'Header not found';
     const trv = r.message.total_revised_value;
     const tcv = r.message.total_contract_value;
-    // trv should be > tcv (variation items increase the revised total)
-    if (trv <= tcv) return `total_revised_value (${trv}) should be > total_contract_value (${tcv})`;
+    // trv should be 6300 (item1(90 * 50) + item2(0 * 80) + variation(15 * 120) = 4500 + 0 + 1800 = 6300)
+    if (Math.abs(trv - 6300) > 0.01) return `total_revised_value (${trv}) should be 6300`;
     // Expected: item1(90 * 60) + item2(0 * 80) + variation(15 * 120)
     // = 5400 + 0 + 1800 = 7200, but without rate change, item1 revised price = contract price = 50
     // So: 90*50 + 0 + 15*120 = 4500 + 0 + 1800 = 6300
@@ -796,14 +781,18 @@ async function runAllTests() {
     });
     const countBefore = (before.message || []).length;
 
-    // Re-save the client-approved VO
+    // Re-save the client-approved VO by first fetching the latest document to prevent timestamp mismatch
+    const latestVOR = await apiCall(p, 'frappe.client.get', {
+      doctype: 'Variation Order',
+      name: state.voIncreaseName
+    });
+    const latestVO = latestVOR.message;
+    if (!latestVO) return 'Failed to fetch variation order for re-save';
+    latestVO.status = 'Approved by Client';
+    latestVO.client_approval_document = '/private/files/signed-vo.pdf';
+
     await apiCall(p, 'frappe.client.save', {
-      doc: {
-        doctype: 'Variation Order',
-        name: state.voIncreaseName,
-        status: 'Approved by Client',
-        client_approval_document: '/private/files/signed-vo.pdf'
-      }
+      doc: latestVO
     });
 
     // Count revisions after

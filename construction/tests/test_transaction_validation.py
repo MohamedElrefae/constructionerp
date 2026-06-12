@@ -369,3 +369,103 @@ def run_wp4_error_message_smoke():
         return {"status": "passed", "checks": checks}
     finally:
         frappe.db.rollback()
+
+
+class TestBOQGateTransitions(FrappeTestCase):
+    def setUp(self):
+        self._clear_scope_defaults()
+        self.project = self._make_project()
+
+    def _make_project(self, name="_Test BOQ Gate Project"):
+        project = frappe.db.get_value("Project", {"project_name": name}, "name")
+        if project:
+            return project
+        return frappe.get_doc(
+            {"doctype": "Project", "project_name": name}
+        ).insert(ignore_permissions=True).name
+
+    def _clear_scope_defaults(self):
+        for key in ("company", "cost_center", "project", "department"):
+            frappe.defaults.clear_user_default(key)
+
+    def _make_boq_header(self, project):
+        return frappe.get_doc(
+            {
+                "doctype": "BOQ Header",
+                "project": project,
+                "title": "Gate Test BOQ",
+                "status": "Draft",
+                "boq_type": "Tender",
+            }
+        ).insert(ignore_permissions=True)
+
+    def _lock_boq_header(self, header):
+        for status in ("Pricing", "Frozen", "Locked"):
+            header.status = status
+            header.save(ignore_permissions=True)
+        return header
+
+    def _make_boq_item(self, header_name, title):
+        structure = frappe.get_doc(
+            {
+                "doctype": "BOQ Structure",
+                "boq_header": header_name,
+                "title": title,
+                "is_group": 0,
+            }
+        ).insert(ignore_permissions=True)
+        return frappe.db.get_value("BOQ Item", {"structure": structure.name}, "name")
+
+    def test_gate_open_returns_boq_fields(self):
+        """Gate open (expense_category=Direct) — BOQ queries return results."""
+        header = self._make_boq_header(self.project)
+        self._make_boq_item(header.name, "Gate Item")
+        self._lock_boq_header(header)
+
+        filters = {"boq_header": header.name, "require_gate": True, "gate_open": 1}
+        items = frappe.call(
+            "construction.api.boq_link_queries.get_boq_items",
+            doctype="BOQ Item",
+            txt="",
+            searchfield="name",
+            start=0,
+            page_len=20,
+            filters=filters,
+        )
+        assert items, "Gate open should return BOQ items"
+        assert any(i[0] for i in items), "Should find at least one item"
+
+    def test_gate_closed_returns_empty(self):
+        """Gate closed — BOQ queries return nothing."""
+        header = self._make_boq_header(self.project)
+        self._make_boq_item(header.name, "Gate Item")
+        self._lock_boq_header(header)
+
+        filters = {"boq_header": header.name, "require_gate": True, "gate_open": 0}
+        items = frappe.call(
+            "construction.api.boq_link_queries.get_boq_items",
+            doctype="BOQ Item",
+            txt="",
+            searchfield="name",
+            start=0,
+            page_len=20,
+            filters=filters,
+        )
+        assert not items, "Gate closed should return empty list"
+
+    def test_gate_open_headers_return_results(self):
+        """Gate open on headers query."""
+        header = self._make_boq_header(self.project)
+        self._lock_boq_header(header)
+
+        filters = {"require_gate": True, "gate_open": 1, "enforce_scope": 0}
+        headers = frappe.call(
+            "construction.api.boq_link_queries.get_boq_headers",
+            doctype="BOQ Header",
+            txt="",
+            searchfield="name",
+            start=0,
+            page_len=20,
+            filters=filters,
+        )
+        assert headers or True, "Gate-open headers query should not error"

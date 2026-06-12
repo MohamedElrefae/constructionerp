@@ -709,3 +709,11 @@ if __name__ == "__main__":
         # Clean up
         structure.delete()
         cost_item.delete()
+
+    def test_boq_header_syncs_project_name_without_fetch_from(self):
+        """BOQ Header should persist a display label for Project during save."""
+        self.assertEqual(
+            self.boq_header.project_name,
+            frappe.db.get_value("Project", self.boq_header.project, "project_name")
+            or self.boq_header.project,
+        )

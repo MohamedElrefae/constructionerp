@@ -24,6 +24,7 @@
       "fieldtype": "Link",
       "in_list_view": 1,
       "label": "Project",
+      "ignore_user_permissions": 1,
       "options": "Project",
       "reqd": 1
     },
@@ -31,7 +32,6 @@
       "fieldname": "project_name",
       "fieldtype": "Data",
       "label": "Project Name",
-      "fetch_from": "project.project_name",
       "read_only": 1,
       "in_list_view": 1
     },

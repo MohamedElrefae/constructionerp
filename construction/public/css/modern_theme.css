@@ -4521,6 +4521,77 @@ html.ct-enterprise[dir="rtl"] .body-sidebar .sidebar-item-container:hover:not(:h
   border-color: transparent var(--ct-primary) transparent transparent !important;
 }
 
+/* ─── BOQ workflow guidance — field-level accent states ─── */
+html.ct-enterprise .frappe-control.ct-boq-step-accent .control-input-wrapper,
+html.ct-enterprise .frappe-control.ct-boq-step-accent .link-field,
+html.ct-enterprise .frappe-control.ct-boq-step-accent .link-field.ui-front {
+  border-color: var(--ct-primary) !important;
+  box-shadow: 0 0 0 3px var(--ct-primary-light) !important;
+  background: var(--ct-surface-hover) !important;
+}
+
+html.ct-enterprise .frappe-control.ct-boq-step-accent .control-label {
+  color: var(--ct-primary) !important;
+}
+
+html.ct-enterprise .frappe-control.ct-boq-step-blocked .control-input-wrapper,
+html.ct-enterprise .frappe-control.ct-boq-step-blocked .link-field,
+html.ct-enterprise .frappe-control.ct-boq-step-blocked .link-field.ui-front {
+  border-color: var(--ct-warning) !important;
+  box-shadow: 0 0 0 3px var(--ct-warning-light) !important;
+  background: var(--ct-surface-hover) !important;
+}
+
+html.ct-enterprise .frappe-control.ct-boq-step-blocked .control-label {
+  color: var(--ct-warning) !important;
+}
+
+html.ct-enterprise .frappe-control.ct-boq-has-inline-hint .control-label {
+  white-space: normal !important;
+}
+
+html.ct-enterprise .frappe-control .help {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-inline-start: 8px;
+  vertical-align: middle;
+}
+
+html.ct-enterprise .frappe-control .ct-boq-inline-hint {
+  display: inline-block;
+  min-width: 1.35rem;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--ct-primary-light, rgba(37, 99, 235, 0.15));
+  border: 1px solid var(--ct-primary);
+  color: #ffffff !important;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+html.ct-enterprise .frappe-control.ct-boq-inline-hint-blocked .ct-boq-inline-hint {
+  color: #ffffff !important;
+  border-color: var(--ct-warning) !important;
+  background: var(--ct-warning-light, rgba(245, 158, 11, 0.15)) !important;
+}
+
+html.ct-enterprise .frappe-control .control-description,
+html.ct-enterprise .frappe-control .help-box,
+html.ct-enterprise .frappe-control .help-block {
+  color: var(--ct-text-secondary) !important;
+}
+
+html.ct-enterprise .frappe-control.ct-boq-step-blocked .control-description,
+html.ct-enterprise .frappe-control.ct-boq-step-blocked .help-box,
+html.ct-enterprise .frappe-control.ct-boq-step-blocked .help-block {
+  color: var(--ct-warning) !important;
+}
+
 /* ─── MOBILE ─── */
 @media (max-width: 768px) {
   html.ct-enterprise .ct-topbar-zone.ct-zone--desk {

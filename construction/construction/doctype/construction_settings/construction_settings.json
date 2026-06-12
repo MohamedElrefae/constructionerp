@@ -12,6 +12,7 @@
     "enable_scope_cost_center",
     "enable_scope_project",
     "enable_scope_department",
+    "scope_filter_exclusions",
     "boq_cascade_section",
     "enable_boq_cascade_filtering",
     "improve_now_rollout_section",
@@ -68,6 +69,13 @@
       "fieldname": "enable_scope_department",
       "fieldtype": "Check",
       "label": "Enable Scope Department",
+      "depends_on": "enable_scope_context"
+    },
+    {
+      "description": "DocTypes excluded from scope filtering (one per line). Forms, list views, and reports for these DocTypes bypass scope query injection. Add 'Project' if users need to switch projects freely.",
+      "fieldname": "scope_filter_exclusions",
+      "fieldtype": "Small Text",
+      "label": "Scope Filter Exclusions",
       "depends_on": "enable_scope_context"
     },
     {

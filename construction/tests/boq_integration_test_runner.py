@@ -7,6 +7,9 @@ TARGETED_TEST_MODULES = (
     "construction.tests.test_accounting_dimension",
     "construction.tests.test_boq_item_stage",
     "construction.tests.test_transaction_validation",
+    "construction.tests.test_boq_link_queries",
+    "construction.tests.test_quantity_revisions",
+    "construction.tests.test_variation_orders",
 )
 
 

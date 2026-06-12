@@ -7,6 +7,7 @@ from construction.api.boq_link_queries import (
     get_boq_items,
     get_boq_scope_token,
     get_boq_structures,
+    get_scope_projects,
 )
 from construction.services.scope_resolution import get_scope_token
 
@@ -27,6 +28,9 @@ class TestBOQLinkQueries(FrappeTestCase):
         self.header_b = self._make_header(self.project_b, "_Test Scoped BOQ B", "Draft")
         self.draft_header = self._make_header(self.project_a, "_Test Draft BOQ", "Draft")
         self.structure_a, self.item_a = self._make_leaf_item(self.header_a.name, "_Test Leaf A")
+        self.structure_a_second, self.item_a_second = self._make_leaf_item(
+            self.header_a.name, "_Test Leaf A Second"
+        )
         self.structure_b, self.item_b = self._make_leaf_item(self.header_b.name, "_Test Leaf B")
         self._set_header_status(self.header_a, "Frozen")
         self._set_header_status(self.header_b, "Frozen")
@@ -125,8 +129,23 @@ class TestBOQLinkQueries(FrappeTestCase):
         self.assertEqual(payload["scope"]["project"], self.project_a)
         self.assertEqual(payload["scope"]["scope_type"], "Project-Scoped")
 
-    def test_boq_header_query_enforces_project_scope_and_allowed_status(self):
+    def test_boq_header_query_enforces_project_scope_without_implicit_status_filter(self):
         rows = get_boq_headers("BOQ Header", "_Test", "name", 0, 20, {}, enforce_scope=True)
+        names = {row[0] for row in rows}
+        self.assertIn(self.header_a.name, names)
+        self.assertIn(self.draft_header.name, names)
+        self.assertNotIn(self.header_b.name, names)
+
+    def test_boq_header_query_applies_explicit_allowed_status_filter(self):
+        rows = get_boq_headers(
+            "BOQ Header",
+            "_Test",
+            "name",
+            0,
+            20,
+            {"allowed_statuses": ["Frozen", "Locked"]},
+            enforce_scope=True,
+        )
         names = {row[0] for row in rows}
         self.assertIn(self.header_a.name, names)
         self.assertNotIn(self.header_b.name, names)
@@ -142,6 +161,35 @@ class TestBOQLinkQueries(FrappeTestCase):
         item_names = {row[0] for row in items}
         self.assertIn(self.item_a.name, item_names)
         self.assertNotIn(self.item_b.name, item_names)
+
+    def test_boq_structure_query_requires_header_when_requested(self):
+        self.assertEqual(
+            get_boq_structures(
+                "BOQ Structure",
+                "",
+                "name",
+                0,
+                20,
+                {"require_boq_header": 1},
+                enforce_scope=True,
+            ),
+            [],
+        )
+
+    def test_boq_structure_query_returns_all_leaf_nodes_for_selected_header(self):
+        structures = get_boq_structures(
+            "BOQ Structure",
+            "_Test Leaf A",
+            "name",
+            0,
+            20,
+            {"boq_header": self.header_a.name, "require_boq_header": 1},
+            enforce_scope=True,
+        )
+        structure_names = {row[0] for row in structures}
+        self.assertIn(self.structure_a.name, structure_names)
+        self.assertIn(self.structure_a_second.name, structure_names)
+        self.assertNotIn(self.structure_b.name, structure_names)
 
     def test_closed_row_gate_returns_no_boq_dropdown_options(self):
         closed_gate = {"require_gate": 1, "gate_open": 0}
@@ -162,3 +210,14 @@ class TestBOQLinkQueries(FrappeTestCase):
             get_boq_item_stages("BOQ Item Stage", "", "name", 0, 20, closed_gate, enforce_scope=True),
             [],
         )
+
+    def test_scope_project_query_returns_current_scope_project(self):
+        rows = get_scope_projects(
+            "Project",
+            "",
+            "name",
+            0,
+            20,
+            {"project": self.project_a, "enforce_scope": 1},
+        )
+        self.assertEqual(rows[0][0], self.project_a)

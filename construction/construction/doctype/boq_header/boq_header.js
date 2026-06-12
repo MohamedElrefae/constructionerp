@@ -3,10 +3,108 @@
 // ViteFormConfig is attached globally via frappe.ui.form.on('*') in vite_layout_controls.js
 // Do NOT call ViteFormConfig.attach(frm) here — it causes duplicate attach.
 
+(function () {
+	function setFieldAccent(frm, fieldname, active, blocked) {
+		const $wrapper = $(`.frappe-control[data-fieldname="${fieldname}"]`);
+		if (!$wrapper.length) return;
+		$wrapper.toggleClass("ct-boq-step-accent", !!active);
+		$wrapper.toggleClass("ct-boq-step-blocked", !!blocked);
+	}
+
+	function setFieldInlineHint(frm, fieldname, hint, blocked) {
+		const $wrapper = $(`.frappe-control[data-fieldname="${fieldname}"]`);
+		if (!$wrapper.length) return;
+		const $help = $wrapper.find(".help").first();
+		if (!$help.length) return;
+		$wrapper.toggleClass("ct-boq-has-inline-hint", !!hint);
+		$wrapper.toggleClass("ct-boq-inline-hint-blocked", !!blocked);
+		$help.find(".ct-boq-inline-hint").remove();
+		if (hint) {
+			$help.append(
+				$("<span>", {
+					class: "ct-boq-inline-hint",
+					text: hint,
+					title: hint,
+				})
+			);
+		}
+	}
+
+	function applyProjectGuidance(frm) {
+		const hasProject = Boolean(frm.doc.project);
+		setFieldAccent(frm, "project", !hasProject, false);
+		setFieldInlineHint(
+			frm,
+			"project",
+			hasProject ? null : __("Select Project first"),
+			false
+		);
+	}
+
+	function syncProjectName(frm) {
+		if (!frm.doc.project) {
+			if (frm.doc.project_name) {
+				frm.set_value("project_name", "");
+			}
+			return;
+		}
+
+		frappe.call({
+			method: "construction.api.scope_context_api.get_project_display_name",
+			args: {
+				project: frm.doc.project,
+			},
+			callback(r) {
+				const projectName = r?.message?.project_name || frm.doc.project;
+				if (frm.doc.project_name !== projectName) {
+					frm.set_value("project_name", projectName);
+				}
+			},
+		});
+	}
+
+	function renderTreeSummary(frm) {
+		if (!frm.doc.name) return;
+		frappe.call({
+			method: "construction.api.boq_api.get_boq_tree_summary",
+			args: { boq_header: frm.doc.name },
+			callback(r) {
+				const nodes = r.message || [];
+				if (!nodes.length) return;
+				let html = '<div class="ct-boq-tree-summary" style="margin-top:16px;padding:12px;background:var(--ct-bg-2,#1a2332);border-radius:6px;border:1px solid var(--ct-border,rgba(148,163,184,0.12))">';
+				html += '<h6 style="margin:0 0 8px;color:var(--ct-text-muted,#64748b);font-size:11px;text-transform:uppercase">' + __("WBS Tree") + '</h6>';
+				nodes.forEach((n) => {
+					const indent = Math.max(0, (n.lft > 0 ? Math.floor(Math.log2(n.rgt - n.lft + 1)) : 0)) * 16;
+					const icon = n.is_group ? "📁" : "📄";
+					const count = n.item_count ? ' <span style="color:var(--ct-accent,#3b82f6);font-size:11px">(' + n.item_count + ' items)</span>' : '';
+					html += '<div style="padding:3px 0;padding-left:' + indent + 'px;font-size:12px">' + icon + ' <b>' + (n.wbs_code || '-') + '</b> ' + (n.title || n.name) + count + '</div>';
+				});
+				html += '</div>';
+				const $existing = $(frm.fields_dict).closest(".form-page").find(".ct-boq-tree-summary");
+				if ($existing.length) $existing.replaceWith(html);
+				else $(frm.fields_dict).closest(".form-page").find(".form-layout").first().after(html);
+			},
+		});
+	}
+
 frappe.ui.form.on("BOQ Header", {
+	setup(frm) {
+		frm.set_query("project", () => {
+			const scopeProject = window.scopeContext?.enabled
+				? window.scopeContext?.current?.project
+				: null;
+			return {
+				query: "construction.api.boq_link_queries.get_scope_projects",
+				filters: { project: scopeProject || "__no_scope_project__", enforce_scope: 1 },
+			};
+		});
+	},
+
 	refresh(frm) {
+		syncProjectName(frm);
 		if (!frm.is_new()) {
 			render_vo_summary(frm);
+			renderTreeSummary(frm);
 			var BOQ_FULL_COLUMNS = [
 				{
 					field_key: "wbs_code",
@@ -440,6 +538,17 @@ frappe.ui.form.on("BOQ Header", {
 				__("Actions")
 			);
 		}
+		applyProjectGuidance(frm);
+	},
+	onload_post_render(frm) {
+		syncProjectName(frm);
+		applyProjectGuidance(frm);
+		setTimeout(() => applyProjectGuidance(frm), 150);
+		setTimeout(() => applyProjectGuidance(frm), 600);
+	},
+	project(frm) {
+		syncProjectName(frm);
+		applyProjectGuidance(frm);
 	},
 });
 
@@ -620,3 +729,4 @@ function open_revised_boq_dialog(frm) {
 		},
 	});
 }
+})();
