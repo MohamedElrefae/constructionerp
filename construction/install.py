@@ -95,6 +95,30 @@ DIRECT_LABOR_DESIGNATION_DEFAULTS = (
 )
 
 
+def setup_website_branding():
+    """Apply website defaults when the Website module is available."""
+    if not frappe.db.exists("DocType", "Website Settings"):
+        return
+
+    settings = frappe.get_single("Website Settings")
+    meta = frappe.get_meta("Website Settings")
+    updates = {
+        "home_page": "index",
+        "app_name": "Construction Sense",
+        "banner_image": "/assets/construction/images/construction_logo.svg",
+        "splash_image": "/assets/construction/images/construction_logo.svg",
+    }
+
+    changed = False
+    for fieldname, value in updates.items():
+        if meta.has_field(fieldname) and getattr(settings, fieldname, None) != value:
+            setattr(settings, fieldname, value)
+            changed = True
+
+    if changed:
+        settings.save(ignore_permissions=True)
+
+
 def setup_boq_integration():
     """Idempotently provision BOQ accounting and operational fields."""
     setup_boq_accounting_dimension()
