@@ -11,6 +11,7 @@ import frappe
 import hypothesis.strategies as st
 from hypothesis import HealthCheck, assume, given, seed, settings
 
+from construction.api.scope_context_api import get_user_scope_context
 from construction.tests.test_boq_helpers import get_or_create_test_project
 
 
@@ -716,4 +717,38 @@ if __name__ == "__main__":
             self.boq_header.project_name,
             frappe.db.get_value("Project", self.boq_header.project, "project_name")
             or self.boq_header.project,
+        )
+
+    def test_boq_header_defaults_project_from_scope_context(self):
+        """BOQ Header should derive its project from the active Scope Context."""
+        project = get_or_create_test_project()
+        company = frappe.db.get_value("Project", project, "company")
+
+        frappe.db.delete("User Scope Context", {"user": frappe.session.user})
+
+        frappe.get_doc(
+            {
+                "doctype": "User Scope Context",
+                "user": frappe.session.user,
+                "company": company,
+                "project": project,
+            }
+        ).insert(ignore_permissions=True)
+
+        self.assertEqual(get_user_scope_context().project, project)
+
+        boq_header = frappe.get_doc(
+            {
+                "doctype": "BOQ Header",
+                "title": "Scope Derived BOQ",
+                "status": "Draft",
+                "boq_type": "Tender",
+            }
+        )
+        boq_header.insert()
+
+        self.assertEqual(boq_header.project, project)
+        self.assertEqual(
+            boq_header.project_name,
+            frappe.db.get_value("Project", project, "project_name") or project,
         )

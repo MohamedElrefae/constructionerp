@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Construction Sense | Enterprise Construction ERP</title>
+  <meta name="description" content="Construction Sense is an enterprise ERP platform for BOQ control, cost management, variation orders, procurement, and project execution.">
+  <link rel="icon" type="image/svg+xml" href="/assets/construction/images/construction_logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Source+Serif+4:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #111827;
+      --ink-2: #243041;
+      --muted: #5e6a7b;
+      --line: #d8dee8;
+      --paper: #f5f2ec;
+      --surface: #ffffff;
+      --steel: #30475e;
+      --steel-dark: #192534;
+      --field: #d7e2df;
+      --safety: #f2a20c;
+      --success: #1f8a5b;
+      --shadow: 0 18px 55px rgba(17, 24, 39, 0.16);
+      --font-body: "Manrope", sans-serif;
+      --font-display: "Source Serif 4", serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font-body);
+      color: var(--ink);
+      background: var(--paper);
+      line-height: 1.5;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(245, 242, 236, 0.92);
+      border-bottom: 1px solid rgba(17, 24, 39, 0.1);
+      backdrop-filter: blur(14px);
+    }
+
+    .container {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 74px;
+      gap: 24px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      font-weight: 800;
+      color: var(--ink);
+      white-space: nowrap;
+    }
+
+    .brand-mark {
+      display: grid;
+      width: 42px;
+      height: 42px;
+      place-items: center;
+      border-radius: 8px;
+      color: #fff;
+      background: linear-gradient(135deg, var(--steel-dark), var(--steel));
+      box-shadow: 0 8px 24px rgba(25, 37, 52, 0.2);
+    }
+
+    .brand-mark svg {
+      width: 25px;
+      height: 25px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 26px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      color: var(--ink-2);
+      font-size: 0.94rem;
+      font-weight: 700;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+    }
+
+    .nav-links a:hover {
+      color: var(--success);
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 0 18px;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      font-weight: 800;
+      text-decoration: none;
+      transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+    }
+
+    .button-primary {
+      color: #fff;
+      background: var(--success);
+      box-shadow: 0 10px 24px rgba(31, 138, 91, 0.25);
+    }
+
+    .button-primary:hover {
+      background: #176f49;
+    }
+
+    .button-secondary {
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.82);
+      border-color: rgba(17, 24, 39, 0.16);
+    }
+
+    .hero {
+      min-height: 82vh;
+      display: grid;
+      align-items: end;
+      padding: 88px 0 54px;
+      color: #fff;
+      background:
+        linear-gradient(90deg, rgba(17, 24, 39, 0.88) 0%, rgba(17, 24, 39, 0.72) 42%, rgba(17, 24, 39, 0.2) 100%),
+        url("https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1800&q=82") center / cover;
+    }
+
+    .hero-content {
+      width: min(760px, 100%);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      color: #f7d17a;
+      font-size: 0.86rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 34px;
+      height: 3px;
+      background: var(--safety);
+    }
+
+    h1 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: clamp(3.2rem, 7vw, 6.6rem);
+      line-height: 0.94;
+      letter-spacing: 0;
+    }
+
+    .hero-copy {
+      max-width: 690px;
+      margin: 24px 0 34px;
+      color: rgba(255, 255, 255, 0.88);
+      font-size: clamp(1.05rem, 1.6vw, 1.28rem);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .hero-panel {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      margin-top: 56px;
+      background: rgba(255, 255, 255, 0.22);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: var(--shadow);
+    }
+
+    .metric {
+      min-height: 118px;
+      padding: 22px;
+      background: rgba(245, 242, 236, 0.94);
+      color: var(--ink);
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 1.74rem;
+      line-height: 1;
+      color: var(--steel-dark);
+    }
+
+    .metric span {
+      display: block;
+      margin-top: 9px;
+      color: var(--muted);
+      font-size: 0.87rem;
+      font-weight: 700;
+    }
+
+    section {
+      padding: 82px 0;
+    }
+
+    .section-heading {
+      display: grid;
+      grid-template-columns: 0.85fr 1.15fr;
+      gap: 56px;
+      align-items: end;
+      margin-bottom: 42px;
+    }
+
+    .section-heading h2 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: clamp(2.1rem, 4vw, 3.6rem);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .section-heading p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    .capabilities {
+      background: var(--paper);
+    }
+
+    .capability-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .capability {
+      min-height: 260px;
+      padding: 28px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      box-shadow: 0 10px 30px rgba(17, 24, 39, 0.06);
+    }
+
+    .capability .number {
+      display: inline-flex;
+      width: 38px;
+      height: 38px;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 26px;
+      border-radius: 8px;
+      color: var(--steel-dark);
+      background: var(--field);
+      font-weight: 900;
+    }
+
+    .capability h3 {
+      margin: 0 0 12px;
+      color: var(--steel-dark);
+      font-size: 1.24rem;
+    }
+
+    .capability p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .operations {
+      color: #fff;
+      background:
+        linear-gradient(135deg, rgba(25, 37, 52, 0.96), rgba(48, 71, 94, 0.94)),
+        url("https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=1600&q=82") center / cover;
+    }
+
+    .operations .section-heading p {
+      color: rgba(255, 255, 255, 0.76);
+    }
+
+    .workflow {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+    }
+
+    .workflow-step {
+      min-height: 210px;
+      padding: 28px;
+      border-right: 1px solid rgba(255, 255, 255, 0.18);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .workflow-step:last-child {
+      border-right: 0;
+    }
+
+    .workflow-step small {
+      color: #f7d17a;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .workflow-step h3 {
+      margin: 36px 0 12px;
+      font-size: 1.2rem;
+    }
+
+    .workflow-step p {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.74);
+      font-size: 0.94rem;
+    }
+
+    .cta {
+      padding: 72px 0;
+      color: #fff;
+      background: var(--steel-dark);
+    }
+
+    .cta-row {
+      display: grid;
+      grid-template-columns: 1.1fr auto;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .cta h2 {
+      margin: 0 0 12px;
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 3.4rem);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .cta p {
+      max-width: 700px;
+      margin: 0;
+      color: rgba(255, 255, 255, 0.76);
+    }
+
+    footer {
+      padding: 28px 0;
+      color: var(--muted);
+      background: #fff;
+      border-top: 1px solid var(--line);
+      font-size: 0.92rem;
+    }
+
+    .footer-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 18px;
+      font-weight: 800;
+    }
+
+    .footer-links a {
+      text-decoration: none;
+    }
+
+    @media (max-width: 900px) {
+      .nav-links {
+        display: none;
+      }
+
+      .hero {
+        min-height: auto;
+        padding: 86px 0 36px;
+        background-position: 61% center;
+      }
+
+      .hero-panel,
+      .capability-grid,
+      .workflow,
+      .section-heading,
+      .cta-row {
+        grid-template-columns: 1fr;
+      }
+
+      .workflow-step {
+        border-right: 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+      }
+
+      .workflow-step:last-child {
+        border-bottom: 0;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .container {
+        width: min(100% - 28px, 1180px);
+      }
+
+      .nav {
+        min-height: 66px;
+      }
+
+      .brand span {
+        max-width: 150px;
+        white-space: normal;
+        line-height: 1.05;
+      }
+
+      .actions .button-secondary {
+        display: none;
+      }
+
+      h1 {
+        font-size: clamp(2.7rem, 15vw, 4.4rem);
+      }
+
+      section {
+        padding: 58px 0;
+      }
+
+      .metric,
+      .capability,
+      .workflow-step {
+        padding: 22px;
+      }
+
+      .footer-row {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="/">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M4 19h16M6 19V8l6-4 6 4v11M9 19v-6h6v6M8 10h8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <span>Construction Sense</span>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="#platform">Platform</a></li>
+        <li><a href="#operations">Operations</a></li>
+        <li><a href="mailto:melrefa3@hotmail.com">Contact</a></li>
+      </ul>
+
+      <div class="actions">
+        <a class="button button-secondary" href="/app">Open Desk</a>
+        <a class="button button-primary" href="/login">Login</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="hero-content">
+          <div class="eyebrow">Enterprise Construction ERP</div>
+          <h1>Construction Sense</h1>
+          <p class="hero-copy">A purpose-built ERPNext platform for contractors who need disciplined BOQ control, project cost visibility, procurement traceability, and audited variation orders from estimate to execution.</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="/login">Access ERP Login</a>
+            <a class="button button-secondary" href="#platform">View Platform</a>
+          </div>
+        </div>
+
+        <div class="hero-panel" aria-label="ERP platform highlights">
+          <div class="metric">
+            <strong>BOQ</strong>
+            <span>Structured scope, rates, quantities, stages, and approvals.</span>
+          </div>
+          <div class="metric">
+            <strong>Cost</strong>
+            <span>Project budgets tied to procurement, stock, labor, and accounts.</span>
+          </div>
+          <div class="metric">
+            <strong>VO</strong>
+            <span>Controlled variation orders with audit history and limits.</span>
+          </div>
+          <div class="metric">
+            <strong>Scope</strong>
+            <span>Company, branch, cost center, and project context enforcement.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="platform" class="capabilities">
+      <div class="container">
+        <div class="section-heading">
+          <h2>Built for construction control.</h2>
+          <p>Construction Sense extends ERPNext with the operational rules construction teams need: BOQ lifecycle management, controlled project scope, cost discipline, and cleaner daily execution for site and back-office teams.</p>
+        </div>
+
+        <div class="capability-grid">
+          <article class="capability">
+            <span class="number">01</span>
+            <h3>BOQ Structure Management</h3>
+            <p>Create project BOQs with clear hierarchy, item stages, cost build-up, quantities, units, and locked approval states that protect baseline scope.</p>
+          </article>
+
+          <article class="capability">
+            <span class="number">02</span>
+            <h3>Project Cost Governance</h3>
+            <p>Connect materials, labor, equipment, overhead, purchasing, stock, and accounting transactions to project context so budget movement stays visible.</p>
+          </article>
+
+          <article class="capability">
+            <span class="number">03</span>
+            <h3>Variation Order Control</h3>
+            <p>Manage scope changes after approval with traceable revisions, validation rules, and approval-ready documentation for project leadership.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="operations" class="operations">
+      <div class="container">
+        <div class="section-heading">
+          <h2>From estimate to invoice.</h2>
+          <p>Give every team the same controlled project record, from tender estimates and BOQ approvals to purchase orders, stock movement, site execution, and commercial changes.</p>
+        </div>
+
+        <div class="workflow">
+          <article class="workflow-step">
+            <small>Plan</small>
+            <h3>Define the work breakdown</h3>
+            <p>Organize activities, branches, cost centers, and project levels before spending begins.</p>
+          </article>
+          <article class="workflow-step">
+            <small>Estimate</small>
+            <h3>Build reliable cost data</h3>
+            <p>Track item quantities, resource requirements, rates, and budget assumptions in one place.</p>
+          </article>
+          <article class="workflow-step">
+            <small>Execute</small>
+            <h3>Control project transactions</h3>
+            <p>Keep purchasing, stock, timesheets, invoices, and journal entries tied to approved scope.</p>
+          </article>
+          <article class="workflow-step">
+            <small>Govern</small>
+            <h3>Approve changes cleanly</h3>
+            <p>Route variation orders through auditable rules before they affect cost and delivery.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="container cta-row">
+        <div>
+          <h2>Your ERP desk is ready.</h2>
+          <p>Use your company credentials to access Construction Sense, review project controls, and continue building your implementation inside Frappe Cloud.</p>
+        </div>
+        <a class="button button-primary" href="/login">Go to Secure Login</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-row">
+      <div>&copy; 2026 Construction Sense. Enterprise construction ERP on Frappe Cloud.</div>
+      <div class="footer-links">
+        <a href="#platform">Platform</a>
+        <a href="#operations">Operations</a>
+        <a href="mailto:melrefa3@hotmail.com">Support</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

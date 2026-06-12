@@ -41,14 +41,6 @@
 		const hasBoqHeader = Boolean(frm.doc.boq_header);
 		const hasBoqStructure = Boolean(frm.doc.boq_structure);
 
-		setFieldAccent(frm, "project", !hasProject, false);
-		setFieldInlineHint(
-			frm,
-			"project",
-			hasProject ? null : __("Select Project first"),
-			false
-		);
-
 		setFieldAccent(frm, "boq_header", !hasBoqHeader, !hasProject);
 		markFieldBlocked(frm, "boq_header", !hasProject, __("Select Project first"));
 		setFieldInlineHint(
@@ -156,6 +148,27 @@
 			if (scope_project && !frm.doc.project) {
 				frm.set_value("project", scope_project);
 			}
+
+			$(document)
+				.off("scope:changed.boqItemStage")
+				.on("scope:changed.boqItemStage", function () {
+					var new_project = window.scopeContext?.enabled
+						? window.scopeContext?.current?.project
+						: null;
+					if (!new_project) return;
+					var current_project = frm.doc.project;
+					if (new_project !== current_project) {
+						frm.set_value("project", new_project);
+						frm.set_value("boq_header", "");
+						frm.set_value("boq_structure", "");
+						frm.set_value("boq_item", "");
+						updateStageGuidance(frm);
+						frappe.show_alert({
+							message: __("Scope changed. Selected BOQ details have been cleared to prevent stale data."),
+							indicator: "orange",
+						});
+					}
+				});
 		},
 
 		onload_post_render(frm) {

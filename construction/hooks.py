@@ -79,20 +79,20 @@ desk_links = {
 # Doctype-specific JavaScript files
 # Paths are relative to the app module folder (construction/construction/)
 doctype_js = {
-    "BOQ Header": "construction/doctype/boq_header/boq_header.js",
-    "BOQ Item": "construction/doctype/boq_item/boq_item.js",
-    "BOQ Item Stage": "construction/doctype/boq_item_stage/boq_item_stage.js",
-    "Construction Settings": "construction/doctype/construction_settings/construction_settings.js",
-    "User Desk Theme": "construction/doctype/user_desk_theme/user_desk_theme.js",
-    "Variation Order": "construction/doctype/variation_order/variation_order.js",
+    "BOQ Header": "construction/construction/doctype/boq_header/boq_header.js",
+    "BOQ Item": "construction/construction/doctype/boq_item/boq_item.js",
+    "BOQ Item Stage": "construction/construction/doctype/boq_item_stage/boq_item_stage.js",
+    "Construction Settings": "construction/construction/doctype/construction_settings/construction_settings.js",
+    "User Desk Theme": "construction/construction/doctype/user_desk_theme/user_desk_theme.js",
+    "Variation Order": "construction/construction/doctype/variation_order/variation_order.js",
 }
 
 doctype_list_js = {
-    "BOQ Item": "construction/doctype/boq_item/boq_item_list.js",
-    "Variation Order": "construction/doctype/variation_order/variation_order_list.js",
+    "BOQ Item": "construction/construction/doctype/boq_item/boq_item_list.js",
+    "Variation Order": "construction/construction/doctype/variation_order/variation_order_list.js",
 }
 
-doctype_tree_js = {"BOQ Structure": "construction/doctype/boq_structure/boq_structure_tree.js"}
+doctype_tree_js = {"BOQ Structure": "construction/construction/doctype/boq_structure/boq_structure_tree.js"}
 
 # CSS includes for authenticated users (desk)
 # v2.2: Single-file theme — tokens + 1,180 selectors, html.ct-enterprise[data-theme] namespace
@@ -168,6 +168,7 @@ web_include_js = "/assets/construction/js/theme_loader_v24.js?v=2.5.2"
 # ─── BRAND OVERRIDES & WEBSITE CONTEXT ───
 brand_html = "construction/templates/includes/navbar_brand.html"
 login_page_title = "Construction ERP — Login"
+homepage = "index"
 
 website_context = {
     "favicon": "/assets/construction/images/construction_logo.svg",

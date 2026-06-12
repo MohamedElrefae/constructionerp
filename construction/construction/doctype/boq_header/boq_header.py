@@ -2,6 +2,8 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 
+from construction.api.scope_context_api import get_user_scope_context
+
 
 class BOQHeader(Document):
     VALID_TRANSITIONS = {
@@ -12,8 +14,33 @@ class BOQHeader(Document):
 
     def validate(self):
         self.validate_status_transition()
+        self.sync_project_from_scope_context()
         self.sync_project_name()
         self.calculate_total_value()
+
+    def sync_project_from_scope_context(self):
+        scope_context = get_user_scope_context()
+        scope_project = scope_context.project if scope_context else None
+
+        if self.is_new():
+            if scope_project:
+                self.project = scope_project
+                return
+            frappe.throw(
+                _(
+                    "Project comes from Scope Context. Set a Project in the top bar before creating a BOQ Header."
+                )
+            )
+
+        if not self.project:
+            if scope_project:
+                self.project = scope_project
+                return
+            frappe.throw(
+                _(
+                    "Project comes from Scope Context. Set a Project in the top bar before creating a BOQ Header."
+                )
+            )
 
     def sync_project_name(self):
         if not self.project:

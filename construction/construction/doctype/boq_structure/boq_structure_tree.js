@@ -6,8 +6,7 @@ frappe.treeview_settings["BOQ Structure"] = {
 	filters: [
 		{
 			fieldname: "project",
-			fieldtype: "Link",
-			options: "Project",
+			fieldtype: "Data",
 			label: __("Project"),
 		},
 		{
@@ -114,35 +113,15 @@ frappe.treeview_settings["BOQ Structure"] = {
 			return null;
 		}
 
-		// Sync local project filter with Scope Context (without hiding it)
+		// Sync local project filter with Scope Context (hide the filter, sync value under the hood)
 		setTimeout(function () {
 			let proj_field = treeview.page.fields_dict.project;
 			let boq_field = treeview.page.fields_dict.boq_header;
 			let scope_project = get_scope_project();
 			if (proj_field) {
+				proj_field.$wrapper.hide();
 				if (scope_project && !proj_field.get_value()) {
 					proj_field.set_value(scope_project);
-				}
-				// Keep BOQ Header consistent when user changes project manually
-				if (!proj_field.__boq_project_bound && boq_field) {
-					proj_field.__boq_project_bound = true;
-					proj_field.$input.on("change", function () {
-						var current_project = proj_field.get_value();
-						var current_boq = boq_field.get_value();
-						if (!current_boq) return;
-						frappe.db
-							.get_value("BOQ Header", current_boq, "project")
-							.then(function (r) {
-								var boq_project = r && r.message ? r.message.project : null;
-								if (
-									current_project &&
-									boq_project &&
-									current_project !== boq_project
-								) {
-									boq_field.set_value("");
-								}
-							});
-					});
 				}
 			}
 		}, 100);

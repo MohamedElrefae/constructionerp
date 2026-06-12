@@ -19,6 +19,10 @@ def _get_dynamic_exclusions():
     if _exclusions_cache is not None:
         return _exclusions_cache
     try:
+        meta = frappe.get_meta("Construction Settings")
+        if not meta.has_field("scope_filter_exclusions"):
+            _exclusions_cache = set()
+            return _exclusions_cache
         custom = frappe.db.get_single_value("Construction Settings", "scope_filter_exclusions") or ""
         if custom:
             _exclusions_cache = {x.strip() for x in custom.replace("\n", ",").split(",") if x.strip()}

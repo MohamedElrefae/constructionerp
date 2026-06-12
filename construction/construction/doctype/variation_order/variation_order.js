@@ -126,6 +126,26 @@ frappe.ui.form.on("Variation Order", {
 		applyVOBoqGuidance(frm);
 		setTimeout(() => applyVOBoqGuidance(frm), 150);
 		setTimeout(() => applyVOBoqGuidance(frm), 600);
+
+		$(document)
+			.off("scope:changed.variationOrder")
+			.on("scope:changed.variationOrder", function () {
+				var new_project = window.scopeContext?.enabled
+					? window.scopeContext?.current?.project
+					: null;
+				if (!new_project) return;
+				var current_project = frm.doc.project;
+				if (new_project !== current_project) {
+					frm.set_value("project", new_project);
+					frm.set_value("boq_header", "");
+					frm.doc.lines = [];
+					frm.refresh_field("lines");
+					frappe.show_alert({
+						message: __("Scope changed. Selected BOQ and VO lines have been cleared to prevent stale data."),
+						indicator: "orange",
+					});
+				}
+			});
 	},
 });
 

@@ -21,11 +21,11 @@
   "fields": [
     {
       "fieldname": "project",
-      "fieldtype": "Link",
+      "fieldtype": "Data",
+      "hidden": 1,
       "in_list_view": 1,
       "label": "Project",
-      "ignore_user_permissions": 1,
-      "options": "Project",
+      "read_only": 1,
       "reqd": 1
     },
     {

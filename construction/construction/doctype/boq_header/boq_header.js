@@ -30,15 +30,32 @@
 		}
 	}
 
+	function getScopeProject() {
+		return window.scopeContext?.enabled ? window.scopeContext?.current?.project || null : null;
+	}
+
+	function syncProjectFromScope(frm) {
+		const scopeProject = getScopeProject();
+		if (!frm.doc.project && scopeProject) {
+			frm.set_value("project", scopeProject);
+			return;
+		}
+
+		if (!frm.doc.project && frm.doc.project_name) {
+			frm.set_value("project_name", "");
+		}
+	}
+
 	function applyProjectGuidance(frm) {
-		const hasProject = Boolean(frm.doc.project);
-		setFieldAccent(frm, "project", !hasProject, false);
-		setFieldInlineHint(
-			frm,
-			"project",
-			hasProject ? null : __("Select Project first"),
-			false
-		);
+		const projectField = frm.get_field && frm.get_field("project");
+		if (projectField && projectField.$wrapper) {
+			projectField.$wrapper.hide();
+		}
+
+		const scopeProject = getScopeProject();
+		if (scopeProject && frm.is_new() && frm.doc.project !== scopeProject) {
+			frm.set_value("project", scopeProject);
+		}
 	}
 
 	function syncProjectName(frm) {
@@ -80,27 +97,17 @@
 					html += '<div style="padding:3px 0;padding-left:' + indent + 'px;font-size:12px">' + icon + ' <b>' + (n.wbs_code || '-') + '</b> ' + (n.title || n.name) + count + '</div>';
 				});
 				html += '</div>';
-				const $existing = $(frm.fields_dict).closest(".form-page").find(".ct-boq-tree-summary");
+				const $page = frm.$wrapper.find(".form-page:visible").first();
+				const $existing = $page.find(".ct-boq-tree-summary");
 				if ($existing.length) $existing.replaceWith(html);
-				else $(frm.fields_dict).closest(".form-page").find(".form-layout").first().after(html);
+				else $page.find(".form-layout").first().after(html);
 			},
 		});
 	}
 
-frappe.ui.form.on("BOQ Header", {
-	setup(frm) {
-		frm.set_query("project", () => {
-			const scopeProject = window.scopeContext?.enabled
-				? window.scopeContext?.current?.project
-				: null;
-			return {
-				query: "construction.api.boq_link_queries.get_scope_projects",
-				filters: { project: scopeProject || "__no_scope_project__", enforce_scope: 1 },
-			};
-		});
-	},
-
+	frappe.ui.form.on("BOQ Header", {
 	refresh(frm) {
+		syncProjectFromScope(frm);
 		syncProjectName(frm);
 		if (!frm.is_new()) {
 			render_vo_summary(frm);
@@ -541,8 +548,16 @@ frappe.ui.form.on("BOQ Header", {
 		applyProjectGuidance(frm);
 	},
 	onload_post_render(frm) {
+		syncProjectFromScope(frm);
 		syncProjectName(frm);
 		applyProjectGuidance(frm);
+		$(document)
+			.off("scope:changed.boqHeader")
+			.on("scope:changed.boqHeader", function () {
+				syncProjectFromScope(frm);
+				syncProjectName(frm);
+				applyProjectGuidance(frm);
+			});
 		setTimeout(() => applyProjectGuidance(frm), 150);
 		setTimeout(() => applyProjectGuidance(frm), 600);
 	},

@@ -3,6 +3,8 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import flt, nowdate
 
+from construction.api.scope_context_api import get_user_scope_context
+
 
 CLIENT_APPROVED_STATUS = "Approved by Client"
 ENGINEER_APPROVED_STATUS = "Approved by Engineer"
@@ -18,12 +20,35 @@ class VariationOrder(Document):
         self.name = f"{self.boq_header}-{self.vo_number}"
 
     def validate(self):
+        self.enforce_scope_context_project()
         self.validate_boq_header()
         self.fetch_header_context()
         self.validate_status_transition()
         self.validate_client_approval_gate()
         self.validate_lines()
         self.calculate_total_contract_delta()
+
+    def enforce_scope_context_project(self):
+        if not self.is_new():
+            return
+        if frappe.session.user == "Administrator":
+            return
+        try:
+            enabled = bool(frappe.db.get_single_value("Construction Settings", "enable_scope_context") or False)
+        except Exception:
+            enabled = False
+        if not enabled:
+            return
+        scope = get_user_scope_context(frappe.session.user)
+        if not scope or not scope.project:
+            return
+        doc_project = self.project or frappe.db.get_value("BOQ Header", self.boq_header, "project") if self.boq_header else None
+        if doc_project and doc_project != scope.project:
+            frappe.throw(
+                _("Project {0} does not match your active scope project {1}. Switch your scope in the top bar and try again.").format(
+                    doc_project, scope.project
+                )
+            )
 
     def on_update(self):
         if self.status == CLIENT_APPROVED_STATUS:

@@ -3,6 +3,7 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import cint, flt
 
+from construction.api.scope_context_api import get_user_scope_context
 from construction.services.boq_operational import validate_stage_quantities
 
 
@@ -37,11 +38,34 @@ class BOQItemStage(Document):
     )
 
     def validate(self):
+        self.enforce_scope_context_project()
         self.validate_selection_chain()
         self.fetch_parent_context()
         self.enforce_certification_role()
         self.enforce_stage_edit_policy()
         validate_stage_quantities(self)
+
+    def enforce_scope_context_project(self):
+        if not self.is_new():
+            return
+        if frappe.session.user == "Administrator":
+            return
+        try:
+            enabled = bool(frappe.db.get_single_value("Construction Settings", "enable_scope_context") or False)
+        except Exception:
+            enabled = False
+        if not enabled:
+            return
+        scope = get_user_scope_context(frappe.session.user)
+        if not scope or not scope.project:
+            return
+        doc_project = self.project or frappe.db.get_value("BOQ Header", self.boq_header, "project") if self.boq_header else None
+        if doc_project and doc_project != scope.project:
+            frappe.throw(
+                _("Project {0} does not match your active scope project {1}. Switch your scope in the top bar and try again.").format(
+                    doc_project, scope.project
+                )
+            )
 
     def before_insert(self):
         self.assign_stage_code_if_missing()

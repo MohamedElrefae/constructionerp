@@ -9,8 +9,7 @@ frappe.treeview_settings["BOQ Structure"] = {
 	filters: [
 		{
 			fieldname: "project",
-			fieldtype: "Link",
-			options: "Project",
+			fieldtype: "Data",
 			label: __("Project"),
 		},
 		{
@@ -86,8 +85,8 @@ frappe.treeview_settings["BOQ Structure"] = {
 
 		// Sync with global scope context changes
 		$(document)
-			.off("scope:changed.boqStructureTreePublic")
-			.on("scope:changed.boqStructureTreePublic", function () {
+			.off("scope:changed.boqStructureTree")
+			.on("scope:changed.boqStructureTree", function () {
 				if (treeview.page && treeview.page.fields_dict) {
 					var proj_field = treeview.page.fields_dict.project;
 					var boq_field = treeview.page.fields_dict.boq_header;
