@@ -60,34 +60,44 @@ frappe.treeview_settings["BOQ Structure"] = {
 		return node.title || node.label;
 	},
 	onrender: function (node) {
-		// Replace root node label with project name + BOQ title
 		if (node.is_root) {
-			var boq = node.data ? node.data.value : null;
-			if (!boq || boq === "BOQ Structure") {
-				var page = cur_page && cur_page.page;
-				if (page && page.fields_dict && page.fields_dict.boq_header) {
-					boq = page.fields_dict.boq_header.get_value();
-				}
+			return;
+		}
+
+		if (node.$tree_link) {
+			var base_label =
+				(node.data && (node.data.title || node.data.label || node.data.value)) ||
+				node.label ||
+				"";
+			var item_count = node.data && node.data.item_count ? parseInt(node.data.item_count, 10) : 0;
+			var total_contract_value = node.data && node.data.total_contract_value ? flt(node.data.total_contract_value) : 0;
+			var total_budgeted_cost = node.data && node.data.total_budgeted_cost ? flt(node.data.total_budgeted_cost) : 0;
+			var metrics = [];
+			if (item_count) {
+				metrics.push(item_count + " " + __("items"));
 			}
-			if (boq && boq !== "BOQ Structure") {
-				frappe.db
-					.get_value("BOQ Header", boq, ["title", "project_name"])
-					.then(function (r) {
-						if (r && r.message) {
-							var label = r.message.title || boq;
-							if (r.message.project_name) {
-								label = r.message.project_name + " \u2014 " + label;
-							}
-							if (node.$tree_link) {
-								node.$tree_link.find(".tree-label").text(label);
-							}
-						}
-					});
+			if (total_contract_value) {
+				metrics.push(format_currency(total_contract_value));
 			}
+			if (total_budgeted_cost) {
+				metrics.push(format_currency(total_budgeted_cost));
+			}
+			var label_html =
+				'<span class="ct-boq-tree-title">' +
+				$("<div>").text(base_label).html() +
+				"</span>";
+			if (metrics.length) {
+				label_html +=
+					' <span class="ct-boq-tree-meta" style="color: var(--text-muted); font-size: 11px;">(' +
+					$("<div>").text(metrics.join(" · ")).html() +
+					")</span>";
+			}
+			node.$tree_link.find(".tree-label").html(label_html);
 		}
 	},
 	onload: function (treeview) {
 		console.info("[BOQ Structure Tree] canonical script loaded");
+		window.cur_tree = treeview;
 
 		// Add CSS to head to guarantee that scope_project is completely hidden in all browsers
 		if (!$('#hide-scope-project-style').length) {

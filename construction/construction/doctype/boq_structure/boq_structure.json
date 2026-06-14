@@ -11,6 +11,9 @@
     "parent_structure",
     "boq_header",
     "project",
+    "item_count",
+    "total_contract_value",
+    "total_budgeted_cost",
     "cb0",
     "is_group",
     "description",
@@ -77,6 +80,28 @@
       "fetch_if_empty": 1,
       "in_list_view": 1,
       "in_standard_filter": 0,
+      "read_only": 1
+    },
+    {
+      "default": "0",
+      "fieldname": "item_count",
+      "fieldtype": "Int",
+      "in_list_view": 1,
+      "label": "Item Count",
+      "read_only": 1
+    },
+    {
+      "fieldname": "total_contract_value",
+      "fieldtype": "Currency",
+      "in_list_view": 1,
+      "label": "Total Contract Value",
+      "read_only": 1
+    },
+    {
+      "fieldname": "total_budgeted_cost",
+      "fieldtype": "Currency",
+      "in_list_view": 1,
+      "label": "Total Budgeted Cost",
       "read_only": 1
     },
     {

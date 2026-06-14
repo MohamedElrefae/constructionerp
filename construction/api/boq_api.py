@@ -9,10 +9,13 @@ from frappe.utils import flt
 @frappe.whitelist()
 def get_children(doctype, parent="", boq_header=None, is_root=False, **filters):
     """Get children for BOQ Structure tree view."""
+    if not boq_header:
+        return []
+
     # Treat root label or is_root as top-level query
     if is_root or parent == "BOQ Structure" or not parent:
         parent_value = ""
-        conditions = "AND `boq_header` = %(boq_header)s" if boq_header else ""
+        conditions = "AND `boq_header` = %(boq_header)s"
         parent_fields = ""
     else:
         parent_value = parent
@@ -24,7 +27,10 @@ def get_children(doctype, parent="", boq_header=None, is_root=False, **filters):
 		SELECT
 			`name` as value,
 			CONCAT(IFNULL(`wbs_code`,''), ' — ', `title`) as title,
-			`is_group` as expandable
+			`is_group` as expandable,
+            `item_count`,
+            `total_contract_value`,
+            `total_budgeted_cost`
 			{parent_fields}
 		FROM `tabBOQ Structure`
 		WHERE IFNULL(`parent_structure`, '') = %(parent)s
@@ -477,6 +483,40 @@ def get_boq_tree_summary(boq_header):
         as_dict=True,
     )
     return structures
+
+
+@frappe.whitelist()
+def get_boq_structure_summary(boq_header):
+    """Return BOQ header totals plus the WBS tree summary for the BOQ Structure form."""
+    if not boq_header:
+        return {"header": None, "nodes": [], "summary": {}}
+
+    header = frappe.db.get_value(
+        "BOQ Header",
+        boq_header,
+        ["name", "title", "project", "project_name", "total_contract_value", "total_budgeted_cost"],
+        as_dict=True,
+    )
+    if not header:
+        return {"header": None, "nodes": [], "summary": {}}
+
+    nodes = get_boq_tree_summary(boq_header) or []
+    leaf_count = sum(1 for node in nodes if not node.get("is_group"))
+    group_count = sum(1 for node in nodes if node.get("is_group"))
+    item_count = sum(frappe.utils.cint(node.get("item_count")) for node in nodes)
+
+    return {
+        "header": header,
+        "nodes": nodes,
+        "summary": {
+            "structure_count": len(nodes),
+            "group_count": group_count,
+            "leaf_count": leaf_count,
+            "item_count": item_count,
+            "total_contract_value": header.get("total_contract_value") or 0,
+            "total_budgeted_cost": header.get("total_budgeted_cost") or 0,
+        },
+    }
 
 
 # ---------------------------------------------------------------------------

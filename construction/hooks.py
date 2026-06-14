@@ -89,6 +89,7 @@ doctype_js = {
 
 doctype_list_js = {
     "BOQ Item": "construction/construction/doctype/boq_item/boq_item_list.js",
+    "BOQ Structure": "construction/construction/doctype/boq_structure/boq_structure_list.js",
     "Variation Order": "construction/construction/doctype/variation_order/variation_order_list.js",
 }
 

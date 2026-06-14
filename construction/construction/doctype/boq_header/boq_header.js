@@ -83,28 +83,7 @@
 	}
 
 	function renderTreeSummary(frm) {
-		if (!frm.doc.name) return;
-		frappe.call({
-			method: "construction.api.boq_api.get_boq_tree_summary",
-			args: { boq_header: frm.doc.name },
-			callback(r) {
-				const nodes = r.message || [];
-				if (!nodes.length) return;
-				let html = '<div class="ct-boq-tree-summary" style="margin-top:16px;padding:12px;background:var(--ct-bg-2,#1a2332);border-radius:6px;border:1px solid var(--ct-border,rgba(148,163,184,0.12))">';
-				html += '<h6 style="margin:0 0 8px;color:var(--ct-text-muted,#64748b);font-size:11px;text-transform:uppercase">' + __("WBS Tree") + '</h6>';
-				nodes.forEach((n) => {
-					const indent = Math.max(0, (n.lft > 0 ? Math.floor(Math.log2(n.rgt - n.lft + 1)) : 0)) * 16;
-					const icon = n.is_group ? "📁" : "📄";
-					const count = n.item_count ? ' <span style="color:var(--ct-accent,#3b82f6);font-size:11px">(' + n.item_count + ' items)</span>' : '';
-					html += '<div style="padding:3px 0;padding-left:' + indent + 'px;font-size:12px">' + icon + ' <b>' + (n.wbs_code || '-') + '</b> ' + (n.title || n.name) + count + '</div>';
-				});
-				html += '</div>';
-				const $page = frm.$wrapper.find(".form-page:visible").first();
-				const $existing = $page.find(".ct-boq-tree-summary");
-				if ($existing.length) $existing.replaceWith(html);
-				else $page.find(".form-layout").first().after(html);
-			},
-		});
+		return;
 	}
 
 	frappe.ui.form.on("BOQ Header", {

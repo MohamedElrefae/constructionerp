@@ -138,6 +138,14 @@ class TestBOQIntegration(unittest.TestCase):
             header.calculate_total_value()
             self.assertEqual(header.total_contract_value, 1000)  # 10 * 100 * 1.0
 
+            # Check structure rollups propagate to the leaf and its ancestors
+            leaf_doc = frappe.get_doc("BOQ Structure", leaf.name)
+            root_doc = frappe.get_doc("BOQ Structure", root.name)
+            self.assertEqual(leaf_doc.item_count, 1)
+            self.assertEqual(leaf_doc.total_contract_value, 1000)
+            self.assertEqual(root_doc.item_count, 1)
+            self.assertEqual(root_doc.total_contract_value, 1000)
+
     def test_5_wbs_code_generation(self):
         """Test WBS code generation"""
         from construction.services.wbs_generator import WBSGenerator

@@ -9,6 +9,7 @@ class BOQStructure(NestedSet):
 
     def validate(self):
         self.enforce_boq_status()
+        self.sync_rollup_fields()
 
     def before_insert(self):
         if not self.flags.get("ignore_wbs_generation"):
@@ -17,9 +18,11 @@ class BOQStructure(NestedSet):
     def after_insert(self):
         if not self.is_group:
             self.create_boq_item()
+        self._trigger_header_rollup()
 
     def on_update(self):
         super().on_update()
+        self._trigger_header_rollup()
 
     def on_trash(self):
         if not self.is_group:
@@ -28,6 +31,13 @@ class BOQStructure(NestedSet):
             validate_boq_structure_leaf_delete_safety(self)
             self.delete_boq_item()
         super().on_trash()
+        self._trigger_header_rollup()
+
+    def _trigger_header_rollup(self):
+        if not self.boq_header:
+            return
+        header = frappe.get_doc("BOQ Header", self.boq_header)
+        header.recalculate_phase1_totals()
 
     def generate_wbs_code(self):
         """Generate hierarchical WBS code under a transaction lock."""
@@ -43,6 +53,56 @@ class BOQStructure(NestedSet):
 
         width = 2 if self.is_group else 3
         return f"{parent_wbs}.{seq:0{width}d}"
+
+    def sync_rollup_fields(self):
+        if not self.boq_header:
+            self.item_count = 0
+            self.total_contract_value = 0
+            self.total_budgeted_cost = 0
+            return
+
+        if not self.name:
+            self.item_count = 0
+            self.total_contract_value = 0
+            self.total_budgeted_cost = 0
+            return
+
+        if not self.lft or not self.rgt:
+            self.item_count = 0
+            self.total_contract_value = 0
+            self.total_budgeted_cost = 0
+            return
+
+        rollup = frappe.db.sql(
+            """
+            SELECT
+                COUNT(DISTINCT i.name) AS item_count,
+                COALESCE(SUM(CASE WHEN i.docstatus < 2 THEN i.line_total ELSE 0 END), 0) AS total_contract_value,
+                COALESCE(
+                    SUM(
+                        CASE
+                            WHEN i.docstatus < 2 THEN i.quantity * i.est_unit_cost * COALESCE(i.factor, 1.0)
+                            ELSE 0
+                        END
+                    ),
+                    0
+                ) AS total_budgeted_cost
+            FROM `tabBOQ Structure` d
+            LEFT JOIN `tabBOQ Item` i
+                ON i.structure = d.name
+               AND i.docstatus < 2
+            WHERE d.boq_header = %s
+              AND d.lft >= %s
+              AND d.rgt <= %s
+              AND d.docstatus < 2
+            """,
+            (self.boq_header, self.lft, self.rgt),
+            as_dict=True,
+        )
+        rollup = rollup[0] if rollup else {}
+        self.item_count = rollup.get("item_count") or 0
+        self.total_contract_value = rollup.get("total_contract_value") or 0
+        self.total_budgeted_cost = rollup.get("total_budgeted_cost") or 0
 
     def _lock_wbs_sequence_scope(self):
         if not self.parent_structure:

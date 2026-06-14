@@ -133,6 +133,11 @@
 			}
 		},
 
+		boq_header: function (frm) {
+			applyBoqGuidance(frm);
+			renderStructureSummary(frm);
+		},
+
 		onload_post_render: function (frm) {
 			applyBoqGuidance(frm);
 			setTimeout(function () { applyBoqGuidance(frm); }, 150);

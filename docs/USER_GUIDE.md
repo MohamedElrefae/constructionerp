@@ -75,19 +75,17 @@ If users need to switch projects freely without scope restrictions:
 
 **Visual cues:** If Project is empty, a **red accent border** appears on the Project field with a pill badge "Select Project first". After selecting a project, the accent clears.
 
-### 2.2 WBS Tree Summary
+### 2.2 WBS Tree
 
-After saving the BOQ Header, scroll to the bottom of the form. A **WBS Tree** panel shows the structure hierarchy with item counts:
+After saving the BOQ Header, open **BOQ Structure → Tree** to inspect the hierarchy. Each structure node carries its own rollup inline:
 
 ```
-📁 01-Site Works
-  📄 01.01-Excavation (3 items)
-  📄 01.02-Concrete (2 items)
-📁 02-Finishes
-  📄 02.01-Painting (1 item)
+01 — Site Works (2 items · 9,000.00 · 0.00)
+  01.01 — Excavation (1 item · 5,000.00 · 0.00)
+  01.02 — Concrete (1 item · 4,000.00 · 0.00)
 ```
 
-**Verify:** Create structures and items (sections 3-4 below), then return to the BOQ Header form. The tree panel updates automatically with the latest hierarchy.
+**Verify:** Create structures and items (sections 3-4 below), then open **BOQ Structure → Tree**. The tree updates automatically, and the totals stay attached to each node instead of appearing as a separate summary banner.
 
 ### 2.3 Lock the BOQ
 
@@ -122,9 +120,11 @@ After saving the BOQ Header, scroll to the bottom of the form. A **WBS Tree** pa
 
 **Important:** BOQ Items can only be linked to **leaf structures** (`is_group=0`). If you try to save an item linked to a group structure, the system will reject it with: *"BOQ Item can only be linked to leaf nodes (is_group=0)."*
 
-### 3.3 Visual Feedback on Structure Field
+### 3.3 BOQ Structure Inline Rollups
 
-When the `structure` field is not blocked, the description below it reads: *"BOQ Items are linked to leaf Structure nodes only. If no structures appear, ensure a leaf-level Structure exists."*
+On the BOQ Structure tree, the node label itself shows the rollup for that node's subtree. The tree does not use a separate summary banner.
+
+Each node shows its own inline totals, and the BOQ Structure list includes ordinary `Item Count`, `Total Contract Value`, and `Total Budgeted Cost` columns.
 
 ---
 

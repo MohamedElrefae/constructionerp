@@ -140,3 +140,64 @@ class BOQHeader(Document):
         self.db_set("total_estimated_value", tev, update_modified=False)
         self.db_set("total_budgeted_cost", tbc, update_modified=False)
         self.db_set("total_revised_value", trv, update_modified=False)
+        self.recalculate_structure_rollups()
+
+    def recalculate_structure_rollups(self):
+        """Sync BOQ Structure row roll-up fields for list/tree display."""
+        if not self.name:
+            return
+
+        rows = frappe.db.sql(
+            """
+            SELECT
+                s.name,
+                COUNT(DISTINCT i.name) AS item_count,
+                COALESCE(SUM(CASE WHEN i.docstatus < 2 THEN i.line_total ELSE 0 END), 0) AS total_contract_value,
+                COALESCE(
+                    SUM(
+                        CASE
+                            WHEN i.docstatus < 2 THEN i.quantity * i.est_unit_cost * COALESCE(i.factor, 1.0)
+                            ELSE 0
+                        END
+                    ),
+                    0
+                ) AS total_budgeted_cost
+            FROM `tabBOQ Structure` s
+            LEFT JOIN `tabBOQ Structure` d
+                ON d.boq_header = s.boq_header
+               AND d.lft >= s.lft
+               AND d.rgt <= s.rgt
+               AND d.docstatus < 2
+            LEFT JOIN `tabBOQ Item` i
+                ON i.structure = d.name
+               AND i.docstatus < 2
+            WHERE s.boq_header = %s
+              AND s.docstatus < 2
+            GROUP BY s.name
+            """,
+            self.name,
+            as_dict=True,
+        )
+
+        for row in rows:
+            frappe.db.set_value(
+                "BOQ Structure",
+                row.name,
+                "item_count",
+                row.item_count or 0,
+                update_modified=False,
+            )
+            frappe.db.set_value(
+                "BOQ Structure",
+                row.name,
+                "total_contract_value",
+                row.total_contract_value or 0,
+                update_modified=False,
+            )
+            frappe.db.set_value(
+                "BOQ Structure",
+                row.name,
+                "total_budgeted_cost",
+                row.total_budgeted_cost or 0,
+                update_modified=False,
+            )
