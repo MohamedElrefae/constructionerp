@@ -26,6 +26,9 @@ jobs:
           cache: pip
       - uses: pre-commit/action@v3.0.0
 
+      - name: Lint scope-dimension metadata
+        run: python3 scripts/lint_scope_metadata.py
+
       - name: Download Semgrep rules
         run: git clone --depth 1 https://github.com/frappe/semgrep-rules.git frappe-semgrep-rules
 

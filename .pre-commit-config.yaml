@@ -63,6 +63,16 @@ repos:
               construction/public/js/components/.*
           )$
 
+  - repo: local
+    hooks:
+      - id: lint-scope-metadata
+        name: "Lint scope-dimension metadata"
+        entry: python3 scripts/lint_scope_metadata.py
+        language: system
+        pass_filenames: false
+        always_run: true
+        files: "^construction/construction/doctype/.*\\.json$"
+
 ci:
   autoupdate_schedule: weekly
   skip: []
