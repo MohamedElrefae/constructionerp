@@ -142,8 +142,8 @@
 
 		onload(frm) {
 			if (!frm.is_new()) return;
-			const scope_project = window.scopeContext?.enabled
-				? window.scopeContext?.current?.project
+			const scope_project = (window.scopeContext && window.scopeContext.enabled)
+				? window.scopeContext.getValidatedCurrentScope().project
 				: null;
 			if (scope_project && !frm.doc.project) {
 				frm.set_value("project", scope_project);
@@ -152,8 +152,8 @@
 			$(document)
 				.off("scope:changed.boqItemStage")
 				.on("scope:changed.boqItemStage", function () {
-					var new_project = window.scopeContext?.enabled
-						? window.scopeContext?.current?.project
+					var new_project = (window.scopeContext && window.scopeContext.enabled)
+						? window.scopeContext.getValidatedCurrentScope().project
 						: null;
 					if (!new_project) return;
 					var current_project = frm.doc.project;

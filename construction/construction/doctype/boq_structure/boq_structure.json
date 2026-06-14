@@ -76,7 +76,7 @@
       "fetch_from": "boq_header.project",
       "fetch_if_empty": 1,
       "in_list_view": 1,
-      "in_standard_filter": 1,
+      "in_standard_filter": 0,
       "read_only": 1
     },
     {

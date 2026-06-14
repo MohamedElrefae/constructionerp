@@ -31,7 +31,9 @@
 	}
 
 	function getScopeProject() {
-		return window.scopeContext?.enabled ? window.scopeContext?.current?.project || null : null;
+		return (window.scopeContext && window.scopeContext.enabled)
+			? window.scopeContext.getValidatedCurrentScope().project || null
+			: null;
 	}
 
 	function syncProjectFromScope(frm) {

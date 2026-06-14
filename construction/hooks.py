@@ -114,7 +114,7 @@ app_include_js = [
     "/assets/construction/js/print_settings_dialog.js",
     "/assets/construction/js/construction_export_menu.js",
     "/assets/construction/js/theme_loader_v24.js?v=2.5.2",
-    "/assets/construction/js/typography_settings.js?v=6",
+    "/assets/construction/js/typography_settings.js?v=9",
     "/assets/construction/js/components/index.js?v=4.6",
     # Searchable Dropdown Module — base class (must load before overrides)
     "/assets/construction/js/searchable_dropdown/utils.js",
@@ -124,17 +124,17 @@ app_include_js = [
     "/assets/construction/js/overrides/ct_select_control.js?v=2",
     # Phase 3: Global ControlLink auto-enhancer — replaces 3 manual config files
     # Auto-applies SearchableDropdownEnhancer to all Link fields on every page
-    "/assets/construction/js/overrides/ct_link_control.js?v=13",
+    "/assets/construction/js/overrides/ct_link_control.js?v=16",
     # v16 runtime safety net — no-op (CSS handles all styling)
     "/assets/construction/js/theme_loader_v16.js?v=2",
     # Scope Context — core class for managing user company/cost_center/project/dept scope
-    "/assets/construction/js/scope_context.js?v=1",
+    "/assets/construction/js/scope_context.js?v=3",
     # Frappe Desk compatibility fixes that must run before list views initialize
     "/assets/construction/js/frappe_compat_patches.js?v=1",
     # Scope Context — navbar UI selectors (cascading company/cost_center/project/dept dropdowns)
-    "/assets/construction/js/scope_context_ui.js?v=1",
+    "/assets/construction/js/scope_context_ui.js?v=2",
     # Scope Context — list view auto-filtering
-    "/assets/construction/js/scope_context_list_filter.js?v=1",
+    "/assets/construction/js/scope_context_list_filter.js?v=2",
     # Scope Context — form default population for new documents
     "/assets/construction/js/scope_context_form_defaults.js?v=3",
     # Sidebar accordion — only one section stays expanded at a time

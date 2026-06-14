@@ -477,3 +477,48 @@ def get_boq_tree_summary(boq_header):
         as_dict=True,
     )
     return structures
+
+
+# ---------------------------------------------------------------------------
+# Scope-aware BOQ helpers
+# ---------------------------------------------------------------------------
+
+
+@frappe.whitelist()
+def get_boq_header_scope_context(boq_header: str) -> dict:
+    """Return safe project/company context for a BOQ Header if the current user
+    is authorized through their scope context. Does NOT require broad Project
+    read permission — authorization is validated against User Scope Context hierarchy.
+
+    Args:
+        boq_header: Name of the BOQ Header document.
+
+    Returns:
+        dict with keys: project, project_name, company, cost_center
+
+    Raises:
+        frappe.PermissionError: If the user is not authorized for the BOQ Header's project.
+    """
+    if not boq_header:
+        frappe.throw(_("BOQ Header is required"))
+
+    from construction.api.scope_context_api import get_user_scope_hierarchy
+
+    header = frappe.get_doc("BOQ Header", boq_header)
+
+    # Validate project is in user's authorized scope
+    scope = get_user_scope_hierarchy()
+    allowed_projects = {p.get("name") for p in scope.get("projects", [])}
+
+    if header.project and header.project not in allowed_projects:
+        frappe.throw(
+            _("You are not authorized to access this BOQ Header project."),
+            frappe.PermissionError,
+        )
+
+    return {
+        "project": header.project,
+        "project_name": header.project_name,
+        "company": header.company,
+        "cost_center": header.cost_center,
+    }

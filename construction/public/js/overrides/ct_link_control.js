@@ -50,8 +50,51 @@
 
 		const originalOnInput = ControlLink.prototype.on_input;
 		ControlLink.prototype.on_input = function (e) {
+			if (this.df && this.df.options && frappe.model && typeof frappe.model.can_read === "function") {
+				const canRead = frappe.model.can_read(this.df.options);
+				const canSelect = typeof frappe.model.can_select === "function" ? frappe.model.can_select(this.df.options) : false;
+				if (!canRead && !canSelect) {
+					return;
+				}
+			}
 			syncBoqNativeCreateState(this);
 			return originalOnInput.call(this, e);
+		};
+
+		const originalValidate = ControlLink.prototype.validate;
+		ControlLink.prototype.validate = function (value) {
+			if (this.df && this.df.options && frappe.model && typeof frappe.model.can_read === "function") {
+				const canRead = frappe.model.can_read(this.df.options);
+				const canSelect = typeof frappe.model.can_select === "function" ? frappe.model.can_select(this.df.options) : false;
+				if (!canRead && !canSelect) {
+					return value;
+				}
+			}
+			return originalValidate.call(this, value);
+		};
+
+		const originalValidateLinkAndFetch = ControlLink.prototype.validate_link_and_fetch;
+		ControlLink.prototype.validate_link_and_fetch = function (value) {
+			if (this.df && this.df.options && frappe.model && typeof frappe.model.can_read === "function") {
+				const canRead = frappe.model.can_read(this.df.options);
+				const canSelect = typeof frappe.model.can_select === "function" ? frappe.model.can_select(this.df.options) : false;
+				if (!canRead && !canSelect) {
+					return Promise.resolve(value);
+				}
+			}
+			return originalValidateLinkAndFetch.call(this, value);
+		};
+
+		const originalGetSearchArgs = ControlLink.prototype.get_search_args;
+		ControlLink.prototype.get_search_args = function (txt) {
+			if (this.df && this.df.options && frappe.model && typeof frappe.model.can_read === "function") {
+				const canRead = frappe.model.can_read(this.df.options);
+				const canSelect = typeof frappe.model.can_select === "function" ? frappe.model.can_select(this.df.options) : false;
+				if (!canRead && !canSelect) {
+					return null;
+				}
+			}
+			return originalGetSearchArgs.call(this, txt);
 		};
 
 		ControlLink.__ct_boq_patch_applied = true;
@@ -157,6 +200,21 @@
 		// Skip internal system link types
 		const skipDoctypes = ["DocType", "DocField", "Workflow State", "Module Def", "Role"];
 		if (skipDoctypes.includes(df.options)) return;
+
+		// Skip and disable field if user has no read/select permission on the options doctype to prevent 403/Forbidden errors
+		if (frappe.model && typeof frappe.model.can_read === "function") {
+			const canRead = frappe.model.can_read(df.options);
+			const canSelect = typeof frappe.model.can_select === "function" ? frappe.model.can_select(df.options) : false;
+			if (!canRead && !canSelect) {
+				field.df.read_only = 1;
+				const $input = $(el);
+				$input.prop("disabled", true);
+				$input.attr("readonly", true);
+				$input.off("focus");
+				$input.off("input");
+				return;
+			}
+		}
 
 		el.setAttribute(CT_ATTR, "1");
 
@@ -301,9 +359,9 @@
 
 		function getScope() {
 			if (window.scopeContext && window.scopeContext.enabled) {
-				return window.scopeContext.getCurrentScope() || {};
+				return window.scopeContext.getValidatedCurrentScope();
 			}
-			return (frappe.boot.scope_context && frappe.boot.scope_context.current) || {};
+			return {};
 		}
 
 		function withScope(filters) {

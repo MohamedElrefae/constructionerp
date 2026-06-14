@@ -209,9 +209,9 @@
 
 	function getScope() {
 		if (window.scopeContext && window.scopeContext.enabled) {
-			return window.scopeContext.getCurrentScope() || {};
+			return window.scopeContext.getValidatedCurrentScope();
 		}
-		return (frappe.boot.scope_context && frappe.boot.scope_context.current) || {};
+		return {};
 	}
 
 	function rowProject(frm, row) {

@@ -110,7 +110,7 @@
 
 	function updateSelects() {
 		var h = sc.hierarchy;
-		var cur = sc.current;
+		var cur = sc.getValidatedCurrentScope();
 		var dims = sc.enabledDimensions;
 
 		if (dims.company) {
@@ -182,7 +182,7 @@
 	}
 
 	function _showFirstLoginModal() {
-		if (sc.current.company) return;
+		if (sc.getValidatedCurrentScope().company) return;
 		var companies = sc.hierarchy.companies || [];
 		if (companies.length === 0) {
 			frappe.show_alert({

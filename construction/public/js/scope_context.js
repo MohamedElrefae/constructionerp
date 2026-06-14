@@ -24,7 +24,7 @@
 
 		init() {
 			if (!this.enabled) return;
-			this._loadFromLocalStorage();
+			this._hydrateAndValidate();
 			this._renderSelectors();
 			this._bindEvents();
 			this._setupMultiTabSync();
@@ -88,12 +88,26 @@
 			};
 		}
 
+		getValidatedCurrentScope() {
+			var changed = this._sanitizeCurrentScope();
+			if (changed) {
+				this._persistToLocalStorage();
+			}
+			return {
+				company: this.current.company || null,
+				cost_center: this.current.cost_center || null,
+				project: this.current.project || null,
+				department: this.current.department || null,
+			};
+		}
+
 		getScopeFilter() {
+			var scope = this.getValidatedCurrentScope();
 			var f = {};
-			if (this.current.company) f.company = this.current.company;
-			if (this.current.cost_center) f.cost_center = this.current.cost_center;
-			if (this.current.project) f.project = this.current.project;
-			if (this.current.department) f.department = this.current.department;
+			if (scope.company) f.company = scope.company;
+			if (scope.cost_center) f.cost_center = scope.cost_center;
+			if (scope.project) f.project = scope.project;
+			if (scope.department) f.department = scope.department;
 			return f;
 		}
 
@@ -121,9 +135,144 @@
 				callback: function (r) {
 					if (r.message && r.message.scope_version) {
 						this._version = r.message.scope_version;
+						this._persistToLocalStorage();
 					}
 				}.bind(this),
 			});
+		}
+
+		_isCompanyValid(compName) {
+			if (!compName) return true;
+			return (this.hierarchy.companies || []).some(function (c) {
+				return c && c.name === compName;
+			});
+		}
+
+		_isCostCenterValid(ccName) {
+			if (!ccName) return true;
+			var cc = (this.hierarchy.cost_centers || []).find(function (x) {
+				return x && x.name === ccName;
+			});
+			if (!cc) return false;
+			if (this.current.company && cc.company && cc.company !== this.current.company) {
+				return false;
+			}
+			return true;
+		}
+
+		_isProjectValid(projName) {
+			if (!projName) return true;
+			var project = (this.hierarchy.projects || []).find(function (p) {
+				return p && p.name === projName;
+			});
+			if (!project) return false;
+			if (this.current.company && project.company && project.company !== this.current.company) {
+				return false;
+			}
+			if (this.current.cost_center && project.cost_center) {
+				if (!this._isProjectUnderCostCenter(projName, this.current.cost_center)) {
+					return false;
+				}
+			}
+			return true;
+		}
+
+		_isDepartmentValid(deptName) {
+			if (!deptName) return true;
+			var dept = (this.hierarchy.departments || []).find(function (d) {
+				return d && d.name === deptName;
+			});
+			if (!dept) return false;
+			if (this.current.company && dept.company && dept.company !== this.current.company) {
+				return false;
+			}
+			if (this.current.cost_center && dept.cost_center) {
+				if (!this._isDepartmentUnderCostCenter(deptName, this.current.cost_center)) {
+					return false;
+				}
+			}
+			return true;
+		}
+
+		_hydrateAndValidate() {
+			var saved = null;
+			try {
+				saved = localStorage.getItem(SCOPE_LS_KEY);
+			} catch (e) {
+				console.warn("[ScopeContext] localStorage read error:", e);
+			}
+
+			var parsed = null;
+			if (saved) {
+				try {
+					parsed = JSON.parse(saved);
+					var isValid = true;
+
+					if (!parsed || parsed.site !== window.location.origin) {
+						isValid = false;
+					}
+
+					if (isValid && this._version && parsed.version !== this._version) {
+						isValid = false;
+					}
+
+					if (isValid) {
+						var tempCompany = this.current.company;
+						var tempCostCenter = this.current.cost_center;
+						var tempProject = this.current.project;
+						var tempDept = this.current.department;
+
+						this.current.company = parsed.company || null;
+						this.current.cost_center = parsed.cost_center || null;
+						this.current.project = parsed.project || null;
+						this.current.department = parsed.department || null;
+
+						if (
+							!this._isCompanyValid(this.current.company) ||
+							!this._isCostCenterValid(this.current.cost_center) ||
+							!this._isProjectValid(this.current.project) ||
+							!this._isDepartmentValid(this.current.department)
+						) {
+							isValid = false;
+						}
+
+						if (!isValid) {
+							this.current.company = tempCompany;
+							this.current.cost_center = tempCostCenter;
+							this.current.project = tempProject;
+							this.current.department = tempDept;
+							localStorage.removeItem(SCOPE_LS_KEY);
+						}
+					} else {
+						localStorage.removeItem(SCOPE_LS_KEY);
+					}
+				} catch (e) {
+					console.warn("[ScopeContext] Error parsing or validating cache:", e);
+					try {
+						localStorage.removeItem(SCOPE_LS_KEY);
+					} catch (err) {}
+				}
+			}
+
+			this._sanitizeCurrentScope();
+			this._persistToLocalStorage();
+			this._logDiagnostics(parsed);
+		}
+
+		_logDiagnostics(parsed) {
+			var isDebug = false;
+			try {
+				isDebug = localStorage.getItem("scope_debug") === "true" || window.location.search.indexOf("scope_debug=1") !== -1;
+			} catch (e) {}
+
+			if (isDebug) {
+				console.log("[ScopeContext Diagnostics]", {
+					boot_version: this._version || null,
+					cached_version: (parsed && parsed.version) || null,
+					site_origin: window.location.origin,
+					selected_project: this.current.project || null,
+				});
+			}
 		}
 
 		_loadFromLocalStorage() {
@@ -131,25 +280,14 @@
 				var saved = localStorage.getItem(SCOPE_LS_KEY);
 				if (saved) {
 					var parsed = JSON.parse(saved);
+					if (parsed.site && parsed.site !== window.location.origin) {
+						return;
+					}
 					if (parsed.company) this.current.company = parsed.company;
 					if (parsed.cost_center) this.current.cost_center = parsed.cost_center;
-					if (
-						parsed.project &&
-						(!parsed.cost_center ||
-							this._isProjectUnderCostCenter(parsed.project, parsed.cost_center))
-					) {
-						this.current.project = parsed.project;
-					}
-					if (
-						parsed.department &&
-						(!parsed.cost_center ||
-							this._isDepartmentUnderCostCenter(
-								parsed.department,
-								parsed.cost_center
-							))
-					) {
-						this.current.department = parsed.department;
-					}
+					if (parsed.project) this.current.project = parsed.project;
+					if (parsed.department) this.current.department = parsed.department;
+					this._sanitizeCurrentScope();
 				}
 			} catch (e) {
 				console.warn("[ScopeContext] localStorage read error:", e);
@@ -158,10 +296,40 @@
 
 		_persistToLocalStorage() {
 			try {
-				localStorage.setItem(SCOPE_LS_KEY, JSON.stringify(this.getCurrentScope()));
+				localStorage.setItem(
+					SCOPE_LS_KEY,
+					JSON.stringify({
+						site: window.location.origin,
+						version: this._version || null,
+						...this.getCurrentScope(),
+					})
+				);
 			} catch (e) {
 				console.warn("[ScopeContext] localStorage write error:", e);
 			}
+		}
+
+		_sanitizeCurrentScope() {
+			var changed = false;
+
+			if (this.current.company && !this._isCompanyValid(this.current.company)) {
+				this.current.company = null;
+				changed = true;
+			}
+			if (this.current.cost_center && !this._isCostCenterValid(this.current.cost_center)) {
+				this.current.cost_center = null;
+				changed = true;
+			}
+			if (this.current.project && !this._isProjectValid(this.current.project)) {
+				this.current.project = null;
+				changed = true;
+			}
+			if (this.current.department && !this._isDepartmentValid(this.current.department)) {
+				this.current.department = null;
+				changed = true;
+			}
+
+			return changed;
 		}
 
 		_renderSelectors() {}
@@ -179,7 +347,7 @@
 		}
 
 		_emitChange() {
-			var payload = this.getCurrentScope();
+			var payload = this.getValidatedCurrentScope();
 			$(document).trigger("scope:changed", payload);
 			this._listeners.forEach(function (l) {
 				if (l.event === "scope:changed") {

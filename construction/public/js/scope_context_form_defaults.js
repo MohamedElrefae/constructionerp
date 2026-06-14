@@ -32,7 +32,7 @@
 			if (!frm.is_new()) return;
 
 			var dims = window.scopeContext.enabledDimensions;
-			var scope = window.scopeContext.getCurrentScope();
+			var scope = window.scopeContext.getValidatedCurrentScope();
 			var meta = frm.meta;
 
 			function set_default_silently(fieldname, value) {

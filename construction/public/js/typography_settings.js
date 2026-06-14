@@ -56,6 +56,9 @@
 	var styleOrderObserverStarted = false;
 	var domObserverStarted = false;
 	var inlineApplyTimer = null;
+	var typographyObservedRoots = typeof WeakSet !== "undefined" ? new WeakSet() : null;
+	var typographyObservedRootList = [];
+	var typographyRootObservers = [];
 
 	function normalize(settings) {
 		settings = Object.assign({}, defaults, settings || {});
@@ -269,9 +272,9 @@
 		ensureStyleTag();
 
 		var root = document.documentElement;
-		setFontVariable(root, "desk", settings.desk_font_family);
+		setFontVariable(root, "desk", settings.desk_font_family, settings);
 		["sidebar", "navbar", "form", "list", "menu"].forEach(function (component) {
-			setFontVariable(root, component, settings[component + "_font_family"]);
+			setFontVariable(root, component, settings[component + "_font_family"], settings);
 		});
 		root.style.setProperty("--ct-desk-font-size", settings.desk_font_size + "px");
 		root.style.setProperty("--ct-desk-font-weight", settings.desk_font_weight);
@@ -285,6 +288,7 @@
 				settings[component + "_font_weight"]
 			);
 		});
+		applyRootTypographyStyles(settings);
 
 		window.ctTypographySettings = settings;
 		window.ctTypographyLastAppliedAt = new Date().toISOString();
@@ -299,33 +303,20 @@
 	function startDomTypographyObserver() {
 		if (domObserverStarted || !window.MutationObserver || !document.body) return;
 		domObserverStarted = true;
-
-		var observer = new MutationObserver(function (mutations) {
-			var shouldApply = mutations.some(function (mutation) {
-				return mutation.addedNodes && mutation.addedNodes.length;
-			});
-			if (!shouldApply) return;
-
-			clearTimeout(inlineApplyTimer);
-			inlineApplyTimer = setTimeout(function () {
-				if (window.ctTypographySettings) {
-					applyInlineTypography(window.ctTypographySettings);
-				}
-			}, 100);
-		});
-		observer.observe(document.body, { childList: true, subtree: true });
+		observeTypographyRoot(document.body);
+		discoverTypographyShadowRoots(document.body);
 	}
 
 	function applyInlineTypography(settings) {
 		if (!document.body) return;
 		settings = normalize(settings);
+		discoverTypographyShadowRoots(document.body);
+		applyDeskTypographyToRoot(document, settings);
+		typographyObservedRootList.forEach(function (root) {
+			applyDeskTypographyToRoot(root, settings);
+		});
 
 		var rules = [
-			{
-				selector:
-					"body, .page-container, .layout-main, .page-content, .workspace, .widget, .widget *",
-				component: "desk",
-			},
 			{
 				selector:
 					".body-sidebar, .body-sidebar *, .desk-sidebar, .desk-sidebar *, .standard-sidebar, .standard-sidebar *, .sidebar-container, .sidebar-container *",
@@ -353,14 +344,104 @@
 			},
 		];
 
+		applyInlineTypographyToRoot(document, rules, settings);
+		typographyObservedRootList.forEach(function (root) {
+			applyInlineTypographyToRoot(root, rules, settings);
+		});
+
+		window.ctTypographyInlineAppliedAt = new Date().toISOString();
+	}
+
+	function applyDeskTypographyToRoot(root, settings) {
+		if (!root || !root.querySelectorAll) return;
+
+		var selector = root === document ? "body, body *" : "*";
+		root.querySelectorAll(selector).forEach(function (el) {
+			if (shouldSkipInlineTypography(el)) return;
+			setInlineFont(el, "desk", settings);
+		});
+	}
+
+	function applyInlineTypographyToRoot(root, rules, settings) {
+		if (!root || !root.querySelectorAll) return;
 		rules.forEach(function (rule) {
-			document.querySelectorAll(rule.selector).forEach(function (el) {
+			root.querySelectorAll(rule.selector).forEach(function (el) {
 				if (shouldSkipInlineTypography(el)) return;
 				setInlineFont(el, rule.component, settings);
 			});
 		});
+	}
 
-		window.ctTypographyInlineAppliedAt = new Date().toISOString();
+	function applyRootTypographyStyles(settings) {
+		var deskFamily = fontStacks[settings.desk_font_family] || "";
+		var root = document.documentElement;
+		var body = document.body;
+
+		root.style.setProperty("font-family", deskFamily || "", "important");
+		root.style.setProperty("font-size", settings.desk_font_size + "px", "important");
+		root.style.setProperty("font-weight", settings.desk_font_weight, "important");
+
+		if (body) {
+			body.style.setProperty("font-family", deskFamily || "", "important");
+			body.style.setProperty("font-size", settings.desk_font_size + "px", "important");
+			body.style.setProperty("font-weight", settings.desk_font_weight, "important");
+		}
+	}
+
+	function observeTypographyRoot(root) {
+		if (!root || !window.MutationObserver) return;
+		if (typographyObservedRoots && typographyObservedRoots.has(root)) return;
+		if (typographyObservedRoots) typographyObservedRoots.add(root);
+		typographyObservedRootList.push(root);
+
+		var observer = new MutationObserver(function (mutations) {
+			var shouldApply = false;
+			mutations.forEach(function (mutation) {
+				if (mutation.addedNodes && mutation.addedNodes.length) {
+					shouldApply = true;
+					[].forEach.call(mutation.addedNodes, function (node) {
+						registerTypographyShadowRoots(node);
+					});
+				}
+			});
+			if (!shouldApply) return;
+
+			clearTimeout(inlineApplyTimer);
+			inlineApplyTimer = setTimeout(function () {
+				if (window.ctTypographySettings) {
+					applyInlineTypography(window.ctTypographySettings);
+				}
+			}, 100);
+		});
+
+		try {
+			observer.observe(root, { childList: true, subtree: true });
+			typographyRootObservers.push(observer);
+		} catch (e) {}
+	}
+
+	function registerTypographyShadowRoots(node) {
+		if (!node || !node.querySelectorAll) return;
+		[].forEach.call(node.querySelectorAll("*"), function (el) {
+			if (el.shadowRoot) {
+				observeTypographyRoot(el.shadowRoot);
+				discoverTypographyShadowRoots(el.shadowRoot);
+			}
+		});
+
+		if (node.shadowRoot) {
+			observeTypographyRoot(node.shadowRoot);
+			discoverTypographyShadowRoots(node.shadowRoot);
+		}
+	}
+
+	function discoverTypographyShadowRoots(root) {
+		if (!root || !root.querySelectorAll) return;
+		[].forEach.call(root.querySelectorAll("*"), function (el) {
+			if (el.shadowRoot) {
+				observeTypographyRoot(el.shadowRoot);
+			}
+		});
 	}
 
 	function shouldSkipInlineTypography(el) {
@@ -382,23 +463,18 @@
 		if (!family && component !== "desk") {
 			family = fontStacks[settings.desk_font_family];
 		}
-		if (family) {
-			el.style.setProperty("font-family", family, "important");
-		} else {
-			el.style.removeProperty("font-family");
-		}
+		el.style.setProperty("font-family", family || "", "important");
 		el.style.setProperty("font-size", settings[component + "_font_size"] + "px", "important");
 		el.style.setProperty("font-weight", settings[component + "_font_weight"], "important");
 	}
 
-	function setFontVariable(root, component, selectedFont) {
+	function setFontVariable(root, component, selectedFont, settings) {
 		var value = fontStacks[selectedFont];
 		var property = "--ct-" + component + "-font-family";
-		if (value) {
-			root.style.setProperty(property, value);
-		} else {
-			root.style.removeProperty(property);
+		if (!value && component !== "desk" && settings) {
+			value = fontStacks[settings.desk_font_family];
 		}
+		root.style.setProperty(property, value || "");
 	}
 
 	function updatePreview(dialog) {

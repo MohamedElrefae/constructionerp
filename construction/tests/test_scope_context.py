@@ -34,6 +34,7 @@ def run_all_tests():
     failed = 0
 
     frappe.db.set_single_value("Construction Settings", "enable_scope_context", 1)
+    _ensure_test_user()
 
     for test_name, test_func in tests:
         try:
@@ -54,6 +55,7 @@ def run_all_tests():
 def _cleanup():
     frappe.db.delete("User Scope Context", {"user": "Administrator"})
     frappe.db.delete("User Scope Context", {"user": "test_scope@example.com"})
+    frappe.db.delete("User Scope Context", {"user": "test_user2@example.com"})
     frappe.db.commit()
 
 
@@ -62,6 +64,14 @@ def _ensure_test_user():
         user = frappe.new_doc("User")
         user.email = "test_scope@example.com"
         user.first_name = "Test Scope"
+        user.send_welcome_email = 0
+        user.insert(ignore_permissions=True)
+        frappe.db.commit()
+
+    if not frappe.db.exists("User", "test_user2@example.com"):
+        user = frappe.new_doc("User")
+        user.email = "test_user2@example.com"
+        user.first_name = "Test User 2"
         user.send_welcome_email = 0
         user.insert(ignore_permissions=True)
         frappe.db.commit()
@@ -264,25 +274,25 @@ def test_server_side_injection():
 
     # Set scope defaults for a non-admin test user
     for key in ("company", "cost_center", "project", "department"):
-        frappe.defaults.clear_user_default(key, "test_user2")
-    frappe.defaults.set_user_default("company", "Elrefae", "test_user2")
-    frappe.defaults.set_user_default("cost_center", _GROUP_CC, "test_user2")
+        frappe.defaults.clear_user_default(key, "test_user2@example.com")
+    frappe.defaults.set_user_default("company", "Elrefae", "test_user2@example.com")
+    frappe.defaults.set_user_default("cost_center", _GROUP_CC, "test_user2@example.com")
 
     # Doctype with both company + cost_center columns
-    cc_result = add_scope_conditions("test_user2", "Sales Invoice")
+    cc_result = add_scope_conditions("test_user2@example.com", "Sales Invoice")
     assert "cost_center" in cc_result, f"cost_center not in: {cc_result}"
     assert "lft" in cc_result.lower(), f"lft not in: {cc_result}"
 
     # System doctype skipped
-    sys_result = add_scope_conditions("test_user2", "User")
+    sys_result = add_scope_conditions("test_user2@example.com", "User")
     assert sys_result == "", f"System doctype should be skipped, got: {sys_result}"
 
     # Doctype missing cost_center column (has company but not cost_center)
-    emp_result = add_scope_conditions("test_user2", "Employee")
+    emp_result = add_scope_conditions("test_user2@example.com", "Employee")
     assert "cost_center" not in emp_result, "Employee has no cost_center column"
 
     # Doctype with neither column
-    country_result = add_scope_conditions("test_user2", "Country")
+    country_result = add_scope_conditions("test_user2@example.com", "Country")
     assert country_result == "", f"Country has no scope columns, got: {country_result}"
 
     # No scope set for this user (clear all user-level defaults)
@@ -297,37 +307,35 @@ def test_server_side_injection():
 def test_scope_drift_detection():
     from construction.services.scope_resolution import get_scope_token
 
-    # Set initial scope
-    set_scope_context(
-        company="Elrefae",
-        cost_center=_COST_CENTER,
-        project=None,
-        department=None,
-        user="test_user2",
-    )
-
-    # Get initial token
-    token1 = get_scope_token("test_user2")
-    assert token1 is not None, "Scope token should be generated"
-    assert len(token1) == 64, f"Expected 64-char hex token, got {len(token1)} chars"
-
-    # Change scope
-    set_scope_context(
-        company="Elrefae",
-        cost_center=_GROUP_CC,
-        project=None,
-        department=None,
-        user="test_user2",
-    )
-
-    # Get new token — should differ
-    token2 = get_scope_token("test_user2")
-    assert token2 is not None, "Scope token should be generated"
-    assert token2 != token1, "Scope token should change when scope changes"
-
-    # Also verify the API endpoint
-    frappe.set_user("test_user2")
+    frappe.set_user("test_user2@example.com")
     try:
+        # Set initial scope
+        set_scope_context(
+            company="Elrefae",
+            cost_center=_COST_CENTER,
+            project=None,
+            department=None,
+        )
+
+        # Get initial token
+        token1 = get_scope_token("test_user2@example.com")
+        assert token1 is not None, "Scope token should be generated"
+        assert len(token1) == 32, f"Expected 32-char hex token, got {len(token1)} chars"
+
+        # Change scope
+        set_scope_context(
+            company="Elrefae",
+            cost_center=_GROUP_CC,
+            project=None,
+            department=None,
+        )
+
+        # Get new token — should differ
+        token2 = get_scope_token("test_user2@example.com")
+        assert token2 is not None, "Scope token should be generated"
+        assert token2 != token1, "Scope token should change when scope changes"
+
+        # Also verify the API endpoint
         result = frappe.call("construction.api.boq_link_queries.get_boq_scope_token")
         assert result.get("scope_token") == token2, "API token should match direct call"
     finally:

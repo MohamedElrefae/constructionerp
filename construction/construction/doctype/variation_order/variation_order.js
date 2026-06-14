@@ -89,8 +89,8 @@ frappe.ui.form.on("Variation Order", {
 		if (frm.is_new()) {
 			frm.doc.__vo_lines_locked = false;
 		}
-		const scope_project = window.scopeContext?.enabled
-			? window.scopeContext?.current?.project
+		const scope_project = (window.scopeContext && window.scopeContext.enabled)
+			? window.scopeContext.getValidatedCurrentScope().project
 			: null;
 		if (scope_project && !frm.doc.project) {
 			frm.set_value("project", scope_project);
@@ -130,8 +130,8 @@ frappe.ui.form.on("Variation Order", {
 		$(document)
 			.off("scope:changed.variationOrder")
 			.on("scope:changed.variationOrder", function () {
-				var new_project = window.scopeContext?.enabled
-					? window.scopeContext?.current?.project
+				var new_project = (window.scopeContext && window.scopeContext.enabled)
+					? window.scopeContext.getValidatedCurrentScope().project
 					: null;
 				if (!new_project) return;
 				var current_project = frm.doc.project;

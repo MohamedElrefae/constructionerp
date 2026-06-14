@@ -37,12 +37,14 @@ def get_user_scope_hierarchy(user=None):
         return cached
 
     hierarchy = {}
+    ignore_perms = False if user == frappe.session.user else True
 
     # All companies (Company DocType has no disabled field)
     hierarchy["companies"] = frappe.get_all(
         "Company",
         fields=["name", "company_name"],
         order_by="company_name asc",
+        ignore_permissions=ignore_perms,
     )
 
     # All cost centers (NestedSet tree — include lft/rgt for descendant expansion)
@@ -50,6 +52,7 @@ def get_user_scope_hierarchy(user=None):
         "Cost Center",
         fields=["name", "cost_center_name", "company", "is_group", "parent_cost_center", "lft", "rgt"],
         order_by="lft asc",
+        ignore_permissions=ignore_perms,
     )
 
     # Allowed projects (filter out completed only)
@@ -62,6 +65,7 @@ def get_user_scope_hierarchy(user=None):
         fields=project_fields,
         filters=project_filters,
         order_by="project_name asc",
+        ignore_permissions=ignore_perms,
     )
 
     # Allowed departments
@@ -74,6 +78,7 @@ def get_user_scope_hierarchy(user=None):
         fields=dept_fields,
         filters=dept_filters,
         order_by="department_name asc",
+        ignore_permissions=ignore_perms,
     )
 
     # Cache for 5 minutes
@@ -101,13 +106,16 @@ def invalidate_scope_cache(user=None):
 # ═══════════════════════════════════════════════════════════════
 
 
+_UNSPECIFIED = object()
+
+
 @frappe.whitelist()
 def set_scope_context(
-    company=None,
-    cost_center=None,
-    branch=None,
-    project=None,
-    department=None,
+    company=_UNSPECIFIED,
+    cost_center=_UNSPECIFIED,
+    branch=_UNSPECIFIED,
+    project=_UNSPECIFIED,
+    department=_UNSPECIFIED,
     source="erpnext",
     client_id=None,
 ):
@@ -125,7 +133,7 @@ def set_scope_context(
         client_id: Browser tab identifier (optional)
 
     Returns:
-        dict: { success, scope_version, source, defaults }
+        dict: { success, scope_version, source }
     """
     user = frappe.session.user
 
@@ -136,22 +144,7 @@ def set_scope_context(
     allowed_projects = {p["name"] for p in hierarchy["projects"]}
     allowed_depts = {d["name"] for d in hierarchy["departments"]}
 
-    # 2. Authorization validation
-    if company and company not in allowed_companies:
-        frappe.throw(_("Not authorized: Company '{0}'").format(company))
-    if cost_center and cost_center not in allowed_cost_centers:
-        frappe.throw(_("Not authorized: Cost Center '{0}'").format(cost_center))
-    if project and project not in allowed_projects:
-        frappe.throw(_("Not authorized: Project '{0}'").format(project))
-    if department and department not in allowed_depts:
-        frappe.throw(_("Not authorized: Department '{0}'").format(department))
-
-    # 3. Cross-dimension validation
-    is_valid, error_msg = validate_scope_dimensions(company, cost_center, project, department)
-    if not is_valid:
-        frappe.throw(_(error_msg))
-
-    # 4. Get or create User Scope Context (CANONICAL STORE)
+    # 2. Get or create User Scope Context (CANONICAL STORE)
     existing_name = frappe.db.get_value("User Scope Context", {"user": user})
     if existing_name:
         scope_doc = frappe.get_doc("User Scope Context", existing_name)
@@ -159,19 +152,26 @@ def set_scope_context(
         scope_doc = frappe.new_doc("User Scope Context")
         scope_doc.user = user
 
-    # 5. Update fields
-    if "company" in frappe.form_dict or company is not None:
-        if not company:
+    # 3. Resolve & update fields (supporting sentinel and form_dict fallback)
+    target_company = company if company is not _UNSPECIFIED else frappe.form_dict.get("company", _UNSPECIFIED)
+    target_cost_center = cost_center if cost_center is not _UNSPECIFIED else frappe.form_dict.get("cost_center", _UNSPECIFIED)
+    target_branch = branch if branch is not _UNSPECIFIED else frappe.form_dict.get("branch", _UNSPECIFIED)
+    target_project = project if project is not _UNSPECIFIED else frappe.form_dict.get("project", _UNSPECIFIED)
+    target_department = department if department is not _UNSPECIFIED else frappe.form_dict.get("department", _UNSPECIFIED)
+
+    if target_company is not _UNSPECIFIED:
+        if not target_company:
             frappe.throw(_("Company is mandatory for Scope Context."))
-        scope_doc.company = company
-    if "cost_center" in frappe.form_dict or cost_center is not None:
-        scope_doc.cost_center = cost_center
-    if "branch" in frappe.form_dict or branch is not None:
-        scope_doc.branch = branch
-    if "project" in frappe.form_dict or project is not None:
-        scope_doc.project = project
-    if "department" in frappe.form_dict or department is not None:
-        scope_doc.department = department
+        scope_doc.company = target_company
+    if target_cost_center is not _UNSPECIFIED:
+        scope_doc.cost_center = target_cost_center
+    if target_branch is not _UNSPECIFIED:
+        scope_doc.branch = target_branch
+    if target_project is not _UNSPECIFIED:
+        scope_doc.project = target_project
+    if target_department is not _UNSPECIFIED:
+        scope_doc.department = target_department
+
     if client_id:
         scope_doc.client_id = client_id
 
@@ -185,6 +185,23 @@ def set_scope_context(
         cc_comp = frappe.db.get_value("Cost Center", scope_doc.cost_center, "company")
         if cc_comp != scope_doc.company:
             scope_doc.cost_center = None
+
+    # 4. Authorization validation on final values
+    if scope_doc.company and scope_doc.company not in allowed_companies:
+        frappe.throw(_("Not authorized: Company '{0}'").format(scope_doc.company))
+    if scope_doc.cost_center and scope_doc.cost_center not in allowed_cost_centers:
+        frappe.throw(_("Not authorized: Cost Center '{0}'").format(scope_doc.cost_center))
+    if scope_doc.project and scope_doc.project not in allowed_projects:
+        frappe.throw(_("Not authorized: Project '{0}'").format(scope_doc.project))
+    if scope_doc.department and scope_doc.department not in allowed_depts:
+        frappe.throw(_("Not authorized: Department '{0}'").format(scope_doc.department))
+
+    # 5. Cross-dimension validation
+    is_valid, error_msg = validate_scope_dimensions(
+        scope_doc.company, scope_doc.cost_center, scope_doc.project, scope_doc.department
+    )
+    if not is_valid:
+        frappe.throw(_(error_msg))
 
     # 6. Save + sync Session Defaults in one transaction
     if scope_doc.is_new():
