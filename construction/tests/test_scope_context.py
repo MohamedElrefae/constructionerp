@@ -28,6 +28,9 @@ def run_all_tests():
         ("T-012 NestedSet descendant expansion", test_nestedset_expansion),
         ("T-013 Server-side query injection", test_server_side_injection),
         ("T-014 Scope drift detection", test_scope_drift_detection),
+        ("T-015 Property Setter standard filters", test_standard_filters_property_setters),
+        ("T-016 Report scope enforcement", test_report_scope_enforcement),
+        ("T-017 Report scope bypass for finance", test_report_scope_bypass_for_finance_role),
     ]
 
     passed = 0
@@ -349,6 +352,7 @@ def test_scope_drift_detection():
 def test_standard_filters_property_setters():
     from construction.patches.v7_2.set_erpnext_standard_filters import (
         ERPNEXT_STANDARD_FILTER_OVERRIDES,
+        setup_erpnext_standard_filters,
     )
 
     setup_erpnext_standard_filters()
