@@ -342,5 +342,73 @@ def test_scope_drift_detection():
         frappe.set_user("Administrator")
 
 
+
+
+# === Option A+ Tests ===
+
+def test_standard_filters_property_setters():
+    from construction.patches.v7_2.set_erpnext_standard_filters import (
+        ERPNEXT_STANDARD_FILTER_OVERRIDES,
+    )
+
+    setup_erpnext_standard_filters()
+    frappe.db.commit()
+
+    for doctype, fields in ERPNEXT_STANDARD_FILTER_OVERRIDES.items():
+        if not frappe.db.exists("DocType", doctype):
+            continue
+        for fieldname in fields:
+            value = frappe.db.get_value(
+                "Property Setter",
+                {"doc_type": doctype, "field_name": fieldname, "property": "in_standard_filter"},
+                "value",
+            )
+            assert value == "0", f"Expected {doctype}.{fieldname} in_standard_filter=0, got {value!r}"
+
+
+def test_report_scope_enforcement():
+    from construction.overrides.scope_report import _enforce_scope_filters
+
+    _ensure_test_user()
+
+    # Set a scope for the test user
+    frappe.set_user("test_user2@example.com")
+    try:
+        set_scope_context(
+            company="Elrefae",
+            cost_center=_COST_CENTER,
+            project=None,
+            department=None,
+            source="test",
+        )
+        frappe.db.commit()
+
+        filters = {"company": "Elrefae", "cost_center": _COST_CENTER, "project": "SomeOtherProject"}
+        enforced = _enforce_scope_filters(filters, "test_user2@example.com")
+
+        assert enforced["company"] == "Elrefae"
+        assert enforced["cost_center"] == _COST_CENTER
+        # Project was not in the user's scope and should be cleared/forced to None
+        assert enforced.get("project") is None or enforced.get("project") == ""
+    finally:
+        frappe.set_user("Administrator")
+
+
+def test_report_scope_bypass_for_finance_role():
+    from construction.overrides.scope_report import _has_unrestricted_report_role
+
+    if not frappe.db.exists("Role", "Accounts User"):
+        frappe.get_doc({"doctype": "Role", "role_name": "Accounts User"}).insert(ignore_permissions=True)
+
+    user = "test_scope@example.com"
+    user_doc = frappe.get_doc("User", user)
+    user_doc.add_roles("Accounts User")
+
+    try:
+        assert _has_unrestricted_report_role(user) is True
+    finally:
+        user_doc.remove_roles("Accounts User")
+
+
 if __name__ == "__main__":
     run_all_tests()

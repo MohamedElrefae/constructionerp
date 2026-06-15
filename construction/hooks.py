@@ -138,6 +138,8 @@ app_include_js = [
     "/assets/construction/js/scope_context_list_filter.js?v=2",
     # Scope Context — form default population for new documents
     "/assets/construction/js/scope_context_form_defaults.js?v=3",
+    # Scope Context — report filter lock and dynamic sync
+    "/assets/construction/js/scope_context_report_filters.js?v=1",
     # Sidebar accordion — only one section stays expanded at a time
     "/assets/construction/js/sidebar_accordion.js?v=1",
     # Translation workflow helpers (Arabic backlog + filters)
@@ -235,6 +237,7 @@ after_install = [
     "construction.install.create_system_themes",
     "construction.install.setup_boq_integration",
     "construction.install.setup_branch_company_field",
+    "construction.install.setup_erpnext_standard_filters",
     "construction.install.seed_form_layout_profiles",
     "construction.insert_translations.execute",
 ]
@@ -250,6 +253,7 @@ after_migrate = [
     "construction.install.verify_workspace_visibility",
     "construction.install.setup_boq_integration",
     "construction.install.setup_branch_company_field",
+    "construction.install.setup_erpnext_standard_filters",
     "construction.install.seed_form_layout_profiles",
     "construction.insert_translations.execute",
 ]
