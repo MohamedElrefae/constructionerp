@@ -1,8 +1,9 @@
 /* eslint-disable */
-(function () {
-	"use strict";
+	(function () {
+		"use strict";
+		var assetVersion = "21";
 
-	var defaults = {
+		var defaults = {
 		desk_font_family: "System Default",
 		desk_font_size: 14,
 		desk_font_weight: "400",
@@ -23,6 +24,9 @@
 		menu_font_weight: "400",
 	};
 
+	// Maintained alongside server-side allowed_fonts sets in:
+	// - construction/api/theme_api.py (lines 2933-2955)
+	// - construction/doctype/user_desk_theme/user_desk_theme.py (lines 37-59)
 	var fontStacks = {
 		Inherit: null,
 		"System Default": "",
@@ -46,19 +50,207 @@
 		Tajawal: '"Tajawal", Tahoma, Arial, sans-serif',
 		Almarai: '"Almarai", Tahoma, Arial, sans-serif',
 	};
-	var fontOptions = Object.keys(fontStacks);
-	var componentFontOptions = fontOptions.join("\n");
-	var deskFontOptions = fontOptions
-		.filter(function (font) {
-			return font !== "Inherit";
-		})
-		.join("\n");
-	var styleOrderObserverStarted = false;
-	var domObserverStarted = false;
-	var inlineApplyTimer = null;
-	var typographyObservedRoots = typeof WeakSet !== "undefined" ? new WeakSet() : null;
-	var typographyObservedRootList = [];
-	var typographyRootObservers = [];
+
+	var webFontOptions = [
+		"Inter",
+		"Cairo",
+		"Tajawal",
+		"Noto Sans Arabic",
+		"Almarai",
+		"Roboto",
+		"Open Sans",
+		"Lato",
+		"Montserrat",
+		"Poppins",
+		"Noto Sans",
+	];
+
+	var localFontOptions = [
+		"System Default",
+		"Arial",
+		"Helvetica",
+		"Tahoma",
+		"Verdana",
+		"Trebuchet MS",
+		"Georgia",
+		"Times New Roman",
+		"Courier New",
+	];
+
+	function sectionOption(label) {
+		return { label: label, value: "__section_" + label, disabled: true };
+	}
+
+	function fontOption(font) {
+		return { label: font, value: font };
+	}
+
+	var deskFontOptions = [
+		sectionOption("Web Fonts (recommended)"),
+	].concat(
+		webFontOptions.map(fontOption),
+		[sectionOption("Local System Fonts (depends on device)")],
+		localFontOptions.map(fontOption)
+	);
+
+	var componentFontOptions = [
+		{ label: "Inherit", value: "Inherit" },
+		sectionOption("Web Fonts (recommended)"),
+	].concat(
+		webFontOptions.map(fontOption),
+		[sectionOption("Local System Fonts (depends on device)")],
+		localFontOptions.map(fontOption)
+	);
+
+	// Must only contain fonts that also exist in fontStacks.
+	// Google Fonts load asynchronously; display=swap mitigates FOUT.
+	var googleFontNames = new Set(webFontOptions);
+
+		var fontOptions = Object.keys(fontStacks);
+		var componentFamilyFields = [
+			"sidebar_font_family",
+			"navbar_font_family",
+			"form_font_family",
+			"list_font_family",
+			"menu_font_family",
+		];
+		var styleOrderObserverStarted = false;
+
+	// ── CSS selector groups for literal style generation ──
+	// Defined once to avoid GC pressure during repeated ensureStyleTag calls.
+
+	var DESK_SELECTORS = [
+		"html.ct-enterprise,",
+		"html.ct-enterprise body",
+	];
+
+	var BODY_STAR_SELECTORS = [
+		'html.ct-enterprise body *:not(svg):not(path):not(use):not(i):not(.icon):not([class^="icon-"]):not([class*=" icon-"]):not(.fa):not([class^="fa-"]):not([class*=" fa-"]):not(.octicon)',
+	];
+
+	var SIDEBAR_SELECTORS = [
+		"html.ct-enterprise .body-sidebar .sidebar-item-label",
+		"html.ct-enterprise .body-sidebar .item-anchor",
+		"html.ct-enterprise .body-sidebar .collapse-sidebar-link",
+		"html.ct-enterprise .body-sidebar .onboarding-sidebar",
+		"html.ct-enterprise .desk-sidebar .standard-sidebar-item",
+		"html.ct-enterprise .standard-sidebar .standard-sidebar-item",
+		"html.ct-enterprise .desk-sidebar .standard-sidebar-item > a.item-anchor",
+		"html.ct-enterprise .standard-sidebar .standard-sidebar-item > a.item-anchor",
+		"html.ct-enterprise .desk-sidebar .sidebar-item-label",
+		"html.ct-enterprise .standard-sidebar .sidebar-item-label",
+		"html.ct-enterprise .sidebar-container .sidebar-item-label",
+		"html.ct-enterprise .sidebar-container .sidebar-link",
+		"html.ct-enterprise .sidebar-container .sidebar-item",
+		"html.ct-enterprise .standard-sidebar-item",
+		"html.ct-enterprise .body-sidebar .sidebar-item-container",
+		"html.ct-enterprise .body-sidebar .sidebar-item-container a",
+		"html.ct-enterprise .standard-sidebar-item a",
+	];
+
+	var NAVBAR_SELECTORS = [
+		"html.ct-enterprise .navbar",
+		"html.ct-enterprise .navbar .nav-link",
+		"html.ct-enterprise .navbar .navbar-brand",
+		'html.ct-enterprise .navbar *:not(svg):not(path):not(use):not(i):not(.icon):not([class^="icon-"]):not([class*=" icon-"]):not(.fa):not([class^="fa-"]):not([class*=" fa-"]):not(.octicon)',
+		"html.ct-enterprise .desktop-navbar",
+		'html.ct-enterprise .desktop-navbar *:not(svg):not(path):not(use):not(i):not(.icon):not([class^="icon-"]):not([class*=" icon-"]):not(.fa):not([class^="fa-"]):not([class*=" fa-"]):not(.octicon)',
+		"html.ct-enterprise .ct-topbar-zone",
+	];
+
+	var FORM_SELECTORS = [
+		"html.ct-enterprise .form-layout",
+		"html.ct-enterprise .form-section",
+		"html.ct-enterprise .frappe-control",
+		"html.ct-enterprise .form-control",
+		"html.ct-enterprise .control-input",
+		"html.ct-enterprise .control-input-wrapper",
+		"html.ct-enterprise .like-disabled-input",
+		"html.ct-enterprise .page-form .frappe-control",
+		"html.ct-enterprise .page-form .form-control",
+		"html.ct-enterprise .page-form input",
+		"html.ct-enterprise .page-form select",
+		"html.ct-enterprise .page-form .btn",
+		"html.ct-enterprise .control-label",
+	];
+
+	var LIST_SELECTORS = [
+		"html.ct-enterprise .list-row",
+		"html.ct-enterprise .list-row-head",
+		"html.ct-enterprise .list-row *",
+		"html.ct-enterprise .list-row-head *",
+		"html.ct-enterprise .frappe-list",
+		"html.ct-enterprise .frappe-list *",
+		"html.ct-enterprise .list-paging-area",
+		"html.ct-enterprise .list-paging-area *",
+		"html.ct-enterprise .datatable",
+		"html.ct-enterprise .datatable *",
+		"html.ct-enterprise .dt-cell",
+		"html.ct-enterprise .report-wrapper",
+	];
+
+	var MENU_SELECTORS = [
+		"html.ct-enterprise .dropdown-menu",
+		"html.ct-enterprise .dropdown-menu *",
+		"html.ct-enterprise .dropdown-item",
+		"html.ct-enterprise .awesomplete ul",
+		"html.ct-enterprise .awesomplete ul *",
+		"html.ct-enterprise .ct-dropdown-list",
+		"html.ct-enterprise .ct-dropdown-list *",
+		"html.ct-enterprise .ct-unified-dropdown",
+		"html.ct-enterprise .ct-unified-dropdown *",
+		"html.ct-enterprise .search-dialog",
+	];
+
+	// Static CSS rules not dependent on settings (preview UI, menu button).
+	var STATIC_RULES = [
+		"html.ct-enterprise .ct-typography-preview {",
+		"  border: 1px solid var(--border-color, #d1d8dd);",
+		"  border-radius: 8px;",
+		"  padding: 12px;",
+		"  background: var(--fg-color, #fff);",
+		"  color: var(--text-color, #192734);",
+		"}",
+		"html.ct-enterprise .ct-typography-preview .sidebar-sample {",
+		"  margin-top: 8px;",
+		"  color: var(--text-muted, #6c7680);",
+		"}",
+		"html.ct-enterprise .ct-typography-user-menu {",
+		"  display: flex;",
+		"  align-items: center;",
+		"  gap: 10px;",
+		"  min-height: 34px;",
+		"  margin: 2px 0 8px;",
+		"  padding: 6px 8px;",
+		"  border-radius: 8px;",
+		"  color: var(--ink-gray-8);",
+		"  text-decoration: none;",
+		"  cursor: pointer;",
+		"}",
+		"html.ct-enterprise .ct-typography-user-menu:hover {",
+		"  background: var(--sidebar-hover-color, rgba(0, 0, 0, 0.06));",
+		"  text-decoration: none;",
+		"}",
+		"html.ct-enterprise .ct-typography-user-menu .ct-typography-icon {",
+		"  display: inline-flex;",
+		"  align-items: center;",
+		"  justify-content: center;",
+		"  width: 28px;",
+		"  min-width: 28px;",
+		"  height: 28px;",
+		"  font-weight: 700;",
+		"}",
+		"html.ct-enterprise .body-sidebar-container:not(.expanded) .ct-typography-user-menu span:not(.ct-typography-icon) {",
+		"  display: none;",
+		"}",
+		// Chromium forced repaint: brief invisible animation forces full style recalc.
+		"@keyframes ct-typography-repaint {",
+		"  0% { opacity: 0.9999; }",
+		"  100% { opacity: 1; }",
+		"}",
+	].join("\n");
+
+	// ── Helpers ──
 
 	function normalize(settings) {
 		settings = Object.assign({}, defaults, settings || {});
@@ -101,153 +293,143 @@
 		return ["300", "400", "500", "600", "700"].indexOf(value) === -1 ? fallback : value;
 	}
 
-	function ensureStyleTag() {
-		var id = "ct-typography-style";
-		var style = document.getElementById(id);
-		if (style) {
-			// Keep typography overrides after late-injected theme/filter styles.
-			document.head.appendChild(style);
-			startStyleOrderObserver(style);
-			return style;
+	function resolveFont(settings, fieldname) {
+		var font = settings[fieldname];
+		return font === "Inherit" ? settings.desk_font_family : font;
+	}
+
+	function fontStack(fontName) {
+		return fontStacks[fontName] || "";
+	}
+
+	function closeOpenMenus() {
+		document.querySelectorAll(".dropdown-menu.show").forEach(function (m) {
+			m.classList.remove("show");
+		});
+	}
+
+	// ── Google Fonts Loader ──
+
+	function loadNeededGoogleFonts(settings) {
+		var seen = {};
+		var families = [];
+		var fields = [
+			"desk_font_family",
+			"sidebar_font_family",
+			"navbar_font_family",
+			"form_font_family",
+			"list_font_family",
+			"menu_font_family",
+		];
+		fields.forEach(function (field) {
+			var font = resolveFont(settings, field);
+				if (googleFontNames.has(font) && !seen[font]) {
+					seen[font] = true;
+					families.push(font);
+				}
+		});
+
+		var link = document.getElementById("ct-google-fonts");
+
+		if (families.length === 0) {
+			if (link) link.remove();
+			return;
 		}
 
-		style = document.createElement("style");
-		style.id = id;
-		style.textContent = [
-			"html.ct-enterprise,",
-			"html.ct-enterprise body {",
-			"  font-family: var(--ct-desk-font-family, inherit) !important;",
-			"  font-size: var(--ct-desk-font-size, 14px) !important;",
-			"  font-weight: var(--ct-desk-font-weight, 400) !important;",
-			"}",
-			"html.ct-enterprise body *:not(svg):not(path):not(use):not(i):not(.icon):not([class^='icon-']):not([class*=' icon-']):not(.fa):not([class^='fa-']):not([class*=' fa-']):not(.octicon) {",
-			"  font-family: var(--ct-desk-font-family, inherit) !important;",
-			"  font-size: var(--ct-desk-font-size, 14px) !important;",
-			"  font-weight: var(--ct-desk-font-weight, 400) !important;",
-			"}",
-			"html.ct-enterprise .body-sidebar .sidebar-item-label,",
-			"html.ct-enterprise .body-sidebar .item-anchor,",
-			"html.ct-enterprise .body-sidebar .collapse-sidebar-link,",
-			"html.ct-enterprise .body-sidebar .onboarding-sidebar,",
-			"html.ct-enterprise .desk-sidebar .standard-sidebar-item,",
-			"html.ct-enterprise .standard-sidebar .standard-sidebar-item,",
-			"html.ct-enterprise .desk-sidebar .standard-sidebar-item > a.item-anchor,",
-			"html.ct-enterprise .standard-sidebar .standard-sidebar-item > a.item-anchor,",
-			"html.ct-enterprise .desk-sidebar .sidebar-item-label,",
-			"html.ct-enterprise .standard-sidebar .sidebar-item-label,",
-			"html.ct-enterprise .sidebar-container .sidebar-item-label,",
-			"html.ct-enterprise .sidebar-container .sidebar-link,",
-			"html.ct-enterprise .sidebar-container .sidebar-item,",
-			"html.ct-enterprise .standard-sidebar-item,",
-			"html.ct-enterprise .body-sidebar .sidebar-item-container,",
-			"html.ct-enterprise .body-sidebar .sidebar-item-container a,",
-			"html.ct-enterprise .standard-sidebar-item a {",
-			"  font-family: var(--ct-sidebar-font-family, var(--ct-desk-font-family, inherit)) !important;",
-			"  font-size: var(--ct-sidebar-font-size, 13px) !important;",
-			"  font-weight: var(--ct-sidebar-font-weight, 500) !important;",
-			"}",
-			"html.ct-enterprise .navbar,",
-			"html.ct-enterprise .navbar .nav-link,",
-			"html.ct-enterprise .navbar .navbar-brand,",
-			"html.ct-enterprise .navbar *:not(svg):not(path):not(use):not(i):not(.icon):not([class^='icon-']):not([class*=' icon-']),",
-			"html.ct-enterprise .desktop-navbar,",
-			"html.ct-enterprise .desktop-navbar *:not(svg):not(path):not(use):not(i):not(.icon):not([class^='icon-']):not([class*=' icon-']),",
-			"html.ct-enterprise .ct-topbar-zone {",
-			"  font-family: var(--ct-navbar-font-family, var(--ct-desk-font-family, inherit)) !important;",
-			"  font-size: var(--ct-navbar-font-size, 14px) !important;",
-			"  font-weight: var(--ct-navbar-font-weight, 500) !important;",
-			"}",
-			"html.ct-enterprise .form-layout,",
-			"html.ct-enterprise .form-section,",
-			"html.ct-enterprise .frappe-control,",
-			"html.ct-enterprise .form-control,",
-			"html.ct-enterprise .control-input,",
-			"html.ct-enterprise .control-input-wrapper,",
-			"html.ct-enterprise .like-disabled-input,",
-			"html.ct-enterprise .page-form .frappe-control,",
-			"html.ct-enterprise .page-form .form-control,",
-			"html.ct-enterprise .page-form input,",
-			"html.ct-enterprise .page-form select,",
-			"html.ct-enterprise .page-form .btn,",
-			"html.ct-enterprise .control-label {",
-			"  font-family: var(--ct-form-font-family, var(--ct-desk-font-family, inherit)) !important;",
-			"  font-size: var(--ct-form-font-size, 14px) !important;",
-			"  font-weight: var(--ct-form-font-weight, 400) !important;",
-			"}",
-			"html.ct-enterprise .list-row,",
-			"html.ct-enterprise .list-row-head,",
-			"html.ct-enterprise .list-row *,",
-			"html.ct-enterprise .list-row-head *,",
-			"html.ct-enterprise .frappe-list,",
-			"html.ct-enterprise .frappe-list *,",
-			"html.ct-enterprise .list-paging-area,",
-			"html.ct-enterprise .list-paging-area *,",
-			"html.ct-enterprise .datatable,",
-			"html.ct-enterprise .datatable *,",
-			"html.ct-enterprise .dt-cell,",
-			"html.ct-enterprise .report-wrapper {",
-			"  font-family: var(--ct-list-font-family, var(--ct-desk-font-family, inherit)) !important;",
-			"  font-size: var(--ct-list-font-size, 13px) !important;",
-			"  font-weight: var(--ct-list-font-weight, 400) !important;",
-			"}",
-			"html.ct-enterprise .dropdown-menu,",
-			"html.ct-enterprise .dropdown-menu *,",
-			"html.ct-enterprise .dropdown-item,",
-			"html.ct-enterprise .awesomplete ul,",
-			"html.ct-enterprise .awesomplete ul *,",
-			"html.ct-enterprise .ct-dropdown-list,",
-			"html.ct-enterprise .ct-dropdown-list *,",
-			"html.ct-enterprise .ct-unified-dropdown,",
-			"html.ct-enterprise .ct-unified-dropdown *,",
-			"html.ct-enterprise .search-dialog {",
-			"  font-family: var(--ct-menu-font-family, var(--ct-desk-font-family, inherit)) !important;",
-			"  font-size: var(--ct-menu-font-size, 13px) !important;",
-			"  font-weight: var(--ct-menu-font-weight, 400) !important;",
-			"}",
-			"html.ct-enterprise .ct-typography-preview {",
-			"  border: 1px solid var(--border-color, #d1d8dd);",
-			"  border-radius: 8px;",
-			"  padding: 12px;",
-			"  background: var(--fg-color, #fff);",
-			"  color: var(--text-color, #192734);",
-			"}",
-			"html.ct-enterprise .ct-typography-preview .sidebar-sample {",
-			"  margin-top: 8px;",
-			"  color: var(--text-muted, #6c7680);",
-			"}",
-			"html.ct-enterprise .ct-typography-user-menu {",
-			"  display: flex;",
-			"  align-items: center;",
-			"  gap: 10px;",
-			"  min-height: 34px;",
-			"  margin: 2px 0 8px;",
-			"  padding: 6px 8px;",
-			"  border-radius: 8px;",
-			"  color: var(--ink-gray-8);",
-			"  text-decoration: none;",
-			"  cursor: pointer;",
-			"}",
-			"html.ct-enterprise .ct-typography-user-menu:hover {",
-			"  background: var(--sidebar-hover-color, rgba(0, 0, 0, 0.06));",
-			"  text-decoration: none;",
-			"}",
-			"html.ct-enterprise .ct-typography-user-menu .ct-typography-icon {",
-			"  display: inline-flex;",
-			"  align-items: center;",
-			"  justify-content: center;",
-			"  width: 28px;",
-			"  min-width: 28px;",
-			"  height: 28px;",
-			"  font-weight: 700;",
-			"}",
-			"html.ct-enterprise .body-sidebar-container:not(.expanded) .ct-typography-user-menu span:not(.ct-typography-icon) {",
-			"  display: none;",
-			"}",
-		].join("\n");
-		document.head.appendChild(style);
-		startStyleOrderObserver(style);
-		return style;
+		var params = families.map(function (name) {
+			return "family=" + name.replace(/ /g, "+") + ":wght@300;400;500;600;700";
+		});
+		params.push("display=swap");
+
+		var href = "https://fonts.googleapis.com/css2?" + params.join("&");
+
+		if (link) {
+			if (link.href !== href) link.href = href;
+		} else {
+			link = document.createElement("link");
+			link.id = "ct-google-fonts";
+			link.rel = "stylesheet";
+			link.href = href;
+			document.head.appendChild(link);
+		}
 	}
+
+	// ── Literal CSS Stylesheet Generation ──
+
+	function generateComponentCSS(selectors, family, size, weight) {
+		var fml = fontStack(family) || "inherit";
+		return (
+			selectors.join(",\n") +
+			" {\n" +
+			"  font-family: " +
+			fml +
+			" !important;\n" +
+			"  font-size: " +
+			size +
+			"px !important;\n" +
+			"  font-weight: " +
+			weight +
+			" !important;\n" +
+			"}"
+		);
+	}
+
+	function ensureStyleTag(settings) {
+		var id = "ct-typography-style";
+		var style = document.getElementById(id);
+		if (!style) {
+			style = document.createElement("style");
+			style.id = id;
+			document.head.appendChild(style);
+		}
+
+		var dFam = settings.desk_font_family;
+		var dSz = settings.desk_font_size;
+		var dWgt = settings.desk_font_weight;
+
+		var sFam = resolveFont(settings, "sidebar_font_family");
+		var sSz = settings.sidebar_font_size;
+		var sWgt = settings.sidebar_font_weight;
+
+		var nFam = resolveFont(settings, "navbar_font_family");
+		var nSz = settings.navbar_font_size;
+		var nWgt = settings.navbar_font_weight;
+
+		var fFam = resolveFont(settings, "form_font_family");
+		var fSz = settings.form_font_size;
+		var fWgt = settings.form_font_weight;
+
+		var lFam = resolveFont(settings, "list_font_family");
+		var lSz = settings.list_font_size;
+		var lWgt = settings.list_font_weight;
+
+		var mFam = resolveFont(settings, "menu_font_family");
+		var mSz = settings.menu_font_size;
+		var mWgt = settings.menu_font_weight;
+
+		var parts = [
+			generateComponentCSS(DESK_SELECTORS, dFam, dSz, dWgt),
+			generateComponentCSS(BODY_STAR_SELECTORS, dFam, dSz, dWgt),
+			generateComponentCSS(SIDEBAR_SELECTORS, sFam, sSz, sWgt),
+			generateComponentCSS(NAVBAR_SELECTORS, nFam, nSz, nWgt),
+			generateComponentCSS(FORM_SELECTORS, fFam, fSz, fWgt),
+			generateComponentCSS(LIST_SELECTORS, lFam, lSz, lWgt),
+			generateComponentCSS(MENU_SELECTORS, mFam, mSz, mWgt),
+			STATIC_RULES,
+		];
+
+		style.textContent = parts.join("\n\n");
+
+		if (document.head.lastElementChild !== style) {
+			document.head.appendChild(style);
+		}
+		startStyleOrderObserver(style);
+	}
+
+	// ── Style Order Observer ──
+	// Keeps #ct-typography-style as the last child of <head> so it wins
+	// against late-injected Frappe styles. The lastElementChild guard
+	// prevents micro-loops when ensureStyleTag re-appends.
 
 	function startStyleOrderObserver(style) {
 		if (styleOrderObserverStarted || !window.MutationObserver) return;
@@ -267,10 +449,67 @@
 		observer.observe(document.head, { childList: true });
 	}
 
+	// ── Repaint Invalidation (Chromium/Edge) ──
+	// Chromium often skips repaint for style.textContent changes on
+	// existing <style> elements, even with literal font stacks that
+	// differ from the previous value. A brief invisible opacity animation
+	// on <body> forces synchronous style recalculation in the compositor.
+
+		function triggerRepaint() {
+			var body = document.body;
+			if (!body) return;
+			body.style.animation = "ct-typography-repaint 0.01s";
+			void body.offsetHeight;
+			body.style.animation = "";
+		}
+
+		function shouldSkipInlineTypography(el) {
+			if (!el || !el.style || !el.tagName) return true;
+			var tag = el.tagName.toLowerCase();
+			if (
+				["svg", "path", "use", "img", "canvas", "video", "style", "script"].indexOf(tag) !== -1
+			) {
+				return true;
+			}
+			var className = typeof el.className === "string" ? el.className : "";
+			return (
+				/(^|\s)(icon|octicon|fa|avatar|indicator)(\s|$)/.test(className) ||
+				/(^|\s)(icon-|fa-)/.test(className)
+			);
+		}
+
+		function applyInlineTypographyFallback(settings) {
+			if (!document.body) return;
+
+			var rules = [
+				{ selector: "body, body *", family: settings.desk_font_family, size: settings.desk_font_size, weight: settings.desk_font_weight },
+				{ selector: SIDEBAR_SELECTORS.join(","), family: resolveFont(settings, "sidebar_font_family"), size: settings.sidebar_font_size, weight: settings.sidebar_font_weight },
+				{ selector: NAVBAR_SELECTORS.join(","), family: resolveFont(settings, "navbar_font_family"), size: settings.navbar_font_size, weight: settings.navbar_font_weight },
+				{ selector: FORM_SELECTORS.join(","), family: resolveFont(settings, "form_font_family"), size: settings.form_font_size, weight: settings.form_font_weight },
+				{ selector: LIST_SELECTORS.join(","), family: resolveFont(settings, "list_font_family"), size: settings.list_font_size, weight: settings.list_font_weight },
+				{ selector: MENU_SELECTORS.join(","), family: resolveFont(settings, "menu_font_family"), size: settings.menu_font_size, weight: settings.menu_font_weight },
+			];
+
+			rules.forEach(function (rule) {
+				var family = fontStack(rule.family) || "";
+				document.querySelectorAll(rule.selector).forEach(function (el) {
+					if (shouldSkipInlineTypography(el)) return;
+					el.style.setProperty("font-family", family, "important");
+					el.style.setProperty("font-size", rule.size + "px", "important");
+					el.style.setProperty("font-weight", rule.weight, "important");
+				});
+			});
+			window.ctTypographyInlineFallbackAppliedAt = new Date().toISOString();
+		}
+
+	// ── Main Apply Function ──
+
 	function applyTypography(settings) {
 		settings = normalize(settings);
-		ensureStyleTag();
+		loadNeededGoogleFonts(settings);
+		ensureStyleTag(settings);
 
+		// Legacy CSS variable compatibility (not consumed by known CSS files).
 		var root = document.documentElement;
 		setFontVariable(root, "desk", settings.desk_font_family, settings);
 		["sidebar", "navbar", "form", "list", "menu"].forEach(function (component) {
@@ -288,89 +527,35 @@
 				settings[component + "_font_weight"]
 			);
 		});
-		applyRootTypographyStyles(settings);
+
+			// Safety net: inline !important on <html> and <body> for FOUC prevention.
+			applyRootTypographyStyles(settings);
+			// v9 wrote inline !important font styles onto descendants. Update those
+			// inline values too, otherwise no repaint mechanism can beat them.
+			applyInlineTypographyFallback(settings);
+
+			triggerRepaint();
 
 		window.ctTypographySettings = settings;
 		window.ctTypographyLastAppliedAt = new Date().toISOString();
-		applyInlineTypography(settings);
-		startDomTypographyObserver();
 		try {
 			localStorage.setItem("ct-typography-settings", JSON.stringify(settings));
 		} catch (e) {}
 		return settings;
 	}
 
-	function startDomTypographyObserver() {
-		if (domObserverStarted || !window.MutationObserver || !document.body) return;
-		domObserverStarted = true;
-		observeTypographyRoot(document.body);
-		discoverTypographyShadowRoots(document.body);
+	// ── Backward Compat: Legacy CSS Variables ──
+
+	function setFontVariable(root, component, selectedFont, settings) {
+		var value = fontStacks[selectedFont];
+		var property = "--ct-" + component + "-font-family";
+		if (!value && component !== "desk" && settings) {
+			value = fontStacks[settings.desk_font_family];
+		}
+		root.style.setProperty(property, value || "");
 	}
 
-	function applyInlineTypography(settings) {
-		if (!document.body) return;
-		settings = normalize(settings);
-		discoverTypographyShadowRoots(document.body);
-		applyDeskTypographyToRoot(document, settings);
-		typographyObservedRootList.forEach(function (root) {
-			applyDeskTypographyToRoot(root, settings);
-		});
-
-		var rules = [
-			{
-				selector:
-					".body-sidebar, .body-sidebar *, .desk-sidebar, .desk-sidebar *, .standard-sidebar, .standard-sidebar *, .sidebar-container, .sidebar-container *",
-				component: "sidebar",
-			},
-			{
-				selector:
-					".navbar, .navbar *, .desktop-navbar, .desktop-navbar *, .ct-topbar-zone, .ct-topbar-zone *",
-				component: "navbar",
-			},
-			{
-				selector:
-					".form-layout, .form-layout *, .form-section, .form-section *, .frappe-control, .frappe-control *, .form-control, .control-input, .control-input-wrapper, .page-form, .page-form *",
-				component: "form",
-			},
-			{
-				selector:
-					".frappe-list, .frappe-list *, .list-row, .list-row *, .list-row-head, .list-row-head *, .datatable, .datatable *, .dt-cell, .report-wrapper, .report-wrapper *",
-				component: "list",
-			},
-			{
-				selector:
-					".dropdown-menu, .dropdown-menu *, .dropdown-item, .awesomplete ul, .awesomplete ul *, .ct-dropdown-list, .ct-dropdown-list *, .ct-unified-dropdown, .ct-unified-dropdown *, .search-dialog, .search-dialog *",
-				component: "menu",
-			},
-		];
-
-		applyInlineTypographyToRoot(document, rules, settings);
-		typographyObservedRootList.forEach(function (root) {
-			applyInlineTypographyToRoot(root, rules, settings);
-		});
-
-		window.ctTypographyInlineAppliedAt = new Date().toISOString();
-	}
-
-	function applyDeskTypographyToRoot(root, settings) {
-		if (!root || !root.querySelectorAll) return;
-
-		var selector = root === document ? "body, body *" : "*";
-		root.querySelectorAll(selector).forEach(function (el) {
-			if (shouldSkipInlineTypography(el)) return;
-			setInlineFont(el, "desk", settings);
-		});
-	}
-
-	function applyInlineTypographyToRoot(root, rules, settings) {
-		if (!root || !root.querySelectorAll) return;
-		rules.forEach(function (rule) {
-			root.querySelectorAll(rule.selector).forEach(function (el) {
-				if (shouldSkipInlineTypography(el)) return;
-				setInlineFont(el, rule.component, settings);
-			});
-		});
-	}
+	// ── Inline Root Fallback ──
 
 	function applyRootTypographyStyles(settings) {
 		var deskFamily = fontStacks[settings.desk_font_family] || "";
@@ -388,94 +573,7 @@
 		}
 	}
 
-	function observeTypographyRoot(root) {
-		if (!root || !window.MutationObserver) return;
-		if (typographyObservedRoots && typographyObservedRoots.has(root)) return;
-		if (typographyObservedRoots) typographyObservedRoots.add(root);
-		typographyObservedRootList.push(root);
-
-		var observer = new MutationObserver(function (mutations) {
-			var shouldApply = false;
-			mutations.forEach(function (mutation) {
-				if (mutation.addedNodes && mutation.addedNodes.length) {
-					shouldApply = true;
-					[].forEach.call(mutation.addedNodes, function (node) {
-						registerTypographyShadowRoots(node);
-					});
-				}
-			});
-			if (!shouldApply) return;
-
-			clearTimeout(inlineApplyTimer);
-			inlineApplyTimer = setTimeout(function () {
-				if (window.ctTypographySettings) {
-					applyInlineTypography(window.ctTypographySettings);
-				}
-			}, 100);
-		});
-
-		try {
-			observer.observe(root, { childList: true, subtree: true });
-			typographyRootObservers.push(observer);
-		} catch (e) {}
-	}
-
-	function registerTypographyShadowRoots(node) {
-		if (!node || !node.querySelectorAll) return;
-		[].forEach.call(node.querySelectorAll("*"), function (el) {
-			if (el.shadowRoot) {
-				observeTypographyRoot(el.shadowRoot);
-				discoverTypographyShadowRoots(el.shadowRoot);
-			}
-		});
-
-		if (node.shadowRoot) {
-			observeTypographyRoot(node.shadowRoot);
-			discoverTypographyShadowRoots(node.shadowRoot);
-		}
-	}
-
-	function discoverTypographyShadowRoots(root) {
-		if (!root || !root.querySelectorAll) return;
-		[].forEach.call(root.querySelectorAll("*"), function (el) {
-			if (el.shadowRoot) {
-				observeTypographyRoot(el.shadowRoot);
-			}
-		});
-	}
-
-	function shouldSkipInlineTypography(el) {
-		if (!el || !el.style || !el.tagName) return true;
-		var tag = el.tagName.toLowerCase();
-		if (
-			["svg", "path", "use", "img", "canvas", "video", "style", "script"].indexOf(tag) !== -1
-		)
-			return true;
-		var className = typeof el.className === "string" ? el.className : "";
-		return (
-			/(^|\s)(icon|octicon|fa|avatar|indicator)(\s|$)/.test(className) ||
-			/(^|\s)(icon-|fa-)/.test(className)
-		);
-	}
-
-	function setInlineFont(el, component, settings) {
-		var family = fontStacks[settings[component + "_font_family"]];
-		if (!family && component !== "desk") {
-			family = fontStacks[settings.desk_font_family];
-		}
-		el.style.setProperty("font-family", family || "", "important");
-		el.style.setProperty("font-size", settings[component + "_font_size"] + "px", "important");
-		el.style.setProperty("font-weight", settings[component + "_font_weight"], "important");
-	}
-
-	function setFontVariable(root, component, selectedFont, settings) {
-		var value = fontStacks[selectedFont];
-		var property = "--ct-" + component + "-font-family";
-		if (!value && component !== "desk" && settings) {
-			value = fontStacks[settings.desk_font_family];
-		}
-		root.style.setProperty(property, value || "");
-	}
+	// ── Dialog Preview ──
 
 	function updatePreview(dialog) {
 		var values = dialog.get_values() || {};
@@ -496,15 +594,18 @@
 		}
 	}
 
+	// ── Dialog ──
+
 	function showDialog() {
 		loadSettings(function (current) {
 			buildDialog(current);
 		});
 	}
 
-	function buildDialog(current) {
-		current = normalize(current);
-		var dialog = new frappe.ui.Dialog({
+		function buildDialog(current) {
+			current = normalize(current);
+			var lastDeskFontFamily = current.desk_font_family;
+			var dialog = new frappe.ui.Dialog({
 			title: __("Typography Settings"),
 			fields: [
 				{
@@ -683,15 +784,25 @@
 			updatePreview(dialog);
 		});
 
-		dialog.$wrapper.on("change input", "select, input", function () {
-			var values = dialog.get_values() || {};
-			applyTypography(values);
-			updatePreview(dialog);
-		});
+			dialog.$wrapper.on("change input", "select, input", function (event) {
+				var values = dialog.get_values() || {};
+				var fieldname = $(event.target).closest("[data-fieldname]").attr("data-fieldname");
+				if (fieldname === "desk_font_family" && values.desk_font_family !== lastDeskFontFamily) {
+					componentFamilyFields.forEach(function (componentFieldname) {
+						dialog.set_value(componentFieldname, "Inherit");
+					});
+					lastDeskFontFamily = values.desk_font_family;
+					values = dialog.get_values() || values;
+				}
+				applyTypography(values);
+				updatePreview(dialog);
+			});
 
 		dialog.show();
 		updatePreview(dialog);
 	}
+
+	// ── Settings Load / Save ──
 
 	function loadSettings(callback) {
 		var fallback = normalize(
@@ -714,6 +825,8 @@
 			},
 		});
 	}
+
+	// ── UI Entry Points ──
 
 	function patchSidebarHeaderMenu() {
 		if (
@@ -738,7 +851,7 @@
 					name: "typography-settings",
 					label: __("Typography Settings"),
 					icon: "type",
-					onClick: showDialog,
+					onClick: closeOpenMenus,
 				});
 			}
 			return items;
@@ -757,6 +870,7 @@
 		item.textContent = __("Typography Settings");
 		item.addEventListener("click", function (event) {
 			event.preventDefault();
+			closeOpenMenus();
 			showDialog();
 		});
 		menu.insertBefore(item, menu.firstChild);
@@ -777,10 +891,13 @@
 		item.addEventListener("click", function (event) {
 			event.preventDefault();
 			event.stopPropagation();
+			closeOpenMenus();
 			showDialog();
 		});
 		userArea.insertAdjacentElement("afterend", item);
 	}
+
+	// ── Initialization ──
 
 	function init() {
 		if (typeof frappe === "undefined") return;
@@ -801,9 +918,10 @@
 				},
 			});
 		}
-		window.ctShowTypographySettings = showDialog;
-		window.ctTypography = {
-			defaults: defaults,
+			window.ctShowTypographySettings = showDialog;
+			window.ctTypography = {
+				assetVersion: assetVersion,
+				defaults: defaults,
 			fontOptions: fontOptions,
 			componentFontOptions: componentFontOptions,
 			deskFontOptions: deskFontOptions,
