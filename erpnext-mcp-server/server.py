@@ -91,6 +91,7 @@ def audit(tool: str, args: dict, result_status: str):
 # Frappe Initialization
 # ═══════════════════════════════════════════════════════════════
 
+
 def init_frappe():
     """Initialize Frappe connection."""
     os.chdir(BENCH_PATH)
@@ -123,8 +124,7 @@ def guard_doctype(doctype: str) -> str:
     """Enforce DocType allowlist."""
     if doctype not in ALLOWLIST:
         raise PermissionError(
-            f"DocType '{doctype}' is not in the read-only allowlist. "
-            f"Allowed: {sorted(ALLOWLIST)}"
+            f"DocType '{doctype}' is not in the read-only allowlist. Allowed: {sorted(ALLOWLIST)}"
         )
     return doctype
 
@@ -132,10 +132,7 @@ def guard_doctype(doctype: str) -> str:
 def guard_sql(sql: str) -> str:
     """Block any SQL that modifies data."""
     if FORBIDDEN_SQL_PATTERN.search(sql):
-        raise PermissionError(
-            "Write SQL detected. This MCP server is read-only. "
-            f"Blocked query: {sql[:200]}"
-        )
+        raise PermissionError(f"Write SQL detected. This MCP server is read-only. Blocked query: {sql[:200]}")
     return sql
 
 
@@ -297,20 +294,85 @@ def tool_run_safe_select(sql: str, params: dict | None = None) -> list[dict]:
 # ═══════════════════════════════════════════════════════════════
 
 from mcp.server import Server
-from mcp.types import Tool, TextContent
+from mcp.types import TextContent, Tool
 
 app = Server("erpnext-construction-mcp")
 
 TOOLS = [
-    Tool(name="get_boq_header", description="Get BOQ Header with all items", inputSchema={"type": "object", "properties": {"name": {"type": "string"}}, "required": ["name"]}),
-    Tool(name="get_boq_structure_tree", description="Get WBS tree for a BOQ Header", inputSchema={"type": "object", "properties": {"boq_header": {"type": "string"}}, "required": ["boq_header"]}),
-    Tool(name="get_scope_context", description="Get current scope for a user", inputSchema={"type": "object", "properties": {"user": {"type": "string"}}}),
-    Tool(name="list_construction_themes", description="List active Construction Themes", inputSchema={"type": "object", "properties": {}}),
-    Tool(name="get_form_layout_profile", description="Get active layout profile for a DocType", inputSchema={"type": "object", "properties": {"doctype": {"type": "string"}}, "required": ["doctype"]}),
-    Tool(name="get_doctype_schema", description="Get field schema for a DocType", inputSchema={"type": "object", "properties": {"doctype": {"type": "string"}}, "required": ["doctype"]}),
-    Tool(name="get_document", description="Generic read-only get_doc (allowlist enforced)", inputSchema={"type": "object", "properties": {"doctype": {"type": "string"}, "name": {"type": "string"}}, "required": ["doctype", "name"]}),
-    Tool(name="get_doctype_list", description="Generic read-only list query (allowlist enforced)", inputSchema={"type": "object", "properties": {"doctype": {"type": "string"}, "filters": {"type": "object"}, "fields": {"type": "array", "items": {"type": "string"}}, "limit": {"type": "integer", "default": 20}}, "required": ["doctype"]}),
-    Tool(name="run_safe_select", description="Run a read-only SELECT SQL query", inputSchema={"type": "object", "properties": {"sql": {"type": "string"}, "params": {"type": "object"}}, "required": ["sql"]}),
+    Tool(
+        name="get_boq_header",
+        description="Get BOQ Header with all items",
+        inputSchema={"type": "object", "properties": {"name": {"type": "string"}}, "required": ["name"]},
+    ),
+    Tool(
+        name="get_boq_structure_tree",
+        description="Get WBS tree for a BOQ Header",
+        inputSchema={
+            "type": "object",
+            "properties": {"boq_header": {"type": "string"}},
+            "required": ["boq_header"],
+        },
+    ),
+    Tool(
+        name="get_scope_context",
+        description="Get current scope for a user",
+        inputSchema={"type": "object", "properties": {"user": {"type": "string"}}},
+    ),
+    Tool(
+        name="list_construction_themes",
+        description="List active Construction Themes",
+        inputSchema={"type": "object", "properties": {}},
+    ),
+    Tool(
+        name="get_form_layout_profile",
+        description="Get active layout profile for a DocType",
+        inputSchema={
+            "type": "object",
+            "properties": {"doctype": {"type": "string"}},
+            "required": ["doctype"],
+        },
+    ),
+    Tool(
+        name="get_doctype_schema",
+        description="Get field schema for a DocType",
+        inputSchema={
+            "type": "object",
+            "properties": {"doctype": {"type": "string"}},
+            "required": ["doctype"],
+        },
+    ),
+    Tool(
+        name="get_document",
+        description="Generic read-only get_doc (allowlist enforced)",
+        inputSchema={
+            "type": "object",
+            "properties": {"doctype": {"type": "string"}, "name": {"type": "string"}},
+            "required": ["doctype", "name"],
+        },
+    ),
+    Tool(
+        name="get_doctype_list",
+        description="Generic read-only list query (allowlist enforced)",
+        inputSchema={
+            "type": "object",
+            "properties": {
+                "doctype": {"type": "string"},
+                "filters": {"type": "object"},
+                "fields": {"type": "array", "items": {"type": "string"}},
+                "limit": {"type": "integer", "default": 20},
+            },
+            "required": ["doctype"],
+        },
+    ),
+    Tool(
+        name="run_safe_select",
+        description="Run a read-only SELECT SQL query",
+        inputSchema={
+            "type": "object",
+            "properties": {"sql": {"type": "string"}, "params": {"type": "object"}},
+            "required": ["sql"],
+        },
+    ),
 ]
 
 
@@ -343,6 +405,7 @@ _executor = concurrent.futures.ThreadPoolExecutor(max_workers=4, thread_name_pre
 @app.call_tool()
 async def call_tool(name: str, arguments: dict):
     import asyncio
+
     try:
         func = _tool_map.get(name)
         if not func:

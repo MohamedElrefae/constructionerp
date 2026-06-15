@@ -1,6 +1,5 @@
 import frappe
 
-
 IMPROVE_NOW_FLAGS = frozenset(
     {
         "enable_boq_excel_import_preview",

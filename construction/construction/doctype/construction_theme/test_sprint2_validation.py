@@ -96,9 +96,9 @@ def test_hex_color_validation_property(test_string):
     is_valid_hex = bool(re.match(r"^#[0-9A-Fa-f]{3}$|^#[0-9A-Fa-f]{6}$", str(test_string or "")))
 
     # Result should match the pattern check
-    assert (
-        result == is_valid_hex
-    ), f"_is_valid_hex_color('{test_string}') returned {result}, expected {is_valid_hex}"
+    assert result == is_valid_hex, (
+        f"_is_valid_hex_color('{test_string}') returned {result}, expected {is_valid_hex}"
+    )
 
 
 # ============================================================================
@@ -163,9 +163,9 @@ def test_wcag_contrast_ratio_property(color1, color2):
     expected_ratio = (lighter + 0.05) / (darker + 0.05)
 
     # Allow small floating point differences
-    assert (
-        abs(ratio - expected_ratio) < 0.0001
-    ), f"Contrast ratio {ratio} does not match expected {expected_ratio}"
+    assert abs(ratio - expected_ratio) < 0.0001, (
+        f"Contrast ratio {ratio} does not match expected {expected_ratio}"
+    )
 
 
 # ============================================================================
@@ -213,9 +213,9 @@ def test_login_title_length_validation_property(title):
         else:
             # Should succeed
             theme.insert()
-            assert frappe.db.exists(
-                "Construction Theme", theme.name
-            ), f"Theme with title length {len(title)} should have been inserted"
+            assert frappe.db.exists("Construction Theme", theme.name), (
+                f"Theme with title length {len(title)} should have been inserted"
+            )
     finally:
         if frappe.db.exists("Construction Theme", theme.name):
             frappe.delete_doc("Construction Theme", theme.name, force=True)
@@ -234,7 +234,9 @@ class TestComponentStylesheetStructure(unittest.TestCase):
 
     def setUp(self):
         """Setup test fixtures."""
-        self.stylesheet_path = "construction/construction/public/css/construction_theme_components.css"
+        self.stylesheet_path = frappe.get_app_path(
+            "construction", "public", "css", "construction_theme_components.css"
+        )
 
     def test_component_stylesheet_exists(self):
         """Verify component stylesheet file exists."""
@@ -301,7 +303,7 @@ class TestComponentStylesheetStructure(unittest.TestCase):
         content_no_comments = re.sub(r"/\*.*?\*/", "", content, flags=re.DOTALL)
 
         # Look for hex color patterns (but not in variable names like --ct-*)
-        hex_pattern = r"(?<!--ct-[a-z0-9-]*)[:#]([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})(?![0-9A-Fa-f])"
+        hex_pattern = r"#([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})(?![0-9A-Fa-f])"
         hex_matches = re.findall(hex_pattern, content_no_comments)
 
         # Filter out false positives (like #media, #keyframes, etc.)

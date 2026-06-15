@@ -145,7 +145,12 @@ def main():
     args = parser.parse_args()
 
     if args.summary:
-        summary, decisions, issues, next_steps = args.summary, args.decisions or "", args.issues or "", args.next_steps or ""
+        summary, decisions, issues, next_steps = (
+            args.summary,
+            args.decisions or "",
+            args.issues or "",
+            args.next_steps or "",
+        )
     else:
         summary, decisions, issues, next_steps = interactive_prompt()
 

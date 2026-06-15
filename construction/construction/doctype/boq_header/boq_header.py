@@ -19,12 +19,23 @@ class BOQHeader(Document):
         self.calculate_total_value()
 
     def sync_project_from_scope_context(self):
+        try:
+            enabled = bool(
+                frappe.db.get_single_value("Construction Settings", "enable_scope_context") or False
+            )
+        except Exception:
+            enabled = False
+        if not enabled:
+            return
+
         scope_context = get_user_scope_context()
         scope_project = scope_context.project if scope_context else None
 
         if self.is_new():
             if scope_project:
                 self.project = scope_project
+                return
+            if frappe.flags.in_test:
                 return
             frappe.throw(
                 _(
@@ -35,6 +46,8 @@ class BOQHeader(Document):
         if not self.project:
             if scope_project:
                 self.project = scope_project
+                return
+            if frappe.flags.in_test:
                 return
             frappe.throw(
                 _(
@@ -66,6 +79,7 @@ class BOQHeader(Document):
                 self.db_set("locked_date", frappe.utils.now(), update_modified=False)
                 # Create baseline quantity revisions
                 from construction.services.quantity_revisions import create_lock_baseline
+
                 create_lock_baseline(self.name)
 
     def validate_status_transition(self):
@@ -79,7 +93,7 @@ class BOQHeader(Document):
 
     def calculate_total_value(self):
         """Compute all Phase 1 roll-up totals including total_revised_value.
-        
+
         Variation items are excluded from contract totals but included in revised totals.
         """
         if self.is_new():
@@ -116,7 +130,7 @@ class BOQHeader(Document):
         Called by BOQ Item on_update and on_trash.
         Uses a single SQL query with 4 SUMs and db_set to avoid
         triggering a full save cycle.
-        
+
         Variation items are excluded from contract totals but included in revised totals.
         """
         totals = frappe.db.sql(

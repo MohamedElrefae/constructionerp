@@ -28,6 +28,9 @@ def run_all_tests():
         ("T-012 NestedSet descendant expansion", test_nestedset_expansion),
         ("T-013 Server-side query injection", test_server_side_injection),
         ("T-014 Scope drift detection", test_scope_drift_detection),
+        ("T-015 Property Setter standard filters", test_standard_filters_property_setters),
+        ("T-016 Report scope enforcement", test_report_scope_enforcement),
+        ("T-017 Report scope bypass for finance", test_report_scope_bypass_for_finance_role),
     ]
 
     passed = 0
@@ -52,10 +55,31 @@ def run_all_tests():
     print("ALL TESTS PASSED")
 
 
+def setup_module(module):
+    """Setup before all tests in this module run"""
+    frappe.db.set_single_value("Construction Settings", "enable_scope_context", 1)
+    frappe.db.commit()
+
+
+def teardown_module(module):
+    """Cleanup after all tests in this module run"""
+    _cleanup()
+    frappe.db.set_single_value("Construction Settings", "enable_scope_context", 0)
+    frappe.db.commit()
+
+
 def _cleanup():
     frappe.db.delete("User Scope Context", {"user": "Administrator"})
     frappe.db.delete("User Scope Context", {"user": "test_scope@example.com"})
     frappe.db.delete("User Scope Context", {"user": "test_user2@example.com"})
+
+    for u in ["Administrator", "test_scope@example.com", "test_user2@example.com"]:
+        frappe.defaults.clear_user_default("company", u)
+        frappe.defaults.clear_user_default("cost_center", u)
+        frappe.defaults.clear_user_default("project", u)
+        frappe.defaults.clear_user_default("department", u)
+        frappe.clear_cache(user=u)
+
     frappe.db.commit()
 
 
@@ -158,15 +182,15 @@ def test_bootinfo_scope_context():
     assert result["success"] is True
 
     bootinfo = extend_bootinfo({})
-    assert (
-        bootinfo.get("scope_context_enabled") is True
-    ), f"scope_context_enabled should be True, got {bootinfo.get('scope_context_enabled')}"
+    assert bootinfo.get("scope_context_enabled") is True, (
+        f"scope_context_enabled should be True, got {bootinfo.get('scope_context_enabled')}"
+    )
     sc = bootinfo.get("scope_context")
     assert sc is not None, f"scope_context missing from bootinfo: {bootinfo}"
     assert sc.get("current") is not None, f"current missing: {sc}"
-    assert (
-        sc["current"]["company"] == "Elrefae"
-    ), f"Expected company=Elrefae, got {sc['current'].get('company')}"
+    assert sc["current"]["company"] == "Elrefae", (
+        f"Expected company=Elrefae, got {sc['current'].get('company')}"
+    )
 
 
 # === T-007 ===
@@ -340,6 +364,74 @@ def test_scope_drift_detection():
         assert result.get("scope_token") == token2, "API token should match direct call"
     finally:
         frappe.set_user("Administrator")
+
+
+# === Option A+ Tests ===
+
+
+def test_standard_filters_property_setters():
+    from construction.patches.v7_2.set_erpnext_standard_filters import (
+        ERPNEXT_STANDARD_FILTER_OVERRIDES,
+        setup_erpnext_standard_filters,
+    )
+
+    setup_erpnext_standard_filters()
+    frappe.db.commit()
+
+    for doctype, fields in ERPNEXT_STANDARD_FILTER_OVERRIDES.items():
+        if not frappe.db.exists("DocType", doctype):
+            continue
+        for fieldname in fields:
+            value = frappe.db.get_value(
+                "Property Setter",
+                {"doc_type": doctype, "field_name": fieldname, "property": "in_standard_filter"},
+                "value",
+            )
+            assert value == "0", f"Expected {doctype}.{fieldname} in_standard_filter=0, got {value!r}"
+
+
+def test_report_scope_enforcement():
+    from construction.overrides.scope_report import _enforce_scope_filters
+
+    _ensure_test_user()
+
+    # Set a scope for the test user
+    frappe.set_user("test_user2@example.com")
+    try:
+        set_scope_context(
+            company="Elrefae",
+            cost_center=_COST_CENTER,
+            project=None,
+            department=None,
+            source="test",
+        )
+        frappe.db.commit()
+
+        filters = {"company": "Elrefae", "cost_center": _COST_CENTER, "project": "SomeOtherProject"}
+        enforced = _enforce_scope_filters(filters, "test_user2@example.com")
+
+        assert enforced["company"] == "Elrefae"
+        assert enforced["cost_center"] == _COST_CENTER
+        # Project was not in the user's scope and should be cleared/forced to None
+        assert enforced.get("project") is None or enforced.get("project") == ""
+    finally:
+        frappe.set_user("Administrator")
+
+
+def test_report_scope_bypass_for_finance_role():
+    from construction.overrides.scope_report import _has_unrestricted_report_role
+
+    if not frappe.db.exists("Role", "Accounts User"):
+        frappe.get_doc({"doctype": "Role", "role_name": "Accounts User"}).insert(ignore_permissions=True)
+
+    user = "test_scope@example.com"
+    user_doc = frappe.get_doc("User", user)
+    user_doc.add_roles("Accounts User")
+
+    try:
+        assert _has_unrestricted_report_role(user) is True
+    finally:
+        user_doc.remove_roles("Accounts User")
 
 
 if __name__ == "__main__":

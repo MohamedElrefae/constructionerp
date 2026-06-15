@@ -71,6 +71,13 @@
 6. **Theme writes:** use `frappe.db.set_value(..., update_modified=False)` not `doc.save()` (avoids TimestampMismatchError)
 7. **Scope tests:** always test as non-admin user (admin bypasses all scope filters)
 8. **Python compatibility:** venv is Python 3.14, but code must remain Python 3.10 quote-nesting safe
+9. **New transactional DocType with scope dimensions?** Follow the Scope Context checklist:
+   - Review `project`, `company`, `cost_center`, `department` fields.
+   - Display-only / derived fields: `fieldtype: "Link"`, `"read_only": 1`, `"in_standard_filter": 0`.
+   - User-selectable fields: `"in_standard_filter": 0`; drive selection via `window.scopeContext` or a scoped whitelisted API.
+   - Never call `frappe.db.get_value("Project", ...)` / `"Company", ...` from client scripts.
+   - Bump `hooks.py` `?v=` cache busters for any modified JS files.
+   - Run `python3 scripts/lint_scope_metadata.py` locally before committing.
 
 ## 5. Active Workstreams
 > Read `SESSION_MEMORY.md` for the current sprint state.

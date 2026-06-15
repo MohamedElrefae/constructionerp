@@ -781,7 +781,6 @@ def seed_form_layout_profiles():
         doc.insert(ignore_permissions=True)
 
 
-
 # ---------------------------------------------------------------------------
 # System Themes
 # ---------------------------------------------------------------------------
@@ -878,6 +877,19 @@ def create_system_themes():
 # ---------------------------------------------------------------------------
 # Branch.company Custom Field (required for HR integrity)
 # ---------------------------------------------------------------------------
+
+
+def setup_erpnext_standard_filters():
+    """Apply Property Setters that hide Company standard filters on ERPNext transactional DocTypes.
+
+    Called by after_install and after_migrate hooks, and by patch.
+    Idempotent — safe to run multiple times.
+    """
+    from construction.patches.v7_2.set_erpnext_standard_filters import (
+        setup_erpnext_standard_filters as _setup,
+    )
+
+    _setup()
 
 
 def setup_branch_company_field():

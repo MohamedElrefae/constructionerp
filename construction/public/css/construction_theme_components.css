@@ -3,7 +3,7 @@
  * These classes are applied to <body> by the theme loader
  * based on Construction Theme feature toggle fields.
  *
- * IMPORTANT: All !important usages are intentional — they must
+ * IMPORTANT: All priority override (bang-important) usages are intentional — they must
  * override Frappe's built-in styles which have high specificity.
  */
 

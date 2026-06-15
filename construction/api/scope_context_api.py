@@ -154,10 +154,14 @@ def set_scope_context(
 
     # 3. Resolve & update fields (supporting sentinel and form_dict fallback)
     target_company = company if company is not _UNSPECIFIED else frappe.form_dict.get("company", _UNSPECIFIED)
-    target_cost_center = cost_center if cost_center is not _UNSPECIFIED else frappe.form_dict.get("cost_center", _UNSPECIFIED)
+    target_cost_center = (
+        cost_center if cost_center is not _UNSPECIFIED else frappe.form_dict.get("cost_center", _UNSPECIFIED)
+    )
     target_branch = branch if branch is not _UNSPECIFIED else frappe.form_dict.get("branch", _UNSPECIFIED)
     target_project = project if project is not _UNSPECIFIED else frappe.form_dict.get("project", _UNSPECIFIED)
-    target_department = department if department is not _UNSPECIFIED else frappe.form_dict.get("department", _UNSPECIFIED)
+    target_department = (
+        department if department is not _UNSPECIFIED else frappe.form_dict.get("department", _UNSPECIFIED)
+    )
 
     if target_company is not _UNSPECIFIED:
         if not target_company:

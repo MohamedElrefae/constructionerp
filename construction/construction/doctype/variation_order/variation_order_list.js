@@ -28,7 +28,10 @@ frappe.listview_settings["Variation Order"] = {
 			if (!v) return "";
 			const cls = v > 0 ? "text-success" : "text-danger";
 			const sign = v > 0 ? "+" : "";
-			return `<span class="${cls}">${sign}${format_currency(v, frappe.defaults.get_default("currency") || "EGP")}</span>`;
+			return `<span class="${cls}">${sign}${format_currency(
+				v,
+				frappe.defaults.get_default("currency") || "EGP",
+			)}</span>`;
 		},
 	},
 
@@ -48,7 +51,7 @@ frappe.listview_settings["Variation Order"] = {
 				if (r.message && r.message.enabled === false) {
 					listview.page.set_indicator(
 						__("Variation Orders are disabled by Construction Settings"),
-						"orange"
+						"orange",
 					);
 				}
 			},

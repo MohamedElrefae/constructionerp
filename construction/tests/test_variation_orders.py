@@ -1,9 +1,9 @@
 import frappe
 from frappe.tests.utils import FrappeTestCase
 
-from construction.services.variation_orders import get_revised_boq_rows, get_revised_qty
 from construction.services.boq_export_service import BOQExportService
 from construction.services.feature_flags import set_flag
+from construction.services.variation_orders import get_revised_boq_rows, get_revised_qty
 from construction.tests.test_boq_helpers import get_or_create_test_project
 
 
@@ -11,12 +11,14 @@ def get_or_create_test_item():
     item_code = frappe.db.get_value("Item", {}, "name")
     if not item_code:
         uom = frappe.db.get_value("UOM", {"enabled": 1}, "name") or "Nos"
-        item = frappe.get_doc({
-            "doctype": "Item",
-            "item_code": "Test Standard Item",
-            "item_group": "All Item Groups",
-            "stock_uom": uom
-        }).insert(ignore_permissions=True)
+        item = frappe.get_doc(
+            {
+                "doctype": "Item",
+                "item_code": "Test Standard Item",
+                "item_group": "All Item Groups",
+                "stock_uom": uom,
+            }
+        ).insert(ignore_permissions=True)
         item_code = item.name
     return item_code
 
@@ -48,7 +50,9 @@ class TestVariationOrders(FrappeTestCase):
 
         first = self._make_vo(header.name, item.name, revised_qty=101).insert(ignore_permissions=True)
         second = self._make_vo(header.name, item.name, revised_qty=101).insert(ignore_permissions=True)
-        other = self._make_vo(other_header.name, other_item.name, revised_qty=101).insert(ignore_permissions=True)
+        other = self._make_vo(other_header.name, other_item.name, revised_qty=101).insert(
+            ignore_permissions=True
+        )
 
         self.assertEqual(first.vo_number, "VO-001")
         self.assertEqual(second.vo_number, "VO-002")
@@ -243,7 +247,7 @@ class TestVariationOrders(FrappeTestCase):
         self.assertEqual(line.revised_qty, 0)
         self.assertEqual(line.delta_qty, -20)
         self.assertEqual(line.line_delta_value, -800)
-        
+
         # Approve and verify quantity revision
         vo = self._approve_by_client(self._approve_to_engineer(vo))
         item.reload()
@@ -252,7 +256,7 @@ class TestVariationOrders(FrappeTestCase):
     def test_boq_header_totals_exclude_variation_items(self):
         from construction.api.boq_api import get_revised_boq_view
 
-        header, item = self._make_boq_item("VO Header Totals", quantity=100, rate=50)
+        header, _item = self._make_boq_item("VO Header Totals", quantity=100, rate=50)
         header.reload()
         contract_value_before = header.total_contract_value
 
@@ -413,6 +417,7 @@ class TestVariationOrders(FrappeTestCase):
             header.save(ignore_permissions=True)
         # Explicitly create baseline for tests
         from construction.services.quantity_revisions import create_lock_baseline
+
         create_lock_baseline(header_name)
         return header
 
@@ -448,6 +453,7 @@ class TestVariationOrders(FrappeTestCase):
 
     def test_create_material_request_for_vo(self):
         from construction.api.boq_api import create_material_request_for_vo
+
         set_flag("enable_variation_orders", 1)
         header, _item = self._make_boq_item("VO MR Gen", quantity=100, rate=50)
         group = frappe.get_doc(
@@ -487,6 +493,7 @@ class TestVariationOrders(FrappeTestCase):
 
     def test_omitted_item_hidden_from_dropdown(self):
         from construction.api.boq_link_queries import get_boq_items
+
         header, item = self._make_boq_item("VO Hide Omitted", quantity=100, rate=50)
         self._move_header_to_locked(header.name)
 
@@ -509,7 +516,9 @@ class TestVariationOrders(FrappeTestCase):
         ).insert(ignore_permissions=True)
         self._approve_by_client(self._approve_to_engineer(vo))
 
-        items = get_boq_items("BOQ Item", "", "name", 0, 10, {"boq_header": header.name, "exclude_zero_revised": 1})
+        items = get_boq_items(
+            "BOQ Item", "", "name", 0, 10, {"boq_header": header.name, "exclude_zero_revised": 1}
+        )
         self.assertNotIn(item.name, [i[0] for i in items])
 
 
@@ -631,7 +640,7 @@ class TestVariationOrderAPI(FrappeTestCase):
     def test_get_revised_boq_view_api(self):
         from construction.api.boq_api import get_revised_boq_view
 
-        header, item = self._make_boq_item("VO API Revised View", quantity=80, rate=60)
+        header, _item = self._make_boq_item("VO API Revised View", quantity=80, rate=60)
         group = frappe.get_doc(
             {
                 "doctype": "BOQ Structure",
@@ -715,14 +724,17 @@ class TestVariationOrderAPI(FrappeTestCase):
 
 def run_vo_tests():
     import unittest
+
     loader = unittest.TestLoader()
     suite = unittest.TestSuite()
     suite.addTest(loader.loadTestsFromTestCase(TestVariationOrders))
     suite.addTest(loader.loadTestsFromTestCase(TestVariationOrderAPI))
     from construction.tests.test_boq_link_queries import TestBOQLinkQueries
+
     suite.addTest(loader.loadTestsFromTestCase(TestBOQLinkQueries))
     runner = unittest.TextTestRunner(verbosity=2)
     result = runner.run(suite)
     if not result.wasSuccessful():
         import sys
+
         sys.exit(1)

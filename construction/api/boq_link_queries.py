@@ -189,7 +189,7 @@ def get_boq_structures(doctype, txt, searchfield, start, page_len, filters, enfo
         f"""
 		SELECT s.name, s.title, s.wbs_code
 		FROM `tabBOQ Structure` s
-		{' '.join(joins)}
+		{" ".join(joins)}
 		WHERE {where_clause}
 			AND (s.name LIKE %(txt)s OR s.title LIKE %(txt)s OR s.wbs_code LIKE %(txt)s)
 		ORDER BY s.modified DESC
@@ -214,7 +214,7 @@ def get_boq_items(doctype, txt, searchfield, start, page_len, filters, enforce_s
     conditions = [
         "i.docstatus < 2",
     ]
-    
+
     # P1-2: Opt-in and null-safe filtering for omitted items
     if filters.get("exclude_zero_revised"):
         conditions.append("COALESCE(i.current_revised_qty, i.quantity) > 0")
@@ -299,7 +299,7 @@ def get_boq_item_stages(doctype, txt, searchfield, start, page_len, filters, enf
         f"""
 		SELECT st.name, st.stage_code, st.stage_name, st.planned_qty
 		FROM `tabBOQ Item Stage` st
-		{' '.join(joins)}
+		{" ".join(joins)}
 		WHERE {where_clause}
 			AND (st.name LIKE %(txt)s OR st.stage_code LIKE %(txt)s OR st.stage_name LIKE %(txt)s)
 		ORDER BY st.modified DESC
@@ -363,7 +363,7 @@ def get_variation_orders(doctype, txt, searchfield, start, page_len, filters, en
         f"""
 		SELECT vo.name, vo.vo_number, vo.status, vo.boq_header
 		FROM `tabVariation Order` vo
-		{' '.join(joins)}
+		{" ".join(joins)}
 		WHERE {where_clause}
 			AND (vo.name LIKE %(txt)s OR vo.vo_number LIKE %(txt)s OR vo.boq_header LIKE %(txt)s)
 		ORDER BY vo.modified DESC
@@ -424,7 +424,7 @@ def get_vo_line_boq_items(doctype, txt, searchfield, start, page_len, filters, e
         f"""
 		SELECT i.name, i.cost_item, i.quantity{select_header_title}
 		FROM `tabBOQ Item` i
-		{' '.join(joins)}
+		{" ".join(joins)}
 		WHERE {where_clause}
 			AND (i.name LIKE %(txt)s OR i.cost_item LIKE %(txt)s)
 		ORDER BY i.modified DESC
@@ -476,7 +476,7 @@ def get_variation_structures(doctype, txt, searchfield, start, page_len, filters
         f"""
 		SELECT s.name, s.title, s.wbs_code, s.variation_order
 		FROM `tabBOQ Structure` s
-		{' '.join(joins)}
+		{" ".join(joins)}
 		WHERE {where_clause}
 			AND (s.name LIKE %(txt)s OR s.title LIKE %(txt)s OR s.wbs_code LIKE %(txt)s)
 		ORDER BY s.modified DESC

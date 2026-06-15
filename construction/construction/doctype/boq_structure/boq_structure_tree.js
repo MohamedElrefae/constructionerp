@@ -69,9 +69,16 @@ frappe.treeview_settings["BOQ Structure"] = {
 				(node.data && (node.data.title || node.data.label || node.data.value)) ||
 				node.label ||
 				"";
-			var item_count = node.data && node.data.item_count ? parseInt(node.data.item_count, 10) : 0;
-			var total_contract_value = node.data && node.data.total_contract_value ? flt(node.data.total_contract_value) : 0;
-			var total_budgeted_cost = node.data && node.data.total_budgeted_cost ? flt(node.data.total_budgeted_cost) : 0;
+			var item_count =
+				node.data && node.data.item_count ? parseInt(node.data.item_count, 10) : 0;
+			var total_contract_value =
+				node.data && node.data.total_contract_value
+					? flt(node.data.total_contract_value)
+					: 0;
+			var total_budgeted_cost =
+				node.data && node.data.total_budgeted_cost
+					? flt(node.data.total_budgeted_cost)
+					: 0;
 			var metrics = [];
 			if (item_count) {
 				metrics.push(item_count + " " + __("items"));
@@ -100,11 +107,11 @@ frappe.treeview_settings["BOQ Structure"] = {
 		window.cur_tree = treeview;
 
 		// Add CSS to head to guarantee that scope_project is completely hidden in all browsers
-		if (!$('#hide-scope-project-style').length) {
+		if (!$("#hide-scope-project-style").length) {
 			$('<style id="hide-scope-project-style">')
-				.prop('type', 'text/css')
+				.prop("type", "text/css")
 				.html('.page-form [data-fieldname="scope_project"] { display: none !important; }')
-				.appendTo('head');
+				.appendTo("head");
 		}
 
 		function get_boq_header() {
@@ -120,7 +127,10 @@ frappe.treeview_settings["BOQ Structure"] = {
 
 		// Sync local project filter with Scope Context (hide the filter, sync value under the hood)
 		var hide_project = function () {
-			let proj_field = treeview.page && treeview.page.fields_dict && treeview.page.fields_dict.scope_project;
+			let proj_field =
+				treeview.page &&
+				treeview.page.fields_dict &&
+				treeview.page.fields_dict.scope_project;
 			if (proj_field) {
 				proj_field.$wrapper.hide();
 				let scope_project = get_scope_project();
@@ -155,23 +165,25 @@ frappe.treeview_settings["BOQ Structure"] = {
 
 					var boq = boq_field ? boq_field.get_value() : null;
 					if (boq && boq_field) {
-						frappe.db.get_value("BOQ Header", boq, ["project", "company"]).then(function (r) {
-							if (r && r.message) {
-								var boq_project = r.message.project;
-								var boq_company = r.message.company;
-								if (project && boq_project !== project) {
-									boq_field.set_value("").then(function () {
-										boq_field.$input.val("");
-										boq_field.$input.trigger("change");
-									});
-								} else if (company && boq_company !== company) {
-									boq_field.set_value("").then(function () {
-										boq_field.$input.val("");
-										boq_field.$input.trigger("change");
-									});
+						frappe.db
+							.get_value("BOQ Header", boq, ["project", "company"])
+							.then(function (r) {
+								if (r && r.message) {
+									var boq_project = r.message.project;
+									var boq_company = r.message.company;
+									if (project && boq_project !== project) {
+										boq_field.set_value("").then(function () {
+											boq_field.$input.val("");
+											boq_field.$input.trigger("change");
+										});
+									} else if (company && boq_company !== company) {
+										boq_field.set_value("").then(function () {
+											boq_field.$input.val("");
+											boq_field.$input.trigger("change");
+										});
+									}
 								}
-							}
-						});
+							});
 					}
 				}
 			});
@@ -199,7 +211,7 @@ frappe.treeview_settings["BOQ Structure"] = {
 				var boq = get_boq_header();
 				if (boq) frappe.set_route("Form", "BOQ Header", boq);
 			},
-			__("View")
+			__("View"),
 		);
 
 		treeview.page.add_inner_button(
@@ -207,7 +219,7 @@ frappe.treeview_settings["BOQ Structure"] = {
 			function () {
 				frappe.set_route("List", "BOQ Item", { boq_header: get_boq_header() });
 			},
-			__("View")
+			__("View"),
 		);
 
 		treeview.page.add_inner_button(
@@ -229,7 +241,7 @@ frappe.treeview_settings["BOQ Structure"] = {
 					},
 				});
 			},
-			__("Export")
+			__("Export"),
 		);
 
 		treeview.page.add_inner_button(
@@ -254,7 +266,7 @@ frappe.treeview_settings["BOQ Structure"] = {
 					},
 				});
 			},
-			__("Export")
+			__("Export"),
 		);
 	},
 };

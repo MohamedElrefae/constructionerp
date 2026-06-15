@@ -17,7 +17,9 @@ def run_wbs_resequence_smoke() -> dict:
 
     try:
         root = _make_structure(draft_header.name, "Root", is_group=1)
-        child_group = _make_structure(draft_header.name, "Child Group", parent_structure=root.name, is_group=1)
+        child_group = _make_structure(
+            draft_header.name, "Child Group", parent_structure=root.name, is_group=1
+        )
         child_leaf = _make_structure(draft_header.name, "Child Leaf", parent_structure=root.name, is_group=0)
         nested_leaf = _make_structure(
             draft_header.name,
