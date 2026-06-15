@@ -29,7 +29,9 @@ class VOLine(Document):
             if item.boq_header != parent.boq_header:
                 frappe.throw(_("VO Line BOQ Item must belong to the selected BOQ Header."))
 
-            structure = frappe.db.get_value("BOQ Structure", item.structure, ["name", "title", "wbs_code", "is_group"], as_dict=True)
+            structure = frappe.db.get_value(
+                "BOQ Structure", item.structure, ["name", "title", "wbs_code", "is_group"], as_dict=True
+            )
             if not structure:
                 frappe.throw(_("Structure linked to BOQ Item {0} does not exist.").format(self.boq_item))
             if structure.is_group:
@@ -49,7 +51,9 @@ class VOLine(Document):
             if self.boq_item:
                 frappe.throw(_("BOQ Item must be empty for New Item VO lines."))
             if self.boq_structure:
-                struct = frappe.db.get_value("BOQ Structure", self.boq_structure, ["boq_header", "is_group"], as_dict=True)
+                struct = frappe.db.get_value(
+                    "BOQ Structure", self.boq_structure, ["boq_header", "is_group"], as_dict=True
+                )
                 if not struct:
                     frappe.throw(_("Parent Structure {0} does not exist.").format(self.boq_structure))
                 if struct.boq_header != parent.boq_header:
@@ -79,27 +83,29 @@ class VOLine(Document):
     def calculate_quantities_and_values(self):
         # Primary input is revised_qty
         # Compute delta_qty from revised_qty
-        
+
         if self.line_type in ("Quantity Change", "Omission"):
             # Compute delta from previous_qty (reference)
             self.delta_qty = flt(self.revised_qty) - flt(self.previous_qty)
             # Compute delta from contract
             self.delta_from_contract_qty = flt(self.revised_qty) - flt(self.contract_qty)
-            
+
             # FIDIC rule: change % from original contract quantity
             if flt(self.contract_qty) > 0:
-                self.change_pct_from_contract = abs(flt(self.delta_from_contract_qty)) / flt(self.contract_qty) * 100
+                self.change_pct_from_contract = (
+                    abs(flt(self.delta_from_contract_qty)) / flt(self.contract_qty) * 100
+                )
             else:
                 # For variation items or zero contract qty
                 self.change_pct_from_contract = 100 if self.revised_qty > 0 else 0
-            
+
             # Rate change triggered based on FIDIC (> 25% from contract)
             self.rate_change_triggered = 1 if self.change_pct_from_contract > 25 else 0
-            
+
             # If not triggered, use contract price
             if not self.rate_change_triggered and self.line_type != "Omission":
                 self.revised_unit_price = self.contract_unit_price
-        
+
         elif self.line_type == "New Item":
             self.delta_qty = flt(self.revised_qty)  # From 0 to revised_qty
             self.delta_from_contract_qty = flt(self.revised_qty)  # From 0 to revised_qty
@@ -112,7 +118,7 @@ class VOLine(Document):
         self.contract_line_value = flt(self.contract_qty) * flt(self.contract_unit_price)
         self.revised_line_value = flt(self.revised_qty) * flt(self.revised_unit_price)
         self.line_delta_value = self.revised_line_value - self.contract_line_value
-        
+
         # Legacy field for compatibility
         self.abs_change_pct = self.change_pct_from_contract
 
@@ -121,7 +127,11 @@ class VOLine(Document):
             if flt(self.revised_unit_price) <= 0 and self.line_type != "Omission":
                 frappe.throw(_("Revised unit price is required when the VO rate change rule is triggered."))
             if not self.rate_change_justification and self.line_type != "Omission":
-                frappe.throw(_("Rate change justification is required when quantity changes by more than 25 percent from contract."))
+                frappe.throw(
+                    _(
+                        "Rate change justification is required when quantity changes by more than 25 percent from contract."
+                    )
+                )
 
         if self.line_type == "Omission":
             self.revised_unit_price = 0

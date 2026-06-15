@@ -1,7 +1,7 @@
 import secrets
 
-from frappe.utils import nowdate
 from frappe.model.document import Document
+from frappe.utils import nowdate
 
 
 class BOQImportBatch(Document):

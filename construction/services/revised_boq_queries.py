@@ -4,10 +4,11 @@ from frappe.utils import flt
 
 def get_original_boq(boq_header):
     """Return the original BOQ view using original_qty.
-    
+
     Shows only non-variation items with original contract values.
     """
-    rows = frappe.db.sql("""
+    rows = frappe.db.sql(
+        """
         SELECT
             item.name as boq_item,
             item.structure,
@@ -22,18 +23,22 @@ def get_original_boq(boq_header):
         WHERE item.boq_header = %(boq_header)s
           AND item.is_variation_item = 0
         ORDER BY structure.lft
-    """, {"boq_header": boq_header}, as_dict=True)
-    
+    """,
+        {"boq_header": boq_header},
+        as_dict=True,
+    )
+
     return rows
 
 
 def get_revised_boq(boq_header):
     """Return the current revised BOQ view.
-    
+
     Uses current_revised_qty and current_revised_unit_price for value computation.
     Includes both contract and variation items.
     """
-    rows = frappe.db.sql("""
+    rows = frappe.db.sql(
+        """
         SELECT
             item.name as boq_item,
             item.structure,
@@ -49,23 +54,27 @@ def get_revised_boq(boq_header):
             item.current_revised_unit_price,
             item.original_qty * item.contract_unit_price * COALESCE(item.factor, 1.0) as original_value,
             item.current_revised_qty * COALESCE(item.current_revised_unit_price, item.contract_unit_price) * COALESCE(item.factor, 1.0) as revised_value,
-            (item.current_revised_qty * COALESCE(item.current_revised_unit_price, item.contract_unit_price) * COALESCE(item.factor, 1.0)) - 
+            (item.current_revised_qty * COALESCE(item.current_revised_unit_price, item.contract_unit_price) * COALESCE(item.factor, 1.0)) -
             (item.original_qty * item.contract_unit_price * COALESCE(item.factor, 1.0)) as delta_value
         FROM `tabBOQ Item` item
         INNER JOIN `tabBOQ Structure` structure ON structure.name = item.structure
         WHERE item.boq_header = %(boq_header)s
         ORDER BY structure.lft
-    """, {"boq_header": boq_header}, as_dict=True)
-    
+    """,
+        {"boq_header": boq_header},
+        as_dict=True,
+    )
+
     return rows
 
 
 def get_quantity_history(boq_item):
     """Return full quantity revision timeline for a BOQ Item.
-    
+
     Ordered by revision_date descending.
     """
-    rows = frappe.db.sql("""
+    rows = frappe.db.sql(
+        """
         SELECT
             name,
             revision_date,
@@ -89,17 +98,21 @@ def get_quantity_history(boq_item):
         FROM `tabBOQ Quantity Revision`
         WHERE boq_item = %(boq_item)s
         ORDER BY revision_date DESC, modified DESC
-    """, {"boq_item": boq_item}, as_dict=True)
-    
+    """,
+        {"boq_item": boq_item},
+        as_dict=True,
+    )
+
     return rows
 
 
 def get_vo_impact(boq_header):
     """Return commercial impact grouped by Variation Order.
-    
+
     Sums delta_value per VO for the given BOQ Header.
     """
-    rows = frappe.db.sql("""
+    rows = frappe.db.sql(
+        """
         SELECT
             rev.variation_order,
             vo.vo_number,
@@ -115,17 +128,21 @@ def get_vo_impact(boq_header):
           AND rev.status = 'Approved'
         GROUP BY rev.variation_order
         ORDER BY vo.vo_date DESC
-    """, {"boq_header": boq_header}, as_dict=True)
-    
+    """,
+        {"boq_header": boq_header},
+        as_dict=True,
+    )
+
     return rows
 
 
 def get_omitted_items(boq_header):
     """Return items that have been fully omitted.
-    
+
     current_revised_qty = 0 and is_variation_item = 0.
     """
-    rows = frappe.db.sql("""
+    rows = frappe.db.sql(
+        """
         SELECT
             item.name as boq_item,
             item.structure,
@@ -142,15 +159,18 @@ def get_omitted_items(boq_header):
           AND item.is_variation_item = 0
           AND COALESCE(item.current_revised_qty, item.quantity) = 0
         ORDER BY structure.lft
-    """, {"boq_header": boq_header}, as_dict=True)
-    
+    """,
+        {"boq_header": boq_header},
+        as_dict=True,
+    )
+
     return rows
 
 
 def get_variation_items(boq_header):
-    """Return all variation items for a BOQ Header.
-    """
-    rows = frappe.db.sql("""
+    """Return all variation items for a BOQ Header."""
+    rows = frappe.db.sql(
+        """
         SELECT
             item.name as boq_item,
             item.structure,
@@ -168,6 +188,9 @@ def get_variation_items(boq_header):
         WHERE item.boq_header = %(boq_header)s
           AND item.is_variation_item = 1
         ORDER BY structure.lft
-    """, {"boq_header": boq_header}, as_dict=True)
-    
+    """,
+        {"boq_header": boq_header},
+        as_dict=True,
+    )
+
     return rows

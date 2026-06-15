@@ -288,7 +288,7 @@ def test_property_2_css_output_format(
 def test_property_3_css_output_size_bound(
     theme_name, colors, accent_primary, navbar_bg, sidebar_bg, surface_bg, body_bg, text_primary
 ):
-    """Property 3: Output <= 800 bytes with all fields populated."""
+    """Property 3: Output <= 1200 bytes with all fields populated."""
     fields = {
         "theme_name": theme_name,
         "theme_type": "Custom Light",

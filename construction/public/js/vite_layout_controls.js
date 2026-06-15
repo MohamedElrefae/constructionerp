@@ -234,7 +234,7 @@
 				`${ICON_GRID} ${__("Form Config")}`,
 				() => this._togglePanel(frm),
 				null,
-				"vfc-btn"
+				"vfc-btn",
 			);
 
 			// Find the button we just added and enhance it
@@ -289,7 +289,7 @@
           </div>
           <button class="vfc-maximize-btn" title="${__("Maximize")}">${ICON_MAXIMIZE}</button>
           <button class="vfc-close-btn" data-vfc-close="${panelId}" title="${__(
-				"Close"
+				"Close",
 			)}">${ICON_X}</button>
         </div>
 
@@ -303,7 +303,7 @@
           </div>
           <div class="vfc-tab" data-vfc-tab="sections" data-panel="${panelId}">
             <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:text-bottom;margin-right:2px"><rect x="1" y="1" width="14" height="14" rx="2"/><line x1="1" y1="5" x2="15" y2="5"/><line x1="1" y1="10" x2="15" y2="10"/></svg> ${__(
-				"Sections"
+				"Sections",
 			)}
           </div>
           ${
@@ -327,19 +327,19 @@
               </div>
               <div class="vfc-density-seg" data-panel="${panelId}">
                 <div class="vfc-den-opt" data-den="1" title="${__(
-					"1 Column — stacked, easy reading"
+					"1 Column — stacked, easy reading",
 				)}">
                   <svg width="28" height="22" viewBox="0 0 28 22"><rect x="2" y="2" width="24" height="4" rx="1" fill="currentColor" opacity=".8"/><rect x="2" y="9" width="24" height="4" rx="1" fill="currentColor" opacity=".8"/><rect x="2" y="16" width="24" height="4" rx="1" fill="currentColor" opacity=".8"/></svg>
                   ${__("1 Column")}
                 </div>
                 <div class="vfc-den-opt" data-den="2" title="${__(
-					"2 Columns — balanced default"
+					"2 Columns — balanced default",
 				)}">
                   <svg width="28" height="22" viewBox="0 0 28 22"><rect x="2" y="2" width="11" height="4" rx="1" fill="currentColor" opacity=".8"/><rect x="15" y="2" width="11" height="4" rx="1" fill="currentColor" opacity=".8"/><rect x="2" y="9" width="11" height="4" rx="1" fill="currentColor" opacity=".8"/><rect x="15" y="9" width="11" height="4" rx="1" fill="currentColor" opacity=".8"/><rect x="2" y="16" width="11" height="4" rx="1" fill="currentColor" opacity=".8"/><rect x="15" y="16" width="11" height="4" rx="1" fill="currentColor" opacity=".8"/></svg>
                   ${__("2 Columns")}
                 </div>
                 <div class="vfc-den-opt" data-den="3" title="${__(
-					"3 Columns — dense, wide screens"
+					"3 Columns — dense, wide screens",
 				)}">
                   <svg width="28" height="22" viewBox="0 0 28 22"><rect x="2" y="2" width="6" height="4" rx="1" fill="currentColor" opacity=".8"/><rect x="11" y="2" width="6" height="4" rx="1" fill="currentColor" opacity=".8"/><rect x="20" y="2" width="6" height="4" rx="1" fill="currentColor" opacity=".8"/><rect x="2" y="9" width="6" height="4" rx="1" fill="currentColor" opacity=".8"/><rect x="11" y="9" width="6" height="4" rx="1" fill="currentColor" opacity=".8"/><rect x="20" y="9" width="6" height="4" rx="1" fill="currentColor" opacity=".8"/></svg>
                   ${__("3 Columns")}
@@ -353,7 +353,7 @@
             <!-- Live mini preview -->
             <div style="margin-top:4px">
               <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--ct-text-muted);margin-bottom:8px">${__(
-					"Preview"
+					"Preview",
 				)}</div>
               <div id="vfc-den-preview-${dtId}" style="border:1px solid var(--ct-border);border-radius:6px;padding:10px;background:var(--ct-bg-elevated)">
                 <div id="vfc-den-preview-rows-${dtId}"></div>
@@ -379,12 +379,12 @@
               <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="1" width="14" height="14" rx="2"/><line x1="1" y1="5" x2="15" y2="5"/><line x1="1" y1="10" x2="15" y2="10"/></svg>
               ${__("Manage Sections")}
               <button class="btn btn-default btn-xs vfc-btn-add-section" id="vfc-add-sec-btn-${dtId}" style="margin-left:auto;padding:2px 8px;font-size:10px">${__(
-				"+ Add Section"
-			)}</button>
+					"+ Add Section",
+				)}</button>
             </div>
             <div style="font-size:10px;color:var(--ct-text-muted);margin-bottom:12px;line-height:1.6">
               ${__(
-					"Drag sections to reorder. Drag fields inside/between sections to arrange columns. Set 1, 2, or 3 columns per section."
+					"Drag sections to reorder. Drag fields inside/between sections to arrange columns. Set 1, 2, or 3 columns per section.",
 				)}
             </div>
             <div id="vfc-sec-list-${dtId}" class="vfc-sec-list-container" style="display:flex;flex-direction:column;gap:12px;flex:1;overflow-y:auto;padding-right:4px"></div>
@@ -412,10 +412,10 @@
         <div class="vfc-foot">
           <span class="vfc-foot-hint">${__("Saved via user settings")}</span>
           <button class="btn btn-default btn-sm" data-vfc-close="${panelId}">${__(
-				"Close"
+				"Close",
 			)}</button>
           <button class="btn btn-primary btn-sm" data-vfc-apply="${dtId}">${__(
-				"Apply & Save"
+				"Apply & Save",
 			)}</button>
         </div>
         <div class="vfc-resize-handle" style="position:absolute;right:0;bottom:0;width:15px;height:15px;cursor:se-resize;background:transparent;z-index:201"></div>
@@ -536,7 +536,7 @@
 			hiddenFields.forEach((fn) => {
 				if (!knownFieldnames.has(fn)) {
 					console.warn(
-						`[VFC] _renderFieldList: unknown fieldname "${fn}" on ${frm.doctype} — skipping`
+						`[VFC] _renderFieldList: unknown fieldname "${fn}" on ${frm.doctype} — skipping`,
 					);
 				}
 			});
@@ -599,7 +599,7 @@
 			const dtId = doctype.replace(/\s/g, "-");
 			const allChecks = document.querySelectorAll(`[id^="vfc_vc_${dtId}_"]`);
 			const visibleCount = Array.from(allChecks).filter(
-				(c) => c.checked && !c.disabled
+				(c) => c.checked && !c.disabled,
 			).length;
 			const reqCount = cur_frm?.fields_dict
 				? Object.values(cur_frm.fields_dict).filter((f) => f.df?.reqd).length
@@ -633,7 +633,7 @@
               <div class="vfc-pre-name">${p.name}</div>
               <div class="vfc-pre-desc">${p.desc}</div>
             </div>
-          </div>`
+          </div>`,
 				)
 				.join("");
 		},
@@ -653,13 +653,15 @@
 			const fieldnames = new Set(
 				[...document.querySelectorAll(`[id^="vfc_vc_${dtId}_"]`)]
 					.filter((cb) => !cb.disabled)
-					.map((cb) => cb.getAttribute("data-field"))
+					.map((cb) => cb.getAttribute("data-field")),
 			);
 
 			if (preset.fields) {
 				preset.fields.forEach((fn) => {
 					if (!fieldnames.has(fn)) {
-						console.warn(`[VFC] Preset '${key}' references unknown field '${fn}' on ${doctype} — skipping`);
+						console.warn(
+							`[VFC] Preset '${key}' references unknown field '${fn}' on ${doctype} — skipping`,
+						);
 					}
 				});
 			}
@@ -694,7 +696,7 @@
 			document.querySelectorAll(".vfc-den-opt").forEach((opt) => {
 				opt.classList.toggle(
 					"vfc-den-active",
-					parseInt(opt.getAttribute("data-den"), 10) === n
+					parseInt(opt.getAttribute("data-den"), 10) === n,
 				);
 			});
 		},
@@ -721,7 +723,7 @@
 			if (!quiet) {
 				frappe.show_alert(
 					{ message: __("Column density set to {0}", [n]), indicator: "blue" },
-					2
+					2,
 				);
 			}
 		},
@@ -827,7 +829,7 @@
 			hiddenFields.forEach((fn) => {
 				if (!knownFieldnames.has(fn)) {
 					console.warn(
-						`[VFC] _restoreState: unknown fieldname "${fn}" on ${dt} — skipping`
+						`[VFC] _restoreState: unknown fieldname "${fn}" on ${dt} — skipping`,
 					);
 					return;
 				}
@@ -924,13 +926,13 @@
 			}
 
 			container.innerHTML = `<div style="text-align:center;padding:20px;color:var(--ct-text-muted)">${__(
-				"Loading sections..."
+				"Loading sections...",
 			)}</div>`;
 
 			// Load SortableJS dynamically if not already present
 			if (typeof Sortable === "undefined") {
 				await frappe.require(
-					"https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"
+					"https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js",
 				);
 			}
 
@@ -952,11 +954,21 @@
 			}
 
 			// Filter out layout-only field types from profile sections
-			const SKIP_TYPES = new Set(["Section Break", "Column Break", "Tab Break", "HTML", "Heading"]);
+			const SKIP_TYPES = new Set([
+				"Section Break",
+				"Column Break",
+				"Tab Break",
+				"HTML",
+				"Heading",
+			]);
 			const cleanSections = JSON.parse(JSON.stringify(profile.sections)).map((sec) => {
-				sec.fields = (sec.fields || []).filter((f) => !SKIP_TYPES.has(
-					(frm.meta?.fields || []).find((mf) => mf.fieldname === f.fieldname)?.fieldtype
-				));
+				sec.fields = (sec.fields || []).filter(
+					(f) =>
+						!SKIP_TYPES.has(
+							(frm.meta?.fields || []).find((mf) => mf.fieldname === f.fieldname)
+								?.fieldtype,
+						),
+				);
 				return sec;
 			});
 			frm._vfc_temp_layout = cleanSections;
@@ -965,7 +977,13 @@
 		},
 
 		_buildNativeSectionsProfile(frm) {
-			const SKIP_TYPES = new Set(["Section Break", "Column Break", "Tab Break", "HTML", "Heading"]);
+			const SKIP_TYPES = new Set([
+				"Section Break",
+				"Column Break",
+				"Tab Break",
+				"HTML",
+				"Heading",
+			]);
 			const sections = [];
 			let currentSection = null;
 			let currentTabFieldname = "";
@@ -1072,15 +1090,17 @@
 
 			nativeSections.forEach((nativeSec) => {
 				const sectionAlreadyExists = merged.some(
-					(sec) => sec.id === nativeSec.id || sec.fieldname === nativeSec.fieldname
+					(sec) => sec.id === nativeSec.id || sec.fieldname === nativeSec.fieldname,
 				);
 				const nativeFields = (nativeSec.fields || []).filter((field) => field.fieldname);
-				const missingFields = nativeFields.filter((field) => !usedFields.has(field.fieldname));
+				const missingFields = nativeFields.filter(
+					(field) => !usedFields.has(field.fieldname),
+				);
 				if (!missingFields.length && sectionAlreadyExists) return;
 
 				if (sectionAlreadyExists) {
 					const existing = merged.find(
-						(sec) => sec.id === nativeSec.id || sec.fieldname === nativeSec.fieldname
+						(sec) => sec.id === nativeSec.id || sec.fieldname === nativeSec.fieldname,
 					);
 					const baseLen = existing.fields?.length || 0;
 					existing.fields = (existing.fields || []).concat(
@@ -1088,7 +1108,7 @@
 							...field,
 							col: field.col || ((baseLen + idx) % (existing.column_count || 2)) + 1,
 							sort_order: baseLen + idx + 1,
-						}))
+						})),
 					);
 					missingFields.forEach((field) => usedFields.add(field.fieldname));
 					return;
@@ -1097,7 +1117,7 @@
 				const nativeFieldnames = new Set(nativeFields.map((field) => field.fieldname));
 				merged.forEach((section) => {
 					section.fields = (section.fields || []).filter(
-						(field) => !nativeFieldnames.has(field.fieldname)
+						(field) => !nativeFieldnames.has(field.fieldname),
 					);
 				});
 
@@ -1128,7 +1148,13 @@
 		},
 
 		_appendUnassignedSection(frm, dtId, profile) {
-			const SKIP_TYPES = new Set(["Section Break", "Column Break", "Tab Break", "HTML", "Heading"]);
+			const SKIP_TYPES = new Set([
+				"Section Break",
+				"Column Break",
+				"Tab Break",
+				"HTML",
+				"Heading",
+			]);
 			const assignedFieldnames = new Set();
 			(frm._vfc_temp_layout || []).forEach((sec) => {
 				(sec.fields || []).forEach((f) => {
@@ -1137,7 +1163,12 @@
 			});
 
 			const unassigned = (frm.meta?.fields || [])
-				.filter((f) => f.fieldname && !assignedFieldnames.has(f.fieldname) && !SKIP_TYPES.has(f.fieldtype))
+				.filter(
+					(f) =>
+						f.fieldname &&
+						!assignedFieldnames.has(f.fieldname) &&
+						!SKIP_TYPES.has(f.fieldtype),
+				)
 				.map((f, idx) => ({
 					fieldname: f.fieldname,
 					col: (idx % 2) + 1,
@@ -1177,7 +1208,7 @@
 			const sections = frm._vfc_temp_layout || [];
 			if (!sections.length) {
 				container.innerHTML = `<div style="text-align:center;padding:20px;color:var(--ct-text-muted)">${__(
-					"No sections defined."
+					"No sections defined.",
 				)}</div>`;
 				return;
 			}
@@ -1195,15 +1226,27 @@
 			}" style="display:flex;align-items:center;background:var(--ct-bg-3);border:1px solid var(--ct-border);padding:6px 8px;border-radius:4px;font-size:11px;cursor:grab;margin-bottom:4px;gap:6px">
               <span class="vfc-sort-handle" style="color:var(--ct-text-muted);cursor:grab">☰</span>
               <span class="vfc-arrow-controls" style="display:inline-flex;gap:2px">
-                <button class="btn btn-default btn-xs" onclick="window._VFC._moveFieldUp('${frm.doctype}', ${sIdx}, '${fld.fieldname}')" ${first ? "disabled style='opacity:0.3'" : ""} style="padding:0 4px;font-size:10px;line-height:1.4" title="${__("Move Up")}">▲</button>
-                <button class="btn btn-default btn-xs" onclick="window._VFC._moveFieldDown('${frm.doctype}', ${sIdx}, '${fld.fieldname}')" ${last ? "disabled style='opacity:0.3'" : ""} style="padding:0 4px;font-size:10px;line-height:1.4" title="${__("Move Down")}">▼</button>
+                <button class="btn btn-default btn-xs" onclick="window._VFC._moveFieldUp('${
+					frm.doctype
+				}', ${sIdx}, '${fld.fieldname}')" ${
+					first ? "disabled style='opacity:0.3'" : ""
+				} style="padding:0 4px;font-size:10px;line-height:1.4" title="${__(
+					"Move Up",
+				)}">▲</button>
+                <button class="btn btn-default btn-xs" onclick="window._VFC._moveFieldDown('${
+					frm.doctype
+				}', ${sIdx}, '${fld.fieldname}')" ${
+					last ? "disabled style='opacity:0.3'" : ""
+				} style="padding:0 4px;font-size:10px;line-height:1.4" title="${__(
+					"Move Down",
+				)}">▼</button>
               </span>
               <span style="font-weight:600;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${__(
-					fld.fieldname
+					fld.fieldname,
 				)}</span>
               <select onchange="window._VFC._onFieldColChange(this, '${frm.doctype}', ${sIdx}, '${
-							fld.fieldname
-						}')" style="background:var(--ct-surface);border:1px solid var(--ct-border);border-radius:3px;font-size:9px;padding:1px 3px">
+					fld.fieldname
+				}')" style="background:var(--ct-surface);border:1px solid var(--ct-border);border-radius:3px;font-size:9px;padding:1px 3px">
                 <option value="1" ${fld.col == 1 ? "selected" : ""}>Col 1</option>
                 <option value="2" ${fld.col == 2 ? "selected" : ""}>Col 2</option>
                 <option value="3" ${fld.col == 3 ? "selected" : ""}>Col 3</option>
@@ -1223,11 +1266,23 @@
             <div style="display:flex;align-items:center;gap:6px">
               <span class="vfc-sec-sort-handle" style="color:var(--ct-text-muted);cursor:grab;font-size:14px">☰</span>
               <span class="vfc-arrow-controls" style="display:inline-flex;gap:2px">
-                <button class="btn btn-default btn-xs" onclick="window._VFC._moveSectionUp('${frm.doctype}', ${sIdx})" ${secFirst ? "disabled style='opacity:0.3'" : ""} style="padding:0 4px;font-size:10px;line-height:1.4" title="${__("Move Up")}">▲</button>
-                <button class="btn btn-default btn-xs" onclick="window._VFC._moveSectionDown('${frm.doctype}', ${sIdx})" ${secLast ? "disabled style='opacity:0.3'" : ""} style="padding:0 4px;font-size:10px;line-height:1.4" title="${__("Move Down")}">▼</button>
+                <button class="btn btn-default btn-xs" onclick="window._VFC._moveSectionUp('${
+					frm.doctype
+				}', ${sIdx})" ${
+					secFirst ? "disabled style='opacity:0.3'" : ""
+				} style="padding:0 4px;font-size:10px;line-height:1.4" title="${__(
+					"Move Up",
+				)}">▲</button>
+                <button class="btn btn-default btn-xs" onclick="window._VFC._moveSectionDown('${
+					frm.doctype
+				}', ${sIdx})" ${
+					secLast ? "disabled style='opacity:0.3'" : ""
+				} style="padding:0 4px;font-size:10px;line-height:1.4" title="${__(
+					"Move Down",
+				)}">▼</button>
               </span>
               <input type="text" value="${sec.label || ""}" placeholder="${__(
-					"Section Name"
+					"Section Name",
 				)}" onchange="window._VFC._onSecLabelChange(this, '${
 					frm.doctype
 				}', ${sIdx})" style="font-size:12px;font-weight:700;background:transparent;border:none;border-bottom:1px dashed var(--ct-border);color:var(--ct-text);flex:1;padding:2px" />
@@ -1241,7 +1296,7 @@
               </select>
 
               <label style="display:inline-flex;align-items:center;font-size:10px;color:var(--ct-text-secondary);gap:2px;cursor:pointer;user-select:none;margin:0" title="${__(
-					"Allow section to be collapsed"
+					"Allow section to be collapsed",
 				)}">
                 <input type="checkbox" ${
 					sec.collapsible ? "checked" : ""
@@ -1252,7 +1307,7 @@
               </label>
 
               <label style="display:inline-flex;align-items:center;font-size:10px;color:var(--ct-text-secondary);gap:2px;cursor:pointer;user-select:none;margin:0" title="${__(
-					"Collapse by default initially"
+					"Collapse by default initially",
 				)}">
                 <input type="checkbox" ${
 					sec.collapsed_by_default ? "checked" : ""
@@ -1267,7 +1322,7 @@
               <button class="btn btn-default btn-xs" onclick="window._VFC._deleteSection('${
 					frm.doctype
 				}', ${sIdx})" style="padding:2px 5px;color:var(--ct-danger);border-color:transparent;background:transparent" title="${__(
-					"Delete Section"
+					"Delete Section",
 				)}">✕</button>
             </div>
 
@@ -1275,7 +1330,7 @@
               ${
 					fieldsHtml ||
 					`<div style="text-align:center;padding:8px;font-size:10px;color:var(--ct-text-muted);font-style:italic">${__(
-						"Drag fields here"
+						"Drag fields here",
 					)}</div>`
 				}
             </div>
@@ -1295,65 +1350,73 @@
 
 			// Initialize SortableJS
 			if (typeof Sortable !== "undefined") {
-				instances.push(new Sortable(container, {
-					handle: ".vfc-sec-sort-handle",
-					animation: 150,
-					onEnd: (evt) => {
-						const newOrder = [];
-						container.querySelectorAll(".vfc-sec-item").forEach((el) => {
-							const idx = parseInt(el.getAttribute("data-section-idx"), 10);
-							newOrder.push(frm._vfc_temp_layout[idx]);
-						});
-						newOrder.forEach((sec, idx) => {
-							sec.sort_order = idx + 1;
-						});
-						frm._vfc_temp_layout = newOrder;
-						this._renderSectionsListHTML(frm, dtId);
-					},
-				}));
-
-				container.querySelectorAll(".vfc-sec-fields-list").forEach((listEl) => {
-					instances.push(new Sortable(listEl, {
-						group: `vfc-fields-${dtId}`,
-						handle: ".vfc-sort-handle",
+				instances.push(
+					new Sortable(container, {
+						handle: ".vfc-sec-sort-handle",
 						animation: 150,
 						onEnd: (evt) => {
-							const updatedLayout = [];
-							container.querySelectorAll(".vfc-sec-item").forEach((secEl) => {
-								const sIdx = parseInt(secEl.getAttribute("data-section-idx"), 10);
-								const originalSec = frm._vfc_temp_layout[sIdx];
-								const newFields = [];
-
-								secEl
-									.querySelectorAll(".vfc-sec-field-item")
-									.forEach((fieldEl, fIdx) => {
-										const fieldname = fieldEl.getAttribute("data-fieldname");
-										let originalField = null;
-										for (let s of frm._vfc_temp_layout) {
-											let found = (s.fields || []).find(
-												(f) => f.fieldname === fieldname
-											);
-											if (found) {
-												originalField = found;
-												break;
-											}
-										}
-										newFields.push({
-											fieldname: fieldname,
-											col: originalField ? originalField.col : 1,
-											sort_order: fIdx + 1,
-											visible: true,
-										});
-									});
-
-								originalSec.fields = newFields;
-								updatedLayout.push(originalSec);
+							const newOrder = [];
+							container.querySelectorAll(".vfc-sec-item").forEach((el) => {
+								const idx = parseInt(el.getAttribute("data-section-idx"), 10);
+								newOrder.push(frm._vfc_temp_layout[idx]);
 							});
-
-							frm._vfc_temp_layout = updatedLayout;
+							newOrder.forEach((sec, idx) => {
+								sec.sort_order = idx + 1;
+							});
+							frm._vfc_temp_layout = newOrder;
 							this._renderSectionsListHTML(frm, dtId);
 						},
-					}));
+					}),
+				);
+
+				container.querySelectorAll(".vfc-sec-fields-list").forEach((listEl) => {
+					instances.push(
+						new Sortable(listEl, {
+							group: `vfc-fields-${dtId}`,
+							handle: ".vfc-sort-handle",
+							animation: 150,
+							onEnd: (evt) => {
+								const updatedLayout = [];
+								container.querySelectorAll(".vfc-sec-item").forEach((secEl) => {
+									const sIdx = parseInt(
+										secEl.getAttribute("data-section-idx"),
+										10,
+									);
+									const originalSec = frm._vfc_temp_layout[sIdx];
+									const newFields = [];
+
+									secEl
+										.querySelectorAll(".vfc-sec-field-item")
+										.forEach((fieldEl, fIdx) => {
+											const fieldname =
+												fieldEl.getAttribute("data-fieldname");
+											let originalField = null;
+											for (let s of frm._vfc_temp_layout) {
+												let found = (s.fields || []).find(
+													(f) => f.fieldname === fieldname,
+												);
+												if (found) {
+													originalField = found;
+													break;
+												}
+											}
+											newFields.push({
+												fieldname: fieldname,
+												col: originalField ? originalField.col : 1,
+												sort_order: fIdx + 1,
+												visible: true,
+											});
+										});
+
+									originalSec.fields = newFields;
+									updatedLayout.push(originalSec);
+								});
+
+								frm._vfc_temp_layout = updatedLayout;
+								this._renderSectionsListHTML(frm, dtId);
+							},
+						}),
+					);
 				});
 			}
 
@@ -1365,7 +1428,7 @@
 		_onFieldColChange(select, doctype, sIdx, fieldname) {
 			if (cur_frm && cur_frm.doctype === doctype && cur_frm._vfc_temp_layout) {
 				const field = (cur_frm._vfc_temp_layout[sIdx].fields || []).find(
-					(f) => f.fieldname === fieldname
+					(f) => f.fieldname === fieldname,
 				);
 				if (field) {
 					field.col = parseInt(select.value, 10);
@@ -1472,7 +1535,7 @@
 					this._renderSectionsListHTML(frm, dtId);
 				},
 				__("Add New Section"),
-				__("Add")
+				__("Add"),
 			);
 		},
 

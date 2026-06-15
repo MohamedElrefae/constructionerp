@@ -8,12 +8,12 @@ template override receives the full context (app_name, logo, etc.).
 """
 
 from frappe.www.login import (
-	get_context,
-	get_login_with_email_link_ratelimit,
-	login_via_key,
-	login_via_token,
-	sanitize_redirect,
-	send_login_link,
+    get_context,
+    get_login_with_email_link_ratelimit,
+    login_via_key,
+    login_via_token,
+    sanitize_redirect,
+    send_login_link,
 )
 
 # Make get_context available for TemplatePage.set_pymodule()

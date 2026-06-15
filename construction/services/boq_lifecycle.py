@@ -17,7 +17,9 @@ TRANSACTION_CHILD_DOCTYPES = (
 def before_delete_boq_item_stage(doc, method=None):
     if doc.stage_status == "Certified" or flt(doc.certified_qty) > 0:
         frappe.throw(
-            _("Cannot delete certified BOQ Item Stage {0}. Create an adjustment stage instead.").format(doc.name)
+            _("Cannot delete certified BOQ Item Stage {0}. Create an adjustment stage instead.").format(
+                doc.name
+            )
         )
 
     for doctype in TRANSACTION_CHILD_DOCTYPES:
@@ -45,9 +47,7 @@ def validate_boq_structure_leaf_delete_safety(doc):
 
     if frappe.db.exists("BOQ Item Stage", {"boq_item": item_name}):
         frappe.throw(
-            _("Cannot delete BOQ Structure {0}: linked BOQ Item {1} has stages.").format(
-                doc.name, item_name
-            )
+            _("Cannot delete BOQ Structure {0}: linked BOQ Item {1} has stages.").format(doc.name, item_name)
         )
 
     for doctype in TRANSACTION_CHILD_DOCTYPES:
@@ -64,7 +64,5 @@ def validate_boq_structure_leaf_delete_safety(doc):
 
         if meta.has_field("boq_structure") and frappe.db.exists(doctype, {"boq_structure": doc.name}):
             frappe.throw(
-                _("Cannot delete BOQ Structure {0}: it is referenced by {1}.").format(
-                    doc.name, doctype
-                )
+                _("Cannot delete BOQ Structure {0}: it is referenced by {1}.").format(doc.name, doctype)
             )

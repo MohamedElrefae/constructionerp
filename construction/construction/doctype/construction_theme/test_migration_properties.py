@@ -63,8 +63,8 @@ def optional_hex_color_strategy():
 # PROPERTY TESTS CLASS
 # ============================================================================
 
-class TestMigrationProperties(unittest.TestCase):
 
+class TestMigrationProperties(unittest.TestCase):
     # ============================================================================
     # PROPERTY 12: Migration Computes Correct Defaults
     # ============================================================================
@@ -315,9 +315,9 @@ class TestMigrationProperties(unittest.TestCase):
 
             for field_name, original_value in original_values.items():
                 current_value = getattr(theme, field_name)
-                assert (
-                    current_value == original_value
-                ), f"Field {field_name} changed: {original_value} -> {current_value}"
+                assert current_value == original_value, (
+                    f"Field {field_name} changed: {original_value} -> {current_value}"
+                )
 
         finally:
             if frappe.db.exists("Construction Theme", theme.name):
@@ -413,13 +413,13 @@ class TestMigrationProperties(unittest.TestCase):
 
             # Pre-populated fields should be unchanged
             if original_primary_btn_bg:
-                assert (
-                    theme.primary_btn_bg == original_primary_btn_bg
-                ), f"Pre-populated primary_btn_bg was changed: {original_primary_btn_bg} -> {theme.primary_btn_bg}"
+                assert theme.primary_btn_bg == original_primary_btn_bg, (
+                    f"Pre-populated primary_btn_bg was changed: {original_primary_btn_bg} -> {theme.primary_btn_bg}"
+                )
             if original_table_header_bg:
-                assert (
-                    theme.table_header_bg == original_table_header_bg
-                ), f"Pre-populated table_header_bg was changed: {original_table_header_bg} -> {theme.table_header_bg}"
+                assert theme.table_header_bg == original_table_header_bg, (
+                    f"Pre-populated table_header_bg was changed: {original_table_header_bg} -> {theme.table_header_bg}"
+                )
 
             # Empty fields should now be populated
             if not original_primary_btn_bg:

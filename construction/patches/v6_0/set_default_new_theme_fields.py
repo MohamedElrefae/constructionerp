@@ -43,6 +43,7 @@ def darken_hex(hex_color, factor=0.1):
     b = int(int(h[4:6], 16) * (1 - factor))
     return f"#{r:02x}{g:02x}{b:02x}"
 
+
 _darken_hex = darken_hex
 
 
@@ -56,6 +57,7 @@ def lighten_hex(hex_color, factor=0.1):
     g = int(int(h[2:4], 16) + (255 - int(h[2:4], 16)) * factor)
     b = int(int(h[4:6], 16) + (255 - int(h[4:6], 16)) * factor)
     return f"#{r:02x}{g:02x}{b:02x}"
+
 
 _lighten_hex = lighten_hex
 

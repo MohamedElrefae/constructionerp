@@ -49,7 +49,7 @@ def fail(msg: str):
 
 
 def info(msg: str):
-    print(f"  ℹ️  {msg}")
+    print(f"  ℹ️  {msg}")  # noqa: RUF001
 
 
 def section(title: str):
@@ -78,30 +78,21 @@ for fname in ("AGENTS.md", "SESSION_MEMORY.md"):
 section("2. Git State")
 
 try:
-    branch = (
-        subprocess.check_output(
-            ["git", "rev-parse", "--abbrev-ref", "HEAD"],
-            cwd=REPO_ROOT,
-            text=True,
-        )
-        .strip()
-    )
-    commit = (
-        subprocess.check_output(
-            ["git", "rev-parse", "--short", "HEAD"],
-            cwd=REPO_ROOT,
-            text=True,
-        )
-        .strip()
-    )
-    commit_count = (
-        subprocess.check_output(
-            ["git", "rev-list", "--count", "HEAD"],
-            cwd=REPO_ROOT,
-            text=True,
-        )
-        .strip()
-    )
+    branch = subprocess.check_output(
+        ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+        cwd=REPO_ROOT,
+        text=True,
+    ).strip()
+    commit = subprocess.check_output(
+        ["git", "rev-parse", "--short", "HEAD"],
+        cwd=REPO_ROOT,
+        text=True,
+    ).strip()
+    commit_count = subprocess.check_output(
+        ["git", "rev-list", "--count", "HEAD"],
+        cwd=REPO_ROOT,
+        text=True,
+    ).strip()
     ok(f"Branch: {branch}")
     ok(f"Latest commit: {commit}")
     ok(f"Total commits: {commit_count}")
@@ -206,7 +197,9 @@ theme_api = CONSTRUCTION_PKG / "api" / "theme_api.py"
 try:
     text = theme_api.read_text()
     whitelist_count = text.count("@frappe.whitelist")
-    func_count = len([line for line in text.splitlines() if line.startswith("def ") or line.startswith("async def ")])
+    func_count = len(
+        [line for line in text.splitlines() if line.startswith("def ") or line.startswith("async def ")]
+    )
     if whitelist_count == 17:
         ok(f"Whitelisted endpoints: {whitelist_count}")
     else:
@@ -226,10 +219,7 @@ section("7. Migration Patches")
 
 patches_dir = CONSTRUCTION_PKG / "patches"
 try:
-    patch_versions = sorted(
-        d.name for d in patches_dir.iterdir()
-        if d.is_dir() and d.name.startswith("v6_")
-    )
+    patch_versions = sorted(d.name for d in patches_dir.iterdir() if d.is_dir() and d.name.startswith("v6_"))
     expected = ["v6_0", "v6_1", "v6_2", "v6_3", "v6_4", "v6_5", "v6_6"]
     for exp in expected:
         if (patches_dir / exp).exists():

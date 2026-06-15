@@ -30,9 +30,7 @@ def lint_doctype_json(path: str) -> list[str]:
     for field in doc.get("fields", []):
         fieldname = field.get("fieldname")
         if fieldname in SCOPE_FIELDS and field.get("in_standard_filter"):
-            violations.append(
-                f"FAIL: {doctype}.json field '{fieldname}' has in_standard_filter=1"
-            )
+            violations.append(f"FAIL: {doctype}.json field '{fieldname}' has in_standard_filter=1")
     return violations
 
 

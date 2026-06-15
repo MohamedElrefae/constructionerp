@@ -1,5 +1,6 @@
-import frappe
 from concurrent.futures import ThreadPoolExecutor, as_completed
+
+import frappe
 from frappe.tests.utils import FrappeTestCase
 
 
@@ -8,7 +9,9 @@ def run_stage_policy_smoke() -> dict:
     certified_header = None
     try:
         header, item = _make_stage_policy_item("WP3 Stage Policy Smoke")
-        stage = _make_stage(item, planned_qty=10, measured_executed_qty=0, certified_qty=0).insert(ignore_permissions=True)
+        stage = _make_stage(item, planned_qty=10, measured_executed_qty=0, certified_qty=0).insert(
+            ignore_permissions=True
+        )
 
         _move_header_to_status(header.name, "Frozen")
         stage.reload()
@@ -74,7 +77,9 @@ def run_stage_certification_role_smoke() -> dict:
     original_user = frappe.session.user
     try:
         header, item = _make_stage_policy_item("WP3 Certification Role Smoke")
-        stage = _make_stage(item, planned_qty=10, measured_executed_qty=10, certified_qty=0).insert(ignore_permissions=True)
+        stage = _make_stage(item, planned_qty=10, measured_executed_qty=10, certified_qty=0).insert(
+            ignore_permissions=True
+        )
         frappe.db.commit()
 
         blocked = None
@@ -134,8 +139,18 @@ def run_stage_bulk_update_smoke() -> dict:
         frappe.db.set_single_value("Construction Settings", "enable_stage_measurement_ui", 1)
         measurement = bulk_update_boq_item_stages(
             [
-                {"name": stage_1.name, "measured_executed_qty": 2, "percent_complete": 40, "stage_status": "In Progress"},
-                {"name": stage_2.name, "measured_executed_qty": 3, "percent_complete": 60, "stage_status": "In Progress"},
+                {
+                    "name": stage_1.name,
+                    "measured_executed_qty": 2,
+                    "percent_complete": 40,
+                    "stage_status": "In Progress",
+                },
+                {
+                    "name": stage_2.name,
+                    "measured_executed_qty": 3,
+                    "percent_complete": 60,
+                    "stage_status": "In Progress",
+                },
             ]
         )
         if not measurement.get("success"):
@@ -150,7 +165,14 @@ def run_stage_bulk_update_smoke() -> dict:
             frappe.throw(f"Expected guest bulk certification block, got {guest_cert}")
 
         admin_cert = bulk_update_boq_item_stages(
-            [{"name": stage_1.name, "measured_executed_qty": 2, "certified_qty": 2, "stage_status": "Certified"}]
+            [
+                {
+                    "name": stage_1.name,
+                    "measured_executed_qty": 2,
+                    "certified_qty": 2,
+                    "stage_status": "Certified",
+                }
+            ]
         )
         if not admin_cert.get("success"):
             frappe.throw(f"Expected admin bulk certification success, got {admin_cert}")
@@ -158,7 +180,13 @@ def run_stage_bulk_update_smoke() -> dict:
         rows = frappe.get_all(
             "BOQ Item Stage",
             filters={"boq_header": header.name},
-            fields=["stage_code", "measured_executed_qty", "certified_qty", "percent_complete", "stage_status"],
+            fields=[
+                "stage_code",
+                "measured_executed_qty",
+                "certified_qty",
+                "percent_complete",
+                "stage_status",
+            ],
             order_by="stage_code",
         )
         return {
@@ -256,7 +284,12 @@ def insert_stage_for_item_smoke(boq_item: str, stage_code: str, planned_qty: flo
         }
     ).insert(ignore_permissions=True)
     frappe.db.commit()
-    return {"success": True, "name": stage.name, "stage_code": stage.stage_code, "planned_qty": stage.planned_qty}
+    return {
+        "success": True,
+        "name": stage.name,
+        "stage_code": stage.stage_code,
+        "planned_qty": stage.planned_qty,
+    }
 
 
 def inspect_stage_concurrent_process_smoke(header: str) -> dict:

@@ -13,7 +13,7 @@
 					class: "ct-boq-inline-hint",
 					text: hint,
 					title: hint,
-				})
+				}),
 			);
 		}
 	}
@@ -22,8 +22,18 @@
 		const hasHeader = Boolean(frm.doc.boq_header);
 		const isBlocked = !hasHeader;
 
-		setFieldInlineHint(frm, "boq_header", hasHeader ? null : __("Select BOQ Header first"), false);
-		setFieldInlineHint(frm, "parent_structure", hasHeader ? null : __("Select BOQ Header first"), isBlocked);
+		setFieldInlineHint(
+			frm,
+			"boq_header",
+			hasHeader ? null : __("Select BOQ Header first"),
+			false,
+		);
+		setFieldInlineHint(
+			frm,
+			"parent_structure",
+			hasHeader ? null : __("Select BOQ Header first"),
+			isBlocked,
+		);
 
 		const $boq_header = $(`.frappe-control[data-fieldname="boq_header"]`);
 		if ($boq_header.length) {
@@ -64,7 +74,9 @@
 
 			let intro_txt = "";
 			if (!frm.doc.__islocal && frm.doc.is_group == 1) {
-				intro_txt += __("Note: This is a Group node. BOQ Items are not created for groups.");
+				intro_txt += __(
+					"Note: This is a Group node. BOQ Items are not created for groups.",
+				);
 			}
 			frm.set_intro(intro_txt);
 
@@ -78,7 +90,7 @@
 							boq_header: frm.doc.boq_header,
 						});
 					},
-					__("View")
+					__("View"),
 				);
 
 				frm.add_custom_button(
@@ -88,7 +100,7 @@
 							boq_header: frm.doc.boq_header,
 						});
 					},
-					__("View")
+					__("View"),
 				);
 
 				frm.add_custom_button(
@@ -104,7 +116,7 @@
 							},
 						});
 					},
-					__("Export")
+					__("Export"),
 				);
 
 				frm.add_custom_button(
@@ -120,7 +132,7 @@
 							},
 						});
 					},
-					__("Export")
+					__("Export"),
 				);
 
 				frm.add_custom_button(
@@ -128,30 +140,35 @@
 					function () {
 						frappe.set_route("print", "BOQ Header", frm.doc.boq_header);
 					},
-					__("Export")
+					__("Export"),
 				);
 			}
 		},
 
 		boq_header: function (frm) {
 			applyBoqGuidance(frm);
-			renderStructureSummary(frm);
 		},
 
 		onload_post_render: function (frm) {
 			applyBoqGuidance(frm);
-			setTimeout(function () { applyBoqGuidance(frm); }, 150);
-			setTimeout(function () { applyBoqGuidance(frm); }, 600);
+			setTimeout(function () {
+				applyBoqGuidance(frm);
+			}, 150);
+			setTimeout(function () {
+				applyBoqGuidance(frm);
+			}, 600);
 		},
 
 		hide_unhide_group_ledger: function (frm) {
 			if (frm.doc.__islocal) return;
 			if (frm.doc.is_group == 1) {
 				frm.add_custom_button(__("Convert to Non-Group"), () =>
-					frm.events.convert_to_ledger(frm)
+					frm.events.convert_to_ledger(frm),
 				);
 			} else if (frm.doc.is_group == 0) {
-				frm.add_custom_button(__("Convert to Group"), () => frm.events.convert_to_group(frm));
+				frm.add_custom_button(__("Convert to Group"), () =>
+					frm.events.convert_to_group(frm),
+				);
 			}
 		},
 
