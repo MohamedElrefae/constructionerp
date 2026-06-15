@@ -55,10 +55,31 @@ def run_all_tests():
     print("ALL TESTS PASSED")
 
 
+def setup_module(module):
+    """Setup before all tests in this module run"""
+    frappe.db.set_single_value("Construction Settings", "enable_scope_context", 1)
+    frappe.db.commit()
+
+
+def teardown_module(module):
+    """Cleanup after all tests in this module run"""
+    _cleanup()
+    frappe.db.set_single_value("Construction Settings", "enable_scope_context", 0)
+    frappe.db.commit()
+
+
 def _cleanup():
     frappe.db.delete("User Scope Context", {"user": "Administrator"})
     frappe.db.delete("User Scope Context", {"user": "test_scope@example.com"})
     frappe.db.delete("User Scope Context", {"user": "test_user2@example.com"})
+
+    for u in ["Administrator", "test_scope@example.com", "test_user2@example.com"]:
+        frappe.defaults.clear_user_default("company", u)
+        frappe.defaults.clear_user_default("cost_center", u)
+        frappe.defaults.clear_user_default("project", u)
+        frappe.defaults.clear_user_default("department", u)
+        frappe.clear_cache(user=u)
+
     frappe.db.commit()
 
 
@@ -161,15 +182,15 @@ def test_bootinfo_scope_context():
     assert result["success"] is True
 
     bootinfo = extend_bootinfo({})
-    assert (
-        bootinfo.get("scope_context_enabled") is True
-    ), f"scope_context_enabled should be True, got {bootinfo.get('scope_context_enabled')}"
+    assert bootinfo.get("scope_context_enabled") is True, (
+        f"scope_context_enabled should be True, got {bootinfo.get('scope_context_enabled')}"
+    )
     sc = bootinfo.get("scope_context")
     assert sc is not None, f"scope_context missing from bootinfo: {bootinfo}"
     assert sc.get("current") is not None, f"current missing: {sc}"
-    assert (
-        sc["current"]["company"] == "Elrefae"
-    ), f"Expected company=Elrefae, got {sc['current'].get('company')}"
+    assert sc["current"]["company"] == "Elrefae", (
+        f"Expected company=Elrefae, got {sc['current'].get('company')}"
+    )
 
 
 # === T-007 ===
@@ -345,9 +366,8 @@ def test_scope_drift_detection():
         frappe.set_user("Administrator")
 
 
-
-
 # === Option A+ Tests ===
+
 
 def test_standard_filters_property_setters():
     from construction.patches.v7_2.set_erpnext_standard_filters import (
