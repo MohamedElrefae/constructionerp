@@ -355,8 +355,27 @@
 			.on("scope:changed.ct_report_filters", function () {
 				if (!window.scopeContext || !window.scopeContext.enabled) return;
 				if (!frappe.query_report || !frappe.query_report.filters) return;
+<<<<<<< HEAD
 				applyScopeToReportFilters(frappe.query_report);
 				frappe.query_report.refresh(true);
+=======
+
+				const scope = getScope();
+				let changed = false;
+
+				frappe.query_report.filters.forEach(function (field) {
+					if (!SCOPE_FIELDS.includes(field.df.fieldname)) return;
+					const scopedValue = scope[field.df.fieldname];
+					if (scopedValue && field.get_value() !== scopedValue) {
+						field.set_value(scopedValue);
+						changed = true;
+					}
+				});
+
+				if (changed) {
+					frappe.query_report.refresh(true);
+				}
+>>>>>>> origin/develop
 			});
 	}
 
