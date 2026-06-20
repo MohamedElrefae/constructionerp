@@ -376,3 +376,25 @@ def get_project_display_name(project):
         frappe.throw(_("Project {0} does not exist.").format(project))
 
     return {"project_name": rows[0].project_name or project}
+
+
+# ═══════════════════════════════════════════════════════════════
+# Option A+ — dimension permission probe
+# ═══════════════════════════════════════════════════════════════
+
+
+@frappe.whitelist()
+def get_scope_dimension_permissions():
+    """
+    Return the current session user's read permission flags for the three
+    scope dimensions. Used by the report filter hardening JS to decide
+    whether to lock Link/MultiSelectList filters or leave them editable.
+
+    Returns a small dict; safe to call from the client (returns booleans only).
+    """
+    return {
+        "Company": bool(frappe.has_permission("Company", "read")),
+        "Project": bool(frappe.has_permission("Project", "read")),
+        "Cost Center": bool(frappe.has_permission("Cost Center", "read")),
+        "Account": bool(frappe.has_permission("Account", "read")),
+    }
