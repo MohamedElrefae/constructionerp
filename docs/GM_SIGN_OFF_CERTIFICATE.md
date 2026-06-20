@@ -64,6 +64,9 @@ Branch: feat/scope-context-option-a-plus-clean
 | Local main worktree aligned with pushed branch | ✅ Complete |
 | Broader-app work preserved before reset | ✅ Complete — backup branch `backup/main-worktree-2026-06-20` (`dce164e`) and archive `/tmp/construction-main-worktree-backup-2026-06-20` |
 | Verification re-run on aligned state | ✅ Complete |
+| Release documentation committed and pushed | ✅ Complete — commit `5888446` (`docs: release documentation for rc-1.1`) |
+
+**Final branch state:** `feat/scope-context-option-a-plus-clean` now points to `5888446`, which contains the release docs on top of the verified release commit `afc0b7f`. The `rc-1.1` tag remains on `afc0b7f`.
 
 ---
 
