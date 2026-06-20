@@ -81,7 +81,7 @@ class ConstructionTheme(Document):
             if existing:
                 frappe.throw(
                     _(
-                        "Only one theme can be the default light theme. '{0}' is already set as default."
+                        "Only one theme can be the default light theme. " "'{0}' is already set as default."
                     ).format(existing)
                 )
 
@@ -92,7 +92,7 @@ class ConstructionTheme(Document):
             if existing:
                 frappe.throw(
                     _(
-                        "Only one theme can be the default dark theme. '{0}' is already set as default."
+                        "Only one theme can be the default dark theme. " "'{0}' is already set as default."
                     ).format(existing)
                 )
 
@@ -170,14 +170,14 @@ class ConstructionTheme(Document):
                 frappe.throw(_("Invalid hex color format in field '{0}': {1}").format(field, value))
 
     def _is_valid_hex_color(self, color):
-        """Check if color is valid hex format (#RGB, #RGBA, #RRGGBB, or #RRGGBBAA)."""
+        """Check if color is valid hex format (#RGB or #RRGGBB)."""
         if not color:
             return True
         color = color.strip()
         if not color.startswith("#"):
             return False
         hex_part = color[1:]
-        return len(hex_part) in [3, 4, 6, 8] and all(c in "0123456789ABCDEFabcdef" for c in hex_part)
+        return len(hex_part) in [3, 6] and all(c in "0123456789ABCDEFabcdef" for c in hex_part)
 
     def _validate_login_page_fields(self):
         """Validate login page field dependencies and constraints.
@@ -225,7 +225,7 @@ class ConstructionTheme(Document):
         title = self.get("login_page_title")
         if title and len(title) > 30:
             frappe.throw(
-                _("Login Page Title must not exceed 30 characters. Current length: {0}").format(len(title))
+                _("Login Page Title must not exceed 30 characters. " "Current length: {0}").format(len(title))
             )
 
     def _validate_login_page_bg_image_publicity(self):
@@ -245,14 +245,8 @@ class ConstructionTheme(Document):
             file_doc = frappe.db.get_value("File", bg_image, ["name", "is_private"], as_dict=True)
 
         if file_doc and file_doc.get("is_private") == 1:
-            # Load the File document using ORM, modify and save it to trigger standard hook / file renaming
-            file_obj = frappe.get_doc("File", file_doc["name"])
-            file_obj.is_private = 0
-            file_obj.save(ignore_permissions=True)
-
-            # Update the field value to the new public URL
-            self.login_page_bg_image = file_obj.file_url
-
+            # Auto-set to public
+            frappe.db.set_value("File", file_doc["name"], "is_private", 0)
             frappe.msgprint(
                 _(
                     "Login Page Background Image was set to public. "
@@ -466,7 +460,8 @@ class ConstructionTheme(Document):
 
             from jinja2 import Environment, FileSystemLoader
 
-            template_dir = frappe.get_app_path("construction", "theme_templates")
+            # Get template directory
+            template_dir = os.path.join(os.path.dirname(__file__), "..", "..", "theme_templates")
 
             env = Environment(loader=FileSystemLoader(template_dir))
 
@@ -564,7 +559,7 @@ class ConstructionTheme(Document):
         html[data-modern-theme="theme_identifier"]{--ct-accent-primary:#4CAF50;...}
 
         Skips any field with empty/null value.
-        Output ≤ 1100 bytes for fully populated theme.
+        Output ≤ 800 bytes for fully populated theme.
         Auto-computes hover colors if empty.
         Uses concise formatting (no newlines/indentation) to meet size constraint.
         """
@@ -692,7 +687,7 @@ class ConstructionTheme(Document):
             )
         elif bg_type == "Solid Color" and self.login_page_bg_color:
             css_rules.append(
-                f"body[data-path='login'] {{\n  background-color: {self.login_page_bg_color};\n}}"
+                f"body[data-path='login'] {{\n" f"  background-color: {self.login_page_bg_color};\n" f"}}"
             )
 
         # Login box position
@@ -715,7 +710,9 @@ class ConstructionTheme(Document):
         # Heading text color
         if self.login_heading_text_color:
             css_rules.append(
-                f"body[data-path='login'] .page-card-head {{\n  color: {self.login_heading_text_color};\n}}"
+                f"body[data-path='login'] .page-card-head {{\n"
+                f"  color: {self.login_heading_text_color};\n"
+                f"}}"
             )
             css_rules.append(
                 f"body[data-path='login'] .page-card-head h4 {{\n"

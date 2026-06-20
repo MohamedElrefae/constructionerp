@@ -70,7 +70,9 @@ class BOQExportService:
     }
 
     @staticmethod
-    def apply_column_config(default_columns: List[Dict], column_config_json: str | None = None) -> List[Dict]:
+    def apply_column_config(
+        default_columns: List[Dict], column_config_json: Optional[str] = None
+    ) -> List[Dict]:
         """
         Merge user column_config with default columns.
         Returns ordered list of {key, label, width} dicts.
@@ -351,7 +353,7 @@ class BOQExportService:
         return depth
 
     @staticmethod
-    def export_header_to_excel(boq_header: str, column_config: str | None = None) -> Dict:
+    def export_header_to_excel(boq_header: str, column_config: Optional[str] = None) -> Dict:
         """Export BOQ Header information only (summary view like print format)."""
         try:
             import openpyxl
@@ -468,7 +470,7 @@ class BOQExportService:
             return {"success": False, "error": str(e)}
 
     @staticmethod
-    def export_to_excel(boq_header: str, column_config: str | None = None) -> Dict:
+    def export_to_excel(boq_header: str, column_config: Optional[str] = None) -> Dict:
         """Export complete BOQ (Header + Structure + Items) to Excel format."""
         try:
             import openpyxl
@@ -678,7 +680,7 @@ class BOQExportService:
         return frappe.render_template(template_str, context)
 
     @staticmethod
-    def export_to_pdf(boq_header: str, column_config: str | None = None) -> Dict:
+    def export_to_pdf(boq_header: str, column_config: Optional[str] = None) -> Dict:
         """Export complete BOQ to PDF."""
         try:
             from frappe.utils import now_datetime
@@ -740,7 +742,7 @@ class BOQExportService:
             return {"success": False, "error": str(e)}
 
     @staticmethod
-    def export_header_to_pdf(boq_header: str, column_config: str | None = None) -> Dict:
+    def export_header_to_pdf(boq_header: str, column_config: Optional[str] = None) -> Dict:
         """Export BOQ Header summary to PDF."""
         try:
             from frappe.utils import now_datetime

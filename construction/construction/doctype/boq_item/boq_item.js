@@ -65,7 +65,7 @@
 					class: "ct-boq-inline-hint",
 					text: hint,
 					title: hint,
-				}),
+				})
 			);
 		}
 	}
@@ -89,8 +89,8 @@
 				blocked
 					? __("Select BOQ Header first")
 					: __(
-							"BOQ Items are linked to leaf Structure nodes only. If no structures appear, ensure a leaf-level Structure exists.",
-						),
+							"BOQ Items are linked to leaf Structure nodes only. If no structures appear, ensure a leaf-level Structure exists."
+					  )
 			);
 		}
 	}
@@ -117,13 +117,13 @@
 			frm,
 			"boq_header",
 			hasHeader ? null : __("Select BOQ Header first"),
-			false,
+			false
 		);
 		setFieldInlineHint(
 			frm,
 			"structure",
 			hasHeader ? null : __("Select BOQ Header first"),
-			!hasHeader,
+			!hasHeader
 		);
 	}
 
@@ -201,7 +201,7 @@
 						boq_header: frm.doc.boq_header,
 					});
 				},
-				__("View"),
+				__("View")
 			);
 
 			frm.add_custom_button(
@@ -211,7 +211,7 @@
 						boq_item: frm.doc.name,
 					});
 				},
-				__("Stages"),
+				__("Stages")
 			);
 
 			frm.add_custom_button(
@@ -221,14 +221,14 @@
 						boq_item: frm.doc.name,
 					});
 				},
-				__("Stages"),
+				__("Stages")
 			);
 
 			if (frm.doc.boq_header && !frm.doc.structure) {
 				frm.add_custom_button(
 					__("Create Leaf Structure"),
 					() => showCreateStructureDialog(frm),
-					__("Create"),
+					__("Create")
 				);
 			}
 		},

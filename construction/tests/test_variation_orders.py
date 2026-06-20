@@ -256,7 +256,7 @@ class TestVariationOrders(FrappeTestCase):
     def test_boq_header_totals_exclude_variation_items(self):
         from construction.api.boq_api import get_revised_boq_view
 
-        header, _item = self._make_boq_item("VO Header Totals", quantity=100, rate=50)
+        header, item = self._make_boq_item("VO Header Totals", quantity=100, rate=50)
         header.reload()
         contract_value_before = header.total_contract_value
 
@@ -640,7 +640,7 @@ class TestVariationOrderAPI(FrappeTestCase):
     def test_get_revised_boq_view_api(self):
         from construction.api.boq_api import get_revised_boq_view
 
-        header, _item = self._make_boq_item("VO API Revised View", quantity=80, rate=60)
+        header, item = self._make_boq_item("VO API Revised View", quantity=80, rate=60)
         group = frappe.get_doc(
             {
                 "doctype": "BOQ Structure",

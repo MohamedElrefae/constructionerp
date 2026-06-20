@@ -139,7 +139,7 @@ app_include_js = [
     # Scope Context — form default population for new documents
     "/assets/construction/js/scope_context_form_defaults.js?v=3",
     # Scope Context — report filter lock and dynamic sync
-    "/assets/construction/js/scope_context_report_filters.js?v=1",
+    "/assets/construction/js/scope_context_report_filters.js?v=4",
     # Sidebar accordion — only one section stays expanded at a time
     "/assets/construction/js/sidebar_accordion.js?v=1",
     # Translation workflow helpers (Arabic backlog + filters)

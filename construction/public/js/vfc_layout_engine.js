@@ -134,7 +134,7 @@
 							if (hasVfcHost) {
 								const hasVisibleFields =
 									this.wrapper.find(
-										".vfc-tab-pane-host .frappe-control:not(.hide-control)",
+										".vfc-tab-pane-host .frappe-control:not(.hide-control)"
 									).length > 0;
 								if (hasVisibleFields) {
 									hide = false;
@@ -143,7 +143,7 @@
 							if (hide) {
 								if (
 									this.wrapper.find(
-										".form-section:not(.hide-control, .empty-section), .form-dashboard-section:not(.hide-control, .empty-section)",
+										".form-section:not(.hide-control, .empty-section), .form-dashboard-section:not(.hide-control, .empty-section)"
 									).length
 								) {
 									hide = false;
@@ -185,13 +185,13 @@
 				if (!profile) {
 					if (layoutRoot) {
 						const denClass = [...layoutRoot.classList].find((c) =>
-							/^vfc-density-\d+$/.test(c),
+							/^vfc-density-\d+$/.test(c)
 						);
 						if (denClass) {
 							const density = parseInt(denClass.split("-").pop(), 10);
 							if (density !== 2 && !hasTabs) {
 								console.log(
-									`[LE] No profile, non-default density (${density}) — density rendering.`,
+									`[LE] No profile, non-default density (${density}) — density rendering.`
 								);
 								this.renderWithDensity(frm, density);
 								return;
@@ -210,7 +210,7 @@
 						console.log(
 							`[LE] layoutRoot not found for ${key}. Scheduling retry ${
 								retries + 1
-							}/20 in 250ms...`,
+							}/20 in 250ms...`
 						);
 						const timer = setTimeout(() => {
 							this.attach(frm);
@@ -218,7 +218,7 @@
 						this._retryTimers.set(key, timer);
 					} else {
 						console.warn(
-							`[LE] Retry limit reached. Could not find layoutRoot for ${key}.`,
+							`[LE] Retry limit reached. Could not find layoutRoot for ${key}.`
 						);
 						this._retryCounts.delete(key);
 					}
@@ -295,7 +295,7 @@
 
 			// Sort sections by sort_order
 			const sections = [...(profile.sections || [])].sort(
-				(a, b) => (a.sort_order || 0) - (b.sort_order || 0),
+				(a, b) => (a.sort_order || 0) - (b.sort_order || 0)
 			);
 
 			const injectedContainers = [];
@@ -308,10 +308,10 @@
 			const densityOverride = layoutRoot.classList.contains("vfc-density-1")
 				? 1
 				: layoutRoot.classList.contains("vfc-density-2")
-					? 2
-					: layoutRoot.classList.contains("vfc-density-3")
-						? 3
-						: 0;
+				? 2
+				: layoutRoot.classList.contains("vfc-density-3")
+				? 3
+				: 0;
 
 			// Tab detection for rendering
 			const hasTabs = (frm.meta?.fields || []).some((f) => f.fieldtype === "Tab Break");
@@ -327,7 +327,7 @@
 
 				// Sort fields within section
 				const fields = [...(sec.fields || [])].sort(
-					(a, b) => (a.sort_order || 0) - (b.sort_order || 0),
+					(a, b) => (a.sort_order || 0) - (b.sort_order || 0)
 				);
 
 				let hasVisibleField = false;
@@ -339,7 +339,7 @@
 					// Unknown field guard
 					if (!knownFieldnames.has(fn)) {
 						console.warn(
-							`[LE] Profile '${profile.profile_name}': unknown fieldname '${fn}' on ${dt} — skipping`,
+							`[LE] Profile '${profile.profile_name}': unknown fieldname '${fn}' on ${dt} — skipping`
 						);
 						return;
 					}
@@ -362,7 +362,7 @@
 					// Handle runtime visibility (user settings, permissions, depends_on)
 					if (fieldObj.df && (fieldObj.df.hidden || fieldObj.df.invisible)) {
 						console.log(
-							`[LE] Skipping hidden field ${fn} (df.hidden=${fieldObj.df.hidden}, df.invisible=${fieldObj.df.invisible})`,
+							`[LE] Skipping hidden field ${fn} (df.hidden=${fieldObj.df.hidden}, df.invisible=${fieldObj.df.invisible})`
 						);
 						return;
 					}
@@ -428,7 +428,7 @@
 					layoutRoot,
 					knownFieldnames,
 					assignedFieldnames,
-					profile,
+					profile
 				);
 			}
 
@@ -523,7 +523,7 @@
 			let count = 0;
 			layoutRoot
 				.querySelectorAll(
-					".form-section, .frappe-section, .section-head, .section-body, .frappe-column, .form-column",
+					".form-section, .frappe-section, .section-head, .section-body, .frappe-column, .form-column"
 				)
 				.forEach((el) => {
 					if (el.closest(".vfc-le-section")) return;
@@ -549,7 +549,7 @@
 			const timers = [300, 750, 1500, 3000].map((delay) =>
 				setTimeout(() => {
 					this._verifyAndRetry(frm, state, `delayed-${delay}`);
-				}, delay),
+				}, delay)
 			);
 			this._validationTimers.set(key, timers);
 		},
@@ -573,12 +573,12 @@
 			console.log(`[LE] Verification ${phase} complete. missingFields=${missingFields}`);
 			if (hiddenNativeCount || visibleNativeCount) {
 				console.log(
-					`[LE] Verification ${phase}: hiddenNativeShells=${hiddenNativeCount}, visibleNativeShells=${visibleNativeCount}`,
+					`[LE] Verification ${phase}: hiddenNativeShells=${hiddenNativeCount}, visibleNativeShells=${visibleNativeCount}`
 				);
 			}
 			if (hiddenEmptySectionCount) {
 				console.log(
-					`[LE] Verification ${phase}: hiddenEmptySections=${hiddenEmptySectionCount}`,
+					`[LE] Verification ${phase}: hiddenEmptySections=${hiddenEmptySectionCount}`
 				);
 			}
 			console.log(`[LE] Verification ${phase}: sections=${sectionSummary}`);
@@ -590,7 +590,7 @@
 					console.log(
 						`[LE] Missing field wrappers detected for ${key}. Scheduling retry ${
 							retries + 1
-						}/20 in 250ms...`,
+						}/20 in 250ms...`
 					);
 					const timer = setTimeout(() => {
 						this.attach(frm);
@@ -598,7 +598,7 @@
 					this._retryTimers.set(key, timer);
 				} else {
 					console.warn(
-						`[LE] Retry limit reached for ${key}. Some field wrappers could not be attached.`,
+						`[LE] Retry limit reached for ${key}. Some field wrappers could not be attached.`
 					);
 					this._retryCounts.delete(key);
 				}
@@ -635,7 +635,7 @@
 				}
 				if (!nativeEl.isConnected) {
 					console.log(
-						`[LE] Verification ${phase}: nativeEl not connected to DOM for ${fn}`,
+						`[LE] Verification ${phase}: nativeEl not connected to DOM for ${fn}`
 					);
 					return true;
 				}
@@ -643,7 +643,7 @@
 				const cell = nativeEl.parentNode;
 				if (!cell?.classList?.contains("vfc-le-cell")) {
 					console.log(
-						`[LE] Verification ${phase}: nativeEl parent is NOT .vfc-le-cell for ${fn}`,
+						`[LE] Verification ${phase}: nativeEl parent is NOT .vfc-le-cell for ${fn}`
 					);
 					return true;
 				}
@@ -651,14 +651,14 @@
 				const section = cell.closest(".vfc-le-section");
 				if (!section || !layoutRoot.contains(section)) {
 					console.log(
-						`[LE] Verification ${phase}: ${fn} is not inside the current VFC section tree`,
+						`[LE] Verification ${phase}: ${fn} is not inside the current VFC section tree`
 					);
 					return true;
 				}
 
 				if (nativeEl.closest("[data-vfc-hidden='1']")) {
 					console.log(
-						`[LE] Verification ${phase}: ${fn} is inside a hidden native Frappe container`,
+						`[LE] Verification ${phase}: ${fn} is inside a hidden native Frappe container`
 					);
 					return true;
 				}
@@ -677,7 +677,7 @@
 							style.display
 						}, visibility=${style.visibility}, opacity=${
 							style.opacity
-						}, rect=${Math.round(rect.width)}x${Math.round(rect.height)}`,
+						}, rect=${Math.round(rect.width)}x${Math.round(rect.height)}`
 					);
 				}
 			}
@@ -691,7 +691,7 @@
 			let count = 0;
 			layoutRoot
 				.querySelectorAll(
-					".form-section, .frappe-section, .section-head, .section-body, .frappe-column, .form-column",
+					".form-section, .frappe-section, .section-head, .section-body, .frappe-column, .form-column"
 				)
 				.forEach((el) => {
 					if (el.closest(".vfc-le-section")) return;
@@ -719,7 +719,7 @@
 						"(no label)";
 					const cells = [...section.querySelectorAll(".vfc-le-cell")];
 					const managed = cells.filter((cell) =>
-						cell.querySelector("[data-vfc-managed='1']"),
+						cell.querySelector("[data-vfc-managed='1']")
 					).length;
 					const painted = cells.filter((cell) => {
 						const field = cell.querySelector("[data-vfc-managed='1']");
@@ -752,7 +752,7 @@
 				// being rendered — skip them to avoid premature hiding during render transitions.
 				if (cells.length > 0) {
 					const allCellsProcessed = cells.every((cell) =>
-						cell.querySelector("[data-vfc-managed='1']"),
+						cell.querySelector("[data-vfc-managed='1']")
 					);
 					if (!allCellsProcessed) return; // render still in progress, skip
 				}
@@ -798,7 +798,7 @@
 
 			nativeEl
 				.querySelectorAll(
-					".control-label, .control-input-wrapper, .control-value, .control-input",
+					".control-label, .control-input-wrapper, .control-value, .control-input"
 				)
 				.forEach((el) => {
 					el.classList.remove("hide-control", "hidden", "d-none");
@@ -836,7 +836,7 @@
 							sec.label || sec.id
 						}": collapsible=true, collapsed_by_default=${
 							sec.collapsed_by_default
-						}, initCollapsed=${initCollapsed}`,
+						}, initCollapsed=${initCollapsed}`
 					);
 
 					head.addEventListener("click", () => {
@@ -885,7 +885,7 @@
 				(f) =>
 					f.fieldname &&
 					!assignedFieldnames.has(f.fieldname) &&
-					!SKIP_TYPES.has(f.fieldtype),
+					!SKIP_TYPES.has(f.fieldtype)
 			);
 
 			if (!unassigned.length) return;
@@ -1136,7 +1136,7 @@
 				return;
 			}
 			console.log(
-				`[LE] renderWithDensity: colCount=${colCount}, profile sections=${profile.sections.length}`,
+				`[LE] renderWithDensity: colCount=${colCount}, profile sections=${profile.sections.length}`
 			);
 
 			// Hide ALL native shells INCLUDING tab structure
@@ -1171,7 +1171,7 @@
 				const gridEl = sectionEl.querySelector(".vfc-le-grid");
 
 				const fields = [...(sec.fields || [])].sort(
-					(a, b) => (a.sort_order || 0) - (b.sort_order || 0),
+					(a, b) => (a.sort_order || 0) - (b.sort_order || 0)
 				);
 				let hasVisibleField = false;
 				let colIdx = 0;
@@ -1222,13 +1222,13 @@
 					console.log(
 						`[LE] renderWithDensity: section "${sec.label || sec.fieldname}" → ${
 							fields.length
-						} fields`,
+						} fields`
 					);
 				}
 			});
 
 			console.log(
-				`[LE] renderWithDensity: rendered ${totalFieldsRendered} fields across ${injectedContainers.length} sections`,
+				`[LE] renderWithDensity: rendered ${totalFieldsRendered} fields across ${injectedContainers.length} sections`
 			);
 			this._activeSections.set(frm.doctype + "__" + frm.docname, injectedContainers);
 		},

@@ -27,7 +27,7 @@
 					class: "ct-boq-inline-hint",
 					text: hint,
 					title: hint,
-				}),
+				})
 			);
 		}
 	}
@@ -43,7 +43,7 @@
 			frm,
 			"boq_header",
 			hasHeader ? null : __("Select BOQ Header first"),
-			false,
+			false
 		);
 	}
 
@@ -114,7 +114,7 @@
 					frappe.show_alert({
 						message: __(
 							"BOQ Header status is {0}; VO can only be saved against Locked BOQs.",
-							[status],
+							[status]
 						),
 						indicator: "orange",
 					});
@@ -147,7 +147,7 @@
 						frm.refresh_field("lines");
 						frappe.show_alert({
 							message: __(
-								"Scope changed. Selected BOQ and VO lines have been cleared to prevent stale data.",
+								"Scope changed. Selected BOQ and VO lines have been cleared to prevent stale data."
 							),
 							indicator: "orange",
 						});
@@ -213,14 +213,14 @@
 							cdt,
 							cdn,
 							"previous_qty",
-							item.current_revised_qty || 0,
+							item.current_revised_qty || 0
 						);
 						frappe.model.set_value(cdt, cdn, "contract_qty", item.quantity || 0);
 						frappe.model.set_value(
 							cdt,
 							cdn,
 							"contract_unit_price",
-							item.contract_unit_price || 0,
+							item.contract_unit_price || 0
 						);
 						if (!row.title && item.title) {
 							frappe.model.set_value(cdt, cdn, "title", item.title);
@@ -308,7 +308,7 @@
 		["Submit to Engineer", "Approve by Engineer", "Approve by Client", "Reject"].forEach(
 			(label) => {
 				frm.remove_custom_button(label, __("Workflow"));
-			},
+			}
 		);
 
 		const status = frm.doc.status || "Draft";
@@ -317,40 +317,40 @@
 			frm.add_custom_button(
 				__("Submit to Engineer"),
 				() => transition_variation_order(frm, "Submitted"),
-				__("Workflow"),
+				__("Workflow")
 			);
 			frm.add_custom_button(
 				__("Reject"),
 				() => transition_variation_order(frm, "Rejected"),
-				__("Workflow"),
+				__("Workflow")
 			);
 		} else if (status === "Submitted") {
 			frm.add_custom_button(
 				__("Approve by Engineer"),
 				() => transition_variation_order(frm, "Approved by Engineer"),
-				__("Workflow"),
+				__("Workflow")
 			);
 			frm.add_custom_button(
 				__("Reject"),
 				() => transition_variation_order(frm, "Rejected"),
-				__("Workflow"),
+				__("Workflow")
 			);
 		} else if (status === "Approved by Engineer") {
 			frm.add_custom_button(
 				__("Approve by Client"),
 				() => prompt_client_approval(frm),
-				__("Workflow"),
+				__("Workflow")
 			);
 			frm.add_custom_button(
 				__("Reject"),
 				() => transition_variation_order(frm, "Rejected"),
-				__("Workflow"),
+				__("Workflow")
 			);
 		} else if (status === "Approved by Client") {
 			frm.add_custom_button(
 				__("Create Material Request"),
 				() => create_mr_for_vo(frm),
-				__("Create"),
+				__("Create")
 			);
 		}
 	}
@@ -413,7 +413,7 @@
 					label: __("Signed client approval PDF"),
 					reqd: 1,
 					description: __(
-						"A signed PDF from the client is required before final approval.",
+						"A signed PDF from the client is required before final approval."
 					),
 				},
 				{
@@ -479,7 +479,7 @@
 			Submitted: __("Submitted — awaiting Engineer approval."),
 			"Approved by Engineer": __("Engineer approved — awaiting signed client approval PDF."),
 			"Approved by Client": __(
-				"Client approved — variation items and revised quantities are now in effect.",
+				"Client approved — variation items and revised quantities are now in effect."
 			),
 			Rejected: __("Rejected — VO is locked; create a new VO if needed."),
 		}[status];
@@ -519,7 +519,7 @@
 		grid_row.toggle_editable("revised_qty", is_editable && !is_omission);
 		grid_row.toggle_editable(
 			"revised_unit_price",
-			is_editable && (is_new_item || row.rate_change_triggered),
+			is_editable && (is_new_item || row.rate_change_triggered)
 		);
 		grid_row.toggle_editable("owner_page", is_editable && is_new_item);
 		grid_row.toggle_editable("owner_ref_no", is_editable && is_new_item);

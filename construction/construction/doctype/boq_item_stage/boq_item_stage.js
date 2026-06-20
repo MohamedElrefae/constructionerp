@@ -20,7 +20,7 @@
 					class: "ct-boq-inline-hint",
 					text: hint,
 					title: hint,
-				}),
+				})
 			);
 		}
 	}
@@ -47,7 +47,7 @@
 			frm,
 			"boq_header",
 			hasProject && !hasBoqHeader ? __("Select BOQ Header first") : null,
-			!hasProject,
+			!hasProject
 		);
 
 		setFieldAccent(frm, "boq_structure", !hasBoqStructure, !hasBoqHeader);
@@ -58,9 +58,9 @@
 			!hasBoqHeader
 				? __("Select BOQ Header first")
 				: !hasBoqStructure
-					? __("Select BOQ Structure first")
-					: null,
-			!hasBoqHeader,
+				? __("Select BOQ Structure first")
+				: null,
+			!hasBoqHeader
 		);
 
 		setFieldAccent(frm, "boq_item", false, !hasBoqStructure);
@@ -68,13 +68,13 @@
 			frm,
 			"boq_item",
 			!hasBoqStructure,
-			__("Select BOQ Structure first — items link to leaf structures only"),
+			__("Select BOQ Structure first — items link to leaf structures only")
 		);
 		setFieldInlineHint(
 			frm,
 			"boq_item",
 			!hasBoqStructure ? __("Select BOQ Structure first") : null,
-			!hasBoqStructure,
+			!hasBoqStructure
 		);
 		if (hasBoqStructure) {
 			const field = frm.fields_dict && frm.fields_dict.boq_item;
@@ -103,10 +103,10 @@
 				color: var(--ct-text, #e2e8f0);
 			">
 				<span>${__(
-					"Start with <b>Project</b> → <b>BOQ Header</b> → <b>BOQ Structure</b> → <b>BOQ Item</b>. Each field unlocks the next.",
+					"Start with <b>Project</b> → <b>BOQ Header</b> → <b>BOQ Structure</b> → <b>BOQ Item</b>. Each field unlocks the next."
 				)}</span>
 				<button class="btn btn-xs btn-default ct-dismiss-onboarding" style="margin-left:12px">${__(
-					"Got it",
+					"Got it"
 				)}</button>
 			</div>
 		`);
@@ -182,7 +182,7 @@
 						updateStageGuidance(frm);
 						frappe.show_alert({
 							message: __(
-								"Scope changed. Selected BOQ details have been cleared to prevent stale data.",
+								"Scope changed. Selected BOQ details have been cleared to prevent stale data."
 							),
 							indicator: "orange",
 						});
@@ -306,18 +306,18 @@
 		frm.set_df_property(
 			"certified_qty",
 			"read_only",
-			is_certified || is_accountant || !can_certify,
+			is_certified || is_accountant || !can_certify
 		);
 
 		if (is_certified) {
 			frm.dashboard.set_headline(
-				__("Certified stage is locked. Create an adjustment stage for corrections."),
+				__("Certified stage is locked. Create an adjustment stage for corrections.")
 			);
 		} else if (!can_certify) {
 			frm.dashboard.set_headline(
 				__(
-					"Measurement entry is available. Certification is limited to Project Manager roles.",
-				),
+					"Measurement entry is available. Certification is limited to Project Manager roles."
+				)
 			);
 		}
 	}
@@ -333,15 +333,15 @@
 		frm.dashboard.clear_headline();
 		frm.dashboard.add_indicator(
 			__("Measured {0}%").replace("{0}", measured_pct.toFixed(1)),
-			measured > planned ? "orange" : "blue",
+			measured > planned ? "orange" : "blue"
 		);
 		frm.dashboard.add_indicator(
 			__("Certified {0}%").replace("{0}", certified_pct.toFixed(1)),
-			certified > measured ? "red" : "green",
+			certified > measured ? "red" : "green"
 		);
 		frm.dashboard.add_indicator(
 			__("Progress {0}%").replace("{0}", percent.toFixed(1)),
-			percent >= 100 ? "green" : "blue",
+			percent >= 100 ? "green" : "blue"
 		);
 	}
 })();

@@ -19,23 +19,12 @@ class BOQHeader(Document):
         self.calculate_total_value()
 
     def sync_project_from_scope_context(self):
-        try:
-            enabled = bool(
-                frappe.db.get_single_value("Construction Settings", "enable_scope_context") or False
-            )
-        except Exception:
-            enabled = False
-        if not enabled:
-            return
-
         scope_context = get_user_scope_context()
         scope_project = scope_context.project if scope_context else None
 
         if self.is_new():
             if scope_project:
                 self.project = scope_project
-                return
-            if frappe.flags.in_test:
                 return
             frappe.throw(
                 _(
@@ -46,8 +35,6 @@ class BOQHeader(Document):
         if not self.project:
             if scope_project:
                 self.project = scope_project
-                return
-            if frappe.flags.in_test:
                 return
             frappe.throw(
                 _(

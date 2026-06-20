@@ -6,7 +6,7 @@ const BASE_URL = "http://v16.localhost:8000";
 const USERNAME = "Administrator";
 const PASSWORD = "admin";
 const SCREENSHOT_DIR = path.resolve(
-	"/home/mohamed/frappe-bench/apps/construction/docs/feature_reviews/evidence/ev_067_ui_tests",
+	"/home/mohamed/frappe-bench/apps/construction/docs/feature_reviews/evidence/ev_067_ui_tests"
 );
 
 const TEST_BOQ_TITLE = `QA Test BOQ ${Date.now()}`;
@@ -25,17 +25,17 @@ async function waitForPageReady(page, timeout = 10000) {
 		await page.waitForFunction(
 			() => {
 				const spinners = document.querySelectorAll(
-					".spinner, .loading-spinner, .frappe-spinner, .btn-loading",
+					".spinner, .loading-spinner, .frappe-spinner, .btn-loading"
 				);
 				for (const s of spinners) {
 					if (s.offsetParent !== null) return false;
 				}
 				return document.readyState === "complete";
 			},
-			{ timeout },
+			{ timeout }
 		);
 	} catch (e) {
-		// ignore
+		// Ignore transient load timing issues in the UI test helper.
 	}
 	await page.waitForTimeout(500);
 }
@@ -64,7 +64,7 @@ async function loginViaAPI(page) {
 				}
 			}
 		},
-		{ u: USERNAME, p: PASSWORD },
+		{ u: USERNAME, p: PASSWORD }
 	);
 	await page.waitForTimeout(5000);
 	await page
@@ -89,7 +89,7 @@ async function apiCall(page, method, params) {
 	if (resp.status() !== 200) {
 		console.error(
 			`API Call ${method} failed with status ${resp.status()}:`,
-			JSON.stringify(json),
+			JSON.stringify(json)
 		);
 	}
 	return json;
@@ -99,12 +99,12 @@ async function navigateToForm(page, doctype, name) {
 	await page
 		.goto(
 			`${BASE_URL}/app/${doctype.replace(/\s+/g, "-").toLowerCase()}/${encodeURIComponent(
-				name,
+				name
 			)}`,
 			{
 				waitUntil: "networkidle",
 				timeout: 20000,
-			},
+			}
 		)
 		.catch(() => {});
 	await waitForPageReady(page);
@@ -283,7 +283,7 @@ async function runAllTests() {
 			});
 			if (res.exc || (res.message && res.message.error)) {
 				return `Failed to advance to ${targetStatus}: ${JSON.stringify(
-					res.message || res.exc,
+					res.message || res.exc
 				)}`;
 			}
 		}
@@ -502,7 +502,7 @@ async function runAllTests() {
 		const revisions = r.message || [];
 		if (revisions.length === 0) return "No non-baseline revisions found";
 		const increase = revisions.find(
-			(rv) => rv.revision_type && rv.revision_type.includes("Increase"),
+			(rv) => rv.revision_type && rv.revision_type.includes("Increase")
 		);
 		if (!increase)
 			return `No Increase revision found. Types: ${revisions
@@ -526,7 +526,7 @@ async function runAllTests() {
 		if (Math.abs(r.message.current_revised_unit_price - 60) > 0.01)
 			return `current_revised_unit_price=${r.message.current_revised_unit_price}, expected 60`;
 		console.log(
-			` (Qty: ${r.message.current_revised_qty}, Rate: ${r.message.current_revised_unit_price})`,
+			` (Qty: ${r.message.current_revised_qty}, Rate: ${r.message.current_revised_unit_price})`
 		);
 		return true;
 	});
@@ -542,7 +542,7 @@ async function runAllTests() {
 		if (!r.message.rate_change_triggered)
 			return `rate_change_triggered=0, change_pct=${r.message.change_pct_from_contract}`;
 		console.log(
-			` (change_pct: ${r.message.change_pct_from_contract}%, triggered: ${r.message.rate_change_triggered})`,
+			` (change_pct: ${r.message.change_pct_from_contract}%, triggered: ${r.message.rate_change_triggered})`
 		);
 		return true;
 	});
@@ -819,7 +819,7 @@ async function runAllTests() {
 		if (Math.abs(item.current_revised_unit_price - 120) > 0.01)
 			return `current_revised_unit_price = ${item.current_revised_unit_price}, expected 120`;
 		console.log(
-			` (is_variation: ${item.is_variation_item}, qty: ${item.current_revised_qty})`,
+			` (is_variation: ${item.is_variation_item}, qty: ${item.current_revised_qty})`
 		);
 		return true;
 	});

@@ -123,13 +123,13 @@
 			}
 
 			const hiddenButHost = report.filter(
-				(p) => !p.active && p.hasHost && p.display !== "none",
+				(p) => !p.active && p.hasHost && p.display !== "none"
 			);
 			if (hiddenButHost.length) {
 				this._log(
 					false,
 					"Inactive pane(s) with VFC host are still visible (should be hidden).",
-					hiddenButHost,
+					hiddenButHost
 				);
 			} else {
 				this._log(true, "Inactive panes with VFC hosts are correctly hidden.");
@@ -171,14 +171,13 @@
 				} else {
 					hidden++;
 					hiddenFields.push(
-						cell.getAttribute("data-vfc-field") ||
-							field.getAttribute("data-fieldname"),
+						cell.getAttribute("data-vfc-field") || field.getAttribute("data-fieldname")
 					);
 				}
 			});
 
 			console.log(
-				`   Visible fields: ${visible}, Hidden fields: ${hidden}, Total cells: ${cells.length}`,
+				`   Visible fields: ${visible}, Hidden fields: ${hidden}, Total cells: ${cells.length}`
 			);
 
 			if (hidden === 0) {
@@ -209,7 +208,7 @@
 
 			// Ask user to check console history for multiple [LE] attach() lines
 			console.log(
-				"   💡 Tip: Filter console for '[LE] attach() triggered'. You should see it once per form load.",
+				"   💡 Tip: Filter console for '[LE] attach() triggered'. You should see it once per form load."
 			);
 			return this._summary();
 		},
@@ -221,7 +220,7 @@
 		checkNativeShells() {
 			this._results = [];
 			console.log(
-				"\n🔍 VFCTest.checkNativeShells() — ensuring native shells are preserved…",
+				"\n🔍 VFCTest.checkNativeShells() — ensuring native shells are preserved…"
 			);
 
 			const layoutRoot = document.querySelector(".form-layout");
@@ -245,7 +244,7 @@
 			});
 
 			console.log(
-				`   Native sections total: ${nativeSections.length}, visible: ${visibleNative.length}`,
+				`   Native sections total: ${nativeSections.length}, visible: ${visibleNative.length}`
 			);
 
 			// For tabbed forms we expect native shells to remain visible (they hold the tabs)
@@ -253,7 +252,7 @@
 			if (hasTabs && visibleNative.length === 0) {
 				this._log(
 					false,
-					"All native sections are hidden on a tabbed form — this will break tabs.",
+					"All native sections are hidden on a tabbed form — this will break tabs."
 				);
 			} else {
 				this._log(true, "Native section shells are present.", {

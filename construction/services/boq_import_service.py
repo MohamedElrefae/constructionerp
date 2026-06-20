@@ -1358,7 +1358,7 @@ class BOQImportService:
         if not text:
             return None
         text = text.replace("٬", "").replace(",", "")
-        text = text.replace("٫", ".")  # noqa: RUF001
+        text = text.replace("\u066b", ".")
         try:
             return Decimal(text)
         except InvalidOperation:

@@ -97,7 +97,7 @@
 					class: "ct-boq-inline-hint",
 					text: hint,
 					title: hint,
-				}),
+				})
 			);
 		}
 	}
@@ -133,9 +133,9 @@
 			!hasProject
 				? __("Select Project first")
 				: !hasBoqHeader
-					? __("Select BOQ Header first")
-					: null,
-			!hasProject,
+				? __("Select BOQ Header first")
+				: null,
+			!hasProject
 		);
 
 		// boq_structure: blocked when header empty; accent when header set but structure empty
@@ -145,7 +145,7 @@
 			cdn,
 			"boq_structure",
 			!hasBoqStructure && hasBoqHeader,
-			!hasBoqHeader,
+			!hasBoqHeader
 		);
 		markGridFieldBlocked(
 			frm,
@@ -153,7 +153,7 @@
 			cdn,
 			"boq_structure",
 			!hasBoqHeader,
-			__("Select BOQ Header first"),
+			__("Select BOQ Header first")
 		);
 		setGridInlineHint(
 			frm,
@@ -163,9 +163,9 @@
 			!hasBoqHeader
 				? __("Select BOQ Header first")
 				: !hasBoqStructure
-					? __("Select BOQ Structure first")
-					: null,
-			!hasBoqHeader,
+				? __("Select BOQ Structure first")
+				: null,
+			!hasBoqHeader
 		);
 
 		// boq_item: blocked when structure empty; accent when structure set but item empty
@@ -176,7 +176,7 @@
 			cdn,
 			"boq_item",
 			!hasBoqStructure,
-			__("Select BOQ Structure first — items link to leaf structures only"),
+			__("Select BOQ Structure first — items link to leaf structures only")
 		);
 		setGridInlineHint(
 			frm,
@@ -186,9 +186,9 @@
 			!hasBoqStructure
 				? __("Select BOQ Structure first")
 				: !hasBoqItem
-					? __("Select BOQ Item first")
-					: null,
-			!hasBoqStructure,
+				? __("Select BOQ Item first")
+				: null,
+			!hasBoqStructure
 		);
 		if (hasBoqStructure) {
 			const tableField = tableFieldFor(frm);
@@ -208,7 +208,7 @@
 			cdn,
 			"boq_item_stage",
 			!hasBoqItemStage && hasBoqItem,
-			!hasBoqItem,
+			!hasBoqItem
 		);
 		markGridFieldBlocked(
 			frm,
@@ -216,7 +216,7 @@
 			cdn,
 			"boq_item_stage",
 			!hasBoqItem,
-			__("Select BOQ Item first"),
+			__("Select BOQ Item first")
 		);
 		setGridInlineHint(
 			frm,
@@ -224,7 +224,7 @@
 			cdn,
 			"boq_item_stage",
 			!hasBoqItem ? __("Select BOQ Item first") : null,
-			!hasBoqItem,
+			!hasBoqItem
 		);
 	}
 
@@ -406,28 +406,28 @@
 		frm.set_query("boq_header", tableField, function (doc, cdt, cdn) {
 			return queryArgs(
 				"construction.api.boq_link_queries.get_boq_headers",
-				buildHeaderFilters(frm, getGridRow(grid, cdt, cdn)),
+				buildHeaderFilters(frm, getGridRow(grid, cdt, cdn))
 			);
 		});
 
 		frm.set_query("boq_structure", tableField, function (doc, cdt, cdn) {
 			return queryArgs(
 				"construction.api.boq_link_queries.get_boq_structures",
-				buildStructureFilters(frm, getGridRow(grid, cdt, cdn)),
+				buildStructureFilters(frm, getGridRow(grid, cdt, cdn))
 			);
 		});
 
 		frm.set_query("boq_item", tableField, function (doc, cdt, cdn) {
 			return queryArgs(
 				"construction.api.boq_link_queries.get_boq_items",
-				buildItemFilters(frm, getGridRow(grid, cdt, cdn)),
+				buildItemFilters(frm, getGridRow(grid, cdt, cdn))
 			);
 		});
 
 		frm.set_query("boq_item_stage", tableField, function (doc, cdt, cdn) {
 			return queryArgs(
 				"construction.api.boq_link_queries.get_boq_item_stages",
-				buildStageFilters(frm, getGridRow(grid, cdt, cdn)),
+				buildStageFilters(frm, getGridRow(grid, cdt, cdn))
 			);
 		});
 
@@ -436,7 +436,7 @@
 			boqHeaderField.get_query = function (doc, cdt, cdn) {
 				return queryArgs(
 					"construction.api.boq_link_queries.get_boq_headers",
-					buildHeaderFilters(frm, getGridRow(grid, cdt, cdn)),
+					buildHeaderFilters(frm, getGridRow(grid, cdt, cdn))
 				);
 			};
 		}
@@ -446,7 +446,7 @@
 			boqStructureField.get_query = function (doc, cdt, cdn) {
 				return queryArgs(
 					"construction.api.boq_link_queries.get_boq_structures",
-					buildStructureFilters(frm, getGridRow(grid, cdt, cdn)),
+					buildStructureFilters(frm, getGridRow(grid, cdt, cdn))
 				);
 			};
 		}
@@ -456,7 +456,7 @@
 			boqItemField.get_query = function (doc, cdt, cdn) {
 				return queryArgs(
 					"construction.api.boq_link_queries.get_boq_items",
-					buildItemFilters(frm, getGridRow(grid, cdt, cdn)),
+					buildItemFilters(frm, getGridRow(grid, cdt, cdn))
 				);
 			};
 		}
@@ -466,7 +466,7 @@
 			boqStageField.get_query = function (doc, cdt, cdn) {
 				return queryArgs(
 					"construction.api.boq_link_queries.get_boq_item_stages",
-					buildStageFilters(frm, getGridRow(grid, cdt, cdn)),
+					buildStageFilters(frm, getGridRow(grid, cdt, cdn))
 				);
 			};
 		}
@@ -475,7 +475,7 @@
 	function fetchScopeToken() {
 		if (tokenFetchInFlight) return tokenFetchInFlight;
 		tokenFetchInFlight = Promise.resolve(
-			frappe.call({ method: "construction.api.boq_link_queries.get_boq_scope_token" }),
+			frappe.call({ method: "construction.api.boq_link_queries.get_boq_scope_token" })
 		)
 			.then((r) => {
 				const payload = r.message || {};
@@ -519,11 +519,11 @@
 					frappe.show_alert(
 						{
 							message: __(
-								"Your scope context has changed. Reloading form to prevent invalid attribution.",
+								"Your scope context has changed. Reloading form to prevent invalid attribution."
 							),
 							indicator: "orange",
 						},
-						5,
+						5
 					);
 					frappe.call({
 						method: "construction.api.boq_link_queries.log_boq_scope_drift",
@@ -572,7 +572,7 @@
 				frm,
 				cdt,
 				cdn,
-				"All BOQ fields have been cleared. Re-select if needed.",
+				"All BOQ fields have been cleared. Re-select if needed."
 			);
 		}
 	}
@@ -679,7 +679,7 @@
 								frm,
 								cdt,
 								cdn,
-								"All BOQ fields have been cleared. Re-select if needed.",
+								"All BOQ fields have been cleared. Re-select if needed."
 							);
 						} else {
 							clearFields(cdt, cdn, ["boq_item", "boq_item_stage"]);

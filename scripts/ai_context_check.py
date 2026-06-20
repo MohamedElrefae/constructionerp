@@ -49,7 +49,7 @@ def fail(msg: str):
 
 
 def info(msg: str):
-    print(f"  ℹ️  {msg}")  # noqa: RUF001
+    print(f"  INFO: {msg}")
 
 
 def section(title: str):

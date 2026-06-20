@@ -25,7 +25,7 @@
 					class: "ct-boq-inline-hint",
 					text: hint,
 					title: hint,
-				}),
+				})
 			);
 		}
 	}
@@ -321,7 +321,7 @@
 							},
 						},
 					],
-					"tree",
+					"tree"
 				);
 
 				// ── Export Menu (standalone dropdown with icon) ──
@@ -337,7 +337,7 @@
 								export_callback: make_export_callback(
 									"construction.api.boq_api.export_boq_header_excel",
 									header_args,
-									"Header exported successfully",
+									"Header exported successfully"
 								),
 							}).show();
 						},
@@ -353,7 +353,7 @@
 								export_callback: make_export_callback(
 									"construction.api.boq_api.export_boq_excel",
 									header_args,
-									"BOQ exported successfully",
+									"BOQ exported successfully"
 								),
 							}).show();
 						},
@@ -370,7 +370,7 @@
 								export_callback: make_export_callback(
 									"construction.api.boq_api.export_boq_header_pdf",
 									header_args,
-									"Header PDF exported successfully",
+									"Header PDF exported successfully"
 								),
 							}).show();
 						},
@@ -386,7 +386,7 @@
 								export_callback: make_export_callback(
 									"construction.api.boq_api.export_boq_pdf",
 									header_args,
-									"BOQ PDF exported successfully",
+									"BOQ PDF exported successfully"
 								),
 							}).show();
 						},
@@ -462,7 +462,7 @@
 							});
 						});
 					},
-					__("Actions"),
+					__("Actions")
 				);
 
 				if (frm.doc.status === "Draft") {
@@ -502,7 +502,7 @@
 							});
 							d.show();
 						},
-						__("Actions"),
+						__("Actions")
 					);
 				}
 
@@ -512,7 +512,7 @@
 					() => {
 						frappe.set_route("List", "Variation Order", { boq_header: frm.doc.name });
 					},
-					__("Actions"),
+					__("Actions")
 				);
 
 				frappe.call({
@@ -525,7 +525,7 @@
 						frm.add_custom_button(
 							__("New Variation Order"),
 							() => open_new_vo_dialog(frm),
-							__("Actions"),
+							__("Actions")
 						);
 					},
 				});
@@ -533,7 +533,7 @@
 				frm.add_custom_button(
 					__("Revised BOQ View"),
 					() => open_revised_boq_dialog(frm),
-					__("Actions"),
+					__("Actions")
 				);
 			}
 			applyProjectGuidance(frm);
@@ -634,16 +634,16 @@
 								rec.count,
 								status,
 								format_currency(total, currency),
-							])
+						  ])
 						: __("{0} VOs ({1})", [rec.count, status]);
 					const indicator =
 						status === "Approved by Client"
 							? "green"
 							: status === "Rejected"
-								? "red"
-								: status === "Draft"
-									? "gray"
-									: "blue";
+							? "red"
+							: status === "Draft"
+							? "gray"
+							: "blue";
 					frm.dashboard.add_indicator(label, indicator);
 				});
 			},
@@ -706,7 +706,7 @@
 				});
 				if (variation_rows.length) {
 					html += `<tr><td colspan="9"><strong>${__(
-						"Variation Items (from approved VOs)",
+						"Variation Items (from approved VOs)"
 					)}</strong></td></tr>`;
 					variation_rows.forEach((row) => {
 						const rv = flt(row.revised_line_value);

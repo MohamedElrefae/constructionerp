@@ -131,7 +131,7 @@ class TestQuantityRevisions(FrappeTestCase):
         self.assertEqual(item.current_revised_unit_price, 50)
 
     def test_re_saving_locked_boq_does_not_duplicate_baseline(self):
-        header, _item = self._make_boq_item("Baseline Dup", quantity=100, rate=50)
+        header, item = self._make_boq_item("Baseline Dup", quantity=100, rate=50)
         self._move_header_to_locked(header.name)
 
         # Count baseline revisions using SQL
@@ -731,7 +731,7 @@ class TestQuantityRevisionService(FrappeTestCase):
         return header
 
     def test_create_lock_baseline_idempotent(self):
-        header, _item = self._make_boq_item("Baseline", quantity=100, rate=50)
+        header, item = self._make_boq_item("Baseline", quantity=100, rate=50)
         self._move_header_to_locked(header.name)
 
         # Count after first (implicit) baseline creation

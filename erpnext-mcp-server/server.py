@@ -124,7 +124,7 @@ def guard_doctype(doctype: str) -> str:
     """Enforce DocType allowlist."""
     if doctype not in ALLOWLIST:
         raise PermissionError(
-            f"DocType '{doctype}' is not in the read-only allowlist. Allowed: {sorted(ALLOWLIST)}"
+            f"DocType '{doctype}' is not in the read-only allowlist. " f"Allowed: {sorted(ALLOWLIST)}"
         )
     return doctype
 
@@ -132,7 +132,9 @@ def guard_doctype(doctype: str) -> str:
 def guard_sql(sql: str) -> str:
     """Block any SQL that modifies data."""
     if FORBIDDEN_SQL_PATTERN.search(sql):
-        raise PermissionError(f"Write SQL detected. This MCP server is read-only. Blocked query: {sql[:200]}")
+        raise PermissionError(
+            "Write SQL detected. This MCP server is read-only. " f"Blocked query: {sql[:200]}"
+        )
     return sql
 
 

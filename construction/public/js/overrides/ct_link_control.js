@@ -274,7 +274,7 @@
                 <div class="dropdown-menu ct-dropdown-menu">
                     <div class="ct-dropdown-search-wrapper">
                         <input type="text" class="ct-dropdown-search" placeholder="${__(
-							"Search…",
+							"Search…"
 						)}" autocomplete="off">
                     </div>
                     <div class="ct-dropdown-list"></div>
@@ -316,7 +316,7 @@
 					"title",
 					needsAccent
 						? __("Start here: select BOQ Header first")
-						: __("Select {0}", [__(field.df.label || field.df.fieldname)]),
+						: __("Select {0}", [__(field.df.label || field.df.fieldname)])
 				);
 			}
 		}
@@ -491,8 +491,8 @@
 			syncBoqNativeCreateState(field);
 			$list.html(
 				`<div style="padding: 10px; text-align: center; color: var(--ct-text-muted);"><i class="fa fa-spinner fa-spin"></i> ${__(
-					"Loading...",
-				)}</div>`,
+					"Loading..."
+				)}</div>`
 			);
 
 			syncGridQuery();
@@ -500,8 +500,8 @@
 			if (preconditionMessage) {
 				$list.html(
 					`<div style="padding: 10px; color: var(--ct-text-muted); font-style: italic;">${frappe.utils.escape_html(
-						preconditionMessage,
-					)}</div>`,
+						preconditionMessage
+					)}</div>`
 				);
 				return;
 			}
@@ -510,8 +510,8 @@
 			if (!args) {
 				$list.html(
 					`<div style="padding: 10px; color: var(--ct-text-muted); font-style: italic;">${__(
-						"No options available",
-					)}</div>`,
+						"No options available"
+					)}</div>`
 				);
 				return;
 			}
@@ -607,8 +607,8 @@
 					} else if (count === 0 && df.reqd) {
 						$list.append(
 							`<div style="padding: 10px; color: var(--ct-text-muted); font-style: italic;">${__(
-								"No results",
-							)}</div>`,
+								"No results"
+							)}</div>`
 						);
 					}
 				},

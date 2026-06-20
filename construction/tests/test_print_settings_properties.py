@@ -16,7 +16,7 @@ if "frappe" not in sys.modules or not hasattr(sys.modules["frappe"], "get_doc"):
     frappe_mock.parse_json = lambda s: json.loads(s)
     frappe_mock.log_error = MagicMock()
     # Make @frappe.whitelist() a pass-through decorator so API functions stay callable
-    frappe_mock.whitelist = lambda *args, **kwargs: lambda fn: fn
+    frappe_mock.whitelist = lambda *args, **kwargs: (lambda fn: fn)
     frappe_mock._ = lambda s: s
     sys.modules["frappe"] = frappe_mock
     sys.modules["frappe.utils"] = MagicMock()

@@ -135,7 +135,7 @@ class VariationOrder(Document):
                 )
             )
 
-        for old_line, new_line in zip(old_doc.lines, self.lines, strict=False):
+        for old_line, new_line in zip(old_doc.lines, self.lines, strict=True):
             if old_line.name != new_line.name:
                 frappe.throw(
                     _("Cannot modify VO lines after Engineer Approval. Return to Submitted status to edit.")

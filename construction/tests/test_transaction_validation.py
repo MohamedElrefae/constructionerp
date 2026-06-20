@@ -380,31 +380,8 @@ class TestBOQGateTransitions(FrappeTestCase):
         project = frappe.db.get_value("Project", {"project_name": name}, "name")
         if project:
             return project
-        company = frappe.db.get_value("Company", {}, "name")
-        if not company:
-            company = (
-                frappe.get_doc(
-                    {
-                        "doctype": "Company",
-                        "company_name": "_Test BOQ Gate Company",
-                        "default_currency": "USD",
-                        "country": "United States",
-                    }
-                )
-                .insert(ignore_permissions=True)
-                .name
-            )
         return (
-            frappe.get_doc(
-                {
-                    "doctype": "Project",
-                    "project_name": name,
-                    "company": company,
-                    "naming_series": "PROJ-.####",
-                }
-            )
-            .insert(ignore_permissions=True)
-            .name
+            frappe.get_doc({"doctype": "Project", "project_name": name}).insert(ignore_permissions=True).name
         )
 
     def _clear_scope_defaults(self):

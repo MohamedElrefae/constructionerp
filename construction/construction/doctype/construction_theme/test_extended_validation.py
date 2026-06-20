@@ -369,12 +369,11 @@ class TestExtendedValidation(unittest.TestCase):
     def test_login_page_bg_image_publicity_check_public_file(self):
         """7.3: Public login_page_bg_image is accepted without warning."""
         # Create a public file
-        tiny_png = b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01\x08\x06\x00\x00\x00\x1f\x15c4\x00\x00\x00\rIDATx\x9cc`\x00\x00\x00\x02\x00\x01H\xaf\xa4q\x00\x00\x00\x00IEND\xaeB`\x82"
         file_doc = frappe.get_doc(
             {
                 "doctype": "File",
-                "file_name": "test_login_bg.png",
-                "content": tiny_png,
+                "file_name": "test_login_bg.jpg",
+                "file_url": "/files/test_login_bg.jpg",
                 "is_private": 0,  # Public
             }
         )
@@ -404,17 +403,15 @@ class TestExtendedValidation(unittest.TestCase):
             frappe.delete_doc("Construction Theme", theme.name, force=True)
         finally:
             frappe.delete_doc("File", file_doc.name, force=True)
-            frappe.db.commit()
 
     def test_login_page_bg_image_publicity_check_private_file_auto_set_public(self):
         """7.3: Private login_page_bg_image is auto-set to public with warning."""
         # Create a private file
-        tiny_png = b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01\x08\x06\x00\x00\x00\x1f\x15c4\x00\x00\x00\rIDATx\x9cc`\x00\x00\x00\x02\x00\x01H\xaf\xa4q\x00\x00\x00\x00IEND\xaeB`\x82"
         file_doc = frappe.get_doc(
             {
                 "doctype": "File",
-                "file_name": "test_login_bg_private.png",
-                "content": tiny_png,
+                "file_name": "test_login_bg_private.jpg",
+                "file_url": "/files/test_login_bg_private.jpg",
                 "is_private": 1,  # Private
             }
         )
@@ -442,13 +439,12 @@ class TestExtendedValidation(unittest.TestCase):
             self.assertIsNotNone(theme.name)
 
             # Verify file was set to public
-            is_private = frappe.db.get_value("File", file_doc.name, "is_private")
-            self.assertEqual(is_private, 0)
+            updated_file = frappe.get_doc("File", file_doc.name)
+            self.assertEqual(updated_file.is_private, 0)
 
             frappe.delete_doc("Construction Theme", theme.name, force=True)
         finally:
             frappe.delete_doc("File", file_doc.name, force=True)
-            frappe.db.commit()
 
     def test_login_page_bg_image_no_image_no_check(self):
         """7.3: No publicity check if login_page_bg_image is empty."""

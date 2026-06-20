@@ -6,7 +6,7 @@ const BASE_URL = "http://v16.localhost:8000";
 const USERNAME = "Administrator";
 const PASSWORD = "admin";
 const SCREENSHOT_DIR = path.resolve(
-	"/home/mohamed/frappe-bench/apps/construction/docs/feature_reviews/evidence/ev_064_ui_tests",
+	"/home/mohamed/frappe-bench/apps/construction/docs/feature_reviews/evidence/ev_064_ui_tests"
 );
 
 if (!fs.existsSync(SCREENSHOT_DIR)) {
@@ -23,17 +23,17 @@ async function waitForPageReady(page, timeout = 10000) {
 		await page.waitForFunction(
 			() => {
 				const spinners = document.querySelectorAll(
-					".spinner, .loading-spinner, .frappe-spinner, .btn-loading",
+					".spinner, .loading-spinner, .frappe-spinner, .btn-loading"
 				);
 				for (const s of spinners) {
 					if (s.offsetParent !== null) return false;
 				}
 				return document.readyState === "complete";
 			},
-			{ timeout },
+			{ timeout }
 		);
 	} catch (e) {
-		// ignore
+		// Ignore transient load timing issues in the UI test helper.
 	}
 	await page.waitForTimeout(500);
 }
@@ -71,7 +71,7 @@ async function loginViaAPI(page) {
 					}
 				}
 			},
-			{ u: USERNAME, p: PASSWORD },
+			{ u: USERNAME, p: PASSWORD }
 		);
 		await page.waitForTimeout(5000);
 	}
@@ -341,7 +341,7 @@ async function runAllTests() {
 		await p
 			.goto(
 				`${BASE_URL}/print?doctype=BOQ+Header&name=BOQ-2026-0006&format=BOQ+Print+Format&no_letterhead=1`,
-				{ waitUntil: "networkidle", timeout: 20000 },
+				{ waitUntil: "networkidle", timeout: 20000 }
 			)
 			.catch(() => {});
 		await waitForPageReady(p);
@@ -404,7 +404,7 @@ async function runAllTests() {
 			`${BASE_URL}/api/method/construction.services.boq_wbs_health.run_wbs_health_check`,
 			{
 				headers: { Accept: "application/json" },
-			},
+			}
 		);
 		const json = await resp.json();
 		const healthy = json?.message?.healthy === true;

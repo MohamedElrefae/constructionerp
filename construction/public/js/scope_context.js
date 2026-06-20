@@ -308,7 +308,7 @@
 						site: window.location.origin,
 						version: this._version || null,
 						...this.getCurrentScope(),
-					}),
+					})
 				);
 			} catch (e) {
 				console.warn("[ScopeContext] localStorage write error:", e);
@@ -402,7 +402,7 @@
 				projectName,
 				costCenterName,
 				"projects",
-				"cost_center",
+				"cost_center"
 			);
 		}
 
@@ -411,7 +411,7 @@
 				deptName,
 				costCenterName,
 				"departments",
-				"cost_center",
+				"cost_center"
 			);
 		}
 	};
