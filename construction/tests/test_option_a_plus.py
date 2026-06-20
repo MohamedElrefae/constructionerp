@@ -1398,6 +1398,64 @@ class TestOptionBReportAccessGate(unittest.TestCase):
         finally:
             scope_report.clear_bypass_context()
 
+    # ── Option B admin toggle tests ──────────────────────────────
+
+    def _disable_option_b_toggle(self):
+        frappe.db.set_single_value(
+            "Construction Settings", "enable_option_b_report_access_bypass", 0
+        )
+        frappe.db.commit()
+        frappe.clear_cache()
+
+    def _enable_option_b_toggle(self):
+        frappe.db.set_single_value(
+            "Construction Settings", "enable_option_b_report_access_bypass", 1
+        )
+        frappe.db.commit()
+        frappe.clear_cache()
+
+    def test_option_b_toggle_off_blocks_has_active_scope_context(self):
+        from construction.overrides.scope_report import _user_has_active_scope_context
+
+        self._set_scope()
+        self._disable_option_b_toggle()
+        try:
+            result = _user_has_active_scope_context("test_user2@example.com")
+            self.assertFalse(result, "Should be False when Option B toggle is off")
+        finally:
+            self._enable_option_b_toggle()
+
+    def test_option_b_toggle_off_blocks_report_is_permitted(self):
+        from frappe.core.doctype.report.report import Report
+
+        self._set_scope()
+        self._disable_option_b_toggle()
+        try:
+            doc = frappe.get_doc("Report", "General Ledger")
+            frappe.set_user("test_user2@example.com")
+            try:
+                self.assertFalse(doc.is_permitted())
+            finally:
+                frappe.set_user("Administrator")
+        finally:
+            self._enable_option_b_toggle()
+
+    def test_option_b_toggle_off_blocks_get_report_doc(self):
+        import frappe.exceptions
+        from frappe.desk.query_report import get_report_doc
+
+        self._set_scope()
+        self._disable_option_b_toggle()
+        try:
+            frappe.set_user("test_user2@example.com")
+            try:
+                with self.assertRaises(frappe.exceptions.PermissionError):
+                    get_report_doc("General Ledger")
+            finally:
+                frappe.set_user("Administrator")
+        finally:
+            self._enable_option_b_toggle()
+
 
 if __name__ == "__main__":
     import unittest as _unittest

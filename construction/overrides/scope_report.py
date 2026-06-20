@@ -145,6 +145,8 @@ def _user_has_active_scope_context(user: str | None = None) -> bool:
         settings = frappe.get_single("Construction Settings")
         if not settings or not settings.enable_scope_context:
             return False
+        if not settings.enable_option_b_report_access_bypass:
+            return False
     except Exception:
         return False
     user = user or frappe.session.user

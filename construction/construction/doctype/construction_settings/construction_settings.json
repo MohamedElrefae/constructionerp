@@ -7,6 +7,8 @@
   "engine": "InnoDB",
   "field_order": [
     "enable_scope_context",
+    "option_b_section",
+    "enable_option_b_report_access_bypass",
     "scope_dimensions_section",
     "enable_scope_company",
     "enable_scope_cost_center",
@@ -174,6 +176,20 @@
       "fieldtype": "HTML",
       "label": "Scope Hierarchy",
       "options": "<p class=\"text-muted\">Loading scope hierarchy...</p>"
+    },
+    {
+      "fieldname": "option_b_section",
+      "fieldtype": "Section Break",
+      "label": "Option B \u2014 Report Access Bypass",
+      "depends_on": "enable_scope_context"
+    },
+    {
+      "default": "1",
+      "fieldname": "enable_option_b_report_access_bypass",
+      "fieldtype": "Check",
+      "label": "Enable Option B Report Access Bypass",
+      "depends_on": "enable_scope_context",
+      "description": "Allow scoped restricted users to access allowlisted financial reports without explicit report permissions. When disabled, restricted users get 403 on reports they lack permission for (Option A+ filter rewriting still applies)."
     }
   ],
   "index_web_pages_for_search": 1,
