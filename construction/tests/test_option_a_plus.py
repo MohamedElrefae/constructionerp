@@ -1456,6 +1456,145 @@ class TestOptionBReportAccessGate(unittest.TestCase):
         finally:
             self._enable_option_b_toggle()
 
+    # ── WP7 audit logging tests ───────────────────────────────────
+
+    def _clear_audit_logs(self):
+        frappe.db.delete("Scope Report Access Log", {})
+        frappe.db.commit()
+
+    def _count_audit_logs(self, user=None, report=None, granted=None):
+        filters = {}
+        if user:
+            filters["user"] = user
+        if report:
+            filters["report_name"] = report
+        if granted is not None:
+            filters["access_granted"] = 1 if granted else 0
+        return frappe.db.count("Scope Report Access Log", filters)
+
+    def test_audit_log_granted_on_is_permitted(self):
+        """Scoped user with bypass active → log entry with granted=True."""
+        self._clear_audit_logs()
+        self._set_scope()
+        try:
+            doc = frappe.get_doc("Report", "General Ledger")
+            frappe.set_user("test_user2@example.com")
+            try:
+                result = doc.is_permitted()
+                self.assertTrue(result)
+            finally:
+                frappe.set_user("Administrator")
+            count = self._count_audit_logs(
+                user="test_user2@example.com",
+                report="General Ledger",
+                granted=True,
+            )
+            self.assertGreaterEqual(count, 1)
+        finally:
+            self._clear_audit_logs()
+
+    def test_audit_log_denied_on_is_permitted_no_scope(self):
+        """Non-scoped restricted user → log entry with granted=False."""
+        self._clear_audit_logs()
+        doc = frappe.get_doc("Report", "General Ledger")
+        frappe.set_user("test_user2@example.com")
+        try:
+            doc.is_permitted()
+        except Exception:
+            pass
+        finally:
+            frappe.set_user("Administrator")
+        count = self._count_audit_logs(
+            user="test_user2@example.com",
+            report="General Ledger",
+            granted=False,
+        )
+        self.assertGreaterEqual(count, 1)
+
+    def test_audit_log_denied_on_is_permitted_toggle_off(self):
+        """Scoped user with toggle off → log entry with granted=False
+        and reason 'Option B bypass not available'."""
+        self._clear_audit_logs()
+        self._set_scope()
+        self._disable_option_b_toggle()
+        try:
+            doc = frappe.get_doc("Report", "General Ledger")
+            frappe.set_user("test_user2@example.com")
+            try:
+                doc.is_permitted()
+            except Exception:
+                pass
+            finally:
+                frappe.set_user("Administrator")
+
+            count = self._count_audit_logs(
+                user="test_user2@example.com",
+                report="General Ledger",
+                granted=False,
+            )
+            self.assertGreaterEqual(count, 1)
+
+            logs = frappe.get_all(
+                "Scope Report Access Log",
+                filters={
+                    "user": "test_user2@example.com",
+                    "report_name": "General Ledger",
+                    "access_granted": 0,
+                },
+                fields=["denial_reason"],
+                limit=1,
+            )
+            if logs:
+                self.assertEqual(logs[0].denial_reason, "Option B bypass not available")
+        finally:
+            self._enable_option_b_toggle()
+            self._clear_audit_logs()
+
+    def test_audit_log_granted_on_get_report_doc(self):
+        """Scoped user with bypass → log entry with granted=True via
+        get_report_doc."""
+        self._clear_audit_logs()
+        self._set_scope()
+        try:
+            from frappe.desk.query_report import get_report_doc
+
+            frappe.set_user("test_user2@example.com")
+            try:
+                doc = get_report_doc("General Ledger")
+                self.assertEqual(doc.name, "General Ledger")
+            finally:
+                frappe.set_user("Administrator")
+            count = self._count_audit_logs(
+                user="test_user2@example.com",
+                report="General Ledger",
+                granted=True,
+            )
+            self.assertGreaterEqual(count, 1)
+        finally:
+            frappe.set_user("Administrator")
+            self._clear_audit_logs()
+
+    def test_audit_log_granted_on_run(self):
+        """Scoped user with bypass → log entry with granted=True via
+        run_report (even if the report itself errors on data)."""
+        self._clear_audit_logs()
+        self._set_scope()
+        try:
+            from frappe.desk.query_report import run
+
+            try:
+                run(report_name="General Ledger", user="test_user2@example.com")
+            except Exception:
+                pass
+            count = self._count_audit_logs(
+                user="test_user2@example.com",
+                report="General Ledger",
+                granted=True,
+            )
+            self.assertGreaterEqual(count, 1)
+        finally:
+            self._clear_audit_logs()
+
 
 if __name__ == "__main__":
     import unittest as _unittest

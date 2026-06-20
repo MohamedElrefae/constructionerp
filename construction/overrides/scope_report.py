@@ -278,19 +278,23 @@ def _log_report_access(
     Runs inside a savepoint so a logging failure never breaks the report.
     """
     try:
-        scope = _get_scope_dict(user)
-        log = frappe.new_doc("Scope Report Access Log")
-        log.user = user
-        log.report_name = report_name
-        log.access_granted = granted
+        try:
+            p = frappe.request.path
+        except RuntimeError:
+            p = ""
+        s = _get_scope_dict(user)
+        d = frappe.new_doc("Scope Report Access Log")
+        d.user = user
+        d.report_name = report_name
+        d.access_granted = granted
         if reason:
-            log.denial_reason = reason
-        log.company = scope.get("company", "")
-        log.cost_center = scope.get("cost_center", "")
-        log.project = scope.get("project", "")
-        log.department = scope.get("department", "")
-        log.request_path = getattr(frappe.request, "path", "") if hasattr(frappe, "request") else ""
-        log.insert(ignore_permissions=True)
+            d.denial_reason = reason
+        d.company = s.get("company", "")
+        d.cost_center = s.get("cost_center", "")
+        d.project = s.get("project", "")
+        d.department = s.get("department", "")
+        d.request_path = p
+        d.insert(ignore_permissions=True)
     except Exception:
         pass
 
@@ -343,9 +347,17 @@ def _patch_report_access_gates() -> None:
 
     def _scope_aware_is_permitted(self):
         try:
-            if self.name in ALLOWED_REPORTS and _user_has_active_scope_context():
-                _log_report_access(self.name, frappe.session.user, True)
-                return True
+            if self.name in ALLOWED_REPORTS:
+                user = frappe.session.user
+                if _user_has_active_scope_context():
+                    _log_report_access(self.name, user, True)
+                    return True
+                if not _has_unrestricted_report_role(user) and user != "Administrator":
+                    scope = get_user_scope_context(user)
+                    reason = None
+                    if scope and scope.company:
+                        reason = "Option B bypass not available"
+                    _log_report_access(self.name, user, False, reason)
         except Exception:
             pass
         return _ORIGINAL_IS_PERMITTED(self)
@@ -409,9 +421,17 @@ def _patch_report_access_gates() -> None:
         # Setting the flag here would leave it active for the rest
         # of the request, allowing stale-flag perm grants via any
         # subsequent `has_permission` / `get_role_permissions` call.
-        if getattr(doc, "name", None) in ALLOWED_REPORTS and _user_has_active_scope_context():
-            _log_report_access(doc.name, frappe.session.user, True)
-            return doc
+        if getattr(doc, "name", None) in ALLOWED_REPORTS:
+            user = frappe.session.user
+            if _user_has_active_scope_context():
+                _log_report_access(doc.name, user, True)
+                return doc
+            if not _has_unrestricted_report_role(user) and user != "Administrator":
+                scope = get_user_scope_context(user)
+                reason = None
+                if scope and scope.company:
+                    reason = "Option B bypass not available"
+                _log_report_access(doc.name, user, False, reason)
 
         # Original 403s for everyone else.
         if not doc.is_permitted():
