@@ -25,20 +25,20 @@
 			const line = `${icon} ${msg}`;
 			this._results.push({ pass, msg, detail });
 			if (detail) {
-				console.log(line, detail);
+				vfcDebugLog("log", line, detail);
 			} else {
-				console.log(line);
+				vfcDebugLog("log", line);
 			}
 		},
 
 		_summary() {
 			const passed = this._results.filter((r) => r.pass).length;
 			const total = this._results.length;
-			console.log(`\n📊 VFCTest Summary: ${passed}/${total} passed`);
+			vfcDebugLog("log", `\n📊 VFCTest Summary: ${passed}/${total} passed`);
 			if (passed < total) {
-				console.warn("⚠️ Some tests failed. Review the ❌ items above.");
+				vfcDebugLog("warn", "⚠️ Some tests failed. Review the ❌ items above.");
 			} else {
-				console.log("🎉 All tests passed!");
+				vfcDebugLog("log", "🎉 All tests passed!");
 			}
 			return { passed, total, results: this._results };
 		},
@@ -49,7 +49,7 @@
     ───────────────────────────────────────────────────────── */
 		checkOrphans() {
 			this._results = [];
-			console.log("\n🔍 VFCTest.checkOrphans() — looking for orphaned field wrappers…");
+			vfcDebugLog("log", "\n🔍 VFCTest.checkOrphans() — looking for orphaned field wrappers…");
 
 			if (!cur_frm) {
 				this._log(false, "No cur_frm available. Open a form first.");
@@ -79,7 +79,7 @@
     ───────────────────────────────────────────────────────── */
 		checkTabPanes() {
 			this._results = [];
-			console.log("\n🔍 VFCTest.checkTabPanes() — inspecting tab pane states…");
+			vfcDebugLog("log", "\n🔍 VFCTest.checkTabPanes() — inspecting tab pane states…");
 
 			const layoutRoot = document.querySelector(".form-layout");
 			if (!layoutRoot) {
@@ -109,7 +109,7 @@
 				};
 			});
 
-			console.table(report);
+			vfcDebugLog("log", report);
 
 			const activePane = report.find((p) => p.active);
 			if (!activePane) {
@@ -144,7 +144,7 @@
     ───────────────────────────────────────────────────────── */
 		checkFieldVisibility() {
 			this._results = [];
-			console.log("\n🔍 VFCTest.checkFieldVisibility() — checking painted fields…");
+			vfcDebugLog("log", "\n🔍 VFCTest.checkFieldVisibility() — checking painted fields…");
 
 			const cells = [...document.querySelectorAll(".vfc-le-cell")];
 			if (!cells.length) {
@@ -176,7 +176,7 @@
 				}
 			});
 
-			console.log(
+			vfcDebugLog("log", 
 				`   Visible fields: ${visible}, Hidden fields: ${hidden}, Total cells: ${cells.length}`
 			);
 
@@ -195,7 +195,7 @@
     ───────────────────────────────────────────────────────── */
 		checkDebounce() {
 			this._results = [];
-			console.log("\n🔍 VFCTest.checkDebounce() — checking attach call pattern…");
+			vfcDebugLog("log", "\n🔍 VFCTest.checkDebounce() — checking attach call pattern…");
 
 			// The debounce wrapper lives in an IIFE; we can't directly inspect _pending,
 			// but we can verify the global hook signature has changed by checking
@@ -207,7 +207,7 @@
 			}
 
 			// Ask user to check console history for multiple [LE] attach() lines
-			console.log(
+			vfcDebugLog("log", 
 				"   💡 Tip: Filter console for '[LE] attach() triggered'. You should see it once per form load."
 			);
 			return this._summary();
@@ -219,7 +219,7 @@
     ───────────────────────────────────────────────────────── */
 		checkNativeShells() {
 			this._results = [];
-			console.log(
+			vfcDebugLog("log", 
 				"\n🔍 VFCTest.checkNativeShells() — ensuring native shells are preserved…"
 			);
 
@@ -243,7 +243,7 @@
 				);
 			});
 
-			console.log(
+			vfcDebugLog("log", 
 				`   Native sections total: ${nativeSections.length}, visible: ${visibleNative.length}`
 			);
 
@@ -268,9 +268,9 @@
     ───────────────────────────────────────────────────────── */
 		runAll() {
 			this._results = [];
-			console.log("\n═══════════════════════════════════════════════════════════");
-			console.log("   VFC Layout Engine — Verification Suite v1.0");
-			console.log("═══════════════════════════════════════════════════════════");
+			vfcDebugLog("log", "\n═══════════════════════════════════════════════════════════");
+			vfcDebugLog("log", "   VFC Layout Engine — Verification Suite v1.0");
+			vfcDebugLog("log", "═══════════════════════════════════════════════════════════");
 
 			this.checkDebounce();
 			this.checkOrphans();
@@ -280,13 +280,13 @@
 
 			const passed = this._results.filter((r) => r.pass).length;
 			const total = this._results.length;
-			console.log("\n═══════════════════════════════════════════════════════════");
-			console.log(`   FINAL: ${passed}/${total} assertions passed`);
-			console.log("═══════════════════════════════════════════════════════════");
+			vfcDebugLog("log", "\n═══════════════════════════════════════════════════════════");
+			vfcDebugLog("log", `   FINAL: ${passed}/${total} assertions passed`);
+			vfcDebugLog("log", "═══════════════════════════════════════════════════════════");
 			return { passed, total };
 		},
 	};
 
 	window.VFCTest = TEST;
-	console.log("[VFCTest] Test suite loaded. Run VFCTest.runAll() to verify.");
+	vfcDebugLog("log", "[VFCTest] Test suite loaded. Run VFCTest.runAll() to verify.");
 })();
