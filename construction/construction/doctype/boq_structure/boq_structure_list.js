@@ -1,5 +1,13 @@
 frappe.listview_settings["BOQ Structure"] = {
-	add_fields: ["item_count", "total_contract_value", "total_budgeted_cost", "boq_header", "project", "parent_structure", "wbs_code"],
+	add_fields: [
+		"item_count",
+		"total_contract_value",
+		"total_budgeted_cost",
+		"boq_header",
+		"project",
+		"parent_structure",
+		"wbs_code",
+	],
 
 	onload(listview) {
 		if (listview.__ct_boq_structure_columns_applied) return;

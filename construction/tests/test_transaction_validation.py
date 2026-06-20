@@ -2,13 +2,13 @@ import frappe
 from frappe.tests.utils import FrappeTestCase
 
 from construction.services.boq_accounting import validate_transaction_row
-from construction.services.boq_transaction_validation import CHILD_TABLE_BY_DOCTYPE, get_child_table
 from construction.services.boq_scope_filters import ALLOWED_TRANSACTION_BOQ_STATUSES
 from construction.services.boq_scope_registry import (
     get_supported_transaction_matrix,
     has_boq_scope_fields,
     is_scope_registry_enabled,
 )
+from construction.services.boq_transaction_validation import CHILD_TABLE_BY_DOCTYPE, get_child_table
 
 
 class TestBOQTransactionValidation(FrappeTestCase):
@@ -380,9 +380,9 @@ class TestBOQGateTransitions(FrappeTestCase):
         project = frappe.db.get_value("Project", {"project_name": name}, "name")
         if project:
             return project
-        return frappe.get_doc(
-            {"doctype": "Project", "project_name": name}
-        ).insert(ignore_permissions=True).name
+        return (
+            frappe.get_doc({"doctype": "Project", "project_name": name}).insert(ignore_permissions=True).name
+        )
 
     def _clear_scope_defaults(self):
         for key in ("company", "cost_center", "project", "department"):

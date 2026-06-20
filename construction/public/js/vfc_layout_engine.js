@@ -104,7 +104,6 @@
 
 			const layoutRoot = this._getLayoutRoot(frm);
 
-
 			// Blocked gate — skip internal/system-only doctypes
 			if (BLOCKED_DOCTYPES.has(dt)) {
 				return;
@@ -122,14 +121,21 @@
 
 						let hide = this.df.hidden || this.df.hidden_due_to_dependency;
 
-						if (!hide && this.frm && !this.frm.get_perm(this.df.permlevel || 0, "read")) {
+						if (
+							!hide &&
+							this.frm &&
+							!this.frm.get_perm(this.df.permlevel || 0, "read")
+						) {
 							hide = true;
 						}
 						if (!hide) {
 							hide = true;
 							const hasVfcHost = this.wrapper.find(".vfc-tab-pane-host").length > 0;
 							if (hasVfcHost) {
-								const hasVisibleFields = this.wrapper.find(".vfc-tab-pane-host .frappe-control:not(.hide-control)").length > 0;
+								const hasVisibleFields =
+									this.wrapper.find(
+										".vfc-tab-pane-host .frappe-control:not(.hide-control)"
+									).length > 0;
 								if (hasVisibleFields) {
 									hide = false;
 								}
@@ -178,11 +184,15 @@
 				// No profile → check density override or fallback to native
 				if (!profile) {
 					if (layoutRoot) {
-						const denClass = [...layoutRoot.classList].find((c) => /^vfc-density-\d+$/.test(c));
+						const denClass = [...layoutRoot.classList].find((c) =>
+							/^vfc-density-\d+$/.test(c)
+						);
 						if (denClass) {
 							const density = parseInt(denClass.split("-").pop(), 10);
 							if (density !== 2 && !hasTabs) {
-								console.log(`[LE] No profile, non-default density (${density}) — density rendering.`);
+								console.log(
+									`[LE] No profile, non-default density (${density}) — density rendering.`
+								);
 								this.renderWithDensity(frm, density);
 								return;
 							}
@@ -260,7 +270,13 @@
 
 			// Build type map for O(1) fieldtype lookup
 			const metaFieldTypeMap = {};
-			const SKIP_TYPES = new Set(["Section Break", "Column Break", "Tab Break", "HTML", "Heading"]);
+			const SKIP_TYPES = new Set([
+				"Section Break",
+				"Column Break",
+				"Tab Break",
+				"HTML",
+				"Heading",
+			]);
 			(frm.meta?.fields || []).forEach((mf) => {
 				if (mf.fieldname) metaFieldTypeMap[mf.fieldname] = mf.fieldtype;
 			});
@@ -289,9 +305,13 @@
 			this._hideNativeLayoutShells(layoutRoot);
 
 			// Determine effective column count from density override (if set)
-			const densityOverride = layoutRoot.classList.contains("vfc-density-1") ? 1
-				: layoutRoot.classList.contains("vfc-density-2") ? 2
-				: layoutRoot.classList.contains("vfc-density-3") ? 3 : 0;
+			const densityOverride = layoutRoot.classList.contains("vfc-density-1")
+				? 1
+				: layoutRoot.classList.contains("vfc-density-2")
+				? 2
+				: layoutRoot.classList.contains("vfc-density-3")
+				? 3
+				: 0;
 
 			// Tab detection for rendering
 			const hasTabs = (frm.meta?.fields || []).some((f) => f.fieldtype === "Tab Break");
@@ -300,7 +320,8 @@
 			sections.forEach((sec) => {
 				if (sec.visible === false) return;
 
-				const effectiveColCount = densityOverride || Math.min(Math.max(sec.column_count || 2, 1), 3);
+				const effectiveColCount =
+					densityOverride || Math.min(Math.max(sec.column_count || 2, 1), 3);
 				const sectionEl = this._buildSectionEl(sec, frm, effectiveColCount);
 				const gridEl = sectionEl.querySelector(".vfc-le-grid");
 
@@ -340,7 +361,9 @@
 
 					// Handle runtime visibility (user settings, permissions, depends_on)
 					if (fieldObj.df && (fieldObj.df.hidden || fieldObj.df.invisible)) {
-						console.log(`[LE] Skipping hidden field ${fn} (df.hidden=${fieldObj.df.hidden}, df.invisible=${fieldObj.df.invisible})`);
+						console.log(
+							`[LE] Skipping hidden field ${fn} (df.hidden=${fieldObj.df.hidden}, df.invisible=${fieldObj.df.invisible})`
+						);
 						return;
 					}
 
@@ -400,7 +423,13 @@
 
 			// ── Append unassigned fields at bottom (unassigned_policy: append) ──
 			if (profile.unassigned_policy !== "discard") {
-				this._appendUnassigned(frm, layoutRoot, knownFieldnames, assignedFieldnames, profile);
+				this._appendUnassigned(
+					frm,
+					layoutRoot,
+					knownFieldnames,
+					assignedFieldnames,
+					profile
+				);
 			}
 
 			// Store for cleanup on next render
@@ -722,7 +751,9 @@
 				// Sections with cells where NOT ALL cells are tagged with data-vfc-managed are still
 				// being rendered — skip them to avoid premature hiding during render transitions.
 				if (cells.length > 0) {
-					const allCellsProcessed = cells.every((cell) => cell.querySelector("[data-vfc-managed='1']"));
+					const allCellsProcessed = cells.every((cell) =>
+						cell.querySelector("[data-vfc-managed='1']")
+					);
 					if (!allCellsProcessed) return; // render still in progress, skip
 				}
 
@@ -800,7 +831,13 @@
 					const initCollapsed = !!sec.collapsed_by_default;
 					// Always set the attribute explicitly so state is unambiguous
 					secEl.setAttribute("data-vfc-collapsed", initCollapsed ? "1" : "0");
-					console.log(`[LE] Section "${sec.label || sec.id}": collapsible=true, collapsed_by_default=${sec.collapsed_by_default}, initCollapsed=${initCollapsed}`);
+					console.log(
+						`[LE] Section "${
+							sec.label || sec.id
+						}": collapsible=true, collapsed_by_default=${
+							sec.collapsed_by_default
+						}, initCollapsed=${initCollapsed}`
+					);
 
 					head.addEventListener("click", () => {
 						const collapsed = secEl.getAttribute("data-vfc-collapsed") === "1";
@@ -853,7 +890,7 @@
 
 			if (!unassigned.length) return;
 
-			const colCount = Math.min(Math.max((profile.unassigned_column_count || 2), 1), 3);
+			const colCount = Math.min(Math.max(profile.unassigned_column_count || 2, 1), 3);
 			const hasTabs = (frm.meta?.fields || []).some((f) => f.fieldtype === "Tab Break");
 
 			if (hasTabs) {
@@ -894,7 +931,10 @@
 						cell.className = "vfc-le-cell";
 						cell.setAttribute("data-vfc-field", f.fieldname);
 
-						const nativeEl = fieldObj.wrapper instanceof jQuery ? fieldObj.wrapper[0] : fieldObj.wrapper;
+						const nativeEl =
+							fieldObj.wrapper instanceof jQuery
+								? fieldObj.wrapper[0]
+								: fieldObj.wrapper;
 						if (nativeEl && nativeEl.parentNode) {
 							cell.appendChild(nativeEl);
 							this._restoreVisibleFieldWrapper(nativeEl);
@@ -931,7 +971,9 @@
 					cell.setAttribute("data-vfc-field", f.fieldname);
 
 					const nativeEl =
-						fieldObj.wrapper instanceof jQuery ? fieldObj.wrapper[0] : fieldObj.wrapper;
+						fieldObj.wrapper instanceof jQuery
+							? fieldObj.wrapper[0]
+							: fieldObj.wrapper;
 					if (nativeEl && nativeEl.parentNode) {
 						cell.appendChild(nativeEl);
 						this._restoreVisibleFieldWrapper(nativeEl);
@@ -1106,7 +1148,13 @@
 			});
 
 			const knownFieldnames = new Set((frm.meta?.fields || []).map((f) => f.fieldname));
-			const SKIP_TYPES = new Set(["Section Break", "Column Break", "Tab Break", "HTML", "Heading"]);
+			const SKIP_TYPES = new Set([
+				"Section Break",
+				"Column Break",
+				"Tab Break",
+				"HTML",
+				"Heading",
+			]);
 			const metaFieldTypeMap = {};
 			(frm.meta?.fields || []).forEach((mf) => {
 				if (mf.fieldname) metaFieldTypeMap[mf.fieldname] = mf.fieldtype;
@@ -1172,7 +1220,9 @@
 					layoutRoot.appendChild(sectionEl);
 					injectedContainers.push(sectionEl);
 					console.log(
-						`[LE] renderWithDensity: section "${sec.label || sec.fieldname}" → ${fields.length} fields`
+						`[LE] renderWithDensity: section "${sec.label || sec.fieldname}" → ${
+							fields.length
+						} fields`
 					);
 				}
 			});
@@ -1204,7 +1254,12 @@
 			const SKIP_TYPES = new Set(["Section Break", "Column Break", "Tab Break"]);
 
 			fields.forEach((df, i) => {
-				if (df.fieldtype === "Tab Break" || df.fieldtype === "HTML" || df.fieldtype === "Heading") return;
+				if (
+					df.fieldtype === "Tab Break" ||
+					df.fieldtype === "HTML" ||
+					df.fieldtype === "Heading"
+				)
+					return;
 
 				if (df.fieldtype === "Section Break") {
 					currentSection = {

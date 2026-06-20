@@ -86,9 +86,7 @@ def ensure_wbs_unique_constraint() -> dict[str, Any]:
     """Add the BOQ Header + WBS Code unique index after health preflight."""
     report = run_wbs_health_check()
     if not report.get("healthy"):
-        frappe.throw(
-            "Cannot add BOQ Structure WBS unique constraint because WBS health check found issues."
-        )
+        frappe.throw("Cannot add BOQ Structure WBS unique constraint because WBS health check found issues.")
 
     existing_index = get_wbs_unique_index_name()
     if existing_index:

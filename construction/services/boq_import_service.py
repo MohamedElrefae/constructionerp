@@ -106,7 +106,9 @@ class BOQImportService:
 
     SECTION_TYPES = {"section", "group", "header", "قسم", "مجموعة", "بند رئيسي"}
     ITEM_TYPES = {"item", "measured item", "بند", "بند مقاس"}
-    IGNORE_TEXT_RE = re.compile(r"^(total|grand total|subtotal|sub total|الإجمالي|اجمالي|المجموع|صافى|صافي)$", re.I)
+    IGNORE_TEXT_RE = re.compile(
+        r"^(total|grand total|subtotal|sub total|الإجمالي|اجمالي|المجموع|صافى|صافي)$", re.I
+    )
 
     @staticmethod
     def import_from_excel(
@@ -194,7 +196,9 @@ class BOQImportService:
             return BOQImportService._error_response(
                 boq_header,
                 ws.title,
-                errors=[{"row_no": None, "code": "invalid_import_mode", "message": _("Invalid import mode.")}],
+                errors=[
+                    {"row_no": None, "code": "invalid_import_mode", "message": _("Invalid import mode.")}
+                ],
                 import_policy=row_policy["policy"],
             )
 
@@ -249,7 +253,11 @@ class BOQImportService:
 
     @staticmethod
     def get_import_status(import_id: str) -> dict:
-        return {"status": "preview-only", "import_id": import_id, "message": "Commit import not implemented yet"}
+        return {
+            "status": "preview-only",
+            "import_id": import_id,
+            "message": "Commit import not implemented yet",
+        }
 
     @staticmethod
     def generate_import_error_report(
@@ -306,7 +314,9 @@ class BOQImportService:
         if not preview.get("success") or preview.get("errors"):
             frappe.throw(_("BOQ Excel import has blocking errors and cannot be committed."))
         if (preview.get("import_policy") or {}).get("requires_async"):
-            frappe.throw(_("This BOQ Excel import exceeds the synchronous row threshold and must use async import."))
+            frappe.throw(
+                _("This BOQ Excel import exceeds the synchronous row threshold and must use async import.")
+            )
 
         proposed = preview.get("proposed_creates") or {}
         structures = proposed.get("structures") or []
@@ -339,12 +349,16 @@ class BOQImportService:
                 existing_by_wbs=existing_by_wbs,
                 created_by_wbs=created_by_wbs,
             )
-            created_structures.append({"name": structure.name, "wbs_code": structure.wbs_code, "is_group": structure.is_group})
+            created_structures.append(
+                {"name": structure.name, "wbs_code": structure.wbs_code, "is_group": structure.is_group}
+            )
             created_by_wbs[structure.wbs_code] = structure.name
 
             if not structure.is_group:
                 item = BOQImportService._update_imported_item(structure, row, batch, confirmed_import_mode)
-                created_items.append({"name": item.name, "structure": structure.name, "wbs_code": structure.wbs_code})
+                created_items.append(
+                    {"name": item.name, "structure": structure.name, "wbs_code": structure.wbs_code}
+                )
 
         batch.status = "Committed"
         batch.save(ignore_permissions=True)
@@ -372,14 +386,20 @@ class BOQImportService:
         for row in structures:
             wbs_code = (row.get("wbs_code") or "").strip()
             if not wbs_code:
-                frappe.throw(_("Imported BOQ row {0} has no proposed WBS code.").format(row.get("row_no") or "system"))
+                frappe.throw(
+                    _("Imported BOQ row {0} has no proposed WBS code.").format(row.get("row_no") or "system")
+                )
             if wbs_code in seen:
                 duplicates.append(wbs_code)
             seen[wbs_code] = row.get("row_no")
             proposed_wbs.append(wbs_code)
 
         if duplicates:
-            frappe.throw(_("Duplicate proposed WBS codes in import preview: {0}.").format(", ".join(sorted(set(duplicates)))))
+            frappe.throw(
+                _("Duplicate proposed WBS codes in import preview: {0}.").format(
+                    ", ".join(sorted(set(duplicates)))
+                )
+            )
 
         existing = frappe.get_all(
             "BOQ Structure",
@@ -388,9 +408,9 @@ class BOQImportService:
         )
         if existing:
             frappe.throw(
-                _("Cannot commit BOQ Excel import because WBS code(s) already exist in this Draft BOQ: {0}.").format(
-                    ", ".join(sorted(set(existing)))
-                )
+                _(
+                    "Cannot commit BOQ Excel import because WBS code(s) already exist in this Draft BOQ: {0}."
+                ).format(", ".join(sorted(set(existing))))
             )
 
     @staticmethod
@@ -453,9 +473,9 @@ class BOQImportService:
         preview: dict,
     ) -> dict:
         import openpyxl
+        from frappe.utils import now_datetime
         from openpyxl.styles import Alignment, Font, PatternFill
         from openpyxl.utils import get_column_letter
-        from frappe.utils import now_datetime
 
         wb = openpyxl.Workbook()
         ws = wb.active
@@ -653,7 +673,9 @@ class BOQImportService:
         parent_structure = None
         parent_wbs = row.get("parent_wbs")
         if parent_wbs:
-            parent_structure = created_by_wbs.get(parent_wbs) or (existing_by_wbs.get(parent_wbs) or {}).get("name")
+            parent_structure = created_by_wbs.get(parent_wbs) or (existing_by_wbs.get(parent_wbs) or {}).get(
+                "name"
+            )
             if not parent_structure:
                 frappe.throw(_("Parent WBS {0} was not resolved during import commit.").format(parent_wbs))
 
@@ -677,7 +699,9 @@ class BOQImportService:
 
     @staticmethod
     def _update_imported_item(structure, row: dict, batch, import_mode: str):
-        normalized = BOQImportService._preview_row_normalized(row.get("row_no"), row.get("wbs_code"), batch.preview_json)
+        normalized = BOQImportService._preview_row_normalized(
+            row.get("row_no"), row.get("wbs_code"), batch.preview_json
+        )
         item_name = frappe.db.get_value("BOQ Item", {"structure": structure.name}, "name")
         if not item_name:
             frappe.throw(_("BOQ Item was not created for imported structure {0}.").format(structure.name))
@@ -799,7 +823,9 @@ class BOQImportService:
                 {
                     "row_no": selected["row_no"],
                     "code": "header_tie_earliest_selected",
-                    "message": _("Multiple possible header rows found; earliest highest-scoring row was selected."),
+                    "message": _(
+                        "Multiple possible header rows found; earliest highest-scoring row was selected."
+                    ),
                 }
             )
         if not selected["has_description"]:
@@ -807,7 +833,9 @@ class BOQImportService:
                 {
                     "row_no": selected["row_no"],
                     "code": "header_without_description_anchor",
-                    "message": _("Header row has no description/title column; parsing confidence is reduced."),
+                    "message": _(
+                        "Header row has no description/title column; parsing confidence is reduced."
+                    ),
                 }
             )
         selected["found"] = True
@@ -818,7 +846,10 @@ class BOQImportService:
     def _parse_rows(data_rows: list[dict], columns: dict, sheet_name: str) -> list[dict]:
         parsed = []
         for source in data_rows:
-            raw = {field: BOQImportService._cell_value(source["values"], col_idx) for field, col_idx in columns.items()}
+            raw = {
+                field: BOQImportService._cell_value(source["values"], col_idx)
+                for field, col_idx in columns.items()
+            }
             if not any(BOQImportService._to_text(value) for value in raw.values()):
                 continue
             parsed.append(
@@ -871,7 +902,9 @@ class BOQImportService:
         for idx, row in enumerate(rows):
             normalized = row["normalized"]
             resolution = resolutions.get(row["row_no"])
-            detected_type, reason_codes, confidence = BOQImportService._detect_row_type(row, rows, idx, import_mode)
+            detected_type, reason_codes, confidence = BOQImportService._detect_row_type(
+                row, rows, idx, import_mode
+            )
 
             if resolution:
                 resolved_type = resolution.get("resolved_type")
@@ -898,12 +931,16 @@ class BOQImportService:
                         {
                             "row_no": row["row_no"],
                             "code": "duplicate_wbs_in_file",
-                            "message": _("Duplicate WBS code {0} also appears on row {1}.").format(wbs, seen_wbs[wbs]),
+                            "message": _("Duplicate WBS code {0} also appears on row {1}.").format(
+                                wbs, seen_wbs[wbs]
+                            ),
                         }
                     )
                 seen_wbs[wbs] = row["row_no"]
-                if import_mode == "Structured" and boq_header and frappe.db.exists(
-                    "BOQ Structure", {"boq_header": boq_header, "wbs_code": wbs}
+                if (
+                    import_mode == "Structured"
+                    and boq_header
+                    and frappe.db.exists("BOQ Structure", {"boq_header": boq_header, "wbs_code": wbs})
                 ):
                     errors.append(
                         {
@@ -918,7 +955,9 @@ class BOQImportService:
                     {
                         "row_no": row["row_no"],
                         "code": "ambiguous_row_unresolved",
-                        "message": _("Ambiguous row must be resolved as Section, Item, or Ignore before commit."),
+                        "message": _(
+                            "Ambiguous row must be resolved as Section, Item, or Ignore before commit."
+                        ),
                     }
                 )
 
@@ -952,7 +991,9 @@ class BOQImportService:
         return preview_rows, errors, warnings
 
     @staticmethod
-    def _detect_row_type(row: dict, rows: list[dict], idx: int, import_mode: str) -> tuple[str, list[str], str]:
+    def _detect_row_type(
+        row: dict, rows: list[dict], idx: int, import_mode: str
+    ) -> tuple[str, list[str], str]:
         n = row["normalized"]
         reasons = []
         if not n.get("title"):
@@ -992,20 +1033,42 @@ class BOQImportService:
         if row_type in {"Ignored", "Ambiguous"}:
             return errors
         if not n.get("title"):
-            errors.append({"row_no": row_no, "code": "missing_description", "message": _("Description is required.")})
+            errors.append(
+                {"row_no": row_no, "code": "missing_description", "message": _("Description is required.")}
+            )
         if row_type == "Item":
             if not n.get("unit"):
-                errors.append({"row_no": row_no, "code": "missing_unit", "message": _("Unit is required for item rows.")})
+                errors.append(
+                    {
+                        "row_no": row_no,
+                        "code": "missing_unit",
+                        "message": _("Unit is required for item rows."),
+                    }
+                )
             if n.get("quantity") is None or n["quantity"] <= 0:
                 errors.append(
-                    {"row_no": row_no, "code": "invalid_quantity", "message": _("Quantity must be greater than zero.")}
+                    {
+                        "row_no": row_no,
+                        "code": "invalid_quantity",
+                        "message": _("Quantity must be greater than zero."),
+                    }
                 )
             if n.get("unit_price") is not None and n["unit_price"] < 0:
                 errors.append(
-                    {"row_no": row_no, "code": "negative_unit_price", "message": _("Unit price cannot be negative.")}
+                    {
+                        "row_no": row_no,
+                        "code": "negative_unit_price",
+                        "message": _("Unit price cannot be negative."),
+                    }
                 )
             if n.get("factor") is not None and n["factor"] <= 0:
-                errors.append({"row_no": row_no, "code": "invalid_factor", "message": _("Factor must be greater than zero.")})
+                errors.append(
+                    {
+                        "row_no": row_no,
+                        "code": "invalid_factor",
+                        "message": _("Factor must be greater than zero."),
+                    }
+                )
         if row_type == "Section" and BOQImportService._has_item_values(n):
             errors.append(
                 {
@@ -1016,7 +1079,11 @@ class BOQImportService:
             )
         if import_mode == "Structured" and not n.get("wbs_code"):
             errors.append(
-                {"row_no": row_no, "code": "missing_wbs_structured", "message": _("WBS Code is required in Structured mode.")}
+                {
+                    "row_no": row_no,
+                    "code": "missing_wbs_structured",
+                    "message": _("WBS Code is required in Structured mode."),
+                }
             )
         return errors
 
@@ -1088,7 +1155,9 @@ class BOQImportService:
         return max_seq + 1
 
     @staticmethod
-    def _validate_parent_wbs_tree(preview_rows: list[dict], import_mode: str, boq_header: str | None) -> list[dict]:
+    def _validate_parent_wbs_tree(
+        preview_rows: list[dict], import_mode: str, boq_header: str | None
+    ) -> list[dict]:
         if import_mode != "Structured":
             return []
 
@@ -1127,9 +1196,9 @@ class BOQImportService:
                         {
                             "row_no": row["row_no"],
                             "code": "parent_wbs_not_section",
-                            "message": _("Parent WBS {0} exists in the uploaded file but is not a Section row.").format(
-                                parent_wbs
-                            ),
+                            "message": _(
+                                "Parent WBS {0} exists in the uploaded file but is not a Section row."
+                            ).format(parent_wbs),
                         }
                     )
                 if parent_row["row_no"] and row["row_no"] and parent_row["row_no"] > row["row_no"]:
@@ -1137,9 +1206,9 @@ class BOQImportService:
                         {
                             "row_no": row["row_no"],
                             "code": "parent_wbs_after_child",
-                            "message": _("Parent WBS {0} appears after this child row in the uploaded file.").format(
-                                parent_wbs
-                            ),
+                            "message": _(
+                                "Parent WBS {0} appears after this child row in the uploaded file."
+                            ).format(parent_wbs),
                         }
                     )
                 continue
@@ -1151,7 +1220,9 @@ class BOQImportService:
                         {
                             "row_no": row["row_no"],
                             "code": "parent_wbs_existing_not_section",
-                            "message": _("Parent WBS {0} exists in BOQ but is not a Section row.").format(parent_wbs),
+                            "message": _("Parent WBS {0} exists in BOQ but is not a Section row.").format(
+                                parent_wbs
+                            ),
                         }
                     )
                 continue
@@ -1160,9 +1231,9 @@ class BOQImportService:
                 {
                     "row_no": row["row_no"],
                     "code": "parent_wbs_not_found",
-                    "message": _("Parent WBS {0} was not found in the uploaded file or target Draft BOQ.").format(
-                        parent_wbs
-                    ),
+                    "message": _(
+                        "Parent WBS {0} was not found in the uploaded file or target Draft BOQ."
+                    ).format(parent_wbs),
                 }
             )
 
@@ -1281,13 +1352,13 @@ class BOQImportService:
     def _to_number(value: Any) -> Decimal | None:
         if value in (None, ""):
             return None
-        if isinstance(value, (int, float, Decimal)):
+        if isinstance(value, int | float | Decimal):
             return Decimal(str(value))
         text = str(value).strip()
         if not text:
             return None
         text = text.replace("٬", "").replace(",", "")
-        text = text.replace("٫", ".")
+        text = text.replace("\u066b", ".")
         try:
             return Decimal(text)
         except InvalidOperation:

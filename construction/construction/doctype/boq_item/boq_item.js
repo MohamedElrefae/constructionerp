@@ -88,7 +88,9 @@
 			field.set_description(
 				blocked
 					? __("Select BOQ Header first")
-					: __("BOQ Items are linked to leaf Structure nodes only. If no structures appear, ensure a leaf-level Structure exists.")
+					: __(
+							"BOQ Items are linked to leaf Structure nodes only. If no structures appear, ensure a leaf-level Structure exists."
+					  )
 			);
 		}
 	}

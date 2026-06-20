@@ -122,9 +122,15 @@
 				this._log(true, "Active tab pane is visible and has content.", activePane);
 			}
 
-			const hiddenButHost = report.filter((p) => !p.active && p.hasHost && p.display !== "none");
+			const hiddenButHost = report.filter(
+				(p) => !p.active && p.hasHost && p.display !== "none"
+			);
 			if (hiddenButHost.length) {
-				this._log(false, "Inactive pane(s) with VFC host are still visible (should be hidden).", hiddenButHost);
+				this._log(
+					false,
+					"Inactive pane(s) with VFC host are still visible (should be hidden).",
+					hiddenButHost
+				);
 			} else {
 				this._log(true, "Inactive panes with VFC hosts are correctly hidden.");
 			}
@@ -155,16 +161,24 @@
 				if (!field) return;
 				const style = getComputedStyle(field);
 				const rect = field.getBoundingClientRect();
-				const isPainted = style.display !== "none" && style.visibility !== "hidden" && rect.height > 2 && rect.width > 2;
+				const isPainted =
+					style.display !== "none" &&
+					style.visibility !== "hidden" &&
+					rect.height > 2 &&
+					rect.width > 2;
 				if (isPainted) {
 					visible++;
 				} else {
 					hidden++;
-					hiddenFields.push(cell.getAttribute("data-vfc-field") || field.getAttribute("data-fieldname"));
+					hiddenFields.push(
+						cell.getAttribute("data-vfc-field") || field.getAttribute("data-fieldname")
+					);
 				}
 			});
 
-			console.log(`   Visible fields: ${visible}, Hidden fields: ${hidden}, Total cells: ${cells.length}`);
+			console.log(
+				`   Visible fields: ${visible}, Hidden fields: ${hidden}, Total cells: ${cells.length}`
+			);
 
 			if (hidden === 0) {
 				this._log(true, `All ${visible} VFC-managed fields are painted.`);
@@ -193,7 +207,9 @@
 			}
 
 			// Ask user to check console history for multiple [LE] attach() lines
-			console.log("   💡 Tip: Filter console for '[LE] attach() triggered'. You should see it once per form load.");
+			console.log(
+				"   💡 Tip: Filter console for '[LE] attach() triggered'. You should see it once per form load."
+			);
 			return this._summary();
 		},
 
@@ -203,7 +219,9 @@
     ───────────────────────────────────────────────────────── */
 		checkNativeShells() {
 			this._results = [];
-			console.log("\n🔍 VFCTest.checkNativeShells() — ensuring native shells are preserved…");
+			console.log(
+				"\n🔍 VFCTest.checkNativeShells() — ensuring native shells are preserved…"
+			);
 
 			const layoutRoot = document.querySelector(".form-layout");
 			if (!layoutRoot) {
@@ -211,21 +229,36 @@
 				return this._summary();
 			}
 
-			const nativeSections = [...layoutRoot.querySelectorAll(".form-section, .frappe-section")];
+			const nativeSections = [
+				...layoutRoot.querySelectorAll(".form-section, .frappe-section"),
+			];
 			const visibleNative = nativeSections.filter((el) => {
 				const s = getComputedStyle(el);
 				const r = el.getBoundingClientRect();
-				return s.display !== "none" && s.visibility !== "hidden" && r.height > 1 && r.width > 1;
+				return (
+					s.display !== "none" &&
+					s.visibility !== "hidden" &&
+					r.height > 1 &&
+					r.width > 1
+				);
 			});
 
-			console.log(`   Native sections total: ${nativeSections.length}, visible: ${visibleNative.length}`);
+			console.log(
+				`   Native sections total: ${nativeSections.length}, visible: ${visibleNative.length}`
+			);
 
 			// For tabbed forms we expect native shells to remain visible (they hold the tabs)
 			const hasTabs = !!layoutRoot.querySelector(".tab-pane");
 			if (hasTabs && visibleNative.length === 0) {
-				this._log(false, "All native sections are hidden on a tabbed form — this will break tabs.");
+				this._log(
+					false,
+					"All native sections are hidden on a tabbed form — this will break tabs."
+				);
 			} else {
-				this._log(true, "Native section shells are present.", { hasTabs, visibleNative: visibleNative.length });
+				this._log(true, "Native section shells are present.", {
+					hasTabs,
+					visibleNative: visibleNative.length,
+				});
 			}
 			return this._summary();
 		},

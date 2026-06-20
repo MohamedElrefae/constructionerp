@@ -185,7 +185,9 @@ def run_boq_excel_commit_smoke() -> dict:
         }
     finally:
         if old_commit_flag is not None:
-            frappe.db.set_single_value("Construction Settings", "enable_boq_excel_import_commit", old_commit_flag)
+            frappe.db.set_single_value(
+                "Construction Settings", "enable_boq_excel_import_commit", old_commit_flag
+            )
         if header:
             _cleanup_header(header.name)
         if path and os.path.exists(path):
@@ -271,7 +273,9 @@ def run_boq_excel_duplicate_import_smoke() -> dict:
         }
     finally:
         if old_commit_flag is not None:
-            frappe.db.set_single_value("Construction Settings", "enable_boq_excel_import_commit", old_commit_flag)
+            frappe.db.set_single_value(
+                "Construction Settings", "enable_boq_excel_import_commit", old_commit_flag
+            )
         if header:
             _cleanup_header(header.name)
         for candidate in (path, stale_path):
@@ -364,12 +368,16 @@ def run_boq_excel_import_policy_smoke() -> dict:
         BOQImportService.MAX_IMPORT_FILE_SIZE_BYTES = old_file_limit
         BOQImportService.MAX_IMPORT_ROW_COUNT = 10
         BOQImportService.ASYNC_IMPORT_ROW_THRESHOLD = 1
-        async_preview = BOQImportService.parse_workbook(path, boq_header=header.name, confirmed_import_mode="Flat")
+        async_preview = BOQImportService.parse_workbook(
+            path, boq_header=header.name, confirmed_import_mode="Flat"
+        )
         if not async_preview.get("success"):
             frappe.throw(f"Expected async-threshold preview to remain successful: {async_preview}")
         if not (async_preview.get("import_policy") or {}).get("requires_async"):
             frappe.throw(f"Expected preview to require async: {async_preview}")
-        if "async_import_required" not in [warning.get("code") for warning in async_preview.get("warnings", [])]:
+        if "async_import_required" not in [
+            warning.get("code") for warning in async_preview.get("warnings", [])
+        ]:
             frappe.throw(f"Expected async_import_required warning: {async_preview.get('warnings')}")
 
         frappe.db.set_single_value("Construction Settings", "enable_boq_excel_import_commit", 1)
@@ -383,14 +391,18 @@ def run_boq_excel_import_policy_smoke() -> dict:
             frappe.throw(f"Expected sync commit to be blocked for async-sized import: {async_commit}")
 
         BOQImportService.MAX_IMPORT_ROW_COUNT = 1
-        row_limit = BOQImportService.parse_workbook(path, boq_header=header.name, confirmed_import_mode="Flat")
+        row_limit = BOQImportService.parse_workbook(
+            path, boq_header=header.name, confirmed_import_mode="Flat"
+        )
         row_errors = [error.get("code") for error in row_limit.get("errors", [])]
         if "row_count_limit_exceeded" not in row_errors:
             frappe.throw(f"Expected row_count_limit_exceeded error: {row_limit}")
 
         BOQImportService.MAX_IMPORT_ROW_COUNT = 10
         BOQImportService.MAX_IMPORT_FILE_SIZE_BYTES = 1
-        file_limit = BOQImportService.parse_workbook(path, boq_header=header.name, confirmed_import_mode="Flat")
+        file_limit = BOQImportService.parse_workbook(
+            path, boq_header=header.name, confirmed_import_mode="Flat"
+        )
         file_errors = [error.get("code") for error in file_limit.get("errors", [])]
         if "file_size_limit_exceeded" not in file_errors:
             frappe.throw(f"Expected file_size_limit_exceeded error: {file_limit}")
@@ -410,7 +422,9 @@ def run_boq_excel_import_policy_smoke() -> dict:
         BOQImportService.MAX_IMPORT_ROW_COUNT = old_row_limit
         BOQImportService.ASYNC_IMPORT_ROW_THRESHOLD = old_async_threshold
         if old_commit_flag is not None:
-            frappe.db.set_single_value("Construction Settings", "enable_boq_excel_import_commit", old_commit_flag)
+            frappe.db.set_single_value(
+                "Construction Settings", "enable_boq_excel_import_commit", old_commit_flag
+            )
         if header:
             _cleanup_header(header.name)
         if path and os.path.exists(path):
@@ -423,8 +437,12 @@ def run_boq_export_depth_map_smoke() -> dict:
     try:
         header = _make_header("WP2.10 Export Depth Smoke")
         root = _insert_manual_structure(header.name, "Root", "01", is_group=1)
-        child = _insert_manual_structure(header.name, "Child", "01.01", is_group=1, parent_structure=root.name)
-        leaf = _insert_manual_structure(header.name, "Leaf", "01.01.001", is_group=0, parent_structure=child.name)
+        child = _insert_manual_structure(
+            header.name, "Child", "01.01", is_group=1, parent_structure=root.name
+        )
+        leaf = _insert_manual_structure(
+            header.name, "Leaf", "01.01.001", is_group=0, parent_structure=child.name
+        )
 
         def fail_if_called(structure_name):
             frappe.throw(f"Legacy per-node depth lookup was called for {structure_name}")
@@ -505,7 +523,9 @@ def run_boq_export_rtl_smoke() -> dict:
         frappe.local.lang = "ar"
         header = _make_header("WP2.12 RTL Export Smoke")
         root = _insert_manual_structure(header.name, "أعمال الخرسانة", "01", is_group=1)
-        leaf = _insert_manual_structure(header.name, "خرسانة عادية", "01.001", is_group=0, parent_structure=root.name)
+        leaf = _insert_manual_structure(
+            header.name, "خرسانة عادية", "01.001", is_group=0, parent_structure=root.name
+        )
         item = frappe.get_doc("BOQ Item", frappe.db.get_value("BOQ Item", {"structure": leaf.name}, "name"))
         item.quantity = 12.5
         item.unit = "Nos"
@@ -530,11 +550,17 @@ def run_boq_export_rtl_smoke() -> dict:
         if not str(ws.cell(row=1, column=1).value or "").startswith("جدول الكميات"):
             frappe.throw(f"Arabic export title is not translated: {ws.cell(row=1, column=1).value}")
         if values_by_header.get("الكمية") != 12.5:
-            frappe.throw(f"Quantity should remain numeric Western Excel value: {values_by_header.get('الكمية')}")
+            frappe.throw(
+                f"Quantity should remain numeric Western Excel value: {values_by_header.get('الكمية')}"
+            )
         if values_by_header.get("سعر الوحدة") != 100:
-            frappe.throw(f"Unit price should remain numeric Western Excel value: {values_by_header.get('سعر الوحدة')}")
+            frappe.throw(
+                f"Unit price should remain numeric Western Excel value: {values_by_header.get('سعر الوحدة')}"
+            )
         if values_by_header.get("إجمالي البند") != 1250:
-            frappe.throw(f"Line total should remain numeric Western Excel value: {values_by_header.get('إجمالي البند')}")
+            frappe.throw(
+                f"Line total should remain numeric Western Excel value: {values_by_header.get('إجمالي البند')}"
+            )
 
         return {
             "success": True,
@@ -578,7 +604,9 @@ def run_boq_pdf_arabic_font_smoke() -> dict:
         frappe.local.lang = "ar"
         header = _make_header("WP5.3 Arabic PDF Smoke")
         root = _insert_manual_structure(header.name, "أعمال الخرسانة", "01", is_group=1)
-        leaf = _insert_manual_structure(header.name, "خرسانة عادية", "01.001", is_group=0, parent_structure=root.name)
+        leaf = _insert_manual_structure(
+            header.name, "خرسانة عادية", "01.001", is_group=0, parent_structure=root.name
+        )
         item = frappe.get_doc("BOQ Item", frappe.db.get_value("BOQ Item", {"structure": leaf.name}, "name"))
         item.quantity = 12.5
         item.unit = "m3"
@@ -698,7 +726,9 @@ def run_boq_print_format_registration_smoke() -> dict:
         frappe.local.lang = "ar"
         header = _make_header("WP5.6 Print Registration Smoke")
         root = _insert_manual_structure(header.name, "أعمال الموقع العام", "01", is_group=1)
-        _insert_manual_structure(header.name, "تجهيز الموقع", "01.001", is_group=0, parent_structure=root.name)
+        _insert_manual_structure(
+            header.name, "تجهيز الموقع", "01.001", is_group=0, parent_structure=root.name
+        )
         context = {
             "header": BOQExportService.get_boq_header_data(header.name),
             "items": BOQExportService.get_tree_data(header.name),

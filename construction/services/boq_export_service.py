@@ -281,12 +281,16 @@ class BOQExportService:
                     node_data["contract_unit_price"] = item.get("contract_unit_price")
                     node_data["line_total"] = item.get("line_total")
                     node_data["factor"] = item.get("factor", 1.0)
-                    node_data["is_variation_item"] = item.get("is_variation_item") or structure.get("is_variation_item")
+                    node_data["is_variation_item"] = item.get("is_variation_item") or structure.get(
+                        "is_variation_item"
+                    )
                     revised = revised_map.get(item.get("name")) or {}
                     node_data["contract_qty"] = revised.get("contract_qty", item.get("quantity"))
                     node_data["vo_qty_delta"] = revised.get("vo_qty_delta", 0)
                     node_data["revised_qty"] = revised.get("revised_qty", item.get("quantity"))
-                    node_data["contract_line_value"] = revised.get("contract_line_value", item.get("line_total") or 0)
+                    node_data["contract_line_value"] = revised.get(
+                        "contract_line_value", item.get("line_total") or 0
+                    )
                     node_data["vo_value_delta"] = revised.get("vo_value_delta", 0)
                     node_data["revised_value"] = revised.get("revised_value", item.get("line_total") or 0)
                     node_data["measured_qty"] = revised.get("measured_qty", 0)
@@ -363,8 +367,16 @@ class BOQExportService:
                 {"key": "boq_type", "label": BOQExportService._label("BOQ Type"), "width": 10},
                 {"key": "status", "label": BOQExportService._label("Status"), "width": 10},
                 {"key": "version", "label": BOQExportService._label("Version"), "width": 8},
-                {"key": "total_contract_value", "label": BOQExportService._label("Total Contract Value"), "width": 15},
-                {"key": "total_budgeted_cost", "label": BOQExportService._label("Total Budgeted Cost"), "width": 15},
+                {
+                    "key": "total_contract_value",
+                    "label": BOQExportService._label("Total Contract Value"),
+                    "width": 15,
+                },
+                {
+                    "key": "total_budgeted_cost",
+                    "label": BOQExportService._label("Total Budgeted Cost"),
+                    "width": 15,
+                },
                 {"key": "created_on", "label": BOQExportService._label("Created On"), "width": 12},
                 {"key": "modified_on", "label": BOQExportService._label("Modified On"), "width": 12},
             ]
@@ -420,11 +432,15 @@ class BOQExportService:
                 label_cell = ws.cell(row=row_idx, column=1, value=label)
                 label_cell.font = label_font
                 label_cell.fill = label_fill
-                label_cell.alignment = Alignment(horizontal=BOQExportService._text_alignment(), vertical="center")
+                label_cell.alignment = Alignment(
+                    horizontal=BOQExportService._text_alignment(), vertical="center"
+                )
 
                 # Value cell
                 value_cell = ws.cell(row=row_idx, column=2, value=value)
-                value_cell.alignment = Alignment(horizontal=BOQExportService._text_alignment(), vertical="center")
+                value_cell.alignment = Alignment(
+                    horizontal=BOQExportService._text_alignment(), vertical="center"
+                )
 
                 # Format currency fields
                 if key in currency_keys:
@@ -507,7 +523,11 @@ class BOQExportService:
             # Write BOQ Header info
             last_col_letter = get_column_letter(len(effective_columns)) if effective_columns else "K"
             ws.merge_cells(f"A1:{last_col_letter}1")
-            ws.cell(row=1, column=1, value=f"{BOQExportService._label('Bill of Quantities')}: {header_data['title']}")
+            ws.cell(
+                row=1,
+                column=1,
+                value=f"{BOQExportService._label('Bill of Quantities')}: {header_data['title']}",
+            )
             ws.cell(row=1, column=1).font = title_font
             ws.cell(row=1, column=1).alignment = Alignment(horizontal="center")
 

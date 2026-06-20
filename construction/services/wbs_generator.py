@@ -9,7 +9,6 @@ from frappe.utils import now
 
 from construction.services.feature_flags import is_enabled
 
-
 RESEQUENCE_FLAG = "enable_boq_wbs_resequence"
 RESEQUENCE_ROLE = "System Manager"
 
@@ -43,7 +42,9 @@ class WBSGenerator:
     def regenerate_subtree(node_name: str, boq_header: str):
         """Regenerate WBS codes for a node and all its descendants."""
         frappe.throw(
-            _("Use resequence_wbs for controlled BOQ-wide WBS regeneration. Node-level regeneration is disabled.")
+            _(
+                "Use resequence_wbs for controlled BOQ-wide WBS regeneration. Node-level regeneration is disabled."
+            )
         )
 
     @staticmethod
@@ -239,7 +240,8 @@ def _write_resequence_audit(boq_header: str, before: dict, after: dict, changed:
             "comment_type": "Info",
             "reference_doctype": "BOQ Header",
             "reference_name": boq_header,
-            "content": "WBS resequence audit\n" + json.dumps(payload, ensure_ascii=False, sort_keys=True, indent=2),
+            "content": "WBS resequence audit\n"
+            + json.dumps(payload, ensure_ascii=False, sort_keys=True, indent=2),
         }
     )
     comment.insert(ignore_permissions=True)

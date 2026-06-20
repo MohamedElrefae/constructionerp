@@ -152,9 +152,7 @@ class TestScopeDimensionPermissionsAPI(unittest.TestCase):
         self.assertIsInstance(result, dict)
         for key in ("Company", "Project", "Cost Center", "Account"):
             self.assertIn(key, result, f"Missing key: {key}")
-            self.assertIsInstance(
-                result[key], bool, f"{key} should be a bool, got {type(result[key])}"
-            )
+            self.assertIsInstance(result[key], bool, f"{key} should be a bool, got {type(result[key])}")
 
     def test_administrator_can_read_all(self):
         frappe.set_user("Administrator")
@@ -263,9 +261,7 @@ class TestScopeReportEnforcement(unittest.TestCase):
         # via lft/rgt expansion.
         frappe.set_user("test_user2@example.com")
         try:
-            frappe.db.delete(
-                "User Scope Context", {"user": "test_user2@example.com"}
-            )
+            frappe.db.delete("User Scope Context", {"user": "test_user2@example.com"})
             frappe.db.commit()
             frappe.clear_cache(user="test_user2@example.com")
             set_scope_context(
@@ -367,6 +363,7 @@ class TestScopeReportAllowlist(unittest.TestCase):
                 return {"result": []}
 
             import construction.overrides.scope_report as mod
+
             mod._ORIGINAL_RUN = fake_run
             try:
                 _scope_aware_run(
@@ -405,6 +402,7 @@ class TestScopeReportAllowlist(unittest.TestCase):
                 return {"result": []}
 
             import construction.overrides.scope_report as mod
+
             mod._ORIGINAL_RUN = fake_run
             try:
                 _scope_aware_run(
@@ -460,6 +458,7 @@ class TestScopeReportPositionalArgs(unittest.TestCase):
                 return {"result": []}
 
             import construction.overrides.scope_report as mod
+
             mod._ORIGINAL_RUN = fake_run
             try:
                 # Call positionally: run(report_name, filters, user, ...)
@@ -500,6 +499,7 @@ class TestScopeReportPositionalArgs(unittest.TestCase):
                 return {"result": []}
 
             import construction.overrides.scope_report as mod
+
             mod._ORIGINAL_RUN = fake_run
             try:
                 # Call with filters as a JSON-encoded string.
@@ -803,9 +803,7 @@ class TestFinanceRoleBypass(unittest.TestCase):
         from construction.overrides.scope_report import _has_unrestricted_report_role
 
         if not frappe.db.exists("Role", "Accounts User"):
-            frappe.get_doc(
-                {"doctype": "Role", "role_name": "Accounts User"}
-            ).insert(ignore_permissions=True)
+            frappe.get_doc({"doctype": "Role", "role_name": "Accounts User"}).insert(ignore_permissions=True)
 
         user = "test_scope@example.com"
         user_doc = frappe.get_doc("User", user)
@@ -877,10 +875,12 @@ class TestOptionBReportAccessGate(unittest.TestCase):
         frappe.clear_cache(user="test_user2@example.com")
         # Make sure apply_report_monkeypatch has been run.
         from construction.overrides import scope_report
+
         if not scope_report._ORIGINAL_RUN_SIG:
             scope_report.apply_report_monkeypatch()
         # Make sure no stale flag survives between tests.
         from construction.overrides import scope_report
+
         scope_report.clear_bypass_context()
 
     def tearDown(self):
@@ -892,6 +892,7 @@ class TestOptionBReportAccessGate(unittest.TestCase):
         frappe.clear_cache(user="test_user2@example.com")
         # Always clear the bypass context, even on test failure.
         from construction.overrides import scope_report
+
         scope_report.clear_bypass_context()
 
     def _set_scope(self):
@@ -1040,9 +1041,7 @@ class TestOptionBReportAccessGate(unittest.TestCase):
         try:
             frappe.set_user("test_user2@example.com")
             try:
-                result = scope_report.frappe.has_permission(
-                    "GL Entry", "report"
-                )
+                result = scope_report.frappe.has_permission("GL Entry", "report")
                 self.assertTrue(result, "report perm should be granted with scope")
             finally:
                 frappe.set_user("Administrator")
@@ -1057,9 +1056,7 @@ class TestOptionBReportAccessGate(unittest.TestCase):
         try:
             frappe.set_user("test_user2@example.com")
             try:
-                result = scope_report.frappe.has_permission(
-                    "GL Entry", "select"
-                )
+                result = scope_report.frappe.has_permission("GL Entry", "select")
                 self.assertTrue(result, "select perm should be granted with scope")
             finally:
                 frappe.set_user("Administrator")
@@ -1074,9 +1071,7 @@ class TestOptionBReportAccessGate(unittest.TestCase):
         try:
             frappe.set_user("test_user2@example.com")
             try:
-                result = scope_report.frappe.has_permission(
-                    "GL Entry", "read"
-                )
+                result = scope_report.frappe.has_permission("GL Entry", "read")
                 self.assertTrue(result, "read perm should be granted with scope")
             finally:
                 frappe.set_user("Administrator")
@@ -1088,9 +1083,7 @@ class TestOptionBReportAccessGate(unittest.TestCase):
 
         self._set_scope()
         # No structured context set. The original check should run.
-        result = scope_report.frappe.has_permission(
-            "GL Entry", "select", user="test_user2@example.com"
-        )
+        result = scope_report.frappe.has_permission("GL Entry", "select", user="test_user2@example.com")
         self.assertFalse(result, "select perm should be denied without flag")
 
     def test_has_permission_bypassed_for_secondary_doctype_select(self):
@@ -1109,9 +1102,7 @@ class TestOptionBReportAccessGate(unittest.TestCase):
                 # SELECT and READ on a secondary doctype must be
                 # granted under the report-scoped bypass.
                 for ptype in ("select", "read"):
-                    result = scope_report.frappe.has_permission(
-                        "Journal Entry", ptype
-                    )
+                    result = scope_report.frappe.has_permission("Journal Entry", ptype)
                     self.assertTrue(
                         result,
                         f"Journal Entry.{ptype} must be granted by report-scoped bypass",
@@ -1133,9 +1124,7 @@ class TestOptionBReportAccessGate(unittest.TestCase):
             frappe.set_user("test_user2@example.com")
             try:
                 for ptype in ("write", "delete", "create", "submit", "cancel", "amend"):
-                    result = scope_report.frappe.has_permission(
-                        "Journal Entry", ptype
-                    )
+                    result = scope_report.frappe.has_permission("Journal Entry", ptype)
                     self.assertFalse(
                         result,
                         f"Journal Entry.{ptype} must NOT be granted by bypass",
@@ -1161,9 +1150,7 @@ class TestOptionBReportAccessGate(unittest.TestCase):
                 # bypass-ON call must NOT leak into a non-bypass
                 # call.
                 for ptype in ("write", "delete", "create", "submit", "cancel", "amend"):
-                    result = scope_report.frappe.has_permission(
-                        "GL Entry", ptype
-                    )
+                    result = scope_report.frappe.has_permission("GL Entry", ptype)
                     self.assertFalse(
                         result,
                         f"GL Entry.{ptype} must NOT be granted by bypass",
@@ -1188,9 +1175,7 @@ class TestOptionBReportAccessGate(unittest.TestCase):
         try:
             frappe.set_user("test_user2@example.com")
             try:
-                result = scope_report.frappe.has_permission(
-                    "GL Entry", "select"
-                )
+                result = scope_report.frappe.has_permission("GL Entry", "select")
                 self.assertFalse(
                     result,
                     "Cross-user flag must not grant perm to a different session user",
@@ -1211,9 +1196,7 @@ class TestOptionBReportAccessGate(unittest.TestCase):
         try:
             frappe.set_user("test_user2@example.com")
             try:
-                result = scope_report.frappe.has_permission(
-                    "GL Entry", "select"
-                )
+                result = scope_report.frappe.has_permission("GL Entry", "select")
                 self.assertFalse(
                     result,
                     "Boolean flag must not grant perm — only structured dict does",
@@ -1239,9 +1222,7 @@ class TestOptionBReportAccessGate(unittest.TestCase):
             frappe.clear_cache(user="test_user2@example.com")
             frappe.set_user("test_user2@example.com")
             try:
-                result = scope_report.frappe.has_permission(
-                    "GL Entry", "select"
-                )
+                result = scope_report.frappe.has_permission("GL Entry", "select")
                 self.assertFalse(
                     result,
                     "Bypass must refuse when scope context is cleared",
@@ -1266,9 +1247,7 @@ class TestOptionBReportAccessGate(unittest.TestCase):
         try:
             frappe.set_user("test_user2@example.com")
             try:
-                result = scope_report.frappe.has_permission(
-                    "Sales Order", "select"
-                )
+                result = scope_report.frappe.has_permission("Sales Order", "select")
                 self.assertFalse(
                     result,
                     "Non-allowlisted report must not grant perm",
@@ -1409,9 +1388,7 @@ class TestOptionBReportAccessGate(unittest.TestCase):
                 )
                 # And the very next perm check on an unrelated
                 # doctype must NOT be granted via a stale flag.
-                result = scope_report.frappe.has_permission(
-                    "Project", "read"
-                )
+                result = scope_report.frappe.has_permission("Project", "read")
                 self.assertFalse(
                     result,
                     "Project.read must NOT be granted after get_report_doc (no stale flag)",
@@ -1424,4 +1401,5 @@ class TestOptionBReportAccessGate(unittest.TestCase):
 
 if __name__ == "__main__":
     import unittest as _unittest
+
     _unittest.main()

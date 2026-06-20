@@ -19,13 +19,21 @@ class BOQTransactionScopeRule:
 
 SUPPORTED_TRANSACTION_RULES: tuple[BOQTransactionScopeRule, ...] = (
     BOQTransactionScopeRule("Purchase Order", "items", "Purchase Order Item", "expense_category", "Direct"),
-    BOQTransactionScopeRule("Purchase Receipt", "items", "Purchase Receipt Item", "expense_category", "Direct"),
-    BOQTransactionScopeRule("Purchase Invoice", "items", "Purchase Invoice Item", "expense_category", "Direct"),
+    BOQTransactionScopeRule(
+        "Purchase Receipt", "items", "Purchase Receipt Item", "expense_category", "Direct"
+    ),
+    BOQTransactionScopeRule(
+        "Purchase Invoice", "items", "Purchase Invoice Item", "expense_category", "Direct"
+    ),
     BOQTransactionScopeRule("Sales Invoice", "items", "Sales Invoice Item", "is_progress_billing", 1),
     BOQTransactionScopeRule("Stock Entry", "items", "Stock Entry Detail", "expense_category", "Direct"),
     BOQTransactionScopeRule("Timesheet", "time_logs", "Timesheet Detail", "designation"),
-    BOQTransactionScopeRule("Journal Entry", "accounts", "Journal Entry Account", "expense_category", "Direct"),
-    BOQTransactionScopeRule("Material Request", "items", "Material Request Item", "expense_category", "Direct"),
+    BOQTransactionScopeRule(
+        "Journal Entry", "accounts", "Journal Entry Account", "expense_category", "Direct"
+    ),
+    BOQTransactionScopeRule(
+        "Material Request", "items", "Material Request Item", "expense_category", "Direct"
+    ),
 )
 
 SUPPORTED_TRANSACTION_DOCTYPES = tuple(rule.doctype for rule in SUPPORTED_TRANSACTION_RULES)

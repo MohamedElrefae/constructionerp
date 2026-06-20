@@ -1,7 +1,6 @@
 import frappe
 from frappe.utils import flt
 
-
 APPROVED_STATUS = "Approved by Client"
 
 

@@ -659,7 +659,9 @@
 			if (preset.fields) {
 				preset.fields.forEach((fn) => {
 					if (!fieldnames.has(fn)) {
-						console.warn(`[VFC] Preset '${key}' references unknown field '${fn}' on ${doctype} — skipping`);
+						console.warn(
+							`[VFC] Preset '${key}' references unknown field '${fn}' on ${doctype} — skipping`
+						);
 					}
 				});
 			}
@@ -952,11 +954,21 @@
 			}
 
 			// Filter out layout-only field types from profile sections
-			const SKIP_TYPES = new Set(["Section Break", "Column Break", "Tab Break", "HTML", "Heading"]);
+			const SKIP_TYPES = new Set([
+				"Section Break",
+				"Column Break",
+				"Tab Break",
+				"HTML",
+				"Heading",
+			]);
 			const cleanSections = JSON.parse(JSON.stringify(profile.sections)).map((sec) => {
-				sec.fields = (sec.fields || []).filter((f) => !SKIP_TYPES.has(
-					(frm.meta?.fields || []).find((mf) => mf.fieldname === f.fieldname)?.fieldtype
-				));
+				sec.fields = (sec.fields || []).filter(
+					(f) =>
+						!SKIP_TYPES.has(
+							(frm.meta?.fields || []).find((mf) => mf.fieldname === f.fieldname)
+								?.fieldtype
+						)
+				);
 				return sec;
 			});
 			frm._vfc_temp_layout = cleanSections;
@@ -965,7 +977,13 @@
 		},
 
 		_buildNativeSectionsProfile(frm) {
-			const SKIP_TYPES = new Set(["Section Break", "Column Break", "Tab Break", "HTML", "Heading"]);
+			const SKIP_TYPES = new Set([
+				"Section Break",
+				"Column Break",
+				"Tab Break",
+				"HTML",
+				"Heading",
+			]);
 			const sections = [];
 			let currentSection = null;
 			let currentTabFieldname = "";
@@ -1075,7 +1093,9 @@
 					(sec) => sec.id === nativeSec.id || sec.fieldname === nativeSec.fieldname
 				);
 				const nativeFields = (nativeSec.fields || []).filter((field) => field.fieldname);
-				const missingFields = nativeFields.filter((field) => !usedFields.has(field.fieldname));
+				const missingFields = nativeFields.filter(
+					(field) => !usedFields.has(field.fieldname)
+				);
 				if (!missingFields.length && sectionAlreadyExists) return;
 
 				if (sectionAlreadyExists) {
@@ -1128,7 +1148,13 @@
 		},
 
 		_appendUnassignedSection(frm, dtId, profile) {
-			const SKIP_TYPES = new Set(["Section Break", "Column Break", "Tab Break", "HTML", "Heading"]);
+			const SKIP_TYPES = new Set([
+				"Section Break",
+				"Column Break",
+				"Tab Break",
+				"HTML",
+				"Heading",
+			]);
 			const assignedFieldnames = new Set();
 			(frm._vfc_temp_layout || []).forEach((sec) => {
 				(sec.fields || []).forEach((f) => {
@@ -1137,7 +1163,12 @@
 			});
 
 			const unassigned = (frm.meta?.fields || [])
-				.filter((f) => f.fieldname && !assignedFieldnames.has(f.fieldname) && !SKIP_TYPES.has(f.fieldtype))
+				.filter(
+					(f) =>
+						f.fieldname &&
+						!assignedFieldnames.has(f.fieldname) &&
+						!SKIP_TYPES.has(f.fieldtype)
+				)
 				.map((f, idx) => ({
 					fieldname: f.fieldname,
 					col: (idx % 2) + 1,
@@ -1195,8 +1226,20 @@
 			}" style="display:flex;align-items:center;background:var(--ct-bg-3);border:1px solid var(--ct-border);padding:6px 8px;border-radius:4px;font-size:11px;cursor:grab;margin-bottom:4px;gap:6px">
               <span class="vfc-sort-handle" style="color:var(--ct-text-muted);cursor:grab">☰</span>
               <span class="vfc-arrow-controls" style="display:inline-flex;gap:2px">
-                <button class="btn btn-default btn-xs" onclick="window._VFC._moveFieldUp('${frm.doctype}', ${sIdx}, '${fld.fieldname}')" ${first ? "disabled style='opacity:0.3'" : ""} style="padding:0 4px;font-size:10px;line-height:1.4" title="${__("Move Up")}">▲</button>
-                <button class="btn btn-default btn-xs" onclick="window._VFC._moveFieldDown('${frm.doctype}', ${sIdx}, '${fld.fieldname}')" ${last ? "disabled style='opacity:0.3'" : ""} style="padding:0 4px;font-size:10px;line-height:1.4" title="${__("Move Down")}">▼</button>
+                <button class="btn btn-default btn-xs" onclick="window._VFC._moveFieldUp('${
+					frm.doctype
+				}', ${sIdx}, '${fld.fieldname}')" ${
+							first ? "disabled style='opacity:0.3'" : ""
+						} style="padding:0 4px;font-size:10px;line-height:1.4" title="${__(
+							"Move Up"
+						)}">▲</button>
+                <button class="btn btn-default btn-xs" onclick="window._VFC._moveFieldDown('${
+					frm.doctype
+				}', ${sIdx}, '${fld.fieldname}')" ${
+							last ? "disabled style='opacity:0.3'" : ""
+						} style="padding:0 4px;font-size:10px;line-height:1.4" title="${__(
+							"Move Down"
+						)}">▼</button>
               </span>
               <span style="font-weight:600;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${__(
 					fld.fieldname
@@ -1223,8 +1266,20 @@
             <div style="display:flex;align-items:center;gap:6px">
               <span class="vfc-sec-sort-handle" style="color:var(--ct-text-muted);cursor:grab;font-size:14px">☰</span>
               <span class="vfc-arrow-controls" style="display:inline-flex;gap:2px">
-                <button class="btn btn-default btn-xs" onclick="window._VFC._moveSectionUp('${frm.doctype}', ${sIdx})" ${secFirst ? "disabled style='opacity:0.3'" : ""} style="padding:0 4px;font-size:10px;line-height:1.4" title="${__("Move Up")}">▲</button>
-                <button class="btn btn-default btn-xs" onclick="window._VFC._moveSectionDown('${frm.doctype}', ${sIdx})" ${secLast ? "disabled style='opacity:0.3'" : ""} style="padding:0 4px;font-size:10px;line-height:1.4" title="${__("Move Down")}">▼</button>
+                <button class="btn btn-default btn-xs" onclick="window._VFC._moveSectionUp('${
+					frm.doctype
+				}', ${sIdx})" ${
+					secFirst ? "disabled style='opacity:0.3'" : ""
+				} style="padding:0 4px;font-size:10px;line-height:1.4" title="${__(
+					"Move Up"
+				)}">▲</button>
+                <button class="btn btn-default btn-xs" onclick="window._VFC._moveSectionDown('${
+					frm.doctype
+				}', ${sIdx})" ${
+					secLast ? "disabled style='opacity:0.3'" : ""
+				} style="padding:0 4px;font-size:10px;line-height:1.4" title="${__(
+					"Move Down"
+				)}">▼</button>
               </span>
               <input type="text" value="${sec.label || ""}" placeholder="${__(
 					"Section Name"
@@ -1295,65 +1350,73 @@
 
 			// Initialize SortableJS
 			if (typeof Sortable !== "undefined") {
-				instances.push(new Sortable(container, {
-					handle: ".vfc-sec-sort-handle",
-					animation: 150,
-					onEnd: (evt) => {
-						const newOrder = [];
-						container.querySelectorAll(".vfc-sec-item").forEach((el) => {
-							const idx = parseInt(el.getAttribute("data-section-idx"), 10);
-							newOrder.push(frm._vfc_temp_layout[idx]);
-						});
-						newOrder.forEach((sec, idx) => {
-							sec.sort_order = idx + 1;
-						});
-						frm._vfc_temp_layout = newOrder;
-						this._renderSectionsListHTML(frm, dtId);
-					},
-				}));
-
-				container.querySelectorAll(".vfc-sec-fields-list").forEach((listEl) => {
-					instances.push(new Sortable(listEl, {
-						group: `vfc-fields-${dtId}`,
-						handle: ".vfc-sort-handle",
+				instances.push(
+					new Sortable(container, {
+						handle: ".vfc-sec-sort-handle",
 						animation: 150,
 						onEnd: (evt) => {
-							const updatedLayout = [];
-							container.querySelectorAll(".vfc-sec-item").forEach((secEl) => {
-								const sIdx = parseInt(secEl.getAttribute("data-section-idx"), 10);
-								const originalSec = frm._vfc_temp_layout[sIdx];
-								const newFields = [];
-
-								secEl
-									.querySelectorAll(".vfc-sec-field-item")
-									.forEach((fieldEl, fIdx) => {
-										const fieldname = fieldEl.getAttribute("data-fieldname");
-										let originalField = null;
-										for (let s of frm._vfc_temp_layout) {
-											let found = (s.fields || []).find(
-												(f) => f.fieldname === fieldname
-											);
-											if (found) {
-												originalField = found;
-												break;
-											}
-										}
-										newFields.push({
-											fieldname: fieldname,
-											col: originalField ? originalField.col : 1,
-											sort_order: fIdx + 1,
-											visible: true,
-										});
-									});
-
-								originalSec.fields = newFields;
-								updatedLayout.push(originalSec);
+							const newOrder = [];
+							container.querySelectorAll(".vfc-sec-item").forEach((el) => {
+								const idx = parseInt(el.getAttribute("data-section-idx"), 10);
+								newOrder.push(frm._vfc_temp_layout[idx]);
 							});
-
-							frm._vfc_temp_layout = updatedLayout;
+							newOrder.forEach((sec, idx) => {
+								sec.sort_order = idx + 1;
+							});
+							frm._vfc_temp_layout = newOrder;
 							this._renderSectionsListHTML(frm, dtId);
 						},
-					}));
+					})
+				);
+
+				container.querySelectorAll(".vfc-sec-fields-list").forEach((listEl) => {
+					instances.push(
+						new Sortable(listEl, {
+							group: `vfc-fields-${dtId}`,
+							handle: ".vfc-sort-handle",
+							animation: 150,
+							onEnd: (evt) => {
+								const updatedLayout = [];
+								container.querySelectorAll(".vfc-sec-item").forEach((secEl) => {
+									const sIdx = parseInt(
+										secEl.getAttribute("data-section-idx"),
+										10
+									);
+									const originalSec = frm._vfc_temp_layout[sIdx];
+									const newFields = [];
+
+									secEl
+										.querySelectorAll(".vfc-sec-field-item")
+										.forEach((fieldEl, fIdx) => {
+											const fieldname =
+												fieldEl.getAttribute("data-fieldname");
+											let originalField = null;
+											for (let s of frm._vfc_temp_layout) {
+												let found = (s.fields || []).find(
+													(f) => f.fieldname === fieldname
+												);
+												if (found) {
+													originalField = found;
+													break;
+												}
+											}
+											newFields.push({
+												fieldname: fieldname,
+												col: originalField ? originalField.col : 1,
+												sort_order: fIdx + 1,
+												visible: true,
+											});
+										});
+
+									originalSec.fields = newFields;
+									updatedLayout.push(originalSec);
+								});
+
+								frm._vfc_temp_layout = updatedLayout;
+								this._renderSectionsListHTML(frm, dtId);
+							},
+						})
+					);
 				});
 			}
 

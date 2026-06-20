@@ -55,12 +55,21 @@
 		setFieldInlineHint(
 			frm,
 			"boq_structure",
-			!hasBoqHeader ? __("Select BOQ Header first") : (!hasBoqStructure ? __("Select BOQ Structure first") : null),
+			!hasBoqHeader
+				? __("Select BOQ Header first")
+				: !hasBoqStructure
+				? __("Select BOQ Structure first")
+				: null,
 			!hasBoqHeader
 		);
 
 		setFieldAccent(frm, "boq_item", false, !hasBoqStructure);
-		markFieldBlocked(frm, "boq_item", !hasBoqStructure, __("Select BOQ Structure first — items link to leaf structures only"));
+		markFieldBlocked(
+			frm,
+			"boq_item",
+			!hasBoqStructure,
+			__("Select BOQ Structure first — items link to leaf structures only")
+		);
 		setFieldInlineHint(
 			frm,
 			"boq_item",
@@ -93,12 +102,18 @@
 				font-size: 13px;
 				color: var(--ct-text, #e2e8f0);
 			">
-				<span>${__("Start with <b>Project</b> → <b>BOQ Header</b> → <b>BOQ Structure</b> → <b>BOQ Item</b>. Each field unlocks the next.")}</span>
-				<button class="btn btn-xs btn-default ct-dismiss-onboarding" style="margin-left:12px">${__("Got it")}</button>
+				<span>${__(
+					"Start with <b>Project</b> → <b>BOQ Header</b> → <b>BOQ Structure</b> → <b>BOQ Item</b>. Each field unlocks the next."
+				)}</span>
+				<button class="btn btn-xs btn-default ct-dismiss-onboarding" style="margin-left:12px">${__(
+					"Got it"
+				)}</button>
 			</div>
 		`);
 		$banner.find(".ct-dismiss-onboarding").on("click", function () {
-			$banner.slideUp(200, function () { $banner.remove(); });
+			$banner.slideUp(200, function () {
+				$banner.remove();
+			});
 			localStorage.setItem(ONBOARDING_DISMISSED_KEY, "1");
 		});
 		frm.layout && frm.layout.show_message && frm.layout.show_message("onboarding", $banner);
@@ -142,9 +157,10 @@
 
 		onload(frm) {
 			if (!frm.is_new()) return;
-			const scope_project = (window.scopeContext && window.scopeContext.enabled)
-				? window.scopeContext.getValidatedCurrentScope().project
-				: null;
+			const scope_project =
+				window.scopeContext && window.scopeContext.enabled
+					? window.scopeContext.getValidatedCurrentScope().project
+					: null;
 			if (scope_project && !frm.doc.project) {
 				frm.set_value("project", scope_project);
 			}
@@ -152,9 +168,10 @@
 			$(document)
 				.off("scope:changed.boqItemStage")
 				.on("scope:changed.boqItemStage", function () {
-					var new_project = (window.scopeContext && window.scopeContext.enabled)
-						? window.scopeContext.getValidatedCurrentScope().project
-						: null;
+					var new_project =
+						window.scopeContext && window.scopeContext.enabled
+							? window.scopeContext.getValidatedCurrentScope().project
+							: null;
 					if (!new_project) return;
 					var current_project = frm.doc.project;
 					if (new_project !== current_project) {
@@ -164,7 +181,9 @@
 						frm.set_value("boq_item", "");
 						updateStageGuidance(frm);
 						frappe.show_alert({
-							message: __("Scope changed. Selected BOQ details have been cleared to prevent stale data."),
+							message: __(
+								"Scope changed. Selected BOQ details have been cleared to prevent stale data."
+							),
 							indicator: "orange",
 						});
 					}
@@ -239,14 +258,17 @@
 	});
 
 	function apply_stage_measurement_ui(frm) {
-		const can_certify = frappe.user.has_role("System Manager")
-			|| frappe.user.has_role("Construction Owner")
-			|| frappe.user.has_role("Project Manager");
-		const is_accountant = frappe.user.has_role("Accountant")
-			&& !frappe.user.has_role("System Manager")
-			&& !frappe.user.has_role("Construction Owner")
-			&& !frappe.user.has_role("Project Manager");
-		const is_certified = frm.doc.stage_status === "Certified" || flt(frm.doc.certified_qty) > 0;
+		const can_certify =
+			frappe.user.has_role("System Manager") ||
+			frappe.user.has_role("Construction Owner") ||
+			frappe.user.has_role("Project Manager");
+		const is_accountant =
+			frappe.user.has_role("Accountant") &&
+			!frappe.user.has_role("System Manager") &&
+			!frappe.user.has_role("Construction Owner") &&
+			!frappe.user.has_role("Project Manager");
+		const is_certified =
+			frm.doc.stage_status === "Certified" || flt(frm.doc.certified_qty) > 0;
 		const planning_locked = ["Frozen", "Locked"].includes(frm.doc.__boq_status || "");
 
 		if (frm.doc.boq_header && !frm.doc.__boq_status_loaded && !frm.doc.__boq_status_loading) {
@@ -259,8 +281,21 @@
 			});
 		}
 
-		const identity_fields = ["project", "boq_header", "boq_structure", "boq_item", "stage_code", "stage_name", "planned_qty"];
-		const execution_fields = ["measured_executed_qty", "percent_complete", "stage_status", "description"];
+		const identity_fields = [
+			"project",
+			"boq_header",
+			"boq_structure",
+			"boq_item",
+			"stage_code",
+			"stage_name",
+			"planned_qty",
+		];
+		const execution_fields = [
+			"measured_executed_qty",
+			"percent_complete",
+			"stage_status",
+			"description",
+		];
 
 		identity_fields.forEach((fieldname) => {
 			frm.set_df_property(fieldname, "read_only", is_certified || planning_locked);
@@ -268,12 +303,22 @@
 		execution_fields.forEach((fieldname) => {
 			frm.set_df_property(fieldname, "read_only", is_certified || is_accountant);
 		});
-		frm.set_df_property("certified_qty", "read_only", is_certified || is_accountant || !can_certify);
+		frm.set_df_property(
+			"certified_qty",
+			"read_only",
+			is_certified || is_accountant || !can_certify
+		);
 
 		if (is_certified) {
-			frm.dashboard.set_headline(__("Certified stage is locked. Create an adjustment stage for corrections."));
+			frm.dashboard.set_headline(
+				__("Certified stage is locked. Create an adjustment stage for corrections.")
+			);
 		} else if (!can_certify) {
-			frm.dashboard.set_headline(__("Measurement entry is available. Certification is limited to Project Manager roles."));
+			frm.dashboard.set_headline(
+				__(
+					"Measurement entry is available. Certification is limited to Project Manager roles."
+				)
+			);
 		}
 	}
 
@@ -286,8 +331,17 @@
 		const certified_pct = planned ? Math.min((certified / planned) * 100, 999) : 0;
 
 		frm.dashboard.clear_headline();
-		frm.dashboard.add_indicator(__("Measured {0}%").replace("{0}", measured_pct.toFixed(1)), measured > planned ? "orange" : "blue");
-		frm.dashboard.add_indicator(__("Certified {0}%").replace("{0}", certified_pct.toFixed(1)), certified > measured ? "red" : "green");
-		frm.dashboard.add_indicator(__("Progress {0}%").replace("{0}", percent.toFixed(1)), percent >= 100 ? "green" : "blue");
+		frm.dashboard.add_indicator(
+			__("Measured {0}%").replace("{0}", measured_pct.toFixed(1)),
+			measured > planned ? "orange" : "blue"
+		);
+		frm.dashboard.add_indicator(
+			__("Certified {0}%").replace("{0}", certified_pct.toFixed(1)),
+			certified > measured ? "red" : "green"
+		);
+		frm.dashboard.add_indicator(
+			__("Progress {0}%").replace("{0}", percent.toFixed(1)),
+			percent >= 100 ? "green" : "blue"
+		);
 	}
 })();

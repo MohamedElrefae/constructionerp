@@ -51,7 +51,9 @@ class BOQItemStage(Document):
         if frappe.session.user == "Administrator":
             return
         try:
-            enabled = bool(frappe.db.get_single_value("Construction Settings", "enable_scope_context") or False)
+            enabled = bool(
+                frappe.db.get_single_value("Construction Settings", "enable_scope_context") or False
+            )
         except Exception:
             enabled = False
         if not enabled:
@@ -59,12 +61,16 @@ class BOQItemStage(Document):
         scope = get_user_scope_context(frappe.session.user)
         if not scope or not scope.project:
             return
-        doc_project = self.project or frappe.db.get_value("BOQ Header", self.boq_header, "project") if self.boq_header else None
+        doc_project = (
+            self.project or frappe.db.get_value("BOQ Header", self.boq_header, "project")
+            if self.boq_header
+            else None
+        )
         if doc_project and doc_project != scope.project:
             frappe.throw(
-                _("Project {0} does not match your active scope project {1}. Switch your scope in the top bar and try again.").format(
-                    doc_project, scope.project
-                )
+                _(
+                    "Project {0} does not match your active scope project {1}. Switch your scope in the top bar and try again."
+                ).format(doc_project, scope.project)
             )
 
     def before_insert(self):
@@ -139,9 +145,9 @@ class BOQItemStage(Document):
             changed = self._changed_fields(old_doc, self.CERTIFIED_IMMUTABLE_FIELDS)
             if changed:
                 frappe.throw(
-                    _("Cannot modify certified BOQ Item Stage fields: {0}. Create an adjustment stage instead.").format(
-                        ", ".join(changed)
-                    )
+                    _(
+                        "Cannot modify certified BOQ Item Stage fields: {0}. Create an adjustment stage instead."
+                    ).format(", ".join(changed))
                 )
             return
 
@@ -162,10 +168,14 @@ class BOQItemStage(Document):
         old_doc = None if self.is_new() else self.get_doc_before_save()
         old_certified_qty = flt(old_doc.certified_qty) if old_doc else 0
         certified_qty_changed = abs(flt(self.certified_qty) - old_certified_qty) > 0.000001
-        setting_certified_status = self.stage_status == "Certified" and (not old_doc or old_doc.stage_status != "Certified")
+        setting_certified_status = self.stage_status == "Certified" and (
+            not old_doc or old_doc.stage_status != "Certified"
+        )
 
         if certified_qty_changed or setting_certified_status:
-            frappe.throw(_("Only Project Manager, Construction Owner, or System Manager can certify BOQ Item Stages."))
+            frappe.throw(
+                _("Only Project Manager, Construction Owner, or System Manager can certify BOQ Item Stages.")
+            )
 
     def _user_can_certify(self):
         roles = set(frappe.get_roles(frappe.session.user))

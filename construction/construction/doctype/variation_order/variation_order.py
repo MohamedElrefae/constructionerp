@@ -5,7 +5,6 @@ from frappe.utils import flt, nowdate
 
 from construction.api.scope_context_api import get_user_scope_context
 
-
 CLIENT_APPROVED_STATUS = "Approved by Client"
 ENGINEER_APPROVED_STATUS = "Approved by Engineer"
 SUBMITTED_STATUS = "Submitted"
@@ -34,7 +33,9 @@ class VariationOrder(Document):
         if frappe.session.user == "Administrator":
             return
         try:
-            enabled = bool(frappe.db.get_single_value("Construction Settings", "enable_scope_context") or False)
+            enabled = bool(
+                frappe.db.get_single_value("Construction Settings", "enable_scope_context") or False
+            )
         except Exception:
             enabled = False
         if not enabled:
@@ -42,12 +43,16 @@ class VariationOrder(Document):
         scope = get_user_scope_context(frappe.session.user)
         if not scope or not scope.project:
             return
-        doc_project = self.project or frappe.db.get_value("BOQ Header", self.boq_header, "project") if self.boq_header else None
+        doc_project = (
+            self.project or frappe.db.get_value("BOQ Header", self.boq_header, "project")
+            if self.boq_header
+            else None
+        )
         if doc_project and doc_project != scope.project:
             frappe.throw(
-                _("Project {0} does not match your active scope project {1}. Switch your scope in the top bar and try again.").format(
-                    doc_project, scope.project
-                )
+                _(
+                    "Project {0} does not match your active scope project {1}. Switch your scope in the top bar and try again."
+                ).format(doc_project, scope.project)
             )
 
     def on_update(self):
@@ -77,7 +82,11 @@ class VariationOrder(Document):
         old_doc = None if self.is_new() else self.get_doc_before_save()
         old_status = old_doc.status if old_doc else DRAFT_STATUS
         if self.status not in allowed.get(old_status, set()):
-            frappe.throw(_("Invalid Variation Order status transition from {0} to {1}.").format(old_status, self.status))
+            frappe.throw(
+                _("Invalid Variation Order status transition from {0} to {1}.").format(
+                    old_status, self.status
+                )
+            )
 
         if self.status == ENGINEER_APPROVED_STATUS:
             self.engineer_approval_date = self.engineer_approval_date or nowdate()
@@ -88,7 +97,9 @@ class VariationOrder(Document):
         if self.status != CLIENT_APPROVED_STATUS:
             return
         if not self.client_approval_document:
-            frappe.throw(_("Signed client approval PDF is required before approving the Variation Order by Client."))
+            frappe.throw(
+                _("Signed client approval PDF is required before approving the Variation Order by Client.")
+            )
         if not str(self.client_approval_document).lower().endswith(".pdf"):
             frappe.throw(_("Client approval document must be a PDF."))
 
@@ -102,7 +113,7 @@ class VariationOrder(Document):
             return
         for line in self.lines:
             line.validate_against_parent(self)
-        
+
         # P0-1: Block line edits after Engineer Approval
         if self.status in (ENGINEER_APPROVED_STATUS, CLIENT_APPROVED_STATUS, REJECTED_STATUS):
             self._validate_no_line_changes_after_approval()
@@ -111,35 +122,46 @@ class VariationOrder(Document):
         """Ensure VO lines are not modified after Engineer Approval."""
         if self.is_new():
             return
-        
+
         old_doc = self.get_doc_before_save()
         if not old_doc:
             return
-        
+
         # Check if any line was modified
         if len(old_doc.lines) != len(self.lines):
-            frappe.throw(_("Cannot add or remove VO lines after Engineer Approval. Return to Submitted status to edit."))
-        
-        for old_line, new_line in zip(old_doc.lines, self.lines):
+            frappe.throw(
+                _(
+                    "Cannot add or remove VO lines after Engineer Approval. Return to Submitted status to edit."
+                )
+            )
+
+        for old_line, new_line in zip(old_doc.lines, self.lines, strict=True):
             if old_line.name != new_line.name:
-                frappe.throw(_("Cannot modify VO lines after Engineer Approval. Return to Submitted status to edit."))
-            
+                frappe.throw(
+                    _("Cannot modify VO lines after Engineer Approval. Return to Submitted status to edit.")
+                )
+
             # Check key fields for changes
-            if (flt(old_line.revised_qty) != flt(new_line.revised_qty) or
-                flt(old_line.revised_unit_price) != flt(new_line.revised_unit_price) or
-                old_line.line_type != new_line.line_type or
-                old_line.boq_item != new_line.boq_item):
-                frappe.throw(_("Cannot modify VO lines after Engineer Approval. Return to Submitted status to edit."))
+            if (
+                flt(old_line.revised_qty) != flt(new_line.revised_qty)
+                or flt(old_line.revised_unit_price) != flt(new_line.revised_unit_price)
+                or old_line.line_type != new_line.line_type
+                or old_line.boq_item != new_line.boq_item
+            ):
+                frappe.throw(
+                    _("Cannot modify VO lines after Engineer Approval. Return to Submitted status to edit.")
+                )
 
     def calculate_total_contract_delta(self):
         self.total_contract_delta = sum(flt(line.line_delta_value) for line in self.lines)
 
     def process_approved_vo_lines(self):
         """Process all VO lines atomically on Client Approval.
-        
+
         Idempotent: skips lines that already have created_quantity_revision.
         """
         from construction.services.quantity_revisions import process_approved_vo_lines as service_process
+
         service_process(self)
 
 
@@ -184,11 +206,11 @@ def create_variation_structure_and_item(vo, line):
     item.unit = line.unit
     item.contract_unit_price = flt(line.revised_unit_price)
     item.import_mode = "Variation"
-    
+
     item.owner_page = line.owner_page
     item.owner_ref_no = line.owner_ref_no
     item.owner_file_ref = line.owner_file_ref
-    
+
     item.save(ignore_permissions=True)
 
     rebuild_tree("BOQ Structure")

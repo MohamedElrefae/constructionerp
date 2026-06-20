@@ -1,9 +1,11 @@
 import unittest
+
 import frappe
+
 
 def run_quantity_revision_tests():
     """Run the VO Quantity Revision test suite and return results.
-    
+
     Can be called via:
         bench --site v16.localhost execute construction.tests.run_quantity_revision_tests
     """
@@ -34,4 +36,3 @@ def run_quantity_revision_tests():
         "failure_details": [(test.id(), str(err)) for test, err in result.failures],
         "error_details": [(test.id(), str(err)) for test, err in result.errors],
     }
-

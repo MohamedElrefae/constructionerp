@@ -15,9 +15,9 @@
  *     node construction/tests/test_browser_scope.js
  */
 
-const { chromium } = require(
-	"/home/mohamed/frappe-bench/apps/construction/construction/tests/node_modules/playwright",
-);
+const {
+	chromium,
+} = require("/home/mohamed/frappe-bench/apps/construction/construction/tests/node_modules/playwright");
 
 const BASE = "http://v16.localhost:8000";
 const ADMIN = { usr: "Administrator", pwd: "test123" };
@@ -62,20 +62,14 @@ async function run() {
 	// 1. Log in as Administrator.
 	const sid = await getSid(ADMIN.usr, ADMIN.pwd);
 	if (!sid) throw new Error("Could not log in as Administrator");
-	await context.addCookies([
-		{ name: "sid", value: sid, domain: "v16.localhost", path: "/" },
-	]);
+	await context.addCookies([{ name: "sid", value: sid, domain: "v16.localhost", path: "/" }]);
 
 	// 2. Track console errors from our module only. We filter out
 	//    pre-existing Frappe dev-server errors (e.g. 500 on
 	//    getdoctype() during report rendering) that are not related
 	//    to our module.
 	const ourConsoleErrors = [];
-	const OUR_MODULE_MARKERS = [
-		"scope_context_report_filters",
-		"construction",
-		"ScopeContext",
-	];
+	const OUR_MODULE_MARKERS = ["scope_context_report_filters", "construction", "ScopeContext"];
 	function isOurError(text) {
 		for (const m of OUR_MODULE_MARKERS) {
 			if (text && text.includes(m)) return true;
@@ -101,7 +95,7 @@ async function run() {
 
 	// 4. Verify the JS module is loaded.
 	const scripts = await page.$$eval("script[src]", (els) =>
-		els.map((e) => e.getAttribute("src")).filter(Boolean),
+		els.map((e) => e.getAttribute("src")).filter(Boolean)
 	);
 	const ourScript = scripts.find((s) => s.includes("scope_context_report_filters.js"));
 	if (!ourScript) {
@@ -142,7 +136,7 @@ async function run() {
 		const ok = r.status === 200 && r.consoleErrors.length === 0;
 		console.log(
 			`  ${ok ? "OK" : "FAIL"} ${r.report}: status=${r.status}, ` +
-				`console errors=${r.consoleErrors.length}`,
+				`console errors=${r.consoleErrors.length}`
 		);
 		if (!ok) {
 			failed++;
@@ -156,9 +150,7 @@ async function run() {
 		console.log(`\nFAILED: ${failed} report(s) had issues.`);
 		process.exit(1);
 	}
-	console.log(
-		"\nPASSED: all 11 allowlisted reports loaded with no console errors.",
-	);
+	console.log("\nPASSED: all 11 allowlisted reports loaded with no console errors.");
 }
 
 run().catch((e) => {

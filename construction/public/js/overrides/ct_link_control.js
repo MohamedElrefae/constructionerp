@@ -50,9 +50,17 @@
 
 		const originalOnInput = ControlLink.prototype.on_input;
 		ControlLink.prototype.on_input = function (e) {
-			if (this.df && this.df.options && frappe.model && typeof frappe.model.can_read === "function") {
+			if (
+				this.df &&
+				this.df.options &&
+				frappe.model &&
+				typeof frappe.model.can_read === "function"
+			) {
 				const canRead = frappe.model.can_read(this.df.options);
-				const canSelect = typeof frappe.model.can_select === "function" ? frappe.model.can_select(this.df.options) : false;
+				const canSelect =
+					typeof frappe.model.can_select === "function"
+						? frappe.model.can_select(this.df.options)
+						: false;
 				if (!canRead && !canSelect) {
 					return;
 				}
@@ -63,9 +71,17 @@
 
 		const originalValidate = ControlLink.prototype.validate;
 		ControlLink.prototype.validate = function (value) {
-			if (this.df && this.df.options && frappe.model && typeof frappe.model.can_read === "function") {
+			if (
+				this.df &&
+				this.df.options &&
+				frappe.model &&
+				typeof frappe.model.can_read === "function"
+			) {
 				const canRead = frappe.model.can_read(this.df.options);
-				const canSelect = typeof frappe.model.can_select === "function" ? frappe.model.can_select(this.df.options) : false;
+				const canSelect =
+					typeof frappe.model.can_select === "function"
+						? frappe.model.can_select(this.df.options)
+						: false;
 				if (!canRead && !canSelect) {
 					return value;
 				}
@@ -75,9 +91,17 @@
 
 		const originalValidateLinkAndFetch = ControlLink.prototype.validate_link_and_fetch;
 		ControlLink.prototype.validate_link_and_fetch = function (value) {
-			if (this.df && this.df.options && frappe.model && typeof frappe.model.can_read === "function") {
+			if (
+				this.df &&
+				this.df.options &&
+				frappe.model &&
+				typeof frappe.model.can_read === "function"
+			) {
 				const canRead = frappe.model.can_read(this.df.options);
-				const canSelect = typeof frappe.model.can_select === "function" ? frappe.model.can_select(this.df.options) : false;
+				const canSelect =
+					typeof frappe.model.can_select === "function"
+						? frappe.model.can_select(this.df.options)
+						: false;
 				if (!canRead && !canSelect) {
 					return Promise.resolve(value);
 				}
@@ -87,9 +111,17 @@
 
 		const originalGetSearchArgs = ControlLink.prototype.get_search_args;
 		ControlLink.prototype.get_search_args = function (txt) {
-			if (this.df && this.df.options && frappe.model && typeof frappe.model.can_read === "function") {
+			if (
+				this.df &&
+				this.df.options &&
+				frappe.model &&
+				typeof frappe.model.can_read === "function"
+			) {
 				const canRead = frappe.model.can_read(this.df.options);
-				const canSelect = typeof frappe.model.can_select === "function" ? frappe.model.can_select(this.df.options) : false;
+				const canSelect =
+					typeof frappe.model.can_select === "function"
+						? frappe.model.can_select(this.df.options)
+						: false;
 				if (!canRead && !canSelect) {
 					return null;
 				}
@@ -204,7 +236,10 @@
 		// Skip and disable field if user has no read/select permission on the options doctype to prevent 403/Forbidden errors
 		if (frappe.model && typeof frappe.model.can_read === "function") {
 			const canRead = frappe.model.can_read(df.options);
-			const canSelect = typeof frappe.model.can_select === "function" ? frappe.model.can_select(df.options) : false;
+			const canSelect =
+				typeof frappe.model.can_select === "function"
+					? frappe.model.can_select(df.options)
+					: false;
 			if (!canRead && !canSelect) {
 				field.df.read_only = 1;
 				const $input = $(el);
@@ -327,8 +362,9 @@
 			if (isBlocked && !text) {
 				var hint = field.df.filter_description; // already translated by form script
 				if (!hint) {
-					hint = $wrapper.find(".ct-boq-inline-hint").text().trim()
-						|| __("Select parent field first");
+					hint =
+						$wrapper.find(".ct-boq-inline-hint").text().trim() ||
+						__("Select parent field first");
 				}
 				$label.text(hint);
 				$btn.attr("title", hint);
@@ -339,8 +375,14 @@
 		}
 		syncBoqNativeCreateState(field);
 		syncLabel();
-		setTimeout(function () { syncBoqNativeCreateState(field); syncLabel(); }, 200);
-		setTimeout(function () { syncBoqNativeCreateState(field); syncLabel(); }, 700);
+		setTimeout(function () {
+			syncBoqNativeCreateState(field);
+			syncLabel();
+		}, 200);
+		setTimeout(function () {
+			syncBoqNativeCreateState(field);
+			syncLabel();
+		}, 700);
 
 		function syncGridQuery() {
 			const cascadeFields = ["boq_header", "boq_structure", "boq_item", "boq_item_stage"];
@@ -407,8 +449,9 @@
 			} else if (fieldname === "boq_item") {
 				if (args.reference_doctype === "VO Line") {
 					args.query = "construction.api.boq_link_queries.get_vo_line_boq_items";
-					const parent_doc = field.frm ? field.frm.doc : (cur_frm ? cur_frm.doc : null);
-					const boq_header = (parent_doc && parent_doc.boq_header) || (row && row.boq_header) || null;
+					const parent_doc = field.frm ? field.frm.doc : cur_frm ? cur_frm.doc : null;
+					const boq_header =
+						(parent_doc && parent_doc.boq_header) || (row && row.boq_header) || null;
 					if (boq_header) filters.boq_header = boq_header;
 					if (row && row.boq_structure) filters.structure = row.boq_structure;
 					filters.require_boq_header = true;
@@ -540,7 +583,11 @@
 
 					// 3. Create New item (if allowed)
 					const doctype = df.options;
-					if (!df.only_select && !field.__ct_boq_blocked && frappe.model.can_create(doctype)) {
+					if (
+						!df.only_select &&
+						!field.__ct_boq_blocked &&
+						frappe.model.can_create(doctype)
+					) {
 						if (count > 0 && !df.reqd) {
 							$list.append('<div class="ct-dropdown-divider"></div>');
 						}

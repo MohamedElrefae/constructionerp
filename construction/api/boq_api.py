@@ -235,7 +235,9 @@ def import_boq_excel(file_url, boq_header, dry_run=1, confirmed_import_mode=None
 
 
 @frappe.whitelist()
-def generate_boq_import_error_report(file_url, boq_header=None, confirmed_import_mode=None, row_resolutions=None):
+def generate_boq_import_error_report(
+    file_url, boq_header=None, confirmed_import_mode=None, row_resolutions=None
+):
     """Generate an Excel review workbook with import errors and warnings."""
     try:
         from construction.services.boq_import_service import BOQImportService
@@ -433,7 +435,10 @@ def create_material_request_for_vo(vo_name):
         return {"success": False, "error": f"Variation Order {vo_name} does not exist."}
 
     if vo.status != "Approved by Client":
-        return {"success": False, "error": "Material Request can only be created from Approved by Client VOs."}
+        return {
+            "success": False,
+            "error": "Material Request can only be created from Approved by Client VOs.",
+        }
 
     variation_lines = [line for line in vo.lines if line.created_boq_item]
     if not variation_lines:
@@ -448,18 +453,25 @@ def create_material_request_for_vo(vo_name):
     for line in variation_lines:
         item_qty = frappe.db.get_value("BOQ Item", line.created_boq_item, "quantity")
         if not line.item_code:
-            frappe.throw(_("Row {0}: Item Code (standard ERPNext Item) is required to generate Material Request.").format(line.idx))
+            frappe.throw(
+                _(
+                    "Row {0}: Item Code (standard ERPNext Item) is required to generate Material Request."
+                ).format(line.idx)
+            )
 
-        mr.append("items", {
-            "item_code": line.item_code,
-            "description": line.title,
-            "qty": flt(item_qty),
-            "schedule_date": mr.schedule_date,
-            "warehouse": "",
-            "boq_header": vo.boq_header,
-            "boq_structure": line.created_boq_structure,
-            "boq_item": line.created_boq_item,
-        })
+        mr.append(
+            "items",
+            {
+                "item_code": line.item_code,
+                "description": line.title,
+                "qty": flt(item_qty),
+                "schedule_date": mr.schedule_date,
+                "warehouse": "",
+                "boq_header": vo.boq_header,
+                "boq_structure": line.created_boq_structure,
+                "boq_item": line.created_boq_item,
+            },
+        )
 
     mr.insert(ignore_permissions=True)
 

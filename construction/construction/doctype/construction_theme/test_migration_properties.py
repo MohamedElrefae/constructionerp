@@ -63,8 +63,8 @@ def optional_hex_color_strategy():
 # PROPERTY TESTS CLASS
 # ============================================================================
 
-class TestMigrationProperties(unittest.TestCase):
 
+class TestMigrationProperties(unittest.TestCase):
     # ============================================================================
     # PROPERTY 12: Migration Computes Correct Defaults
     # ============================================================================

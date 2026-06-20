@@ -208,16 +208,16 @@
 		if (!report || !report.filters) return;
 		const scope = getScope();
 		const companyField = (report.filters || []).find(
-			(f) => f && f.df && f.df.fieldname === "company",
+			(f) => f && f.df && f.df.fieldname === "company"
 		);
 		if (companyField && scope.company && !canRead("Company")) {
 			lockField(companyField, scope.company);
 		}
 		const budgetAgainstField = (report.filters || []).find(
-			(f) => f && f.df && f.df.fieldname === "budget_against",
+			(f) => f && f.df && f.df.fieldname === "budget_against"
 		);
 		const budgetAgainstFilterField = (report.filters || []).find(
-			(f) => f && f.df && f.df.fieldname === "budget_against_filter",
+			(f) => f && f.df && f.df.fieldname === "budget_against_filter"
 		);
 		if (!budgetAgainstFilterField) return;
 
@@ -246,12 +246,12 @@
 					? h.cost_centers.map((cc) => ({
 							value: cc.name,
 							description: cc.cost_center_name || cc.name,
-						}))
+					  }))
 					: h && Array.isArray(h.projects) && dimension === "Project"
 					? h.projects.map((p) => ({
 							value: p.name,
 							description: p.project_name || p.name,
-						}))
+					  }))
 					: [];
 
 			budgetAgainstFilterField.get_data = function (txt) {
@@ -260,18 +260,17 @@
 					(r) =>
 						!needle ||
 						r.value.toLowerCase().includes(needle) ||
-						r.description.toLowerCase().includes(needle),
+						r.description.toLowerCase().includes(needle)
 				);
 			};
 			// Lock with the scoped value for the chosen dimension.
-			const scopedForDim =
-				dimension === "Project" ? scope.project : scope.cost_center;
+			const scopedForDim = dimension === "Project" ? scope.project : scope.cost_center;
 			lockField(budgetAgainstFilterField, scopedForDim || null);
 		} else {
 			// Finance / permitted user: keep the original get_data.
 			if (scope[dimension === "Project" ? "project" : "cost_center"]) {
 				budgetAgainstFilterField.set_value(
-					scope[dimension === "Project" ? "project" : "cost_center"],
+					scope[dimension === "Project" ? "project" : "cost_center"]
 				);
 			}
 		}
@@ -355,27 +354,8 @@
 			.on("scope:changed.ct_report_filters", function () {
 				if (!window.scopeContext || !window.scopeContext.enabled) return;
 				if (!frappe.query_report || !frappe.query_report.filters) return;
-<<<<<<< HEAD
 				applyScopeToReportFilters(frappe.query_report);
 				frappe.query_report.refresh(true);
-=======
-
-				const scope = getScope();
-				let changed = false;
-
-				frappe.query_report.filters.forEach(function (field) {
-					if (!SCOPE_FIELDS.includes(field.df.fieldname)) return;
-					const scopedValue = scope[field.df.fieldname];
-					if (scopedValue && field.get_value() !== scopedValue) {
-						field.set_value(scopedValue);
-						changed = true;
-					}
-				});
-
-				if (changed) {
-					frappe.query_report.refresh(true);
-				}
->>>>>>> origin/develop
 			});
 	}
 

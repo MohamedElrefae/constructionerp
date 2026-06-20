@@ -297,10 +297,7 @@ def _patch_report_access_gates() -> None:
 
     def _scope_aware_is_permitted(self):
         try:
-            if (
-                self.name in ALLOWED_REPORTS
-                and _user_has_active_scope_context()
-            ):
+            if self.name in ALLOWED_REPORTS and _user_has_active_scope_context():
                 return True
         except Exception:
             pass
@@ -330,6 +327,7 @@ def _patch_report_access_gates() -> None:
         from frappe.desk.query_report import (
             get_reference_report as _get_ref,
         )
+
         try:
             doc = frappe.get_doc("Report", report_name)
         except Exception:
@@ -351,6 +349,7 @@ def _patch_report_access_gates() -> None:
 
         if doc.disabled:
             from frappe import _ as _t
+
             frappe.throw(_t("Report {0} is disabled").format(_t(report_name)))
 
         # Bypass path: allowlisted report + scoped user → skip both
@@ -363,27 +362,20 @@ def _patch_report_access_gates() -> None:
         # Setting the flag here would leave it active for the rest
         # of the request, allowing stale-flag perm grants via any
         # subsequent `has_permission` / `get_role_permissions` call.
-        if (
-            getattr(doc, "name", None) in ALLOWED_REPORTS
-            and _user_has_active_scope_context()
-        ):
+        if getattr(doc, "name", None) in ALLOWED_REPORTS and _user_has_active_scope_context():
             return doc
 
         # Original 403s for everyone else.
         if not doc.is_permitted():
             from frappe import _ as _t
             from frappe.exceptions import PermissionError as _PE
-            raise _PE(
-                _t("You don't have access to Report: {0}").format(_t(doc.name))
-            )
+
+            raise _PE(_t("You don't have access to Report: {0}").format(_t(doc.name)))
         if not frappe.has_permission(doc.ref_doctype, "report"):
             from frappe import _ as _t
             from frappe.exceptions import PermissionError as _PE
-            raise _PE(
-                _t("You don't have permission to get a report on: {0}").format(
-                    _t(doc.ref_doctype)
-                )
-            )
+
+            raise _PE(_t("You don't have permission to get a report on: {0}").format(_t(doc.ref_doctype)))
         return doc
 
     _scope_aware_get_report_doc._scope_patched_get_report_doc = True
@@ -423,9 +415,7 @@ def _patch_report_access_gates() -> None:
             **kwargs,
         )
 
-    _scope_aware_permissions_has_permission.__name__ = (
-        "_scope_aware_permissions_has_permission"
-    )
+    _scope_aware_permissions_has_permission.__name__ = "_scope_aware_permissions_has_permission"
     fp.has_permission = _scope_aware_permissions_has_permission
 
     # --- Patch get_role_permissions ---
@@ -436,11 +426,7 @@ def _patch_report_access_gates() -> None:
 
     def _scope_aware_get_role_permissions(doctype_meta, user=None, **kwargs):
         try:
-            doctype_name = (
-                doctype_meta.name
-                if hasattr(doctype_meta, "name")
-                else doctype_meta
-            )
+            doctype_name = doctype_meta.name if hasattr(doctype_meta, "name") else doctype_meta
             if _bypass_should_apply(doctype=doctype_name):
                 # Compute the user's real perms via the original
                 # logic, then override ONLY the allowlisted ptypes
@@ -448,9 +434,7 @@ def _patch_report_access_gates() -> None:
                 # delete, create, etc. remain 0 — the bypass does
                 # NOT over-grant. The original has_permission reads
                 # perms[ptype] and returns accordingly.
-                perms = _ORIGINAL_GET_ROLE_PERMISSIONS(
-                    doctype_meta, user=user, **kwargs
-                )
+                perms = _ORIGINAL_GET_ROLE_PERMISSIONS(doctype_meta, user=user, **kwargs)
                 for ptype in _ALLOWED_PTYPES:
                     perms[ptype] = 1
                 return perms
@@ -467,7 +451,10 @@ def _patch_report_access_gates() -> None:
     except Exception:
         fm = None
 
-    if fm is not None and getattr(fm, "get_permitted_fields", None).__name__ == "_scope_aware_get_permitted_fields":
+    if (
+        fm is not None
+        and getattr(fm, "get_permitted_fields", None).__name__ == "_scope_aware_get_permitted_fields"
+    ):
         pass  # already patched
     elif fm is not None:
         _ORIGINAL_GET_PERMITTED_FIELDS = fm.get_permitted_fields
@@ -626,7 +613,7 @@ def _normalize_filters(args: tuple, kwargs: dict):
             new_args = (
                 *new_args[:filters_index],
                 parsed,
-                *new_args[filters_index + 1:],
+                *new_args[filters_index + 1 :],
             )
         new_kwargs = {k: v for k, v in new_kwargs.items() if k != "filters"}
     else:
@@ -777,7 +764,7 @@ def _scope_aware_run(*args, **kwargs):
             new_args = (
                 *new_args[:filters_index],
                 filters,
-                *new_args[filters_index + 1:],
+                *new_args[filters_index + 1 :],
             )
             if "filters" in new_kwargs:
                 new_kwargs = {k: v for k, v in new_kwargs.items() if k != "filters"}

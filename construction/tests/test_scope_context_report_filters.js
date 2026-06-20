@@ -48,10 +48,7 @@ describe("ALLOWLISTED_REPORTS", () => {
 			"Budget Variance Report",
 			"Cash Flow",
 		]) {
-			assert.ok(
-				mod.ALLOWLISTED_REPORTS.has(report),
-				`${report} should be in the allowlist`,
-			);
+			assert.ok(mod.ALLOWLISTED_REPORTS.has(report), `${report} should be in the allowlist`);
 		}
 	});
 
@@ -298,7 +295,7 @@ describe("Budget Variance Report — get_data override for dimension", () => {
 			(r) =>
 				!needle ||
 				r.value.toLowerCase().includes(needle) ||
-				r.description.toLowerCase().includes(needle),
+				r.description.toLowerCase().includes(needle)
 		);
 		assert.equal(filtered.length, 1);
 		assert.equal(filtered[0].value, "Sub - E");
@@ -312,7 +309,7 @@ describe("Budget Variance Report — get_data override for dimension", () => {
 			(r) =>
 				!needle ||
 				r.value.toLowerCase().includes(needle) ||
-				r.description.toLowerCase().includes(needle),
+				r.description.toLowerCase().includes(needle)
 		);
 		assert.equal(filtered.length, 1);
 		assert.equal(filtered[0].value, "PROJ-1");

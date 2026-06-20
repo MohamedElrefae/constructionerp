@@ -214,7 +214,7 @@ def get_boq_items(doctype, txt, searchfield, start, page_len, filters, enforce_s
     conditions = [
         "i.docstatus < 2",
     ]
-    
+
     # P1-2: Opt-in and null-safe filtering for omitted items
     if filters.get("exclude_zero_revised"):
         conditions.append("COALESCE(i.current_revised_qty, i.quantity) > 0")

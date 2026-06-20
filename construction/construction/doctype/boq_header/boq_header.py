@@ -66,6 +66,7 @@ class BOQHeader(Document):
                 self.db_set("locked_date", frappe.utils.now(), update_modified=False)
                 # Create baseline quantity revisions
                 from construction.services.quantity_revisions import create_lock_baseline
+
                 create_lock_baseline(self.name)
 
     def validate_status_transition(self):
@@ -79,7 +80,7 @@ class BOQHeader(Document):
 
     def calculate_total_value(self):
         """Compute all Phase 1 roll-up totals including total_revised_value.
-        
+
         Variation items are excluded from contract totals but included in revised totals.
         """
         if self.is_new():
@@ -116,7 +117,7 @@ class BOQHeader(Document):
         Called by BOQ Item on_update and on_trash.
         Uses a single SQL query with 4 SUMs and db_set to avoid
         triggering a full save cycle.
-        
+
         Variation items are excluded from contract totals but included in revised totals.
         """
         totals = frappe.db.sql(

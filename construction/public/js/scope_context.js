@@ -166,7 +166,11 @@
 				return p && p.name === projName;
 			});
 			if (!project) return false;
-			if (this.current.company && project.company && project.company !== this.current.company) {
+			if (
+				this.current.company &&
+				project.company &&
+				project.company !== this.current.company
+			) {
 				return false;
 			}
 			if (this.current.cost_center && project.cost_center) {
@@ -262,7 +266,9 @@
 		_logDiagnostics(parsed) {
 			var isDebug = false;
 			try {
-				isDebug = localStorage.getItem("scope_debug") === "true" || window.location.search.indexOf("scope_debug=1") !== -1;
+				isDebug =
+					localStorage.getItem("scope_debug") === "true" ||
+					window.location.search.indexOf("scope_debug=1") !== -1;
 			} catch (e) {}
 
 			if (isDebug) {
