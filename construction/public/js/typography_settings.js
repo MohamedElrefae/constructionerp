@@ -1,9 +1,9 @@
 /* eslint-disable */
-	(function () {
-		"use strict";
-		var assetVersion = "21";
+(function () {
+	"use strict";
+	var assetVersion = "21";
 
-		var defaults = {
+	var defaults = {
 		desk_font_family: "System Default",
 		desk_font_size: 14,
 		desk_font_weight: "400",
@@ -85,9 +85,7 @@
 		return { label: font, value: font };
 	}
 
-	var deskFontOptions = [
-		sectionOption("Web Fonts (recommended)"),
-	].concat(
+	var deskFontOptions = [sectionOption("Web Fonts (recommended)")].concat(
 		webFontOptions.map(fontOption),
 		[sectionOption("Local System Fonts (depends on device)")],
 		localFontOptions.map(fontOption)
@@ -106,23 +104,20 @@
 	// Google Fonts load asynchronously; display=swap mitigates FOUT.
 	var googleFontNames = new Set(webFontOptions);
 
-		var fontOptions = Object.keys(fontStacks);
-		var componentFamilyFields = [
-			"sidebar_font_family",
-			"navbar_font_family",
-			"form_font_family",
-			"list_font_family",
-			"menu_font_family",
-		];
-		var styleOrderObserverStarted = false;
+	var fontOptions = Object.keys(fontStacks);
+	var componentFamilyFields = [
+		"sidebar_font_family",
+		"navbar_font_family",
+		"form_font_family",
+		"list_font_family",
+		"menu_font_family",
+	];
+	var styleOrderObserverStarted = false;
 
 	// ── CSS selector groups for literal style generation ──
 	// Defined once to avoid GC pressure during repeated ensureStyleTag calls.
 
-	var DESK_SELECTORS = [
-		"html.ct-enterprise,",
-		"html.ct-enterprise body",
-	];
+	var DESK_SELECTORS = ["html.ct-enterprise,", "html.ct-enterprise body"];
 
 	var BODY_STAR_SELECTORS = [
 		'html.ct-enterprise body *:not(svg):not(path):not(use):not(i):not(.icon):not([class^="icon-"]):not([class*=" icon-"]):not(.fa):not([class^="fa-"]):not([class*=" fa-"]):not(.octicon)',
@@ -323,10 +318,10 @@
 		];
 		fields.forEach(function (field) {
 			var font = resolveFont(settings, field);
-				if (googleFontNames.has(font) && !seen[font]) {
-					seen[font] = true;
-					families.push(font);
-				}
+			if (googleFontNames.has(font) && !seen[font]) {
+				seen[font] = true;
+				families.push(font);
+			}
 		});
 
 		var link = document.getElementById("ct-google-fonts");
@@ -455,52 +450,82 @@
 	// differ from the previous value. A brief invisible opacity animation
 	// on <body> forces synchronous style recalculation in the compositor.
 
-		function triggerRepaint() {
-			var body = document.body;
-			if (!body) return;
-			body.style.animation = "ct-typography-repaint 0.01s";
-			void body.offsetHeight;
-			body.style.animation = "";
+	function triggerRepaint() {
+		var body = document.body;
+		if (!body) return;
+		body.style.animation = "ct-typography-repaint 0.01s";
+		void body.offsetHeight;
+		body.style.animation = "";
+	}
+
+	function shouldSkipInlineTypography(el) {
+		if (!el || !el.style || !el.tagName) return true;
+		var tag = el.tagName.toLowerCase();
+		if (
+			["svg", "path", "use", "img", "canvas", "video", "style", "script"].indexOf(tag) !== -1
+		) {
+			return true;
 		}
+		var className = typeof el.className === "string" ? el.className : "";
+		return (
+			/(^|\s)(icon|octicon|fa|avatar|indicator)(\s|$)/.test(className) ||
+			/(^|\s)(icon-|fa-)/.test(className)
+		);
+	}
 
-		function shouldSkipInlineTypography(el) {
-			if (!el || !el.style || !el.tagName) return true;
-			var tag = el.tagName.toLowerCase();
-			if (
-				["svg", "path", "use", "img", "canvas", "video", "style", "script"].indexOf(tag) !== -1
-			) {
-				return true;
-			}
-			var className = typeof el.className === "string" ? el.className : "";
-			return (
-				/(^|\s)(icon|octicon|fa|avatar|indicator)(\s|$)/.test(className) ||
-				/(^|\s)(icon-|fa-)/.test(className)
-			);
-		}
+	function applyInlineTypographyFallback(settings) {
+		if (!document.body) return;
 
-		function applyInlineTypographyFallback(settings) {
-			if (!document.body) return;
+		var rules = [
+			{
+				selector: "body, body *",
+				family: settings.desk_font_family,
+				size: settings.desk_font_size,
+				weight: settings.desk_font_weight,
+			},
+			{
+				selector: SIDEBAR_SELECTORS.join(","),
+				family: resolveFont(settings, "sidebar_font_family"),
+				size: settings.sidebar_font_size,
+				weight: settings.sidebar_font_weight,
+			},
+			{
+				selector: NAVBAR_SELECTORS.join(","),
+				family: resolveFont(settings, "navbar_font_family"),
+				size: settings.navbar_font_size,
+				weight: settings.navbar_font_weight,
+			},
+			{
+				selector: FORM_SELECTORS.join(","),
+				family: resolveFont(settings, "form_font_family"),
+				size: settings.form_font_size,
+				weight: settings.form_font_weight,
+			},
+			{
+				selector: LIST_SELECTORS.join(","),
+				family: resolveFont(settings, "list_font_family"),
+				size: settings.list_font_size,
+				weight: settings.list_font_weight,
+			},
+			{
+				selector: MENU_SELECTORS.join(","),
+				family: resolveFont(settings, "menu_font_family"),
+				size: settings.menu_font_size,
+				weight: settings.menu_font_weight,
+			},
+		];
 
-			var rules = [
-				{ selector: "body, body *", family: settings.desk_font_family, size: settings.desk_font_size, weight: settings.desk_font_weight },
-				{ selector: SIDEBAR_SELECTORS.join(","), family: resolveFont(settings, "sidebar_font_family"), size: settings.sidebar_font_size, weight: settings.sidebar_font_weight },
-				{ selector: NAVBAR_SELECTORS.join(","), family: resolveFont(settings, "navbar_font_family"), size: settings.navbar_font_size, weight: settings.navbar_font_weight },
-				{ selector: FORM_SELECTORS.join(","), family: resolveFont(settings, "form_font_family"), size: settings.form_font_size, weight: settings.form_font_weight },
-				{ selector: LIST_SELECTORS.join(","), family: resolveFont(settings, "list_font_family"), size: settings.list_font_size, weight: settings.list_font_weight },
-				{ selector: MENU_SELECTORS.join(","), family: resolveFont(settings, "menu_font_family"), size: settings.menu_font_size, weight: settings.menu_font_weight },
-			];
-
-			rules.forEach(function (rule) {
-				var family = fontStack(rule.family) || "";
-				document.querySelectorAll(rule.selector).forEach(function (el) {
-					if (shouldSkipInlineTypography(el)) return;
-					el.style.setProperty("font-family", family, "important");
-					el.style.setProperty("font-size", rule.size + "px", "important");
-					el.style.setProperty("font-weight", rule.weight, "important");
-				});
+		rules.forEach(function (rule) {
+			var family = fontStack(rule.family) || "";
+			document.querySelectorAll(rule.selector).forEach(function (el) {
+				if (shouldSkipInlineTypography(el)) return;
+				el.style.setProperty("font-family", family, "important");
+				el.style.setProperty("font-size", rule.size + "px", "important");
+				el.style.setProperty("font-weight", rule.weight, "important");
 			});
-			window.ctTypographyInlineFallbackAppliedAt = new Date().toISOString();
-		}
+		});
+		window.ctTypographyInlineFallbackAppliedAt = new Date().toISOString();
+	}
 
 	// ── Main Apply Function ──
 
@@ -528,13 +553,13 @@
 			);
 		});
 
-			// Safety net: inline !important on <html> and <body> for FOUC prevention.
-			applyRootTypographyStyles(settings);
-			// v9 wrote inline !important font styles onto descendants. Update those
-			// inline values too, otherwise no repaint mechanism can beat them.
-			applyInlineTypographyFallback(settings);
+		// Safety net: inline !important on <html> and <body> for FOUC prevention.
+		applyRootTypographyStyles(settings);
+		// v9 wrote inline !important font styles onto descendants. Update those
+		// inline values too, otherwise no repaint mechanism can beat them.
+		applyInlineTypographyFallback(settings);
 
-			triggerRepaint();
+		triggerRepaint();
 
 		window.ctTypographySettings = settings;
 		window.ctTypographyLastAppliedAt = new Date().toISOString();
@@ -602,10 +627,10 @@
 		});
 	}
 
-		function buildDialog(current) {
-			current = normalize(current);
-			var lastDeskFontFamily = current.desk_font_family;
-			var dialog = new frappe.ui.Dialog({
+	function buildDialog(current) {
+		current = normalize(current);
+		var lastDeskFontFamily = current.desk_font_family;
+		var dialog = new frappe.ui.Dialog({
 			title: __("Typography Settings"),
 			fields: [
 				{
@@ -784,19 +809,22 @@
 			updatePreview(dialog);
 		});
 
-			dialog.$wrapper.on("change input", "select, input", function (event) {
-				var values = dialog.get_values() || {};
-				var fieldname = $(event.target).closest("[data-fieldname]").attr("data-fieldname");
-				if (fieldname === "desk_font_family" && values.desk_font_family !== lastDeskFontFamily) {
-					componentFamilyFields.forEach(function (componentFieldname) {
-						dialog.set_value(componentFieldname, "Inherit");
-					});
-					lastDeskFontFamily = values.desk_font_family;
-					values = dialog.get_values() || values;
-				}
-				applyTypography(values);
-				updatePreview(dialog);
-			});
+		dialog.$wrapper.on("change input", "select, input", function (event) {
+			var values = dialog.get_values() || {};
+			var fieldname = $(event.target).closest("[data-fieldname]").attr("data-fieldname");
+			if (
+				fieldname === "desk_font_family" &&
+				values.desk_font_family !== lastDeskFontFamily
+			) {
+				componentFamilyFields.forEach(function (componentFieldname) {
+					dialog.set_value(componentFieldname, "Inherit");
+				});
+				lastDeskFontFamily = values.desk_font_family;
+				values = dialog.get_values() || values;
+			}
+			applyTypography(values);
+			updatePreview(dialog);
+		});
 
 		dialog.show();
 		updatePreview(dialog);
@@ -918,10 +946,10 @@
 				},
 			});
 		}
-			window.ctShowTypographySettings = showDialog;
-			window.ctTypography = {
-				assetVersion: assetVersion,
-				defaults: defaults,
+		window.ctShowTypographySettings = showDialog;
+		window.ctTypography = {
+			assetVersion: assetVersion,
+			defaults: defaults,
 			fontOptions: fontOptions,
 			componentFontOptions: componentFontOptions,
 			deskFontOptions: deskFontOptions,

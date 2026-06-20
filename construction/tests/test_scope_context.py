@@ -182,15 +182,15 @@ def test_bootinfo_scope_context():
     assert result["success"] is True
 
     bootinfo = extend_bootinfo({})
-    assert bootinfo.get("scope_context_enabled") is True, (
-        f"scope_context_enabled should be True, got {bootinfo.get('scope_context_enabled')}"
-    )
+    assert (
+        bootinfo.get("scope_context_enabled") is True
+    ), f"scope_context_enabled should be True, got {bootinfo.get('scope_context_enabled')}"
     sc = bootinfo.get("scope_context")
     assert sc is not None, f"scope_context missing from bootinfo: {bootinfo}"
     assert sc.get("current") is not None, f"current missing: {sc}"
-    assert sc["current"]["company"] == "Elrefae", (
-        f"Expected company=Elrefae, got {sc['current'].get('company')}"
-    )
+    assert (
+        sc["current"]["company"] == "Elrefae"
+    ), f"Expected company=Elrefae, got {sc['current'].get('company')}"
 
 
 # === T-007 ===
