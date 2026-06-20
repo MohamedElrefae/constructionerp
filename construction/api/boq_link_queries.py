@@ -1,3 +1,5 @@
+from typing import Any
+
 import frappe
 
 from construction.services.boq_scope_filters import (
@@ -11,7 +13,7 @@ from construction.services.boq_scope_filters import (
 from construction.services.scope_resolution import get_scope_token
 
 
-def _as_dict(filters):
+def _as_dict(filters: Any) -> dict[str, Any]:
     if not filters:
         return {}
     if isinstance(filters, str):
@@ -19,13 +21,13 @@ def _as_dict(filters):
     return filters
 
 
-def _extract_enforce_scope(filters, enforce_scope):
+def _extract_enforce_scope(filters: dict[str, Any], enforce_scope: Any) -> Any:
     if enforce_scope is not None:
         return enforce_scope
     return filters.pop("enforce_scope", None)
 
 
-def _limit_values(txt, start, page_len):
+def _limit_values(txt: str, start: int, page_len: int) -> dict[str, Any]:
     return {
         "txt": f"%{txt or ''}%",
         "start": int(start or 0),
@@ -33,11 +35,11 @@ def _limit_values(txt, start, page_len):
     }
 
 
-def _join_project_sql(join_project):
+def _join_project_sql(join_project: bool) -> str:
     return "INNER JOIN `tabProject` p ON p.name = h.project" if join_project else ""
 
 
-def _attach_scope_response(scope):
+def _attach_scope_response(scope: Any) -> None:
     if not scope:
         return
     frappe.local.response["boq_scope_token"] = get_scope_token(frappe.session.user)
@@ -48,15 +50,17 @@ def _attach_scope_response(scope):
         )
 
 
-def _truthy(value):
+def _truthy(value: Any) -> bool:
     return value in (True, 1, "1", "true", "True", "yes", "Yes")
 
 
-def _gate_is_closed(filters):
+def _gate_is_closed(filters: dict[str, Any]) -> bool:
     return _truthy(filters.get("require_gate")) and not _truthy(filters.get("gate_open"))
 
 
-def _apply_allowed_statuses(conditions, values, filters, header_alias="h"):
+def _apply_allowed_statuses(
+    conditions: list[str], values: dict[str, Any], filters: dict[str, Any], header_alias: str = "h"
+) -> None:
     if not filters.get("allowed_statuses"):
         return
     conditions.append(f"{header_alias}.status IN %(allowed_statuses)s")
@@ -84,7 +88,15 @@ def log_boq_scope_drift(form_doctype, form_name, previous_scope, current_scope):
 
 @frappe.whitelist()
 @frappe.validate_and_sanitize_search_inputs
-def get_scope_projects(doctype, txt, searchfield, start, page_len, filters, enforce_scope=None):
+def get_scope_projects(
+    doctype: str,
+    txt: str,
+    searchfield: str,
+    start: int,
+    page_len: int,
+    filters: dict[str, Any] | str | None,
+    enforce_scope: Any = None,
+):
     """Return the active scope project for link validation without requiring Project select perms."""
     filters = _as_dict(filters)
     enforce_scope = _extract_enforce_scope(filters, enforce_scope)
@@ -119,7 +131,15 @@ def get_allowed_transaction_boq_statuses():
 
 @frappe.whitelist()
 @frappe.validate_and_sanitize_search_inputs
-def get_boq_headers(doctype, txt, searchfield, start, page_len, filters, enforce_scope=None):
+def get_boq_headers(
+    doctype: str,
+    txt: str,
+    searchfield: str,
+    start: int,
+    page_len: int,
+    filters: dict[str, Any] | str | None,
+    enforce_scope: Any = None,
+):
     filters = _as_dict(filters)
     enforce_scope = _extract_enforce_scope(filters, enforce_scope)
     if _gate_is_closed(filters):
@@ -135,23 +155,30 @@ def get_boq_headers(doctype, txt, searchfield, start, page_len, filters, enforce
     _apply_allowed_statuses(conditions, values, filters, "h")
 
     where_clause = " AND ".join(conditions)
-    return frappe.db.sql(
-        f"""
-		SELECT h.name, h.title, h.project
-		FROM `tabBOQ Header` h
-		{_join_project_sql(join_project)}
-		WHERE {where_clause}
-			AND (h.name LIKE %(txt)s OR h.title LIKE %(txt)s OR h.project LIKE %(txt)s)
-		ORDER BY h.modified DESC
-		LIMIT %(start)s, %(page_len)s
-		""",
-        values,
+    query = (
+        "\n\t\tSELECT h.name, h.title, h.project\n"
+        "\t\tFROM `tabBOQ Header` h\n"
+        + _join_project_sql(join_project)
+        + "\n\t\tWHERE "
+        + where_clause
+        + "\n\t\t\tAND (h.name LIKE %(txt)s OR h.title LIKE %(txt)s OR h.project LIKE %(txt)s)\n"
+        + "\t\tORDER BY h.modified DESC\n"
+        + "\t\tLIMIT %(start)s, %(page_len)s\n"
     )
+    return frappe.db.sql(query, values)
 
 
 @frappe.whitelist()
 @frappe.validate_and_sanitize_search_inputs
-def get_boq_structures(doctype, txt, searchfield, start, page_len, filters, enforce_scope=None):
+def get_boq_structures(
+    doctype: str,
+    txt: str,
+    searchfield: str,
+    start: int,
+    page_len: int,
+    filters: dict[str, Any] | str | None,
+    enforce_scope: Any = None,
+):
     filters = _as_dict(filters)
     enforce_scope = _extract_enforce_scope(filters, enforce_scope)
     if _gate_is_closed(filters):
@@ -185,23 +212,31 @@ def get_boq_structures(doctype, txt, searchfield, start, page_len, filters, enfo
     if join_project:
         joins.append("INNER JOIN `tabProject` p ON p.name = h.project")
     where_clause = " AND ".join(conditions)
-    return frappe.db.sql(
-        f"""
-		SELECT s.name, s.title, s.wbs_code
-		FROM `tabBOQ Structure` s
-		{' '.join(joins)}
-		WHERE {where_clause}
-			AND (s.name LIKE %(txt)s OR s.title LIKE %(txt)s OR s.wbs_code LIKE %(txt)s)
-		ORDER BY s.modified DESC
-		LIMIT %(start)s, %(page_len)s
-		""",
-        values,
+    join_clause = " ".join(joins)
+    query = (
+        "\n\t\tSELECT s.name, s.title, s.wbs_code\n"
+        "\t\tFROM `tabBOQ Structure` s\n"
+        + join_clause
+        + "\n\t\tWHERE "
+        + where_clause
+        + "\n\t\t\tAND (s.name LIKE %(txt)s OR s.title LIKE %(txt)s OR s.wbs_code LIKE %(txt)s)\n"
+        + "\t\tORDER BY s.modified DESC\n"
+        + "\t\tLIMIT %(start)s, %(page_len)s\n"
     )
+    return frappe.db.sql(query, values)
 
 
 @frappe.whitelist()
 @frappe.validate_and_sanitize_search_inputs
-def get_boq_items(doctype, txt, searchfield, start, page_len, filters, enforce_scope=None):
+def get_boq_items(
+    doctype: str,
+    txt: str,
+    searchfield: str,
+    start: int,
+    page_len: int,
+    filters: dict[str, Any] | str | None,
+    enforce_scope: Any = None,
+):
     filters = _as_dict(filters)
     enforce_scope = _extract_enforce_scope(filters, enforce_scope)
     if _gate_is_closed(filters):
@@ -235,24 +270,31 @@ def get_boq_items(doctype, txt, searchfield, start, page_len, filters, enforce_s
     _apply_allowed_statuses(conditions, values, filters, "h")
 
     where_clause = " AND ".join(conditions)
-    return frappe.db.sql(
-        f"""
-		SELECT i.name, h.title, i.quantity, h.project
-		FROM `tabBOQ Item` i
-		INNER JOIN `tabBOQ Header` h ON h.name = i.boq_header
-		{_join_project_sql(join_project)}
-		WHERE {where_clause}
-			AND (i.name LIKE %(txt)s OR h.title LIKE %(txt)s)
-		ORDER BY i.modified DESC
-		LIMIT %(start)s, %(page_len)s
-		""",
-        values,
+    query = (
+        "\n\t\tSELECT i.name, h.title, i.quantity, h.project\n"
+        "\t\tFROM `tabBOQ Item` i\n"
+        "\t\tINNER JOIN `tabBOQ Header` h ON h.name = i.boq_header\n"
+        + _join_project_sql(join_project)
+        + "\n\t\tWHERE "
+        + where_clause
+        + "\n\t\t\tAND (i.name LIKE %(txt)s OR h.title LIKE %(txt)s)\n"
+        + "\t\tORDER BY i.modified DESC\n"
+        + "\t\tLIMIT %(start)s, %(page_len)s\n"
     )
+    return frappe.db.sql(query, values)
 
 
 @frappe.whitelist()
 @frappe.validate_and_sanitize_search_inputs
-def get_boq_item_stages(doctype, txt, searchfield, start, page_len, filters, enforce_scope=None):
+def get_boq_item_stages(
+    doctype: str,
+    txt: str,
+    searchfield: str,
+    start: int,
+    page_len: int,
+    filters: dict[str, Any] | str | None,
+    enforce_scope: Any = None,
+):
     filters = _as_dict(filters)
     enforce_scope = _extract_enforce_scope(filters, enforce_scope)
     if _gate_is_closed(filters):
@@ -295,23 +337,31 @@ def get_boq_item_stages(doctype, txt, searchfield, start, page_len, filters, enf
         joins.append("INNER JOIN `tabProject` p ON p.name = h.project")
 
     where_clause = " AND ".join(conditions)
-    return frappe.db.sql(
-        f"""
-		SELECT st.name, st.stage_code, st.stage_name, st.planned_qty
-		FROM `tabBOQ Item Stage` st
-		{' '.join(joins)}
-		WHERE {where_clause}
-			AND (st.name LIKE %(txt)s OR st.stage_code LIKE %(txt)s OR st.stage_name LIKE %(txt)s)
-		ORDER BY st.modified DESC
-		LIMIT %(start)s, %(page_len)s
-		""",
-        values,
+    join_clause = " ".join(joins)
+    query = (
+        "\n\t\tSELECT st.name, st.stage_code, st.stage_name, st.planned_qty\n"
+        "\t\tFROM `tabBOQ Item Stage` st\n"
+        + join_clause
+        + "\n\t\tWHERE "
+        + where_clause
+        + "\n\t\t\tAND (st.name LIKE %(txt)s OR st.stage_code LIKE %(txt)s OR st.stage_name LIKE %(txt)s)\n"
+        + "\t\tORDER BY st.modified DESC\n"
+        + "\t\tLIMIT %(start)s, %(page_len)s\n"
     )
+    return frappe.db.sql(query, values)
 
 
 @frappe.whitelist()
 @frappe.validate_and_sanitize_search_inputs
-def get_variation_orders(doctype, txt, searchfield, start, page_len, filters, enforce_scope=None):
+def get_variation_orders(
+    doctype: str,
+    txt: str,
+    searchfield: str,
+    start: int,
+    page_len: int,
+    filters: dict[str, Any] | str | None,
+    enforce_scope: Any = None,
+):
     """Link-search for Variation Order DocType.
 
     Filters:
@@ -359,23 +409,31 @@ def get_variation_orders(doctype, txt, searchfield, start, page_len, filters, en
         joins.append("INNER JOIN `tabProject` p ON p.name = h.project")
 
     where_clause = " AND ".join(conditions)
-    return frappe.db.sql(
-        f"""
-		SELECT vo.name, vo.vo_number, vo.status, vo.boq_header
-		FROM `tabVariation Order` vo
-		{' '.join(joins)}
-		WHERE {where_clause}
-			AND (vo.name LIKE %(txt)s OR vo.vo_number LIKE %(txt)s OR vo.boq_header LIKE %(txt)s)
-		ORDER BY vo.modified DESC
-		LIMIT %(start)s, %(page_len)s
-		""",
-        values,
+    join_clause = " ".join(joins)
+    query = (
+        "\n\t\tSELECT vo.name, vo.vo_number, vo.status, vo.boq_header\n"
+        "\t\tFROM `tabVariation Order` vo\n"
+        + join_clause
+        + "\n\t\tWHERE "
+        + where_clause
+        + "\n\t\t\tAND (vo.name LIKE %(txt)s OR vo.vo_number LIKE %(txt)s OR vo.boq_header LIKE %(txt)s)\n"
+        + "\t\tORDER BY vo.modified DESC\n"
+        + "\t\tLIMIT %(start)s, %(page_len)s\n"
     )
+    return frappe.db.sql(query, values)
 
 
 @frappe.whitelist()
 @frappe.validate_and_sanitize_search_inputs
-def get_vo_line_boq_items(doctype, txt, searchfield, start, page_len, filters, enforce_scope=None):
+def get_vo_line_boq_items(
+    doctype: str,
+    txt: str,
+    searchfield: str,
+    start: int,
+    page_len: int,
+    filters: dict[str, Any] | str | None,
+    enforce_scope: Any = None,
+):
     """Link-search for the BOQ Item field on VO Line (Quantity Change / Omission).
 
     Restricts to leaves of the selected BOQ Header and excludes variation
@@ -420,23 +478,32 @@ def get_vo_line_boq_items(doctype, txt, searchfield, start, page_len, filters, e
 
     where_clause = " AND ".join(conditions)
     select_header_title = ", h.title" if (join_header or join_project) else ""
-    return frappe.db.sql(
-        f"""
-		SELECT i.name, i.cost_item, i.quantity{select_header_title}
-		FROM `tabBOQ Item` i
-		{' '.join(joins)}
-		WHERE {where_clause}
-			AND (i.name LIKE %(txt)s OR i.cost_item LIKE %(txt)s)
-		ORDER BY i.modified DESC
-		LIMIT %(start)s, %(page_len)s
-		""",
-        values,
+    join_clause = " ".join(joins)
+    query = (
+        "\n\t\tSELECT i.name, i.cost_item, i.quantity"
+        + select_header_title
+        + "\n\t\tFROM `tabBOQ Item` i\n"
+        + join_clause
+        + "\n\t\tWHERE "
+        + where_clause
+        + "\n\t\t\tAND (i.name LIKE %(txt)s OR i.cost_item LIKE %(txt)s)\n"
+        + "\t\tORDER BY i.modified DESC\n"
+        + "\t\tLIMIT %(start)s, %(page_len)s\n"
     )
+    return frappe.db.sql(query, values)
 
 
 @frappe.whitelist()
 @frappe.validate_and_sanitize_search_inputs
-def get_variation_structures(doctype, txt, searchfield, start, page_len, filters, enforce_scope=None):
+def get_variation_structures(
+    doctype: str,
+    txt: str,
+    searchfield: str,
+    start: int,
+    page_len: int,
+    filters: dict[str, Any] | str | None,
+    enforce_scope: Any = None,
+):
     """Link-search for VO Line.created_boq_structure (New Item VO line)."""
     filters = _as_dict(filters)
     enforce_scope = _extract_enforce_scope(filters, enforce_scope)
@@ -472,15 +539,15 @@ def get_variation_structures(doctype, txt, searchfield, start, page_len, filters
         joins.append("INNER JOIN `tabProject` p ON p.name = h.project")
 
     where_clause = " AND ".join(conditions)
-    return frappe.db.sql(
-        f"""
-		SELECT s.name, s.title, s.wbs_code, s.variation_order
-		FROM `tabBOQ Structure` s
-		{' '.join(joins)}
-		WHERE {where_clause}
-			AND (s.name LIKE %(txt)s OR s.title LIKE %(txt)s OR s.wbs_code LIKE %(txt)s)
-		ORDER BY s.modified DESC
-		LIMIT %(start)s, %(page_len)s
-		""",
-        values,
+    join_clause = " ".join(joins)
+    query = (
+        "\n\t\tSELECT s.name, s.title, s.wbs_code, s.variation_order\n"
+        "\t\tFROM `tabBOQ Structure` s\n"
+        + join_clause
+        + "\n\t\tWHERE "
+        + where_clause
+        + "\n\t\t\tAND (s.name LIKE %(txt)s OR s.title LIKE %(txt)s OR s.wbs_code LIKE %(txt)s)\n"
+        + "\t\tORDER BY s.modified DESC\n"
+        + "\t\tLIMIT %(start)s, %(page_len)s\n"
     )
+    return frappe.db.sql(query, values)
