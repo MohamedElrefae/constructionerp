@@ -7,6 +7,8 @@
   "engine": "InnoDB",
   "field_order": [
     "enable_scope_context",
+    "option_b_section",
+    "enable_option_b_report_access_bypass",
     "scope_dimensions_section",
     "enable_scope_company",
     "enable_scope_cost_center",
@@ -38,6 +40,20 @@
       "fieldtype": "Check",
       "label": "Enable Scope Context",
       "description": "Enable user scope context feature (Company/Branch/Project/Department filtering and form defaults)"
+    },
+    {
+      "fieldname": "option_b_section",
+      "fieldtype": "Section Break",
+      "label": "Option B — Report Access Bypass",
+      "depends_on": "enable_scope_context"
+    },
+    {
+      "default": "1",
+      "fieldname": "enable_option_b_report_access_bypass",
+      "fieldtype": "Check",
+      "label": "Enable Option B Report Access Bypass",
+      "depends_on": "enable_scope_context",
+      "description": "Allow scoped restricted users to access allowlisted financial reports without explicit report permissions. When disabled, restricted users get 403 on reports they lack permission for (Option A+ filter rewriting still applies)."
     },
     {
       "fieldname": "scope_dimensions_section",
@@ -149,6 +165,18 @@
       "label": "Enable Variation Orders"
     },
     {
+      "fieldname": "vfc_debug_logging_section",
+      "fieldtype": "Section Break",
+      "label": "VFC Debug Logging"
+    },
+    {
+      "default": "0",
+      "description": "When enabled, VFC (Form Layout Engine) emits diagnostic console.log output. Use ?vfc_debug=1 URL param for one-off debugging without changing this setting.",
+      "fieldname": "enable_vfc_debug_logging",
+      "fieldtype": "Check",
+      "label": "Enable VFC Debug Logging"
+    },
+    {
       "description": "Employee designations whose Timesheet rows require BOQ attribution as direct labor.",
       "fieldname": "direct_labor_designations",
       "fieldtype": "Table",
@@ -176,18 +204,6 @@
       "fieldtype": "HTML",
       "label": "Scope Hierarchy",
       "options": "<p class=\"text-muted\">Loading scope hierarchy...</p>"
-    },
-    {
-      "fieldname": "vfc_debug_logging_section",
-      "fieldtype": "Section Break",
-      "label": "VFC Debug Logging"
-    },
-    {
-      "default": "0",
-      "description": "When enabled, VFC (Form Layout Engine) emits diagnostic console.log output. Use ?vfc_debug=1 URL param for one-off debugging without changing this setting.",
-      "fieldname": "enable_vfc_debug_logging",
-      "fieldtype": "Check",
-      "label": "Enable VFC Debug Logging"
     }
   ],
   "index_web_pages_for_search": 1,
