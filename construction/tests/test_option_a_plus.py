@@ -826,6 +826,602 @@ class TestFinanceRoleBypass(unittest.TestCase):
         self.assertFalse(_has_unrestricted_report_role(user))
 
 
+# ─────────────────────────────────────────────────────────────────────
+# Option B — Report access gate (Report.is_permitted + get_report_doc +
+# has_permission + get_role_permissions + get_permitted_fields)
+# ─────────────────────────────────────────────────────────────────────
+
+
+class TestOptionBReportAccessGate(unittest.TestCase):
+    """
+    Verify the Option B report-access-gate bypass.
+
+    The patch is gated on a STRUCTURED context
+    (`frappe.flags.scope_report_bypass` is a dict with
+    `report_name`, `user`) validated by `_bypass_should_apply`. The
+    patch must:
+    - Allow `Report.is_permitted()` to return True for allowlisted
+      reports when the user has an active scope context.
+    - Allow `get_report_doc()` to skip both 403 checks for allowlisted
+      reports when the user has an active scope context.
+    - Allow `frappe.has_permission` to return True for `report`,
+      `select`, and `read` ptypes ONLY when the structured context
+      is set AND the ptype is in the small allowlist.
+    - Allow `frappe.permissions.get_role_permissions` to return
+      permissive perms (for the allowlisted ptypes only) under the
+      same condition.
+    - Allow `frappe.model.get_permitted_fields` to return all valid
+      columns under the same condition.
+    - NOT bypass for:
+        * non-allowlisted reports,
+        * users without a scope context,
+        * requests where the structured context is missing/empty,
+        * requests where the user in the context differs from the
+          session user (cross-user leak guard),
+        * ptypes other than the small allowlist (report, select, read).
+
+    The bypass is REPORT-scoped, not doctype-scoped: the report's
+    SQL builder may query multiple secondary doctypes, and the
+    data is constrained by the L1+L2 wrappers. The bypass only
+    opens the perm gate for the report's own queries.
+    """
+
+    def setUp(self):
+        _enable_scope()
+        _ensure_test_user()
+        # Clean state.
+        frappe.db.delete("User Scope Context", {"user": "test_user2@example.com"})
+        for key in ("project", "department", "cost_center", "company"):
+            frappe.defaults.clear_user_default(key, "test_user2@example.com")
+        frappe.db.commit()
+        frappe.clear_cache(user="test_user2@example.com")
+        # Make sure apply_report_monkeypatch has been run.
+        from construction.overrides import scope_report
+        if not scope_report._ORIGINAL_RUN_SIG:
+            scope_report.apply_report_monkeypatch()
+        # Make sure no stale flag survives between tests.
+        from construction.overrides import scope_report
+        scope_report.clear_bypass_context()
+
+    def tearDown(self):
+        _disable_scope()
+        frappe.db.delete("User Scope Context", {"user": "test_user2@example.com"})
+        for key in ("project", "department", "cost_center", "company"):
+            frappe.defaults.clear_user_default(key, "test_user2@example.com")
+        frappe.db.commit()
+        frappe.clear_cache(user="test_user2@example.com")
+        # Always clear the bypass context, even on test failure.
+        from construction.overrides import scope_report
+        scope_report.clear_bypass_context()
+
+    def _set_scope(self):
+        frappe.set_user("test_user2@example.com")
+        try:
+            set_scope_context(
+                company="Elrefae",
+                cost_center=_COST_CENTER,
+                project=None,
+                department=None,
+                source="test_option_b",
+            )
+            frappe.db.commit()
+            frappe.clear_cache(user="test_user2@example.com")
+        finally:
+            frappe.set_user("Administrator")
+
+    def _set_bypass_context(self, scope_report, report_name="General Ledger", user="test_user2@example.com"):
+        """Set a valid structured bypass context for the test user."""
+        scope_report.frappe.flags.scope_report_bypass = {
+            "report_name": report_name,
+            "user": user,
+        }
+
+    def test_user_has_active_scope_context_returns_true_with_scope(self):
+        from construction.overrides.scope_report import _user_has_active_scope_context
+
+        self._set_scope()
+        result = _user_has_active_scope_context("test_user2@example.com")
+        self.assertTrue(result)
+
+    def test_user_has_active_scope_context_returns_false_without_scope(self):
+        from construction.overrides.scope_report import _user_has_active_scope_context
+
+        # No scope set.
+        result = _user_has_active_scope_context("test_user2@example.com")
+        self.assertFalse(result)
+
+    def test_user_has_active_scope_context_returns_false_for_admin(self):
+        from construction.overrides.scope_report import _user_has_active_scope_context
+
+        # Administrator is always bypassed.
+        result = _user_has_active_scope_context("Administrator")
+        self.assertFalse(result)
+
+    def test_user_has_active_scope_context_returns_false_when_flag_off(self):
+        from construction.overrides.scope_report import _user_has_active_scope_context
+
+        self._set_scope()
+        _disable_scope()
+        try:
+            result = _user_has_active_scope_context("test_user2@example.com")
+            self.assertFalse(result, "Should be False when enable_scope_context is off")
+        finally:
+            _enable_scope()
+
+    def test_report_is_permitted_bypassed_for_allowlisted_with_scope(self):
+        from frappe.core.doctype.report.report import Report
+
+        from construction.overrides import scope_report
+
+        self._set_scope()
+        # Check that is_permitted on a General Ledger doc returns True
+        # for the scoped user (without them having any role on it).
+        doc = frappe.get_doc("Report", "General Ledger")
+        frappe.set_user("test_user2@example.com")
+        try:
+            self.assertTrue(doc.is_permitted())
+        finally:
+            frappe.set_user("Administrator")
+
+    def test_report_is_permitted_not_bypassed_without_scope(self):
+        from frappe.core.doctype.report.report import Report
+
+        # No scope.
+        doc = frappe.get_doc("Report", "General Ledger")
+        frappe.set_user("test_user2@example.com")
+        try:
+            # The report has Has Role rows; site.engineer doesn't match.
+            self.assertFalse(doc.is_permitted())
+        finally:
+            frappe.set_user("Administrator")
+
+    def test_report_is_permitted_not_bypassed_for_non_allowlisted(self):
+        from frappe.core.doctype.report.report import Report
+
+        self._set_scope()
+        # Find a non-allowlisted report. Use Sales Analytics if it
+        # exists; otherwise create a dummy check.
+        if frappe.db.exists("Report", "Sales Analytics"):
+            doc = frappe.get_doc("Report", "Sales Analytics")
+            frappe.set_user("test_user2@example.com")
+            try:
+                # Even with scope, Sales Analytics (not in allowlist) must
+                # not be bypassed.
+                self.assertFalse(doc.is_permitted())
+            finally:
+                frappe.set_user("Administrator")
+
+    def test_get_report_doc_bypassed_for_allowlisted_with_scope(self):
+        from frappe.desk.query_report import get_report_doc
+
+        self._set_scope()
+        # Should not raise.
+        frappe.set_user("test_user2@example.com")
+        try:
+            doc = get_report_doc("General Ledger")
+            self.assertEqual(doc.name, "General Ledger")
+        finally:
+            frappe.set_user("Administrator")
+
+    def test_get_report_doc_not_bypassed_without_scope(self):
+        import frappe.exceptions
+        from frappe.desk.query_report import get_report_doc
+
+        # No scope.
+        frappe.set_user("test_user2@example.com")
+        try:
+            with self.assertRaises(frappe.exceptions.PermissionError):
+                get_report_doc("General Ledger")
+        finally:
+            frappe.set_user("Administrator")
+
+    def test_get_report_doc_not_bypassed_for_non_allowlisted_without_scope(self):
+        import frappe.exceptions
+        from frappe.desk.query_report import get_report_doc
+
+        self._set_scope()
+        # Sales Analytics (if exists) is not in the allowlist, so
+        # the bypass should NOT fire even with scope.
+        if frappe.db.exists("Report", "Sales Analytics"):
+            frappe.set_user("test_user2@example.com")
+            try:
+                with self.assertRaises(frappe.exceptions.PermissionError):
+                    get_report_doc("Sales Analytics")
+            finally:
+                frappe.set_user("Administrator")
+
+    def test_has_permission_bypassed_for_report_perm(self):
+        from construction.overrides import scope_report
+
+        self._set_scope()
+        # With scope + structured bypass context for GL Entry,
+        # `report` perm must be granted.
+        self._set_bypass_context(scope_report)
+        try:
+            frappe.set_user("test_user2@example.com")
+            try:
+                result = scope_report.frappe.has_permission(
+                    "GL Entry", "report"
+                )
+                self.assertTrue(result, "report perm should be granted with scope")
+            finally:
+                frappe.set_user("Administrator")
+        finally:
+            scope_report.clear_bypass_context()
+
+    def test_has_permission_bypassed_for_select_perm(self):
+        from construction.overrides import scope_report
+
+        self._set_scope()
+        self._set_bypass_context(scope_report)
+        try:
+            frappe.set_user("test_user2@example.com")
+            try:
+                result = scope_report.frappe.has_permission(
+                    "GL Entry", "select"
+                )
+                self.assertTrue(result, "select perm should be granted with scope")
+            finally:
+                frappe.set_user("Administrator")
+        finally:
+            scope_report.clear_bypass_context()
+
+    def test_has_permission_bypassed_for_read_perm(self):
+        from construction.overrides import scope_report
+
+        self._set_scope()
+        self._set_bypass_context(scope_report)
+        try:
+            frappe.set_user("test_user2@example.com")
+            try:
+                result = scope_report.frappe.has_permission(
+                    "GL Entry", "read"
+                )
+                self.assertTrue(result, "read perm should be granted with scope")
+            finally:
+                frappe.set_user("Administrator")
+        finally:
+            scope_report.clear_bypass_context()
+
+    def test_has_permission_not_bypassed_without_flag(self):
+        from construction.overrides import scope_report
+
+        self._set_scope()
+        # No structured context set. The original check should run.
+        result = scope_report.frappe.has_permission(
+            "GL Entry", "select", user="test_user2@example.com"
+        )
+        self.assertFalse(result, "select perm should be denied without flag")
+
+    def test_has_permission_bypassed_for_secondary_doctype_select(self):
+        """The bypass is report-scoped: the report's SQL builder
+        may query secondary doctypes (e.g. AP queries Purchase
+        Invoice, GL Entry, Journal Entry). For SELECT/READ ptypes,
+        the bypass MUST apply to those secondary doctypes. The
+        data is constrained by the L1+L2 wrappers."""
+        from construction.overrides import scope_report
+
+        self._set_scope()
+        self._set_bypass_context(scope_report)
+        try:
+            frappe.set_user("test_user2@example.com")
+            try:
+                # SELECT and READ on a secondary doctype must be
+                # granted under the report-scoped bypass.
+                for ptype in ("select", "read"):
+                    result = scope_report.frappe.has_permission(
+                        "Journal Entry", ptype
+                    )
+                    self.assertTrue(
+                        result,
+                        f"Journal Entry.{ptype} must be granted by report-scoped bypass",
+                    )
+            finally:
+                frappe.set_user("Administrator")
+        finally:
+            scope_report.clear_bypass_context()
+
+    def test_has_permission_not_bypassed_for_unrelated_ptype_on_secondary_doctype(self):
+        """Even for secondary doctypes, write/delete/create etc.
+        must NOT be granted by the bypass. Only the small
+        allowlist of ptypes (report, select, read) is allowed."""
+        from construction.overrides import scope_report
+
+        self._set_scope()
+        self._set_bypass_context(scope_report)
+        try:
+            frappe.set_user("test_user2@example.com")
+            try:
+                for ptype in ("write", "delete", "create", "submit", "cancel", "amend"):
+                    result = scope_report.frappe.has_permission(
+                        "Journal Entry", ptype
+                    )
+                    self.assertFalse(
+                        result,
+                        f"Journal Entry.{ptype} must NOT be granted by bypass",
+                    )
+            finally:
+                frappe.set_user("Administrator")
+        finally:
+            scope_report.clear_bypass_context()
+
+    def test_has_permission_not_bypassed_for_disallowed_ptype(self):
+        """P0 narrowing: only the small allowlist of ptypes
+        (report, select, read) may be granted. Other ptypes
+        (write, delete, create, submit) must be denied."""
+        from construction.overrides import scope_report
+
+        self._set_scope()
+        self._set_bypass_context(scope_report)
+        try:
+            frappe.set_user("test_user2@example.com")
+            try:
+                # Even for the report's own ref_doctype, write/delete
+                # must be denied. The cache from a previous
+                # bypass-ON call must NOT leak into a non-bypass
+                # call.
+                for ptype in ("write", "delete", "create", "submit", "cancel", "amend"):
+                    result = scope_report.frappe.has_permission(
+                        "GL Entry", ptype
+                    )
+                    self.assertFalse(
+                        result,
+                        f"GL Entry.{ptype} must NOT be granted by bypass",
+                    )
+            finally:
+                frappe.set_user("Administrator")
+        finally:
+            scope_report.clear_bypass_context()
+
+    def test_has_permission_not_bypassed_for_cross_user_leak(self):
+        """P0 narrowing: the structured context's user must match
+        the session user. A scoped user A cannot grant perms for
+        scoped user B's request by manipulating the flag."""
+        from construction.overrides import scope_report
+
+        self._set_scope()
+        # Set the flag for a DIFFERENT user.
+        scope_report.frappe.flags.scope_report_bypass = {
+            "report_name": "General Ledger",
+            "user": "other_user@example.com",
+        }
+        try:
+            frappe.set_user("test_user2@example.com")
+            try:
+                result = scope_report.frappe.has_permission(
+                    "GL Entry", "select"
+                )
+                self.assertFalse(
+                    result,
+                    "Cross-user flag must not grant perm to a different session user",
+                )
+            finally:
+                frappe.set_user("Administrator")
+        finally:
+            scope_report.clear_bypass_context()
+
+    def test_has_permission_not_bypassed_with_bool_flag(self):
+        """P0 narrowing: a boolean True (the old API) must NOT
+        grant perm — the new gate requires a structured dict."""
+        from construction.overrides import scope_report
+
+        self._set_scope()
+        # Set the old-style boolean flag. Must NOT grant perm.
+        scope_report.frappe.flags.scope_report_bypass = True
+        try:
+            frappe.set_user("test_user2@example.com")
+            try:
+                result = scope_report.frappe.has_permission(
+                    "GL Entry", "select"
+                )
+                self.assertFalse(
+                    result,
+                    "Boolean flag must not grant perm — only structured dict does",
+                )
+            finally:
+                frappe.set_user("Administrator")
+        finally:
+            scope_report.clear_bypass_context()
+
+    def test_has_permission_not_bypassed_when_scope_cleared(self):
+        """P0 narrowing: if the scope context is cleared after
+        the flag is set, the bypass must be refused."""
+        from construction.overrides import scope_report
+
+        self._set_scope()
+        self._set_bypass_context(scope_report)
+        try:
+            # Clear the scope doc. The structured-context validator
+            # checks `_user_has_active_scope_context(user)` on every
+            # call, so the bypass must refuse.
+            frappe.db.delete("User Scope Context", {"user": "test_user2@example.com"})
+            frappe.db.commit()
+            frappe.clear_cache(user="test_user2@example.com")
+            frappe.set_user("test_user2@example.com")
+            try:
+                result = scope_report.frappe.has_permission(
+                    "GL Entry", "select"
+                )
+                self.assertFalse(
+                    result,
+                    "Bypass must refuse when scope context is cleared",
+                )
+            finally:
+                frappe.set_user("Administrator")
+        finally:
+            # Restore the scope so tearDown can clean up cleanly.
+            self._set_scope()
+            scope_report.clear_bypass_context()
+
+    def test_has_permission_not_bypassed_for_non_allowlisted_report(self):
+        """P0 narrowing: a non-allowlisted report in the flag must
+        not grant perm. This catches an over-broad flag setter."""
+        from construction.overrides import scope_report
+
+        self._set_scope()
+        scope_report.frappe.flags.scope_report_bypass = {
+            "report_name": "Sales Analytics",  # NOT in allowlist
+            "user": "test_user2@example.com",
+        }
+        try:
+            frappe.set_user("test_user2@example.com")
+            try:
+                result = scope_report.frappe.has_permission(
+                    "Sales Order", "select"
+                )
+                self.assertFalse(
+                    result,
+                    "Non-allowlisted report must not grant perm",
+                )
+            finally:
+                frappe.set_user("Administrator")
+        finally:
+            scope_report.clear_bypass_context()
+
+    def test_get_role_permissions_bypassed_with_scope(self):
+        from construction.overrides import scope_report
+
+        self._set_scope()
+        self._set_bypass_context(scope_report)
+        try:
+            # The cross-user check requires session.user == flag.user.
+            frappe.set_user("test_user2@example.com")
+            try:
+                meta = frappe.get_meta("GL Entry")
+                result = scope_report.frappe.permissions.get_role_permissions(
+                    meta, user="test_user2@example.com"
+                )
+                # Should be permissive — read should be truthy.
+                self.assertTrue(
+                    result.get("read") or result.get("select"),
+                    "get_role_permissions should be permissive with scope",
+                )
+            finally:
+                frappe.set_user("Administrator")
+        finally:
+            scope_report.clear_bypass_context()
+
+    def test_get_role_permissions_overrides_only_allowlisted_ptypes(self):
+        """P0 narrowing: the bypass overrides ONLY the allowlisted
+        ptypes (report, select, read) in the returned perms dict.
+        write/delete/create remain 0 even with the bypass active."""
+        from construction.overrides import scope_report
+
+        self._set_scope()
+        self._set_bypass_context(scope_report)
+        try:
+            frappe.set_user("test_user2@example.com")
+            try:
+                meta = frappe.get_meta("Project")
+                result = scope_report.frappe.permissions.get_role_permissions(
+                    meta, user="test_user2@example.com"
+                )
+                # report, select, read should be 1 (bypass).
+                for ptype in ("report", "select", "read"):
+                    self.assertEqual(
+                        result.get(ptype),
+                        1,
+                        f"Project.{ptype} must be 1 (bypass active)",
+                    )
+                # write, delete, create should be 0 (not in
+                # allowlist, original perms are 0 for test_user2).
+                for ptype in ("write", "delete", "create", "submit", "cancel", "amend"):
+                    self.assertNotEqual(
+                        result.get(ptype),
+                        1,
+                        f"Project.{ptype} must NOT be 1 (bypass active)",
+                    )
+            finally:
+                frappe.set_user("Administrator")
+        finally:
+            scope_report.clear_bypass_context()
+
+    def test_get_permitted_fields_bypassed_with_scope(self):
+        from construction.overrides import scope_report
+
+        self._set_scope()
+        self._set_bypass_context(scope_report)
+        try:
+            frappe.set_user("test_user2@example.com")
+            try:
+                result = scope_report.frappe.model.get_permitted_fields(
+                    "GL Entry", user="test_user2@example.com"
+                )
+                # Should include all valid columns (including posting_date).
+                self.assertIn("posting_date", result)
+            finally:
+                frappe.set_user("Administrator")
+        finally:
+            scope_report.clear_bypass_context()
+
+    def test_get_permitted_fields_bypassed_for_secondary_doctype(self):
+        """The bypass is report-scoped: the report's SQL builder
+        may query secondary doctypes, so get_permitted_fields
+        must return all columns for those doctypes."""
+        from construction.overrides import scope_report
+
+        self._set_scope()
+        self._set_bypass_context(scope_report)
+        try:
+            frappe.set_user("test_user2@example.com")
+            try:
+                result = scope_report.frappe.model.get_permitted_fields(
+                    "Project", user="test_user2@example.com"
+                )
+                # All valid Project columns should be in the result.
+                all_cols = set(frappe.get_meta("Project").get_valid_columns())
+                self.assertTrue(
+                    all_cols.issubset(set(result)),
+                    "get_permitted_fields must return all columns for a secondary doctype under report-scoped bypass",
+                )
+            finally:
+                frappe.set_user("Administrator")
+        finally:
+            scope_report.clear_bypass_context()
+
+    def test_get_report_doc_does_not_set_bypass_flag(self):
+        """P0 regression: `get_report_doc()` must NOT set
+        `frappe.flags.scope_report_bypass`. Only `_scope_aware_run`
+        (which is wrapped in `try/finally`) is allowed to set the
+        flag. Otherwise the `get_script` path would leave the
+        flag active for the rest of the request, allowing
+        `has_permission("Project", "read")` and similar to be
+        wrongly granted via a stale flag."""
+        from frappe.desk.query_report import get_report_doc
+
+        from construction.overrides import scope_report
+
+        self._set_scope()
+        # Make sure no stale flag survives setUp.
+        scope_report.clear_bypass_context()
+        try:
+            frappe.set_user("test_user2@example.com")
+            try:
+                # Call get_report_doc as the restricted user.
+                # This is the entry point for `get_script`.
+                doc = get_report_doc("General Ledger")
+                self.assertEqual(doc.name, "General Ledger")
+                # CRITICAL: the bypass flag MUST NOT be set.
+                self.assertFalse(
+                    hasattr(frappe.flags, "scope_report_bypass")
+                    and getattr(frappe.flags, "scope_report_bypass", None) is not None,
+                    "get_report_doc must NOT set scope_report_bypass",
+                )
+                # And the very next perm check on an unrelated
+                # doctype must NOT be granted via a stale flag.
+                result = scope_report.frappe.has_permission(
+                    "Project", "read"
+                )
+                self.assertFalse(
+                    result,
+                    "Project.read must NOT be granted after get_report_doc (no stale flag)",
+                )
+            finally:
+                frappe.set_user("Administrator")
+        finally:
+            scope_report.clear_bypass_context()
+
+
 if __name__ == "__main__":
     import unittest as _unittest
     _unittest.main()
