@@ -83,6 +83,7 @@ doctype_js = {
     "BOQ Item": "construction/construction/doctype/boq_item/boq_item.js",
     "BOQ Item Stage": "construction/construction/doctype/boq_item_stage/boq_item_stage.js",
     "Construction Settings": "construction/construction/doctype/construction_settings/construction_settings.js",
+    "Scope Report Access Log": "construction/construction/doctype/scope_report_access_log/scope_report_access_log.js",
     "User Desk Theme": "construction/construction/doctype/user_desk_theme/user_desk_theme.js",
     "Variation Order": "construction/construction/doctype/variation_order/variation_order.js",
 }
