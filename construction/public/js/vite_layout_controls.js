@@ -182,7 +182,7 @@
 		try {
 			frappe.model.user_settings.save(doctype, key, value);
 		} catch (e) {
-			console.warn("[VFC] frappe.model.user_settings.save failed:", e);
+			vfcDebugLog("warn", "[VFC] frappe.model.user_settings.save failed:", e);
 		}
 	}
 
@@ -199,7 +199,7 @@
        Called on every form refresh. Idempotent.
     ───────────────────────────────────────────────────────── */
 		attach(frm) {
-			console.log("[VFC] attach() called for:", frm.doctype);
+			vfcDebugLog("log", "[VFC] attach() called for:", frm.doctype);
 			// Idempotency: only inject once per frm instance
 			if (frm._vfc_attached) {
 				// On subsequent refreshes, just re-apply saved state
@@ -535,7 +535,7 @@
 			// Unknown-field guard: warn once per unknown field, then skip
 			hiddenFields.forEach((fn) => {
 				if (!knownFieldnames.has(fn)) {
-					console.warn(
+					vfcDebugLog("warn", 
 						`[VFC] _renderFieldList: unknown fieldname "${fn}" on ${frm.doctype} — skipping`
 					);
 				}
@@ -659,7 +659,7 @@
 			if (preset.fields) {
 				preset.fields.forEach((fn) => {
 					if (!fieldnames.has(fn)) {
-						console.warn(
+						vfcDebugLog("warn", 
 							`[VFC] Preset '${key}' references unknown field '${fn}' on ${doctype} — skipping`
 						);
 					}
@@ -828,7 +828,7 @@
 			const hiddenFields = settings.vfc_hidden_fields || [];
 			hiddenFields.forEach((fn) => {
 				if (!knownFieldnames.has(fn)) {
-					console.warn(
+					vfcDebugLog("warn", 
 						`[VFC] _restoreState: unknown fieldname "${fn}" on ${dt} — skipping`
 					);
 					return;
@@ -943,7 +943,7 @@
 					? await window.VFCLayoutEngine._fetchProfile(frm.doctype)
 					: null;
 			} catch (err) {
-				console.warn("[VFC] Error fetching profile:", err);
+				vfcDebugLog("warn", "[VFC] Error fetching profile:", err);
 			}
 
 			const nativeProfile = this._buildNativeSectionsProfile(frm);
@@ -1680,7 +1680,7 @@
 				try {
 					VFC.attach(frm);
 				} catch (err) {
-					console.warn("[VFC] attach error:", err);
+					vfcDebugLog("warn", "[VFC] attach error:", err);
 				}
 			}, 150);
 		},

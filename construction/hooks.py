@@ -139,6 +139,7 @@ app_include_js = [
     # Scope Context — form default population for new documents
     "/assets/construction/js/scope_context_form_defaults.js?v=3",
     # Scope Context — report filter lock and dynamic sync
+    "/assets/construction/js/vfc_config.js?v=1",
     "/assets/construction/js/scope_context_report_filters.js?v=4",
     # Sidebar accordion — only one section stays expanded at a time
     "/assets/construction/js/sidebar_accordion.js?v=1",
@@ -151,10 +152,10 @@ app_include_js = [
     # Must load last: native Frappe affordances remain available after theme styling
     "/assets/construction/js/native_frappe_controls_compat.js?v=9",
     # ─── Vite UI Phase 2: Form Config — auto-attaches to every form. MUST load LAST ───
-    "/assets/construction/js/vite_layout_controls.js?v=1.17",
+    "/assets/construction/js/vite_layout_controls.js?v=1.18",
     # Phase 2: Generic Layout Engine — re-parents field wrappers per Form Layout Profile.
     # Must load AFTER vite_layout_controls.js (engine fires at 250ms, controls at 150ms).
-    "/assets/construction/js/vfc_layout_engine.js?v=1.41",
+    "/assets/construction/js/vfc_layout_engine.js?v=1.42",
 ]
 
 

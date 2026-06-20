@@ -45,6 +45,10 @@ def extend_bootinfo(bootinfo):
         if row.designation and row.boq_requirement == "Mandatory"
     ]
 
+    bootinfo["vfc_debug_enabled"] = bool(
+        getattr(settings, "enable_vfc_debug_logging", False)
+    )
+
     bootinfo["scope_context_enabled_dimensions"] = {
         "company": bool(settings.enable_scope_company if scope_enabled else False),
         "cost_center": bool(settings.enable_scope_cost_center if scope_enabled else False),

@@ -23,6 +23,8 @@
     "enable_boq_scope_registry",
     "enable_bilingual_boq_print",
     "enable_variation_orders",
+    "vfc_debug_logging_section",
+    "enable_vfc_debug_logging",
     "direct_labor_designations",
     "section_break_2",
     "scope_context_settings_help",
@@ -174,6 +176,18 @@
       "fieldtype": "HTML",
       "label": "Scope Hierarchy",
       "options": "<p class=\"text-muted\">Loading scope hierarchy...</p>"
+    },
+    {
+      "fieldname": "vfc_debug_logging_section",
+      "fieldtype": "Section Break",
+      "label": "VFC Debug Logging"
+    },
+    {
+      "default": "0",
+      "description": "When enabled, VFC (Form Layout Engine) emits diagnostic console.log output. Use ?vfc_debug=1 URL param for one-off debugging without changing this setting.",
+      "fieldname": "enable_vfc_debug_logging",
+      "fieldtype": "Check",
+      "label": "Enable VFC Debug Logging"
     }
   ],
   "index_web_pages_for_search": 1,

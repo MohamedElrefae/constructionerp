@@ -99,7 +99,7 @@
        Fetches the active profile (cached per doctype) then renders.
     ───────────────────────────────────────────────────────────── */
 		async attach(frm) {
-			console.log(`[LE] attach() triggered for: ${frm.doctype}`);
+			vfcDebugLog("log", `[LE] attach() triggered for: ${frm.doctype}`);
 			const dt = frm.doctype;
 
 			const layoutRoot = this._getLayoutRoot(frm);
@@ -157,7 +157,7 @@
 			}
 
 			const key = frm.doctype + "__" + frm.docname;
-			console.log(`[LE] Processing key: ${key}`);
+			vfcDebugLog("log", `[LE] Processing key: ${key}`);
 			if (!this._retryTimers) this._retryTimers = new Map();
 			if (!this._retryCounts) this._retryCounts = new Map();
 			if (!this._attachTokens) this._attachTokens = new Map();
@@ -172,12 +172,12 @@
 
 			try {
 				// Fetch profile (cached after first call)
-				console.log(`[LE] Fetching profile for ${dt}...`);
+				vfcDebugLog("log", `[LE] Fetching profile for ${dt}...`);
 				const profile = await this._fetchProfile(dt);
-				console.log(`[LE] Profile fetched for ${dt}:`, profile);
+				vfcDebugLog("log", `[LE] Profile fetched for ${dt}:`, profile);
 
 				if (this._attachTokens.get(key) !== token) {
-					console.log(`[LE] Stale attach skipped for ${key}.`);
+					vfcDebugLog("log", `[LE] Stale attach skipped for ${key}.`);
 					return;
 				}
 
@@ -190,7 +190,7 @@
 						if (denClass) {
 							const density = parseInt(denClass.split("-").pop(), 10);
 							if (density !== 2 && !hasTabs) {
-								console.log(
+								vfcDebugLog("log", 
 									`[LE] No profile, non-default density (${density}) — density rendering.`
 								);
 								this.renderWithDensity(frm, density);
@@ -199,7 +199,7 @@
 						}
 					}
 
-					console.log(`[LE] No profile found for ${dt}. Aborting VFC layout.`);
+					vfcDebugLog("log", `[LE] No profile found for ${dt}. Aborting VFC layout.`);
 					return;
 				}
 
@@ -207,7 +207,7 @@
 					const retries = this._retryCounts.get(key) || 0;
 					if (retries < 20) {
 						this._retryCounts.set(key, retries + 1);
-						console.log(
+						vfcDebugLog("log", 
 							`[LE] layoutRoot not found for ${key}. Scheduling retry ${
 								retries + 1
 							}/20 in 250ms...`
@@ -217,7 +217,7 @@
 						}, 250);
 						this._retryTimers.set(key, timer);
 					} else {
-						console.warn(
+						vfcDebugLog("warn", 
 							`[LE] Retry limit reached. Could not find layoutRoot for ${key}.`
 						);
 						this._retryCounts.delete(key);
@@ -228,7 +228,7 @@
 				// Re-inject on every refresh (field wrappers may be recreated)
 				this._render(frm, profile, layoutRoot);
 			} catch (err) {
-				console.error(`[LE] attach error for ${dt}:`, err);
+				vfcDebugLog("error", `[LE] attach error for ${dt}:`, err);
 			}
 		},
 
@@ -338,7 +338,7 @@
 
 					// Unknown field guard
 					if (!knownFieldnames.has(fn)) {
-						console.warn(
+						vfcDebugLog("warn", 
 							`[LE] Profile '${profile.profile_name}': unknown fieldname '${fn}' on ${dt} — skipping`
 						);
 						return;
@@ -349,7 +349,7 @@
 
 					const fieldObj = frm.fields_dict[fn];
 					if (!fieldObj) {
-						console.log(`[LE] FieldObj not found for ${fn}`);
+						vfcDebugLog("log", `[LE] FieldObj not found for ${fn}`);
 						return;
 					}
 
@@ -361,7 +361,7 @@
 
 					// Handle runtime visibility (user settings, permissions, depends_on)
 					if (fieldObj.df && (fieldObj.df.hidden || fieldObj.df.invisible)) {
-						console.log(
+						vfcDebugLog("log", 
 							`[LE] Skipping hidden field ${fn} (df.hidden=${fieldObj.df.hidden}, df.invisible=${fieldObj.df.invisible})`
 						);
 						return;
@@ -369,7 +369,7 @@
 
 					const wrapper = fieldObj.wrapper;
 					if (!wrapper) {
-						console.log(`[LE] Wrapper missing for ${fn}`);
+						vfcDebugLog("log", `[LE] Wrapper missing for ${fn}`);
 						return;
 					}
 
@@ -570,24 +570,24 @@
 			const visibleNativeCount = this._countVisibleNativeLayoutShells(layoutRoot);
 			const hiddenEmptySectionCount = this._hideEmptyCustomSections(layoutRoot);
 			const sectionSummary = this._getSectionSummary(layoutRoot);
-			console.log(`[LE] Verification ${phase} complete. missingFields=${missingFields}`);
+			vfcDebugLog("log", `[LE] Verification ${phase} complete. missingFields=${missingFields}`);
 			if (hiddenNativeCount || visibleNativeCount) {
-				console.log(
+				vfcDebugLog("log", 
 					`[LE] Verification ${phase}: hiddenNativeShells=${hiddenNativeCount}, visibleNativeShells=${visibleNativeCount}`
 				);
 			}
 			if (hiddenEmptySectionCount) {
-				console.log(
+				vfcDebugLog("log", 
 					`[LE] Verification ${phase}: hiddenEmptySections=${hiddenEmptySectionCount}`
 				);
 			}
-			console.log(`[LE] Verification ${phase}: sections=${sectionSummary}`);
+			vfcDebugLog("log", `[LE] Verification ${phase}: sections=${sectionSummary}`);
 
 			if (missingFields) {
 				const retries = this._retryCounts.get(key) || 0;
 				if (retries < 20) {
 					this._retryCounts.set(key, retries + 1);
-					console.log(
+					vfcDebugLog("log", 
 						`[LE] Missing field wrappers detected for ${key}. Scheduling retry ${
 							retries + 1
 						}/20 in 250ms...`
@@ -597,7 +597,7 @@
 					}, 250);
 					this._retryTimers.set(key, timer);
 				} else {
-					console.warn(
+					vfcDebugLog("warn", 
 						`[LE] Retry limit reached for ${key}. Some field wrappers could not be attached.`
 					);
 					this._retryCounts.delete(key);
@@ -611,7 +611,7 @@
 		_hasMissingFields(frm, state, phase) {
 			const layoutRoot = this._getLayoutRoot(frm);
 			if (!layoutRoot || !layoutRoot.isConnected) {
-				console.log(`[LE] Verification ${phase}: current layoutRoot missing or detached`);
+				vfcDebugLog("log", `[LE] Verification ${phase}: current layoutRoot missing or detached`);
 				return true;
 			}
 
@@ -624,17 +624,17 @@
 
 				const wrapper = fieldObj.wrapper;
 				if (!wrapper) {
-					console.log(`[LE] Verification ${phase}: Wrapper missing for ${fn}`);
+					vfcDebugLog("log", `[LE] Verification ${phase}: Wrapper missing for ${fn}`);
 					return true;
 				}
 
 				const nativeEl = wrapper instanceof jQuery ? wrapper[0] : wrapper;
 				if (!nativeEl) {
-					console.log(`[LE] Verification ${phase}: nativeEl is falsy for ${fn}`);
+					vfcDebugLog("log", `[LE] Verification ${phase}: nativeEl is falsy for ${fn}`);
 					return true;
 				}
 				if (!nativeEl.isConnected) {
-					console.log(
+					vfcDebugLog("log", 
 						`[LE] Verification ${phase}: nativeEl not connected to DOM for ${fn}`
 					);
 					return true;
@@ -642,7 +642,7 @@
 
 				const cell = nativeEl.parentNode;
 				if (!cell?.classList?.contains("vfc-le-cell")) {
-					console.log(
+					vfcDebugLog("log", 
 						`[LE] Verification ${phase}: nativeEl parent is NOT .vfc-le-cell for ${fn}`
 					);
 					return true;
@@ -650,14 +650,14 @@
 
 				const section = cell.closest(".vfc-le-section");
 				if (!section || !layoutRoot.contains(section)) {
-					console.log(
+					vfcDebugLog("log", 
 						`[LE] Verification ${phase}: ${fn} is not inside the current VFC section tree`
 					);
 					return true;
 				}
 
 				if (nativeEl.closest("[data-vfc-hidden='1']")) {
-					console.log(
+					vfcDebugLog("log", 
 						`[LE] Verification ${phase}: ${fn} is inside a hidden native Frappe container`
 					);
 					return true;
@@ -672,7 +672,7 @@
 					rect.height < 2 ||
 					rect.width < 2
 				) {
-					console.log(
+					vfcDebugLog("log", 
 						`[LE] Verification ${phase}: ${fn} is currently not painted. display=${
 							style.display
 						}, visibility=${style.visibility}, opacity=${
@@ -831,7 +831,7 @@
 					const initCollapsed = !!sec.collapsed_by_default;
 					// Always set the attribute explicitly so state is unambiguous
 					secEl.setAttribute("data-vfc-collapsed", initCollapsed ? "1" : "0");
-					console.log(
+					vfcDebugLog("log", 
 						`[LE] Section "${
 							sec.label || sec.id
 						}": collapsible=true, collapsed_by_default=${
@@ -1122,7 +1122,7 @@
 		renderWithDensity(frm, colCount) {
 			const layoutRoot = this._getLayoutRoot(frm);
 			if (!layoutRoot) {
-				console.warn("[LE] renderWithDensity: no layoutRoot");
+				vfcDebugLog("warn", "[LE] renderWithDensity: no layoutRoot");
 				return;
 			}
 
@@ -1132,10 +1132,10 @@
 			// Build a virtual profile from the current form meta fields
 			const profile = this._buildDensityProfile(frm, colCount);
 			if (!profile) {
-				console.warn("[LE] renderWithDensity: no profile built");
+				vfcDebugLog("warn", "[LE] renderWithDensity: no profile built");
 				return;
 			}
-			console.log(
+			vfcDebugLog("log", 
 				`[LE] renderWithDensity: colCount=${colCount}, profile sections=${profile.sections.length}`
 			);
 
@@ -1219,7 +1219,7 @@
 				if (hasVisibleField || sec.collapsible) {
 					layoutRoot.appendChild(sectionEl);
 					injectedContainers.push(sectionEl);
-					console.log(
+					vfcDebugLog("log", 
 						`[LE] renderWithDensity: section "${sec.label || sec.fieldname}" → ${
 							fields.length
 						} fields`
@@ -1227,7 +1227,7 @@
 				}
 			});
 
-			console.log(
+			vfcDebugLog("log", 
 				`[LE] renderWithDensity: rendered ${totalFieldsRendered} fields across ${injectedContainers.length} sections`
 			);
 			this._activeSections.set(frm.doctype + "__" + frm.docname, injectedContainers);
@@ -1319,7 +1319,7 @@
 				try {
 					LayoutEngine.attach(frm);
 				} catch (err) {
-					console.warn("[LE] attach error:", err);
+					vfcDebugLog("warn", "[LE] attach error:", err);
 				}
 			}, 250);
 		},
@@ -1328,7 +1328,7 @@
 				try {
 					LayoutEngine.attach(frm);
 				} catch (err) {
-					console.warn("[LE] attach error:", err);
+					vfcDebugLog("warn", "[LE] attach error:", err);
 				}
 			}, 50);
 		},
@@ -1338,5 +1338,5 @@
      EXPOSE globally for vfc_sections_tab.js and console debugging
   ═══════════════════════════════════════════════════════════════════ */
 	window.VFCLayoutEngine = LayoutEngine;
-	console.log("[LE] vfc_layout_engine.js parsed and initialized successfully.");
+	vfcDebugLog("log", "[LE] vfc_layout_engine.js parsed and initialized successfully.");
 })();
