@@ -262,9 +262,14 @@ def _patch_report_access_gates() -> None:
       opens the perm gate for the report's own queries.
     - `Report.is_permitted` returns True only when the report is in
       the allowlist AND the calling user has an active scope.
-    - `get_report_doc` sets the structured context for the duration
-      of the call. The L2 wrapper / `query_report.run` clears it in
-      its own `finally`.
+    - `get_report_doc` does NOT set the structured context. It
+      simply returns the report doc for the allowlisted scoped
+      path, skipping the two original 403 checks. This is critical:
+      the `get_script` path calls `get_report_doc` and continues
+      in the same request WITHOUT going through `_scope_aware_run`,
+      so any flag set here would leak into the rest of the request.
+      The structured context is set ONLY inside `_scope_aware_run`
+      (the `run` call path), in `try/finally` that always clears it.
     - `has_permission` / `get_role_permissions` /
       `get_permitted_fields` only return permissive values when
       the structured context is present AND the ptype being checked
