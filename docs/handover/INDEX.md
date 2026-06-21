@@ -16,6 +16,7 @@ This directory consolidates handover documents, technical briefings, and manager
 | `SENIOR_ENGINEER_AUDIT_REPORT.md` | Senior engineer audit of scope context implementation and recommendations. | Active |
 | `TYPOGRAPHY_CURRENT_FONT_IMPLEMENTATION_REPORT.md` | Typography settings implementation report — current state of font system. | Active |
 | `VFC_PROJECT_TABS_DEBUG_REPORT.md` | Debug & fix plan for VFC Project Form Tabs — fixes applied and verified. | Active |
+| `MANAGER_DECISION_RECORD_2026-06-21_WP5_WP7.md` | Approval note for WP1-WP4/WP6/WP7 and explicit decisions for WP5 deferral and WP7 retention. | Active |
 | `CONSTRUCTION_ERP_AI_MEMORY_PLAN_v2.2.md` | AI memory architecture plan (repo-authoritative). Now superseded by `docs/ai/` references + MCP protocol in `AGENTS.md`. | Archive |
 | `AGENTS_HANDOFF.md` | Typography settings handoff from feat/edge-typography-fix-v16. Contents merged into `TYPOGRAPHY_CURRENT_FONT_IMPLEMENTATION_REPORT.md`. | Superseded |
 | `SESSION_MEMORY.md` (at repo root) | Living document — sprint state, session log, known issues. | Active |
