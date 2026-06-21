@@ -78,6 +78,7 @@ ALLOWLIST = {
 
 audit_logger = logging.getLogger("erpnext_mcp_audit")
 audit_logger.setLevel(logging.INFO)
+AUDIT_LOG.parent.mkdir(parents=True, exist_ok=True)
 handler = logging.FileHandler(AUDIT_LOG)
 handler.setFormatter(logging.Formatter("%(asctime)s | %(message)s"))
 audit_logger.addHandler(handler)
