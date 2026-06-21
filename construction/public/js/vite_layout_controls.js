@@ -170,6 +170,10 @@
 		localStorage.setItem(lsKey(doctype, "density"), String(n));
 	}
 
+	function resetDensity(doctype) {
+		localStorage.removeItem(lsKey(doctype, "density"));
+	}
+
 	function loadUserSettings(doctype) {
 		try {
 			return frappe.get_user_settings(doctype) || {};
@@ -184,6 +188,11 @@
 		} catch (e) {
 			vfcDebugLog("warn", "[VFC] frappe.model.user_settings.save failed:", e);
 		}
+	}
+
+	function resetUserSettings(doctype) {
+		saveUserSettings(doctype, "vfc_hidden_fields", []);
+		saveUserSettings(doctype, "vfc_preset", "Default");
 	}
 
 	function isTabbedForm(frm) {
@@ -751,6 +760,15 @@
 			return hiddenFields;
 		},
 
+		_restoreVfcHiddenFieldVisibility(frm, hiddenFields) {
+			(hiddenFields || []).forEach((fieldname) => {
+				const fieldObj = frm.fields_dict?.[fieldname];
+				const df = fieldObj?.df;
+				if (df?.hidden || df?.invisible || df?.hidden_due_to_dependency) return;
+				frm.toggle_display(fieldname, true);
+			});
+		},
+
 		/* ─────────────────────────────────────────────────────────
        _applyAndSave — main Apply & Save button handler
     ───────────────────────────────────────────────────────── */
@@ -819,41 +837,42 @@
 		},
 
 		/* ─────────────────────────────────────────────────────────
-        _revertToDefault — revert current user to default/native layout.
-        Deletes the user's personal for_user profile if one exists.
-        If no personal profile exists, just invalidates cache and
-        re-renders with the role/default match.
+        _revertToDefault — fully reset current user's VFC state.
+        Removes the personal for_user profile, density override, hidden
+        field list, and selected preset for the current DocType.
      ───────────────────────────────────────────────────────── */
 		async _revertToDefault(frm, dtId) {
 			const dt = frm.doctype;
 
 			frappe.confirm(
-				__("Revert to default layout? This removes your personal profile customizations."),
+				__("Revert to default/native layout? This resets your VFC density, hidden fields, preset, and personal layout for this form."),
 				async () => {
 					try {
+						const settings = loadUserSettings(dt);
+						const hiddenFields = settings.vfc_hidden_fields || [];
 						const resp = await frappe.call({
 							method: "construction.construction.api.layout_api.delete_my_personal_layout",
 							args: { doctype: dt },
 						});
 
 						const result = resp?.message;
-						if (result?.status === "deleted") {
-							frappe.show_alert({
-								message: __("Personal profile removed"),
-								indicator: "green",
-							});
-						} else {
-							frappe.show_alert({
-								message: __("No personal profile found for this doctype"),
-								indicator: "orange",
-							});
-						}
+						resetDensity(dt);
+						resetUserSettings(dt);
+						this._restoreVfcHiddenFieldVisibility(frm, hiddenFields);
+						this._renderDensityPreview(dtId, loadDensity(dt));
 
-						// Invalidate cache and re-render
 						if (window.VFCLayoutEngine) {
 							window.VFCLayoutEngine.invalidateCache?.(dt);
 							window.VFCLayoutEngine.attach?.(frm);
 						}
+
+						frappe.show_alert({
+							message:
+								result?.status === "deleted"
+									? __("VFC preferences reset and personal layout removed")
+									: __("VFC preferences reset"),
+							indicator: "green",
+						});
 
 						this._togglePanel(frm, false);
 					} catch (err) {
