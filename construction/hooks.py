@@ -117,7 +117,6 @@ app_include_js = [
     "/assets/construction/js/construction_export_menu.js",
     "/assets/construction/js/theme_loader_v24.js?v=2.5.2",
     "/assets/construction/js/typography_settings.js?v=21",
-    "/assets/construction/js/components/index.js?v=4.6",
     # Searchable Dropdown Module — base class (must load before overrides)
     "/assets/construction/js/searchable_dropdown/utils.js",
     "/assets/construction/js/searchable_dropdown/searchable_dropdown.js",
@@ -154,10 +153,10 @@ app_include_js = [
     # Must load last: native Frappe affordances remain available after theme styling
     "/assets/construction/js/native_frappe_controls_compat.js?v=9",
     # ─── Vite UI Phase 2: Form Config — auto-attaches to every form. MUST load LAST ───
-    "/assets/construction/js/vite_layout_controls.js?v=1.18",
+    "/assets/construction/js/vite_layout_controls.js?v=1.19",
     # Phase 2: Generic Layout Engine — re-parents field wrappers per Form Layout Profile.
     # Must load AFTER vite_layout_controls.js (engine fires at 250ms, controls at 150ms).
-    "/assets/construction/js/vfc_layout_engine.js?v=1.42",
+    "/assets/construction/js/vfc_layout_engine.js?v=1.43",
 ]
 
 
@@ -259,11 +258,6 @@ after_migrate = [
     "construction.install.setup_erpnext_standard_filters",
     "construction.install.seed_form_layout_profiles",
     "construction.insert_translations.execute",
-]
-
-# Custom migration patches — applied by bench migrate
-patches = [
-    "construction.patches.v6_7.add_for_user_to_form_layout_profile",
 ]
 
 # Translations

@@ -171,6 +171,36 @@ All assets in hooks.py use version query strings (`?v=X`) for cache busting with
 
 ---
 
+## ADR-008: VFC Primary Architecture — Database-Backed Overlay
+
+**Status:** Accepted  
+**Date:** 2026-06-21  
+**Deciders:** Mohamed Elrefae, Engineering Management
+
+### Context
+VFC Phase 1+2 shipped two overlapping layout approaches:
+1. **Database-backed overlay** — `Form Layout Profile` DocType + `vfc_layout_engine.js`
+2. **React/modern form path** — `components/index.js` + `modern_form_api.py`
+
+Continuing both creates maintenance burden, confuses feature development, and splits test coverage.
+
+### Decision
+1. **Primary architecture:** DB-backed overlay (`Form Layout Profile` + `vfc_layout_engine.js`). All new layout features target this path.
+2. **React path deprecated** as of 2026-06-21:
+   - `components/index.js?v=4.6` removed from `hooks.py` `app_include_js` (no longer globally loaded)
+   - All `modern_form_api.py` endpoints restricted to System Manager
+   - Source files retained in repo for reference; not deleted
+3. **Cache strategy:** 60-second client-side TTL on profile fetches (no backend realtime invalidation in this sprint)
+
+### Consequences
+- ✅ Single primary architecture for feature work
+- ✅ React source remains available for reference
+- ✅ No breaking changes for remote clients that depend on `modern_form_api.py` (they just need System Manager role)
+- ⚠️ Any existing UI that loaded React components via `components/index.js` will need to migrate
+- ⚠️ `modern_form_api.py` code will become stale without active use
+
+---
+
 ## Rejected Alternatives
 
 ### SASS/SCSS Compilation

@@ -55,10 +55,13 @@
 
 ### 3D. Form Layout Engine (VFC)
 - **Form Layout Profile** DocType: stores `sections_json` for each `reference_doctype`
-- `vfc_layout_engine.js` (847 lines): runtime field re-parenting into custom sections
-- `vite_layout_controls.js` (dynamic): drag/resize panel + Sections Editor tab
+- `vfc_layout_engine.js` (1,342 lines): runtime field re-parenting into custom sections
+- `vite_layout_controls.js` (1,694 lines): drag/resize panel + Sections Editor tab
 - `vfc_sections.css` (177 lines): section card styles
-- Status: Phase 1+2 complete (drag/resize + section editor), Phase 3+ in progress
+- `vfc_config.js` (23 lines): debug flag gating
+- `construction/api/layout_api.py` (302 lines): backend layout CRUD (5 whitelisted endpoints)
+- `construction/api/modern_form_api.py` (431 lines): React form API — **deprecated**, System Manager only
+- Status: Phase 1+2 complete, Phase 3+ stabilization in progress
 
 ## 4. Critical Conventions (Non-Negotiable)
 1. **All SQL:** parameterized queries ONLY — never f-string SQL injection
@@ -102,7 +105,7 @@
 | **Theme API** | `construction/api/theme_api.py` (17 whitelisted endpoints) |
 | **Scope query injection** | `construction/overrides/scope_query.py` |
 | **Form Layout API** | `construction/construction/api/layout_api.py` |
-| **Architecture decisions** | `ADR.md` (7 accepted ADRs), `docs/ADR-001-accounting-dimension.md` |
+| **Architecture decisions** | `ADR.md` (8 accepted ADRs), `docs/ADR-001-accounting-dimension.md` |
 | **CSS token reference** | `docs/token_reference.md` (54 tokens) |
 | **Hook matrix** | `docs/hook_matrix.md` |
 | **Developer onboarding** | `docs/onboarding.md` |

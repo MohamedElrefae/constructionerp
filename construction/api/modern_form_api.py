@@ -8,8 +8,25 @@ from frappe import _
 from frappe.model.document import Document
 
 
+# ──────────────────────────────────────────────────────────────────────
+# Access gate — all endpoints restricted to System Manager
+# ADR-008: React/modern form path deprecated as of 2026-06-21.
+# ──────────────────────────────────────────────────────────────────────
+
+
+def _require_system_manager():
+    if frappe.session.user == "Administrator":
+        return
+    if "System Manager" not in frappe.get_roles(frappe.session.user):
+        frappe.throw(
+            _("This API is deprecated and restricted to System Manager."),
+            frappe.PermissionError,
+        )
+
+
 @frappe.whitelist()
 def get_form_config(doctype):
+    _require_system_manager()
     """
     Get form configuration for a DocType
     Returns field definitions, layout info, and validation rules
@@ -73,6 +90,7 @@ def get_form_config(doctype):
 
 @frappe.whitelist()
 def get_document(doctype, name):
+    _require_system_manager()
     """
     Get a single document by name
 
@@ -113,6 +131,7 @@ def get_document(doctype, name):
 
 @frappe.whitelist()
 def create_document(doctype, data):
+    _require_system_manager()
     """
     Create a new document
 
@@ -152,6 +171,7 @@ def create_document(doctype, data):
 
 @frappe.whitelist()
 def update_document(doctype, name, data):
+    _require_system_manager()
     """
     Update an existing document
 
@@ -197,6 +217,7 @@ def update_document(doctype, name, data):
 
 @frappe.whitelist()
 def delete_document(doctype, name):
+    _require_system_manager()
     """
     Delete a document
 
@@ -228,6 +249,7 @@ def delete_document(doctype, name):
 
 @frappe.whitelist()
 def validate_field(doctype, fieldname, value, context=None):
+    _require_system_manager()
     """
     Validate a single field value
 
@@ -281,6 +303,7 @@ def validate_field(doctype, fieldname, value, context=None):
 
 @frappe.whitelist()
 def search_link(doctype, txt, filters=None, page_length=20):
+    _require_system_manager()
     """
     Search for link field values
 

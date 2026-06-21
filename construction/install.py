@@ -718,12 +718,62 @@ DEFAULT_USER_SCOPE_CONTEXT_LAYOUT = {
     ],
 }
 
+DEFAULT_PROJECT_LAYOUT = {
+    "version": 1,
+    "unassigned_policy": "append",
+    "sections": [
+        {
+            "id": "sec_identity",
+            "label": "Project Identity",
+            "column_count": 2,
+            "sort_order": 1,
+            "visible": True,
+            "collapsible": False,
+            "collapsed_by_default": False,
+            "fields": [
+                {"fieldname": "project_name", "col": 1, "sort_order": 1, "visible": True},
+                {"fieldname": "status", "col": 2, "sort_order": 2, "visible": True},
+                {"fieldname": "project_type", "col": 1, "sort_order": 3, "visible": True},
+                {"fieldname": "percent_complete", "col": 2, "sort_order": 4, "visible": True},
+            ],
+        },
+        {
+            "id": "sec_schedule",
+            "label": "Schedule",
+            "column_count": 2,
+            "sort_order": 2,
+            "visible": True,
+            "collapsible": True,
+            "collapsed_by_default": False,
+            "fields": [
+                {"fieldname": "expected_start_date", "col": 1, "sort_order": 1, "visible": True},
+                {"fieldname": "expected_end_date", "col": 2, "sort_order": 2, "visible": True},
+            ],
+        },
+        {
+            "id": "sec_costing",
+            "label": "Costing",
+            "column_count": 2,
+            "sort_order": 3,
+            "visible": True,
+            "collapsible": True,
+            "collapsed_by_default": True,
+            "fields": [
+                {"fieldname": "estimated_costing", "col": 1, "sort_order": 1, "visible": True},
+                {"fieldname": "total_sales_amount", "col": 2, "sort_order": 2, "visible": True},
+                {"fieldname": "total_purchase_cost", "col": 1, "sort_order": 3, "visible": True},
+                {"fieldname": "gross_margin", "col": 2, "sort_order": 4, "visible": True},
+            ],
+        },
+    ],
+}
+
 
 def seed_form_layout_profiles():
     """Seed default Form Layout Profiles for construction DocTypes.
 
     Called by after_migrate hook. Idempotent — skips existing profiles.
-    Covers: BOQ Header, BOQ Item Stage, BOQ Structure, User Scope Context.
+    Covers: BOQ Header, BOQ Item Stage, BOQ Structure, User Scope Context, Project.
 
     Stage 1: construction module doctypes only.
     Future stages will expand to the full ERPNext app.
@@ -760,6 +810,14 @@ def seed_form_layout_profiles():
             "is_system": 1,
             "priority": 10,
             "sections_json": json.dumps(DEFAULT_USER_SCOPE_CONTEXT_LAYOUT),
+        },
+        {
+            "reference_doctype": "Project",
+            "profile_name": "Default",
+            "is_default": 1,
+            "is_system": 1,
+            "priority": 10,
+            "sections_json": json.dumps(DEFAULT_PROJECT_LAYOUT),
         },
     ]
 

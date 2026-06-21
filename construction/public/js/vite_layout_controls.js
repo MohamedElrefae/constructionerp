@@ -388,6 +388,9 @@
 				)}
             </div>
             <div id="vfc-sec-list-${dtId}" class="vfc-sec-list-container" style="display:flex;flex-direction:column;gap:12px;flex:1;overflow-y:auto;padding-right:4px"></div>
+            <button class="btn btn-default btn-xs" id="vfc-revert-btn-${dtId}" style="margin-top:8px;padding:2px 8px;font-size:10px;color:var(--ct-danger);border-color:var(--ct-danger)">${__(
+				"Revert to Default / Native"
+			)}</button>
           </div>
 
           <!-- Tab: Presets -->
@@ -500,6 +503,12 @@
 			const applyBtn = panel.querySelector(`[data-vfc-apply="${dtId}"]`);
 			if (applyBtn) {
 				applyBtn.addEventListener("click", () => this._applyAndSave(frm, dtId));
+			}
+
+			// Revert to Default button
+			const revertBtn = panel.querySelector(`#vfc-revert-btn-${dtId}`);
+			if (revertBtn) {
+				revertBtn.addEventListener("click", () => this._revertToDefault(frm, dtId));
 			}
 
 			// Initial render
@@ -716,7 +725,6 @@
 			saveDensity(frm.doctype, n);
 
 			if (window.VFCLayoutEngine) {
-				window.VFCLayoutEngine.restoreNative(frm);
 				window.VFCLayoutEngine.attach?.(frm);
 			}
 
@@ -808,6 +816,62 @@
 
 			frappe.show_alert({ message: __("Form Config saved"), indicator: "green" }, 3);
 			this._togglePanel(frm, false);
+		},
+
+		/* ─────────────────────────────────────────────────────────
+        _revertToDefault — revert current user to default/native layout.
+        Deletes the user's personal for_user profile if one exists.
+        If no personal profile exists, just invalidates cache and
+        re-renders with the role/default match.
+     ───────────────────────────────────────────────────────── */
+		async _revertToDefault(frm, dtId) {
+			const dt = frm.doctype;
+
+			frappe.confirm(
+				__("Revert to default layout? This removes your personal profile customizations."),
+				async () => {
+					try {
+						// List all profiles for this doctype
+						const resp = await frappe.call({
+							method: "construction.construction.api.layout_api.list_layouts",
+							args: { doctype: dt },
+						});
+
+						const profiles = resp?.message || [];
+						const user = frappe.session.user;
+
+						// Find and delete the current user's personal profile
+						for (const profile of profiles) {
+							if (profile.for_user === user) {
+								await frappe.call({
+									method: "construction.construction.api.layout_api.delete_layout",
+									args: { name: profile.name },
+								});
+								frappe.show_alert({
+									message: __("Personal profile '{0}' removed", [profile.profile_name]),
+									indicator: "green",
+								});
+								break;
+							}
+						}
+
+						// Invalidate cache and re-render
+						if (window.VFCLayoutEngine) {
+							window.VFCLayoutEngine.invalidateCache?.(dt);
+							window.VFCLayoutEngine.attach?.(frm);
+						}
+
+						this._togglePanel(frm, false);
+					} catch (err) {
+						vfcDebugLog("error", "[VFC] _revertToDefault failed:", err);
+						frappe.show_alert({
+							message: __("Revert failed: {0}", [err.message || err]),
+							indicator: "red",
+						});
+					}
+				},
+				() => {} // cancelled — no-op
+			);
 		},
 
 		/* ─────────────────────────────────────────────────────────
@@ -929,10 +993,10 @@
 				"Loading sections..."
 			)}</div>`;
 
-			// Load SortableJS dynamically if not already present
+			// Load SortableJS from local asset (no CDN dependency)
 			if (typeof Sortable === "undefined") {
 				await frappe.require(
-					"https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"
+					"/assets/construction/js/vendor/sortablejs.min.js"
 				);
 			}
 

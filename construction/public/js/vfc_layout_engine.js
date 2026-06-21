@@ -44,39 +44,67 @@
      BLOCKED_DOCTYPES - this is a safety net.
   ═══════════════════════════════════════════════════════════════════ */
 	const BLOCKED_DOCTYPES = new Set([
-		// Frappe core internals
+		// ── Frappe core metadata ──
+		// Never allow VFC to re-parent core schema-definition doctypes.
 		"DocType",
 		"DocField",
 		"DocPerm",
 		"Custom Field",
 		"Property Setter",
+
+		// ── Client/Server scripting ──
+		// Scripts managed by Frappe's hook system, not form layout.
 		"Client Script",
 		"Server Script",
+
+		// ── Reports, Pages, Print ──
+		// Not standard data-entry forms.
 		"Report",
 		"Page",
+		"Print Format",
+		"Letter Head",
+
+		// ── System/internal logs ──
+		// Never expose these to layout manipulation.
 		"Patch Log",
 		"Error Log",
 		"Scheduled Job Log",
 		"Activity Log",
 		"Access Log",
 		"Version",
+
+		// ── Communication/Notification ──
+		// Thread/timeline entries that render in Frappe's timeline widget.
 		"Comment",
 		"Communication",
-		"File",
-		"ToDo",
-		"Tag",
-		"Tag Link",
-		"Email Queue",
-		"Email Queue Recipient",
 		"Notification Log",
+
+		// ── File/Attachment ──
+		"File",
+
+		// ── Workflow ──
+		// Workflow internals should not be layout-moved.
 		"Workflow Action",
 		"Workflow Action Master",
 		"Workflow Transition",
+
+		// ── Tags ──
+		"Tag",
+		"Tag Link",
+
+		// ── Email ──
+		"Email Queue",
+		"Email Queue Recipient",
+
+		// ── ToDo ──
+		"ToDo",
+
+		// ── i18n ──
 		"Translation",
 		"Language",
+
+		// ── System Configuration ──
 		"Module Def",
-		"Print Format",
-		"Letter Head",
 		"Web Form",
 		"Web Page",
 		"Website Settings",
@@ -88,7 +116,9 @@
      LAYOUT ENGINE — singleton
   ═══════════════════════════════════════════════════════════════════ */
 	const LayoutEngine = {
-		// Cache: doctype → profile data (null = no profile, {} = loaded)
+		// Cache TTL: 60 seconds (profile changes become visible within this window)
+		CACHE_TTL_MS: 60000,
+		// Cache: doctype → { value, ts } (null = no profile, {} = loaded)
 		_cache: new Map(),
 		// Active containers: frm.doctype → array of injected section divs
 		_activeSections: new Map(),
@@ -238,7 +268,11 @@
     ───────────────────────────────────────────────────────────── */
 		async _fetchProfile(doctype) {
 			if (this._cache.has(doctype)) {
-				return this._cache.get(doctype);
+				const entry = this._cache.get(doctype);
+				if (entry && entry.ts && Date.now() - entry.ts < this.CACHE_TTL_MS) {
+					return entry.value;
+				}
+				this._cache.delete(doctype);
 			}
 
 			const result = await frappe.call({
@@ -248,7 +282,7 @@
 			});
 
 			const profile = result?.message || null;
-			this._cache.set(doctype, profile);
+			this._cache.set(doctype, { value: profile, ts: Date.now() });
 			return profile;
 		},
 
@@ -360,9 +394,9 @@
 					}
 
 					// Handle runtime visibility (user settings, permissions, depends_on)
-					if (fieldObj.df && (fieldObj.df.hidden || fieldObj.df.invisible)) {
+					if (fieldObj.df && (fieldObj.df.hidden || fieldObj.df.invisible || fieldObj.df.hidden_due_to_dependency)) {
 						vfcDebugLog("log", 
-							`[LE] Skipping hidden field ${fn} (df.hidden=${fieldObj.df.hidden}, df.invisible=${fieldObj.df.invisible})`
+							`[LE] Skipping hidden field ${fn} (df.hidden=${fieldObj.df.hidden}, df.invisible=${fieldObj.df.invisible}, df.hidden_due_to_dependency=${fieldObj.df.hidden_due_to_dependency})`
 						);
 						return;
 					}
@@ -619,7 +653,7 @@
 				const fieldObj = frm.fields_dict[fn];
 				if (!fieldObj) continue;
 
-				if (fieldObj.df && (fieldObj.df.hidden || fieldObj.df.invisible)) continue;
+				if (fieldObj.df && (fieldObj.df.hidden || fieldObj.df.invisible || fieldObj.df.hidden_due_to_dependency)) continue;
 				if (state.profileHiddenFieldnames.has(fn)) continue;
 
 				const wrapper = fieldObj.wrapper;
@@ -790,9 +824,9 @@
 			nativeEl.classList.remove("hide-control", "hidden", "d-none");
 			nativeEl.removeAttribute("hidden");
 			nativeEl.setAttribute("data-vfc-managed", "1");
-			nativeEl.style.setProperty("display", "block");
-			nativeEl.style.setProperty("visibility", "visible", "important");
-			nativeEl.style.setProperty("opacity", "1", "important");
+			nativeEl.style.removeProperty("display");
+			nativeEl.style.removeProperty("visibility");
+			nativeEl.style.removeProperty("opacity");
 			nativeEl.style.removeProperty("height");
 			nativeEl.style.removeProperty("max-height");
 
@@ -803,8 +837,8 @@
 				.forEach((el) => {
 					el.classList.remove("hide-control", "hidden", "d-none");
 					el.removeAttribute("hidden");
-					el.style.setProperty("visibility", "visible", "important");
-					el.style.setProperty("opacity", "1", "important");
+					el.style.removeProperty("visibility");
+					el.style.removeProperty("opacity");
 				});
 		},
 
@@ -925,7 +959,7 @@
 						const fieldObj = frm.fields_dict[f.fieldname];
 						if (!fieldObj || !fieldObj.wrapper) return;
 
-						if (fieldObj.df && (fieldObj.df.hidden || fieldObj.df.invisible)) return;
+						if (fieldObj.df && (fieldObj.df.hidden || fieldObj.df.invisible || fieldObj.df.hidden_due_to_dependency)) return;
 
 						const cell = document.createElement("div");
 						cell.className = "vfc-le-cell";
@@ -1033,6 +1067,14 @@
 
 			if (frm.docname) {
 				this._clearValidationTimers(dt + "__" + frm.docname);
+				const key = dt + "__" + frm.docname;
+				if (this._retryTimers && this._retryTimers.has(key)) {
+					clearTimeout(this._retryTimers.get(key));
+					this._retryTimers.delete(key);
+				}
+				if (this._retryCounts) {
+					this._retryCounts.delete(key);
+				}
 			}
 
 			// Disconnect and delete any MutationObservers for this doctype
@@ -1061,6 +1103,9 @@
 			}
 
 			const observer = new MutationObserver((mutations) => {
+				if (window.VFC_DEBUG) {
+					window.__VFC_OBSERVER_COUNT = (window.__VFC_OBSERVER_COUNT || 0) + 1;
+				}
 				let needsReattach = false;
 				for (const mutation of mutations) {
 					if (mutation.type === "childList" && mutation.addedNodes.length) {
@@ -1097,9 +1142,8 @@
 				}
 			});
 
-			observer.observe(this._getObserverRoot(frm, layoutRoot), {
+			observer.observe(layoutRoot, {
 				childList: true,
-				subtree: true,
 			});
 			this._observers.set(key, observer);
 		},
@@ -1111,6 +1155,15 @@
     ───────────────────────────────────────────────────────────── */
 		_invalidateCache(doctype) {
 			this._cache.delete(doctype);
+		},
+
+		/* ─────────────────────────────────────────────────────────────
+        invalidateCache(doctype)
+        Public alias for _invalidateCache. Called by vite_layout_controls.js
+        after saving a profile. Exposed on window.VFCLayoutEngine.
+     ───────────────────────────────────────────────────────────── */
+		invalidateCache(doctype) {
+			this._invalidateCache(doctype);
 		},
 
 		/* ─────────────────────────────────────────────────────────────

@@ -56,12 +56,15 @@
 - Full RTL support, Arabic translations seeded via patches v6.0–v6.6
 - `translated_doctypes` in `hooks.py` covers 12 DocTypes
 
-### Form Layout Engine (VFC) ✅ Phase 1+2
-- Form Layout Profile DocType (`sections_json` blob, 12 fields)
-- `vfc_layout_engine.js` (847 lines): runtime field re-parenting
-- `vite_layout_controls.js`: drag/resize panel + Sections Editor tab
+### Form Layout Engine (VFC) ✅ Phase 1+2 (Stabilization in progress)
+- Form Layout Profile DocType (12 fields, `for_user` personal override, `for_role` targeting, `is_system` seed guard)
+- `vfc_layout_engine.js` (1,342 lines): runtime field re-parenting into named sections
+- `vite_layout_controls.js` (1,694 lines): drag/resize panel + Sections Editor tab + density controls
 - `vfc_sections.css` (177 lines): section card styles
-- Phase 3+: additional layout features (in progress)
+- `vfc_config.js` (23 lines): debug flag gating
+- `construction/api/layout_api.py` (302 lines): 5 whitelisted endpoints (get/save/list/delete/validate)
+- `construction/api/modern_form_api.py` (431 lines): React form API — **deprecated** as of 2026-06-21 (ADR-008)
+- Phase 3+: stabilization sprint in progress (feat/vfc-phase3-stabilization)
 
 ### Vite UI ✅ Phase 0+1+2
 - Visual foundation (`vite_form_override.css`, `vite_list_override.css`)

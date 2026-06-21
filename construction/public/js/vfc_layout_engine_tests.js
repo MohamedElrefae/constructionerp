@@ -7,11 +7,11 @@
      VFCTest.runAll()
 
    Or run individually:
-     VFCTest.checkDoubleAttach()
+     VFCTest.checkEngineLoaded()
      VFCTest.checkOrphans()
      VFCTest.checkTabPanes()
      VFCTest.checkFieldVisibility()
-     VFCTest.checkDebounce()
+     VFCTest.checkNativeShells()
   ═══════════════════════════════════════════════════════════════════════ */
 
 (function () {
@@ -189,34 +189,50 @@
 		},
 
 		/* ─────────────────────────────────────────────────────────
-       Test 4: Debounce state
-       Ensures Patch A (debounce) is active and no double-attach
-       occurred within the last few seconds.
-    ───────────────────────────────────────────────────────── */
-		checkDebounce() {
+        Test 4: Engine loaded and API surface
+        Verifies the current VFC engine is loaded with all expected
+        public methods and cache configuration.
+     ───────────────────────────────────────────────────────── */
+		checkEngineLoaded() {
 			this._results = [];
-			vfcDebugLog("log", "\n🔍 VFCTest.checkDebounce() — checking attach call pattern…");
+			vfcDebugLog("log", "\n🔍 VFCTest.checkEngineLoaded() — verifying engine API surface…");
 
-			// The debounce wrapper lives in an IIFE; we can't directly inspect _pending,
-			// but we can verify the global hook signature has changed by checking
-			// that window.VFC_DISABLED exists as a concept (added in 1.29).
-			if (typeof window.VFC_DISABLED !== "undefined") {
-				this._log(true, "VFC_DISABLED flag is present (v1.29+ engine).");
+			const LE = window.VFCLayoutEngine;
+			if (!LE) {
+				this._log(false, "window.VFCLayoutEngine is not defined — engine may not be loaded.");
+				return this._summary();
+			}
+			this._log(true, "window.VFCLayoutEngine is defined.");
+
+			// Verify key public methods
+			const expected = ["attach", "restoreNative", "invalidateCache", "_fetchProfile"];
+			expected.forEach((method) => {
+				if (typeof LE[method] === "function") {
+					this._log(true, `${method}() is available.`);
+				} else {
+					this._log(false, `${method}() is MISSING.`);
+				}
+			});
+
+			// Verify cache TTL constant
+			if (LE.CACHE_TTL_MS === 60000) {
+				this._log(true, "CACHE_TTL_MS = 60000 (60 second TTL configured).");
 			} else {
-				this._log(false, "VFC_DISABLED flag missing — you may be running the old engine.");
+				this._log(false, `CACHE_TTL_MS is ${LE.CACHE_TTL_MS}, expected 60000.`);
 			}
 
-			// Ask user to check console history for multiple [LE] attach() lines
+			// Verify observer counter (debug-gated)
 			vfcDebugLog("log", 
-				"   💡 Tip: Filter console for '[LE] attach() triggered'. You should see it once per form load."
+				"   💡 Tip: Enable VFC_DEBUG and refresh to measure observer callback volume."
 			);
+
 			return this._summary();
 		},
 
 		/* ─────────────────────────────────────────────────────────
-       Test 5: Native section shells are NOT hidden on tabbed forms
-       Ensures we haven't regressed native tab structure.
-    ───────────────────────────────────────────────────────── */
+        Test 5: Native section shells are NOT hidden on tabbed forms
+        Ensures we haven't regressed native tab structure.
+     ───────────────────────────────────────────────────────── */
 		checkNativeShells() {
 			this._results = [];
 			vfcDebugLog("log", 
@@ -272,7 +288,7 @@
 			vfcDebugLog("log", "   VFC Layout Engine — Verification Suite v1.0");
 			vfcDebugLog("log", "═══════════════════════════════════════════════════════════");
 
-			this.checkDebounce();
+			this.checkEngineLoaded();
 			this.checkOrphans();
 			this.checkTabPanes();
 			this.checkFieldVisibility();
