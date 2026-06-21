@@ -91,9 +91,9 @@
 - **Files:** `vfc_config.js`, `boot.py`, `hooks.py`
 - **Result:** Diagnostic logging gated by `vfc_debug_logging` toggle on Construction Settings
 
-#### Task 5: WP5 — Project-wise Profitability → Blocked (Client Gate)
-- **Status:** Waiting for client confirmation before implementation
-- **Next action:** None until client confirms
+#### Task 5: WP5 — Project-wise Profitability → Pending Client Decision
+- **Status:** Deferred per manager direction (2026-06-21). Standard ERPNext report pulls from GL only; would not reflect BOQ-driven costs. Will revisit after BOQ reports are finalized to decide between (a) installing standard report as-is, or (b) building custom Construction Profitability report joining BOQ + GL data.
+- **Next action:** None until BOQ reports complete and client confirms requirement
 
 #### Task 6: WP6 — Option B Admin Toggle → Completed (2026-06-21)
 - **Files:** `construction_settings.json`, `scope_report.py`
