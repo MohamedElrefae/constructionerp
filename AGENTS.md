@@ -7,9 +7,9 @@
 - **Repo root:** `/home/mohamed/frappe-bench/apps/construction`
 - **Author:** Mohamed Elrefae (solo civil engineer developer)
 - **License:** MIT
-- **Current branch:** `feature/vite-ui-v1`
-- **Total commits:** 117
-- **Latest commit:** `d7b5186` — fix: f-strings compatible with Python 3.10 quote nesting rules
+- **Current branch:** `develop`
+- **Total commits:** 185
+- **Latest commit:** `73439f3` — fix: ensure MCP audit log parent directory exists before FileHandler init
 
 ## 2. Tech Stack
 - **Backend:** Python 3.14 (venv), Frappe Framework (v15/v16 dual-compat); code must remain Python 3.10 quote-nesting compatible
@@ -82,11 +82,16 @@
 ## 5. Active Workstreams
 > Read `SESSION_MEMORY.md` for the current sprint state.
 >
-> As of last update (2026-05-30):
-> - Form Layout Engine Phase 3+ — in progress
-> - BOQ Accounting Integration — in progress
-> - Cost Estimation (CostItem) — not started
-> - Procurement (PlantResource) — not started
+> As of last update (2026-06-21):
+> - **Sprint: rc-1.1 Follow-up (WP1–WP7)** — 6/7 work packages complete
+> - WP1 (Broader-app audit) — ✅ Done
+> - WP2 (Migration survival test) — ✅ Done
+> - WP3 (Handover docs) — ✅ Done
+> - WP4 (VFC debug flag) — ✅ Done
+> - WP5 (Project-wise Profitability) — ⏳ Blocked (client gate)
+> - WP6 (Option B admin toggle) — ✅ Done
+> - WP7 (Audit logging) — ✅ Done
+> - Scope report overrides patched at import via `construction/__init__.py`
 
 ## 6. Key Files
 | Purpose | Path |
@@ -164,5 +169,5 @@ bash scripts/install_git_hooks.sh
 If MCP memory conflicts with any live repo file (`AGENTS.md`, `SESSION_MEMORY.md`, DocType JSON), **the repo file wins.** Always re-run `scripts/ai_context_check.py` when schemas change.
 
 ---
-*Last updated: 2026-05-31*  
+*Last updated: 2026-06-21*  
 *Update this file only when project identity, tech stack, or core architecture changes.*

@@ -173,13 +173,13 @@ Multiple handover / draft documents exist in repo root and subdirectories. Some 
 ### 5.2 Candidate Documents to Review
 | Path | Status | Proposed Action |
 |------|--------|-----------------|
-| `/home/mohamed/frappe-bench/BOQ_STRUCTURE_BLOCKER_HANDOFF.md` | Root-level duplicate | Move/review against `docs/BOQ_STRUCTURE_BLOCKER_HANDOFF.md` |
+| `/home/mohamed/frappe-bench/BOQ_STRUCTURE_BLOCKER_HANDOFF.md` | Root-level duplicate (outside git repo) | See `docs/handover/BOQ_STRUCTURE_BLOCKER_HANDOFF.md` (different doc — scope context handoff) |
 | `/home/mohamed/frappe-bench/01 scope context/*.md` | Legacy scope-context plans | Archive or migrate relevant parts to `docs/scope_context_*` |
 | `/home/mohamed/frappe-bench/02BOQ Integratiom/*.md` | Legacy BOQ plans | Archive or migrate relevant parts to `docs/boq_*` |
 | `/home/mohamed/frappe-bench/03 ACCOUNTING INTEGRATAION/*.md` | In-progress accounting docs | Keep; add front-matter linking to current state |
 | `/home/mohamed/frappe-bench/AGENTS_HANDOFF.md` | Possibly stale | Review against `AGENTS.md`; merge or delete |
 | `/home/mohamed/frappe-bench/apps/construction/AGENTS_HANDOFF.md` | Possibly stale | Same as above |
-| `/home/mohamed/frappe-bench/apps/construction/VFC_PROJECT_TABS_DEBUG_REPORT.md` | VFC debug report | Convert to VFC troubleshooting guide or archive |
+| `docs/handover/VFC_PROJECT_TABS_DEBUG_REPORT.md` (migrated from repo root) | VFC debug report | Convert to VFC troubleshooting guide or archive |
 | `/home/mohamed/frappe-bench/apps/construction/SESSION_MEMORY.md` | Living doc | Update after each work package |
 
 ### 5.3 Step-by-Step Tasks

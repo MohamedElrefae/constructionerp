@@ -213,7 +213,7 @@ python3 scripts/mcp_recall.py --tag construction --tag boq
 | MCP recall helper | `scripts/mcp_recall.py` |
 | Git hook installer | `scripts/install_git_hooks.sh` |
 | ERPNext MCP server | `erpnext-mcp-server/server.py` |
-| Architecture plan | `CONSTRUCTION_ERP_AI_MEMORY_PLAN_v2.2.md` |
+| Architecture plan | `docs/handover/CONSTRUCTION_ERP_AI_MEMORY_PLAN_v2.2.md` |
 
 ---
 
@@ -252,4 +252,4 @@ python3 scripts/mcp_recall.py --tag construction --tag boq
 
 ---
 
-*For the full architecture plan, see `CONSTRUCTION_ERP_AI_MEMORY_PLAN_v2.2.md`.*
+*For the full architecture plan, see `docs/handover/CONSTRUCTION_ERP_AI_MEMORY_PLAN_v2.2.md`.*

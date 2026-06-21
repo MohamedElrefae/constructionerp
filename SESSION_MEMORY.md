@@ -1,13 +1,13 @@
 # Session Memory — Construction ERP
-**LAST UPDATED:** 2026-06-11
-**UPDATED BY:** Kimi Code (VO Quantity Revision implementation + test fixes)
+**LAST UPDATED:** 2026-06-21
+**UPDATED BY:** Cursor (WP1–WP7 rc-1.1 follow-up sprint)
 
 ---
 
 ## 1. Project Snapshot
-- **Total commits:** 117
-- **Current branch:** `feature/vite-ui-v1`
-- **Last session date:** 2026-05-31
+- **Total commits:** 185
+- **Current branch:** `develop`
+- **Last session date:** 2026-06-21
 - **Python version:** 3.14 (venv: `/home/mohamed/frappe-bench/env`)
 - **AGENTS.md status:** Rewritten from Scope Context dev report → agent context file
 - **New files created:** `SESSION_MEMORY.md`, `docs/ai/CONTEXT_INDEX.md`, `docs/ai/SCHEMA_FACTS.md`, `docs/ai/CODING_PATTERNS.md`, `scripts/ai_context_check.py`
@@ -74,51 +74,35 @@
 
 ## 3. In Progress (Active Work — Updated After Every Session)
 
-### Current Sprint: VO Quantity Revision / Form Layout Engine Phase 3+ / BOQ Accounting
-#### Task 1: VO Quantity Revision Implementation — Status: Completed (2026-06-11)
-- **Started:** 2026-06-11
-- **Files being modified:** `construction/construction/doctype/boq_item/boq_item.json`, `construction/construction/doctype/boq_header/boq_header.py`, `construction/construction/doctype/boq_quantity_revision/`, `construction/construction/doctype/vo_line/vo_line.py`, `construction/construction/doctype/variation_order/variation_order.py`, `construction/services/quantity_revisions.py`, `construction/services/revised_boq_queries.py`, `construction/tests/test_quantity_revisions.py`, `construction/tests/test_variation_orders.py`
-- **Decisions made:**
-  - `revised_qty` is primary input; `delta_qty` computed from it
-  - `rate_change_triggered` uses `change_pct_from_contract` (FIDIC >25% from original contract)
-  - `original_qty` is locked at baseline; `current_revised_qty` updated on approval
-  - `BOQ Quantity Revision` is non-submittable with custom status field
-  - `line_total` intentionally kept as contract value (not overwritten by revised value)
-  - `process_approved_vo_lines` now calls `update_boq_header_totals` for all line types including New Items
-  - `item_code` removed from VO Line
-  - VO line editing blocked after Engineer Approved (P0-1)
-  - Idempotent approval: `created_quantity_revision` check prevents duplicates (P0-4)
-- **Blockers:** None
-- **Test results:** 57/57 tests passing (custom runner)
-- **Migration:** `bench --site v16.localhost migrate` completed successfully
-- **Evidence:** EV-065 (Schema), EV-066 (Tests), EV-067 (Manual QA) filled with actual results
-- **Next action:** None — feature complete
+### Current Sprint: rc-1.1 Follow-up (WP1–WP7) — 6/7 Complete
+#### Task 1: WP1 — Broader-app Audit → Completed (2026-06-21)
+- **Files:** `docs/evidence/broader_app_audit_log.md`
+- **Result:** 76 backup files classified into 17 categories; no fragmentation found
 
-#### Task 2: AI Memory Architecture Implementation — Status: In Progress
-- **Started:** 2026-05-31
-- **Files being modified:** `AGENTS.md`, `SESSION_MEMORY.md`, `docs/ai/*`, `scripts/*`, `construction-erp-coder/*`
-- **Decisions made:**
-  - Repo files are source of truth; MCP/skills are adapters only
-  - `AGENTS.md` rewritten from dev report to agent context
-  - `SESSION_MEMORY.md` created as living sprint document
-  - `docs/ai/` created for deep references (schemas, patterns, index)
-  - Validation script created to prevent stale memory
-  - Git post-commit hook installed for auto-capture
-  - `mcp_store.py`, `mcp_recall.py`, `session_end.py` helpers created
-- **Blockers:** None
-- **Next action:** Phase 2 MCP auto-capture operational; proceed to Phase 3 (ERPNext read-only MCP server) when needed
+#### Task 2: WP2 — Migration Survival Test → Completed (2026-06-21)
+- **Files:** `construction/tests/test_migration_survival.py`
+- **Result:** 7 formal tests run after every `bench migrate`
 
-#### Task 3: Form Layout Engine Phase 3+ — Status: In Progress
-- **Started:** Prior to 2026-05-30
-- **Files being modified:** `vfc_layout_engine.js`, `vite_layout_controls.js`, `vfc_sections.css`
-- **Blockers:** None
-- **Next action:** Continue layout feature expansion
+#### Task 3: WP3 — Handover Documentation → Completed (2026-06-21)
+- **Files:** `docs/handover/INDEX.md` + migrated documents
+- **Result:** 7 handover docs consolidated into `docs/handover/`; `AGENTS.md` and `SESSION_MEMORY.md` updated
 
-#### Task 4: BOQ Accounting Integration — Status: In Progress
-- **Started:** Prior to 2026-05-30
-- **Files being modified:** `services/boq_accounting.py`, `services/boq_transaction_validation.py`
-- **Blockers:** None
-- **Next action:** Continue integration with Purchase Order / Invoice / Stock Entry hooks
+#### Task 4: WP4 — VFC Debug Flag → Completed (2026-06-21)
+- **Files:** `vfc_config.js`, `boot.py`, `hooks.py`
+- **Result:** Diagnostic logging gated by `vfc_debug_logging` toggle on Construction Settings
+
+#### Task 5: WP5 — Project-wise Profitability → Blocked (Client Gate)
+- **Status:** Waiting for client confirmation before implementation
+- **Next action:** None until client confirms
+
+#### Task 6: WP6 — Option B Admin Toggle → Completed (2026-06-21)
+- **Files:** `construction_settings.json`, `scope_report.py`
+- **Result:** `enable_option_b_report_access_bypass` field + `_user_has_active_scope_context()` gate; default ON for backward compatibility
+
+#### Task 7: WP7 — Audit Logging → Completed (2026-06-21)
+- **Files:** `scope_report.py`, `construction/doctype/scope_report_access_log/`, `test_option_a_plus.py`
+- **Result:** `_log_report_access()` helper with RuntimeError fix; denial logging; 5 tests; 34 total pass
+- **Key fix:** `getattr(frappe.request, "path", "")` → `try/except RuntimeError`
 
 ---
 
@@ -276,9 +260,48 @@
   - Seed MCP memory from repo files only (Phase 2)
   - Keep `SESSION_MEMORY.md` updated manually as fallback
 
-### Session 2026-05-30 — Agent: Antigravity
+### Session 2025-05-30 — Agent: Antigravity
 - **Worked on:** Plan revision — `CONSTRUCTION_ERP_AI_MEMORY_PLAN.md` v2.1
 - **Decisions:** Updated plan to reflect actual repo state
 - **Issues found:** `AGENTS.md` exists but needs content overhaul; BOQ Item schema differs from v1.0 plan
 - **Files changed:** `CONSTRUCTION_ERP_AI_MEMORY_PLAN.md`
 - **Next steps:** Execute Phase 1 — update AGENTS.md, create SESSION_MEMORY.md
+
+### Session 2026-06-21 — Agent: Cursor (WP1–WP7 rc-1.1 follow-up sprint)
+- **Worked on:** 7 post-rc-1.1 follow-up work packages
+- **Decisions:**
+  - `develop` is the sprint integration branch — all feature branches merged into it, then deleted
+  - WP1: Broader-app backup files audited at `docs/evidence/broader_app_audit_log.md`
+  - WP2: Formal migration survival test created at `construction/tests/test_migration_survival.py`
+  - WP3: Handover docs consolidated into `docs/handover/`; `AGENTS.md` and `SESSION_MEMORY.md` updated
+  - WP4: VFC diagnostic logging wired via `vfc_config.js`, `boot.py`, hooks, and settings toggle
+  - WP6: Option B admin toggle field on Construction Settings + `_user_has_active_scope_context()` gate
+  - WP7: `Scope Report Access Log` DocType + `_log_report_access()` helper with `try/except RuntimeError` for `frappe.request` outside HTTP context; denial logging added for restricted non-scoped users
+- **Issues found:**
+  - WP7: `getattr(frappe.request, "path", "")` raises `RuntimeError` (not `AttributeError`) outside HTTP context — fixed with `try/except RuntimeError` wrapper
+  - WP7: `bench` command requires interactive terminal; replaced with `bench --site v16.localhost console <<PYEOF`
+  - WP3: Root-level directories (`01 scope context/`, `02BOQ Integratiom/`, etc.) are outside the construction git repo and cannot be committed
+- **Files changed (cumulative):**
+  - `construction/overrides/scope_report.py` — WP4 debug logging, WP6 Option B gate, WP7 audit logging + denial logging
+  - `construction/construction/doctype/scope_report_access_log/` — WP7 DocType (JSON, py, js)
+  - `construction/construction/doctype/construction_settings/construction_settings.json` — WP6 toggle field
+  - `construction/boot.py` — WP4 VFC debug flag
+  - `construction/hooks.py` — WP4 VFC boot hook
+  - `construction/public/js/vfc_config.js` — WP4 VFC debug flag
+  - `construction/tests/test_option_a_plus.py` — 5 WP7 audit logging tests + WP6 toggle tests
+  - `construction/tests/test_migration_survival.py` — WP2 formal migration survival test
+  - `docs/evidence/broader_app_audit_log.md` — WP1 audit log
+  - `docs/handover/INDEX.md` — WP3 handover index (created)
+  - `docs/handover/BOQ_STRUCTURE_BLOCKER_HANDOFF.md` — WP3 migrated from `docs/`
+  - `docs/handover/SCOPE_CONTEXT_STANDARDIZATION_APPROVAL_REPORT.md` — WP3 migrated
+  - `docs/handover/SENIOR_ENGINEER_AUDIT_REPORT.md` — WP3 migrated
+  - `docs/handover/TYPOGRAPHY_CURRENT_FONT_IMPLEMENTATION_REPORT.md` — WP3 migrated
+  - `docs/handover/VFC_PROJECT_TABS_DEBUG_REPORT.md` — WP3 migrated
+  - `docs/handover/CONSTRUCTION_ERP_AI_MEMORY_PLAN_v2.2.md` — WP3 migrated
+  - `docs/handover/AGENTS_HANDOFF.md` — WP3 migrated
+  - `erpnext-mcp-server/server.py` — WP1 audit log directory fix
+  - `AGENTS.md` — updated branch, commit count, workstreams
+  - `SESSION_MEMORY.md` — updated (this entry)
+- **Test results:** 34 tests pass (test_option_a_plus + test_migration_survival)
+- **Migration:** `bench --site v16.localhost migrate` completed for WP7 DocType
+- **Next steps:** WP5 (Project-wise Profitability) blocked on client confirmation

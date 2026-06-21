@@ -66,7 +66,7 @@ Current asset versions in `construction/hooks.py`:
 
 Existing related reports:
 
-- `VFC_PROJECT_TABS_DEBUG_REPORT.md`
+- `docs/handover/VFC_PROJECT_TABS_DEBUG_REPORT.md`
 - `VFC_DENSITY_DEBUG_REPORT.md`
 - `docs/form_layout_engine_team_letter.md`
 
