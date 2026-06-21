@@ -27,12 +27,11 @@ Complete reference of all Frappe hooks used by Construction Theming System.
 | app_include_js[1] | /assets/construction/js/construction_export_menu.js | - | 5.7KB |
 | app_include_js[2] | /assets/construction/js/theme_patch.js | ?v=9 | 7KB |
 | app_include_js[3] | /assets/construction/js/theme_loader.js | ?v=11 | 16KB |
-| app_include_js[4] | /assets/construction/js/components/index.js | ?v=4.5 | - |
-| app_include_js[5] | /assets/construction/js/searchable_dropdown/utils.js | - | - |
-| app_include_js[6] | /assets/construction/js/searchable_dropdown/searchable_dropdown.js | - | - |
-| app_include_js[7] | /assets/construction/js/searchable_dropdown/config/journal_entry.js | - | - |
-| app_include_js[8] | /assets/construction/js/searchable_dropdown/config/sales_invoice.js | - | - |
-| app_include_js[9] | /assets/construction/js/searchable_dropdown/config/customer_supplier.js | - | - |
+| app_include_js[4] | /assets/construction/js/searchable_dropdown/utils.js | - | - |
+| app_include_js[5] | /assets/construction/js/searchable_dropdown/searchable_dropdown.js | - | - |
+| app_include_js[6] | /assets/construction/js/searchable_dropdown/config/journal_entry.js | - | - |
+| app_include_js[7] | /assets/construction/js/searchable_dropdown/config/sales_invoice.js | - | - |
+| app_include_js[8] | /assets/construction/js/searchable_dropdown/config/customer_supplier.js | - | - |
 
 ### CSS (Backend - Logged In Users)
 

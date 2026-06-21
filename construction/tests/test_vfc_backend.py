@@ -24,6 +24,7 @@ from construction.construction.api.layout_api import (
     save_layout,
     list_layouts,
     delete_layout,
+    delete_my_personal_layout,
     validate_layout,
 )
 
@@ -260,6 +261,21 @@ class TestLayoutAPI(unittest.TestCase):
         p = self._make_profile(is_system=1)
         with self.assertRaises(frappe.PermissionError):
             delete_layout(p.name)
+
+    # ── delete_my_personal_layout ──
+
+    def test_delete_my_personal_layout_removes_for_user_profile(self):
+        user = frappe.session.user
+        p = self._make_profile(for_user=user, profile_name="_Test_PersonalDelete")
+        result = delete_my_personal_layout(p.reference_doctype)
+        self.assertEqual(result["status"], "deleted")
+        self.assertEqual(result["name"], p.name)
+        self.profiles.remove(p)
+
+    def test_delete_my_personal_layout_not_found(self):
+        result = delete_my_personal_layout("NonExistentDocType")
+        self.assertEqual(result["status"], "not_found")
+        self.assertIsNone(result["name"])
 
     # ── validate_layout ──
 

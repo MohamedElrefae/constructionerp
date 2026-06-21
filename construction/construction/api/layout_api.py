@@ -209,6 +209,34 @@ def list_layouts(doctype: str) -> list[dict]:
 
 
 @frappe.whitelist()
+def delete_my_personal_layout(doctype: str) -> dict:
+    """
+    Delete the current user's personal for_user profile for a doctype.
+    No System Manager permission required — any user can remove their own
+    personal layout override.
+    """
+    user = frappe.session.user
+    existing = frappe.db.get_value(
+        "Form Layout Profile",
+        {"reference_doctype": doctype, "for_user": user, "enabled": 1},
+        "name",
+    )
+    if not existing:
+        return {"status": "not_found", "name": None}
+
+    doc = frappe.get_doc("Form Layout Profile", existing)
+    if doc.is_system:
+        frappe.throw(
+            _("System-seeded profiles cannot be deleted. Disable them instead."),
+            frappe.PermissionError,
+        )
+
+    frappe.delete_doc("Form Layout Profile", existing, ignore_permissions=True)
+    frappe.db.commit()
+    return {"status": "deleted", "name": existing}
+
+
+@frappe.whitelist()
 def delete_layout(name: str) -> dict:
     """
     Delete a Form Layout Profile by name.

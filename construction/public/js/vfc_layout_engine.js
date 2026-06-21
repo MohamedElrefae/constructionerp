@@ -430,13 +430,13 @@
 							fieldObj._native_parent = nativeEl.parentNode;
 						}
 						cell.appendChild(nativeEl);
-						this._restoreVisibleFieldWrapper(nativeEl);
+						this._restoreVisibleFieldWrapper(nativeEl, fieldObj);
 					}
 
 					gridEl.appendChild(cell);
 					hasVisibleField = true;
 				});
-
+    
 				// Only append section if it has at least one field (or is collapsible)
 				if (hasVisibleField || sec.collapsible) {
 					if (hasTabs) {
@@ -818,8 +818,12 @@
 			return hidden;
 		},
 
-		_restoreVisibleFieldWrapper(nativeEl) {
+		_restoreVisibleFieldWrapper(nativeEl, fieldObj) {
 			if (!nativeEl) return;
+
+			if (fieldObj?.df?.hidden_due_to_dependency || fieldObj?.df?.hidden) {
+				return;
+			}
 
 			nativeEl.classList.remove("hide-control", "hidden", "d-none");
 			nativeEl.removeAttribute("hidden");
@@ -971,7 +975,7 @@
 								: fieldObj.wrapper;
 						if (nativeEl && nativeEl.parentNode) {
 							cell.appendChild(nativeEl);
-							this._restoreVisibleFieldWrapper(nativeEl);
+							this._restoreVisibleFieldWrapper(nativeEl, fieldObj);
 						}
 						grid.appendChild(cell);
 					});
@@ -1010,7 +1014,7 @@
 							: fieldObj.wrapper;
 					if (nativeEl && nativeEl.parentNode) {
 						cell.appendChild(nativeEl);
-						this._restoreVisibleFieldWrapper(nativeEl);
+						this._restoreVisibleFieldWrapper(nativeEl, fieldObj);
 					}
 					grid.appendChild(cell);
 				});
@@ -1261,7 +1265,7 @@
 							fieldObj._native_parent = nativeEl.parentNode;
 						}
 						cell.appendChild(nativeEl);
-						this._restoreVisibleFieldWrapper(nativeEl);
+						this._restoreVisibleFieldWrapper(nativeEl, fieldObj);
 					}
 
 					gridEl.appendChild(cell);

@@ -831,28 +831,22 @@
 				__("Revert to default layout? This removes your personal profile customizations."),
 				async () => {
 					try {
-						// List all profiles for this doctype
 						const resp = await frappe.call({
-							method: "construction.construction.api.layout_api.list_layouts",
+							method: "construction.construction.api.layout_api.delete_my_personal_layout",
 							args: { doctype: dt },
 						});
 
-						const profiles = resp?.message || [];
-						const user = frappe.session.user;
-
-						// Find and delete the current user's personal profile
-						for (const profile of profiles) {
-							if (profile.for_user === user) {
-								await frappe.call({
-									method: "construction.construction.api.layout_api.delete_layout",
-									args: { name: profile.name },
-								});
-								frappe.show_alert({
-									message: __("Personal profile '{0}' removed", [profile.profile_name]),
-									indicator: "green",
-								});
-								break;
-							}
+						const result = resp?.message;
+						if (result?.status === "deleted") {
+							frappe.show_alert({
+								message: __("Personal profile removed"),
+								indicator: "green",
+							});
+						} else {
+							frappe.show_alert({
+								message: __("No personal profile found for this doctype"),
+								indicator: "orange",
+							});
 						}
 
 						// Invalidate cache and re-render

@@ -67,7 +67,14 @@
 - Added `run_vfc_tests()` function matching the existing `run_quantity_revision_tests()` pattern
 - Can be invoked via: `bench --site v16.localhost execute construction.tests.run_vfc_tests`
 
+## Known Gaps
+- **Cache TTL expiry**: The browser test suite checks the `CACHE_TTL_MS` constant value (60s) but does
+  not exercise the actual expiry/refetch behaviour. Proving the 60-second cache invalidation at runtime
+  requires a manual browser test: (1) load a form with a custom layout, (2) modify the profile server-side,
+  (3) verify within 60s the old layout is served, and (4) verify after 60s+ the new layout appears. This
+  gap is acceptable because cache TTL is a performance optimisation, not a correctness constraint.
+
 ## Test Count
-- **26 backend tests** across 4 test classes
+- **37 backend tests** across 4 test classes
 - **1 browser test** (`checkEngineLoaded`)
 - All tests documented and ready for execution
