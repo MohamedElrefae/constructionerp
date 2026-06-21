@@ -8,8 +8,8 @@
 - **Author:** Mohamed Elrefae (solo civil engineer developer)
 - **License:** MIT
 - **Current branch:** `develop`
-- **Total commits:** 185
-- **Latest commit:** `73439f3` — fix: ensure MCP audit log parent directory exists before FileHandler init
+- **Total commits:** 191
+- **Latest commit:** `698ea94` — feat: VFC full reset — density, hidden fields, preset, and layout
 
 ## 2. Tech Stack
 - **Backend:** Python 3.14 (venv), Frappe Framework (v15/v16 dual-compat); code must remain Python 3.10 quote-nesting compatible
@@ -53,15 +53,20 @@
 - BOQ API (`api/boq_api.py`): 9 whitelisted endpoints
 - BOQ Structure uses NestedSet (`lft`, `rgt`, `old_parent`, `is_group`, `wbs_code`)
 
-### 3D. Form Layout Engine (VFC)
+### 3D. Form Layout Engine (VFC) ✅ Phase 1+2+3
 - **Form Layout Profile** DocType: stores `sections_json` for each `reference_doctype`
-- `vfc_layout_engine.js` (1,342 lines): runtime field re-parenting into custom sections
-- `vite_layout_controls.js` (1,694 lines): drag/resize panel + Sections Editor tab
+- `vfc_layout_engine.js` (1,399 lines): runtime field re-parenting into custom sections
+- `vite_layout_controls.js` (1,771 lines): drag/resize panel + Sections Editor tab + density controls + revert
 - `vfc_sections.css` (177 lines): section card styles
 - `vfc_config.js` (23 lines): debug flag gating
-- `construction/api/layout_api.py` (302 lines): backend layout CRUD (5 whitelisted endpoints)
-- `construction/api/modern_form_api.py` (431 lines): React form API — **deprecated**, System Manager only
-- Status: Phase 1+2 complete, Phase 3+ stabilization in progress
+- `construction/construction/api/layout_api.py` (330 lines, 6 whitelisted endpoints): backend layout CRUD + `delete_my_personal_layout`
+- `construction/api/modern_form_api.py` (454 lines): React form API — **deprecated**, System Manager only (ADR-008)
+- 37 backend tests in `tests/test_vfc_backend.py`; browser test suite in `vfc_layout_engine_tests.js`
+- Status: Phase 3 stabilization complete (WP0–WP5). Includes:
+  - Cache TTL (60s client-side), revert-to-default button
+  - Project layout seed, `hidden_due_to_dependency` guard
+  - Non-admin personal layout deletion via `delete_my_personal_layout`
+  - Full reset (density, hidden fields, preset, layout)
 
 ## 4. Critical Conventions (Non-Negotiable)
 1. **All SQL:** parameterized queries ONLY — never f-string SQL injection
@@ -86,7 +91,7 @@
 > Read `SESSION_MEMORY.md` for the current sprint state.
 >
 > As of last update (2026-06-21):
-> - **Sprint: rc-1.1 Follow-up (WP1–WP7)** — 6/7 work packages complete
+> - **Sprint: rc-1.1 Follow-up (WP1–WP7)** — All 7 work packages complete
 > - WP1 (Broader-app audit) — ✅ Done
 > - WP2 (Migration survival test) — ✅ Done
 > - WP3 (Handover docs) — ✅ Done
@@ -94,6 +99,7 @@
 > - WP5 (Project-wise Profitability) — ⏳ Blocked (client gate)
 > - WP6 (Option B admin toggle) — ✅ Done
 > - WP7 (Audit logging) — ✅ Done
+> - **VFC Phase 3 Stabilization (WP0–WP5)** — ✅ Complete (commits 7aadbdd, d55f6a2, 698ea94)
 > - Scope report overrides patched at import via `construction/__init__.py`
 
 ## 6. Key Files
@@ -104,7 +110,9 @@
 | **BOQ CRUD API** | `construction/api/boq_api.py` (9 whitelisted endpoints) |
 | **Theme API** | `construction/api/theme_api.py` (17 whitelisted endpoints) |
 | **Scope query injection** | `construction/overrides/scope_query.py` |
-| **Form Layout API** | `construction/construction/api/layout_api.py` |
+| **Form Layout API** | `construction/construction/api/layout_api.py` (6 endpoints) |
+| **VFC backend tests** | `construction/tests/test_vfc_backend.py` (39 tests) |
+| **VFC browser tests** | `construction/public/js/vfc_layout_engine_tests.js` |
 | **Architecture decisions** | `ADR.md` (8 accepted ADRs), `docs/ADR-001-accounting-dimension.md` |
 | **CSS token reference** | `docs/token_reference.md` (54 tokens) |
 | **Hook matrix** | `docs/hook_matrix.md` |
@@ -172,5 +180,5 @@ bash scripts/install_git_hooks.sh
 If MCP memory conflicts with any live repo file (`AGENTS.md`, `SESSION_MEMORY.md`, DocType JSON), **the repo file wins.** Always re-run `scripts/ai_context_check.py` when schemas change.
 
 ---
-*Last updated: 2026-06-21*  
+*Last updated: 2026-06-21 (VFC Phase 3 stabilization complete)*  
 *Update this file only when project identity, tech stack, or core architecture changes.*

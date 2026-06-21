@@ -1,10 +1,10 @@
 # Construction ERP — End-to-End User Guide
 # Enterprise Workflow: Company → Cost Center → Project → BOQ
 
-**Version:** 1.0
-**Date:** 2026-06-12
-**Branch:** `feature/vite-ui-v1`
-**Tested by:** Playwright UI Runner + Browser QA
+**Version:** 1.1
+**Date:** 2026-06-21 (VFC Phase 3 stabilization + full reset)
+**Branch:** `develop`
+**Tested by:** Playwright UI Runner + Browser QA + VFC test suite
 **Status:** All features verified — 27/27 VO test + 72/72 cascade blocker assertions passed
 
 ---
@@ -19,8 +19,9 @@
 6. [Cascade Blocker — Visual Guidance](#6-cascade-blocker--visual-guidance)
 7. [Transaction Forms — Grid Blocker](#7-transaction-forms--grid-blocker)
 8. [Variation Orders — Full Lifecycle](#8-variation-orders--full-lifecycle)
-9. [Administration — Settings & Diagnostics](#9-administration--settings--diagnostics)
-10. [Quick Reference — Feature Checklist](#10-quick-reference--feature-checklist)
+9. [Form Layout Engine (VFC) — Layout Customization](#9-form-layout-engine-vfc--layout-customization)
+10. [Administration — Settings & Diagnostics](#10-administration--settings--diagnostics)
+11. [Quick Reference — Feature Checklist](#11-quick-reference--feature-checklist)
 
 ---
 
@@ -347,9 +348,66 @@ When grid rows are **collapsed** (not expanded for editing) and have blocked BOQ
 
 ---
 
-## 9. Administration — Settings & Diagnostics
+## 9. Form Layout Engine (VFC) — Layout Customization
 
-### 9.1 Construction Settings Reference
+The Form Layout Engine (VFC) lets you customise how fields are arranged on any form. You can group fields into named sections, choose a column density, hide unwanted fields, and save your layout as a personal profile.
+
+### 9.1 Access
+
+1. Open any form (e.g., Sales Invoice, BOQ Header, User Scope Context)
+2. Click the **pencil icon** in the form toolbar (top-right)
+3. The **Layout Controls** panel opens as a dialog modal
+
+### 9.2 Sections Editor
+
+- **Current Sections** tab shows the form's current layout sections
+- **Add Section:** Enter a section name and click **Add**
+- **Remove Section:** Click the × icon on a section header
+- **Add Field to Section:** Select a field from the dropdown and click **Add**
+- **Remove Field:** Click the × icon on a field badge
+- Changes are applied when you click **Apply & Save**
+
+### 9.3 Density Control
+
+- Choose **1 column**, **2 columns** (default), or **3 columns** grid layout
+- Fields are distributed left-to-right, top-to-bottom
+- Density is saved to your browser's localStorage immediately
+
+### 9.4 Hidden Fields
+
+- **Hidden Fields** tab shows all fields on the form with checkboxes
+- Uncheck a field to hide it from the form
+- Hidden fields are saved per-user per-DocType
+- Fields hidden by Frappe's own dependency rules (e.g., `depends_on`) cannot be unhidden
+
+### 9.5 Presets
+
+- **Presets** tab lets you save and load named layout profiles
+- **Save Current As:** Name the current layout configuration (sections + hidden fields) and save it
+- **Apply:** Select a saved preset from the list to apply it immediately
+- Presets are stored in your browser's localStorage
+
+### 9.6 Revert to Default/Native
+
+- Click **Revert to Default/Native** button at the bottom of the panel
+- This resets:
+  - **Density** → back to the profile-defined default
+  - **Hidden fields** → all VFC-hidden fields are restored
+  - **Preset** → reset to "Default"
+  - **Personal layout** → your personal `for_user` profile is deleted (server-side)
+- After revert, the form refreshes immediately
+- Non-admin users can always revert their own personal layout
+
+### 9.7 Profile Persistence
+
+- Layout profiles are stored server-side as **Form Layout Profile** records
+- System Administrators see a **Sections Editor** tab for creating/sharing profiles
+- Regular users see only **Current Sections** (read-only) and personal overrides
+- Personal overrides (`for_user` profiles) persist until explicitly reverted
+
+## 10. Administration — Settings & Diagnostics
+
+### 10.1 Construction Settings Reference
 
 | Setting | Location | Purpose |
 |---------|----------|---------|
@@ -360,7 +418,7 @@ When grid rows are **collapsed** (not expanded for editing) and have blocked BOQ
 | Enable Variation Orders | Improve Now section | Master switch for VO functionality |
 | Direct Labor Designations | Improve Now section | Designations eligible for Timesheet BOQ gates |
 
-### 9.2 Cache Bust Verification
+### 10.2 Cache Bust Verification
 
 When a new version is deployed, verify assets are loaded fresh:
 
@@ -405,7 +463,7 @@ Admins can review these to identify users who frequently change scope mid-sessio
 - [ ] Accent persists after save if field still empty (not gated on `is_new()`)
 - [ ] Grid rows show accent/blocker in child tables
 - [ ] Collapsed rows show dimmed visual state
-- [ ] Grid rows re-block on parent project change
+- [ ] Grid rows re-block on child project change
 
 ### Variation Orders
 - [ ] Only Locked BOQ Headers appear in VO dropdown
@@ -416,6 +474,17 @@ Admins can review these to identify users who frequently change scope mid-sessio
 - [ ] Totals: Original contract value unchanged, revised value reflects VOs
 - [ ] Idempotency: re-saving approved VO creates no duplicate revisions
 - [ ] Client Approval: PDF upload required, rejection possible at any stage
+
+### Form Layout Engine (VFC)
+- [ ] Layout icon visible in the form toolbar (pencil icon) — opens Sections Editor
+- [ ] **Sections Editor tab:** Drag fields between sections, create/rename/remove sections
+- [ ] **Density control tab:** Choose 1, 2, or 3-column grid layout
+- [ ] **Hidden fields tab:** Toggle individual field visibility via checkboxes
+- [ ] **Presets tab:** Name and save layout configurations, apply from a list
+- [ ] **Revert button:** Fully resets density, hidden fields, preset, and personal layout to default/native
+- [ ] Non-admin users can revert their own personal layout via the revert button
+- [ ] Changes persist across page reload (localStorage + server-side profile)
+- [ ] Form refreshes immediately after Apply or Revert
 
 ### Admin
 - [ ] Construction Settings: Scope Filter Exclusions configurable

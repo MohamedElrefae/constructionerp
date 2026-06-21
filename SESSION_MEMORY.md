@@ -1,11 +1,11 @@
 # Session Memory — Construction ERP
-**LAST UPDATED:** 2026-06-21
-**UPDATED BY:** Cursor (WP1–WP7 rc-1.1 follow-up sprint)
+**LAST UPDATED:** 2026-06-21 (VFC Phase 3 stabilization complete)
+**UPDATED BY:** Cursor (WP1–WP7 rc-1.1 follow-up sprint + VFC Phase 3 stabilization)
 
 ---
 
 ## 1. Project Snapshot
-- **Total commits:** 185
+- **Total commits:** 191
 - **Current branch:** `develop`
 - **Last session date:** 2026-06-21
 - **Python version:** 3.14 (venv: `/home/mohamed/frappe-bench/env`)
@@ -56,15 +56,19 @@
 - Full RTL support, Arabic translations seeded via patches v6.0–v6.6
 - `translated_doctypes` in `hooks.py` covers 12 DocTypes
 
-### Form Layout Engine (VFC) ✅ Phase 1+2 (Stabilization in progress)
+### Form Layout Engine (VFC) ✅ Phase 1+2+3 (Stabilization Complete)
 - Form Layout Profile DocType (12 fields, `for_user` personal override, `for_role` targeting, `is_system` seed guard)
-- `vfc_layout_engine.js` (1,342 lines): runtime field re-parenting into named sections
-- `vite_layout_controls.js` (1,694 lines): drag/resize panel + Sections Editor tab + density controls
+- `vfc_layout_engine.js` (1,399 lines): runtime field re-parenting into named sections
+- `vite_layout_controls.js` (1,771 lines): drag/resize panel + Sections Editor tab + density controls + revert
 - `vfc_sections.css` (177 lines): section card styles
 - `vfc_config.js` (23 lines): debug flag gating
-- `construction/api/layout_api.py` (302 lines): 5 whitelisted endpoints (get/save/list/delete/validate)
-- `construction/api/modern_form_api.py` (431 lines): React form API — **deprecated** as of 2026-06-21 (ADR-008)
-- Phase 3+: stabilization sprint in progress (feat/vfc-phase3-stabilization)
+- `construction/construction/api/layout_api.py` (330 lines, 6 endpoints): get/save/list/delete/validate + `delete_my_personal_layout`
+- `construction/api/modern_form_api.py` (454 lines): React form API — **deprecated** (ADR-008), System Manager only
+- Phase 3 stabilization (WP0–WP5) complete:
+  - Cache TTL (60s client-side), revert-to-default button, full reset (density/hidden/preset/layout)
+  - Project layout seed, BOQ Item Stage seed verified, BLOCKED_DOCTYPES audit
+  - `hidden_due_to_dependency` guard, non-admin personal layout deletion
+  - 39 backend tests + browser test suite
 
 ### Vite UI ✅ Phase 0+1+2
 - Visual foundation (`vite_form_override.css`, `vite_list_override.css`)
@@ -142,7 +146,38 @@
 
 ## 6. Session Log (Append-Only — Most Recent First)
 
-### Session 2026-06-11 — Agent: Kimi Code (VO Quantity Revision)
+### Session 2026-06-21 — Agent: Cursor (VFC Phase 3 Stabilization)
+- **Worked on:** VFC Phase 3 stabilization — WP0 through WP5 complete, plus review findings
+- **Decisions:**
+  - React runtime removed from hooks.py (components/index.js); all 7 modern_form_api.py endpoints gated to System Manager only (ADR-008)
+  - Cache: 60s client-side TTL only, no backend realtime invalidation
+  - Recovery: revert-to-default button + full reset (density, hidden fields, preset, layout)
+  - Expansion: Project layout seed added; BOQ Item Stage seed verified
+  - `hidden_due_to_dependency` guard added to all 4 field-checking locations + `_restoreVisibleFieldWrapper`
+  - Non-admin personal layout deletion via new `delete_my_personal_layout(doctype)` endpoint
+  - SortableJS CDN replaced with local vendor asset
+  - JS cache busters bumped: vfc_layout_engine 1.42→1.44, vite_layout_controls 1.18→1.21
+- **Files changed (3 commits: 7aadbdd, d55f6a2, 698ea94):**
+  - `ADR.md` — ADR-008 appended
+  - `AGENTS.md` — VFC section updated, ADR count 7→8
+  - `SESSION_MEMORY.md` — updated
+  - `construction/api/modern_form_api.py` — all 7 endpoints gated with `_require_system_manager()`
+  - `construction/hooks.py` — patches entry removed; components/index.js include removed; cache busters bumped
+  - `construction/install.py` — DEFAULT_PROJECT_LAYOUT added; seed function updated
+  - `construction/public/js/vfc_layout_engine.js` — cache TTL, hidden_due_to_dependency guard, observer fixes, retry timer cleanup
+  - `construction/public/js/vfc_layout_engine_tests.js` — checkDebounce→checkEngineLoaded
+  - `construction/public/js/vite_layout_controls.js` — density fix, revert button, local SortableJS, full reset
+  - `construction/public/js/vendor/sortablejs.min.js` — local SortableJS asset
+  - `construction/construction/api/layout_api.py` — `delete_my_personal_layout` endpoint added
+  - `construction/tests/__init__.py` — `run_vfc_tests()` runner added
+  - `construction/tests/test_vfc_backend.py` — 39 backend tests
+  - `docs/hook_matrix.md` — stale components/index.js row removed
+  - `docs/feature_reviews/evidence/EV-068` through `EV-073` — 6 evidence files
+  - `docs/handover/VFC_PHASE_3_PLUS_*` — 3 handover documents
+- **Test results:** 39/39 VFC backend tests passing
+- **Build:** `bench build --app construction` successful
+- **Migration:** `bench --site v16.localhost migrate` successful
+- **Next steps:** Final user UI testing
 - **Worked on:** VO Quantity Revision model implementation — end-to-end completion
 - **Decisions:**
   - `revised_qty` is primary input; `delta_qty` computed from it
