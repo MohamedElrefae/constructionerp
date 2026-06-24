@@ -246,3 +246,36 @@ html.ct-enterprise .datatable .dt-row:nth-child(even) .dt-cell {
   background: rgba(148, 163, 184, 0.025);
 }
 
+/* ════════════════════════════════════════════════════════════════
+   11. LEVEL-RIGHT FIXES — like column overlay + dropdown z-index
+   ════════════════════════════════════════════════════════════════ */
+
+/* Prevent sticky level-right from stacking above dropdowns */
+html.ct-enterprise .list-row .level-right {
+  z-index: 1;
+}
+
+html.ct-enterprise .list-row-head .level-right {
+  z-index: 3;
+}
+
+/* When both like and comment count are disabled, collapse the right sidebar */
+html.ct-enterprise .result.no-activity .list-row .level-right,
+html.ct-enterprise .result.no-activity .list-row-head .level-right {
+  flex: 0 0 auto;
+  width: auto;
+  min-width: 0;
+  padding: 9px 6px;
+  border-left: none;
+}
+
+/* Ensure dropdowns always appear above the sticky level-right */
+html.ct-enterprise .list-row-container .level-right + .dropdown-menu,
+html.ct-enterprise .list-row-container .level-right ~ .dropdown-menu {
+  z-index: 1050 !important;
+}
+
+html.ct-enterprise .filterable-dropdown {
+  z-index: 1050 !important;
+}
+

@@ -115,7 +115,7 @@ app_include_css = [
 app_include_js = [
     "/assets/construction/js/print_settings_dialog.js",
     "/assets/construction/js/construction_export_menu.js",
-    "/assets/construction/js/theme_loader_v24.js?v=2.5.2",
+    "/assets/construction/js/theme_loader_v24.js?v=2.5.5",
     "/assets/construction/js/typography_settings.js?v=21",
     # Searchable Dropdown Module — base class (must load before overrides)
     "/assets/construction/js/searchable_dropdown/utils.js",
@@ -142,6 +142,9 @@ app_include_js = [
     "/assets/construction/js/vfc_config.js?v=1",
     # VFC debug log gating — must load BEFORE vite_layout_controls and vfc_layout_engine
     "/assets/construction/js/scope_context_report_filters.js?v=4",
+    # CT List View Config — hides like column, collapses level-right, fixes dropdown z-index
+    # Must load AFTER list view initializes but BEFORE user interaction
+    "/assets/construction/js/ct_list_view_config.js?v=1",
     # Sidebar accordion — only one section stays expanded at a time
     "/assets/construction/js/sidebar_accordion.js?v=1",
     # Translation workflow helpers (Arabic backlog + filters)
@@ -163,12 +166,12 @@ app_include_js = [
 # CSS includes for unauthenticated pages (login, etc.)
 # v2.4-r3: modern_theme.css handles all theming including login
 web_include_css = [
-    "/assets/construction/css/modern_theme.css?v=2.5.5",
+    "/assets/construction/css/modern_theme.css?v=2.5.6",
     "/assets/construction/css/email_theme.css",
 ]
 
 # v2.4-r3: theme_loader_v24 handles namespace injection and theming for all pages
-web_include_js = "/assets/construction/js/theme_loader_v24.js?v=2.5.2"
+web_include_js = "/assets/construction/js/theme_loader_v24.js?v=2.5.5"
 
 # ─── BRAND OVERRIDES & WEBSITE CONTEXT ───
 brand_html = "construction/templates/includes/navbar_brand.html"
@@ -240,6 +243,8 @@ after_install = [
     "construction.install.setup_boq_integration",
     "construction.install.setup_branch_company_field",
     "construction.install.setup_erpnext_standard_filters",
+    "construction.install.fix_select_permissions",
+    "construction.install.fix_system_manager_permissions",
     "construction.install.seed_form_layout_profiles",
     "construction.insert_translations.execute",
 ]
@@ -256,6 +261,8 @@ after_migrate = [
     "construction.install.setup_boq_integration",
     "construction.install.setup_branch_company_field",
     "construction.install.setup_erpnext_standard_filters",
+    "construction.install.fix_select_permissions",
+    "construction.install.fix_system_manager_permissions",
     "construction.install.seed_form_layout_profiles",
     "construction.insert_translations.execute",
 ]
