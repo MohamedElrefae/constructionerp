@@ -647,6 +647,102 @@ html.ct-enterprise .frappe-control.ct-boq-inline-hint-blocked .ct-boq-inline-hin
   box-shadow: 0 0 8px rgba(37,99,235,0.3) !important;
 }
 
+/* 24. List filter row hardening
+   Keep native Frappe filter controls usable and make dropdowns float cleanly
+   above the list table instead of visually merging with row data. */
+.page-form {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  position: relative !important;
+  z-index: 30 !important;
+  overflow: visible !important;
+  isolation: isolate !important;
+  align-items: flex-start !important;
+  gap: 6px !important;
+}
+
+.page-form .standard-filter-section {
+  flex: 1 1 auto !important;
+  width: auto !important;
+  min-width: 0 !important;
+}
+
+.page-form .filter-section {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  flex-wrap: wrap !important;
+  flex: 0 0 auto !important;
+  width: auto !important;
+  gap: 6px !important;
+  position: relative !important;
+  z-index: 35 !important;
+  overflow: visible !important;
+  min-height: 30px !important;
+}
+
+.page-form .sort-selector {
+  position: relative !important;
+  z-index: 45 !important;
+  overflow: visible !important;
+}
+
+.page-form .sort-selector .dropdown-menu,
+.page-form .sort-selector .dropdown-menu.show {
+  z-index: 12000 !important;
+  min-width: 220px !important;
+  max-height: min(320px, calc(100vh - 190px)) !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  background: var(--ct-bg-elevated, #1e293b) !important;
+  border: 1px solid var(--ct-border, rgba(148,163,184,0.24)) !important;
+  border-left: 3px solid var(--ct-primary, #2563eb) !important;
+  box-shadow: 0 18px 44px rgba(15,23,42,0.42) !important;
+  opacity: 1 !important;
+  backdrop-filter: none !important;
+}
+
+.page-form .sort-selector .dropdown-menu li,
+.page-form .sort-selector .dropdown-menu .dropdown-item,
+.page-form .sort-selector .dropdown-menu a {
+  background: transparent !important;
+  min-height: 32px !important;
+  line-height: 1.35 !important;
+  white-space: nowrap !important;
+}
+
+.page-form .filter-x-button,
+.page-form button.filter-x-button {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 0 0 34px !important;
+  width: 34px !important;
+  min-width: 34px !important;
+  max-width: 34px !important;
+  height: 30px !important;
+  padding: 0 !important;
+  margin: 0 4px !important;
+  position: relative !important;
+  z-index: 50 !important;
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  border-radius: 6px !important;
+}
+
+.page-form .filter-x-button svg,
+.page-form .filter-x-button .icon {
+  pointer-events: none !important;
+}
+
+.frappe-list,
+.frappe-list .result,
+.frappe-list .list-row-container,
+.frappe-list .list-row-head {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
 `;
 
 	var style = document.createElement("style");
@@ -680,4 +776,20 @@ html.ct-enterprise .frappe-control.ct-boq-inline-hint-blocked .ct-boq-inline-hin
 		}
 	});
 	observer.observe(document.head, { childList: true });
+
+	// Frappe applies query-string list filters such as
+	// /desk/item?is_construction_resource=1. After "clear all filters",
+	// remove the query string too so the cleared state survives refresh/navigation.
+	document.addEventListener(
+		"click",
+		function (event) {
+			if (!event.target.closest(".filter-x-button")) return;
+			setTimeout(function () {
+				if (!window.location.search) return;
+				var cleanUrl = window.location.pathname + window.location.hash;
+				window.history.replaceState(window.history.state || {}, "", cleanUrl);
+			}, 250);
+		},
+		true
+	);
 })();

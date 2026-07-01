@@ -30,7 +30,7 @@
 - Combined file: `modern_theme.css` (4,258 lines) — this is what Frappe actually loads
 - Dark mode namespace: `html.ct-enterprise[data-theme="dark"]`
 - Server-side resolution via `boot_session` hook (`construction.api.theme_api.add_theme_to_boot`) — no FOUC
-- **17 whitelisted endpoints** / **34 functions total** in `api/theme_api.py`
+- **17 whitelisted endpoints** / **33 functions total** in `api/theme_api.py`
 - Per-user: **User Desk Theme** DocType (25 fields); site-wide: **Construction Theme** DocType (94 fields) + **Modern Theme Settings** DocType
 
 ### 3B. Scope Context System
@@ -119,6 +119,7 @@
 | **Developer onboarding** | `docs/onboarding.md` |
 | **Session state** | `SESSION_MEMORY.md` (living document) |
 | **Schema facts** | `docs/ai/SCHEMA_FACTS.md` |
+| **Agent workflow** | `docs/ai/AGENT_WORKFLOW.md` |
 | **Coding patterns** | `docs/ai/CODING_PATTERNS.md` |
 | **ERPNext MCP bridge** | `erpnext-mcp-server/server.py` (read-only DocType queries) |
 
@@ -127,8 +128,20 @@
 ### For All Agents (Static Files)
 1. Read this file (`AGENTS.md`) first.
 2. Read `SESSION_MEMORY.md` for current sprint state.
-3. If you need schema details, read `docs/ai/SCHEMA_FACTS.md`.
-4. If you need code patterns, read `docs/ai/CODING_PATTERNS.md`.
+3. Read `docs/ai/AGENT_WORKFLOW.md` for the Architect/Reviewer/Builder/Final Reviewer contract.
+4. If you need schema details, read `docs/ai/SCHEMA_FACTS.md`.
+5. If you need code patterns, read `docs/ai/CODING_PATTERNS.md`.
+
+### Pre-Agent Verification Gate
+Run this before implementation or memory seeding:
+
+```bash
+python3 scripts/schema_drift_checker.py
+python3 scripts/ai_context_check.py
+git status --short
+```
+
+Hard stop on schema or context-check failures. Live repo files always override MCP memory.
 
 ### For MCP-Enabled Agents (Auto-Capture)
 
@@ -177,8 +190,8 @@ bash scripts/install_git_hooks.sh
 ```
 
 ### Conflict Resolution
-If MCP memory conflicts with any live repo file (`AGENTS.md`, `SESSION_MEMORY.md`, DocType JSON), **the repo file wins.** Always re-run `scripts/ai_context_check.py` when schemas change.
+If MCP memory conflicts with any live repo file (`AGENTS.md`, `SESSION_MEMORY.md`, DocType JSON), **the repo file wins.** Always re-run `scripts/schema_drift_checker.py` and `scripts/ai_context_check.py` when schemas change.
 
 ---
-*Last updated: 2026-06-21 (VFC Phase 3 stabilization complete)*  
+*Last updated: 2026-06-29 (AI orchestration and memory workflow added)*  
 *Update this file only when project identity, tech stack, or core architecture changes.*

@@ -39,8 +39,8 @@
   --bg: #f8fafc !important;
   --bg-2: #f1f5f9 !important;
   --surface: #ffffff !important;
-  --surface-hover: #f1f5f9 !important;
-  --surface-active: #e2e8f0 !important;
+  --surface-hover: #e2e8f0 !important;
+  --surface-active: #cbd5e1 !important;
 
   /* Border defaults */
   --border: rgba(15,23,42,0.1) !important;
@@ -207,8 +207,8 @@ html[data-theme="light"] {
   --bg: #f8fafc !important;
   --bg-2: #f1f5f9 !important;
   --surface: #ffffff !important;
-  --surface-hover: #f1f5f9 !important;
-  --surface-active: #e2e8f0 !important;
+  --surface-hover: #e2e8f0 !important;
+  --surface-active: #cbd5e1 !important;
 
   /* Text - DARK for contrast */
   --text: #0f172a !important;

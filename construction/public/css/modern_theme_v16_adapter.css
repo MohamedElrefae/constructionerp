@@ -1696,7 +1696,7 @@ textarea.form-control { resize: vertical !important; min-height: 80px !important
 [data-theme="light"] .tagit, [data-theme="light"] .tag-area { background: #ffffff !important; }
 [data-theme="light"] .form-sidebar-stats { color: #475569 !important; }
 [data-theme="light"] .activity-item { color: #475569 !important; }
-[data-theme="light"] .attachment-row:hover { background: #f1f5f9 !important; }
+[data-theme="light"] .attachment-row:hover { background: #e2e8f0 !important; }
 
 
 

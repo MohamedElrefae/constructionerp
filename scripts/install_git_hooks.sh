@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Install git hooks for auto-capturing memories on commits.
+# Install git hooks for auto-capturing memories on commits and optional pruning.
 
 set -e
 
@@ -18,6 +18,8 @@ CHANGED_FILES="$(git diff-tree --no-commit-id --name-only -r HEAD | tr '\n' ' ')
 AUTHOR="$(git log -1 --pretty=%an)"
 
 PYTHON="/home/mohamed/.local/share/pipx/venvs/memorygraphmcp/bin/python"
+SYSTEM_PYTHON="${SYSTEM_PYTHON:-python3}"
+AUDIT_LOG="$REPO_ROOT/logs/ai_mcp_audit.log"
 
 # Only store if commit message is meaningful (skip merge commits, etc.)
 if [[ -n "$COMMIT_MSG" && ! "$COMMIT_MSG" =~ ^Merge\  && ! "$COMMIT_MSG" =~ ^Revert\  ]]; then
@@ -28,6 +30,12 @@ if [[ -n "$COMMIT_MSG" && ! "$COMMIT_MSG" =~ ^Merge\  && ! "$COMMIT_MSG" =~ ^Rev
         --tag "git" --tag "commit" --tag "construction" \
         --importance 0.6 \
         --file "$CHANGED_FILES" 2>/dev/null || true
+fi
+
+# Keep tactical memory from growing without bound. This must never block commits.
+if [[ -f "$REPO_ROOT/scripts/ai_memory_pruner.py" ]]; then
+    mkdir -p "$(dirname "$AUDIT_LOG")"
+    "$SYSTEM_PYTHON" "$REPO_ROOT/scripts/ai_memory_pruner.py" --auto >> "$AUDIT_LOG" 2>&1 || true
 fi
 HOOK
 

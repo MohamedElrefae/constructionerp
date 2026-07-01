@@ -1,11 +1,11 @@
 # Construction ERP — End-to-End User Guide
 # Enterprise Workflow: Company → Cost Center → Project → BOQ
 
-**Version:** 1.1
-**Date:** 2026-06-21 (VFC Phase 3 stabilization + full reset)
+**Version:** 1.2
+**Date:** 2026-06-29 (Phase 1 BOQ Cost Estimation local test guide)
 **Branch:** `develop`
-**Tested by:** Playwright UI Runner + Browser QA + VFC test suite
-**Status:** All features verified — 27/27 VO test + 72/72 cascade blocker assertions passed
+**Tested by:** Local bench tests + Playwright UI Runner + Browser QA + VFC test suite
+**Status:** Phase 1 estimation PASS; 13/13 cost analysis tests and 39/39 VFC regression tests passed
 
 ---
 
@@ -15,13 +15,14 @@
 2. [BOQ Header — Create & Lock](#2-boq-header--create--lock)
 3. [BOQ Structure — WBS Tree](#3-boq-structure--wbs-tree)
 4. [BOQ Item — Line Items](#4-boq-item--line-items)
-5. [BOQ Item Stage — Measurement](#5-boq-item-stage--measurement)
-6. [Cascade Blocker — Visual Guidance](#6-cascade-blocker--visual-guidance)
-7. [Transaction Forms — Grid Blocker](#7-transaction-forms--grid-blocker)
-8. [Variation Orders — Full Lifecycle](#8-variation-orders--full-lifecycle)
-9. [Form Layout Engine (VFC) — Layout Customization](#9-form-layout-engine-vfc--layout-customization)
-10. [Administration — Settings & Diagnostics](#10-administration--settings--diagnostics)
-11. [Quick Reference — Feature Checklist](#11-quick-reference--feature-checklist)
+5. [Phase 1 BOQ Cost Estimation — Local Bench Test](#4a-phase-1-boq-cost-estimation--local-bench-test)
+6. [BOQ Item Stage — Measurement](#5-boq-item-stage--measurement)
+7. [Cascade Blocker — Visual Guidance](#6-cascade-blocker--visual-guidance)
+8. [Transaction Forms — Grid Blocker](#7-transaction-forms--grid-blocker)
+9. [Variation Orders — Full Lifecycle](#8-variation-orders--full-lifecycle)
+10. [Form Layout Engine (VFC) — Layout Customization](#9-form-layout-engine-vfc--layout-customization)
+11. [Administration — Settings & Diagnostics](#10-administration--settings--diagnostics)
+12. [Quick Reference — Feature Checklist](#11-quick-reference--feature-checklist)
 
 ---
 
@@ -162,6 +163,357 @@ If you're on the BOQ Item form, have a BOQ Header selected, but no leaf structur
 4. The structure is created, and the `structure` field auto-selects the new node
 
 **No more navigating away just to create a structure.**
+
+---
+
+## 4A. Phase 1 BOQ Cost Estimation — Local Bench Test
+
+Use this section to test the new estimation engine locally before starting progressive billing, subcontractor certificates, or actual site-cost features.
+
+### 4A.1 Local Bench Preflight
+
+Run these commands from the app folder:
+
+```bash
+cd /home/mohamed/frappe-bench/apps/construction
+python3 scripts/schema_drift_checker.py
+python3 scripts/ai_context_check.py
+bench --site v16.localhost run-tests --app construction --module construction.tests.test_cost_analysis_engine
+bench --site v16.localhost run-tests --app construction --module construction.tests.test_vfc_backend
+```
+
+Expected:
+
+- Schema drift checker says schema facts match live DocType JSON.
+- AI context check reports 40 checks passed, 0 failed.
+- Cost analysis suite reports 13 tests passed.
+- VFC regression suite reports 39 tests passed.
+
+Then migrate and clear cache from the bench root:
+
+```bash
+cd /home/mohamed/frappe-bench
+bench --site v16.localhost migrate
+bench --site v16.localhost clear-cache
+bench --site v16.localhost clear-website-cache
+```
+
+Start the local server if it is not already running:
+
+```bash
+cd /home/mohamed/frappe-bench
+bench start
+```
+
+Open:
+
+```text
+http://v16.localhost:8000/app
+```
+
+If the browser cannot resolve `v16.localhost`, confirm your local hosts/DNS setup, then retry. Do not continue to the next feature until the migration and automated tests pass.
+
+### 4A.2 What This Feature Tests
+
+This phase is estimation-only.
+
+Included:
+
+- Construction metadata on ERPNext Item.
+- Resource Price History for suggested rates from Purchase Invoice and Purchase Order rows.
+- BOQ Cost Analysis and BOQ Cost Analysis Detail.
+- Approved analysis rollup into BOQ Item estimated cost.
+- Header estimated-total refresh.
+- Supersede/restore behavior when multiple analyses exist.
+
+Not included yet:
+
+- Owner progressive billing.
+- Subcontractor payment certificates.
+- Site/gang timesheets.
+- Actual site-cost capture.
+- Retention, advance recovery, VAT, or insurance certificate mechanics.
+
+### 4A.3 Prepare Resource Items
+
+Create or verify ERPNext Items for resources used in cost analysis.
+
+1. Go to **Item -> New**.
+2. Create an item such as `MAT-CEMENT-001`.
+3. Set:
+   - **Item Name:** Cement Test Material
+   - **Item Group:** any valid buying group
+   - **Stock UOM:** Nos
+   - **Is Stock Item:** unchecked is acceptable for local testing
+4. In construction fields, set:
+   - **Is Construction Resource:** checked
+   - **Construction Resource Type:** Material
+   - **Default Cost Stream:** M
+   - **Default Wastage %:** 5
+5. Save.
+
+Optional: create more resources for labor, plant, and subcontract streams:
+
+| Resource Type | Cost Stream | Example Item Code |
+|---|---|---|
+| Material | M | `MAT-CEMENT-001` |
+| Labor | L | `LAB-MASON-001` |
+| Plant | P | `PLANT-MIXER-001` |
+| Subcontract | S | `SUB-CONCRETE-001` |
+| Overhead | O | `OH-SITE-ADMIN-001` |
+
+Verify:
+
+- The Item saves without editing ERPNext core DocType JSON.
+- Construction fields remain visible after reload.
+
+### 4A.4 Prepare BOQ Test Data
+
+Create a small BOQ chain:
+
+1. Go to **Project -> New** and create a test project if needed.
+2. Go to **BOQ Header -> New**.
+3. Set:
+   - **Title:** Local Estimation Test BOQ
+   - **Project:** your test project
+   - **BOQ Type:** Tender
+   - **Status:** Draft
+4. Save.
+5. Go to **BOQ Structure -> New** and create a group:
+   - **BOQ Header:** Local Estimation Test BOQ
+   - **Title:** Concrete Works
+   - **Is Group:** checked
+6. Create a leaf structure:
+   - **BOQ Header:** Local Estimation Test BOQ
+   - **Parent Structure:** Concrete Works
+   - **Title:** Foundation Concrete
+   - **Is Group:** unchecked
+7. Go to **BOQ Item -> New**.
+8. Set:
+   - **BOQ Header:** Local Estimation Test BOQ
+   - **Structure:** Foundation Concrete
+   - **Title:** C25 concrete foundation
+   - **Quantity:** 100
+   - **Unit:** Nos
+   - **Contract Unit Price:** 500
+9. Save.
+
+Verify:
+
+- BOQ Item saves only against the leaf structure.
+- `est_unit_cost` may be 0 before cost analysis approval. This is correct.
+- `contract_unit_price` and `line_total` are populated from the BOQ Item pricing fields.
+
+### 4A.5 Create BOQ Cost Analysis
+
+1. Go to **BOQ Cost Analysis -> New**.
+2. Set:
+   - **Title:** C25 foundation estimate v1
+   - **BOQ Item:** select the BOQ Item from section 4A.4
+   - **Company:** select the project company
+   - **Analysis UOM:** Nos
+   - **Analysis Quantity:** 1
+   - **Currency:** EGP or your company currency
+3. In **Details**, add resource rows:
+
+| Cost Stream | Item Code | UOM | Qty per BOQ Unit | Cost Rate | Wastage % |
+|---|---|---|---:|---:|---:|
+| M | `MAT-CEMENT-001` | Nos | 2 | 100 | 5 |
+| L | `LAB-MASON-001` | Nos | 1 | 80 | 0 |
+
+4. Save.
+
+Expected calculation:
+
+- Material amount = 2 x 100 x 1.05 = 210
+- Labor amount = 1 x 80 = 80
+- Total direct cost = 290
+- If overhead/profit are 0, total unit cost = 290
+
+Verify before submit:
+
+- Detail row `Amount` values are calculated.
+- `Total Direct Cost` and `Total Unit Cost` are populated.
+- BOQ Item `est_unit_cost` is not considered approved until submit.
+
+### 4A.6 Submit Analysis and Verify Rollup
+
+Submit the BOQ Cost Analysis.
+
+Verify:
+
+- **Analysis Status:** Approved
+- **Approved By:** current user
+- **Approved On:** populated
+- BOQ Item `est_unit_cost` equals approved analysis `total_unit_cost`
+- BOQ Item `est_line_total` equals `quantity x est_unit_cost x factor`
+- BOQ Item overhead/profit/calculated sell price fields are refreshed
+- BOQ Header `total_estimated_value` updates after approval
+
+For the example above with quantity 100 and unit cost 290:
+
+```text
+BOQ Item est_unit_cost = 290
+BOQ Item est_line_total = 29,000
+BOQ Header total_estimated_value includes 29,000
+```
+
+### 4A.7 Supersede and Restore Test
+
+Use this to confirm the approval lifecycle.
+
+1. Create a second **BOQ Cost Analysis** for the same BOQ Item.
+2. Use a different rate, for example total unit cost 350.
+3. Submit the second analysis.
+
+Verify:
+
+- Second analysis becomes **Approved**.
+- First analysis becomes **Superseded**.
+- BOQ Item `est_unit_cost` changes to the second analysis cost.
+
+Now cancel the second analysis.
+
+Verify:
+
+- Second analysis is cancelled.
+- First analysis is restored to **Approved**.
+- BOQ Item `est_unit_cost` returns to the first analysis cost.
+- BOQ Header estimated total refreshes again.
+
+### 4A.8 Resource Price History Test
+
+There are two local test paths.
+
+Path A: quick manual ledger test as System Manager:
+
+1. Go to **Resource Price History -> New**.
+2. Set:
+   - **Item Code:** `MAT-CEMENT-001`
+   - **Price Date:** today
+   - **Rate:** 100
+   - **Currency:** company currency
+   - **UOM:** Nos
+   - **Company:** your company
+   - **Supplier:** optional
+   - **Status:** Active
+3. Save.
+
+Verify:
+
+- The row saves with valid links.
+- Negative rates are rejected.
+- Cancelled rows are not used for suggestions.
+
+Path B: procurement capture test:
+
+1. Create a valid Supplier if needed.
+2. Create a **Purchase Invoice** or **Purchase Order** with item `MAT-CEMENT-001`.
+3. Set a positive rate and valid UOM.
+4. Submit the document.
+5. Open **Resource Price History**.
+
+Verify:
+
+- A Resource Price History row is created from the submitted document.
+- Source DocType, Source Name, Supplier, Company, Project, UOM, Currency, and Rate are populated.
+- Cancelling the Purchase Invoice or Purchase Order marks matching history rows as Cancelled instead of deleting them.
+
+### 4A.9 Report Service Checks from Bench
+
+Some Phase 1 reports are service-backed. You can verify them from bench while UI report pages are still being refined.
+
+From the bench root:
+
+```bash
+cd /home/mohamed/frappe-bench
+bench --site v16.localhost execute construction.services.boq_report_service.get_resource_price_history
+```
+
+For targeted checks, use Python through `bench console`:
+
+```bash
+cd /home/mohamed/frappe-bench
+bench --site v16.localhost console
+```
+
+Then run:
+
+```python
+from construction.services.boq_report_service import (
+    get_boq_cost_analysis_summary,
+    get_boq_item_cost_vs_contract,
+    get_resource_requirement_summary,
+    get_resource_price_history,
+    get_boq_items_missing_analysis,
+)
+
+boq_header = "YOUR-BOQ-HEADER-NAME"
+get_boq_cost_analysis_summary(boq_header)
+get_boq_item_cost_vs_contract(boq_header)
+get_resource_requirement_summary(boq_header)
+get_boq_items_missing_analysis(boq_header)
+get_resource_price_history(item_code="MAT-CEMENT-001")
+get_resource_price_history(from_date="2026-01-01", to_date="2026-12-31")
+```
+
+Verify:
+
+- Missing-analysis report lists BOQ Items before approval.
+- Missing-analysis report removes the item after approval.
+- Resource requirement summary groups resources by stream and item.
+- Price history filters by item, supplier, and date range.
+
+Exit console with:
+
+```python
+exit()
+```
+
+### 4A.10 Permission Smoke Test
+
+Use users with these roles:
+
+| Role | Expected Access |
+|---|---|
+| System Manager | Full access |
+| Construction Owner | Create, write, submit, cancel, amend, read, report |
+| Project Manager | Create, write, submit, cancel, amend, read, report |
+| Site Engineer | Read/report only for BOQ Cost Analysis |
+| Accountant | Read/report only |
+
+Manual check:
+
+1. Log in as a Project Manager.
+2. Open a Draft BOQ Cost Analysis.
+3. Confirm submit/cancel actions are available according to document status.
+4. Log in as a Site Engineer.
+5. Confirm BOQ Cost Analysis is not writable and cannot be created.
+
+Automated check:
+
+```bash
+cd /home/mohamed/frappe-bench/apps/construction
+bench --site v16.localhost run-tests --app construction --module construction.tests.test_cost_analysis_engine
+```
+
+Verify `test_non_admin_permissions` passes.
+
+### 4A.11 Ready-for-Next-Feature Checklist
+
+Do not move to progressive billing until all items below pass locally:
+
+- [ ] `schema_drift_checker.py` passes.
+- [ ] `ai_context_check.py` passes.
+- [ ] `test_cost_analysis_engine` passes 13/13.
+- [ ] `test_vfc_backend` passes 39/39.
+- [ ] At least one BOQ Item has an approved BOQ Cost Analysis.
+- [ ] BOQ Item estimated cost updates from the approved analysis.
+- [ ] BOQ Header estimated total updates after analysis approval.
+- [ ] Second analysis supersedes the first and cancellation restores the prior analysis.
+- [ ] Resource Price History can be created from valid procurement data or manual System Manager entry.
+- [ ] Report service checks return expected rows.
+- [ ] Project Manager and Site Engineer permissions behave as expected.
 
 ---
 
@@ -434,7 +786,7 @@ When a new version is deployed, verify assets are loaded fresh:
 | `filter_fix.js` | `?v=7` |
 | `scope_context_form_defaults.js` | `?v=3` |
 
-### 9.3 Scope Drift Audit Log
+### 10.3 Scope Drift Audit Log
 
 When a scope drift is detected during save, an entry is created in the **Error Log** (search "BOQ Scope Drift"). The log includes:
 - User who triggered the drift
@@ -445,7 +797,7 @@ Admins can review these to identify users who frequently change scope mid-sessio
 
 ---
 
-## 10. Quick Reference — Feature Checklist
+## 11. Quick Reference — Feature Checklist
 
 ### Scope Context
 - [ ] Top bar shows cascading scope selectors
@@ -475,6 +827,18 @@ Admins can review these to identify users who frequently change scope mid-sessio
 - [ ] Idempotency: re-saving approved VO creates no duplicate revisions
 - [ ] Client Approval: PDF upload required, rejection possible at any stage
 
+### BOQ Cost Estimation
+- [ ] Local migration and cache clear completed on `v16.localhost`
+- [ ] Construction resource Item fields are visible and save correctly
+- [ ] BOQ Cost Analysis calculates detail amounts, direct cost, and unit cost
+- [ ] Submitted analysis updates BOQ Item `est_unit_cost`
+- [ ] Submitted analysis updates BOQ Header `total_estimated_value`
+- [ ] Second analysis supersedes the first approved analysis
+- [ ] Cancelling the second analysis restores the prior approved analysis
+- [ ] Resource Price History can be created from valid purchase data or manual System Manager entry
+- [ ] Report service functions return expected summary, missing-analysis, resource, and price-history rows
+- [ ] Project Manager can submit/cancel and Site Engineer cannot write/create BOQ Cost Analysis
+
 ### Form Layout Engine (VFC)
 - [ ] Layout icon visible in the form toolbar (pencil icon) — opens Sections Editor
 - [ ] **Sections Editor tab:** Drag fields between sections, create/rename/remove sections
@@ -501,6 +865,8 @@ The following automated and manual test evidence is available:
 
 | Test Suite | Location | Result |
 |------------|----------|--------|
+| BOQ Cost Estimation Engine (13 tests) | `construction/tests/test_cost_analysis_engine.py` | 13/13 passing |
+| VFC Regression (39 tests) | `construction/tests/test_vfc_backend.py` | 39/39 passing |
 | VO Quantity Revision (27 steps) | `docs/feature_reviews/evidence/ev_067_ui_tests/VO_QUANTITY_REVISION_MANUAL_TEST.md` | 27/27 ✅ |
 | Screenshots | `docs/feature_reviews/evidence/ev_067_ui_tests/*.png` | 11 captures |
 | Scope Context (14 tests) | `construction/tests/test_scope_context.py` | All passing |

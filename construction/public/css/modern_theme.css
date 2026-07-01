@@ -167,8 +167,8 @@ html.ct-enterprise[data-theme="light"] {
   --ct-bg-elevated: #f1f5f9;
   --ct-bg-3: #e2e8f0;
   --ct-surface: #ffffff;
-  --ct-surface-hover: #f1f5f9;
-  --ct-surface-active: #e2e8f0;
+  --ct-surface-hover: #e2e8f0;
+  --ct-surface-active: #cbd5e1;
   --ct-surface-elevated: #ffffff;
   --ct-text: #0f172a;
   --ct-text-secondary: #475569;
@@ -4397,6 +4397,41 @@ html.ct-enterprise .ct-theme-wrapper .dropdown-item:hover {
   background: var(--ct-surface-hover);
   color: var(--ct-text);
 }
+
+/* ─── v2.5.3 — Icon Button Theme Toggle (replaces dropdown) ─── */
+html.ct-enterprise .ct-theme-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--ct-border);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ct-text-secondary);
+  cursor: pointer;
+  transition: var(--ct-motion);
+  padding: 0;
+  line-height: 1;
+}
+
+html.ct-enterprise .ct-theme-icon-btn:hover {
+  color: var(--ct-primary);
+  border-color: var(--ct-primary);
+  background: rgba(37, 99, 235, 0.08);
+}
+
+html.ct-enterprise .ct-theme-icon-btn svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+html.ct-enterprise .ct-theme-icon-btn .ct-icon-sun { display: none; }
+html.ct-enterprise .ct-theme-icon-btn .ct-icon-moon { display: block; }
+
+html.ct-enterprise[data-theme="dark"] .ct-theme-icon-btn .ct-icon-sun { display: block; }
+html.ct-enterprise[data-theme="dark"] .ct-theme-icon-btn .ct-icon-moon { display: none; }
 
 /* ════════════════════════════════════════════════════════════
    v2.5.3 — Sidebar/Menu Hover Parity

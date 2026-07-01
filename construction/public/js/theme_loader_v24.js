@@ -16,7 +16,9 @@
 		path.startsWith("/desk") ||
 		path.startsWith("/app") ||
 		path.startsWith("/login") ||
-		path.startsWith("/reset_password")
+		path.startsWith("/reset_password") ||
+		path === "/" ||
+		path.startsWith("/index")
 	) {
 		if (!html.classList.contains("ct-enterprise")) {
 			html.classList.add("ct-enterprise");
@@ -28,8 +30,8 @@
 		} else if (savedMode === "dark") {
 			html.setAttribute("data-theme", "dark");
 		} else {
-			html.setAttribute("data-theme", "dark");
-			localStorage.setItem("ct-theme-mode", "dark");
+			html.setAttribute("data-theme", "light");
+			localStorage.setItem("ct-theme-mode", "light");
 		}
 	}
 
@@ -37,6 +39,22 @@
 		html.setAttribute("data-theme", mode);
 		localStorage.setItem("ct-theme-mode", mode);
 		window.dispatchEvent(new CustomEvent("ct-theme-change", { detail: { theme: mode } }));
+
+		if (typeof frappe !== "undefined" && frappe.session &&
+			frappe.session.user && frappe.session.user !== "Guest") {
+			try {
+				frappe.call({
+					method: "construction.api.theme_api.set_user_theme",
+					args: { theme: mode, mode: mode },
+					freeze: false,
+					callback: function (r) {
+						if (r && r.exc) {
+							console.warn("[CT] Theme persist failed:", r.exc);
+						}
+					},
+				});
+			} catch (e) {}
+		}
 	}
 	window.ctSetMode = setMode;
 
@@ -225,9 +243,9 @@
 				} catch (e) {
 					return;
 				}
-				if (document.body.classList.contains("login-content")) return;
-				var path = window.location.pathname;
-				if (path.startsWith("/login") || path.startsWith("/reset_password")) return;
+			if (document.body.classList.contains("login-content")) return;
+			var path = window.location.pathname;
+			if (path.startsWith("/login") || path.startsWith("/reset_password") || path === "/" || path.startsWith("/index")) return;
 
 				this._isRendering = true;
 				try {
@@ -249,14 +267,21 @@
 									return;
 								}
 
+								var stale = target.querySelectorAll('[data-ct-topbar="' + item.id + '"]');
+								for (var si = 0; si < stale.length; si++) {
+									if (stale[si] !== (injected && injected.element)) stale[si].remove();
+								}
+
 								var el = document.createElement(tagName);
 								el.className = "ct-topbar-item";
 								el.setAttribute("data-ct-topbar", item.id);
 								el.innerHTML = item.render();
 								target.appendChild(el);
 
-								if (item.setup) item.setup(el);
 								this._injected.set(item.id, { element: el });
+								if (item.setup) {
+									try { item.setup(el); } catch (e2) { console.warn("[CT] setup error:", e2); }
+								}
 							} catch (e) {
 								console.warn("[CT] render item error:", e);
 							}
@@ -339,100 +364,68 @@
 
 		window.ctTopbar = new ConstructionTopbarManager();
 
-		// Hide theme switcher on public pages (login, reset_password)
-		var isPublicPage = path.startsWith("/login") || path.startsWith("/reset_password");
+		// Hide theme switcher on public pages (login, reset_password, landing)
+		var isPublicPage = path.startsWith("/login") || path.startsWith("/reset_password") || path === "/" || path.startsWith("/index");
 
-		window.ctTopbar.register({
-			id: "theme-switcher",
-			order: 10,
-			render: function () {
-				if (isPublicPage) return "";
-				var mode = html.getAttribute("data-theme") || "dark";
-				return (
-					'<div class="dropdown ct-theme-wrapper" id="ct-theme-toggle">' +
-					'<button class="btn-reset nav-link text-muted dropdown-toggle ct-theme-btn" ' +
-					'type="button" aria-haspopup="true" aria-expanded="false">' +
-					'<span id="ct-theme-label">' +
-					themeLabel(mode) +
-					"</span></button>" +
-					'<div class="dropdown-menu dropdown-menu-right">' +
-					'<a class="dropdown-item" href="#" data-ct-mode="dark">\uD83C\uDFD7\uFE0F Construction Dark</a>' +
-					'<a class="dropdown-item" href="#" data-ct-mode="light">\u2600\uFE0F Construction Light</a>' +
-					"</div></div>"
-				);
-			},
-			setup: function (element) {
-				var btn = element.querySelector(".ct-theme-btn");
-				var menu = element.querySelector(".dropdown-menu");
-				if (!btn || !menu) return;
+	window.ctTopbar.register({
+		id: "theme-switcher",
+		order: 10,
+		render: function () {
+			if (isPublicPage) return "";
+			return (
+				'<button class="ct-theme-icon-btn" id="ct-theme-icon" ' +
+				'type="button" aria-label="Toggle theme" title="Switch light/dark">' +
+				'<svg class="ct-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+				'stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+				'<circle cx="12" cy="12" r="5"/>' +
+				'<line x1="12" y1="1" x2="12" y2="3"/>' +
+				'<line x1="12" y1="21" x2="12" y2="23"/>' +
+				'<line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>' +
+				'<line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>' +
+				'<line x1="1" y1="12" x2="3" y2="12"/>' +
+				'<line x1="21" y1="12" x2="23" y2="12"/>' +
+				'<line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>' +
+				'<line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>' +
+				"</svg>" +
+				'<svg class="ct-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+				'stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+				'<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>' +
+				"</svg>" +
+				"</button>"
+			);
+		},
+		setup: function (element) {
+			var btn = element.querySelector("#ct-theme-icon");
+			if (!btn) return;
 
-				btn.addEventListener("click", function (e) {
-					e.preventDefault();
-					e.stopPropagation();
+			btn.addEventListener("click", function (e) {
+				e.preventDefault();
+				e.stopPropagation();
+				var current = html.getAttribute("data-theme") || "light";
+				var next = current === "dark" ? "light" : "dark";
+				ctSetMode(next);
+			});
 
-					var isOpen = menu.classList.contains("show");
-					document.querySelectorAll(".dropdown-menu.show").forEach(function (m) {
-						m.classList.remove("show");
-						var b = m.closest(".dropdown")
-							? m.closest(".dropdown").querySelector("[aria-expanded]")
-							: null;
-						if (b) b.setAttribute("aria-expanded", "false");
-					});
-					if (!isOpen) {
-						menu.classList.add("show");
-						btn.setAttribute("aria-expanded", "true");
-						var rect = btn.getBoundingClientRect();
-						menu.style.position = "fixed";
-						menu.style.top = rect.bottom + 4 + "px";
-						menu.style.right = window.innerWidth - rect.right + "px";
-						menu.style.left = "auto";
-						menu.style.bottom = "auto";
-						menu.style.transform = "none";
-					}
-				});
-
-				menu.querySelectorAll(".dropdown-item").forEach(function (item) {
-					item.addEventListener("click", function (e) {
-						e.preventDefault();
-						e.stopPropagation();
-						var mode = item.getAttribute("data-ct-mode");
-						if (mode) ctSetMode(mode);
-						menu.classList.remove("show");
-						btn.setAttribute("aria-expanded", "false");
-					});
-				});
-
-				var outsideClick = function (e) {
-					if (!element.contains(e.target)) {
-						menu.classList.remove("show");
-						btn.setAttribute("aria-expanded", "false");
-					}
-				};
-				element._ctOutsideClick = outsideClick;
-				document.addEventListener("click", outsideClick);
-
-				var handler = function (e) {
-					var label = element.querySelector("#ct-theme-label");
-					if (label) {
-						label.textContent = themeLabel(
-							e.detail ? e.detail.theme : html.getAttribute("data-theme") || "dark"
-						);
-					}
-				};
-				element._ctThemeHandler = handler;
-				window.addEventListener("ct-theme-change", handler);
-			},
-			teardown: function (element) {
-				if (element._ctThemeHandler) {
-					window.removeEventListener("ct-theme-change", element._ctThemeHandler);
-					element._ctThemeHandler = null;
+			var handler = function (e) {
+				var mode = (e && e.detail) ? e.detail.theme : (html.getAttribute("data-theme") || "light");
+				var sun = element.querySelector(".ct-icon-sun");
+				var moon = element.querySelector(".ct-icon-moon");
+				if (sun && moon) {
+					sun.style.display = mode === "dark" ? "block" : "none";
+					moon.style.display = mode === "dark" ? "none" : "block";
 				}
-				if (element._ctOutsideClick) {
-					document.removeEventListener("click", element._ctOutsideClick);
-					element._ctOutsideClick = null;
-				}
-			},
-		});
+			};
+			element._ctThemeHandler = handler;
+			window.addEventListener("ct-theme-change", handler);
+			handler();
+		},
+		teardown: function (element) {
+			if (element._ctThemeHandler) {
+				window.removeEventListener("ct-theme-change", element._ctThemeHandler);
+				element._ctThemeHandler = null;
+			}
+		},
+	});
 	}
 
 	if (typeof frappe !== "undefined" && typeof jQuery !== "undefined") {

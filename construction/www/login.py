@@ -7,6 +7,8 @@ Re-exports Frappe's login context so our construction/www/login.html
 template override receives the full context (app_name, logo, etc.).
 """
 
+no_cache = True
+
 from frappe.www.login import (
     get_context,
     get_login_with_email_link_ratelimit,

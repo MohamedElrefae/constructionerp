@@ -408,7 +408,97 @@
       padding: 1rem !important;
     }
   }
+
+  /* Hide topbar, breadcrumbs and footer layout */
+  header.navbar,
+  footer.footer,
+  body > .navbar,
+  body > .page-footer,
+  #navbar-breadcrumbs,
+  .sign-up-message,
+  .signup-disabled,
+  .for-signup {
+    display: none !important;
+  }
+
+  .ct-login-theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 11000;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    border-radius: 10px;
+    background: rgba(30, 41, 59, 0.6);
+    color: #cbd5e1;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 0;
+  }
+
+  .ct-login-theme-toggle:hover {
+    border-color: #2563eb;
+    color: #f1f5f9;
+    transform: translateY(-1px);
+  }
+
+  .ct-login-theme-toggle svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .ct-login-theme-toggle .ct-icon-moon { display: block; }
+  .ct-login-theme-toggle .ct-icon-sun { display: none; }
+
+  html[data-theme="dark"] .ct-login-theme-toggle .ct-icon-moon { display: none; }
+  html[data-theme="dark"] .ct-login-theme-toggle .ct-icon-sun { display: block; }
 </style>
+
+<button class="ct-login-theme-toggle" id="ct-login-theme-toggle"
+        aria-label="Toggle theme" title="Switch light/dark">
+  <svg class="ct-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+       stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="5"/>
+    <line x1="12" y1="1" x2="12" y2="3"/>
+    <line x1="12" y1="21" x2="12" y2="23"/>
+    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+    <line x1="1" y1="12" x2="3" y2="12"/>
+    <line x1="21" y1="12" x2="23" y2="12"/>
+    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+  </svg>
+  <svg class="ct-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+       stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+  </svg>
+</button>
+
+<script>
+  (function () {
+    var html = document.documentElement;
+    var btn = document.getElementById("ct-login-theme-toggle");
+    if (!btn) return;
+    btn.addEventListener("click", function () {
+      var current = html.getAttribute("data-theme") || "light";
+      var next = current === "dark" ? "light" : "dark";
+      if (window.ctSetMode) {
+        window.ctSetMode(next);
+      } else {
+        html.setAttribute("data-theme", next);
+        localStorage.setItem("ct-theme-mode", next);
+      }
+    });
+  })();
+</script>
 
 {{ super() }}
 {% endblock %}
+
+{% block navbar %}{% endblock %}

@@ -1,535 +1,867 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Construction Sense | Enterprise Construction ERP</title>
-  <meta name="description" content="Construction Sense is an enterprise ERP platform for BOQ control, cost management, variation orders, procurement, and project execution.">
-  <link rel="icon" type="image/svg+xml" href="/assets/construction/images/construction_logo.svg">
+{% extends "templates/base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block meta_block %}
+  <meta name="description" content="{{ description }}">
+{% endblock %}
+
+{% block head_include %}
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Source+Serif+4:wght@600;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --ink: #111827;
-      --ink-2: #243041;
-      --muted: #5e6a7b;
-      --line: #d8dee8;
-      --paper: #f5f2ec;
-      --surface: #ffffff;
-      --steel: #30475e;
-      --steel-dark: #192534;
-      --field: #d7e2df;
-      --safety: #f2a20c;
-      --success: #1f8a5b;
-      --shadow: 0 18px 55px rgba(17, 24, 39, 0.16);
-      --font-body: "Manrope", sans-serif;
-      --font-display: "Source Serif 4", serif;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      margin: 0;
-      font-family: var(--font-body);
-      color: var(--ink);
-      background: var(--paper);
-      line-height: 1.5;
-    }
-
-    a {
-      color: inherit;
-    }
-
-    .site-header {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      background: rgba(245, 242, 236, 0.92);
-      border-bottom: 1px solid rgba(17, 24, 39, 0.1);
-      backdrop-filter: blur(14px);
-    }
-
-    .container {
-      width: min(1180px, calc(100% - 40px));
-      margin: 0 auto;
-    }
-
-    .nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      min-height: 74px;
-      gap: 24px;
-    }
-
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      text-decoration: none;
-      font-weight: 800;
-      color: var(--ink);
-      white-space: nowrap;
-    }
-
-    .brand-mark {
-      display: grid;
-      width: 42px;
-      height: 42px;
-      place-items: center;
-      border-radius: 8px;
-      color: #fff;
-      background: linear-gradient(135deg, var(--steel-dark), var(--steel));
-      box-shadow: 0 8px 24px rgba(25, 37, 52, 0.2);
-    }
-
-    .brand-mark svg {
-      width: 25px;
-      height: 25px;
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 26px;
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      color: var(--ink-2);
-      font-size: 0.94rem;
-      font-weight: 700;
-    }
-
-    .nav-links a {
-      text-decoration: none;
-    }
-
-    .nav-links a:hover {
-      color: var(--success);
-    }
-
-    .actions {
-      display: flex;
-      gap: 10px;
-    }
-
-    .button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 44px;
-      padding: 0 18px;
-      border: 1px solid transparent;
-      border-radius: 8px;
-      font-weight: 800;
-      text-decoration: none;
-      transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
-    }
-
-    .button:hover {
-      transform: translateY(-1px);
-    }
-
-    .button-primary {
-      color: #fff;
-      background: var(--success);
-      box-shadow: 0 10px 24px rgba(31, 138, 91, 0.25);
-    }
-
-    .button-primary:hover {
-      background: #176f49;
-    }
-
-    .button-secondary {
-      color: var(--ink);
-      background: rgba(255, 255, 255, 0.82);
-      border-color: rgba(17, 24, 39, 0.16);
-    }
-
-    .hero {
-      min-height: 82vh;
-      display: grid;
-      align-items: end;
-      padding: 88px 0 54px;
-      color: #fff;
-      background:
-        linear-gradient(90deg, rgba(17, 24, 39, 0.88) 0%, rgba(17, 24, 39, 0.72) 42%, rgba(17, 24, 39, 0.2) 100%),
-        url("https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1800&q=82") center / cover;
-    }
-
-    .hero-content {
-      width: min(760px, 100%);
-    }
-
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 20px;
-      color: #f7d17a;
-      font-size: 0.86rem;
-      font-weight: 800;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .eyebrow::before {
-      content: "";
-      width: 34px;
-      height: 3px;
-      background: var(--safety);
-    }
-
-    h1 {
-      margin: 0;
-      font-family: var(--font-display);
-      font-size: clamp(3.2rem, 7vw, 6.6rem);
-      line-height: 0.94;
-      letter-spacing: 0;
-    }
-
-    .hero-copy {
-      max-width: 690px;
-      margin: 24px 0 34px;
-      color: rgba(255, 255, 255, 0.88);
-      font-size: clamp(1.05rem, 1.6vw, 1.28rem);
-    }
-
-    .hero-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 14px;
-    }
-
-    .hero-panel {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1px;
-      margin-top: 56px;
-      background: rgba(255, 255, 255, 0.22);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      box-shadow: var(--shadow);
-    }
-
-    .metric {
-      min-height: 118px;
-      padding: 22px;
-      background: rgba(245, 242, 236, 0.94);
-      color: var(--ink);
-    }
-
-    .metric strong {
-      display: block;
-      font-size: 1.74rem;
-      line-height: 1;
-      color: var(--steel-dark);
-    }
-
-    .metric span {
-      display: block;
-      margin-top: 9px;
-      color: var(--muted);
-      font-size: 0.87rem;
-      font-weight: 700;
-    }
-
-    section {
-      padding: 82px 0;
-    }
-
-    .section-heading {
-      display: grid;
-      grid-template-columns: 0.85fr 1.15fr;
-      gap: 56px;
-      align-items: end;
-      margin-bottom: 42px;
-    }
-
-    .section-heading h2 {
-      margin: 0;
-      font-family: var(--font-display);
-      font-size: clamp(2.1rem, 4vw, 3.6rem);
-      line-height: 1;
-      letter-spacing: 0;
-    }
-
-    .section-heading p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 1.05rem;
-    }
-
-    .capabilities {
-      background: var(--paper);
-    }
-
-    .capability-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-    }
-
-    .capability {
-      min-height: 260px;
-      padding: 28px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--surface);
-      box-shadow: 0 10px 30px rgba(17, 24, 39, 0.06);
-    }
-
-    .capability .number {
-      display: inline-flex;
-      width: 38px;
-      height: 38px;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 26px;
-      border-radius: 8px;
-      color: var(--steel-dark);
-      background: var(--field);
-      font-weight: 900;
-    }
-
-    .capability h3 {
-      margin: 0 0 12px;
-      color: var(--steel-dark);
-      font-size: 1.24rem;
-    }
-
-    .capability p {
-      margin: 0;
-      color: var(--muted);
-    }
-
-    .operations {
-      color: #fff;
-      background:
-        linear-gradient(135deg, rgba(25, 37, 52, 0.96), rgba(48, 71, 94, 0.94)),
-        url("https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=1600&q=82") center / cover;
-    }
-
-    .operations .section-heading p {
-      color: rgba(255, 255, 255, 0.76);
-    }
-
-    .workflow {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 0;
-      border: 1px solid rgba(255, 255, 255, 0.18);
-    }
-
-    .workflow-step {
-      min-height: 210px;
-      padding: 28px;
-      border-right: 1px solid rgba(255, 255, 255, 0.18);
-      background: rgba(255, 255, 255, 0.08);
-    }
-
-    .workflow-step:last-child {
-      border-right: 0;
-    }
-
-    .workflow-step small {
-      color: #f7d17a;
-      font-weight: 900;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .workflow-step h3 {
-      margin: 36px 0 12px;
-      font-size: 1.2rem;
-    }
-
-    .workflow-step p {
-      margin: 0;
-      color: rgba(255, 255, 255, 0.74);
-      font-size: 0.94rem;
-    }
-
-    .cta {
-      padding: 72px 0;
-      color: #fff;
-      background: var(--steel-dark);
-    }
-
-    .cta-row {
-      display: grid;
-      grid-template-columns: 1.1fr auto;
-      gap: 32px;
-      align-items: center;
-    }
-
-    .cta h2 {
-      margin: 0 0 12px;
-      font-family: var(--font-display);
-      font-size: clamp(2rem, 4vw, 3.4rem);
-      line-height: 1;
-      letter-spacing: 0;
-    }
-
-    .cta p {
-      max-width: 700px;
-      margin: 0;
-      color: rgba(255, 255, 255, 0.76);
-    }
-
-    footer {
-      padding: 28px 0;
-      color: var(--muted);
-      background: #fff;
-      border-top: 1px solid var(--line);
-      font-size: 0.92rem;
-    }
-
-    .footer-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-    }
-
-    .footer-links {
-      display: flex;
-      gap: 18px;
-      font-weight: 800;
-    }
-
-    .footer-links a {
-      text-decoration: none;
-    }
-
-    @media (max-width: 900px) {
-      .nav-links {
-        display: none;
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Source+Serif+4:wght@600;700&family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    (function() {
+      var saved = localStorage.getItem("ct-landing-lang");
+      if (saved && saved !== "{{ lang }}") {
+        window.location.href = "/?lang=" + saved;
       }
+      // Set <html> lang/dir for accessibility + CSS selectors
+      document.documentElement.setAttribute("lang", "{{ lang_attr }}");
+      document.documentElement.setAttribute("dir", "{{ lang_dir }}");
+    })();
+  </script>
+{% endblock %}
 
-      .hero {
-        min-height: auto;
-        padding: 86px 0 36px;
-        background-position: 61% center;
-      }
+{% block style %}
+{{ super() }}
+<style>
+  :root {
+    /* Hybrid Industrial Premium Theme - Light Content Default */
+    --ink: #0f172a;
+    --ink-2: #334155;
+    --muted: #64748b;
+    --line: #e2e8f0;
+    --paper: #f8fafc;
+    --surface: #ffffff;
+    --surface-glass: rgba(255, 255, 255, 0.85);
+    
+    /* Dark Hero / Operations */
+    --hero-bg: #0b1020;
+    --hero-surface: rgba(15, 23, 42, 0.6);
+    --hero-line: rgba(255, 255, 255, 0.1);
+    --hero-ink: #f8fafc;
+    --hero-muted: #94a3b8;
+    
+    --steel: #334155;
+    --steel-dark: #0f172a;
+    --field: #f1f5f9;
+    --safety: #f59e0b; /* Safety Amber */
+    --success: #10b981; /* Signal Green */
+    --shadow: 0 18px 55px rgba(15, 23, 42, 0.08);
+    
+    --font-body: "Manrope", sans-serif;
+    --font-display: "Source Serif 4", serif;
+  }
 
-      .hero-panel,
-      .capability-grid,
-      .workflow,
-      .section-heading,
-      .cta-row {
-        grid-template-columns: 1fr;
-      }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
 
-      .workflow-step {
-        border-right: 0;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.18);
-      }
+  body {
+    margin: 0;
+    font-family: var(--font-body);
+    color: var(--ink);
+    background: var(--paper);
+    line-height: 1.5;
+    overflow-x: hidden;
+  }
+  
+  a { color: inherit; }
 
-      .workflow-step:last-child {
-        border-bottom: 0;
-      }
+  /* Typography */
+  h1, h2, h3 {
+    margin: 0;
+    letter-spacing: -0.02em;
+  }
+
+  /* Glass Header */
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--surface-glass);
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    transition: background 0.3s ease, border-color 0.3s ease;
+  }
+
+  .container {
+    width: min(1180px, calc(100% - 40px));
+    margin: 0 auto;
+  }
+
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 72px;
+    gap: 24px;
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    font-weight: 800;
+    color: var(--ink);
+    white-space: nowrap;
+    font-size: 1.1rem;
+  }
+
+  .brand-mark {
+    display: grid;
+    width: 40px;
+    height: 40px;
+    place-items: center;
+    border-radius: 8px;
+    color: #fff;
+    background: linear-gradient(135deg, var(--steel-dark), var(--steel));
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.2);
+  }
+
+  .brand-mark svg { width: 24px; height: 24px; }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    color: var(--ink-2);
+    font-size: 0.95rem;
+    font-weight: 700;
+  }
+
+  .nav-links a {
+    text-decoration: none;
+    position: relative;
+    padding: 8px 0;
+    transition: color 0.2s ease;
+  }
+  
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--success);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+  }
+
+  .nav-links a:hover { color: var(--success); }
+  .nav-links a:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  .actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+
+  /* Buttons */
+  .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 0 20px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    font-weight: 800;
+    font-size: 0.95rem;
+    text-decoration: none;
+    cursor: pointer;
+    font-family: var(--font-body);
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease, background 0.2s ease;
+  }
+
+  .button:hover { transform: translateY(-2px); }
+  .button:active { transform: translateY(0); }
+
+  .button-primary {
+    color: #fff;
+    background: var(--success);
+    box-shadow: 0 10px 24px rgba(16, 185, 129, 0.25);
+  }
+  .button-primary:hover { background: #0e9f6e; box-shadow: 0 12px 28px rgba(16, 185, 129, 0.35); }
+
+  .button-secondary {
+    color: var(--ink);
+    background: var(--surface);
+    border-color: var(--line);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+  }
+  .button-secondary:hover { border-color: var(--ink-2); }
+
+  .button-dark {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(8px);
+  }
+  .button-dark:hover { background: rgba(255, 255, 255, 0.2); border-color: rgba(255, 255, 255, 0.3); }
+
+  /* Hero Section (Cinematic Dark) */
+  .hero {
+    position: relative;
+    min-height: 85vh;
+    display: grid;
+    align-items: center;
+    padding: 120px 0 80px;
+    color: var(--hero-ink);
+    background: var(--hero-bg);
+    overflow: hidden;
+  }
+
+  /* Ambient Hero Background Glows */
+  .hero::before, .hero::after {
+    content: '';
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    filter: blur(120px);
+    z-index: 0;
+    opacity: 0.5;
+    animation: float 20s ease-in-out infinite alternate;
+  }
+  .hero::before {
+    background: rgba(245, 158, 11, 0.15); /* Safety Amber Glow */
+    top: -100px;
+    right: -100px;
+  }
+  .hero::after {
+    background: rgba(16, 185, 129, 0.15); /* Signal Green Glow */
+    bottom: -100px;
+    left: -100px;
+    animation-delay: -10s;
+  }
+
+  @keyframes float {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(50px, 50px) scale(1.1); }
+  }
+
+  .hero .container { position: relative; z-index: 10; }
+
+  .hero-content {
+    width: min(800px, 100%);
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    color: var(--safety);
+    font-size: 0.85rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .eyebrow::before {
+    content: "";
+    width: 40px;
+    height: 3px;
+    background: currentColor;
+    border-radius: 2px;
+  }
+
+  .hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(3.2rem, 7vw, 6.2rem);
+    line-height: 1.05;
+    margin-bottom: 24px;
+    background: linear-gradient(to right, #fff, #94a3b8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero-copy {
+    max-width: 640px;
+    margin: 0 0 40px;
+    color: var(--hero-muted);
+    font-size: clamp(1.1rem, 1.6vw, 1.35rem);
+    line-height: 1.6;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .hero-panel {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    margin-top: 80px;
+    background: var(--hero-line);
+    border: 1px solid var(--hero-line);
+    border-radius: 16px;
+    overflow: hidden;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+  }
+
+  .metric {
+    min-height: 120px;
+    padding: 24px;
+    background: var(--hero-surface);
+    color: var(--hero-ink);
+    transition: background 0.3s ease;
+  }
+  
+  .metric:hover { background: rgba(30, 41, 59, 0.8); }
+
+  .metric strong {
+    display: block;
+    font-size: 1.8rem;
+    line-height: 1;
+    color: #fff;
+    margin-bottom: 8px;
+    font-family: var(--font-display);
+  }
+
+  .metric span {
+    display: block;
+    color: var(--hero-muted);
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  section { padding: 100px 0; }
+
+  .section-heading {
+    display: grid;
+    grid-template-columns: 0.8fr 1.2fr;
+    gap: 64px;
+    align-items: end;
+    margin-bottom: 56px;
+  }
+
+  .section-heading h2 {
+    font-family: var(--font-display);
+    font-size: clamp(2.4rem, 4vw, 3.8rem);
+    line-height: 1.1;
+    color: var(--steel-dark);
+  }
+
+  .section-heading p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 1.15rem;
+    line-height: 1.6;
+  }
+
+  /* Capabilities Grid (Running Borders) */
+  .capabilities { background: var(--paper); }
+  
+  .capability-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  @property --border-angle {
+    syntax: "<angle>";
+    inherits: true;
+    initial-value: 0turn;
+  }
+
+  .capability {
+    position: relative;
+    min-height: 280px;
+    padding: 32px;
+    border-radius: 16px;
+    background: var(--surface);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+    z-index: 1;
+  }
+
+  /* Animated Border Base */
+  .capability::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: 17px;
+    background: var(--line);
+    z-index: -1;
+    transition: background 0.4s ease;
+  }
+
+  .capability:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.12);
+  }
+
+  .capability:hover::before {
+    background: conic-gradient(
+      from var(--border-angle),
+      var(--line) 0%,
+      var(--line) 40%,
+      var(--safety) 50%,
+      var(--success) 60%,
+      var(--line) 100%
+    );
+    animation: border-rotate 3s linear infinite;
+  }
+
+  @keyframes border-rotate {
+    to { --border-angle: 1turn; }
+  }
+
+  .capability .number {
+    display: inline-flex;
+    width: 44px;
+    height: 44px;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 32px;
+    border-radius: 10px;
+    color: var(--steel-dark);
+    background: var(--field);
+    font-weight: 800;
+    font-size: 1.1rem;
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+  
+  .capability:hover .number {
+    background: var(--steel-dark);
+    color: #fff;
+  }
+
+  .capability h3 {
+    margin: 0 0 16px;
+    color: var(--steel-dark);
+    font-size: 1.35rem;
+  }
+
+  .capability p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  /* Operations Workflow */
+  .operations {
+    color: var(--hero-ink);
+    background: var(--hero-bg);
+    position: relative;
+  }
+
+  .operations::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=1600&q=82") center / cover fixed;
+    opacity: 0.15;
+    z-index: 0;
+  }
+  
+  .operations .container { position: relative; z-index: 1; }
+
+  .operations .section-heading h2 { color: #fff; }
+  .operations .section-heading p { color: var(--hero-muted); }
+
+  .workflow {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    background: var(--hero-surface);
+    border: 1px solid var(--hero-line);
+    border-radius: 16px;
+    backdrop-filter: blur(12px);
+    overflow: hidden;
+  }
+
+  .workflow-step {
+    padding: 32px;
+    border-right: 1px solid var(--hero-line);
+    transition: background 0.3s ease;
+  }
+  .workflow-step:hover { background: rgba(255, 255, 255, 0.05); }
+  .workflow-step:last-child { border-right: 0; }
+
+  .workflow-step small {
+    display: inline-block;
+    padding: 4px 10px;
+    background: rgba(245, 158, 11, 0.15);
+    color: var(--safety);
+    border-radius: 6px;
+    font-weight: 800;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+
+  .workflow-step h3 {
+    margin: 0 0 12px;
+    font-size: 1.25rem;
+    color: #fff;
+  }
+
+  .workflow-step p {
+    margin: 0;
+    color: var(--hero-muted);
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  /* CTA */
+  .cta {
+    padding: 80px 0;
+    color: #fff;
+    background: linear-gradient(135deg, var(--steel-dark), #1e293b);
+    border-top: 1px solid var(--line);
+  }
+
+  .cta-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 40px;
+    align-items: center;
+  }
+
+  .cta h2 {
+    font-family: var(--font-display);
+    font-size: clamp(2.2rem, 4vw, 3.2rem);
+    margin: 0 0 16px;
+    color: #fff;
+  }
+
+  .cta p {
+    max-width: 600px;
+    margin: 0;
+    color: var(--hero-muted);
+    font-size: 1.1rem;
+  }
+
+  /* Footer */
+  footer {
+    padding: 40px 0;
+    color: var(--muted);
+    background: var(--paper);
+    border-top: 1px solid var(--line);
+    font-size: 0.9rem;
+  }
+
+  .footer-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 24px;
+    font-weight: 700;
+  }
+  .footer-links a { text-decoration: none; transition: color 0.2s ease; }
+  .footer-links a:hover { color: var(--steel-dark); }
+
+  /* Login Popover Modal */
+  #login-modal {
+    padding: 40px;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: var(--surface);
+    color: var(--ink);
+    box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
+    max-width: 420px;
+    width: 90%;
+    margin: auto;
+    
+    /* Entry/Exit Animations */
+    transition: opacity 0.3s ease, transform 0.3s ease, overlay 0.3s allow-discrete, display 0.3s allow-discrete;
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+
+  #login-modal:popover-open {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  @starting-style {
+    #login-modal:popover-open {
+      opacity: 0;
+      transform: translateY(20px) scale(0.95);
     }
+  }
 
-    @media (max-width: 620px) {
-      .container {
-        width: min(100% - 28px, 1180px);
-      }
+  #login-modal::backdrop {
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: opacity 0.3s ease, overlay 0.3s allow-discrete, display 0.3s allow-discrete;
+    opacity: 0;
+  }
 
-      .nav {
-        min-height: 66px;
-      }
+  #login-modal:popover-open::backdrop {
+    opacity: 1;
+  }
 
-      .brand span {
-        max-width: 150px;
-        white-space: normal;
-        line-height: 1.05;
-      }
-
-      .actions .button-secondary {
-        display: none;
-      }
-
-      h1 {
-        font-size: clamp(2.7rem, 15vw, 4.4rem);
-      }
-
-      section {
-        padding: 58px 0;
-      }
-
-      .metric,
-      .capability,
-      .workflow-step {
-        padding: 22px;
-      }
-
-      .footer-row {
-        align-items: flex-start;
-        flex-direction: column;
-      }
+  @starting-style {
+    #login-modal:popover-open::backdrop {
+      opacity: 0;
     }
-  </style>
-</head>
-<body>
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
+  }
+
+  .modal-header h3 {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    color: var(--steel-dark);
+  }
+
+  .btn-close {
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 6px;
+    display: grid;
+    place-items: center;
+    transition: background 0.2s, color 0.2s;
+  }
+  .btn-close:hover { background: var(--field); color: var(--ink); }
+
+  .form-group { margin-bottom: 20px; }
+  .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--ink-2);
+  }
+  .form-control {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--paper);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    color: var(--ink);
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .form-control:focus {
+    outline: none;
+    border-color: var(--success);
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+    background: var(--surface);
+  }
+  .login-btn { width: 100%; margin-top: 8px; }
+
+  /* Scroll Reveal Utilities */
+  .reveal-on-scroll {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal-on-scroll.revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    .reveal-on-scroll { opacity: 1; transform: none; }
+  }
+
+  @media (max-width: 900px) {
+    .nav-links { display: none; }
+    .hero { min-height: auto; padding: 100px 0 60px; }
+    .hero-panel, .capability-grid, .workflow, .section-heading, .cta-row { grid-template-columns: 1fr; gap: 32px; }
+    .workflow { border-radius: 12px; }
+    .workflow-step { border-right: 0; border-bottom: 1px solid var(--hero-line); }
+    .workflow-step:last-child { border-bottom: 0; }
+  }
+
+  @media (max-width: 620px) {
+    .container { width: min(100% - 32px, 1180px); }
+    .actions .button-secondary { display: none; }
+    .hero h1 { font-size: clamp(2.8rem, 12vw, 4rem); }
+    section { padding: 60px 0; }
+    .metric, .capability, .workflow-step { padding: 24px; }
+    .footer-row { align-items: flex-start; flex-direction: column; }
+  }
+
+  /* ─── Language Switcher ─── */
+  .lang-switch {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    padding: 0 14px;
+    border: 1px solid var(--ink-2);
+    border-radius: 8px;
+    background: transparent;
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+  }
+
+  .lang-switch:hover {
+    border-color: var(--success);
+    color: var(--success);
+  }
+
+  html[data-theme="dark"] .lang-switch {
+    border-color: rgba(148, 163, 184, 0.3);
+    color: #cbd5e1;
+  }
+
+  html[data-theme="dark"] .lang-switch:hover {
+    border-color: var(--success);
+    color: var(--success);
+  }
+
+  /* ─── RTL (Arabic) ─── */
+  html[lang="ar"] body {
+    font-family: "Cairo", var(--font-body);
+  }
+
+  html[lang="ar"] .nav {
+    flex-direction: row-reverse;
+  }
+
+  html[lang="ar"] .nav-links {
+    flex-direction: row-reverse;
+  }
+
+  html[lang="ar"] .hero-actions,
+  html[lang="ar"] .actions {
+    flex-direction: row-reverse;
+  }
+
+  html[lang="ar"] .footer-row {
+    flex-direction: row-reverse;
+  }
+
+  html[lang="ar"] .footer-links {
+    flex-direction: row-reverse;
+  }
+
+  html[lang="ar"] .section-heading {
+    direction: rtl;
+  }
+
+  html[lang="ar"] .workflow {
+    direction: rtl;
+  }
+
+  html[lang="ar"] .workflow-step {
+    border-right: 0;
+    border-left: 1px solid rgba(255, 255, 255, 0.18);
+  }
+
+  html[lang="ar"] .workflow-step:last-child {
+    border-left: 0;
+  }
+
+  html[lang="ar"] .hero-panel {
+    direction: rtl;
+  }
+
+  html[lang="ar"] .cta-row {
+    direction: rtl;
+  }
+
+  html[lang="ar"] .capability-grid {
+    direction: rtl;
+  }
+
+  @media (max-width: 900px) {
+    html[lang="ar"] .workflow-step { border-left: 0; border-bottom: 1px solid var(--hero-line); }
+  }
+</style>
+{% endblock %}
+
+{% block navbar %}
   <header class="site-header">
     <div class="container nav">
       <a class="brand" href="/">
         <span class="brand-mark" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none">
-            <path d="M4 19h16M6 19V8l6-4 6 4v11M9 19v-6h6v6M8 10h8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M4 19h16M6 19V8l6-4 6 4v11M9 19v-6h6v6M8 10h8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </span>
-        <span>Construction Sense</span>
+        <span>{{ t.brand }}</span>
       </a>
 
       <ul class="nav-links">
-        <li><a href="#platform">Platform</a></li>
-        <li><a href="#operations">Operations</a></li>
-        <li><a href="mailto:melrefa3@hotmail.com">Contact</a></li>
+        <li><a href="#platform">{{ t.nav_platform }}</a></li>
+        <li><a href="#operations">{{ t.nav_operations }}</a></li>
+        <li><a href="mailto:melrefa3@hotmail.com">{{ t.nav_contact }}</a></li>
       </ul>
 
       <div class="actions">
-        <a class="button button-primary" href="/login#signup">Sign Up</a>
+        <a class="lang-switch" href="/?lang={% if lang == 'en' %}ar{% else %}en{% endif %}" id="lang-switch">{{ t.lang_switch_label }}</a>
+        <a class="button button-primary" href="/login">{{ t.login }}</a>
       </div>
     </div>
   </header>
+{% endblock %}
+
+{% block content %}
+
 
   <main>
     <section class="hero">
-      <div class="container">
+      <div class="container reveal-on-scroll">
         <div class="hero-content">
-          <div class="eyebrow">Enterprise Construction ERP</div>
-          <h1>Construction Sense</h1>
-          <p class="hero-copy">A purpose-built ERPNext platform for contractors who need disciplined BOQ control, project cost visibility, procurement traceability, and audited variation orders from estimate to execution.</p>
+          <div class="eyebrow">{{ t.eyebrow }}</div>
+          <h1>{{ t.hero_title }}</h1>
+          <p class="hero-copy">{{ t.hero_copy }}</p>
           <div class="hero-actions">
-            <a class="button button-primary" href="/login">Access ERP Login</a>
-            <a class="button button-secondary" href="#platform">View Platform</a>
+            <a class="button button-primary" href="/login">{{ t.hero_cta_login }}</a>
+            <a class="button button-dark" href="#platform">{{ t.hero_cta_explore }}</a>
           </div>
         </div>
 
         <div class="hero-panel" aria-label="ERP platform highlights">
           <div class="metric">
-            <strong>BOQ</strong>
-            <span>Structured scope, rates, quantities, stages, and approvals.</span>
+            <strong>{{ t.metric_boq_label }}</strong>
+            <span>{{ t.metric_boq_desc }}</span>
           </div>
           <div class="metric">
-            <strong>Cost</strong>
-            <span>Project budgets tied to procurement, stock, labor, and accounts.</span>
+            <strong>{{ t.metric_cost_label }}</strong>
+            <span>{{ t.metric_cost_desc }}</span>
           </div>
           <div class="metric">
-            <strong>VO</strong>
-            <span>Controlled variation orders with audit history and limits.</span>
+            <strong>{{ t.metric_vo_label }}</strong>
+            <span>{{ t.metric_vo_desc }}</span>
           </div>
           <div class="metric">
-            <strong>Scope</strong>
-            <span>Company, branch, cost center, and project context enforcement.</span>
+            <strong>{{ t.metric_scope_label }}</strong>
+            <span>{{ t.metric_scope_desc }}</span>
           </div>
         </div>
       </div>
@@ -537,28 +869,28 @@
 
     <section id="platform" class="capabilities">
       <div class="container">
-        <div class="section-heading">
-          <h2>Built for construction control.</h2>
-          <p>Construction Sense extends ERPNext with the operational rules construction teams need: BOQ lifecycle management, controlled project scope, cost discipline, and cleaner daily execution for site and back-office teams.</p>
+        <div class="section-heading reveal-on-scroll">
+          <h2>{{ t.platform_h2 }}</h2>
+          <p>{{ t.platform_p }}</p>
         </div>
 
         <div class="capability-grid">
-          <article class="capability">
+          <article class="capability reveal-on-scroll">
             <span class="number">01</span>
-            <h3>BOQ Structure Management</h3>
-            <p>Create project BOQs with clear hierarchy, item stages, cost build-up, quantities, units, and locked approval states that protect baseline scope.</p>
+            <h3>{{ t.cap1_h3 }}</h3>
+            <p>{{ t.cap1_p }}</p>
           </article>
 
-          <article class="capability">
+          <article class="capability reveal-on-scroll" style="transition-delay: 100ms;">
             <span class="number">02</span>
-            <h3>Project Cost Governance</h3>
-            <p>Connect materials, labor, equipment, overhead, purchasing, stock, and accounting transactions to project context so budget movement stays visible.</p>
+            <h3>{{ t.cap2_h3 }}</h3>
+            <p>{{ t.cap2_p }}</p>
           </article>
 
-          <article class="capability">
+          <article class="capability reveal-on-scroll" style="transition-delay: 200ms;">
             <span class="number">03</span>
-            <h3>Variation Order Control</h3>
-            <p>Manage scope changes after approval with traceable revisions, validation rules, and approval-ready documentation for project leadership.</p>
+            <h3>{{ t.cap3_h3 }}</h3>
+            <p>{{ t.cap3_p }}</p>
           </article>
         </div>
       </div>
@@ -566,55 +898,88 @@
 
     <section id="operations" class="operations">
       <div class="container">
-        <div class="section-heading">
-          <h2>From estimate to invoice.</h2>
-          <p>Give every team the same controlled project record, from tender estimates and BOQ approvals to purchase orders, stock movement, site execution, and commercial changes.</p>
+        <div class="section-heading reveal-on-scroll">
+          <h2>{{ t.ops_h2 }}</h2>
+          <p>{{ t.ops_p }}</p>
         </div>
 
-        <div class="workflow">
+        <div class="workflow reveal-on-scroll">
           <article class="workflow-step">
-            <small>Plan</small>
-            <h3>Define the work breakdown</h3>
-            <p>Organize activities, branches, cost centers, and project levels before spending begins.</p>
+            <small>{{ t.step_plan }}</small>
+            <h3>{{ t.step_plan_h3 }}</h3>
+            <p>{{ t.step_plan_p }}</p>
           </article>
           <article class="workflow-step">
-            <small>Estimate</small>
-            <h3>Build reliable cost data</h3>
-            <p>Track item quantities, resource requirements, rates, and budget assumptions in one place.</p>
+            <small>{{ t.step_estimate }}</small>
+            <h3>{{ t.step_estimate_h3 }}</h3>
+            <p>{{ t.step_estimate_p }}</p>
           </article>
           <article class="workflow-step">
-            <small>Execute</small>
-            <h3>Control project transactions</h3>
-            <p>Keep purchasing, stock, timesheets, invoices, and journal entries tied to approved scope.</p>
+            <small>{{ t.step_execute }}</small>
+            <h3>{{ t.step_execute_h3 }}</h3>
+            <p>{{ t.step_execute_p }}</p>
           </article>
           <article class="workflow-step">
-            <small>Govern</small>
-            <h3>Approve changes cleanly</h3>
-            <p>Route variation orders through auditable rules before they affect cost and delivery.</p>
+            <small>{{ t.step_govern }}</small>
+            <h3>{{ t.step_govern_h3 }}</h3>
+            <p>{{ t.step_govern_p }}</p>
           </article>
         </div>
       </div>
     </section>
 
     <section class="cta">
-      <div class="container cta-row">
+      <div class="container cta-row reveal-on-scroll">
         <div>
-          <h2>Your ERP desk is ready.</h2>
-          <p>Use your company credentials to access Construction Sense, review project controls, and continue building your implementation inside Frappe Cloud.</p>
+          <h2>{{ t.cta_h2 }}</h2>
+          <p>{{ t.cta_p }}</p>
+        </div>
+        <div>
+          <a class="button button-primary" href="/login" style="min-height: 54px; font-size: 1.1rem; padding: 0 32px;">{{ t.cta_login }}</a>
         </div>
       </div>
     </section>
   </main>
 
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      // Language persistence
+      var langSwitch = document.getElementById("lang-switch");
+      if (langSwitch) {
+        langSwitch.addEventListener("click", function(e) {
+          var url = new URL(this.href);
+          var newLang = url.searchParams.get("lang") || "en";
+          localStorage.setItem("ct-landing-lang", newLang);
+        });
+      }
+
+      // Intersection Observer for scroll reveal animations
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("revealed");
+            }
+          });
+        }, { threshold: 0.15, rootMargin: "0px 0px -50px 0px" });
+        
+        document.querySelectorAll(".reveal-on-scroll").forEach(el => observer.observe(el));
+      } else {
+        document.querySelectorAll(".reveal-on-scroll").forEach(el => el.classList.add("revealed"));
+      }
+    });
+  </script>
+{% endblock %}
+
+{% block footer %}
   <footer>
     <div class="container footer-row">
-      <div>&copy; 2026 Construction Sense. Enterprise construction ERP on Frappe Cloud.</div>
+      <div>{{ t.footer_copy }}</div>
       <div class="footer-links">
-        <a href="#platform">Platform</a>
-        <a href="#operations">Operations</a>
-        <a href="mailto:melrefa3@hotmail.com">Support</a>
+        <a href="#platform">{{ t.footer_platform }}</a>
+        <a href="#operations">{{ t.footer_operations }}</a>
+        <a href="mailto:melrefa3@hotmail.com">{{ t.footer_support }}</a>
       </div>
     </div>
   </footer>
-</body>
-</html>
+{% endblock %}

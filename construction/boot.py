@@ -49,6 +49,13 @@ def extend_bootinfo(bootinfo):
         getattr(settings, "enable_vfc_debug_logging", False)
     )
 
+    # Expose Construction Settings flags to the frontend via frappe.boot.construction_settings
+    bootinfo["construction_settings"] = {
+        "enable_global_export_menu": int(
+            getattr(settings, "enable_global_export_menu", 1)
+        ),
+    }
+
     bootinfo["scope_context_enabled_dimensions"] = {
         "company": bool(settings.enable_scope_company if scope_enabled else False),
         "cost_center": bool(settings.enable_scope_cost_center if scope_enabled else False),
