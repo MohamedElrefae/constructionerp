@@ -1,0 +1,114 @@
+{
+  "actions": [],
+  "creation": "2026-06-29 00:00:00.000000",
+  "doctype": "DocType",
+  "editable_grid": 1,
+  "engine": "InnoDB",
+  "field_order": [
+    "cost_stream",
+    "item_code",
+    "item_name",
+    "resource_uom",
+    "qty_per_boq_unit",
+    "wastage_pct",
+    "cost_rate",
+    "amount",
+    "rate_source",
+    "supplier",
+    "remarks"
+  ],
+  "fields": [
+    {
+      "fieldname": "cost_stream",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "label": "Cost Stream",
+      "options": "M\nL\nP\nS\nO",
+      "reqd": 1
+    },
+    {
+      "fieldname": "item_code",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "label": "Item Code",
+      "options": "Item",
+      "reqd": 1,
+      "search_index": 1
+    },
+    {
+      "fetch_from": "item_code.item_name",
+      "fieldname": "item_name",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Item Name",
+      "read_only": 1
+    },
+    {
+      "fieldname": "resource_uom",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "label": "UOM",
+      "options": "UOM",
+      "reqd": 1
+    },
+    {
+      "default": "1",
+      "fieldname": "qty_per_boq_unit",
+      "fieldtype": "Float",
+      "in_list_view": 1,
+      "label": "Qty per BOQ Unit",
+      "non_negative": 1,
+      "reqd": 1
+    },
+    {
+      "default": "0",
+      "fieldname": "wastage_pct",
+      "fieldtype": "Percent",
+      "in_list_view": 1,
+      "label": "Wastage %"
+    },
+    {
+      "fieldname": "cost_rate",
+      "fieldtype": "Currency",
+      "in_list_view": 1,
+      "label": "Cost Rate",
+      "reqd": 1
+    },
+    {
+      "fieldname": "amount",
+      "fieldtype": "Currency",
+      "in_list_view": 1,
+      "label": "Amount",
+      "read_only": 1
+    },
+    {
+      "default": "Manual",
+      "fieldname": "rate_source",
+      "fieldtype": "Select",
+      "label": "Rate Source",
+      "options": "Manual\nImport\nItem Price\nLast PI\nLast PO\nWeighted Average\nSupplier-Specific\nProject-Specific\nResource Price History\nTemplate"
+    },
+    {
+      "fieldname": "supplier",
+      "fieldtype": "Link",
+      "label": "Supplier",
+      "options": "Supplier"
+    },
+    {
+      "fieldname": "remarks",
+      "fieldtype": "Small Text",
+      "label": "Remarks"
+    }
+  ],
+  "istable": 1,
+  "links": [],
+  "modified": "2026-06-29 00:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "Construction",
+  "name": "BOQ Cost Analysis Detail",
+  "owner": "Administrator",
+  "permissions": [],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": []
+}

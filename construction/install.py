@@ -107,6 +107,7 @@ def setup_website_branding():
         "app_name": "Construction Sense",
         "banner_image": "/assets/construction/images/construction_logo.svg",
         "splash_image": "/assets/construction/images/construction_logo.svg",
+        "disable_signup": 1,
     }
 
     changed = False
@@ -117,6 +118,90 @@ def setup_website_branding():
 
     if changed:
         settings.save(ignore_permissions=True)
+
+
+def fix_select_permissions():
+    """Set select=1 on all DocPerm records that have read=1 but select=0.
+
+    In Frappe v16, DatabaseQuery.check_select_permission() requires
+    'select' permission for frappe.get_list() calls (used by Number
+    Cards, Dashboard Charts, etc.). ERPNext ships most roles with
+    read=1 but select=0, which causes permission errors on workspace
+    widgets for non-admin users.
+
+    This is idempotent and safe: 'read' already grants data visibility,
+    'select' just allows the query to run.
+    """
+    try:
+        updated = frappe.db.sql(
+            "UPDATE `tabDocPerm` SET `select`=1 WHERE `read`=1 AND `select`=0",
+            update=True,
+        )
+        if updated:
+            frappe.db.commit()
+            frappe.clear_cache()
+    except Exception:
+        pass
+
+
+def fix_system_manager_permissions():
+    """Ensure System Manager role has DocPerm entries on ALL doctypes.
+
+    In some local databases, System Manager DocPerm entries are missing
+    from ERPNext doctypes (Sales Order, Purchase Order, Project, etc.).
+    Without these, even System Manager users get 'Insufficient Permission'
+    errors on workspace Number Cards and Dashboard Charts.
+
+    This is idempotent: it only inserts entries where none exist.
+    """
+    try:
+        doctypes = frappe.db.sql("""
+            SELECT DISTINCT dt.name
+            FROM `tabDocType` dt
+            WHERE NOT EXISTS (
+                SELECT 1 FROM `tabDocPerm` dp
+                WHERE dp.parent = dt.name AND dp.role = 'System Manager'
+            )
+            AND dt.name NOT IN ('DocType', 'DocField', 'DocPerm', 'Custom Field',
+                'Property Setter', 'Installed Application', 'Installed Apps',
+                'Module Def', 'Module Onboarding', 'Section Order')
+        """)
+
+        inserted = 0
+        for (dt_name,) in doctypes:
+            try:
+                meta = frappe.get_meta(dt_name)
+                frappe.get_doc({
+                    "doctype": "DocPerm",
+                    "parent": dt_name,
+                    "parenttype": "DocType",
+                    "parentfield": "permissions",
+                    "role": "System Manager",
+                    "permlevel": 0,
+                    "read": 1,
+                    "write": 1,
+                    "create": 1,
+                    "delete": 1,
+                    "submit": 1 if meta.is_submittable else 0,
+                    "cancel": 1 if meta.is_submittable else 0,
+                    "amend": 1 if meta.is_submittable else 0,
+                    "print": 1,
+                    "email": 1,
+                    "report": 1,
+                    "import": 1,
+                    "export": 1,
+                    "share": 1,
+                    "select": 1,
+                }).db_insert()
+                inserted += 1
+            except Exception:
+                pass
+
+        if inserted:
+            frappe.db.commit()
+            frappe.clear_cache()
+    except Exception:
+        pass
 
 
 def setup_boq_integration():
@@ -1052,6 +1137,140 @@ def _invalidate_workspace_caches():
     except Exception:
         # Cache clearing is best-effort; don't fail the migration
         pass
+
+
+# ---------------------------------------------------------------------------
+# Item Construction Custom Fields (Idempotent)
+# ---------------------------------------------------------------------------
+
+
+def setup_item_construction_fields():
+    """Idempotently add construction custom fields to standard ERPNext Item.
+
+    Called by after_install and after_migrate hooks.
+    Does NOT modify core erpnext/item.json.
+    """
+    if not frappe.db.exists("DocType", "Item"):
+        return
+    if not frappe.db.exists("DocType", "Custom Field"):
+        return
+
+    try:
+        from frappe.custom.doctype.custom_field.custom_field import create_custom_field
+    except ImportError:
+        return
+
+    fields = [
+        {
+            "fieldname": "item_name_ar",
+            "fieldtype": "Data",
+            "label": "Item Name (Arabic)",
+            "insert_after": "item_name",
+            "translatable": 0,
+        },
+        {
+            "fieldname": "is_construction_resource",
+            "fieldtype": "Check",
+            "label": "Is Construction Resource",
+            "insert_after": "item_name_ar",
+            "default": "0",
+            "in_list_view": 1,
+            "in_standard_filter": 1,
+        },
+        {
+            "fieldname": "construction_resource_type",
+            "fieldtype": "Select",
+            "label": "Construction Resource Type",
+            "options": "\nMaterial\nLabor\nPlant\nSubcontract\nOverhead",
+            "insert_after": "is_construction_resource",
+            "depends_on": "eval:doc.is_construction_resource",
+            "in_standard_filter": 1,
+        },
+        {
+            "fieldname": "default_cost_stream",
+            "fieldtype": "Select",
+            "label": "Default Cost Stream",
+            "options": "\nM\nL\nP\nS\nO",
+            "insert_after": "construction_resource_type",
+            "depends_on": "eval:doc.is_construction_resource",
+            "in_standard_filter": 1,
+        },
+        {
+            "fieldname": "default_wastage_pct",
+            "fieldtype": "Percent",
+            "label": "Default Wastage %",
+            "insert_after": "default_cost_stream",
+            "depends_on": "eval:doc.is_construction_resource",
+        },
+        {
+            "fieldname": "default_productivity_qty_per_day",
+            "fieldtype": "Float",
+            "label": "Default Productivity Qty/Day",
+            "insert_after": "default_wastage_pct",
+            "depends_on": "eval:doc.is_construction_resource",
+        },
+        {
+            "fieldname": "labor_trade_designation",
+            "fieldtype": "Link",
+            "label": "Labor Trade Designation",
+            "options": "Designation",
+            "insert_after": "default_productivity_qty_per_day",
+            "depends_on": "eval:doc.is_construction_resource",
+        },
+        {
+            "fieldname": "linked_asset",
+            "fieldtype": "Link",
+            "label": "Linked Asset",
+            "options": "Asset",
+            "insert_after": "labor_trade_designation",
+            "depends_on": "eval:doc.is_construction_resource",
+        },
+    ]
+
+    for field_def in fields:
+        fieldname = field_def["fieldname"]
+        custom_field_name = frappe.db.get_value(
+            "Custom Field", {"dt": "Item", "fieldname": fieldname}, "name"
+        )
+
+        if custom_field_name:
+            _update_item_construction_custom_field(custom_field_name, field_def)
+        else:
+            try:
+                create_custom_field("Item", field_def, ignore_validate=True)
+            except Exception:
+                frappe.log_error(
+                    f"Failed to create custom field {fieldname} on Item",
+                    "Setup Item Construction Fields",
+                )
+
+    frappe.clear_cache(doctype="Item")
+
+
+def _update_item_construction_custom_field(custom_field_name, field_def):
+    try:
+        doc = frappe.get_doc("Custom Field", custom_field_name)
+        changed = False
+        for key in (
+            "label",
+            "fieldtype",
+            "options",
+            "depends_on",
+            "description",
+            "default",
+            "in_list_view",
+            "in_standard_filter",
+        ):
+            if key in field_def and doc.get(key) != field_def[key]:
+                doc.set(key, field_def[key])
+                changed = True
+        if changed:
+            doc.save(ignore_permissions=True)
+    except Exception:
+        frappe.log_error(
+            f"Failed to update Item custom field {custom_field_name}",
+            "Setup Item Construction Fields",
+        )
 
 
 # ---------------------------------------------------------------------------
