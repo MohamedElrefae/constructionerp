@@ -88,163 +88,19 @@
 
 	frappe.ui.form.on("BOQ Header", {
 		refresh(frm) {
+			// Signal to generic_export_menu.js that this page manages its own
+			// export menu — prevents a duplicate generic Export button appearing.
+			// frm-instance property (not window) prevents bleed across navigations.
+			frm.__ct_has_manual_export = true;
+
 			syncProjectFromScope(frm);
 			syncProjectName(frm);
 			if (!frm.is_new()) {
 				render_vo_summary(frm);
 				renderTreeSummary(frm);
-				var BOQ_FULL_COLUMNS = [
-					{
-						field_key: "wbs_code",
-						label: "WBS Code",
-						default_width: 12,
-						default_visible: true,
-						default_sort_order: 0,
-					},
-					{
-						field_key: "title",
-						label: "Title / Description",
-						default_width: 30,
-						default_visible: true,
-						default_sort_order: 1,
-					},
-					{
-						field_key: "type",
-						label: "Type",
-						default_width: 6,
-						default_visible: true,
-						default_sort_order: 2,
-					},
-					{
-						field_key: "unit",
-						label: "Unit",
-						default_width: 5,
-						default_visible: true,
-						default_sort_order: 3,
-					},
-					{
-						field_key: "quantity",
-						label: "Quantity",
-						default_width: 8,
-						default_visible: true,
-						default_sort_order: 4,
-					},
-					{
-						field_key: "contract_unit_price",
-						label: "Unit Price",
-						default_width: 10,
-						default_visible: true,
-						default_sort_order: 5,
-					},
-					{
-						field_key: "factor",
-						label: "Factor",
-						default_width: 5,
-						default_visible: true,
-						default_sort_order: 6,
-					},
-					{
-						field_key: "line_total",
-						label: "Line Total",
-						default_width: 10,
-						default_visible: true,
-						default_sort_order: 7,
-					},
-					{
-						field_key: "owner_ref_no",
-						label: "Ref",
-						default_width: 9,
-						default_visible: true,
-						default_sort_order: 8,
-					},
-					{
-						field_key: "owner_page",
-						label: "Owner Page",
-						default_width: 5,
-						default_visible: false,
-						default_sort_order: 9,
-					},
-					{
-						field_key: "owner_file_ref",
-						label: "File Ref",
-						default_width: 5,
-						default_visible: false,
-						default_sort_order: 10,
-					},
-				];
-
-				var BOQ_HEADER_COLUMNS = [
-					{
-						field_key: "name",
-						label: "BOQ ID",
-						default_width: 15,
-						default_visible: true,
-						default_sort_order: 0,
-					},
-					{
-						field_key: "title",
-						label: "Title",
-						default_width: 20,
-						default_visible: true,
-						default_sort_order: 1,
-					},
-					{
-						field_key: "project_name",
-						label: "Project",
-						default_width: 20,
-						default_visible: true,
-						default_sort_order: 2,
-					},
-					{
-						field_key: "boq_type",
-						label: "BOQ Type",
-						default_width: 10,
-						default_visible: true,
-						default_sort_order: 3,
-					},
-					{
-						field_key: "status",
-						label: "Status",
-						default_width: 10,
-						default_visible: true,
-						default_sort_order: 4,
-					},
-					{
-						field_key: "version",
-						label: "Version",
-						default_width: 8,
-						default_visible: true,
-						default_sort_order: 5,
-					},
-					{
-						field_key: "total_contract_value",
-						label: "Total Contract Value",
-						default_width: 15,
-						default_visible: true,
-						default_sort_order: 6,
-					},
-					{
-						field_key: "total_budgeted_cost",
-						label: "Total Budgeted Cost",
-						default_width: 15,
-						default_visible: true,
-						default_sort_order: 7,
-					},
-					{
-						field_key: "created_on",
-						label: "Created On",
-						default_width: 12,
-						default_visible: false,
-						default_sort_order: 8,
-					},
-					{
-						field_key: "modified_on",
-						label: "Modified On",
-						default_width: 12,
-						default_visible: false,
-						default_sort_order: 9,
-					},
-				];
+				// M4: Columns from shared module (boq_export_columns.js) — single source of truth.
+				var BOQ_FULL_COLUMNS   = window.BOQ_EXPORT_COLUMNS.full();
+				var BOQ_HEADER_COLUMNS = window.BOQ_EXPORT_COLUMNS.header();
 
 				// ── Helper: build export callback for frappe.call ──
 				var make_export_callback = function (method, args_fn, success_msg) {

@@ -69,6 +69,10 @@
 		},
 
 		refresh: function (frm) {
+			// Signal to generic_export_menu.js that this page has its own export menu.
+			// frm-instance property (not window) prevents bleed across navigations.
+			frm.__ct_has_manual_export = true;
+
 			frm.toggle_enable(["boq_header"], frm.doc.__islocal);
 			applyBoqGuidance(frm);
 
@@ -103,50 +107,82 @@
 					__("View")
 				);
 
-				frm.add_custom_button(
-					__("Export to Excel"),
-					function () {
-						frappe.call({
-							method: "construction.api.boq_api.export_boq_excel",
-							args: { boq_header: frm.doc.boq_header },
-							callback(r) {
-								if (r.message && r.message.file_url) {
-									window.open(r.message.file_url);
-								}
-							},
-						});
-					},
-					__("Export")
-				);
+				// ── Export Menu (ConstructionExportMenu dropdown) ──
+				// M4: Columns from shared module (boq_export_columns.js) — single source of truth.
+				var BOQ_FULL_COLUMNS = window.BOQ_EXPORT_COLUMNS.full();
 
-				frm.add_custom_button(
-					__("Export to PDF"),
-					function () {
-						frappe.call({
-							method: "construction.api.boq_api.export_boq_pdf",
-							args: { boq_header: frm.doc.boq_header },
-							callback(r) {
-								if (r.message && r.message.file_url) {
-									window.open(r.message.file_url);
-								}
-							},
+				var make_boq_export_callback = function (method, success_msg) {
+					return function (column_config) {
+						return new Promise(function (resolve, reject) {
+							frappe.call({
+								method: method,
+								args: {
+									boq_header: frm.doc.boq_header,
+									column_config: JSON.stringify(column_config),
+								},
+								callback: function (r) {
+									if (r.message && r.message.file_url) {
+										window.open(r.message.file_url);
+										frappe.show_alert({ message: __(success_msg), indicator: "green" });
+										resolve();
+									} else if (r.message && r.message.error) {
+										frappe.show_alert({ message: r.message.error, indicator: "red" });
+										reject(new Error(r.message.error));
+									} else {
+										resolve();
+									}
+								},
+								error: function (err) { reject(err); },
+							});
 						});
-					},
-					__("Export")
-				);
+					};
+				};
 
-				frm.add_custom_button(
-					__("Print"),
-					function () {
-						frappe.set_route("print", "BOQ Header", frm.doc.boq_header);
+				new ConstructionExportMenu(frm, [
+					{
+						label: __("Excel — Full BOQ"),
+						icon: "fa fa-file-excel-o",
+						action: function () {
+							new PrintSettingsDialog({
+								report_type: "BOQ_Structure_Full_Excel",
+								columns: BOQ_FULL_COLUMNS,
+								sample_data: [],
+								export_callback: make_boq_export_callback(
+									"construction.api.boq_api.export_boq_excel",
+									"BOQ exported successfully"
+								),
+							}).show();
+						},
 					},
-					__("Export")
-				);
+					{
+						label: __("PDF — Full BOQ"),
+						icon: "fa fa-file-pdf-o",
+						action: function () {
+							new PrintSettingsDialog({
+								report_type: "BOQ_Structure_Full_PDF",
+								columns: BOQ_FULL_COLUMNS,
+								sample_data: [],
+								export_callback: make_boq_export_callback(
+									"construction.api.boq_api.export_boq_pdf",
+									"BOQ PDF exported successfully"
+								),
+							}).show();
+						},
+					},
+					{
+						label: __("Print"),
+						icon: "fa fa-print",
+						separator_before: true,
+						action: function () {
+							frappe.set_route("print", "BOQ Header", frm.doc.boq_header);
+						},
+					},
+				]);
 			}
 		},
 
+
 		boq_header: function (frm) {
-			applyBoqGuidance(frm);
 			applyBoqGuidance(frm);
 		},
 
