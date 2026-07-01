@@ -25,6 +25,8 @@
     "enable_boq_scope_registry",
     "enable_bilingual_boq_print",
     "enable_variation_orders",
+    "global_export_menu_section",
+    "enable_global_export_menu",
     "vfc_debug_logging_section",
     "enable_vfc_debug_logging",
     "direct_labor_designations",
@@ -163,6 +165,18 @@
       "fieldname": "enable_variation_orders",
       "fieldtype": "Check",
       "label": "Enable Variation Orders"
+    },
+    {
+      "fieldname": "global_export_menu_section",
+      "fieldtype": "Section Break",
+      "label": "Global Export Menu"
+    },
+    {
+      "default": "1",
+      "description": "When enabled, every Frappe form shows an Export (Excel / PDF / Print) dropdown button automatically. Forms that define their own export menu (e.g. BOQ Header) are not affected.",
+      "fieldname": "enable_global_export_menu",
+      "fieldtype": "Check",
+      "label": "Enable Global Export Menu on all Forms"
     },
     {
       "fieldname": "vfc_debug_logging_section",

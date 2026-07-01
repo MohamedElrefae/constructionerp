@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>{{ doctype }} — {{ docname }}</title>
+    <style>
+        :root {
+            --export-primary: #1a365d;
+            --export-accent: #2b6cb0;
+            --export-border: #cbd5e0;
+            --export-header-bg: #2b6cb0;
+            --export-header-text: #ffffff;
+            --export-row-alt: #ebf4ff;
+            --export-text: #2d3748;
+            --export-muted: #718096;
+            --export-footer-bg: #f7fafc;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            font-size: 10px;
+            color: var(--export-text);
+            background: #fff;
+            padding: 16px 20px;
+        }
+
+        /* ── Header ── */
+        .doc-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            border-bottom: 3px solid var(--export-primary);
+            padding-bottom: 12px;
+            margin-bottom: 16px;
+        }
+
+        .doc-header__brand {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--export-primary);
+            letter-spacing: 0.5px;
+        }
+
+        .doc-header__sub {
+            font-size: 11px;
+            color: var(--export-muted);
+            margin-top: 2px;
+        }
+
+        .doc-header__meta {
+            text-align: right;
+            font-size: 9px;
+            color: var(--export-muted);
+            line-height: 1.6;
+        }
+
+        /* ── Title bar ── */
+        .doc-title {
+            background: var(--export-header-bg);
+            color: var(--export-header-text);
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin-bottom: 14px;
+        }
+
+        .doc-title__doctype {
+            font-size: 10px;
+            opacity: 0.85;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .doc-title__name {
+            font-size: 14px;
+            font-weight: 700;
+            margin-top: 2px;
+        }
+
+        /* ── Data table ── */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 16px;
+        }
+
+        .data-table thead tr {
+            background: var(--export-primary);
+            color: #fff;
+        }
+
+        .data-table thead th {
+            padding: 7px 10px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .data-table tbody tr {
+            border-bottom: 1px solid var(--export-border);
+        }
+
+        .data-table tbody tr:nth-child(even) {
+            background: var(--export-row-alt);
+        }
+
+        .data-table tbody td {
+            padding: 6px 10px;
+            font-size: 10px;
+            color: var(--export-text);
+            border: 1px solid var(--export-border);
+            word-break: break-word;
+        }
+
+        .data-table tbody td.numeric {
+            text-align: right;
+            font-family: "Courier New", monospace;
+            font-size: 10px;
+        }
+
+        /* ── Footer ── */
+        .doc-footer {
+            border-top: 1px solid var(--export-border);
+            padding-top: 10px;
+            background: var(--export-footer-bg);
+            display: flex;
+            justify-content: space-between;
+            font-size: 8px;
+            color: var(--export-muted);
+            padding: 8px 10px;
+            border-radius: 0 0 4px 4px;
+        }
+
+        /* ── Print overrides ── */
+        @media print {
+            body { padding: 0; }
+            .doc-header { page-break-inside: avoid; }
+            .data-table { page-break-inside: auto; }
+            .data-table tr { page-break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="doc-header">
+        <div>
+            <div class="doc-header__brand">Construction ERP</div>
+            <div class="doc-header__sub">Document Export</div>
+        </div>
+        <div class="doc-header__meta">
+            {% if company %}<strong>{{ company }}</strong><br>{% endif %}
+            Export Date: {{ export_date }}
+        </div>
+    </div>
+
+    <!-- Document title block -->
+    <div class="doc-title">
+        <div class="doc-title__doctype">{{ doctype }}</div>
+        <div class="doc-title__name">{{ docname }}</div>
+    </div>
+
+    <!-- Data table: one column per row for a "field label | value" layout -->
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th style="width:35%">Field</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for col in columns %}
+            <tr>
+                <td><strong>{{ col.label }}</strong></td>
+                <td{% if col.fieldtype in ['Currency','Float','Int','Percent'] %} class="numeric"{% endif %}>
+                    {{ row.get(col.field_key, '') or '' }}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Footer -->
+    <div class="doc-footer">
+        <span>Construction ERP — Document Export</span>
+        <span>{{ doctype }} / {{ docname }}</span>
+    </div>
+
+</body>
+</html>

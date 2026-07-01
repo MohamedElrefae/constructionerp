@@ -73,6 +73,18 @@ desk_links = {
             "label": "Scope Context Settings",
             "description": "Enable/disable scope context feature",
         },
+        {
+            "type": "doctype",
+            "name": "BOQ Cost Analysis",
+            "label": "BOQ Cost Analysis",
+            "description": "Resource-based unit-rate analysis for BOQ Items",
+        },
+        {
+            "type": "doctype",
+            "name": "Resource Price History",
+            "label": "Resource Price History",
+            "description": "Auditable price ledger for construction resources",
+        },
     ]
 }
 
@@ -89,6 +101,7 @@ doctype_js = {
 }
 
 doctype_list_js = {
+    "Item": "construction/public/js/item_list.js",
     "BOQ Item": "construction/construction/doctype/boq_item/boq_item_list.js",
     "BOQ Structure": "construction/construction/doctype/boq_structure/boq_structure_list.js",
     "Variation Order": "construction/construction/doctype/variation_order/variation_order_list.js",
@@ -99,7 +112,7 @@ doctype_tree_js = {"BOQ Structure": "construction/construction/doctype/boq_struc
 # CSS includes for authenticated users (desk)
 # v2.2: Single-file theme — tokens + 1,180 selectors, html.ct-enterprise[data-theme] namespace
 app_include_css = [
-    "/assets/construction/css/modern_theme.css?v=2.5.6",
+    "/assets/construction/css/modern_theme.css?v=2.5.7",
     "/assets/construction/css/scope_context.css?v=2",
     # ─── Vite UI — MUST load LAST to win cascade ───
     # Phase 1: Visual Foundation
@@ -113,8 +126,11 @@ app_include_css = [
 # Global JS includes (raw asset path — loaded directly, not bundled)
 # CSS-only theming: theme_loader handles sync/navbar dropdown; theme_loader_v16 is a no-op safety net
 app_include_js = [
+    # Shared BOQ column definitions — must load before doctype JS that uses window.BOQ_EXPORT_COLUMNS
+    "/assets/construction/js/boq_export_columns.js?v=1",
     "/assets/construction/js/print_settings_dialog.js",
     "/assets/construction/js/construction_export_menu.js",
+    "/assets/construction/js/generic_export_menu.js?v=1",
     "/assets/construction/js/theme_loader_v24.js?v=2.5.5",
     "/assets/construction/js/typography_settings.js?v=21",
     # Searchable Dropdown Module — base class (must load before overrides)
@@ -152,7 +168,7 @@ app_include_js = [
     # BOQ integration filters for transaction child rows
     "/assets/construction/js/boq_filters.js?v=6",
     # Filter fix — injected AFTER Frappe bundle to win cascade order
-    "/assets/construction/js/filter_fix.js?v=8",
+    "/assets/construction/js/filter_fix.js?v=11",
     # Must load last: native Frappe affordances remain available after theme styling
     "/assets/construction/js/native_frappe_controls_compat.js?v=9",
     # ─── Vite UI Phase 2: Form Config — auto-attaches to every form. MUST load LAST ───
@@ -166,7 +182,7 @@ app_include_js = [
 # CSS includes for unauthenticated pages (login, etc.)
 # v2.4-r3: modern_theme.css handles all theming including login
 web_include_css = [
-    "/assets/construction/css/modern_theme.css?v=2.5.6",
+    "/assets/construction/css/modern_theme.css?v=2.5.7",
     "/assets/construction/css/email_theme.css",
 ]
 
@@ -211,9 +227,17 @@ extend_bootinfo = "construction.boot.extend_bootinfo"
 # validate runs on both insert AND update
 doc_events = {
     "*": {"validate": "construction.overrides.scope_enforcement.validate"},
-    "Purchase Order": {"validate": "construction.services.boq_transaction_validation.validate_document"},
+    "Purchase Order": {
+        "validate": "construction.services.boq_transaction_validation.validate_document",
+        "on_submit": "construction.services.resource_price_service.capture_price_from_purchase_document",
+        "on_cancel": "construction.services.resource_price_service.cancel_price_history_for_document",
+    },
     "Purchase Receipt": {"validate": "construction.services.boq_transaction_validation.validate_document"},
-    "Purchase Invoice": {"validate": "construction.services.boq_transaction_validation.validate_document"},
+    "Purchase Invoice": {
+        "validate": "construction.services.boq_transaction_validation.validate_document",
+        "on_submit": "construction.services.resource_price_service.capture_price_from_purchase_document",
+        "on_cancel": "construction.services.resource_price_service.cancel_price_history_for_document",
+    },
     "Stock Entry": {"validate": "construction.services.boq_transaction_validation.validate_document"},
     "Timesheet": {"validate": "construction.services.boq_transaction_validation.validate_document"},
     "Journal Entry": {"validate": "construction.services.boq_transaction_validation.validate_document"},
@@ -246,6 +270,7 @@ after_install = [
     "construction.install.fix_select_permissions",
     "construction.install.fix_system_manager_permissions",
     "construction.install.seed_form_layout_profiles",
+    "construction.install.setup_item_construction_fields",
     "construction.insert_translations.execute",
 ]
 
@@ -264,8 +289,12 @@ after_migrate = [
     "construction.install.fix_select_permissions",
     "construction.install.fix_system_manager_permissions",
     "construction.install.seed_form_layout_profiles",
+    "construction.install.setup_item_construction_fields",
     "construction.insert_translations.execute",
 ]
+
+# Patches
+patches = "construction.patches.txt"
 
 # Translations
 translated_doctypes = {
@@ -275,6 +304,9 @@ translated_doctypes = {
     "BOQ Structure": ["ar"],
     "CostItem": ["ar"],
     "PlantResource": ["ar"],
+    "BOQ Cost Analysis": ["ar"],
+    "BOQ Cost Analysis Detail": ["ar"],
+    "Resource Price History": ["ar"],
     "Construction Settings": ["ar"],
     "Construction Theme": ["ar"],
     "Direct Labor Designation": ["ar"],
