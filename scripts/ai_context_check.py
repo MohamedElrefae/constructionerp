@@ -204,10 +204,10 @@ try:
         ok(f"Whitelisted endpoints: {whitelist_count}")
     else:
         fail(f"Whitelisted endpoints: {whitelist_count} (expected 17)")
-    if func_count == 34:
+    if func_count == 33:
         ok(f"Total functions: {func_count}")
     else:
-        info(f"Total functions: {func_count} (expected 34 — may have changed)")
+        fail(f"Total functions: {func_count} (expected 33)")
 except Exception as e:
     fail(f"Theme API check failed: {e}")
 
@@ -219,13 +219,28 @@ section("7. Migration Patches")
 
 patches_dir = CONSTRUCTION_PKG / "patches"
 try:
-    patch_versions = sorted(d.name for d in patches_dir.iterdir() if d.is_dir() and d.name.startswith("v6_"))
-    expected = ["v6_0", "v6_1", "v6_2", "v6_3", "v6_4", "v6_5", "v6_6"]
+    expected = [
+        "v6_0",
+        "v6_1",
+        "v6_2",
+        "v6_3",
+        "v6_4",
+        "v6_5",
+        "v6_6",
+        "v6_7",
+        "v6_8",
+        "v7_1",
+        "v7_2",
+    ]
     for exp in expected:
         if (patches_dir / exp).exists():
             ok(f"Patch dir '{exp}' exists")
         else:
             fail(f"Patch dir '{exp}' MISSING")
+    if (patches_dir / "v7_0_migrate_quantity_revisions.py").exists():
+        ok("Patch file 'v7_0_migrate_quantity_revisions.py' exists")
+    else:
+        fail("Patch file 'v7_0_migrate_quantity_revisions.py' MISSING")
 except Exception as e:
     fail(f"Patch check failed: {e}")
 
@@ -237,8 +252,12 @@ section("8. DocType Registry")
 
 expected_doctypes = {
     "boq_header",
+    "boq_import_batch",
     "boq_item",
     "boq_item_stage",
+    "boq_cost_analysis",
+    "boq_cost_analysis_detail",
+    "boq_quantity_revision",
     "boq_structure",
     "construction_settings",
     "construction_theme",
@@ -248,8 +267,12 @@ expected_doctypes = {
     "journal_entry",
     "modern_theme_settings",
     "plantresource",
+    "resource_price_history",
+    "scope_report_access_log",
     "user_desk_theme",
     "user_scope_context",
+    "variation_order",
+    "vo_line",
 }
 
 try:
@@ -263,9 +286,34 @@ try:
             fail(f"DocType '{m}' MISSING")
     if extra:
         for e in extra:
-            info(f"Extra DocType found: '{e}'")
+            fail(f"Unexpected DocType folder found: '{e}'")
 except Exception as e:
     fail(f"DocType registry check failed: {e}")
+
+# ═══════════════════════════════════════════════════════════════
+# Check 8B: Schema Facts Drift
+# ═══════════════════════════════════════════════════════════════
+
+section("8B. Schema Facts Drift")
+
+try:
+    result = subprocess.run(
+        [sys.executable, str(REPO_ROOT / "scripts" / "schema_drift_checker.py")],
+        cwd=REPO_ROOT,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    if result.returncode == 0:
+        ok("docs/ai/SCHEMA_FACTS.md matches live DocType JSON")
+    else:
+        fail("docs/ai/SCHEMA_FACTS.md drift detected")
+        if result.stdout.strip():
+            info(result.stdout.strip())
+        if result.stderr.strip():
+            info(result.stderr.strip())
+except Exception as e:
+    fail(f"Schema drift check failed: {e}")
 
 # ═══════════════════════════════════════════════════════════════
 # Check 9: CostItem & PlantResource Schema

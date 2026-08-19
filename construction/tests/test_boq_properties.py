@@ -681,15 +681,9 @@ if __name__ == "__main__":
         # Clean up
         migration_header.delete()
 
-    def test_property17_cost_item_fetch(self):
-        """Property 17: Cost Item Fetch"""
-        # Create a test Cost Item
-        cost_item = frappe.new_doc("Cost Item")
-        cost_item.item_name = "Test Cost Item"
-        cost_item.total_direct_cost = 100.0
-        cost_item.insert()
-
-        # Create a BOQ Item linked to this cost item
+    def test_property17_cost_item_preserved_on_save(self):
+        """Property 17: Cost Item value is preserved on save (no longer fetched from deprecated CostItem)."""
+        # Create a BOQ Item
         structure = frappe.new_doc("BOQ Structure")
         structure.boq_header = self.boq_header.name
         structure.title = "Test Item"
@@ -700,16 +694,16 @@ if __name__ == "__main__":
         item_name = frappe.db.get_value("BOQ Item", {"structure": structure.name}, "name")
         if item_name:
             item = frappe.get_doc("BOQ Item", item_name)
-            item.cost_item = cost_item.name
+            item.est_unit_cost = 250.0
+            item.cost_item = "DeprecatedRef"
             item.save()
 
-            # The est_unit_cost should be fetched from CostItem
+            # The est_unit_cost should be preserved (not zeroed)
             item.reload()
-            self.assertEqual(item.est_unit_cost, 100.0)
+            self.assertEqual(item.est_unit_cost, 250.0)
 
         # Clean up
         structure.delete()
-        cost_item.delete()
 
     def test_boq_header_syncs_project_name_without_fetch_from(self):
         """BOQ Header should persist a display label for Project during save."""

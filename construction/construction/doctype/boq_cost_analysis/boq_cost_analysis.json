@@ -1,0 +1,315 @@
+{
+  "actions": [],
+  "allow_rename": 1,
+  "autoname": "naming_series:",
+  "creation": "2026-06-29 00:00:00.000000",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "naming_series",
+    "title",
+    "boq_item",
+    "boq_header",
+    "boq_structure",
+    "project",
+    "company",
+    "analysis_status",
+    "cb_identity",
+    "analysis_uom",
+    "analysis_qty",
+    "effective_date",
+    "currency",
+    "is_template",
+    "template_name",
+    "category",
+    "description_ar",
+    "sb_details",
+    "details",
+    "sb_totals",
+    "total_direct_cost",
+    "overhead_pct",
+    "profit_pct",
+    "total_unit_cost",
+    "cb_totals",
+    "suggested_sell_rate",
+    "sb_approval",
+    "approved_by",
+    "approved_on",
+    "remarks"
+  ],
+  "fields": [
+    {
+      "fieldname": "naming_series",
+      "fieldtype": "Select",
+      "label": "Series",
+      "options": "BCA-.YYYY.-",
+      "reqd": 1,
+      "default": "BCA-.YYYY.-"
+    },
+    {
+      "fieldname": "title",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Title",
+      "reqd": 1
+    },
+    {
+    "fieldname": "boq_item",
+    "fieldtype": "Link",
+    "in_list_view": 1,
+    "in_standard_filter": 1,
+    "label": "BOQ Item",
+    "options": "BOQ Item",
+    "search_index": 1
+   },
+    {
+      "fetch_from": "boq_item.boq_header",
+      "fieldname": "boq_header",
+      "fieldtype": "Link",
+      "label": "BOQ Header",
+      "options": "BOQ Header",
+      "read_only": 1
+    },
+    {
+      "fetch_from": "boq_item.structure",
+      "fieldname": "boq_structure",
+      "fieldtype": "Link",
+      "label": "BOQ Structure",
+      "options": "BOQ Structure",
+      "read_only": 1
+    },
+    {
+      "fetch_from": "boq_header.project",
+      "fieldname": "project",
+      "fieldtype": "Link",
+      "label": "Project",
+      "options": "Project",
+      "read_only": 1
+    },
+    {
+      "fieldname": "company",
+      "fieldtype": "Link",
+      "in_standard_filter": 1,
+      "label": "Company",
+      "options": "Company",
+      "reqd": 1
+    },
+    {
+      "default": "Draft",
+      "fieldname": "analysis_status",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Analysis Status",
+      "options": "Draft\nApproved\nSuperseded",
+      "reqd": 1
+    },
+    {
+      "fieldname": "cb_identity",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "analysis_uom",
+      "fieldtype": "Link",
+      "label": "Analysis UOM",
+      "options": "UOM",
+      "reqd": 1
+    },
+    {
+      "default": "1",
+      "fieldname": "analysis_qty",
+      "fieldtype": "Float",
+      "label": "Analysis Quantity",
+      "non_negative": 1,
+      "reqd": 1
+    },
+    {
+      "fieldname": "effective_date",
+      "fieldtype": "Date",
+      "label": "Effective Date"
+    },
+    {
+      "default": "EGP",
+      "fieldname": "currency",
+      "fieldtype": "Link",
+      "label": "Currency",
+      "options": "Currency",
+      "reqd": 1
+    },
+    {
+      "default": "0",
+      "fieldname": "is_template",
+      "fieldtype": "Check",
+      "label": "Is Template"
+    },
+    {
+      "fieldname": "template_name",
+      "fieldtype": "Data",
+      "label": "Template Name"
+    },
+    {
+      "fieldname": "category",
+      "fieldtype": "Data",
+      "in_standard_filter": 1,
+      "label": "Category"
+    },
+    {
+      "fieldname": "description_ar",
+      "fieldtype": "Small Text",
+      "label": "Description (Arabic)"
+    },
+    {
+      "fieldname": "sb_details",
+      "fieldtype": "Section Break",
+      "label": "Cost Build-Up Details"
+    },
+    {
+      "fieldname": "details",
+      "fieldtype": "Table",
+      "label": "Details",
+      "options": "BOQ Cost Analysis Detail",
+      "reqd": 1
+    },
+    {
+      "fieldname": "sb_totals",
+      "fieldtype": "Section Break",
+      "label": "Totals"
+    },
+    {
+      "fieldname": "total_direct_cost",
+      "fieldtype": "Currency",
+      "label": "Total Direct Cost",
+      "read_only": 1
+    },
+    {
+      "default": "0",
+      "fieldname": "overhead_pct",
+      "fieldtype": "Percent",
+      "label": "Overhead %"
+    },
+    {
+      "default": "0",
+      "fieldname": "profit_pct",
+      "fieldtype": "Percent",
+      "label": "Profit %"
+    },
+    {
+      "fieldname": "total_unit_cost",
+      "fieldtype": "Currency",
+      "label": "Total Unit Cost",
+      "read_only": 1
+    },
+    {
+      "fieldname": "cb_totals",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "suggested_sell_rate",
+      "fieldtype": "Currency",
+      "label": "Suggested Sell Rate",
+      "read_only": 1
+    },
+    {
+      "fieldname": "sb_approval",
+      "fieldtype": "Section Break",
+      "label": "Approval"
+    },
+    {
+      "fieldname": "approved_by",
+      "fieldtype": "Link",
+      "label": "Approved By",
+      "options": "User",
+      "read_only": 1
+    },
+    {
+      "fieldname": "approved_on",
+      "fieldtype": "Datetime",
+      "label": "Approved On",
+      "read_only": 1
+    },
+    {
+      "fieldname": "remarks",
+      "fieldtype": "Small Text",
+      "label": "Remarks"
+    }
+  ],
+  "index_web_pages_for_search": 1,
+  "is_submittable": 1,
+  "links": [],
+  "modified": "2026-06-29 00:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "Construction",
+  "name": "BOQ Cost Analysis",
+  "naming_rule": "By 'Naming Series' field",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "amend": 1,
+      "cancel": 1,
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "submit": 1,
+      "write": 1
+    },
+    {
+      "amend": 1,
+      "cancel": 1,
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Construction Owner",
+      "share": 1,
+      "submit": 1,
+      "write": 1
+    },
+    {
+      "amend": 1,
+      "cancel": 1,
+      "create": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Project Manager",
+      "share": 1,
+      "submit": 1,
+      "write": 1
+    },
+    {
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Site Engineer"
+    },
+    {
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Accountant"
+    },
+    {
+      "read": 1,
+      "role": "Read-Only"
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": [],
+  "track_changes": 1
+}

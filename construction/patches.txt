@@ -10,3 +10,6 @@ construction.patches.v6_6.add_boq_cascade_transaction_fields
 construction.patches.v6_8.add_boq_structure_wbs_unique_constraint
 construction.patches.v7_1.fix_boq_header_project_link
 construction.patches.v7_2.set_erpnext_standard_filters
+construction.patches.v8_0.add_item_construction_fields
+construction.patches.v8_1.deprecate_costitem_plantresource
+construction.patches.v8_2.enable_global_export_menu_default

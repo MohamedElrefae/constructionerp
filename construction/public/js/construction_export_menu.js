@@ -50,7 +50,7 @@ class ConstructionExportMenu {
 		);
 
 		var $menu = $(
-			'<ul class="dropdown-menu dropdown-menu-right" style="min-width:220px;"></ul>'
+			'<ul class="dropdown-menu dropdown-menu-right" style="min-width:220px; top: 100% !important; bottom: auto !important; margin-top: 5px !important; z-index: 1050 !important;"></ul>'
 		);
 
 		var self = this;

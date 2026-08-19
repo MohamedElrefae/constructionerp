@@ -1,0 +1,226 @@
+{
+  "actions": [],
+  "allow_rename": 1,
+  "autoname": "naming_series:",
+  "creation": "2026-06-29 00:00:00.000000",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "naming_series",
+    "item_code",
+    "item_name",
+    "resource_type",
+    "price_date",
+    "rate",
+    "currency",
+    "exchange_rate",
+    "uom",
+    "supplier",
+    "project",
+    "region",
+    "company",
+    "sb_source",
+    "source_doctype",
+    "source_name",
+    "source_row",
+    "sb_status",
+    "status",
+    "cancelled_by",
+    "cancelled_on",
+    "remarks"
+  ],
+  "fields": [
+    {
+      "fieldname": "naming_series",
+      "fieldtype": "Select",
+      "label": "Series",
+      "options": "RPH-.YYYY.-",
+      "reqd": 1,
+      "default": "RPH-.YYYY.-"
+    },
+    {
+      "fieldname": "item_code",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Item Code",
+      "options": "Item",
+      "reqd": 1,
+      "search_index": 1
+    },
+    {
+      "fetch_from": "item_code.item_name",
+      "fieldname": "item_name",
+      "fieldtype": "Data",
+      "label": "Item Name",
+      "read_only": 1
+    },
+    {
+      "fieldname": "resource_type",
+      "fieldtype": "Select",
+      "in_standard_filter": 1,
+      "label": "Resource Type",
+      "options": "\nMaterial\nLabor\nPlant\nSubcontract\nOverhead"
+    },
+    {
+      "fieldname": "price_date",
+      "fieldtype": "Date",
+      "in_list_view": 1,
+      "label": "Price Date",
+      "reqd": 1
+    },
+    {
+      "fieldname": "rate",
+      "fieldtype": "Currency",
+      "in_list_view": 1,
+      "label": "Rate",
+      "reqd": 1
+    },
+    {
+      "default": "EGP",
+      "fieldname": "currency",
+      "fieldtype": "Link",
+      "label": "Currency",
+      "options": "Currency",
+      "reqd": 1
+    },
+    {
+      "default": "1.0",
+      "fieldname": "exchange_rate",
+      "fieldtype": "Float",
+      "label": "Exchange Rate",
+      "non_negative": 1
+    },
+    {
+      "fieldname": "uom",
+      "fieldtype": "Link",
+      "label": "UOM",
+      "options": "UOM",
+      "reqd": 1
+    },
+    {
+      "fieldname": "supplier",
+      "fieldtype": "Link",
+      "in_standard_filter": 1,
+      "label": "Supplier",
+      "options": "Supplier"
+    },
+    {
+      "fieldname": "project",
+      "fieldtype": "Link",
+      "in_standard_filter": 1,
+      "label": "Project",
+      "options": "Project"
+    },
+    {
+      "fieldname": "region",
+      "fieldtype": "Data",
+      "in_standard_filter": 1,
+      "label": "Region"
+    },
+    {
+      "fieldname": "company",
+      "fieldtype": "Link",
+      "in_standard_filter": 1,
+      "label": "Company",
+      "options": "Company",
+      "reqd": 1
+    },
+    {
+      "fieldname": "sb_source",
+      "fieldtype": "Section Break",
+      "label": "Source Document"
+    },
+    {
+      "fieldname": "source_doctype",
+      "fieldtype": "Data",
+      "label": "Source DocType",
+      "read_only": 1
+    },
+    {
+      "fieldname": "source_name",
+      "fieldtype": "Data",
+      "label": "Source Name",
+      "read_only": 1
+    },
+    {
+      "fieldname": "source_row",
+      "fieldtype": "Data",
+      "label": "Source Row",
+      "read_only": 1
+    },
+    {
+      "fieldname": "sb_status",
+      "fieldtype": "Section Break",
+      "label": "Status"
+    },
+    {
+      "default": "Active",
+      "fieldname": "status",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "label": "Status",
+      "options": "Active\nCancelled",
+      "reqd": 1
+    },
+    {
+      "fieldname": "cancelled_by",
+      "fieldtype": "Data",
+      "label": "Cancelled By",
+      "read_only": 1
+    },
+    {
+      "fieldname": "cancelled_on",
+      "fieldtype": "Datetime",
+      "label": "Cancelled On",
+      "read_only": 1
+    },
+    {
+      "fieldname": "remarks",
+      "fieldtype": "Small Text",
+      "label": "Remarks"
+    }
+  ],
+  "index_web_pages_for_search": 1,
+  "links": [],
+  "modified": "2026-06-29 00:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "Construction",
+  "name": "Resource Price History",
+  "naming_rule": "By 'Naming Series' field",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Construction Owner"
+    },
+    {
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Project Manager"
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": [],
+  "track_changes": 1
+}
