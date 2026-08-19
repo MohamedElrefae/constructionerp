@@ -1,11 +1,11 @@
 # Construction ERP — End-to-End User Guide
 # Enterprise Workflow: Company → Cost Center → Project → BOQ
 
-**Version:** 1.2
-**Date:** 2026-08-19 (Cost Estimation Engine Phase 1 + Cost Database Phase 2)
+**Version:** 1.3
+**Date:** 2026-08-20 (deployment-readiness remediation)
 **Branch:** `develop`
 **Tested by:** Playwright UI Runner + Browser QA + VFC test suite + cost-analysis engine suite
-**Status:** All features verified — 27/27 VO test + 72/72 cascade blocker assertions passed; cost database 10/10, cost analysis engine 17/17, VFC 39/39
+**Status:** Release validation passed — VO 23/23, Quantity Revisions 30/30, Transaction Validation 13/13, BOQ Link Queries 9/9, Scope Context 17/17, Cost Database 10/10, Cost Analysis Engine 17/17, and VFC 39/39
 
 ---
 
@@ -49,13 +49,13 @@
 
 ### 1.3 Scope Filter Exclusions (Admin)
 
-If users need to switch projects freely without scope restrictions:
+Use exclusions only when a DocType should be omitted from Scope Context's list-query filtering:
 
 1. Navigate to **Construction Settings**
 2. In the **Scope Filter Exclusions** field (under Scope Dimensions), add `Project` on a new line
 3. **Save**
 
-**Verify:** Open a BOQ Header form — the Project dropdown now shows all projects, not just the scoped one. The Permission Error popup on BOQ Header new form is resolved.
+**Verify:** Lists for excluded DocTypes no longer receive the Scope Context SQL filter. This setting does not change BOQ Header project defaults or validation; use the active scope to create a BOQ Header.
 
 ### 1.4 Scope Drift Protection
 
@@ -72,9 +72,11 @@ If users need to switch projects freely without scope restrictions:
 1. Navigate to **BOQ Header → New**
 2. Fill in:
    - **Title:** e.g. "QA Test BOQ"
-   - **Project:** select your project (pre-filled if scope context is active)
+   - **Project:** automatically populated from your active Scope Context
    - **BOQ Type:** Tender / Contract
 3. **Save**
+
+**Note:** With Scope Context enabled, select the project in the top bar before creating the header. When Scope Context is disabled, integrations and imports may supply the project's internal value directly; the BOQ Header form does not expose a project selector.
 
 **Visual cues:** If Project is empty, a **red accent border** appears on the Project field with a pill badge "Select Project first". After selecting a project, the accent clears.
 
@@ -139,7 +141,7 @@ Each node shows its own inline totals, and the BOQ Structure list includes ordin
 2. Fill in:
    - **BOQ Header:** select your BOQ Header
    - **Structure:** select a leaf structure (e.g. "Excavation")
-   - **Title:** e.g. "C25 Concrete Foundation"
+   - **Cost Item:** e.g. "C25 Concrete Foundation"
    - **Quantity:** 100
    - **Unit:** Nos
    - **Contract Unit Price:** 50
@@ -306,7 +308,7 @@ When grid rows are **collapsed** (not expanded for editing) and have blocked BOQ
 | 7 | Status → **Approved by Engineer** → Save | Engineer Approval Date populated |
 | 8 | **Verify:** Try editing Revised Qty → **blocked** (read-only after Engineer Approval) | P0-1 enforcement working |
 | 9 | Status → **Approved by Client** → upload PDF → Save | Client Approval Date populated |
-| 10 | Go to **BOQ Quantity Revision** list | New revision: Type = "Increase Above 25%", Delta = 26 |
+| 10 | Go to **BOQ Quantity Revision** list | New revision: Type = "Increase Above 25%", **Delta Quantity** = 26 |
 | 11 | Open the BOQ Item | Original Qty = 100 (unchanged), Current Revised Qty = 126 |
 
 ### 8.3 Part 2: Quantity Decrease VO
@@ -327,7 +329,7 @@ When grid rows are **collapsed** (not expanded for editing) and have blocked BOQ
 | 2 | VO Line: Line Type = **Omission**, BOQ Item = item to omit | Revised Qty auto-set to 0 |
 | 3 | Submit → Engineer Approve → Client Approve | |
 | 4 | Open BOQ Item | Current Revised Qty = 0, Original Qty unchanged |
-| 5 | Go to BOQ Item list for this header | Omitted item hidden from dropdowns (exclude_zero_revised active) |
+| 5 | Go to a transaction or VO item dropdown for this header | Omitted item is hidden from selectable BOQ Item dropdowns. |
 
 ### 8.5 Part 4: New Variation Item VO
 
@@ -524,12 +526,12 @@ The Form Layout Engine (VFC) lets you customise how fields are arranged on any f
 ### 11.1 Access
 
 1. Open any form (e.g., Sales Invoice, BOQ Header, User Scope Context)
-2. Click the **pencil icon** in the form toolbar (top-right)
+2. Click the **Form Config** button (grid icon, top-right)
 3. The **Layout Controls** panel opens as a dialog modal
 
 ### 11.2 Sections Editor
 
-- **Current Sections** tab shows the form's current layout sections
+- **Sections** tab shows the form's current layout sections
 - **Add Section:** Enter a section name and click **Add**
 - **Remove Section:** Click the × icon on a section header
 - **Add Field to Section:** Select a field from the dropdown and click **Add**
@@ -571,7 +573,7 @@ The Form Layout Engine (VFC) lets you customise how fields are arranged on any f
 
 - Layout profiles are stored server-side as **Form Layout Profile** records
 - System Administrators see a **Sections Editor** tab for creating/sharing profiles
-- Regular users see only **Current Sections** (read-only) and personal overrides
+- Regular users see only **Sections** (read-only) and personal overrides
 - Personal overrides (`for_user` profiles) persist until explicitly reverted
 
 ## 12. Administration — Settings & Diagnostics
@@ -597,10 +599,10 @@ When a new version is deployed, verify assets are loaded fresh:
 
 | File | Expected Version |
 |------|-----------------|
-| `modern_theme.css` | `?v=2.5.6` |
-| `ct_link_control.js` | `?v=13` |
-| `boq_filters.js` | `?v=5` |
-| `filter_fix.js` | `?v=7` |
+| `modern_theme.css` | `?v=2.5.7` |
+| `ct_link_control.js` | `?v=16` |
+| `boq_filters.js` | `?v=8` |
+| `filter_fix.js` | `?v=11` |
 | `scope_context_form_defaults.js` | `?v=3` |
 
 ### 12.3 Scope Drift Audit Log
@@ -669,7 +671,7 @@ Admins can review these to identify users who frequently change scope mid-sessio
 - [ ] Bulk reprice touches Draft analyses only; dry_run preview available
 
 ### Form Layout Engine (VFC)
-- [ ] Layout icon visible in the form toolbar (pencil icon) — opens Sections Editor
+- [ ] Form Config button visible in the form toolbar (grid icon) — opens Sections Editor
 - [ ] **Sections Editor tab:** Drag fields between sections, create/rename/remove sections
 - [ ] **Density control tab:** Choose 1, 2, or 3-column grid layout
 - [ ] **Hidden fields tab:** Toggle individual field visibility via checkboxes
@@ -696,8 +698,10 @@ The following automated and manual test evidence is available:
 |------------|----------|--------|
 | VO Quantity Revision (27 steps) | `docs/feature_reviews/evidence/ev_067_ui_tests/VO_QUANTITY_REVISION_MANUAL_TEST.md` | 27/27 ✅ |
 | Screenshots | `docs/feature_reviews/evidence/ev_067_ui_tests/*.png` | 11 captures |
-| Scope Context (14 tests) | `construction/tests/test_scope_context.py` | All passing |
-| Gate Transitions (3 tests) | `construction/tests/test_transaction_validation.py` | All passing |
+| Scope Context (17 tests) | `construction/tests/test_scope_context.py` | 17/17 integration checks |
+| Transaction validation + gate transitions (13 tests) | `construction/tests/test_transaction_validation.py` | 13/13 ✅ |
+| BOQ Link Queries (9 tests) | `construction/tests/test_boq_link_queries.py` | 9/9 ✅ |
+| Quantity Revisions (30 tests) | `construction/tests/test_quantity_revisions.py` | 30/30 ✅ |
 | Cost Estimation Engine (17 tests) | `construction/tests/test_cost_analysis_engine.py` | 17/17 ✅ |
 | Cost Database API (10 tests) | `construction/tests/test_cost_database_api.py` | 10/10 ✅ |
 | VFC Backend (39 tests) | `construction/tests/test_vfc_backend.py` | 39/39 ✅ |

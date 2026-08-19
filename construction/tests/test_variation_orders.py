@@ -492,7 +492,7 @@ class TestVariationOrders(FrappeTestCase):
             create_material_request_for_vo(vo.name)
 
     def test_omitted_item_hidden_from_dropdown(self):
-        from construction.api.boq_link_queries import get_boq_items
+        from construction.api.boq_link_queries import get_boq_items, get_boq_structures
 
         header, item = self._make_boq_item("VO Hide Omitted", quantity=100, rate=50)
         self._move_header_to_locked(header.name)
@@ -520,6 +520,19 @@ class TestVariationOrders(FrappeTestCase):
             "BOQ Item", "", "name", 0, 10, {"boq_header": header.name, "exclude_zero_revised": 1}
         )
         self.assertNotIn(item.name, [i[0] for i in items])
+
+        structures = get_boq_structures(
+            "BOQ Structure",
+            "",
+            "name",
+            0,
+            10,
+            {"boq_header": header.name, "exclude_zero_revised": 1},
+        )
+        self.assertNotIn(item.structure, [row[0] for row in structures])
+
+        with self.assertRaises(Exception):
+            self._make_vo(header.name, item.name, revised_qty=1).insert(ignore_permissions=True)
 
 
 class TestVariationOrderAPI(FrappeTestCase):

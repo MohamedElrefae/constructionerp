@@ -19,28 +19,34 @@ class BOQHeader(Document):
         self.calculate_total_value()
 
     def sync_project_from_scope_context(self):
+        if frappe.session.user == "Administrator":
+            return
+
+        try:
+            scope_context_enabled = bool(
+                frappe.db.get_single_value("Construction Settings", "enable_scope_context") or False
+            )
+        except Exception:
+            scope_context_enabled = False
+
+        if not scope_context_enabled:
+            return
+
+        if self.project:
+            return
+
         scope_context = get_user_scope_context()
         scope_project = scope_context.project if scope_context else None
 
-        if self.is_new():
-            if scope_project:
-                self.project = scope_project
-                return
-            frappe.throw(
-                _(
-                    "Project comes from Scope Context. Set a Project in the top bar before creating a BOQ Header."
-                )
-            )
+        if scope_project:
+            self.project = scope_project
+            return
 
-        if not self.project:
-            if scope_project:
-                self.project = scope_project
-                return
-            frappe.throw(
-                _(
-                    "Project comes from Scope Context. Set a Project in the top bar before creating a BOQ Header."
-                )
+        frappe.throw(
+            _(
+                "Project comes from Scope Context. Set a Project in the top bar before creating a BOQ Header."
             )
+        )
 
     def sync_project_name(self):
         if not self.project:

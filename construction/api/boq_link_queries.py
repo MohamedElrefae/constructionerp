@@ -198,6 +198,18 @@ def get_boq_structures(
         join_header = True
         conditions.append("h.project = %(project)s")
         values["project"] = filters.get("project")
+    if filters.get("exclude_zero_revised"):
+        conditions.append(
+            """
+            EXISTS (
+                SELECT 1
+                FROM `tabBOQ Item` i
+                WHERE i.structure = s.name
+                  AND i.docstatus < 2
+                  AND COALESCE(i.current_revised_qty, i.quantity) > 0
+            )
+            """
+        )
 
     scope = resolve_query_scope(enforce_scope)
     if scope:
@@ -262,6 +274,9 @@ def get_boq_items(
     if filters.get("structure"):
         conditions.append("i.structure = %(structure)s")
         values["structure"] = filters.get("structure")
+    if filters.get("is_variation_item") is not None:
+        conditions.append("i.is_variation_item = %(is_variation_item)s")
+        values["is_variation_item"] = int(filters.get("is_variation_item"))
 
     scope = resolve_query_scope(enforce_scope)
     if scope:

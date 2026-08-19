@@ -391,7 +391,7 @@ def test_standard_filters_property_setters():
 
 
 def test_report_scope_enforcement():
-    from construction.overrides.scope_report import _enforce_scope_filters
+    from construction.overrides.scope_report import _enforce_scope_filters_strict
 
     _ensure_test_user()
 
@@ -408,12 +408,12 @@ def test_report_scope_enforcement():
         frappe.db.commit()
 
         filters = {"company": "Elrefae", "cost_center": _COST_CENTER, "project": "SomeOtherProject"}
-        enforced = _enforce_scope_filters(filters, "test_user2@example.com")
+        enforced = _enforce_scope_filters_strict(filters, "test_user2@example.com")
 
         assert enforced["company"] == "Elrefae"
-        assert enforced["cost_center"] == _COST_CENTER
-        # Project was not in the user's scope and should be cleared/forced to None
-        assert enforced.get("project") is None or enforced.get("project") == ""
+        assert _COST_CENTER in enforced["cost_center"]
+        # Project is a MultiSelectList and is cleared when absent from scope.
+        assert enforced["project"] == []
     finally:
         frappe.set_user("Administrator")
 

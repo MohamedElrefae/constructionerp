@@ -221,3 +221,59 @@ class TestBOQLinkQueries(FrappeTestCase):
             {"project": self.project_a, "enforce_scope": 1},
         )
         self.assertEqual(rows[0][0], self.project_a)
+
+    def test_boq_header_scope_default_respects_explicit_project(self):
+        user = "boq-header-scope-test@example.com"
+        previous_user = frappe.session.user
+        previous_scope_context_enabled = frappe.db.get_single_value(
+            "Construction Settings", "enable_scope_context"
+        )
+
+        if not frappe.db.exists("User", user):
+            frappe.get_doc(
+                {
+                    "doctype": "User",
+                    "email": user,
+                    "first_name": "BOQ Header Scope Test",
+                    "enabled": 1,
+                }
+            ).insert(ignore_permissions=True)
+
+        try:
+            frappe.db.set_single_value("Construction Settings", "enable_scope_context", 1)
+            frappe.db.delete("User Scope Context", {"user": user})
+            frappe.get_doc(
+                {
+                    "doctype": "User Scope Context",
+                    "user": user,
+                    "company": self.company,
+                    "project": self.project_a,
+                }
+            ).insert(ignore_permissions=True)
+            frappe.set_user(user)
+
+            scope_default_header = frappe.get_doc(
+                {
+                    "doctype": "BOQ Header",
+                    "title": "_Test Scope Default Header",
+                    "status": "Draft",
+                    "boq_type": "Tender",
+                }
+            ).insert(ignore_permissions=True)
+            explicit_project_header = frappe.get_doc(
+                {
+                    "doctype": "BOQ Header",
+                    "project": self.project_b,
+                    "title": "_Test Explicit Project Header",
+                    "status": "Draft",
+                    "boq_type": "Tender",
+                }
+            ).insert(ignore_permissions=True)
+
+            self.assertEqual(scope_default_header.project, self.project_a)
+            self.assertEqual(explicit_project_header.project, self.project_b)
+        finally:
+            frappe.set_user(previous_user)
+            frappe.db.set_single_value(
+                "Construction Settings", "enable_scope_context", previous_scope_context_enabled or 0
+            )

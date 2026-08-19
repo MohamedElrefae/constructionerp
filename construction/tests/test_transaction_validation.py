@@ -380,13 +380,24 @@ class TestBOQGateTransitions(FrappeTestCase):
         project = frappe.db.get_value("Project", {"project_name": name}, "name")
         if project:
             return project
+        company = frappe.db.get_value("Company", {}, "name")
         return (
-            frappe.get_doc({"doctype": "Project", "project_name": name}).insert(ignore_permissions=True).name
+            frappe.get_doc(
+                {
+                    "doctype": "Project",
+                    "project_name": name,
+                    "company": company,
+                    "naming_series": "PROJ-.####",
+                }
+            )
+            .insert(ignore_permissions=True)
+            .name
         )
 
     def _clear_scope_defaults(self):
         for key in ("company", "cost_center", "project", "department"):
             frappe.defaults.clear_user_default(key)
+        frappe.db.delete("User Scope Context", {"user": frappe.session.user})
 
     def _make_boq_header(self, project):
         return frappe.get_doc(

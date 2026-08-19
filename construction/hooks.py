@@ -166,7 +166,7 @@ app_include_js = [
     # Translation workflow helpers (Arabic backlog + filters)
     "/assets/construction/js/translation_list_tools.js?v=1",
     # BOQ integration filters for transaction child rows
-    "/assets/construction/js/boq_filters.js?v=6",
+    "/assets/construction/js/boq_filters.js?v=8",
     # Filter fix — injected AFTER Frappe bundle to win cascade order
     "/assets/construction/js/filter_fix.js?v=11",
     # Must load last: native Frappe affordances remain available after theme styling

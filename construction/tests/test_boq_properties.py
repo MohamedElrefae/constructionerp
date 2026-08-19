@@ -714,35 +714,58 @@ if __name__ == "__main__":
         )
 
     def test_boq_header_defaults_project_from_scope_context(self):
-        """BOQ Header should derive its project from the active Scope Context."""
+        """A scoped non-admin BOQ Header derives its project from Scope Context."""
         project = get_or_create_test_project()
         company = frappe.db.get_value("Project", project, "company")
-
-        frappe.db.delete("User Scope Context", {"user": frappe.session.user})
-
-        frappe.get_doc(
-            {
-                "doctype": "User Scope Context",
-                "user": frappe.session.user,
-                "company": company,
-                "project": project,
-            }
-        ).insert(ignore_permissions=True)
-
-        self.assertEqual(get_user_scope_context().project, project)
-
-        boq_header = frappe.get_doc(
-            {
-                "doctype": "BOQ Header",
-                "title": "Scope Derived BOQ",
-                "status": "Draft",
-                "boq_type": "Tender",
-            }
+        user = "boq-scope-test@example.com"
+        previous_user = frappe.session.user
+        previous_scope_context_enabled = frappe.db.get_single_value(
+            "Construction Settings", "enable_scope_context"
         )
-        boq_header.insert()
 
-        self.assertEqual(boq_header.project, project)
-        self.assertEqual(
-            boq_header.project_name,
-            frappe.db.get_value("Project", project, "project_name") or project,
-        )
+        if not frappe.db.exists("User", user):
+            frappe.get_doc(
+                {
+                    "doctype": "User",
+                    "email": user,
+                    "first_name": "BOQ Scope Test",
+                    "enabled": 1,
+                }
+            ).insert(ignore_permissions=True)
+
+        try:
+            frappe.db.set_single_value("Construction Settings", "enable_scope_context", 1)
+            frappe.set_user(user)
+            frappe.db.delete("User Scope Context", {"user": user})
+
+            frappe.get_doc(
+                {
+                    "doctype": "User Scope Context",
+                    "user": user,
+                    "company": company,
+                    "project": project,
+                }
+            ).insert(ignore_permissions=True)
+
+            self.assertEqual(get_user_scope_context().project, project)
+
+            boq_header = frappe.get_doc(
+                {
+                    "doctype": "BOQ Header",
+                    "title": "Scope Derived BOQ",
+                    "status": "Draft",
+                    "boq_type": "Tender",
+                }
+            )
+            boq_header.insert()
+
+            self.assertEqual(boq_header.project, project)
+            self.assertEqual(
+                boq_header.project_name,
+                frappe.db.get_value("Project", project, "project_name") or project,
+            )
+        finally:
+            frappe.set_user(previous_user)
+            frappe.db.set_single_value(
+                "Construction Settings", "enable_scope_context", previous_scope_context_enabled or 0
+            )

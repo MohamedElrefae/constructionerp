@@ -377,6 +377,7 @@
 		filters.require_boq_header = true;
 		filters.require_structure = true;
 		filters.allowed_statuses = ["Frozen", "Locked"];
+		filters.exclude_zero_revised = true;
 		return withScope(withGate(frm, row, filters));
 	}
 

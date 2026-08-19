@@ -63,13 +63,13 @@
 				if (!doc.boq_header) {
 					return { filters: { name: "" } };
 				}
-				const filters = { boq_header: doc.boq_header };
 				if (row.line_type === "New Item") {
-					filters.is_group = 1;
-				} else {
-					filters.is_group = 0;
+					return { filters: { boq_header: doc.boq_header, is_group: 1 } };
 				}
-				return { filters: filters };
+				return {
+					query: "construction.api.boq_link_queries.get_boq_structures",
+					filters: { boq_header: doc.boq_header, exclude_zero_revised: true },
+				};
 			});
 
 			frm.set_query("boq_item", "lines", function (doc, cdt, cdn) {
@@ -77,11 +77,18 @@
 				if (!doc.boq_header) {
 					return { filters: { name: "" } };
 				}
-				const filters = { boq_header: doc.boq_header, is_variation_item: 0 };
+				const filters = {
+					boq_header: doc.boq_header,
+					is_variation_item: 0,
+					exclude_zero_revised: true,
+				};
 				if (row.boq_structure) {
 					filters.structure = row.boq_structure;
 				}
-				return { filters: filters };
+				return {
+					query: "construction.api.boq_link_queries.get_boq_items",
+					filters,
+				};
 			});
 		},
 

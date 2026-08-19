@@ -28,6 +28,10 @@ class VOLine(Document):
                 frappe.throw(_("BOQ Item {0} does not exist.").format(self.boq_item))
             if item.boq_header != parent.boq_header:
                 frappe.throw(_("VO Line BOQ Item must belong to the selected BOQ Header."))
+            if flt(item.current_revised_qty if item.current_revised_qty is not None else item.quantity) <= 0:
+                frappe.throw(
+                    _("Omitted BOQ Items cannot be selected for a new Variation Order line.")
+                )
 
             structure = frappe.db.get_value(
                 "BOQ Structure", item.structure, ["name", "title", "wbs_code", "is_group"], as_dict=True

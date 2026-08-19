@@ -81,6 +81,11 @@
 
 ## 3. In Progress (Active Work — Updated After Every Session)
 
+### Deployment-readiness remediation — Completed (2026-08-20)
+- **Result:** All findings from `docs/USER_GUIDE_DEPLOYMENT_REVIEW_2026-08-19.md` remediated; review verdict updated to release-ready.
+- **Key fixes:** BOQ Header scope enforcement now honors the feature flag, Administrator bypass, and explicit projects; omitted BOQ Items are hidden from transaction and VO item dropdowns after approved omission; User Guide terminology, VFC labels, cache versions, and test evidence synchronized.
+- **Validation:** VO 23/23, Quantity Revisions 30/30, Transaction Validation 13/13, BOQ Link Queries 9/9, BOQ Properties 17/17, Scope Context 17/17, Cost Engine 17/17, Cost DB 10/10, VFC 39/39; `bench build --app construction` passed.
+
 ### Current Sprint: rc-1.1 Follow-up (WP1–WP7) — 6/7 Complete
 #### Task 1: WP1 — Broader-app Audit → Completed (2026-06-21)
 - **Files:** `docs/evidence/broader_app_audit_log.md`
@@ -145,6 +150,11 @@
 ---
 
 ## 6. Session Log (Append-Only — Most Recent First)
+
+### Session 2026-08-20 — Deployment-readiness remediation
+- **Worked on:** Remediated all F1–F7 findings in the user-guide deployment review.
+- **Files changed:** BOQ Header validation, BOQ item link query, transaction and VO dropdown filters, cache-bust hook, user guide, review report, and affected regression fixtures.
+- **Validation:** All targeted backend suites passed; Scope Context manual runner repaired to use `_enforce_scope_filters_strict` and passed 17/17; asset build succeeded.
 
 ### Session 2026-06-21 — Agent: Cursor (VFC Phase 3 Stabilization)
 - **Worked on:** VFC Phase 3 stabilization — WP0 through WP5 complete, plus review findings
