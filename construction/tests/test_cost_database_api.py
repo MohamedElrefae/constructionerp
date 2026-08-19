@@ -112,7 +112,7 @@ class TestCostDatabaseAPI(FrappeTestCase):
         with self.assertRaises(frappe.ValidationError):
             download_cost_database_template(mode="invalid")
 
-    def _build_test_excel(self):
+    def _build_test_excel(self, rate=3600):
         import openpyxl
 
         wb = openpyxl.Workbook()
@@ -125,26 +125,26 @@ class TestCostDatabaseAPI(FrappeTestCase):
         ])
         resources.append([
             "API-CEM-001", "Material", "M", "API Cement", "أسمنت API",
-            "Ton", 3600, "EGP", 1.0, self.company,
+            "Ton", rate, "EGP", 1.0, self.company,
             "Cairo", "2026-06-01", "Test Import",
         ])
 
         templates = wb.create_sheet("BOQItemTemplates")
         templates.append([
-            "template_name", "description_en", "description_ar", "uom",
+            "template_name", "description_en", "description_ar", "category", "uom",
             "overhead_pct", "profit_pct", "currency",
         ])
         templates.append([
-            "API-CONC-PLN", "API Plain Concrete", "خرسانة عادية API",
+            "API-CONC-PLN", "API Plain Concrete", "خرسانة عادية API", "Concrete Works",
             "m³", 12, 8, "EGP",
         ])
 
-        rate = wb.create_sheet("RateAnalysis")
-        rate.append([
+        rate_sheet = wb.create_sheet("RateAnalysis")
+        rate_sheet.append([
             "template_name", "resource_code", "qty_per_boq_unit", "wastage_pct",
             "cost_stream", "cost_rate", "rate_source",
         ])
-        rate.append(["API-CONC-PLN", "API-CEM-001", 0.25, 3, "M", 3600, "Import"])
+        rate_sheet.append(["API-CONC-PLN", "API-CEM-001", 0.25, 3, "M", rate, "Import"])
 
         buf = io.BytesIO()
         wb.save(buf)
@@ -173,3 +173,112 @@ class TestCostDatabaseAPI(FrappeTestCase):
         self.assertTrue(result["success"])
         self.assertTrue(result["dry_run"])
         self.assertEqual(len(result["records_created"]["items"]), 0)
+
+    def test_import_cost_database_creates_records(self):
+        """Real import creates Items, Resource Price History, and templates with schema fields persisted."""
+        from construction.services.cost_database_service import import_cost_database_from_excel
+
+        content = self._build_test_excel()
+        result = import_cost_database_from_excel(
+            file_content=content,
+            file_name="test_import.xlsx",
+            company=self.company,
+        )
+        self.assertTrue(result["success"], msg=str(result["errors"]))
+        self.assertEqual(len(result["records_created"]["items"]), 1)
+        self.assertEqual(len(result["records_created"]["resource_price_history"]), 1)
+        self.assertEqual(len(result["records_created"]["boq_cost_analysis_templates"]), 1)
+
+        # Item created with construction resource flags
+        item = frappe.get_doc("Item", "API-CEM-001")
+        self.assertTrue(item.is_construction_resource)
+        self.assertEqual(item.construction_resource_type, "Material")
+        self.assertEqual(item.default_cost_stream, "M")
+
+        # Resource Price History created with region and source
+        rph_name = result["records_created"]["resource_price_history"][0]
+        rph = frappe.get_doc("Resource Price History", rph_name)
+        self.assertEqual(rph.region, "Cairo")
+        self.assertEqual(rph.source_doctype, "Import")
+        self.assertEqual(rph.source_name, "Test Import")
+        self.assertEqual(rph.status, "Active")
+
+        # Template created with bilingual + category fields persisted
+        tpl_name = result["records_created"]["boq_cost_analysis_templates"][0]
+        tpl = frappe.get_doc("BOQ Cost Analysis", tpl_name)
+        self.assertEqual(tpl.is_template, 1)
+        self.assertEqual(tpl.template_name, "API-CONC-PLN")
+        self.assertEqual(tpl.description_ar, "خرسانة عادية API")
+        self.assertEqual(tpl.category, "Concrete Works")
+        self.assertEqual(tpl.company, self.company)
+        self.assertEqual(len(tpl.details), 1)
+        self.assertEqual(tpl.details[0].item_code, "API-CEM-001")
+        self.assertEqual(tpl.details[0].rate_source, "Import")
+
+    def test_import_cost_database_idempotent(self):
+        """Re-importing the same file creates no duplicate price history or templates."""
+        from construction.services.cost_database_service import import_cost_database_from_excel
+
+        content = self._build_test_excel()
+        first = import_cost_database_from_excel(
+            file_content=content,
+            file_name="test_import.xlsx",
+            company=self.company,
+        )
+        self.assertTrue(first["success"], msg=str(first["errors"]))
+
+        second = import_cost_database_from_excel(
+            file_content=content,
+            file_name="test_import.xlsx",
+            company=self.company,
+        )
+        self.assertTrue(second["success"], msg=str(second["errors"]))
+
+        # No duplicate price history rows
+        self.assertEqual(len(second["records_created"]["resource_price_history"]), 0)
+        self.assertEqual(len(second["records_skipped"]["resource_price_history"]), 1)
+
+        # No duplicate template — draft updated in place
+        self.assertEqual(len(second["records_created"]["boq_cost_analysis_templates"]), 0)
+        self.assertEqual(len(second["records_updated"]["boq_cost_analysis_templates"]), 1)
+
+        # Exactly one price history row and one template exist
+        self.assertEqual(frappe.db.count("Resource Price History", {"item_code": "API-CEM-001"}), 1)
+        self.assertEqual(
+            frappe.db.count("BOQ Cost Analysis", {"template_name": "API-CONC-PLN", "is_template": 1}),
+            1,
+        )
+
+    def test_import_cost_database_updates_draft_template(self):
+        """Re-import with a changed rate updates the draft template instead of duplicating it."""
+        from construction.services.cost_database_service import import_cost_database_from_excel
+
+        content = self._build_test_excel()
+        first = import_cost_database_from_excel(
+            file_content=content,
+            file_name="test_import.xlsx",
+            company=self.company,
+        )
+        self.assertTrue(first["success"], msg=str(first["errors"]))
+        tpl_name = first["records_created"]["boq_cost_analysis_templates"][0]
+
+        # New price for the same resource — history appends, template upserts
+        content = self._build_test_excel(rate=4200)
+        second = import_cost_database_from_excel(
+            file_content=content,
+            file_name="test_import.xlsx",
+            company=self.company,
+        )
+        self.assertTrue(second["success"], msg=str(second["errors"]))
+
+        # New price history row appended (rate differs)
+        self.assertEqual(len(second["records_created"]["resource_price_history"]), 1)
+        self.assertEqual(frappe.db.count("Resource Price History", {"item_code": "API-CEM-001"}), 2)
+
+        # Template updated in place, not duplicated
+        tpl = frappe.get_doc("BOQ Cost Analysis", tpl_name)
+        self.assertEqual(tpl.details[0].cost_rate, 4200)
+        self.assertEqual(
+            frappe.db.count("BOQ Cost Analysis", {"template_name": "API-CONC-PLN", "is_template": 1}),
+            1,
+        )

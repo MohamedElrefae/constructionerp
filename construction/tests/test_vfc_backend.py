@@ -157,6 +157,12 @@ class TestFormLayoutProfile(unittest.TestCase):
 class TestLayoutAPI(unittest.TestCase):
     def setUp(self):
         self.profiles = []
+        # Purge leftovers from previous runs (save_layout commits mid-test,
+        # which defeats transaction rollback isolation)
+        frappe.db.delete(
+            "Form Layout Profile", {"name": ("in", ["Task-_Test_UpdateMe", "Task-_Test_SaveNew"])}
+        )
+        frappe.db.commit()
 
     def tearDown(self):
         for doc in self.profiles:
@@ -164,6 +170,10 @@ class TestLayoutAPI(unittest.TestCase):
                 frappe.delete_doc("Form Layout Profile", doc.name, ignore_permissions=True)
             except Exception:
                 pass
+        frappe.db.delete(
+            "Form Layout Profile", {"name": ("in", ["Task-_Test_UpdateMe", "Task-_Test_SaveNew"])}
+        )
+        frappe.db.commit()
 
     def _make_profile(self, **overrides):
         doc = _create_profile(**overrides)

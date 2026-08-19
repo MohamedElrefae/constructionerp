@@ -7,6 +7,7 @@
   "field_order": [
     "sb0",
     "title",
+    "category",
     "wbs_code",
     "parent_structure",
     "boq_header",
@@ -17,6 +18,7 @@
     "cb0",
     "is_group",
     "description",
+    "description_ar",
     "is_variation_item",
     "variation_order",
     "sb_owner",
@@ -46,6 +48,12 @@
       "in_list_view": 1,
       "label": "Title",
       "reqd": 1
+    },
+    {
+      "fieldname": "category",
+      "fieldtype": "Data",
+      "label": "Category",
+      "in_standard_filter": 1
     },
     {
       "fieldname": "wbs_code",
@@ -119,6 +127,11 @@
       "fieldname": "description",
       "fieldtype": "Small Text",
       "label": "Description"
+    },
+    {
+      "fieldname": "description_ar",
+      "fieldtype": "Small Text",
+      "label": "Description (Arabic)"
     },
     {
       "default": "0",

@@ -21,6 +21,8 @@
     "currency",
     "is_template",
     "template_name",
+    "category",
+    "description_ar",
     "sb_details",
     "details",
     "sb_totals",
@@ -144,6 +146,17 @@
       "fieldname": "template_name",
       "fieldtype": "Data",
       "label": "Template Name"
+    },
+    {
+      "fieldname": "category",
+      "fieldtype": "Data",
+      "in_standard_filter": 1,
+      "label": "Category"
+    },
+    {
+      "fieldname": "description_ar",
+      "fieldtype": "Small Text",
+      "label": "Description (Arabic)"
     },
     {
       "fieldname": "sb_details",

@@ -28,7 +28,7 @@ class BOQItem(Document):
         "enforce_boq_status",
         "validate_input_guards",
         "validate_stage_distribution",
-        "fetch_cost_item_data",
+        "fetch_cost_data",
         "calculate_cost_buildup",
         "calculate_line_total",
         "validate_output_guards",
@@ -137,22 +137,40 @@ class BOQItem(Document):
     def validate_stage_distribution(self):
         validate_boq_item_stage_distribution(self)
 
-    # --- Step 4: Fetch CostItem data ---
-    def fetch_cost_item_data(self):
-        """Fetch est_unit_cost from CostItem. Set to zero if no cost_item linked.
-        Gracefully handles the case where CostItem DocType is not yet deployed.
+    # --- Step 4: Fetch approved cost data ---
+    def fetch_cost_data(self):
+        """Fetch est_unit_cost from approved BOQ Cost Analysis.
+        
+        If an approved BOQ Cost Analysis exists, use its total_unit_cost.
+        If none exists, preserve the current est_unit_cost value during saves.
         """
-        if self.cost_item:
-            try:
-                if frappe.db.exists("DocType", "CostItem"):
-                    cost = frappe.db.get_value("CostItem", self.cost_item, "total_direct_cost")
-                    self.est_unit_cost = cost or 0
-                else:
-                    self.est_unit_cost = 0
-            except Exception:
-                self.est_unit_cost = 0
-        else:
-            self.est_unit_cost = 0
+        approved_cost = self._get_approved_analysis_unit_cost()
+        if approved_cost is not None:
+            self.est_unit_cost = approved_cost
+            return
+
+        if self.is_new():
+            self.est_unit_cost = self.get("est_unit_cost") or 0
+
+    def _get_approved_analysis_unit_cost(self):
+        """Query approved BOQ Cost Analysis for total_unit_cost."""
+        if not self.name or not frappe.db.exists("DocType", "BOQ Cost Analysis"):
+            return None
+        try:
+            name = frappe.db.get_value(
+                "BOQ Cost Analysis",
+                {
+                    "boq_item": self.name,
+                    "analysis_status": "Approved",
+                    "docstatus": 1,
+                },
+                "name",
+            )
+            if name:
+                return flt(frappe.db.get_value("BOQ Cost Analysis", name, "total_unit_cost"))
+        except Exception:
+            pass
+        return None
 
     # --- Step 5: Cost buildup ---
     def calculate_cost_buildup(self):

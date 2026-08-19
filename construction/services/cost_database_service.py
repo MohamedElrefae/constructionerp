@@ -119,8 +119,9 @@ COLUMN_ALIASES = {
     "resource_code": ["resource_code", "code", "كود المورد", "resource_id"],
     "name_en": ["name_en", "name", "الاسم انجليزي"],
     "name_ar": ["name_ar", "الاسم عربي", "description_ar"],
-    "resource_type": ["resource_type", "type", "نوع المورد", "category"],
+    "resource_type": ["resource_type", "type", "نوع المورد"],
     "cost_stream": ["cost_stream", "stream", "تصنيف التكلفة"],
+    "category": ["category", "الفئة"],
     "uom": ["uom", "unit", "وحدة"],
     "unit_price_egp": ["unit_price_egp", "price", "السعر", "unit_price", "rate"],
     "currency": ["currency", "العملة"],
@@ -189,12 +190,22 @@ def import_cost_database_from_excel(
             "errors": ["openpyxl is required for Excel import"],
             "warnings": [],
             "records_created": {},
+            "records_updated": {},
+            "records_skipped": {},
         }
 
     errors = []
     warnings = []
     records_created = {
         "items": [],
+        "resource_price_history": [],
+        "boq_cost_analysis_templates": [],
+    }
+    records_updated = {
+        "items": [],
+        "boq_cost_analysis_templates": [],
+    }
+    records_skipped = {
         "resource_price_history": [],
         "boq_cost_analysis_templates": [],
     }
@@ -381,30 +392,47 @@ def import_cost_database_from_excel(
                     changed = True
                 if changed:
                     item_doc.save(ignore_permissions=True)
+                    records_updated["items"].append(resource_code)
             except Exception as e:
                 warnings.append(f"Resources row {idx}: failed to update Item {resource_code}: {str(e)}")
 
-        # Create Resource Price History
+        # Create Resource Price History (idempotent: skip identical existing rows)
         try:
-            history = frappe.get_doc({
-                "doctype": "Resource Price History",
+            dup_filters = {
                 "item_code": resource_code,
-                "resource_type": resource_type,
+                "price_date": row_price_date,
                 "rate": unit_price,
                 "currency": currency,
-                "exchange_rate": exchange_rate,
                 "uom": uom,
-                "price_date": row_price_date,
                 "company": company,
                 "region": row_region,
                 "supplier": supplier,
-                "source_doctype": "Import",
                 "source_name": source_name,
                 "status": "Active",
-                "remarks": remarks,
-            })
-            history.insert(ignore_permissions=True)
-            records_created["resource_price_history"].append(history.name)
+            }
+            existing = frappe.db.get_value("Resource Price History", dup_filters, "name")
+            if existing:
+                records_skipped["resource_price_history"].append(existing)
+            else:
+                history = frappe.get_doc({
+                    "doctype": "Resource Price History",
+                    "item_code": resource_code,
+                    "resource_type": resource_type,
+                    "rate": unit_price,
+                    "currency": currency,
+                    "exchange_rate": exchange_rate,
+                    "uom": uom,
+                    "price_date": row_price_date,
+                    "company": company,
+                    "region": row_region,
+                    "supplier": supplier,
+                    "source_doctype": "Import",
+                    "source_name": source_name,
+                    "status": "Active",
+                    "remarks": remarks,
+                })
+                history.insert(ignore_permissions=True)
+                records_created["resource_price_history"].append(history.name)
         except Exception as e:
             errors.append(f"Resources row {idx}: failed to create Resource Price History: {str(e)}")
 
@@ -440,6 +468,39 @@ def import_cost_database_from_excel(
             })
 
         try:
+            existing_template = frappe.db.get_value(
+                "BOQ Cost Analysis",
+                {"template_name": template_name, "company": company, "is_template": 1},
+                "name",
+            )
+
+            if existing_template:
+                existing_doc = frappe.get_doc("BOQ Cost Analysis", existing_template)
+                if existing_doc.docstatus == 1:
+                    records_skipped["boq_cost_analysis_templates"].append(existing_template)
+                    warnings.append(
+                        f"BOQItemTemplates row {idx}: template '{template_name}' already submitted ({existing_template}); skipped"
+                    )
+                    continue
+
+                # Update the draft template in place (idempotent re-import)
+                existing_doc.title = description_en or template_name
+                existing_doc.description_ar = description_ar
+                existing_doc.category = _clean_string(row.get("category"))
+                existing_doc.analysis_uom = uom
+                existing_doc.overhead_pct = overhead_pct
+                existing_doc.profit_pct = profit_pct
+                existing_doc.currency = currency
+                existing_doc.details = []
+                for detail in details:
+                    existing_doc.append("details", detail)
+                if auto_submit:
+                    existing_doc.submit()
+                else:
+                    existing_doc.save(ignore_permissions=True)
+                records_updated["boq_cost_analysis_templates"].append(existing_template)
+                continue
+
             analysis = frappe.get_doc({
                 "doctype": "BOQ Cost Analysis",
                 "title": description_en or template_name,
@@ -471,6 +532,8 @@ def import_cost_database_from_excel(
         records_created=records_created,
         errors=errors,
         warnings=warnings,
+        records_updated=records_updated,
+        records_skipped=records_skipped,
     )
 
 
@@ -789,11 +852,13 @@ def _parse_date(value):
         return None
 
 
-def _build_result(success, dry_run, records_created, errors, warnings):
+def _build_result(success, dry_run, records_created, errors, warnings, records_updated=None, records_skipped=None):
     return {
         "success": success,
         "dry_run": dry_run,
         "records_created": records_created,
+        "records_updated": records_updated or {},
+        "records_skipped": records_skipped or {},
         "errors": errors,
         "warnings": warnings,
     }
