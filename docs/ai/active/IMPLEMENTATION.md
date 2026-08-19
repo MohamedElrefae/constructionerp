@@ -168,6 +168,32 @@ test_vfc_backend.py — 39/39 passed ✓ (verified stable across consecutive run
 test_boq_properties.py — 17 pre-existing scope-context setUp errors (identical on clean develop; not Phase 2 scope)
 ```
 
+### Site Test-Bootstrap Blocker Resolved (2026-08-19)
+
+Consultant review could not reproduce the cost-database / cost-analysis runs via the standard
+`bench run-tests`: bootstrap aborted with `DocType Payment Gateway not found` before any test ran.
+
+Root cause (verified, pre-existing on `develop` @ `f6c239a` — reproduced with pre-merge code):
+ERPNext v16 moved `Payment Gateway` into the standalone `payments` app; this site intentionally
+does not install it, leaving `Payment Gateway Account.payment_gateway` a dangling Link field.
+Frappe's test-record generator walks Link dependencies depth-first and crashes on the missing
+DocType, aborting the entire bootstrap. Chain: `User Scope Context → User → Email Account →
+Company → … → Subscription Plan → Payment Gateway Account → Payment Gateway`.
+
+Resolution (no core changes, no `payments` install — deliberate scope decision): added
+`construction/tests/test_bootstrap_guard.py`, applied from `construction/tests/__init__.py`
+(imported by the runner before record preloading). It wraps the generator to skip missing
+DocTypes with a one-time logged warning instead of crashing. Test-infrastructure only — never
+active in production.
+
+Post-fix evidence (standard `bench run-tests` on merged `develop`):
+
+```
+test_cost_database_api.py — 10/10 OK
+test_cost_analysis_engine.py — 17/17 OK
+test_vfc_backend.py — 39/39 OK
+```
+
 ## Final Review Verdict
 
 **PASS** — All 6 findings (4 P1, 2 P2) from FINAL_DIFF.md have been fixed and verified.

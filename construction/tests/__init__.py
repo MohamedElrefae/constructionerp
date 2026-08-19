@@ -2,6 +2,16 @@ import unittest
 
 import frappe
 
+# Applied at test-package import time: the standard runner imports
+# construction.tests BEFORE preloading test records, so the guard is in
+# place exactly when the bootstrap needs it and never in production.
+try:
+    from construction.tests.test_bootstrap_guard import apply_test_generator_guard
+
+    apply_test_generator_guard()
+except Exception:
+    pass
+
 
 def run_vfc_tests():
     """Run the VFC backend test suite and return results.
