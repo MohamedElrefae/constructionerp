@@ -1,0 +1,3312 @@
+diff --git a/construction/scratch/survival_test.py b/construction/scratch/survival_test.py
+deleted file mode 100644
+index ae43c3d..0000000
+--- a/construction/scratch/survival_test.py
++++ /dev/null
+@@ -1,34 +0,0 @@
+-import frappe
+-
+-from construction.api.theme_api import whitelabel_patch
+-from construction.install import create_system_themes
+-
+-
+-def simulate_migration_survival():
+-    print("--- Simulating Update Survival Test ---")
+-
+-    # 1. Run the patch
+-    print("Running whitelabel_patch...")
+-    whitelabel_patch()
+-
+-    # 2. Check if Frappe branding is gone
+-    welcome_page = frappe.db.exists("Page", "welcome-to-erpnext")
+-    print(f"Frappe Welcome Page exists: {bool(welcome_page)} (Expected: False)")
+-
+-    # 3. Check if Construction Themes exist
+-    themes = frappe.get_all("Construction Theme", filters={"is_system_theme": 1})
+-    print(f"System Themes found: {len(themes)} (Expected: >0)")
+-
+-    # 4. Check hooks
+-    print("Checking hooks configuration...")
+-    import construction.hooks as hooks
+-
+-    print(f"email_css hook present: {'email_css' in dir(hooks)}")
+-    print(f"pdf_header_html hook present: {'pdf_header_html' in dir(hooks)}")
+-
+-    print("--- Survival Test Complete ---")
+-
+-
+-if __name__ == "__main__":
+-    frappe.connect()
+-    simulate_migration_survival()
+diff --git a/construction/tests/playwright_browser.js b/construction/tests/playwright_browser.js
+new file mode 100644
+index 0000000..3665c23
+--- /dev/null
++++ b/construction/tests/playwright_browser.js
+@@ -0,0 +1,17 @@
++const { chromium } = require("playwright");
++
++function browserLaunchOptions() {
++	return {
++		headless: process.env.PLAYWRIGHT_HEADFUL !== "1",
++		executablePath: process.env.PLAYWRIGHT_EXECUTABLE_PATH || undefined,
++	};
++}
++
++async function launchChromium() {
++	return chromium.launch(browserLaunchOptions());
++}
++
++module.exports = {
++	browserLaunchOptions,
++	launchChromium,
++};
+diff --git a/construction/tests/playwright_smoke.js b/construction/tests/playwright_smoke.js
+new file mode 100644
+index 0000000..b4118d5
+--- /dev/null
++++ b/construction/tests/playwright_smoke.js
+@@ -0,0 +1,18 @@
++const { launchChromium } = require("./playwright_browser");
++
++async function main() {
++	const browser = await launchChromium();
++	try {
++		const page = await browser.newPage();
++		await page.goto("data:text/html,<title>playwright-smoke</title><h1>Playwright ready</h1>");
++		const title = await page.title();
++		console.log(`Playwright browser ready: ${title}`);
++	} finally {
++		await browser.close();
++	}
++}
++
++main().catch((error) => {
++	console.error(error);
++	process.exit(1);
++});
+diff --git a/construction/tests/test_boq_import_status_smoke.py b/construction/tests/test_boq_import_status_smoke.py
+new file mode 100644
+index 0000000..21e3923
+--- /dev/null
++++ b/construction/tests/test_boq_import_status_smoke.py
+@@ -0,0 +1,479 @@
++"""Quick manual smoke for the WP2/WP4 service changes.
++
++Run via:
++    bench --site v16.localhost execute construction.tests.test_boq_import_status_smoke.run
++"""
++
++from __future__ import annotations
++
++import os
++import tempfile
++import uuid
++
++import frappe
++import openpyxl
++
++from construction.services.boq_import_service import BOQImportService
++
++
++def _make_header():
++    project = frappe.db.get_value("Project", {}, "name")
++    if not project:
++        frappe.throw("Manual smoke requires at least one Project record.")
++    return frappe.get_doc(
++        {
++            "doctype": "BOQ Header",
++            "project": project,
++            "title": f"WP2 Status Smoke {uuid.uuid4().hex[:8]}",
++            "status": "Draft",
++            "boq_type": "Tender",
++        }
++    ).insert(ignore_permissions=True)
++
++
++def _cleanup_header(name):
++    for doctype in ("BOQ Item", "BOQ Structure", "BOQ Import Batch"):
++        frappe.db.delete(doctype, {"boq_header": name})
++    frappe.db.delete("BOQ Header", {"name": name})
++    frappe.db.commit()
++
++
++def _make_workbook(rows):
++    wb = openpyxl.Workbook()
++    ws = wb.active
++    ws.title = "BOQ"
++    for row in rows:
++        ws.append(row)
++    handle = tempfile.NamedTemporaryFile(suffix=".xlsx", delete=False)
++    handle.close()
++    wb.save(handle.name)
++    return handle.name
++
++
++def run() -> dict:
++    frappe.flags.in_test = True
++    results = {}
++    template_file_url = None
++    template_file_path = None
++
++    # 1) not_found
++    not_found = BOQImportService.get_import_status("BOQIMP-NOPE")
++    results["not_found"] = not_found
++    if not_found.get("status") != "not_found" or not_found.get("success") is not False:
++        frappe.throw(f"Expected not_found response, got {not_found}")
++
++    # 2) empty import_id
++    empty = BOQImportService.get_import_status("")
++    results["empty"] = empty
++    if empty.get("status") != "not_found":
++        frappe.throw(f"Expected not_found for empty import_id, got {empty}")
++
++    # 3) committed batch
++    header = None
++    path = None
++    old_flag = frappe.db.get_single_value("Construction Settings", "enable_boq_excel_import_commit")
++    try:
++        frappe.db.set_single_value("Construction Settings", "enable_boq_excel_import_commit", 1)
++        header = _make_header()
++        path = _make_workbook(
++            [
++                ["Description", "Unit", "Quantity", "Unit Price"],
++                ["Excavation", "Nos", 2, 150],
++                ["Backfill", "Unit", 3, 75],
++            ]
++        )
++        from construction.api.boq_api import import_boq_excel as api_import_boq_excel
++
++        api_preview = api_import_boq_excel(path, header.name, dry_run=1)
++        results["api_import_preview"] = {
++            "success": api_preview.get("success"),
++            "detected_import_mode": api_preview.get("detected_import_mode"),
++        }
++        if not api_preview.get("success"):
++            frappe.throw(f"API preview failed: {api_preview}")
++
++        commit = BOQImportService.import_from_excel(
++            file_url=path,
++            boq_header=header.name,
++            dry_run=False,
++            confirmed_import_mode="Flat",
++        )
++        if not commit.get("success"):
++            frappe.throw(f"Commit failed: {commit}")
++
++        status = BOQImportService.get_import_status(commit["import_batch"])
++        results["committed_status"] = status
++        if status.get("status") != "Committed":
++            frappe.throw(f"Expected Committed, got {status}")
++        if status.get("success") is not True:
++            frappe.throw(f"Expected success=True, got {status}")
++        if status.get("import_id") != commit["import_batch"]:
++            frappe.throw(f"import_id mismatch: {status.get('import_id')} vs {commit['import_batch']}")
++        if status.get("boq_header") != header.name:
++            frappe.throw(f"boq_header mismatch: {status.get('boq_header')}")
++        if status.get("import_mode") != "Flat":
++            frappe.throw(f"import_mode mismatch: {status.get('import_mode')}")
++        if not status.get("committed_structure_count"):
++            frappe.throw(
++                f"committed_structure_count should be > 0, got {status.get('committed_structure_count')}"
++            )
++        if not status.get("committed_item_count"):
++            frappe.throw(f"committed_item_count should be > 0, got {status.get('committed_item_count')}")
++
++        # 4) Preview-only batch (status="Preview")
++        preview = BOQImportService.import_from_excel(
++            file_url=path,
++            boq_header=header.name,
++            dry_run=True,
++        )
++        if preview.get("success") and not preview.get("errors"):
++            preview_batch = BOQImportService._create_import_batch(
++                file_url=path,
++                file_path=path,
++                boq_header=header.name,
++                preview=preview,
++                import_mode="Flat",
++                status="Preview",
++            )
++            preview_status = BOQImportService.get_import_status(preview_batch.name)
++            results["preview_status"] = preview_status
++            if preview_status.get("status") != "Preview":
++                frappe.throw(f"Expected Preview, got {preview_status}")
++
++        # 5) Failed batch
++        failed_batch = BOQImportService._create_import_batch(
++            file_url=path,
++            file_path=path,
++            boq_header=header.name,
++            preview={
++                "summary": {
++                    "row_count": 0,
++                    "section_count": 0,
++                    "item_count": 0,
++                    "ambiguous_count": 0,
++                    "error_count": 0,
++                    "warning_count": 0,
++                },
++                "errors": [],
++                "warnings": [],
++                "preview_tree": [],
++            },
++            import_mode="Flat",
++            status="Failed",
++        )
++        failed_status = BOQImportService.get_import_status(failed_batch.name)
++        results["failed_status"] = failed_status
++        if failed_status.get("status") != "Failed":
++            frappe.throw(f"Expected Failed, got {failed_status}")
++
++        # 8) Failed-batch error_message round-trip (WP8)
++        failed_with_msg = BOQImportService._create_import_batch(
++            file_url=path,
++            file_path=path,
++            boq_header=header.name,
++            preview={
++                "summary": {
++                    "row_count": 0,
++                    "section_count": 0,
++                    "item_count": 0,
++                    "ambiguous_count": 0,
++                    "error_count": 0,
++                    "warning_count": 0,
++                },
++                "errors": [],
++                "warnings": [],
++                "preview_tree": [],
++            },
++            import_mode="Flat",
++            status="Failed",
++        )
++        failed_with_msg.error_message = "Test failure: WBS health check failed"
++        failed_with_msg.save(ignore_permissions=True)
++        failed_status_with_msg = BOQImportService.get_import_status(failed_with_msg.name)
++        results["failed_with_error_message"] = {
++            "status": failed_status_with_msg.get("status"),
++            "error_message": failed_status_with_msg.get("error_message"),
++        }
++        if failed_status_with_msg.get("status") != "Failed":
++            frappe.throw(f"Expected Failed, got {failed_status_with_msg}")
++        if failed_status_with_msg.get("error_message") != "Test failure: WBS health check failed":
++            frappe.throw(f"Failed batch status did not return error_message: {failed_status_with_msg}")
++
++        # 9) Template generation (WP3)
++        from construction.api.boq_api import create_boq_import_template
++
++        api_template = create_boq_import_template()
++        results["api_template"] = {
++            "success": api_template.get("success"),
++            "file_url": api_template.get("file_url"),
++            "file_name": api_template.get("file_name"),
++        }
++        if not api_template.get("success"):
++            frappe.throw(f"Template generation failed: {api_template}")
++        if not api_template.get("file_url", "").startswith("/private/files/"):
++            frappe.throw(f"Template is not private: {api_template}")
++        if not api_template.get("file_name", "").endswith(".xlsx"):
++            frappe.throw(f"Template filename wrong: {api_template}")
++
++        template_path = frappe.get_site_path(api_template["file_url"].lstrip("/"))
++        if not os.path.exists(template_path):
++            frappe.throw(f"Template file missing on disk: {template_path}")
++        template_file_url = api_template["file_url"]
++        template_file_path = template_path
++
++        template_wb = openpyxl.load_workbook(template_path, data_only=True)
++        if "BOQ Import Template" not in template_wb.sheetnames:
++            frappe.throw(f"Template missing main sheet: {template_wb.sheetnames}")
++        if "Instructions" not in template_wb.sheetnames:
++            frappe.throw(f"Template missing Instructions sheet: {template_wb.sheetnames}")
++        template_ws = template_wb["BOQ Import Template"]
++        headers = [template_ws.cell(row=1, column=col).value for col in range(1, template_ws.max_column + 1)]
++        if headers != BOQImportService.TEMPLATE_COLUMNS:
++            frappe.throw(f"Template headers mismatch: {headers}")
++
++        file_private = frappe.db.get_value("File", {"file_url": api_template["file_url"]}, "is_private")
++        if int(file_private or 0) != 1:
++            frappe.throw("Template File record is not private.")
++
++    finally:
++        if old_flag is not None:
++            frappe.db.set_single_value("Construction Settings", "enable_boq_excel_import_commit", old_flag)
++        if header:
++            _cleanup_header(header.name)
++        if path and os.path.exists(path):
++            os.remove(path)
++        if template_file_url:
++            frappe.db.delete("File", {"file_url": template_file_url})
++            frappe.db.commit()
++        if template_file_path and os.path.exists(template_file_path):
++            os.remove(template_file_path)
++
++    # 6) Async block message check
++    old_threshold = BOQImportService.ASYNC_IMPORT_ROW_THRESHOLD
++    old_flag = frappe.db.get_single_value("Construction Settings", "enable_boq_excel_import_commit")
++    header2 = None
++    path2 = None
++    try:
++        BOQImportService.ASYNC_IMPORT_ROW_THRESHOLD = 1
++        frappe.db.set_single_value("Construction Settings", "enable_boq_excel_import_commit", 1)
++        header2 = _make_header()
++        path2 = _make_workbook(
++            [
++                ["Description", "Unit", "Quantity", "Unit Price"],
++                ["Excavation", "Nos", 1, 10],
++                ["Backfill", "Nos", 1, 10],
++            ]
++        )
++        async_commit = BOQImportService.import_from_excel(
++            file_url=path2,
++            boq_header=header2.name,
++            dry_run=False,
++            confirmed_import_mode="Flat",
++        )
++        results["async_error"] = async_commit.get("error")
++        if async_commit.get("success") or "Large-file async import" not in (async_commit.get("error") or ""):
++            frappe.throw(f"Expected new async block message, got {async_commit}")
++    finally:
++        BOQImportService.ASYNC_IMPORT_ROW_THRESHOLD = old_threshold
++        if old_flag is not None:
++            frappe.db.set_single_value("Construction Settings", "enable_boq_excel_import_commit", old_flag)
++        if header2:
++            _cleanup_header(header2.name)
++        if path2 and os.path.exists(path2):
++            os.remove(path2)
++
++    # 7) Whitelisted API endpoint
++    from construction.api.boq_api import get_boq_import_status
++
++    api_not_found = get_boq_import_status("BOQIMP-NOPE")
++    results["api_not_found"] = api_not_found
++    if api_not_found.get("status") != "not_found":
++        frappe.throw(f"API not_found failed: {api_not_found}")
++
++    api_empty = get_boq_import_status("")
++    results["api_empty"] = api_empty
++    if api_empty.get("status") != "not_found":
++        frappe.throw(f"API empty failed: {api_empty}")
++
++    # 10) Preview flag enforcement (WP5)
++    from construction.api.boq_api import create_boq_import_template as api_create_template
++    from construction.api.boq_api import is_boq_excel_import_enabled as api_is_enabled
++
++    old_preview_flag = frappe.db.get_single_value("Construction Settings", "enable_boq_excel_import_preview")
++    old_commit_flag_for_block = frappe.db.get_single_value(
++        "Construction Settings", "enable_boq_excel_import_commit"
++    )
++    try:
++        # 10e) Helper returns false when preview flag is off
++        frappe.db.set_single_value("Construction Settings", "enable_boq_excel_import_preview", 0)
++        frappe.db.set_single_value("Construction Settings", "enable_boq_excel_import_commit", 1)
++        helper_off = api_is_enabled()
++        results["helper_off"] = helper_off
++        if helper_off.get("enabled") is not False:
++            frappe.throw(f"Helper should be off when preview flag is off, got {helper_off}")
++        if helper_off.get("preview_enabled") is not False:
++            frappe.throw(f"helper.preview_enabled should be False, got {helper_off}")
++        if helper_off.get("commit_enabled") is not True:
++            frappe.throw(f"helper.commit_enabled should be True, got {helper_off}")
++
++        # 10a) import_from_excel blocked (preview flag off)
++        from construction.services.boq_import_service import BOQImportService as _BIS
++
++        header3 = None
++        path3 = None
++        try:
++            header3 = _make_header()
++            path3 = _make_workbook(
++                [
++                    ["Description", "Unit", "Quantity", "Unit Price"],
++                    ["Excavation", "Nos", 1, 10],
++                ]
++            )
++            blocked = _BIS.import_from_excel(
++                file_url=path3,
++                boq_header=header3.name,
++                dry_run=True,
++            )
++            results["preview_blocked_preview"] = blocked
++            if blocked.get("success") or "preview is disabled" not in (blocked.get("error") or ""):
++                frappe.throw(f"Expected preview flag block on import_from_excel, got {blocked}")
++
++            blocked_commit = _BIS.import_from_excel(
++                file_url=path3,
++                boq_header=header3.name,
++                dry_run=False,
++                confirmed_import_mode="Flat",
++            )
++            results["preview_blocked_commit"] = blocked_commit
++            if blocked_commit.get("success") or "preview is disabled" not in (
++                blocked_commit.get("error") or ""
++            ):
++                frappe.throw(f"Expected preview flag block on commit path, got {blocked_commit}")
++        finally:
++            if header3:
++                _cleanup_header(header3.name)
++            if path3 and os.path.exists(path3):
++                os.remove(path3)
++
++        # 10b) generate_import_error_report blocked
++        blocked_report = _BIS.generate_import_error_report(
++            file_url="/tmp/nonexistent.xlsx",
++            boq_header="BOQ-2026-DUMMY",
++        )
++        results["preview_blocked_error_report"] = blocked_report
++        if blocked_report.get("success") or "preview is disabled" not in (blocked_report.get("error") or ""):
++            frappe.throw(f"Expected preview flag block on error report, got {blocked_report}")
++
++        # 10c) create_import_template blocked
++        blocked_template = api_create_template()
++        results["preview_blocked_template"] = blocked_template
++        if blocked_template.get("success") or "preview is disabled" not in (
++            blocked_template.get("error") or ""
++        ):
++            frappe.throw(f"Expected preview flag block on template, got {blocked_template}")
++
++        # 10f) Helper still shows preview when only commit flag is off
++        frappe.db.set_single_value("Construction Settings", "enable_boq_excel_import_preview", 1)
++        frappe.db.set_single_value("Construction Settings", "enable_boq_excel_import_commit", 0)
++        helper_partial = api_is_enabled()
++        results["helper_partial"] = helper_partial
++        if helper_partial.get("enabled") is not True:
++            frappe.throw(f"Helper should show preview when commit flag is off, got {helper_partial}")
++        if helper_partial.get("preview_enabled") is not True:
++            frappe.throw(f"helper.preview_enabled should be True, got {helper_partial}")
++        if helper_partial.get("commit_enabled") is not False:
++            frappe.throw(f"helper.commit_enabled should be False, got {helper_partial}")
++
++        # 10g) Helper returns true when both flags are on
++        frappe.db.set_single_value("Construction Settings", "enable_boq_excel_import_preview", 1)
++        frappe.db.set_single_value("Construction Settings", "enable_boq_excel_import_commit", 1)
++        helper_on = api_is_enabled()
++        results["helper_on"] = helper_on
++        if helper_on.get("enabled") is not True:
++            frappe.throw(f"Helper should be on when both flags are on, got {helper_on}")
++    finally:
++        if old_preview_flag is not None:
++            frappe.db.set_single_value(
++                "Construction Settings", "enable_boq_excel_import_preview", old_preview_flag
++            )
++        else:
++            frappe.db.set_single_value("Construction Settings", "enable_boq_excel_import_preview", 0)
++        if old_commit_flag_for_block is not None:
++            frappe.db.set_single_value(
++                "Construction Settings", "enable_boq_excel_import_commit", old_commit_flag_for_block
++            )
++        else:
++            frappe.db.set_single_value("Construction Settings", "enable_boq_excel_import_commit", 0)
++
++    # 11) Commit mutation rollback preserves failed batch without partial BOQ rows
++    old_preview_flag = frappe.db.get_single_value("Construction Settings", "enable_boq_excel_import_preview")
++    old_commit_flag = frappe.db.get_single_value("Construction Settings", "enable_boq_excel_import_commit")
++    header4 = None
++    path4 = None
++    original_update = BOQImportService._update_imported_item
++    calls = {"count": 0}
++
++    def failing_update(structure, row, batch, import_mode):
++        calls["count"] += 1
++        if calls["count"] == 2:
++            frappe.throw("Injected failure after partial BOQ import mutation")
++        return original_update(structure, row, batch, import_mode)
++
++    try:
++        frappe.db.set_single_value("Construction Settings", "enable_boq_excel_import_preview", 1)
++        frappe.db.set_single_value("Construction Settings", "enable_boq_excel_import_commit", 1)
++        header4 = _make_header()
++        path4 = _make_workbook(
++            [
++                ["Description", "Unit", "Quantity", "Unit Price"],
++                ["Excavation", "Nos", 2, 150],
++                ["Backfill", "Unit", 3, 75],
++            ]
++        )
++        BOQImportService._update_imported_item = staticmethod(failing_update)
++        failed_commit = BOQImportService.import_from_excel(
++            file_url=path4,
++            boq_header=header4.name,
++            dry_run=False,
++            confirmed_import_mode="Flat",
++        )
++        results["rollback_failure"] = failed_commit
++        if failed_commit.get("success"):
++            frappe.throw(f"Injected failure should fail commit, got {failed_commit}")
++
++        failed_batch = frappe.db.get_value(
++            "BOQ Import Batch",
++            {"boq_header": header4.name, "status": "Failed"},
++            ["name", "error_message"],
++            as_dict=True,
++        )
++        if not failed_batch or "Injected failure" not in (failed_batch.error_message or ""):
++            frappe.throw(f"Failed batch was not preserved with error_message: {failed_batch}")
++
++        structure_count = frappe.db.count("BOQ Structure", {"boq_header": header4.name})
++        item_count = frappe.db.count("BOQ Item", {"boq_header": header4.name})
++        results["rollback_counts"] = {
++            "structures": structure_count,
++            "items": item_count,
++            "batch": failed_batch.name,
++        }
++        if structure_count or item_count:
++            frappe.throw(
++                f"Rollback left partial import rows: structures={structure_count}, items={item_count}"
++            )
++    finally:
++        BOQImportService._update_imported_item = original_update
++        if old_preview_flag is not None:
++            frappe.db.set_single_value(
++                "Construction Settings", "enable_boq_excel_import_preview", old_preview_flag
++            )
++        if old_commit_flag is not None:
++            frappe.db.set_single_value(
++                "Construction Settings", "enable_boq_excel_import_commit", old_commit_flag
++            )
++        if header4:
++            _cleanup_header(header4.name)
++        if path4 and os.path.exists(path4):
++            os.remove(path4)
++
++    return {"success": True, "checks": results}
+diff --git a/docs/BOQ_EXCEL_IMPORT_SCOPE_FINISH_PLAN.md b/docs/BOQ_EXCEL_IMPORT_SCOPE_FINISH_PLAN.md
+new file mode 100644
+index 0000000..43718e3
+--- /dev/null
++++ b/docs/BOQ_EXCEL_IMPORT_SCOPE_FINISH_PLAN.md
+@@ -0,0 +1,1035 @@
++# BOQ Excel Import Scope Finish Plan
++
++Date: 2026-06-16
++Repo: `/home/mohamed/frappe-bench/apps/construction`
++Phase: Finish BOQ Excel Import Scope
++Audience: Software consultant / engineering review
++Revision: 2026-06-16 (revised against live repo)
++
++## Revision Notes (2026-06-16)
++
++The original plan was written from memory and missed four facts that exist in
++the current code:
++
++1. **`enable_boq_excel_import_preview` is declared in
++   `construction/services/feature_flags.py` and in `Construction Settings`
++   DocType JSON, but it is never checked at runtime.** The original plan
++   treats it as the gate for the preview API. The service currently runs
++   preview and commit code paths with no preview-flag check at all. The
++   finish scope must decide whether to enforce the preview flag now or
++   remove it from the runtime contract.
++
++2. **`get_import_status()` is not wired to any API endpoint, the BOQ
++   Header JS, the error report API, or the import batch list view.** The
++   plan should be honest about this. It is currently a dead public method
++   on the service. Either expose it as `@frappe.whitelist()` in
++   `construction/api/boq_api.py` (and add a UI surface) or remove it.
++
++3. **`create_import_template()` is also not wired anywhere.** No API
++   method exists, no UI button exists, no test calls it. It is also a dead
++   public method on the service.
++
++4. **The current BOQ Header JS dialog is much simpler than the plan
++   implies.** It only collects a file URL and posts to
++   `import_boq_excel` with `dry_run=1` (the default). There is no preview
++   step in the UI, no row resolution UI, no mode confirmation UI, and no
++   commit button toggle. The plan must reflect this and decide whether
++   the UI should be brought up to the preview-first contract or whether
++   the current "import = preview-only in practice" UI is acceptable for
++   this phase.
++
++5. **`BOQ Import Batch` already has the fields the original plan
++   recommended adding.** `boq_header`, `project` (fetched), `status`
++   (`Preview` / `Committed` / `Failed` / `Cancelled`), `import_mode`,
++   `source_file`, `source_file_name`, `sheet_name`, count fields, and
++   the JSON review payloads. There is no need to add
++   `started_at` / `finished_at` / `error_message` to the DocType for
++   this phase. Failed-batch preservation is a code concern, not a schema
++   concern, since `status="Failed"` is already a valid value.
++
++6. **`is_enabled()` on unknown flags throws.** The preview flag must be
++   either enforced or removed from the `IMPROVE_NOW_FLAGS` set before
++   `get_import_status()` or any new API starts consulting it; otherwise
++   preview code paths that fall back to `is_enabled` will start
++   throwing for users who already use the flag today.
++
++7. **Async block message is already user-facing.** The current message
++   is `"This BOQ Excel import exceeds the synchronous row threshold and
++   must use async import."` The plan's suggested improvement
++   (`"This file is too large for synchronous import..."`) is good and
++   should be applied as a small copy-only change.
++
++8. **The "stale evidence" the original plan called out is
++   `EV-026-wp2-parser-normalizer.md` and the
++   `evidence_log.md` "Pending" row for it.** `EV-030-wp2-commit-import.md`
++   already documents that commit is implemented behind the flag, so the
++   "commit not implemented" story in `EV-026` was a snapshot in time,
++   not the current truth. The finish phase should add a superseding
++   evidence entry, not rewrite history.
++
++## Executive Summary
++
++The BOQ Excel import module is close to a shippable state, but the current
++code contains contradictory product signals:
++
++- A real synchronous commit path exists and is covered by smoke tests
++  (`run_boq_excel_commit_smoke`,
++  `run_boq_excel_duplicate_import_smoke`).
++- `get_import_status()` still returns `preview-only` and
++  `"Commit import not implemented yet"`. It is not wired to any API or
++  UI surface.
++- `create_import_template()` still returns a placeholder string. It is
++  not wired to any API or UI surface.
++- Async-sized imports are detected and blocked, but no async queue/status
++  implementation exists.
++- `enable_boq_excel_import_preview` is declared but not enforced.
++- The BOQ Header JS dialog calls `import_boq_excel` with
++  `dry_run=True` only and does not surface a commit action.
++
++The recommended release scope for this phase is:
++
++> Ship **BOQ Excel preview + synchronous commit for small files** behind
++> the `enable_boq_excel_import_commit` feature flag. Explicitly block
++> async-sized imports with the new product-approved message. Rewrite or
++> remove `get_import_status()` and `create_import_template()`. Decide
++> whether to enforce `enable_boq_excel_import_preview` at runtime or
++> drop the runtime promise. Keep the current preview-only BOQ Header
++> dialog behavior for this phase and document the gap.
++
++This plan avoids pretending async import exists, removes stale
++preview-only messaging from the surface that is actually shipped,
++keeps the already-tested synchronous commit path, and does not invent
++UI that the JS does not have.
++
++## Current State (Verified Against Live Repo)
++
++### Implemented (verified)
++
++`construction/services/boq_import_service.py` supports:
++
++- Excel file parsing (openpyxl, merged-cell aware).
++- Header detection by anchor scoring in the first 20 rows.
++- Structured, Semi-Structured, and Flat import modes.
++- Row classification into Section, Item, Ambiguous, Ignored.
++- Adjacent-duplicate warning.
++- Parent WBS tree validation (self-reference, parent-after-child,
++  parent-not-section, parent-not-found, existing-not-section).
++- Proposed WBS code generation (Flat root injection, Semi-Structured
++  auto-numbering, Structured passthrough).
++- `BOQ Structure.flags.ignore_wbs_generation = True` during insert to
++  prevent the WBS hook from overriding imported codes.
++- `wbs_generated_by_system` flagging for Flat / Semi-Structured.
++- `source_row_no`, `source_sheet_name`, `source_wbs_code`,
++  `source_item_ref` traceability on both Structure and Item.
++- `import_batch` and `import_mode` on Structure and Item.
++- Feature-flagged synchronous commit through `_commit_import()`.
++- Draft-only commit guard (`BOQ Header.status == "Draft"`).
++- Duplicate WBS protection:
++  - file-level duplicate (parsed_rows loop)
++  - target-Draft collision (final `_validate_commit_wbs_uniqueness`
++    with `select ... for update` on the BOQ Header)
++  - stale-preview collision (same final guard, raised after a manual
++    insert between preview and commit; covered by
++    `run_boq_excel_duplicate_import_smoke`).
++- Ambiguous-row blocking and row-resolution handling.
++- Preview response with `summary`, `errors`, `warnings`,
++  `import_policy`, `proposed_creates`, `preview_rows`, `preview_tree`.
++- Error report generation through `generate_import_error_report()`
++  with private `File` storage and a two-sheet workbook (`Import Review`
++  + `Summary`).
++- Import traceability through `BOQ Import Batch` (autoname
++  `BOQIMP-YYYYMMDD-xxxxxxxx`).
++- WBS health check after commit.
++- File-size hard limit (25 MB) and row-count hard limit (10,000) with
++  distinct error codes.
++- Async threshold (2,000 rows) with `requires_async=True`,
++  `async_import_required` warning, and a hard commit block.
++
++### Contradictions / Gaps (verified)
++
++| Area | Current Behavior | Problem | Wired? |
++| --- | --- | --- | --- |
++| Commit status | `_commit_import()` creates BOQ records | `get_import_status()` says preview-only and commit not implemented | Service method exists, **not** called by any API or UI |
++| Template | `TEMPLATE_COLUMNS` exists | `create_import_template()` returns placeholder text | Service method exists, **not** called by any API or UI |
++| Async policy | Parser marks `requires_async=True` above threshold; commit throws "must use async import" | No queue/status/worker implementation exists | Throw is in service, message is user-facing |
++| Preview flag | `enable_boq_excel_import_preview` exists in settings and feature_flags | Never checked at runtime; preview always runs | Flag declared, **not** enforced |
++| API contract | `import_boq_excel()` supports `dry_run=False` | No `get_boq_import_status` or `create_boq_import_template` API exists | Only `import_boq_excel` and `generate_boq_import_error_report` are whitelisted |
++| UI contract | BOQ Header JS dialog calls `import_boq_excel` with `dry_run=True` only | No preview step, no mode confirmation, no commit button toggle, no template button | Dialog is a single Attach field + Import button |
++| Tests | Commit, duplicate, error report, policy, file/row limits are covered as smoke functions | No tests for `get_import_status` or `create_import_template` (no callers exist) | Smoke functions exist for the wired paths |
++
++## Current Code Evidence
++
++### Commit Path Exists (verified, `boq_import_service.py:288-377`)
++
++`BOQImportService.import_from_excel(..., dry_run=False)` calls
++`_commit_import()`.
++
++`_commit_import()`:
++
++- Requires `enable_boq_excel_import_commit`
++  (`feature_flags.is_enabled`, line 298).
++- Requires `confirmed_import_mode` and validates it is in
++  `IMPORT_MODES` (lines 301-305).
++- Requires target BOQ Header exists (line 307).
++- Requires BOQ Header status is `Draft` (lines 310-312).
++- Blocks previews with errors (lines 314-315).
++- Blocks previews that require async (lines 316-319).
++- Requires proposed structures (line 322-324).
++- Validates proposed WBS uniqueness in a `select ... for update`
++  transaction boundary on the BOQ Header (lines 326, 380-414).
++- Creates a `BOQ Import Batch` with status `Preview` (lines 329-336,
++  631-662).
++- Inserts `BOQ Structure` rows with `ignore_wbs_generation` flag and
++  full traceability (lines 343-355, 664-698).
++- Updates linked `BOQ Item` rows with quantity, unit, factor,
++  contract_unit_price, owner fields, and traceability
++  (lines 357-361, 700-724).
++- Sets batch status to `Committed` (line 363).
++- Runs WBS health check (line 365).
++
++### Status Endpoint Is Stale And Unwired (verified)
++
++Current `get_import_status(import_id)` at lines 254-260:
++
++```python
++return {
++    "status": "preview-only",
++    "import_id": import_id,
++    "message": "Commit import not implemented yet",
++}
++```
++
++This is no longer true for small synchronous imports. It is also
++**not called by any whitelisted API method or UI**, so its staleness is
++not user-visible today but is misleading to future agents and
++contributors who search the code.
++
++### Template Endpoint Is Placeholder And Unwired (verified)
++
++Current `create_import_template()` at lines 250-252:
++
++```python
++return "Excel template creation to be implemented in WP2.8"
++```
++
++Also **not called by any whitelisted API method or UI**.
++
++### Async Imports Are Not Implemented (verified)
++
++The parser sets
++`policy["requires_async"] = data_row_count > ASYNC_IMPORT_ROW_THRESHOLD`
++at line 443. Synchronous commit then throws the user-facing message at
++lines 316-319:
++
++```text
++This BOQ Excel import exceeds the synchronous row threshold and must use async import.
++```
++
++That message is acceptable for the blocked case but should be
++rephrased per the "Suggested improvement" block in the original plan.
++
++### Preview Flag Is Declared But Not Enforced (verified)
++
++`IMPROVE_NOW_FLAGS` in `construction/services/feature_flags.py:3-13`
++includes `enable_boq_excel_import_preview`, but the only runtime
++check is on `enable_boq_excel_import_commit` at
++`boq_import_service.py:298`. The preview code path runs unconditionally
++today. The Construction Settings DocType already exposes the field
++(`construction_settings.json:103`).
++
++This means the service contract already violates the flag's
++"preview / dry run" promise defined in
++`docs/feature_reviews/evidence/EV-021-boq-excel-template-spec.md:19`.
++The finish phase must either:
++
++- Enforce `enable_boq_excel_import_preview` at the top of
++  `import_from_excel()` and `generate_import_error_report()`, **or**
++- Document that the flag is informational and remove the runtime
++  promise.
++
++### BOQ Header JS Is Preview-Only In Practice (verified)
++
++`construction/construction/doctype/boq_header/boq_header.js:468-507`
++defines the "Import Excel" button. It:
++
++- Opens a dialog with a single `Attach` field (`file_url`).
++- Calls `frappe.call` to
++  `construction.api.boq_api.import_boq_excel` with
++  `boq_header=frm.doc.name` and `file_url=values.file_url`.
++- Does **not** pass `dry_run=0`, so the service runs in preview-only
++  mode by default.
++- Does **not** show the preview tree, errors, warnings, or proposed
++  creates.
++- Does **not** ask for `confirmed_import_mode`.
++- Does **not** show a "Commit" button or surface a `BOQ Import Batch`
++  ID back to the user.
++- Reloads the form on `r.message.success` and shows
++  "Import successful" alert.
++
++For a Draft BOQ with no records, this means the user attaches a file,
++sees a green alert, and the form re-loads with no visible change. This
++is the actual shipped UX today and the plan must be honest about it.
++
++## Recommended Release Scope
++
++### Chosen Scope: Preview + Small Synchronous Commit, Honest UI
++
++Ship now:
++
++1. Dry-run preview and validation (already implemented).
++2. Error report generation (already implemented).
++3. Synchronous commit for files below the async threshold (already
++   implemented).
++4. Feature flag enforcement through
++   `enable_boq_excel_import_commit` (already implemented).
++5. Clear, product-approved block for async-sized files (small copy
++   change to the throw message).
++6. Replace `get_import_status()` with a real implementation that
++   reads from `BOQ Import Batch`, **and** expose it through a
++   whitelisted API method.
++7. Either implement `create_import_template()` with `openpyxl` and
++   expose it, or remove the public method.
++8. Decide and document the `enable_boq_excel_import_preview` runtime
++   behavior.
++9. Add tests for the new status endpoint and the template endpoint
++   (or for the explicit "not available" response if the alternative
++   path is taken).
++10. Keep the current BOQ Header JS dialog as the supported UI for this
++    phase. Do not invent a preview/confirmation/commit UI in this
++    phase; record the gap as a known follow-up.
++
++Defer:
++
++1. Async queue job.
++2. Background worker progress tracking.
++3. Async retry/cancel/resume.
++4. Upload-session persistence for large files.
++5. A preview-then-commit UI inside the BOQ Header form.
++6. A "Download template" button in the BOQ Header dialog.
++
++## Alternatives Considered
++
++### Alternative A: Preview-Only
++
++Pros:
++
++- Lowest risk.
++- Avoids commit-side data mutation.
++
++Cons:
++
++- Regresses already-implemented and verified commit work
++  (`EV-030-wp2-commit-import.md`,
++  `EV-031-wp2-duplicate-import-protection.md`).
++- Conflicts with the evidence log row for `EV-030`, which already says
++  commit is implemented and verified.
++- Leaves `BOQ Import Batch` commit traceability underused.
++
++Recommendation: Do not choose this unless management wants to delay
++all import mutation.
++
++### Alternative B: Full Sync + Async Import
++
++Pros:
++
++- Complete long-term UX.
++- Large files can be imported in background.
++
++Cons:
++
++- Requires queue design, status polling, failure recovery,
++  idempotency, and cancellation behavior.
++- Higher risk than needed for current phase.
++
++Recommendation: Defer async to a later dedicated phase.
++
++### Alternative C: Small Sync Commit Now, Async Deferred (chosen)
++
++Pros:
++
++- Matches current implementation.
++- Keeps large imports safe.
++- Removes stale messaging from the parts of the API we actually
++  ship.
++- Can be verified quickly with existing smoke patterns.
++
++Cons:
++
++- Large imports remain blocked until async phase.
++- BOQ Header UI is still preview-only; users must use the API or a
++  future UI change to actually commit.
++
++Recommendation: Adopt this scope, and explicitly accept the BOQ
++Header UI gap as a follow-up rather than expanding the phase.
++
++## Target Product Behavior
++
++### Preview
++
++Input:
++
++- Excel file URL/path.
++- BOQ Header.
++- Optional `confirmed_import_mode`.
++- Optional `row_resolutions`.
++
++Output (unchanged):
++
++- `success`
++- `dry_run=True`
++- detected and confirmed mode fields
++- errors/warnings
++- preview rows/tree
++- proposed creates
++- import policy
++
++No database mutation except optional logs/file reads.
++
++### Commit
++
++Allowed only when:
++
++- `enable_boq_excel_import_commit = 1`
++- `dry_run=False`
++- target BOQ Header exists
++- target BOQ Header status is `Draft`
++- `confirmed_import_mode` is supplied
++- preview has no blocking errors
++- import policy does not require async
++- proposed WBS codes do not collide with the current Draft BOQ
++
++Output (unchanged):
++
++- `success=True`
++- `dry_run=False`
++- `boq_header`
++- `import_batch`
++- `confirmed_import_mode`
++- `summary`
++- `created_structures`
++- `created_items`
++- `health`
++
++### Async-Sized Files
++
++For this phase:
++
++- Preview may still succeed.
++- Preview must include `import_policy.requires_async=True`.
++- Warnings must include `async_import_required`.
++- Commit must return a clear failure with the new message:
++
++  ```text
++  This file is too large for synchronous import. Large-file async import is not enabled in this release. Reduce the file size or split the BOQ into smaller workbooks.
++  ```
++
++  Apply this to the `frappe.throw` at
++  `boq_import_service.py:316-319`.
++
++### Import Status (new)
++
++Replace the body of `get_import_status(import_id)` so it returns the
++real `BOQ Import Batch` state. The recommended response shape is the
++one in the original plan, with one adjustment: include
++`committed_structure_count` and `committed_item_count` only if a
++follow-up commit run adds those fields. For this phase, derive
++`created_structures` and `created_items` from the imported
++`BOQ Structure` and `BOQ Item` rows where `import_batch = import_id`,
++which already works.
++
++If the batch is not found, return:
++
++```python
++{
++    "success": False,
++    "status": "not_found",
++    "import_id": import_id,
++    "error": "BOQ Import Batch was not found.",
++}
++```
++
++Expose this through a new whitelisted method
++`construction.api.boq_api.get_boq_import_status(import_id)`.
++
++### Template Endpoint (new)
++
++Pick exactly one of the two paths below. Do not ship placeholder text
++in either case.
++
++#### Preferred: Implement `create_import_template()`
++
++Generate an `.xlsx` workbook with `openpyxl` using the same
++`TEMPLATE_COLUMNS` already defined on the service. The workbook
++should include a header row, a freeze pane on row 1, data validation
++for the `Type` column (`Section`, `Item`, `Ignored`), and an
++`Instructions` sheet that explains the three modes. Save as a
++private `File` and return:
++
++```python
++{
++    "success": True,
++    "file_url": "...",
++    "file_name": "BOQ_Import_Template.xlsx",
++}
++```
++
++Expose through
++`construction.api.boq_api.create_boq_import_template()`. Optionally
++gate on the existing `enable_boq_excel_import_preview` flag for
++consistency.
++
++#### Alternative: Remove `create_import_template()`
++
++If template implementation is deferred:
++
++- Delete the `create_import_template` method on the service.
++- Do not expose any template API.
++- Do not add a template button to the BOQ Header UI.
++
++The original plan's "hide/disable" option is rejected because there
++is currently no caller, so "hide" is moot. Removal is the cleaner
++choice.
++
++### `enable_boq_excel_import_preview` Decision (new)
++
++Pick exactly one:
++
++- **Enforce** at the top of `import_from_excel()` and
++  `generate_import_error_report()`. Throw the same
++  "BOQ Excel preview is disabled by Construction Settings." copy as
++  the commit flag.
++- **Document as informational** in the Construction Settings field
++  help text and do not enforce at runtime.
++
++The original plan is silent on this. The recommended default is
++**enforce**, because the field exists, the user-facing spec
++(`EV-021`) calls it the preview gate, and the field help text in
++`construction_settings.json` should be aligned with the runtime
++behavior. If a release manager wants to keep the current "always
++preview" behavior, document it explicitly in
++`construction_settings.json` help text and in the evidence log.
++
++## Required Work Packages
++
++### WP1: Freeze Release Scope
++
++Decision:
++
++> Release preview + synchronous commit for small files. Defer async
++> commit. Replace `get_import_status()` and either implement or
++> remove `create_import_template()`. Decide and apply
++> `enable_boq_excel_import_preview` enforcement. Keep the BOQ
++> Header JS dialog as the supported UI; record the UI gap as a
++> follow-up.
++
++Actions:
++
++1. Record the decision in this plan (revised section above).
++2. Update stale docs that still say commit is not implemented:
++   - Add a superseding note to
++     `docs/feature_reviews/evidence/EV-026-wp2-parser-normalizer.md`
++     stating that commit is implemented behind the flag (see
++     `EV-030`).
++   - Add a row to `docs/feature_reviews/evidence/evidence_log.md`
++     summarizing the WP2 finish phase.
++3. Confirm threshold values stay at:
++   - `ASYNC_IMPORT_ROW_THRESHOLD = 2000`
++   - `MAX_IMPORT_ROW_COUNT = 10000`
++   - `MAX_IMPORT_FILE_SIZE_BYTES = 25 * 1024 * 1024`
++
++Acceptance:
++
++- Team agrees the BOQ Header JS gap is a known follow-up, not part
++  of this phase.
++
++### WP2: Replace `get_import_status()` And Expose It
++
++Current method at `boq_import_service.py:254-260` is stale. It must
++be rewritten, and a whitelisted API must be added.
++
++Recommended service behavior:
++
++1. Look up `BOQ Import Batch` by `name = import_id`.
++2. If not found, return the `not_found` shape above.
++3. If found, derive counts from the batch's JSON review payloads
++   and from `BOQ Structure` / `BOQ Item` rows where
++   `import_batch = import_id`.
++4. Return a dict matching the "Status Response" block in the
++   original plan.
++
++API exposure:
++
++1. Add `get_boq_import_status(import_id)` to
++   `construction/api/boq_api.py` with `@frappe.whitelist()`.
++2. Read from the service, return the dict directly.
++3. Wrap the call with the same `try/except` shape used by the
++   other import endpoints, returning
++   `{"success": False, "error": "..."}` on failure.
++4. Do not add this endpoint to the BOQ Header JS in this phase;
++   it is server-side only until the UI gap is closed.
++
++Acceptance:
++
++- No service method or API method returns
++  `"Commit import not implemented yet"`.
++- Status reflects the real `BOQ Import Batch.status` value.
++- Tests cover committed batch, preview batch, and not-found.
++
++### WP3: Implement Or Remove `create_import_template()`
++
++Pick one path. Default: implement.
++
++If implementing:
++
++1. Replace the body of `create_import_template()` at
++   `boq_import_service.py:250-252` with an `openpyxl` workbook
++   generation that uses the existing `TEMPLATE_COLUMNS` constant.
++2. Save as a private `File` in `private/files/`, mirroring the
++   `_write_import_error_report` pattern at
++   `boq_import_service.py:468-620`.
++3. Return the `success` / `file_url` / `file_name` shape from the
++   original plan.
++4. Add `create_boq_import_template()` to
++   `construction/api/boq_api.py` with `@frappe.whitelist()` and
++   the standard try/except wrapper.
++5. Optionally enforce `enable_boq_excel_import_preview` here too.
++
++If removing:
++
++1. Delete the `create_import_template` method on the service.
++2. Confirm no API method, no test, and no JS file references it
++   (current grep confirms there are no callers).
++
++Acceptance:
++
++- No method returns the placeholder text.
++- Either the template is a real downloadable file or the method
++  does not exist.
++
++### WP4: Tighten Async Block Message
++
++Single copy change in `boq_import_service.py:316-319`. Replace the
++current `frappe.throw` message with:
++
++> This file is too large for synchronous import. Large-file async
++> import is not enabled in this release. Reduce the file size or
++> split the BOQ into smaller workbooks.
++
++The error code stays the same. The `async_import_required` warning
++on the preview response already includes the threshold count, so
++users will see both the warning and the new commit-time message.
++
++Acceptance:
++
++- The new message is what `run_boq_excel_import_policy_smoke` and
++  any new tests assert on.
++
++### WP5: Decide `enable_boq_excel_import_preview` Enforcement
++
++Pick one path. Default: enforce.
++
++If enforcing:
++
++1. Add `is_enabled("enable_boq_excel_import_preview")` checks at
++   the top of `import_from_excel()` and
++   `generate_import_error_report()`.
++2. Throw the same "disabled by Construction Settings" copy used
++   by commit.
++3. The commit path inherits the preview check because
++   `import_from_excel` is the entry point; no separate check is
++   needed.
++4. Update the smoke tests that currently call
++   `parse_workbook` directly (which bypasses the flag check) so
++   the smoke tests still pass: either set the flag during the
++   test, or call `parse_workbook` directly and keep the service
++   entry point as the only gated surface.
++
++If documenting as informational:
++
++1. Update the `help` text on the field in
++   `construction_settings.json` to state "informational; preview
++   always runs".
++2. Add a note in the evidence log entry.
++
++Acceptance:
++
++- The flag's runtime contract is consistent with the help text
++  and the EV-021 spec.
++
++### WP6: API Contract Review
++
++Required review of `construction/api/boq_api.py`:
++
++1. Confirm `dry_run` is parsed consistently as boolean at
++   `boq_api.py:218-234` (currently `frappe.utils.cint(dry_run)`,
++   which is correct for the way the JS sends it).
++2. Confirm `row_resolutions` parsing handles invalid JSON
++   gracefully at `boq_api.py:228`. The current code passes the
++   parsed result directly; a malformed string would raise
++   `frappe.parse_json` failure inside the service. Add a
++   `try/except` around `frappe.parse_json` and treat parse failure
++   as `row_resolutions=None` to keep the contract stable.
++3. Confirm the error shape is stable:
++   `{"success": False, "error": "..."}`.
++4. Add the two whitelisted methods decided in WP2 and WP3.
++
++Acceptance:
++
++- API methods expose the actual release scope.
++- No API endpoint implies async import exists.
++
++### WP7: BOQ Header UI Review
++
++Required review of
++`construction/construction/doctype/boq_header/boq_header.js:468-507`:
++
++1. Document the current behavior in the docstring or a comment:
++   "This dialog triggers a preview-only import. To commit, use the
++   whitelisted API with `dry_run=0` and a confirmed import mode, or
++   use the future preview-then-commit UI (tracked as a follow-up)."
++2. Do not expand the dialog into a preview-then-commit flow in this
++   phase. The work required (rendering the preview tree, the
++   row-resolution UI, the import-mode picker, the commit button
++   toggle, the result surface with batch ID and WBS health) is
++   substantial and is out of scope for "finish the existing scope."
++3. Confirm the dialog only appears for `frm.doc.status === "Draft"`
++   (already correct at line 468).
++4. Confirm the dialog greys out or hides when
++   `enable_boq_excel_import_commit` is off, by adding a
++   `frappe.call` to `is_variation_orders_enabled`-style helper, or
++   by a new helper `is_boq_excel_import_commit_enabled()`. If
++   enforcement is added in WP5, this is a small UX nicety; if
++   enforcement is not added, this is a required guard.
++
++Acceptance:
++
++- The dialog matches what the service actually does (preview
++  only) or is replaced with a documented "API only" message.
++- The UI does not promise async import.
++
++### WP8: Status Field Hygiene
++
++The `BOQ Import Batch.status` field already has the values
++`Preview`, `Committed`, `Failed`, `Cancelled`. The current commit
++path sets `Preview` at insert and `Committed` at the end. There is
++no current path that sets `Failed` or `Cancelled`.
++
++For this phase:
++
++1. Wrap the body of `_commit_import()` after batch creation in a
++   `try/except` that, on failure, sets the batch to `Failed` and
++   stores the error message in a new `error_message` field.
++2. Add the `error_message` field to `boq_import_batch.json` (Data
++   field, long enough for a sentence). Do not add `started_at` or
++   `finished_at` for this phase; `creation` and `modified` are
++   sufficient.
++3. The duplicate-import and stale-preview blocks already throw
++   before the batch is inserted, so they do not need to set
++   `Failed`. Only commit-mutation failures need this treatment.
++
++Acceptance:
++
++- A successfully committed import ends in `Committed`.
++- An import whose batch was created but whose commit mutation
++  failed ends in `Failed` with a non-empty `error_message`.
++- The status endpoint reports the final state.
++
++### WP9: Stale Evidence Documentation
++
++1. Add a new evidence file
++   `docs/feature_reviews/evidence/EV-068-wp2-finish-scope.md` that
++   summarizes:
++   - what is shipping (preview + small sync commit),
++   - what is deferred (async),
++   - the BOQ Header UI gap,
++   - the `enable_boq_excel_import_preview` decision.
++2. Add a row to `docs/feature_reviews/evidence/evidence_log.md`
++   referencing `EV-068`.
++3. Do not rewrite `EV-026`; instead add a "Superseded by EV-068"
++   footnote at the bottom. The current `EV-030`,
++   `EV-031`, `EV-032`, and `EV-033` already describe the commit,
++   duplicate, error-report, and threshold behaviors correctly.
++
++Acceptance:
++
++- The current docs do not contradict the current release behavior.
++
++### WP10: Test Coverage
++
++Existing smoke coverage already includes:
++
++- `run_boq_excel_parser_smoke` (preview classification cases).
++- `run_boq_excel_commit_smoke` (successful sync commit, flag block).
++- `run_boq_excel_duplicate_import_smoke` (duplicate file, stale
++  preview).
++- `run_boq_excel_error_report_smoke` (error report file,
++  private File record).
++- `run_boq_excel_import_policy_smoke` (async block, row limit,
++  file size limit).
++- `TestBOQExcelParser` (unittest cases for Flat root generation
++  and Structured parent passthrough).
++
++Required additional tests:
++
++1. `run_boq_excel_status_smoke`:
++   - committed batch returns the right status fields,
++   - preview batch returns `Preview`,
++   - not-found returns the `not_found` shape,
++   - permission is enforced (call as a restricted user, expect
++     PermissionError or the equivalent JSON error).
++2. `run_boq_excel_template_smoke` if implementing:
++   - file exists at the returned path,
++   - workbook opens,
++   - expected columns are present in the header row,
++   - `Type` column has data validation,
++   - `File` record is private.
++3. API contract tests for the new status and template endpoints
++   (call directly through `@frappe.whitelist` API).
++4. UI smoke/manual test:
++   - preview only via the BOQ Header dialog (current behavior is
++     acceptable; just record it).
++
++Recommended commands:
++
++```bash
++bench --site v16.localhost execute construction.tests.test_boq_excel_parser.run_boq_excel_preview_smoke
++bench --site v16.localhost execute construction.tests.test_boq_excel_parser.run_boq_excel_commit_smoke
++bench --site v16.localhost execute construction.tests.test_boq_excel_parser.run_boq_excel_duplicate_import_smoke
++bench --site v16.localhost execute construction.tests.test_boq_excel_parser.run_boq_excel_error_report_smoke
++bench --site v16.localhost execute construction.tests.test_boq_excel_parser.run_boq_excel_import_policy_smoke
++```
++
++Plus syntax/lint:
++
++```bash
++python3 -m py_compile construction/services/boq_import_service.py construction/api/boq_api.py
++```
++
++Plus Frappe runner (per the
++`EV-048-wp4-final-qa-rollup.md` "formal runner remains blocked"
++caveat, this may not work in this environment).
++
++## Proposed API Response Contracts
++
++### Preview Response (unchanged)
++
++```json
++{
++  "success": true,
++  "dry_run": true,
++  "boq_header": "BOQ-...",
++  "sheet_name": "Sheet1",
++  "detected_import_mode": "Flat",
++  "confirmed_import_mode": null,
++  "allowed_import_modes": ["Structured", "Semi-Structured", "Flat"],
++  "requires_user_confirmation": true,
++  "summary": {},
++  "errors": [],
++  "warnings": [],
++  "import_policy": {
++    "requires_async": false,
++    "data_row_count": 100
++  },
++  "proposed_creates": {},
++  "preview_rows": [],
++  "preview_tree": []
++}
++```
++
++### Commit Response (unchanged)
++
++```json
++{
++  "success": true,
++  "dry_run": false,
++  "boq_header": "BOQ-...",
++  "import_batch": "BOQIMP-...",
++  "confirmed_import_mode": "Flat",
++  "summary": {},
++  "created_structures": [],
++  "created_items": [],
++  "health": {}
++}
++```
++
++### Async Block Response (changed message)
++
++```json
++{
++  "success": false,
++  "dry_run": false,
++  "error": "This file is too large for synchronous import. Large-file async import is not enabled in this release. Reduce the file size or split the BOQ into smaller workbooks."
++}
++```
++
++### Status Response (new)
++
++```json
++{
++  "success": true,
++  "status": "Committed",
++  "import_id": "BOQIMP-...",
++  "boq_header": "BOQ-...",
++  "import_mode": "Flat",
++  "row_count": 100,
++  "section_count": 1,
++  "item_count": 100,
++  "ambiguous_count": 0,
++  "error_count": 0,
++  "warning_count": 0,
++  "committed_structure_count": 3,
++  "committed_item_count": 2
++}
++```
++
++`committed_structure_count` and `committed_item_count` are derived
++from `frappe.db.count("BOQ Structure", {"import_batch": import_id})`
++and the equivalent for `BOQ Item`. They are only present when the
++batch exists and the count query succeeds.
++
++### Template Response (new, if implementing)
++
++```json
++{
++  "success": true,
++  "file_url": "/private/files/BOQ_Import_Template.xlsx",
++  "file_name": "BOQ_Import_Template.xlsx"
++}
++```
++
++## Data Integrity Requirements
++
++Commit must preserve:
++
++1. Draft-only mutation.
++2. BOQ Header lock against concurrent imports
++   (`select ... for update` on the BOQ Header row, already in
++   `_validate_commit_wbs_uniqueness`).
++3. Unique WBS enforcement.
++4. No duplicate WBS from stale previews.
++5. Correct parent-child WBS tree.
++6. Correct item values:
++   - quantity
++   - unit
++   - contract unit price
++   - factor
++   - line total (computed by the Item controller)
++7. Traceability fields on BOQ Structure/BOQ Item:
++   - import batch
++   - import mode
++   - source row no
++   - source WBS code
++   - generated WBS flag
++   - source item ref
++8. WBS health check after commit.
++
++## Security / Permission Requirements
++
++1. Import commit remains feature-flagged.
++2. Commit should use server-side checks, not only UI checks.
++3. Generated templates/error reports should be private files.
++4. The new `get_boq_import_status` API must not leak batches
++   outside permitted BOQ scope. Reuse the project-scope check
++   pattern from `get_boq_header_scope_context` at
++   `boq_api.py:540-575`:
++   - Resolve the BOQ Header from the batch.
++   - Check the header's `project` is in the caller's
++     `get_user_scope_hierarchy` `projects` set.
++   - Throw `frappe.PermissionError` otherwise.
++5. Restricted users must not get generic Project/Company/Cost
++   Center access through import APIs.
++
++## Consultant Review Questions
++
++1. Is the recommended scope acceptable: small synchronous commit
++   now, async deferred?
++2. Should the BOQ Header UI stay preview-only for this phase, or
++   should the preview-then-commit UI be pulled into this phase?
++3. Should `create_import_template()` be implemented in this phase
++   or removed entirely?
++4. Should `enable_boq_excel_import_preview` be enforced at runtime
++   or kept as an informational flag?
++5. Are current thresholds acceptable?
++   - 2,000 rows async threshold
++   - 10,000 max rows
++   - 25 MB max file size
++6. Is the new `error_message` field on `BOQ Import Batch`
++   acceptable for marking failed imports, or should the failure
++   state be encoded differently (e.g. in the existing
++   `errors_json`)?
++7. Should historical evidence docs be updated, or should we add
++   only a superseding implementation note (`EV-068`)?
++8. Should `get_boq_import_status` enforce project scope, or should
++   it rely on the default Frappe `read` permission for
++   `BOQ Import Batch`?
++
++## Recommended Implementation Order
++
++1. Freeze release scope (this plan).
++2. Update async block message in
++   `boq_import_service.py:316-319` (small, safe, immediate
++   win).
++3. Rewrite `get_import_status()` in `boq_import_service.py`.
++4. Implement or remove `create_import_template()` in
++   `boq_import_service.py`.
++5. Decide and apply `enable_boq_excel_import_preview` runtime
++   behavior.
++6. Add `get_boq_import_status` (and optionally
++   `create_boq_import_template`) to
++   `construction/api/boq_api.py`.
++7. Add `error_message` field to `BOQ Import Batch` and wrap
++   `_commit_import` mutation in try/except that sets
++   `status="Failed"`.
++8. Update BOQ Header JS to be honest about preview-only behavior
++   and to hide the dialog when the commit flag is off.
++9. Add `EV-068` evidence file and log row.
++10. Add `run_boq_excel_status_smoke` and (if implemented)
++    `run_boq_excel_template_smoke` tests.
++11. Run the full existing BOQ import smoke suite.
++12. Write final implementation report.
++
++## Definition of Done
++
++This phase is complete when:
++
++1. No service or API method returns
++   `"Commit import not implemented yet"`.
++2. `get_import_status()` returns real status from
++   `BOQ Import Batch` and is exposed through a whitelisted API.
++3. `create_import_template()` is either implemented and exposed,
++   or removed.
++4. Async-sized files are blocked with the new product-approved
++   message.
++5. `enable_boq_excel_import_preview` is either enforced at runtime
++   or explicitly documented as informational in
++   `construction_settings.json` help text.
++6. Small synchronous commit remains feature-flagged and tested.
++7. Duplicate/stale WBS protections remain tested.
++8. Error report generation remains tested.
++9. Failed imports create a `BOQ Import Batch` with
++   `status="Failed"` and a populated `error_message`.
++10. BOQ Header UI reflects actual release scope (preview only)
++    and does not promise async or template behavior it does not
++    have.
++11. Consultant-approved implementation report `EV-068` is added.
++
++## Final Recommendation
++
++Proceed with **Preview + Small Synchronous Commit** as the finish
++scope, with three honest adjustments to the original plan:
++
++- The BOQ Header JS dialog is preview-only in practice today and
++  should not be expanded in this phase. Document the gap and track
++  it as a follow-up.
++- `get_import_status` and `create_import_template` are not wired
++  anywhere today. Either expose them as real APIs or remove the
++  public methods; do not leave placeholder text on shipped service
++  methods.
++- `enable_boq_excel_import_preview` is declared but not enforced.
++  Either enforce it or document the gap. Do not ship a service
++  contract that contradicts the field's promise.
++
++Do not implement async import in this phase. Async import deserves
++a separate design because it requires queueing, status polling,
++retry/failure handling, large-file lifecycle management, and
++operator controls.
+diff --git a/docs/RESTORED_WORK_FOLLOWUP_REPORT.md b/docs/RESTORED_WORK_FOLLOWUP_REPORT.md
+new file mode 100644
+index 0000000..9d84e1c
+--- /dev/null
++++ b/docs/RESTORED_WORK_FOLLOWUP_REPORT.md
+@@ -0,0 +1,190 @@
++# Restored Work Follow-up Report
++
++Date: 2026-06-15
++Repo: `/home/mohamed/frappe-bench/apps/construction`
++Branch: `feat/scope-context-standardization`
++
++## Summary
++
++The restored working tree is mostly staged local work recovered from the local
++`recover-lost-files` branch. The changes are not committed on the current branch
++and are not on GitHub. This report lists the pieces that appear to need
++follow-up before the restored work should be treated as production-ready.
++
++## Findings
++
++### P1: Typography handoff does not match the restored code
++
++Evidence:
++
++- `AGENTS_HANDOFF.md` says `typography_settings.js` was refactored from v9 to
++  v16 and `hooks.py` was bumped to `?v=16`.
++- The current `construction/hooks.py` still loads
++  `/assets/construction/js/typography_settings.js?v=9`.
++- The current `construction/public/js/typography_settings.js` still emits
++  CSS-variable-based typography rules in `ensureStyleTag`, while the handoff
++  claims the fix replaced that path with literal static font stacks.
++- Neither `construction/hooks.py` nor `construction/public/js/typography_settings.js`
++  is in the staged restore.
++
++Risk:
++
++The handoff may describe work that was not restored, or it may be stale and
++should not be committed as-is. If committed unchanged, it will mislead the next
++agent/team about the actual state of the typography/Edge fix.
++
++Recommended finish plan:
++
++1. Decide whether the v16 typography fix should be restored, reimplemented, or
++   dropped.
++2. If it should ship, update `typography_settings.js` and bump `hooks.py`.
++3. Run `node --check construction/public/js/typography_settings.js`.
++4. Run `bench build --app construction`.
++5. Manually verify the Edge font-family repaint issue.
++6. Update or remove `AGENTS_HANDOFF.md` so it matches reality.
++
++### P1: BOQ Excel import has mixed "commit implemented" and "preview-only" signals
++
++Evidence:
++
++- `BOQImportService._commit_import()` exists and creates structures/items when
++  `enable_boq_excel_import_commit` is enabled.
++- `BOQImportService.get_import_status()` still returns:
++  `status: "preview-only"` and `message: "Commit import not implemented yet"`.
++- `BOQImportService.create_import_template()` still returns:
++  `"Excel template creation to be implemented in WP2.8"`.
++- Large imports set `requires_async` and synchronous commit throws:
++  `"must use async import"`, but no async import queue/status implementation was
++  found in the staged changes.
++
++Risk:
++
++Users or API clients may see contradictory status. Small synchronous commits may
++work behind the feature flag, but the status/template/async paths are unfinished
++or at least not aligned.
++
++Recommended finish plan:
++
++1. Decide the intended release scope:
++   - preview-only,
++   - small synchronous commit only,
++   - or full sync plus async commit.
++2. If preview-only, remove or keep disabled the commit path and update UI/API
++   messaging accordingly.
++3. If sync commit should ship, update `get_import_status()` and tests so status
++   reflects real committed/failed/preview states.
++4. Implement or explicitly disable the Excel template endpoint.
++5. Implement async commit queue/status, or lower the UX promise so async-sized
++   files are clearly blocked with a product message.
++6. Run BOQ parser/import tests after choosing the scope.
++
++### P1: Scope context global standardization still needs runtime verification
++
++Evidence:
++
++- The new `docs/scope context globally/SCOPE_CONTEXT_GLOBAL_IMPLEMENTATION_HANDOFF.md`
++  defines a broad app-wide mission: zero 403 errors for restricted users across
++  lists, trees, and forms.
++- The repo metadata lint now passes:
++  `PASS: no scope-dimension field has in_standard_filter=1 (15 DocTypes checked).`
++- A search of staged client JavaScript found no direct
++  `frappe.db.get_value("Project" | "Company" | "Cost Center", ...)` calls.
++- The handoff's definition of done still requires manual restricted-user
++  browser verification across the Construction app.
++
++Risk:
++
++Static checks look good, but the main failure mode is runtime behavior in Frappe
++list/tree/form bootstrapping. The work should not be considered complete until a
++restricted user can navigate the app without Project/Company/Cost Center 403s.
++
++Recommended finish plan:
++
++1. Run `python3 scripts/lint_scope_metadata.py` in CI.
++2. Run `bench migrate` after metadata changes.
++3. Log in as a restricted role such as Site Engineer or Accountant.
++4. Visit key Construction list/tree/form views and capture network/console logs.
++5. Fix any remaining 403s at the DocType metadata or safe API layer.
++6. Convert the handoff into an implementation report once verified.
++
++### P2: `construction/scratch_test.py` is a debug artifact
++
++Evidence:
++
++- `construction/scratch_test.py` is newly added.
++- It inserts a private PNG `File`, creates a `Construction Theme`, prints debug
++  output, then rolls back.
++- It is not named as a standard test module and has no assertions.
++
++Risk:
++
++This looks like a one-off debug script for private login background image
++behavior. Committing it in the app package may confuse test discovery,
++maintenance, or deployment hygiene.
++
++Recommended finish plan:
++
++1. Decide whether the behavior is worth preserving.
++2. If yes, convert it into a real test under the appropriate test module with
++   assertions and cleanup.
++3. If no, remove it from the commit.
++
++### P2: Added handoff files should be converted or excluded
++
++Evidence:
++
++- `AGENTS_HANDOFF.md` is newly added and currently mismatches the code.
++- `docs/scope context globally/SCOPE_CONTEXT_GLOBAL_IMPLEMENTATION_HANDOFF.md`
++  is newly added and reads as instructions to begin work, not a completion
++  report.
++
++Risk:
++
++Handoff files are useful during recovery, but they can make the repository look
++less finished if committed alongside implementation work without being updated.
++
++Recommended finish plan:
++
++1. Keep only handoff files that are intentionally part of project documentation.
++2. Rename/update them as status reports if the work is complete.
++3. Remove stale or agent-only instructions from the production commit.
++
++### P2: VFC layout engine contains heavy diagnostic logging
++
++Evidence:
++
++- `construction/public/js/vfc_layout_engine.js` contains many `console.log`
++  diagnostics such as attach, profile fetch, verification, wrapper movement, and
++  initialization logs.
++- The staged restore modifies this file substantially.
++
++Risk:
++
++The logging may be intentional during layout-engine hardening, but if left
++enabled in production it can make browser consoles noisy and obscure real errors.
++
++Recommended finish plan:
++
++1. Decide whether diagnostics should remain enabled by default.
++2. Gate layout-engine logs behind a debug flag or remove low-value logs.
++3. Run browser verification after any logging or timing changes.
++
++## Verification Already Performed During This Review
++
++- Confirmed the current branch tracks GitHub and is not ahead/behind:
++  `feat/scope-context-standardization == origin/feat/scope-context-standardization`.
++- Confirmed restored changes are staged, not unstaged.
++- Confirmed the staged restore has 62 files, not 64.
++- Ran `python3 scripts/lint_scope_metadata.py`; it passed.
++- Searched staged client JavaScript for direct restricted
++  `frappe.db.get_value("Project" | "Company" | "Cost Center", ...)` calls; none
++  were found.
++
++## Suggested Planning Order
++
++1. Resolve the typography handoff mismatch.
++2. Decide BOQ Excel import release scope and fix status/template/async behavior.
++3. Run restricted-user scope-context browser verification.
++4. Remove or convert scratch/handoff artifacts.
++5. Reduce or gate VFC diagnostic logging if this branch is headed to production.
++6. Run the focused Python and JS test suites for the touched areas.
+diff --git a/docs/TYPOGRAPHY_HANDOFF_MISMATCH_FINISH_REPORT.md b/docs/TYPOGRAPHY_HANDOFF_MISMATCH_FINISH_REPORT.md
+new file mode 100644
+index 0000000..92288d2
+--- /dev/null
++++ b/docs/TYPOGRAPHY_HANDOFF_MISMATCH_FINISH_REPORT.md
+@@ -0,0 +1,415 @@
++# Typography Handoff Mismatch Finish Report
++
++Date: 2026-06-15
++Repo: `/home/mohamed/frappe-bench/apps/construction`
++Branch: `feat/scope-context-standardization`
++
++## Objective
++
++Finish P1 item 1: resolve the mismatch between `AGENTS_HANDOFF.md` and the
++actual typography source code, then leave the repository in a truthful,
++verifiable state.
++
++## Verdict
++
++The mismatch is real. `AGENTS_HANDOFF.md` claims a v16 Microsoft Edge
++font-rendering fix is implemented, but the live source tree still matches the
++older v9 behavior.
++
++Committing the restored tree as-is would ship a false completion signal.
++
++## Three-Marker Audit
++
++| Marker | Actual Code | Handoff Claim |
++| --- | --- | --- |
++| `construction/hooks.py` | `typography_settings.js?v=9` | `?v=16` |
++| `ensureStyleTag()` | CSS variables such as `var(--ct-desk-font-family, inherit)` | Literal font stacks such as `"Times New Roman", Times, serif` |
++| Google Fonts loader | Not present | `loadNeededGoogleFonts()` and `<link id="ct-google-fonts">` |
++| DOM typography observer | Present in v9 flow | Removed in v16 flow |
++
++## Risk
++
++If committed unchanged, QA will believe the Edge typography bug is already
++fixed. In reality, the browser still loads the v9 raw asset and the generated
++CSS still depends on custom properties for `font-family`, which is the behavior
++the handoff says was replaced.
++
++## Decision Required
++
++Choose one path before committing the restored work.
++
++### Option A: Ship the Edge Typography Fix
++
++Use this if the Microsoft Edge font-family repaint bug is in scope for this
++branch.
++
++Completion means:
++
++- `typography_settings.js` generates literal font stacks for primary typography
++  CSS.
++- `hooks.py` uses the final cache-buster version.
++- Google Fonts are loaded when selected.
++- Legacy inline observer code is removed or no longer part of the main flow.
++- Automated checks pass.
++- Edge manual QA is completed or clearly delegated with an honest status.
++- `AGENTS_HANDOFF.md` is updated into a truthful implementation/verification
++  report.
++
++### Option B: Do Not Ship the Edge Typography Fix in This Branch
++
++Use this if the handoff was restored accidentally or belongs to another branch.
++
++Completion means:
++
++- Remove `AGENTS_HANDOFF.md`, or rewrite it to say the typography fix is not
++  included in this branch.
++- Leave `typography_settings.js` and `hooks.py` unchanged.
++- Track the Edge fix separately.
++
++## Recommendation
++
++Option A is recommended if this branch is intended to finish the restored work
++fully. The v16 design is directionally correct: literal CSS font stacks are a
++reasonable fix for Chromium/Edge repaint problems involving `font-family` custom
++properties.
++
++If Microsoft Edge manual verification is unavailable, either mark that
++verification as pending or choose Option B. Do not keep the current handoff claim
++without matching code.
++
++## Option A: Required Gaps to Close
++
++### Gap 1: `fontStacks` and server `allowed_fonts` can diverge
++
++The client font list in `typography_settings.js` and server allowlists in
++`construction/api/theme_api.py` and
++`construction/construction/doctype/user_desk_theme/user_desk_theme.py` are
++maintained independently.
++
++Required finish:
++
++- Add comments at each location linking the lists.
++- Prefer a later follow-up to expose the server font allowlist through boot or
++  add a lint check.
++- Before shipping, verify every JS `fontStacks` key is accepted by server
++  normalization.
++
++### Gap 2: Google Font names must not drift from `fontStacks`
++
++The Google Fonts subset must stay aligned with `fontStacks`.
++
++Required finish:
++
++- Add a `googleFontNames` set only for fonts that also exist in `fontStacks`.
++- Keep the set near `fontStacks` with a maintenance comment.
++- Consider a JS test/lint that fails if `googleFontNames` contains unknown
++  fonts.
++
++### Gap 3: `ensureStyleTag(settings)` needs a precise output contract
++
++The current `ensureStyleTag()` has no arguments and emits a static CSS block
++with `var()`.
++
++Required finish:
++
++- Change it to `ensureStyleTag(settings)`.
++- Keep the existing selector coverage from v9 unless deliberately reduced.
++- Resolve `Inherit` component fonts to the desk font immediately.
++- Generate rules for all six components: desk, sidebar, navbar, form, list,
++  menu.
++- Generate literal values for family, size, and weight.
++
++### Gap 4: Avoid style-order observer append loops
++
++`ensureStyleTag(settings)` will rewrite the style tag repeatedly during dialog
++changes. The order observer also re-appends the style node.
++
++Required finish:
++
++- Ensure regeneration does not create a micro-loop.
++- Either skip appending when the style is already the last child of `<head>`, or
++  temporarily pause observer-driven re-appends during regeneration.
++
++### Gap 5: Define the repaint invalidation mechanism
++
++The handoff mentions a `ct-typography-changing` class but does not design it.
++
++Required finish:
++
++- Add/remove `ct-typography-changing` on `document.documentElement`.
++- Force reflow with `void document.documentElement.offsetHeight`.
++- Add a harmless CSS rule if needed so the class triggers style recalculation.
++
++### Gap 6: Implement `closeOpenMenus()`
++
++The handoff references `closeOpenMenus()`, but v9 does not define it.
++
++Required finish:
++
++- Add a helper that closes open dropdown menus before the dialog opens.
++- Use a minimal DOM approach, for example removing `.show` from open
++  `.dropdown-menu.show` elements.
++
++### Gap 7: Treat legacy CSS variables as compatibility only
++
++The repo currently has no clear consumers for `--ct-*-font-*` CSS variables.
++
++Required finish:
++
++- Do not rely on CSS variables for primary `font-family` rules.
++- Either keep setting them only as compatibility output or remove them if no
++  consumers are confirmed.
++- Document the choice.
++
++### Gap 8: Check co-loaded scripts for font overrides
++
++Typography loads between `theme_loader_v24.js` and `components/index.js`.
++
++Required finish:
++
++- Search `theme_loader_v24.js` and the component bundle source for
++  `font-family` writes or injected typography styles.
++- Confirm the typography style-order strategy wins without fighting other
++  scripts.
++
++### Gap 9: Remove legacy inline typography observer scope
++
++The v9 observer infrastructure should be removed if the static literal
++stylesheet becomes the primary mechanism.
++
++Remove or retire:
++
++- `inlineApplyTimer`
++- `typographyObservedRoots`
++- `typographyObservedRootList`
++- `typographyRootObservers`
++- `domObserverStarted`
++- `applyInlineTypography`
++- `startDomTypographyObserver`
++- `observeTypographyRoot`
++- `discoverTypographyShadowRoots`
++- `registerTypographyShadowRoots`
++- `shouldSkipInlineTypography`
++- `setInlineFont`
++
++### Gap 10: Specify Google Fonts URL construction
++
++Google Fonts CSS2 URLs must include family names and weights.
++
++Required finish:
++
++- Use URL-encoded family names, replacing spaces with `+`.
++- Include allowed weights: `wght@300;400;500;600;700`.
++- Use multiple `family=` params.
++- Add `display=swap`.
++- Example:
++
++```text
++https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap
++```
++
++### Gap 11: Resolve `Inherit` before loading Google Fonts
++
++If a component font is `Inherit`, the loader must inspect the desk font.
++
++Required finish:
++
++- If desk is `Cairo` and sidebar is `Inherit`, load Cairo.
++- If desk is `System Default`, do not load a Google Font for inherited
++  components.
++
++### Gap 12: Document Google Fonts loading flash
++
++Google Fonts load asynchronously, so a fallback font may render briefly before
++the selected web font appears.
++
++Required finish:
++
++- Use `display=swap`.
++- Document the flash/fallback behavior as an accepted limitation.
++
++### Gap 13: Document `node --check` limits
++
++`node --check` only validates syntax. It does not validate Frappe globals such
++as `frappe`, `__`, or `$`.
++
++Required finish:
++
++- Keep `node --check`, but document it as a syntax-only gate.
++- Do browser/manual testing for runtime behavior.
++
++### Gap 14: Build and clear cache are both required
++
++`typography_settings.js` is loaded as a raw asset. Frappe must copy it into
++`sites/assets`.
++
++Required finish:
++
++- Run `bench build --app construction`.
++- Run `bench clear-cache`.
++- Hard-refresh the browser.
++
++### Gap 15: Handle double apply on save
++
++The dialog applies settings immediately, then applies server-normalized settings
++again after save succeeds.
++
++Required finish:
++
++- Ensure `applyTypography(settings)` is idempotent.
++- Rewriting the same style twice should not flicker or duplicate DOM nodes.
++
++### Gap 16: Add at least minimal tests or checks
++
++Required finish:
++
++- Add or run a JS check that verifies generated `font-family` CSS contains no
++  `var()`.
++- Add or run a Python check that server typography normalization accepts every
++  client font name.
++- Prefer adding these to the project test suite if time allows.
++
++## Phased Implementation Plan for Option A
++
++### Phase 0: Safeguard
++
++```bash
++cd /home/mohamed/frappe-bench/apps/construction
++git checkout -b feat/edge-typography-fix-v16
++cp construction/public/js/typography_settings.js construction/public/js/typography_settings.js.v9-backup
++```
++
++If staying on the current branch, skip branch creation but keep the backup until
++verification is complete.
++
++### Phase 1: Rewrite `typography_settings.js`
++
++Code tasks:
++
++1. Add `googleFontNames` near `fontStacks`.
++2. Add `closeOpenMenus()`.
++3. Add `resolveFontFamily(settings, component)`.
++4. Add `loadNeededGoogleFonts(settings)`.
++5. Rewrite `ensureStyleTag(settings)` to emit literal CSS.
++6. Preserve existing v9 selector coverage unless deliberately reduced.
++7. Rewrite `applyTypography(settings)` flow:
++   - normalize settings
++   - load needed Google Fonts
++   - regenerate literal stylesheet
++   - optionally set legacy variables as compatibility output
++   - apply root inline fallback
++   - trigger repaint invalidation
++8. Remove or retire the legacy inline observer functions and variables listed
++   in Gap 9.
++
++Keep unchanged unless needed:
++
++- `fontStacks`, except maintenance comments
++- `fontOptions`
++- `componentFontOptions`
++- `deskFontOptions`
++- `normalize()`
++- `clamp()`
++- `normalizeWeight()`
++- `startStyleOrderObserver()`, except loop prevention
++- `applyRootTypographyStyles()`
++- dialog construction and preview functions
++- settings load/save flow
++- `window.ctTypography`
++- `window.ctShowTypographySettings`
++
++### Phase 2: Bump Cache Buster
++
++Change `construction/hooks.py`:
++
++```python
++"/assets/construction/js/typography_settings.js?v=9",
++```
++
++to:
++
++```python
++"/assets/construction/js/typography_settings.js?v=16",
++```
++
++or a later version if more iterations are made.
++
++### Phase 3: Automated Verification
++
++Run:
++
++```bash
++node --check construction/public/js/typography_settings.js
++python3 -m py_compile construction/hooks.py
++bench build --app construction
++bench clear-cache
++```
++
++Also run targeted checks:
++
++- Verify generated typography CSS has literal `font-family` values.
++- Verify `font-family:` declarations in the generated style do not contain
++  `var(`.
++- Verify all client font names pass server normalization.
++
++### Phase 4: Co-loaded Script Audit
++
++Search for competing font writes:
++
++```bash
++rg "font-family|fontFamily|--ct-.*font" construction/public/js/theme_loader_v24.js construction/public/js/components construction/public/js
++```
++
++Confirm any competing rules are either unrelated or weaker than
++`#ct-typography-style`.
++
++### Phase 5: Update Documentation
++
++Rewrite `AGENTS_HANDOFF.md` so it becomes a truthful implementation report.
++
++Required contents:
++
++- actual files changed
++- final cache-buster version
++- automated commands run
++- Edge manual QA status
++- known limitations, especially Google Fonts fallback/flash
++
++### Phase 6: Microsoft Edge Manual QA
++
++Manual checks:
++
++- Hard-refresh the desk page.
++- Open Typography Settings from sidebar/user menu.
++- Change Desk Font Family to `Times New Roman`; UI visibly changes.
++- Change Desk Font Family to `Tahoma`; UI visibly changes.
++- Change Desk Font Family to `Cairo`; `#ct-google-fonts` appears and UI uses
++  Cairo after load.
++- Change Desk Font Size; UI size changes.
++- Cancel without saving; reload returns to previously saved settings.
++- Save settings; reload preserves saved typography.
++- Opening the dialog does not collapse or break the sidebar.
++
++Browser diagnostics:
++
++```javascript
++console.log(document.getElementById("ct-typography-style")?.textContent.match(/font-family:[^;]+;/g));
++console.log(getComputedStyle(document.body).fontFamily);
++console.log(document.getElementById("ct-google-fonts")?.href);
++```
++
++Expected:
++
++- `#ct-typography-style` contains literal font stacks.
++- `getComputedStyle(document.body).fontFamily` reflects the selected font.
++- `#ct-google-fonts` exists when a Google Font is selected.
++
++## Completion Definition
++
++This P1 item is complete when one of the following is true:
++
++1. Option A is implemented, cache-busted, built, verified, and documented.
++2. Option B is chosen and the stale handoff claim is removed or corrected.
++
++Do not commit a state where `AGENTS_HANDOFF.md` claims v16 is implemented while
++the source tree still loads v9.
+diff --git a/docs/feature_reviews/BOQ_EXCEL_IMPORT_UI_TEST_PLAN.md b/docs/feature_reviews/BOQ_EXCEL_IMPORT_UI_TEST_PLAN.md
+new file mode 100644
+index 0000000..0a1694f
+--- /dev/null
++++ b/docs/feature_reviews/BOQ_EXCEL_IMPORT_UI_TEST_PLAN.md
+@@ -0,0 +1,416 @@
++# BOQ Excel Import — Manual UI Test Plan (Pre-Commit)
++
++Date: 2026-06-16
++Site: `v16.localhost`
++Repo: `/home/mohamed/frappe-bench/apps/construction`
++Audience: Mohamed (manual tester) before commit
++Pre-req: Read `BOQ_EXCEL_IMPORT_SCOPE_FINISH_PLAN.md` (revised 2026-06-16)
++         and `CONSULTANT_REVIEW_RESPONSE_BOQ_EXCEL_FINISH.md`.
++
++## Goal
++
++Verify, in a real browser against `v16.localhost`, that every user-visible
++piece of the BOQ Excel import scope ships correctly. The 15-check
++`test_boq_import_status_smoke.run` and the parser regression smoke already
++cover the server side. This plan covers the **UI** surface the smoke
++harness cannot reach.
++
++## What the User Sees (Recap)
++
++The finish phase ships these user-visible touchpoints:
++
++1. Two new buttons on the **BOQ Header** form (Actions group, Draft only):
++   - **Import Excel** — preview-only dialog.
++   - **Download Excel Template** — generates and opens a private xlsx.
++2. Both buttons only appear if `enable_boq_excel_import_preview = 1`.
++3. The dialog title is "Import BOQ from Excel (Preview)" with a description
++   field explaining preview-only behavior and a "Run Preview" button.
++4. After preview, the dialog shows error/warning counts and the form
++   re-loads only if a real commit was requested (which it never is from
++   the dialog).
++5. New whitelisted API methods exist for `get_boq_import_status`,
++   `create_boq_import_template`, `is_boq_excel_import_enabled`. They are
++   server-side only in this phase — no UI calls them.
++
++## Pre-Test Setup
++
++### A. Create a fresh test Project
++
++The scope-context check in `_assert_boq_header_access` only passes for
++projects in the caller's `get_user_scope_hierarchy().projects` set.
++
++1. Log in as Administrator.
++2. **Project** → New.
++3. Set Project Name `UI Test 2026-06-16`, Status `Open`, save.
++4. Note the project name (e.g. `PROJ-00xx`).
++
++### B. Create a fresh test BOQ Header
++
++1. **BOQ Header** → New.
++2. Set Project to the one above.
++3. Set Title `UI Test BOQ 2026-06-16`.
++4. Set Status `Draft`, BOQ Type `Tender`, save.
++5. Note the BOQ Header name (e.g. `BOQ-2026-0xxx`).
++
++### C. Prepare test xlsx files
++
++Use `python3` from the bench to generate three small workbooks. Save them
++to `private/files/` so the dialog can attach them, or attach from a
++downloads folder.
++
++**File 1 — `ui_test_preview.xlsx` (Flat mode, clean):**
++
++```python
++import openpyxl
++wb = openpyxl.Workbook(); ws = wb.active; ws.title = "BOQ"
++ws.append(["Description", "Unit", "Quantity", "Unit Price"])
++ws.append(["Excavation", "m3", 100, 50])
++ws.append(["Backfill", "m3", 80, 40])
++ws.save("/tmp/ui_test_preview.xlsx")
++```
++
++**File 2 — `ui_test_async.xlsx` (Flat, > 2000 rows triggers async block):**
++
++```python
++import openpyxl
++wb = openpyxl.Workbook(); ws = wb.active; ws.title = "BOQ"
++ws.append(["Description", "Unit", "Quantity", "Unit Price"])
++for i in range(2500):
++    ws.append([f"Item {i}", "m3", 1, 10])
++wb.save("/tmp/ui_test_async.xlsx")
++```
++
++**File 3 — `ui_test_ambiguous.xlsx` (Ambiguous row):**
++
++```python
++import openpyxl
++wb = openpyxl.Workbook(); ws = wb.active; ws.title = "BOQ"
++ws.append(["Description", "Unit", "Quantity", "Unit Price"])
++ws.append(["General Notes", "", "", ""])  # ambiguous
++ws.append(["Excavation", "m3", 10, 50])
++wb.save("/tmp/ui_test_ambiguous.xlsx")
++```
++
++### D. Start state: both flags OFF
++
++1. **Construction Settings** → set both:
++   - `Enable BOQ Excel Import Preview` = 0
++   - `Enable BOQ Excel Import Commit` = 0
++2. Save.
++
++## Test Cases
++
++### TC-1: Buttons hidden when preview flag is OFF (D from setup)
++
++1. Open the Draft BOQ Header from setup step B.
++2. Open the **Actions** dropdown.
++3. **Expect**: "Import Excel" and "Download Excel Template" are **NOT**
++   present.
++4. **Pass criteria**: only the existing buttons (Advance Status, Variation
++   Orders, Revised BOQ View) are visible.
++
++### TC-2: Buttons appear when preview flag is ON, commit OFF
++
++1. Construction Settings → `Enable BOQ Excel Import Preview` = 1.
++   Leave `Enable BOQ Excel Import Commit` = 0.
++2. Save.
++3. **Reload** the BOQ Header form (Frappe doctype_js is per-form).
++4. Open Actions dropdown.
++5. **Expect**: Both buttons appear.
++6. **Pass criteria**: "Import Excel" and "Download Excel Template" are
++   visible. This is the P2.2 fix — preview-only access should still
++   surface the buttons.
++
++### TC-3: Download Excel Template — preview flag ON, commit OFF
++
++1. From TC-2 state, click **Download Excel Template**.
++2. **Expect**: a freeze overlay "Generating template..." appears briefly,
++   then a new browser tab opens with the xlsx download.
++3. Open the downloaded xlsx.
++4. **Expect**:
++   - Sheet `BOQ Import Template` exists with header row matching
++     `TEMPLATE_COLUMNS` (WBS Code, Parent WBS, Title / Description,
++     Type, Unit, Quantity, Unit Price, Factor, Notes, Owner Page,
++     Owner Ref No, Owner File Ref).
++   - Sheet `Instructions` exists with the three-mode explanation.
++   - First row is frozen.
++5. **Pass criteria**: workbook opens, both sheets present, header row
++   matches the constant.
++
++### TC-4: Import Excel dialog — preview flag ON, commit OFF
++
++1. From TC-2 state, click **Import Excel**.
++2. **Expect**: dialog titled "Import BOQ from Excel (Preview)" with a
++   single Attach field whose description reads roughly
++   "This dialog runs a preview only. To commit, call the API with
++   dry_run=0 and a confirmed import mode, or wait for the
++   preview-then-commit UI."
++3. **Pass criteria**: title includes "(Preview)", description field is
++   visible, primary button reads "Run Preview".
++
++### TC-5: Preview succeeds — clean file
++
++1. In the TC-4 dialog, attach `/tmp/ui_test_preview.xlsx`.
++2. Click **Run Preview**.
++3. **Expect**:
++   - Freeze overlay "Parsing workbook..." appears.
++   - On success: green alert with text
++     "Preview complete. Errors: 0, Warnings: 0." (or similar).
++   - Dialog stays open so the user can attach another file or close.
++4. **Pass criteria**: no red msgprint, alert indicator is green, the
++   count of 0 errors and 0 warnings is correct.
++
++### TC-6: Preview surfaces errors — ambiguous file
++
++1. Attach `/tmp/ui_test_ambiguous.xlsx`, click **Run Preview**.
++2. **Expect**:
++   - Orange (not green) alert:
++     "Preview complete. Errors: 1, Warnings: 0."
++3. **Pass criteria**: alert indicator is orange, error count = 1.
++
++### TC-7: Status API via Frappe console (server-only, no UI)
++
++This is the closest UI proxy for the status endpoint: open the
++Frappe desk console (Settings → Developer → Console, or
++`/app/web-page/console` if available) and run:
++
++```python
++frappe.call(
++    "construction.api.boq_api.get_boq_import_status",
++    {"import_id": "BOQIMP-FAKE"}
++)
++# Expected: {"success": False, "status": "not_found", ...}
++
++frappe.call(
++    "construction.api.boq_api.get_boq_import_status",
++    {"import_id": "BOQIMP-20260616-XXXXXXXX"}
++)
++# Expected: real batch dict with status / summary / counts
++```
++
++**Pass criteria**: not_found shape for unknown id, real shape for a
++real id, `error_message` present when the batch is `Failed`.
++
++### TC-8: Full commit path via the API (preview OFF → commit ON)
++
++1. Construction Settings → `Enable BOQ Excel Import Preview` = 1,
++   `Enable BOQ Excel Import Commit` = 1.
++2. From the Frappe console:
++
++```python
++result = frappe.call(
++    "construction.api.boq_api.import_boq_excel",
++    {
++        "file_url": "/private/files/ui_test_preview.xlsx",
++        "boq_header": "BOQ-2026-0xxx",  # from setup B
++        "dry_run": 0,
++        "confirmed_import_mode": "Flat",
++    },
++)
++# Expected: {"success": True, "import_batch": "BOQIMP-...", "created_structures": [...], ...}
++```
++
++3. **Pass criteria**: success, `import_batch` is non-empty, 3 structures
++   (1 root + 2 items) and 2 items created.
++4. Open the BOQ Header Tree view and confirm 3 rows under
++   `Imported BOQ Items / بنود مستوردة`.
++
++### TC-9: Permission denial — restricted user
++
++This is the P1.2 fix verification.
++
++1. As Administrator, create a new user `ui_test_restricted` with role
++   `Project Manager` (read-only on `BOQ Header` is the default).
++2. Restrict that user's project scope to a **different** project (not
++   the UI Test one from setup A).
++3. Log out, log in as `ui_test_restricted`.
++4. From the console, try to import against the test BOQ Header:
++
++```python
++frappe.call(
++    "construction.api.boq_api.import_boq_excel",
++    {
++        "file_url": "/private/files/ui_test_preview.xlsx",
++        "boq_header": "BOQ-2026-0xxx",
++        "dry_run": 1,
++    },
++)
++```
++
++5. **Expect**: error in the response. The exact shape depends on
++   whether `_assert_boq_header_access` raises `PermissionError`
++   (re-raised) or `ValidationError` (caught and returned as
++   `{"success": False, "error": "..."}`). The message should mention
++   authorization / scope.
++
++**Pass criteria**: the call does not commit anything; an authorization
++error is returned or raised.
++
++### TC-10: Savepoint rollback — failed mid-import leaves no rows
++
++This is the P1.1 fix verification, easiest to exercise through the
++smoke runner, but a manual sanity check is worthwhile.
++
++1. Re-enable both flags as Administrator.
++2. Confirm there is a Draft BOQ Header (the test one or a fresh one)
++   with no existing structures.
++3. From the console, simulate a commit with a file that will pass
++   preview but fail mid-insert. The simplest way is to inject failure
++   by monkey-patching the service before calling it:
++
++```python
++from construction.services.boq_import_service import BOQImportService
++orig = BOQImportService._insert_structure_from_import_row
++def fail_on_second(*args, **kwargs):
++    if not fail_on_second.called:
++        fail_on_second.called = True
++        return orig(*args, **kwargs)
++    raise RuntimeError("Simulated mid-import failure")
++fail_on_second.called = False
++BOQImportService._insert_structure_from_import_row = staticmethod(fail_on_second)
++
++result = frappe.call(
++    "construction.api.boq_api.import_boq_excel",
++    {
++        "file_url": "/private/files/ui_test_preview.xlsx",
++        "boq_header": "BOQ-2026-0xxx",
++        "dry_run": 0,
++        "confirmed_import_mode": "Flat",
++    },
++)
++# Expected: success=False, error="... Simulated mid-import failure"
++```
++
++4. After the call, list structures and items for the test BOQ:
++
++```python
++frappe.get_all("BOQ Structure", filters={"boq_header": "BOQ-2026-0xxx"})
++frappe.get_all("BOQ Item", filters={"boq_header": "BOQ-2026-0xxx"})
++# Expected: empty lists (savepoint rolled back)
++
++frappe.get_all(
++    "BOQ Import Batch",
++    filters={"boq_header": "BOQ-2026-0xxx", "status": "Failed"},
++    fields=["name", "error_message"],
++)
++# Expected: at least one Failed batch with the simulated error text
++```
++
++**Pass criteria**: zero structures, zero items, one Failed batch with
++`error_message` populated.
++
++### TC-11: Re-import protection (existing test, manual confirmation)
++
++1. With the test BOQ Header now empty (TC-10 rolled back), re-run TC-8.
++2. **Expect**: success — the rollback truly wiped the partial state.
++3. **Pass criteria**: commit succeeds, 3 structures + 2 items.
++
++### TC-12: Async block message — preview + commit ON, large file
++
++1. Both flags on. From the console:
++
++```python
++result = frappe.call(
++    "construction.api.boq_api.import_boq_excel",
++    {
++        "file_url": "/tmp/ui_test_async.xlsx",
++        "boq_header": "BOQ-2026-0xxx",
++        "dry_run": 0,
++        "confirmed_import_mode": "Flat",
++    },
++)
++# Expected: success=False, error contains "too large for synchronous import"
++```
++
++2. **Pass criteria**: the error string is the new WP4 copy, not
++   "must use async import".
++
++### TC-13: Template download — preview ON, commit OFF, the full flow
++
++1. Reset Construction Settings: preview ON, commit OFF.
++2. Click **Download Excel Template** again.
++3. **Expect**: works the same as TC-3.
++4. **Pass criteria**: template still generated, private file, both
++   sheets, headers match.
++
++### TC-14: Buttons hidden when commit is ON but preview is OFF
++
++1. Construction Settings → preview OFF, commit ON.
++2. Reload BOQ Header form.
++3. **Expect**: Buttons are hidden.
++4. **Pass criteria**: nothing in the Actions group for Excel/template.
++   The `enabled = preview_enabled` helper returns false in this state.
++
++### TC-15: After-commit — `get_boq_import_status` returns real data
++
++1. With both flags ON, after TC-8 succeeded, capture the
++   `import_batch` value from the result.
++2. From the console:
++
++```python
++status = frappe.call(
++    "construction.api.boq_api.get_boq_import_status",
++    {"import_id": "BOQIMP-..."},
++)
++# Expected: success=True, status="Committed",
++#   committed_structure_count=3, committed_item_count=2
++```
++
++3. **Pass criteria**: status = `Committed`, counts > 0, `error_message`
++   absent or empty.
++
++## Reset / Cleanup
++
++After all tests pass:
++
++1. Delete the test Project and BOQ Header.
++2. Delete the test files from `private/files/` and `tabFile`.
++3. Reset Construction Settings: `Enable BOQ Excel Import Preview` = 0,
++   `Enable BOQ Excel Import Commit` = 0.
++4. Remove the `ui_test_restricted` user if you created one.
++
++## Pass / Fail Summary
++
++| TC | Title | Pass | Notes |
++| --- | --- | --- | --- |
++| 1 | Buttons hidden — preview OFF | ☐ | |
++| 2 | Buttons appear — preview ON, commit OFF | ☐ | P2.2 fix |
++| 3 | Template download — preview ON, commit OFF | ☐ | |
++| 4 | Dialog copy — preview-only | ☐ | |
++| 5 | Preview success — clean file | ☐ | |
++| 6 | Preview success — ambiguous file | ☐ | |
++| 7 | Status API via console | ☐ | |
++| 8 | Full commit — preview + commit ON | ☐ | |
++| 9 | Permission denial — restricted user | ☐ | P1.2 fix |
++| 10 | Savepoint rollback — no partial rows | ☐ | P1.1 fix |
++| 11 | Re-import after rollback | ☐ | |
++| 12 | Async block message | ☐ | WP4 |
++| 13 | Template still works — preview only | ☐ | |
++| 14 | Buttons hidden — preview OFF, commit ON | ☐ | |
++| 15 | Status API after commit | ☐ | P2.1 fix |
++
++All 15 must pass before commit. If any fail, the matching work
++package is not actually shipped and must be revisited before staging
++the change.
++
++## After All Pass
++
++- Update `EV-068-wp2-finish-scope.md` with the manual UI test
++  results (link this file as `EV-068-attachment.md` or paste the
++  filled table).
++- Update `evidence_log.md` EV-068 row: change `Pending` → `User`
++  (the reviewer who ran the tests) or `Manager` if a manager
++  verifies.
++- Commit the work in the order suggested in the consultant response
++  conversation (one commit per major concern, or one combined
++  commit).
++- Stage deploy per `EV-061-frappe-cloud-deployment-plan.md`.
++
++## What This Plan Does NOT Cover
++
++- Browser compatibility (only test in the browser you usually use;
++  EV-064 has a Playwright pass for reference).
++- Load testing of the template endpoint.
++- Multi-user concurrent commit on the same BOQ Header (covered by
++  the existing duplicate-import protection, not the finish phase).
++- Arabic UI / RTL — out of scope for the finish phase per the plan.
+diff --git a/docs/feature_reviews/CONSULTANT_REVIEW_REQUEST_BOQ_EXCEL_FINISH.md b/docs/feature_reviews/CONSULTANT_REVIEW_REQUEST_BOQ_EXCEL_FINISH.md
+new file mode 100644
+index 0000000..7eecd2b
+--- /dev/null
++++ b/docs/feature_reviews/CONSULTANT_REVIEW_REQUEST_BOQ_EXCEL_FINISH.md
+@@ -0,0 +1,218 @@
++# Consultant Review Request — BOQ Excel Import Scope Finish
++
++To: codex-ai consultant
++From: Mohamed Elrefae
++Date: 2026-06-16
++Repo: `/home/mohamed/frappe-bench/apps/construction`
++Branch: current local worktree (not yet committed)
++Plan: `BOQ_EXCEL_IMPORT_SCOPE_FINISH_PLAN.md` (revised 2026-06-16)
++Evidence: `docs/feature_reviews/evidence/EV-068-wp2-finish-scope.md`
++
++## What I'm Asking You to Review
++
++Please review the BOQ Excel Import Scope Finish work for code quality,
++correctness, and consultant-grade evidence. The plan, the code, and the
++evidence are all in this repo.
++
++The finish phase shipped six work packages (WP2, WP3, WP4, WP5, WP7,
++WP8) that together remove the contradictions between implemented
++commit behavior and stale preview-only / placeholder messaging, and
++expose the status and template endpoints that the service code has
++always implied.
++
++## What Shipped
++
++1. **WP2 — `get_import_status()` rewrite + whitelisted API**
++   - `construction/services/boq_import_service.py:254-322` —
++     replaced the stale "preview-only" stub with a real implementation
++     that reads `BOQ Import Batch` and derives committed counts from
++     `BOQ Structure` / `BOQ Item` rows.
++   - `construction/api/boq_api.py` — added
++     `@frappe.whitelist() get_boq_import_status(import_id)` with
++     project-scope enforcement that mirrors
++     `get_boq_header_scope_context`.
++
++2. **WP3 — Real template endpoint**
++   - `construction/services/boq_import_service.py:250-345` — replaced
++     the placeholder string with a real `openpyxl`-based generator
++     using the existing `TEMPLATE_COLUMNS`, plus data validation and
++     an Instructions sheet. Saves as a private `File`.
++   - `construction/api/boq_api.py` — added
++     `@frappe.whitelist() create_boq_import_template()`.
++
++3. **WP4 — Async block message**
++   - `construction/services/boq_import_service.py:316-323` — replaced
++     "must use async import" with the product-approved
++     "This file is too large for synchronous import..." message.
++
++4. **WP5 — Preview flag enforcement**
++   - `construction/services/boq_import_service.py` — added
++     `is_enabled("enable_boq_excel_import_preview")` checks at the
++     top of `import_from_excel`, `generate_import_error_report`, and
++     `create_import_template`.
++   - `construction/construction/doctype/construction_settings/construction_settings.json`
++     — updated help text on the flag.
++
++5. **WP7 — UI honesty**
++   - `construction/api/boq_api.py` — added
++     `@frappe.whitelist() is_boq_excel_import_enabled()`.
++   - `construction/construction/doctype/boq_header/boq_header.js` —
++     wrapped the Import button in the helper, renamed the dialog to
++     "Import BOQ from Excel (Preview)", added a description field,
++     added a "Download Excel Template" button.
++
++6. **WP8 — Failed batch + `error_message` field**
++   - `construction/construction/doctype/boq_import_batch/boq_import_batch.json`
++     — added `error_message` (Long Text) field.
++   - `construction/services/boq_import_service.py` — wrapped the
++     structure/item insert loop in `try/except`; on failure the
++     batch is set to `Failed` with the error message and the
++     exception is re-raised.
++
++## What Was Deferred (per plan)
++
++- Async queue, status polling, retry/cancel/resume.
++- A full preview-then-commit UI inside the BOQ Header form (the
++  current dialog runs the preview API and surfaces a one-line alert).
++- `get_boq_import_status` UI surface.
++
++## Verification
++
++15-check manual smoke at
++`construction/tests/test_boq_import_status_smoke.py`:
++
++```bash
++bench --site v16.localhost execute construction.tests.test_boq_import_status_smoke.run
++```
++
++Result: passed on `v16.localhost`. All 15 checks green, including
++the preview-flag enforcement matrix and the failed-batch
++`error_message` round-trip.
++
++Syntax + migration + regression:
++
++```bash
++python3 -m py_compile \
++  construction/services/boq_import_service.py \
++  construction/api/boq_api.py \
++  construction/tests/test_boq_import_status_smoke.py
++# OK
++
++node --check construction/construction/doctype/boq_header/boq_header.js
++# OK
++
++bench --site v16.localhost migrate
++# OK (added error_message field; help text updated)
++
++bench --site v16.localhost execute \
++  construction.tests.test_boq_excel_parser.run_boq_excel_parser_smoke
++# OK (regression)
++```
++
++## Specific Questions for You
++
++1. **WP5 enforcement decision** — is enforcing
++   `enable_boq_excel_import_preview` at runtime the right call, or
++   should the flag have stayed informational? I picked enforcement
++   because the field's promise (`EV-021`) and the existing
++   `enable_boq_excel_import_commit` precedent both point that way,
++   and the existing smokes bypass the flag by calling
++   `parse_workbook` directly.
++
++2. **WP8 boundary** — is wrapping just the structure/item insert
++   loop in `try/except` sufficient, or should the batch
++   `status="Preview" → "Committed"` transition also be wrapped
++   (i.e. should a save failure on the batch itself be reflected as
++   `Failed`)? I went with the narrower boundary because the
++   `_validate_commit_wbs_uniqueness` `for update` lock runs before
++   the batch is created, so uniqueness errors don't produce orphan
++   batches; the remaining failure surface is the insert loop.
++
++3. **WP7 button visibility** — I made
++   `is_boq_excel_import_enabled` return
++   `enabled = preview_enabled AND commit_enabled`. That means
++   admins who only enable preview (e.g. for read-only QA) won't see
++   the button at all, even though the preview API would still work.
++   Is hiding the button the right call, or should the dialog
++   surface be available whenever preview is on, and the commit
++   failure surface itself be the gate?
++
++4. **Scope-safety of `get_boq_import_status`** — I reused the
++   `get_boq_header_scope_context` pattern. Is the project-scope
++   check correct, or should I also enforce `BOQ Import Batch.read`
++   permission separately? The current code throws
++   `frappe.PermissionError` if the project is not in the user's
++   scope, regardless of Frappe's role-based permission on the
++   `BOQ Import Batch` DocType.
++
++5. **Template data validation** — I added a `DataValidation` list
++   for the `Type` column with values
++   `Section,Item,Ignored`. The service's
++   `_normalize_type` accepts a broader set
++   (`section, group, header, قسم, مجموعة, بند رئيسي, item,
++   measured item, بند, بند مقاس`). Should the template's data
++   validation list be the broader set, or is restricting it to the
++   three canonical values a deliberate UX improvement?
++
++6. **Failed-batch rollback** — currently, if the structure/item
++   insert loop fails partway, the batch is set to `Failed` and the
++   exception is re-raised, but partial structures/items that were
++   already inserted are not rolled back. The pre-existing
++   `select ... for update` lock on the BOQ Header reduces the
++   window for this, but a true atomic boundary would need a savepoint
++   or an explicit rollback. Is the current "best-effort rollback
++   by status flag" acceptable for this phase, or should I add a
++   savepoint and explicit rollback of inserted structures/items
++   on failure?
++
++7. **`create_import_template` runtime cost** — it generates a new
++   workbook on every call and saves a new `File` record. Is that
++   acceptable, or should the template be generated once and cached
++   as a singleton `File`? I picked "always fresh" for the MVP, but
++   want a second opinion.
++
++8. **Plan revision** — the plan was originally written from memory
++   and missed four live-repo facts (`enable_boq_excel_import_preview`
++   declared but not enforced, `get_import_status` / `create_import_template`
++   not wired anywhere, BOQ Header JS preview-only in practice,
++   `BOQ Import Batch` already has most fields). The 2026-06-16
++   revision added a "Revision Notes" section at the top. Is the
++   revised plan structure acceptable, or should the original plan
++   have been deleted and replaced with a clean v2?
++
++## Files Changed (Untracked or Modified in Current Worktree)
++
++- `BOQ_EXCEL_IMPORT_SCOPE_FINISH_PLAN.md` — untracked, revised plan.
++- `construction/services/boq_import_service.py` — WP2, WP3, WP4, WP5,
++  WP8.
++- `construction/api/boq_api.py` — WP2, WP3, WP5, WP7.
++- `construction/construction/doctype/boq_header/boq_header.js` — WP7.
++- `construction/construction/doctype/boq_import_batch/boq_import_batch.json`
++  — WP8 (`error_message` field).
++- `construction/construction/doctype/construction_settings/construction_settings.json`
++  — WP5 (help text).
++- `construction/tests/test_boq_import_status_smoke.py` — new,
++  15-check manual smoke.
++- `docs/feature_reviews/evidence/EV-068-wp2-finish-scope.md` — new,
++  finish-phase evidence.
++- `docs/feature_reviews/evidence/evidence_log.md` — `EV-068` row.
++- `docs/feature_reviews/evidence/EV-026-wp2-parser-normalizer.md`
++  — superseding note appended.
++
++## What I Want From You
++
++1. A line-by-line read of the plan revision (especially the
++   "Revision Notes" and "Recommended Release Scope" sections) and
++   the six code changes above.
++2. Direct answers to the eight specific questions.
++3. A verdict on whether `EV-068` is sufficient to move
++   `WP2 finish-scope` from `Pending` to `VER`, or what additional
++   evidence you want before approving.
++4. Any consultant-grade concerns I missed — security, performance,
++   multi-tenant, edge cases.
++
++Please reply in the same consultant-review style as `EV-023` and
++`EV-024` (clear verdict, conditions if any, action items).
++
++Thanks,
++Mohamed
+diff --git a/docs/feature_reviews/CONSULTANT_REVIEW_RESPONSE_BOQ_EXCEL_FINISH.md b/docs/feature_reviews/CONSULTANT_REVIEW_RESPONSE_BOQ_EXCEL_FINISH.md
+new file mode 100644
+index 0000000..1d2daeb
+--- /dev/null
++++ b/docs/feature_reviews/CONSULTANT_REVIEW_RESPONSE_BOQ_EXCEL_FINISH.md
+@@ -0,0 +1,91 @@
++# Consultant Review Response - BOQ Excel Import Finish Scope
++
++Date: 2026-06-16
++
++## Status
++
++The four consultant follow-up items from the BOQ Excel import finish review were implemented in the working tree and verified against `v16.localhost`.
++
++## Completed Items
++
++### P1.1 Commit failure savepoint / rollback
++
++Implemented in `construction/services/boq_import_service.py`.
++
++- Added a database savepoint before the structure/item mutation loop.
++- On mutation failure, rolls back to the savepoint.
++- Preserves the `BOQ Import Batch` row as `Failed`.
++- Stores the exception text in `BOQ Import Batch.error_message`.
++- Added smoke coverage that injects a mid-import failure and verifies:
++  - no partial `BOQ Structure` rows remain,
++  - no partial `BOQ Item` rows remain,
++  - the failed batch remains available with `error_message`.
++
++### P1.2 BOQ Header authorization for import APIs
++
++Implemented in `construction/api/boq_api.py`.
++
++- Added `_assert_boq_header_access()`.
++- `import_boq_excel()` now checks:
++  - read access for preview,
++  - write access for commit,
++  - project scope access through the existing scope hierarchy pattern.
++- `generate_boq_import_error_report()` now checks read/scope access when a BOQ Header is supplied.
++- `get_boq_import_status()` now also checks `BOQ Import Batch` read permission and BOQ Header read/scope access.
++
++### P2.1 Status API returns failed-batch error message
++
++Implemented in `construction/services/boq_import_service.py`.
++
++- `get_import_status()` now returns `error_message`.
++- Smoke coverage verifies the field through the status API response.
++
++### P2.2 Preview-only UI visible when preview is enabled
++
++Implemented in:
++
++- `construction/api/boq_api.py`
++- `construction/construction/doctype/boq_header/boq_header.js`
++
++Changes:
++
++- `is_boq_excel_import_enabled()` now returns `enabled = preview_enabled`.
++- `commit_enabled` remains available separately for the future preview-then-commit UI.
++- BOQ Header dialog copy no longer tells users to call the API directly.
++
++## Verification
++
++Static checks:
++
++```bash
++ruff format --check construction/api/boq_api.py construction/services/boq_import_service.py construction/tests/test_boq_import_status_smoke.py
++ruff check construction/api/boq_api.py construction/services/boq_import_service.py construction/tests/test_boq_import_status_smoke.py
++python3 -m py_compile construction/api/boq_api.py construction/services/boq_import_service.py construction/tests/test_boq_import_status_smoke.py
++node --check construction/construction/doctype/boq_header/boq_header.js
++```
++
++Result: passed.
++
++Frappe smoke checks:
++
++```bash
++bench --site v16.localhost execute construction.tests.test_boq_import_status_smoke.run
++bench --site v16.localhost execute construction.tests.test_boq_excel_parser.run_boq_excel_parser_smoke
++```
++
++Result: passed.
++
++Notable smoke evidence:
++
++- `helper_partial` now returns `enabled: true`, `preview_enabled: true`, `commit_enabled: false`.
++- Injected rollback failure returns the expected failure.
++- Rollback counts after injected failure are `structures: 0`, `items: 0`.
++- Failed batch remains available with `error_message`.
++
++## Updated Verdict
++
++The four P1/P2 consultant concerns are now resolved in code and smoke-tested. The remaining larger deferred items are still product scope decisions, not contradictions in the current implementation:
++
++- async large-file import,
++- full preview-then-commit UI,
++- optional status UI surface.
+diff --git a/docs/feature_reviews/evidence/EV-068-wp2-finish-scope.md b/docs/feature_reviews/evidence/EV-068-wp2-finish-scope.md
+new file mode 100644
+index 0000000..1f03df7
+--- /dev/null
++++ b/docs/feature_reviews/evidence/EV-068-wp2-finish-scope.md
+@@ -0,0 +1,218 @@
++# EV-068 — BOQ Excel Import Scope Finish
++
++Date: 2026-06-16
++
++## Scope
++
++Finish the BOQ Excel import scope by removing the contradictions between
++implemented commit behavior and stale "preview-only" / placeholder
++messaging, and by exposing the status and template endpoints that the
++service code has always implied. Recorded against
++`BOQ_EXCEL_IMPORT_SCOPE_FINISH_PLAN.md` (revised 2026-06-16) and the
++work packages WP2, WP3, WP4, WP5, WP7, WP8 from that plan.
++
++## What Shipped
++
++### WP2 — `get_import_status()` rewrite + whitelisted API
++
++- Replaced the stale `BOQImportService.get_import_status()` body
++  (`status: "preview-only"`, `"Commit import not implemented yet"`)
++  with a real implementation that reads `BOQ Import Batch` and
++  derives `committed_structure_count` and `committed_item_count`
++  from `BOQ Structure` / `BOQ Item` rows where
++  `import_batch = import_id`.
++- Added `@frappe.whitelist() construction.api.boq_api.get_boq_import_status(import_id)`.
++  The API enforces the same project-scope pattern as
++  `get_boq_header_scope_context`: restricted users get
++  `frappe.PermissionError` if the batch's BOQ Header project is not
++  in their `get_user_scope_hierarchy().projects` set.
++- Response shape: `success`, `status`, `import_id`, `boq_header`,
++  `project`, `import_mode`, `source_file`, `source_file_name`,
++  `sheet_name`, `row_count`, `section_count`, `item_count`,
++  `ambiguous_count`, `error_count`, `warning_count`,
++  `committed_structure_count`, `committed_item_count`, `errors`,
++  `warnings`. Not-found returns
++  `{"success": False, "status": "not_found", "import_id": ...,
++  "error": "BOQ Import Batch was not found."}`.
++
++### WP3 — Real template endpoint
++
++- Replaced
++  `BOQImportService.create_import_template()` (which returned the
++  literal string `"Excel template creation to be implemented in WP2.8"`)
++  with a real `openpyxl`-based generator. Uses the existing
++  `TEMPLATE_COLUMNS` constant, adds header styling, freeze pane,
++  `DataValidation` for the `Type` column (`Section`, `Item`,
++  `Ignored`), and an `Instructions` sheet explaining the three import
++  modes and the WBS / parent / item-value rules.
++- Saves the workbook as a private `File` in
++  `private/files/BOQ_Import_Template_YYYYMMDD_HHMMSS.xlsx` and
++  returns `{"success": True, "file_url": ..., "file_name": ...}`.
++- Added `@frappe.whitelist() construction.api.boq_api.create_boq_import_template()`.
++
++### WP4 — Async block message
++
++- Replaced
++  `"This BOQ Excel import exceeds the synchronous row threshold and
++  must use async import."` (the message in the commit-time
++  `frappe.throw` at `boq_import_service.py`) with the
++  product-approved copy:
++  `"This file is too large for synchronous import. Large-file async
++  import is not enabled in this release. Reduce the file size or
++  split the BOQ into smaller workbooks."`.
++- The `async_import_required` warning on the preview response
++  (already present) is unchanged.
++
++### WP5 — Preview flag enforcement
++
++- Added `is_enabled("enable_boq_excel_import_preview")` checks at
++  the top of `BOQImportService.import_from_excel`,
++  `BOQImportService.generate_import_error_report`, and
++  `BOQImportService.create_import_template`. All three return
++  `{"success": False, "error": "BOQ Excel preview is disabled by
++  Construction Settings."}` when the flag is off.
++- The commit path is gated transitively because
++  `import_from_excel` is its entry point; the existing
++  `_commit_import` check on `enable_boq_excel_import_commit` still
++  applies on top.
++- Updated the field's help text in
++  `construction_settings.json` to state the new runtime contract
++  (gates preview / error report / template; required for the commit
++  flag to be usable).
++
++### WP7 — UI honesty
++
++- Added `@frappe.whitelist() is_boq_excel_import_enabled()` returning
++  `{"enabled", "preview_enabled", "commit_enabled"}`. Button is
++  shown only when both flags are on.
++- Updated `construction/construction/doctype/boq_header/boq_header.js`:
++  - The "Import Excel" button is now wrapped in a `frappe.call` to
++    the new helper. It appears only for Draft BOQs **and** when both
++    flags are on.
++  - Dialog title renamed to "Import BOQ from Excel (Preview)";
++    primary button renamed to "Run Preview".
++  - Added an inline field description explaining the dialog is
++    preview-only and pointing users at the API for commit.
++  - Replaced the silent `success` callback with explicit feedback:
++    success alert shows error/warning counts; failure shows
++    `msgprint` with the server error.
++  - Added a "Download Excel Template" button that calls
++    `create_boq_import_template` and opens the result in a new tab.
++- No `?v=` cache-buster bump was needed because the file is
++  registered via `doctype_js` (per-form, not cache-versioned).
++
++### WP8 — Failed batch + `error_message` field
++
++- Added `error_message` (Long Text) field to `BOQ Import Batch`
++  DocType and migrated `v16.localhost`.
++- Wrapped the structure/item insert loop in
++  `BOQImportService._commit_import()` in `try/except`. On failure,
++  the batch is set to `status="Failed"`,
++  `error_message=str(exc)` is stored, and the exception is
++  re-raised so the API caller still gets the error.
++- The `BOQ Header ... for update` lock in
++  `_validate_commit_wbs_uniqueness` runs before the batch is
++  created, so a uniqueness failure still raises before any batch
++  exists (no orphan batch for that case).
++
++## Deferred
++
++- Async queue, status polling, retry/cancel/resume.
++- A preview-then-commit UI inside the BOQ Header form. The current
++  dialog runs the preview API and surfaces a one-line alert; the
++  full preview tree, row-resolution UI, mode picker, and commit
++  button toggle remain as a follow-up.
++- `get_boq_import_status` UI surface (the API is exposed and
++  scope-safe, but no BOQ Header JS button calls it yet).
++
++## Verification
++
++15-check manual smoke:
++`construction.tests.test_boq_import_status_smoke.run`
++
++```bash
++bench --site v16.localhost execute construction.tests.test_boq_import_status_smoke.run
++```
++
++Result: passed. Checks:
++
++1. `get_import_status` returns `not_found` for missing batch.
++2. `get_import_status` returns `not_found` for empty `import_id`.
++3. `get_import_status` returns `Committed` with real batch metadata
++   and `committed_structure_count` / `committed_item_count` > 0
++   after a successful sync commit.
++4. `get_import_status` returns `Preview` for a preview-only batch.
++5. `get_import_status` returns `Failed` for a failed batch.
++6. Async-sized file commit returns the new product-approved
++   message.
++7. Whitelisted `get_boq_import_status` API returns `not_found` for
++   missing / empty ids.
++8. A `Failed` batch persists `error_message` on save and the
++   status endpoint reports the final state.
++9. Whitelisted `create_boq_import_template` API returns success,
++   produces a private file in `/private/files/`, the workbook
++   contains `BOQ Import Template` and `Instructions` sheets, the
++   header row matches `TEMPLATE_COLUMNS`, and the `File` record is
++   private.
++10. Preview flag off blocks:
++    1. `import_from_excel(dry_run=True)` with the new error.
++    2. `import_from_excel(dry_run=False)` (commit) with the same
++       error.
++    3. `generate_import_error_report` with the same error.
++    4. `create_import_template` with the same error.
++    5. `is_boq_excel_import_enabled` returns
++       `enabled=False` when only the preview flag is off.
++    6. `is_boq_excel_import_enabled` returns
++       `enabled=False` when only the commit flag is off.
++    7. `is_boq_excel_import_enabled` returns
++       `enabled=True` when both flags are on.
++
++Syntax check:
++
++```bash
++python3 -m py_compile \
++  construction/services/boq_import_service.py \
++  construction/api/boq_api.py \
++  construction/tests/test_boq_import_status_smoke.py
++```
++
++Result: passed.
++
++Migration:
++
++```bash
++bench --site v16.localhost migrate
++```
++
++Result: passed. New `BOQ Import Batch.error_message` field added;
++help text on `enable_boq_excel_import_preview` updated.
++
++Existing parser smoke (regression check):
++
++```bash
++bench --site v16.localhost execute construction.tests.test_boq_excel_parser.run_boq_excel_parser_smoke
++```
++
++Result: passed. Existing preview/parser behavior remained valid.
++
++## Documentation Footnote
++
++`EV-026-wp2-parser-normalizer.md` contains a sentence stating that
++"Parser is preview-only; commit remains blocked by `WP2.2B` and
++`WP2.6`." This was true when `EV-026` was written but is no longer
++the current state. `EV-030-wp2-commit-import.md` already documents
++that commit is implemented behind the flag, and `EV-068` is the
++consolidated finish-phase evidence. The historical file is
++preserved unchanged per the project policy of adding superseding
++notes rather than rewriting history.
++
++## Acceptance
++
++`WP2.13 finish-scope = VER`. The BOQ Excel import ships preview +
++synchronous commit behind the existing `Construction Settings`
++feature flags. Async is explicitly deferred and large files are
++blocked with a product-approved message. No service or API method
++returns the stale "Commit import not implemented yet" /
++"Excel template creation to be implemented in WP2.8" placeholder
++text. The BOQ Header dialog is honest about being preview-only and
++is hidden when the relevant flags are off.
+diff --git a/docs/scope_context_option_b_design.md b/docs/scope_context_option_b_design.md
+new file mode 100644
+index 0000000..a70725c
+--- /dev/null
++++ b/docs/scope_context_option_b_design.md
+@@ -0,0 +1,109 @@
++# Option B — Design Notes (Revised)
++
++**Goal:** Let restricted users open all 11 allowlisted financial reports with zero 403s. The scope-context system (Option A+) handles the filter values; Option B handles the access gate.
++
++**Out of scope:** Granting broad report permissions to all users, modifying ERPNext core JSON, replacing report logic.
++
++---
++
++## 1. Root cause of the 403 (revised after audit)
++
++When a restricted user (no role in the report's `Has Role` whitelist) opens a financial report, Frappe's JS pre-fetches the report's Python script via `frappe.desk.query_report.get_script`. That call invokes `get_report_doc(report_name)` in `apps/frappe/frappe/desk/query_report.py`:
++
++```python
++def get_report_doc(report_name):
++    doc = frappe.get_doc("Report", report_name)
++    ...
++    if not doc.is_permitted():
++        frappe.throw(_("You don't have access to Report: {0}"), PermissionError)
++
++    if not frappe.has_permission(doc.ref_doctype, "report"):
++        frappe.throw(_("You don't have permission to get a report on: {0}"), PermissionError)
++    ...
++```
++
++`Report.is_permitted()` (in `apps/frappe/frappe/core/doctype/report/report.py`):
++
++```python
++def is_permitted(self):
++    allowed = [d.role for d in frappe.get_all("Has Role", fields=["role"], filters={"parent": self.name})]
++    custom_roles = get_custom_allowed_roles("report", self.name)
++    if custom_roles:
++        allowed = custom_roles
++    if not allowed:
++        return True
++    if has_common(frappe.get_roles(), allowed):
++        return True
++    # implicit return None
++```
++
++The 11 allowlisted reports have `Has Role` rows for `Accounts Manager` / `Accounts User` / `Auditor` / etc. A Site Engineer (roles: `['Site Engineer', 'All', 'Guest', 'Desk User']`) does not match any of those, so `is_permitted()` returns `None` (falsy) and the 403 fires.
++
++`run()` at line 216 has a second check on the ref_doctype (e.g. `GL Entry`) for `report` perm. Both 403s are caught BEFORE our L2 wrapper (`scope_report._scope_aware_run`) is invoked.
++
++---
++
++## 2. Design — minimal, surgical
++
++The scope-context system already has a proven pattern: monkey-patch the report entry points to bypass / rewrite based on the user's active scope. Option B extends this pattern to the **access gate** layer.
++
++### 2.1 The 11 allowlisted reports are the gate
++
++For an allowlisted report, when the user has an active scope context:
++
++1. Bypass `Report.is_permitted()` — the scope context itself proves the user is authorized to see the report.
++2. Bypass `frappe.has_permission(ref_doctype, "report")` — the L1/L2 wrappers constrain the data to the scope, so this check is redundant.
++
++For everything else (non-allowlisted reports, or unscoped users), the original logic runs unchanged.
++
++### 2.2 The patch targets
++
++Two functions to patch in `apps/frappe/frappe/`:
++
++1. `frappe.core.doctype.report.report.is_permitted` — wrap with a scope-aware bypass.
++2. `frappe.desk.query_report.get_report_doc` — the ref_doctype `report` perm check.
++
++Both are already in the hot path of the desk; the patches are surgical (one wrapper function each) and do not change the data layer.
++
++### 2.3 The decision
++
++```python
++def _scope_aware_is_permitted(report_doc):
++    """Bypass Report.is_permitted() for allowlisted reports when the
++    user has an active scope context."""
++    if (
++        report_doc.name in ALLOWED_REPORTS
++        and _user_has_active_scope_context()
++    ):
++        return True
++    return ORIGINAL_IS_PERMITTED(report_doc)
++```
++
++The `get_report_doc` ref_doctype check is bypassed by the same condition.
++
++### 2.4 No broad perm grants
++
++This design does NOT:
++- Grant `read` on `Report` DocType to any role.
++- Add Has Role rows to the 11 allowlisted reports.
++- Modify ERPNext / Frappe core JSON.
++- Change how the L2 wrapper enforces scope on filter values.
++
++It only adds a single bypass condition, identical in spirit to the L1/L2 wrappers already shipped in Option A+.
++
++---
++
++## 3. Acceptance criteria
++
++- [ ] `get_script` returns 200 for a restricted user with an active scope context on an allowlisted report.
++- [ ] `run` returns 200 for a restricted user with an active scope context on an allowlisted report.
++- [ ] `get_script` still returns 403 for an unscoped user (no scope context) on an allowlisted report.
++- [ ] `get_script` still returns 403 for a non-allowlisted report (e.g. `Sales Analytics`) for any user.
++- [ ] The L2 wrapper still rewrites filters for the restricted user (defence in depth).
++- [ ] Browser UAT: restricted user opens all 11 reports in a real Chromium, network panel shows zero 403s.
++
++---
++
++## 4. Rollback
++
++The monkey-patch is in `construction/overrides/scope_report.py`'s `apply_report_monkeypatch()`. To roll back, simply remove the patch and re-`bench migrate`. No data changes.

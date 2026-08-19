@@ -1,0 +1,68 @@
+diff --git a/construction/install.py b/construction/install.py
+index 977302e..77ec9ea 100644
+--- a/construction/install.py
++++ b/construction/install.py
+@@ -95,6 +95,45 @@ DIRECT_LABOR_DESIGNATION_DEFAULTS = (
+ )
+ 
+ 
++def setup_website_branding():
++    """Set Construction ERP branding on Website Settings and System Settings."""
++    try:
++        # Website Settings
++        if frappe.db.exists("DocType", "Website Settings"):
++            ws = frappe.get_doc("Website Settings")
++            changed = False
++            if getattr(ws, "app_name", None) != "Construction ERP":
++                ws.app_name = "Construction ERP"
++                changed = True
++            logo_path = "/assets/construction/images/construction_logo.svg"
++            if getattr(ws, "app_logo", None) != logo_path:
++                ws.app_logo = logo_path
++                changed = True
++            if getattr(ws, "brand_html", None) != "Construction ERP":
++                ws.brand_html = "Construction ERP"
++                changed = True
++            if changed:
++                ws.save(ignore_permissions=True)
++
++        # System Settings
++        if frappe.db.exists("DocType", "System Settings"):
++            ss = frappe.get_doc("System Settings")
++            if getattr(ss, "app_name", None) != "Construction ERP":
++                ss.app_name = "Construction ERP"
++                ss.save(ignore_permissions=True)
++
++        # Navbar Settings
++        if frappe.db.exists("DocType", "Navbar Settings"):
++            ns = frappe.get_doc("Navbar Settings")
++            logo_path = "/assets/construction/images/construction_logo.svg"
++            if getattr(ns, "app_logo", None) != logo_path:
++                ns.app_logo = logo_path
++                ns.save(ignore_permissions=True)
++    except Exception:
++        # Non-fatal: branding can be set manually if this fails
++        pass
++
++
+ def setup_boq_integration():
+     """Idempotently provision BOQ accounting and operational fields."""
+     setup_boq_accounting_dimension()
+diff --git a/docs/feature_reviews/Untitled Document b/docs/feature_reviews/Untitled Document
+index 0dabec0..32d2e48 100644
+--- a/docs/feature_reviews/Untitled Document	
++++ b/docs/feature_reviews/Untitled Document	
+@@ -12,4 +12,13 @@ Use the evidence log:
+ Administrator
+ Admin@2026-temp
+ 
++The admin account is still enabled on v16.localhost, and I’ve reset it to a known password.
++
++Use:
++
++Username: Administrator
++Email: admin@example.com
++Password: Admin@12345
++I also confirmed the account still has full admin roles, including System Manager and Administrator.
++
+ 

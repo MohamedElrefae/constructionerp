@@ -1,0 +1,924 @@
+diff --git a/construction/hooks.py b/construction/hooks.py
+index 878a64d..6c1a17b 100644
+--- a/construction/hooks.py
++++ b/construction/hooks.py
+@@ -115,8 +115,9 @@ app_include_js = [
+     "/assets/construction/js/print_settings_dialog.js",
+     "/assets/construction/js/construction_export_menu.js",
+     "/assets/construction/js/theme_loader_v24.js?v=2.5.2",
+-    "/assets/construction/js/typography_settings.js?v=9",
++    "/assets/construction/js/typography_settings.js?v=17",
+     "/assets/construction/js/components/index.js?v=4.6",
++
+     # Searchable Dropdown Module — base class (must load before overrides)
+     "/assets/construction/js/searchable_dropdown/utils.js",
+     "/assets/construction/js/searchable_dropdown/searchable_dropdown.js",
+diff --git a/construction/public/js/typography_settings.js b/construction/public/js/typography_settings.js
+index defb9fa..d2bf254 100644
+--- a/construction/public/js/typography_settings.js
++++ b/construction/public/js/typography_settings.js
+@@ -25,7 +25,7 @@
+ 
+ 	var fontStacks = {
+ 		Inherit: null,
+-		"System Default": "",
++		"System Default": '"Inter", "Noto Sans Arabic", "Segoe UI", Tahoma, Arial, sans-serif',
+ 		Inter: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+ 		Arial: "Arial, Helvetica, sans-serif",
+ 		Helvetica: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+@@ -53,12 +53,113 @@
+ 			return font !== "Inherit";
+ 		})
+ 		.join("\n");
++	// Map of font names → Google Fonts API name (null = not available on Google Fonts)
++	// Fonts not in this map are assumed to be system-only.
++	var webFontMap = {
++		Inter: "Inter",
++		Cairo: "Cairo",
++		Tajawal: "Tajawal",
++		"Noto Sans Arabic": "Noto Sans Arabic",
++		Almarai: "Almarai",
++		Roboto: "Roboto",
++		"Open Sans": "Open Sans",
++		Lato: "Lato",
++		Montserrat: "Montserrat",
++		Poppins: "Poppins",
++		"Noto Sans": "Noto Sans",
++		// Microsoft/system fonts available via Google Fonts or metric-compatible alternatives
++		"Courier New": "Courier Prime",   // metric-compatible with Courier New
++		Tahoma: "Tahoma",                 // not on Google Fonts — loaded via @font-face below
++		Georgia: "Georgia",               // not on Google Fonts — loaded via @font-face below
++	};
++
++	// Fonts loadable from Google Fonts API
++	var googleFontNames = {
++		Inter: true,
++		Cairo: true,
++		Tajawal: true,
++		"Noto Sans Arabic": true,
++		Almarai: true,
++		Roboto: true,
++		"Open Sans": true,
++		Lato: true,
++		Montserrat: true,
++		Poppins: true,
++		"Noto Sans": true,
++		"Courier Prime": true,
++		// System fonts NOT on Google Fonts (loaded via @font-face instead):
++		// Tahoma, Georgia, Times New Roman, Trebuchet MS, Verdana, Helvetica, Arial
++	};
++
++	// @font-face definitions for fonts not available on Google Fonts
++	// Uses fontsource.org CDN and system font stack fallbacks
++	var fontFaceCSS = [
++		// Tahoma — not available as a web font; use Liberation Sans as metric-compatible
++		"@font-face {",
++		"  font-family: 'Tahoma';",
++		"  src: local('Tahoma'), local('Liberation Sans'), local('Noto Sans');",
++		"  font-weight: 100 900;",
++		"  font-display: swap;",
++		"}",
++		// Georgia — not available as a web font; use Liberation Serif as fallback
++		"@font-face {",
++		"  font-family: 'Georgia';",
++		"  src: local('Georgia'), local('Liberation Serif'), local('Noto Serif');",
++		"  font-weight: 100 900;",
++		"  font-display: swap;",
++		"}",
++		// Times New Roman — use Liberation Serif (metric-compatible)
++		"@font-face {",
++		"  font-family: 'Times New Roman';",
++		"  src: local('Times New Roman'), local('Liberation Serif'), local('Nimbus Roman'), local('Noto Serif');",
++		"  font-weight: 100 900;",
++		"  font-display: swap;",
++		"}",
++		// Arial — use Liberation Sans (metric-compatible)
++		"@font-face {",
++		"  font-family: 'Arial';",
++		"  src: local('Arial'), local('Liberation Sans'), local('Nimbus Sans'), local('Noto Sans');",
++		"  font-weight: 100 900;",
++		"  font-display: swap;",
++		"}",
++		// Helvetica — use Nimbus Sans (metric-compatible)
++		"@font-face {",
++		"  font-family: 'Helvetica Neue';",
++		"  src: local('Helvetica Neue'), local('Helvetica'), local('Nimbus Sans'), local('Liberation Sans'), local('Noto Sans');",
++		"  font-weight: 100 900;",
++		"  font-display: swap;",
++		"}",
++		// Verdana — use DejaVu Sans (metric-compatible)
++		"@font-face {",
++		"  font-family: 'Verdana';",
++		"  src: local('Verdana'), local('DejaVu Sans'), local('Noto Sans');",
++		"  font-weight: 100 900;",
++		"  font-display: swap;",
++		"}",
++		// Trebuchet MS — use Liberation Sans as fallback
++		"@font-face {",
++		"  font-family: 'Trebuchet MS';",
++		"  src: local('Trebuchet MS'), local('Liberation Sans'), local('Noto Sans');",
++		"  font-weight: 100 900;",
++		"  font-display: swap;",
++		"}",
++		// Courier New — use Courier Prime from Google Fonts or Liberation Mono
++		"@font-face {",
++		"  font-family: 'Courier New';",
++		"  src: local('Courier New'), local('Courier Prime'), local('Liberation Mono'), local('DejaVu Sans Mono');",
++		"  font-weight: 100 900;",
++		"  font-display: swap;",
++		"}",
++		// Segoe UI — use system fallbacks on Linux
++		"@font-face {",
++		"  font-family: 'Segoe UI';",
++		"  src: local('Segoe UI'), local('Liberation Sans'), local('Noto Sans'), local('Ubuntu Sans');",
++		"  font-weight: 100 900;",
++		"  font-display: swap;",
++		"}",
++	].join("\n");
++
+ 	var styleOrderObserverStarted = false;
+-	var domObserverStarted = false;
+-	var inlineApplyTimer = null;
+-	var typographyObservedRoots = typeof WeakSet !== "undefined" ? new WeakSet() : null;
+-	var typographyObservedRootList = [];
+-	var typographyRootObservers = [];
+ 
+ 	function normalize(settings) {
+ 		settings = Object.assign({}, defaults, settings || {});
+@@ -101,151 +202,310 @@
+ 		return ["300", "400", "500", "600", "700"].indexOf(value) === -1 ? fallback : value;
+ 	}
+ 
+-	function ensureStyleTag() {
++	function loadNeededGoogleFonts(settings) {
++		var needed = {};
++		["desk", "sidebar", "navbar", "form", "list", "menu"].forEach(function (component) {
++			var font = settings[component + "_font_family"];
++			if (font === "Inherit") font = settings.desk_font_family;
++			if (googleFontNames[font]) needed[font] = true;
++			// Also check if the webFontMap redirects to a Google Font
++			var mapped = webFontMap[font];
++			if (mapped && googleFontNames[mapped] && mapped !== font) needed[mapped] = true;
++		});
++
++		var names = Object.keys(needed);
++		var existing = document.getElementById("ct-google-fonts");
++		if (!names.length) {
++			if (existing) existing.remove();
++		} else {
++			var families = names
++				.map(function (name) {
++					return "family=" + encodeURIComponent(name) + ":wght@300;400;500;600;700";
++				})
++				.join("&");
++			var url = "https://fonts.googleapis.com/css2?" + families + "&display=swap";
++
++			if (!existing || existing.href !== url) {
++				if (existing) existing.remove();
++				var link = document.createElement("link");
++				link.id = "ct-google-fonts";
++				link.rel = "stylesheet";
++				link.href = url;
++				document.head.appendChild(link);
++			}
++		}
++
++		// Ensure @font-face fallback definitions are injected
++		var fontFaceTag = document.getElementById("ct-font-face-fallbacks");
++		if (!fontFaceTag) {
++			fontFaceTag = document.createElement("style");
++			fontFaceTag.id = "ct-font-face-fallbacks";
++			fontFaceTag.textContent = fontFaceCSS;
++			// Insert at the TOP of <head> so it's available before other rules
++			document.head.insertBefore(fontFaceTag, document.head.firstChild);
++		}
++
++		// Log font availability diagnostic (once)
++		if (!window._ctFontDiagDone) {
++			window._ctFontDiagDone = true;
++			setTimeout(function () {
++				var fontNames = Object.keys(fontStacks).filter(function (n) { return n !== "Inherit"; });
++				var results = {};
++				fontNames.forEach(function (name) {
++					var stack = fontStacks[name];
++					if (!stack) return;
++					var primary = name;
++					try {
++						results[primary] = document.fonts.check("16px " + JSON.stringify(primary));
++					} catch (e) {
++						results[primary] = "error";
++					}
++				});
++				console.log("[TypographySettings] Font availability:", JSON.stringify(results));
++			}, 2000);
++		}
++	}
++
++	function ensureStyleTag(settings) {
+ 		var id = "ct-typography-style";
+ 		var style = document.getElementById(id);
+-		if (style) {
+-			// Keep typography overrides after late-injected theme/filter styles.
++		if (!style) {
++			style = document.createElement("style");
++			style.id = id;
+ 			document.head.appendChild(style);
+ 			startStyleOrderObserver(style);
+-			return style;
+ 		}
+ 
+-		style = document.createElement("style");
+-		style.id = id;
++		function resolveFont(component) {
++			var selected = settings[component + "_font_family"];
++			if (selected === "Inherit") selected = settings.desk_font_family;
++			return fontStacks[selected] || "";
++		}
++
++		var deskFamily = resolveFont("desk");
++		var sidebarFamily = resolveFont("sidebar");
++		var navbarFamily = resolveFont("navbar");
++		var formFamily = resolveFont("form");
++		var listFamily = resolveFont("list");
++		var menuFamily = resolveFont("menu");
++
++		// Helper to support both namespaced (html.ct-enterprise) and non-namespaced selectors
++		function expandSelectors(list) {
++			var result = [];
++			list.forEach(function (sel) {
++				result.push(sel);
++				if (sel.indexOf("html.ct-enterprise ") === 0) {
++					result.push(sel.substring("html.ct-enterprise ".length));
++				}
++			});
++			return result.join(",\n");
++		}
++
++		// Exclude all component areas from the wildcard selector to prevent override conflicts
++		var wildcardSelectorBase = "html.ct-enterprise body *:not(svg):not(path):not(use):not(i):not(.icon):not([class^='icon-']):not([class*=' icon-']):not(.fa):not([class^='fa-']):not([class*=' fa-']):not(.octicon)" +
++			":not(.body-sidebar *)" +
++			":not(.desk-sidebar *)" +
++			":not(.standard-sidebar *)" +
++			":not(.sidebar-container *)" +
++			":not(.navbar *)" +
++			":not(.desktop-navbar *)" +
++			":not(.ct-topbar-zone *)" +
++			":not(.form-layout *)" +
++			":not(.form-section *)" +
++			":not(.frappe-control *)" +
++			":not(.form-control *)" +
++			":not(.page-form *)" +
++			":not(.list-row *)" +
++			":not(.list-row-head *)" +
++			":not(.frappe-list *)" +
++			":not(.dropdown-menu *)" +
++			":not(.awesomplete *)" +
++			":not(.ct-dropdown-list *)" +
++			":not(.ct-unified-dropdown *)" +
++			":not(.search-dialog *)" +
++			":not(.ct-typography-preview *)";
++
++		var baseSelectors = expandSelectors([
++			"html.ct-enterprise",
++			"html.ct-enterprise body"
++		]) + " {\n" +
++			"  font-family: " + deskFamily + " !important;\n" +
++			"  font-size: " + settings.desk_font_size + "px !important;\n" +
++			"  font-weight: " + settings.desk_font_weight + " !important;\n" +
++			"}\n" +
++			expandSelectors([wildcardSelectorBase]) + " {\n" +
++			"  font-family: " + deskFamily + " !important;\n" +
++			"  font-size: " + settings.desk_font_size + "px !important;\n" +
++			"  font-weight: " + settings.desk_font_weight + " !important;\n" +
++			"}\n";
++
++		var sidebarSelectors = expandSelectors([
++			"html.ct-enterprise .body-sidebar .sidebar-item-label",
++			"html.ct-enterprise .body-sidebar .item-anchor",
++			"html.ct-enterprise .body-sidebar .collapse-sidebar-link",
++			"html.ct-enterprise .body-sidebar .onboarding-sidebar",
++			"html.ct-enterprise .desk-sidebar .standard-sidebar-item",
++			"html.ct-enterprise .standard-sidebar .standard-sidebar-item",
++			"html.ct-enterprise .desk-sidebar .standard-sidebar-item > a.item-anchor",
++			"html.ct-enterprise .standard-sidebar .standard-sidebar-item > a.item-anchor",
++			"html.ct-enterprise .desk-sidebar .sidebar-item-label",
++			"html.ct-enterprise .standard-sidebar .sidebar-item-label",
++			"html.ct-enterprise .sidebar-container .sidebar-item-label",
++			"html.ct-enterprise .sidebar-container .sidebar-link",
++			"html.ct-enterprise .sidebar-container .sidebar-item",
++			"html.ct-enterprise .standard-sidebar-item",
++			"html.ct-enterprise .body-sidebar .sidebar-item-container",
++			"html.ct-enterprise .body-sidebar .sidebar-item-container a",
++			"html.ct-enterprise .standard-sidebar-item a"
++		]) + " {\n" +
++			"  font-family: " + sidebarFamily + " !important;\n" +
++			"  font-size: " + settings.sidebar_font_size + "px !important;\n" +
++			"  font-weight: " + settings.sidebar_font_weight + " !important;\n" +
++			"}\n";
++
++		var navbarSelectors = expandSelectors([
++			"html.ct-enterprise .navbar",
++			"html.ct-enterprise .navbar .nav-link",
++			"html.ct-enterprise .navbar .navbar-brand",
++			"html.ct-enterprise .navbar *:not(svg):not(path):not(use):not(i):not(.icon):not([class^='icon-']):not([class*=' icon-'])",
++			"html.ct-enterprise .desktop-navbar",
++			"html.ct-enterprise .desktop-navbar *:not(svg):not(path):not(use):not(i):not(.icon):not([class^='icon-']):not([class*=' icon-'])",
++			"html.ct-enterprise .ct-topbar-zone"
++		]) + " {\n" +
++			"  font-family: " + navbarFamily + " !important;\n" +
++			"  font-size: " + settings.navbar_font_size + "px !important;\n" +
++			"  font-weight: " + settings.navbar_font_weight + " !important;\n" +
++			"}\n";
++
++		var formSelectors = expandSelectors([
++			"html.ct-enterprise .form-layout",
++			"html.ct-enterprise .form-section",
++			"html.ct-enterprise .frappe-control",
++			"html.ct-enterprise .form-control",
++			"html.ct-enterprise .control-input",
++			"html.ct-enterprise .control-input-wrapper",
++			"html.ct-enterprise .like-disabled-input",
++			"html.ct-enterprise .page-form .frappe-control",
++			"html.ct-enterprise .page-form .form-control",
++			"html.ct-enterprise .page-form input",
++			"html.ct-enterprise .page-form select",
++			"html.ct-enterprise .page-form .btn",
++			"html.ct-enterprise .control-label"
++		]) + " {\n" +
++			"  font-family: " + formFamily + " !important;\n" +
++			"  font-size: " + settings.form_font_size + "px !important;\n" +
++			"  font-weight: " + settings.form_font_weight + " !important;\n" +
++			"}\n";
++
++		var listSelectors = expandSelectors([
++			"html.ct-enterprise .list-row",
++			"html.ct-enterprise .list-row-head",
++			"html.ct-enterprise .list-row *",
++			"html.ct-enterprise .list-row-head *",
++			"html.ct-enterprise .frappe-list",
++			"html.ct-enterprise .frappe-list *",
++			"html.ct-enterprise .list-paging-area",
++			"html.ct-enterprise .list-paging-area *",
++			"html.ct-enterprise .datatable",
++			"html.ct-enterprise .datatable *",
++			"html.ct-enterprise .dt-cell",
++			"html.ct-enterprise .report-wrapper"
++		]) + " {\n" +
++			"  font-family: " + listFamily + " !important;\n" +
++			"  font-size: " + settings.list_font_size + "px !important;\n" +
++			"  font-weight: " + settings.list_font_weight + " !important;\n" +
++			"}\n";
++
++		var menuSelectors = expandSelectors([
++			"html.ct-enterprise .dropdown-menu",
++			"html.ct-enterprise .dropdown-menu *",
++			"html.ct-enterprise .dropdown-item",
++			"html.ct-enterprise .awesomplete ul",
++			"html.ct-enterprise .awesomplete ul *",
++			"html.ct-enterprise .ct-dropdown-list",
++			"html.ct-enterprise .ct-dropdown-list *",
++			"html.ct-enterprise .ct-unified-dropdown",
++			"html.ct-enterprise .ct-unified-dropdown *",
++			"html.ct-enterprise .search-dialog"
++		]) + " {\n" +
++			"  font-family: " + menuFamily + " !important;\n" +
++			"  font-size: " + settings.menu_font_size + "px !important;\n" +
++			"  font-weight: " + settings.menu_font_weight + " !important;\n" +
++			"}\n";
++
++		var previewSelectors = expandSelectors([
++			"html.ct-enterprise .ct-typography-preview"
++		]) + " {\n" +
++			"  border: 1px solid var(--border-color, #d1d8dd);\n" +
++			"  border-radius: 8px;\n" +
++			"  padding: 12px;\n" +
++			"  background: var(--fg-color, #fff);\n" +
++			"  color: var(--text-color, #192734);\n" +
++			"  font-family: " + deskFamily + " !important;\n" +
++			"  font-size: " + settings.desk_font_size + "px !important;\n" +
++			"  font-weight: " + settings.desk_font_weight + " !important;\n" +
++			"}\n" +
++			expandSelectors(["html.ct-enterprise .ct-typography-preview .sidebar-sample"]) + " {\n" +
++			"  margin-top: 8px;\n" +
++			"  color: var(--text-muted, #6c7680);\n" +
++			"  font-family: " + sidebarFamily + " !important;\n" +
++			"  font-size: " + settings.sidebar_font_size + "px !important;\n" +
++			"  font-weight: " + settings.sidebar_font_weight + " !important;\n" +
++			"}\n";
++
++		var menuUserItemSelectors = expandSelectors([
++			"html.ct-enterprise .ct-typography-user-menu"
++		]) + " {\n" +
++			"  display: flex;\n" +
++			"  align-items: center;\n" +
++			"  gap: 10px;\n" +
++			"  min-height: 34px;\n" +
++			"  margin: 2px 0 8px;\n" +
++			"  padding: 6px 8px;\n" +
++			"  border-radius: 8px;\n" +
++			"  color: var(--ink-gray-8);\n" +
++			"  text-decoration: none;\n" +
++			"  cursor: pointer;\n" +
++			"}\n" +
++			expandSelectors(["html.ct-enterprise .ct-typography-user-menu:hover"]) + " {\n" +
++			"  background: var(--sidebar-hover-color, rgba(0, 0, 0, 0.06));\n" +
++			"  text-decoration: none;\n" +
++			"}\n" +
++			expandSelectors(["html.ct-enterprise .ct-typography-user-menu .ct-typography-icon"]) + " {\n" +
++			"  display: inline-flex;\n" +
++			"  align-items: center;\n" +
++			"  justify-content: center;\n" +
++			"  width: 28px;\n" +
++			"  min-width: 28px;\n" +
++			"  height: 28px;\n" +
++			"  font-weight: 700;\n" +
++			"}\n" +
++			expandSelectors(["html.ct-enterprise .body-sidebar-container:not(.expanded) .ct-typography-user-menu span:not(.ct-typography-icon)"]) + " {\n" +
++			"  display: none;\n" +
++			"}\n";
++
++		var changingSelectors = expandSelectors(["html.ct-typography-changing body"]) + " {\n" +
++			"  opacity: 0.999 !important;\n" +
++			"}\n";
++
+ 		style.textContent = [
+-			"html.ct-enterprise,",
+-			"html.ct-enterprise body {",
+-			"  font-family: var(--ct-desk-font-family, inherit) !important;",
+-			"  font-size: var(--ct-desk-font-size, 14px) !important;",
+-			"  font-weight: var(--ct-desk-font-weight, 400) !important;",
+-			"}",
+-			"html.ct-enterprise body *:not(svg):not(path):not(use):not(i):not(.icon):not([class^='icon-']):not([class*=' icon-']):not(.fa):not([class^='fa-']):not([class*=' fa-']):not(.octicon) {",
+-			"  font-family: var(--ct-desk-font-family, inherit) !important;",
+-			"  font-size: var(--ct-desk-font-size, 14px) !important;",
+-			"  font-weight: var(--ct-desk-font-weight, 400) !important;",
+-			"}",
+-			"html.ct-enterprise .body-sidebar .sidebar-item-label,",
+-			"html.ct-enterprise .body-sidebar .item-anchor,",
+-			"html.ct-enterprise .body-sidebar .collapse-sidebar-link,",
+-			"html.ct-enterprise .body-sidebar .onboarding-sidebar,",
+-			"html.ct-enterprise .desk-sidebar .standard-sidebar-item,",
+-			"html.ct-enterprise .standard-sidebar .standard-sidebar-item,",
+-			"html.ct-enterprise .desk-sidebar .standard-sidebar-item > a.item-anchor,",
+-			"html.ct-enterprise .standard-sidebar .standard-sidebar-item > a.item-anchor,",
+-			"html.ct-enterprise .desk-sidebar .sidebar-item-label,",
+-			"html.ct-enterprise .standard-sidebar .sidebar-item-label,",
+-			"html.ct-enterprise .sidebar-container .sidebar-item-label,",
+-			"html.ct-enterprise .sidebar-container .sidebar-link,",
+-			"html.ct-enterprise .sidebar-container .sidebar-item,",
+-			"html.ct-enterprise .standard-sidebar-item,",
+-			"html.ct-enterprise .body-sidebar .sidebar-item-container,",
+-			"html.ct-enterprise .body-sidebar .sidebar-item-container a,",
+-			"html.ct-enterprise .standard-sidebar-item a {",
+-			"  font-family: var(--ct-sidebar-font-family, var(--ct-desk-font-family, inherit)) !important;",
+-			"  font-size: var(--ct-sidebar-font-size, 13px) !important;",
+-			"  font-weight: var(--ct-sidebar-font-weight, 500) !important;",
+-			"}",
+-			"html.ct-enterprise .navbar,",
+-			"html.ct-enterprise .navbar .nav-link,",
+-			"html.ct-enterprise .navbar .navbar-brand,",
+-			"html.ct-enterprise .navbar *:not(svg):not(path):not(use):not(i):not(.icon):not([class^='icon-']):not([class*=' icon-']),",
+-			"html.ct-enterprise .desktop-navbar,",
+-			"html.ct-enterprise .desktop-navbar *:not(svg):not(path):not(use):not(i):not(.icon):not([class^='icon-']):not([class*=' icon-']),",
+-			"html.ct-enterprise .ct-topbar-zone {",
+-			"  font-family: var(--ct-navbar-font-family, var(--ct-desk-font-family, inherit)) !important;",
+-			"  font-size: var(--ct-navbar-font-size, 14px) !important;",
+-			"  font-weight: var(--ct-navbar-font-weight, 500) !important;",
+-			"}",
+-			"html.ct-enterprise .form-layout,",
+-			"html.ct-enterprise .form-section,",
+-			"html.ct-enterprise .frappe-control,",
+-			"html.ct-enterprise .form-control,",
+-			"html.ct-enterprise .control-input,",
+-			"html.ct-enterprise .control-input-wrapper,",
+-			"html.ct-enterprise .like-disabled-input,",
+-			"html.ct-enterprise .page-form .frappe-control,",
+-			"html.ct-enterprise .page-form .form-control,",
+-			"html.ct-enterprise .page-form input,",
+-			"html.ct-enterprise .page-form select,",
+-			"html.ct-enterprise .page-form .btn,",
+-			"html.ct-enterprise .control-label {",
+-			"  font-family: var(--ct-form-font-family, var(--ct-desk-font-family, inherit)) !important;",
+-			"  font-size: var(--ct-form-font-size, 14px) !important;",
+-			"  font-weight: var(--ct-form-font-weight, 400) !important;",
+-			"}",
+-			"html.ct-enterprise .list-row,",
+-			"html.ct-enterprise .list-row-head,",
+-			"html.ct-enterprise .list-row *,",
+-			"html.ct-enterprise .list-row-head *,",
+-			"html.ct-enterprise .frappe-list,",
+-			"html.ct-enterprise .frappe-list *,",
+-			"html.ct-enterprise .list-paging-area,",
+-			"html.ct-enterprise .list-paging-area *,",
+-			"html.ct-enterprise .datatable,",
+-			"html.ct-enterprise .datatable *,",
+-			"html.ct-enterprise .dt-cell,",
+-			"html.ct-enterprise .report-wrapper {",
+-			"  font-family: var(--ct-list-font-family, var(--ct-desk-font-family, inherit)) !important;",
+-			"  font-size: var(--ct-list-font-size, 13px) !important;",
+-			"  font-weight: var(--ct-list-font-weight, 400) !important;",
+-			"}",
+-			"html.ct-enterprise .dropdown-menu,",
+-			"html.ct-enterprise .dropdown-menu *,",
+-			"html.ct-enterprise .dropdown-item,",
+-			"html.ct-enterprise .awesomplete ul,",
+-			"html.ct-enterprise .awesomplete ul *,",
+-			"html.ct-enterprise .ct-dropdown-list,",
+-			"html.ct-enterprise .ct-dropdown-list *,",
+-			"html.ct-enterprise .ct-unified-dropdown,",
+-			"html.ct-enterprise .ct-unified-dropdown *,",
+-			"html.ct-enterprise .search-dialog {",
+-			"  font-family: var(--ct-menu-font-family, var(--ct-desk-font-family, inherit)) !important;",
+-			"  font-size: var(--ct-menu-font-size, 13px) !important;",
+-			"  font-weight: var(--ct-menu-font-weight, 400) !important;",
+-			"}",
+-			"html.ct-enterprise .ct-typography-preview {",
+-			"  border: 1px solid var(--border-color, #d1d8dd);",
+-			"  border-radius: 8px;",
+-			"  padding: 12px;",
+-			"  background: var(--fg-color, #fff);",
+-			"  color: var(--text-color, #192734);",
+-			"}",
+-			"html.ct-enterprise .ct-typography-preview .sidebar-sample {",
+-			"  margin-top: 8px;",
+-			"  color: var(--text-muted, #6c7680);",
+-			"}",
+-			"html.ct-enterprise .ct-typography-user-menu {",
+-			"  display: flex;",
+-			"  align-items: center;",
+-			"  gap: 10px;",
+-			"  min-height: 34px;",
+-			"  margin: 2px 0 8px;",
+-			"  padding: 6px 8px;",
+-			"  border-radius: 8px;",
+-			"  color: var(--ink-gray-8);",
+-			"  text-decoration: none;",
+-			"  cursor: pointer;",
+-			"}",
+-			"html.ct-enterprise .ct-typography-user-menu:hover {",
+-			"  background: var(--sidebar-hover-color, rgba(0, 0, 0, 0.06));",
+-			"  text-decoration: none;",
+-			"}",
+-			"html.ct-enterprise .ct-typography-user-menu .ct-typography-icon {",
+-			"  display: inline-flex;",
+-			"  align-items: center;",
+-			"  justify-content: center;",
+-			"  width: 28px;",
+-			"  min-width: 28px;",
+-			"  height: 28px;",
+-			"  font-weight: 700;",
+-			"}",
+-			"html.ct-enterprise .body-sidebar-container:not(.expanded) .ct-typography-user-menu span:not(.ct-typography-icon) {",
+-			"  display: none;",
+-			"}",
++			baseSelectors,
++			sidebarSelectors,
++			navbarSelectors,
++			formSelectors,
++			listSelectors,
++			menuSelectors,
++			previewSelectors,
++			menuUserItemSelectors,
++			changingSelectors
+ 		].join("\n");
+-		document.head.appendChild(style);
+-		startStyleOrderObserver(style);
++
++		// Keep typography overrides after late-injected theme/filter styles.
++		if (document.head.lastElementChild !== style) {
++			document.head.appendChild(style);
++		}
++
++		console.log("[TypographySettings] Injected CSS (len=" + style.textContent.length + "):", style.textContent);
+ 		return style;
+ 	}
+ 
+@@ -269,13 +529,16 @@
+ 
+ 	function applyTypography(settings) {
+ 		settings = normalize(settings);
+-		ensureStyleTag();
++		console.log("[TypographySettings] applying settings:", JSON.stringify(settings));
++		loadNeededGoogleFonts(settings);
++		ensureStyleTag(settings);
+ 
+ 		var root = document.documentElement;
+ 		setFontVariable(root, "desk", settings.desk_font_family, settings);
+ 		["sidebar", "navbar", "form", "list", "menu"].forEach(function (component) {
+ 			setFontVariable(root, component, settings[component + "_font_family"], settings);
+ 		});
++
+ 		root.style.setProperty("--ct-desk-font-size", settings.desk_font_size + "px");
+ 		root.style.setProperty("--ct-desk-font-weight", settings.desk_font_weight);
+ 		["sidebar", "navbar", "form", "list", "menu"].forEach(function (component) {
+@@ -292,84 +555,15 @@
+ 
+ 		window.ctTypographySettings = settings;
+ 		window.ctTypographyLastAppliedAt = new Date().toISOString();
+-		applyInlineTypography(settings);
+-		startDomTypographyObserver();
+-		try {
+-			localStorage.setItem("ct-typography-settings", JSON.stringify(settings));
+-		} catch (e) {}
+-		return settings;
+-	}
+-
+-	function startDomTypographyObserver() {
+-		if (domObserverStarted || !window.MutationObserver || !document.body) return;
+-		domObserverStarted = true;
+-		observeTypographyRoot(document.body);
+-		discoverTypographyShadowRoots(document.body);
+-	}
+-
+-	function applyInlineTypography(settings) {
+-		if (!document.body) return;
+-		settings = normalize(settings);
+-		discoverTypographyShadowRoots(document.body);
+-		applyDeskTypographyToRoot(document, settings);
+-		typographyObservedRootList.forEach(function (root) {
+-			applyDeskTypographyToRoot(root, settings);
+-		});
+-
+-		var rules = [
+-			{
+-				selector:
+-					".body-sidebar, .body-sidebar *, .desk-sidebar, .desk-sidebar *, .standard-sidebar, .standard-sidebar *, .sidebar-container, .sidebar-container *",
+-				component: "sidebar",
+-			},
+-			{
+-				selector:
+-					".navbar, .navbar *, .desktop-navbar, .desktop-navbar *, .ct-topbar-zone, .ct-topbar-zone *",
+-				component: "navbar",
+-			},
+-			{
+-				selector:
+-					".form-layout, .form-layout *, .form-section, .form-section *, .frappe-control, .frappe-control *, .form-control, .control-input, .control-input-wrapper, .page-form, .page-form *",
+-				component: "form",
+-			},
+-			{
+-				selector:
+-					".frappe-list, .frappe-list *, .list-row, .list-row *, .list-row-head, .list-row-head *, .datatable, .datatable *, .dt-cell, .report-wrapper, .report-wrapper *",
+-				component: "list",
+-			},
+-			{
+-				selector:
+-					".dropdown-menu, .dropdown-menu *, .dropdown-item, .awesomplete ul, .awesomplete ul *, .ct-dropdown-list, .ct-dropdown-list *, .ct-unified-dropdown, .ct-unified-dropdown *, .search-dialog, .search-dialog *",
+-				component: "menu",
+-			},
+-		];
+-
+-		applyInlineTypographyToRoot(document, rules, settings);
+-		typographyObservedRootList.forEach(function (root) {
+-			applyInlineTypographyToRoot(root, rules, settings);
+-		});
+-
+-		window.ctTypographyInlineAppliedAt = new Date().toISOString();
+-	}
+ 
+-	function applyDeskTypographyToRoot(root, settings) {
+-		if (!root || !root.querySelectorAll) return;
++		// Trigger repaint invalidation for Chromium-based browsers (Edge)
++		root.classList.add("ct-typography-changing");
++		void root.offsetHeight; // force layout recalculation
++		setTimeout(function () {
++			root.classList.remove("ct-typography-changing");
++		}, 50);
+ 
+-		var selector = root === document ? "body, body *" : "*";
+-		root.querySelectorAll(selector).forEach(function (el) {
+-			if (shouldSkipInlineTypography(el)) return;
+-			setInlineFont(el, "desk", settings);
+-		});
+-	}
+-
+-	function applyInlineTypographyToRoot(root, rules, settings) {
+-		if (!root || !root.querySelectorAll) return;
+-		rules.forEach(function (rule) {
+-			root.querySelectorAll(rule.selector).forEach(function (el) {
+-				if (shouldSkipInlineTypography(el)) return;
+-				setInlineFont(el, rule.component, settings);
+-			});
+-		});
++		return settings;
+ 	}
+ 
+ 	function applyRootTypographyStyles(settings) {
+@@ -388,86 +582,6 @@
+ 		}
+ 	}
+ 
+-	function observeTypographyRoot(root) {
+-		if (!root || !window.MutationObserver) return;
+-		if (typographyObservedRoots && typographyObservedRoots.has(root)) return;
+-		if (typographyObservedRoots) typographyObservedRoots.add(root);
+-		typographyObservedRootList.push(root);
+-
+-		var observer = new MutationObserver(function (mutations) {
+-			var shouldApply = false;
+-			mutations.forEach(function (mutation) {
+-				if (mutation.addedNodes && mutation.addedNodes.length) {
+-					shouldApply = true;
+-					[].forEach.call(mutation.addedNodes, function (node) {
+-						registerTypographyShadowRoots(node);
+-					});
+-				}
+-			});
+-			if (!shouldApply) return;
+-
+-			clearTimeout(inlineApplyTimer);
+-			inlineApplyTimer = setTimeout(function () {
+-				if (window.ctTypographySettings) {
+-					applyInlineTypography(window.ctTypographySettings);
+-				}
+-			}, 100);
+-		});
+-
+-		try {
+-			observer.observe(root, { childList: true, subtree: true });
+-			typographyRootObservers.push(observer);
+-		} catch (e) {}
+-	}
+-
+-	function registerTypographyShadowRoots(node) {
+-		if (!node || !node.querySelectorAll) return;
+-		[].forEach.call(node.querySelectorAll("*"), function (el) {
+-			if (el.shadowRoot) {
+-				observeTypographyRoot(el.shadowRoot);
+-				discoverTypographyShadowRoots(el.shadowRoot);
+-			}
+-		});
+-
+-		if (node.shadowRoot) {
+-			observeTypographyRoot(node.shadowRoot);
+-			discoverTypographyShadowRoots(node.shadowRoot);
+-		}
+-	}
+-
+-	function discoverTypographyShadowRoots(root) {
+-		if (!root || !root.querySelectorAll) return;
+-		[].forEach.call(root.querySelectorAll("*"), function (el) {
+-			if (el.shadowRoot) {
+-				observeTypographyRoot(el.shadowRoot);
+-			}
+-		});
+-	}
+-
+-	function shouldSkipInlineTypography(el) {
+-		if (!el || !el.style || !el.tagName) return true;
+-		var tag = el.tagName.toLowerCase();
+-		if (
+-			["svg", "path", "use", "img", "canvas", "video", "style", "script"].indexOf(tag) !== -1
+-		)
+-			return true;
+-		var className = typeof el.className === "string" ? el.className : "";
+-		return (
+-			/(^|\s)(icon|octicon|fa|avatar|indicator)(\s|$)/.test(className) ||
+-			/(^|\s)(icon-|fa-)/.test(className)
+-		);
+-	}
+-
+-	function setInlineFont(el, component, settings) {
+-		var family = fontStacks[settings[component + "_font_family"]];
+-		if (!family && component !== "desk") {
+-			family = fontStacks[settings.desk_font_family];
+-		}
+-		el.style.setProperty("font-family", family || "", "important");
+-		el.style.setProperty("font-size", settings[component + "_font_size"] + "px", "important");
+-		el.style.setProperty("font-weight", settings[component + "_font_weight"], "important");
+-	}
+-
+ 	function setFontVariable(root, component, selectedFont, settings) {
+ 		var value = fontStacks[selectedFont];
+ 		var property = "--ct-" + component + "-font-family";
+@@ -478,25 +592,31 @@
+ 	}
+ 
+ 	function updatePreview(dialog) {
+-		var values = dialog.get_values() || {};
+-		var settings = normalize(values);
++		var settings = normalize(dialog.get_values() || {});
+ 		var preview = dialog.$wrapper.find(".ct-typography-preview").get(0);
+ 		if (!preview) return;
+ 
+-		var family = fontStacks[settings.desk_font_family] || "";
+-		preview.style.fontFamily = family || "";
+-		preview.style.fontSize = settings.desk_font_size + "px";
+-		preview.style.fontWeight = settings.desk_font_weight;
++		setFontVariable(preview, "desk", settings.desk_font_family, settings);
++		preview.style.setProperty("--ct-desk-font-size", settings.desk_font_size + "px");
++		preview.style.setProperty("--ct-desk-font-weight", settings.desk_font_weight);
+ 
+ 		var sidebar = preview.querySelector(".sidebar-sample");
+ 		if (sidebar) {
+-			sidebar.style.fontSize = settings.sidebar_font_size + "px";
+-			sidebar.style.fontWeight = settings.sidebar_font_weight;
+-			sidebar.style.fontFamily = fontStacks[settings.sidebar_font_family] || family || "";
++			setFontVariable(sidebar, "sidebar", settings.sidebar_font_family, settings);
++			sidebar.style.setProperty("--ct-sidebar-font-size", settings.sidebar_font_size + "px");
++			sidebar.style.setProperty("--ct-sidebar-font-weight", settings.sidebar_font_weight);
++		}
++	}
++
++	function closeOpenMenus() {
++		if (window.jQuery) {
++			window.jQuery(".dropdown-menu.show").removeClass("show");
++			window.jQuery("[data-toggle='dropdown'].show").dropdown("hide");
+ 		}
+ 	}
+ 
+ 	function showDialog() {
++		closeOpenMenus();
+ 		loadSettings(function (current) {
+ 			buildDialog(current);
+ 		});
+@@ -657,6 +777,12 @@
+ 						if (response.message) {
+ 							frappe.boot.construction_typography = response.message;
+ 							applyTypography(response.message);
++							try {
++								localStorage.setItem(
++									"ct-typography-settings",
++									JSON.stringify({ v: 2, ts: Date.now(), ...response.message })
++								);
++							} catch (e) {}
+ 							if (window.jQuery) {
+ 								$(document).trigger("ct-typography-saved", [response.message]);
+ 							}
+@@ -746,22 +872,6 @@
+ 		frappe.ui.SidebarHeader.prototype._ctTypographyPatched = true;
+ 	}
+ 
+-	function injectToolbarUserItem() {
+-		var menu = document.querySelector("#toolbar-user .dropdown-menu");
+-		if (!menu || menu.querySelector("[data-ct-typography-settings]")) return;
+-
+-		var item = document.createElement("a");
+-		item.href = "#";
+-		item.className = "dropdown-item";
+-		item.setAttribute("data-ct-typography-settings", "1");
+-		item.textContent = __("Typography Settings");
+-		item.addEventListener("click", function (event) {
+-			event.preventDefault();
+-			showDialog();
+-		});
+-		menu.insertBefore(item, menu.firstChild);
+-	}
+-
+ 	function injectSidebarUserItem() {
+ 		var userArea = document.querySelector(".body-sidebar-bottom .dropdown-navbar-user");
+ 		if (!userArea || document.querySelector(".ct-typography-user-menu")) return;
+@@ -784,6 +894,7 @@
+ 
+ 	function init() {
+ 		if (typeof frappe === "undefined") return;
++		console.log("[TypographySettings] init running, bootstrap=", (frappe.boot ? !!frappe.boot.construction_typography : "no-boot"), "html-classes=", document.documentElement.className);
+ 
+ 		var initialSettings =
+ 			(frappe.boot && frappe.boot.construction_typography) ||
+@@ -813,13 +924,11 @@
+ 			load: loadSettings,
+ 		};
+ 		patchSidebarHeaderMenu();
+-		injectToolbarUserItem();
+ 		injectSidebarUserItem();
+ 
+ 		if (window.jQuery) {
+ 			$(document).on("toolbar_setup page-change", function () {
+ 				patchSidebarHeaderMenu();
+-				injectToolbarUserItem();
+ 				injectSidebarUserItem();
+ 				applyTypography(
+ 					window.ctTypographySettings || frappe.boot.construction_typography
+@@ -827,20 +936,23 @@
+ 			});
+ 		}
+ 
+-		[0, 250, 1000].forEach(function (delay) {
+-			setTimeout(function () {
+-				applyTypography(
+-					window.ctTypographySettings ||
+-						(frappe.boot && frappe.boot.construction_typography)
+-				);
+-			}, delay);
+-		});
++		setTimeout(function () {
++			applyTypography(
++				window.ctTypographySettings ||
++					(frappe.boot && frappe.boot.construction_typography)
++			);
++		}, 0);
+ 	}
+ 
+ 	function readLocalSettings() {
+ 		try {
+ 			var raw = localStorage.getItem("ct-typography-settings");
+-			return raw ? JSON.parse(raw) : null;
++			if (!raw) return null;
++			var parsed = JSON.parse(raw);
++			if (!parsed.v || !parsed.ts || Date.now() - parsed.ts > 3600000) return null;
++			delete parsed.v;
++			delete parsed.ts;
++			return parsed;
+ 		} catch (e) {
+ 			return null;
+ 		}
