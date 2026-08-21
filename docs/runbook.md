@@ -4,6 +4,57 @@
 
 ---
 
+## 0. Deployment Pre-Flight (MANDATORY before any migrate/deploy)
+
+> Added 2026-08-21 per consultant handoff `CONSULTANT_HANDOFF_GM_2026-08-21.md` (risks R1, R2).
+> **Never run `bench migrate` on a site without completing this section first.**
+
+### 0.1 One-command check
+
+```bash
+bash apps/construction/scripts/preflight_check.sh <site-name>
+```
+
+The script verifies:
+| Check | Why |
+|-------|-----|
+| `redis_cache` answers PING | App sessions/cache break silently if down; tests and UI fail with confusing errors (incident 2026-08-21) |
+| `redis_queue` answers PING | Background jobs stall if down |
+| Site directory exists | Catches typos before they hit the wrong site |
+| Database backup < 24h old | Rollback point for schema migration (R2) |
+| ≥ 2 GB free disk | Backups + migration need headroom |
+
+Exit code `0` = safe to deploy. **Any FAIL/WARN = stop and fix first.**
+
+### 0.2 Full deployment sequence
+
+```bash
+# 1. Pre-flight (must exit 0)
+bash apps/construction/scripts/preflight_check.sh <site-name>
+
+# 2. Fresh backup with files (if pre-flight flagged it stale)
+bench --site <site-name> backup --with-files
+
+# 3. Deploy
+bench --site <site-name> migrate
+bench build --app construction
+bench restart
+
+# 4. Post-deploy sanity: re-run pre-flight + one non-admin smoke test
+bash apps/construction/scripts/preflight_check.sh <site-name>
+```
+
+### 0.3 If Redis is down at the client server
+
+```bash
+redis-server config/redis_cache.conf --daemonize yes
+redis-server config/redis_queue.conf --daemonize yes
+```
+
+Then re-run the pre-flight script. If the client uses systemd/supervisor, enable those units instead so Redis survives reboots.
+
+---
+
 ## Quick Reference
 
 | Task | Command/Location |
@@ -404,4 +455,4 @@ print(get_effective_desk_theme("dark"))
 
 ---
 
-*Last Updated: 2026-05-05*
+*Last Updated: 2026-08-21 (added §0 Deployment Pre-Flight)*

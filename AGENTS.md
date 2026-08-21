@@ -8,8 +8,8 @@
 - **Author:** Mohamed Elrefae (solo civil engineer developer)
 - **License:** MIT
 - **Current branch:** `develop`
-- **Total commits:** 191
-- **Latest commit:** `698ea94` — feat: VFC full reset — density, hidden fields, preset, and layout
+- **Total commits:** 191+
+- **Latest commit:** `88493fc` — release: sign off construction ERP deployment
 
 ## 2. Tech Stack
 - **Backend:** Python 3.14 (venv), Frappe Framework (v15/v16 dual-compat); code must remain Python 3.10 quote-nesting compatible
