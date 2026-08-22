@@ -58,10 +58,26 @@ def bulk_reprice_analyses(
     )
 
     detail_filters = {}
+    resource_type_items = None
     if item_code:
         detail_filters["item_code"] = item_code
     if resource_type:
-        detail_filters["resource_type"] = resource_type
+        # BOQ Cost Analysis Detail rows carry no resource_type field; resolve it
+        # from the linked Item's construction_resource_type custom field instead.
+        resource_type_items = set(
+            frappe.get_all(
+                "Item",
+                filters={"construction_resource_type": resource_type},
+                pluck="name",
+            )
+        )
+        if not resource_type_items:
+            return {
+                "analyses_touched": 0,
+                "details_updated": 0,
+                "details_unchanged": 0,
+                "errors": [],
+            }
     if cost_stream:
         detail_filters["cost_stream"] = cost_stream
 
@@ -70,6 +86,8 @@ def bulk_reprice_analyses(
             doc = frappe.get_doc("BOQ Cost Analysis", analysis_name)
             changed = False
             for row in doc.get("details") or []:
+                if resource_type_items is not None and row.item_code not in resource_type_items:
+                    continue
                 if detail_filters:
                     if not all(row.get(k) == v for k, v in detail_filters.items()):
                         continue

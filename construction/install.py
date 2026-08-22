@@ -1384,3 +1384,34 @@ def verify_workspace_visibility():
         )
     else:
         frappe.logger().info("Construction workspace health check: PASSED")
+
+
+# Roles referenced by DocType permissions across the app (source of truth:
+# doctype JSON perm blocks). These MUST exist in the database for permission
+# assignment to work. Note: "Project Manager" here is the app's role defined
+# by the DocType JSONs and is distinct from ERPNext's standard
+# "Projects Manager" role.
+CONSTRUCTION_ROLES = (
+    ("Construction Owner", "Owns construction data; full rights on BOQ Cost Analysis and cost data."),
+    ("Project Manager", "Manages projects; can create/submit analyses and certify stages."),
+    ("Site Engineer", "Field execution role; read-only access to cost data."),
+)
+
+
+def seed_construction_roles():
+    """Create app roles if missing. Idempotent — safe on every migrate."""
+    created = []
+    for role_name, description in CONSTRUCTION_ROLES:
+        if frappe.db.exists("Role", {"role_name": role_name}):
+            continue
+        doc = frappe.new_doc("Role")
+        doc.role_name = role_name
+        doc.description = description
+        doc.desk_access = 1
+        doc.insert(ignore_permissions=True)
+        created.append(role_name)
+
+    if created:
+        frappe.db.commit()
+        frappe.logger().info(f"Construction roles seeded: {', '.join(created)}")
+    return created

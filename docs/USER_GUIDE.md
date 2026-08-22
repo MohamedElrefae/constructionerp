@@ -1,11 +1,18 @@
 # Construction ERP — End-to-End User Guide
 # Enterprise Workflow: Company → Cost Center → Project → BOQ
 
-**Version:** 1.3
-**Date:** 2026-08-20 (deployment-readiness remediation)
+**Version:** 1.4
+**Date:** 2026-08-22 (engineering verification remediation — see `ENGINEERING_VERIFICATION_REPORT_2026-08-22.md`)
 **Branch:** `develop`
 **Tested by:** Playwright UI Runner + Browser QA + VFC test suite + cost-analysis engine suite
-**Status:** Release validation passed — VO 23/23, Quantity Revisions 30/30, Transaction Validation 13/13, BOQ Link Queries 9/9, Scope Context 17/17, Cost Database 10/10, Cost Analysis Engine 17/17, and VFC 39/39
+**Status:** Independently re-verified against live code on 2026-08-22 — VO 23/23, Quantity Revisions 30/30, Transaction Validation 13/13, BOQ Link Queries 9/9, Scope Context 17/17, Cost Database 10/10, Cost Analysis Engine 18/18 (incl. resource-type filter regression), and VFC 39/39
+
+### Changelog v1.4
+- §2.1 / §6.2 corrected: BOQ Header Project field is hidden by design (Scope Context is the only source); no accent/pill applies to that form.
+- §10.6: `resource_type` filter now works — matches detail rows via the Item's *Construction Resource Type*.
+- §11 rewritten where inaccurate: drag-and-drop field placement (no add-field dropdown), built-in presets only, server-side storage semantics, revert refresh caveat, System Manager save gate.
+- §9.2 required-field list and permission wording aligned with the live schema.
+- §13 checklist items aligned with verified behavior; WBS Tree panel item corrected to Tree View navigation.
 
 ---
 
@@ -76,9 +83,9 @@ Use exclusions only when a DocType should be omitted from Scope Context's list-q
    - **BOQ Type:** Tender / Contract
 3. **Save**
 
-**Note:** With Scope Context enabled, select the project in the top bar before creating the header. When Scope Context is disabled, integrations and imports may supply the project's internal value directly; the BOQ Header form does not expose a project selector.
+**Note:** With Scope Context enabled, select the project in the top bar before creating the header — the Project field on the BOQ Header form is hidden by design and is sourced exclusively from your active Scope Context (server-validated). When Scope Context is disabled, integrations and imports may supply the project's internal value directly; the BOQ Header form does not expose a project selector.
 
-**Visual cues:** If Project is empty, a **red accent border** appears on the Project field with a pill badge "Select Project first". After selecting a project, the accent clears.
+**Note:** The red-accent / "Select Project first" guidance described in §6 applies to the BOQ Item Stage, BOQ Item, and Variation Order forms — not to BOQ Header.
 
 ### 2.2 WBS Tree
 
@@ -217,14 +224,13 @@ This system guides you through cascading selection fields with **color-coded vis
 
 **Dropdown click test:** When a field is orange-blocked, clicking its dropdown does NOT open. When accented (red), the dropdown opens normally.
 
-### 6.2 BOQ Header — Project Accent
+### 6.2 BOQ Header — Project Source (no accent)
 
 **Test: Open `/app/boq-header/new`**
 
-- If scope pre-fills project → **no accent** (correct — project is already set)
-- If project is empty → **red accent** + "Select Project first" pill badge
-- Select a project → accent clears immediately
-- Clear the project → accent reappears
+- The **Project field is hidden** on the BOQ Header form by design — it cannot be selected manually.
+- With Scope Context enabled and a project active in the top bar, it is filled automatically on new records; saving without an active scope project is rejected server-side ("Project comes from Scope Context…").
+- The red-accent / pill visual guidance does **not** apply to this form. See §6.1 (BOQ Item Stage) and §6.3 (Variation Order) for accent behavior.
 
 ### 6.3 Variation Order — BOQ Header Accent
 
@@ -371,14 +377,12 @@ The Cost Estimation Engine builds **resource-based unit rates** for your BOQ Ite
 
 **Manual entry:** Navigate to **Resource Price History → New** and fill:
 
-- **Item Code** (the resource), **Resource Type**, **Rate**, **Currency**, **UOM**
-- **Price Date**, **Company** (required)
-- Optional: **Supplier**, **Project**, **Region** (e.g. Cairo, Alexandria), **Remarks**
+- **Required:** Item Code (the resource), Rate, Currency, UOM, Price Date, Company
+- **Resource Type** is optional but recommended — bulk reprice filtering matches on it via the Item's *Construction Resource Type*
+- Optional: Supplier, Project, Region (e.g. Cairo, Alexandria), Remarks
 - **Status** defaults to **Active**
 
-**Verify:** Submit a Purchase Invoice for a resource item, then open the Resource Price History list filtered by that item — a new Active row exists with Source DocType = Purchase Invoice. Cancel the invoice — the row flips to Cancelled.
-
-**Permissions:** System Manager has full access. Construction Owner and Project Manager can read/report/export. Site Engineer has no create/write access.
+**Permissions:** System Manager has full access. Construction Owner and Project Manager can read/report/export price history. Site Engineer has no create/write access. On **BOQ Cost Analysis**, Construction Owner has full rights (create/submit/cancel) and Project Manager can create/submit; Site Engineer is read-only.
 
 ### 9.3 Create a BOQ Cost Analysis for a BOQ Item
 
@@ -515,7 +519,7 @@ POST /api/method/construction.api.cost_database_api.reprice_cost_analyses
 {"company": "Your Company", "dry_run": false}
 ```
 
-Optional filters: `boq_header`, `boq_item`, `item_code`, `resource_type`, `cost_stream`, `region`, `as_of_date`. Only **Draft** analyses are repriced — Approved analyses must be superseded by a new version, never silently mutated. Use `dry_run: true` to preview how many rows would change.
+Optional filters: `boq_header`, `boq_item`, `item_code`, `resource_type`, `cost_stream`, `region`, `as_of_date`. `resource_type` matches detail rows through each resource Item's *Construction Resource Type*. Only **Draft** analyses are repriced — Approved analyses must be superseded by a new version, never silently mutated. Use `dry_run: true` to preview how many rows would change.
 
 ---
 
@@ -534,7 +538,7 @@ The Form Layout Engine (VFC) lets you customise how fields are arranged on any f
 - **Sections** tab shows the form's current layout sections
 - **Add Section:** Enter a section name and click **Add**
 - **Remove Section:** Click the × icon on a section header
-- **Add Field to Section:** Select a field from the dropdown and click **Add**
+- **Move fields between sections:** Drag field rows between sections in the editor (drag-and-drop, with ▲▼ arrow buttons as a fallback). There is no add-field dropdown — placement is done by dragging.
 - **Remove Field:** Click the × icon on a field badge
 - Changes are applied when you click **Apply & Save**
 
@@ -544,19 +548,19 @@ The Form Layout Engine (VFC) lets you customise how fields are arranged on any f
 - Fields are distributed left-to-right, top-to-bottom
 - Density is saved to your browser's localStorage immediately
 
-### 11.4 Hidden Fields
+### 11.4 Field Visibility (Hidden Fields)
 
-- **Hidden Fields** tab shows all fields on the form with checkboxes
-- Uncheck a field to hide it from the form
-- Hidden fields are saved per-user per-DocType
-- Fields hidden by Frappe's own dependency rules (e.g., `depends_on`) cannot be unhidden
+- The **Fields** tab lists all fields on the form with checkboxes
+- Uncheck a field to hide it from the form; check to show again
+- Hidden-field choices are saved **per-user per-DocType** in your server-side user settings (they follow you across devices)
+- Fields hidden by Frappe's own dependency rules (e.g., `depends_on`) are respected — VFC will not force them visible
 
 ### 11.5 Presets
 
-- **Presets** tab lets you save and load named layout profiles
-- **Save Current As:** Name the current layout configuration (sections + hidden fields) and save it
-- **Apply:** Select a saved preset from the list to apply it immediately
-- Presets are stored in your browser's localStorage
+- The **Presets** tab offers built-in, pre-configured layout presets (currently available on BOQ Header, BOQ Item, and BOQ Item Stage forms)
+- Select a preset and click **Apply & Save** to apply its section/visibility configuration immediately
+- Presets are developer-curated; users cannot create or name custom presets in this release
+- Your applied preset choice is stored per-user server-side (cross-device)
 
 ### 11.6 Revert to Default/Native
 
@@ -566,14 +570,14 @@ The Form Layout Engine (VFC) lets you customise how fields are arranged on any f
   - **Hidden fields** → all VFC-hidden fields are restored
   - **Preset** → reset to "Default"
   - **Personal layout** → your personal `for_user` profile is deleted (server-side)
-- After revert, the form refreshes immediately
+- After revert, the layout engine re-renders immediately; for a fully native view (including any residual hidden-field styling) do a page refresh
 - Non-admin users can always revert their own personal layout
 
 ### 11.7 Profile Persistence
 
-- Layout profiles are stored server-side as **Form Layout Profile** records
-- System Administrators see a **Sections Editor** tab for creating/sharing profiles
-- Regular users see only **Sections** (read-only) and personal overrides
+- Layout profiles are stored server-side as **Form Layout Profile** records and resolved per user: personal override → role profile → default profile (with a ~60 s client cache)
+- **Saving** section layouts requires **System Manager**; regular users can preview edits locally but saving shared/system profiles is rejected server-side
+- All users can manage density, field visibility, presets, and can revert their own personal layout via the revert button
 - Personal overrides (`for_user` profiles) persist until explicitly reverted
 
 ## 12. Administration — Settings & Diagnostics
@@ -623,7 +627,7 @@ Admins can review these to identify users who frequently change scope mid-sessio
 - [ ] List views filter to selected scope
 - [ ] New forms pre-fill scope values
 - [ ] Scope drift alert on save after scope change
-- [ ] Project field accent on any new form with empty project
+- [ ] Project field accent/pill on new forms with empty project (wherever the project field is visible — not on BOQ Header, whose project is hidden and scope-driven)
 - [ ] Dynamic whitelist excludes specified DocTypes
 
 ### BOQ Cascade Blocker
@@ -671,22 +675,22 @@ Admins can review these to identify users who frequently change scope mid-sessio
 - [ ] Bulk reprice touches Draft analyses only; dry_run preview available
 
 ### Form Layout Engine (VFC)
-- [ ] Form Config button visible in the form toolbar (grid icon) — opens Sections Editor
-- [ ] **Sections Editor tab:** Drag fields between sections, create/rename/remove sections
+- [ ] Form Config button visible in the form toolbar (grid icon) — opens the layout panel
+- [ ] **Sections Editor tab:** Drag fields between sections (▲▼ arrows fallback), create/rename/remove sections
 - [ ] **Density control tab:** Choose 1, 2, or 3-column grid layout
-- [ ] **Hidden fields tab:** Toggle individual field visibility via checkboxes
-- [ ] **Presets tab:** Name and save layout configurations, apply from a list
-- [ ] **Revert button:** Fully resets density, hidden fields, preset, and personal layout to default/native
+- [ ] **Fields tab:** Toggle individual field visibility via checkboxes
+- [ ] **Presets tab:** Apply built-in presets from a list (BOQ Header / BOQ Item / BOQ Item Stage)
+- [ ] **Revert button:** Resets density, hidden fields, preset, and personal layout to default/native
 - [ ] Non-admin users can revert their own personal layout via the revert button
-- [ ] Changes persist across page reload (localStorage + server-side profile)
-- [ ] Form refreshes immediately after Apply or Revert
+- [ ] Changes persist across page reload (density in localStorage; visibility/presets/profiles server-side)
+- [ ] Layout engine re-renders after Apply or Revert; full native view restored on page refresh
 
 ### Admin
 - [ ] Construction Settings: Scope Filter Exclusions configurable
 - [ ] Error Log: Scope Drift events logged for audit
-- [ ] WBS Tree panel visible on BOQ Header form
+- [ ] BOQ Header Construction menu → Tree View opens the BOQ Structure WBS tree
 - [ ] Quick Create Structure available on BOQ Item form
-- [ ] Onboarding banner on first BOQ Item Stage visit
+- [ ] Onboarding banner on new BOQ Item Stage forms
 
 ---
 
@@ -718,6 +722,10 @@ The following automated and manual test evidence is available:
 4. **Cost database templates are a library, not auto-applied:** Imported BOQ Cost Analysis templates (`Is Template = 1`) hold reusable rate recipes. Applying a template's rates to a live BOQ Item analysis is currently a manual copy step; automated template application is planned for a later phase.
 
 5. **Estimation reports are service-layer only:** The five estimation report functions (§9.5) are backend services. They are not yet wired as Desk query reports.
+
+6. **VFC layout saving is System Manager-gated:** Regular users can adjust density, field visibility, apply presets, and revert their own personal layout; saving shared section layouts requires System Manager.
+
+7. **WBS tree rollup labels omit zero segments:** A node whose subtree has zero contract/budget value shows only its item count (e.g. "(2 items)").
 
 ---
 

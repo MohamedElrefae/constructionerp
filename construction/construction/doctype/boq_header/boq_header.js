@@ -4,31 +4,9 @@
 // Do NOT call ViteFormConfig.attach(frm) here — it causes duplicate attach.
 
 (function () {
-	function setFieldAccent(frm, fieldname, active, blocked) {
-		const $wrapper = $(`.frappe-control[data-fieldname="${fieldname}"]`);
-		if (!$wrapper.length) return;
-		$wrapper.toggleClass("ct-boq-step-accent", !!active);
-		$wrapper.toggleClass("ct-boq-step-blocked", !!blocked);
-	}
-
-	function setFieldInlineHint(frm, fieldname, hint, blocked) {
-		const $wrapper = $(`.frappe-control[data-fieldname="${fieldname}"]`);
-		if (!$wrapper.length) return;
-		const $help = $wrapper.find(".help").first();
-		if (!$help.length) return;
-		$wrapper.toggleClass("ct-boq-has-inline-hint", !!hint);
-		$wrapper.toggleClass("ct-boq-inline-hint-blocked", !!blocked);
-		$help.find(".ct-boq-inline-hint").remove();
-		if (hint) {
-			$help.append(
-				$("<span>", {
-					class: "ct-boq-inline-hint",
-					text: hint,
-					title: hint,
-				})
-			);
-		}
-	}
+	// NOTE: Project on BOQ Header is hidden by design — it is sourced exclusively
+	// from Scope Context (server-validated in boq_header.py). Accent/pill guidance
+	// therefore does not apply to this form; see USER_GUIDE §6.2.
 
 	function getScopeProject() {
 		return window.scopeContext && window.scopeContext.enabled

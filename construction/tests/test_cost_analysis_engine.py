@@ -625,6 +625,67 @@ class TestCostAnalysisEngine(FrappeTestCase):
         self.assertAlmostEqual(analysis.details[0].cost_rate, 250.0, places=2)
         self.assertAlmostEqual(analysis.total_direct_cost, 250.0, places=2)
 
+    def test_bulk_reprice_resource_type_filter(self):
+        """resource_type filter matches detail rows via Item.construction_resource_type."""
+        from construction.services.cost_database_service import bulk_reprice_analyses
+        from construction.services.resource_price_service import capture_price_from_purchase_document
+
+        mat_code = self._make_item_doctype("RT-MAT", "Resource Type Material")
+        lab_code = self._make_item_doctype("RT-LAB", "Resource Type Labor")
+        frappe.db.set_value("Item", mat_code, "construction_resource_type", "Material")
+        frappe.db.set_value("Item", lab_code, "construction_resource_type", "Labor")
+
+        analysis = self._make_cost_analysis(
+            self.item.name,
+            details=[
+                {
+                    "cost_stream": "M",
+                    "item_code": mat_code,
+                    "resource_uom": "Nos",
+                    "qty_per_boq_unit": 1,
+                    "cost_rate": 100,
+                    "wastage_pct": 0,
+                },
+                {
+                    "cost_stream": "L",
+                    "item_code": lab_code,
+                    "resource_uom": "Nos",
+                    "qty_per_boq_unit": 1,
+                    "cost_rate": 100,
+                    "wastage_pct": 0,
+                },
+            ],
+        )
+
+        for code, rate in ((mat_code, 300), (lab_code, 200)):
+            capture_price_from_purchase_document(
+                frappe._dict(
+                    {
+                        "doctype": "Purchase Invoice",
+                        "name": f"RT-PI-{code}",
+                        "docstatus": 1,
+                        "supplier": self._make_supplier(),
+                        "company": self.company,
+                        "project": self.project,
+                        "posting_date": "2026-06-01",
+                        "items": [
+                            frappe._dict({"item_code": code, "rate": rate, "uom": "Nos", "name": f"ROW-{code}"})
+                        ],
+                    }
+                )
+            )
+
+        result = bulk_reprice_analyses(
+            boq_header=self.header.name,
+            company=self.company,
+            resource_type="Material",
+        )
+        self.assertEqual(result["details_updated"], 1)
+
+        analysis.reload()
+        self.assertAlmostEqual(analysis.details[0].cost_rate, 300.0, places=2)
+        self.assertAlmostEqual(analysis.details[1].cost_rate, 100.0, places=2)
+
     def _build_test_excel(self):
         import openpyxl
 
