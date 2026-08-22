@@ -1,0 +1,5 @@
+app,source_text,suggested_ar,status
+frappe,City,المدينة,unreviewed
+frappe,Country,البلد,unreviewed
+frappe,Phone,الهاتف,unreviewed
+frappe,Postal Code,الرمز البريدي,unreviewed

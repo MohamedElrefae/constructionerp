@@ -73,57 +73,45 @@ def update_translations_for_source_safe(source=None, translation_dict=None):
     return updated
 
 
+MISSING_SOURCES_SQL = """
+	select t.source_text
+	from `tabTranslation` t
+	where ifnull(t.source_text, '') != ''
+	group by t.source_text
+	having sum(case when t.language='ar' then 1 else 0 end)=0
+	order by t.source_text
+	limit %(limit)s
+"""
+
+
 @frappe.whitelist()
 def seed_missing_arabic_translations(limit=500):
-    """Create Arabic Translation rows for source texts missing Arabic entries."""
+    """Report source texts missing Arabic entries — WITHOUT creating rows.
+
+    Creating rows with ``translated_text = source_text`` (English) produced junk
+    translations that masked real ones. This is now report-only; a safer import
+    path (reviewed, insert-only) lives in ``construction.insert_translations``.
+    """
     limit = max(1, min(cint(limit) or 500, 5000))
-
-    rows = frappe.db.sql(
-        """
-		select t.source_text
-		from `tabTranslation` t
-		where ifnull(t.source_text, '') != ''
-		group by t.source_text
-		having sum(case when t.language='ar' then 1 else 0 end)=0
-		order by t.source_text
-		limit %(limit)s
-		""",
-        {"limit": limit},
-        as_dict=True,
-    )
-
-    created = 0
-    for row in rows:
-        source_text = row.get("source_text")
-        if not source_text:
-            continue
-        if frappe.db.exists("Translation", {"language": "ar", "source_text": source_text, "context": ""}):
-            continue
-        doc = frappe.get_doc(
-            {
-                "doctype": "Translation",
-                "language": "ar",
-                "source_text": source_text,
-                # Translation.translated_text is mandatory in Frappe.
-                # Use source_text as placeholder so rows can be created and then reviewed.
-                "translated_text": source_text,
-                "context": "",
-            }
-        )
-        doc.insert()
-        created += 1
-
-    frappe.db.commit()
-    return {"created": created, "checked": len(rows)}
+    rows = frappe.db.sql(MISSING_SOURCES_SQL, {"limit": limit}, as_dict=True)
+    return {"created": 0, "checked": len(rows), "missing": [r["source_text"] for r in rows]}
 
 
 @frappe.whitelist()
-def get_missing_arabic_translation_names(limit=1000):
-    """Return Translation row names where Arabic text still equals source text."""
+def get_missing_arabic_translation_sources(limit=1000):
+    """Return source texts (not row names) that have no Arabic entry at all."""
+    limit = max(1, min(cint(limit) or 1000, 5000))
+    rows = frappe.db.sql(MISSING_SOURCES_SQL, {"limit": limit}, as_dict=True)
+    return [r["source_text"] for r in rows]
+
+
+@frappe.whitelist()
+def get_placeholder_arabic_translation_sources(limit=1000):
+    """Return source texts whose Arabic value still equals the English source (placeholder junk)."""
     limit = max(1, min(cint(limit) or 1000, 5000))
     rows = frappe.db.sql(
         """
-		select name
+		select distinct source_text
 		from `tabTranslation`
 		where language='ar'
 		  and ifnull(source_text,'') != ''
@@ -134,7 +122,7 @@ def get_missing_arabic_translation_names(limit=1000):
         {"limit": limit},
         as_dict=True,
     )
-    return [r["name"] for r in rows]
+    return [r["source_text"] for r in rows]
 
 
 @frappe.whitelist()
@@ -170,3 +158,137 @@ def normalize_translation_keys():
 
     frappe.db.commit()
     return {"updated": updated}
+
+
+def _load_glossary():
+    path = frappe.get_app_path("construction", "data", "glossary", "egyptian_construction_glossary.json")
+    with open(path, encoding="utf-8") as handle:
+        data = json.load(handle)
+    glossary = {}
+    for term in data.get("terms", []):
+        if term.get("en") and term.get("ar"):
+            glossary[term["en"].strip()] = term["ar"].strip()
+    return glossary
+
+
+@frappe.whitelist()
+def apply_glossary_corrections(dry_run=True):
+    """Bulk-correct Arabic Translation rows to the canonical Egyptian glossary.
+
+    Safe, idempotent, and explicit (run from the Translation list-view tools).
+    Only Arabic rows whose ``source_text`` matches a glossary term are touched;
+    rows whose value already matches are skipped. Placeholder rows (value ==
+    source) are corrected too. Returns counts + a preview of changes.
+    """
+    dry_run = bool(dry_run)
+    glossary = _load_glossary()
+    if not glossary:
+        return {"checked": 0, "updated": 0, "created": 0, "preview": []}
+
+    rows = frappe.get_all(
+        "Translation",
+        fields=["name", "language", "source_text", "context", "translated_text"],
+        filters={"source_text": ("in", list(glossary.keys())), "language": "ar"},
+        limit_page_length=0,
+    )
+
+    preview = []
+    updated = created = 0
+    for row in rows:
+        canonical = glossary.get((row.source_text or "").strip())
+        if not canonical or row.translated_text == canonical:
+            continue
+        preview.append(
+            {
+                "name": row.name,
+                "source_text": row.source_text,
+                "context": row.context or "",
+                "before": row.translated_text,
+                "after": canonical,
+            }
+        )
+        if not dry_run:
+            frappe.db.set_value(
+                "Translation", row.name, "translated_text", canonical, update_modified=False
+            )
+            updated += 1
+
+    if not dry_run and updated:
+        frappe.db.commit()
+
+    return {"checked": len(rows), "updated": updated, "created": created, "preview": preview}
+
+
+REVIEW_QUEUE_COLUMNS = ["app", "source_text", "suggested_ar", "status"]
+APPROVED_STATUSES = {"approved", "ok", "correct", "done", ""}
+
+
+def _read_review_queue(path=None):
+    import csv
+
+    path = path or frappe.get_app_path("construction", "data", "translations", "review_queue.csv")
+    with open(path, encoding="utf-8", newline="") as handle:
+        reader = csv.DictReader(handle)
+        return [row for row in reader if (row.get("suggested_ar") or "").strip()]
+
+
+@frappe.whitelist()
+def import_review_queue(dry_run=True, enable_status_gate=False):
+    """Apply rows from the packaged review queue into the DB as Arabic translations.
+
+    Reads ``construction/data/translations/review_queue.csv`` and applies every row
+    carrying a non-empty ``suggested_ar`` (the reviewer/translator has filled it).
+    Explicit approval action, so it upserts (a reviewed value wins); rows that already
+    match are skipped. Use ``dry_run`` to preview without writing.
+    """
+    dry_run = bool(dry_run)
+    enable_status_gate = bool(enable_status_gate)
+    rows = _read_review_queue()
+    total = len(rows)
+
+    preview = []
+    created = updated = skipped = 0
+    for row in rows:
+        source = (row.get("source_text") or "").strip()
+        value = (row.get("suggested_ar") or "").strip()
+        if not source or not value:
+            skipped += 1
+            continue
+        if enable_status_gate and (row.get("status") or "unreviewed").strip().lower() not in APPROVED_STATUSES:
+            skipped += 1
+            continue
+
+        existing = frappe.db.get_value(
+            "Translation",
+            {"language": "ar", "source_text": source, "context": ""},
+            "name",
+        )
+        if existing:
+            current = frappe.db.get_value("Translation", existing, "translated_text")
+            if current == value:
+                skipped += 1
+                continue
+            preview.append({"source_text": source, "before": current, "after": value, "action": "update"})
+            if not dry_run:
+                frappe.db.set_value("Translation", existing, "translated_text", value, update_modified=False)
+                updated += 1
+        else:
+            preview.append({"source_text": source, "before": "", "after": value, "action": "create"})
+            if not dry_run:
+                doc = frappe.get_doc(
+                    {
+                        "doctype": "Translation",
+                        "language": "ar",
+                        "source_text": source,
+                        "context": "",
+                        "translated_text": value,
+                    }
+                )
+                doc.flags.ignore_permissions = True
+                doc.insert(ignore_permissions=True)
+                created += 1
+
+    if not dry_run and (created or updated):
+        frappe.db.commit()
+
+    return {"total": total, "created": created, "updated": updated, "skipped": skipped, "preview": preview}

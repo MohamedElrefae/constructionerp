@@ -207,7 +207,7 @@ Max 30 characters,30 حرفا كحد أقصى,,construction/construction/doctype
 Maximum number of themes shown in theme switcher dropdown,الحد الأقصى لعدد السمات المعروضة في قائمة مبدل السمات,,construction/construction/doctype/modern_theme_settings/modern_theme_settings.json:None,Description of the 'Theme Switcher Limit' (Int) field in DocType 'Modern | Theme Settings',
 Measured Work,أعمال مقاسة,,construction/construction/doctype/boq_item/boq_item.json:None,Option for the 'Item Type' (Select) field in DocType 'BOQ Item',
 Mobile Card View,عرض البطاقات للجوال,,construction/construction/doctype/construction_theme/construction_theme.json:None,Label of the mobile_card_view (Check) field in DocType 'Construction Theme',
-Mobilization Cost,تكلفة التجهيز,,construction/construction/doctype/plantresource/plant_resource.json:None,Label of the mobilization_cost (Currency) field in DocType 'PlantResource',
+Mobilization Cost,تكلفة تجهيز الموقع,,construction/construction/doctype/plantresource/plant_resource.json:None,Label of the mobilization_cost (Currency) field in DocType 'PlantResource',
 Modern Theme Settings,إعدادات السمة الحديثة,,construction/config/workspace_sidebar_items.json:None; construction/construction/doctype/modern_theme_settings/modern_theme_settings.json:None,Label of a Workspace Sidebar Item | Name of a DocType,
 Modern Theme Settings saved successfully,تم حفظ إعدادات السمة الحديثة بنجاح,,construction/api/theme_api.py:389,,
 "Muted text, descriptions",النصوص والأوصاف الثانوية,,construction/construction/doctype/construction_theme/construction_theme.json:None,Description of the 'Text Secondary' (Color) field in DocType 'Construction | Theme',

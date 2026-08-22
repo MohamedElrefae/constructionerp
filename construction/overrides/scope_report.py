@@ -13,9 +13,9 @@ Rules:
 - If scope context is disabled, the user is Administrator, or the user
   has a finance / system role: bypass entirely.
 - If the report name is **not** in :data:`ALLOWED_REPORTS`: bypass
-  entirely. Only the 10 plan-specified financial reports (plus
-  Project-wise Profitability if installed) are gated. Everything else
-  keeps Frappe's default behaviour.
+  entirely. The protected set contains the plan-specified financial
+  reports and the operational dashboard reports listed below. Everything
+  else keeps Frappe's default behaviour.
 - For a restricted user running an allowlisted report: rewrite the
   filter dict to **strictly** match the active Scope Context. The
   user cannot pick a different allowed company / project / cost
@@ -45,10 +45,8 @@ from construction.api.scope_context_api import (
 
 logger = logging.getLogger(__name__)
 
-# The 10 plan-specified financial reports + Project-wise Profitability.
-# These are the only reports the backend wrapper mutates. All other
-# reports pass through to the original `run` unchanged.
-ALLOWED_REPORTS: frozenset[str] = frozenset(
+# The plan-specified financial reports + Project-wise Profitability.
+FINANCIAL_REPORTS: frozenset[str] = frozenset(
     {
         "General Ledger",
         "Trial Balance",
@@ -63,6 +61,23 @@ ALLOWED_REPORTS: frozenset[str] = frozenset(
         "Project-wise Profitability",
     }
 )
+
+# Dashboard charts use Script Reports, which execute report SQL directly and
+# therefore cannot rely on permission_query_conditions for row-level scope.
+# Keeping them in this protected set ensures the run wrapper rewrites their
+# filters before execution instead of granting broad ERPNext roles.
+DASHBOARD_REPORTS: frozenset[str] = frozenset(
+    {
+        "Purchase Order Trends",
+        "Purchase Receipt Trends",
+        "Purchase Analytics",
+        "Fixed Asset Register",
+    }
+)
+
+# These are the only reports the backend wrapper mutates. All other reports
+# pass through to the original `run` unchanged.
+ALLOWED_REPORTS: frozenset[str] = FINANCIAL_REPORTS | DASHBOARD_REPORTS
 
 # Roles allowed to run reports without forced scope filters.
 UNRESTRICTED_REPORT_ROLES: frozenset[str] = frozenset(
@@ -802,8 +817,8 @@ def _scope_aware_run(*args, **kwargs):
         return _ORIGINAL_RUN(*args, **kwargs)
 
     # 5. Bypass for non-allowlisted reports. This is the critical
-    #    Option A+ invariant: only the 10 plan-specified reports
-    #    are gated. Everything else keeps Frappe's default behaviour.
+    #    Option A+ invariant: only the protected financial and dashboard
+    #    reports are gated. Everything else keeps Frappe's default behaviour.
     if report_name not in ALLOWED_REPORTS:
         return _ORIGINAL_RUN(*args, **kwargs)
 

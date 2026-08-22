@@ -31,6 +31,7 @@
 11. [Form Layout Engine (VFC) — Layout Customization](#11-form-layout-engine-vfc--layout-customization)
 12. [Administration — Settings & Diagnostics](#12-administration--settings--diagnostics)
 13. [Quick Reference — Feature Checklist](#13-quick-reference--feature-checklist)
+14. [Arabic & Translations](#14-arabic--translations)
 
 ---
 
@@ -691,6 +692,59 @@ Admins can review these to identify users who frequently change scope mid-sessio
 - [ ] BOQ Header Construction menu → Tree View opens the BOQ Structure WBS tree
 - [ ] Quick Create Structure available on BOQ Item form
 - [ ] Onboarding banner on new BOQ Item Stage forms
+
+---
+
+## 14. Arabic & Translations
+
+### 14.1 Setting the Language
+
+Each user picks a language via **User → Settings → Language**. The site default is controlled under **System Settings → Language**. Choose **Arabic (ar)** for a fully Arabic desk. After switching, press `Ctrl + Shift + R` to reload (or clear-cache) so the translation catalog and theme re-build.
+
+### 14.2 Terminology Standard (Egyptian)
+
+The Construction app and its ERPNext integration use a single glossary — **Egyptian construction & accounting Arabic** — stored at `construction/data/glossary/egyptian_construction_glossary.json`. Key rules:
+
+| Term | Used | Never |
+|------|------|-------|
+| Subcontractor / Subcontracting | مقاول باطن / مقاولات الباطن | التصنيع بالعقد (manufacturing) |
+| Retention | محتجزات ضمان | الاحتفاظ الأسهم (stock-market) |
+| Payment Entry | سند قبض / سند صرف | قيد دفع (generic MSA) |
+| Journal Entry | قيد يومية | قيد اليومية (inconsistent) |
+| Progress Billing | مستخلص جاري | literal translation |
+| Variation Order | أمر تغيير | — |
+| Bill of Quantities | جدول الكميات | — |
+| Advance | دفعة مقدمة | — |
+| Overtime | ساعات إضافية | — |
+
+### 14.3 Translating / Correcting a String
+
+Translations live in the **Translation** DocType (filter *language = ar*). To find the right row:
+
+1. Open **Translation** list (AwesomeBar search).
+2. Use the custom menu for fast filters:
+   - **Arabic Only** — show only `ar` rows.
+   - **Filter Missing Arabic** — show source texts with no Arabic entry yet.
+   - **Filter Placeholder (Junk) Arabic** — show rows whose Arabic still equals the English source (leftover placeholders).
+3. Edit the row, set the **Translated Text**, Save.
+
+### 14.4 Your Fix Survives `bench migrate`
+
+Deploys run a translation seed that is **insert-only** — it creates missing rows but **never overwrites an existing one**. If a reviewed corpus row disagrees with your edit, it is surfaced as a *drift* report via `construction.api.translation_tools.get_arabic_translation_drift()` instead of silently clobbering your change. To review drifting rows:
+
+```bash
+bench --site <your-site> execute construction.insert_translations.get_arabic_translation_drift
+```
+
+### 14.5 Clearing the Translation Cache
+
+After changing or importing translations, refresh the cached catalog so the UI picks it up immediately:
+
+```bash
+bench --site <your-site> clear-cache
+```
+
+In the browser, hard-reload (`Ctrl + Shift + R`).
 
 ---
 

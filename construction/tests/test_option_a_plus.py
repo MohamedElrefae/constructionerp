@@ -320,8 +320,8 @@ class TestScopeReportAllowlist(unittest.TestCase):
         frappe.db.commit()
         frappe.clear_cache(user="test_user2@example.com")
 
-    def test_allowed_reports_constant_contains_10(self):
-        from construction.overrides.scope_report import ALLOWED_REPORTS
+    def test_allowed_reports_constant_contains_protected_reports(self):
+        from construction.overrides.scope_report import ALLOWED_REPORTS, DASHBOARD_REPORTS
 
         for name in [
             "General Ledger",
@@ -336,6 +336,15 @@ class TestScopeReportAllowlist(unittest.TestCase):
             "Cash Flow",
         ]:
             self.assertIn(name, ALLOWED_REPORTS)
+
+        for name in [
+            "Purchase Order Trends",
+            "Purchase Receipt Trends",
+            "Purchase Analytics",
+            "Fixed Asset Register",
+        ]:
+            self.assertIn(name, ALLOWED_REPORTS)
+            self.assertIn(name, DASHBOARD_REPORTS)
 
     def test_non_allowlisted_report_passes_through(self):
         """For a non-allowlisted report, the wrapper must NOT rewrite filters."""
@@ -1001,6 +1010,25 @@ class TestOptionBReportAccessGate(unittest.TestCase):
         try:
             doc = get_report_doc("General Ledger")
             self.assertEqual(doc.name, "General Ledger")
+        finally:
+            frappe.set_user("Administrator")
+
+    def test_dashboard_reports_get_report_doc_bypassed_with_scope(self):
+        """Dashboard Script Reports must load without broad ERPNext roles."""
+        from frappe.desk.query_report import get_report_doc
+
+        self._set_scope()
+        frappe.set_user("test_user2@example.com")
+        try:
+            for report_name in (
+                "Purchase Order Trends",
+                "Purchase Receipt Trends",
+                "Purchase Analytics",
+                "Fixed Asset Register",
+            ):
+                with self.subTest(report=report_name):
+                    report = get_report_doc(report_name)
+                    self.assertEqual(report.name, report_name)
         finally:
             frappe.set_user("Administrator")
 

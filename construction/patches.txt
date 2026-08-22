@@ -13,3 +13,4 @@ construction.patches.v7_2.set_erpnext_standard_filters
 construction.patches.v8_0.add_item_construction_fields
 construction.patches.v8_1.deprecate_costitem_plantresource
 construction.patches.v8_2.enable_global_export_menu_default
+construction.patches.v8_3.fix_arabic_domain_terminology

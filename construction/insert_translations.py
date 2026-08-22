@@ -109,7 +109,45 @@ def _get_existing_arabic_translation_map():
     return existing
 
 
-def execute(commit=False):
+def _compute_drift(translations, existing_translations):
+    """Return rows where a reviewed translation differs from what is in the DB.
+
+    These are never auto-overwritten at migrate time — they are surfaced for
+    manual review so administrator/human edits to ``tabTranslation`` are respected.
+    """
+    drift = []
+    for (source_text, context), translated_text in translations.items():
+        exists = existing_translations.get((source_text, context))
+        if not exists:
+            continue
+        row = frappe.db.get_value(
+            "Translation",
+            exists,
+            ["translated_text", "modified_by"],
+            as_dict=True,
+        )
+        if row and row.translated_text != translated_text:
+            drift.append(
+                {
+                    "source_text": source_text,
+                    "context": context,
+                    "expected": translated_text,
+                    "current": row.translated_text,
+                    "modified_by": row.modified_by,
+                }
+            )
+    return drift
+
+
+def execute(commit=False, dry_run=False):
+    """Seed reviewed Arabic translations using an INSERT-ONLY strategy.
+
+    - Missing rows are created.
+    - Existing rows are NEVER overwritten — a differing reviewed value is
+      reported as drift instead of silently replacing a human/admin edit.
+    - Call ``get_arabic_translation_drift()`` to inspect disagreements and fix
+      them through a patch / human review, not by overwriting on migrate.
+    """
     translations = _load_reviewed_translations()
     existing_translations = _get_existing_arabic_translation_map()
 
@@ -118,6 +156,9 @@ def execute(commit=False):
         exists = existing_translations.get((source_text, context))
 
         if not exists:
+            if dry_run:
+                count += 1
+                continue
             doc = frappe.get_doc(
                 {
                     "doctype": "Translation",
@@ -133,19 +174,25 @@ def execute(commit=False):
             count += 1
             print(f"Added translation for: {source_text}")
         else:
-            doc = frappe.get_doc("Translation", exists)
-            if doc.translated_text != translated_text:
-                doc.translated_text = translated_text
-                doc.flags.ignore_permissions = True
-                doc.save(ignore_permissions=True)
-                count += 1
-                print(f"Updated translation for: {source_text}")
+            existing = frappe.db.get_value("Translation", exists, "translated_text")
+            if existing == translated_text:
+                continue
+            # Non-destructive: do not overwrite; report for review.
+            print(f"[DRIFT] {source_text}: DB='{existing}' vs seed='{translated_text}'")
 
     if commit:
         frappe.db.commit()
 
     _clear_translation_caches()
-    print(f"Successfully processed {count} translations from {len(translations)} reviewed Arabic entries.")
+    print(f"Successfully processed {count} translations from {len(translations)} reviewed Arabic entries (insert-only, non-overwriting).")
+
+
+@frappe.whitelist()
+def get_arabic_translation_drift():
+    """Report reviewed-vs-DB disagreements (insert-only seeding no longer overwrites them)."""
+    translations = _load_reviewed_translations()
+    existing_translations = _get_existing_arabic_translation_map()
+    return _compute_drift(translations, existing_translations)
 
 
 @frappe.whitelist()

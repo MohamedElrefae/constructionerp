@@ -62,9 +62,8 @@
 				this._needsRender = false;
 				this._isRendering = false;
 				this._initialized = false;
-				this._isDesk = false;
+				this._domObserver = null;
 
-				this._detectContext();
 				this._init();
 			}
 
@@ -84,21 +83,34 @@
 				this.disable();
 				try {
 					$(document).off(".ct");
+					$(window).off(".ct");
 				} catch (e) {}
-				this._injected.forEach(
-					function (data, id) {
-						if (data.element && data.element.isConnected) {
-							var item = this.registry.find(function (r) {
-								return r.id === id;
-							});
-							if (item && item.teardown && data.element) item.teardown(data.element);
-							data.element.remove();
-						}
-					}.bind(this)
-				);
-				this._injected.clear();
+				this._cleanupAllInjected();
+				if (this._domObserver) {
+					this._domObserver.disconnect();
+					this._domObserver = null;
+				}
 				this.registry = [];
 				if (window.ctTopbar === this) window.ctTopbar = null;
+			}
+
+			_cleanupAllInjected() {
+				this._injected.forEach(function (data, id) {
+					var item = this.registry.find(function (r) {
+						return r.id === id;
+					});
+					if (data && data.element) {
+						if (item && item.teardown) {
+							try {
+								item.teardown(data.element);
+							} catch (e) {}
+						}
+						try {
+							data.element.remove();
+						} catch (e) {}
+					}
+				}.bind(this));
+				this._injected.clear();
 			}
 
 			register(config) {
@@ -109,7 +121,11 @@
 					var needsRebuild = existing.render !== config.render;
 					if (needsRebuild && existing.teardown) {
 						var injected = this._injected.get(config.id);
-						if (injected && injected.element) existing.teardown(injected.element);
+						if (injected && injected.element) {
+							try {
+								existing.teardown(injected.element);
+							} catch (e) {}
+						}
 					}
 					for (var k in config) {
 						if (config.hasOwnProperty(k)) existing[k] = config[k];
@@ -136,143 +152,143 @@
 				});
 				var injected = this._injected.get(id);
 				if (item && item.teardown && injected && injected.element) {
-					item.teardown(injected.element);
+					try {
+						item.teardown(injected.element);
+					} catch (e) {}
 				}
 				this.registry = this.registry.filter(function (r) {
 					return r.id !== id;
 				});
-				if (injected && injected.element && injected.element.isConnected)
+				if (injected && injected.element && injected.element.isConnected) {
 					injected.element.remove();
+				}
 				this._injected.delete(id);
 				this._scheduleRender();
-			}
-
-			_detectContext() {
-				this._isDesk = false;
-				try {
-					var route = frappe.get_route
-						? frappe.get_route()
-						: frappe.router
-						? frappe.router.current_route
-						: null;
-					if (route && route.length > 0) {
-						this._isDesk =
-							route[0] === "Workspaces" || route[0] === "" || route[0] === "desk";
-						return;
-					}
-					var deskNav = document.querySelector(".desktop-navbar");
-					if (deskNav && deskNav.offsetParent !== null) {
-						this._isDesk = true;
-					}
-				} catch (e) {}
 			}
 
 			_init() {
 				if (this._initialized) return;
 				this._initialized = true;
 
+				var me = this;
 				try {
 					$(document).on(
-						"toolbar_setup.ct",
+						"toolbar_setup.ct desktop_screen.ct page-change.ct app_ready.ct list_view_rendered.ct",
 						function () {
-							this._scheduleRender();
-						}.bind(this)
+							me._scheduleRender();
+						}
 					);
 
-					$(document).on(
-						"desktop_screen.ct",
-						function () {
-							this._detectContext();
-							this._scheduleRender();
-						}.bind(this)
-					);
+					$(document).on("show.ct", ".page-container", function () {
+						me._scheduleRender();
+					});
 
-					$(document).on(
-						"page-change.ct",
-						function () {
-							setTimeout(
-								function () {
-									this._scheduleRender();
-								}.bind(this),
-								0
-							);
-						}.bind(this)
-					);
+					this._observeTopbarTargets();
 				} catch (e) {}
 
 				this._scheduleRender();
+			}
+
+			_observeTopbarTargets() {
+				if (!window.MutationObserver || !document.body || this._domObserver) return;
+
+				var me = this;
+				this._domObserver = new MutationObserver(function (records) {
+					var relevant = records.some(function (record) {
+						if (record.type === "attributes") {
+							var t = record.target;
+							if (
+								t &&
+								t.classList &&
+								(t.classList.contains("page-container") ||
+									t.classList.contains("page-head") ||
+									t.classList.contains("desktop-navbar"))
+							) {
+								return true;
+							}
+						}
+						var target = record.target;
+						if (
+							target.closest &&
+							(target.closest(".desktop-navbar") ||
+								target.closest(".page-head") ||
+								target.closest(".page-actions") ||
+								target.closest(".page-container"))
+						) {
+							return true;
+						}
+						return Array.from(record.addedNodes || []).some(function (node) {
+							return (
+								node.nodeType === 1 &&
+								(node.matches &&
+									(node.matches(
+										".desktop-navbar, .page-head, .page-actions, .page-container"
+									) ||
+										(node.querySelector &&
+											node.querySelector(
+												".desktop-navbar, .page-head, .page-actions, .page-container"
+											))))
+							);
+						});
+					});
+
+					if (relevant) {
+						me._scheduleRender();
+					}
+				});
+
+				this._domObserver.observe(document.body, {
+					childList: true,
+					subtree: true,
+					attributes: true,
+					attributeFilter: ["style", "class"],
+				});
 			}
 
 			_scheduleRender() {
 				if (!this._enabled) return;
 				this._needsRender = true;
 				clearTimeout(this._renderTimeout);
-				this._renderTimeout = setTimeout(
-					function () {
-						if (this._needsRender && !this._isRendering) {
-							this._needsRender = false;
-							this.render();
-						}
-					}.bind(this),
-					50
-				);
+				var me = this;
+				this._renderTimeout = setTimeout(function () {
+					if (me._needsRender && !me._isRendering) {
+						me._needsRender = false;
+						me.render();
+					}
+				}, 40);
 			}
 
-			render() {
-				if (!this._enabled) return;
-				try {
-					if (!frappe.session || !frappe.session.user) return;
-				} catch (e) {
-					return;
+			_getActivePageContainer() {
+				if (typeof frappe !== "undefined" && frappe.container && frappe.container.page) {
+					var p = frappe.container.page;
+					if (p.isConnected && $(p).is(":visible")) {
+						return p;
+					}
 				}
-				if (document.body.classList.contains("login-content")) return;
-				var path = window.location.pathname;
-				if (path.startsWith("/login") || path.startsWith("/reset_password")) return;
-
-				this._isRendering = true;
-				try {
-					var target = this._getTarget();
-					if (!target) return;
-
-					var isNavZone = target.tagName === "UL";
-					var tagName = isNavZone ? "li" : "div";
-
-					this.registry.forEach(
-						function (item) {
-							try {
-								var injected = this._injected.get(item.id);
-
-								if (injected && injected.element && injected.element.isConnected) {
-									if (!target.contains(injected.element)) {
-										target.appendChild(injected.element);
-									}
-									return;
-								}
-
-								var el = document.createElement(tagName);
-								el.className = "ct-topbar-item";
-								el.setAttribute("data-ct-topbar", item.id);
-								el.innerHTML = item.render();
-								target.appendChild(el);
-
-								if (item.setup) item.setup(el);
-								this._injected.set(item.id, { element: el });
-							} catch (e) {
-								console.warn("[CT] render item error:", e);
-							}
-						}.bind(this)
-					);
-				} finally {
-					this._isRendering = false;
+				var containers = document.querySelectorAll("#body > .page-container");
+				for (var i = 0; i < containers.length; i++) {
+					var c = containers[i];
+					if (
+						c.offsetParent !== null ||
+						(getComputedStyle(c).display !== "none" && !c.hidden)
+					) {
+						return c;
+					}
 				}
+				return null;
 			}
 
 			_getTarget() {
-				this._detectContext();
+				var activeContainer = this._getActivePageContainer();
 
-				if (this._isDesk) {
-					var deskNav = document.querySelector(".desktop-navbar");
-					if (deskNav) {
+				// 1. Check for visible .desktop-navbar (Desktop screen)
+				if (activeContainer) {
+					var deskNav = activeContainer.querySelector(".desktop-navbar");
+					if (
+						deskNav &&
+						(deskNav.offsetParent !== null ||
+							getComputedStyle(deskNav).display !== "none")
+					) {
 						var existing = deskNav.querySelector(".ct-topbar-zone");
 						if (existing) return existing;
 
@@ -285,9 +301,33 @@
 					}
 				}
 
-				this._isDesk = false;
+				// Global visible desktop-navbar check (if desktop is active)
+				var globalDeskNav = document.querySelector(".desktop-navbar");
+				if (
+					globalDeskNav &&
+					globalDeskNav.offsetParent !== null &&
+					(!activeContainer || activeContainer.contains(globalDeskNav))
+				) {
+					var existing = globalDeskNav.querySelector(".ct-topbar-zone");
+					if (existing) return existing;
 
-				var pageHead = this._findVisible(".page-head");
+					var zone = document.createElement("ul");
+					zone.className = "ct-topbar-zone ct-zone--desk";
+					zone.style.cssText =
+						"display:flex;align-items:center;list-style:none;height:100%;flex-shrink:0;margin-left:auto;padding:0 4px 0 12px;";
+					globalDeskNav.appendChild(zone);
+					return zone;
+				}
+
+				// 2. Active Page Head (Workspaces, List views, Form views, Reports, Trees, Pages)
+				var pageHead = null;
+				if (activeContainer) {
+					pageHead = activeContainer.querySelector(".page-head");
+				}
+				if (!pageHead) {
+					pageHead = this._findVisible(".page-head");
+				}
+
 				if (pageHead) {
 					var existing = pageHead.querySelector(".ct-topbar-zone--standard");
 					if (existing) return existing;
@@ -296,12 +336,14 @@
 					zone.className = "ct-topbar-zone ct-topbar-zone--standard";
 					zone.style.cssText =
 						"display:flex;align-items:center;margin-left:auto;flex-shrink:0;gap:4px;padding:0 4px;";
-
 					pageHead.appendChild(zone);
 					return zone;
 				}
 
-				var pageActions = this._findVisible(".page-actions");
+				// 3. Page Actions fallback
+				var pageActions = activeContainer
+					? activeContainer.querySelector(".page-actions")
+					: this._findVisible(".page-actions");
 				if (pageActions) {
 					var existing = pageActions.querySelector(".ct-topbar-zone--actions");
 					if (existing) return existing;
@@ -320,8 +362,9 @@
 			_findVisible(selector) {
 				var all = document.querySelectorAll(selector);
 				for (var i = 0; i < all.length; i++) {
-					if (all[i].offsetParent !== null) {
-						return all[i];
+					var el = all[i];
+					if (el.offsetParent !== null || getComputedStyle(el).display !== "none") {
+						return el;
 					}
 				}
 				return null;
@@ -334,6 +377,103 @@
 					document.body.insertBefore(header, document.body.firstChild);
 				}
 				return header;
+			}
+
+			_cleanupStaleZones(activeTarget) {
+				var allZones = document.querySelectorAll(".ct-topbar-zone");
+				for (var i = 0; i < allZones.length; i++) {
+					var z = allZones[i];
+					if (z !== activeTarget && !z.contains(activeTarget)) {
+						if (!z.isConnected || z.offsetParent === null) {
+							this.registry.forEach(function (item) {
+								var child = z.querySelector(
+									'[data-ct-topbar="' + item.id + '"]'
+								);
+								if (child && item.teardown) {
+									try {
+										item.teardown(child);
+									} catch (e) {}
+								}
+							});
+							try {
+								z.remove();
+							} catch (e) {}
+						}
+					}
+				}
+			}
+
+			render() {
+				if (!this._enabled) return;
+				try {
+					if (!frappe.session || !frappe.session.user) return;
+				} catch (e) {
+					return;
+				}
+				if (document.body.classList.contains("login-content")) return;
+				var path = window.location.pathname;
+				if (path.startsWith("/login") || path.startsWith("/reset_password")) return;
+
+				this._isRendering = true;
+				try {
+					var target = this._getTarget();
+					if (!target) return;
+
+					this._cleanupStaleZones(target);
+
+					var isNavZone = target.tagName === "UL";
+					var tagName = isNavZone ? "li" : "div";
+
+					this.registry.forEach(
+						function (item) {
+							try {
+								var injected = this._injected.get(item.id);
+								var needsMount = true;
+
+								if (injected && injected.element && injected.element.isConnected) {
+									if (
+										target.contains(injected.element) &&
+										injected.element.tagName.toLowerCase() === tagName
+									) {
+										needsMount = false;
+									} else {
+										if (item.teardown) {
+											try {
+												item.teardown(injected.element);
+											} catch (e) {}
+										}
+										injected.element.remove();
+										this._injected.delete(item.id);
+									}
+								}
+
+								if (needsMount) {
+									var el = document.createElement(tagName);
+									el.className = "ct-topbar-item";
+									el.setAttribute("data-ct-topbar", item.id);
+									el.innerHTML = item.render ? item.render() : "";
+									target.appendChild(el);
+
+									if (item.setup) {
+										try {
+											item.setup(el);
+										} catch (err) {
+											console.warn("[CT] setup error:", item.id, err);
+										}
+									}
+									this._injected.set(item.id, {
+										element: el,
+										zone: target,
+									});
+								}
+							} catch (e) {
+								console.warn("[CT] render item error:", item.id, e);
+							}
+						}.bind(this)
+					);
+				} finally {
+					this._isRendering = false;
+				}
 			}
 		}
 
@@ -809,6 +949,26 @@
 	function patchRouteWatch() {
 		if (typeof frappe !== "undefined" && frappe.router) {
 			frappe.router.on("change", function () {
+				var manager = window.ctTopbar;
+				if (manager) {
+					manager._scheduleRender();
+				}
+				setTimeout(
+					function () {
+						if (manager) {
+							manager._scheduleRender();
+						}
+					},
+					150
+				);
+				setTimeout(
+					function () {
+						if (manager) {
+							manager._scheduleRender();
+						}
+					},
+					450
+				);
 				setTimeout(installChartGuard, 300);
 				setTimeout(syncSidebarActive, 200);
 			});

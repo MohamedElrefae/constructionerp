@@ -359,6 +359,18 @@
 		var descriptors = build_column_descriptors(tree_view.doctype);
 		var items = [];
 
+		var get_tree_filters = function () {
+			var filters = {};
+			if (tree_view.args && typeof tree_view.args === "object") {
+				for (var k in tree_view.args) {
+					if (k !== "doctype" && k !== "cmd" && k !== "method" && Object.prototype.hasOwnProperty.call(tree_view.args, k)) {
+						filters[k] = tree_view.args[k];
+					}
+				}
+			}
+			return filters;
+		};
+
 		if (can_export(tree_view.doctype) && descriptors.length) {
 			items.push({
 				label: __("Excel (XLSX)"),
@@ -372,7 +384,7 @@
 							return make_list_export_callback(
 								"construction.api.export_api.export_doctype_list_excel",
 								tree_view.doctype,
-								tree_view.args,
+								get_tree_filters(),
 								column_config
 							);
 						}
@@ -392,7 +404,7 @@
 							return make_list_export_callback(
 								"construction.api.export_api.export_doctype_list_pdf",
 								tree_view.doctype,
-								tree_view.args,
+								get_tree_filters(),
 								column_config
 							);
 						}

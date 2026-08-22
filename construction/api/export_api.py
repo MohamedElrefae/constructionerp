@@ -103,12 +103,7 @@ def export_doctype_list_excel(doctype, filters=None, column_config=None):
         if not columns:
             return {"error": _("No columns selected for export.")}
 
-        parsed_filters = {}
-        if filters:
-            try:
-                parsed_filters = json.loads(filters)
-            except Exception:
-                parsed_filters = filters
+        parsed_filters = _sanitize_filters(doctype, filters)
 
         fields = [col["field_key"] for col in columns]
         if "name" not in fields:
@@ -198,12 +193,7 @@ def export_doctype_list_pdf(doctype, filters=None, column_config=None):
         if not columns:
             return {"error": _("No columns selected for export.")}
 
-        parsed_filters = {}
-        if filters:
-            try:
-                parsed_filters = json.loads(filters)
-            except Exception:
-                parsed_filters = filters
+        parsed_filters = _sanitize_filters(doctype, filters)
 
         fields = [col["field_key"] for col in columns]
         if "name" not in fields:
@@ -237,6 +227,61 @@ def export_doctype_list_pdf(doctype, filters=None, column_config=None):
 # ─────────────────────────────────────────────────────────────────────────────
 #  Internal helpers
 # ─────────────────────────────────────────────────────────────────────────────
+
+def _sanitize_filters(doctype, filters):
+    """
+    Clean filters to only include valid docfield names or standard fields for the doctype.
+    Prevents errors like 'You do not have permission to access field: DocType.doctype'
+    when tree_view.args (e.g. {'doctype': 'Account', 'cmd': '...'}) is passed as filters.
+    """
+    if not filters:
+        return {}
+    parsed = filters
+    if isinstance(filters, str):
+        try:
+            parsed = json.loads(filters)
+        except Exception:
+            parsed = filters
+
+    IGNORED_KEYS = {"doctype", "cmd", "method", "is_root", "tree_method"}
+
+    try:
+        meta = frappe.get_meta(doctype)
+        valid_fields = {df.fieldname for df in meta.fields} | {
+            "name", "creation", "modified", "modified_by", "owner", "docstatus", "idx"
+        }
+        if meta.istable:
+            valid_fields.update({"parent", "parenttype", "parentfield"})
+    except Exception:
+        valid_fields = None
+
+    if isinstance(parsed, dict):
+        sanitized = {}
+        for k, v in parsed.items():
+            if k in IGNORED_KEYS:
+                continue
+            if valid_fields is not None and k not in valid_fields:
+                continue
+            sanitized[k] = v
+        return sanitized
+    elif isinstance(parsed, list):
+        sanitized = []
+        for f in parsed:
+            if isinstance(f, (list, tuple)):
+                fname = f[1] if len(f) == 4 else (f[0] if len(f) >= 1 else None)
+                if fname in IGNORED_KEYS:
+                    continue
+                if valid_fields is not None and fname not in valid_fields:
+                    continue
+                sanitized.append(f)
+            elif isinstance(f, str):
+                if f in IGNORED_KEYS:
+                    continue
+                if valid_fields is not None and f not in valid_fields:
+                    continue
+                sanitized.append(f)
+        return sanitized
+    return {}
 
 def _check_global_export_enabled():
     """Raise PermissionError if the global export toggle is disabled."""

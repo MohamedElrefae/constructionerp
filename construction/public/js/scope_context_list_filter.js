@@ -99,6 +99,18 @@
 		if (window.cur_list && window.cur_list.doctype) {
 			window.cur_list.refresh();
 		}
+		try {
+			if (typeof frappe !== "undefined" && frappe.workspace && frappe.workspace._page) {
+				if (frappe.workspace.pages) {
+					delete frappe.workspace.pages[frappe.workspace._page.name];
+				}
+				if (typeof frappe.workspace.show_page === "function") {
+					frappe.workspace.show_page(frappe.workspace._page);
+				}
+			}
+		} catch (e) {
+			console.warn("[ScopeContext Filter] Workspace refresh error:", e);
+		}
 	});
 
 	frappe.listview_settings = frappe.listview_settings || {};

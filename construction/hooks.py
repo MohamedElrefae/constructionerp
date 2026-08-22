@@ -131,7 +131,7 @@ app_include_js = [
     "/assets/construction/js/print_settings_dialog.js",
     "/assets/construction/js/construction_export_menu.js",
     "/assets/construction/js/generic_export_menu.js?v=1",
-    "/assets/construction/js/theme_loader_v24.js?v=2.5.5",
+    "/assets/construction/js/theme_loader_v24.js?v=2.6.0",
     "/assets/construction/js/typography_settings.js?v=21",
     # Searchable Dropdown Module — base class (must load before overrides)
     "/assets/construction/js/searchable_dropdown/utils.js",
@@ -147,11 +147,11 @@ app_include_js = [
     # Scope Context — core class for managing user company/cost_center/project/dept scope
     "/assets/construction/js/scope_context.js?v=3",
     # Frappe Desk compatibility fixes that must run before list views initialize
-    "/assets/construction/js/frappe_compat_patches.js?v=1",
+    "/assets/construction/js/frappe_compat_patches.js?v=2",
     # Scope Context — navbar UI selectors (cascading company/cost_center/project/dept dropdowns)
-    "/assets/construction/js/scope_context_ui.js?v=2",
+    "/assets/construction/js/scope_context_ui.js?v=4",
     # Scope Context — list view auto-filtering
-    "/assets/construction/js/scope_context_list_filter.js?v=2",
+    "/assets/construction/js/scope_context_list_filter.js?v=3",
     # Scope Context — form default population for new documents
     "/assets/construction/js/scope_context_form_defaults.js?v=3",
     # Scope Context — report filter lock and dynamic sync
@@ -164,7 +164,7 @@ app_include_js = [
     # Sidebar accordion — only one section stays expanded at a time
     "/assets/construction/js/sidebar_accordion.js?v=1",
     # Translation workflow helpers (Arabic backlog + filters)
-    "/assets/construction/js/translation_list_tools.js?v=1",
+    "/assets/construction/js/translation_list_tools.js?v=4",
     # BOQ integration filters for transaction child rows
     "/assets/construction/js/boq_filters.js?v=8",
     # Filter fix — injected AFTER Frappe bundle to win cascade order
@@ -187,7 +187,7 @@ web_include_css = [
 ]
 
 # v2.4-r3: theme_loader_v24 handles namespace injection and theming for all pages
-web_include_js = "/assets/construction/js/theme_loader_v24.js?v=2.5.5"
+web_include_js = "/assets/construction/js/theme_loader_v24.js?v=2.6.0"
 
 # ─── BRAND OVERRIDES & WEBSITE CONTEXT ───
 brand_html = "construction/templates/includes/navbar_brand.html"
