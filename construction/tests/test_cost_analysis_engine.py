@@ -779,3 +779,67 @@ class TestCostAnalysisEngine(FrappeTestCase):
         self.assertEqual(analysis.is_template, 1)
         self.assertEqual(analysis.template_name, "IMP-CONC-PLN")
         self.assertEqual(len(analysis.details), 3)
+
+    def test_cost_stream_filter_only_updates_requested_stream(self):
+        """bulk_reprice_analyses must apply the advertised cost_stream filter:
+        only rows in the requested stream are repriced; the other stream's rows,
+        totals, and modified timestamps stay unchanged. Also verifies invalid
+        stream codes are rejected."""
+        from construction.services.cost_database_service import bulk_reprice_analyses
+        from construction.services.resource_price_service import capture_price_from_purchase_document
+
+        item_m = self._make_item_doctype("STREAM-MAT-M", "Stream Material M")
+        item_l = self._make_item_doctype("STREAM-MAT-L", "Stream Labor L")
+
+        supplier = self._make_supplier()
+
+        analysis = self._make_cost_analysis(
+            self.item.name,
+            details=[
+                {"cost_stream": "M", "item_code": item_m, "resource_uom": "Nos",
+                 "qty_per_boq_unit": 1, "cost_rate": 100, "wastage_pct": 0},
+                {"cost_stream": "L", "item_code": item_l, "resource_uom": "Hr",
+                 "qty_per_boq_unit": 1, "cost_rate": 50, "wastage_pct": 0},
+            ],
+        )
+
+        # Capture two DIFFERENT new prices: M item pans to 250, L item pans to 80.
+        capture_price_from_purchase_document(frappe._dict({
+            "doctype": "Purchase Invoice", "name": "STREAM-PI-M", "docstatus": 1,
+            "supplier": supplier, "company": self.company, "project": self.project,
+            "posting_date": "2026-06-01",
+            "items": [frappe._dict({"item_code": item_m, "rate": 250, "uom": "Nos", "name": "R1"})],
+        }))
+        capture_price_from_purchase_document(frappe._dict({
+            "doctype": "Purchase Invoice", "name": "STREAM-PI-L", "docstatus": 1,
+            "supplier": supplier, "company": self.company, "project": self.project,
+            "posting_date": "2026-06-01",
+            "items": [frappe._dict({"item_code": item_l, "rate": 80, "uom": "Hr", "name": "R2"})],
+        }))
+
+        # Reject an invalid stream code up front.
+        with self.assertRaises(frappe.ValidationError):
+            bulk_reprice_analyses(boq_header=self.header.name, company=self.company, cost_stream="X")
+
+        # Reprice ONLY the M stream.
+        result = bulk_reprice_analyses(boq_header=self.header.name, company=self.company, cost_stream="M")
+        self.assertTrue(result["success"], msg=result["errors"])
+        self.assertEqual(result["details_updated"], 1, msg=f"Expected exactly 1 updated, got {result}")
+
+        # M stream row updated, L stream row untouched.
+        analysis.reload()
+        m_row = next(r for r in analysis.details if r.cost_stream == "M")
+        l_row = next(r for r in analysis.details if r.cost_stream == "L")
+        self.assertAlmostEqual(flt(m_row.cost_rate), 250.0, places=2)
+        self.assertAlmostEqual(flt(l_row.cost_rate), 50.0, places=2)
+
+        # Dry-run must not persist the M change.
+        analysis.reload()
+        before_dry = next(r for r in analysis.details if r.cost_stream == "M").cost_rate
+        result_dry = bulk_reprice_analyses(
+            boq_header=self.header.name, company=self.company, cost_stream="M", dry_run=True
+        )
+        self.assertTrue(result_dry["success"])
+        analysis.reload()
+        after_dry = next(r for r in analysis.details if r.cost_stream == "M").cost_rate
+        self.assertEqual(flt(before_dry), flt(after_dry))

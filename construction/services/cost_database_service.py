@@ -11,6 +11,11 @@ from construction.services.resource_price_service import get_suggested_rate
 # Bulk Repricing
 # ---------------------------------------------------------------------------
 
+# Valid BOQ Cost Analysis Detail.cost_stream codes (Material, Labor, Plant,
+# Subcontract, Overhead). Used to validate an incoming cost_stream filter so a
+# mistyped or unfiltered request can never widen beyond the requested stream.
+VALID_COST_STREAMS = frozenset({"M", "L", "P", "S", "O"})
+
 
 def bulk_reprice_analyses(
     boq_header=None,
@@ -69,6 +74,16 @@ def bulk_reprice_analyses(
     resource_type_items = None
     if item_code:
         detail_filters["item_code"] = item_code
+    if cost_stream:
+        # cost_stream is a Select field (M/L/P/S/O). Reject invalid codes up
+        # front so a mistyped filter cannot silently widen the repricing scope.
+        if cost_stream not in VALID_COST_STREAMS:
+            frappe.throw(
+                _("Invalid cost_stream '{0}'. Valid values: {1}").format(
+                    cost_stream, ", ".join(sorted(VALID_COST_STREAMS))
+                )
+            )
+        detail_filters["cost_stream"] = cost_stream
     if resource_type:
         # BOQ Cost Analysis Detail rows carry no resource_type field; resolve it
         # from the linked Item's construction_resource_type custom field instead.
@@ -94,7 +109,7 @@ def bulk_reprice_analyses(
         detail_rows = frappe.get_all(
             "BOQ Cost Analysis Detail",
             filters=[["parent", "in", analysis_names]],
-            fields=["name", "parent", "item_code", "supplier", "cost_rate", "rate_source"],
+            fields=["name", "parent", "item_code", "supplier", "cost_rate", "rate_source", "cost_stream"],
             limit_page_length=0,
         )
         if detail_filters:
@@ -123,6 +138,7 @@ def bulk_reprice_analyses(
                     bulk_rate_lookup,
                     as_of_date=as_of_date,
                     region=region,
+                    cost_stream=cost_stream,
                     dry_run=dry_run,
                     analyses_touched=analyses_touched,
                     counters=counters,
@@ -154,6 +170,7 @@ def _apply_bulk_reprice_to_analysis(
     bulk_rate_lookup,
     as_of_date=None,
     region=None,
+    cost_stream=None,
     dry_run=False,
     analyses_touched=None,
     counters=None,
@@ -161,7 +178,9 @@ def _apply_bulk_reprice_to_analysis(
     """Apply the rate updates for one analysis given its preloaded detail rows.
 
     ``counters`` is mutated in place (a dict with 'updated'/'unchanged') so the
-    caller can aggregate without a second pass.
+    caller can aggregate without a second pass. When ``cost_stream`` is set, only
+    detail rows in that stream are repriced (defense in depth — the caller also
+    pre-filters detail_rows).
     """
     if analyses_touched is None:
         analyses_touched = set()
@@ -172,7 +191,23 @@ def _apply_bulk_reprice_to_analysis(
     rows_for_doc = [r for r in detail_rows if r.get("parent") == analysis_name]
     changed = False
 
+    # Index eligible rows once: (item_code, supplier) -> canonical cost_stream
+    # so we can skip rows that don't match the requested stream without a full
+    # list scan per row.
+    stream_index = {}
+    if cost_stream:
+        for r in rows_for_doc:
+            stream_index[(r.get("item_code"), r.get("supplier"))] = r.get("cost_stream")
+
     for row in doc.get("details") or []:
+        if cost_stream:
+            # Only repricing rows that belong to the requested stream.
+            # rows_for_doc is authoritative for the stream value (it may be
+            # empty if the row was pre-filtered out).
+            row_stream = stream_index.get((row.item_code, row.supplier))
+            if row_stream != cost_stream:
+                continue
+
         # Match the preloaded detail row so row.item_code/supplier are canonical.
         suggested = bulk_rate_lookup.resolve(
             item_code=row.item_code,

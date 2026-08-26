@@ -1036,6 +1036,45 @@ class TestSecurityAuditRemediation(FrappeTestCase):
         finally:
             frappe.set_user("Administrator")
 
+    def test_scope_hierarchy_cache_not_poisoned_by_privileged_lookup(self):
+        """Cross-principal cache poisoning regression: a privileged cross-user
+        lookup must NOT populate the target user's own self-query cache. A cold
+        restricted user's next request must still come back empty."""
+        from construction.api.scope_context_api import get_user_scope_hierarchy
+
+        outsider = self._create_test_user("scope_cache_outsider")
+
+        # Ensure clean caches for the outsider.
+        frappe.cache().delete_value(f"scope_hierarchy:{outsider}")
+        frappe.cache().delete_keys("scope_hierarchy:xuser:")
+
+        # 1. Cold self-query (restricted user) must be empty.
+        frappe.set_user(outsider)
+        self_1 = get_user_scope_hierarchy(outsider)
+        self._assert_empty_hierarchy(self_1)
+        frappe.set_user("Administrator")
+
+        # 2. Administrator (privileged) cross-looks-up the SAME user → full data,
+        #    cached under a cross-user key (never the target's self key).
+        cross = get_user_scope_hierarchy(outsider)
+        self.assertTrue(
+            any(len(v) > 0 for v in cross.values()),
+            "Privileged cross-user lookup should see the full hierarchy",
+        )
+
+        # 3. The restricted user's NEXT self-query must STILL be empty.
+        frappe.set_user(outsider)
+        self_2 = get_user_scope_hierarchy(outsider)
+        self._assert_empty_hierarchy(self_2)
+
+    def _assert_empty_hierarchy(self, hierarchy):
+        for key in ("companies", "cost_centers", "projects", "departments"):
+            self.assertEqual(
+                len(hierarchy.get(key, [])),
+                0,
+                f"Hierarchy '{key}' must be empty, got {len(hierarchy.get(key, []))}",
+            )
+
     # -------------------------------------------------------------------------
     # 12. Report Enforcement Fails Closed on Installation Failure
     # -------------------------------------------------------------------------

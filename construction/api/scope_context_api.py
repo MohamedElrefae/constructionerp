@@ -123,23 +123,46 @@ def get_user_scope_hierarchy(user=None):
     role permissions and User Permissions.
 
     All queries are permission-enforcing (frappe.get_list). Results are
-    Redis-cached with a 5-minute TTL keyed per user.
+    Redis-cached with a 5-minute TTL keyed by user AND evaluation mode, so a
+    privileged cross-user lookup can never poison the target user's own cache
+    key (cross-principal cache poisoning / hierarchy disclosure).
+
+    Security gates (performed BEFORE any cache read):
+      - A cross-user lookup is allowed ONLY for Administrator / System Manager.
     """
     user = user or frappe.session.user
-    cache_key = f"scope_hierarchy:{user}"
+    cross_user = user != frappe.session.user
 
+    # Authorization before cache lookup: a restricted user must not be able to
+    # read a target user's cached (possibly privileged) hierarchy.
+    if cross_user and not _is_privileged_scope_actor():
+        frappe.throw(
+            _("Not authorized to inspect scope hierarchy of another user."),
+            frappe.PermissionError,
+        )
+
+    if cross_user:
+        # Privileged cross-user lookup. Use a SEPARATE cache key that the
+        # target user's own self-query never reads, so the full hierarchy is
+        # never stored under the target user's self key.
+        cache_key = f"scope_hierarchy:xuser:{frappe.session.user}:{user}"
+        return _load_scope_hierarchy(user, ignore_permissions=True, cache_key=cache_key)
+
+    # Self-query: permission-context result cached under the user's own key.
+    cache_key = f"scope_hierarchy:{user}"
+    return _load_scope_hierarchy(user, ignore_permissions=False, cache_key=cache_key)
+
+
+def _load_scope_hierarchy(user, ignore_permissions, cache_key):
+    """Compute (or fetch cached) the scope hierarchy for ``user`` under the
+    given evaluation mode. ``ignore_permissions=True`` is used ONLY for
+    privileged cross-user lookups under a non-self cache key."""
     # Try cache first
     cached = frappe.cache().get_value(cache_key)
     if cached is not None:
         return cached
 
-    ignore_perms = False if user == frappe.session.user else True
-    if ignore_perms and not _is_privileged_scope_actor():
-        frappe.throw(
-            _("Not authorized to inspect scope hierarchy of another user."),
-            frappe.PermissionError,
-        )
-    kw = {} if not ignore_perms else {"ignore_permissions": True}
+    kw = {} if not ignore_permissions else {"ignore_permissions": True}
 
     def _safe_get_list(doctype, fields, filters=None, order_by=None):
         """Permission-enforcing fetch that degrades to an EMPTY list (never
@@ -193,7 +216,7 @@ def get_user_scope_hierarchy(user=None):
         order_by="department_name asc",
     )
 
-    # Cache for 5 minutes
+    # Cache for 5 minutes under the evaluation-mode-specific key
     frappe.cache().set_value(cache_key, hierarchy, expires_in_sec=300)
 
     return hierarchy
@@ -203,14 +226,25 @@ def invalidate_scope_cache(user=None):
     """
     Invalidate Redis cache for user scope hierarchy.
     Called on User Permission changes via doc_events.
+
+    Clears both the user's own permission-context key and any privileged
+    cross-user (``xuser``) key that may have cached a hierarchy for them.
     """
+    def _delete_xuser_keys():
+        try:
+            frappe.cache().delete_keys("scope_hierarchy:xuser:")
+        except Exception:
+            pass
+
     if user:
         frappe.cache().delete_value(f"scope_hierarchy:{user}")
+        _delete_xuser_keys()
     else:
         # Invalidate all users' caches
         user_list = frappe.get_all("User", pluck="name")
         for u in user_list:
             frappe.cache().delete_value(f"scope_hierarchy:{u}")
+        _delete_xuser_keys()
 
 
 # ═══════════════════════════════════════════════════════════════
