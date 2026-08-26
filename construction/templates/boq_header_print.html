@@ -2,7 +2,7 @@
 <html dir="{{ direction or 'ltr' }}" lang="{% if is_arabic %}ar{% else %}en{% endif %}">
 <head>
     <meta charset="utf-8">
-    <title>BOQ Header - {{ header.title }}</title>
+    <title>BOQ Header - {{ header.title | e }}</title>
     <style>
         :root {
             --print-border-color: #ddd;
@@ -100,8 +100,8 @@
 </head>
 <body>
     <div class="header">
-        <h1>{{ labels["BOQ Header"] }}</h1>
-        <h2>{{ header.title }}</h2>
+        <h1>{{ labels["BOQ Header"] | e }}</h1>
+        <h2>{{ header.title | e }}</h2>
     </div>
 
     {% set currency_keys = ["total_contract_value", "total_budgeted_cost"] %}
@@ -121,15 +121,15 @@
     } %}
 
     <div class="info-section">
-        <h3>{{ labels["Bill of Quantities"] }}</h3>
+        <h3>{{ labels["Bill of Quantities"] | e }}</h3>
         {% for col in columns %}
         <div class="info-row">
-            <span class="info-label">{{ col.label }}:</span>
+            <span class="info-label">{{ col.label | e }}:</span>
             <span class="info-value{% if col.key in currency_keys %} currency{% endif %}">
                 {% if col.key in currency_keys %}
                     {{ "%.2f"|format(field_map.get(col.key, 0) or 0) }}
                 {% else %}
-                    {{ field_map.get(col.key, '') or '' }}
+                    {{ (field_map.get(col.key, '') or '') | e }}
                 {% endif %}
             </span>
         </div>
@@ -138,7 +138,7 @@
 
     <div class="footer">
         <p>Construction ERP - BOQ Management System</p>
-        <p>{{ labels["Export Date"] }}: {{ export_date }} | {{ labels["Company"] }}: {{ company }}</p>
+        <p>{{ labels["Export Date"] | e }}: {{ export_date | e }} | {{ labels["Company"] | e }}: {{ company | e }}</p>
     </div>
 </body>
 </html>

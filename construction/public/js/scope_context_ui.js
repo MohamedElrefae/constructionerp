@@ -30,14 +30,15 @@
 			);
 
 			(items || []).forEach(function (item) {
-				var val = item[valueField || "name"];
-				var label = item[labelField || valueField || "name"];
+				var val = item[valueField || "name"] || "";
+				var label = item[labelField || valueField || "name"] || "";
 				if (val === currentValue) {
 					currentLabel = label;
 				}
-				$menu.append(
-					'<a class="dropdown-item" href="#" data-value="' + val + '">' + label + "</a>"
-				);
+				var $item = $('<a class="dropdown-item" href="#"></a>');
+				$item.attr("data-value", val);
+				$item.text(label);
+				$menu.append($item);
 			});
 
 			$label.text(currentLabel);

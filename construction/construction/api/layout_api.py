@@ -158,7 +158,6 @@ def save_layout(
         doc.is_default = is_default
         doc.priority = priority
         doc.save(ignore_permissions=True)
-        frappe.db.commit()
         return {"status": "updated", "name": doc.name}
     else:
         doc = frappe.new_doc("Form Layout Profile")
@@ -173,7 +172,6 @@ def save_layout(
         doc.layout_version = 1
         doc.enabled = 1
         doc.insert(ignore_permissions=True)
-        frappe.db.commit()
         return {"status": "created", "name": doc.name}
 
 
@@ -232,7 +230,6 @@ def delete_my_personal_layout(doctype: str) -> dict:
         )
 
     frappe.delete_doc("Form Layout Profile", existing, ignore_permissions=True)
-    frappe.db.commit()
     return {"status": "deleted", "name": existing}
 
 
@@ -252,7 +249,6 @@ def delete_layout(name: str) -> dict:
         )
 
     frappe.delete_doc("Form Layout Profile", name, ignore_permissions=True)
-    frappe.db.commit()
     return {"status": "deleted", "name": name}
 
 

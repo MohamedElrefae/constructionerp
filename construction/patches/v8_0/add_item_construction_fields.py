@@ -3,7 +3,7 @@ import frappe
 
 def execute():
     """Add construction custom fields to standard ERPNext Item.
-    
+
     This patch idempotently creates the following custom fields:
     - is_construction_resource (Check)
     - construction_resource_type (Select)
@@ -13,7 +13,7 @@ def execute():
     - labor_trade_designation (Link -> Designation)
     - linked_asset (Link -> Asset)
     - item_name_ar (Data) — Arabic item name for bilingual BOQs/reports
-    
+
     Does NOT modify core erpnext item.json.
     """
     if not frappe.db.exists("DocType", "Item"):

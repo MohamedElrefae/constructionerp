@@ -251,12 +251,6 @@ if __name__ == "__main__":
 # Task 7.4: Verify API endpoints accept column_config and pass it to export service
 # **Validates: Requirements 9.2, 9.3**
 
-# Pre-register the Frappe-style import path used inside boq_api.py functions:
-#   from construction.services.boq_export_service import BOQExportService
-# We create a mock module at that path so the local import resolves to our mock.
-_mock_export_module = MagicMock()
-sys.modules["construction.services.boq_export_service"] = _mock_export_module
-
 from construction.api.boq_api import (
     export_boq_excel,
     export_boq_header_excel,
@@ -277,7 +271,7 @@ class TestAPIColumnConfigPassthrough(unittest.TestCase):
     """
 
     def setUp(self):
-        """Set up common mock return value and reset the mock service."""
+        """Set up common mock return value and patch the export service."""
         self.success_result = {
             "success": True,
             "file_url": "/files/test.pdf",
@@ -289,9 +283,12 @@ class TestAPIColumnConfigPassthrough(unittest.TestCase):
                 {"field_key": "title", "label": "Title", "width": 40, "visible": True, "sort_order": 1},
             ]
         )
-        # Reset the mock service before each test
-        self.mock_service = _mock_export_module.BOQExportService
-        self.mock_service.reset_mock()
+        self.patcher = patch("construction.services.boq_export_service.BOQExportService")
+        self.mock_service = self.patcher.start()
+
+    def tearDown(self):
+        """Stop the patcher to restore original module."""
+        self.patcher.stop()
 
     # --- export_boq_pdf ---
 

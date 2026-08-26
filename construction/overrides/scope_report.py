@@ -103,50 +103,128 @@ SCOPE_DIMENSIONS: tuple[str, ...] = (
 _ORIGINAL_RUN = None
 _ORIGINAL_RUN_SIG = None
 
+# Degraded-mode state. When installation of the full enforcement wrapper
+# fails, a FAIL-CLOSED guard remains installed that DENIES all protected
+# reports instead of letting them run unscoped.
+_DEGRADED = False
 
-def apply_report_monkeypatch() -> None:
-    """Install all scope-context report monkey-patches.
 
-    Patches (Option A+):
-      - ``frappe.desk.query_report.run`` → scope-aware wrapper that
-        rewrites filters to the active scope.
+def _degraded_guard_run(*args, **kwargs):
+    """Fail-closed stand-in for query_report.run.
 
-    Patches (Option B):
-      - ``frappe.core.doctype.report.report.is_permitted`` → bypass
-        for allowlisted reports when the user has an active scope
-        context.
-      - ``frappe.desk.query_report.get_report_doc`` → bypass the
-        ``report`` perm check (line 49 of the original) under the
-        same condition.
-      - ``frappe.permissions.has_permission`` → bypass for
-        ``report``, ``select``, ``read`` ptypes when a structured
-        bypass context is set and validated.
-      - ``frappe.permissions.get_role_permissions`` → return the
-        original perms dict with ONLY the allowlisted ptypes
-        overridden to 1.
-      - ``frappe.model.get_permitted_fields`` → return all valid
-        columns when the structured context is set.
-
-    All patches are additive: non-allowlisted reports and users
-    without a scope context fall through to the original behaviour.
+    While enforcement is degraded/unavailable, allowlisted (protected)
+    reports are DENIED outright. Non-protected reports pass through to
+    Frappe's original behaviour unchanged.
     """
-    global _ORIGINAL_RUN, _ORIGINAL_RUN_SIG
+    try:
+        report_name = _resolve_report_name(args, kwargs)
+    except Exception:
+        report_name = None
+    if report_name in ALLOWED_REPORTS:
+        frappe.throw(
+            _(
+                "Security Error: Report scope enforcement is unavailable. "
+                "Access to protected reports is denied."
+            ),
+            frappe.PermissionError,
+        )
+    return _ORIGINAL_RUN(*args, **kwargs)
 
-    if _ORIGINAL_RUN is not None:
-        return
+
+def apply_report_monkeypatch() -> bool:
+    """Install the scope-context report enforcement. Returns True when the
+    FULL enforcement is active.
+
+    Installation order guarantees no fail-open window:
+
+      1. Capture the original ``query_report.run``.
+      2. Immediately install the FAIL-CLOSED degraded guard (denies
+         protected reports).
+      3. Attempt the full wrapper + access-gate patches.
+      4. On ANY failure, restore the degraded guard and flag the app
+         degraded — protected reports stay denied, never unscoped.
+
+    Idempotent: repeated calls are safe and return current status.
+    Use :func:`report_enforcement_health` for startup/health verification.
+    """
+    global _ORIGINAL_RUN, _ORIGINAL_RUN_SIG, _DEGRADED
 
     try:
         from frappe.desk import query_report
     except Exception:
-        return
+        globals()["_DEGRADED"] = True
+        return False
+
+    current = getattr(query_report.run, "__name__", "")
+    if current == "_scope_aware_run":
+        return not _DEGRADED
+    if current == "_degraded_guard_run":
+        return False  # already guarding in fail-closed mode
+
+    try:
+        _ORIGINAL_RUN = query_report.run
+        _ORIGINAL_RUN_SIG = inspect.signature(_ORIGINAL_RUN)
+    except Exception:
+        globals()["_DEGRADED"] = True
+        return False
+
+    # Step 1: fail-closed baseline BEFORE attempting the real patch.
+    query_report.run = _degraded_guard_run
 
     # --- Option A+: report.run wrapper ---
-    _ORIGINAL_RUN = query_report.run
-    _ORIGINAL_RUN_SIG = inspect.signature(_ORIGINAL_RUN)
-    query_report.run = _scope_aware_run
-
     # --- Option B: Report.is_permitted + get_report_doc ---
-    _patch_report_access_gates()
+    try:
+        query_report.run = _scope_aware_run
+        _patch_report_access_gates()
+    except Exception as e:
+        logger.exception("Report scope enforcement failed to install; degrading to fail-closed guard")
+        try:
+            frappe.log_error(
+                f"Report scope enforcement failed to install; protected reports are DENIED: {e}",
+                "Scope Report Monkeypatch",
+            )
+        except Exception:
+            pass
+        query_report.run = _degraded_guard_run
+        globals()["_DEGRADED"] = True
+        return False
+
+    return True
+
+
+def report_enforcement_health() -> dict:
+    """Health probe for startup checks / monitoring.
+
+    Returns the installation state of the report-scope enforcement.
+    ``installed=False`` together with ``fail_closed_guard=True`` means
+    protected reports are being DENIED (safe), not served unscoped.
+    """
+    status = {
+        "installed": False,
+        "fail_closed_guard": False,
+        "runner": None,
+        "report_gates_patched": False,
+        "degraded": bool(_DEGRADED),
+    }
+    try:
+        from frappe.desk import query_report
+
+        runner_name = getattr(query_report.run, "__name__", "")
+        status["runner"] = runner_name
+        status["installed"] = runner_name == "_scope_aware_run" and not _DEGRADED
+        status["fail_closed_guard"] = runner_name == "_degraded_guard_run"
+    except Exception:
+        return status
+
+    try:
+        from frappe.core.doctype.report import report as report_module
+
+        status["report_gates_patched"] = (
+            getattr(report_module.Report.is_permitted, "__name__", "") == "_scope_aware_is_permitted"
+        )
+    except Exception:
+        pass
+    return status
 
 
 def _user_has_active_scope_context(user: str | None = None) -> bool:
@@ -596,27 +674,31 @@ def _resolve_report_name(args: tuple, kwargs: dict) -> str | None:
 
 def _resolve_user(args: tuple, kwargs: dict) -> str:
     """
-    Return the user from either a keyword or positional arg.
+    Return the user for report execution and scope enforcement.
 
-    Mirrors the real Frappe signature ``run(report_name, filters=None,
-    user=None, ...)`` so that callers invoking positionally — e.g.
-    ``run("General Ledger", filters, "some-user@example.com")`` —
-    are honoured. Falls back to ``frappe.session.user`` only when no
-    explicit value is supplied.
+    Security: Defaults strictly to ``frappe.session.user``.
+    Impersonation (specifying a different user) is permitted ONLY for System Managers
+    and Administrator. Non-System Managers attempting to supply a different user
+    are rejected with a PermissionError to prevent scope bypass.
     """
-    if kwargs.get("user"):
-        return kwargs["user"]
-    if _ORIGINAL_RUN_SIG is None:
-        return frappe.session.user
-    try:
-        bound = _ORIGINAL_RUN_SIG.bind_partial(*args, **kwargs)
-        bound_user = bound.arguments.get("user")
-        if bound_user:
-            return bound_user
-    except TypeError:
-        # Caller passed something we cannot bind; fall through to session.
-        pass
-    return frappe.session.user
+    session_user = frappe.session.user
+    requested_user = kwargs.get("user")
+    if not requested_user and _ORIGINAL_RUN_SIG is not None:
+        try:
+            bound = _ORIGINAL_RUN_SIG.bind_partial(*args, **kwargs)
+            requested_user = bound.arguments.get("user")
+        except TypeError:
+            requested_user = None
+
+    if requested_user and requested_user != session_user:
+        if session_user != "Administrator" and "System Manager" not in frappe.get_roles(session_user):
+            frappe.throw(
+                _("You are not permitted to execute reports on behalf of another user."),
+                frappe.PermissionError,
+            )
+        return requested_user
+
+    return session_user
 
 
 def _normalize_filters(args: tuple, kwargs: dict):
@@ -798,14 +880,17 @@ def _scope_aware_run(*args, **kwargs):
     # 1. Resolve the report name early so we can decide on enforcement.
     report_name = _resolve_report_name(args, kwargs)
 
-    # 2. Bypass when scope context is disabled.
+    # 2. Check scope context settings (fail closed if settings fail)
     try:
         settings = frappe.get_single("Construction Settings")
         if not settings or not settings.enable_scope_context:
             return _ORIGINAL_RUN(*args, **kwargs)
-    except Exception:
-        # If settings are unavailable, do not break the report.
-        return _ORIGINAL_RUN(*args, **kwargs)
+    except Exception as e:
+        frappe.logger("scope_report").error(f"Failed to read scope settings in report runner: {e}")
+        frappe.throw(
+            frappe._("Security Error: Scope enforcement configuration could not be loaded."),
+            frappe.PermissionError,
+        )
 
     # 3. Bypass for Administrator.
     user = _resolve_user(args, kwargs)
@@ -816,11 +901,17 @@ def _scope_aware_run(*args, **kwargs):
     if _has_unrestricted_report_role(user):
         return _ORIGINAL_RUN(*args, **kwargs)
 
-    # 5. Bypass for non-allowlisted reports. This is the critical
-    #    Option A+ invariant: only the protected financial and dashboard
-    #    reports are gated. Everything else keeps Frappe's default behaviour.
+    # 5. Bypass for non-allowlisted reports.
     if report_name not in ALLOWED_REPORTS:
         return _ORIGINAL_RUN(*args, **kwargs)
+
+    # Fail closed: Protected report requires active scope context for restricted users
+    if not _user_has_active_scope_context(user):
+        _log_report_access(report_name, user, False)
+        frappe.throw(
+            frappe._("Access denied: Active scope context is required to view this report."),
+            frappe.PermissionError,
+        )
 
     # 6. Normalise positional / keyword args so we can read filters
     #    regardless of how the caller invoked the function. The

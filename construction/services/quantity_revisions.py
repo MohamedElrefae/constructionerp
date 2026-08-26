@@ -224,37 +224,52 @@ def process_approved_vo_lines(vo):
     """Process all VO lines atomically on Client Approval.
 
     Idempotent: skips lines that already have created_quantity_revision.
-
-    Requirements:
-    - Check created_quantity_revision before creating new revision.
-    - Check created_boq_item / created_boq_structure before creating new variation items.
-    - Lock BOQ Item row during approval.
-    - Validate actual DB current_revised_qty matches expected.
-    - Apply all lines or fail cleanly (no partial approval).
+    Two-pass design + savepoint ensures NO partial approval survives an error.
     """
     from construction.construction.doctype.variation_order.variation_order import (
         create_variation_structure_and_item,
     )
 
-    errors = []
+    if frappe.session.user != "Administrator":
+        frappe.has_permission("Variation Order", "write", doc=vo, throw=True)
 
+    # --- PASS 1: Pre-validation & row locking ---
     for line in vo.lines:
-        # Idempotency check
         if line.created_quantity_revision:
             continue
+        if line.line_type in ("Quantity Change", "Omission"):
+            if not line.boq_item:
+                frappe.throw(_("Row {0}: Linked BOQ Item is required for {1}.").format(line.idx, line.line_type))
+            locked = frappe.db.sql(
+                "SELECT name, current_revised_qty, current_revised_unit_price, original_qty FROM `tabBOQ Item` WHERE name = %s FOR UPDATE",
+                line.boq_item,
+                as_dict=True,
+            )
+            if not locked:
+                frappe.throw(_("Row {0}: BOQ Item {1} not found.").format(line.idx, line.boq_item))
 
-        try:
+    # --- PASS 2: Apply mutations inside savepoint ---
+    save_point = f"vo_approval_{frappe.generate_hash(length=8)}"
+    frappe.db.savepoint(save_point)
+
+    try:
+        for line in vo.lines:
+            if line.created_quantity_revision:
+                continue
+
             if line.line_type == "New Item":
-                if line.created_boq_item:
+                if line.created_quantity_revision:
                     continue
 
-                # Create variation item and structure
-                structure = create_variation_structure_and_item(vo, line)
+                if line.created_boq_item:
+                    existing_rev = frappe.db.get_value("BOQ Quantity Revision", {"variation_order": vo.name, "boq_item": line.created_boq_item})
+                    if existing_rev:
+                        line.db_set("created_quantity_revision", existing_rev, update_modified=False)
+                        continue
 
-                # Get the created item
+                structure = create_variation_structure_and_item(vo, line)
                 item_name = frappe.db.get_value("BOQ Item", {"structure": structure.name}, "name")
 
-                # Set variation-specific fields
                 frappe.db.set_value(
                     "BOQ Item",
                     item_name,
@@ -266,7 +281,6 @@ def process_approved_vo_lines(vo):
                     update_modified=False,
                 )
 
-                # Create revision
                 revision = create_variation_item_revision(
                     boq_item=item_name,
                     quantity=line.revised_qty,
@@ -280,20 +294,22 @@ def process_approved_vo_lines(vo):
                     rate_change_justification=line.rate_change_justification,
                 )
 
-                # Link back
                 line.db_set("created_boq_structure", structure.name, update_modified=False)
                 line.db_set("created_boq_item", item_name, update_modified=False)
                 line.db_set("created_quantity_revision", revision.name, update_modified=False)
 
             elif line.line_type in ("Quantity Change", "Omission"):
-                # Read actual current values from DB (with lock)
+                existing_rev = frappe.db.get_value("BOQ Quantity Revision", {"variation_order": vo.name, "boq_item": line.boq_item})
+                if existing_rev:
+                    line.db_set("created_quantity_revision", existing_rev, update_modified=False)
+                    continue
+
                 actual = frappe.db.sql(
                     "SELECT current_revised_qty, current_revised_unit_price, original_qty FROM `tabBOQ Item` WHERE name = %s FOR UPDATE",
                     line.boq_item,
                     as_dict=True,
                 )[0]
 
-                # Create revision with actual values
                 revision = create_quantity_revision(
                     boq_item=line.boq_item,
                     previous_qty=actual.current_revised_qty,
@@ -306,20 +322,15 @@ def process_approved_vo_lines(vo):
                     status="Approved",
                 )
 
-                # Apply revision
                 apply_approved_revision(revision)
-
-                # Link back
                 line.db_set("created_quantity_revision", revision.name, update_modified=False)
 
-        except Exception as e:
-            errors.append(str(e))
-            frappe.log_error(f"Error processing VO line {line.name}: {str(e)}", "VO Approval")
+        # Update BOQ Header totals for all line types
+        update_boq_header_totals(vo.boq_header)
 
-    if errors:
-        frappe.throw(_("Errors occurred during VO approval: {0}").format("; ".join(errors)))
-
-    # Update BOQ Header totals for all line types (including New Items)
-    update_boq_header_totals(vo.boq_header)
+    except Exception as exc:
+        frappe.db.rollback(save_point=save_point)
+        frappe.log_error(f"VO approval aborted and rolled back: {str(exc)}", "VO Approval")
+        raise
 
     return {"success": True}

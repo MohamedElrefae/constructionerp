@@ -21,10 +21,11 @@ def _as_dict(filters: Any) -> dict[str, Any]:
     return filters
 
 
-def _extract_enforce_scope(filters: dict[str, Any], enforce_scope: Any) -> Any:
-    if enforce_scope is not None:
-        return enforce_scope
-    return filters.pop("enforce_scope", None)
+def _extract_enforce_scope(filters: dict[str, Any], enforce_scope: Any = None) -> Any:
+    # Always pop enforce_scope from filters to prevent parameter pollution
+    filters.pop("enforce_scope", None)
+    # Server-side authoritative: never accept client overrides
+    return None
 
 
 def _limit_values(txt: str, start: int, page_len: int) -> dict[str, Any]:
@@ -407,10 +408,10 @@ def get_variation_orders(
         conditions.append("h.project = %(project)s")
         values["project"] = filters.get("project")
 
-    # Only apply user scope when the caller did not pin a specific BOQ Header
-    # (VOs raised against a Locked BOQ are an admin/PM workflow, not a
-    # project-scoped list view, so a pinned boq_header should win over scope).
-    scope = None if filters.get("boq_header") else resolve_query_scope(enforce_scope)
+    if filters.get("boq_header") and frappe.session.user != "Administrator":
+        frappe.has_permission("BOQ Header", "read", doc=filters.get("boq_header"), throw=True)
+
+    scope = resolve_query_scope(enforce_scope)
     if scope:
         _attach_scope_response(scope)
         join_header = True
@@ -478,7 +479,10 @@ def get_vo_line_boq_items(
         conditions.append("h.project = %(project)s")
         values["project"] = filters.get("project")
 
-    scope = None if filters.get("boq_header") else resolve_query_scope(enforce_scope)
+    if filters.get("boq_header") and frappe.session.user != "Administrator":
+        frappe.has_permission("BOQ Header", "read", doc=filters.get("boq_header"), throw=True)
+
+    scope = resolve_query_scope(enforce_scope)
     if scope:
         _attach_scope_response(scope)
         join_header = True
@@ -540,7 +544,10 @@ def get_variation_structures(
         conditions.append("h.project = %(project)s")
         values["project"] = filters.get("project")
 
-    scope = None if filters.get("boq_header") else resolve_query_scope(enforce_scope)
+    if filters.get("boq_header") and frappe.session.user != "Administrator":
+        frappe.has_permission("BOQ Header", "read", doc=filters.get("boq_header"), throw=True)
+
+    scope = resolve_query_scope(enforce_scope)
     if scope:
         _attach_scope_response(scope)
         join_header = True

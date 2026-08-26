@@ -2,7 +2,7 @@
 <html dir="{{ direction or 'ltr' }}" lang="{% if is_arabic %}ar{% else %}en{% endif %}">
 <head>
     <meta charset="utf-8">
-    <title>Bill of Quantities - {{ header.title }}</title>
+    <title>Bill of Quantities - {{ (header.title if header is defined and header else title) | e }}</title>
     <style>
         :root {
             --print-border-color: #ddd;
@@ -132,22 +132,22 @@
 </head>
 <body>
     <div class="header">
-        <h1>{{ labels["Bill of Quantities"] }}</h1>
-        <h2>{{ header.title }}</h2>
+        <h1>{{ labels["Bill of Quantities"] | e }}</h1>
+        <h2>{{ header.title | e }}</h2>
         <div class="header-info">
             <table>
                 <tr>
                     <td>
-                        <span class="label">{{ labels["Project"] }}:</span> {{ header.project_name or header.project }}<br>
-                        <span class="label">{{ labels["BOQ Type"] }}:</span> {{ header.boq_type }}
+                        <span class="label">{{ labels["Project"] | e }}:</span> {{ (header.project_name or header.project) | e }}<br>
+                        <span class="label">{{ labels["BOQ Type"] | e }}:</span> {{ header.boq_type | e }}
                     </td>
                     <td>
-                        <span class="label">{{ labels["Status"] }}:</span> {{ header.status }}<br>
-                        <span class="label">{{ labels["Version"] }}:</span> {{ header.version }}
+                        <span class="label">{{ labels["Status"] | e }}:</span> {{ header.status | e }}<br>
+                        <span class="label">{{ labels["Version"] | e }}:</span> {{ header.version | e }}
                     </td>
                     <td>
-                        <span class="label">{{ labels["Export Date"] }}:</span> {{ export_date }}<br>
-                        <span class="label">{{ labels["Company"] }}:</span> {{ company }}
+                        <span class="label">{{ labels["Export Date"] | e }}:</span> {{ export_date | e }}<br>
+                        <span class="label">{{ labels["Company"] | e }}:</span> {{ company | e }}
                     </td>
                 </tr>
             </table>
@@ -161,7 +161,7 @@
         <thead>
             <tr>
                 {% for col in columns %}
-                <th style="width: {{ col.width }}%">{{ col.label }}</th>
+                <th style="width: {{ col.width | float }}%">{{ col.label | e }}</th>
                 {% endfor %}
             </tr>
         </thead>
@@ -177,14 +177,14 @@
                 <td{% if cell_classes %} class="{{ cell_classes | join(' ') }}"{% endif %}>
                     {# Map column key to node value with appropriate formatting #}
                     {% if key == "title" %}
-                        {{ node.indent }}{{ node.title }}
+                        {{ node.indent }}{{ node.title | e }}
                     {% elif key == "type" %}
-                        {% if node.is_group %}{{ labels["Section"] }}{% else %}{{ labels["Item"] }}{% endif %}
+                        {% if node.is_group %}{{ labels["Section"] | e }}{% else %}{{ labels["Item"] | e }}{% endif %}
                     {% elif key in numeric_keys %}
                         {% set val = node[key] %}
                         {% if val %}{{ "%.2f"|format(val) }}{% endif %}
                     {% else %}
-                        {{ node[key] or '' }}
+                        {{ (node[key] or '') | e }}
                     {% endif %}
                 </td>
                 {% endfor %}
@@ -200,19 +200,19 @@
             {% endfor %}
             <tr class="total-row">
                 {% if ns.line_total_idx > 0 %}
-                <td colspan="{{ ns.line_total_idx }}" style="text-align: {{ opposite_align or 'right' }}; padding-right: 20px;">{{ labels["GRAND TOTAL"] }}</td>
-                <td class="number">{{ "%.2f"|format(grand_total) }}</td>
+                <td colspan="{{ ns.line_total_idx }}" style="text-align: {{ opposite_align or 'right' }}; padding-right: 20px;">{{ (labels.get("GRAND TOTAL", "GRAND TOTAL") if labels is defined and labels else "GRAND TOTAL") | e }}</td>
+                <td class="number">{{ "%.2f"|format(grand_total or 0.0) }}</td>
                 {% if ns.line_total_idx < columns|length - 1 %}
                 <td colspan="{{ columns|length - ns.line_total_idx - 1 }}"></td>
                 {% endif %}
                 {% elif ns.line_total_idx == 0 %}
-                <td class="number">{{ "%.2f"|format(grand_total) }}</td>
+                <td class="number">{{ "%.2f"|format(grand_total or 0.0) }}</td>
                 {% if columns|length > 1 %}
                 <td colspan="{{ columns|length - 1 }}"></td>
                 {% endif %}
                 {% else %}
                 {# line_total column not present — span all columns #}
-                <td colspan="{{ columns|length }}" style="text-align: {{ opposite_align or 'right' }}; padding-right: 20px;">{{ labels["GRAND TOTAL"] }}: {{ "%.2f"|format(grand_total) }}</td>
+                <td colspan="{{ columns|length }}" style="text-align: {{ opposite_align or 'right' }}; padding-right: 20px;">{{ (labels.get("GRAND TOTAL", "GRAND TOTAL") if labels is defined and labels else "GRAND TOTAL") | e }}: {{ "%.2f"|format(grand_total or 0.0) }}</td>
                 {% endif %}
             </tr>
         </tbody>
@@ -220,7 +220,7 @@
 
     <div class="footer">
         <p>Construction ERP - BOQ Management System</p>
-        <p>{{ labels["BOQ ID"] }}: {{ header.name }} | {{ labels["Total Contract Value"] }}: {{ "%.2f"|format(header.total_contract_value) }}</p>
+        <p>{{ (labels.get("BOQ ID", "BOQ ID") if labels is defined and labels else "BOQ ID") | e }}: {{ (header.name if header is defined and header else '') | e }} | {{ (labels.get("Total Contract Value", "Total Contract Value") if labels is defined and labels else "Total Contract Value") | e }}: {{ "%.2f"|format((header.total_contract_value if header is defined and header else 0.0) or 0.0) }}</p>
     </div>
 </body>
 </html>

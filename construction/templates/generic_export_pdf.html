@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>{{ doctype }} — {{ docname }}</title>
+    <title>{{ doctype | e }} — {{ docname | e }}</title>
     <style>
         :root {
             --export-primary: #1a365d;
@@ -157,15 +157,15 @@
             <div class="doc-header__sub">Document Export</div>
         </div>
         <div class="doc-header__meta">
-            {% if company %}<strong>{{ company }}</strong><br>{% endif %}
-            Export Date: {{ export_date }}
+            {% if company %}<strong>{{ company | e }}</strong><br>{% endif %}
+            Export Date: {{ export_date | e }}
         </div>
     </div>
 
     <!-- Document title block -->
     <div class="doc-title">
-        <div class="doc-title__doctype">{{ doctype }}</div>
-        <div class="doc-title__name">{{ docname }}</div>
+        <div class="doc-title__doctype">{{ doctype | e }}</div>
+        <div class="doc-title__name">{{ docname | e }}</div>
     </div>
 
     <!-- Data table: one column per row for a "field label | value" layout -->
@@ -179,9 +179,9 @@
         <tbody>
             {% for col in columns %}
             <tr>
-                <td><strong>{{ col.label }}</strong></td>
+                <td><strong>{{ col.label | e }}</strong></td>
                 <td{% if col.fieldtype in ['Currency','Float','Int','Percent'] %} class="numeric"{% endif %}>
-                    {{ row.get(col.field_key, '') or '' }}
+                    {{ (row.get(col.field_key, '') or '') | e }}
                 </td>
             </tr>
             {% endfor %}
@@ -191,7 +191,7 @@
     <!-- Footer -->
     <div class="doc-footer">
         <span>Construction ERP — Document Export</span>
-        <span>{{ doctype }} / {{ docname }}</span>
+        <span>{{ doctype | e }} / {{ docname | e }}</span>
     </div>
 
 </body>

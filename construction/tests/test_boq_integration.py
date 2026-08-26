@@ -245,46 +245,54 @@ class TestBOQIntegration(unittest.TestCase):
             structure.save()
 
     def test_10_rollup_calculation_performance(self):
-        """Test performance of rollup calculations"""
+        """Test performance and correctness of rollup calculations on a real 100-item tree."""
         import time
 
-        # Create a moderately complex structure
-        start_time = time.time()
+        # Build 10 sections with 10 items each (100 items total) through standard document lifecycle
+        expected_total = 0
+        for s_idx in range(10):
+            sec = frappe.get_doc({
+                "doctype": "BOQ Structure",
+                "boq_header": self.boq_header.name,
+                "title": f"Benchmark Section {s_idx + 1}",
+                "is_group": 1,
+            }).insert(ignore_permissions=True)
 
-        # Create 100 items
-        for i in range(100):
-            item = frappe.get_doc(
-                {
+            for i_idx in range(10):
+                qty = (i_idx + 1) * 10
+                rate = (s_idx + 1) * 5.0
+                expected_total += (qty * rate)
+
+                item_struct = frappe.get_doc({
                     "doctype": "BOQ Structure",
                     "boq_header": self.boq_header.name,
-                    "title": f"Test Item {i}",
+                    "title": f"Benchmark Item {s_idx + 1}.{i_idx + 1}",
                     "is_group": 0,
-                }
-            )
-            item.insert()
+                    "parent_structure": sec.name,
+                }).insert(ignore_permissions=True)
 
-            # Update BOQ Item with values
-            boq_items = frappe.get_all("BOQ Item", filters={"structure": item.name}, fields=["name"])
-            if boq_items:
-                boq_item = frappe.get_doc("BOQ Item", boq_items[0].name)
-                boq_item.quantity = 10
-                boq_item.contract_unit_price = 100
-                boq_item.factor = 1.0
-                boq_item.save()
+                item_doc = frappe.get_doc("BOQ Item", {"structure": item_struct.name})
+                item_doc.quantity = qty
+                item_doc.unit = "Nos"
+                item_doc.contract_unit_price = rate
+                item_doc.save(ignore_permissions=True)
 
-        # Calculate total
+        # Measure rollup calculation performance
         header = frappe.get_doc("BOQ Header", self.boq_header.name)
+        start_time = time.time()
         header.calculate_total_value()
+        execution_time = time.time() - start_time
 
-        end_time = time.time()
-        execution_time = end_time - start_time
-
-        # Performance check: should complete in reasonable time
+        # Assert performance (< 1.0s) and arithmetic correctness
         self.assertLess(
-            execution_time, 5.0, f"Rollup calculation took {execution_time:.2f} seconds, should be < 5s"
+            execution_time, 1.0, f"Rollup calculation for 100 items took {execution_time:.3f}s, threshold is 1.0s"
         )
-
-        print(f"Rollup calculation for 100 items took {execution_time:.2f} seconds")
+        self.assertAlmostEqual(
+            header.total_contract_value,
+            expected_total,
+            places=2,
+            msg=f"Expected contract total {expected_total}, got {header.total_contract_value}",
+        )
 
 
 if __name__ == "__main__":

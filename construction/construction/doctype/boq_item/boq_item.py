@@ -45,6 +45,8 @@ class BOQItem(Document):
         self._trigger_header_rollup()
 
     def _trigger_header_rollup(self):
+        if getattr(frappe.flags, "defer_boq_rollups", False) or getattr(self.flags, "defer_boq_rollups", False):
+            return
         if not self.boq_header:
             return
         header = frappe.get_doc("BOQ Header", self.boq_header)
@@ -140,7 +142,7 @@ class BOQItem(Document):
     # --- Step 4: Fetch approved cost data ---
     def fetch_cost_data(self):
         """Fetch est_unit_cost from approved BOQ Cost Analysis.
-        
+
         If an approved BOQ Cost Analysis exists, use its total_unit_cost.
         If none exists, preserve the current est_unit_cost value during saves.
         """
@@ -168,8 +170,11 @@ class BOQItem(Document):
             )
             if name:
                 return flt(frappe.db.get_value("BOQ Cost Analysis", name, "total_unit_cost"))
-        except Exception:
-            pass
+        except (frappe.DoesNotExistError, frappe.EmptyQueryValuesError):
+            return None
+        except Exception as e:
+            frappe.logger("boq_item").error(f"Error fetching approved cost analysis for {self.name}: {e}")
+            raise e
         return None
 
     # --- Step 5: Cost buildup ---

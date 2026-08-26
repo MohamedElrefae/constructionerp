@@ -10,6 +10,100 @@ from construction.construction.utils.scope_validation import validate_scope_dime
 # ═══════════════════════════════════════════════════════════════
 
 
+def _is_privileged_scope_actor():
+    return (
+        frappe.session.user == "Administrator" or "System Manager" in frappe.get_roles()
+    )
+
+
+def get_allowed_scope_dimensions(user=None):
+    """Single permission-correct source of allowed scope dimensions.
+
+    Resolution per dimension (fail closed):
+      1. Explicit User Permissions for the user define the allowed set.
+      2. Without User Permissions, the set is every value the user can
+         READ via ``frappe.get_list`` (role perms + User Permission
+         filters). A user lacking read access gets an EMPTY set.
+      3. An EMPTY allowed set means NOTHING is allowed — never "allow all".
+
+    Uses ``frappe.get_list`` (permission-enforcing) — never plain
+    ``frappe.get_all``, which bypasses permissions. Cross-user lookups
+    are privileged-only (Administrator / System Manager).
+    """
+    user = user or frappe.session.user
+    cross_user = user != frappe.session.user
+    if cross_user and not _is_privileged_scope_actor():
+        frappe.throw(
+            _("Not authorized to inspect scope dimensions of another user."),
+            frappe.PermissionError,
+        )
+
+    kw = {"ignore_permissions": True} if cross_user else {}
+
+    def _user_permission_values(doctype):
+        if cross_user:
+            # Privileged actors inspecting another user's grants.
+            return set(
+                frappe.get_all(
+                    "User Permission",
+                    filters={"user": user, "allow": doctype},
+                    pluck="for_value",
+                    limit_page_length=0,
+                )
+            )
+        try:
+            return set(
+                frappe.get_list(
+                    "User Permission",
+                    filters={"user": user, "allow": doctype},
+                    pluck="for_value",
+                    limit_page_length=0,
+                )
+            )
+        except Exception:
+            # A user who cannot read the "User Permission" doctype by role
+            # may still read their OWN grant records — that is the exact
+            # restriction set that defines their permitted scope. It is
+            # pinned to ``user == self`` so it cannot leak other users'
+            # grants or the wider hierarchy. This mirrors how Frappe itself
+            # resolves user permissions.
+            return set(
+                frappe.get_all(
+                    "User Permission",
+                    filters={"user": user, "allow": doctype},
+                    pluck="for_value",
+                    limit_page_length=0,
+                )
+            )
+
+    def _allowed_values(doctype, filters=None):
+        ups = _user_permission_values(doctype)
+        if ups:
+            return ups
+        try:
+            rows = frappe.get_list(
+                doctype,
+                fields=["name"],
+                filters=filters or {},
+                limit_page_length=0,
+                **kw,
+            )
+        except frappe.PermissionError:
+            # No read access on this dimension at all → nothing allowed.
+            return set()
+        return {r["name"] for r in rows}
+
+    project_filters = {"status": ["!=", "Completed"]}
+    department_filters = {"disabled": 0} if frappe.db.has_column("Department", "disabled") else {}
+
+    return {
+        "company": _allowed_values("Company"),
+        "cost_center": _allowed_values("Cost Center"),
+        "project": _allowed_values("Project", project_filters),
+        "department": _allowed_values("Department", department_filters),
+    }
+
+
 def get_user_scope_context(user=None):
     """
     Returns the User Scope Context document for the given user, or None.
@@ -25,8 +119,11 @@ def get_user_scope_context(user=None):
 def get_user_scope_hierarchy(user=None):
     """
     Returns the scope hierarchy (companies, cost centers, projects, departments)
-    that the user is permitted to access, based on User Permissions.
-    Results are Redis-cached with 5-minute TTL.
+    that the user is PERMITTED to access, based on session identity,
+    role permissions and User Permissions.
+
+    All queries are permission-enforcing (frappe.get_list). Results are
+    Redis-cached with a 5-minute TTL keyed per user.
     """
     user = user or frappe.session.user
     cache_key = f"scope_hierarchy:{user}"
@@ -36,36 +133,52 @@ def get_user_scope_hierarchy(user=None):
     if cached is not None:
         return cached
 
-    hierarchy = {}
     ignore_perms = False if user == frappe.session.user else True
+    if ignore_perms and not _is_privileged_scope_actor():
+        frappe.throw(
+            _("Not authorized to inspect scope hierarchy of another user."),
+            frappe.PermissionError,
+        )
+    kw = {} if not ignore_perms else {"ignore_permissions": True}
 
-    # All companies (Company DocType has no disabled field)
-    hierarchy["companies"] = frappe.get_all(
-        "Company",
-        fields=["name", "company_name"],
-        order_by="company_name asc",
-        ignore_permissions=ignore_perms,
-    )
+    def _safe_get_list(doctype, fields, filters=None, order_by=None):
+        """Permission-enforcing fetch that degrades to an EMPTY list (never
+        bypasses) when the caller lacks read access to the dimension."""
+        try:
+            return frappe.get_list(
+                doctype,
+                fields=fields,
+                filters=filters,
+                order_by=order_by,
+                limit_page_length=0,
+                **kw,
+            )
+        except frappe.PermissionError:
+            return []
+
+    # All companies (Company DocType has no disabled field) — permission enforced
+    hierarchy = {
+        "companies": _safe_get_list(
+            "Company", ["name", "company_name"], order_by="company_name asc"
+        ),
+    }
 
     # All cost centers (NestedSet tree — include lft/rgt for descendant expansion)
-    hierarchy["cost_centers"] = frappe.get_all(
+    hierarchy["cost_centers"] = _safe_get_list(
         "Cost Center",
-        fields=["name", "cost_center_name", "company", "is_group", "parent_cost_center", "lft", "rgt"],
+        ["name", "cost_center_name", "company", "is_group", "parent_cost_center", "lft", "rgt"],
         order_by="lft asc",
-        ignore_permissions=ignore_perms,
     )
 
     # Allowed projects (filter out completed only)
     project_fields = ["name", "project_name", "company"]
     if frappe.db.has_column("Project", "cost_center"):
         project_fields.append("cost_center")
-    project_filters = {"status": ["!=", "Completed"]}
-    hierarchy["projects"] = frappe.get_all(
+    hierarchy["projects"] = _safe_get_list(
         "Project",
-        fields=project_fields,
-        filters=project_filters,
+        project_fields,
+        filters={"status": ["!=", "Completed"]},
         order_by="project_name asc",
-        ignore_permissions=ignore_perms,
     )
 
     # Allowed departments
@@ -73,12 +186,11 @@ def get_user_scope_hierarchy(user=None):
     if frappe.db.has_column("Department", "cost_center"):
         dept_fields.append("cost_center")
     dept_filters = {"disabled": 0} if frappe.db.has_column("Department", "disabled") else {}
-    hierarchy["departments"] = frappe.get_all(
+    hierarchy["departments"] = _safe_get_list(
         "Department",
-        fields=dept_fields,
+        dept_fields,
         filters=dept_filters,
         order_by="department_name asc",
-        ignore_permissions=ignore_perms,
     )
 
     # Cache for 5 minutes
@@ -137,12 +249,12 @@ def set_scope_context(
     """
     user = frappe.session.user
 
-    # 1. Build allowed hierarchies
-    hierarchy = get_user_scope_hierarchy(user)
-    allowed_companies = {c["name"] for c in hierarchy["companies"]}
-    allowed_cost_centers = {cc["name"] for cc in hierarchy["cost_centers"]}
-    allowed_projects = {p["name"] for p in hierarchy["projects"]}
-    allowed_depts = {d["name"] for d in hierarchy["departments"]}
+    # 1. Build allowed hierarchies from the permission-correct service.
+    allowed = get_allowed_scope_dimensions(user)
+    allowed_companies = allowed["company"]
+    allowed_cost_centers = allowed["cost_center"]
+    allowed_projects = allowed["project"]
+    allowed_depts = allowed["department"]
 
     # 2. Get or create User Scope Context (CANONICAL STORE)
     existing_name = frappe.db.get_value("User Scope Context", {"user": user})
@@ -179,7 +291,7 @@ def set_scope_context(
     if client_id:
         scope_doc.client_id = client_id
 
-    # Auto-clear branch and cost center if they do not match the company
+    # Auto-clear branch, cost center, project, and department if they do not match the company
     if scope_doc.branch and scope_doc.company:
         branch_comp = frappe.db.get_value("Branch", scope_doc.branch, "company")
         if branch_comp != scope_doc.company:
@@ -189,6 +301,16 @@ def set_scope_context(
         cc_comp = frappe.db.get_value("Cost Center", scope_doc.cost_center, "company")
         if cc_comp != scope_doc.company:
             scope_doc.cost_center = None
+
+    if scope_doc.project and scope_doc.company:
+        proj_comp = frappe.db.get_value("Project", scope_doc.project, "company")
+        if proj_comp and proj_comp != scope_doc.company:
+            scope_doc.project = None
+
+    if scope_doc.department and scope_doc.company:
+        dept_comp = frappe.db.get_value("Department", scope_doc.department, "company")
+        if dept_comp and dept_comp != scope_doc.company:
+            scope_doc.department = None
 
     # 4. Authorization validation on final values
     if scope_doc.company and scope_doc.company not in allowed_companies:
@@ -226,8 +348,6 @@ def set_scope_context(
     else:
         frappe.defaults.clear_user_default("department", user)
 
-    frappe.db.commit()
-
     # 7. Log source for cross-system debugging
     frappe.logger("scope_context").info(
         f"Scope changed: user={user}, company={scope_doc.company}, "
@@ -250,7 +370,16 @@ def set_scope_context(
 
 @frappe.whitelist()
 def get_scope_hierarchy_detail():
-    """Returns full hierarchy data with link status for management UI."""
+    """
+    Returns full hierarchy data with link status for management UI.
+
+    System Manager ONLY: this endpoint exposes the complete company /
+    cost-center / project / department structure of the site and is a
+    management tool, not a general-user read API.
+    """
+    if not _is_privileged_scope_actor():
+        frappe.throw(_("Not authorized"), frappe.PermissionError)
+
     companies = frappe.get_all("Company", fields=["name", "company_name"], order_by="company_name asc")
     cost_centers = frappe.get_all(
         "Cost Center",
@@ -371,13 +500,41 @@ def get_active_scope_summary():
 
 @frappe.whitelist()
 def get_project_display_name(project):
-    """Return the display label for a Project without requiring direct Project permissions."""
+    """Return the display label for a Project.
+
+    Authorization policy (fail closed, non-disclosing):
+      - Callers with Project READ permission may resolve any project they
+        can read (frappe.get_list enforces User Permissions).
+      - Otherwise the caller may ONLY resolve their ACTIVE scope project.
+      - Missing and unauthorized projects return the SAME generic denial —
+        no existence oracle.
+    """
     if not project:
         return {"project_name": ""}
 
-    rows = frappe.get_all("Project", filters={"name": project}, fields=["project_name"], limit=1)
+    permitted = False
+    try:
+        permitted = bool(frappe.has_permission("Project", "read"))
+    except Exception:
+        permitted = False
+
+    if not permitted:
+        scope_doc = get_user_scope_context(frappe.session.user)
+        if not (scope_doc and scope_doc.project and scope_doc.project == str(project).strip()):
+            # Identical denial for missing AND unauthorized names.
+            frappe.throw(_("Not authorized to access this project."), frappe.PermissionError)
+
+    rows = frappe.get_list(
+        "Project",
+        filters={"name": project},
+        fields=["project_name"],
+        limit=1,
+    )
     if not rows:
-        frappe.throw(_("Project {0} does not exist.").format(project))
+        if permitted:
+            # Privileged readers may learn a name does not exist.
+            frappe.throw(_("Project {0} does not exist.").format(project))
+        frappe.throw(_("Not authorized to access this project."), frappe.PermissionError)
 
     return {"project_name": rows[0].project_name or project}
 

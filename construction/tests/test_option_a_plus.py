@@ -49,6 +49,37 @@ _COST_CENTER = "Main - E"
 _GROUP_CC = "Elrefae - E"
 
 
+def _grant_scope_permissions(user):
+    """Grant the minimum realistic User Permissions so a restricted (role-less)
+    test user can operate within a company/cost center under FAIL-CLOSED scope
+    semantics. Without these, a user with no Company/CC read access and no
+    User Permissions would be denied (correct fail-closed behaviour)."""
+    for allow, value in (
+        ("Company", "Elrefae"),
+        ("Cost Center", _COST_CENTER),
+        ("Cost Center", _GROUP_CC),
+    ):
+        if not frappe.db.exists("User Permission", {"user": user, "allow": allow, "for_value": value}):
+            frappe.get_doc({
+                "doctype": "User Permission",
+                "user": user,
+                "allow": allow,
+                "for_value": value,
+            }).insert(ignore_permissions=True)
+
+    # Grant Project User Permissions for any project of the scoped company.
+    # A role-less user cannot read Project, so without an explicit grant the
+    # allowed-project set stays empty and scope selection would be denied.
+    for proj in frappe.get_all("Project", filters={"company": "Elrefae"}, pluck="name", limit=5):
+        if not frappe.db.exists("User Permission", {"user": user, "allow": "Project", "for_value": proj}):
+            frappe.get_doc({
+                "doctype": "User Permission",
+                "user": user,
+                "allow": "Project",
+                "for_value": proj,
+            }).insert(ignore_permissions=True)
+
+
 def _ensure_test_user():
     if not frappe.db.exists("User", "test_user2@example.com"):
         user = frappe.new_doc("User")
@@ -57,6 +88,7 @@ def _ensure_test_user():
         user.send_welcome_email = 0
         user.insert(ignore_permissions=True)
         frappe.db.commit()
+    _grant_scope_permissions("test_user2@example.com")
 
 
 def _enable_scope():
@@ -188,18 +220,23 @@ class TestScopeReportEnforcement(unittest.TestCase):
         _enable_scope()
         _ensure_test_user()
         frappe.db.delete("User Scope Context", {"user": "test_user2@example.com"})
+        frappe.db.delete("User Permission", {"user": "test_user2@example.com"})
+        _grant_scope_permissions("test_user2@example.com")
         frappe.db.commit()
         frappe.clear_cache(user="test_user2@example.com")
 
     def tearDown(self):
         _disable_scope()
         frappe.db.delete("User Scope Context", {"user": "test_user2@example.com"})
+        frappe.db.delete("User Permission", {"user": "test_user2@example.com"})
         frappe.db.commit()
         frappe.clear_cache(user="test_user2@example.com")
 
     def _set_scope(self, project=None, department=None):
         # Always start from a clean state.
         frappe.db.delete("User Scope Context", {"user": "test_user2@example.com"})
+        frappe.db.delete("User Permission", {"user": "test_user2@example.com"})
+        _grant_scope_permissions("test_user2@example.com")
         for key in ("project", "department", "cost_center", "company"):
             frappe.defaults.clear_user_default(key, "test_user2@example.com")
         frappe.db.commit()
@@ -231,6 +268,8 @@ class TestScopeReportEnforcement(unittest.TestCase):
 
         # Force-clear any prior scope state explicitly.
         frappe.db.delete("User Scope Context", {"user": "test_user2@example.com"})
+        frappe.db.delete("User Permission", {"user": "test_user2@example.com"})
+        _grant_scope_permissions("test_user2@example.com")
         frappe.db.commit()
         frappe.clear_cache(user="test_user2@example.com")
 
@@ -239,9 +278,13 @@ class TestScopeReportEnforcement(unittest.TestCase):
         self.assertEqual(out["project"], [])
 
         # When the user has a project in scope:
-        allowed_project = frappe.get_all("Project", pluck="name", limit=1)
+        allowed_project = frappe.get_all("Project", filters={"company": "Elrefae"}, pluck="name", limit=1)
         if not allowed_project:
-            self.skipTest("No Project records in DB to test scope project")
+            p = frappe.new_doc("Project")
+            p.project_name = "_Test Elrefae Project"
+            p.company = "Elrefae"
+            p.insert(ignore_permissions=True)
+            allowed_project = [p.name]
         self._set_scope(project=allowed_project[0])
         out = _enforce_scope_filters_strict({}, "test_user2@example.com")
         self.assertEqual(out["project"], [allowed_project[0]])
@@ -262,6 +305,8 @@ class TestScopeReportEnforcement(unittest.TestCase):
         frappe.set_user("test_user2@example.com")
         try:
             frappe.db.delete("User Scope Context", {"user": "test_user2@example.com"})
+            frappe.db.delete("User Permission", {"user": "test_user2@example.com"})
+            _grant_scope_permissions("test_user2@example.com")
             frappe.db.commit()
             frappe.clear_cache(user="test_user2@example.com")
             set_scope_context(
@@ -317,6 +362,7 @@ class TestScopeReportAllowlist(unittest.TestCase):
     def tearDown(self):
         _disable_scope()
         frappe.db.delete("User Scope Context", {"user": "test_user2@example.com"})
+        frappe.db.delete("User Permission", {"user": "test_user2@example.com"})
         frappe.db.commit()
         frappe.clear_cache(user="test_user2@example.com")
 
@@ -441,6 +487,7 @@ class TestScopeReportPositionalArgs(unittest.TestCase):
     def tearDown(self):
         _disable_scope()
         frappe.db.delete("User Scope Context", {"user": "test_user2@example.com"})
+        frappe.db.delete("User Permission", {"user": "test_user2@example.com"})
         frappe.db.commit()
         frappe.clear_cache(user="test_user2@example.com")
 
@@ -548,6 +595,8 @@ class TestStrictSignature(unittest.TestCase):
         _ensure_test_user()
         # Clean state.
         frappe.db.delete("User Scope Context", {"user": "test_user2@example.com"})
+        frappe.db.delete("User Permission", {"user": "test_user2@example.com"})
+        _grant_scope_permissions("test_user2@example.com")
         for key in ("project", "department", "cost_center", "company"):
             frappe.defaults.clear_user_default(key, "test_user2@example.com")
         frappe.db.commit()
@@ -570,6 +619,7 @@ class TestStrictSignature(unittest.TestCase):
     def tearDown(self):
         _disable_scope()
         frappe.db.delete("User Scope Context", {"user": "test_user2@example.com"})
+        frappe.db.delete("User Permission", {"user": "test_user2@example.com"})
         for key in ("project", "department", "cost_center", "company"):
             frappe.defaults.clear_user_default(key, "test_user2@example.com")
         frappe.db.commit()
@@ -878,6 +928,8 @@ class TestOptionBReportAccessGate(unittest.TestCase):
         _ensure_test_user()
         # Clean state.
         frappe.db.delete("User Scope Context", {"user": "test_user2@example.com"})
+        frappe.db.delete("User Permission", {"user": "test_user2@example.com"})
+        _grant_scope_permissions("test_user2@example.com")
         for key in ("project", "department", "cost_center", "company"):
             frappe.defaults.clear_user_default(key, "test_user2@example.com")
         frappe.db.commit()
@@ -895,6 +947,7 @@ class TestOptionBReportAccessGate(unittest.TestCase):
     def tearDown(self):
         _disable_scope()
         frappe.db.delete("User Scope Context", {"user": "test_user2@example.com"})
+        frappe.db.delete("User Permission", {"user": "test_user2@example.com"})
         for key in ("project", "department", "cost_center", "company"):
             frappe.defaults.clear_user_default(key, "test_user2@example.com")
         frappe.db.commit()
@@ -1246,6 +1299,8 @@ class TestOptionBReportAccessGate(unittest.TestCase):
             # checks `_user_has_active_scope_context(user)` on every
             # call, so the bypass must refuse.
             frappe.db.delete("User Scope Context", {"user": "test_user2@example.com"})
+            frappe.db.delete("User Permission", {"user": "test_user2@example.com"})
+            _grant_scope_permissions("test_user2@example.com")
             frappe.db.commit()
             frappe.clear_cache(user="test_user2@example.com")
             frappe.set_user("test_user2@example.com")

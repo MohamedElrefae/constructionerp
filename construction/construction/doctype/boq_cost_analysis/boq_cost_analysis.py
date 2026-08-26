@@ -83,18 +83,30 @@ class BOQCostAnalysis(Document):
             frappe.throw(_("At least one cost detail row is required."))
 
     def deactivate_other_approved_analyses(self):
-        existing = frappe.db.get_value(
-            "BOQ Cost Analysis",
-            {
-                "boq_item": self.boq_item,
-                "analysis_status": "Approved",
-                "docstatus": 1,
-                "name": ["!=", self.name],
-            },
-            "name",
+        if not self.boq_item:
+            return
+
+        # Lock parent BOQ Item row to serialize concurrent approvals for the same item
+        frappe.db.sql(
+            "SELECT name FROM `tabBOQ Item` WHERE name = %(item)s FOR UPDATE",
+            {"item": self.boq_item},
         )
-        if existing:
-            doc = frappe.get_doc("BOQ Cost Analysis", existing)
+
+        other_approved = frappe.db.sql(
+            """
+            SELECT name FROM `tabBOQ Cost Analysis`
+            WHERE boq_item = %(boq_item)s
+              AND analysis_status = 'Approved'
+              AND name != %(name)s
+              AND docstatus = 1
+            FOR UPDATE
+            """,
+            {"boq_item": self.boq_item, "name": self.name},
+            as_dict=True,
+        )
+
+        for row in other_approved:
+            doc = frappe.get_doc("BOQ Cost Analysis", row.name)
             doc.db_set("analysis_status", "Superseded", update_modified=False)
 
     def update_boq_item_estimated_cost(self):

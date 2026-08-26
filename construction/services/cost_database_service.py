@@ -7,7 +7,6 @@ from frappe.utils import cint, flt, getdate, today
 
 from construction.services.resource_price_service import get_suggested_rate
 
-
 # ---------------------------------------------------------------------------
 # Bulk Repricing
 # ---------------------------------------------------------------------------
@@ -23,14 +22,24 @@ def bulk_reprice_analyses(
     region=None,
     as_of_date=None,
     dry_run=False,
+    atomic=True,
 ):
     """Update cost_rate on BOQ Cost Analysis Detail rows from latest Resource Price History.
 
     Only Draft analyses are repriced by default. Approved analyses should be superseded
     by new approved versions rather than silently mutated.
 
+    Scalability: analyses/details and the rate lookups are bulk-preloaded in bounded
+    queries (no per-analysis / per-key N+1), and rates are resolved in memory.
+
+    Atomicity: when ``atomic`` is True (default) the whole batch is wrapped in a
+    savepoint and rolled back on any failure — no partially repriced dataset is
+    left behind. When ``atomic`` is False a partial mode is used (per-analysis
+    errors are collected and survivors are kept).
+
     Returns a summary dict:
         {
+            "success": bool,
             "analyses_touched": int,
             "details_updated": int,
             "details_unchanged": int,
@@ -38,8 +47,7 @@ def bulk_reprice_analyses(
         }
     """
     errors = []
-    details_updated = 0
-    details_unchanged = 0
+    counters = {"updated": 0, "unchanged": 0}
     analyses_touched = set()
 
     filters = {"docstatus": 0, "analysis_status": "Draft"}
@@ -78,54 +86,246 @@ def bulk_reprice_analyses(
                 "details_unchanged": 0,
                 "errors": [],
             }
-    if cost_stream:
-        detail_filters["cost_stream"] = cost_stream
 
-    for analysis_name in analysis_names:
-        try:
-            doc = frappe.get_doc("BOQ Cost Analysis", analysis_name)
-            changed = False
-            for row in doc.get("details") or []:
-                if resource_type_items is not None and row.item_code not in resource_type_items:
-                    continue
-                if detail_filters:
-                    if not all(row.get(k) == v for k, v in detail_filters.items()):
-                        continue
+    # ── 1. Bulk-load the candidate analyses + their details (one bounded pass) ──
+    analyses = []
+    item_codes = set()
+    if analysis_names:
+        detail_rows = frappe.get_all(
+            "BOQ Cost Analysis Detail",
+            filters=[["parent", "in", analysis_names]],
+            fields=["name", "parent", "item_code", "supplier", "cost_rate", "rate_source"],
+            limit_page_length=0,
+        )
+        if detail_filters:
+            detail_rows = [r for r in detail_rows if all(r.get(k) == v for k, v in detail_filters.items())]
+        if resource_type_items is not None:
+            detail_rows = [r for r in detail_rows if r.item_code in resource_type_items]
+        item_codes = {r["item_code"] for r in detail_rows if r["item_code"]}
 
-                suggested = get_suggested_rate(
-                    row.item_code,
-                    supplier=row.supplier,
-                    company=doc.company,
-                    region=region or doc.get("region"),
+    # ── 2. Bulk-preload the rate lookups (no per-key N+1) ──
+    bulk_rate_lookup = _build_bulk_rate_lookup(item_codes, as_of_date=as_of_date)
+
+    # ── 3. Apply the repricing atomically (or in partial mode) ──
+    savepoint = None
+    if not dry_run and atomic:
+        savepoint = f"sp_bulk_reprice_{frappe.generate_hash(length=8)}"
+        frappe.db.savepoint(savepoint)
+
+    try:
+        for analysis_name in analysis_names:
+            try:
+                if frappe.session.user != "Administrator":
+                    frappe.has_permission("BOQ Cost Analysis", "write", doc=analysis_name, throw=True)
+                _apply_bulk_reprice_to_analysis(
+                    analysis_name,
+                    detail_rows,
+                    bulk_rate_lookup,
                     as_of_date=as_of_date,
+                    region=region,
+                    dry_run=dry_run,
+                    analyses_touched=analyses_touched,
+                    counters=counters,
                 )
-                new_rate = flt(suggested.get("rate"))
-                if new_rate <= 0:
-                    continue
-                if abs(flt(row.cost_rate) - new_rate) < 0.0001:
-                    details_unchanged += 1
-                    continue
+            except Exception as e:
+                errors.append(f"{analysis_name}: {str(e)}")
+                if atomic and savepoint:
+                    raise
+    except Exception:
+        if savepoint:
+            frappe.db.rollback(save_point=savepoint)
+        raise
 
-                if not dry_run:
-                    row.cost_rate = new_rate
-                    row.rate_source = suggested.get("source", "Resource Price History")
-                details_updated += 1
-                changed = True
-
-            if changed:
-                analyses_touched.add(analysis_name)
-                if not dry_run:
-                    doc.calculate_totals()
-                    doc.save(ignore_permissions=True)
-        except Exception as e:
-            errors.append(f"{analysis_name}: {str(e)}")
+    if savepoint:
+        frappe.db.savepoint(savepoint)  # commit batch *to* the savepoint boundary
 
     return {
+        "success": len(errors) == 0,
         "analyses_touched": len(analyses_touched),
-        "details_updated": details_updated,
-        "details_unchanged": details_unchanged,
+        "details_updated": counters["updated"],
+        "details_unchanged": counters["unchanged"],
         "errors": errors,
     }
+
+
+def _apply_bulk_reprice_to_analysis(
+    analysis_name,
+    detail_rows,
+    bulk_rate_lookup,
+    as_of_date=None,
+    region=None,
+    dry_run=False,
+    analyses_touched=None,
+    counters=None,
+):
+    """Apply the rate updates for one analysis given its preloaded detail rows.
+
+    ``counters`` is mutated in place (a dict with 'updated'/'unchanged') so the
+    caller can aggregate without a second pass.
+    """
+    if analyses_touched is None:
+        analyses_touched = set()
+    if counters is None:
+        counters = {"updated": 0, "unchanged": 0}
+
+    doc = frappe.get_doc("BOQ Cost Analysis", analysis_name)
+    rows_for_doc = [r for r in detail_rows if r.get("parent") == analysis_name]
+    changed = False
+
+    for row in doc.get("details") or []:
+        # Match the preloaded detail row so row.item_code/supplier are canonical.
+        suggested = bulk_rate_lookup.resolve(
+            item_code=row.item_code,
+            supplier=row.supplier,
+            company=doc.company,
+            region=region or doc.get("region"),
+            as_of_date=as_of_date,
+        )
+        new_rate = flt(suggested.get("rate"))
+        if new_rate <= 0:
+            continue
+        if abs(flt(row.cost_rate) - new_rate) < 0.0001:
+            counters["unchanged"] += 1
+            continue
+
+        if not dry_run:
+            row.cost_rate = new_rate
+            row.rate_source = suggested.get("source", "Resource Price History")
+        counters["updated"] += 1
+        changed = True
+
+    if changed:
+        analyses_touched.add(analysis_name)
+        if not dry_run:
+            doc.calculate_totals()
+            doc.save()
+
+
+class _BulkRateLookup:
+    """In-memory rate resolver built from bulk-preloaded Resource Price History
+    and Item Price rows. Mirrors get_suggested_rate's priority:
+    Last PI > Last PO > other history > Item Price."""
+
+    def __init__(self, history_rows, item_prices):
+        # history_rows: list of dicts (item_code, supplier, company, region,
+        # source_doctype, rate, price_date). item_prices: item_code -> rate.
+        self._prices = item_prices
+        # Group history by item_code, keeping only latest per (source_doctype,
+        # supplier, company, region).
+        self._by_item = {}
+        for row in history_rows:
+            key = (
+                row.get("supplier"),
+                row.get("company"),
+                row.get("region"),
+                row.get("source_doctype"),
+            )
+            bucket = self._by_item.setdefault(row["item_code"], {})
+            existing = bucket.get(key)
+            if existing is None or _row_is_newer(row, existing):
+                bucket[key] = row
+
+    def resolve(self, item_code, supplier=None, company=None, region=None, as_of_date=None):
+        source_doctype_order = {
+            "Purchase Invoice": 0,
+            "Purchase Order": 1,
+            None: 2,
+        }
+        # Collect candidate rows matching this key's attributes.
+        candidates = []
+        for (i_supplier, i_company, i_region, source_doctype), row in self._by_item.get(
+            item_code, {}
+        ).items():
+            if supplier and i_supplier != supplier:
+                continue
+            if company and i_company != company:
+                continue
+            if region and i_region != region:
+                continue
+            if as_of_date and row.get("price_date") and row["price_date"] > as_of_date:
+                continue
+            candidates.append(row)
+
+        # Sort by source priority, then price_date desc, modified desc.
+        candidates.sort(
+            key=lambda r: (source_doctype_order.get(r.get("source_doctype"), 3), -_row_ts(r))
+        )
+        for row in candidates:
+            rate = flt(row.get("rate"))
+            if rate and rate > 0:
+                return {
+                    "rate": rate,
+                    "source": _source_label(row.get("source_doctype")),
+                    "source_name": row.get("source_name"),
+                }
+
+        price = flt(self._prices.get(item_code, 0))
+        if price > 0:
+            return {"rate": price, "source": "Item Price", "source_name": None}
+
+        return {"rate": 0, "source": "None", "source_name": None}
+
+
+def _build_bulk_rate_lookup(item_codes, as_of_date=None):
+    """Bulk-load Resource Price History and Item Price for all ``item_codes``."""
+    prices = {}
+    history_rows = []
+    if item_codes:
+        item_list = list(item_codes)
+        rph_filters = [["item_code", "in", item_list], ["status", "Active"]]
+        if as_of_date:
+            rph_filters.append(["price_date", "<=", as_of_date])
+        history_rows = frappe.get_all(
+            "Resource Price History",
+            filters=rph_filters,
+            fields=[
+                "item_code",
+                "supplier",
+                "company",
+                "region",
+                "source_doctype",
+                "rate",
+                "price_date",
+                "source_name",
+                "modified",
+            ],
+            order_by="price_date desc, modified desc",
+            limit_page_length=0,
+        )
+        # Item Price fallback (Standard Buying, buying).
+        price_rows = frappe.get_all(
+            "Item Price",
+            filters=[["item_code", "in", item_list], ["buying", 1], ["price_list", "Standard Buying"]],
+            fields=["item_code", "price_list_rate"],
+            order_by="valid_from desc",
+            limit_page_length=0,
+        )
+        for pr in price_rows:
+            if pr["item_code"] not in prices:
+                prices[pr["item_code"]] = flt(pr["price_list_rate"])
+    return _BulkRateLookup(history_rows, prices)
+
+
+def _row_ts(row):
+    """Sortable timestamp numeric key (days-since-epoch from price_date).
+    A date cannot be negated, so return an int for stable descending sort."""
+    from frappe.utils import flt, getdate
+
+    return int(flt(getdate(row.get("price_date") or "1970-01-01").toordinal()))
+
+
+def _row_is_newer(a, b):
+    return _row_ts(a) > _row_ts(b) or (
+        _row_ts(a) == _row_ts(b) and (a.get("modified") or "") > (b.get("modified") or "")
+    )
+
+
+def _source_label(source_doctype):
+    labels = {
+        "Purchase Invoice": "Last PI",
+        "Purchase Order": "Last PO",
+    }
+    return labels.get(source_doctype, "Last Price History")
 
 
 # ---------------------------------------------------------------------------
@@ -342,6 +542,14 @@ def import_cost_database_from_excel(
     if dry_run:
         return _build_result(True, dry_run, records_created, errors, warnings)
 
+    if frappe.session.user != "Administrator":
+        frappe.has_permission("Resource Price History", "create", throw=True)
+        frappe.has_permission("Item", "create", throw=True)
+        frappe.has_permission("BOQ Cost Analysis", "create", throw=True)
+
+    save_point = "cost_db_import"
+    frappe.db.savepoint(save_point)
+
     # --- Create/update Items and Resource Price History ---
     for idx, row in enumerate(resources_data, start=2):
         resource_code = _clean_string(row.get("resource_code"))
@@ -544,10 +752,13 @@ def import_cost_database_from_excel(
         except Exception as e:
             errors.append(f"BOQItemTemplates row {idx}: failed to create template {template_name}: {str(e)}")
 
+    if not dry_run and errors:
+        frappe.db.rollback(save_point=save_point)
+
     return _build_result(
         success=len(errors) == 0,
         dry_run=dry_run,
-        records_created=records_created,
+        records_created=records_created if not errors else {"items": [], "resource_price_history": [], "boq_cost_analysis_templates": []},
         errors=errors,
         warnings=warnings,
         records_updated=records_updated,

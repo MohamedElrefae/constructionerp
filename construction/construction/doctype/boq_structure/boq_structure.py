@@ -34,6 +34,8 @@ class BOQStructure(NestedSet):
         self._trigger_header_rollup()
 
     def _trigger_header_rollup(self):
+        if getattr(frappe.flags, "defer_boq_rollups", False) or getattr(self.flags, "defer_boq_rollups", False):
+            return
         if not self.boq_header:
             return
         header = frappe.get_doc("BOQ Header", self.boq_header)
@@ -199,6 +201,7 @@ class BOQStructure(NestedSet):
 
     @frappe.whitelist()
     def convert_group_to_ledger(self):
+        self.check_permission("write")
         self.ensure_draft_for_conversion()
         if not self.is_group:
             return 1
@@ -211,6 +214,7 @@ class BOQStructure(NestedSet):
 
     @frappe.whitelist()
     def convert_ledger_to_group(self):
+        self.check_permission("write")
         self.ensure_draft_for_conversion()
         if self.is_group:
             return 1

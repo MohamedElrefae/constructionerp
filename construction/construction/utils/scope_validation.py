@@ -22,8 +22,12 @@ def validate_scope_dimensions(company=None, cost_center=None, project=None, depa
             dept_company = frappe.db.get_value("Department", department, "company")
             if dept_company and dept_company != company:
                 errors.append(f"Department '{department}' does not belong to Company '{company}'")
-        except Exception:
+        except (frappe.DoesNotExistError, frappe.EmptyQueryValuesError):
             pass
+        except Exception as e:
+            frappe.logger("scope_validation").error(f"Error checking department company for {department}: {e}")
+            if throw:
+                raise e
 
     # Project ↔ Cost Center: advisory warning (Project.cost_center is a default, not mandatory)
     if project and cost_center:

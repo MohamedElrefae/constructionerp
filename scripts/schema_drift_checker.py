@@ -22,7 +22,6 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DOCTYPES = REPO_ROOT / "construction" / "construction" / "doctype"
 SCHEMA_FACTS = REPO_ROOT / "docs" / "ai" / "SCHEMA_FACTS.md"
@@ -91,7 +90,7 @@ def render_schema_facts(schemas: list[dict]) -> str:
         "",
         f"- Schema-owning DocTypes: {len(schemas)}",
         f"- Override-only DocType folders: {len(override_only)}",
-        f"- Source path: `construction/construction/doctype/*/*.json`",
+        "- Source path: `construction/construction/doctype/*/*.json`",
         "",
         "| Folder | DocType | JSON | Fields | Notes |",
         "|---|---|---|---:|---|",

@@ -63,6 +63,5 @@ def update_construction_workspace():
 
     ws.content = json.dumps(content)
     ws.save()
-    frappe.db.commit()
 
     return {"status": "success", "message": "Workspace updated with all sections"}

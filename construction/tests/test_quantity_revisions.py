@@ -1,3 +1,5 @@
+import os
+
 import frappe
 from frappe.tests.utils import FrappeTestCase
 from frappe.utils import flt
@@ -27,9 +29,44 @@ class TestQuantityRevisions(FrappeTestCase):
     def setUp(self):
         self.project = get_or_create_test_project()
         frappe.db.delete("User Scope Context", {"user": "Administrator"})
+        self._created_files = []
 
     def tearDown(self):
+        if hasattr(self, "_created_files"):
+            for f in self._created_files:
+                try:
+                    path = f.get_full_path()
+                    if os.path.exists(path):
+                        os.remove(path)
+                    frappe.db.delete("File", {"name": f.name})
+                except Exception:
+                    pass
+            self._created_files = []
         frappe.db.rollback()
+
+    def _create_valid_pdf_file(self, attached_doctype, attached_name):
+        import io
+        import os
+
+        from pypdf import PdfWriter
+
+        writer = PdfWriter()
+        writer.add_blank_page(width=72, height=72)
+        buf = io.BytesIO()
+        writer.write(buf)
+        pdf_content = buf.getvalue()
+
+        file_doc = frappe.get_doc({
+            "doctype": "File",
+            "file_name": f"approval_{frappe.generate_hash(length=6)}.pdf",
+            "attached_to_doctype": attached_doctype,
+            "attached_to_name": attached_name,
+            "is_private": 1,
+            "content": pdf_content,
+        })
+        file_doc.insert(ignore_permissions=True)
+        self._created_files.append(file_doc)
+        return file_doc
 
     def _make_boq_item(self, title, quantity=100, rate=50):
         header = frappe.get_doc(
@@ -98,8 +135,9 @@ class TestQuantityRevisions(FrappeTestCase):
         return vo
 
     def _approve_by_client(self, vo):
+        file_doc = self._create_valid_pdf_file("Variation Order", vo.name)
         vo.status = "Approved by Client"
-        vo.client_approval_document = "/private/files/signed-vo.pdf"
+        vo.client_approval_document = file_doc.name
         vo.save(ignore_permissions=True)
         vo.reload()
         return vo
@@ -131,7 +169,7 @@ class TestQuantityRevisions(FrappeTestCase):
         self.assertEqual(item.current_revised_unit_price, 50)
 
     def test_re_saving_locked_boq_does_not_duplicate_baseline(self):
-        header, item = self._make_boq_item("Baseline Dup", quantity=100, rate=50)
+        header, _item = self._make_boq_item("Baseline Dup", quantity=100, rate=50)
         self._move_header_to_locked(header.name)
 
         # Count baseline revisions using SQL
@@ -690,9 +728,44 @@ class TestQuantityRevisions(FrappeTestCase):
 class TestQuantityRevisionService(FrappeTestCase):
     def setUp(self):
         self.project = get_or_create_test_project()
+        self._created_files = []
 
     def tearDown(self):
+        if hasattr(self, "_created_files"):
+            for f in self._created_files:
+                try:
+                    path = f.get_full_path()
+                    if os.path.exists(path):
+                        os.remove(path)
+                    frappe.db.delete("File", {"name": f.name})
+                except Exception:
+                    pass
+            self._created_files = []
         frappe.db.rollback()
+
+    def _create_valid_pdf_file(self, attached_doctype, attached_name):
+        import io
+        import os
+
+        from pypdf import PdfWriter
+
+        writer = PdfWriter()
+        writer.add_blank_page(width=72, height=72)
+        buf = io.BytesIO()
+        writer.write(buf)
+        pdf_content = buf.getvalue()
+
+        file_doc = frappe.get_doc({
+            "doctype": "File",
+            "file_name": f"approval_{frappe.generate_hash(length=6)}.pdf",
+            "attached_to_doctype": attached_doctype,
+            "attached_to_name": attached_name,
+            "is_private": 1,
+            "content": pdf_content,
+        })
+        file_doc.insert(ignore_permissions=True)
+        self._created_files.append(file_doc)
+        return file_doc
 
     def _make_boq_item(self, title, quantity=100, rate=50):
         header = frappe.get_doc(
@@ -731,7 +804,7 @@ class TestQuantityRevisionService(FrappeTestCase):
         return header
 
     def test_create_lock_baseline_idempotent(self):
-        header, item = self._make_boq_item("Baseline", quantity=100, rate=50)
+        header, _item = self._make_boq_item("Baseline", quantity=100, rate=50)
         self._move_header_to_locked(header.name)
 
         # Count after first (implicit) baseline creation
@@ -851,7 +924,8 @@ class TestQuantityRevisionService(FrappeTestCase):
 
         # Approve by Client
         vo.status = "Approved by Client"
-        vo.client_approval_document = "/private/files/test.pdf"
+        pdf_file = self._create_valid_pdf_file("Variation Order", vo.name)
+        vo.client_approval_document = pdf_file.name
         vo.save(ignore_permissions=True)
 
         line = vo.lines[0]

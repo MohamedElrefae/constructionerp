@@ -2,9 +2,11 @@ import frappe
 from frappe import _
 
 
-@frappe.whitelist()
 def cleanup_old_doctypes():
-    """Delete old DocTypes and Pages from the database."""
+    """Delete old DocTypes and Pages from the database (CLI/migration use only)."""
+    frappe.only_for("System Manager")
+
+    logger = frappe.logger("construction")
 
     # Delete old DocTypes
     old_doctypes = ["LaborResource", "MaterialResource", "PlantResource", "CostItem"]
@@ -12,11 +14,10 @@ def cleanup_old_doctypes():
     for dt in old_doctypes:
         try:
             if frappe.db.exists("DocType", dt):
-                frappe.delete_doc("DocType", dt, force=True)
-                frappe.db.commit()
-                print(f"Deleted DocType: {dt}")
+                frappe.delete_doc("DocType", dt, ignore_permissions=False)
+                logger.info(f"Deleted legacy DocType: {dt}")
         except Exception as e:
-            print(f"Error deleting {dt}: {e}")
+            logger.warning(f"Error deleting legacy DocType {dt}: {e}")
 
     # Delete old Pages
     old_pages = ["materialresource", "plantresource", "costitem"]
@@ -24,10 +25,9 @@ def cleanup_old_doctypes():
     for page in old_pages:
         try:
             if frappe.db.exists("Page", page):
-                frappe.delete_doc("Page", page, force=True)
-                frappe.db.commit()
-                print(f"Deleted Page: {page}")
+                frappe.delete_doc("Page", page, ignore_permissions=False)
+                logger.info(f"Deleted legacy Page: {page}")
         except Exception as e:
-            print(f"Error deleting {page}: {e}")
+            logger.warning(f"Error deleting legacy Page {page}: {e}")
 
     return {"success": True, "message": "Cleanup complete!"}

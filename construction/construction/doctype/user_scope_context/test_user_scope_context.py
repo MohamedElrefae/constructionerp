@@ -190,7 +190,7 @@ class TestUserScopeContext(FrappeTestCase):
             # No cross-company cost center found — verify direct validation instead
             from construction.construction.utils.scope_validation import validate_scope_dimensions
 
-            ok, msg = validate_scope_dimensions("_FakeCo", "_FakeCC", None, None)
+            ok, _msg = validate_scope_dimensions("_FakeCo", "_FakeCC", None, None)
             self.assertTrue(ok, "Non-existent cost center should pass validation gracefully")
 
     # =================================================================
@@ -208,6 +208,15 @@ class TestUserScopeContext(FrappeTestCase):
         """Test that record owner can modify their own record"""
         owner = self.test_user
         original_user = frappe.session.user
+        # Fail-closed scope bootstrap requires the owner to hold a User
+        # Permission for the company they establish as their scope.
+        if not frappe.db.exists("User Permission", {"user": owner, "allow": "Company", "for_value": self.test_company}):
+            frappe.get_doc({
+                "doctype": "User Permission",
+                "user": owner,
+                "allow": "Company",
+                "for_value": self.test_company,
+            }).insert(ignore_permissions=True)
         frappe.set_user(owner)
         doc = frappe.get_doc({"doctype": "User Scope Context", "user": owner, "company": self.test_company})
         doc.insert(ignore_permissions=True)

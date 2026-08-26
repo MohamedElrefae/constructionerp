@@ -38,6 +38,7 @@ function indentSpan(level) {
 
 function buildHierarchyHTML(tree) {
 	var parts = ['<div style="margin-top:8px">'];
+	var esc = frappe.utils.escape_html;
 
 	for (var ci = 0; ci < tree.length; ci++) {
 		var c = tree[ci];
@@ -47,8 +48,8 @@ function buildHierarchyHTML(tree) {
 			'<div class="company-card" style="border:1px solid var(--border-color);border-radius:8px;margin-bottom:16px;overflow:hidden">',
 			'<div class="company-header" style="background:var(--bg-color);padding:10px 14px;font-weight:600;font-size:1rem;border-bottom:1px solid var(--border-color)">',
 			frappe.utils.icon("building", "sm"),
-			" " + c.title,
-			" &mdash; " + c.name,
+			" " + esc(c.title || ""),
+			" &mdash; " + esc(c.name || ""),
 			"</div>",
 			'<div style="padding:10px 14px">'
 		);
@@ -92,11 +93,11 @@ function buildHierarchyHTML(tree) {
 
 				parts.push(
 					"<tr>",
-					"<td>" + indent + "<b>" + cc.label + "</b></td>",
+					"<td>" + indent + "<b>" + esc(cc.label || "") + "</b></td>",
 					"<td>" + groupBadge + "</td>",
 					"<td>" + statusIcon(cc.linked) + (cc.linked ? " Set" : " Not set") + "</td>",
 					'<td><button class="btn btn-xs btn-default open-record" data-doctype="Cost Center" data-name="' +
-						cc.name +
+						esc(cc.name || "") +
 						'">Open</button></td>',
 					"</tr>"
 				);
@@ -112,11 +113,11 @@ function buildHierarchyHTML(tree) {
 						var p = cc.projects[pi];
 						parts.push(
 							"<tr>",
-							"<td>" + indentSpan(1) + p.label + "</td>",
+							"<td>" + indentSpan(1) + esc(p.label || "") + "</td>",
 							"<td>" + statusIcon(p.company_ok) + "</td>",
 							"<td>" + statusIcon(p.cost_center_ok) + "</td>",
 							'<td><button class="btn btn-xs btn-default open-record" data-doctype="Project" data-name="' +
-								p.name +
+								esc(p.name || "") +
 								'">Open</button></td>',
 							"</tr>"
 						);
@@ -135,11 +136,11 @@ function buildHierarchyHTML(tree) {
 						var d = cc.departments[di];
 						parts.push(
 							"<tr>",
-							"<td>" + indentSpan(1) + d.label + "</td>",
+							"<td>" + indentSpan(1) + esc(d.label || "") + "</td>",
 							"<td>" + statusIcon(d.company_ok) + "</td>",
 							"<td>" + statusIcon(d.cost_center_ok) + "</td>",
 							'<td><button class="btn btn-xs btn-default open-record" data-doctype="Department" data-name="' +
-								d.name +
+								esc(d.name || "") +
 								'">Open</button></td>',
 							"</tr>"
 						);
@@ -153,7 +154,7 @@ function buildHierarchyHTML(tree) {
 				'<div class="text-muted" style="margin-bottom:10px;font-size:0.85rem">',
 				"No cost centers linked to this company.",
 				' <button class="btn btn-xs btn-default create-record" data-doctype="Cost Center" data-company="' +
-					c.name +
+					esc(c.name || "") +
 					'">+ Add Cost Center</button>',
 				"</div>"
 			);
@@ -173,11 +174,11 @@ function buildHierarchyHTML(tree) {
 				var p = c.orphan_projects[pi];
 				parts.push(
 					"<tr>",
-					"<td>" + p.label + "</td>",
+					"<td>" + esc(p.label || "") + "</td>",
 					"<td>" + statusIcon(p.company_ok) + "</td>",
 					"<td>" + statusIcon(p.cost_center_ok) + "</td>",
 					'<td><button class="btn btn-xs btn-default open-record" data-doctype="Project" data-name="' +
-						p.name +
+						esc(p.name || "") +
 						'">Open</button></td>',
 					"</tr>"
 				);
@@ -199,11 +200,11 @@ function buildHierarchyHTML(tree) {
 				var d = c.orphan_depts[di];
 				parts.push(
 					"<tr>",
-					"<td>" + d.label + "</td>",
+					"<td>" + esc(d.label || "") + "</td>",
 					"<td>" + statusIcon(d.company_ok) + "</td>",
 					"<td>" + statusIcon(d.cost_center_ok) + "</td>",
 					'<td><button class="btn btn-xs btn-default open-record" data-doctype="Department" data-name="' +
-						d.name +
+						esc(d.name || "") +
 						'">Open</button></td>',
 					"</tr>"
 				);
@@ -215,13 +216,13 @@ function buildHierarchyHTML(tree) {
 		parts.push(
 			'<div style="margin-top:8px">',
 			'<button class="btn btn-xs btn-default create-record" data-doctype="Cost Center" data-company="' +
-				c.name +
+				esc(c.name || "") +
 				'">+ New Cost Center</button> ',
 			'<button class="btn btn-xs btn-default create-record" data-doctype="Project" data-company="' +
-				c.name +
+				esc(c.name || "") +
 				'">+ New Project</button> ',
 			'<button class="btn btn-xs btn-default create-record" data-doctype="Department" data-company="' +
-				c.name +
+				esc(c.name || "") +
 				'">+ New Department</button>',
 			"</div>"
 		);

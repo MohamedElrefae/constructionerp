@@ -368,16 +368,12 @@ class TestExtendedValidation(unittest.TestCase):
 
     def test_login_page_bg_image_publicity_check_public_file(self):
         """7.3: Public login_page_bg_image is accepted without warning."""
-        # Create a public file
-        file_doc = frappe.get_doc(
-            {
-                "doctype": "File",
-                "file_name": "test_login_bg.jpg",
-                "file_url": "/files/test_login_bg.jpg",
-                "is_private": 0,  # Public
-            }
-        )
-        file_doc.insert()
+        # Create a public file record
+        file_doc = frappe.new_doc("File")
+        file_doc.file_name = "test_login_bg.jpg"
+        file_doc.file_url = "/files/test_login_bg.jpg"
+        file_doc.is_private = 0
+        file_doc.db_insert()
 
         try:
             theme = frappe.get_doc(
@@ -406,16 +402,12 @@ class TestExtendedValidation(unittest.TestCase):
 
     def test_login_page_bg_image_publicity_check_private_file_auto_set_public(self):
         """7.3: Private login_page_bg_image is auto-set to public with warning."""
-        # Create a private file
-        file_doc = frappe.get_doc(
-            {
-                "doctype": "File",
-                "file_name": "test_login_bg_private.jpg",
-                "file_url": "/files/test_login_bg_private.jpg",
-                "is_private": 1,  # Private
-            }
-        )
-        file_doc.insert()
+        # Create a private file record
+        file_doc = frappe.new_doc("File")
+        file_doc.file_name = "test_login_bg_private.jpg"
+        file_doc.file_url = "/files/test_login_bg_private.jpg"
+        file_doc.is_private = 1
+        file_doc.db_insert()
 
         try:
             theme = frappe.get_doc(

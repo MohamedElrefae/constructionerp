@@ -5,13 +5,13 @@ from frappe.utils import flt, today
 
 def get_suggested_rate(item_code, supplier=None, project=None, company=None, region=None, as_of_date=None):
     """Get best suggested rate for an item.
-    
+
     Priority order:
     1. Last submitted Purchase Invoice rate
     2. Last submitted Purchase Order rate
     3. Last other source (Import, Manual, etc.)
     4. Item Price (standard ERPNext)
-    
+
     Excludes Cancelled history rows.
     Optionally filters by region and as-of date for price locking.
     Returns dict with rate, source, and source_document.
@@ -105,7 +105,7 @@ def _get_item_price_rate(item_code):
 
 def capture_price_from_purchase_document(doc, method=None):
     """Hook handler: on_submit of Purchase Invoice or Purchase Order.
-    
+
     Creates Resource Price History rows for each item row.
     """
     if doc.docstatus != 1:
@@ -158,7 +158,7 @@ def capture_price_from_purchase_document(doc, method=None):
 
 def cancel_price_history_for_document(doc, method=None):
     """Hook handler: on_cancel of Purchase Invoice or Purchase Order.
-    
+
     Marks matching history rows as Cancelled instead of deleting them.
     """
     if doc.doctype not in ("Purchase Invoice", "Purchase Order"):

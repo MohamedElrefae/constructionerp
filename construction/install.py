@@ -1056,7 +1056,147 @@ def setup_branch_company_field():
                 "in_list_view": 1,
                 "in_standard_filter": 1,
             }
-        ).insert()
+        ).insert(ignore_permissions=True)
+
+
+def setup_variation_order_custom_field():
+    """Create or idempotently reconcile Material Request.custom_variation_order.
+
+    Reconciliation covers pre-existing fields created before search indexing
+    was introduced, so upgrades converge on the same schema as fresh installs.
+    Index-creation errors are logged loudly instead of being swallowed.
+    """
+    if not frappe.db.exists("DocType", "Material Request"):
+        return
+
+    field_name = frappe.db.get_value(
+        "Custom Field", {"dt": "Material Request", "fieldname": "custom_variation_order"}
+    )
+    if not field_name:
+        frappe.get_doc(
+            {
+                "doctype": "Custom Field",
+                "dt": "Material Request",
+                "fieldname": "custom_variation_order",
+                "label": "Variation Order",
+                "fieldtype": "Link",
+                "options": "Variation Order",
+                "insert_after": "title",
+                "read_only": 1,
+                "search_index": 1,
+            }
+        ).insert(ignore_permissions=True)
+    elif not frappe.db.get_value("Custom Field", field_name, "search_index"):
+        # Reconcile legacy field metadata so DocType matches the physical index.
+        frappe.db.set_value("Custom Field", field_name, "search_index", 1)
+        frappe.clear_doctype_cache("Material Request")
+
+    try:
+        frappe.db.add_index("Material Request", ["custom_variation_order"], "idx_mr_custom_vo")
+    except Exception as e:
+        frappe.logger("construction_install").error(
+            f"Failed to ensure idx_mr_custom_vo index on 'tabMaterial Request': {e}"
+        )
+
+    _enforce_one_active_mr_per_vo()
+
+
+def _enforce_one_active_mr_per_vo():
+    """Enforce a database-backed one-non-cancelled-MR-per-VO invariant.
+
+    MariaDB cannot express a partial UNIQUE index (``UNIQUE ... WHERE
+    docstatus < 2``), so we add a STORED generated column that is the VO
+    name only while the MR is not cancelled, and NULL otherwise. NULLs do
+    not participate in a UNIQUE index, so at most one non-cancelled MR can
+    reference any given Variation Order. Cancelled MRs (``docstatus = 2``)
+    do NOT block a replacement — matching the ``docstatus < 2`` logic used
+    by ``create_material_request_for_vo``.
+
+    The reconcile is idempotent and logged loudly (never silently swallowed).
+    """
+    if not frappe.db.exists("DocType", "Material Request"):
+        return
+    if not frappe.db.exists("DocType", "Variation Order"):
+        return
+
+    stored_col = "custom_variation_order_active"
+
+    # Existence check that never relies on the (possible stale) has_column cache.
+    exists = frappe.db.sql(
+        "SHOW COLUMNS FROM `tabMaterial Request` LIKE %(col)s", {"col": stored_col}
+    )
+    if not exists:
+        try:
+            frappe.db.sql(
+                f"ALTER TABLE `tabMaterial Request` "
+                f"ADD COLUMN `{stored_col}` VARCHAR(140) "
+                f"AS (CASE WHEN docstatus < 2 THEN `custom_variation_order` ELSE NULL END) "
+                f"STORED"
+            )
+        except Exception as e:
+            # "Duplicate column" is benign (a concurrent run added it); anything
+            # else must be surfaced loudly.
+            if "Duplicate column" not in str(e):
+                frappe.logger("construction_install").error(
+                    f"Failed to add generated column '{stored_col}' on 'tabMaterial Request': {e}"
+                )
+                return
+
+    # Deduplicate any pre-existing conflicts before enforcing the unique index,
+    # otherwise index creation fails on an already-populated site.
+    try:
+        dups = frappe.db.sql(
+            f"""
+            SELECT `{stored_col}`, COUNT(*) AS c
+            FROM `tabMaterial Request`
+            WHERE `{stored_col}` IS NOT NULL
+            GROUP BY `{stored_col}`
+            HAVING COUNT(*) > 1
+            """,
+            as_dict=True,
+        )
+        for dup in dups:
+            vo_name = dup[stored_col]
+            keep = frappe.db.sql(
+                f"SELECT name FROM `tabMaterial Request` "
+                f"WHERE `{stored_col}` = %(vo)s ORDER BY creation ASC LIMIT 1",
+                {"vo": vo_name},
+                as_dict=True,
+            )
+            keep_name = keep[0]["name"] if keep else None
+            extras = frappe.db.sql(
+                f"SELECT name FROM `tabMaterial Request` "
+                f"WHERE `{stored_col}` = %(vo)s AND name != %(keep)s",
+                {"vo": vo_name, "keep": keep_name},
+                as_dict=True,
+            )
+            for ex in extras:
+                frappe.db.sql(
+                    f"UPDATE `tabMaterial Request` SET `{stored_col}` = NULL WHERE name = %(name)s",
+                    {"name": ex["name"]},
+                )
+            frappe.logger("construction_install").warning(
+                f"Deduplicated {len(extras)} extra active Material Request(s) for Variation Order "
+                f"'{vo_name}' (kept '{keep_name}') to satisfy the one-active-MR-per-VO invariant."
+            )
+    except Exception as e:
+        frappe.logger("construction_install").error(
+            f"Failed to deduplicate active Material Requests for '{stored_col}': {e}"
+        )
+
+    try:
+        frappe.db.sql("ALTER TABLE `tabMaterial Request` DROP INDEX `uniq_mr_one_active_vo`")
+    except Exception:
+        pass  # index may not exist yet
+    try:
+        frappe.db.sql(
+            "CREATE UNIQUE INDEX `uniq_mr_one_active_vo` "
+            "ON `tabMaterial Request` (`custom_variation_order_active`)"
+        )
+    except Exception as e:
+        frappe.logger("construction_install").error(
+            f"Failed to enforce unique index 'uniq_mr_one_active_vo' on 'tabMaterial Request': {e}"
+        )
 
 
 # ---------------------------------------------------------------------------

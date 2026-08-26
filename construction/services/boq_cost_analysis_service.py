@@ -5,7 +5,7 @@ from frappe.utils import flt
 
 def get_approved_analysis_for_boq_item(boq_item):
     """Get the approved BOQ Cost Analysis for a BOQ Item.
-    
+
     Returns the doc or None.
     """
     name = frappe.db.get_value(

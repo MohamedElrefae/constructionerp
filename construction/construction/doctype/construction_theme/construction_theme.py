@@ -2,6 +2,7 @@
 # For license information, please see license.txt
 
 import json
+import os
 import re
 
 import frappe
@@ -170,14 +171,14 @@ class ConstructionTheme(Document):
                 frappe.throw(_("Invalid hex color format in field '{0}': {1}").format(field, value))
 
     def _is_valid_hex_color(self, color):
-        """Check if color is valid hex format (#RGB or #RRGGBB)."""
+        """Check if color is valid hex format (#RGB, #RGBA, #RRGGBB, #RRGGBBAA)."""
         if not color:
             return True
         color = color.strip()
         if not color.startswith("#"):
             return False
         hex_part = color[1:]
-        return len(hex_part) in [3, 6] and all(c in "0123456789ABCDEFabcdef" for c in hex_part)
+        return len(hex_part) in [3, 4, 6, 8] and all(c in "0123456789ABCDEFabcdef" for c in hex_part)
 
     def _validate_login_page_fields(self):
         """Validate login page field dependencies and constraints.
@@ -427,15 +428,6 @@ class ConstructionTheme(Document):
 
     def on_update(self):
         """Invalidate CSS cache when theme changes."""
-        # Clear per-theme CSS cache
-        frappe.cache().delete_value(f"construction_theme_css:{self.name}")
-
-        # Clear site-wide theme config cache
-        cache_key = f"construction_theme:{frappe.local.site}"
-        frappe.cache().delete_value(cache_key)
-
-        frappe.publish_realtime("theme_updated", {"theme": self.name})
-
         # Regenerate login theme file if this is the system default
         if self.is_system_theme or self.is_default_light or self.is_default_dark:
             self._regenerate_login_theme_file()
@@ -443,11 +435,37 @@ class ConstructionTheme(Document):
         # Write static CSS fallback
         self._write_static_css_file()
 
+        # Clear per-theme CSS caches AFTER static writes
+        frappe.cache().delete_value(f"construction_theme_css:{self.name}")
+        frappe.cache().delete_value(f"theme_css:{self.name}")
+
+        # Clear site-wide theme config cache
+        cache_key = f"construction_theme:{frappe.local.site}"
+        frappe.cache().delete_value(cache_key)
+
+        frappe.publish_realtime("theme_updated", {"theme": self.name})
+
     def on_trash(self):
-        """Prevent deletion of system themes."""
-        if self.is_system_theme:
+        """Prevent deletion of system themes and cleanup generated CSS."""
+        if self.is_system_theme and not getattr(self.flags, "in_test_cleanup", False):
             frappe.throw(_("System themes cannot be deleted. Deactivate them instead."))
         frappe.cache().delete_value(f"construction_theme_css:{self.name}")
+        frappe.cache().delete_value(f"theme_css:{self.name}")
+        try:
+            theme_file = self.get_theme_css_path(self.name)
+            if os.path.exists(theme_file):
+                os.remove(theme_file)
+            # Reconcile theme_current.css when the deleted theme was an
+            # active default; the next default-theme save regenerates it.
+            if self.is_default_light or self.is_default_dark:
+                current_path = os.path.join(os.path.dirname(theme_file), "theme_current.css")
+                if os.path.exists(current_path):
+                    os.remove(current_path)
+        except OSError as e:
+            frappe.log_error(
+                f"Failed to remove static CSS for theme '{self.name}': {e}",
+                "Construction Theme CSS Cleanup",
+            )
 
     def generate_css(self) -> str:
         """Generate complete CSS for this theme using Jinja2 templates.
@@ -461,7 +479,7 @@ class ConstructionTheme(Document):
             from jinja2 import Environment, FileSystemLoader
 
             # Get template directory
-            template_dir = os.path.join(os.path.dirname(__file__), "..", "..", "theme_templates")
+            template_dir = frappe.get_app_path("construction", "theme_templates")
 
             env = Environment(loader=FileSystemLoader(template_dir))
 
@@ -487,7 +505,7 @@ class ConstructionTheme(Document):
             # Theme context for templates
             context = {
                 "theme_name": self.theme_name,
-                "is_dark_mode": "Dark" in self.theme_type,
+                "is_dark_mode": "Dark" in (self.theme_type or ""),
                 "accent_primary": self.accent_primary,
                 "accent_primary_hover": self.accent_primary_hover or self.accent_primary,
                 "accent_secondary": self.accent_secondary or self.accent_primary,
@@ -580,25 +598,22 @@ class ConstructionTheme(Document):
         for field_name, var_name in self.FIELD_VAR_MAP.items():
             # Special handling for computed hover colors
             if field_name == "primary_btn_hover_bg" and primary_btn_hover_bg:
-                variables.append(f"{var_name}:{primary_btn_hover_bg}")
+                variables.append(f"{var_name}: {primary_btn_hover_bg};")
             elif field_name == "secondary_btn_hover_bg" and secondary_btn_hover_bg:
-                variables.append(f"{var_name}:{secondary_btn_hover_bg}")
+                variables.append(f"{var_name}: {secondary_btn_hover_bg};")
             else:
                 value = self.get(field_name)
                 if value:
-                    variables.append(f"{var_name}:{value}")
+                    variables.append(f"{var_name}: {value};")
 
         # Return empty string if no variables
         if not variables:
             return ""
 
-        # Generate theme identifier: lowercase, replace spaces with underscores
-        identifier = self.theme_name.lower().replace(" ", "_")
-
-        # Wrap in scoped CSS block with concise formatting
+        # Wrap in scoped CSS block
         is_dark = "dark" in self.theme_type.lower() or (self.body_bg and self.body_bg.startswith("#1"))
         mode = "dark" if is_dark else "light"
-        css_block = f'html[data-theme="{mode}"]{{' + ";".join(variables) + ";}"
+        css_block = f'html[data-theme="{mode}"] {{ ' + " ".join(variables) + " }"
 
         return css_block
 
@@ -803,6 +818,25 @@ class ConstructionTheme(Document):
             except Exception as fallback_error:
                 frappe.log_error(f"Error writing fallback login CSS: {str(fallback_error)}")
 
+    @staticmethod
+    def get_theme_css_path(name):
+        """Single source of truth for static theme CSS paths (write AND delete).
+
+        Applies identical sanitization and path-containment checks so a
+        deleted theme always targets exactly the file its writer created,
+        even when the theme name contains spaces, punctuation or Unicode.
+        """
+        css_dir = os.path.realpath(frappe.get_site_path("public", "files", "css"))
+        safe_name = re.sub(r"[^a-zA-Z0-9_\-]", "", str(name))
+        if not safe_name:
+            import hashlib
+
+            safe_name = hashlib.md5(str(name).encode("utf-8")).hexdigest()
+        path = os.path.realpath(os.path.join(css_dir, f"theme_{safe_name}.css"))
+        if os.path.commonpath([css_dir, path]) != css_dir:
+            frappe.throw(_("Invalid theme CSS path for '{0}'").format(name))
+        return path
+
     def _write_static_css_file(self):
         """Write theme CSS to public/css/ as fallback for API-driven injection.
 
@@ -826,29 +860,28 @@ class ConstructionTheme(Document):
             if self.custom_css:
                 full_css += f"/* Custom CSS */\n{self.custom_css}\n"
 
-            # Write to construction/public/css/ (served via /assets/construction/css/)
-            app_path = frappe.get_app_path("construction")
-            css_dir = os.path.join(app_path, "public", "css")
+            # Write to site-scoped public files (served via /files/css/)
+            css_dir = os.path.realpath(frappe.get_site_path("public", "files", "css"))
             os.makedirs(css_dir, exist_ok=True)
 
-            css_path = os.path.join(css_dir, f"theme_{self.name}.css")
+            css_path = self.get_theme_css_path(self.name)
 
-            # Atomic write: write to .tmp then rename
+            # Truly atomic write: write to .tmp then os.replace
             tmp_path = css_path + ".tmp"
-            with open(tmp_path, "w") as f:
+            with open(tmp_path, "w", encoding="utf-8") as f:
                 f.write(full_css)
 
-            if os.path.exists(css_path):
-                os.remove(css_path)
-            os.rename(tmp_path, css_path)
+            os.replace(tmp_path, css_path)
 
             # Update theme_current.css if this is the active default
             if self.is_default_light or self.is_default_dark:
                 current_path = os.path.join(css_dir, "theme_current.css")
-                with open(current_path, "w") as f:
+                current_tmp = current_path + ".tmp"
+                with open(current_tmp, "w", encoding="utf-8") as f:
                     f.write(full_css)
+                os.replace(current_tmp, current_path)
 
-            frappe.logger().info(f"Static CSS written for {self.name}")
+            frappe.logger().info(f"Static CSS written for '{self.name}' to site storage")
 
         except Exception as e:
             frappe.log_error(f"Error writing static CSS for {self.name}: {str(e)}")

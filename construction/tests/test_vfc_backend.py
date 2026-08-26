@@ -20,11 +20,11 @@ import unittest
 import frappe
 
 from construction.construction.api.layout_api import (
-    get_active_layout,
-    save_layout,
-    list_layouts,
     delete_layout,
     delete_my_personal_layout,
+    get_active_layout,
+    list_layouts,
+    save_layout,
     validate_layout,
 )
 
@@ -202,7 +202,7 @@ class TestLayoutAPI(unittest.TestCase):
 
     def test_get_active_layout_prefers_role(self):
         user_roles = frappe.get_roles(frappe.session.user)
-        target_role = [r for r in user_roles if r not in ("Administrator", "System Manager", "All", "Guest")][0]
+        target_role = next(r for r in user_roles if r not in ("Administrator", "System Manager", "All", "Guest"))
         self._make_profile(is_default=1, profile_name="_Test_Default")
         p = self._make_profile(for_role=target_role, profile_name="_Test_Role", priority=20)
         result = get_active_layout(p.reference_doctype)

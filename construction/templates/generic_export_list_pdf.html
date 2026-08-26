@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>{{ doctype }} List Export</title>
+    <title>{{ doctype | e }} List Export</title>
     <style>
         :root {
             --export-primary: #1a365d;
@@ -160,14 +160,14 @@
             <div class="doc-header__sub">List View Export</div>
         </div>
         <div class="doc-header__meta">
-            {% if company %}<strong>{{ company }}</strong><br>{% endif %}
-            Export Date: {{ export_date }}
+            {% if company %}<strong>{{ company | e }}</strong><br>{% endif %}
+            Export Date: {{ export_date | e }}
         </div>
     </div>
 
     <!-- Document title block -->
     <div class="doc-title">
-        <div class="doc-title__doctype">{{ doctype }}</div>
+        <div class="doc-title__doctype">{{ doctype | e }}</div>
         <div class="doc-title__name">Total Records: {{ rows|length }}</div>
     </div>
 
@@ -177,7 +177,7 @@
             <tr>
                 {% for col in columns %}
                 <th{% if col.default_width %} style="width: {{ col.default_width }}%"{% endif %}>
-                    {{ col.label }}
+                    {{ col.label | e }}
                 </th>
                 {% endfor %}
             </tr>
@@ -187,7 +187,7 @@
             <tr>
                 {% for col in columns %}
                 <td class="{% if col.fieldtype in ['Currency','Float','Int','Percent'] %}numeric{% endif %}">
-                    {{ row.get(col.field_key, '') or '' }}
+                    {{ (row.get(col.field_key, '') or '') | e }}
                 </td>
                 {% endfor %}
             </tr>
@@ -198,7 +198,7 @@
     <!-- Footer -->
     <div class="doc-footer">
         <span>Construction ERP — List Export</span>
-        <span>{{ doctype }}</span>
+        <span>{{ doctype | e }}</span>
     </div>
 
 </body>

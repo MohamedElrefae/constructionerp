@@ -322,7 +322,6 @@ def save_user_theme_settings(inherit_from_site, light_theme=None, dark_theme=Non
             user_theme.dark_theme = dark_theme
 
         user_theme.save(ignore_permissions=True)
-        frappe.db.commit()
 
         return {"success": True, "message": _("Theme settings saved successfully")}
 
@@ -384,7 +383,6 @@ def save_modern_theme_settings(
         settings.theme_switcher_limit = theme_switcher_limit
         settings.css_cache_ttl = css_cache_ttl
         settings.save()
-        frappe.db.commit()
 
         return {"success": True, "message": _("Modern Theme Settings saved successfully")}
 
@@ -509,7 +507,6 @@ def save_user_mode(mode):
 
         # Direct DB update — skips ORM validation & modified timestamp check
         frappe.db.set_value("User", user, "desk_theme", desk_theme_value, update_modified=False)
-        frappe.db.commit()
 
         return {"success": True, "mode": mode}
     except Exception as e:
@@ -554,7 +551,6 @@ def _create_system_theme_on_fly(theme_name):
     theme.border_color = "rgba(148,163,184,0.18)" if is_dark else "#e5e7eb"
 
     theme.insert(ignore_if_duplicate=True)
-    frappe.db.commit()
 
     frappe.logger().info(f"[Theme API] Created system theme on the fly: {theme_name}")
 
@@ -2312,7 +2308,6 @@ def set_user_theme(theme, mode):
                 frappe.db.set_value("User Desk Theme", user_theme_name, "light_theme", None)
                 frappe.db.set_value("User Desk Theme", user_theme_name, "dark_theme", None)
 
-            frappe.db.commit()
             return {"success": True, "message": f"Mode saved: {mode}", "basic_theme": True}
 
         # Get or create User Desk Theme
@@ -2338,7 +2333,6 @@ def set_user_theme(theme, mode):
         desk_theme_value = "Dark" if mode == "dark" else "Light"
         frappe.db.set_value("User", user, "desk_theme", desk_theme_value, update_modified=False)
 
-        frappe.db.commit()
 
         return {"success": True, "message": "Theme preference saved", "theme_doc": theme_doc}
 
@@ -3096,7 +3090,6 @@ def save_user_typography_settings(
 
     doc.update(settings)
     doc.save(ignore_permissions=True)
-    frappe.db.commit()
     frappe.cache().delete_key(f"user_desk_theme:{frappe.session.user}")
     frappe.cache().hdel("bootinfo", frappe.session.user)
 
@@ -3173,33 +3166,31 @@ def get_default_theme_vals():
 def whitelabel_patch():
     """
     Post-migration cleanup. Removes Frappe branding that reappears on updates.
+    Uses direct database updates to ensure hermetic execution without rewriting source files.
     """
-    # Remove welcome page
-    frappe.delete_doc_if_exists("Page", "welcome-to-erpnext", force=1)
+    # Remove welcome page from database without touching disk files
+    if frappe.db.exists("Page", "welcome-to-erpnext"):
+        frappe.delete_doc("Page", "welcome-to-erpnext", force=1, for_reload=True, ignore_permissions=True)
 
     # Clear onboarding content
     if frappe.db.exists("Blog Post", "Welcome"):
-        frappe.db.set_value("Blog Post", "Welcome", "content", "")
+        frappe.db.set_value("Blog Post", "Welcome", "content", "", update_modified=False)
 
-    # Clear module onboarding docs
-    for module in frappe.get_all("Module Onboarding", fields=["name"]):
-        doc = frappe.get_doc("Module Onboarding", module.name)
-        doc.documentation_url = ""
-        doc.flags.ignore_mandatory = True
-        doc.flags.ignore_links = True
-        doc.save(ignore_permissions=True)
+    # Clear module onboarding docs via database updates
+    if frappe.db.exists("DocType", "Module Onboarding"):
+        for module_name in frappe.get_all("Module Onboarding", pluck="name"):
+            frappe.db.set_value("Module Onboarding", module_name, "documentation_url", "", update_modified=False)
 
-    # Clear onboarding steps
-    for step in frappe.get_all("Onboarding Step", fields=["name"]):
-        doc = frappe.get_doc("Onboarding Step", step.name)
-        doc.intro_video_url = ""
-        doc.description = ""
-        doc.flags.ignore_mandatory = True
-        doc.flags.ignore_links = True
-        # Sanitize legacy onboarding actions for v16 compatibility
-        if doc.get("action"):
-            doc.action = _sanitize_onboarding_action(doc.action)
-        doc.save(ignore_permissions=True)
+    # Clear onboarding steps via database updates
+    if frappe.db.exists("DocType", "Onboarding Step"):
+        for step in frappe.get_all("Onboarding Step", fields=["name", "action"]):
+            update_dict = {
+                "intro_video_url": "",
+                "description": "",
+            }
+            if step.get("action"):
+                update_dict["action"] = _sanitize_onboarding_action(step.action)
+            frappe.db.set_value("Onboarding Step", step.name, update_dict, update_modified=False)
 
 
 # ── Onboarding Action Sanitizer ──

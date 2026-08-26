@@ -5,7 +5,7 @@ from frappe.utils import flt
 
 def get_boq_cost_analysis_summary(boq_header):
     """Report 1: BOQ Cost Analysis Summary.
-    
+
     Shows approved cost analysis details for all BOQ Items in a header.
     """
     rows = frappe.db.sql(
@@ -38,7 +38,7 @@ def get_boq_cost_analysis_summary(boq_header):
 
 def get_boq_item_cost_vs_contract(boq_header):
     """Report 2: BOQ Item Estimated Cost vs Contract Rate.
-    
+
     Shows approved unit cost, contract rate, and margin for each item.
     """
     rows = frappe.db.sql(
@@ -79,7 +79,7 @@ def get_boq_item_cost_vs_contract(boq_header):
 
 def get_resource_requirement_summary(boq_header):
     """Report 3: Resource Requirement Summary by resource stream.
-    
+
     Aggregates resource quantities across all approved cost analyses.
     """
     rows = frappe.db.sql(
@@ -111,7 +111,7 @@ def get_resource_requirement_summary(boq_header):
 
 def get_resource_price_history(item_code=None, supplier=None, region=None, from_date=None, to_date=None):
     """Report 4: Resource Price History / Rate Movement.
-    
+
     Shows price changes over time for selected items.
     All filtering is done in-database via parameterized SQL.
     """
@@ -154,7 +154,7 @@ def get_resource_price_history(item_code=None, supplier=None, region=None, from_
 
 def get_boq_items_missing_analysis(boq_header):
     """Report 5: BOQ Items Missing Approved Cost Analysis.
-    
+
     Lists BOQ Items without an approved cost analysis.
     """
     rows = frappe.db.sql(

@@ -1,3 +1,5 @@
+import os
+
 import frappe
 from frappe.tests.utils import FrappeTestCase
 
@@ -26,9 +28,43 @@ def get_or_create_test_item():
 class TestVariationOrders(FrappeTestCase):
     def setUp(self):
         frappe.db.delete("User Scope Context", {"user": "Administrator"})
+        self._created_files = []
 
     def tearDown(self):
+        if hasattr(self, "_created_files"):
+            for f in self._created_files:
+                try:
+                    path = f.get_full_path()
+                    if os.path.exists(path):
+                        os.remove(path)
+                    frappe.db.delete("File", {"name": f.name})
+                except Exception:
+                    pass
+            self._created_files = []
         frappe.db.rollback()
+
+    def _create_valid_pdf_file(self, attached_doctype, attached_name):
+        import io
+
+        from pypdf import PdfWriter
+
+        writer = PdfWriter()
+        writer.add_blank_page(width=72, height=72)
+        buf = io.BytesIO()
+        writer.write(buf)
+        pdf_content = buf.getvalue()
+
+        file_doc = frappe.get_doc({
+            "doctype": "File",
+            "file_name": f"approval_{frappe.generate_hash(length=6)}.pdf",
+            "attached_to_doctype": attached_doctype,
+            "attached_to_name": attached_name,
+            "is_private": 1,
+            "content": pdf_content,
+        })
+        file_doc.insert(ignore_permissions=True)
+        self._created_files.append(file_doc)
+        return file_doc
 
     def test_variation_order_requires_locked_boq_header(self):
         header, item = self._make_boq_item("VO Lock Gate")
@@ -256,7 +292,7 @@ class TestVariationOrders(FrappeTestCase):
     def test_boq_header_totals_exclude_variation_items(self):
         from construction.api.boq_api import get_revised_boq_view
 
-        header, item = self._make_boq_item("VO Header Totals", quantity=100, rate=50)
+        header, _item = self._make_boq_item("VO Header Totals", quantity=100, rate=50)
         header.reload()
         contract_value_before = header.total_contract_value
 
@@ -379,8 +415,9 @@ class TestVariationOrders(FrappeTestCase):
         return vo
 
     def _approve_by_client(self, vo):
+        file_doc = self._create_valid_pdf_file("Variation Order", vo.name)
         vo.status = "Approved by Client"
-        vo.client_approval_document = "/private/files/signed-vo.pdf"
+        vo.client_approval_document = file_doc.name
         vo.save(ignore_permissions=True)
         vo.reload()
         return vo
@@ -540,8 +577,44 @@ class TestVariationOrderAPI(FrappeTestCase):
     client scripts. These do not assert server logic; they confirm the
     endpoints exist, respect the rollout flag, and round-trip state."""
 
+    def setUp(self):
+        self._created_files = []
+
     def tearDown(self):
+        if hasattr(self, "_created_files"):
+            for f in self._created_files:
+                try:
+                    path = f.get_full_path()
+                    if os.path.exists(path):
+                        os.remove(path)
+                    frappe.db.delete("File", {"name": f.name})
+                except Exception:
+                    pass
+            self._created_files = []
         frappe.db.rollback()
+
+    def _create_valid_pdf_file(self, attached_doctype, attached_name):
+        import io
+
+        from pypdf import PdfWriter
+
+        writer = PdfWriter()
+        writer.add_blank_page(width=72, height=72)
+        buf = io.BytesIO()
+        writer.write(buf)
+        pdf_content = buf.getvalue()
+
+        file_doc = frappe.get_doc({
+            "doctype": "File",
+            "file_name": f"approval_{frappe.generate_hash(length=6)}.pdf",
+            "attached_to_doctype": attached_doctype,
+            "attached_to_name": attached_name,
+            "is_private": 1,
+            "content": pdf_content,
+        })
+        file_doc.insert(ignore_permissions=True)
+        self._created_files.append(file_doc)
+        return file_doc
 
     def test_create_variation_order_requires_locked_header(self):
         from construction.api.boq_api import create_variation_order
@@ -582,8 +655,8 @@ class TestVariationOrderAPI(FrappeTestCase):
 
         created = create_variation_order(header.name)
         self.assertTrue(created["success"], created)
-        result = transition_variation_order(created["name"], "Approved by Client")
-        self.assertFalse(result["success"])
+        with self.assertRaises((frappe.ValidationError, Exception)):
+            transition_variation_order(created["name"], "Approved by Client")
 
     def test_transition_variation_order_happy_path(self):
         from construction.api.boq_api import create_variation_order, transition_variation_order
@@ -614,16 +687,14 @@ class TestVariationOrderAPI(FrappeTestCase):
         eng = transition_variation_order(vo_name, "Approved by Engineer")
         self.assertTrue(eng["success"], eng)
         # Approved by Client without PDF must fail
-        bad = transition_variation_order(vo_name, "Approved by Client")
-        self.assertFalse(bad["success"])
+        with self.assertRaises((frappe.ValidationError, Exception)):
+            transition_variation_order(vo_name, "Approved by Client")
+        pdf_file = self._create_valid_pdf_file("Variation Order", vo_name)
         good = transition_variation_order(
-            vo_name, "Approved by Client", client_approval_document="/private/files/signed-vo.pdf"
+            vo_name, "Approved by Client", client_approval_document=pdf_file.name
         )
         self.assertTrue(good["success"], good)
         self.assertEqual(good["status"], "Approved by Client")
-        # Cleanup: delete the VO doc explicitly (FrappeTestCase.rollback would
-        # handle it, but the doc name looks like a DocType module so we want
-        # to remove it before the next test picks it up)
         frappe.delete_doc("Variation Order", vo_name, force=1, ignore_permissions=True)
 
     def test_get_variation_order_summary_groups_by_status(self):
@@ -653,7 +724,7 @@ class TestVariationOrderAPI(FrappeTestCase):
     def test_get_revised_boq_view_api(self):
         from construction.api.boq_api import get_revised_boq_view
 
-        header, item = self._make_boq_item("VO API Revised View", quantity=80, rate=60)
+        header, _item = self._make_boq_item("VO API Revised View", quantity=80, rate=60)
         group = frappe.get_doc(
             {
                 "doctype": "BOQ Structure",
@@ -689,7 +760,8 @@ class TestVariationOrderAPI(FrappeTestCase):
         vo.status = "Approved by Engineer"
         vo.save(ignore_permissions=True)
         vo.status = "Approved by Client"
-        vo.client_approval_document = "/private/files/test.pdf"
+        pdf_file = self._create_valid_pdf_file("Variation Order", vo.name)
+        vo.client_approval_document = pdf_file.name
         vo.save(ignore_permissions=True)
         vo.reload()
 

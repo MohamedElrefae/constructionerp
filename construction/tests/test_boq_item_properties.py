@@ -53,13 +53,13 @@ class TestCostBuildupFormulas:
     @given(est_unit_cost=currency, overhead_pct=pct, profit_pct=pct)
     @settings(max_examples=100)
     def test_overhead_formula(self, est_unit_cost, overhead_pct, profit_pct):
-        overhead, profit, sell_price, _ = run_cost_buildup(est_unit_cost, overhead_pct, profit_pct, 1, 1)
+        overhead, _profit, _sell_price, _ = run_cost_buildup(est_unit_cost, overhead_pct, profit_pct, 1, 1)
         assert abs(overhead - est_unit_cost * overhead_pct / 100) < 0.01
 
     @given(est_unit_cost=currency, overhead_pct=pct, profit_pct=pct)
     @settings(max_examples=100)
     def test_profit_formula(self, est_unit_cost, overhead_pct, profit_pct):
-        overhead, profit, sell_price, _ = run_cost_buildup(est_unit_cost, overhead_pct, profit_pct, 1, 1)
+        overhead, profit, _sell_price, _ = run_cost_buildup(est_unit_cost, overhead_pct, profit_pct, 1, 1)
         expected = (est_unit_cost + overhead) * profit_pct / 100
         assert abs(profit - expected) < 0.01
 

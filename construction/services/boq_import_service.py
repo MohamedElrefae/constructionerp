@@ -118,17 +118,25 @@ class BOQImportService:
         confirmed_import_mode: str | None = None,
         row_resolutions: list[dict] | None = None,
     ) -> dict:
-        """Parse, preview, and optionally commit BOQ Excel import."""
+        """Parse, preview, and atomically commit BOQ Excel import."""
+        if not dry_run and boq_header and frappe.session.user != "Administrator":
+            frappe.has_permission("BOQ Header", "write", doc=boq_header, throw=True)
+            frappe.has_permission("BOQ Structure", "create", throw=True)
+            frappe.has_permission("BOQ Item", "create", throw=True)
+
+        file_path = BOQImportService._resolve_file_path(file_url)
+        preview = BOQImportService.parse_workbook(
+            file_path=file_path,
+            boq_header=boq_header,
+            confirmed_import_mode=confirmed_import_mode,
+            row_resolutions=row_resolutions or [],
+        )
+        if dry_run:
+            return preview
+
+        save_point = "boq_import_commit"
+        frappe.db.savepoint(save_point)
         try:
-            file_path = BOQImportService._resolve_file_path(file_url)
-            preview = BOQImportService.parse_workbook(
-                file_path=file_path,
-                boq_header=boq_header,
-                confirmed_import_mode=confirmed_import_mode,
-                row_resolutions=row_resolutions or [],
-            )
-            if dry_run:
-                return preview
             return BOQImportService._commit_import(
                 file_url=file_url,
                 file_path=file_path,
@@ -137,8 +145,9 @@ class BOQImportService:
                 confirmed_import_mode=confirmed_import_mode,
             )
         except Exception as exc:
-            frappe.log_error(f"BOQ import error: {str(exc)}")
-            return {"success": False, "dry_run": bool(dry_run), "error": str(exc)}
+            frappe.db.rollback(save_point=save_point)
+            frappe.log_error(f"BOQ import commit rolled back: {str(exc)}")
+            raise
 
     @staticmethod
     def parse_workbook(
@@ -157,6 +166,11 @@ class BOQImportService:
                 errors=file_policy["errors"],
                 import_policy=file_policy["policy"],
             )
+
+        # Pre-scan the ZIP/XML container BEFORE openpyxl materializes any
+        # object. Hostile declarations (huge merges/dimensions/bombs) are
+        # rejected here without paying library parsing costs.
+        BOQImportService._prescan_xlsx(file_path)
 
         wb = openpyxl.load_workbook(file_path, data_only=True)
         ws = BOQImportService._select_worksheet(wb)
@@ -340,25 +354,32 @@ class BOQImportService:
         created_structures = []
         created_items = []
 
-        for row in structures:
-            structure = BOQImportService._insert_structure_from_import_row(
-                boq_header=boq_header,
-                row=row,
-                batch=batch,
-                import_mode=confirmed_import_mode,
-                existing_by_wbs=existing_by_wbs,
-                created_by_wbs=created_by_wbs,
-            )
-            created_structures.append(
-                {"name": structure.name, "wbs_code": structure.wbs_code, "is_group": structure.is_group}
-            )
-            created_by_wbs[structure.wbs_code] = structure.name
+        from construction.construction.utils.rollup import defer_boq_rollups
 
-            if not structure.is_group:
-                item = BOQImportService._update_imported_item(structure, row, batch, confirmed_import_mode)
-                created_items.append(
-                    {"name": item.name, "structure": structure.name, "wbs_code": structure.wbs_code}
+        with defer_boq_rollups():
+            for row in structures:
+                structure = BOQImportService._insert_structure_from_import_row(
+                    boq_header=boq_header,
+                    row=row,
+                    batch=batch,
+                    import_mode=confirmed_import_mode,
+                    existing_by_wbs=existing_by_wbs,
+                    created_by_wbs=created_by_wbs,
                 )
+                created_structures.append(
+                    {"name": structure.name, "wbs_code": structure.wbs_code, "is_group": structure.is_group}
+                )
+                created_by_wbs[structure.wbs_code] = structure.name
+
+                if not structure.is_group:
+                    item = BOQImportService._update_imported_item(structure, row, batch, confirmed_import_mode)
+                    created_items.append(
+                        {"name": item.name, "structure": structure.name, "wbs_code": structure.wbs_code}
+                    )
+
+        # Execute single batch rollup calculation across tree
+        header_doc = frappe.get_doc("BOQ Header", boq_header)
+        header_doc.recalculate_phase1_totals()
 
         batch.status = "Committed"
         batch.save(ignore_permissions=True)
@@ -743,21 +764,291 @@ class BOQImportService:
                 }
         return {}
 
+    MAX_FILE_SIZE = 25 * 1024 * 1024  # 25 MB
+    MAX_UNCOMPRESSED_SIZE = 100 * 1024 * 1024  # 100 MB
+    MAX_ROWS = 50000
+    MAX_COLS = 100
+    MAX_MERGED_RANGES = 500
+    MAX_TOTAL_MERGED_CELLS = 10000
+
+    # Pre-scan (ZIP/XML) limits — enforced BEFORE openpyxl materializes objects.
+    MAX_ZIP_MEMBERS = 500
+    MAX_MEMBER_COMPRESSION_RATIO = 100
+    MAX_WORKSHEET_XML_BYTES = 50 * 1024 * 1024
+    MAX_SHARED_STRINGS_BYTES = 50 * 1024 * 1024
+
+    @staticmethod
+    def _prescan_xlsx(file_path: str) -> None:
+        """Bounded streaming pre-scan of the XLSX container.
+
+        Enforces member count, per-member uncompressed size, compression
+        ratio, worksheet/shared-strings XML size, sheet dimensions, merge
+        count and total merged area DIRECTLY ON THE ZIP + XML STREAM —
+        before ``openpyxl.load_workbook`` can materialize a single object.
+        This closes the pre-validation DoS window where a tiny crafted
+        archive declaring huge merges/dimensions forced expensive parsing.
+        """
+        import zipfile
+
+        try:
+            with zipfile.ZipFile(file_path, "r") as zf:
+                members = zf.infolist()
+                if len(members) > BOQImportService.MAX_ZIP_MEMBERS:
+                    frappe.throw(
+                        _("Excel archive contains too many parts ({0}; limit {1}).").format(
+                            len(members), BOQImportService.MAX_ZIP_MEMBERS
+                        ),
+                        frappe.ValidationError,
+                    )
+
+                total_uncompressed = 0
+                for info in members:
+                    # Overflow-safe aggregate accounting (Python ints do not
+                    # overflow; the check is still enforced per member first).
+                    total_uncompressed += info.file_size
+                    if info.file_size > BOQImportService.MAX_UNCOMPRESSED_SIZE:
+                        frappe.throw(
+                            _("Archive member '{0}' is too large to process safely.").format(info.filename),
+                            frappe.ValidationError,
+                        )
+                    if total_uncompressed > BOQImportService.MAX_UNCOMPRESSED_SIZE:
+                        frappe.throw(
+                            _("Uncompressed Excel archive exceeds safety threshold of {0} bytes.").format(
+                                BOQImportService.MAX_UNCOMPRESSED_SIZE
+                            ),
+                            frappe.ValidationError,
+                        )
+                    if info.compress_size > 0 and (info.file_size / info.compress_size) > BOQImportService.MAX_MEMBER_COMPRESSION_RATIO:
+                        frappe.throw(
+                            _("Suspicious compression ratio detected in '{0}' (potential Zip Bomb).").format(
+                                info.filename
+                            ),
+                            frappe.ValidationError,
+                        )
+                    if info.filename == "xl/sharedStrings.xml" and info.file_size > BOQImportService.MAX_SHARED_STRINGS_BYTES:
+                        frappe.throw(
+                            _("Workbook shared-string table is too large to process safely."),
+                            frappe.ValidationError,
+                        )
+
+                for info in members:
+                    if not re.fullmatch(r"xl/worksheets/sheet\d+\.xml", info.filename):
+                        continue
+                    if info.file_size > BOQImportService.MAX_WORKSHEET_XML_BYTES:
+                        frappe.throw(
+                            _("Worksheet '{0}' is too large to process safely.").format(info.filename),
+                            frappe.ValidationError,
+                        )
+                    BOQImportService._prescan_worksheet_xml(zf, info)
+        except zipfile.BadZipFile:
+            frappe.throw(_("Corrupted Excel archive file."), frappe.ValidationError)
+
+    @staticmethod
+    def _prescan_worksheet_xml(zf, info) -> None:
+        """Stream one worksheet XML enforcing dimensions, row counts and merge limits."""
+        import xml.etree.ElementTree as ET
+
+        row_count = 0
+        merge_count = 0
+        total_merged_cells = 0
+        dimension_checked = False
+
+        try:
+            stream = zf.open(info, "r")
+            try:
+                for event, elem in ET.iterparse(stream, events=("end",)):
+                    tag = elem.tag.rsplit("}", 1)[-1]
+                    if tag == "row":
+                        row_count += 1
+                        if row_count > BOQImportService.MAX_ROWS:
+                            frappe.throw(
+                                _("Worksheet exceeds maximum row limit of {0} rows.").format(
+                                    BOQImportService.MAX_ROWS
+                                ),
+                                frappe.ValidationError,
+                            )
+                    elif tag == "mergeCell":
+                        merge_count += 1
+                        if merge_count > BOQImportService.MAX_MERGED_RANGES:
+                            frappe.throw(
+                                _("Worksheet contains too many merged cell ranges (exceeds safety limit of {0}).").format(
+                                    BOQImportService.MAX_MERGED_RANGES
+                                ),
+                                frappe.ValidationError,
+                            )
+                        ref = elem.get("ref") or ""
+                        cells = BOQImportService._merged_range_cell_area(ref)
+                        total_merged_cells += cells
+                        if total_merged_cells > BOQImportService.MAX_TOTAL_MERGED_CELLS:
+                            frappe.throw(
+                                _("Total merged cell area ({0} cells) exceeds safety limit of {1} cells.").format(
+                                    total_merged_cells, BOQImportService.MAX_TOTAL_MERGED_CELLS
+                                ),
+                                frappe.ValidationError,
+                            )
+                    elif tag == "dimension" and not dimension_checked:
+                        dimension_checked = True
+                        ref = elem.get("ref") or ""
+                        max_row, max_col = BOQImportService._dimension_bounds(ref)
+                        if max_row > BOQImportService.MAX_ROWS or max_col > BOQImportService.MAX_COLS:
+                            frappe.throw(
+                                _("Worksheet declared size ({0} x {1}) exceeds safety limits.").format(
+                                    max_row, max_col
+                                ),
+                                frappe.ValidationError,
+                            )
+                    # Bound parser memory while streaming.
+                    elem.clear()
+            finally:
+                stream.close()
+        except ET.ParseError as e:
+            frappe.throw(
+                _("Corrupted or hostile worksheet XML: {0}").format(str(e)),
+                frappe.ValidationError,
+            )
+
+    @staticmethod
+    def _cell_ref_to_indices(ref: str) -> tuple[int, int]:
+        """Convert an A1-style cell reference to (row, col) integers."""
+        match = re.fullmatch(r"([A-Za-z]+)(\d+)", ref.strip())
+        if not match:
+            return 0, 0
+        col_letters, row_digits = match.groups()
+        col = 0
+        for ch in col_letters.upper():
+            col = col * 26 + (ord(ch) - ord("A") + 1)
+        return int(row_digits), col
+
+    @staticmethod
+    def _merged_range_cell_area(ref: str) -> int:
+        """Return the cell area of a merged range like 'A1:Z500000'."""
+        parts = ref.split(":")
+        if len(parts) != 2:
+            return 0
+        r1, c1 = BOQImportService._cell_ref_to_indices(parts[0])
+        r2, c2 = BOQImportService._cell_ref_to_indices(parts[1])
+        if not (r1 and c1 and r2 and c2):
+            # Unparseable/hostile declaration — treat as maximum-risk area.
+            return BOQImportService.MAX_TOTAL_MERGED_CELLS + 1
+        return abs(r2 - r1 + 1) * abs(c2 - c1 + 1)
+
+    @staticmethod
+    def _dimension_bounds(ref: str) -> tuple[int, int]:
+        """Return (max_row, max_col) from a dimension ref like 'A1:Z500000'."""
+        parts = ref.split(":")
+        end = parts[-1] if parts else ""
+        row, col = BOQImportService._cell_ref_to_indices(end)
+        return row, col
+
     @staticmethod
     def _resolve_file_path(file_url: str) -> str:
-        if os.path.isabs(file_url) and os.path.exists(file_url):
-            return file_url
+        import zipfile
 
-        clean = file_url.lstrip("/")
-        candidates = [
-            frappe.get_site_path("public", clean.removeprefix("files/")),
-            frappe.get_site_path("private", clean.removeprefix("private/files/")),
-            frappe.get_site_path(clean),
-        ]
-        for path in candidates:
-            if os.path.exists(path):
-                return path
-        frappe.throw(_("Import file was not found: {0}").format(file_url))
+        if not file_url:
+            frappe.throw(_("File URL is required."))
+
+        doc_str = str(file_url).strip()
+
+        # Reject path traversal sequences
+        if ".." in doc_str:
+            frappe.throw(_("Invalid file path (traversal detected): {0}").format(doc_str), frappe.ValidationError)
+
+        site_path = os.path.realpath(frappe.get_site_path())
+
+        # Locate File document in database - REQUIRE a registered File doc
+        file_doc_name = None
+        if frappe.db.exists("File", doc_str):
+            file_doc_name = doc_str
+        elif frappe.db.exists("File", {"file_url": doc_str}):
+            file_doc_name = frappe.db.get_value("File", {"file_url": doc_str}, "name")
+
+        if not file_doc_name:
+            frappe.throw(
+                _("Access denied: File '{0}' is not a registered, authorized File attachment.").format(doc_str),
+                frappe.PermissionError,
+            )
+
+        file_doc = frappe.get_doc("File", file_doc_name)
+
+        # Enforce read permissions on the File document
+        frappe.has_permission("File", "read", doc=file_doc, throw=True)
+
+        # If private file, check attached document authorization or ownership
+        if file_doc.is_private:
+            if file_doc.attached_to_doctype and file_doc.attached_to_name:
+                frappe.has_permission(
+                    file_doc.attached_to_doctype, "read", doc=file_doc.attached_to_name, throw=True
+                )
+            elif file_doc.owner != frappe.session.user and "System Manager" not in frappe.get_roles():
+                frappe.throw(
+                    _("Access denied: Private file belongs to another user."),
+                    frappe.PermissionError,
+                )
+
+        real_path = os.path.realpath(file_doc.get_full_path())
+
+        if not real_path or not os.path.exists(real_path):
+            frappe.throw(_("Import file was not found on server: {0}").format(doc_str))
+
+        # Enforce canonical path containment using os.path.commonpath
+        try:
+            if os.path.commonpath([site_path, real_path]) != site_path:
+                frappe.throw(
+                    _("Access to file outside site directory is forbidden: {0}").format(doc_str),
+                    frappe.PermissionError,
+                )
+        except ValueError:
+            frappe.throw(
+                _("Access to file outside site directory is forbidden: {0}").format(doc_str),
+                frappe.PermissionError,
+            )
+
+        # Resource limits: Max file size (25MB)
+        file_size = os.path.getsize(real_path)
+        if file_size > BOQImportService.MAX_FILE_SIZE:
+            frappe.throw(
+                _("File size ({0} bytes) exceeds maximum allowed limit of 25MB.").format(file_size),
+                frappe.ValidationError,
+            )
+
+        # Validate XLSX magic bytes (strict OpenXML PK\x03\x04)
+        sig = b""
+        try:
+            with open(real_path, "rb") as f:
+                sig = f.read(4)
+                if sig.startswith(b"\xd0\xcf\x11\xe0"):
+                    frappe.throw(
+                        _("Unsupported legacy format: Binary Excel (.xls) is not supported. Please upload an OpenXML Excel workbook (.xlsx)."),
+                        frappe.ValidationError,
+                    )
+                if not sig.startswith(b"PK\x03\x04"):
+                    frappe.throw(_("Invalid file format: Expected an Excel workbook (.xlsx)."), frappe.ValidationError)
+        except Exception as e:
+            if isinstance(e, (frappe.ValidationError, frappe.PermissionError)):
+                raise e
+            frappe.throw(_("Unable to read import file: {0}").format(str(e)), frappe.ValidationError)
+
+        # Decompression / Zip bomb protection for XLSX archives
+        if sig.startswith(b"PK\x03\x04"):
+            try:
+                with zipfile.ZipFile(real_path, "r") as zf:
+                    total_uncompressed = sum(info.file_size for info in zf.infolist())
+                    if total_uncompressed > BOQImportService.MAX_UNCOMPRESSED_SIZE:
+                        frappe.throw(
+                            _("Uncompressed Excel archive ({0} bytes) exceeds safety threshold of 100MB.").format(
+                                total_uncompressed
+                            ),
+                            frappe.ValidationError,
+                        )
+                    if file_size > 0 and (total_uncompressed / file_size) > 100:
+                        frappe.throw(
+                            _("Suspicious compression ratio detected (potential Zip Bomb)."),
+                            frappe.ValidationError,
+                        )
+            except zipfile.BadZipFile:
+                frappe.throw(_("Corrupted Excel archive file."), frappe.ValidationError)
+
+        return real_path
 
     @staticmethod
     def _select_worksheet(wb) -> Any:
@@ -769,8 +1060,53 @@ class BOQImportService:
 
     @staticmethod
     def _read_rows_with_merged_values(ws) -> list[dict]:
+        # Enforce column and row count limits before parsing
+        if ws.max_column and ws.max_column > BOQImportService.MAX_COLS:
+            frappe.throw(
+                _("Worksheet column count ({0}) exceeds safety limit of {1} columns.").format(
+                    ws.max_column, BOQImportService.MAX_COLS
+                ),
+                frappe.ValidationError,
+            )
+
+        if ws.max_row and ws.max_row > BOQImportService.MAX_ROWS:
+            frappe.throw(
+                _("Worksheet row count ({0}) exceeds maximum allowed limit of {1} rows.").format(
+                    ws.max_row, BOQImportService.MAX_ROWS
+                ),
+                frappe.ValidationError,
+            )
+
+        if len(ws.merged_cells.ranges) > BOQImportService.MAX_MERGED_RANGES:
+            frappe.throw(
+                _("Worksheet contains too many merged cell ranges (exceeds safety limit of {0}).").format(
+                    BOQImportService.MAX_MERGED_RANGES
+                ),
+                frappe.ValidationError,
+            )
+
         merged_values = {}
+        total_merged_cells = 0
+
         for merged_range in ws.merged_cells.ranges:
+            # Reject out-of-bounds merged ranges to prevent memory explosion
+            if merged_range.max_row > BOQImportService.MAX_ROWS or merged_range.max_col > BOQImportService.MAX_COLS:
+                frappe.throw(
+                    _("Hostile or out-of-bounds merged range detected ({0}).").format(str(merged_range)),
+                    frappe.ValidationError,
+                )
+
+            range_cells = (merged_range.max_row - merged_range.min_row + 1) * (merged_range.max_col - merged_range.min_col + 1)
+            total_merged_cells += range_cells
+
+            if total_merged_cells > BOQImportService.MAX_TOTAL_MERGED_CELLS:
+                frappe.throw(
+                    _("Total merged cell area ({0} cells) exceeds safety limit of {1} cells.").format(
+                        total_merged_cells, BOQImportService.MAX_TOTAL_MERGED_CELLS
+                    ),
+                    frappe.ValidationError,
+                )
+
             value = ws.cell(merged_range.min_row, merged_range.min_col).value
             for row in range(merged_range.min_row, merged_range.max_row + 1):
                 for col in range(merged_range.min_col, merged_range.max_col + 1):
@@ -778,8 +1114,13 @@ class BOQImportService:
 
         rows = []
         for row_idx, row in enumerate(ws.iter_rows(), start=1):
+            if row_idx > BOQImportService.MAX_ROWS:
+                frappe.throw(
+                    _("Worksheet exceeds maximum row limit of {0} rows.").format(BOQImportService.MAX_ROWS),
+                    frappe.ValidationError,
+                )
             values = []
-            for col_idx, cell in enumerate(row, start=1):
+            for col_idx, cell in enumerate(row[: BOQImportService.MAX_COLS], start=1):
                 values.append(merged_values.get((row_idx, col_idx), cell.value))
             rows.append({"row_no": row_idx, "values": values})
         return rows

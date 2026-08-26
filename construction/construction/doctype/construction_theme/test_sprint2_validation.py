@@ -234,7 +234,9 @@ class TestComponentStylesheetStructure(unittest.TestCase):
 
     def setUp(self):
         """Setup test fixtures."""
-        self.stylesheet_path = "construction/construction/public/css/construction_theme_components.css"
+        self.stylesheet_path = frappe.get_app_path(
+            "construction", "public", "css", "construction_theme_components.css"
+        )
 
     def test_component_stylesheet_exists(self):
         """Verify component stylesheet file exists."""
@@ -280,32 +282,30 @@ class TestComponentStylesheetStructure(unittest.TestCase):
         with open(self.stylesheet_path, "r") as f:
             content = f.read()
 
-        # Find all !important declarations
-        important_lines = re.findall(r".*!important.*", content)
+        lines = content.split("\n")
+        in_comment_block = False
+        for i, l in enumerate(lines):
+            stripped = l.strip()
+            if "/*" in stripped and "*/" not in stripped:
+                in_comment_block = True
+            if "*/" in stripped:
+                in_comment_block = False
+                continue
+            if in_comment_block or stripped.startswith("*") or stripped.startswith("/*"):
+                continue
 
-        for line in important_lines:
-            # Check if there's a comment nearby (within 2 lines before)
-            lines = content.split("\n")
-            for i, l in enumerate(lines):
-                if "!important" in l:
-                    # Check if there's a comment on this line or previous line
-                    has_comment = "/*" in l or (i > 0 and "*/" in lines[i - 1])
-                    self.assertTrue(has_comment, f"!important usage not documented: {l}")
+            if "!important" in l:
+                has_comment = "/*" in l or (i > 0 and "*/" in lines[i - 1])
+                self.assertTrue(has_comment, f"!important usage not documented: {l}")
 
     def test_no_hardcoded_hex_colors(self):
         """Verify no hardcoded hex color values in stylesheet."""
         with open(self.stylesheet_path, "r") as f:
             content = f.read()
 
-        # Remove comments from content
         content_no_comments = re.sub(r"/\*.*?\*/", "", content, flags=re.DOTALL)
-
-        # Look for hex color patterns (but not in variable names like --ct-*)
-        hex_pattern = r"(?<!--ct-[a-z0-9-]*)[:#]([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})(?![0-9A-Fa-f])"
-        hex_matches = re.findall(hex_pattern, content_no_comments)
-
-        # Filter out false positives (like #media, #keyframes, etc.)
-        false_positives = ["media", "keyframes", "supports", "document"]
+        hex_matches = re.findall(r"#[0-9A-Fa-f]{3,6}\b", content_no_comments)
+        false_positives = {"#media", "#keyframes", "#supports", "#document"}
         hex_matches = [m for m in hex_matches if m not in false_positives]
 
         self.assertEqual(len(hex_matches), 0, f"Found hardcoded hex colors in stylesheet: {hex_matches}")

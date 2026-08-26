@@ -12,10 +12,10 @@ import frappe
 @dataclass(frozen=True)
 class ScopeContext:
     user: str
-    company: Optional[str] = None
-    cost_center: Optional[str] = None
-    project: Optional[str] = None
-    modified: Optional[str] = None
+    company: str | None = None
+    cost_center: str | None = None
+    project: str | None = None
+    modified: str | None = None
 
     @property
     def is_empty(self):
@@ -103,17 +103,10 @@ def get_cost_center_descendants(cost_center):
 
 
 def should_enforce_scope(enforce_scope=None):
-    """Resolve caller override against rollout mode."""
-    if isinstance(enforce_scope, str):
-        enforce_scope = enforce_scope.lower() not in {"0", "false", "no", "off"}
-    if enforce_scope is not None:
-        if enforce_scope is False and is_boq_cascade_enabled():
-            frappe.logger("boq_scope").warning(
-                {
-                    "event": "boq_scope_enforcement_bypassed",
-                    "user": frappe.session.user,
-                    "mode": get_boq_cascade_mode(),
-                }
-            )
-        return bool(enforce_scope)
+    """
+    Resolve whether scope enforcement should be applied.
+
+    Security: Authoritative server-side decision. Client-supplied False overrides
+    are ignored to prevent unauthorized bypass of company/project/cost-center boundaries.
+    """
     return is_boq_cascade_enabled()

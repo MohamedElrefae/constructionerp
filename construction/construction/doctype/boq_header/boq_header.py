@@ -19,9 +19,6 @@ class BOQHeader(Document):
         self.calculate_total_value()
 
     def sync_project_from_scope_context(self):
-        if frappe.session.user == "Administrator":
-            return
-
         try:
             scope_context_enabled = bool(
                 frappe.db.get_single_value("Construction Settings", "enable_scope_context") or False
@@ -32,13 +29,25 @@ class BOQHeader(Document):
         if not scope_context_enabled:
             return
 
-        if self.project:
-            return
-
         scope_context = get_user_scope_context()
         scope_project = scope_context.project if scope_context else None
 
-        if scope_project:
+        if self.project:
+            if (
+                scope_project
+                and self.project != scope_project
+                and frappe.session.user != "Administrator"
+                and not self.flags.ignore_permissions
+                and "System Manager" not in frappe.get_roles()
+            ):
+                frappe.throw(
+                    _("Cannot create BOQ Header for Project '{0}' outside active Scope Context '{1}'.").format(
+                        self.project, scope_project
+                    ),
+                    frappe.PermissionError,
+                )
+            return
+        elif scope_project:
             self.project = scope_project
             return
 
@@ -154,57 +163,39 @@ class BOQHeader(Document):
         if not self.name:
             return
 
-        rows = frappe.db.sql(
+        frappe.db.sql(
             """
-            SELECT
-                s.name,
-                COUNT(DISTINCT i.name) AS item_count,
-                COALESCE(SUM(CASE WHEN i.docstatus < 2 THEN i.line_total ELSE 0 END), 0) AS total_contract_value,
-                COALESCE(
-                    SUM(
-                        CASE
-                            WHEN i.docstatus < 2 THEN i.quantity * i.est_unit_cost * COALESCE(i.factor, 1.0)
-                            ELSE 0
-                        END
-                    ),
-                    0
-                ) AS total_budgeted_cost
-            FROM `tabBOQ Structure` s
-            LEFT JOIN `tabBOQ Structure` d
-                ON d.boq_header = s.boq_header
-               AND d.lft >= s.lft
-               AND d.rgt <= s.rgt
-               AND d.docstatus < 2
-            LEFT JOIN `tabBOQ Item` i
-                ON i.structure = d.name
-               AND i.docstatus < 2
-            WHERE s.boq_header = %s
-              AND s.docstatus < 2
-            GROUP BY s.name
+            UPDATE `tabBOQ Structure` target
+            JOIN (
+                SELECT
+                    s.name AS structure_name,
+                    COUNT(DISTINCT i.name) AS item_count,
+                    COALESCE(SUM(CASE WHEN i.docstatus < 2 THEN i.line_total ELSE 0 END), 0) AS total_contract_value,
+                    COALESCE(
+                        SUM(
+                            CASE
+                                WHEN i.docstatus < 2 THEN i.quantity * i.est_unit_cost * COALESCE(i.factor, 1.0)
+                                ELSE 0
+                            END
+                        ),
+                        0
+                    ) AS total_budgeted_cost
+                FROM `tabBOQ Structure` s
+                LEFT JOIN `tabBOQ Structure` d
+                    ON d.boq_header = s.boq_header
+                   AND d.lft >= s.lft
+                   AND d.rgt <= s.rgt
+                   AND d.docstatus < 2
+                LEFT JOIN `tabBOQ Item` i
+                    ON i.structure = d.name
+                   AND i.docstatus < 2
+                WHERE s.boq_header = %(header)s
+                  AND s.docstatus < 2
+                GROUP BY s.name
+            ) agg ON target.name = agg.structure_name
+            SET target.item_count = agg.item_count,
+                target.total_contract_value = agg.total_contract_value,
+                target.total_budgeted_cost = agg.total_budgeted_cost
             """,
-            self.name,
-            as_dict=True,
+            {"header": self.name},
         )
-
-        for row in rows:
-            frappe.db.set_value(
-                "BOQ Structure",
-                row.name,
-                "item_count",
-                row.item_count or 0,
-                update_modified=False,
-            )
-            frappe.db.set_value(
-                "BOQ Structure",
-                row.name,
-                "total_contract_value",
-                row.total_contract_value or 0,
-                update_modified=False,
-            )
-            frappe.db.set_value(
-                "BOQ Structure",
-                row.name,
-                "total_budgeted_cost",
-                row.total_budgeted_cost or 0,
-                update_modified=False,
-            )

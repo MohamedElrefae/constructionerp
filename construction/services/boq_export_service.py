@@ -1,11 +1,11 @@
-# Copyright (c) 2026, Mohamed Elrefae and contributors
-# For license information, please see license.txt
-
+import math
 import os
 from typing import Any, Dict, List, Optional
 
 import frappe
 from frappe import _
+
+from construction.construction.utils.export_sanitizer import sanitize_spreadsheet_value
 
 
 class BOQExportService:
@@ -71,7 +71,7 @@ class BOQExportService:
 
     @staticmethod
     def apply_column_config(
-        default_columns: List[Dict], column_config_json: Optional[str] = None
+        default_columns: List[Dict], column_config_json: Any = None
     ) -> List[Dict]:
         """
         Merge user column_config with default columns.
@@ -79,31 +79,57 @@ class BOQExportService:
         Skips unknown keys with a warning log.
         Falls back to default_columns when column_config_json is None or invalid.
         """
-        if column_config_json is None:
-            return default_columns
+        sanitized_defaults = []
+        for col in default_columns:
+            raw_w = col.get("width", 10)
+            try:
+                nw = float(raw_w)
+                if not (0 < nw <= 100) or math.isnan(nw) or math.isinf(nw):
+                    nw = 10.0
+            except (ValueError, TypeError):
+                nw = 10.0
+            sanitized_defaults.append({**col, "width": round(nw, 2)})
 
-        try:
-            column_config = frappe.parse_json(column_config_json)
-        except Exception:
-            frappe.log_error("Invalid column_config JSON, falling back to defaults", "BOQ Export")
-            return default_columns
+        if column_config_json is None:
+            return sanitized_defaults
+
+        if isinstance(column_config_json, (list, tuple)):
+            column_config = column_config_json
+        else:
+            try:
+                column_config = frappe.parse_json(column_config_json)
+            except Exception:
+                frappe.log_error("Invalid column_config JSON, falling back to defaults", "BOQ Export")
+                return sanitized_defaults
+
+        if not isinstance(column_config, (list, tuple)):
+            return sanitized_defaults
 
         # Build lookup of default columns by key
-        defaults_map = {col["key"]: col for col in default_columns}
+        defaults_map = {col.get("key") or col.get("field_key"): col for col in sanitized_defaults}
 
         # Filter visible, sort by sort_order, map to output format
-        visible = [c for c in column_config if c.get("visible")]
+        visible = [c for c in column_config if c.get("visible", True)]
         visible.sort(key=lambda c: c.get("sort_order", 0))
 
         result = []
         for col in visible:
-            field_key = col.get("field_key")
+            field_key = col.get("field_key") or col.get("key")
             if field_key not in defaults_map:
                 frappe.log_error(f"Unknown field_key '{field_key}' in column_config, skipping", "BOQ Export")
                 continue
             default = defaults_map[field_key]
+            raw_width = col.get("width", default.get("width", 10))
+            try:
+                numeric_width = float(raw_width)
+                if not (0 < numeric_width <= 100) or math.isnan(numeric_width) or math.isinf(numeric_width):
+                    numeric_width = float(default.get("width", 10))
+            except (ValueError, TypeError):
+                numeric_width = float(default.get("width", 10))
+
+            label = col.get("label") or default.get("label") or field_key
             result.append(
-                {"key": field_key, "label": default["label"], "width": col.get("width", default["width"])}
+                {"key": field_key, "label": label, "width": round(numeric_width, 2)}
             )
 
         return result
@@ -353,7 +379,7 @@ class BOQExportService:
         return depth
 
     @staticmethod
-    def export_header_to_excel(boq_header: str, column_config: Optional[str] = None) -> Dict:
+    def export_header_to_excel(boq_header: str, column_config: str | None = None) -> Dict:
         """Export BOQ Header information only (summary view like print format)."""
         try:
             import openpyxl
@@ -405,7 +431,7 @@ class BOQExportService:
             title_cell = ws.cell(
                 row=1,
                 column=1,
-                value=f"{BOQExportService._label('BOQ Header')}: {header_data['title']}",
+                value=f"{BOQExportService._label('BOQ Header')}: {sanitize_spreadsheet_value(header_data['title'])}",
             )
             title_cell.font = title_font
             title_cell.alignment = Alignment(horizontal="center", vertical="center")
@@ -427,6 +453,9 @@ class BOQExportService:
                     value = header_data.get("project_name", header_data.get("project", ""))
                 else:
                     value = header_data.get(key, "")
+
+                if key not in currency_keys:
+                    value = sanitize_spreadsheet_value(value)
 
                 # Label cell
                 label_cell = ws.cell(row=row_idx, column=1, value=label)
@@ -470,7 +499,7 @@ class BOQExportService:
             return {"success": False, "error": str(e)}
 
     @staticmethod
-    def export_to_excel(boq_header: str, column_config: Optional[str] = None) -> Dict:
+    def export_to_excel(boq_header: str, column_config: str | None = None) -> Dict:
         """Export complete BOQ (Header + Structure + Items) to Excel format."""
         try:
             import openpyxl
@@ -526,17 +555,17 @@ class BOQExportService:
             ws.cell(
                 row=1,
                 column=1,
-                value=f"{BOQExportService._label('Bill of Quantities')}: {header_data['title']}",
+                value=f"{BOQExportService._label('Bill of Quantities')}: {sanitize_spreadsheet_value(header_data['title'])}",
             )
             ws.cell(row=1, column=1).font = title_font
             ws.cell(row=1, column=1).alignment = Alignment(horizontal="center")
 
             ws.cell(row=2, column=1, value=f"{BOQExportService._label('Project')}:")
-            ws.cell(row=2, column=2, value=header_data.get("project_name", header_data.get("project", "")))
+            ws.cell(row=2, column=2, value=sanitize_spreadsheet_value(header_data.get("project_name", header_data.get("project", ""))))
             ws.cell(row=2, column=4, value=f"{BOQExportService._label('BOQ Type')}:")
-            ws.cell(row=2, column=5, value=header_data.get("boq_type", ""))
+            ws.cell(row=2, column=5, value=sanitize_spreadsheet_value(header_data.get("boq_type", "")))
             ws.cell(row=2, column=7, value=f"{BOQExportService._label('Status')}:")
-            ws.cell(row=2, column=8, value=header_data.get("status", ""))
+            ws.cell(row=2, column=8, value=sanitize_spreadsheet_value(header_data.get("status", "")))
 
             ws.cell(row=3, column=1, value=f"{BOQExportService._label('Version')}:")
             ws.cell(row=3, column=2, value=header_data.get("version", 1))
@@ -577,10 +606,10 @@ class BOQExportService:
 
                 # Build a data dict for this node to look up by column key
                 node_values = {
-                    "wbs_code": node.get("wbs_code", ""),
-                    "title": f"{indent}{node.get('title', '')}",
+                    "wbs_code": sanitize_spreadsheet_value(node.get("wbs_code", "")),
+                    "title": f"{indent}{sanitize_spreadsheet_value(node.get('title', ''))}",
                     "type": node_type,
-                    "unit": node.get("unit", ""),
+                    "unit": sanitize_spreadsheet_value(node.get("unit", "")),
                     "quantity": node.get("quantity"),
                     "vo_qty_delta": node.get("vo_qty_delta", 0),
                     "revised_qty": node.get("revised_qty"),
@@ -589,9 +618,9 @@ class BOQExportService:
                     "line_total": node.get("line_total") or 0,
                     "vo_value_delta": node.get("vo_value_delta", 0),
                     "revised_value": node.get("revised_value", node.get("line_total") or 0),
-                    "owner_ref_no": node.get("owner_ref_no", ""),
-                    "owner_page": node.get("owner_page", ""),
-                    "owner_file_ref": node.get("owner_file_ref", ""),
+                    "owner_ref_no": sanitize_spreadsheet_value(node.get("owner_ref_no", "")),
+                    "owner_page": sanitize_spreadsheet_value(node.get("owner_page", "")),
+                    "owner_file_ref": sanitize_spreadsheet_value(node.get("owner_file_ref", "")),
                 }
 
                 if not node.get("is_group"):
@@ -680,7 +709,7 @@ class BOQExportService:
         return frappe.render_template(template_str, context)
 
     @staticmethod
-    def export_to_pdf(boq_header: str, column_config: Optional[str] = None) -> Dict:
+    def export_to_pdf(boq_header: str, column_config: str | None = None) -> Dict:
         """Export complete BOQ to PDF."""
         try:
             from frappe.utils import now_datetime
@@ -742,7 +771,7 @@ class BOQExportService:
             return {"success": False, "error": str(e)}
 
     @staticmethod
-    def export_header_to_pdf(boq_header: str, column_config: Optional[str] = None) -> Dict:
+    def export_header_to_pdf(boq_header: str, column_config: str | None = None) -> Dict:
         """Export BOQ Header summary to PDF."""
         try:
             from frappe.utils import now_datetime

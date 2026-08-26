@@ -21,6 +21,7 @@ def update_translations_for_source_safe(source=None, translation_dict=None):
     - Updates one row per language for the provided source text.
     - Creates missing language rows with empty context.
     """
+    frappe.only_for("System Manager")
     source = _normalize_source_text(source)
     if not source or not translation_dict:
         return []
@@ -128,6 +129,7 @@ def get_placeholder_arabic_translation_sources(limit=1000):
 @frappe.whitelist()
 def normalize_translation_keys():
     """Trim source_text whitespace and normalize common Arabic translation mistakes."""
+    frappe.only_for("System Manager")
     updated = 0
     for row in frappe.get_all(
         "Translation",
@@ -156,7 +158,6 @@ def normalize_translation_keys():
             )
             updated += 1
 
-    frappe.db.commit()
     return {"updated": updated}
 
 
@@ -173,13 +174,8 @@ def _load_glossary():
 
 @frappe.whitelist()
 def apply_glossary_corrections(dry_run=True):
-    """Bulk-correct Arabic Translation rows to the canonical Egyptian glossary.
-
-    Safe, idempotent, and explicit (run from the Translation list-view tools).
-    Only Arabic rows whose ``source_text`` matches a glossary term are touched;
-    rows whose value already matches are skipped. Placeholder rows (value ==
-    source) are corrected too. Returns counts + a preview of changes.
-    """
+    """Bulk-correct Arabic Translation rows to the canonical Egyptian glossary."""
+    frappe.only_for("System Manager")
     dry_run = bool(dry_run)
     glossary = _load_glossary()
     if not glossary:
@@ -213,9 +209,6 @@ def apply_glossary_corrections(dry_run=True):
             )
             updated += 1
 
-    if not dry_run and updated:
-        frappe.db.commit()
-
     return {"checked": len(rows), "updated": updated, "created": created, "preview": preview}
 
 
@@ -234,13 +227,8 @@ def _read_review_queue(path=None):
 
 @frappe.whitelist()
 def import_review_queue(dry_run=True, enable_status_gate=False):
-    """Apply rows from the packaged review queue into the DB as Arabic translations.
-
-    Reads ``construction/data/translations/review_queue.csv`` and applies every row
-    carrying a non-empty ``suggested_ar`` (the reviewer/translator has filled it).
-    Explicit approval action, so it upserts (a reviewed value wins); rows that already
-    match are skipped. Use ``dry_run`` to preview without writing.
-    """
+    """Apply rows from the packaged review queue into the DB as Arabic translations."""
+    frappe.only_for("System Manager")
     dry_run = bool(dry_run)
     enable_status_gate = bool(enable_status_gate)
     rows = _read_review_queue()
@@ -284,11 +272,7 @@ def import_review_queue(dry_run=True, enable_status_gate=False):
                         "translated_text": value,
                     }
                 )
-                doc.flags.ignore_permissions = True
-                doc.insert(ignore_permissions=True)
+                doc.insert()
                 created += 1
-
-    if not dry_run and (created or updated):
-        frappe.db.commit()
 
     return {"total": total, "created": created, "updated": updated, "skipped": skipped, "preview": preview}

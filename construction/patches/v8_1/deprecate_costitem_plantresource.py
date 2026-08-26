@@ -3,13 +3,13 @@ import frappe
 
 def execute():
     """Safely deprecate CostItem and PlantResource scaffolds.
-    
+
     Step 1: Verify no data exists.
     Step 2: Log count evidence.
     Step 3: Deprecate by setting status on CostItem records (if any).
     Step 4: Remove DocType references from hooks.py translated_doctypes.
     Step 5: Mark DocTypes as deprecated in their JSON (notifies users via Frappe UI).
-    
+
     Does NOT:
     - Drop tables (safe rollback if needed)
     - Touch Direct Labor Designation

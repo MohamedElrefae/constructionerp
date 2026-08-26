@@ -252,6 +252,7 @@ class TestBOQLinkQueries(FrappeTestCase):
             ).insert(ignore_permissions=True)
             frappe.set_user(user)
 
+            # 1. New BOQ Header without project picks up active user scope project
             scope_default_header = frappe.get_doc(
                 {
                     "doctype": "BOQ Header",
@@ -260,20 +261,34 @@ class TestBOQLinkQueries(FrappeTestCase):
                     "boq_type": "Tender",
                 }
             ).insert(ignore_permissions=True)
+            self.assertEqual(scope_default_header.project, self.project_a)
+
+            # 2. Scoped user attempting out-of-scope project creation must be rejected
+            with self.assertRaises(frappe.PermissionError):
+                frappe.get_doc(
+                    {
+                        "doctype": "BOQ Header",
+                        "project": self.project_b,
+                        "title": "_Test Out of Scope Explicit Project Header",
+                        "status": "Draft",
+                        "boq_type": "Tender",
+                    }
+                ).insert()  # no ignore_permissions so scope enforcement fires
+
+            # 3. Explicit permitted project is preserved
             explicit_project_header = frappe.get_doc(
                 {
                     "doctype": "BOQ Header",
-                    "project": self.project_b,
+                    "project": self.project_a,
                     "title": "_Test Explicit Project Header",
                     "status": "Draft",
                     "boq_type": "Tender",
                 }
             ).insert(ignore_permissions=True)
-
-            self.assertEqual(scope_default_header.project, self.project_a)
-            self.assertEqual(explicit_project_header.project, self.project_b)
+            self.assertEqual(explicit_project_header.project, self.project_a)
         finally:
             frappe.set_user(previous_user)
             frappe.db.set_single_value(
                 "Construction Settings", "enable_scope_context", previous_scope_context_enabled or 0
             )
+            frappe.db.commit()

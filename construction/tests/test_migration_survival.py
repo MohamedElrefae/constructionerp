@@ -11,14 +11,15 @@ class TestMigrationSurvival(FrappeTestCase):
     EXPECTED_SYSTEM_THEME_COUNT = 4
 
     def test_whitelabel_patch_removes_welcome_page(self):
-        frappe.delete_doc_if_exists("Page", "welcome-to-erpnext", force=1)
+        frappe.db.delete("Page", {"name": "welcome-to-erpnext"})
         page = frappe.get_doc({
             "doctype": "Page",
+            "name": "welcome-to-erpnext",
             "page_name": "welcome-to-erpnext",
             "title": "Welcome",
             "module": "Core",
         })
-        page.insert(ignore_permissions=True)
+        page.db_insert()
         self.assertTrue(
             frappe.db.exists("Page", "welcome-to-erpnext"),
             "Precondition: welcome page must exist before patch",

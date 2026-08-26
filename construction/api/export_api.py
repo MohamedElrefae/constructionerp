@@ -13,13 +13,15 @@ export_doctype_pdf(doctype, docname, column_config=None)
 
 import json
 import re
+from typing import Any
 
 import frappe
 from frappe import _
-from frappe.utils import format_date, format_datetime, flt, cint, strip_html
+from frappe.utils import cint, flt, format_date, format_datetime, strip_html
 from frappe.utils.pdf import get_pdf
 from frappe.utils.xlsxutils import make_xlsx
 
+from construction.construction.utils.export_sanitizer import escape_html_for_pdf, sanitize_spreadsheet_value
 
 # ── Non-exportable fieldtypes ────────────────────────────────────────────────
 NON_EXPORTABLE_FIELDTYPES = {
@@ -312,17 +314,20 @@ def _get_doc_with_permission(doctype, docname):
     return frappe.get_doc(doctype, docname)
 
 
+def _sanitize_cell_for_export(val: Any) -> Any:
+    """Sanitize string values to prevent CSV/Excel Formula Injection (DDE injection)."""
+    return sanitize_spreadsheet_value(val)
+
+
 def _resolve_columns(doctype, column_config_json):
     """
     Return an ordered list of dicts { field_key, label, fieldtype, options }
-    for the visible columns.
-
-    When the caller provides column_config (the common path from PrintSettingsDialog),
-    fieldtype and options are merged back in from meta so that _format_value can
-    apply correct formatting even for user-reordered/hidden columns.
+    for the visible columns, validated against user's permitted fields.
     """
     meta = frappe.get_meta(doctype)
     meta_field_map = {f.fieldname: f for f in meta.fields}
+    permitted_fields = set(frappe.model.get_permitted_fields(doctype, user=frappe.session.user, ptype="read"))
+    standard_allowed = {"name", "owner", "creation", "modified", "docstatus"}
 
     if column_config_json:
         try:
@@ -332,8 +337,9 @@ def _resolve_columns(doctype, column_config_json):
                 if not c.get("visible", True):
                     continue
                 key = c.get("field_key", "")
+                if key not in permitted_fields and key not in standard_allowed:
+                    continue
                 meta_f = meta_field_map.get(key)
-                # H1: merge fieldtype / options from meta so formatting is applied
                 cols.append({
                     "field_key": key,
                     "label": c.get("label") or (_(meta_f.label) if meta_f else key),
@@ -349,9 +355,9 @@ def _resolve_columns(doctype, column_config_json):
     for f in meta.fields:
         if f.fieldtype in NON_EXPORTABLE_FIELDTYPES:
             continue
-        if not f.fieldname:
+        if not f.fieldname or f.hidden:
             continue
-        if f.hidden:
+        if f.fieldname not in permitted_fields and f.fieldname not in standard_allowed:
             continue
         if f.fieldname in SYSTEM_FIELDS_HIDDEN_BY_DEFAULT:
             continue
@@ -373,24 +379,13 @@ def _build_row(doctype, doc, columns):
     row = {}
     for col in columns:
         key = col["field_key"]
-        # Works on both DocType documents and raw dicts from get_list
         raw = doc.get(key)
-        # Use the fieldtype from the resolved column (preferred) or look it up
         fieldtype = col.get("fieldtype") or (field_map[key].fieldtype if key in field_map else "Data")
         row[key] = _format_value(raw, fieldtype, col.get("options", ""))
     return row
 
 
 def _format_value(value, fieldtype, options=""):
-    """
-    Format a raw doc value according to its fieldtype for display in export.
-
-    Parameters
-    ----------
-    value    : raw value from the document
-    fieldtype: Frappe fieldtype string
-    options  : field options string (used for Select label resolution)
-    """
     if value is None or value == "":
         return ""
 
@@ -411,13 +406,13 @@ def _format_value(value, fieldtype, options=""):
 
     if fieldtype == "Currency":
         try:
-            return "{:,.2f}".format(flt(value))
+            return f"{flt(value):,.2f}"
         except Exception:
             return str(value)
 
     if fieldtype in ("Float", "Percent"):
         try:
-            return "{:.2f}".format(flt(value))
+            return f"{flt(value):.2f}"
         except Exception:
             return str(value)
 
@@ -428,27 +423,22 @@ def _format_value(value, fieldtype, options=""):
             return str(value)
 
     if fieldtype in ("Text Editor", "HTML Editor"):
-        # M5: use frappe.utils.strip_html to decode HTML entities correctly
         return strip_html(str(value)).strip()
 
     if fieldtype == "Select" and options:
-        # L5: Select stores the raw value; return it as-is (options are the same
-        # strings shown in the UI for Frappe Select fields).
         return str(value)
 
-    # Default: plain string
     return str(value)
 
 
 def _make_xlsx(doctype, docname, columns, rows):
-    """Build in-memory Excel bytes using frappe's xlsxutils."""
-    # L1: make_xlsx is imported at module level; no try/except needed
-    header = [col.get("label", col["field_key"]) for col in columns]
+    """Build in-memory Excel bytes using frappe's xlsxutils with formula sanitization."""
+    header = [_sanitize_cell_for_export(col.get("label", col["field_key"])) for col in columns]
     data_rows = []
     for row in rows:
-        data_rows.append([row.get(col["field_key"], "") for col in columns])
+        data_rows.append([_sanitize_cell_for_export(row.get(col["field_key"], "")) for col in columns])
 
-    xlsx_file = make_xlsx([header] + data_rows, f"{doctype} Export")
+    xlsx_file = make_xlsx([header, *data_rows], f"{doctype} Export")
     return xlsx_file.getvalue()
 
 

@@ -7,7 +7,6 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 
-
 # ──────────────────────────────────────────────────────────────────────
 # Access gate — all endpoints restricted to System Manager
 # ADR-008: React/modern form path deprecated as of 2026-06-21.
@@ -158,7 +157,6 @@ def create_document(doctype, data):
 
         # Save
         doc.insert()
-        frappe.db.commit()
 
         return {"success": True, "data": {"name": doc.name, "message": _(f"{doctype} created successfully")}}
 
@@ -202,7 +200,6 @@ def update_document(doctype, name, data):
 
         # Save
         doc.save()
-        frappe.db.commit()
 
         return {"success": True, "data": {"name": doc.name, "message": _(f"{doctype} updated successfully")}}
 
@@ -236,7 +233,6 @@ def delete_document(doctype, name):
             return {"success": False, "error": _("Not permitted to delete this document")}
 
         doc.delete()
-        frappe.db.commit()
 
         return {"success": True, "message": _(f"{doctype} '{name}' deleted successfully")}
 

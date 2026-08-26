@@ -80,7 +80,38 @@ def _cleanup():
         frappe.defaults.clear_user_default("department", u)
         frappe.clear_cache(user=u)
 
+    frappe.db.delete("User Permission", {"user": "test_user2@example.com"})
     frappe.db.commit()
+
+
+def _grant_scope_permissions(user):
+    """Grant the minimum realistic User Permissions so a restricted (role-less)
+    test user can operate within a company/cost center under FAIL-CLOSED scope
+    semantics. Without these, a user with no Company/CC read access and no
+    User Permissions would be denied (correct fail-closed behaviour)."""
+    for allow, value in (
+        ("Company", "Elrefae"),
+        ("Cost Center", _COST_CENTER),
+        ("Cost Center", _GROUP_CC),
+    ):
+        if not frappe.db.exists("User Permission", {"user": user, "allow": allow, "for_value": value}):
+            frappe.get_doc({
+                "doctype": "User Permission",
+                "user": user,
+                "allow": allow,
+                "for_value": value,
+            }).insert(ignore_permissions=True)
+
+    # Grant Project User Permissions for any project of the scoped company,
+    # so project-scoping tests work under fail-closed semantics.
+    for proj in frappe.get_all("Project", filters={"company": "Elrefae"}, pluck="name", limit=5):
+        if not frappe.db.exists("User Permission", {"user": user, "allow": "Project", "for_value": proj}):
+            frappe.get_doc({
+                "doctype": "User Permission",
+                "user": user,
+                "allow": "Project",
+                "for_value": proj,
+            }).insert(ignore_permissions=True)
 
 
 def _ensure_test_user():
@@ -99,6 +130,8 @@ def _ensure_test_user():
         user.send_welcome_email = 0
         user.insert(ignore_permissions=True)
         frappe.db.commit()
+
+    _grant_scope_permissions("test_user2@example.com")
 
 
 _COST_CENTER = "Main - E"  # non-group cost center belonging to Elrefae
@@ -296,11 +329,25 @@ def test_server_side_injection():
     # Admin always bypasses
     assert add_scope_conditions("Administrator", "Sales Invoice") == ""
 
-    # Set scope defaults for a non-admin test user
-    for key in ("company", "cost_center", "project", "department"):
-        frappe.defaults.clear_user_default(key, "test_user2@example.com")
-    frappe.defaults.set_user_default("company", "Elrefae", "test_user2@example.com")
-    frappe.defaults.set_user_default("cost_center", _GROUP_CC, "test_user2@example.com")
+    _ensure_test_user()
+
+    # Scope conditions derive from the CANONICAL User Scope Context record,
+    # not session defaults. Establish a real scope for the non-admin user.
+    frappe.db.delete("User Scope Context", {"user": "test_user2@example.com"})
+    frappe.db.commit()
+    frappe.set_user("test_user2@example.com")
+    try:
+        set_scope_context(
+            company="Elrefae",
+            cost_center=_GROUP_CC,
+            project=None,
+            department=None,
+            source="test",
+        )
+    finally:
+        frappe.set_user("Administrator")
+    frappe.db.commit()
+    frappe.clear_cache(user="test_user2@example.com")
 
     # Doctype with both company + cost_center columns
     cc_result = add_scope_conditions("test_user2@example.com", "Sales Invoice")
@@ -311,7 +358,7 @@ def test_server_side_injection():
     sys_result = add_scope_conditions("test_user2@example.com", "User")
     assert sys_result == "", f"System doctype should be skipped, got: {sys_result}"
 
-    # Doctype missing cost_center column (has company but not cost_center)
+    # Doctype with cost_center column absent (has company but not cost_center)
     emp_result = add_scope_conditions("test_user2@example.com", "Employee")
     assert "cost_center" not in emp_result, "Employee has no cost_center column"
 
@@ -319,12 +366,13 @@ def test_server_side_injection():
     country_result = add_scope_conditions("test_user2@example.com", "Country")
     assert country_result == "", f"Country has no scope columns, got: {country_result}"
 
-    # No scope set for this user (clear all user-level defaults)
-    for key in ("company", "cost_center", "project", "department"):
-        frappe.defaults.clear_user_default(key, "test_nobody")
+    # Guest never bypasses — fail closed on scoped doctypes
+    guest_result = add_scope_conditions("Guest", "Sales Invoice")
+    assert guest_result == "1=0", f"Guest must be denied scoped reads, got: {guest_result}"
+
+    # Unscoped restricted user → fail closed on scoped columns ("1=0")
     none_result = add_scope_conditions("test_nobody", "Sales Invoice")
-    assert "cost_center" not in none_result, f"cost_center should not appear for unscoped user: {none_result}"
-    assert "project" not in none_result, f"project should not appear for unscoped user: {none_result}"
+    assert none_result == "1=0", f"Unscoped user must be denied scoped reads, got: {none_result}"
 
 
 # === T-014 ===
