@@ -288,7 +288,11 @@ class TestBOQLinkQueries(FrappeTestCase):
             self.assertEqual(explicit_project_header.project, self.project_a)
         finally:
             frappe.set_user(previous_user)
+            # Do NOT commit here: FrappeTestCase rolls back the transaction after
+            # each test, restoring enable_scope_context and removing all fixtures
+            # (headers/structures/items/projects/User Scope Context) created in
+            # setUp. Committing in teardown would persist those records and break
+            # database hermeticity.
             frappe.db.set_single_value(
                 "Construction Settings", "enable_scope_context", previous_scope_context_enabled or 0
             )
-            frappe.db.commit()

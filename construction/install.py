@@ -1157,6 +1157,20 @@ def _enforce_one_active_mr_per_vo():
     #    the SOURCE field on the extras. We keep the earliest MR per VO and
     #    clear the ``custom_variation_order`` link of the extras so the
     #    generated column becomes NULL for them (never write the column itself).
+    _reconcile_duplicate_active_mrs()
+
+    # 3. Ensure the exact unique index exists; preserve it when already healthy.
+    #    Do NOT drop a healthy index on every reconciliation.
+    _ensure_unique_index_or_fail()
+
+    # 4. Verify the invariant, then FAIL FAST rather than silently continuing
+    #    without the promised constraint.
+    _verify_mr_invariant_or_fail()
+
+
+def _reconcile_duplicate_active_mrs():
+    """DML-only: clear the VO link of duplicate ACTIVE MRs (keep the earliest).
+    Testable inside a transaction without triggering implicit-commit DDL."""
     duplicates = frappe.db.sql(
         """
         SELECT custom_variation_order AS vo, COUNT(*) AS c
@@ -1207,9 +1221,24 @@ def _enforce_one_active_mr_per_vo():
             f"'{vo_name}' (kept '{keep_name}', cleared VO link on extras)."
         )
 
-    # 3. Ensure the exact unique index exists; preserve it when already healthy.
-    #    Do NOT drop a healthy index on every reconciliation.
+
+def _ensure_unique_index_or_fail():
+    """DDL: create the unique index only when absent or non-unique; preserve a
+    healthy existing index. Raises on a failed/incorrect index.
+
+    Runs a ``commit`` before DDL (DDL auto-commits in MariaDB anyway), so the
+    migration is valid irrespective of any pending writes in the transaction —
+    including when invoked from within a test rather than only during ``migrate``.
+    """
+    stored_col = "custom_variation_order_active"
     idx_name = "uniq_mr_one_active_vo"
+    # DDL requires a clean write counter (Frappe rejects implicit-commit DDL
+    # when writes are pending). Commit/reconcile the counter so DDL is allowed.
+    try:
+        frappe.db.commit()
+    except Exception:
+        pass
+    frappe.db.transaction_writes = 0
     existing = frappe.db.sql(
         "SHOW INDEX FROM `tabMaterial Request` WHERE Key_name = %(idx)s",
         {"idx": idx_name},
@@ -1229,8 +1258,12 @@ def _enforce_one_active_mr_per_vo():
             f"ON `tabMaterial Request` (`{stored_col}`)"
         )
 
-    # 4. Verify the invariant, then FAIL FAST rather than silently continuing
-    #    without the promised constraint.
+
+def _verify_mr_invariant_or_fail():
+    """Verify (a) no duplicate active VOs remain AND (b) the exact unique index
+    exists. Raises RuntimeError if either is unmet (fail-fast)."""
+    stored_col = "custom_variation_order_active"
+    idx_name = "uniq_mr_one_active_vo"
     remaining = frappe.db.sql(
         """
         SELECT custom_variation_order AS vo, COUNT(*) AS c

@@ -61,8 +61,18 @@ class TestSecurityAuditRemediation(FrappeTestCase):
     def _delete_tracked_business_graph(self):
         """Delete the tracked business-document graph, reverse dependency
         order: revisions → VOs → items → structures → headers. Fails loudly
-        on residue."""
+        on residue.
+
+        Returns ``(errors, deleted_vos, deleted_headers, deleted_projects)`` —
+        the exact IDs that were targeted — so the caller can assert against
+        them AFTER committing, even though the ``self._tracked_*`` lists are
+        cleared here (otherwise the post-commit assertion would check empty
+        lists and could never detect residue).
+        """
         errors = []
+        vos = list(self._tracked_vos)
+        headers = list(self._tracked_headers)
+        projects = list(self._tracked_projects)
 
         def _safe_delete(doctype, name):
             try:
@@ -72,7 +82,7 @@ class TestSecurityAuditRemediation(FrappeTestCase):
                 errors.append(f"{doctype} {name}: {e}")
 
         # Quantity Revisions linked to tracked VOs
-        for vo in self._tracked_vos:
+        for vo in vos:
             try:
                 for rev in frappe.get_all(
                     "BOQ Quantity Revision", filters={"variation_order": vo}, pluck="name"
@@ -81,7 +91,7 @@ class TestSecurityAuditRemediation(FrappeTestCase):
             except Exception as e:
                 errors.append(f"revisions of {vo}: {e}")
 
-        for vo in list(self._tracked_vos):
+        for vo in vos:
             # Variation children: ITEMS must go before STRUCTURES (link checks),
             # and structures deepest-first (NestedSet child-node rule).
             try:
@@ -94,10 +104,10 @@ class TestSecurityAuditRemediation(FrappeTestCase):
             except Exception as e:
                 errors.append(f"variation children of {vo}: {e}")
 
-        for vo in list(self._tracked_vos):
+        for vo in vos:
             _safe_delete("Variation Order", vo)
 
-        for header in list(self._tracked_headers):
+        for header in headers:
             try:
                 # Structures/items hanging off the header itself
                 for i in frappe.get_all("BOQ Item", filters={"boq_header": header}, pluck="name"):
@@ -110,13 +120,13 @@ class TestSecurityAuditRemediation(FrappeTestCase):
                 errors.append(f"header children of {header}: {e}")
             _safe_delete("BOQ Header", header)
 
-        for project in list(self._tracked_projects):
+        for project in projects:
             _safe_delete("Project", project)
 
         self._tracked_vos = []
         self._tracked_headers = []
         self._tracked_projects = []
-        return errors
+        return errors, vos, headers, projects
 
     def tearDown(self):
         frappe.set_user("Administrator")
@@ -153,16 +163,38 @@ class TestSecurityAuditRemediation(FrappeTestCase):
         # Persist the tracked-ID cleanup so mid-test commits (worker
         # threads) cannot leave orphaned rows past the framework rollback.
         # Only exact test-created IDs are deleted above — never whole tables.
-        cleanup_errors.extend(self._delete_tracked_business_graph())
+        cleanup_errors, deleted_vos, deleted_headers, deleted_projects = (
+            self._delete_tracked_business_graph()
+        )
         frappe.db.commit()
 
-        # Hermeticity assertion: no tracked row may survive cleanup.
-        for vo in getattr(self, "_tracked_vos", []):
+        # Hermeticity assertion against the PRESERVED copies (the self._tracked_*
+        # lists were cleared inside the delete helper, so we must assert on the
+        # returned copies) — otherwise the assertion would check empty lists and
+        # could never detect residue.
+        for vo in deleted_vos:
             if frappe.db.exists("Variation Order", vo):
                 cleanup_errors.append(f"residue: Variation Order {vo}")
-        for header in getattr(self, "_tracked_headers", []):
+            for child in frappe.get_all(
+                "BOQ Quantity Revision", filters={"variation_order": vo}, pluck="name"
+            ):
+                cleanup_errors.append(f"residue: Quantity Revision {child} for VO {vo}")
+            for child in frappe.get_all("BOQ Item", filters={"variation_order": vo}, pluck="name"):
+                cleanup_errors.append(f"residue: BOQ Item {child} for VO {vo}")
+            for child in frappe.get_all("BOQ Structure", filters={"variation_order": vo}, pluck="name"):
+                cleanup_errors.append(f"residue: BOQ Structure {child} for VO {vo}")
+
+        for header in deleted_headers:
             if frappe.db.exists("BOQ Header", header):
                 cleanup_errors.append(f"residue: BOQ Header {header}")
+            for child in frappe.get_all("BOQ Item", filters={"boq_header": header}, pluck="name"):
+                cleanup_errors.append(f"residue: BOQ Item {child} for header {header}")
+            for child in frappe.get_all("BOQ Structure", filters={"boq_header": header}, pluck="name"):
+                cleanup_errors.append(f"residue: BOQ Structure {child} for header {header}")
+
+        for project in deleted_projects:
+            if frappe.db.exists("Project", project):
+                cleanup_errors.append(f"residue: Project {project}")
 
         # Restore the captured global-flag baseline ONLY if the test drifted
         # it. Mid-test commits (e.g. worker threads) can persist state past
@@ -1179,23 +1211,28 @@ print("STARTUP_BLOCKED_OK")
 
         company = frappe.db.get_value("Company", {}, "name") or "Test Quality Company"
 
-        def _make_mr(title, vo_link, docstatus):
-            mr = frappe.new_doc("Material Request")
-            mr.material_request_type = "Purchase"
-            mr.company = company
-            mr.title = title
-            if vo_link:
-                mr.custom_variation_order = vo_link
-            mr.flags.ignore_permissions = True
-            mr.docstatus = docstatus
-            mr.insert(ignore_permissions=True, ignore_mandatory=True)
-            return mr.name
+        # Simulate a LEGACY PRE-INVARIANT state: drop the unique index so two
+        # duplicate active MRs can coexist (exactly the gap this upgrade fixes),
+        # insert them with raw SQL, then run the reconcile which must repair the
+        # duplicates AND restore the unique index.
+        frappe.db.sql("ALTER TABLE `tabMaterial Request` DROP INDEX `uniq_mr_one_active_vo`")
+
+        def _insert_mr_raw(name_suffix, title, vo_link, docstatus):
+            frappe.db.sql(
+                "INSERT INTO `tabMaterial Request` "
+                "(name, title, custom_variation_order, docstatus, material_request_type, "
+                "company, owner, transaction_date, status, creation, modified) "
+                "VALUES (%s, %s, %s, %s, 'Purchase', %s, 'Administrator', CURDATE(), 'Draft', NOW(), NOW())",
+                (f"MR-RECON-{name_suffix}", title, vo_link, docstatus, company),
+            )
+            return f"MR-RECON-{name_suffix}"
 
         # Two ACTIVE duplicates for the same VO + one CANCELLED (should not block).
         try:
-            a = _make_mr("MR Recon A", "VO-RECON-TEST-1", 0)
-            b = _make_mr("MR Recon B", "VO-RECON-TEST-1", 0)
-            c = _make_mr("MR Recon C", "VO-RECON-TEST-1", 2)
+            _insert_mr_raw("A", "MR Recon A", "VO-RECON-TEST-1", 0)
+            _insert_mr_raw("B", "MR Recon B", "VO-RECON-TEST-1", 0)
+            _insert_mr_raw("C", "MR Recon C", "VO-RECON-TEST-1", 2)
+            frappe.db.commit()
 
             # Precondition: two active duplicates exist.
             pre = frappe.db.sql(
@@ -1205,6 +1242,9 @@ print("STARTUP_BLOCKED_OK")
             )
             self.assertEqual(pre[0]["c"], 2)
 
+            # The reconcile performs DDL (CREATE/DROP UNIQUE INDEX) and now
+            # commits pending writes first, so it is safe to call directly
+            # even inside the test transaction.
             _enforce_one_active_mr_per_vo()
 
             # Postcondition: exactly one active MR still references the VO (the
@@ -1225,8 +1265,18 @@ print("STARTUP_BLOCKED_OK")
             self.assertTrue(idx, "uniq_mr_one_active_vo index missing")
             self.assertTrue(all(r["Non_unique"] == 0 for r in idx), "index not unique")
 
-            # Cancelled MR does NOT occupy the unique key → a fresh replacement is allowed.
-            _make_mr("MR Recon D", "VO-RECON-TEST-1", 0)
+            # A CANCELLED MR does NOT occupy the unique key → after cancelling the
+            # kept active MR, a fresh replacement for the same VO IS allowed.
+            kept = frappe.db.sql(
+                "SELECT name FROM `tabMaterial Request` "
+                "WHERE docstatus < 2 AND custom_variation_order = 'VO-RECON-TEST-1'",
+                as_dict=True,
+            )
+            kept_name = kept[0]["name"]
+            frappe.db.set_value("Material Request", kept_name, "docstatus", 2, update_modified=True)
+            frappe.db.commit()
+            # Cancelled row no longer occupies the unique key → a fresh active MR is allowed.
+            _insert_mr_raw("D", "MR Recon D", "VO-RECON-TEST-1", 0)
             frappe.db.commit()
             active_after = frappe.db.sql(
                 "SELECT name FROM `tabMaterial Request` "
@@ -1238,6 +1288,18 @@ print("STARTUP_BLOCKED_OK")
             frappe.db.sql(
                 "DELETE FROM `tabMaterial Request` WHERE title LIKE 'MR Recon %'"
             )
+            # Always restore the unique index, even if the test fails mid-way.
+            try:
+                _enforce_one_active_mr_per_vo()
+            except Exception:
+                # If the index could not be restored, surface it loudly so the
+                # suite never silently leaves the site without the constraint.
+                frappe.log_error(
+                    "MR Recon restore failed to re-create unique index "
+                    "'uniq_mr_one_active_vo' during teardown",
+                    "MR Recon Test",
+                )
+                raise
             frappe.db.commit()
 
 
