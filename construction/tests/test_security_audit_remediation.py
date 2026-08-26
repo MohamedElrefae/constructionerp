@@ -1131,5 +1131,75 @@ print("STARTUP_BLOCKED_OK")
         )
         self.assertIn("STARTUP_BLOCKED_OK", proc.stdout, proc.stdout + "\n" + proc.stderr)
 
+    def test_mr_upgrade_reconciles_duplicate_active_material_requests(self):
+        """Upgrade reconcile must resolve legacy duplicate active MRs for one VO by
+        editing the SOURCE field (not the generated column), keep the earliest MR,
+        preserve/install the unique index, and fail-fast if the invariant cannot be
+        met. A cancelled MR must not block a fresh replacement."""
+        from construction.install import _enforce_one_active_mr_per_vo
+
+        company = frappe.db.get_value("Company", {}, "name") or "Test Quality Company"
+
+        def _make_mr(title, vo_link, docstatus):
+            mr = frappe.new_doc("Material Request")
+            mr.material_request_type = "Purchase"
+            mr.company = company
+            mr.title = title
+            if vo_link:
+                mr.custom_variation_order = vo_link
+            mr.flags.ignore_permissions = True
+            mr.docstatus = docstatus
+            mr.insert(ignore_permissions=True, ignore_mandatory=True)
+            return mr.name
+
+        # Two ACTIVE duplicates for the same VO + one CANCELLED (should not block).
+        try:
+            a = _make_mr("MR Recon A", "VO-RECON-TEST-1", 0)
+            b = _make_mr("MR Recon B", "VO-RECON-TEST-1", 0)
+            c = _make_mr("MR Recon C", "VO-RECON-TEST-1", 2)
+
+            # Precondition: two active duplicates exist.
+            pre = frappe.db.sql(
+                "SELECT COUNT(*) c FROM `tabMaterial Request` "
+                "WHERE docstatus < 2 AND custom_variation_order = 'VO-RECON-TEST-1'",
+                as_dict=True,
+            )
+            self.assertEqual(pre[0]["c"], 2)
+
+            _enforce_one_active_mr_per_vo()
+
+            # Postcondition: exactly one active MR still references the VO (the
+            # earliest created), the other's link was cleared, and the cancelled
+            # one remains cancelled.
+            active = frappe.db.sql(
+                "SELECT name FROM `tabMaterial Request` "
+                "WHERE docstatus < 2 AND custom_variation_order = 'VO-RECON-TEST-1'",
+                as_dict=True,
+            )
+            self.assertEqual(len(active), 1, f"Expected 1 active MR, got {active}")
+
+            # The unique index must exist and be unique.
+            idx = frappe.db.sql(
+                "SHOW INDEX FROM `tabMaterial Request` WHERE Key_name = 'uniq_mr_one_active_vo'",
+                as_dict=True,
+            )
+            self.assertTrue(idx, "uniq_mr_one_active_vo index missing")
+            self.assertTrue(all(r["Non_unique"] == 0 for r in idx), "index not unique")
+
+            # Cancelled MR does NOT occupy the unique key → a fresh replacement is allowed.
+            _make_mr("MR Recon D", "VO-RECON-TEST-1", 0)
+            frappe.db.commit()
+            active_after = frappe.db.sql(
+                "SELECT name FROM `tabMaterial Request` "
+                "WHERE docstatus < 2 AND custom_variation_order = 'VO-RECON-TEST-1'",
+                as_dict=True,
+            )
+            self.assertEqual(len(active_after), 1)
+        finally:
+            frappe.db.sql(
+                "DELETE FROM `tabMaterial Request` WHERE title LIKE 'MR Recon %'"
+            )
+            frappe.db.commit()
+
 
 

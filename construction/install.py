@@ -1105,14 +1105,26 @@ def _enforce_one_active_mr_per_vo():
     """Enforce a database-backed one-non-cancelled-MR-per-VO invariant.
 
     MariaDB cannot express a partial UNIQUE index (``UNIQUE ... WHERE
-    docstatus < 2``), so we add a STORED generated column that is the VO
-    name only while the MR is not cancelled, and NULL otherwise. NULLs do
-    not participate in a UNIQUE index, so at most one non-cancelled MR can
-    reference any given Variation Order. Cancelled MRs (``docstatus = 2``)
-    do NOT block a replacement — matching the ``docstatus < 2`` logic used
-    by ``create_material_request_for_vo``.
+    docstatus < 2``), so we add a STORED generated column that equals the VO
+    name only while the MR is not cancelled and NULL otherwise. NULLs do not
+    participate in a UNIQUE index, so at most one non-cancelled MR can
+    reference a given Variation Order. Cancelled MRs (``docstatus = 2``) do
+    NOT block a replacement — matching ``create_material_request_for_vo``.
 
-    The reconcile is idempotent and logged loudly (never silently swallowed).
+    This is a fail-fast, idempotent migration:
+
+      1. Add the generated column only if absent (benign on re-run).
+      2. Resolve ANY legacy duplicates by editing the SOURCE field
+         (``custom_variation_order`` / ``docstatus``) according to the approved
+         data policy — never by writing the generated column, which MariaDB
+         recomputes from the source fields.
+      3. Preserve a healthy existing unique index — create it only when absent
+         or when its definition is incorrect (do NOT drop a good index).
+      4. Verify (a) no duplicate active VOs remain AND (b) the exact unique
+         index exists. If either fails, RAISE and abort the migration.
+
+    Raise: RuntimeError on any unrecoverable conflict or unmet invariant so an
+    upgrade cannot silently continue without the promised constraint.
     """
     if not frappe.db.exists("DocType", "Material Request"):
         return
@@ -1121,7 +1133,7 @@ def _enforce_one_active_mr_per_vo():
 
     stored_col = "custom_variation_order_active"
 
-    # Existence check that never relies on the (possible stale) has_column cache.
+    # 1. Add the generated column only if it does not already exist.
     exists = frappe.db.sql(
         "SHOW COLUMNS FROM `tabMaterial Request` LIKE %(col)s", {"col": stored_col}
     )
@@ -1134,68 +1146,118 @@ def _enforce_one_active_mr_per_vo():
                 f"STORED"
             )
         except Exception as e:
-            # "Duplicate column" is benign (a concurrent run added it); anything
-            # else must be surfaced loudly.
             if "Duplicate column" not in str(e):
                 frappe.logger("construction_install").error(
                     f"Failed to add generated column '{stored_col}' on 'tabMaterial Request': {e}"
                 )
-                return
+                raise
+            # benign: a concurrent run already added it.
 
-    # Deduplicate any pre-existing conflicts before enforcing the unique index,
-    # otherwise index creation fails on an already-populated site.
-    try:
-        dups = frappe.db.sql(
-            f"""
-            SELECT `{stored_col}`, COUNT(*) AS c
-            FROM `tabMaterial Request`
-            WHERE `{stored_col}` IS NOT NULL
-            GROUP BY `{stored_col}`
-            HAVING COUNT(*) > 1
+    # 2. Resolve duplicate ACTIVE MRs (docstatus < 2) sharing a VO by editing
+    #    the SOURCE field on the extras. We keep the earliest MR per VO and
+    #    clear the ``custom_variation_order`` link of the extras so the
+    #    generated column becomes NULL for them (never write the column itself).
+    duplicates = frappe.db.sql(
+        """
+        SELECT custom_variation_order AS vo, COUNT(*) AS c
+        FROM `tabMaterial Request`
+        WHERE docstatus < 2
+          AND custom_variation_order IS NOT NULL
+          AND custom_variation_order <> ''
+        GROUP BY custom_variation_order
+        HAVING COUNT(*) > 1
+        """,
+        as_dict=True,
+    )
+    for dup in duplicates:
+        vo_name = dup["vo"]
+        keep = frappe.db.sql(
+            """
+            SELECT name FROM `tabMaterial Request`
+            WHERE docstatus < 2 AND custom_variation_order = %(vo)s
+              AND custom_variation_order IS NOT NULL
+            ORDER BY creation ASC, name ASC
+            LIMIT 1
             """,
+            {"vo": vo_name},
             as_dict=True,
         )
-        for dup in dups:
-            vo_name = dup[stored_col]
-            keep = frappe.db.sql(
-                f"SELECT name FROM `tabMaterial Request` "
-                f"WHERE `{stored_col}` = %(vo)s ORDER BY creation ASC LIMIT 1",
-                {"vo": vo_name},
-                as_dict=True,
+        keep_name = keep[0]["name"] if keep else None
+        extras = frappe.db.sql(
+            """
+            SELECT name FROM `tabMaterial Request`
+            WHERE docstatus < 2 AND custom_variation_order = %(vo)s
+              AND custom_variation_order IS NOT NULL
+              AND name != %(keep)s
+            """,
+            {"vo": vo_name, "keep": keep_name},
+            as_dict=True,
+        )
+        for ex in extras:
+            # Approved data policy: clear the duplicate's VO link so the
+            # one-active-MR-per-VO invariant is restored deterministically.
+            frappe.db.sql(
+                "UPDATE `tabMaterial Request` "
+                "SET `custom_variation_order` = NULL "
+                "WHERE name = %(name)s AND docstatus < 2",
+                {"name": ex["name"]},
             )
-            keep_name = keep[0]["name"] if keep else None
-            extras = frappe.db.sql(
-                f"SELECT name FROM `tabMaterial Request` "
-                f"WHERE `{stored_col}` = %(vo)s AND name != %(keep)s",
-                {"vo": vo_name, "keep": keep_name},
-                as_dict=True,
-            )
-            for ex in extras:
-                frappe.db.sql(
-                    f"UPDATE `tabMaterial Request` SET `{stored_col}` = NULL WHERE name = %(name)s",
-                    {"name": ex["name"]},
-                )
-            frappe.logger("construction_install").warning(
-                f"Deduplicated {len(extras)} extra active Material Request(s) for Variation Order "
-                f"'{vo_name}' (kept '{keep_name}') to satisfy the one-active-MR-per-VO invariant."
-            )
-    except Exception as e:
-        frappe.logger("construction_install").error(
-            f"Failed to deduplicate active Material Requests for '{stored_col}': {e}"
+        frappe.logger("construction_install").warning(
+            f"Resolved {len(extras)} duplicate active Material Request(s) for Variation Order "
+            f"'{vo_name}' (kept '{keep_name}', cleared VO link on extras)."
         )
 
-    try:
-        frappe.db.sql("ALTER TABLE `tabMaterial Request` DROP INDEX `uniq_mr_one_active_vo`")
-    except Exception:
-        pass  # index may not exist yet
-    try:
+    # 3. Ensure the exact unique index exists; preserve it when already healthy.
+    #    Do NOT drop a healthy index on every reconciliation.
+    idx_name = "uniq_mr_one_active_vo"
+    existing = frappe.db.sql(
+        "SHOW INDEX FROM `tabMaterial Request` WHERE Key_name = %(idx)s",
+        {"idx": idx_name},
+        as_dict=True,
+    )
+    healthy = bool(existing) and all(r.get("Non_unique") == 0 for r in existing)
+    if not existing:
         frappe.db.sql(
-            "CREATE UNIQUE INDEX `uniq_mr_one_active_vo` "
-            "ON `tabMaterial Request` (`custom_variation_order_active`)"
+            f"CREATE UNIQUE INDEX `{idx_name}` "
+            f"ON `tabMaterial Request` (`{stored_col}`)"
         )
-    except Exception as e:
-        frappe.logger("construction_install").error(
-            f"Failed to enforce unique index 'uniq_mr_one_active_vo' on 'tabMaterial Request': {e}"
+    elif not healthy:
+        # Correct an incorrect/non-unique index (e.g. leftover non-unique build).
+        frappe.db.sql(f"ALTER TABLE `tabMaterial Request` DROP INDEX `{idx_name}`")
+        frappe.db.sql(
+            f"CREATE UNIQUE INDEX `{idx_name}` "
+            f"ON `tabMaterial Request` (`{stored_col}`)"
+        )
+
+    # 4. Verify the invariant, then FAIL FAST rather than silently continuing
+    #    without the promised constraint.
+    remaining = frappe.db.sql(
+        """
+        SELECT custom_variation_order AS vo, COUNT(*) AS c
+        FROM `tabMaterial Request`
+        WHERE docstatus < 2
+          AND custom_variation_order IS NOT NULL
+          AND custom_variation_order <> ''
+        GROUP BY custom_variation_order
+        HAVING COUNT(*) > 1
+        """,
+        as_dict=True,
+    )
+    if remaining:
+        raise RuntimeError(
+            "One-active-MR-per-VO invariant not satisfied; duplicate active MRs remain: "
+            + ", ".join(f"{r['vo']}->{r['c']}" for r in remaining)
+        )
+
+    final_index = frappe.db.sql(
+        "SHOW INDEX FROM `tabMaterial Request` WHERE Key_name = %(idx)s",
+        {"idx": idx_name},
+        as_dict=True,
+    )
+    if not final_index or any(r.get("Non_unique") != 0 for r in final_index):
+        raise RuntimeError(
+            f"Unique index '{idx_name}' is missing or not unique on 'tabMaterial Request'; "
+            "aborting migration."
         )
 
 
