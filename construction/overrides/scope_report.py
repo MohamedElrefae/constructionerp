@@ -42,42 +42,17 @@ from construction.api.scope_context_api import (
     get_user_scope_context,
     get_user_scope_hierarchy,
 )
+from construction.overrides.report_guard import (
+    ALLOWED_REPORTS,
+    get_original_run,
+    get_original_run_sig,
+    is_guard_active,
+)
+from construction.overrides.report_guard import (
+    resolve_report_name as _resolve_report_name,
+)
 
 logger = logging.getLogger(__name__)
-
-# The plan-specified financial reports + Project-wise Profitability.
-FINANCIAL_REPORTS: frozenset[str] = frozenset(
-    {
-        "General Ledger",
-        "Trial Balance",
-        "Profit and Loss Statement",
-        "Balance Sheet",
-        "Accounts Payable",
-        "Accounts Payable Summary",
-        "Accounts Receivable",
-        "Accounts Receivable Summary",
-        "Budget Variance Report",
-        "Cash Flow",
-        "Project-wise Profitability",
-    }
-)
-
-# Dashboard charts use Script Reports, which execute report SQL directly and
-# therefore cannot rely on permission_query_conditions for row-level scope.
-# Keeping them in this protected set ensures the run wrapper rewrites their
-# filters before execution instead of granting broad ERPNext roles.
-DASHBOARD_REPORTS: frozenset[str] = frozenset(
-    {
-        "Purchase Order Trends",
-        "Purchase Receipt Trends",
-        "Purchase Analytics",
-        "Fixed Asset Register",
-    }
-)
-
-# These are the only reports the backend wrapper mutates. All other reports
-# pass through to the original `run` unchanged.
-ALLOWED_REPORTS: frozenset[str] = FINANCIAL_REPORTS | DASHBOARD_REPORTS
 
 # Roles allowed to run reports without forced scope filters.
 UNRESTRICTED_REPORT_ROLES: frozenset[str] = frozenset(
@@ -99,50 +74,27 @@ SCOPE_DIMENSIONS: tuple[str, ...] = (
 )
 
 # Cached signature of the original run() so we can normalize positional
-# args safely.
+# args safely. Set from the guard's captured original at install time.
 _ORIGINAL_RUN = None
 _ORIGINAL_RUN_SIG = None
 
 # Degraded-mode state. When installation of the full enforcement wrapper
-# fails, a FAIL-CLOSED guard remains installed that DENIES all protected
-# reports instead of letting them run unscoped.
+# fails, the FAIL-CLOSED guard from report_guard remains installed and
+# DENIES all protected reports instead of letting them run unscoped.
 _DEGRADED = False
-
-
-def _degraded_guard_run(*args, **kwargs):
-    """Fail-closed stand-in for query_report.run.
-
-    While enforcement is degraded/unavailable, allowlisted (protected)
-    reports are DENIED outright. Non-protected reports pass through to
-    Frappe's original behaviour unchanged.
-    """
-    try:
-        report_name = _resolve_report_name(args, kwargs)
-    except Exception:
-        report_name = None
-    if report_name in ALLOWED_REPORTS:
-        frappe.throw(
-            _(
-                "Security Error: Report scope enforcement is unavailable. "
-                "Access to protected reports is denied."
-            ),
-            frappe.PermissionError,
-        )
-    return _ORIGINAL_RUN(*args, **kwargs)
 
 
 def apply_report_monkeypatch() -> bool:
     """Install the scope-context report enforcement. Returns True when the
     FULL enforcement is active.
 
-    Installation order guarantees no fail-open window:
-
-      1. Capture the original ``query_report.run``.
-      2. Immediately install the FAIL-CLOSED degraded guard (denies
-         protected reports).
-      3. Attempt the full wrapper + access-gate patches.
-      4. On ANY failure, restore the degraded guard and flag the app
-         degraded — protected reports stay denied, never unscoped.
+    The FAIL-CLOSED guard is installed separately (and earlier) by
+    ``construction.overrides.report_guard.install_report_guard`` in
+    ``construction.__init__`` BEFORE this module is imported. That guard
+    exists even if this module cannot be imported, so there is no fail-open
+    window on an import-time error. This function only UPGRADES that guard
+    to the full enforcement wrapper; on any failure the guard is left in
+    place and protected reports stay denied.
 
     Idempotent: repeated calls are safe and return current status.
     Use :func:`report_enforcement_health` for startup/health verification.
@@ -158,18 +110,15 @@ def apply_report_monkeypatch() -> bool:
     current = getattr(query_report.run, "__name__", "")
     if current == "_scope_aware_run":
         return not _DEGRADED
-    if current == "_degraded_guard_run":
-        return False  # already guarding in fail-closed mode
 
-    try:
-        _ORIGINAL_RUN = query_report.run
-        _ORIGINAL_RUN_SIG = inspect.signature(_ORIGINAL_RUN)
-    except Exception:
+    # Source the true original runner from the guard (which captured it at
+    # startup) — never re-capture from query_report.run, which may already be
+    # the guard itself.
+    _ORIGINAL_RUN = get_original_run()
+    _ORIGINAL_RUN_SIG = get_original_run_sig()
+    if _ORIGINAL_RUN is None:
         globals()["_DEGRADED"] = True
         return False
-
-    # Step 1: fail-closed baseline BEFORE attempting the real patch.
-    query_report.run = _degraded_guard_run
 
     # --- Option A+: report.run wrapper ---
     # --- Option B: Report.is_permitted + get_report_doc ---
@@ -185,7 +134,6 @@ def apply_report_monkeypatch() -> bool:
             )
         except Exception:
             pass
-        query_report.run = _degraded_guard_run
         globals()["_DEGRADED"] = True
         return False
 
@@ -212,7 +160,7 @@ def report_enforcement_health() -> dict:
         runner_name = getattr(query_report.run, "__name__", "")
         status["runner"] = runner_name
         status["installed"] = runner_name == "_scope_aware_run" and not _DEGRADED
-        status["fail_closed_guard"] = runner_name == "_degraded_guard_run"
+        status["fail_closed_guard"] = is_guard_active()
     except Exception:
         return status
 
@@ -661,15 +609,6 @@ def _is_allowlisted_report_for_user(report_name: str, user: str | None) -> bool:
 # ---------------------------------------------------------------------------
 # Argument normalization
 # ---------------------------------------------------------------------------
-
-
-def _resolve_report_name(args: tuple, kwargs: dict) -> str | None:
-    """Return the report name from either a positional or keyword arg."""
-    if kwargs.get("report_name"):
-        return kwargs["report_name"]
-    if args:
-        return args[0]
-    return None
 
 
 def _resolve_user(args: tuple, kwargs: dict) -> str:

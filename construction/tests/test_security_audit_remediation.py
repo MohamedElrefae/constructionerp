@@ -3,6 +3,8 @@
 
 import io
 import os
+import subprocess
+import sys
 import threading
 import time
 import zipfile
@@ -1041,6 +1043,7 @@ class TestSecurityAuditRemediation(FrappeTestCase):
         """When enforcement installation fails, protected reports must be
         DENIED (fail-closed guard), never served unscoped; non-protected
         reports pass through; health probe reports degraded state."""
+        import construction.overrides.report_guard as report_guard_module
         import construction.overrides.scope_report as scope_report_module
 
         health = scope_report_module.report_enforcement_health()
@@ -1053,12 +1056,14 @@ class TestSecurityAuditRemediation(FrappeTestCase):
 
         original_runner = query_report.run
         sentinel = {"passthrough": True}
-        real_original = scope_report_module._ORIGINAL_RUN
+        real_original = report_guard_module.get_original_run()
         try:
-            # Simulate a broken installation: the guard stays in place and
-            # the "original" is a spy so we can observe pass-through exactly.
-            query_report.run = scope_report_module._degraded_guard_run
+            # Simulate a broken installation: the fail-closed guard is placed
+            # on the runner and the true original is a spy so we can observe
+            # pass-through exactly.
+            query_report.run = report_guard_module._fail_closed_guard
             scope_report_module._ORIGINAL_RUN = lambda *a, **kw: sentinel
+            report_guard_module._ORIGINAL_RUN = lambda *a, **kw: sentinel
             frappe.set_user("Administrator")
 
             with self.assertRaises(frappe.PermissionError):
@@ -1069,8 +1074,62 @@ class TestSecurityAuditRemediation(FrappeTestCase):
             self.assertEqual(result, sentinel)
         finally:
             scope_report_module._ORIGINAL_RUN = real_original
+            report_guard_module._ORIGINAL_RUN = real_original
             query_report.run = original_runner
             frappe.set_user("Administrator")
+
+    def test_report_enforcement_fails_closed_when_scope_report_import_fails(self):
+        """Separate-process startup test: if construction.overrides.scope_report
+        cannot be imported, the minimal fail-closed guard must still be active
+        and every protected report must raise frappe.PermissionError. This must
+        NOT be satisfied by manually assigning the guard — the subprocess only
+        blocks the scope_report module import and then imports construction."""
+        script = r"""
+import builtins
+_real_import = builtins.__import__
+def _blocked(name, *a, **kw):
+    if name == "construction.overrides.scope_report":
+        raise ImportError("simulated: cannot import scope_report")
+    return _real_import(name, *a, **kw)
+builtins.__import__ = _blocked
+
+import frappe
+from frappe.desk import query_report
+import construction
+
+assert construction._GUARD_OK is True, "guard must be installed"
+assert construction._REPORT_ENFORCEMENT_OK is False
+assert getattr(query_report.run, "__name__", "") == "_fail_closed_guard"
+
+try:
+    query_report.run(report_name="General Ledger", filters={"company": "X"})
+except frappe.PermissionError:
+    pass
+else:
+    raise RuntimeError("protected report was served without enforcement (BAD)")
+
+# Non-protected reports must pass through to the real original.
+import construction.overrides.report_guard as rg
+sentinel = {"ok": True}
+rg._ORIGINAL_RUN = lambda *a, **kw: sentinel
+result = query_report.run(report_name="Sales Analytics", filters={})
+assert result == sentinel, "non-protected report must pass through"
+print("STARTUP_BLOCKED_OK")
+"""
+        runner = os.path.join(frappe.get_app_path("construction", "..", "..", "env", "bin", "python"))
+        if not os.path.exists(runner):
+            runner = os.path.join(frappe.get_app_path("construction", "..", "..", "env", "bin", "python3"))
+        if not os.path.exists(runner):
+            # Fall back to the running interpreter's sibling env (common bench layout).
+            runner = os.path.join(os.path.dirname(sys.executable), "python")
+        proc = subprocess.run(
+            [runner, "-c", script],
+            cwd=os.path.expanduser("~/frappe-bench"),
+            capture_output=True,
+            text=True,
+            timeout=120,
+        )
+        self.assertIn("STARTUP_BLOCKED_OK", proc.stdout, proc.stdout + "\n" + proc.stderr)
 
 
 
