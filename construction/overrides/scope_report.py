@@ -44,9 +44,12 @@ from construction.api.scope_context_api import (
 )
 from construction.overrides.report_guard import (
     ALLOWED_REPORTS,
+    DASHBOARD_REPORTS,
+    FINANCIAL_REPORTS,
     get_original_run,
     get_original_run_sig,
     is_guard_active,
+    restore_fail_closed_guard,
 )
 from construction.overrides.report_guard import (
     resolve_report_name as _resolve_report_name,
@@ -126,7 +129,10 @@ def apply_report_monkeypatch() -> bool:
         query_report.run = _scope_aware_run
         _patch_report_access_gates()
     except Exception as e:
-        logger.exception("Report scope enforcement failed to install; degrading to fail-closed guard")
+        logger.exception("Report scope enforcement failed to install; restoring fail-closed guard")
+        # Restore the guard so protected reports stay DENIED — never leave the
+        # half-installed _scope_aware_run wrapper active.
+        restore_fail_closed_guard()
         try:
             frappe.log_error(
                 f"Report scope enforcement failed to install; protected reports are DENIED: {e}",

@@ -1187,11 +1187,42 @@ result = query_report.run(report_name="Sales Analytics", filters={})
 assert result == sentinel, "non-protected report must pass through"
 print("STARTUP_BLOCKED_OK")
 """
+        self._run_subprocess_expect(script, "STARTUP_BLOCKED_OK")
+
+    def test_report_enforcement_refuses_startup_when_guard_cannot_install(self):
+        """If report_guard itself cannot be imported/installed, startup MUST fail
+        (raise) rather than log-and-continue into a fail-open state."""
+        script = r"""
+import builtins
+_real_import = builtins.__import__
+def _blocked(name, *a, **kw):
+    if name == "construction.overrides.report_guard":
+        raise ImportError("simulated: cannot import report_guard")
+    return _real_import(name, *a, **kw)
+builtins.__import__ = _blocked
+
+import construction
+try:
+    import frappe
+except Exception:
+    pass
+print("GUARD_IMPORT_FAILED_OK")
+"""
+        # Expect the import of construction to RAISE (fatal), so 'GUARD_IMPORT_FAILED_OK'
+        # must NOT appear in stdout; the process must fail.
+        self._run_subprocess_expect_absent(script, "GUARD_IMPORT_FAILED_OK")
+
+    def _run_subprocess_expect(self, script, expected_marker):
+        self._run_subprocess(script, assert_marker=expected_marker, want_marker=True)
+
+    def _run_subprocess_expect_absent(self, script, absent_marker):
+        self._run_subprocess(script, assert_marker=absent_marker, want_marker=False)
+
+    def _run_subprocess(self, script, assert_marker=None, want_marker=True):
         runner = os.path.join(frappe.get_app_path("construction", "..", "..", "env", "bin", "python"))
         if not os.path.exists(runner):
             runner = os.path.join(frappe.get_app_path("construction", "..", "..", "env", "bin", "python3"))
         if not os.path.exists(runner):
-            # Fall back to the running interpreter's sibling env (common bench layout).
             runner = os.path.join(os.path.dirname(sys.executable), "python")
         proc = subprocess.run(
             [runner, "-c", script],
@@ -1200,7 +1231,11 @@ print("STARTUP_BLOCKED_OK")
             text=True,
             timeout=120,
         )
-        self.assertIn("STARTUP_BLOCKED_OK", proc.stdout, proc.stdout + "\n" + proc.stderr)
+        combined = proc.stdout + "\n" + proc.stderr
+        if want_marker:
+            self.assertIn(assert_marker, combined, combined)
+        else:
+            self.assertNotIn(assert_marker, combined, combined)
 
     def test_mr_upgrade_reconciles_duplicate_active_material_requests(self):
         """Upgrade reconcile must resolve legacy duplicate active MRs for one VO by

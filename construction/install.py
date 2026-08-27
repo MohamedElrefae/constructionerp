@@ -1223,40 +1223,93 @@ def _reconcile_duplicate_active_mrs():
 
 
 def _ensure_unique_index_or_fail():
-    """DDL: create the unique index only when absent or non-unique; preserve a
-    healthy existing index. Raises on a failed/incorrect index.
+    """DDL: ensure the exact unique index on `custom_variation_order_active`.
 
-    Runs a ``commit`` before DDL (DDL auto-commits in MariaDB anyway), so the
-    migration is valid irrespective of any pending writes in the transaction —
-    including when invoked from within a test rather than only during ``migrate``.
+    Preserves a healthy existing index and only creates/corrects when absent or
+    incorrectly defined. Verifies the EXACT definition (one ordered column, the
+    generated column, unique, BTREE). Raises on failure — migration aborts.
+
+    DDL is permitted here because a ``commit`` is run first: Frappe's ``commit``
+    resets the transaction-write counter internally (DDL auto-commits in
+    MariaDB), so no manual counter reset and no swallowed commit failure are
+    needed. Any commit failure propagates and aborts the migration.
     """
     stored_col = "custom_variation_order_active"
     idx_name = "uniq_mr_one_active_vo"
-    # DDL requires a clean write counter (Frappe rejects implicit-commit DDL
-    # when writes are pending). Commit/reconcile the counter so DDL is allowed.
-    try:
-        frappe.db.commit()
-    except Exception:
-        pass
-    frappe.db.transaction_writes = 0
-    existing = frappe.db.sql(
-        "SHOW INDEX FROM `tabMaterial Request` WHERE Key_name = %(idx)s",
+    # Commit pending DML so the subsequent DDL is allowed and so the reconciliation
+    # state is durable. If this commit fails, the migration must abort.
+    frappe.db.commit()
+
+    idx_def = frappe.db.sql(
+        """
+        SELECT COLUMN_NAME, SEQ_IN_INDEX, NON_UNIQUE, INDEX_TYPE
+        FROM information_schema.STATISTICS
+        WHERE TABLE_SCHEMA = DATABASE()
+          AND TABLE_NAME = 'tabMaterial Request'
+          AND INDEX_NAME = %(idx)s
+        ORDER BY SEQ_IN_INDEX
+        """,
         {"idx": idx_name},
         as_dict=True,
     )
-    healthy = bool(existing) and all(r.get("Non_unique") == 0 for r in existing)
-    if not existing:
-        frappe.db.sql(
-            f"CREATE UNIQUE INDEX `{idx_name}` "
-            f"ON `tabMaterial Request` (`{stored_col}`)"
-        )
-    elif not healthy:
-        # Correct an incorrect/non-unique index (e.g. leftover non-unique build).
+    healthy = _index_is_correct(idx_def, stored_col)
+    if healthy:
+        return
+    if idx_def:
+        # Incorrect (wrong column/order/uniqueness/type) → drop and rebuild.
         frappe.db.sql(f"ALTER TABLE `tabMaterial Request` DROP INDEX `{idx_name}`")
-        frappe.db.sql(
-            f"CREATE UNIQUE INDEX `{idx_name}` "
-            f"ON `tabMaterial Request` (`{stored_col}`)"
+    frappe.db.sql(
+        f"CREATE UNIQUE INDEX `{idx_name}` "
+        f"ON `tabMaterial Request` (`{stored_col}`)"
+    )
+    # Post-create verification — a wrong definition must abort, not pass silently.
+    idx_after = frappe.db.sql(
+        """
+        SELECT COLUMN_NAME, SEQ_IN_INDEX, NON_UNIQUE, INDEX_TYPE
+        FROM information_schema.STATISTICS
+        WHERE TABLE_SCHEMA = DATABASE()
+          AND TABLE_NAME = 'tabMaterial Request'
+          AND INDEX_NAME = %(idx)s
+        ORDER BY SEQ_IN_INDEX
+        """,
+        {"idx": idx_name},
+        as_dict=True,
+    )
+    if not _index_is_correct(idx_after, stored_col):
+        raise RuntimeError(
+            f"Index '{idx_name}' could not be created correctly on 'tabMaterial Request'."
         )
+
+
+def _index_is_correct(idx_rows, stored_col):
+    """True when ``idx_rows`` (from information_schema.STATISTICS) describe the
+    exact expected index: a single ordered column equal to ``stored_col``, unique
+    (NON_UNIQUE=0), with BTREE type. Any extra/missing/wrong column is unhealthy.
+
+    MariaDB returns numeric columns as strings (e.g. '0'/'1'), so values are
+    coerced with int().
+    """
+    if not idx_rows:
+        return False
+    if len(idx_rows) != 1:
+        return False
+    row = idx_rows[0]
+    seq_raw = row.get("SEQ_IN_INDEX")
+    non_unique_raw = row.get("NON_UNIQUE")
+    # Use explicit None checks: numeric columns can legitimately be 0, and Python's
+    # `x or DEFAULT` would turn a real 0 into the default.
+    seq = int(seq_raw) if seq_raw is not None and seq_raw != "" else 0
+    non_unique = int(non_unique_raw) if non_unique_raw is not None and non_unique_raw != "" else 1
+    if seq != 1:
+        return False
+    if (row.get("COLUMN_NAME") or "") != stored_col:
+        return False
+    if non_unique != 0:
+        return False
+    col_type = (row.get("INDEX_TYPE") or "").upper()
+    if col_type not in ("BTREE", "UNIQUE"):
+        return False
+    return True
 
 
 def _verify_mr_invariant_or_fail():
@@ -1283,14 +1336,21 @@ def _verify_mr_invariant_or_fail():
         )
 
     final_index = frappe.db.sql(
-        "SHOW INDEX FROM `tabMaterial Request` WHERE Key_name = %(idx)s",
+        """
+        SELECT COLUMN_NAME, SEQ_IN_INDEX, NON_UNIQUE, INDEX_TYPE
+        FROM information_schema.STATISTICS
+        WHERE TABLE_SCHEMA = DATABASE()
+          AND TABLE_NAME = 'tabMaterial Request'
+          AND INDEX_NAME = %(idx)s
+        ORDER BY SEQ_IN_INDEX
+        """,
         {"idx": idx_name},
         as_dict=True,
     )
-    if not final_index or any(r.get("Non_unique") != 0 for r in final_index):
+    if not _index_is_correct(final_index, stored_col):
         raise RuntimeError(
-            f"Unique index '{idx_name}' is missing or not unique on 'tabMaterial Request'; "
-            "aborting migration."
+            f"Unique index '{idx_name}' is missing or not correctly defined "
+            "on 'tabMaterial Request'; aborting migration."
         )
 
 

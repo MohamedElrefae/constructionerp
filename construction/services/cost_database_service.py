@@ -191,21 +191,19 @@ def _apply_bulk_reprice_to_analysis(
     rows_for_doc = [r for r in detail_rows if r.get("parent") == analysis_name]
     changed = False
 
-    # Index eligible rows once: (item_code, supplier) -> canonical cost_stream
-    # so we can skip rows that don't match the requested stream without a full
-    # list scan per row.
-    stream_index = {}
+    # Eligible rows are identified by their EXACT child-row name, not by
+    # (item_code, supplier): two rows can legitimately share the same item and
+    # supplier while belonging to different cost streams. Keying eligibility on
+    # the tuple would let one stream's filter update a row of another stream.
+    eligible_by_name = None
     if cost_stream:
-        for r in rows_for_doc:
-            stream_index[(r.get("item_code"), r.get("supplier"))] = r.get("cost_stream")
+        eligible_by_name = {r.get("name") for r in rows_for_doc if r.get("name")}
 
     for row in doc.get("details") or []:
         if cost_stream:
-            # Only repricing rows that belong to the requested stream.
-            # rows_for_doc is authoritative for the stream value (it may be
-            # empty if the row was pre-filtered out).
-            row_stream = stream_index.get((row.item_code, row.supplier))
-            if row_stream != cost_stream:
+            # Only repricing rows whose exact child row was pre-filtered as
+            # belonging to the requested stream.
+            if row.get("name") not in eligible_by_name:
                 continue
 
         # Match the preloaded detail row so row.item_code/supplier are canonical.

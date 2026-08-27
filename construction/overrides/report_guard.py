@@ -145,6 +145,28 @@ def is_guard_active() -> bool:
     return getattr(query_report.run, "__name__", "") == "_fail_closed_guard"
 
 
+def restore_fail_closed_guard() -> bool:
+    """Re-install the fail-closed guard on ``query_report.run``.
+
+    Used when the full enforcement wrapper is being installed and a step after
+    assigning it fails (e.g. ``_patch_report_access_gates``), so the guard is put
+    back and protected reports remain DENIED rather than being served by a
+    half-installed wrapper.
+    """
+    global _GUARD_INSTALLED
+    try:
+        from frappe.desk import query_report
+    except Exception:
+        _GUARD_INSTALLED = False
+        return False
+    if _ORIGINAL_RUN is None:
+        _GUARD_INSTALLED = False
+        return False
+    query_report.run = _fail_closed_guard
+    _GUARD_INSTALLED = True
+    return True
+
+
 __all__ = [
     "ALLOWED_REPORTS",
     "DASHBOARD_REPORTS",

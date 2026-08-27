@@ -5,38 +5,44 @@ Simplified Theme Switch Override - SQL-based to avoid Python controller import i
 import frappe
 from frappe import _
 
+# Frappe's core switch_theme accepts `theme` and stores these exact Select values.
+_STANDARD_THEMES = frozenset({"Dark", "Light", "Automatic"})
+
 
 @frappe.whitelist()
-def switch_theme(theme_name=None):
+def switch_theme(theme=None, theme_name=None):
     """
     Override Frappe's default switch_theme to handle construction themes.
 
-    Uses SQL to avoid Python controller import issues.
+    Signature is API-compatible with core ``frappe.core.doctype.user.user.switch_theme``,
+    which is invoked as ``switch_theme(theme=...)``. ``theme_name`` is accepted as a
+    legacy alias; if both are supplied and disagree, a ValidationError is raised.
 
-    Transaction model: Frappe owns the request transaction — we do NOT commit
-    here. All writes are wrapped in a savepoint so that if any step fails the
-    partial state is rolled back and the client receives an error (no
-    catch-and-success that hides inconsistent state).
+    Standard themes use the exact Frappe Select values ``Dark`` / ``Light`` /
+    ``Automatic``. Construction themes are resolved by ``theme_name``.
 
-    Args:
-        theme_name: Theme name (can be Frappe standard or Construction theme)
+    Transaction model: Frappe owns the request transaction — we do NOT commit.
+    Writes are wrapped in a savepoint so a failure rolls back and re-raises
+    (no catch-and-success). Only an authenticated, non-Guest session user may
+    switch — used to switch their OWN theme.
     """
     user = frappe.session.user
 
-    # Reject Guest/prohibited writes up front.
     if user in ("", "Guest"):
         frappe.throw(_("Not permitted to switch themes from this session."), frappe.PermissionError)
 
-    def _authorize_user_write():
-        if not frappe.has_permission("User", "write", user=user):
-            if user != frappe.session.user:
-                frappe.throw(
-                    _("You may only switch your own theme."), frappe.PermissionError
-                )
+    # Normalize the two accepted argument names, rejecting disagreement.
+    if theme is not None and theme_name is not None and str(theme) != str(theme_name):
+        frappe.throw(
+            _("Conflicting theme arguments: theme='{0}' vs theme_name='{1}'").format(theme, theme_name),
+            frappe.ValidationError,
+        )
+    theme_value = theme or theme_name
 
-    if not theme_name:
+    if not theme_value:
         user_doc = frappe.get_doc("User", user)
-        mode = "dark" if user_doc.desk_theme in ["Dark", "automatic"] else "light"
+        current = user_doc.desk_theme or "Light"
+        mode = "dark" if current in ("Dark", "Automatic") else "light"
         return {"message": f"Theme check - current mode: {mode}", "mode": mode}
 
     savepoint = f"sp_switch_theme_{frappe.generate_hash(length=8)}"
@@ -48,23 +54,18 @@ def switch_theme(theme_name=None):
             WHERE theme_name = %s AND is_active = 1
             LIMIT 1
             """,
-            (theme_name,),
+            (theme_value,),
             as_dict=True,
         )
 
         if construction_theme:
             theme_record = construction_theme[0]
             is_dark = "Dark" in (theme_record.theme_type or "")
+            desk_theme_value = "Dark" if is_dark else "Light"
             mode = "dark" if is_dark else "light"
 
-            # Permission-aware write to the user's own desk_theme field.
-            _authorize_user_write()
-            desk_theme_value = "Dark" if is_dark else "Light"
-            frappe.db.set_value(
-                "User", user, "desk_theme", desk_theme_value, update_modified=False
-            )
+            frappe.db.set_value("User", user, "desk_theme", desk_theme_value, update_modified=False)
 
-            # Update or create User Desk Theme record.
             existing = frappe.db.get_value("User Desk Theme", {"user": user}, "name")
             if existing:
                 udt = frappe.get_doc("User Desk Theme", existing)
@@ -82,15 +83,20 @@ def switch_theme(theme_name=None):
                     udt.light_theme = theme_record.name
                 udt.insert(ignore_permissions=True)
 
-            return {"message": f"Theme switched to {theme_name}", "mode": mode}
-        else:
-            mode = "dark" if theme_name in ["Dark", "Automatic"] else "light"
-            _authorize_user_write()
-            frappe.db.set_value("User", user, "desk_theme", mode)
-            return {"message": f"Theme switched to {theme_name}", "mode": mode}
+            return {"message": f"Theme switched to {theme_value}", "mode": mode}
+
+        # Standard Frappe theme — preserve the exact Select enum value.
+        if theme_value not in _STANDARD_THEMES:
+            frappe.throw(
+                _("Unknown theme '{0}'. Valid standard themes: Dark, Light, Automatic.").format(theme_value),
+                frappe.ValidationError,
+            )
+        frappe.db.set_value("User", user, "desk_theme", theme_value)
+        mode = "dark" if theme_value in ("Dark", "Automatic") else "light"
+        return {"message": f"Theme switched to {theme_value}", "mode": mode}
     except Exception:
         # Atomic rollback of all writes in this request; re-raise so the client
         # receives an error rather than a misleading success.
         frappe.db.rollback(save_point=savepoint)
-        frappe.logger().error(f"[Theme Switch] Error for user '{user}', theme '{theme_name}'")
+        frappe.logger().error(f"[Theme Switch] Error for user '{user}', theme '{theme_value}'")
         raise

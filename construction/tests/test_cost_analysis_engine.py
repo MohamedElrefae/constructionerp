@@ -843,3 +843,56 @@ class TestCostAnalysisEngine(FrappeTestCase):
         analysis.reload()
         after_dry = next(r for r in analysis.details if r.cost_stream == "M").cost_rate
         self.assertEqual(flt(before_dry), flt(after_dry))
+
+    def test_cost_stream_collision_same_item_supplier(self):
+        """Two analysis children that share the exact same item code AND supplier
+        but belong to DIFFERENT cost streams must not cross-contaminate. Requesting
+        stream M must update ONLY the M row; the L row (same item/supplier) must stay
+        unchanged. This is the `(item_code, supplier)` identity-collision shape."""
+        from construction.services.cost_database_service import bulk_reprice_analyses
+        from construction.services.resource_price_service import capture_price_from_purchase_document
+
+        item = self._make_item_doctype("STREAM-COLLIDE", "Stream Collide Item")
+        supplier = self._make_supplier()
+
+        # Two rows with the SAME item and supplier, different cost streams.
+        analysis = self._make_cost_analysis(
+            self.item.name,
+            details=[
+                {"cost_stream": "M", "item_code": item, "supplier": supplier,
+                 "resource_uom": "Nos", "qty_per_boq_unit": 1, "cost_rate": 100, "wastage_pct": 0},
+                {"cost_stream": "L", "item_code": item, "supplier": supplier,
+                 "resource_uom": "Hr", "qty_per_boq_unit": 1, "cost_rate": 50, "wastage_pct": 0},
+            ],
+        )
+
+        # One new price for the (item, supplier) key → would update whichever stream
+        # is selected. Pans to 250.
+        capture_price_from_purchase_document(frappe._dict({
+            "doctype": "Purchase Invoice", "name": "COLLIDE-PI", "docstatus": 1,
+            "supplier": supplier, "company": self.company, "project": self.project,
+            "posting_date": "2026-06-01",
+            "items": [frappe._dict({"item_code": item, "rate": 250, "uom": "Nos", "name": "R1"})],
+        }))
+
+        m_row_id = None
+        for d in analysis.details:
+            if d.cost_stream == "M":
+                m_row_id = d.name
+        self.assertTrue(m_row_id, "an M child row must exist")
+
+        # Reprice ONLY the M stream.
+        result = bulk_reprice_analyses(boq_header=self.header.name, company=self.company, cost_stream="M")
+        self.assertTrue(result["success"], msg=result["errors"])
+        self.assertEqual(result["details_updated"], 1, msg=f"Expected exactly 1 updated, got {result}")
+
+        analysis.reload()
+        m_row = next(r for r in analysis.details if r.cost_stream == "M")
+        l_row = next(r for r in analysis.details if r.cost_stream == "L")
+        # M updated to the new rate; L must remain at its own rate (50) and is NOT
+        # repriced despite sharing item/supplier with M (its rate_source stays the
+        # pre-existing Manual value, never the price-history source label).
+        self.assertAlmostEqual(flt(m_row.cost_rate), 250.0, places=2)
+        self.assertAlmostEqual(flt(l_row.cost_rate), 50.0, places=2)
+        self.assertNotEqual(l_row.rate_source, "Resource Price History")
+        self.assertNotEqual(l_row.rate_source, "Last PI")
