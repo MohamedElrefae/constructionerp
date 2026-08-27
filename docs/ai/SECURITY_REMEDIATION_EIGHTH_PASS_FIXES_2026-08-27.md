@@ -19,6 +19,11 @@ remaining items were:
 
 ## 2. QA coverage added this pass (committed)
 
+*Correction (ninth-pass accuracy note): this pass added **10 new test methods** plus
+**one strengthened existing subprocess path** (the guard startup helper gained
+exact return-code and error-text assertions) — not "11 focused tests." Exact
+before/after method counts: security suite 19 → 23; migration suite 7 → 13.*
+
 | Test | Location | Coverage |
 |---|---|---|
 | `test_index_is_correct_accepts_exact_definition` | `test_migration_survival.py` | Exact one-column unique BTREE accepted |

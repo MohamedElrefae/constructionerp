@@ -1191,7 +1191,16 @@ print("STARTUP_BLOCKED_OK")
 
     def test_report_enforcement_refuses_startup_when_guard_cannot_install(self):
         """If report_guard itself cannot be imported/installed, startup MUST fail
-        (raise) rather than log-and-continue into a fail-open state."""
+        (raise ReportScopeEnforcementError) rather than log-and-continue into a
+        fail-open state.
+
+        The child probe verifies the EXACT failure mode — exception TYPE name
+        (not str(ex), which carries only the message) plus the fatal text —
+        prints a deliberate marker, and exits exactly 3. The parent runs the
+        subprocess ONCE and asserts returncode == 3, the marker present, and the
+        import-success marker absent. Any other failure mode exits with a
+        different code, which fails the assertion (no incidental-traceback
+        false positives)."""
         script = r"""
 import builtins
 _real_import = builtins.__import__
@@ -1203,39 +1212,39 @@ builtins.__import__ = _blocked
 
 try:
     import construction
-    import frappe
-    print("GUARD_IMPORT_FAILED_OK")
-    raise SystemExit(0)
 except Exception as ex:
-    # Fatal case: construction must RAISE a dedicated ReportScopeEnforcementError.
-    msg = str(ex)
-    assert "ReportScopeEnforcementError" in msg, f"expected fatal class, got: {ex!r}"
-    assert "Refusing startup" in msg, f"expected fatal message, got: {ex!r}"
-    raise SystemExit(3)
+    if type(ex).__name__ == "ReportScopeEnforcementError" and "Refusing startup" in str(ex):
+        print("EXPECTED_FATAL_GUARD")
+        raise SystemExit(3)
+    print("WRONG_FAILURE_MODE")
+    raise SystemExit(2)
+print("GUARD_IMPORT_FAILED_OK")
+raise SystemExit(1)
 """
-        # Expect nonzero exit, a fatal ReportScopeEnforcementError with the "Refusing
-        # startup" text, and NO "GUARD_IMPORT_FAILED_OK" success marker.
-        self._run_subprocess_expect_absent(script, "GUARD_IMPORT_FAILED_OK")
-        self._run_subprocess_fatal(script, "ReportScopeEnforcementError")
+        proc = self._run_subprocess_raw(script)
+        combined = proc.stdout + "\n" + proc.stderr
+        self.assertEqual(
+            proc.returncode, 3,
+            f"Expected exit 3 (exact fatal failure mode), got {proc.returncode}. Output:\n{combined}",
+        )
+        self.assertIn("EXPECTED_FATAL_GUARD", combined, combined)
+        self.assertNotIn("GUARD_IMPORT_FAILED_OK", combined, combined)
+        self.assertNotIn("WRONG_FAILURE_MODE", combined, combined)
 
-    def _run_subprocess_fatal(self, script, error_fragment):
+    def _run_subprocess_raw(self, script):
+        """Run a subprocess without any assertions; returns the CompletedProcess."""
         runner = os.path.join(frappe.get_app_path("construction", "..", "..", "env", "bin", "python"))
         if not os.path.exists(runner):
             runner = os.path.join(frappe.get_app_path("construction", "..", "..", "env", "bin", "python3"))
         if not os.path.exists(runner):
             runner = os.path.join(os.path.dirname(sys.executable), "python")
-        proc = subprocess.run(
+        return subprocess.run(
             [runner, "-c", script],
             cwd=os.path.expanduser("~/frappe-bench"),
             capture_output=True,
             text=True,
             timeout=120,
         )
-        # Fatal path: the subprocess must exit non-zero (by design) AND the stderr/
-        # stdout must carry the error class text.
-        self.assertNotEqual(proc.returncode, 0, f"expected non-zero exit; output:\n{proc.stdout}\n{proc.stderr}")
-        self.assertIn(error_fragment, proc.stdout + "\n" + proc.stderr,
-                      f"expected '{error_fragment}' in output:\n{proc.stdout}\n{proc.stderr}")
 
     def _run_subprocess_expect(self, script, expected_marker):
         self._run_subprocess(script, assert_marker=expected_marker, want_marker=True, want_rc=0)
@@ -1422,26 +1431,68 @@ except Exception as ex:
             frappe.set_user("Administrator")
 
     def test_switch_theme_rolls_back_on_failure(self):
-        """If a write inside the savepoint fails, earlier writes in the same
-        transaction are rolled back (Atomic rollback, no catch-and-success)."""
+        """TRUE post-write failure injection: the first User desk-theme write
+        EXECUTES and THEN a sentinel exception is raised. The endpoint must
+        re-raise the exact sentinel and roll the executed write back so the
+        previous database value is restored (atomic savepoint rollback, no
+        catch-and-success)."""
         from unittest import mock
 
         from construction.overrides import switch_theme_simple as st
 
+        class _SentinelPostWriteFailure(Exception):
+            pass
+
         frappe.set_user("Administrator")
-        # Pre-existing value.
         prev = frappe.db.get_value("User", "Administrator", "desk_theme") or "Light"
         try:
-            # Force the savepoint body to raise after the first write.
-            with mock.patch.object(st, "_STANDARD_THEMES", frozenset()):
-                # "Dark" is not in the emptied set → the standard branch validates
-                # after writing, so an unknown value is rejected → rollback of the
-                # first set_value.
-                with self.assertRaises(frappe.ValidationError):
+            real_set_value = frappe.db.set_value
+            calls = {"n": 0}
+
+            def _write_then_raise(*args, **kwargs):
+                # Execute the REAL write first (it must succeed), then fail.
+                result = real_set_value(*args, **kwargs)
+                calls["n"] += 1
+                raise _SentinelPostWriteFailure("post-write boom")
+
+            with mock.patch.object(frappe.db, "set_value", side_effect=_write_then_raise):
+                with self.assertRaises(_SentinelPostWriteFailure) as cm:
                     st.switch_theme(theme="Dark")
+            # The sentinel itself must be what propagated (exact re-raise).
+            self.assertIn("post-write boom", str(cm.exception))
+            # The spy proves the real write actually executed before the failure.
+            self.assertEqual(calls["n"], 1, "the User desk-theme write must have executed")
+            # The executed write must have been rolled back to the previous value.
             theme_after = frappe.db.get_value("User", "Administrator", "desk_theme") or "Light"
-            # The earlier write must have been rolled back to the pre-existing value.
-            self.assertEqual(theme_after, prev)
+            self.assertEqual(theme_after, prev, "post-write failure must roll back the write")
+        finally:
+            frappe.db.rollback()
+            frappe.set_user("Administrator")
+
+    def test_legacy_switch_theme_route_enforces_strict_contract(self):
+        """The legacy dotted route (construction.overrides.switch_theme.switch_theme)
+        must be a thin shim delegating to the strict implementation: lowercase /
+        non-enum values are REJECTED (no direct desk_theme write), valid enums are
+        stored with their exact Frappe value, and no interior commit occurs."""
+        from unittest import mock
+
+        from construction.overrides import switch_theme as legacy
+        from construction.overrides import switch_theme_simple as strict
+
+        self.assertIsNot(legacy.switch_theme, strict.switch_theme, "shim must delegate, not alias")
+        frappe.set_user("Administrator")
+        try:
+            with mock.patch("frappe.db.commit", side_effect=AssertionError("interior commit")):
+                # The ninth-pass counterexample: lowercase bypass via the legacy route.
+                with self.assertRaises(frappe.ValidationError):
+                    legacy.switch_theme(theme="dark")
+                # Valid enum through the shim stores the exact value.
+                legacy.switch_theme(theme="Dark")
+            self.assertEqual(frappe.db.get_value("User", "Administrator", "desk_theme"), "Dark")
+            # Guest is denied through the shim as well.
+            frappe.set_user("Guest")
+            with self.assertRaises(frappe.PermissionError):
+                legacy.switch_theme(theme="Dark")
         finally:
             frappe.db.rollback()
             frappe.set_user("Administrator")

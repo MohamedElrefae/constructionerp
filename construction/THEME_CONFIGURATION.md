@@ -34,7 +34,7 @@ switch_theme() in modern_theme_loader_v2.js
 |---|---|
 | `public/js/modern_theme_loader_v2.js` | Theme loader, switcher override, inline CSS injection |
 | `api/theme_api.py` | Server-side theme resolution + persistence APIs |
-| `overrides/switch_theme.py` | Frappe switch_theme override for construction themes |
+| `overrides/switch_theme_simple.py` | Frappe switch_theme override for construction themes (strict contract; `overrides/switch_theme.py` is a deprecated shim delegating to it) |
 | `public/css/modern_theme_tokens.css` | Design tokens (colors, spacing, typography) |
 | `public/css/modern_theme_base.css` | Frappe native element overrides |
 | `public/css/modern_theme_*.css` | Component-specific styles |
