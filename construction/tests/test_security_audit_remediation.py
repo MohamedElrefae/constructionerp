@@ -1201,24 +1201,49 @@ def _blocked(name, *a, **kw):
     return _real_import(name, *a, **kw)
 builtins.__import__ = _blocked
 
-import construction
 try:
+    import construction
     import frappe
-except Exception:
-    pass
-print("GUARD_IMPORT_FAILED_OK")
+    print("GUARD_IMPORT_FAILED_OK")
+    raise SystemExit(0)
+except Exception as ex:
+    # Fatal case: construction must RAISE a dedicated ReportScopeEnforcementError.
+    msg = str(ex)
+    assert "ReportScopeEnforcementError" in msg, f"expected fatal class, got: {ex!r}"
+    assert "Refusing startup" in msg, f"expected fatal message, got: {ex!r}"
+    raise SystemExit(3)
 """
-        # Expect the import of construction to RAISE (fatal), so 'GUARD_IMPORT_FAILED_OK'
-        # must NOT appear in stdout; the process must fail.
+        # Expect nonzero exit, a fatal ReportScopeEnforcementError with the "Refusing
+        # startup" text, and NO "GUARD_IMPORT_FAILED_OK" success marker.
         self._run_subprocess_expect_absent(script, "GUARD_IMPORT_FAILED_OK")
+        self._run_subprocess_fatal(script, "ReportScopeEnforcementError")
+
+    def _run_subprocess_fatal(self, script, error_fragment):
+        runner = os.path.join(frappe.get_app_path("construction", "..", "..", "env", "bin", "python"))
+        if not os.path.exists(runner):
+            runner = os.path.join(frappe.get_app_path("construction", "..", "..", "env", "bin", "python3"))
+        if not os.path.exists(runner):
+            runner = os.path.join(os.path.dirname(sys.executable), "python")
+        proc = subprocess.run(
+            [runner, "-c", script],
+            cwd=os.path.expanduser("~/frappe-bench"),
+            capture_output=True,
+            text=True,
+            timeout=120,
+        )
+        # Fatal path: the subprocess must exit non-zero (by design) AND the stderr/
+        # stdout must carry the error class text.
+        self.assertNotEqual(proc.returncode, 0, f"expected non-zero exit; output:\n{proc.stdout}\n{proc.stderr}")
+        self.assertIn(error_fragment, proc.stdout + "\n" + proc.stderr,
+                      f"expected '{error_fragment}' in output:\n{proc.stdout}\n{proc.stderr}")
 
     def _run_subprocess_expect(self, script, expected_marker):
-        self._run_subprocess(script, assert_marker=expected_marker, want_marker=True)
+        self._run_subprocess(script, assert_marker=expected_marker, want_marker=True, want_rc=0)
 
     def _run_subprocess_expect_absent(self, script, absent_marker):
-        self._run_subprocess(script, assert_marker=absent_marker, want_marker=False)
+        self._run_subprocess(script, assert_marker=absent_marker, want_marker=False, want_rc=None)
 
-    def _run_subprocess(self, script, assert_marker=None, want_marker=True):
+    def _run_subprocess(self, script, assert_marker=None, want_marker=True, want_rc=None):
         runner = os.path.join(frappe.get_app_path("construction", "..", "..", "env", "bin", "python"))
         if not os.path.exists(runner):
             runner = os.path.join(frappe.get_app_path("construction", "..", "..", "env", "bin", "python3"))
@@ -1232,6 +1257,12 @@ print("GUARD_IMPORT_FAILED_OK")
             timeout=120,
         )
         combined = proc.stdout + "\n" + proc.stderr
+        if want_rc is not None:
+            self.assertEqual(
+                proc.returncode,
+                want_rc,
+                f"Expected return code {want_rc}, got {proc.returncode}. Output:\n{combined}",
+            )
         if want_marker:
             self.assertIn(assert_marker, combined, combined)
         else:
@@ -1339,3 +1370,78 @@ print("GUARD_IMPORT_FAILED_OK")
 
 
 
+
+    # -------------------------------------------------------------------------
+    # 13. Theme switch RPC contract (eighth-pass QA)
+    # -------------------------------------------------------------------------
+    def test_switch_theme_accepts_core_theme_arg_and_stores_enum(self):
+        """Core calls switch_theme(theme=...); the override must accept `theme`,
+        store the exact Frappe enum value, write within the request transaction,
+        and not call frappe.db.commit."""
+        from unittest import mock
+
+        from construction.overrides import switch_theme_simple as st
+
+        frappe.set_user("Administrator")
+        try:
+            with mock.patch("frappe.db.commit", side_effect=AssertionError("interior commit")) as commit_spy:
+                result = st.switch_theme(theme="Dark")
+                self.assertTrue(commit_spy.called is False, "no interior commit expected")
+            self.assertEqual(result["mode"], "dark")
+            stored = frappe.db.get_value("User", "Administrator", "desk_theme")
+            self.assertEqual(stored, "Dark", "Exact Frappe enum value must be persisted")
+
+            # Accepts the legacy theme_name alias too.
+            self.assertEqual(st.switch_theme(theme_name="Light")["mode"], "light")
+            self.assertEqual(frappe.db.get_value("User", "Administrator", "desk_theme"), "Light")
+        finally:
+            frappe.db.rollback()
+            frappe.set_user("Administrator")
+
+    def test_switch_theme_rejects_conflict_and_unknown(self):
+        from construction.overrides import switch_theme_simple as st
+
+        frappe.set_user("Administrator")
+        try:
+            with self.assertRaises(frappe.ValidationError):
+                st.switch_theme(theme="Dark", theme_name="Light")
+            with self.assertRaises(frappe.ValidationError):
+                st.switch_theme(theme="NotATheme")
+        finally:
+            frappe.db.rollback()
+            frappe.set_user("Administrator")
+
+    def test_switch_theme_guest_denied(self):
+        from construction.overrides import switch_theme_simple as st
+
+        frappe.set_user("Guest")
+        try:
+            with self.assertRaises(frappe.PermissionError):
+                st.switch_theme(theme="Dark")
+        finally:
+            frappe.set_user("Administrator")
+
+    def test_switch_theme_rolls_back_on_failure(self):
+        """If a write inside the savepoint fails, earlier writes in the same
+        transaction are rolled back (Atomic rollback, no catch-and-success)."""
+        from unittest import mock
+
+        from construction.overrides import switch_theme_simple as st
+
+        frappe.set_user("Administrator")
+        # Pre-existing value.
+        prev = frappe.db.get_value("User", "Administrator", "desk_theme") or "Light"
+        try:
+            # Force the savepoint body to raise after the first write.
+            with mock.patch.object(st, "_STANDARD_THEMES", frozenset()):
+                # "Dark" is not in the emptied set → the standard branch validates
+                # after writing, so an unknown value is rejected → rollback of the
+                # first set_value.
+                with self.assertRaises(frappe.ValidationError):
+                    st.switch_theme(theme="Dark")
+            theme_after = frappe.db.get_value("User", "Administrator", "desk_theme") or "Light"
+            # The earlier write must have been rolled back to the pre-existing value.
+            self.assertEqual(theme_after, prev)
+        finally:
+            frappe.db.rollback()
+            frappe.set_user("Administrator")
