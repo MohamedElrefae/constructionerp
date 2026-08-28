@@ -1089,7 +1089,7 @@ def setup_variation_order_custom_field():
     elif not frappe.db.get_value("Custom Field", field_name, "search_index"):
         # Reconcile legacy field metadata so DocType matches the physical index.
         frappe.db.set_value("Custom Field", field_name, "search_index", 1)
-        frappe.clear_doctype_cache("Material Request")
+        frappe.clear_cache(doctype="Material Request")
 
     try:
         frappe.db.add_index("Material Request", ["custom_variation_order"], "idx_mr_custom_vo")
