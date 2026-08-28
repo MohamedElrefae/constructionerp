@@ -81,6 +81,30 @@ def download_cost_database_template(mode="blank"):
     )
 
 
+def _read_request_payload():
+    """Return the request payload as a dict-like with ``.get`` support.
+
+    Handles all three transports Frappe clients use:
+      - JSON body (Desk/React clients): ``frappe.request.data`` parses to a dict
+      - form-encoded POST: ``frappe.form_dict``
+      - empty body with query params: ``frappe.form_dict``
+
+    The previous implementation did ``frappe.parse_json(frappe.request.data)
+    if frappe.request.data else frappe.form_dict``, which 500-ed on EVERY POST
+    because ``request.data`` is raw bytes (never empty for a POST) and
+    ``parse_json`` returns the bytes unchanged for non-JSON bodies.
+    """
+    raw = getattr(frappe.request, "data", None) if getattr(frappe, "request", None) else None
+    if raw:
+        try:
+            parsed = frappe.parse_json(raw)
+        except Exception:
+            parsed = None
+        if isinstance(parsed, dict):
+            return parsed
+    return frappe.form_dict
+
+
 @frappe.whitelist()
 def reprice_cost_analyses():
     """Whitelisted endpoint to bulk reprice BOQ Cost Analysis detail rows.
@@ -103,7 +127,7 @@ def reprice_cost_analyses():
     if not frappe.has_permission("BOQ Cost Analysis", "write"):
         frappe.throw(_("Insufficient permission to reprice analyses"), frappe.PermissionError)
 
-    data = frappe.parse_json(frappe.request.data) if frappe.request.data else frappe.form_dict
+    data = _read_request_payload()
 
     result = bulk_reprice_analyses(
         boq_header=data.get("boq_header"),
