@@ -1,3 +1,5 @@
+import frappe
+
 __version__ = "0.0.5"
 
 # ─────────────────────────────────────────────────────────────────────────
@@ -109,12 +111,16 @@ try:
                         "language": lang,
                         "ct_is_catalog_entry": 0,
                     },
+                    order_by="modified asc, creation asc, name asc",
+                    limit_page_length=0,
                 )
             except Exception:
                 rows = frappe.get_all(
                     "Translation",
                     fields=["source_text", "translated_text", "context"],
                     filters={"language": lang},
+                    order_by="modified asc, creation asc, name asc",
+                    limit_page_length=0,
                 )
 
             for t in rows:

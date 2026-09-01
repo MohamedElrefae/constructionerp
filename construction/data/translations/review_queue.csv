@@ -3,3 +3,17 @@ frappe,City,المدينة,unreviewed
 frappe,Country,البلد,unreviewed
 frappe,Phone,الهاتف,unreviewed
 frappe,Postal Code,الرمز البريدي,unreviewed
+frappe,Add Child,إضافة فرع,approved
+frappe,Child Item,عنصر فرعي,approved
+frappe,Add script for Child Table,إضافة برنامج نصي للجدول الفرعي,approved
+frappe,Select Child Table,تحديد الجدول الفرعي,approved
+frappe,Cannot create a {0} against a child document: {1},لا يمكن إنشاء {0} لمستند فرعي: {1},approved
+frappe,Parent-to-child or child-to-different-child grouping is not allowed.,لا يُسمح بالتجميع من السجل الرئيسي إلى سجل فرعي أو من سجل فرعي إلى سجل فرعي آخر.,approved
+frappe,{0} of {1} ({2} rows with children),{0} من {1} ({2} صفوف تحتوي على سجلات فرعية),approved
+erpnext,"Can not filter based on Child Account, if grouped by Account",لا يمكن التصفية حسب حساب فرعي عند التجميع حسب الحساب,approved
+erpnext,Child Docname,اسم المستند الفرعي,approved
+erpnext,Invalid Child Procedure,الإجراء الفرعي غير صالح,approved
+erpnext,Left Child,الفرع الأيسر,approved
+erpnext,Right Child,الفرع الأيمن,approved
+erpnext,Child Row Reference,مرجع الصف الفرعي,approved
+erpnext,Stock Entry Child,سطر حركة المخزون الفرعي,approved
