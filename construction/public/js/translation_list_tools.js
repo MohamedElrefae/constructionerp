@@ -97,7 +97,7 @@
 			});
 		});
 
-		listview.page.add_menu_item(__("Show Manual Overrides Only"), () => {
+		listview.page.add_menu_item(__("Show Existing Runtime Translations"), () => {
 			listview.filter_area.clear().then(() => {
 				addFilter(listview, ["Translation", "ct_is_catalog_entry", "=", 0]);
 			});
@@ -249,7 +249,7 @@
 					const stats = r?.message || {};
 					frappe.confirm(
 						__(
-							"Sync every msgid from frappe/erpnext/construction .po files into Translation rows? Current catalog rows: {0}. Manual overrides are never overwritten.",
+							"Sync every msgid from frappe/erpnext/construction .po files into Translation rows? Current catalog rows: {0}. Existing runtime translations are never overwritten.",
 							[stats.catalog_entries || 0]
 						),
 						() => {

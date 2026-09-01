@@ -288,7 +288,7 @@ def import_review_queue(dry_run=True, enable_status_gate=False):
 # Mirrors every msgid from the installed apps' Arabic .po files into
 # ``tabTranslation`` so translators can edit any UI string from the standard
 # list. Catalog rows are excluded from the runtime cache by the monkey-patch
-# in ``construction.__init__``; only manual overrides affect the UI.
+# in ``construction.__init__``; only existing runtime translations affect the UI.
 # ─────────────────────────────────────────────────────────────────────────
 
 from pathlib import Path
@@ -311,7 +311,7 @@ def _po_path_for_app(app):
 
 @frappe.whitelist()
 def get_translation_catalog_stats():
-    """Return counts of catalog vs manual Arabic Translation rows."""
+    """Return counts of catalog vs existing runtime Arabic Translation rows."""
     frappe.only_for("System Manager")
     _ensure_catalog_fields()
     return {
@@ -319,7 +319,7 @@ def get_translation_catalog_stats():
         "catalog_entries": frappe.db.count(
             "Translation", {"language": "ar", "ct_is_catalog_entry": 1}
         ),
-        "manual_overrides": frappe.db.count(
+        "existing_runtime_translations": frappe.db.count(
             "Translation", {"language": "ar", "ct_is_catalog_entry": 0}
         ),
         "missing_arabic": frappe.db.count(
@@ -339,7 +339,7 @@ def sync_translation_catalog(apps=None, dry_run=True, batch_size=1000):
 
     - Creates a row for every msgid that does not yet exist.
     - Updates ``ct_po_translation`` when the .po file changes.
-    - Never overwrites a manual override's ``translated_text``.
+    - Never overwrites an existing runtime translation's ``translated_text``.
     - Catalog rows are excluded from the runtime translation cache.
 
     New catalog rows are bulk-inserted for performance (tens of thousands of

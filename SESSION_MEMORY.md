@@ -358,9 +358,9 @@
 - **Worked on:** Ground-up fix so every ERPNext/Frappe UI string appears in the Translation list and can be filtered/edited.
 - **Decisions:**
   - Seed every msgid from `frappe/erpnext/construction` Arabic `.po` files into `tabTranslation` as catalog rows.
-  - Catalog rows are excluded from the runtime translation cache via monkey-patch in `construction.__init__`; only manual overrides affect the UI, so worker memory stays flat.
+  - Catalog rows are excluded from the runtime translation cache via monkey-patch in `construction.__init__`; only existing runtime translations affect the UI, so worker memory stays flat.
   - Editing a catalog row auto-promotes it to a manual override (`override_doctype_class` on `Translation`).
-  - New list-view tools: Search Arabic Text, Show Catalog Entries, Show Manual Overrides, Show Empty PO Arabic, Sync Translation Catalog.
+  - New list-view tools: Search Arabic Text, Show Catalog Entries, Show Existing Runtime Translations, Show Empty PO Arabic, Sync Translation Catalog.
   - v8_4 patch fixes tree-view Arabic translations (`Add Child` → `إضافة فرع`, etc.).
   - v8_5 patch creates custom fields and seeds the catalog.
 - **Files changed:**

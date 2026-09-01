@@ -89,8 +89,9 @@ try:
     def _get_user_translations_excluding_catalog(lang: str):
         """Load user translations but skip auto-created catalog entries.
 
-        Manual overrides (ct_is_catalog_entry = 0 or field absent) are still
-        loaded, so user edits take precedence over the .mo catalog.
+		Existing runtime translations (ct_is_catalog_entry = 0 or field absent)
+		are still loaded, so established translations and user edits take
+		precedence over the .mo catalog.
         """
         if not lang:
             return {}

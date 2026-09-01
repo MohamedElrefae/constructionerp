@@ -164,7 +164,7 @@ app_include_js = [
     # Sidebar accordion — only one section stays expanded at a time
     "/assets/construction/js/sidebar_accordion.js?v=1",
     # Translation workflow helpers (Arabic backlog + filters + catalog workbench)
-    "/assets/construction/js/translation_list_tools.js?v=5",
+    "/assets/construction/js/translation_list_tools.js?v=6",
     # BOQ integration filters for transaction child rows
     "/assets/construction/js/boq_filters.js?v=8",
     # Filter fix — injected AFTER Frappe bundle to win cascade order
@@ -216,7 +216,7 @@ override_whitelisted_methods = {
     "frappe.translate.update_translations_for_source": "construction.api.translation_tools.update_translations_for_source_safe",
 }
 
-# Override core Translation controller so catalog rows auto-promote to manual overrides on edit.
+# Override core Translation controller so edited catalog rows become runtime translations.
 override_doctype_class = {
     "Translation": "construction.overrides.translation.CustomTranslation",
 }
