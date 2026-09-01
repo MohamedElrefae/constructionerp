@@ -2,7 +2,11 @@ import json
 
 import frappe
 from frappe import _
-from frappe.translate import strip_html_tags
+from frappe.translate import (
+	MERGED_TRANSLATION_KEY,
+	USER_TRANSLATION_KEY,
+	strip_html_tags,
+)
 from frappe.utils import cint
 
 
@@ -276,3 +280,276 @@ def import_review_queue(dry_run=True, enable_status_gate=False):
                 created += 1
 
     return {"total": total, "created": created, "updated": updated, "skipped": skipped, "preview": preview}
+
+
+# ─────────────────────────────────────────────────────────────────────────
+# Translation Catalog Workbench
+#
+# Mirrors every msgid from the installed apps' Arabic .po files into
+# ``tabTranslation`` so translators can edit any UI string from the standard
+# list. Catalog rows are excluded from the runtime cache by the monkey-patch
+# in ``construction.__init__``; only manual overrides affect the UI.
+# ─────────────────────────────────────────────────────────────────────────
+
+from pathlib import Path
+
+from babel.messages.pofile import read_po
+
+CATALOG_APPS = ["frappe", "erpnext", "construction"]
+
+
+def _ensure_catalog_fields():
+    """Create custom fields lazily (safe to call from API/patch)."""
+    from construction.setup.translation_catalog_fields import ensure_custom_fields
+
+    ensure_custom_fields()
+
+
+def _po_path_for_app(app):
+    return Path(frappe.get_app_path(app)) / "locale" / "ar.po"
+
+
+@frappe.whitelist()
+def get_translation_catalog_stats():
+    """Return counts of catalog vs manual Arabic Translation rows."""
+    frappe.only_for("System Manager")
+    _ensure_catalog_fields()
+    return {
+        "total_ar": frappe.db.count("Translation", {"language": "ar"}),
+        "catalog_entries": frappe.db.count(
+            "Translation", {"language": "ar", "ct_is_catalog_entry": 1}
+        ),
+        "manual_overrides": frappe.db.count(
+            "Translation", {"language": "ar", "ct_is_catalog_entry": 0}
+        ),
+        "missing_arabic": frappe.db.count(
+            "Translation",
+            {
+                "language": "ar",
+                "ct_is_catalog_entry": 1,
+                "ct_po_translation": ["in", ["", None]],
+            },
+        ),
+    }
+
+
+@frappe.whitelist()
+def sync_translation_catalog(apps=None, dry_run=True, batch_size=1000):
+    """Seed/update Translation rows from each app's Arabic .po catalog.
+
+    - Creates a row for every msgid that does not yet exist.
+    - Updates ``ct_po_translation`` when the .po file changes.
+    - Never overwrites a manual override's ``translated_text``.
+    - Catalog rows are excluded from the runtime translation cache.
+
+    New catalog rows are bulk-inserted for performance (tens of thousands of
+    msgids can be synced in seconds rather than minutes).
+    """
+    frappe.only_for("System Manager")
+    _ensure_catalog_fields()
+
+    apps = apps or CATALOG_APPS
+    if isinstance(apps, str):
+        apps = frappe.parse_json(apps)
+
+    dry_run = bool(dry_run)
+    batch_size = cint(batch_size) or 1000
+
+    # Build an index of existing catalog rows.
+    existing_catalog = {}
+    for row in frappe.get_all(
+        "Translation",
+        filters={"language": "ar", "ct_is_catalog_entry": 1},
+        fields=["name", "source_text", "context", "ct_app"],
+        limit_page_length=0,
+    ):
+        key = (row.source_text, row.context or "", row.ct_app or "")
+        existing_catalog[key] = row.name
+
+    created = updated = 0
+    synced_at = frappe.utils.now()
+    pending_inserts = []
+
+    fields = [
+        "name",
+        "language",
+        "source_text",
+        "translated_text",
+        "context",
+        "owner",
+        "creation",
+        "modified",
+        "modified_by",
+        "docstatus",
+        "idx",
+        "ct_is_catalog_entry",
+        "ct_app",
+        "ct_po_translation",
+        "ct_review_status",
+        "ct_catalog_synced_at",
+    ]
+
+    def _flush_inserts():
+        if not pending_inserts:
+            return
+        frappe.db.bulk_insert(
+            "Translation",
+            fields,
+            pending_inserts,
+            chunk_size=batch_size,
+        )
+        pending_inserts.clear()
+
+    for app in apps:
+        po_path = _po_path_for_app(app)
+        if not po_path.exists():
+            continue
+
+        with po_path.open("rb") as handle:
+            catalog = read_po(handle, locale="ar")
+
+        for message in catalog:
+            if not message.id:
+                continue
+
+            source_text = message.id
+            context = message.context or ""
+            po_translation = message.string or ""
+            key = (source_text, context, app)
+
+            if key in existing_catalog:
+                name = existing_catalog[key]
+                current_po = frappe.db.get_value("Translation", name, "ct_po_translation")
+                if current_po != po_translation:
+                    if not dry_run:
+                        frappe.db.set_value(
+                            "Translation",
+                            name,
+                            {
+                                "ct_po_translation": po_translation,
+                                "ct_catalog_synced_at": synced_at,
+                                "ct_review_status": "Approved" if po_translation else "Pending",
+                            },
+                            update_modified=False,
+                        )
+                    updated += 1
+            else:
+                if not dry_run:
+                    pending_inserts.append(
+                        (
+                            frappe.generate_hash(length=10),
+                            "ar",
+                            source_text,
+                            po_translation,
+                            context,
+                            frappe.session.user,
+                            synced_at,
+                            synced_at,
+                            frappe.session.user,
+                            0,
+                            0,
+                            1,
+                            app,
+                            po_translation,
+                            "Approved" if po_translation else "Pending",
+                            synced_at,
+                        )
+                    )
+                created += 1
+
+            if len(pending_inserts) >= batch_size and not dry_run:
+                _flush_inserts()
+
+    if not dry_run:
+        _flush_inserts()
+        frappe.db.commit()
+        frappe.cache.delete_value(
+            keys=["bootinfo", USER_TRANSLATION_KEY, MERGED_TRANSLATION_KEY]
+        )
+        frappe.clear_cache()
+
+    return {
+        "apps": apps,
+        "created": created,
+        "updated": updated,
+        "dry_run": dry_run,
+    }
+
+
+@frappe.whitelist()
+def reset_catalog_overrides(apps=None, dry_run=True):
+    """Remove catalog rows that no longer exist in the .po files (cleanup).
+
+    Use this sparingly; it is mainly for removing strings that were deleted
+    from upstream catalogs.
+    """
+    frappe.only_for("System Manager")
+    _ensure_catalog_fields()
+
+    apps = apps or CATALOG_APPS
+    if isinstance(apps, str):
+        apps = frappe.parse_json(apps)
+
+    dry_run = bool(dry_run)
+
+    # Collect all current catalog keys from .po files.
+    valid_keys = set()
+    for app in apps:
+        po_path = _po_path_for_app(app)
+        if not po_path.exists():
+            continue
+        with po_path.open("rb") as handle:
+            catalog = read_po(handle, locale="ar")
+        for message in catalog:
+            if message.id:
+                valid_keys.add((message.id, message.context or "", app))
+
+    to_delete = []
+    for row in frappe.get_all(
+        "Translation",
+        filters={"language": "ar", "ct_is_catalog_entry": 1},
+        fields=["name", "source_text", "context", "ct_app"],
+        limit_page_length=0,
+    ):
+        key = (row.source_text, row.context or "", row.ct_app or "")
+        if key not in valid_keys:
+            to_delete.append(row.name)
+
+    if not dry_run:
+        for name in to_delete:
+            frappe.db.delete("Translation", name)
+        frappe.db.commit()
+        frappe.cache.delete_value(
+            keys=["bootinfo", USER_TRANSLATION_KEY, MERGED_TRANSLATION_KEY]
+        )
+        frappe.clear_cache()
+
+    return {"deleted": len(to_delete), "dry_run": dry_run}
+
+
+@frappe.whitelist()
+def search_arabic_translations(search_text, limit=100):
+    """Search both source_text and translated_text for the given string."""
+    frappe.only_for("System Manager")
+    if not search_text:
+        return []
+
+    limit = max(1, min(cint(limit) or 100, 1000))
+    like = f"%{search_text}%"
+
+    rows = frappe.db.sql(
+        """
+        SELECT name, source_text, translated_text, context, ct_app, ct_is_catalog_entry
+        FROM `tabTranslation`
+        WHERE language = 'ar'
+          AND (
+              source_text LIKE %(search)s
+              OR translated_text LIKE %(search)s
+          )
+        ORDER BY ct_is_catalog_entry ASC, modified DESC
+        LIMIT %(limit)s
+        """,
+        {"search": like, "limit": limit},
+        as_dict=True,
+    )
+    return rows

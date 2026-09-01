@@ -14,3 +14,5 @@ construction.patches.v8_0.add_item_construction_fields
 construction.patches.v8_1.deprecate_costitem_plantresource
 construction.patches.v8_2.enable_global_export_menu_default
 construction.patches.v8_3.fix_arabic_domain_terminology
+construction.patches.v8_4.fix_tree_view_arabic_translations
+construction.patches.v8_5.seed_translation_catalog

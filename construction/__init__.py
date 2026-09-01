@@ -71,3 +71,63 @@ else:
             f"and protected reports are DENIED. {_guard_error}",
             "Scope Report Monkeypatch",
         )
+
+
+# ─────────────────────────────────────────────────────────────────────────
+# Translation catalog runtime optimization.
+#
+# The Construction app can seed every msgid from the Arabic .po files into
+# ``tabTranslation`` as catalog rows so users can edit any UI string from the
+# Translation list. Catalog rows are not needed at runtime because the .mo
+# catalog already supplies the same strings, so we exclude them from the
+# in-memory user-translations dict to keep worker memory flat and boot fast.
+# ─────────────────────────────────────────────────────────────────────────
+
+try:
+    import frappe.translate as _translate
+
+    def _get_user_translations_excluding_catalog(lang: str):
+        """Load user translations but skip auto-created catalog entries.
+
+        Manual overrides (ct_is_catalog_entry = 0 or field absent) are still
+        loaded, so user edits take precedence over the .mo catalog.
+        """
+        if not lang:
+            return {}
+
+        def _read_from_db():
+            user_translations = {}
+            # Field may not exist until the first migrate/patch runs; fall back
+            # gracefully to an unfiltered read if the column is missing. At that
+            # point no catalog rows exist yet, so the result is equivalent.
+            try:
+                rows = frappe.get_all(
+                    "Translation",
+                    fields=["source_text", "translated_text", "context"],
+                    filters={
+                        "language": lang,
+                        "ct_is_catalog_entry": 0,
+                    },
+                )
+            except Exception:
+                rows = frappe.get_all(
+                    "Translation",
+                    fields=["source_text", "translated_text", "context"],
+                    filters={"language": lang},
+                )
+
+            for t in rows:
+                key = t.source_text
+                if t.context:
+                    key += ":" + t.context
+                user_translations[key] = t.translated_text
+            return user_translations
+
+        return frappe.cache.hget(
+            _translate.USER_TRANSLATION_KEY, lang, generator=_read_from_db
+        )
+
+    _translate.get_user_translations = _get_user_translations_excluding_catalog
+except Exception:
+    # Do not block startup if the optimization cannot be installed.
+    pass

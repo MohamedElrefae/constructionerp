@@ -21,6 +21,29 @@
 			});
 		});
 
+		// ── Arabic-text search (filter by translated_text) ──
+		listview.page.add_menu_item(__("Search Arabic Text"), () => {
+			frappe.prompt(
+				[
+					{
+						fieldname: "search_text",
+						label: __("Arabic text to search"),
+						fieldtype: "Data",
+						reqd: 1,
+					},
+				],
+				(values) => {
+					const text = (values.search_text || "").trim();
+					if (!text) return;
+					listview.filter_area.clear().then(() => {
+						addFilter(listview, ["Translation", "translated_text", "like", `%${text}%`]);
+					});
+				},
+				__("Search Arabic Text"),
+				__("Search")
+			);
+		});
+
 		listview.page.add_menu_item(__("Filter Missing Arabic"), () => {
 			frappe
 				.call({
@@ -65,6 +88,27 @@
 						}
 					});
 				});
+		});
+
+		// ── Catalog workbench filters ──
+		listview.page.add_menu_item(__("Show Catalog Entries"), () => {
+			listview.filter_area.clear().then(() => {
+				addFilter(listview, ["Translation", "ct_is_catalog_entry", "=", 1]);
+			});
+		});
+
+		listview.page.add_menu_item(__("Show Manual Overrides Only"), () => {
+			listview.filter_area.clear().then(() => {
+				addFilter(listview, ["Translation", "ct_is_catalog_entry", "=", 0]);
+			});
+		});
+
+		listview.page.add_menu_item(__("Show Empty PO Arabic"), () => {
+			listview.filter_area.clear().then(() => {
+				addFilter(listview, ["Translation", "ct_is_catalog_entry", "=", 1]).then(() => {
+					addFilter(listview, ["Translation", "ct_po_translation", "in", ["", null]]);
+				});
+			});
 		});
 
 		listview.page.add_menu_item(__("Normalize Translation Keys"), () => {
@@ -184,6 +228,44 @@
 										message: __(
 											"Imported {0} created, {1} updated from {2} total",
 											[rr.created || 0, rr.updated || 0, rr.total || 0]
+										),
+										indicator: "green",
+									});
+									listview.refresh();
+								});
+						}
+					);
+				});
+		});
+
+		// ── Catalog sync (System Manager only) ──
+		listview.page.add_menu_item(__("Sync Translation Catalog"), () => {
+			frappe
+				.call({
+					method: "construction.api.translation_tools.get_translation_catalog_stats",
+					freeze: true,
+				})
+				.then((r) => {
+					const stats = r?.message || {};
+					frappe.confirm(
+						__(
+							"Sync every msgid from frappe/erpnext/construction .po files into Translation rows? Current catalog rows: {0}. Manual overrides are never overwritten.",
+							[stats.catalog_entries || 0]
+						),
+						() => {
+							frappe
+								.call({
+									method: "construction.api.translation_tools.sync_translation_catalog",
+									args: { dry_run: 0, batch_size: 1000 },
+									freeze: true,
+									freeze_message: __("Syncing translation catalog..."),
+								})
+								.then((res2) => {
+									const rr = res2?.message || {};
+									frappe.show_alert({
+										message: __(
+											"Catalog sync: {0} created, {1} updated",
+											[rr.created || 0, rr.updated || 0]
 										),
 										indicator: "green",
 									});

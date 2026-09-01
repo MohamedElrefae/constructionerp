@@ -38,6 +38,11 @@ CRITICAL_OVERRIDES = {
     "Header Link": "رابط رأس جدول الكميات",
     "Item Classification": "تصنيف البند",
     "Other Fields": "حقول أخرى",
+    # Tree-view shared action labels (Chart of Accounts, Cost Center, etc.)
+    "Add Child": "إضافة فرع",
+    "Edit": "تعديل",
+    "Rename": "إعادة تسمية",
+    "Delete": "حذف",
     '<span class="h4"><b>Reports & Masters</b></span>': '<span class="h4"><b>التقارير والبيانات الرئيسية</b></span>',
     '<span class="h4"><b>Reports &amp; Masters</b></span>': '<span class="h4"><b>التقارير والبيانات الرئيسية</b></span>',
     '<span class="h4"><b>Masters &amp; Reports</b></span>': '<span class="h4"><b>البيانات الرئيسية والتقارير</b></span>',

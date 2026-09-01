@@ -163,8 +163,8 @@ app_include_js = [
     "/assets/construction/js/ct_list_view_config.js?v=1",
     # Sidebar accordion — only one section stays expanded at a time
     "/assets/construction/js/sidebar_accordion.js?v=1",
-    # Translation workflow helpers (Arabic backlog + filters)
-    "/assets/construction/js/translation_list_tools.js?v=4",
+    # Translation workflow helpers (Arabic backlog + filters + catalog workbench)
+    "/assets/construction/js/translation_list_tools.js?v=5",
     # BOQ integration filters for transaction child rows
     "/assets/construction/js/boq_filters.js?v=8",
     # Filter fix — injected AFTER Frappe bundle to win cascade order
@@ -214,6 +214,11 @@ override_whitelisted_methods = {
     "frappe.core.doctype.user.user.switch_theme": "construction.overrides.switch_theme_simple.switch_theme",
     "frappe.utils.change_log.show_update_popup": "construction.api.theme_api.ignore_update_popup",
     "frappe.translate.update_translations_for_source": "construction.api.translation_tools.update_translations_for_source_safe",
+}
+
+# Override core Translation controller so catalog rows auto-promote to manual overrides on edit.
+override_doctype_class = {
+    "Translation": "construction.overrides.translation.CustomTranslation",
 }
 
 # Boot session hook - inject user's theme into frappe.boot

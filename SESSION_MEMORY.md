@@ -353,3 +353,27 @@
 - **Test results:** 34 tests pass (test_option_a_plus + test_migration_survival)
 - **Migration:** `bench --site v16.localhost migrate` completed for WP7 DocType
 - **Next steps:** WP5 (Project-wise Profitability) blocked on client confirmation
+
+### Session 2026-09-01 — Agent: OpenCode (Translation Catalog Workbench)
+- **Worked on:** Ground-up fix so every ERPNext/Frappe UI string appears in the Translation list and can be filtered/edited.
+- **Decisions:**
+  - Seed every msgid from `frappe/erpnext/construction` Arabic `.po` files into `tabTranslation` as catalog rows.
+  - Catalog rows are excluded from the runtime translation cache via monkey-patch in `construction.__init__`; only manual overrides affect the UI, so worker memory stays flat.
+  - Editing a catalog row auto-promotes it to a manual override (`override_doctype_class` on `Translation`).
+  - New list-view tools: Search Arabic Text, Show Catalog Entries, Show Manual Overrides, Show Empty PO Arabic, Sync Translation Catalog.
+  - v8_4 patch fixes tree-view Arabic translations (`Add Child` → `إضافة فرع`, etc.).
+  - v8_5 patch creates custom fields and seeds the catalog.
+- **Files changed:**
+  - `construction/__init__.py` — runtime cache optimization monkey-patch
+  - `construction/overrides/translation.py` — `CustomTranslation` controller
+  - `construction/setup/translation_catalog_fields.py` — catalog custom fields
+  - `construction/api/translation_tools.py` — `sync_translation_catalog`, `reset_catalog_overrides`, `search_arabic_translations`, `get_translation_catalog_stats`
+  - `construction/public/js/translation_list_tools.js` — workbench menu actions (v5)
+  - `construction/hooks.py` — `override_doctype_class`, bump `translation_list_tools.js?v=5`
+  - `construction/patches/v8_4/fix_tree_view_arabic_translations.py` — tree action fixes
+  - `construction/patches/v8_5/seed_translation_catalog.py` — catalog seed patch
+  - `construction/patches.txt` — registered v8_4 + v8_5
+  - `construction/insert_translations.py` — added `Add Child`/`Edit`/`Rename`/`Delete` to `CRITICAL_OVERRIDES`
+  - `apps/frappe/frappe/locale/ar.po` — filled `msgstr` for `Add Child`
+- **Verification:** All Python/JS modules pass `py_compile` / `node --check`; `.po` scan shows ~15,106 msgids across apps.
+- **Next steps:** Run `bench --site v16.localhost migrate` to apply patches; hard-refresh browser to load updated list-view tools.
