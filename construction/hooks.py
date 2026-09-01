@@ -278,7 +278,7 @@ after_install = [
     "construction.install.seed_construction_roles",
     "construction.install.seed_form_layout_profiles",
     "construction.install.setup_item_construction_fields",
-    "construction.insert_translations.execute",
+    "construction.translation_service.import_released_overrides_hook",
 ]
 
 # After migrate - ensure system themes and workspace sidebar exist
@@ -299,7 +299,7 @@ after_migrate = [
     "construction.install.seed_construction_roles",
     "construction.install.seed_form_layout_profiles",
     "construction.install.setup_item_construction_fields",
-    "construction.insert_translations.execute",
+    "construction.translation_service.import_released_overrides_hook",
 ]
 
 # Patches

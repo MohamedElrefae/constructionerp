@@ -64,39 +64,68 @@ class TestTranslationCatalogRuntime(FrappeTestCase):
 
         catalog.translated_text = "الترجمة المعتمدة"
         catalog.save(ignore_permissions=True)
+        catalog.reload()
 
         self.assertEqual(catalog.ct_is_catalog_entry, 1)
-        runtime_rows = frappe.get_all(
-            "Translation",
-            filters={
-                "language": "ar",
-                "source_text": self.source_text,
-                "ct_is_catalog_entry": 0,
-            },
-            fields=["name", "translated_text"],
-        )
-        self.assertEqual(len(runtime_rows), 1)
-        self.assertEqual(runtime_rows[0].translated_text, "الترجمة المعتمدة")
-
-        catalog.translated_text = "الترجمة المعتمدة الثانية"
-        catalog.save(ignore_permissions=True)
-        runtime_rows = frappe.get_all(
-            "Translation",
-            filters={
-                "language": "ar",
-                "source_text": self.source_text,
-                "ct_is_catalog_entry": 0,
-            },
-            fields=["translated_text"],
-        )
-        self.assertEqual(len(runtime_rows), 1)
-        self.assertEqual(runtime_rows[0].translated_text, "الترجمة المعتمدة الثانية")
-
-        frappe_translate.clear_cache()
-        self.assertEqual(
-            frappe_translate.get_user_translations("ar").get(self.source_text),
-            "الترجمة المعتمدة الثانية",
-        )
+        if frappe.db.has_column("Translation", "ct_proposed_translation"):
+            self.assertEqual(catalog.ct_proposed_translation, "الترجمة المعتمدة")
+            self.assertEqual(catalog.ct_review_status, "Pending")
+            runtime_rows = frappe.get_all(
+                "Translation",
+                filters={
+                    "language": "ar",
+                    "source_text": self.source_text,
+                    "ct_is_catalog_entry": 0,
+                },
+                fields=["name", "translated_text"],
+            )
+            self.assertEqual(len(runtime_rows), 0)
+            catalog.translated_text = "الترجمة المعتمدة الثانية"
+            catalog.save(ignore_permissions=True)
+            catalog.reload()
+            self.assertEqual(catalog.ct_proposed_translation, "الترجمة المعتمدة الثانية")
+            runtime_rows = frappe.get_all(
+                "Translation",
+                filters={
+                    "language": "ar",
+                    "source_text": self.source_text,
+                    "ct_is_catalog_entry": 0,
+                },
+                fields=["translated_text"],
+            )
+            self.assertEqual(len(runtime_rows), 0)
+            frappe_translate.clear_cache()
+            self.assertIsNone(frappe_translate.get_user_translations("ar").get(self.source_text))
+        else:
+            runtime_rows = frappe.get_all(
+                "Translation",
+                filters={
+                    "language": "ar",
+                    "source_text": self.source_text,
+                    "ct_is_catalog_entry": 0,
+                },
+                fields=["name", "translated_text"],
+            )
+            self.assertEqual(len(runtime_rows), 1)
+            self.assertEqual(runtime_rows[0].translated_text, "الترجمة المعتمدة")
+            catalog.translated_text = "الترجمة المعتمدة الثانية"
+            catalog.save(ignore_permissions=True)
+            runtime_rows = frappe.get_all(
+                "Translation",
+                filters={
+                    "language": "ar",
+                    "source_text": self.source_text,
+                    "ct_is_catalog_entry": 0,
+                },
+                fields=["translated_text"],
+            )
+            self.assertEqual(len(runtime_rows), 1)
+            self.assertEqual(runtime_rows[0].translated_text, "الترجمة المعتمدة الثانية")
+            frappe_translate.clear_cache()
+            self.assertEqual(
+                frappe_translate.get_user_translations("ar").get(self.source_text),
+                "الترجمة المعتمدة الثانية",
+            )
 
     def test_approved_review_updates_list_value_but_preserves_po_baseline(self):
         catalog = self._insert_translation(

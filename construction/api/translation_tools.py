@@ -11,10 +11,12 @@ from frappe.utils import cint
 
 
 def _normalize_source_text(source: str) -> str:
-    source = (source or "").strip()
+    source = source or ""
     if not source:
         return ""
-    return strip_html_tags(source)
+    if "\x00" in source:
+        frappe.throw("source_text contains embedded NUL")
+    return source
 
 
 def _get_runtime_translation_rows(language, source_text, context=""):
@@ -54,42 +56,22 @@ def upsert_runtime_translation(
 ):
     """Create or update the canonical DB row that overrides app catalogs.
 
-    Catalog rows remain intact as reviewable .po mirrors. Repeated edits update
-    the newest existing runtime row instead of producing another duplicate.
+    Delegates to the canonical translation_service for digest/origin handling.
     """
-    source_text = _normalize_source_text(source_text)
-    translated_text = (translated_text or "").strip()
-    context = context or ""
-    if not source_text or not language or not translated_text:
-        return None
+    from construction.translation_service import upsert_runtime_translation as _svc
 
-    rows = _get_runtime_translation_rows(language, source_text, context)
-    if rows:
-        doc = frappe.get_doc("Translation", rows[0].name)
-        doc.translated_text = translated_text
-    else:
-        doc = frappe.get_doc(
-            {
-                "doctype": "Translation",
-                "language": language,
-                "source_text": source_text,
-                "translated_text": translated_text,
-                "context": context,
-            }
-        )
-
-    if doc.meta.has_field("ct_is_catalog_entry"):
-        doc.ct_is_catalog_entry = 0
-    if app and doc.meta.has_field("ct_app"):
-        doc.ct_app = app
-    if doc.meta.has_field("ct_review_status"):
-        doc.ct_review_status = "Approved"
-
-    if doc.is_new():
-        doc.insert(ignore_permissions=ignore_permissions)
-    else:
-        doc.save(ignore_permissions=ignore_permissions)
-    return doc.name
+    res = _svc(
+        source_text,
+        translated_text,
+        language=language,
+        context=context or "",
+        app=app,
+        origin="Site Override",
+        ignore_permissions=ignore_permissions,
+    )
+    if isinstance(res, dict):
+        return res.get("name")
+    return res
 
 
 def _get_catalog_translation_rows(language, source_text, context="", app=None):
@@ -480,6 +462,9 @@ def sync_translation_catalog(apps=None, dry_run=True, batch_size=1000):
     synced_at = frappe.utils.now()
     pending_inserts = []
 
+    has_digest = frappe.db.has_column("Translation", "ct_key_digest")
+    has_norm = frappe.db.has_column("Translation", "ct_search_normalized")
+    has_origin = frappe.db.has_column("Translation", "ct_origin")
     fields = [
         "name",
         "language",
@@ -498,6 +483,12 @@ def sync_translation_catalog(apps=None, dry_run=True, batch_size=1000):
         "ct_review_status",
         "ct_catalog_synced_at",
     ]
+    if has_digest:
+        fields.append("ct_key_digest")
+    if has_norm:
+        fields.append("ct_search_normalized")
+    if has_origin:
+        fields.append("ct_origin")
 
     def _flush_inserts():
         if not pending_inserts:
@@ -532,39 +523,58 @@ def sync_translation_catalog(apps=None, dry_run=True, batch_size=1000):
                 current_po = frappe.db.get_value("Translation", name, "ct_po_translation")
                 if current_po != po_translation:
                     if not dry_run:
-                        frappe.db.set_value(
-                            "Translation",
-                            name,
-                            {
-                                "ct_po_translation": po_translation,
-                                "ct_catalog_synced_at": synced_at,
-                                "ct_review_status": "Approved" if po_translation else "Pending",
-                            },
-                            update_modified=False,
-                        )
+                        upd = {
+                            "ct_po_translation": po_translation,
+                            "ct_catalog_synced_at": synced_at,
+                            "ct_review_status": "Approved" if po_translation else "Pending",
+                        }
+                        if has_digest:
+                            import hashlib, json as _json
+
+                            payload = ["ar", source_text, context or "", app or "", "catalog"]
+                            raw = _json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
+                            upd["ct_key_digest"] = hashlib.sha256(raw.encode("utf-8")).hexdigest()
+                        if has_norm:
+                            upd["ct_search_normalized"] = strip_html_tags(source_text or "").strip()
+                        frappe.db.set_value("Translation", name, upd, update_modified=False)
                     updated += 1
             else:
                 if not dry_run:
-                    pending_inserts.append(
-                        (
-                            frappe.generate_hash(length=10),
-                            "ar",
-                            source_text,
-                            po_translation,
-                            context,
-                            frappe.session.user,
-                            synced_at,
-                            synced_at,
-                            frappe.session.user,
-                            0,
-                            0,
-                            1,
-                            app,
-                            po_translation,
-                            "Approved" if po_translation else "Pending",
-                            synced_at,
-                        )
+                    import hashlib, json as _json
+
+                    digest_val = ""
+                    norm_val = ""
+                    if has_digest:
+                        payload = ["ar", source_text, context or "", app or "", "catalog"]
+                        raw = _json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
+                        digest_val = hashlib.sha256(raw.encode("utf-8")).hexdigest()
+                    if has_norm:
+                        norm_val = strip_html_tags(source_text or "").strip()
+                    row_tuple = (
+                        frappe.generate_hash(length=10),
+                        "ar",
+                        source_text,
+                        po_translation,
+                        context,
+                        frappe.session.user,
+                        synced_at,
+                        synced_at,
+                        frappe.session.user,
+                        0,
+                        0,
+                        1,
+                        app,
+                        po_translation,
+                        "Approved" if po_translation else "Pending",
+                        synced_at,
                     )
+                    if has_digest:
+                        row_tuple += (digest_val,)
+                    if has_norm:
+                        row_tuple += (norm_val,)
+                    if has_origin:
+                        row_tuple += ("",)
+                    pending_inserts.append(row_tuple)
                 created += 1
 
             if len(pending_inserts) >= batch_size and not dry_run:

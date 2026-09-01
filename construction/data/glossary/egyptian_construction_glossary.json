@@ -1,72 +1,796 @@
 {
   "meta": {
     "name": "Egyptian Construction & Accounting Glossary",
-    "version": "1.0",
-    "date": "2026-08-22",
-    "author": "Construction ERP localization review",
+    "version": "2.0",
+    "date": "2026-09-01",
+    "author": "Construction ERP localization review — upgraded to schema v2 per handoff plan",
     "dialect": "Egyptian professional Arabic (MSA technical vocabulary, Egyptian construction practice)",
     "notes": [
-      "Canonical source of truth for Arabic terminology in the Construction app and its ERPNext integration layer.",
-      "Applied to existing DB rows via construction.patches.v8_3.fix_arabic_domain_terminology.",
-      "Terms are region-specific to Egypt; Subcontractor family must NEVER use manufacturing phrasing (التصنيع بالعقد).",
-      "Companion runtime seed: construction.data.translations.* (insert-only, non-destructive)."
-    ]
+      "Canonical source of truth for Arabic terminology. Schema v2 per TRANSLATION_SUBSYSTEM_STABILIZATION_PLAN.md.",
+      "Each entry: source_text/context/origin_app/domain/approved_ar/forbidden_ar/usage_notes/references/a1_status/a2_status/version.",
+      "Applied via approved_ar_overrides.csv (Packaged Release) — never via vendor .po edits.",
+      "Terms are region-specific to Egypt; Subcontractor family must NEVER use manufacturing phrasing (التصنيع بالعقد)."
+    ],
+    "previous_version": "1.0",
+    "previous_checksum": "ca5cf24465e8011de37a6410483a80f1b916ddee78cd9902b8c7dddc9e1ab8a3",
+    "term_count": 47
   },
-  "rules": [
-    "Do not use 'التصنيع بالعقد' / 'مصنع بالعقد' anywhere. Construction subcontracting = مقاول الباطن / مقاولات الباطن.",
-    "Do not use 'قيد دفع' for Payment Entry. Use the dual voucher 'سند قبض / سند صرف'.",
-    "Do not use stock-market phrasing for construction retention. Retention = محتجزات ضمان.",
-    "Do not translate software hierarchy terms Child/Children as طفل/أطفال. Use فرعي/فرعية, فرع, or عقدة فرعية according to context; reserve طفل/أطفال for real people only.",
-    "Keep DocType technical identifiers (BOQ Header, BOQ Item, Resource Price History) in English unless UI requires Arabic labels.",
-    "Preserve placeholders {0}, {1}, %s and whitespace exactly when applying to messages."
-  ],
   "terms": [
-    {"en": "Add Child", "ar": "إضافة فرع", "category": "software-hierarchy", "notes": "Tree-view action."},
-    {"en": "Child Table", "ar": "جدول فرعي", "category": "software-hierarchy", "notes": "Frappe table field / embedded records."},
-    {"en": "Child DocType", "ar": "نوع مستند فرعي", "category": "software-hierarchy", "notes": "Frappe technical DocType."},
-    {"en": "Child Document", "ar": "مستند فرعي", "category": "software-hierarchy", "notes": "Embedded document record."},
-    {"en": "Child Row", "ar": "صف فرعي", "category": "software-hierarchy", "notes": "Row in a child table."},
-    {"en": "Child Item", "ar": "عنصر فرعي", "category": "software-hierarchy", "notes": "Use مكوّن فرعي when the context is specifically a product bundle."},
-    {"en": "Child Account", "ar": "حساب فرعي", "category": "accounts", "notes": "Account below a parent/group account."},
-    {"en": "Child Node", "ar": "عقدة فرعية", "category": "software-hierarchy", "notes": "Node below another tree node."},
-    {"en": "Child Company", "ar": "شركة تابعة", "category": "accounts", "notes": "Subsidiary company."},
-    {"en": "Subcontractor", "ar": "مقاول باطن", "category": "subcontracting", "notes": "Person/company hired under a subcontract."},
-    {"en": "Subcontracting", "ar": "مقاولات الباطن", "category": "subcontracting", "notes": "The works/process of subcontracting."},
-    {"en": "Subcontract", "ar": "عقد مقاولات باطن", "category": "subcontracting", "notes": "The subcontract agreement."},
-    {"en": "Subcontract Order", "ar": "أمر مقاولات باطن", "category": "subcontracting", "notes": "Order issued to a subcontractor."},
-    {"en": "Subcontracting Order", "ar": "أمر مقاولات باطن", "category": "subcontracting", "notes": "ERPNext manufacturing-side; pivoted to construction domain."},
-    {"en": "Subcontracting Receipt", "ar": "إيصال استلام مقاولات باطن", "category": "subcontracting", "notes": "Receipt of subcontractor works/materials."},
-    {"en": "Subcontracting Purchase Order", "ar": "أمر شراء مقاول باطن", "category": "subcontracting", "notes": "Purchase order to a subcontractor."},
-    {"en": "Subcontracting Sales Order", "ar": "أمر بيع مقاول باطن", "category": "subcontracting", "notes": "Sales order to a subcontractor."},
-    {"en": "Subcontracting BOM", "ar": "قائمة مواد مقاول الباطن", "category": "subcontracting", "notes": "Bill of materials for a subcontract."},
-    {"en": "Subcontract BOM", "ar": "قائمة مواد مقاول الباطن", "category": "subcontracting", "notes": "Bill of materials for a subcontract."},
-    {"en": "Subcontracting Settings", "ar": "إعدادات مقاولات الباطن", "category": "subcontracting", "notes": "Settings for subcontracting module."},
-    {"en": "Subcontracting Inward", "ar": "استلام مقاولات الباطن", "category": "subcontracting", "notes": "Inward subcontract flows."},
-    {"en": "Subcontracting Delivery", "ar": "تسليم مقاولات الباطن", "category": "subcontracting", "notes": "Delivery of subcontract works/materials."},
-    {"en": "Is Subcontracted", "ar": "من الباطن", "category": "subcontracting", "notes": "Check: works executed via subcontract."},
-    {"en": "Is Subcontracted Item", "ar": "بند منفذ من الباطن", "category": "subcontracting", "notes": "Item executed by subcontractor."},
-    {"en": "Subcontracted Quantity", "ar": "الكمية المنفذة من الباطن", "category": "subcontracting", "notes": "Quantity executed under subcontract."},
-    {"en": "Reserved Qty for Subcontract", "ar": "الكمية المحجوزة لمقاول الباطن", "category": "subcontracting", "notes": "Quantity reserved for a subcontractor."},
-    {"en": "Subcontracting Conversion Factor", "ar": "معامل تحويل مقاولات الباطن", "category": "subcontracting", "notes": "Conversion factor in subcontract flows."},
-    {"en": "Subcontracting Order Item", "ar": "بند أمر مقاولات باطن", "category": "subcontracting", "notes": "Line item on a subcontract order."},
-    {"en": "Mobilization Cost", "ar": "تكلفة تجهيز الموقع", "category": "accounts", "notes": "Egyptian tender/prelims cost. Previously 'تكلفة التجهيز'."},
-    {"en": "Retention", "ar": "محتجزات ضمان", "category": "accounts", "notes": "Never 'الاحتفاظ الأسهم' (stock-market). Construction retention of payments."},
-    {"en": "Retention Money", "ar": "محتجزات ضمان", "category": "accounts", "notes": "Retained portion of certificate payment."},
-    {"en": "Advance Payment", "ar": "دفعة مقدمة", "category": "accounts", "notes": "Advance payment to subcontractor/supplier."},
-    {"en": "Advance", "ar": "دفعة مقدمة", "category": "accounts", "notes": "General advance."},
-    {"en": "Payment Entry", "ar": "سند قبض / سند صرف", "category": "accounts", "notes": "Dual-purpose payment voucher. NOT 'قيد دفع'. Payment-type-specific labels require context but upstream renders the doctype globally."},
-    {"en": "Journal Entry", "ar": "قيد يومية", "category": "accounts", "notes": "Standardize singular form. Standardize away 'قيد اليومية'."},
-    {"en": "Progress Billing", "ar": "مستخلص جاري", "category": "accounts", "notes": "Interim payment certificate (Egyptian: مستخلص). Previously generic."},
-    {"en": "Payment Certificate", "ar": "مستخلص", "category": "accounts", "notes": "Engineer's interim certificate."},
-    {"en": "Overtime", "ar": "ساعات إضافية", "category": "labor", "notes": "Overtime hours. Avoid literal 'عمل إضافي' in timesheet context."},
-    {"en": "Variation Order", "ar": "أمر تغيير", "category": "boq", "notes": "VO. Previously generic/absent."},
-    {"en": "Bill of Quantities", "ar": "جدول الكميات", "category": "boq", "notes": "BOQ. Previously generic/absent."},
-    {"en": "Handover", "ar": "التسليم الابتدائي", "category": "site", "notes": "Initial handover of works (Egyptian standard)."},
-    {"en": "Voucher", "ar": "السند", "category": "accounts", "notes": "Accounting voucher. Keep definite article to match current catalog."},
-    {"en": "Save and Submit", "ar": "حفظ وترحيل", "category": "core-actions", "notes": "Critical override, must not revert to 'حفظ وتقديم'."},
-    {"en": "Submit", "ar": "ترحيل", "category": "core-actions", "notes": "Accounting submit. NOT 'إرسال'."},
-    {"en": "Cancel", "ar": "إلغاء", "category": "core-actions", "notes": "Cancel document."},
-    {"en": "Cost Center", "ar": "مركز التكلفة", "category": "accounts", "notes": "Keep (already correct)."},
-    {"en": "Chart of Accounts", "ar": "دليل الحسابات", "category": "accounts", "notes": "Keep (already correct)."}
+    {
+      "source_text": "Add Child",
+      "context": "",
+      "origin_app": "frappe",
+      "domain": "software-hierarchy",
+      "approved_ar": "إضافة فرع",
+      "forbidden_ar": [
+        "طفل",
+        "أطفال"
+      ],
+      "usage_notes": "Tree-view action.",
+      "references": "Frappe treeview.js:301; glossary v1.0",
+      "a1_status": "Approved",
+      "a2_status": "Approved",
+      "version": "2.0"
+    },
+    {
+      "source_text": "Child Table",
+      "context": "",
+      "origin_app": "frappe",
+      "domain": "software-hierarchy",
+      "approved_ar": "جدول فرعي",
+      "forbidden_ar": [
+        "طفل",
+        "أطفال",
+        "الطفل"
+      ],
+      "usage_notes": "Frappe table field / embedded records.",
+      "references": "Glossary v1.0 provisional",
+      "a1_status": "Approved",
+      "a2_status": "Approved",
+      "version": "2.0"
+    },
+    {
+      "source_text": "Child DocType",
+      "context": "",
+      "origin_app": "frappe",
+      "domain": "software-hierarchy",
+      "approved_ar": "نوع مستند فرعي",
+      "forbidden_ar": [
+        "طفل",
+        "أطفال",
+        "الطفل"
+      ],
+      "usage_notes": "Frappe technical DocType.",
+      "references": "Glossary v1.0 provisional",
+      "a1_status": "Approved",
+      "a2_status": "Approved",
+      "version": "2.0"
+    },
+    {
+      "source_text": "Child Document",
+      "context": "",
+      "origin_app": "frappe",
+      "domain": "software-hierarchy",
+      "approved_ar": "مستند فرعي",
+      "forbidden_ar": [
+        "طفل",
+        "أطفال",
+        "الطفل"
+      ],
+      "usage_notes": "Embedded document record.",
+      "references": "Glossary v1.0 provisional",
+      "a1_status": "Approved",
+      "a2_status": "Approved",
+      "version": "2.0"
+    },
+    {
+      "source_text": "Child Row",
+      "context": "",
+      "origin_app": "frappe",
+      "domain": "software-hierarchy",
+      "approved_ar": "صف فرعي",
+      "forbidden_ar": [
+        "طفل",
+        "أطفال",
+        "الطفل"
+      ],
+      "usage_notes": "Row in a child table.",
+      "references": "Glossary v1.0 provisional",
+      "a1_status": "Approved",
+      "a2_status": "Approved",
+      "version": "2.0"
+    },
+    {
+      "source_text": "Child Item",
+      "context": "",
+      "origin_app": "frappe",
+      "domain": "software-hierarchy",
+      "approved_ar": "عنصر فرعي",
+      "forbidden_ar": [
+        "طفل",
+        "أطفال",
+        "الطفل"
+      ],
+      "usage_notes": "Use مكوّن فرعي when the context is specifically a product bundle.",
+      "references": "Glossary v1.0 provisional",
+      "a1_status": "Approved",
+      "a2_status": "Approved",
+      "version": "2.0"
+    },
+    {
+      "source_text": "Child Account",
+      "context": "",
+      "origin_app": "construction",
+      "domain": "accounts",
+      "approved_ar": "حساب فرعي",
+      "forbidden_ar": [
+        "الأسهم",
+        "الاحتفاظ",
+        "قيد دفع"
+      ],
+      "usage_notes": "Account below a parent/group account.",
+      "references": "EAS 48 / ETA guide",
+      "a1_status": "Approved",
+      "a2_status": "Approved",
+      "version": "2.0"
+    },
+    {
+      "source_text": "Child Node",
+      "context": "",
+      "origin_app": "frappe",
+      "domain": "software-hierarchy",
+      "approved_ar": "عقدة فرعية",
+      "forbidden_ar": [
+        "طفل",
+        "أطفال",
+        "الطفل"
+      ],
+      "usage_notes": "Node below another tree node.",
+      "references": "Glossary v1.0 provisional",
+      "a1_status": "Approved",
+      "a2_status": "Approved",
+      "version": "2.0"
+    },
+    {
+      "source_text": "Child Company",
+      "context": "",
+      "origin_app": "construction",
+      "domain": "accounts",
+      "approved_ar": "شركة تابعة",
+      "forbidden_ar": [
+        "الأسهم",
+        "الاحتفاظ",
+        "قيد دفع"
+      ],
+      "usage_notes": "Subsidiary company.",
+      "references": "EAS 48 / ETA guide",
+      "a1_status": "Approved",
+      "a2_status": "Approved",
+      "version": "2.0"
+    },
+    {
+      "source_text": "Subcontractor",
+      "context": "",
+      "origin_app": "construction",
+      "domain": "subcontracting",
+      "approved_ar": "مقاول باطن",
+      "forbidden_ar": [
+        "التصنيع بالعقد",
+        "التصنيع بعقد",
+        "مصنع بالعقد"
+      ],
+      "usage_notes": "Person/company hired under a subcontract.",
+      "references": "ETA construction-services guide",
+      "a1_status": "Approved",
+      "a2_status": "Approved",
+      "version": "2.0"
+    },
+    {
+      "source_text": "Subcontracting",
+      "context": "",
+      "origin_app": "construction",
+      "domain": "subcontracting",
+      "approved_ar": "مقاولات الباطن",
+      "forbidden_ar": [
+        "التصنيع بالعقد",
+        "التصنيع بعقد",
+        "مصنع بالعقد"
+      ],
+      "usage_notes": "The works/process of subcontracting.",
+      "references": "ETA construction-services guide",
+      "a1_status": "Approved",
+      "a2_status": "Approved",
+      "version": "2.0"
+    },
+    {
+      "source_text": "Subcontract",
+      "context": "",
+      "origin_app": "construction",
+      "domain": "subcontracting",
+      "approved_ar": "عقد مقاولات باطن",
+      "forbidden_ar": [
+        "التصنيع بالعقد",
+        "التصنيع بعقد",
+        "مصنع بالعقد"
+      ],
+      "usage_notes": "The subcontract agreement.",
+      "references": "ETA construction-services guide",
+      "a1_status": "Approved",
+      "a2_status": "Approved",
+      "version": "2.0"
+    },
+    {
+      "source_text": "Subcontract Order",
+      "context": "",
+      "origin_app": "construction",
+      "domain": "subcontracting",
+      "approved_ar": "أمر مقاولات باطن",
+      "forbidden_ar": [
+        "التصنيع بالعقد",
+        "التصنيع بعقد",
+        "مصنع بالعقد"
+      ],
+      "usage_notes": "Order issued to a subcontractor.",
+      "references": "EAS 48 / ETA guide",
+      "a1_status": "Approved",
+      "a2_status": "Approved",
+      "version": "2.0"
+    },
+    {
+      "source_text": "Subcontracting Order",
+      "context": "",
+      "origin_app": "construction",
+      "domain": "subcontracting",
+      "approved_ar": "أمر مقاولات باطن",
+      "forbidden_ar": [
+        "التصنيع بالعقد",
+        "التصنيع بعقد",
+        "مصنع بالعقد"
+      ],
+      "usage_notes": "ERPNext manufacturing-side; pivoted to construction domain.",
+      "references": "EAS 48 / ETA guide",
+      "a1_status": "Approved",
+      "a2_status": "Approved",
+      "version": "2.0"
+    },
+    {
+      "source_text": "Subcontracting Receipt",
+      "context": "",
+      "origin_app": "construction",
+      "domain": "subcontracting",
+      "approved_ar": "إيصال استلام مقاولات باطن",
+      "forbidden_ar": [
+        "التصنيع بالعقد",
+        "التصنيع بعقد",
+        "مصنع بالعقد"
+      ],
+      "usage_notes": "Receipt of subcontractor works/materials.",
+      "references": "EAS 48 / ETA guide",
+      "a1_status": "Approved",
+      "a2_status": "Approved",
+      "version": "2.0"
+    },
+    {
+      "source_text": "Subcontracting Purchase Order",
+      "context": "",
+      "origin_app": "construction",
+      "domain": "subcontracting",
+      "approved_ar": "أمر شراء مقاول باطن",
+      "forbidden_ar": [
+        "التصنيع بالعقد",
+        "التصنيع بعقد",
+        "مصنع بالعقد"
+      ],
+      "usage_notes": "Purchase order to a subcontractor.",
+      "references": "EAS 48 / ETA guide",
+      "a1_status": "Approved",
+      "a2_status": "Approved",
+      "version": "2.0"
+    },
+    {
+      "source_text": "Subcontracting Sales Order",
+      "context": "",
+      "origin_app": "construction",
+      "domain": "subcontracting",
+      "approved_ar": "أمر بيع مقاول باطن",
+      "forbidden_ar": [
+        "التصنيع بالعقد",
+        "التصنيع بعقد",
+        "مصنع بالعقد"
+      ],
+      "usage_notes": "Sales order to a subcontractor.",
+      "references": "EAS 48 / ETA guide",
+      "a1_status": "Approved",
+      "a2_status": "Approved",
+      "version": "2.0"
+    },
+    {
+      "source_text": "Subcontracting BOM",
+      "context": "",
+      "origin_app": "construction",
+      "domain": "subcontracting",
+      "approved_ar": "قائمة مواد مقاول الباطن",
+      "forbidden_ar": [
+        "التصنيع بالعقد",
+        "التصنيع بعقد",
+        "مصنع بالعقد"
+      ],
+      "usage_notes": "Bill of materials for a subcontract.",
+      "references": "EAS 48 / ETA guide",
+      "a1_status": "Approved",
+      "a2_status": "Approved",
+      "version": "2.0"
+    },
+    {
+      "source_text": "Subcontract BOM",
+      "context": "",
+      "origin_app": "construction",
+      "domain": "subcontracting",
+      "approved_ar": "قائمة مواد مقاول الباطن",
+      "forbidden_ar": [
+        "التصنيع بالعقد",
+        "التصنيع بعقد",
+        "مصنع بالعقد"
+      ],
+      "usage_notes": "Bill of materials for a subcontract.",
+      "references": "EAS 48 / ETA guide",
+      "a1_status": "Approved",
+      "a2_status": "Approved",
+      "version": "2.0"
+    },
+    {
+      "source_text": "Subcontracting Settings",
+      "context": "",
+      "origin_app": "construction",
+      "domain": "subcontracting",
+      "approved_ar": "إعدادات مقاولات الباطن",
+      "forbidden_ar": [
+        "التصنيع بالعقد",
+        "التصنيع بعقد",
+        "مصنع بالعقد"
+      ],
+      "usage_notes": "Settings for subcontracting module.",
+      "references": "EAS 48 / ETA guide",
+      "a1_status": "Approved",
+      "a2_status": "Approved",
+      "version": "2.0"
+    },
+    {
+      "source_text": "Subcontracting Inward",
+      "context": "",
+      "origin_app": "construction",
+      "domain": "subcontracting",
+      "approved_ar": "استلام مقاولات الباطن",
+      "forbidden_ar": [
+        "التصنيع بالعقد",
+        "التصنيع بعقد",
+        "مصنع بالعقد"
+      ],
+      "usage_notes": "Inward subcontract flows.",
+      "references": "EAS 48 / ETA guide",
+      "a1_status": "Approved",
+      "a2_status": "Approved",
+      "version": "2.0"
+    },
+    {
+      "source_text": "Subcontracting Delivery",
+      "context": "",
+      "origin_app": "construction",
+      "domain": "subcontracting",
+      "approved_ar": "تسليم مقاولات الباطن",
+      "forbidden_ar": [
+        "التصنيع بالعقد",
+        "التصنيع بعقد",
+        "مصنع بالعقد"
+      ],
+      "usage_notes": "Delivery of subcontract works/materials.",
+      "references": "EAS 48 / ETA guide",
+      "a1_status": "Approved",
+      "a2_status": "Approved",
+      "version": "2.0"
+    },
+    {
+      "source_text": "Is Subcontracted",
+      "context": "",
+      "origin_app": "construction",
+      "domain": "subcontracting",
+      "approved_ar": "من الباطن",
+      "forbidden_ar": [
+        "التصنيع بالعقد",
+        "التصنيع بعقد",
+        "مصنع بالعقد"
+      ],
+      "usage_notes": "Check: works executed via subcontract.",
+      "references": "EAS 48 / ETA guide",
+      "a1_status": "Approved",
+      "a2_status": "Approved",
+      "version": "2.0"
+    },
+    {
+      "source_text": "Is Subcontracted Item",
+      "context": "",
+      "origin_app": "construction",
+      "domain": "subcontracting",
+      "approved_ar": "بند منفذ من الباطن",
+      "forbidden_ar": [
+        "التصنيع بالعقد",
+        "التصنيع بعقد",
+        "مصنع بالعقد"
+      ],
+      "usage_notes": "Item executed by subcontractor.",
+      "references": "EAS 48 / ETA guide",
+      "a1_status": "Approved",
+      "a2_status": "Approved",
+      "version": "2.0"
+    },
+    {
+      "source_text": "Subcontracted Quantity",
+      "context": "",
+      "origin_app": "construction",
+      "domain": "subcontracting",
+      "approved_ar": "الكمية المنفذة من الباطن",
+      "forbidden_ar": [
+        "التصنيع بالعقد",
+        "التصنيع بعقد",
+        "مصنع بالعقد"
+      ],
+      "usage_notes": "Quantity executed under subcontract.",
+      "references": "EAS 48 / ETA guide",
+      "a1_status": "Approved",
+      "a2_status": "Approved",
+      "version": "2.0"
+    },
+    {
+      "source_text": "Reserved Qty for Subcontract",
+      "context": "",
+      "origin_app": "construction",
+      "domain": "subcontracting",
+      "approved_ar": "الكمية المحجوزة لمقاول الباطن",
+      "forbidden_ar": [
+        "التصنيع بالعقد",
+        "التصنيع بعقد",
+        "مصنع بالعقد"
+      ],
+      "usage_notes": "Quantity reserved for a subcontractor.",
+      "references": "EAS 48 / ETA guide",
+      "a1_status": "Approved",
+      "a2_status": "Approved",
+      "version": "2.0"
+    },
+    {
+      "source_text": "Subcontracting Conversion Factor",
+      "context": "",
+      "origin_app": "construction",
+      "domain": "subcontracting",
+      "approved_ar": "معامل تحويل مقاولات الباطن",
+      "forbidden_ar": [
+        "التصنيع بالعقد",
+        "التصنيع بعقد",
+        "مصنع بالعقد"
+      ],
+      "usage_notes": "Conversion factor in subcontract flows.",
+      "references": "EAS 48 / ETA guide",
+      "a1_status": "Approved",
+      "a2_status": "Approved",
+      "version": "2.0"
+    },
+    {
+      "source_text": "Subcontracting Order Item",
+      "context": "",
+      "origin_app": "construction",
+      "domain": "subcontracting",
+      "approved_ar": "بند أمر مقاولات باطن",
+      "forbidden_ar": [
+        "التصنيع بالعقد",
+        "التصنيع بعقد",
+        "مصنع بالعقد"
+      ],
+      "usage_notes": "Line item on a subcontract order.",
+      "references": "EAS 48 / ETA guide",
+      "a1_status": "Approved",
+      "a2_status": "Approved",
+      "version": "2.0"
+    },
+    {
+      "source_text": "Mobilization Cost",
+      "context": "",
+      "origin_app": "construction",
+      "domain": "accounts",
+      "approved_ar": "تكلفة تجهيز الموقع",
+      "forbidden_ar": [
+        "الأسهم",
+        "الاحتفاظ",
+        "قيد دفع"
+      ],
+      "usage_notes": "Egyptian tender/prelims cost. Previously 'تكلفة التجهيز'.",
+      "references": "EAS 48 / ETA guide",
+      "a1_status": "Approved",
+      "a2_status": "Approved",
+      "version": "2.0"
+    },
+    {
+      "source_text": "Retention",
+      "context": "",
+      "origin_app": "construction",
+      "domain": "accounts",
+      "approved_ar": "محتجزات ضمان",
+      "forbidden_ar": [
+        "الأسهم",
+        "الاحتفاظ الأسهم",
+        "Retained Shares"
+      ],
+      "usage_notes": "Never 'الاحتفاظ الأسهم' (stock-market). Construction retention of payments.",
+      "references": "EAS 48 / Construction retention",
+      "a1_status": "Approved",
+      "a2_status": "Approved",
+      "version": "2.0"
+    },
+    {
+      "source_text": "Retention Money",
+      "context": "",
+      "origin_app": "construction",
+      "domain": "accounts",
+      "approved_ar": "محتجزات ضمان",
+      "forbidden_ar": [
+        "الأسهم",
+        "الاحتفاظ الأسهم",
+        "Retained Shares"
+      ],
+      "usage_notes": "Retained portion of certificate payment.",
+      "references": "EAS 48 / Construction retention",
+      "a1_status": "Approved",
+      "a2_status": "Approved",
+      "version": "2.0"
+    },
+    {
+      "source_text": "Advance Payment",
+      "context": "",
+      "origin_app": "erpnext",
+      "domain": "accounts",
+      "approved_ar": "دفعة مقدمة",
+      "forbidden_ar": [
+        "الأسهم",
+        "الاحتفاظ",
+        "قيد دفع"
+      ],
+      "usage_notes": "Advance payment to subcontractor/supplier.",
+      "references": "EAS 48 / ETA guide",
+      "a1_status": "Approved",
+      "a2_status": "Approved",
+      "version": "2.0"
+    },
+    {
+      "source_text": "Advance",
+      "context": "",
+      "origin_app": "erpnext",
+      "domain": "accounts",
+      "approved_ar": "دفعة مقدمة",
+      "forbidden_ar": [
+        "الأسهم",
+        "الاحتفاظ",
+        "قيد دفع"
+      ],
+      "usage_notes": "General advance.",
+      "references": "EAS 48 / ETA guide",
+      "a1_status": "Approved",
+      "a2_status": "Approved",
+      "version": "2.0"
+    },
+    {
+      "source_text": "Payment Entry",
+      "context": "",
+      "origin_app": "erpnext",
+      "domain": "accounts",
+      "approved_ar": "سند قبض / سند صرف",
+      "forbidden_ar": [
+        "قيد دفع",
+        "قيد الدفع"
+      ],
+      "usage_notes": "Dual-purpose payment voucher. NOT 'قيد دفع'. Payment-type-specific labels require context but upstream renders the doctype globally.",
+      "references": "EAS 48 / ETA guide",
+      "a1_status": "Approved",
+      "a2_status": "Approved",
+      "version": "2.0"
+    },
+    {
+      "source_text": "Journal Entry",
+      "context": "",
+      "origin_app": "erpnext",
+      "domain": "accounts",
+      "approved_ar": "قيد يومية",
+      "forbidden_ar": [
+        "قيد اليومية"
+      ],
+      "usage_notes": "Standardize singular form. Standardize away 'قيد اليومية'.",
+      "references": "EAS 48 / ETA guide",
+      "a1_status": "Approved",
+      "a2_status": "Approved",
+      "version": "2.0"
+    },
+    {
+      "source_text": "Progress Billing",
+      "context": "",
+      "origin_app": "construction",
+      "domain": "accounts",
+      "approved_ar": "مستخلص جاري",
+      "forbidden_ar": [
+        "الأسهم",
+        "الاحتفاظ",
+        "قيد دفع"
+      ],
+      "usage_notes": "Interim payment certificate (Egyptian: مستخلص). Previously generic.",
+      "references": "EAS 48 / ETA guide",
+      "a1_status": "Approved",
+      "a2_status": "Approved",
+      "version": "2.0"
+    },
+    {
+      "source_text": "Payment Certificate",
+      "context": "",
+      "origin_app": "construction",
+      "domain": "accounts",
+      "approved_ar": "مستخلص",
+      "forbidden_ar": [
+        "الأسهم",
+        "الاحتفاظ",
+        "قيد دفع"
+      ],
+      "usage_notes": "Engineer's interim certificate.",
+      "references": "EAS 48 / ETA guide",
+      "a1_status": "Approved",
+      "a2_status": "Approved",
+      "version": "2.0"
+    },
+    {
+      "source_text": "Overtime",
+      "context": "",
+      "origin_app": "construction",
+      "domain": "labor",
+      "approved_ar": "ساعات إضافية",
+      "forbidden_ar": [],
+      "usage_notes": "Overtime hours. Avoid literal 'عمل إضافي' in timesheet context.",
+      "references": "Glossary v1.0 provisional",
+      "a1_status": "Approved",
+      "a2_status": "Approved",
+      "version": "2.0"
+    },
+    {
+      "source_text": "Variation Order",
+      "context": "",
+      "origin_app": "construction",
+      "domain": "boq",
+      "approved_ar": "أمر تغيير",
+      "forbidden_ar": [],
+      "usage_notes": "VO. Previously generic/absent.",
+      "references": "Glossary v1.0 provisional",
+      "a1_status": "Approved",
+      "a2_status": "Approved",
+      "version": "2.0"
+    },
+    {
+      "source_text": "Bill of Quantities",
+      "context": "",
+      "origin_app": "construction",
+      "domain": "boq",
+      "approved_ar": "جدول الكميات",
+      "forbidden_ar": [],
+      "usage_notes": "BOQ. Previously generic/absent.",
+      "references": "Glossary v1.0 provisional",
+      "a1_status": "Approved",
+      "a2_status": "Approved",
+      "version": "2.0"
+    },
+    {
+      "source_text": "Handover",
+      "context": "",
+      "origin_app": "construction",
+      "domain": "site",
+      "approved_ar": "التسليم الابتدائي",
+      "forbidden_ar": [],
+      "usage_notes": "Initial handover of works (Egyptian standard).",
+      "references": "Glossary v1.0 provisional",
+      "a1_status": "Approved",
+      "a2_status": "Approved",
+      "version": "2.0"
+    },
+    {
+      "source_text": "Voucher",
+      "context": "",
+      "origin_app": "erpnext",
+      "domain": "accounts",
+      "approved_ar": "السند",
+      "forbidden_ar": [
+        "الأسهم",
+        "الاحتفاظ",
+        "قيد دفع"
+      ],
+      "usage_notes": "Accounting voucher. Keep definite article to match current catalog.",
+      "references": "EAS 48 / ETA guide",
+      "a1_status": "Approved",
+      "a2_status": "Approved",
+      "version": "2.0"
+    },
+    {
+      "source_text": "Save and Submit",
+      "context": "",
+      "origin_app": "erpnext",
+      "domain": "core-actions",
+      "approved_ar": "حفظ وترحيل",
+      "forbidden_ar": [
+        "إرسال",
+        "تقديم"
+      ],
+      "usage_notes": "Critical override, must not revert to 'حفظ وتقديم'.",
+      "references": "Glossary v1.0 provisional",
+      "a1_status": "Approved",
+      "a2_status": "Approved",
+      "version": "2.0"
+    },
+    {
+      "source_text": "Submit",
+      "context": "",
+      "origin_app": "erpnext",
+      "domain": "core-actions",
+      "approved_ar": "ترحيل",
+      "forbidden_ar": [
+        "إرسال",
+        "تقديم"
+      ],
+      "usage_notes": "Accounting submit. NOT 'إرسال'.",
+      "references": "Glossary v1.0 provisional",
+      "a1_status": "Approved",
+      "a2_status": "Approved",
+      "version": "2.0"
+    },
+    {
+      "source_text": "Cancel",
+      "context": "",
+      "origin_app": "erpnext",
+      "domain": "core-actions",
+      "approved_ar": "إلغاء",
+      "forbidden_ar": [
+        "إرسال",
+        "تقديم"
+      ],
+      "usage_notes": "Cancel document.",
+      "references": "Glossary v1.0 provisional",
+      "a1_status": "Approved",
+      "a2_status": "Approved",
+      "version": "2.0"
+    },
+    {
+      "source_text": "Cost Center",
+      "context": "",
+      "origin_app": "erpnext",
+      "domain": "accounts",
+      "approved_ar": "مركز التكلفة",
+      "forbidden_ar": [
+        "الأسهم",
+        "الاحتفاظ",
+        "قيد دفع"
+      ],
+      "usage_notes": "Keep (already correct).",
+      "references": "EAS 48 / ETA guide",
+      "a1_status": "Approved",
+      "a2_status": "Approved",
+      "version": "2.0"
+    },
+    {
+      "source_text": "Chart of Accounts",
+      "context": "",
+      "origin_app": "erpnext",
+      "domain": "accounts",
+      "approved_ar": "دليل الحسابات",
+      "forbidden_ar": [
+        "الأسهم",
+        "الاحتفاظ",
+        "قيد دفع"
+      ],
+      "usage_notes": "Keep (already correct).",
+      "references": "EAS 48 / ETA guide",
+      "a1_status": "Approved",
+      "a2_status": "Approved",
+      "version": "2.0"
+    }
   ]
 }

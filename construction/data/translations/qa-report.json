@@ -1,0 +1,76 @@
+{
+  "total": 15106,
+  "batches": {
+    "batch-01-construction-accounting": {
+      "count": 1378,
+      "flags": {
+        "html_imbalance": 54,
+        "placeholder_mismatch": 168,
+        "whitespace": 9
+      }
+    },
+    "batch-02-contracts-subcontractors-certificates": {
+      "count": 124,
+      "flags": {
+        "placeholder_mismatch": 32,
+        "html_imbalance": 3,
+        "whitespace": 1
+      }
+    },
+    "batch-03-boq-estimation-project-costing": {
+      "count": 257,
+      "flags": {
+        "html_imbalance": 12,
+        "placeholder_mismatch": 38,
+        "whitespace": 4
+      }
+    },
+    "batch-04-purchasing-inventory-site-materials": {
+      "count": 1453,
+      "flags": {
+        "placeholder_mismatch": 211,
+        "html_imbalance": 61,
+        "whitespace": 11
+      }
+    },
+    "batch-05-core-actions-errors": {
+      "count": 897,
+      "flags": {
+        "placeholder_mismatch": 125,
+        "html_imbalance": 34,
+        "whitespace": 4
+      }
+    },
+    "batch-06-payroll-labor": {
+      "count": 72,
+      "flags": {
+        "placeholder_mismatch": 7,
+        "html_imbalance": 2,
+        "whitespace": 1
+      }
+    },
+    "batch-07-manufacturing": {
+      "count": 137,
+      "flags": {
+        "placeholder_mismatch": 10,
+        "html_imbalance": 5,
+        "whitespace": 1
+      }
+    },
+    "batch-08-technical-administration": {
+      "count": 10788,
+      "flags": {
+        "html_imbalance": 140,
+        "whitespace": 46,
+        "placeholder_mismatch": 617
+      }
+    }
+  },
+  "flag_counts": {
+    "html_imbalance": 311,
+    "placeholder_mismatch": 1208,
+    "whitespace": 77
+  },
+  "cross_conflicts": 37,
+  "missing": 7338
+}

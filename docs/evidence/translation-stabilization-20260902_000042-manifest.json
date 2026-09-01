@@ -1,0 +1,38 @@
+{
+  "timestamp": "20260902_000042",
+  "site": "v16.localhost",
+  "counts": {
+    "catalog": 15106,
+    "runtime": 3005,
+    "total_ar": 18111,
+    "missing_ar": 7338
+  },
+  "checksums": {
+    "frappe/ar.po": "b27d1024fce6f608c488e4f4ac4658bfc287c4c69323ccf562bb9e3e0801603c",
+    "frappe/ar.mo": null,
+    "erpnext/ar.po": "2dfe0a5d07b091d1d34563fa53aac9f4665519aa9672303b4cd6fe3b2d705275",
+    "erpnext/ar.mo": null,
+    "construction/ar.po": "eb80514ab9197dca53c066e1fc1557f31303cd737eadf56a2aa22cdc2c014bff",
+    "construction/ar.mo": null
+  },
+  "glossary": {
+    "path": "construction/data/glossary/egyptian_construction_glossary.json",
+    "sha256": "aefbbf633d432fb93ac63996960bb58d0bd005e973e0e461f4480d7ae46b51b4",
+    "bytes": 24380,
+    "terms": 47
+  },
+  "commits": {
+    "construction": "95a9bfd5ceb168d5e9ec041a1a1dab263667661e",
+    "frappe": "81aadb9ba1bc07abccd8f720af80f4f2fb4a68a0",
+    "erpnext": "2807c9f08fff3f161c0a2e10745a26aa6331ffd5"
+  },
+  "frappe_status": "M frappe/locale/ar.po",
+  "construction_status": "M construction/__init__.py\n M construction/api/translation_tools.py\n M construction/data/glossary/egyptian_construction_glossary.json\n M construction/hooks.py\n M construction/overrides/translation.py\n M construction/patches.txt\n M construction/setup/translation_catalog_fields.py\n?? construction/data/translations/approved_ar_overrides.csv\n?? construction/patches/v8_6/\n?? construction/translation_loader.py\n?? construction/translation_service.py\n?? \"docs/TRANSLATION_SUBSYSTEM_STABILIZATION_PLAN v2 .md\"\n?? scripts/lint_translation_writes.py",
+  "erpnext_status": "",
+  "backup_location": "sites/v16.localhost/private/backups/translation-stabilization-20260902_000042",
+  "existing_backup": "sites/v16.localhost/private/backups/20260821_200036-localhost-database.sql.gz",
+  "checks": {
+    "targeted_export_parseable": true,
+    "db_integrity": true
+  }
+}

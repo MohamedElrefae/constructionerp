@@ -13,13 +13,53 @@ from frappe.translate import MERGED_TRANSLATION_KEY, USER_TRANSLATION_KEY
 class CustomTranslation(Translation):
     def validate(self):
         super().validate()
-        # Record a meaningful catalog edit for promotion after this row saves.
+        if "\x00" in (self.source_text or "") or "\x00" in (self.translated_text or "") or "\x00" in (self.context or ""):
+            frappe.throw("Translation key/value contains embedded NUL")
+        if self.meta.has_field("ct_key_digest"):
+            from construction.translation_service import _compute_digest, _search_normalized
+
+            is_catalog = bool(self.get("ct_is_catalog_entry"))
+            self.ct_key_digest = _compute_digest(
+                self.language or "", self.source_text or "", self.context or "", self.get("ct_app") or "", is_catalog
+            )
+        if self.meta.has_field("ct_search_normalized"):
+            from construction.translation_service import _search_normalized
+
+            self.ct_search_normalized = _search_normalized(self.source_text or "")
+        if self.meta.has_field("ct_origin"):
+            is_catalog = bool(self.get("ct_is_catalog_entry"))
+            if is_catalog:
+                if self.get("ct_origin") and self.ct_origin not in ("Packaged Release", "Site Override", ""):
+                    frappe.throw("ct_origin for catalog must be empty, Packaged Release or Site Override")
+                if not self.get("ct_origin"):
+                    self.ct_origin = ""
+            else:
+                if not self.get("ct_origin"):
+                    self.ct_origin = "Site Override"
+                elif self.ct_origin not in ("Packaged Release", "Site Override"):
+                    frappe.throw("ct_origin for runtime must be Packaged Release or Site Override")
         if self.get("ct_is_catalog_entry") and self.get("ct_po_translation") is not None:
-            po_value = (self.ct_po_translation or "").strip()
-            current = (self.translated_text or "").strip()
-            if current and current != po_value:
-                self.ct_review_status = "Approved"
-                self.flags.ct_runtime_value = current
+            if self.meta.has_field("ct_proposed_translation"):
+                po_value = self.ct_po_translation or ""
+                current = self.translated_text or ""
+                if current != po_value:
+                    if current:
+                        self.ct_proposed_translation = current
+                        if self.meta.has_field("ct_review_status"):
+                            if self.ct_review_status in (None, "", "Approved"):
+                                self.ct_review_status = "Pending"
+                    else:
+                        self.ct_proposed_translation = ""
+                else:
+                    if self.get("ct_proposed_translation"):
+                        self.ct_proposed_translation = ""
+                    if self.meta.has_field("ct_review_status") and self.ct_review_status == "Pending":
+                        pass
+            else:
+                po_value = (self.ct_po_translation or "").strip()
+                current = (self.translated_text or "").strip()
+                if current and current != po_value:
+                    self.flags.ct_runtime_value = current
 
     def on_update(self):
         super().on_update()
@@ -34,7 +74,6 @@ class CustomTranslation(Translation):
                 app=self.get("ct_app"),
                 ignore_permissions=True,
             )
+        from construction.translation_service import invalidate_translation_caches
 
-        # Ensure any status/value change is reflected in runtime and list views.
-        frappe.cache.hdel(USER_TRANSLATION_KEY, self.language)
-        frappe.cache.hdel(MERGED_TRANSLATION_KEY, self.language)
+        invalidate_translation_caches(self.language)
