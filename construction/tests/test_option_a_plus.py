@@ -797,10 +797,10 @@ class TestStrictSignature(unittest.TestCase):
         self.assertIn("Main - E", result["filters"]["cost_center"])
 
     def test_unrestricted_user_in_positional_slot_bypasses(self):
-        """If the positional `user` is an unrestricted role, the
-        wrapper must bypass enforcement. This proves the wrapper
-        actually uses the positional user (rather than ignoring it
-        and falling back to frappe.session.user)."""
+        """If the positional `user` is System Manager, the wrapper must
+        bypass enforcement. This proves the wrapper actually uses the
+        positional user (rather than ignoring it and falling back to
+        frappe.session.user). Finance roles no longer bypass."""
         import construction.overrides.scope_report as mod
         from construction.overrides.scope_report import _scope_aware_run
 
@@ -815,7 +815,7 @@ class TestStrictSignature(unittest.TestCase):
 
         mod._ORIGINAL_RUN = strict_fake
         try:
-            # Ensure the test user has the Accounts Manager role.
+            # Ensure the test user has System Manager (only role that bypasses now).
             if not frappe.db.exists("User", "accounts.manager@example.com"):
                 u = frappe.new_doc("User")
                 u.email = "accounts.manager@example.com"
@@ -825,13 +825,12 @@ class TestStrictSignature(unittest.TestCase):
                 u.insert(ignore_permissions=True)
                 frappe.db.commit()
             user_doc = frappe.get_doc("User", "accounts.manager@example.com")
-            if "Accounts Manager" not in frappe.get_roles("accounts.manager@example.com"):
-                user_doc.add_roles("Accounts Manager")
+            if "System Manager" not in frappe.get_roles("accounts.manager@example.com"):
+                user_doc.add_roles("System Manager")
                 role_added = True
                 frappe.db.commit()
 
-            # The wrapper must bypass — filters should pass through
-            # unchanged.
+            # The wrapper must bypass — filters should pass through unchanged.
             result = _scope_aware_run(
                 "General Ledger",
                 {"company": "ACo", "cost_center": ["ACC"]},
@@ -840,7 +839,7 @@ class TestStrictSignature(unittest.TestCase):
         finally:
             if role_added and user_doc is not None:
                 try:
-                    user_doc.remove_roles("Accounts Manager")
+                    user_doc.remove_roles("System Manager")
                     frappe.db.commit()
                 except Exception:
                     pass
@@ -856,21 +855,18 @@ class TestStrictSignature(unittest.TestCase):
 
 
 class TestFinanceRoleBypass(unittest.TestCase):
-    """Restricted users get scope enforcement; finance users bypass it."""
+    """Only System Manager bypasses scope; finance roles are now scoped like everyone else (ERPNext native)."""
 
     def test_unrestricted_role_bypasses(self):
         from construction.overrides.scope_report import _has_unrestricted_report_role
 
-        if not frappe.db.exists("Role", "Accounts User"):
-            frappe.get_doc({"doctype": "Role", "role_name": "Accounts User"}).insert(ignore_permissions=True)
-
         user = "test_scope@example.com"
         user_doc = frappe.get_doc("User", user)
         try:
-            user_doc.add_roles("Accounts User")
+            user_doc.add_roles("System Manager")
             self.assertTrue(_has_unrestricted_report_role(user))
         finally:
-            user_doc.remove_roles("Accounts User")
+            user_doc.remove_roles("System Manager")
 
     def test_non_finance_role_does_not_bypass(self):
         from construction.overrides.scope_report import _has_unrestricted_report_role
@@ -881,6 +877,12 @@ class TestFinanceRoleBypass(unittest.TestCase):
             user_doc.remove_roles(role)
 
         self.assertFalse(_has_unrestricted_report_role(user))
+        # Finance roles no longer bypass — they are filtered like everyone else
+        user_doc.add_roles("Accounts Manager")
+        try:
+            self.assertFalse(_has_unrestricted_report_role(user))
+        finally:
+            user_doc.remove_roles("Accounts Manager")
 
 
 # ─────────────────────────────────────────────────────────────────────

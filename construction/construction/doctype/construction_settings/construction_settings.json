@@ -37,7 +37,7 @@
   ],
   "fields": [
     {
-      "default": "0",
+      "default": "1",
       "fieldname": "enable_scope_context",
       "fieldtype": "Check",
       "label": "Enable Scope Context",

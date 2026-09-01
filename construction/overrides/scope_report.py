@@ -58,12 +58,13 @@ from construction.overrides.report_guard import (
 logger = logging.getLogger(__name__)
 
 # Roles allowed to run reports without forced scope filters.
+# Senior decision: Only System Manager bypasses scope. Finance roles
+# (Accounts Manager / Accounts User / Finance Manager) are now treated
+# like all other users — ERPNext native Report permissions decide *access*,
+# Scope decides *data subset*. No custom parallel auth.
 UNRESTRICTED_REPORT_ROLES: frozenset[str] = frozenset(
     {
         "System Manager",
-        "Accounts Manager",
-        "Accounts User",
-        "Finance Manager",
     }
 )
 
