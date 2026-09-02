@@ -319,6 +319,26 @@ def import_released_overrides(path=None, dry_run=True, _skip_permission=False):
             if existing_rows:
                 skipped += 1
                 continue
+        if (existing_app or "") != expected_app and existing_rows and existing_val == val and existing_origin == "Packaged Release":
+            if not dry_run:
+                frappe.db.set_value("Translation", existing_rows[0].name, {"ct_app": expected_app, "ct_origin": "Packaged Release", "ct_release_version": ver, "ct_released_at": frappe.utils.now(), "ct_released_by": row.get("a1_reviewer") or "packaged"}, update_modified=False)
+                try:
+                    catalog_rows = frappe.get_all(
+                        "Translation",
+                        filters={"language": lang, "source_text": src, "context": ctx or "", "ct_is_catalog_entry": 1},
+                        fields=["name", "ct_app"],
+                        limit_page_length=0,
+                    )
+                    for crow in catalog_rows:
+                        if expected_app and crow.ct_app and crow.ct_app != expected_app:
+                            continue
+                        if (crow.ct_app or "") != expected_app:
+                            frappe.db.set_value("Translation", crow.name, {"ct_app": expected_app}, update_modified=False)
+                except Exception:
+                    pass
+            updated += 1
+            preview.append({"source_text": src, "context": ctx, "before": existing_val, "after": val, "action": "metadata_repair"})
+            continue
         if existing_origin == "Site Override" and existing_rows:
             drift += 1
             preview.append({"source_text": src, "context": ctx, "before": existing_val, "after": val, "action": "drift_site_override"})
@@ -327,11 +347,6 @@ def import_released_overrides(path=None, dry_run=True, _skip_permission=False):
             skipped += 1
             continue
         action = "update" if existing_rows else "create"
-        if existing_rows and not dry_run and (existing_app or "") != expected_app and existing_val == val:
-            frappe.db.set_value("Translation", existing_rows[0].name, {"ct_app": expected_app, "ct_origin": "Packaged Release", "ct_release_version": ver, "ct_released_at": frappe.utils.now(), "ct_released_by": row.get("a1_reviewer") or "packaged"}, update_modified=False)
-            updated += 1
-            preview.append({"source_text": src, "context": ctx, "before": existing_val, "after": val, "action": "metadata_repair"})
-            continue
         preview.append({"source_text": src, "context": ctx, "before": existing_val, "after": val, "action": action})
         if dry_run:
             if action == "create":

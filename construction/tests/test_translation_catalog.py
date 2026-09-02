@@ -38,22 +38,37 @@ class TestTranslationCatalogRuntime(FrappeTestCase):
 
     def test_runtime_loader_skips_catalog_and_resolves_duplicates_deterministically(self):
         self._insert_translation("قيمة الكتالوج", is_catalog=1, po_translation="قيمة الكتالوج")
-        self._insert_translation("قيمة قديمة", is_catalog=0)
-        newest = self._insert_translation("قيمة أحدث", is_catalog=0)
+        first = self._insert_translation("قيمة قديمة", is_catalog=0)
+        if frappe.db.has_column("Translation", "ct_key_digest"):
+            from construction.translation_service import upsert_runtime_translation
 
-        frappe.db.set_value(
-            "Translation",
-            newest.name,
-            "modified",
-            "2099-01-01 00:00:00",
-            update_modified=False,
-        )
-        frappe_translate.clear_cache()
-
-        self.assertEqual(
-            frappe_translate.get_user_translations("ar").get(self.source_text),
-            "قيمة أحدث",
-        )
+            upsert_runtime_translation(self.source_text, "قيمة أحدث", language="ar", ignore_permissions=True)
+            runtime_rows = frappe.get_all(
+                "Translation",
+                filters={"language": "ar", "source_text": self.source_text, "ct_is_catalog_entry": 0},
+                fields=["name", "translated_text"],
+            )
+            self.assertEqual(len(runtime_rows), 1)
+            self.assertEqual(runtime_rows[0].translated_text, "قيمة أحدث")
+            frappe_translate.clear_cache()
+            self.assertEqual(
+                frappe_translate.get_user_translations("ar").get(self.source_text),
+                "قيمة أحدث",
+            )
+        else:
+            newest = self._insert_translation("قيمة أحدث", is_catalog=0)
+            frappe.db.set_value(
+                "Translation",
+                newest.name,
+                "modified",
+                "2099-01-01 00:00:00",
+                update_modified=False,
+            )
+            frappe_translate.clear_cache()
+            self.assertEqual(
+                frappe_translate.get_user_translations("ar").get(self.source_text),
+                "قيمة أحدث",
+            )
 
     def test_catalog_edit_upserts_one_runtime_row_and_preserves_catalog(self):
         catalog = self._insert_translation(
