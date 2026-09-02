@@ -508,6 +508,31 @@ def save_user_mode(mode):
         # Direct DB update — skips ORM validation & modified timestamp check
         frappe.db.set_value("User", user, "desk_theme", desk_theme_value, update_modified=False)
 
+        # ``User.desk_theme`` defaults to Light in Frappe, so it cannot tell
+        # an inherited site default from an explicit user choice on its own.
+        # Record a lightweight User Desk Theme override when a user operates
+        # the Construction switcher; this preserves a deliberate Light choice
+        # while allowing users with no preference to inherit the dark site
+        # default.
+        fieldname = f"{mode}_theme"
+        default_theme = frappe.db.get_value(
+            "Construction Theme",
+            {"is_active": 1, f"is_default_{mode}": 1},
+            "name",
+        )
+        if default_theme:
+            user_theme_name = frappe.db.get_value("User Desk Theme", {"user": user}, "name")
+            if user_theme_name:
+                user_theme = frappe.get_doc("User Desk Theme", user_theme_name)
+            else:
+                user_theme = frappe.new_doc("User Desk Theme")
+                user_theme.user = user
+            user_theme.inherit_from_site = 0
+            user_theme.set(fieldname, default_theme)
+            user_theme.save(ignore_permissions=True)
+
+        frappe.cache().hdel("bootinfo", user)
+
         return {"success": True, "mode": mode}
     except Exception as e:
         frappe.log_error(f"Error saving user mode: {str(e)}")
@@ -2831,22 +2856,39 @@ def get_user_theme_for_boot():
             as_dict=True,
         )
 
-        # Get user's mode preference from User.desk_theme
+        # An inherited User Desk Theme (or no record) means that the user has
+        # not selected a personal mode.  Frappe creates User.desk_theme="Light"
+        # for such users, so reading that field first incorrectly made the
+        # framework default override Construction's site-wide dark default.
+        if not user_theme or user_theme.inherit_from_site:
+            default_theme = frappe.db.get_value(
+                "Construction Theme",
+                {"is_active": 1, "is_default_dark": 1},
+                "name",
+            )
+            if default_theme:
+                return {
+                    "theme": _get_frontend_theme_key(default_theme, "dark"),
+                    "mode": "dark",
+                    "source": "site_default",
+                    "doc_name": default_theme,
+                }
+            return {"theme": "construction_dark", "mode": "dark", "source": "site_default"}
+
+        # Get the mode preference only for an explicit User Desk Theme.
         desk_theme = frappe.db.get_value("User", user, "desk_theme") or "Light"
         mode = "dark" if desk_theme == "Dark" else "light"
 
-        # If user has custom theme settings and not inheriting from site
-        if user_theme and not user_theme.inherit_from_site:
-            theme_doc = user_theme.dark_theme if mode == "dark" else user_theme.light_theme
-            if theme_doc:
-                # Convert DocType name to frontend key
-                frontend_key = _get_frontend_theme_key(theme_doc, mode)
-                return {
-                    "theme": frontend_key,
-                    "mode": mode,
-                    "source": "user_desk_theme",
-                    "doc_name": theme_doc,  # Original DocType name for reference
-                }
+        theme_doc = user_theme.dark_theme if mode == "dark" else user_theme.light_theme
+        if theme_doc:
+            # Convert DocType name to frontend key
+            frontend_key = _get_frontend_theme_key(theme_doc, mode)
+            return {
+                "theme": frontend_key,
+                "mode": mode,
+                "source": "user_desk_theme",
+                "doc_name": theme_doc,  # Original DocType name for reference
+            }
 
         # User inherits from site or no custom theme set - check site defaults
         site_settings = frappe.db.get_value(
