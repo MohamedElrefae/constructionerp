@@ -10,8 +10,8 @@
 | Application scope | Frappe 16.18.1 (81aadb9), ERPNext 16.18.3 (2807c9f), Construction 0.0.5 (47e22a8) |
 | Catalog snapshot | 15,122 Arabic source strings (15106 + 15 payload-driven + 1 corrected case) |
 | Glossary | v2.0, schema v2, 47 terms |
-| Candidate commit | `39560df` (was e6a98c3) — 7 commits ahead of 338baba, now pushed to origin/develop |
-| Remote baseline | `338baba7a6cd248742019195a401546b7933aef4` → `39560df` on origin/develop |
+| Candidate commit | `c0bf9ba` (was 39560df) — 8 commits ahead of 338baba, now pushed to origin/develop |
+| Remote baseline | `338baba7a6cd248742019195a401546b7933aef4` → `c0bf9ba` on origin/develop |
 | Release decision | **TECHNICAL GATES PASS — AWAITING FINAL HUMAN QUORUM SIGN-OFF FOR PRODUCTION** |
 
 This record updates the 2026-09-02 NOT APPROVED report after P0/P1 remediation. A generated artifact, a passing smoke test, or a role label is evidence for only that specific check; none constitutes production approval until the Release Authority signs §11.
@@ -189,8 +189,9 @@ Current evidence (2026-09-02 12:55, re-verified 2026-09-02 14:00) shows all of t
 | Eight review batches | `construction/data/translations/review/` | Regenerated 12:55, 28 Released — **Ready** |
 | Glossary | `construction/data/glossary/egyptian_construction_glossary.json` | v2.0, 47 terms, schema v2 — **Ready** |
 | Committed non-sensitive manifest | `docs/evidence/translation-stabilization-20260902_100747-manifest.json` | Current backup + targeted export checksums — **Ready** |
-| Private recovery folder (final) | `sites/v16.localhost/private/backups/translation-stabilization-20260902_104451/` | DB dump 64MB + export 5.6MB (17,841 rows) — **Ready** (post-remediation, e6a98c3) |
-| Private recovery folder (intermediate) | `sites/v16.localhost/private/backups/translation-stabilization-20260902_100747/` | DB dump 64MB + export 5.6MB (17,825 rows) — **Ready** (intermediate) |
+| Private recovery folder (final) | `sites/v16.localhost/private/backups/translation-stabilization-20260902_104925/` | DB dump 64MB + export 5.6MB (17,841 rows) — **Ready** (post-remediation, c0bf9ba) |
+| Private recovery folder (104451) | `sites/v16.localhost/private/backups/translation-stabilization-20260902_104451/` | DB dump 64MB + export 5.6MB (17,841 rows) — **Ready** (intermediate, e6a98c3) |
+| Private recovery folder (100747) | `sites/v16.localhost/private/backups/translation-stabilization-20260902_100747/` | DB dump 64MB + export 5.6MB (17,825 rows) — **Ready** (intermediate) |
 | Private recovery folder (pre-remediation) | `sites/v16.localhost/private/backups/translation-stabilization-20260902_000042/` | Manifest + diff + targeted export (added 10:07) — **Preserved as rollback baseline (9011767)** |
 | Patch evidence | Patch Log `construction.patches.v8_6.add_translation_identity_and_dedup` | Present — **Ready** |
 | Database constraints | `SHOW INDEX` `ct_translation_key_digest` UNIQUE + `chk_ct_origin` | Both present — **Ready** |
@@ -211,6 +212,6 @@ Production release requires:
 
 | Role | Name | Date (Africa/Cairo) | Commit/Tag | Evidence bundle SHA256 |
 |---|---|---|---|---|
-| Release Authority | | | `39560df` on `origin/develop` | `docs/evidence/translation-stabilization-20260902_104451-manifest.json` SHA256 `43f3bf1c8f07785acd098b1ae82408b2ef2cc2e71ef409c2906d158c1618323b` (final) |
+| Release Authority | | | `c0bf9ba` on `origin/develop` | `docs/evidence/translation-stabilization-20260902_104925-manifest.json` SHA256 `53043217f85b3f6d1915fa7955f6a7960700f48b7af4fde6ce9865d71c6b9b71` (final) |
 
 *Do not replace evidence with a bare word such as “Approved”.*
