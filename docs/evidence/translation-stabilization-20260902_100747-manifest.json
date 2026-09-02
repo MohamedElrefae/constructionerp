@@ -1,0 +1,42 @@
+{
+  "timestamp": "20260902_100747",
+  "site": "v16.localhost",
+  "counts": {
+    "catalog": 15106,
+    "runtime": 2719,
+    "total_ar": 17825,
+    "missing_ar": 7339,
+    "packaged": 28,
+    "digest_unique": true,
+    "has_drift": false
+  },
+  "checksums": {
+    "frappe/ar.po": "cc353e76ebd37c0ef0d72f79cf0c081a460cfa5fe6846dcf36d122384c225502",
+    "frappe/ar.mo": null,
+    "erpnext/ar.po": "2dfe0a5d07b091d1d34563fa53aac9f4665519aa9672303b4cd6fe3b2d705275",
+    "erpnext/ar.mo": null,
+    "construction/ar.po": "eb80514ab9197dca53c066e1fc1557f31303cd737eadf56a2aa22cdc2c014bff",
+    "construction/ar.mo": null
+  },
+  "glossary": {
+    "path": "construction/data/glossary/egyptian_construction_glossary.json",
+    "sha256": "aefbbf633d432fb93ac63996960bb58d0bd005e973e0e461f4480d7ae46b51b4",
+    "bytes": 24380,
+    "terms": 47,
+    "version": "2.0"
+  },
+  "commits": {
+    "construction": "9011767ba57ef161edfc17e6bc03e8bf5a3ee398",
+    "frappe": "81aadb9ba1bc07abccd8f720af80f4f2fb4a68a0",
+    "erpnext": "2807c9f08fff3f161c0a2e10745a26aa6331ffd5"
+  },
+  "frappe_status": "",
+  "construction_status": "M construction/data/translations/approved_ar_overrides.csv\n M construction/translation_service.py\n M docs/translation/sign-off-1.0.md",
+  "erpnext_status": "",
+  "backup_location": "sites/v16.localhost/private/backups/translation-stabilization-20260902_100747",
+  "database_backup": "sites/v16.localhost/private/backups/translation-stabilization-20260902_100747/_6d52b48c328b294e-database-20260902_100747.sql.gz",
+  "targeted_export": "sites/v16.localhost/private/backups/translation-stabilization-20260902_100747/arabic_translation_export.csv",
+  "database_backup_sha256": "fa1c0a9b17c14f12dd6b81efab31e736ecd2f5a8f505e8c5339dfc81302d376d",
+  "targeted_export_sha256": "d794bfe0781d3f339ee93920a9f867ce5d1fb3813cea5751bf8a863eef1662a4",
+  "restore_instructions": "Restore database: gunzip < sites/v16.localhost/private/backups/translation-stabilization-20260902_100747/_6d52b48c328b294e-database-20260902_100747.sql.gz | mysql --socket=/run/mysqld/mysqld.sock -u _6d52b48c328b294e -p[pass] _6d52b48c328b294e  OR bench --site v16.localhost restore sites/v16.localhost/private/backups/translation-stabilization-20260902_100747/_6d52b48c328b294e-database-20260902_100747.sql.gz ; For targeted restore, use csv import or bench console"
+}
