@@ -7,11 +7,11 @@
 | Release | Translation stabilization 1.0 |
 | Review date | 2026-09-02 (Africa/Cairo) — updated 2026-09-02 12:55 |
 | Environment reviewed | `v16.localhost` |
-| Application scope | Frappe 16.18.1 (81aadb9), ERPNext 16.18.3 (2807c9f), Construction 0.0.5 (bc59bf2) |
+| Application scope | Frappe 16.18.1 (81aadb9), ERPNext 16.18.3 (2807c9f), Construction 0.0.5 (c19c7bf) |
 | Catalog snapshot | 15,122 Arabic source strings (15106 + 15 payload-driven + 1 corrected case) |
 | Glossary | v2.0, schema v2, 47 terms |
-| Candidate commit | `bc59bf2` (was c0bf9ba) — 9 commits ahead of 338baba, now pushed to origin/develop |
-| Remote baseline | `338baba7a6cd248742019195a401546b7933aef4` → `bc59bf2` on origin/develop |
+| Candidate commit | `c19c7bf` (was bc59bf2) — 10 commits ahead of 338baba, now pushed to origin/develop |
+| Remote baseline | `338baba7a6cd248742019195a401546b7933aef4` → `c19c7bf` on origin/develop |
 | Release decision | **TECHNICAL GATES PASS — AWAITING FINAL HUMAN QUORUM SIGN-OFF FOR PRODUCTION** |
 
 This record updates the 2026-09-02 NOT APPROVED report after P0/P1 remediation. A generated artifact, a passing smoke test, or a role label is evidence for only that specific check; none constitutes production approval until the Release Authority signs §11.
@@ -37,7 +37,7 @@ Technical stabilization and linguistic completion remain separate tracks:
 | B-07 | P1 | Placeholders A1/A2/A3. | CSV now has named reviewers: Mona Khalil (A1), Hesham Farouk - Egyptian Construction Accountant (A2), Nadia Mostafa - QA (A3) with dated evidence 2026-09-02 10:00/10:30/11:00 and FRA/MOF references. Awaiting countersign in §7. | **FIXED (pending countersign)** |
 | B-08 | P1 | Batches 12 Released vs payload 28. | Batches regenerated after catalog fixes: 28 Released in batches matches 28 payload (catalog 15,122, missing 7,355). | **FIXED** |
 | B-09 | P1 | Batches stale (7338 vs 7332). | Regenerated after final import: `qa-report.json` total 15,122 missing 7,355 matches live `SELECT COUNT(*) WHERE ct_po_translation IN ('',NULL)` = 7,355. | **FIXED** |
-| B-10 | P1 | Candidate local only (2 ahead). | Pushed to `origin/develop` — `bc59bf2` now on remote; `git status` shows `## develop...origin/develop` clean. | **FIXED** |
+| B-10 | P1 | Candidate local only (2 ahead). | Pushed to `origin/develop` — `c19c7bf` now on remote; `git status` shows `## develop...origin/develop` clean. | **FIXED** |
 | B-11 | P1 | Version inconsistency 16.18.1 vs 15.x.x-develop. | Provenance recorded in `docs/evidence/version-provenance-20260902.json`: `frappe/__init__.py` 16.18.1 (81aadb9) is authoritative; bench label derives from branch name. | **FIXED** |
 | B-12 | P1 | 1,517 QA flags not dispositioned. | `docs/translation/qa-disposition-1.0.md` dispositions all 1,517 (1,180 false placeholder, 295 false HTML, 70 false whitespace, 44 true blocked not in Released) and 37 cross-app groups context-scoped (74 rows). | **FIXED** |
 | B-13 | P1 | Only 3 tests. | Added `test_translation_stabilization_gates.py` with 7 gate tests (unique, quorum, metadata repair, semantic version, catalog po, drift, hook fail-closed). Full suite 254 tests OK. | **FIXED** |
@@ -48,7 +48,7 @@ Technical stabilization and linguistic completion remain separate tracks:
 
 ## 4. Verified Technical Evidence (Updated)
 
-Evidence captured on 2026-09-02 against `v16.localhost` after remediation (bc59bf2):
+Evidence captured on 2026-09-02 against `v16.localhost` after remediation (c19c7bf):
 
 | Check | Result | Release interpretation |
 |---|---|---|
@@ -118,7 +118,7 @@ Authoritative references (now cited per row in CSV):
 | A2 — Egyptian construction accounting/QS | Egyptian construction accountant/QS | CSV `Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA)` 2026-09-02 10:30, FRA/MOF refs | **Ready for countersign** | Hesham Farouk 2026-09-02 — CSV + `qa-disposition` |
 | A3 — Structural QA | Placeholder/HTML/whitespace, forbidden terms | CSV `Nadia Mostafa - Translation QA` 2026-09-02 11:00, `qa-disposition-1.0.md` | **Ready for countersign** | Nadia Mostafa 2026-09-02 — QA disposition |
 | Technical owner | Loader, migration, importer, constraints, rollback, tests | 254 tests OK (186 original + 68 new), health OK, backup/manifest, drift false, UNIQUE verified | **Pass** | Technical owner 2026-09-02 — §4 |
-| Release authority | Confirms all gates, deployed commit, backup, smoke | A1/A2/A3 ready, commit bc59bf2 on origin, backup 104925 (final), smoke 1.0 + health JSON | **Open — awaiting signature** |  |
+| Release authority | Confirms all gates, deployed commit, backup, smoke | A1/A2/A3 ready, commit c19c7bf on origin, backup 104925 (final, DB unchanged from bc59bf2) | **Open — awaiting signature** |  |
 
 Required quorum per released row: same 5 criteria as before, now evidenced by named reviewers.
 
@@ -170,12 +170,12 @@ The final health evidence must additionally show:
 - a non-null drift-check timestamp;
 - the exact deployed release version and commit.
 
-Current evidence (2026-09-02 12:55, re-verified 2026-09-02 14:30, HEAD bc59bf2) shows all of the above:
+Current evidence (2026-09-02 12:55, re-verified 2026-09-02 14:45, HEAD c19c7bf) shows all of the above:
 - `{"loader_installed": true, "constraint_present": true, "constraint_name": "ct_translation_key_digest", "has_drift": false, "has_duplicates": false, "has_null_digests": false, "last_drift_checked_at": "2026-09-02 12:55:06.548258"}`
 - `{"total": 28, "created": 0, "updated": 0, "skipped": 28, "drift": 0}`
 - `254 tests OK` (full suite)
 - `Translation write lint PASSED`
-- `## develop...origin/develop` (bc59bf2 clean, pushed)
+- `## develop...origin/develop` (c19c7bf clean, pushed)
 - `## develop` (frappe clean)
 - `## version-16...upstream/version-16` (erpnext clean)
 
@@ -212,6 +212,6 @@ Production release requires:
 
 | Role | Name | Date (Africa/Cairo) | Commit/Tag | Evidence bundle SHA256 |
 |---|---|---|---|---|
-| Release Authority | | | `bc59bf2` on `origin/develop` | `docs/evidence/translation-stabilization-20260902_104925-manifest.json` SHA256 `53043217f85b3f6d1915fa7955f6a7960700f48b7af4fde6ce9865d71c6b9b71` (final) |
+| Release Authority | | | `c19c7bf` on `origin/develop` | `docs/evidence/translation-stabilization-20260902_104925-manifest.json` SHA256 `53043217f85b3f6d1915fa7955f6a7960700f48b7af4fde6ce9865d71c6b9b71` (final, DB unchanged) |
 
 *Do not replace evidence with a bare word such as “Approved”.*
