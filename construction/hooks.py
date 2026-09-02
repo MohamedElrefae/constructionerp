@@ -131,7 +131,7 @@ app_include_js = [
     "/assets/construction/js/print_settings_dialog.js",
     "/assets/construction/js/construction_export_menu.js",
     "/assets/construction/js/generic_export_menu.js?v=1",
-    "/assets/construction/js/theme_loader_v24.js?v=2.6.0",
+    "/assets/construction/js/theme_loader_v24.js?v=2.6.1",
     "/assets/construction/js/typography_settings.js?v=21",
     # Searchable Dropdown Module — base class (must load before overrides)
     "/assets/construction/js/searchable_dropdown/utils.js",
@@ -149,7 +149,7 @@ app_include_js = [
     # Frappe Desk compatibility fixes that must run before list views initialize
     "/assets/construction/js/frappe_compat_patches.js?v=2",
     # Scope Context — navbar UI selectors (cascading company/cost_center/project/dept dropdowns)
-    "/assets/construction/js/scope_context_ui.js?v=4",
+    "/assets/construction/js/scope_context_ui.js?v=5",
     # Scope Context — list view auto-filtering
     "/assets/construction/js/scope_context_list_filter.js?v=3",
     # Scope Context — form default population for new documents
@@ -187,7 +187,7 @@ web_include_css = [
 ]
 
 # v2.4-r3: theme_loader_v24 handles namespace injection and theming for all pages
-web_include_js = "/assets/construction/js/theme_loader_v24.js?v=2.6.0"
+web_include_js = "/assets/construction/js/theme_loader_v24.js?v=2.6.1"
 
 # ─── BRAND OVERRIDES & WEBSITE CONTEXT ───
 brand_html = "construction/templates/includes/navbar_brand.html"

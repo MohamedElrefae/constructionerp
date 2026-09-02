@@ -7,6 +7,10 @@
 		console.log("[ScopeContext UI] enabled=" + window.scopeContext.enabled);
 
 		var sc = window.scopeContext;
+		// The core object is always present so downstream integrations can make
+		// safe feature-flag checks.  Do not register a visible selector when the
+		// server has disabled the feature, though.
+		if (!sc.enabled) return true;
 
 		function populateDropdown(
 			$context,

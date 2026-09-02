@@ -22,20 +22,44 @@
 			html.classList.add("ct-enterprise");
 		}
 
+		// ``frappe.boot`` is emitted before app_include_js.  Prefer its
+		// server-resolved mode over a browser cache so a user's saved theme and
+		// the first paint cannot drift apart.  localStorage remains a fallback
+		// for public pages and an offline convenience only.
+		var bootMode =
+			window.frappe && frappe.boot &&
+			(frappe.boot.construction_theme_mode || frappe.boot.theme);
 		var savedMode = localStorage.getItem("ct-theme-mode");
-		if (savedMode === "light") {
-			html.setAttribute("data-theme", "light");
-		} else if (savedMode === "dark") {
-			html.setAttribute("data-theme", "dark");
-		} else {
-			html.setAttribute("data-theme", "dark");
-			localStorage.setItem("ct-theme-mode", "dark");
-		}
+		var initialMode =
+			bootMode === "light" || bootMode === "dark"
+				? bootMode
+				: savedMode === "light" || savedMode === "dark"
+					? savedMode
+					: "dark";
+		html.setAttribute("data-theme", initialMode);
+		localStorage.setItem("ct-theme-mode", initialMode);
 	}
 
 	function setMode(mode) {
+		if (mode !== "light" && mode !== "dark") return;
 		html.setAttribute("data-theme", mode);
 		localStorage.setItem("ct-theme-mode", mode);
+
+		// Persist the selection as well as changing the current tab.  Previously
+		// the switcher only changed localStorage, while the server boot payload
+		// continued to use the old User.desk_theme on the next login/reload.
+		if (
+			window.frappe &&
+			frappe.call &&
+			frappe.session &&
+			frappe.session.user &&
+			frappe.session.user !== "Guest"
+		) {
+			frappe.call({
+				method: "construction.api.theme_api.save_user_mode",
+				args: { mode: mode },
+			});
+		}
 		window.dispatchEvent(new CustomEvent("ct-theme-change", { detail: { theme: mode } }));
 	}
 	window.ctSetMode = setMode;

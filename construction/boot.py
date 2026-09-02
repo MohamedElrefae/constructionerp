@@ -69,7 +69,11 @@ def extend_bootinfo(bootinfo):
 
     hierarchy = get_user_scope_hierarchy(user)
 
-    version = frappe.cache().get_value(f"scope_version:{user}") or frappe.utils.now()
+    # The version is compared with localStorage by the Desk client.  A wall
+    # clock timestamp generated for every boot makes every cached scope look
+    # stale, even when the user has not changed it.  The document's monotonic
+    # ``scope_version`` is the canonical, stable value instead.
+    version = scope_doc.scope_version if scope_doc else 0
 
     bootinfo["scope_context"] = {
         "current": scope_current,

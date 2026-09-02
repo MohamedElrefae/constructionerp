@@ -2890,10 +2890,23 @@ def add_theme_to_boot(bootinfo):
         theme_config = get_theme_config()
         frappe.cache().set_value(cache_key, theme_config, expires_in_sec=3600)
 
+    # ``theme_config`` contains site branding and colour tokens.  It is not a
+    # user's selected light/dark mode: using its ``color_scheme`` here made a
+    # site default overwrite every user's saved Desk preference on reload.
+    # Resolve the user preference separately and make that the one value the
+    # browser consumes for its initial mode.
+    user_theme = get_user_theme_for_boot()
+    mode = user_theme.get("mode")
+    if mode not in ("light", "dark"):
+        mode = "dark"
+
     bootinfo.construction_theme = theme_config
+    bootinfo.construction_theme_mode = mode
+    bootinfo.construction_theme_key = user_theme.get("theme", f"construction_{mode}")
+    bootinfo.construction_theme_source = user_theme.get("source", "mode_fallback")
     bootinfo.construction_typography = get_user_typography_settings()
-    # Also set the standard frappe.boot.theme for compatibility
-    bootinfo.theme = theme_config.get("color_scheme", "dark")
+    # Also set the standard Frappe key for integrations that read it directly.
+    bootinfo.theme = mode
 
 
 def _default_typography_settings():
