@@ -4521,6 +4521,20 @@ html.ct-enterprise[dir="rtl"] .body-sidebar .sidebar-item-container:hover:not(:h
   border-color: transparent var(--ct-primary) transparent transparent !important;
 }
 
+/* Construction Light: keep selected sidebar items readable over the blue background. */
+html.ct-enterprise[data-theme="light"] .body-sidebar .standard-sidebar-item:is(.active-sidebar, .active, .selected) a,
+html.ct-enterprise[data-theme="light"] .body-sidebar .standard-sidebar-item:is(.active-sidebar, .active, .selected) .sidebar-item-label,
+html.ct-enterprise[data-theme="light"] .body-sidebar .standard-sidebar-item:is(.active-sidebar, .active, .selected) .sidebar-item-icon,
+html.ct-enterprise[data-theme="light"] .body-sidebar .standard-sidebar-item:is(.active-sidebar, .active, .selected) .sidebar-item-icon svg,
+html.ct-enterprise[data-theme="light"] .desk-sidebar .standard-sidebar-item:is(.active-sidebar, .active, .selected) a,
+html.ct-enterprise[data-theme="light"] .desk-sidebar .standard-sidebar-item:is(.active-sidebar, .active, .selected) .sidebar-item-label,
+html.ct-enterprise[data-theme="light"] .desk-sidebar .standard-sidebar-item:is(.active-sidebar, .active, .selected) .sidebar-item-icon,
+html.ct-enterprise[data-theme="light"] .desk-sidebar .standard-sidebar-item:is(.active-sidebar, .active, .selected) .sidebar-item-icon svg {
+  color: #ffffff !important;
+  fill: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
 /* ─── BOQ workflow guidance — field-level accent states ─── */
 html.ct-enterprise .frappe-control.ct-boq-step-accent .control-input-wrapper,
 html.ct-enterprise .frappe-control.ct-boq-step-accent .link-field,
