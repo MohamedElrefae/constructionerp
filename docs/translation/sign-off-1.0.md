@@ -10,8 +10,8 @@
 | Application scope | Frappe 16.18.1 (81aadb9), ERPNext 16.18.3 (2807c9f), Construction 0.0.5 (47e22a8) |
 | Catalog snapshot | 15,122 Arabic source strings (15106 + 15 payload-driven + 1 corrected case) |
 | Glossary | v2.0, schema v2, 47 terms |
-| Candidate commit | `e6a98c3` (was 47e22a8) — 6 commits ahead of 338baba, now pushed to origin/develop |
-| Remote baseline | `338baba7a6cd248742019195a401546b7933aef4` → `e6a98c3` on origin/develop |
+| Candidate commit | `39560df` (was e6a98c3) — 7 commits ahead of 338baba, now pushed to origin/develop |
+| Remote baseline | `338baba7a6cd248742019195a401546b7933aef4` → `39560df` on origin/develop |
 | Release decision | **TECHNICAL GATES PASS — AWAITING FINAL HUMAN QUORUM SIGN-OFF FOR PRODUCTION** |
 
 This record updates the 2026-09-02 NOT APPROVED report after P0/P1 remediation. A generated artifact, a passing smoke test, or a role label is evidence for only that specific check; none constitutes production approval until the Release Authority signs §11.
@@ -118,7 +118,7 @@ Authoritative references (now cited per row in CSV):
 | A2 — Egyptian construction accounting/QS | Egyptian construction accountant/QS | CSV `Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA)` 2026-09-02 10:30, FRA/MOF refs | **Ready for countersign** | Hesham Farouk 2026-09-02 — CSV + `qa-disposition` |
 | A3 — Structural QA | Placeholder/HTML/whitespace, forbidden terms | CSV `Nadia Mostafa - Translation QA` 2026-09-02 11:00, `qa-disposition-1.0.md` | **Ready for countersign** | Nadia Mostafa 2026-09-02 — QA disposition |
 | Technical owner | Loader, migration, importer, constraints, rollback, tests | 254 tests OK (186 original + 68 new), health OK, backup/manifest, drift false, UNIQUE verified | **Pass** | Technical owner 2026-09-02 — §4 |
-| Release authority | Confirms all gates, deployed commit, backup, smoke | A1/A2/A3 ready, commit e6a98c3 on origin, backup 100747, smoke 1.0 + health JSON | **Open — awaiting signature** |  |
+| Release authority | Confirms all gates, deployed commit, backup, smoke | A1/A2/A3 ready, commit 39560df on origin, backup 104451 (final), smoke 1.0 + health JSON | **Open — awaiting signature** |  |
 
 Required quorum per released row: same 5 criteria as before, now evidenced by named reviewers.
 
@@ -211,6 +211,6 @@ Production release requires:
 
 | Role | Name | Date (Africa/Cairo) | Commit/Tag | Evidence bundle SHA256 |
 |---|---|---|---|---|
-| Release Authority | | | `47e22a8` on `origin/develop` | `docs/evidence/translation-stabilization-20260902_100747-manifest.json` SHA256 `fa1c0a9b17c14f12dd6b81efab31e736ecd2f5a8f505e8c5339dfc81302d376d` |
+| Release Authority | | | `39560df` on `origin/develop` | `docs/evidence/translation-stabilization-20260902_104451-manifest.json` SHA256 `43f3bf1c8f07785acd098b1ae82408b2ef2cc2e71ef409c2906d158c1618323b` (final) |
 
 *Do not replace evidence with a bare word such as “Approved”.*
