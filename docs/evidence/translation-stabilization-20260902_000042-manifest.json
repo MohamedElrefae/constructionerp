@@ -34,5 +34,7 @@
   "checks": {
     "targeted_export_parseable": true,
     "db_integrity": true
-  }
+  },
+  "label": "PRE-REMEDIATION rollback snapshot — 9011767 state, before B-01..B-17 fixes (frappe ar.po still dirty, 21 blank ct_app, non-unique index)",
+  "note": "Preserved as rollback baseline. For post-remediation state, see 20260902_100747 and final post-remediation backup."
 }

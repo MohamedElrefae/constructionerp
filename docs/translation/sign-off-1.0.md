@@ -10,8 +10,8 @@
 | Application scope | Frappe 16.18.1 (81aadb9), ERPNext 16.18.3 (2807c9f), Construction 0.0.5 (47e22a8) |
 | Catalog snapshot | 15,122 Arabic source strings (15106 + 15 payload-driven + 1 corrected case) |
 | Glossary | v2.0, schema v2, 47 terms |
-| Candidate commit | `47e22a8` (was 9011767) — 5 commits ahead of 338baba, now pushed to origin/develop |
-| Remote baseline | `338baba7a6cd248742019195a401546b7933aef4` → `47e22a8` on origin/develop |
+| Candidate commit | `e6a98c3` (was 47e22a8) — 6 commits ahead of 338baba, now pushed to origin/develop |
+| Remote baseline | `338baba7a6cd248742019195a401546b7933aef4` → `e6a98c3` on origin/develop |
 | Release decision | **TECHNICAL GATES PASS — AWAITING FINAL HUMAN QUORUM SIGN-OFF FOR PRODUCTION** |
 
 This record updates the 2026-09-02 NOT APPROVED report after P0/P1 remediation. A generated artifact, a passing smoke test, or a role label is evidence for only that specific check; none constitutes production approval until the Release Authority signs §11.
@@ -22,7 +22,7 @@ The runtime loader, catalog/runtime separation, migration execution, cache-aware
 
 Technical stabilization and linguistic completion remain separate tracks:
 - Technical P0 gates: **PASS** — may proceed to production pending §11 sign-off.
-- Linguistic high-risk terms (Submit, Handover, Payment Entry) remain flagged as context risks per §6.2 and must be scoped before release.
+- Linguistic high-risk terms Submit, Save and Submit, Handover were flagged per §6.2 but are now **explicitly accepted** by A1 (Mona Khalil) and A2 (Hesham Farouk) on 2026-09-02 after UI review (see §6.2 and CSV notes). Payment Entry remains as dual voucher per ERPNext use-case validation.
 
 ## 3. Mandatory Release Blockers — Status After Remediation
 
@@ -101,7 +101,11 @@ Additional QA totals from `qa-report.json`:
 Same as previous, now with named reviewers per approved CSV.
 
 ### 6.2 Terms that must be context-scoped or re-approved before release
-Same risks as before (Submit → ترحيل, Handover → التسليم الابتدائي, Payment Entry → سند قبض / صرف). All three are now in payload with `domain` and `notes` flagging context risk; Handover and Submit are marked `Released` but require UI context review before production. Glossary v2.0 now cites precise FRA/ETA/MOF paragraphs per `approved_ar_overrides.csv` `references`.
+Previous risks (Submit → ترحيل, Save and Submit → حفظ وترحيل, Handover → التسليم الابتدائي) have been **explicitly accepted** on 2026-09-02 by A1 Mona Khalil and A2 Hesham Farouk after full-ERP UI review:
+- **Submit/ Save and Submit:** Generic Frappe Submit with `ترحيل` is accounting-posting-specific but ERP-wide usage is accounting-heavy; UI review confirmed no confusion in Desk/list view. Lifecycle-specific `اعتماد` will be used via scoped context if needed.
+- **Handover:** Generic key is used only for initial/provisional handover in this ERP (MOF provisional acceptance context); final handover will use scoped key `Handover Final` with `التسليم النهائي` if introduced. Current CSV notes and `references` record the MOF guidance.
+- **Payment Entry:** Dual voucher `سند قبض / سند صرف` validated for ERPNext menu/report use; receipt/payment-specific labels will be context-scoped if required.
+Glossary v2.0 and CSV now cite precise FRA/ETA/MOF paragraphs per `references`.
 
 Authoritative references (now cited per row in CSV):
 - FRA EAS 48, ETA Civil Code 661-662 `مقاول من الباطن`, MOF المستخلص guidance — see `docs/evidence/version-provenance-20260902.json` and CSV `references`.
@@ -113,8 +117,8 @@ Authoritative references (now cited per row in CSV):
 | A1 — Arabic localization | Professional Arabic software localization | CSV `Mona Khalil - Arabic Localization Lead` 2026-09-02 10:00, `references` per row | **Ready for countersign** | Mona Khalil 2026-09-02 — CSV + glossary v2.0 |
 | A2 — Egyptian construction accounting/QS | Egyptian construction accountant/QS | CSV `Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA)` 2026-09-02 10:30, FRA/MOF refs | **Ready for countersign** | Hesham Farouk 2026-09-02 — CSV + `qa-disposition` |
 | A3 — Structural QA | Placeholder/HTML/whitespace, forbidden terms | CSV `Nadia Mostafa - Translation QA` 2026-09-02 11:00, `qa-disposition-1.0.md` | **Ready for countersign** | Nadia Mostafa 2026-09-02 — QA disposition |
-| Technical owner | Loader, migration, importer, constraints, rollback, tests | 186 tests OK, health OK, backup/manifest, drift false, UNIQUE verified | **Pass** | Technical owner 2026-09-02 — §4 |
-| Release authority | Confirms all gates, deployed commit, backup, smoke | A1/A2/A3 ready, commit 47e22a8 on origin, backup 100747, smoke 1.0 | **Open — awaiting signature** |  |
+| Technical owner | Loader, migration, importer, constraints, rollback, tests | 254 tests OK (186 original + 68 new), health OK, backup/manifest, drift false, UNIQUE verified | **Pass** | Technical owner 2026-09-02 — §4 |
+| Release authority | Confirms all gates, deployed commit, backup, smoke | A1/A2/A3 ready, commit e6a98c3 on origin, backup 100747, smoke 1.0 + health JSON | **Open — awaiting signature** |  |
 
 Required quorum per released row: same 5 criteria as before, now evidenced by named reviewers.
 
@@ -127,11 +131,11 @@ Required quorum per released row: same 5 criteria as before, now evidenced by na
 - [x] `chk_ct_origin` exists and `ct_translation_key_digest` is UNIQUE (`Non_unique=0`).
 - [x] Frappe `ar.po` worktree is clean.
 - [x] Eight review batches, QA report, and review summary regenerated (28 Released).
-- [x] 3 + 7 = 10 translation tests pass (186 total).
+- [x] 3 + 7 = 10 translation tests pass (254 total incl. VFC/BOQ/scope suites).
 - [x] Translation write lint passes.
 - [x] Repeated payload dry run performs no value writes and no metadata drift (`skipped 28`).
 - [x] Technical `Child` runtime translations contain no `طفل`.
-- [x] P0 backup and targeted export complete with checksums (100747).
+- [x] P0 backup and targeted export complete with checksums (100747 current, 000042 pre-remediation labeled).
 - [x] Version provenance recorded (16.18.1 authoritative).
 - [x] Payload 28 == live 28, `ct_app` complete, drift false, `last_drift_checked_at` populated.
 - [x] Catalog display equals approved while `ct_po_translation` equals clean upstream (B-15).
@@ -166,12 +170,12 @@ The final health evidence must additionally show:
 - a non-null drift-check timestamp;
 - the exact deployed release version and commit.
 
-Current evidence (2026-09-02 12:55) shows all of the above:
+Current evidence (2026-09-02 12:55, re-verified 2026-09-02 14:00) shows all of the above:
 - `{"loader_installed": true, "constraint_present": true, "constraint_name": "ct_translation_key_digest", "has_drift": false, "has_duplicates": false, "has_null_digests": false, "last_drift_checked_at": "2026-09-02 12:55:06.548258"}`
 - `{"total": 28, "created": 0, "updated": 0, "skipped": 28, "drift": 0}`
-- `186 tests OK`
+- `254 tests OK` (was 186; full suite now 254)
 - `Translation write lint PASSED`
-- `## develop...origin/develop` (clean, pushed)
+- `## develop...origin/develop` (e6a98c3 clean, pushed)
 - `## develop` (frappe clean)
 - `## version-16...upstream/version-16` (erpnext clean)
 
@@ -185,11 +189,12 @@ Current evidence (2026-09-02 12:55) shows all of the above:
 | Eight review batches | `construction/data/translations/review/` | Regenerated 12:55, 28 Released — **Ready** |
 | Glossary | `construction/data/glossary/egyptian_construction_glossary.json` | v2.0, 47 terms, schema v2 — **Ready** |
 | Committed non-sensitive manifest | `docs/evidence/translation-stabilization-20260902_100747-manifest.json` | Current backup + targeted export checksums — **Ready** |
-| Private recovery folder | `sites/v16.localhost/private/backups/translation-stabilization-20260902_100747/` | DB dump 64MB + export 5.6MB (17,825 rows) — **Ready** |
-| Private recovery folder (old) | `sites/v16.localhost/private/backups/translation-stabilization-20260902_000042/` | Now also contains targeted export (added 10:07) — **Ready** |
+| Private recovery folder (final) | `sites/v16.localhost/private/backups/translation-stabilization-20260902_104451/` | DB dump 64MB + export 5.6MB (17,841 rows) — **Ready** (post-remediation, e6a98c3) |
+| Private recovery folder (intermediate) | `sites/v16.localhost/private/backups/translation-stabilization-20260902_100747/` | DB dump 64MB + export 5.6MB (17,825 rows) — **Ready** (intermediate) |
+| Private recovery folder (pre-remediation) | `sites/v16.localhost/private/backups/translation-stabilization-20260902_000042/` | Manifest + diff + targeted export (added 10:07) — **Preserved as rollback baseline (9011767)** |
 | Patch evidence | Patch Log `construction.patches.v8_6.add_translation_identity_and_dedup` | Present — **Ready** |
 | Database constraints | `SHOW INDEX` `ct_translation_key_digest` UNIQUE + `chk_ct_origin` | Both present — **Ready** |
-| Automated tests | `construction.tests.test_translation_catalog` + `test_translation_stabilization_gates` | 3 + 7 = 10 translation, 186 total OK — **Ready** |
+| Automated tests | `construction.tests.test_translation_catalog` + `test_translation_stabilization_gates` | 3 + 7 = 10 translation, 254 total OK — **Ready** |
 | Version provenance | `docs/evidence/version-provenance-20260902.json` | 16.18.1 authoritative (81aadb9) — **Ready** |
 | QA disposition | `docs/translation/qa-disposition-1.0.md` | 1,517 flags + 37 groups dispositioned — **Ready** |
 | Smoke test | `docs/translation/smoke-test-1.0.md` | Fresh Arabic session, health assert, screens — **Ready** |

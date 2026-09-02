@@ -38,5 +38,6 @@
   "targeted_export": "sites/v16.localhost/private/backups/translation-stabilization-20260902_100747/arabic_translation_export.csv",
   "database_backup_sha256": "fa1c0a9b17c14f12dd6b81efab31e736ecd2f5a8f505e8c5339dfc81302d376d",
   "targeted_export_sha256": "d794bfe0781d3f339ee93920a9f867ce5d1fb3813cea5751bf8a863eef1662a4",
-  "restore_instructions": "Restore database: gunzip < sites/v16.localhost/private/backups/translation-stabilization-20260902_100747/_6d52b48c328b294e-database-20260902_100747.sql.gz | mysql --socket=/run/mysqld/mysqld.sock -u _6d52b48c328b294e -p[pass] _6d52b48c328b294e  OR bench --site v16.localhost restore sites/v16.localhost/private/backups/translation-stabilization-20260902_100747/_6d52b48c328b294e-database-20260902_100747.sql.gz ; For targeted restore, use csv import or bench console"
+  "restore_instructions": "Restore database: gunzip < sites/v16.localhost/private/backups/translation-stabilization-20260902_100747/_6d52b48c328b294e-database-20260902_100747.sql.gz | mysql --socket=/run/mysqld/mysqld.sock -u _6d52b48c328b294e -p[pass] _6d52b48c328b294e  OR bench --site v16.localhost restore sites/v16.localhost/private/backups/translation-stabilization-20260902_100747/_6d52b48c328b294e-database-20260902_100747.sql.gz ; For targeted restore, use csv import or bench console",
+  "label": "POST-REMEDIATION intermediate — after B-01..B-09 fixes, before final 254-test and explicit acceptance for Submit/Handover"
 }
