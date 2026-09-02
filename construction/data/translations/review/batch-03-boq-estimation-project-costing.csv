@@ -1,4 +1,5 @@
 app,msgid,context,locations,comments,ct_app,po_translation,runtime_translation,effective_translation,proposed_translation,domain,priority,a1_status,a1_reviewer,a1_notes,a2_status,a2_reviewer,a2_notes,a3_status,a3_reviewer,a3_notes,qa_flags,cross_app_conflict,release_status,references
+construction,Variation Order,,,,construction,,أمر تغيير,أمر تغيير,أمر تغيير,boq,missing,Approved,Mona Khalil - Arabic Localization Lead,,Approved,Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA),,Approved,Nadia Mostafa - Translation QA / Structural Review,,,,Released,glossary v1.0
 erpnext,Total Projected Qty,,,,erpnext,توقعات مجموع الكمية,,توقعات مجموع الكمية,,boq,pending,,,,,,,,,,,,Approved,
 erpnext,Update Consumed Material Cost In Project,,,,erpnext,تحديث تكلفة المواد المستهلكة في المشروع,,تحديث تكلفة المواد المستهلكة في المشروع,,boq,pending,,,,,,,,,,,,Approved,
 erpnext,Costing Details,,,,erpnext,,تفاصيل احتساب التكلفة,تفاصيل احتساب التكلفة,,boq,missing,,,,,,,,,,,,Pending,

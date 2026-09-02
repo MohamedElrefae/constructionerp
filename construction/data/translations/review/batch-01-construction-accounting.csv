@@ -1,4 +1,8 @@
 app,msgid,context,locations,comments,ct_app,po_translation,runtime_translation,effective_translation,proposed_translation,domain,priority,a1_status,a1_reviewer,a1_notes,a2_status,a2_reviewer,a2_notes,a3_status,a3_reviewer,a3_notes,qa_flags,cross_app_conflict,release_status,references
+construction,Payment Certificate,,,,construction,,مستخلص,مستخلص,مستخلص,accounts,missing,Approved,Mona Khalil - Arabic Localization Lead,,Approved,Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA),,Approved,Nadia Mostafa - Translation QA / Structural Review,,,,Released,glossary v1.0
+construction,Retention Money,,,,construction,,محتجزات ضمان,محتجزات ضمان,محتجزات ضمان,accounts,missing,Approved,Mona Khalil - Arabic Localization Lead,,Approved,Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA),,Approved,Nadia Mostafa - Translation QA / Structural Review,,,,Released,EAS 48 Contract Asset/Liability + MOF final guarantee terminology; glossary v2.0 accounts
+construction,Retention,,,,construction,,محتجزات ضمان,محتجزات ضمان,محتجزات ضمان,accounts,missing,Approved,Mona Khalil - Arabic Localization Lead,,Approved,Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA),,Approved,Nadia Mostafa - Translation QA / Structural Review,,,,Released,EAS 48 Contract Asset/Liability + MOF final guarantee terminology; glossary v2.0 accounts
+erpnext,Child Account,,,,erpnext,,حساب فرعي,حساب فرعي,حساب فرعي,accounts,missing,Approved,Mona Khalil - Arabic Localization Lead,,Approved,Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA),,Approved,Nadia Mostafa - Translation QA / Structural Review,,,,Released,glossary v1.0
 erpnext,"<label class=""control-label"" style=""margin-bottom: 0px;"">Account Number Settings</label>",,,,erpnext,,,,,accounts,missing,,,,,,,,,,html_imbalance,,Pending,
 erpnext,Invoiced Qty,,,,erpnext,,الكمية المفوترة,الكمية المفوترة,,accounts,missing,,,,,,,,,,,,Pending,
 erpnext,Create Invoices,,,,erpnext,إنشاء الفواتير,,إنشاء الفواتير,,accounts,pending,,,,,,,,,,,,Approved,
@@ -259,7 +263,7 @@ erpnext,Depreciation Expense Account,,,,erpnext,حساب نفقات الاهلا
 erpnext,Are you sure you want to revise this budget? The current budget will be cancelled and a new draft will be created.,,,,erpnext,,,,,accounts,missing,,,,,,,,,,,,Pending,
 erpnext,Journals,,,,erpnext,,اليوميات,اليوميات,,accounts,missing,,,,,,,,,,,,Pending,
 erpnext,"{0} {1} is associated with {2}, but Party Account is {3}",,,,erpnext,{0} {1} مرتبط ب {2}، ولكن حساب الطرف هو {3},,{0} {1} مرتبط ب {2}، ولكن حساب الطرف هو {3},,accounts,pending,,,,,,,,,,,,Approved,
-erpnext,Journal Entry,,,,erpnext,القيود اليومية,قيد يومية,قيد يومية,,accounts,pending,Approved,A1,,Approved,A2,,Approved,A3,,,,Released,glossary v1.0
+erpnext,Journal Entry,,,,erpnext,القيود اليومية,قيد يومية,قيد يومية,,accounts,released,Approved,Mona Khalil - Arabic Localization Lead,,Approved,Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA),,Approved,Nadia Mostafa - Translation QA / Structural Review,,,,Released,ERPNext accounting DocTypes; EAS 48; glossary v2.0 accounts
 erpnext,Number of days appointments can be booked in advance,,,,erpnext,عدد أيام يمكن حجز المواعيد مقدما,,عدد أيام يمكن حجز المواعيد مقدما,,accounts,pending,,,,,,,,,,,,Approved,
 erpnext,Payment Deductions or Loss,,,,erpnext,خصومات الدفع أو الخسارة,,خصومات الدفع أو الخسارة,,accounts,pending,,,,,,,,,,,,Approved,
 erpnext,Sales Invoice {0} has already been submitted,,,,erpnext,سبق أن تم ترحيل فاتورة المبيعات {0},,سبق أن تم ترحيل فاتورة المبيعات {0},,accounts,pending,,,,,,,,,,,,Approved,
@@ -513,7 +517,7 @@ frappe,"<h3>Print Format Help</h3>
 	</tbody>
 </table>
 ",,,,frappe,,,,,accounts,missing,,,,,,,,,,placeholder_mismatch;html_imbalance;whitespace,,Pending,
-erpnext,Chart Of Accounts,,,,erpnext,,دليل الحسابات,دليل الحسابات,,accounts,missing,,,,,,,,,,,,Pending,
+erpnext,Chart Of Accounts,,,,erpnext,,,دليل الحسابات,,accounts,missing,,,,,,,,,,,,Deprecated,
 erpnext,Purchase Invoices,,,,erpnext,فواتير الشراء,,فواتير الشراء,,accounts,pending,,,,,,,,,,,,Approved,
 erpnext,Payment Gateway Account,,,,erpnext,دفع حساب البوابة,,دفع حساب البوابة,,accounts,pending,,,,,,,,,,,,Approved,
 erpnext,Process Period Closing Voucher,,,,erpnext,,معالجة سند إغلاق الفترة,معالجة سند إغلاق الفترة,,accounts,missing,,,,,,,,,,,,Pending,
@@ -734,7 +738,7 @@ erpnext,New Account Name,,,,erpnext,اسم الحساب الجديد,,اسم ا�
 erpnext,Deferred accounting failed for some invoices:,,,,erpnext,,,,,accounts,missing,,,,,,,,,,,,Pending,
 erpnext,"Payment Type must be one of Receive, Pay and Internal Transfer",,,,erpnext,"نوع الدفع يجب أن يكون إما استلام , دفع أو مناقلة داخلية\n<br>\nPayment Type must be one of Receive, Pay and Internal Transfer",,"نوع الدفع يجب أن يكون إما استلام , دفع أو مناقلة داخلية\n<br>\nPayment Type must be one of Receive, Pay and Internal Transfer",,accounts,pending,,,,,,,,,,html_imbalance,,Approved,
 erpnext,Offsetting Account,,,,erpnext,,حساب المقاصة,حساب المقاصة,,accounts,missing,,,,,,,,,,,,Pending,
-erpnext,Chart of Accounts,,,,erpnext,الشجرة المحاسبية,دليل الحسابات,دليل الحسابات,,accounts,pending,Approved,A1,,Approved,A2,,Approved,A3,,,,Released,glossary v1.0
+erpnext,Chart of Accounts,,,,erpnext,الشجرة المحاسبية,دليل الحسابات,دليل الحسابات,,accounts,released,Approved,Mona Khalil - Arabic Localization Lead,,Approved,Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA),,Approved,Nadia Mostafa - Translation QA / Structural Review,,,,Released,glossary v1.0
 erpnext,Row #{0}: Service Start and End Date is required for deferred accounting,,,,erpnext,الصف # {0}: مطلوب بداية وتاريخ انتهاء الخدمة للمحاسبة المؤجلة,,الصف # {0}: مطلوب بداية وتاريخ انتهاء الخدمة للمحاسبة المؤجلة,,accounts,pending,,,,,,,,,,,,Approved,
 erpnext,Capital Work In Progress Account,,,,erpnext,حساب رأس المال قيد التنفيذ,,حساب رأس المال قيد التنفيذ,,accounts,pending,,,,,,,,,,,,Approved,
 erpnext,Accountant,,,,erpnext,,محاسب,محاسب,,accounts,missing,,,,,,,,,,,,Pending,
@@ -789,7 +793,7 @@ erpnext,Payment Ledger Entry,,,,erpnext,,قيد دفتر أستاذ الدفع,�
 erpnext,Invoice already created for all billing hours,,,,erpnext,الفاتورة التي تم إنشاؤها بالفعل لجميع ساعات الفوترة,,الفاتورة التي تم إنشاؤها بالفعل لجميع ساعات الفوترة,,accounts,pending,,,,,,,,,,,,Approved,
 erpnext,Payments,,,,erpnext,المدفوعات,,المدفوعات,,accounts,pending,,,,,,,,,,,,Approved,
 erpnext,Inter Company Journal Entry,,,,erpnext,الدخول المشترك بين الشركة,,الدخول المشترك بين الشركة,,accounts,pending,,,,,,,,,,,,Approved,
-erpnext,Voucher,,,,erpnext,,السند,السند,,accounts,missing,Approved,A1,,Approved,A2,,Approved,A3,,,,Released,glossary v1.0
+erpnext,Voucher,,,,erpnext,,السند,السند,,accounts,missing,Approved,Mona Khalil - Arabic Localization Lead,,Approved,Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA),,Approved,Nadia Mostafa - Translation QA / Structural Review,,,,Released,glossary v1.0
 erpnext,Total payments amount can't be greater than {},,,,erpnext,لا يمكن أن يكون إجمالي المدفوعات أكبر من {},,لا يمكن أن يكون إجمالي المدفوعات أكبر من {},,accounts,pending,,,,,,,,,,,,Approved,
 erpnext,Select Difference Account,,,,erpnext,حدد حساب الفرق,,حدد حساب الفرق,,accounts,pending,,,,,,,,,,,,Approved,
 erpnext,Cash/Bank Account,,,,erpnext,حساب النقد / البنك,,حساب النقد / البنك,,accounts,pending,,,,,,,,,,,,Approved,
@@ -1158,7 +1162,7 @@ erpnext,Voucher Subtype,,,,erpnext,,النوع الفرعي للسند,النو�
 erpnext,Row {0}: Purchase Invoice {1} has no stock impact.,,,,erpnext,,,,,accounts,missing,,,,,,,,,,placeholder_mismatch,,Pending,
 erpnext,End date of current invoice's period,,,,erpnext,تاريخ نهاية فترة الفاتورة الحالية,,تاريخ نهاية فترة الفاتورة الحالية,,accounts,pending,,,,,,,,,,,,Approved,
 erpnext,You cannot create a {0} within the closed Accounting Period {1},,,,erpnext,,,,,accounts,missing,,,,,,,,,,placeholder_mismatch,,Pending,
-erpnext,Advance Payment,,,,erpnext,,دفعة مقدمة,دفعة مقدمة,,accounts,missing,Approved,A1,,Approved,A2,,Approved,A3,,,,Released,glossary v1.0
+erpnext,Advance Payment,,,,erpnext,,دفعة مقدمة,دفعة مقدمة,,accounts,missing,Approved,Mona Khalil - Arabic Localization Lead,,Approved,Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA),,Approved,Nadia Mostafa - Translation QA / Structural Review,,,,Released,glossary v1.0
 erpnext,Default Advance Received Account,,,,erpnext,,حساب الدفعات المقدمة المستلمة الافتراضي,حساب الدفعات المقدمة المستلمة الافتراضي,,accounts,missing,,,,,,,,,,,,Pending,
 erpnext,Asset Depreciation Ledger,,,,erpnext,دفتر حسابات استهلاك الأصول,,دفتر حسابات استهلاك الأصول,,accounts,pending,,,,,,,,,,,,Approved,
 erpnext,Select the Bank Account to reconcile.,,,,erpnext,حدد الحساب البنكي للتوفيق.,,حدد الحساب البنكي للتوفيق.,,accounts,pending,,,,,,,,,,,,Approved,
@@ -1208,7 +1212,7 @@ erpnext,Unrealized Exchange Gain/Loss Account,,,,erpnext,غير مجرب تبا�
 erpnext,Default Accounts,,,,erpnext,الحسابات الافتراضية,,الحسابات الافتراضية,,accounts,pending,,,,,,,,,,,,Approved,
 erpnext,Row #{0}: Journal Entry {1} does not have account {2} or already matched against another voucher,,,,erpnext,الصف {1} : قيد اليومية {1} لا يحتوى على الحساب {2} أو بالفعل يوجد في قسيمة مقابلة أخرى\n<br>\nRow #{0}: Journal Entry {1} does not have account {2} or already matched against another voucher,,الصف {1} : قيد اليومية {1} لا يحتوى على الحساب {2} أو بالفعل يوجد في قسيمة مقابلة أخرى\n<br>\nRow #{0}: Journal Entry {1} does not have account {2} or already matched against another voucher,,accounts,pending,,,,,,,,,,html_imbalance,,Approved,
 erpnext,Invalid value {0} for {1} against account {2},,,,erpnext,,,,,accounts,missing,,,,,,,,,,placeholder_mismatch,,Pending,
-erpnext,Payment Entry,,,,erpnext,تدوينات المدفوعات,سند قبض / سند صرف,سند قبض / سند صرف,,accounts,pending,Approved,A1,,Approved,A2,,Approved,A3,,,,Released,glossary v1.0
+erpnext,Payment Entry,,,,erpnext,تدوينات المدفوعات,سند قبض / سند صرف,سند قبض / سند صرف,,accounts,released,Approved,Mona Khalil - Arabic Localization Lead,,Approved,Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA),,Approved,Nadia Mostafa - Translation QA / Structural Review,,,,Released,ERPNext accounting DocTypes; EAS 48; glossary v2.0 accounts
 erpnext,Do you still want to enable immutable ledger?,,,,erpnext,,,,,accounts,missing,,,,,,,,,,,,Pending,
 erpnext,Charts Based On,,,,erpnext,الرسوم البيانية على أساس,,الرسوم البيانية على أساس,,accounts,pending,,,,,,,,,,,,Approved,
 frappe,Check this if you don't want users to sign up for an account on your site. Users won't get desk access unless you explicitly provide it.,,,,frappe,تحقق من هذا إذا كنت لا تريد أن يقوم المستخدمون بالتسجيل للحصول على حساب على موقعك. لن يتمكن المستخدمون من الوصول إلى المكتب ما لم تقدمه صراحةً.,,تحقق من هذا إذا كنت لا تريد أن يقوم المستخدمون بالتسجيل للحصول على حساب على موقعك. لن يتمكن المستخدمون من الوصول إلى المكتب ما لم تقدمه صراحةً.,,accounts,pending,,,,,,,,,,,,Approved,
@@ -1482,7 +1486,7 @@ erpnext,Use Company default Cost Center for Round off,,,,erpnext,,استخدام
 frappe,Automatically delete account within (hours),,,,frappe,,,,,accounts,missing,,,,,,,,,,,,Pending,
 frappe,Add a {0} Chart,,,,frappe,أضف مخطط {0},,أضف مخطط {0},,accounts,pending,,,,,,,,,,,,Approved,
 erpnext,You cannot submit the order without payment.,,,,erpnext,لا يمكنك تقديم الطلب بدون دفع.,,لا يمكنك تقديم الطلب بدون دفع.,,accounts,pending,,,,,,,,,,,,Approved,
-erpnext,Cost Center,,,,erpnext,مركز التكلفة,مركز التكلفة,مركز التكلفة,,accounts,pending,Approved,A1,,Approved,A2,,Approved,A3,,,,Released,glossary v1.0
+erpnext,Cost Center,,,,erpnext,مركز التكلفة,مركز التكلفة,مركز التكلفة,,accounts,released,Approved,Mona Khalil - Arabic Localization Lead,,Approved,Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA),,Approved,Nadia Mostafa - Translation QA / Structural Review,,,,Released,glossary v1.0
 erpnext,Against Voucher,,,,erpnext,مقابل إيصال,,مقابل إيصال,,accounts,pending,,,,,,,,,,,,Approved,
 erpnext,All these items have already been Invoiced/Returned,,,,erpnext,تم بالفعل إصدار فاتورة / إرجاع جميع هذه العناصر,,تم بالفعل إصدار فاتورة / إرجاع جميع هذه العناصر,,accounts,pending,,,,,,,,,,,,Approved,
 erpnext,Please set 'Asset Depreciation Cost Center' in Company {0},,,,erpnext,"يرجى تحديد ""مركز تكلفة اهلاك الأصول"" للشركة {0}",,"يرجى تحديد ""مركز تكلفة اهلاك الأصول"" للشركة {0}",,accounts,pending,,,,,,,,,,,,Approved,

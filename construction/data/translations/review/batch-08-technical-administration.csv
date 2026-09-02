@@ -1,4 +1,12 @@
 app,msgid,context,locations,comments,ct_app,po_translation,runtime_translation,effective_translation,proposed_translation,domain,priority,a1_status,a1_reviewer,a1_notes,a2_status,a2_reviewer,a2_notes,a3_status,a3_reviewer,a3_notes,qa_flags,cross_app_conflict,release_status,references
+frappe,Child DocType,,,,frappe,,نوع مستند فرعي,نوع مستند فرعي,نوع مستند فرعي,technical,missing,Approved,Mona Khalil - Arabic Localization Lead,,Approved,Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA),,Approved,Nadia Mostafa - Translation QA / Structural Review,,,,Released,glossary v1.0
+construction,Mobilization Cost,,,,construction,,تكلفة تجهيز الموقع,تكلفة تجهيز الموقع,تكلفة تجهيز الموقع,technical,missing,Approved,Mona Khalil - Arabic Localization Lead,,Approved,Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA),,Approved,Nadia Mostafa - Translation QA / Structural Review,,,,Released,glossary v1.0
+construction,Progress Billing,,,,construction,,مستخلص جاري,مستخلص جاري,مستخلص جاري,technical,missing,Approved,Mona Khalil - Arabic Localization Lead,,Approved,Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA),,Approved,Nadia Mostafa - Translation QA / Structural Review,,,,Released,glossary v1.0; EAS 48
+erpnext,Child Company,,,,erpnext,,شركة تابعة,شركة تابعة,شركة تابعة,technical,missing,Approved,Mona Khalil - Arabic Localization Lead,,Approved,Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA),,Approved,Nadia Mostafa - Translation QA / Structural Review,,,,Released,glossary v1.0
+frappe,Child Node,,,,frappe,,عقدة فرعية,عقدة فرعية,عقدة فرعية,technical,missing,Approved,Mona Khalil - Arabic Localization Lead,,Approved,Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA),,Approved,Nadia Mostafa - Translation QA / Structural Review,,,,Released,glossary v1.0
+frappe,Child Row,,,,frappe,,صف فرعي,صف فرعي,صف فرعي,technical,missing,Approved,Mona Khalil - Arabic Localization Lead,,Approved,Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA),,Approved,Nadia Mostafa - Translation QA / Structural Review,,,,Released,glossary v1.0
+frappe,Child Document,,,,frappe,,مستند فرعي,مستند فرعي,مستند فرعي,technical,missing,Approved,Mona Khalil - Arabic Localization Lead,,Approved,Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA),,Approved,Nadia Mostafa - Translation QA / Structural Review,,,,Released,glossary v1.0
+frappe,Child Table,,,,frappe,,جدول فرعي,جدول فرعي,جدول فرعي,technical,missing,Approved,Mona Khalil - Arabic Localization Lead,,Approved,Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA),,Approved,Nadia Mostafa - Translation QA / Structural Review,,,,Released,glossary v1.0
 frappe,Searching ...,,,,frappe,جاري البحث ...,,جاري البحث ...,,technical,pending,,,,,,,,,,,,Approved,
 frappe,Script,,,,frappe,سيناريو,,سيناريو,,technical,pending,,,,,,,,,,,,Approved,
 frappe,API Endpoint Args should be valid JSON,,,,frappe,,,,,technical,missing,,,,,,,,,,,,Pending,
@@ -1701,7 +1709,7 @@ erpnext,Parcel weight cannot be 0,,,,erpnext,,,,,technical,missing,,,,,,,,,,,,Pe
 erpnext,Net Change in Cash,,,,erpnext,صافي التغير في النقد,,صافي التغير في النقد,,technical,pending,,,,,,,,,,,,Approved,
 frappe,"Your query has been received. We will reply back shortly. If you have any additional information, please reply to this mail.",,,,frappe,وقد وردت الاستعلام الخاص بك. سوف نقوم بالرد مرة أخرى قريبا. إذا كان لديك أي معلومات إضافية، يرجى الرد على هذا البريد.,,وقد وردت الاستعلام الخاص بك. سوف نقوم بالرد مرة أخرى قريبا. إذا كان لديك أي معلومات إضافية، يرجى الرد على هذا البريد.,,technical,pending,,,,,,,,,,,,Approved,
 frappe,chrome,,,,frappe,,,,,technical,missing,,,,,,,,,,,,Pending,
-frappe,Add Child,,,,frappe,إضافة فرع,إضافة فرع,إضافة فرع,,technical,pending,Approved,A1,,Approved,A2,,Approved,A3,,,,Released,EAS glossary v1.0; Frappe treeview.js:301
+frappe,Add Child,,,,frappe,,إضافة فرع,إضافة فرع,,technical,missing,Approved,Mona Khalil - Arabic Localization Lead,,Approved,Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA),,Approved,Nadia Mostafa - Translation QA / Structural Review,,,,Released,FRA EAS 48 + ETA; Frappe treeview.js:301; glossary v2.0 p.1; Egyptian Civil Code 131-1948 Art 661-662 formal 'مقاول من الباطن'
 erpnext,Generate Schedule,,,,erpnext,إنشاء جدول,,إنشاء جدول,,technical,pending,,,,,,,,,,,,Approved,
 frappe,Reference Type,,,,frappe,نوع المرجع,,نوع المرجع,,technical,pending,,,,,,,,,,,,Approved,
 erpnext,Receive,,,,erpnext,تسلم,,تسلم,,technical,pending,,,,,,,,,,,,Approved,
@@ -10607,7 +10615,7 @@ frappe,"Footer ""Powered By""",,,,frappe,,,,,technical,missing,,,,,,,,,,,,Pendin
 frappe,Collapsible Depends On,,,,frappe,الضم يعتمد على,,الضم يعتمد على,,technical,pending,,,,,,,,,,,,Approved,
 frappe,URL that points to a human-readable terms of service document for the client. Should be shown to end-user before authorizing.,,,,frappe,,,,,technical,missing,,,,,,,,,,,,Pending,
 erpnext,Is Composite Asset,,,,erpnext,,أصل مركب,أصل مركب,,technical,missing,,,,,,,,,,,,Pending,
-frappe,Child Doctype,,,,frappe,,,,,technical,missing,,,,,,,,,,,,Pending,
+frappe,Child Doctype,,,,frappe,,,نوع مستند فرعي,,technical,missing,,,,,,,,,,,,Deprecated,
 erpnext,The field To Shareholder cannot be blank,,,,erpnext,لا يمكن ترك الحقل للمساهم فارغا,,لا يمكن ترك الحقل للمساهم فارغا,,technical,pending,,,,,,,,,,,,Approved,
 erpnext,Bisect Left,,,,erpnext,,تقسيم يسارا,تقسيم يسارا,,technical,missing,,,,,,,,,,,,Pending,
 erpnext,Add Multiple Tasks,,,,erpnext,إضافة مهام متعددة,,إضافة مهام متعددة,,technical,pending,,,,,,,,,,,,Approved,
@@ -10694,7 +10702,7 @@ erpnext,"Here you can maintain family details like name and occupation of parent
 erpnext,Based On Data ( in years ),,,,erpnext,على أساس البيانات (بالسنوات),,على أساس البيانات (بالسنوات),,technical,pending,,,,,,,,,,,,Approved,
 frappe,Add Tags,,,,frappe,,,,,technical,missing,,,,,,,,,,,,Pending,
 frappe,No Data,,,,frappe,,,,,technical,missing,,,,,,,,,,,,Pending,
-construction,Bill of Quantities,,,,construction,جدول الكميات,جدول الكميات,جدول الكميات,,technical,pending,Approved,A1,,Approved,A2,,Approved,A3,,,,Released,glossary v1.0
+construction,Bill of Quantities,,,,construction,جدول الكميات,جدول الكميات,جدول الكميات,,technical,released,Approved,Mona Khalil - Arabic Localization Lead,,Approved,Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA),,Approved,Nadia Mostafa - Translation QA / Structural Review,,,,Released,glossary v1.0
 erpnext,Indirect Expenses,,,,erpnext,نفقات غير مباشرة,,نفقات غير مباشرة,,technical,pending,,,,,,,,,,,,Approved,
 erpnext,Starting location from left edge,,,,erpnext,بدءا الموقع من الحافة اليسرى,,بدءا الموقع من الحافة اليسرى,,technical,pending,,,,,,,,,,,,Approved,
 erpnext,Calorie (Mean),,,,erpnext,,,,,technical,missing,,,,,,,,,,,,Pending,

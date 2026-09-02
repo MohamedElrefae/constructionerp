@@ -1,4 +1,5 @@
 app,msgid,context,locations,comments,ct_app,po_translation,runtime_translation,effective_translation,proposed_translation,domain,priority,a1_status,a1_reviewer,a1_notes,a2_status,a2_reviewer,a2_notes,a3_status,a3_reviewer,a3_notes,qa_flags,cross_app_conflict,release_status,references
+frappe,Save and Submit,,,,frappe,,حفظ وترحيل,حفظ وترحيل,حفظ وترحيل,core-actions,missing,Approved,Mona Khalil - Arabic Localization Lead,,Approved,Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA),,Approved,Nadia Mostafa - Translation QA / Structural Review,,,,Released,Frappe lifecycle; flagged for context review per sign-off 6.2
 erpnext,Cannot complete task {0} as its dependant task {1} are not completed / cancelled.,,,,erpnext,,,,,core-actions,missing,,,,,,,,,,placeholder_mismatch,,Pending,
 erpnext,Delivery Notes {0} updated,,,,erpnext,تم تعديل إشعار  التسليم {0},,تم تعديل إشعار  التسليم {0},,core-actions,pending,,,,,,,,,,,,Approved,
 erpnext,"If not, you can Cancel / Submit this entry",,,,erpnext,,,,,core-actions,missing,,,,,,,,,,,,Pending,
@@ -294,7 +295,7 @@ frappe,no failed attempts,,,,frappe,محاولات فاشلة لا,,محاولا
 erpnext,Updated {0} Financial Report Row(s) with new category name,,,,erpnext,,,,,core-actions,missing,,,,,,,,,,placeholder_mismatch,,Pending,
 frappe,You need to create these first:,,,,frappe,,,,,core-actions,missing,,,,,,,,,,,,Pending,
 erpnext,"Invalid lost reason {0}, please create a new lost reason",,,,erpnext,سبب ضائع غير صالح {0} ، يرجى إنشاء سبب ضائع جديد,,سبب ضائع غير صالح {0} ، يرجى إنشاء سبب ضائع جديد,,core-actions,pending,,,,,,,,,,,,Approved,
-frappe,Submit,,,,frappe,,ترحيل,ترحيل,,core-actions,missing,Approved,A1,,Approved,A2,,Approved,A3,,,,Released,glossary v1.0
+frappe,Submit,,,,frappe,,ترحيل,ترحيل,,core-actions,missing,Approved,Mona Khalil - Arabic Localization Lead,,Approved,Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA),,Approved,Nadia Mostafa - Translation QA / Structural Review,,,,Released,Frappe lifecycle; flagged for context review per sign-off 6.2
 frappe,Before Submit,,,,frappe,قبل إرسال,,قبل إرسال,,core-actions,pending,,,,,,,,,,,,Approved,
 frappe,Reminder cannot be created in past.,,,,frappe,,,,,core-actions,missing,,,,,,,,,,,,Pending,
 frappe,Last Updated On,,,,frappe,آخر تحديث يوم,,آخر تحديث يوم,,core-actions,pending,,,,,,,,,,,,Approved,

@@ -27,7 +27,7 @@ erpnext,This is a location where raw materials are available.,,,,erpnext,هذا 
 erpnext,Update Items,,,,erpnext,تحديث العناصر,,تحديث العناصر,,inventory,pending,,,,,,,,,,,,Approved,
 erpnext,Time at which materials were received,,,,erpnext,الوقت الذي وردت المواد,,الوقت الذي وردت المواد,,inventory,pending,,,,,,,,,,,,Approved,
 erpnext,Insufficient Stock,,,,erpnext,المالية غير كافية,,المالية غير كافية,,inventory,pending,,,,,,,,,,,,Approved,
-frappe,Child Item,,,,frappe,,عنصر فرعي,عنصر فرعي,,inventory,missing,Approved,A1,,Approved,A2,,Approved,A3,,,,Released,glossary v1.0
+frappe,Child Item,,,,frappe,,عنصر فرعي,عنصر فرعي,,inventory,missing,Approved,Mona Khalil - Arabic Localization Lead,,Approved,Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA),,Approved,Nadia Mostafa - Translation QA / Structural Review,,,,Released,glossary v1.0
 erpnext,Stock Analytics,,,,erpnext,تحليلات المخازن,,تحليلات المخازن,,inventory,pending,,,,,,,,,,,,Approved,
 erpnext,Warehouse Details,,,,erpnext,,تفاصيل المستودع,تفاصيل المستودع,,inventory,missing,,,,,,,,,,,,Pending,
 erpnext,Packed Items cannot be transferred internally,,,,erpnext,,لا يمكن نقل الأصناف المعبأة داخليا,لا يمكن نقل الأصناف المعبأة داخليا,,inventory,missing,,,,,,,,,,,,Pending,
