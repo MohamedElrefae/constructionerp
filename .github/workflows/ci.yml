@@ -42,12 +42,14 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          # Frappe version-16 currently requires Python >=3.14,<3.15.
+          python-version: '3.14'
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          # Match Frappe v16's declared Node runtime.
+          node-version: 20
           check-latest: true
 
       - name: Cache pip
