@@ -48,8 +48,8 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          # Match Frappe v16's declared Node runtime.
-          node-version: 20
+          # Frappe v16's package.json requires Node >=24.
+          node-version: 24
           check-latest: true
 
       - name: Cache pip
