@@ -69,7 +69,9 @@ jobs:
 
       - name: Setup
         run: |
-          pip install frappe-bench
+          # Bench 5.31.0 calls supervisorctl during init; GitHub's runner has
+          # no Supervisor service, so pin the last verified CI-compatible release.
+          pip install 'frappe-bench==5.29.1'
           bench init --skip-redis-config-generation --skip-assets --frappe-branch version-16 --python "$(which python)" ~/frappe-bench
           mariadb --host 127.0.0.1 --port 3306 -u root -proot -e "SET GLOBAL character_set_server = 'utf8mb4'"
           mariadb --host 127.0.0.1 --port 3306 -u root -proot -e "SET GLOBAL collation_server = 'utf8mb4_unicode_ci'"
