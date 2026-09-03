@@ -69,12 +69,15 @@ jobs:
 
       - name: Setup
         run: |
-          # Bench 5.31.0 calls supervisorctl during init; GitHub's runner has
-          # no Supervisor service, so pin the last verified CI-compatible release.
-          pip install 'frappe-bench==5.29.1'
+          pip install frappe-bench
           bench init --skip-redis-config-generation --skip-assets --frappe-branch version-16 --python "$(which python)" ~/frappe-bench
           mariadb --host 127.0.0.1 --port 3306 -u root -proot -e "SET GLOBAL character_set_server = 'utf8mb4'"
           mariadb --host 127.0.0.1 --port 3306 -u root -proot -e "SET GLOBAL collation_server = 'utf8mb4_unicode_ci'"
+        # Bench attempts to reload Supervisor after each app install.  CI has
+        # supervisorctl but no running Supervisor service, so use Bench's
+        # documented build guard to suppress process-manager reloads.
+        env:
+          FRAPPE_DOCKER_BUILD: '1'
 
       - name: Install
         working-directory: /home/runner/frappe-bench
@@ -88,6 +91,7 @@ jobs:
           bench build
         env:
           CI: 'Yes'
+          FRAPPE_DOCKER_BUILD: '1'
 
       - name: Verify App Installation
         working-directory: /home/runner/frappe-bench
