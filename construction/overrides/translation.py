@@ -21,6 +21,11 @@ class CustomTranslation(Translation):
         self.context = (self.context or "").strip()
         if not self.source_text:
             frappe.throw("source_text is required (whitespace-only values are rejected)")
+        if not self.get("ct_is_catalog_entry") and not (self.translated_text or "").strip():
+            # A runtime row with an empty value would blank the UI string
+            # (loader shadowing) — reject it; catalog rows may stay empty
+            # (they represent untranslated upstream strings).
+            frappe.throw("translated_text is required for runtime (non-catalog) translations")
         if "\x00" in (self.source_text or "") or "\x00" in (self.translated_text or "") or "\x00" in (self.context or ""):
             frappe.throw("Translation key/value contains embedded NUL")
         if self.meta.has_field("ct_key_digest"):

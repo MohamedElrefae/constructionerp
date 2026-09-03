@@ -660,3 +660,111 @@ def get_translation_health_api():
 def assert_translation_health_api():
     frappe.only_for("System Manager")
     return assert_translation_health()
+
+
+@frappe.whitelist()
+def diagnose_translation(source_text, context=None, language="ar"):
+    """Explain exactly why a UI string is (or is not) translated.
+
+    Self-diagnosis for any 'translation exists in the list but not in the UI'
+    report. Returns the upstream .po value, the live runtime override, the
+    effective value the UI resolves, and a verdict with the reason.
+    """
+    frappe.only_for("System Manager", True)
+    source_text = _runtime_source(source_text)
+    context = (context or "").strip()
+    from pathlib import Path
+
+    from babel.messages.pofile import read_po
+
+    result = {
+        "requested_key": source_text,
+        "context": context,
+        "language": language,
+        "po": {},
+        "runtime": {},
+        "effective": "",
+        "verdict": "",
+        "reason": "",
+    }
+    # 1) Upstream .po baselines (what the .mo path supplies)
+    for app in ("frappe", "erpnext", "construction"):
+        po_path = Path(frappe.get_app_path(app)) / "locale" / f"{language}.po"
+        if not po_path.exists():
+            continue
+        try:
+            with po_path.open("rb") as handle:
+                catalog = read_po(handle, locale=language)
+            msg = catalog.get(source_text, context=context or None)
+            if msg is not None and msg.string:
+                result["po"][app] = msg.string
+        except Exception:
+            continue
+    # 2) Live runtime rows
+    result["runtime"] = [
+        {
+            "name": r.name,
+            "translated_text": r.translated_text,
+            "origin": r.get("ct_origin"),
+            "release_status": r.get("ct_review_status"),
+            "ct_app": r.get("ct_app"),
+            "ct_proposed_translation": r.get("ct_proposed_translation"),
+        }
+        for r in frappe.get_all(
+            "Translation",
+            filters={"language": language, "source_text": source_text},
+            fields=["name", "translated_text", "ct_is_catalog_entry", "ct_origin",
+                    "ct_review_status", "ct_app", "ct_proposed_translation", "context"],
+            limit_page_length=0,
+        )
+        if (r.context or "") == context
+    ]
+    # 3) What the UI resolves
+    try:
+        from frappe.translate import get_all_translations
+
+        key = f"{source_text}:{context}" if context else source_text
+        result["effective"] = get_all_translations(language).get(key, "") or ""
+    except Exception:
+        pass
+    # 4) Verdict
+    runtime_released = [
+        r for r in result["runtime"]
+        if not r.get("ct_is_catalog_entry") and (r.get("translated_text") or "").strip()
+    ]
+    if result["effective"]:
+        if runtime_released:
+            result["verdict"] = "translated"
+            result["reason"] = "runtime override wins"
+        elif result["po"]:
+            result["verdict"] = "translated"
+            result["reason"] = f"upstream .po baseline ({', '.join(result['po'])})"
+        else:
+            result["verdict"] = "translated"
+            result["reason"] = "merged catalog"
+    elif result["runtime"] and any(
+        r.get("ct_is_catalog_entry") and (r.get("ct_proposed_translation") or "").strip()
+        for r in result["runtime"]
+    ):
+        result["verdict"] = "pending_release"
+        result["reason"] = (
+            "a proposal exists on a catalog row but has not been Released — "
+            "release it via the review workflow for the UI to change"
+        )
+    elif result["po"]:
+        result["verdict"] = "empty_upstream"
+        result["reason"] = "upstream .po has an entry but no Arabic text"
+    else:
+        result["verdict"] = "missing"
+        result["reason"] = (
+            "no Arabic anywhere for this exact key — translate it via the review "
+            "batches or add a runtime translation"
+        )
+    if "\n" in json.dumps(result["runtime"], ensure_ascii=False):
+        pass
+    return result
+
+
+@frappe.whitelist()
+def diagnose_translation_api(source_text, context=None, language="ar"):
+    return diagnose_translation(source_text, context=context, language=language)

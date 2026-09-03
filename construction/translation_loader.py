@@ -40,6 +40,10 @@ try:
                     frappe.log_error(f"Translation loader DB error: {e}\n{frappe.get_traceback()}", "Translation Loader")
                     return {}
             for t in rows:
+                # An empty runtime value must never shadow the .mo catalog:
+                # storing it would blank the UI string entirely.
+                if not t.translated_text:
+                    continue
                 key = t.source_text
                 if t.context:
                     key += ":" + t.context
