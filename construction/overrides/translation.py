@@ -13,6 +13,14 @@ from frappe.translate import MERGED_TRANSLATION_KEY, USER_TRANSLATION_KEY
 class CustomTranslation(Translation):
     def validate(self):
         super().validate()
+        # Runtime lookup keys must match what the UI requests. Accidental
+        # leading/trailing whitespace (paste artifacts) breaks the lookup while
+        # remaining self-consistent in the digest, so trim it here. Catalog
+        # bulk inserts bypass validate and keep exact upstream msgid bytes.
+        self.source_text = (self.source_text or "").strip()
+        self.context = (self.context or "").strip()
+        if not self.source_text:
+            frappe.throw("source_text is required (whitespace-only values are rejected)")
         if "\x00" in (self.source_text or "") or "\x00" in (self.translated_text or "") or "\x00" in (self.context or ""):
             frappe.throw("Translation key/value contains embedded NUL")
         if self.meta.has_field("ct_key_digest"):
@@ -22,6 +30,18 @@ class CustomTranslation(Translation):
             self.ct_key_digest = _compute_digest(
                 self.language or "", self.source_text or "", self.context or "", self.get("ct_app") or "", is_catalog
             )
+            # Friendly duplicate message instead of a raw IntegrityError when
+            # trimming collapses this row onto an existing key.
+            clash = frappe.db.get_value(
+                "Translation",
+                {"ct_key_digest": self.ct_key_digest, "name": ("!=", self.name or "")},
+                "name",
+            )
+            if clash:
+                frappe.throw(
+                    f"A translation with this key already exists ({clash}). "
+                    "Edit that row instead of creating a duplicate."
+                )
         if self.meta.has_field("ct_search_normalized"):
             from construction.translation_service import _search_normalized
 

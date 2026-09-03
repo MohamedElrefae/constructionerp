@@ -17,3 +17,4 @@ construction.patches.v8_3.fix_arabic_domain_terminology
 construction.patches.v8_4.fix_tree_view_arabic_translations
 construction.patches.v8_5.seed_translation_catalog
 construction.patches.v8_6.add_translation_identity_and_dedup
+construction.patches.v8_7.trim_runtime_translation_keys

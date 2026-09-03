@@ -19,6 +19,7 @@ class TestTranslationStabilizationGates(FrappeTestCase):
         frappe.db.delete("Translation", {"source_text": ["like", "MetaRepair%"], "language": "ar"})
         frappe.db.delete("Translation", {"source_text": ["like", "CatalogPO%"], "language": "ar"})
         frappe.db.delete("Translation", {"source_text": ["like", "DriftOrphan%"], "language": "ar"})
+        frappe.db.delete("Translation", {"source_text": ["like", "Trim Test%"], "language": "ar"})
         frappe.db.delete("Translation", {"source_text": "HookFail", "language": "ar"})
         frappe.db.commit()
         frappe_translate.clear_cache()
@@ -63,20 +64,50 @@ class TestTranslationStabilizationGates(FrappeTestCase):
         self.assertTrue(idx, "UNIQUE ct_translation_key_digest must exist")
         src = f"Unique Test {uuid4().hex}"
         self._insert_runtime(src, "قيمة أولى")
+        # Raw insert bypasses the controller's friendly duplicate check and
+        # must be rejected by the DB UNIQUE constraint itself.
+        doc2 = frappe.new_doc("Translation")
+        doc2.update({
+            "language": "ar",
+            "source_text": src,
+            "translated_text": "قيمة ثانية",
+            "context": "",
+            "ct_is_catalog_entry": 0,
+            "ct_app": None,
+            "ct_origin": "Site Override",
+        })
+        from construction.translation_service import _compute_digest
+        doc2.ct_key_digest = _compute_digest("ar", src, "", None, False)
         with self.assertRaises(Exception) as cm:
-            doc2 = frappe.get_doc(
-                {
-                    "doctype": "Translation",
-                    "language": "ar",
-                    "source_text": src,
-                    "translated_text": "قيمة ثانية",
-                    "context": "",
-                    "ct_is_catalog_entry": 0,
-                    "ct_app": None,
-                }
-            )
-            doc2.insert(ignore_permissions=True)
-        self.assertIn("Duplicate", str(cm.exception) or "UNIQUE" in str(cm.exception) or "1062" in str(cm.exception))
+            doc2.db_insert()
+        self.assertTrue(
+            "Duplicate" in str(cm.exception) or "1062" in str(cm.exception),
+            f"expected DB unique violation, got: {cm.exception}",
+        )
+
+    def test_key_trim_friendly_duplicate_and_empty_rejection(self):
+        # 1) Trailing newline is trimmed and the digest matches the clean key.
+        from construction.translation_service import _compute_digest
+        src_dirty = f"Trim Test {uuid4().hex}\n"
+        doc = self._insert_runtime(src_dirty, "قيمة")
+        doc.reload()
+        self.assertEqual(doc.source_text, src_dirty.strip(), "edge whitespace must be trimmed on save")
+        self.assertEqual(doc.ct_key_digest, _compute_digest("ar", src_dirty.strip(), "", None, False))
+
+        # 2) Creating a duplicate of the clean key gives a friendly error.
+        with self.assertRaises(Exception) as cm:
+            self._insert_runtime(src_dirty.strip(), "قيمة ثانية")
+        self.assertIn("already exists", str(cm.exception))
+
+        # 3) Whitespace-only source is rejected.
+        with self.assertRaises(Exception) as cm2:
+            self._insert_runtime("   \n  ", "قيمة")
+        self.assertIn("source_text is required", str(cm2.exception))
+
+        # 4) The loader resolves the clean key (the exact user-reported bug).
+        frappe_translate.clear_cache()
+        from frappe.translate import get_user_translations
+        self.assertEqual(get_user_translations("ar").get(src_dirty.strip()), "قيمة")
 
     def test_b04_quorum_enforced(self):
         from construction.translation_service import import_released_overrides
@@ -149,16 +180,22 @@ class TestTranslationStabilizationGates(FrappeTestCase):
 
     def test_b06_drift_detection(self):
         from construction.translation_service import get_translation_health
-        h = get_translation_health()
-        self.assertFalse(h["has_drift"])
-        self.assertIsNotNone(h["last_drift_checked_at"])
+        # The test DB is the live site: baseline may already carry legitimate
+        # drift from operator edits. Assert that adding an orphan ADDS drift,
+        # and that details are populated — not an absolute false baseline.
+        baseline = get_translation_health()
+        self.assertIsNotNone(baseline["last_drift_checked_at"])
+        self.assertTrue(baseline["constraint_present"])
         src = f"DriftOrphan {uuid4().hex}"
         self._insert_runtime(src, "قيمة orphan", origin="Packaged Release", version="1.0")
-        h2 = get_translation_health()
-        self.assertTrue(h2["has_drift"])
-        self.assertIn("orphan", " ".join(h2["drift_details"]).lower())
-        frappe.db.delete("Translation", {"source_text": src, "language": "ar"})
-        frappe.db.commit()
+        try:
+            h2 = get_translation_health()
+            self.assertTrue(h2["has_drift"], "orphan packaged row must be detected as drift")
+            self.assertTrue(any(src in d for d in h2["drift_details"]),
+                            f"orphan key must appear in drift details: {h2['drift_details']}")
+        finally:
+            frappe.db.delete("Translation", {"source_text": src, "language": "ar"})
+            frappe.db.commit()
 
     def test_b17_hook_fail_closed(self):
         from construction.translation_service import import_released_overrides_hook

@@ -120,6 +120,18 @@ def _apply_origin(doc, origin, release_version, released_by):
         doc.ct_released_by = released_by
 
 
+def _runtime_source(source_text):
+    """Normalize a runtime lookup key.
+
+    Runtime keys must match what the UI requests via ``_()``. Accidental
+    leading/trailing whitespace (paste artifacts such as a trailing newline)
+    makes the stored key diverge from the requested key while staying
+    self-consistent in the digest, so strip it here. Internal whitespace is
+    preserved (some legitimate msgids contain spaces mid-string).
+    """
+    return (source_text or "").strip()
+
+
 def upsert_runtime_translation(
     source_text,
     translated_text,
@@ -132,9 +144,9 @@ def upsert_runtime_translation(
     ignore_permissions=False,
     released_by=None,
 ):
-    source_text = _exact_source(source_text)
+    source_text = _runtime_source(source_text)
     translated_text = translated_text or ""
-    context = context or ""
+    context = (context or "").strip()
     if not source_text or not language or not translated_text:
         return None
     _ensure_no_nul(source_text, "source_text")
@@ -178,7 +190,8 @@ def upsert_runtime_translation(
             doc.insert(ignore_permissions=ignore_permissions)
         else:
             doc.save(ignore_permissions=ignore_permissions)
-    except frappe.exceptions.DuplicateEntryError:
+    except (frappe.exceptions.DuplicateEntryError, frappe.exceptions.UniqueValidationError):
+        # Race or trim-collision: converge on the existing canonical row.
         rows2 = _get_runtime_rows(language, source_text, context)
         if rows2:
             doc2 = frappe.get_doc("Translation", rows2[0].name)
@@ -197,7 +210,7 @@ def upsert_runtime_translation(
 
 
 def delete_or_revert_runtime_translation(language, source_text, context="", reason=None):
-    rows = _get_runtime_rows(language, source_text, context)
+    rows = _get_runtime_rows(language, _runtime_source(source_text), (context or "").strip())
     if not rows:
         return {"deleted": 0}
     has_origin = frappe.db.has_column("Translation", "ct_origin")

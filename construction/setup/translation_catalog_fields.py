@@ -29,11 +29,10 @@ CUSTOM_FIELDS = [
         "label": "App",
         "fieldtype": "Data",
         "insert_after": "ct_is_catalog_entry",
-        "read_only": 1,
         "in_list_view": 1,
         "in_standard_filter": 1,
         "search_index": 1,
-        "description": "Source app (frappe / erpnext / construction).",
+        "description": "Provenance only (frappe / erpnext / construction). NOT part of the runtime key — a blank value does not prevent a translation from applying. Editable for manually created rows.",
         "owner": "Administrator",
     },
     {

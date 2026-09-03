@@ -8,6 +8,7 @@ ALLOWLIST = {
     "construction/translation_service.py",
     "construction/translation_loader.py",
     "construction/patches/v8_6/add_translation_identity_and_dedup.py",
+    "construction/patches/v8_7/trim_runtime_translation_keys.py",
     "construction/setup/translation_catalog_fields.py",
     "construction/patches/v6_2/seed_arabic_translations.py",
     "construction/patches/v6_3/seed_reviewed_arabic_translation_files.py",
