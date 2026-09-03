@@ -3232,7 +3232,9 @@ def whitelabel_patch():
         frappe.db.set_value("Blog Post", "Welcome", "content", "", update_modified=False)
 
     # Clear module onboarding docs via database updates
-    if frappe.db.exists("DocType", "Module Onboarding"):
+    if frappe.db.exists("DocType", "Module Onboarding") and frappe.db.has_column(
+        "Module Onboarding", "documentation_url"
+    ):
         for module_name in frappe.get_all("Module Onboarding", pluck="name"):
             frappe.db.set_value("Module Onboarding", module_name, "documentation_url", "", update_modified=False)
 

@@ -150,6 +150,60 @@ def ensure_custom_fields():
             frappe.log_error(f"Failed to create custom field {field['fieldname']}", "Translation Catalog Setup")
 
 
+def ensure_translation_identity():
+    """after_install / after_migrate hook: guarantee identity fields + digests.
+
+    Fresh ``install-app`` marks app patches as executed without running them,
+    so schema created only by patches (v8_6/v8_7) would be missing on new
+    sites. This hook is idempotent: it creates the custom fields if needed and
+    backfills digests / normalized search keys / origin for any row that lacks
+    them. Safe to run repeatedly (second run changes nothing).
+    """
+    ensure_custom_fields()
+    if not frappe.db.has_column("Translation", "ct_key_digest"):
+        return {"skipped": True, "reason": "ct_key_digest column unavailable"}
+
+    import hashlib
+    import json
+
+    from frappe.translate import strip_html_tags
+
+    def _digest(lang, src, ctx, app, is_catalog):
+        payload = (
+            [lang or "", src or "", ctx or "", app or "", "catalog"]
+            if is_catalog
+            else [lang or "", src or "", ctx or "", "runtime"]
+        )
+        raw = json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
+        return hashlib.sha256(raw.encode("utf-8")).hexdigest()
+
+    backfilled = 0
+    rows = frappe.get_all(
+        "Translation",
+        filters={"ct_key_digest": ("in", ("", None))},
+        fields=["name", "language", "source_text", "context", "ct_app",
+                "ct_is_catalog_entry", "ct_origin", "ct_key_digest", "ct_search_normalized"],
+        limit_page_length=0,
+    )
+    for r in rows:
+        lang = r.language or ""
+        src = r.source_text or ""
+        ctx = r.context or ""
+        app = r.get("ct_app") or ""
+        is_catalog = bool(r.get("ct_is_catalog_entry"))
+        updates = {
+            "ct_key_digest": _digest(lang, src, ctx, app, is_catalog),
+            "ct_search_normalized": strip_html_tags(src).strip(),
+        }
+        if not is_catalog and frappe.db.has_column("Translation", "ct_origin") and not (r.get("ct_origin") or "").strip():
+            updates["ct_origin"] = "Site Override"
+        frappe.db.set_value("Translation", r.name, updates, update_modified=False)
+        backfilled += 1
+    if backfilled:
+        frappe.db.commit()
+    return {"backfilled": backfilled}
+
+
 def apply():
     """Run from patches / migrate."""
     ensure_custom_fields()

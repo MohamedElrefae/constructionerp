@@ -7,6 +7,12 @@ app_description = "Construction ERP App for BOQ, Cost Estimation, and Project Ma
 app_email = "melrefa3@hotmail.com"
 app_license = "MIT"
 
+# Hard install-time dependency: UOM fixtures, Item/Company custom fields,
+# ERPNext standard filters, and accounting dimensions all require ERPNext.
+# Declaring it makes install-app fail with a clear message instead of a
+# cryptic missing-table error (e.g. tabUOM) on frappe-only sites.
+required_apps = ["erpnext"]
+
 # Module registration (fixes DocType import resolution)
 modules = [
     {
@@ -278,6 +284,7 @@ after_install = [
     "construction.install.seed_construction_roles",
     "construction.install.seed_form_layout_profiles",
     "construction.install.setup_item_construction_fields",
+    "construction.setup.translation_catalog_fields.ensure_translation_identity",
     "construction.translation_service.import_released_overrides_hook",
 ]
 
@@ -299,6 +306,7 @@ after_migrate = [
     "construction.install.seed_construction_roles",
     "construction.install.seed_form_layout_profiles",
     "construction.install.setup_item_construction_fields",
+    "construction.setup.translation_catalog_fields.ensure_translation_identity",
     "construction.translation_service.import_released_overrides_hook",
 ]
 

@@ -13,6 +13,20 @@ def _row(doc: Any) -> dict[str, Any]:
     return dict(doc)
 
 
+def _table_ready(doctype: str) -> bool:
+    """Whether the backing table for ``doctype`` exists.
+
+    During a fresh ``install-app``, DocType sync order is not guaranteed: the
+    ``BOQ Structure.on_doctype_update`` hook can fire before ``tabBOQ Item``
+    is created. Health queries must tolerate that instead of aborting the
+    install with a TableMissingError.
+    """
+    try:
+        return bool(frappe.db.table_exists(doctype))
+    except Exception:
+        return False
+
+
 def _issue(issue_type: str, severity: str, message: str, **context: Any) -> dict[str, Any]:
     return {
         "issue_type": issue_type,
@@ -29,34 +43,48 @@ def run_wbs_health_check(boq_header: str | None = None) -> dict[str, Any]:
     if boq_header:
         filters["boq_header"] = boq_header
 
-    structures = [
-        _row(row)
-        for row in frappe.get_all(
-            "BOQ Structure",
-            filters=filters,
-            fields=[
-                "name",
-                "title",
-                "boq_header",
-                "parent_structure",
-                "wbs_code",
-                "is_group",
-                "lft",
-                "rgt",
-                "docstatus",
-            ],
-            order_by="boq_header, lft, name",
-        )
-    ]
-    items = [
-        _row(row)
-        for row in frappe.get_all(
-            "BOQ Item",
-            filters=filters,
-            fields=["name", "boq_header", "structure", "docstatus"],
-            order_by="boq_header, name",
-        )
-    ]
+    # Fresh-install tolerance: skip queries for tables that do not exist yet
+    # and report the skip instead of crashing mid-sync.
+    structure_table_ready = _table_ready("BOQ Structure")
+    item_table_ready = _table_ready("BOQ Item")
+    skipped: list[str] = []
+    if not structure_table_ready:
+        skipped.append("BOQ Structure")
+    if not item_table_ready:
+        skipped.append("BOQ Item")
+
+    structures: list[dict[str, Any]] = []
+    if structure_table_ready:
+        structures = [
+            _row(row)
+            for row in frappe.get_all(
+                "BOQ Structure",
+                filters=filters,
+                fields=[
+                    "name",
+                    "title",
+                    "boq_header",
+                    "parent_structure",
+                    "wbs_code",
+                    "is_group",
+                    "lft",
+                    "rgt",
+                    "docstatus",
+                ],
+                order_by="boq_header, lft, name",
+            )
+        ]
+    items: list[dict[str, Any]] = []
+    if item_table_ready:
+        items = [
+            _row(row)
+            for row in frappe.get_all(
+                "BOQ Item",
+                filters=filters,
+                fields=["name", "boq_header", "structure", "docstatus"],
+                order_by="boq_header, name",
+            )
+        ]
 
     issues: list[dict[str, Any]] = []
     issues.extend(_find_duplicate_wbs(structures))
@@ -71,6 +99,7 @@ def run_wbs_health_check(boq_header: str | None = None) -> dict[str, Any]:
     return {
         "boq_header": boq_header,
         "healthy": not issues,
+        "skipped_tables": skipped,
         "summary": {
             "structures_checked": len(structures),
             "items_checked": len(items),
@@ -84,6 +113,16 @@ def run_wbs_health_check(boq_header: str | None = None) -> dict[str, Any]:
 
 def ensure_wbs_unique_constraint() -> dict[str, Any]:
     """Add the BOQ Header + WBS Code unique index after health preflight."""
+    if not _table_ready("BOQ Structure"):
+        # Fresh install mid-sync: the table does not exist yet. The index is
+        # added the next time this hook runs (any BOQ Structure update) or by
+        # patch v6_8 on migrate.
+        return {
+            "created": False,
+            "skipped": True,
+            "reason": "tabBOQ Structure does not exist yet (fresh install sync order)",
+        }
+
     report = run_wbs_health_check()
     if not report.get("healthy"):
         frappe.throw("Cannot add BOQ Structure WBS unique constraint because WBS health check found issues.")
