@@ -61,8 +61,9 @@ jobs:
             ${{ runner.os }}-pip-
             ${{ runner.os }}-
 
-      - name: Install MariaDB Client
-        run: sudo apt-get update && sudo apt-get install -y mariadb-client
+      - name: Install MariaDB build dependencies
+        # Frappe v16's mysqlclient dependency builds from source on Linux/Python 3.14.
+        run: sudo apt-get update && sudo apt-get install -y mariadb-client default-libmysqlclient-dev build-essential pkg-config
 
       - name: Install uv
         run: pip install uv
