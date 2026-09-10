@@ -1,0 +1,600 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "result-envelope v1",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "job_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+    },
+    "work_item": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+    },
+    "stage": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+    },
+    "role": {
+      "enum": [
+        "architect",
+        "reviewer",
+        "builder",
+        "verifier",
+        "proposer",
+        "ai-a1",
+        "ai-a2",
+        "ai-a3"
+      ]
+    },
+    "tool": {
+      "enum": [
+        "codex",
+        "antigravity",
+        "opencode",
+        "synthetic"
+      ]
+    },
+    "model": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "session_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "dispatch_mode": {
+      "enum": [
+        "native",
+        "manual"
+      ]
+    },
+    "candidate_kind": {
+      "enum": [
+        "code",
+        "stage4-proposal"
+      ]
+    },
+    "candidate_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "plan_revision_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "prompt_version": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "status": {
+      "enum": [
+        "COMPLETE",
+        "FAILED"
+      ]
+    },
+    "verdict": {
+      "enum": [
+        "PASS",
+        "BLOCKED",
+        "PROPOSED",
+        "FAILED"
+      ]
+    },
+    "failure_class": {
+      "anyOf": [
+        {
+          "enum": [
+            "MISSING_BINARY",
+            "AUTH_FAILURE",
+            "DENIED_ACTION",
+            "MALFORMED_RESULT",
+            "EVIDENCE_UNAVAILABLE",
+            "TIMEOUT"
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "schema_version": {
+            "const": 1
+          },
+          "finding_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "classification": {
+            "enum": [
+              "implementation_defect",
+              "design_defect",
+              "optional_improvement",
+              "owner_decision"
+            ]
+          },
+          "blocking": {
+            "type": "boolean"
+          },
+          "summary": {
+            "type": "string",
+            "minLength": 1
+          },
+          "affected_requirements": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "evidence_refs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "artifact_id": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "visibility": {
+                  "enum": [
+                    "public",
+                    "private"
+                  ]
+                }
+              },
+              "required": [
+                "artifact_id",
+                "sha256",
+                "visibility"
+              ]
+            },
+            "minItems": 0,
+            "uniqueItems": false
+          },
+          "snapshot": {
+            "anyOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "reproduction_digest": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  },
+                  "relevant_evidence_digest": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  },
+                  "normalized_material_ref": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "artifact_id": {
+                        "type": "string",
+                        "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+                      },
+                      "sha256": {
+                        "type": "string",
+                        "pattern": "^[0-9a-f]{64}$"
+                      },
+                      "visibility": {
+                        "enum": [
+                          "public",
+                          "private"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "artifact_id",
+                      "sha256",
+                      "visibility"
+                    ]
+                  }
+                },
+                "required": [
+                  "reproduction_digest",
+                  "relevant_evidence_digest",
+                  "normalized_material_ref"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "schema_version",
+          "finding_id",
+          "classification",
+          "blocking",
+          "summary",
+          "affected_requirements",
+          "evidence_refs",
+          "snapshot"
+        ],
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "classification": {
+                  "const": "optional_improvement"
+                }
+              },
+              "required": [
+                "classification"
+              ]
+            },
+            "then": {
+              "properties": {
+                "blocking": {
+                  "const": false
+                }
+              }
+            }
+          }
+        ]
+      },
+      "minItems": 0,
+      "uniqueItems": false
+    },
+    "evidence_paths": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "artifact_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "visibility": {
+            "enum": [
+              "public",
+              "private"
+            ]
+          }
+        },
+        "required": [
+          "artifact_id",
+          "sha256",
+          "visibility"
+        ]
+      },
+      "minItems": 0,
+      "uniqueItems": false
+    },
+    "started_utc": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$"
+    },
+    "finished_utc": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$"
+    },
+    "export_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "proposal_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "bundle_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "payload_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "private_artifact_refs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "artifact_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "visibility": {
+            "enum": [
+              "public",
+              "private"
+            ]
+          }
+        },
+        "required": [
+          "artifact_id",
+          "sha256",
+          "visibility"
+        ]
+      },
+      "minItems": 0,
+      "uniqueItems": false
+    }
+  },
+  "required": [
+    "schema_version",
+    "job_id",
+    "work_item",
+    "stage",
+    "role",
+    "tool",
+    "model",
+    "session_id",
+    "dispatch_mode",
+    "candidate_kind",
+    "candidate_id",
+    "plan_revision_hash",
+    "prompt_version",
+    "status",
+    "verdict",
+    "failure_class",
+    "findings",
+    "evidence_paths",
+    "started_utc",
+    "finished_utc"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "COMPLETE"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+          },
+          "model": {
+            "type": "string",
+            "minLength": 1
+          },
+          "failure_class": {
+            "type": "null"
+          },
+          "verdict": {
+            "enum": [
+              "PASS",
+              "BLOCKED",
+              "PROPOSED"
+            ]
+          },
+          "evidence_paths": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "artifact_id": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "visibility": {
+                  "enum": [
+                    "public",
+                    "private"
+                  ]
+                }
+              },
+              "required": [
+                "artifact_id",
+                "sha256",
+                "visibility"
+              ]
+            },
+            "minItems": 1,
+            "uniqueItems": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "FAILED"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "failure_class": {
+            "enum": [
+              "MISSING_BINARY",
+              "AUTH_FAILURE",
+              "DENIED_ACTION",
+              "MALFORMED_RESULT",
+              "EVIDENCE_UNAVAILABLE",
+              "TIMEOUT"
+            ]
+          },
+          "verdict": {
+            "const": "FAILED"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "verdict": {
+            "const": "PASS"
+          }
+        },
+        "required": [
+          "verdict"
+        ]
+      },
+      "then": {
+        "properties": {
+          "findings": {
+            "items": {
+              "properties": {
+                "blocking": {
+                  "const": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "verdict": {
+            "const": "BLOCKED"
+          }
+        },
+        "required": [
+          "verdict"
+        ]
+      },
+      "then": {
+        "properties": {
+          "findings": {
+            "contains": {
+              "properties": {
+                "blocking": {
+                  "const": true
+                }
+              },
+              "required": [
+                "blocking"
+              ]
+            },
+            "minContains": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "candidate_kind": {
+            "const": "stage4-proposal"
+          }
+        },
+        "required": [
+          "candidate_kind"
+        ]
+      },
+      "then": {
+        "required": [
+          "export_sha256",
+          "proposal_sha256",
+          "private_artifact_refs"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "candidate_kind": {
+            "const": "code"
+          }
+        },
+        "required": [
+          "candidate_kind"
+        ]
+      },
+      "then": {
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "export_sha256"
+              ]
+            },
+            {
+              "required": [
+                "proposal_sha256"
+              ]
+            },
+            {
+              "required": [
+                "bundle_sha256"
+              ]
+            },
+            {
+              "required": [
+                "payload_sha256"
+              ]
+            },
+            {
+              "required": [
+                "private_artifact_refs"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

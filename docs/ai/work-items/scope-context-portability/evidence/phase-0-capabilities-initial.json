@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "phase": 0,
+  "created_utc": "2026-09-10T21:38:15.201341Z",
+  "phase_exit": "BLOCKED",
+  "tools": {
+    "codex": {
+      "binary": "/home/mohamed/.local/bin/codex",
+      "status": "UNPROVEN",
+      "version": "codex-cli 0.152.1",
+      "version_exit_code": 0,
+      "headless_probe": {
+        "status": "BLOCKED",
+        "configured_model": "gpt-6-astra",
+        "configured_effort": "high",
+        "model_identity": "requested; backend identity requires Phase 1 observation",
+        "session_id": null,
+        "structured_output_valid": false,
+        "exit_code": 1,
+        "timeout": false,
+        "started_utc": "2026-09-10T21:38:15.246802Z",
+        "finished_utc": "2026-09-10T21:38:15.490514Z",
+        "event_types": [],
+        "raw_output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "permission_boundary": "NOT_PROVEN: read-only requested; write-enabled builder control-store denial needs separate enforcement probe",
+        "invocation": [
+          "/home/mohamed/.local/bin/codex",
+          "exec",
+          "--ignore-user-config",
+          "--ephemeral",
+          "--sandbox",
+          "read-only",
+          "--skip-git-repo-check",
+          "--cd",
+          "<private-probe-dir>/workspace",
+          "--model",
+          "gpt-6-astra",
+          "--json",
+          "--output-schema",
+          "<private-probe-dir>/probe-schema.json",
+          "--output-last-message",
+          "<private-probe-dir>/last-message.json",
+          "-c",
+          "model_reasoning_effort=\"high\"",
+          "Capability probe only. Do not read project files, use tools, or modify anything. Return exactly {\"probe\":\"ok\"}."
+        ]
+      }
+    },
+    "antigravity": {
+      "binary": null,
+      "status": "MISSING_BINARY"
+    },
+    "opencode": {
+      "binary": null,
+      "status": "MISSING_BINARY"
+    }
+  },
+  "required_remaining_gates": [
+    "Owner review of versioned role prompts",
+    "All native tools have accepted headless probes",
+    "Control-store/approval-command permissions proven or owner-executed operation boundary recorded",
+    "Models pinned from observed native configuration for all roles"
+  ]
+}

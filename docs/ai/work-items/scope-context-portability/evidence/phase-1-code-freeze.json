@@ -1,0 +1,272 @@
+{
+  "schema_version": 1,
+  "phase": 1,
+  "status": "FROZEN",
+  "recorded_utc": "2026-09-10T23:05:22.678947Z",
+  "source_manifest_sha256": "1a31afa2fba2e00be53d03913a574040e4053d898c492ba2ce0bc183cabce67d",
+  "files": [
+    {
+      "path": ".gitignore",
+      "sha256": "647d2ab73efb87d024b9469073a40f5f160e7c081c404d5660c6e94422ef26ee",
+      "executable": false
+    },
+    {
+      "path": "AGENT_WORKFLOW.md",
+      "sha256": "c4478843e2b3c24cf7bdd7fdce3c9ab3975f4d0042080693e5eb36997ea764f3",
+      "executable": false
+    },
+    {
+      "path": "docs/ai/roles/ai-reviewer.md",
+      "sha256": "3fdfa75d3763a3f6dbc0873d6a04d01764202e6af62be384ec212cf29ca9a503",
+      "executable": false
+    },
+    {
+      "path": "docs/ai/roles/architect.md",
+      "sha256": "ef527ef0243402f3d313a6e3603a07a4bc0b0044be4579b9c5ea67f609d9397f",
+      "executable": false
+    },
+    {
+      "path": "docs/ai/roles/builder.md",
+      "sha256": "45190b4f743ef0b57263872eb4a11aeddb8430a085a1acc277b490ef5092c8af",
+      "executable": false
+    },
+    {
+      "path": "docs/ai/roles/reviewer.md",
+      "sha256": "3cd42677471d49f265ac1c6c0b412724110557c60526cb002ab5073cf3ebdeed",
+      "executable": false
+    },
+    {
+      "path": "docs/ai/roles/verifier.md",
+      "sha256": "98f41066bbf57fba9459b64e5119bde61468647b85753a417e669f7bccb00e8d",
+      "executable": false
+    },
+    {
+      "path": "docs/ai/templates/explanation.md",
+      "sha256": "d7c23e36f470cc9ac3d0ace34abc07a04a38c849bdfddf38a69433f77612a734",
+      "executable": false
+    },
+    {
+      "path": "docs/ai/templates/inbox-architect.md",
+      "sha256": "20a6e5b9954e484311c3ab0a16adca23a758282925c2731aef23661929b7e5a0",
+      "executable": false
+    },
+    {
+      "path": "docs/ai/templates/inbox-builder-delta.md",
+      "sha256": "20a6e5b9954e484311c3ab0a16adca23a758282925c2731aef23661929b7e5a0",
+      "executable": false
+    },
+    {
+      "path": "docs/ai/templates/inbox-builder.md",
+      "sha256": "20a6e5b9954e484311c3ab0a16adca23a758282925c2731aef23661929b7e5a0",
+      "executable": false
+    },
+    {
+      "path": "docs/ai/templates/inbox-quorum.md",
+      "sha256": "20a6e5b9954e484311c3ab0a16adca23a758282925c2731aef23661929b7e5a0",
+      "executable": false
+    },
+    {
+      "path": "docs/ai/templates/inbox-reviewer.md",
+      "sha256": "20a6e5b9954e484311c3ab0a16adca23a758282925c2731aef23661929b7e5a0",
+      "executable": false
+    },
+    {
+      "path": "docs/ai/templates/inbox-verifier.md",
+      "sha256": "20a6e5b9954e484311c3ab0a16adca23a758282925c2731aef23661929b7e5a0",
+      "executable": false
+    },
+    {
+      "path": "orchestrator/README.md",
+      "sha256": "3d0e72b9e42038f55cb3cbc278374f780b614a2139f1c29d898172f46e057cc0",
+      "executable": false
+    },
+    {
+      "path": "orchestrator/adapters.py",
+      "sha256": "e3f90082a2dccca5e657d7da9bf1a58584e5f1d8ef8ca3f1eb202024fef8e9e7",
+      "executable": false
+    },
+    {
+      "path": "orchestrator/candidates.py",
+      "sha256": "f6adc386bb294f1f6743fc8198f467697158e99cf97e24a90184ad07616aa6de",
+      "executable": false
+    },
+    {
+      "path": "orchestrator/capability_probe.py",
+      "sha256": "7b49f3779933a673719699adcd8141ee3358f3bb82e22fc42947fbc30f4addab",
+      "executable": false
+    },
+    {
+      "path": "orchestrator/cli.py",
+      "sha256": "bffd0758947aefb333869fb1592d0aa869cb0b6795e110184dff2a3f4f507612",
+      "executable": false
+    },
+    {
+      "path": "orchestrator/core.py",
+      "sha256": "fd34777fda1163c43158bb9d83b25d6f714987889bd2306136ab0c16477c2120",
+      "executable": false
+    },
+    {
+      "path": "orchestrator/engine.py",
+      "sha256": "10840392f1ccb1fec34c7384c864b5cf6b6a62ed95f504d16387aa629cee94bd",
+      "executable": false
+    },
+    {
+      "path": "orchestrator/normalization.py",
+      "sha256": "2da2b56542827d1852ae4698d84dcee5b7afde477553e731694d6eaca55e68c5",
+      "executable": false
+    },
+    {
+      "path": "orchestrator/probe_transports.py",
+      "sha256": "054555e465bf3118e9a3996c355f8c530ab76d78e2dfd592b5bb8257129cf964",
+      "executable": false
+    },
+    {
+      "path": "orchestrator/requirements.in",
+      "sha256": "5795b50d2873e4abd0e097f363765f1a1a839a87b6d8f5a088fa366e635eb18c",
+      "executable": false
+    },
+    {
+      "path": "orchestrator/requirements.txt",
+      "sha256": "889df95f5178512c85207a17896b2bab44180d9c297b3ef0594c3ff613859d38",
+      "executable": false
+    },
+    {
+      "path": "orchestrator/roles.json",
+      "sha256": "0a999f40d7480024362c862d11691d2b63978e6d16e12f2e88357aaceba46217",
+      "executable": false
+    },
+    {
+      "path": "orchestrator/routing.py",
+      "sha256": "725cbc2af5cfe6107a5750564417ff62967024af9941acbd7b3b816b3af0a1ff",
+      "executable": false
+    },
+    {
+      "path": "orchestrator/sandbox.py",
+      "sha256": "8d53e9bc8c0733ac7f193ffe6b4b6cad261cf71b56392fc7c28f92df5b7125ca",
+      "executable": false
+    },
+    {
+      "path": "orchestrator/schema_source.py",
+      "sha256": "f15f1bf93e14a8a86413dd7680fea1b54b66db8aa6d9c37402337d141d8f30b8",
+      "executable": false
+    },
+    {
+      "path": "orchestrator/schemas/v1/approval-token.json",
+      "sha256": "45aa361c4a7d5b32ebeaec87cab291eef0d0e8b07faad372c566afa1d7d3f9f6",
+      "executable": false
+    },
+    {
+      "path": "orchestrator/schemas/v1/finding.json",
+      "sha256": "7e71469a9147d64033b2ee4901857e31014f8d2e8ce96e7e8eada56fa16931a5",
+      "executable": false
+    },
+    {
+      "path": "orchestrator/schemas/v1/repair-packet.json",
+      "sha256": "ee39bcc6e14b356faedfc6403fa69f52da7e00bd735e44f7d6524643f544e71b",
+      "executable": false
+    },
+    {
+      "path": "orchestrator/schemas/v1/result-envelope.json",
+      "sha256": "41dffea8bf99afa7b053619f8e221a51d4bc1691d559e082e2e7b3d1fd04a072",
+      "executable": false
+    },
+    {
+      "path": "orchestrator/schemas/v1/state-export.json",
+      "sha256": "ed34c00c8d94ee53d4f40f76afa0d4bb59e55a1ffbd88d7e4001e8dbfc8622d9",
+      "executable": false
+    },
+    {
+      "path": "orchestrator/store.py",
+      "sha256": "b115eb46f007ccee05e73cd09c8a05fcee2063ae1124ff70c3cff6f07d7b02a0",
+      "executable": false
+    },
+    {
+      "path": "orchestrator/tests/conftest.py",
+      "sha256": "b668a553c56e775efb9d74a7c15a78f381b46c340702f59e729703e7a4e45bd3",
+      "executable": false
+    },
+    {
+      "path": "orchestrator/tests/test_adapter_results.py",
+      "sha256": "0463a57e7ce90ca4f6ddb3a224c75811ba4b999e6556078c128579b9259f4c02",
+      "executable": false
+    },
+    {
+      "path": "orchestrator/tests/test_candidates.py",
+      "sha256": "ca55a8bcac6a7ca561a4876ff1548f3055ef075fdb200b73286ccedf10c0a488",
+      "executable": false
+    },
+    {
+      "path": "orchestrator/tests/test_contracts.py",
+      "sha256": "7d392a8e18ad6cf5b30171e52d1fc6a8567eae256c513ffe1f52f514d0a4b27f",
+      "executable": false
+    },
+    {
+      "path": "orchestrator/tests/test_engine.py",
+      "sha256": "9f2a2c71671fe89b403855fe0b8ed499cdfb8772cf15b64b0f1e8805c4c50cc9",
+      "executable": false
+    },
+    {
+      "path": "orchestrator/tests/test_packaging.py",
+      "sha256": "314a2302d20b8bb556ad446f8d389bc2af14d6243d24f70686e796b4a2a89d34",
+      "executable": false
+    },
+    {
+      "path": "orchestrator/tests/test_process_restart.py",
+      "sha256": "7a69b132d00a904c4131295ca7de9242e2bccd8a345bf0b3b5994f5b75bc8688",
+      "executable": false
+    },
+    {
+      "path": "orchestrator/tests/test_review_regressions.py",
+      "sha256": "a3559b6a87b9d0a3410f316f3d761c0c9abfd952dfd28d6c4780984dc8b14035",
+      "executable": false
+    },
+    {
+      "path": "orchestrator/tests/test_routing.py",
+      "sha256": "137be49abcaafd3ecd49745b309ab5ec61a4755f2e1cbd1d4a43fa5344b1ee09",
+      "executable": false
+    },
+    {
+      "path": "orchestrator/tests/test_sandbox.py",
+      "sha256": "45f352614e4f84533556b9714c1af7a7606cad421fa3aab48a0e9ef3e8f51c69",
+      "executable": false
+    },
+    {
+      "path": "orchestrator/tests/test_validation_runner.py",
+      "sha256": "9b69154cbfdf1b996da209d7f5805d4866d7c8b2b17b01b714d16331e74f0871",
+      "executable": false
+    },
+    {
+      "path": "orchestrator/validate.py",
+      "sha256": "a6b3f71954bd33564f796cf6f74ac803812026682b5326ec1971d542e008c834",
+      "executable": false
+    },
+    {
+      "path": "orchestrator/validation_runner.py",
+      "sha256": "868ed7dc07b151e8b4fbb7658aca1a358331169e365a02fcdac16f8fcfba7fd7",
+      "executable": false
+    },
+    {
+      "path": "orchestrator/worker.py",
+      "sha256": "9c5cfd54e55b472d007287cc1b44b3dbaf5dbf3afaaf48cdf15f620a10fe1242",
+      "executable": false
+    },
+    {
+      "path": "pyproject.toml",
+      "sha256": "144908ef7fb8ff4f62bb38dfbc00807994056d97062894b0f8c46fda82380075",
+      "executable": false
+    },
+    {
+      "path": "setup.py",
+      "sha256": "8c8ff19e07f2478e918c142daed4acbc05bf097c3cb58b44bb054d43ed73b6a0",
+      "executable": false
+    }
+  ],
+  "policy": "Code/config/role/template changes require owner approval and Phase 2 requalification. Workflow records and subsequent evidence are outside this source freeze.",
+  "qualification": "Phase 1 only; real pilot and full Phase 2 remain pending",
+  "review_chain": [
+    "phase-1-independent-review.json",
+    "phase-1-independent-review-r2.json",
+    "phase-1-independent-review-r3.json"
+  ],
+  "tests_passed": 93
+}

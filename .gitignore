@@ -30,3 +30,7 @@ modern_theme_v16_adapter_v5.css
 
 # Auto-generated theme CSS files (generated at runtime from Construction Theme doctype)
 construction/public/css/theme_*.css
+
+# Isolated workflow development/runtime (never app package data)
+/orchestrator/.venv/
+/orchestrator/var/

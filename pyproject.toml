@@ -71,3 +71,9 @@ quote-style = "double"
 indent-style = "space"
 docstring-code-format = true
 
+
+[tool.flit.module]
+name = "construction"
+
+[tool.flit.sdist]
+exclude = ["orchestrator/", "tests_offline/"]

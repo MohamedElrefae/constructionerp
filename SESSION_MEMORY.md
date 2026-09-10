@@ -81,6 +81,9 @@
 
 ## 3. In Progress (Active Work — Updated After Every Session)
 
+**2026-09-11 — Workflow Phases 0–1 (isolated worktree):** Phase 0 passed under the owner consultant directive; all five prompt hashes approved. Phase 1 engine/adapters/operator CLI implemented, with 93 passing tests and native Codex/OpenCode transport proof. Independent review blockers repaired, final bounded review PASS; Phase 1 source freeze recorded. Antigravity uses the explicitly authorized independent Codex substitute. See `docs/ai/work-items/scope-context-portability/IMPLEMENTATION.md`. No project commit or ERP operation; original dirty ERP checkout remains separate.
+
+
 ### Deployment-readiness remediation — Completed (2026-08-20)
 - **Result:** All findings from `docs/USER_GUIDE_DEPLOYMENT_REVIEW_2026-08-19.md` remediated; review verdict updated to release-ready.
 - **Key fixes:** BOQ Header scope enforcement now honors the feature flag, Administrator bypass, and explicit projects; omitted BOQ Items are hidden from transaction and VO item dropdowns after approved omission; User Guide terminology, VFC labels, cache versions, and test evidence synchronized.
@@ -150,6 +153,18 @@
 ---
 
 ## 6. Session Log (Append-Only — Most Recent First)
+
+### Session 2026-09-11 — Codex workflow implementation
+- Local SQLite authority, independent native worker sessions, exact candidate binding, owner grants and conditional defect routing implemented in the isolated workflow worktree.
+- Permission wrapper protects control/Git writes and peer artifacts; native Codex and OpenCode probes passed. `/run` masking initially broke DNS; preserving only resolver data fixed the regression.
+- Independent native code review was launched only after explicit scoped transfer authorization. Four P1 findings repaired and regression-tested: approval scope confusion, prepare/replay crash, pause lock starvation, stale dispatch preconditions.
+- Final independent bounded review: PASS; source freeze recorded in phase-1-code-freeze.json. Approval admission also synchronizes pending durable decisions before accepting a token.
+- Full regression suite: 93 passed; real process restart and app packaging excluded workflow code/dependencies. Full Phase 2 qualification and real pilot remain pending.
+- State/memory remain local per owner directive. No project commit, staging, ERP rerun or import.
+
+
+**2026-09-11 — Workflow Phases 0–1 (isolated worktree):** Phase 0 passed under the owner consultant directive; all five prompt hashes approved. Phase 1 engine/adapters/operator CLI implemented, with 93 passing tests and native Codex/OpenCode transport proof. Independent review blockers repaired, final bounded review PASS; Phase 1 source freeze recorded. Antigravity uses the explicitly authorized independent Codex substitute. See `docs/ai/work-items/scope-context-portability/IMPLEMENTATION.md`. No project commit or ERP operation; original dirty ERP checkout remains separate.
+
 
 ### Session 2026-08-20 — Deployment-readiness remediation
 - **Worked on:** Remediated all F1–F7 findings in the user-guide deployment review.
@@ -377,3 +392,5 @@
   - `apps/frappe/frappe/locale/ar.po` — filled `msgstr` for `Add Child`
 - **Verification:** All Python/JS modules pass `py_compile` / `node --check`; `.po` scan shows ~15,106 msgids across apps.
 - **Next steps:** Run `bench --site v16.localhost migrate` to apply patches; hard-refresh browser to load updated list-view tools.
+
+Workflow session capture: external MemoryGraph write was rejected by automatic approval review; this local record is the fallback. No external retry attempted.

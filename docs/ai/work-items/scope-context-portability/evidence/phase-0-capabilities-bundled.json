@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "phase": 0,
+  "created_utc": "2026-09-10T21:40:45.434584Z",
+  "phase_exit": "BLOCKED",
+  "tools": {
+    "codex": {
+      "binary": "/opt/codex-desktop/resources/codex",
+      "status": "UNPROVEN",
+      "version": "codex-cli 0.153.0-alpha.5",
+      "version_exit_code": 0,
+      "headless_probe": {
+        "status": "HEADLESS_PASS",
+        "configured_model": "gpt-6-astra",
+        "configured_effort": "high",
+        "model_identity": "requested; backend identity requires Phase 1 observation",
+        "session_id": "01a08d44-1999-7762-b0eb-f75dfdf46077",
+        "structured_output_valid": true,
+        "exit_code": 0,
+        "timeout": false,
+        "started_utc": "2026-09-10T21:40:45.443425Z",
+        "finished_utc": "2026-09-10T21:40:56.663944Z",
+        "event_types": [
+          "item.completed",
+          "thread.started",
+          "turn.completed",
+          "turn.started"
+        ],
+        "raw_output_sha256": "2ae9088f96b53386383c2fedf7fef7c1e5ea0d4ad2a669d3b70080b406e9e44e",
+        "permission_boundary": "NOT_PROVEN: read-only requested; write-enabled builder control-store denial needs separate enforcement probe",
+        "invocation": [
+          "/opt/codex-desktop/resources/codex",
+          "exec",
+          "--ignore-user-config",
+          "--ephemeral",
+          "--sandbox",
+          "read-only",
+          "--skip-git-repo-check",
+          "--cd",
+          "<private-probe-dir>/workspace",
+          "--model",
+          "gpt-6-astra",
+          "--json",
+          "--output-schema",
+          "<private-probe-dir>/probe-schema.json",
+          "--output-last-message",
+          "<private-probe-dir>/last-message.json",
+          "-c",
+          "model_reasoning_effort=\"high\"",
+          "Capability probe only. Do not read project files, use tools, or modify anything. Return exactly {\"probe\":\"ok\"}."
+        ]
+      }
+    },
+    "antigravity": {
+      "binary": null,
+      "status": "MISSING_BINARY"
+    },
+    "opencode": {
+      "binary": null,
+      "status": "MISSING_BINARY"
+    }
+  },
+  "required_remaining_gates": [
+    "Owner review of versioned role prompts",
+    "All native tools have accepted headless probes",
+    "Control-store/approval-command permissions proven or owner-executed operation boundary recorded",
+    "Models pinned from observed native configuration for all roles"
+  ]
+}

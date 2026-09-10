@@ -1,0 +1,109 @@
+{
+  "correction": "Original ERP checkout remains dirty (59 entries); it was not cleaned or modified by workflow implementation.",
+  "directive": "CONSULTANT_DIRECTIVE_2026-09-11.md",
+  "permission_boundary": {
+    "approval_interface": "Owner operator commands only; native child cannot write control-store mounts",
+    "owner_executed_operations": [
+      "COMMIT",
+      "DRY_RUN",
+      "IMPORT"
+    ],
+    "same_account_unsandboxed_processes": "Trusted owner boundary; ordinary terminal commands alone are not isolation",
+    "verified_controls": [
+      "Writable source sentinel passed",
+      "Control-file write denied",
+      "Git-metadata write denied",
+      "Real Codex and OpenCode transports passed inside wrapper"
+    ]
+  },
+  "phase": 0,
+  "phase_exit": "PASSED_WITH_OWNER_DIRECTIVE",
+  "pins": "orchestrator/roles.json",
+  "recorded_utc": "2026-09-10T22:26:13.513977Z",
+  "role_prompt_review": "APPROVED",
+  "schema_version": 1,
+  "tools": {
+    "antigravity": {
+      "authorized_reviewer_substitute": "Independent native Codex session",
+      "not_claimed_as_antigravity_execution": true,
+      "status": "NOT_INSTALLED"
+    },
+    "codex": {
+      "binary": "/opt/codex-desktop/resources/codex",
+      "headless_probe": {
+        "configured_effort": "high",
+        "configured_model": "gpt-6-astra",
+        "event_types": [
+          "item.completed",
+          "thread.started",
+          "turn.completed",
+          "turn.started"
+        ],
+        "exit_code": 0,
+        "finished_utc": "2026-09-10T21:40:56.663944Z",
+        "invocation": [
+          "/opt/codex-desktop/resources/codex",
+          "exec",
+          "--ignore-user-config",
+          "--ephemeral",
+          "--sandbox",
+          "read-only",
+          "--skip-git-repo-check",
+          "--cd",
+          "<private-probe-dir>/workspace",
+          "--model",
+          "gpt-6-astra",
+          "--json",
+          "--output-schema",
+          "<private-probe-dir>/probe-schema.json",
+          "--output-last-message",
+          "<private-probe-dir>/last-message.json",
+          "-c",
+          "model_reasoning_effort=\"high\"",
+          "Capability probe only. Do not read project files, use tools, or modify anything. Return exactly {\"probe\":\"ok\"}."
+        ],
+        "model_identity": "Pinned requested gpt-6-astra; native session identity captured. No backend model attestation claimed.",
+        "permission_boundary": "Initial no-tools probe only; superseded by phase-0-boundary.json and phase-1-native-transport-final.json",
+        "raw_output_sha256": "2ae9088f96b53386383c2fedf7fef7c1e5ea0d4ad2a669d3b70080b406e9e44e",
+        "session_id": "01a08d44-1999-7762-b0eb-f75dfdf46077",
+        "started_utc": "2026-09-10T21:40:45.443425Z",
+        "status": "HEADLESS_PASS",
+        "structured_output_valid": true,
+        "timeout": false
+      },
+      "status": "HEADLESS_AND_SANDBOX_TRANSPORT_PASS",
+      "version": "codex-cli 0.153.0-alpha.5",
+      "version_exit_code": 0
+    },
+    "opencode": {
+      "binary": "/usr/bin/opencode-cli",
+      "event_types": [
+        "step_finish",
+        "step_start",
+        "text"
+      ],
+      "exit_code": 0,
+      "headless_pass": true,
+      "observed_models": [
+        {
+          "modelID": "gpt-5.6-luna",
+          "providerID": "opencode-go"
+        },
+        {
+          "modelID": "gpt-5.6-luna",
+          "providerID": "opencode-go"
+        }
+      ],
+      "permission_config": {
+        "*": "deny"
+      },
+      "schema_version": 1,
+      "session_id": "ses_f72a9fa8affeye2RKxwNDtriWC",
+      "stdout_sha256": "6190656f423c5c73a662a7a6d818f798a4ff8d4c6f06c92a17d0b284cb88d19f",
+      "structured_output_valid": true,
+      "version": "1.14.33"
+    }
+  },
+  "transport_evidence": "evidence/phase-1-native-transport-final.json",
+  "retained_failed_transport_evidence": "evidence/phase-1-native-transport.json (DNS regression, corrected before final probes)"
+}
