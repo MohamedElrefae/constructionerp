@@ -30,6 +30,8 @@ def can_unshare_net():
 
 
 def run(spec, destination, deadline):
+    if not can_unshare_net():
+        raise WorkflowError("Network isolation unavailable: offline validation requires unshared network")
     candidate = freeze(
         spec["root"],
         spec["base_commit"],
@@ -53,8 +55,7 @@ def run(spec, destination, deadline):
             hidden_roots=[spec["control_root"], spec["work_item_root"]],
             writable_source=False,
         )
-        if can_unshare_net():
-            wrapped.insert(1, "--unshare-net")
+        wrapped.insert(1, "--unshare-net")
         write_json(
             destination / "validation-intent.json", {"index": index, "argv": argv, "started_utc": start}
         )

@@ -9,7 +9,16 @@ from pathlib import Path
 from core import WorkflowError
 
 
-def command(argv, root, work_item, writable_native=(), hidden_roots=(), read_files=(), writable_source=True):
+def command(
+    argv,
+    root,
+    work_item,
+    writable_native=(),
+    hidden_roots=(),
+    read_files=(),
+    writable_source=True,
+    neutral_mounts=(),
+):
     binary = shutil.which("bwrap")
     if not binary:
         raise WorkflowError("Bubblewrap unavailable: native dispatch disabled")
@@ -63,6 +72,15 @@ def command(argv, root, work_item, writable_native=(), hidden_roots=(), read_fil
         p = Path(p).resolve()
         if p.is_file():
             cmd += ["--ro-bind", str(p), str(p)]
+    for m in neutral_mounts:
+        host_path = Path(m["host_path"]).resolve()
+        sandbox_path = m["sandbox_path"]
+        parent = str(Path(sandbox_path).parent)
+        cmd += ["--dir", parent]
+        if m.get("writable", False):
+            cmd += ["--bind", str(host_path), sandbox_path]
+        else:
+            cmd += ["--ro-bind", str(host_path), sandbox_path]
     cmd += ["--chdir", str(root), "--", *argv]
     return cmd
 

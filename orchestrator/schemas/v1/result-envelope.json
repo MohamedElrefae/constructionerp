@@ -333,6 +333,10 @@
       "type": "string",
       "pattern": "^[0-9a-f]{64}$"
     },
+    "dry_run_evidence_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
     "private_artifact_refs": {
       "type": "array",
       "items": {

@@ -11,7 +11,9 @@ Implements Canonical Plan §5.3, §11:
 
 import hashlib
 import json
+import os
 import re
+import tempfile
 from copy import deepcopy
 from pathlib import Path
 from core import WorkflowError, canonical, digest
@@ -176,9 +178,9 @@ def project_proposal_rows(rows):
     proposal object. Exclude A2 decisions and review-generated top-level row flags.
     """
     projected = []
-    for r in rows:
-        if not r.get("identity") or not r.get("english"):
-            raise WorkflowError(f"Proposal row missing required identity or english: {r}")
+    for idx, r in enumerate(rows):
+        if not isinstance(r, dict) or not r.get("identity") or not r.get("english"):
+            raise WorkflowError(f"Proposal row at index {idx} missing required identity or english")
         projected.append({
             "identity": r["identity"],
             "english": r["english"],
@@ -223,11 +225,11 @@ def compose_bundle(proposal_rows, a2_decisions, company="Elrefae"):
     """
     sorted_proposal = project_proposal_rows(proposal_rows)
     bundle_rows = []
-    for p_row in sorted_proposal:
+    for idx, p_row in enumerate(sorted_proposal):
         ident = p_row["identity"]
         a2 = a2_decisions.get(ident)
         if not a2:
-            raise WorkflowError(f"Missing A2 review decision for identity: {ident}")
+            raise WorkflowError(f"Missing A2 review decision for row at index {idx}")
 
         # Flags on the row: preserve proposal flags + add no_verified_reference if reference absent
         flags = list(p_row.get("proposal", {}).get("flags", []))
@@ -308,33 +310,34 @@ def validate_panel_reviews(reviews, expected_identities, required_roles=("ai-a1"
             raise WorkflowError(f"Panel review {role} missing row_decisions list")
 
         identities_covered = set()
-        for r in row_decisions:
+        for idx, r in enumerate(row_decisions):
+            if not isinstance(r, dict):
+                raise WorkflowError(f"Panel review {role} row at index {idx} not an object")
             ident = r.get("identity")
             if not ident or not isinstance(ident, str):
-                raise WorkflowError(f"Panel review {role} has row without valid identity: {r}")
+                raise WorkflowError(f"Panel review {role} has row at index {idx} without valid identity")
             if ident in identities_covered:
-                raise WorkflowError(f"Duplicate identity '{ident}' in panel review {role}")
+                raise WorkflowError(f"Duplicate identity in panel review {role}")
             identities_covered.add(ident)
 
             # Check decision type
             decision = r.get("decision")
             if decision == "rejected":
                 blocking_findings.append({
-                    "finding_id": f"rejected-{role}-{ident}",
+                    "finding_id": f"rejected-{role}-{idx}",
                     "role": role,
                     "blocking": True,
                     "classification": "row_rejected",
-                    "identity": ident,
-                    "summary": f"Reviewer {role} rejected row {ident}: {r.get('rationale') or 'no rationale'}",
+                    "summary": f"Reviewer {role} rejected row at index {idx}",
                 })
             elif decision not in ("approved", "exception"):
                 raise WorkflowError(
-                    f"Panel review {role} row {ident} invalid decision '{decision}': must be 'approved' or 'exception'"
+                    f"Panel review {role} row at index {idx} invalid decision: must be 'approved' or 'exception'"
                 )
 
             if decision == "exception" and not (r.get("rationale") or r.get("exception_reason")):
                 raise WorkflowError(
-                    f"Panel review {role} row {ident} marked as 'exception' without required rationale"
+                    f"Panel review {role} row at index {idx} marked as 'exception' without required rationale"
                 )
 
             # Check if reviewer requested an Arabic value change
@@ -342,11 +345,10 @@ def validate_panel_reviews(reviews, expected_identities, required_roles=("ai-a1"
                 renewal_required = True
 
         if identities_covered != expected_set:
-            diff = expected_set.symmetric_difference(identities_covered)
             missing = expected_set - identities_covered
             extra = identities_covered - expected_set
             raise WorkflowError(
-                f"Panel review {role} does not cover exact identities: missing {len(missing)}, extra {len(extra)}, symmetric difference: {diff}"
+                f"Panel review {role} does not cover exact identities: missing {len(missing)}, extra {len(extra)}"
             )
 
     if len(set(sessions)) != len(sessions):
@@ -393,3 +395,312 @@ def verify_stage4_manifest(
             raise WorkflowError(f"Invalid panel digest for role {role}: must be 64-character lowercase hex")
 
     return True
+
+
+def store_private_blob(private_root, doc_bytes, expected_sha=None):
+    """Store canonical document bytes in content-addressed storage with 0700 dir and 0600 file."""
+    if not isinstance(doc_bytes, bytes):
+        raise WorkflowError("doc_bytes must be bytes")
+    blobs_dir = Path(private_root) / "blobs"
+    blobs_dir.mkdir(parents=True, exist_ok=True)
+    os.chmod(str(blobs_dir), 0o700)
+    sha256 = hashlib.sha256(doc_bytes).hexdigest()
+    if expected_sha and sha256 != expected_sha:
+        raise WorkflowError("Content SHA-256 does not match expected digest")
+    target_path = blobs_dir / f"{sha256}.json"
+    fd, tmp_name = tempfile.mkstemp(prefix=".blob-", dir=blobs_dir)
+    try:
+        with os.fdopen(fd, "wb") as f:
+            f.write(doc_bytes)
+            f.flush()
+            os.fsync(f.fileno())
+        os.chmod(tmp_name, 0o600)
+        os.replace(tmp_name, target_path)
+    finally:
+        if os.path.exists(tmp_name):
+            try:
+                os.unlink(tmp_name)
+            except OSError:
+                pass
+    return sha256, target_path
+
+
+def read_private_blob(private_root, sha256):
+    """Read blob bytes from content-addressed storage and verify digest."""
+    if not is_hex64(sha256):
+        raise WorkflowError("Invalid blob digest: must be 64-character lowercase hex")
+    blob_path = Path(private_root) / "blobs" / f"{sha256}.json"
+    if not blob_path.exists() or blob_path.is_symlink():
+        raise WorkflowError("Private blob missing or invalid")
+    data = blob_path.read_bytes()
+    if hashlib.sha256(data).hexdigest() != sha256:
+        raise WorkflowError("Private blob digest corrupted")
+    return data
+
+
+def validate_and_store_proposal(
+    private_root,
+    raw_proposal_path,
+    expected_export_sha,
+    expected_identities,
+    expected_identities_digest,
+    export_catalog_path=None,
+):
+    """Enforce exact 81 identities, English matching, is_group matching, non-empty Arabic, and semantic hash."""
+    raw_path = Path(raw_proposal_path)
+    if not raw_path.exists() or raw_path.is_symlink():
+        raise WorkflowError("Raw proposal file missing or invalid symlink")
+
+    try:
+        content = raw_path.read_text()
+        doc = json.loads(content)
+    except (OSError, json.JSONDecodeError):
+        raise WorkflowError("Raw proposal file could not be parsed as JSON")
+
+    if not isinstance(doc, dict):
+        raise WorkflowError("Proposal payload must be a JSON object")
+
+    raw_export_sha = doc.get("export_sha256")
+    if raw_export_sha != expected_export_sha:
+        raise WorkflowError("Proposal export_sha256 mismatch")
+
+    rows = doc.get("rows")
+    if not isinstance(rows, list):
+        raise WorkflowError("Proposal missing rows list")
+
+    if len(rows) != len(expected_identities):
+        raise WorkflowError(f"Proposal identity count mismatch: expected {len(expected_identities)}, found {len(rows)}")
+
+    sorted_rows = project_proposal_rows(rows)
+    identities = [r["identity"] for r in sorted_rows]
+
+    if len(set(identities)) != len(expected_identities):
+        raise WorkflowError("Proposal contains duplicate identities")
+
+    if set(identities) != set(expected_identities):
+        raise WorkflowError("Proposal identities do not match expected identities")
+
+    actual_ident_digest = derive_identities_digest(identities)
+    if actual_ident_digest != expected_identities_digest:
+        raise WorkflowError("Proposal identities digest mismatch")
+
+    catalog_by_id = {}
+    if export_catalog_path:
+        cat_p = Path(export_catalog_path)
+        if cat_p.exists() and not cat_p.is_symlink():
+            try:
+                cat_doc = json.loads(cat_p.read_text())
+                for cat_r in cat_doc.get("rows", []):
+                    if isinstance(cat_r, dict) and cat_r.get("identity"):
+                        catalog_by_id[cat_r["identity"]] = cat_r
+            except (OSError, json.JSONDecodeError):
+                pass
+
+    for idx, r in enumerate(sorted_rows):
+        ident = r["identity"]
+        prop = r.get("proposal")
+        if not isinstance(prop, dict):
+            raise WorkflowError(f"Proposal row at index {idx} missing proposal dictionary")
+        arabic = prop.get("arabic")
+        if not isinstance(arabic, str) or not arabic.strip():
+            raise WorkflowError(f"Proposal row at index {idx} missing non-empty Arabic text")
+
+        if catalog_by_id and ident in catalog_by_id:
+            cat_row = catalog_by_id[ident]
+            cat_english = cat_row.get("english") or cat_row.get("account_name")
+            if cat_english and r.get("english") != cat_english:
+                raise WorkflowError(f"Proposal English name mismatch against catalog at row index {idx}")
+            if "is_group" in cat_row:
+                if bool(r.get("is_group", False)) != bool(cat_row.get("is_group", False)):
+                    raise WorkflowError(f"Proposal is_group boolean mismatch against catalog at row index {idx}")
+
+    canonical_proposal = {
+        "schema": "stage4-proposal/v1",
+        "export_sha256": expected_export_sha,
+        "rows": sorted_rows,
+    }
+    canonical_bytes = canonical(canonical_proposal)
+    proposal_sha256 = hashlib.sha256(canonical_bytes).hexdigest()
+
+    calc_proposal_hash = derive_proposal_hash(sorted_rows, expected_export_sha)
+    if proposal_sha256 != calc_proposal_hash:
+        raise WorkflowError("Proposal canonical artifact hash does not match semantic projection hash")
+
+    store_private_blob(private_root, canonical_bytes, expected_sha=proposal_sha256)
+
+    return {
+        "proposal_sha256": proposal_sha256,
+        "artifact_sha256": proposal_sha256,
+        "rows_count": len(sorted_rows),
+        "export_sha256": expected_export_sha,
+    }
+
+
+def validate_and_store_review(
+    private_root,
+    raw_review_path,
+    expected_role,
+    expected_proposal_sha,
+    expected_identities,
+):
+    """Validate reviewer row decisions, store canonical blob, and return metadata."""
+    raw_path = Path(raw_review_path)
+    if not raw_path.exists() or raw_path.is_symlink():
+        raise WorkflowError("Raw review file missing or invalid symlink")
+
+    try:
+        content = raw_path.read_text()
+        doc = json.loads(content)
+    except (OSError, json.JSONDecodeError):
+        raise WorkflowError("Raw review file could not be parsed as JSON")
+
+    if not isinstance(doc, dict):
+        raise WorkflowError("Review payload must be a JSON object")
+
+    session_id = doc.get("session_id")
+    if not session_id or not isinstance(session_id, str):
+        raise WorkflowError(f"Review for {expected_role} missing valid session_id")
+
+    row_decisions = doc.get("row_decisions")
+    if not isinstance(row_decisions, list) or len(row_decisions) != len(expected_identities):
+        raise WorkflowError(
+            f"Reviewer row decisions count mismatch for role {expected_role}: expected {len(expected_identities)}, found {len(row_decisions) if isinstance(row_decisions, list) else 0}"
+        )
+
+    expected_set = set(expected_identities)
+    covered_set = set()
+    blocking_findings = []
+    renewal_required = False
+
+    for idx, r in enumerate(row_decisions):
+        if not isinstance(r, dict):
+            raise WorkflowError(f"Reviewer {expected_role} row at index {idx} not an object")
+        ident = r.get("identity")
+        if not ident or not isinstance(ident, str):
+            raise WorkflowError(f"Reviewer {expected_role} row at index {idx} lacks valid identity")
+        if ident in covered_set:
+            raise WorkflowError(f"Duplicate identity in panel review {expected_role}")
+        covered_set.add(ident)
+
+        decision = r.get("decision")
+        if decision == "rejected":
+            blocking_findings.append({
+                "finding_id": f"rejected-{expected_role}-{idx}",
+                "role": expected_role,
+                "blocking": True,
+                "classification": "row_rejected",
+                "summary": f"Reviewer {expected_role} rejected row at index {idx}",
+            })
+        elif decision not in ("approved", "exception"):
+            raise WorkflowError(
+                f"Reviewer {expected_role} row at index {idx} invalid decision: must be 'approved' or 'exception'"
+            )
+
+        if decision == "exception" and not (r.get("rationale") or r.get("exception_reason")):
+            raise WorkflowError(
+                f"Reviewer {expected_role} row at index {idx} marked as 'exception' without required rationale"
+            )
+
+        if r.get("suggested_arabic") and r.get("suggested_arabic") != r.get("proposed_arabic"):
+            renewal_required = True
+
+    if covered_set != expected_set:
+        missing = expected_set - covered_set
+        extra = covered_set - expected_set
+        raise WorkflowError(
+            f"Panel review {expected_role} does not cover exact identities: missing {len(missing)}, extra {len(extra)}"
+        )
+
+    for f in doc.get("findings", []):
+        if f.get("blocking", True):
+            blocking_findings.append(dict(f, role=expected_role))
+        if f.get("classification") == "arabic_value_change":
+            renewal_required = True
+
+    if doc.get("verdict") == "BLOCKED" and not blocking_findings:
+        blocking_findings.append({
+            "finding_id": f"blocked-{expected_role}",
+            "role": expected_role,
+            "blocking": True,
+            "classification": "review_rejected",
+            "summary": f"Reviewer {expected_role} reported BLOCKED verdict",
+        })
+
+    canonical_review = {
+        "schema": "stage4-panel-review/v1",
+        "role": expected_role,
+        "session_id": session_id,
+        "proposal_sha256": expected_proposal_sha,
+        "verdict": "BLOCKED" if blocking_findings else doc.get("verdict", "PASS"),
+        "row_decisions": row_decisions,
+        "findings": doc.get("findings", []),
+    }
+    canonical_bytes = canonical(canonical_review)
+    review_sha = hashlib.sha256(canonical_bytes).hexdigest()
+    store_private_blob(private_root, canonical_bytes, expected_sha=review_sha)
+
+    return {
+        "review_sha256": review_sha,
+        "role": expected_role,
+        "session_id": session_id,
+        "verdict": canonical_review["verdict"],
+        "renewal_required": renewal_required,
+        "blocking_findings": blocking_findings,
+    }
+
+
+def compose_and_store_bundle_and_payload(
+    private_root,
+    proposal_sha,
+    a2_review_sha,
+    company,
+    candidate_id,
+    export_sha,
+    erp_descriptor_hash,
+    panel_digests,
+    required_roles=("ai-a1", "ai-a2", "ai-a3"),
+):
+    """Reads blobs, composes bundle and payload, verifies manifest, stores blobs, and returns metadata."""
+    proposal_bytes = read_private_blob(private_root, proposal_sha)
+    proposal_doc = json.loads(proposal_bytes)
+    proposal_rows = proposal_doc.get("rows", [])
+
+    a2_bytes = read_private_blob(private_root, a2_review_sha)
+    a2_doc = json.loads(a2_bytes)
+    a2_rows = a2_doc.get("row_decisions", [])
+    a2_decisions = {r["identity"]: r for r in a2_rows}
+
+    bundle = compose_bundle(proposal_rows, a2_decisions, company=company)
+    bundle_bytes = canonical(bundle)
+    bundle_sha = hashlib.sha256(bundle_bytes).hexdigest()
+    store_private_blob(private_root, bundle_bytes, expected_sha=bundle_sha)
+
+    payload = [{"identity": r["identity"], "arabic": r["proposal"]["arabic"]} for r in bundle["rows"]]
+    payload_bytes = canonical(payload)
+    payload_sha = hashlib.sha256(payload_bytes).hexdigest()
+    store_private_blob(private_root, payload_bytes, expected_sha=payload_sha)
+
+    verify_stage4_manifest(
+        candidate_id,
+        export_sha,
+        proposal_sha,
+        bundle_sha,
+        payload_sha,
+        panel_digests,
+        required_roles=required_roles,
+    )
+
+    return {
+        "bundle_sha256": bundle_sha,
+        "payload_sha256": payload_sha,
+        "bundle_artifact": {
+            "artifact_id": f"stage4-bundle-{bundle_sha[:16]}",
+            "sha256": bundle_sha,
+            "visibility": "private",
+        },
+        "payload_artifact": {
+            "artifact_id": f"stage4-payload-{payload_sha[:16]}",
+            "sha256": payload_sha,
+            "visibility": "private",
+        },
+    }

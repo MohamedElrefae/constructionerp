@@ -5,16 +5,7 @@ import json
 from copy import deepcopy
 
 from core import WorkflowError, digest
-from stage4 import (
-    canonical_bundle_sha256,
-    canonical_payload_sha256,
-    compose_bundle,
-    derive_proposal_hash,
-    derive_stage4_candidate_id,
-    is_hex64,
-    validate_panel_reviews,
-    verify_stage4_manifest,
-)
+from stage4 import derive_stage4_candidate_id, is_hex64
 
 
 def initial(config):
@@ -233,25 +224,25 @@ def apply_event(current, event, config):
                     gate=None,
                 )
         elif role == "proposer":
-            cand = deepcopy(body.get("candidate") or {})
-            rows = cand.get("rows") or cand.get("proposal_rows") or output.get("rows") or output.get("proposal_rows", [])
-            export_sha = cand.get("export_sha256") or state["candidate"].get("export_sha256")
             if output["verdict"] == "PROPOSED":
-                if not rows or not export_sha:
+                verified_arts = body.get("verified_private_artifacts", [])
+                proposal_sha = body.get("proposal_sha256")
+                export_sha = body.get("export_sha256") or state["candidate"].get("export_sha256")
+                if not verified_arts or not proposal_sha or not export_sha:
                     state["attempt"] += 1
                     pause(state, "MALFORMED_RESULT")
                 else:
-                    proposal_sha = derive_proposal_hash(rows, export_sha)
-                    candidate_id = derive_stage4_candidate_id(export_sha, proposal_sha)
-                    cand["rows"] = rows
+                    candidate_id = body.get("candidate_id") or derive_stage4_candidate_id(export_sha, proposal_sha)
+                    cand = deepcopy(state["candidate"])
                     cand["export_sha256"] = export_sha
                     cand["proposal_sha256"] = proposal_sha
                     cand["candidate_id"] = candidate_id
                     cand["manifest_hash"] = candidate_id
+                    cand["private_artifact_refs"] = deepcopy(verified_arts)
                     state["candidate"] = cand
                     state.update(
                         sub_status="PROPOSAL_FROZEN",
-                        status="PANEL_REVIEW",
+                        status="BUILD_COMPLETE",
                         next_roles=config.get("quorum", ["ai-a1", "ai-a2", "ai-a3"]),
                         review_results={},
                     )
@@ -312,21 +303,30 @@ def apply_event(current, event, config):
                         review_results={},
                     )
         elif role in config.get("quorum", []):
-            state["review_results"][role] = output
+            entry = dict(output)
+            entry["verified_artifacts"] = body.get("verified_private_artifacts", [])
+            entry["review_meta"] = body.get("review_meta", {})
+            state["review_results"][role] = entry
             if set(state["review_results"]) == set(config["quorum"]):
                 if state.get("sub_status") in ("PROPOSAL_FROZEN", "PANEL_REVIEW"):
-                    expected_identities = config.get("expected_identities", [])
-                    if not expected_identities and "candidate" in state and "expected_identities" in state["candidate"]:
-                        expected_identities = state["candidate"]["expected_identities"]
-
-                    validation = validate_panel_reviews(
-                        state["review_results"],
-                        expected_identities,
-                        required_roles=tuple(config["quorum"]),
-                    )
                     state["sub_status"] = "PANEL_REVIEW"
-                    if validation["blocking_findings"]:
-                        incoming = findings(state, validation["blocking_findings"])
+                    all_blocking = []
+                    renewal_required = False
+                    sessions = []
+                    for qrole in config["quorum"]:
+                        qinfo = state["review_results"][qrole]
+                        qmeta = qinfo.get("review_meta", {})
+                        if qmeta.get("blocking_findings"):
+                            all_blocking.extend(qmeta["blocking_findings"])
+                        if qmeta.get("renewal_required"):
+                            renewal_required = True
+                        if qinfo.get("session_id"):
+                            sessions.append(qinfo["session_id"])
+
+                    if len(set(sessions)) != len(sessions):
+                        pause(state, "MALFORMED_RESULT")
+                    elif all_blocking:
+                        incoming = findings(state, all_blocking)
                         state["findings"] += [
                             f
                             for f in incoming
@@ -342,7 +342,7 @@ def apply_event(current, event, config):
                         else:
                             state.update(status="NEEDS_REVISION", next_roles=["proposer"], gate=None)
                             state["attempt"] += 1
-                    elif validation["renewal_required"]:
+                    elif renewal_required:
                         state.update(
                             sub_status="PANEL_RENEWAL",
                             status="NEEDS_REVISION",
@@ -350,54 +350,31 @@ def apply_event(current, event, config):
                             review_results={},
                             round=state["round"] + 1,
                         )
-                    elif all(o["verdict"] == "PASS" for o in state["review_results"].values()):
-                        proposal_rows = state["candidate"].get("rows") or state["candidate"].get("proposal_rows", [])
-                        a2_res = state["review_results"].get("ai-a2", {})
-                        a2_rows = a2_res.get("row_decisions", [])
-                        a2_decisions = {r["identity"]: r for r in a2_rows}
-
-                        bundle = compose_bundle(proposal_rows, a2_decisions, company=config.get("company", "Elrefae"))
-                        bundle_sha = canonical_bundle_sha256(bundle)
-
-                        payload = [{"identity": r["identity"], "arabic": r["proposal"]["arabic"]} for r in bundle["rows"]]
-                        payload_sha = canonical_payload_sha256(payload)
-
-                        panel_digests = {}
-                        for qrole in config["quorum"]:
-                            qres = state["review_results"][qrole]
-                            q_digest = qres.get("digest")
-                            if not q_digest or not is_hex64(q_digest):
-                                q_digest = hashlib.sha256(json.dumps(qres, sort_keys=True).encode()).hexdigest()
-                            panel_digests[qrole] = q_digest
-
-                        verify_stage4_manifest(
-                            state["candidate"]["candidate_id"],
-                            state["candidate"]["export_sha256"],
-                            state["candidate"]["proposal_sha256"],
-                            bundle_sha,
-                            payload_sha,
-                            panel_digests,
-                            required_roles=tuple(config["quorum"]),
-                        )
-
-                        state["candidate"]["bundle"] = bundle
-                        state["candidate"]["bundle_sha256"] = bundle_sha
-                        state["candidate"]["payload"] = payload
-                        state["candidate"]["payload_sha256"] = payload_sha
-                        state["bundle_sha256"] = bundle_sha
-                        state["payload_sha256"] = payload_sha
-
-                        state.update(
-                            sub_status="BUNDLE_VALIDATED",
-                            status="BUILD_COMPLETE",
-                            next_roles=["verifier"],
-                            review_results={},
-                            round=state["round"] + 1,
-                        )
+                    elif all(q["verdict"] == "PASS" for q in state["review_results"].values()):
+                        bundle_sha = body.get("bundle_sha256") or (body.get("bundle_composed") or {}).get("bundle_sha256")
+                        payload_sha = body.get("payload_sha256") or (body.get("bundle_composed") or {}).get("payload_sha256")
+                        bundle_arts = body.get("bundle_artifacts") or (body.get("bundle_composed") or {}).get("verified_private_artifacts", [])
+                        if not bundle_sha or not payload_sha or not is_hex64(bundle_sha) or not is_hex64(payload_sha):
+                            state["attempt"] += 1
+                            pause(state, "MALFORMED_RESULT")
+                        else:
+                            state["candidate"]["bundle_sha256"] = bundle_sha
+                            state["candidate"]["payload_sha256"] = payload_sha
+                            state["bundle_sha256"] = bundle_sha
+                            state["payload_sha256"] = payload_sha
+                            if "private_artifact_refs" in state["candidate"] and bundle_arts:
+                                state["candidate"]["private_artifact_refs"].extend(bundle_arts)
+                            state.update(
+                                sub_status="BUNDLE_VALIDATED",
+                                status="BUILD_COMPLETE",
+                                next_roles=["verifier"],
+                                review_results={},
+                                round=state["round"] + 1,
+                            )
                     else:
-                        review_outcome(state, list(state["review_results"].values()), "quorum", config["quorum"])
+                        review_outcome(state, [state["review_results"][r] for r in config["quorum"]], "quorum", config["quorum"])
                 else:
-                    review_outcome(state, list(state["review_results"].values()), "quorum", config["quorum"])
+                    review_outcome(state, [state["review_results"][r] for r in config["quorum"]], "quorum", config["quorum"])
             else:
                 state["next_roles"] = []
         else:

@@ -78,6 +78,8 @@ def invocation(spec):
         raise WorkflowError("Unknown native tool")
     read_files = [spec["wire_schema"], *spec.get("read_artifacts", [])]
     hidden = [spec.get("control_root", str(Path(spec["runtime"]).parents[1])), spec["work_item_root"]]
+    if spec.get("private_root"):
+        hidden.append(spec["private_root"])
     return sandbox_command(
         argv,
         spec["root"],
@@ -86,6 +88,7 @@ def invocation(spec):
         hidden_roots=hidden,
         read_files=read_files,
         writable_source=spec["role"] == "builder",
+        neutral_mounts=spec.get("neutral_mounts", ()),
     ), env
 
 

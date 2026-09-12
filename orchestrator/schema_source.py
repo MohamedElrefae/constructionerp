@@ -119,9 +119,17 @@ RESULT = obj(
         "proposal_sha256": HASH,
         "bundle_sha256": HASH,
         "payload_sha256": HASH,
+        "dry_run_evidence_digest": HASH,
         "private_artifact_refs": array(ARTIFACT),
     },
-    optional=("export_sha256", "proposal_sha256", "bundle_sha256", "payload_sha256", "private_artifact_refs"),
+    optional=(
+        "export_sha256",
+        "proposal_sha256",
+        "bundle_sha256",
+        "payload_sha256",
+        "dry_run_evidence_digest",
+        "private_artifact_refs",
+    ),
 )
 RESULT["allOf"] = [
     condition(

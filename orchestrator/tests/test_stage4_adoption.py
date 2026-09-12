@@ -13,11 +13,12 @@ Verifies:
 """
 
 import json
+import shutil
 import pytest
 from copy import deepcopy
 from pathlib import Path
 
-from core import WorkflowError, digest, utc, canonical, bytes_hash
+from core import WorkflowError, digest, utc, canonical, bytes_hash, write_json
 from engine import Engine
 from routing import apply_event, initial, gate_id
 from stage4 import (
@@ -64,6 +65,10 @@ def test_repo(tmp_path):
         "ai-a3": {"tool": "codex", "binary": "/bin/true", "model": "gpt-6-astra", "prompt_sha256": "0"*64},
     }
     (repo / "orchestrator/roles.json").write_text(json.dumps(roles))
+
+    source = Path(__file__).resolve().parents[2]
+    if (source / "docs/ai/roles").exists():
+        shutil.copytree(source / "docs/ai/roles", repo / "docs/ai/roles")
 
     plan_dir = repo / "docs/translation"
     plan_dir.mkdir(parents=True)
@@ -325,6 +330,8 @@ def test_stage4_sub_status_state_transitions_end_to_end(test_repo):
             }
             for i, ident in enumerate(expected_identities)
         ]
+        proposal_sha = derive_proposal_hash(proposer_rows, state["candidate"]["export_sha256"])
+        candidate_id = derive_stage4_candidate_id(state["candidate"]["export_sha256"], proposal_sha)
         state["active_jobs"] = ["job-p1"]
         ev_prop = {
             "seq": 2,
@@ -333,27 +340,37 @@ def test_stage4_sub_status_state_transitions_end_to_end(test_repo):
                 "job_id": "job-p1",
                 "role": "proposer",
                 "candidate": state["candidate"],
+                "export_sha256": state["candidate"]["export_sha256"],
+                "proposal_sha256": proposal_sha,
+                "candidate_id": candidate_id,
+                "verified_private_artifacts": [
+                    {"artifact_id": "stage4-proposal-job-p1", "sha256": proposal_sha, "visibility": "private"}
+                ],
                 "result": {
                     "status": "COMPLETE",
                     "verdict": "PROPOSED",
-                    "rows": proposer_rows,
+                    "export_sha256": state["candidate"]["export_sha256"],
+                    "proposal_sha256": proposal_sha,
                     "findings": [],
+                    "evidence_paths": [{"artifact_id": "job-p1-native-events", "sha256": "e" * 64, "visibility": "public"}],
                 },
             },
         }
         state = apply_event(state, ev_prop, config)
         assert state["sub_status"] == "PROPOSAL_FROZEN"
-        assert state["status"] == "PANEL_REVIEW"
+        assert state["status"] == "BUILD_COMPLETE"
         assert set(state["next_roles"]) == set(config["quorum"])
         # Proposal hash and candidate ID derived dynamically from proposer rows
-        assert state["candidate"]["proposal_sha256"] == derive_proposal_hash(proposer_rows, state["candidate"]["export_sha256"])
-        assert state["candidate"]["candidate_id"] == derive_stage4_candidate_id(state["candidate"]["export_sha256"], state["candidate"]["proposal_sha256"])
+        assert state["candidate"]["proposal_sha256"] == proposal_sha
+        assert state["candidate"]["candidate_id"] == candidate_id
         # Bundle and payload hashes do NOT exist yet
         assert "bundle_sha256" not in state["candidate"]
         assert "payload_sha256" not in state["candidate"]
 
         # Step 3: Quorum panel reviews collected covering exact 81 identities
         state["active_jobs"] = [f"job-{role}" for role in config["quorum"]]
+        bundle_sha = "b" * 64
+        payload_sha = "c" * 64
         for i, role in enumerate(config["quorum"], start=3):
             ev_quorum = {
                 "seq": i,
@@ -361,18 +378,33 @@ def test_stage4_sub_status_state_transitions_end_to_end(test_repo):
                 "payload": {
                     "job_id": f"job-{role}",
                     "role": role,
+                    "verified_private_artifacts": [
+                        {"artifact_id": f"stage4-review-{role}-job-{role}", "sha256": "%064x" % (100 + i), "visibility": "private"}
+                    ],
+                    "review_meta": {
+                        "verdict": "PASS",
+                        "blocking_findings": [],
+                        "renewal_required": False,
+                        "row_decisions_digest": "r" * 64,
+                    },
                     "result": {
                         "status": "COMPLETE",
                         "verdict": "PASS",
                         "session_id": f"sess-{role}",
-                        "row_decisions": [
-                            {"identity": ident, "decision": "approved", "rationale": "Correct"}
-                            for ident in expected_identities
-                        ],
                         "findings": [],
+                        "evidence_paths": [{"artifact_id": f"job-{role}-native-events", "sha256": "e" * 64, "visibility": "public"}],
                     },
                 },
             }
+            if role == config["quorum"][-1]:
+                ev_quorum["payload"]["bundle_composed"] = {
+                    "bundle_sha256": bundle_sha,
+                    "payload_sha256": payload_sha,
+                    "verified_private_artifacts": [
+                        {"artifact_id": f"stage4-bundle-{candidate_id[:16]}", "sha256": bundle_sha, "visibility": "private"},
+                        {"artifact_id": f"stage4-payload-{candidate_id[:16]}", "sha256": payload_sha, "visibility": "private"},
+                    ],
+                }
             state = apply_event(state, ev_quorum, config)
 
         # After 3rd reviewer PASS, bundle composition and verification are triggered:
@@ -386,8 +418,9 @@ def test_stage4_sub_status_state_transitions_end_to_end(test_repo):
         assert is_hex64(state["candidate"]["payload_sha256"])
         assert state["bundle_sha256"] == state["candidate"]["bundle_sha256"]
         assert state["payload_sha256"] == state["candidate"]["payload_sha256"]
-        assert "bundle" in state["candidate"]
-        assert "payload" in state["candidate"]
+        # Private data containment: raw bundle and payload dicts MUST NOT be in candidate
+        assert "bundle" not in state["candidate"]
+        assert "payload" not in state["candidate"]
 
         bundle_sha = state["candidate"]["bundle_sha256"]
         payload_sha = state["candidate"]["payload_sha256"]
@@ -740,3 +773,298 @@ def test_verify_stage4_manifest_validates_hex_and_distinct_hashes():
     bad_panel = {"ai-a1": "a"*64, "ai-a2": "b"*64}
     with pytest.raises(WorkflowError, match="keys must match exact required roles"):
         verify_stage4_manifest(h[0], h[1], h[2], h[3], h[4], bad_panel)
+
+
+class Stage4Stub:
+    """Synthetic launcher for Stage 4 testing that obeys the private artifact contract."""
+
+    def __init__(self, outcomes=None, delayed=False, canary=""):
+        self.starts = []
+        self.outcomes = outcomes or {}
+        self.delayed = delayed
+        self.canary = canary
+
+    def __call__(self, job):
+        self.starts.append(job["job_id"])
+        if not self.delayed:
+            self.complete(job)
+
+    def complete(self, job):
+        destination = Path(job["runtime"])
+        spec = job["spec"]
+        role = job["role"]
+        body = deepcopy(spec["envelope"])
+        body.update(self.outcomes.get(role, {}))
+        body["session_id"] = f"synthetic-{job['job_id']}"
+        body["status"] = "COMPLETE"
+
+        expected_art_id = spec.get("expected_artifact_id")
+        if expected_art_id:
+            private_out = destination / "private_out"
+            private_out.mkdir(parents=True, exist_ok=True)
+            out_file = private_out / "output.json"
+
+            if role == "proposer":
+                body["verdict"] = "PROPOSED"
+                catalog_path = None
+                for nm in spec.get("neutral_mounts", []):
+                    if nm.get("sandbox_path") == "/workspace/private_inputs/account_catalog.json":
+                        catalog_path = Path(nm["host_path"])
+                        break
+                if catalog_path and catalog_path.exists():
+                    catalog_doc = json.loads(catalog_path.read_text())
+                    cat_rows = catalog_doc.get("rows", [])
+                else:
+                    cat_rows = []
+
+                rows = []
+                for idx, r in enumerate(cat_rows):
+                    ident = r["identity"]
+                    eng = r.get("english") or r.get("account_name")
+                    is_grp = r.get("is_group", False)
+                    ar_text = f"حساب {idx} {self.canary}".strip()
+                    rows.append({
+                        "identity": ident,
+                        "english": eng,
+                        "is_group": is_grp,
+                        "proposal": {"arabic": ar_text, "confidence": "high"},
+                    })
+
+                out_file.write_text(json.dumps({
+                    "export_sha256": spec["envelope"]["export_sha256"],
+                    "rows": rows,
+                }))
+
+            elif role in ("ai-a1", "ai-a2", "ai-a3"):
+                body["verdict"] = "PASS"
+                proposal_path = None
+                for nm in spec.get("neutral_mounts", []):
+                    if nm.get("sandbox_path") == "/workspace/private_inputs/proposal.json":
+                        proposal_path = Path(nm["host_path"])
+                        break
+                if proposal_path and proposal_path.exists():
+                    p_doc = json.loads(proposal_path.read_text())
+                    p_rows = p_doc.get("rows", [])
+                else:
+                    p_rows = []
+
+                row_decisions = []
+                for idx, pr in enumerate(p_rows):
+                    row_decisions.append({
+                        "identity": pr["identity"],
+                        "decision": "approved",
+                        "rationale": f"Valid translation {self.canary}".strip(),
+                        "reference": {"status": "present"},
+                    })
+
+                out_file.write_text(json.dumps({
+                    "session_id": body["session_id"],
+                    "verdict": "PASS",
+                    "row_decisions": row_decisions,
+                    "findings": [],
+                }))
+
+        elif role == "verifier":
+            body["verdict"] = "PASS"
+            body["findings"] = []
+        elif role == "builder":
+            body["verdict"] = "PASS"
+            body["dry_run_evidence_digest"] = "d" * 64
+            body["findings"] = []
+
+        payload = {
+            "body": body,
+            "wire": {
+                "explanation": f"SYNTHETIC stage4 result for {role}",
+            },
+        }
+        (destination / "stdout.jsonl").write_text(json.dumps(payload))
+        write_json(
+            destination / "terminal.json",
+            dict(
+                job_id=job["job_id"],
+                phase="TERMINAL",
+                exit_code=0,
+                timeout=False,
+                started_utc=utc(),
+                finished_utc=utc(),
+                session_id=body["session_id"],
+            ),
+            immutable=True,
+        )
+
+    def parse(self, job, raw):
+        data = json.loads(raw)
+        return data["body"]["session_id"], data["body"], data["wire"], []
+
+
+def test_stage4_public_engine_lifecycle_acceptance(test_repo, tmp_path):
+    """Canonical Plan §11.2 Acceptance: Full lifecycle driven strictly through public Engine methods.
+
+    Engine.adopt_historical -> Engine.approve(PLAN) -> proposer -> panel reviews -> verifier -> DRY_RUN gate.
+    """
+    import shutil
+    mock_private = tmp_path / "private_stage4"
+    mock_private.mkdir(parents=True)
+    real_catalog = Path("/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4/account_catalog_20260910_121018.json")
+    shutil.copy2(real_catalog, mock_private / real_catalog.name)
+
+    stub = Stage4Stub()
+    e = Engine(test_repo, launcher=stub)
+    try:
+        view = e.adopt_historical("erp-arabic-bilingual-data")
+        e.config["erp_descriptor"]["private_root"] = str(mock_private)
+        e.config["private_root"] = str(mock_private)
+
+        # Initial adopted state assertions
+        assert view["sub_status"] == "PROPOSAL_PENDING"
+        assert view["status"] == "DRAFT"
+        assert view["gate"]["scope"] == "PLAN"
+        assert view["next_roles"] == []
+        assert view["plan_granted"] is False
+
+        # Attempting e.run() while parked at PLAN gate must remain parked
+        v_parked = e.run()
+        assert v_parked["gate"]["scope"] == "PLAN"
+        assert v_parked["status"] == "DRAFT"
+
+        # Owner grants PLAN token
+        plan_token = {
+            "schema_version": 1,
+            "token_id": "tok-plan-lifecycle-001",
+            "work_item": "erp-arabic-bilingual-data",
+            "gate_id": view["gate"]["gate_id"],
+            "issuer": "owner",
+            "scope": "PLAN",
+            "status": "ISSUED",
+            "issued_utc": utc(),
+            "plan_revision_hash": e.config["plan_revision_hash"],
+            "scope_hash": e.config["scope_hash"],
+            "stages": ["4"],
+            "repository_id": str(test_repo),
+            "branch": "feature/scope-context-portability",
+        }
+        v_end = e.approve(plan_token)
+        assert v_end["sub_status"] == "OWNER_PAYLOAD_AUTHORIZATION"
+        assert v_end["status"] == "VERIFIED_FOR_RELEASE"
+        assert v_end["gate"]["scope"] == "DRY_RUN"
+        assert v_end["next_roles"] == []
+
+        cand = v_end["candidate"]
+        assert is_hex64(cand["proposal_sha256"])
+        assert is_hex64(cand["bundle_sha256"])
+        assert is_hex64(cand["payload_sha256"])
+        assert is_hex64(cand["candidate_id"])
+        assert is_hex64(cand["export_sha256"])
+
+        # Proves 5 distinct hashes
+        all_hashes = {
+            cand["export_sha256"],
+            cand["proposal_sha256"],
+            cand["candidate_id"],
+            cand["bundle_sha256"],
+            cand["payload_sha256"],
+        }
+        assert len(all_hashes) == 5
+
+        # Private data containment: state never stores raw rows, bundle, or payload
+        assert "bundle" not in cand
+        assert "payload" not in cand
+        assert "rows" not in cand
+        assert "proposal_rows" not in cand
+        assert "row_decisions" not in cand
+
+        # Blobs exist in content-addressed private storage with 0o600 permissions
+        blobs_dir = mock_private / "blobs"
+        assert (blobs_dir / f"{cand['proposal_sha256']}.json").exists()
+        assert (blobs_dir / f"{cand['bundle_sha256']}.json").exists()
+        assert (blobs_dir / f"{cand['payload_sha256']}.json").exists()
+
+        for b in blobs_dir.glob("*.json"):
+            assert oct(b.stat().st_mode & 0o777) == oct(0o600)
+
+        # Temporary output.json files removed
+        for p in (test_repo / "orchestrator/var/jobs").rglob("output.json"):
+            raise AssertionError(f"temporary output.json leaked at {p}")
+
+    finally:
+        e.close()
+
+
+def test_exhaustive_privacy_leakage_scan(test_repo, tmp_path):
+    """Exhaustive privacy scan: verifies zero leak of private account data into SQLite, logs, or exports."""
+    import shutil
+    mock_private = tmp_path / "private_stage4_canary"
+    mock_private.mkdir(parents=True)
+    real_catalog = Path("/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4/account_catalog_20260910_121018.json")
+    shutil.copy2(real_catalog, mock_private / real_catalog.name)
+
+    CANARY_ARABIC = "حساب_كناري_خاص_سري_987654321"
+    CANARY_ENGLISH_NOTE = "CANARY_CONFIDENTIAL_RATIONALE_XYZ123"
+
+    stub = Stage4Stub(canary=f"{CANARY_ARABIC} {CANARY_ENGLISH_NOTE}")
+    e = Engine(test_repo, launcher=stub)
+    try:
+        view = e.adopt_historical("erp-arabic-bilingual-data")
+        e.config["erp_descriptor"]["private_root"] = str(mock_private)
+        e.config["private_root"] = str(mock_private)
+
+        plan_token = {
+            "schema_version": 1,
+            "token_id": "tok-plan-canary-001",
+            "work_item": "erp-arabic-bilingual-data",
+            "gate_id": view["gate"]["gate_id"],
+            "issuer": "owner",
+            "scope": "PLAN",
+            "status": "ISSUED",
+            "issued_utc": utc(),
+            "plan_revision_hash": e.config["plan_revision_hash"],
+            "scope_hash": e.config["scope_hash"],
+            "stages": ["4"],
+            "repository_id": str(test_repo),
+            "branch": "feature/scope-context-portability",
+        }
+        v_end = e.approve(plan_token)
+        assert v_end["sub_status"] == "OWNER_PAYLOAD_AUTHORIZATION"
+
+        # 1. Assert canaries ARE present in private root blobs
+        blobs_dir = mock_private / "blobs"
+        all_blob_text = "".join(f.read_text() for f in blobs_dir.glob("*.json"))
+        assert CANARY_ARABIC in all_blob_text
+        assert CANARY_ENGLISH_NOTE in all_blob_text
+
+        # 2. Assert canaries are ABSENT from all SQLite tables
+        tables = [r[0] for r in e.store.conn.execute("SELECT name FROM sqlite_master WHERE type='table'").fetchall()]
+        for tbl in tables:
+            rows = e.store.conn.execute(f"SELECT * FROM {tbl}").fetchall()
+            for r in rows:
+                text = str(r)
+                assert CANARY_ARABIC not in text, f"Leaked in table {tbl}"
+                assert CANARY_ENGLISH_NOTE not in text, f"Leaked in table {tbl}"
+
+        # 3. Assert canaries are ABSENT from STATE.json
+        state_path = test_repo / "docs/ai/work-items/erp-arabic-bilingual-data/STATE.json"
+        if state_path.exists():
+            state_text = state_path.read_text()
+            assert CANARY_ARABIC not in state_text, "Leaked in STATE.json"
+            assert CANARY_ENGLISH_NOTE not in state_text, "Leaked in STATE.json"
+
+        # 4. Assert canaries are ABSENT from work-item files (runs, inbox, outbox, etc.)
+        wi_dir = test_repo / "docs/ai/work-items/erp-arabic-bilingual-data"
+        for f in wi_dir.rglob("*"):
+            if f.is_file():
+                txt = f.read_text(errors="ignore")
+                assert CANARY_ARABIC not in txt, f"Leaked in {f}"
+                assert CANARY_ENGLISH_NOTE not in txt, f"Leaked in {f}"
+
+        # 5. Assert canaries are ABSENT from orchestrator runtime files
+        orch_var = test_repo / "orchestrator/var"
+        if orch_var.exists():
+            for f in orch_var.rglob("*"):
+                if f.is_file():
+                    txt = f.read_text(errors="ignore")
+                    assert CANARY_ARABIC not in txt, f"Leaked in runtime file {f}"
+                    assert CANARY_ENGLISH_NOTE not in txt, f"Leaked in runtime file {f}"
+
+    finally:
+        e.close()

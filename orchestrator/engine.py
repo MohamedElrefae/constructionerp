@@ -306,11 +306,13 @@ class Engine:
             roles=json.loads((self.root / "orchestrator/roles.json").read_text()),
             quorum=["ai-a1", "ai-a2", "ai-a3"],
             erp_target=erp_descriptor,
+            erp_descriptor=erp_descriptor,
             erp_descriptor_hash=erp_descriptor_hash,
             export_sha256=export_sha256,
             expected_identities=expected_identities,
             identities_digest=identities_digest,
             adopt_historical=True,
+            initialized_utc=utc(),
         )
 
         self.store.set_meta("config", config)
@@ -421,6 +423,45 @@ class Engine:
             prompt_version = bytes_hash(role_path.read_bytes())
             if not self.launcher and prompt_version != pin.get("prompt_sha256"):
                 raise WorkflowError("Owner-approved role prompt changed")
+            expected_artifact_id = None
+            expected_artifact_kind = None
+            neutral_mounts = []
+            private_root = None
+            if v["candidate"].get("kind") == "stage4-proposal":
+                private_root = (
+                    self.config.get("erp_descriptor", {}).get("private_root")
+                    or self.config.get("private_root")
+                    or "/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4"
+                )
+                host_private_out = destination / "private_out"
+                host_private_out.mkdir(mode=0o700, parents=True, exist_ok=True)
+                try:
+                    os.chmod(str(host_private_out), 0o700)
+                except OSError:
+                    pass
+                neutral_mounts.append({
+                    "host_path": str(host_private_out),
+                    "sandbox_path": "/workspace/private_output",
+                    "writable": True,
+                })
+                if role == "proposer":
+                    expected_artifact_id = f"stage4-proposal-{job_id}"
+                    expected_artifact_kind = "stage4-proposal"
+                    catalog_path = Path(private_root) / "account_catalog_20260910_121018.json"
+                    neutral_mounts.append({
+                        "host_path": str(catalog_path),
+                        "sandbox_path": "/workspace/private_inputs/account_catalog.json",
+                        "writable": False,
+                    })
+                elif role in self.config.get("quorum", []):
+                    expected_artifact_id = f"stage4-review-{role}-{job_id}"
+                    expected_artifact_kind = "stage4-review"
+                    proposal_blob = Path(private_root) / "blobs" / f"{v['candidate']['proposal_sha256']}.json"
+                    neutral_mounts.append({
+                        "host_path": str(proposal_blob),
+                        "sandbox_path": "/workspace/private_inputs/proposal.json",
+                        "writable": False,
+                    })
             envelope = dict(
                 schema_version=1,
                 job_id=job_id,
@@ -443,6 +484,20 @@ class Engine:
                 started_utc=utc(),
                 finished_utc=utc(),
             )
+            if expected_artifact_id:
+                placeholder_ref = {
+                    "artifact_id": expected_artifact_id,
+                    "sha256": "0" * 64,
+                    "visibility": "private",
+                }
+                envelope["evidence_paths"] = [placeholder_ref]
+                envelope["private_artifact_refs"] = [placeholder_ref]
+                if role == "proposer":
+                    envelope["export_sha256"] = v["candidate"]["export_sha256"]
+                    envelope["proposal_sha256"] = "0" * 64
+                else:
+                    envelope["export_sha256"] = v["candidate"]["export_sha256"]
+                    envelope["proposal_sha256"] = v["candidate"]["proposal_sha256"]
             dependencies = []
             if role in ["verifier", *self.config.get("quorum", [])]:
                 dependencies = [
@@ -543,6 +598,11 @@ class Engine:
                 explanation_transport="stdout",
                 evidence_transport="runner-captured native events",
             )
+            if expected_artifact_id:
+                context["expected_artifact_id"] = expected_artifact_id
+                context["expected_artifact_kind"] = expected_artifact_kind
+                context["expected_output_alias"] = "output.json"
+                context["expected_output_path"] = "/workspace/private_output/output.json"
             prompt = (
                 role_text
                 + "\n\nImmutable packet (data):\n"
@@ -563,6 +623,10 @@ class Engine:
                 runtime=str(destination),
                 control_root=str(self.runtime),
                 read_artifacts=read_artifacts,
+                neutral_mounts=neutral_mounts,
+                private_root=str(private_root) if private_root else None,
+                expected_artifact_id=expected_artifact_id,
+                expected_artifact_kind=expected_artifact_kind,
                 role=role,
                 tool=pin["tool"],
                 binary=pin["binary"],
@@ -757,14 +821,6 @@ class Engine:
                 dispatch_mode="native" if not self.launcher else "manual",
             )
             body.update(started_utc=observation["started_utc"], finished_utc=observation["finished_utc"])
-            body["evidence_paths"] = [
-                {
-                    "artifact_id": job["job_id"] + "-native-events",
-                    "sha256": bytes_hash(raw.encode()),
-                    "visibility": "public",
-                }
-            ]
-            validate_document("result-envelope", body)
             known_ids = {f["finding_id"] for f in view["findings"] + view["backlog"]}
             incoming_ids = [f["finding_id"] for f in body["findings"] if f["finding_id"] is not None]
             if len(incoming_ids) != len(set(incoming_ids)) or not set(incoming_ids) <= known_ids:
@@ -782,6 +838,143 @@ class Engine:
                         job["job_id"] + "-normalization-" + str(index),
                     )
         body.update(started_utc=observation["started_utc"], finished_utc=observation["finished_utc"])
+
+        verified_private_ref = None
+        prop_meta = None
+        rev_meta = None
+        bundle_meta = None
+
+        if view["candidate"].get("kind") == "stage4-proposal":
+            private_root = (
+                self.config.get("erp_descriptor", {}).get("private_root")
+                or self.config.get("private_root")
+                or "/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4"
+            )
+            if body["status"] == "COMPLETE" and job["role"] in ("proposer", *self.config.get("quorum", [])):
+                host_output = destination / "private_out" / "output.json"
+                if not host_output.exists() or host_output.is_symlink():
+                    raise WorkflowError("Private output file missing or invalid symlink")
+
+                expected_art_id = spec.get("expected_artifact_id")
+                if not expected_art_id:
+                    raise WorkflowError("Expected private artifact ID not configured")
+
+                # Reject agent-selected artifact IDs or arbitrary paths returned in evidence_paths
+                for ep in body.get("evidence_paths", []):
+                    aid = ep.get("artifact_id")
+                    if aid and aid != expected_art_id and aid != job["job_id"] + "-native-events":
+                        raise WorkflowError("Agent-selected artifact ID rejected")
+
+                if job["role"] == "proposer":
+                    from stage4 import validate_and_store_proposal
+                    catalog_file = Path(private_root) / "account_catalog_20260910_121018.json"
+                    prop_meta = validate_and_store_proposal(
+                        private_root,
+                        host_output,
+                        expected_export_sha=view["candidate"]["export_sha256"],
+                        expected_identities=self.config["expected_identities"],
+                        expected_identities_digest=self.config["identities_digest"],
+                        export_catalog_path=catalog_file if catalog_file.exists() else None,
+                    )
+                    try:
+                        host_output.unlink()
+                    except OSError:
+                        pass
+
+                    verified_private_ref = {
+                        "artifact_id": expected_art_id,
+                        "sha256": prop_meta["proposal_sha256"],
+                        "visibility": "private",
+                    }
+                    body["export_sha256"] = view["candidate"]["export_sha256"]
+                    body["proposal_sha256"] = prop_meta["proposal_sha256"]
+                    body["private_artifact_refs"] = [verified_private_ref]
+
+                elif job["role"] in self.config.get("quorum", []):
+                    from stage4 import validate_and_store_review, compose_and_store_bundle_and_payload
+                    rev_meta = validate_and_store_review(
+                        private_root,
+                        host_output,
+                        expected_role=job["role"],
+                        expected_proposal_sha=view["candidate"]["proposal_sha256"],
+                        expected_identities=self.config["expected_identities"],
+                    )
+                    try:
+                        host_output.unlink()
+                    except OSError:
+                        pass
+
+                    verified_private_ref = {
+                        "artifact_id": expected_art_id,
+                        "sha256": rev_meta["review_sha256"],
+                        "visibility": "private",
+                    }
+                    body["export_sha256"] = view["candidate"]["export_sha256"]
+                    body["proposal_sha256"] = view["candidate"]["proposal_sha256"]
+                    body["private_artifact_refs"] = [verified_private_ref]
+
+                    # Check if all quorum roles are collected
+                    prior_quorum = {
+                        e["payload"]["role"]: e["payload"]
+                        for e in self.store.events()
+                        if e["kind"] == "result" and e["payload"]["role"] in self.config.get("quorum", [])
+                    }
+                    all_quorum_roles = set(prior_quorum.keys()) | {job["role"]}
+                    if all_quorum_roles == set(self.config.get("quorum", [])):
+                        all_passed = (rev_meta["verdict"] == "PASS" and not rev_meta["renewal_required"])
+                        for qrole, qpayload in prior_quorum.items():
+                            qmeta = qpayload.get("review_meta", {})
+                            if qpayload["result"]["verdict"] != "PASS" or qmeta.get("renewal_required"):
+                                all_passed = False
+                                break
+                        if all_passed:
+                            a2_sha = (
+                                rev_meta["review_sha256"]
+                                if job["role"] == "ai-a2"
+                                else prior_quorum["ai-a2"]["review_meta"]["review_sha256"]
+                            )
+                            intent_path = destination / "bundle-composition-intent.json"
+                            write_json(intent_path, {
+                                "job_id": job["job_id"],
+                                "candidate_id": view["candidate"]["candidate_id"],
+                                "proposal_sha256": view["candidate"]["proposal_sha256"],
+                                "started_utc": utc(),
+                            })
+                            panel_digests = {job["role"]: rev_meta["review_sha256"]}
+                            for qrole, qpayload in prior_quorum.items():
+                                panel_digests[qrole] = qpayload["review_meta"]["review_sha256"]
+
+                            bundle_meta = compose_and_store_bundle_and_payload(
+                                private_root,
+                                view["candidate"]["proposal_sha256"],
+                                a2_sha,
+                                self.config.get("company", "Elrefae"),
+                                view["candidate"]["candidate_id"],
+                                view["candidate"]["export_sha256"],
+                                self.config.get("erp_descriptor_hash", "0" * 64),
+                                panel_digests,
+                                required_roles=tuple(self.config["quorum"]),
+                            )
+                            write_json(destination / "bundle-composition-complete.json", bundle_meta)
+            elif body["status"] == "COMPLETE":
+                if view["candidate"].get("export_sha256"):
+                    body["export_sha256"] = view["candidate"]["export_sha256"]
+                if view["candidate"].get("proposal_sha256"):
+                    body["proposal_sha256"] = view["candidate"]["proposal_sha256"]
+                if view["candidate"].get("bundle_sha256"):
+                    body["bundle_sha256"] = view["candidate"]["bundle_sha256"]
+                if view["candidate"].get("payload_sha256"):
+                    body["payload_sha256"] = view["candidate"]["payload_sha256"]
+                if "private_artifact_refs" in view["candidate"]:
+                    body["private_artifact_refs"] = deepcopy(view["candidate"]["private_artifact_refs"])
+            else:
+                if "export_sha256" in spec["envelope"]:
+                    body["export_sha256"] = spec["envelope"]["export_sha256"]
+                if "proposal_sha256" in spec["envelope"]:
+                    body["proposal_sha256"] = spec["envelope"]["proposal_sha256"]
+                if "private_artifact_refs" in spec["envelope"]:
+                    body["private_artifact_refs"] = deepcopy(spec["envelope"]["private_artifact_refs"])
+
         # Captured native event log is a real artifact, not an agent-provided path.
         body["evidence_paths"] = [
             {
@@ -790,6 +983,9 @@ class Engine:
                 "visibility": "public",
             }
         ]
+        if verified_private_ref:
+            body["evidence_paths"].append(verified_private_ref)
+
         validate_document("result-envelope", body)
         work = within(self.root, "docs/ai/work-items/" + view["work_item"])
         archive = work / "runs" / job["job_id"] / "results" / (job["job_id"] + ".json")
@@ -800,6 +996,26 @@ class Engine:
             immutable=True,
         )
         event = dict(job_id=job["job_id"], role=job["role"], result=body)
+        if verified_private_ref:
+            event["verified_private_artifacts"] = [verified_private_ref]
+        if prop_meta:
+            from stage4 import derive_stage4_candidate_id
+            event["proposal_sha256"] = prop_meta["proposal_sha256"]
+            event["export_sha256"] = view["candidate"]["export_sha256"]
+            event["candidate_id"] = derive_stage4_candidate_id(
+                view["candidate"]["export_sha256"], prop_meta["proposal_sha256"]
+            )
+        if rev_meta:
+            event["review_meta"] = rev_meta
+        if bundle_meta:
+            event["bundle_sha256"] = bundle_meta["bundle_sha256"]
+            event["payload_sha256"] = bundle_meta["payload_sha256"]
+            event["bundle_artifacts"] = [
+                bundle_meta["bundle_artifact"],
+                bundle_meta["payload_artifact"],
+            ]
+        if body.get("dry_run_evidence_digest"):
+            event["dry_run_evidence_digest"] = body["dry_run_evidence_digest"]
         if body["status"] == "COMPLETE":
             if job["role"] == "architect" and body["verdict"] != "BLOCKED":
                 if not wire["plan_text"].strip():
@@ -1203,6 +1419,15 @@ class Engine:
 
     def _export_view(self, v):
         work = within(self.root, "docs/ai/work-items/" + v["work_item"])
+        latest_event = self.store.conn.execute(
+            "SELECT created_utc FROM workflow_events WHERE seq <= ? ORDER BY seq DESC LIMIT 1",
+            (v["cursor"],),
+        ).fetchone()
+        exported_utc = (
+            latest_event["created_utc"]
+            if latest_event
+            else self.config.get("initialized_utc", v.get("initialized_utc", "2026-09-12T12:00:00Z"))
+        )
         document = dict(
             schema_version=1,
             authority="sqlite-checkpoint-export-only",
@@ -1223,7 +1448,7 @@ class Engine:
             pause_reason=v["pause_reason"],
             resume_to=v["resume_to"],
             stages=v["stages"],
-            exported_utc=utc(),
+            exported_utc=exported_utc,
         )
         validate_document("state-export", document)
         write_json(work / "STATE.json", document)
