@@ -1766,11 +1766,13 @@ def test_adversarial_catalog_corruption_fails_closed(test_repo, tmp_path):
             e.accept(job, obs, view)
 
         # 2. Invalid schema (rows is not a list) -> fails closed
+        (dest / "stdout.jsonl").write_text(json.dumps(payload))
         cat_blob.write_text(json.dumps({"schema": "stage4-account-catalog/v1", "rows": "not-a-list"}))
         with pytest.raises(WorkflowError, match="Export catalog blob invalid schema"):
             e.accept(job, obs, view)
 
         # 3. Missing catalog blob -> fails closed
+        (dest / "stdout.jsonl").write_text(json.dumps(payload))
         cat_blob.unlink()
         with pytest.raises(WorkflowError, match="Export catalog blob missing"):
             e.accept(job, obs, view)
@@ -2080,6 +2082,359 @@ def test_raw_artifacts_scrubbed_on_malformed_output(test_repo, tmp_path):
             "Catalog term must be scrubbed from stderr.txt on malformed output"
     finally:
         e.close()
+
+
+def test_missing_or_corrupt_catalog_with_english_canary_quarantines_artifacts(test_repo, tmp_path):
+    """When catalog is corrupt or missing, raw artifacts with English canary must be quarantined/deleted."""
+    mock_private = tmp_path / "private_corrupt_cat"
+    mock_private.mkdir(parents=True)
+    real_catalog = Path("/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4/account_catalog_20260910_121018.json")
+    shutil.copy2(real_catalog, mock_private / real_catalog.name)
+
+    stub = Stage4Stub()
+    e = Engine(test_repo, launcher=stub)
+    try:
+        desc = {
+            "erp_checkout": "/home/mohamed/frappe-bench/apps/construction",
+            "bench_root": "/home/mohamed/frappe-bench",
+            "site": "v16.localhost",
+            "site_classification": "non-production test",
+            "private_root": str(mock_private),
+        }
+        view = e.adopt_historical("erp-arabic-bilingual-data", erp_descriptor=desc)
+        export_sha = view["candidate"]["export_sha256"]
+        cat_blob = mock_private / "blobs" / f"{export_sha}.json"
+        assert cat_blob.exists()
+
+        # --- Scenario A: Corrupt catalog blob ---
+        job_id_a = "job-corrupt-cat-canary"
+        dest_a = test_repo / "orchestrator/var/jobs" / job_id_a
+        dest_a.mkdir(parents=True)
+
+        envelope_a = {
+            "schema_version": 1,
+            "job_id": job_id_a,
+            "work_item": "erp-arabic-bilingual-data",
+            "stage": "4",
+            "role": "proposer",
+            "tool": "opencode",
+            "model": "opencode-go/gpt-5.6-luna",
+            "status": "COMPLETE",
+            "verdict": "PROPOSED",
+            "failure_class": None,
+            "evidence_paths": [],
+            "findings": [],
+            "candidate_kind": "stage4-proposal",
+            "candidate_id": view["candidate"]["candidate_id"],
+            "plan_revision_hash": e.config["plan_revision_hash"],
+            "prompt_version": e.config["roles"]["proposer"]["prompt_sha256"],
+            "session_id": "sess-corrupt-a",
+            "export_sha256": export_sha,
+            "proposal_sha256": None,
+        }
+        english_canary = "Office Rent CONFIDENTIAL_TERM_123"
+        arabic_canary = "حساب_خاص_سري"
+        wire_a = {"explanation": f"Leaking {english_canary} and {arabic_canary}", "result_json": json.dumps(envelope_a), "plan_text": ""}
+        payload_a = {"body": envelope_a, "wire": wire_a}
+        stdout_a = dest_a / "stdout.jsonl"
+        stdout_a.write_text(json.dumps(payload_a), encoding="utf-8")
+        stderr_a = dest_a / "stderr.txt"
+        stderr_a.write_text(f"Stderr with {english_canary} and {arabic_canary}", encoding="utf-8")
+
+        job_a = {
+            "job_id": job_id_a,
+            "role": "proposer",
+            "runtime": str(dest_a),
+            "spec": {
+                "expected_artifact_id": f"stage4-proposal-{job_id_a}",
+                "envelope": envelope_a,
+                "tool": "opencode",
+                "model": "opencode-go/gpt-5.6-luna",
+            },
+        }
+        obs_a = {"exit_code": 0, "session_id": "sess-corrupt-a", "started_utc": utc(), "finished_utc": utc()}
+
+        # Deliberately corrupt catalog JSON
+        cat_blob.write_text("{corrupt-json-blob")
+
+        with pytest.raises(WorkflowError, match="Export catalog blob"):
+            e.accept(job_a, obs_a, view)
+
+        # Public runtime artifacts must NOT exist in job destination (quarantined/deleted)
+        assert not stdout_a.exists(), "stdout.jsonl must not remain in public job dir when catalog terms cannot be loaded"
+        assert not stderr_a.exists(), "stderr.txt must not remain in public job dir when catalog terms cannot be loaded"
+
+        # Quarantined copies in protected private root
+        q_stdout_a = mock_private / "quarantine" / job_id_a / "stdout.jsonl"
+        q_stderr_a = mock_private / "quarantine" / job_id_a / "stderr.txt"
+        assert q_stdout_a.exists(), "Raw artifact should be safely moved to protected private storage"
+        assert q_stderr_a.exists(), "Raw stderr should be safely moved to protected private storage"
+        assert english_canary in q_stdout_a.read_text(encoding="utf-8")
+
+        # --- Scenario B: Missing catalog blob ---
+        job_id_b = "job-missing-cat-canary"
+        dest_b = test_repo / "orchestrator/var/jobs" / job_id_b
+        dest_b.mkdir(parents=True)
+
+        envelope_b = deepcopy(envelope_a)
+        envelope_b["job_id"] = job_id_b
+        wire_b = {"explanation": f"Leaking {english_canary}", "result_json": json.dumps(envelope_b), "plan_text": ""}
+        payload_b = {"body": envelope_b, "wire": wire_b}
+        stdout_b = dest_b / "stdout.jsonl"
+        stdout_b.write_text(json.dumps(payload_b), encoding="utf-8")
+        stderr_b = dest_b / "stderr.txt"
+        stderr_b.write_text(f"Stderr {english_canary}", encoding="utf-8")
+
+        job_b = {
+            "job_id": job_id_b,
+            "role": "proposer",
+            "runtime": str(dest_b),
+            "spec": {
+                "expected_artifact_id": f"stage4-proposal-{job_id_b}",
+                "envelope": envelope_b,
+                "tool": "opencode",
+                "model": "opencode-go/gpt-5.6-luna",
+            },
+        }
+        obs_b = {"exit_code": 0, "session_id": "sess-corrupt-b", "started_utc": utc(), "finished_utc": utc()}
+
+        cat_blob.unlink()
+
+        with pytest.raises(WorkflowError, match="Export catalog blob"):
+            e.accept(job_b, obs_b, view)
+
+        assert not stdout_b.exists(), "stdout.jsonl must not remain in public job dir on missing catalog"
+        assert not stderr_b.exists(), "stderr.txt must not remain in public job dir on missing catalog"
+        assert (mock_private / "quarantine" / job_id_b / "stdout.jsonl").exists()
+    finally:
+        e.close()
+
+
+def test_invalid_utf8_runtime_output_handling(test_repo, tmp_path):
+    """Invalid UTF-8 in runtime output must not leak bytes or replace original acceptance exception."""
+    mock_private = tmp_path / "private_invalid_utf8"
+    mock_private.mkdir(parents=True)
+    real_catalog = Path("/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4/account_catalog_20260910_121018.json")
+    shutil.copy2(real_catalog, mock_private / real_catalog.name)
+
+    stub = Stage4Stub()
+    e = Engine(test_repo, launcher=stub)
+    try:
+        desc = {
+            "erp_checkout": "/home/mohamed/frappe-bench/apps/construction",
+            "bench_root": "/home/mohamed/frappe-bench",
+            "site": "v16.localhost",
+            "site_classification": "non-production test",
+            "private_root": str(mock_private),
+        }
+        view = e.adopt_historical("erp-arabic-bilingual-data", erp_descriptor=desc)
+
+        # Case A: stdout.jsonl contains invalid UTF-8 bytes
+        job_id_a = "job-invalid-utf8-stdout"
+        dest_a = test_repo / "orchestrator/var/jobs" / job_id_a
+        dest_a.mkdir(parents=True)
+
+        bad_bytes = b'{"header": "ok", "corrupted": \xff\xfe\x80\x00}'
+        stdout_a = dest_a / "stdout.jsonl"
+        stdout_a.write_bytes(bad_bytes)
+        stderr_a = dest_a / "stderr.txt"
+        stderr_a.write_text("clean stderr", encoding="utf-8")
+
+        job_a = {
+            "job_id": job_id_a,
+            "role": "proposer",
+            "runtime": str(dest_a),
+            "spec": {
+                "expected_artifact_id": f"stage4-proposal-{job_id_a}",
+                "envelope": {"job_id": job_id_a},
+                "tool": "opencode",
+                "model": "opencode-go/gpt-5.6-luna",
+            },
+        }
+        obs_a = {"exit_code": 0, "session_id": "sess-utf8-a", "started_utc": utc(), "finished_utc": utc()}
+
+        with pytest.raises(UnicodeDecodeError):
+            e.accept(job_a, obs_a, view)
+
+        # Raw file with invalid bytes must be removed from public destination
+        assert not stdout_a.exists(), "stdout.jsonl with invalid UTF-8 must not remain in public job dir"
+        # Quarantined copy in protected private root preserves exact bytes
+        q_stdout_a = mock_private / "quarantine" / job_id_a / "stdout.jsonl"
+        assert q_stdout_a.exists()
+        assert q_stdout_a.read_bytes() == bad_bytes
+
+        # Case B: stdout.jsonl has valid UTF-8 but triggers a WorkflowError,
+        # while stderr.txt contains invalid UTF-8 bytes.
+        job_id_b = "job-invalid-utf8-stderr"
+        dest_b = test_repo / "orchestrator/var/jobs" / job_id_b
+        dest_b.mkdir(parents=True)
+
+        envelope_b = {
+            "schema_version": 1,
+            "job_id": job_id_b,
+            "work_item": "erp-arabic-bilingual-data",
+            "stage": "4",
+            "role": "proposer",
+            "tool": "opencode",
+            "model": "opencode-go/gpt-5.6-luna",
+            "status": "COMPLETE",
+            "verdict": "PROPOSED",
+            "failure_class": None,
+            "evidence_paths": [],
+            "findings": [],
+            "candidate_kind": "stage4-proposal",
+            "candidate_id": view["candidate"]["candidate_id"],
+            "plan_revision_hash": "mismatched-plan-hash",
+            "prompt_version": e.config["roles"]["proposer"]["prompt_sha256"],
+            "session_id": "sess-utf8-b",
+            "export_sha256": view["candidate"]["export_sha256"],
+            "proposal_sha256": None,
+        }
+        wire_b = {"explanation": "Normal explanation", "result_json": json.dumps(envelope_b), "plan_text": ""}
+        payload_b = {"body": envelope_b, "wire": wire_b}
+        stdout_b = dest_b / "stdout.jsonl"
+        stdout_b.write_text(json.dumps(payload_b), encoding="utf-8")
+
+        bad_stderr_bytes = b"stderr crashed with \x80\xff\xfe binary corruption"
+        stderr_b = dest_b / "stderr.txt"
+        stderr_b.write_bytes(bad_stderr_bytes)
+
+        job_b = {
+            "job_id": job_id_b,
+            "role": "proposer",
+            "runtime": str(dest_b),
+            "spec": {
+                "expected_artifact_id": f"stage4-proposal-{job_id_b}",
+                "envelope": {**envelope_b, "plan_revision_hash": e.config["plan_revision_hash"]},
+                "tool": "opencode",
+                "model": "opencode-go/gpt-5.6-luna",
+            },
+        }
+        obs_b = {"exit_code": 0, "session_id": "sess-utf8-b", "started_utc": utc(), "finished_utc": utc()}
+
+        # Crucial check: the original WorkflowError must be preserved, NOT replaced by UnicodeDecodeError!
+        with pytest.raises(WorkflowError, match="Stale or mismatched result binding"):
+            e.accept(job_b, obs_b, view)
+
+        # Invalid stderr.txt must not remain in public dir
+        assert not stderr_b.exists(), "stderr.txt with invalid UTF-8 must not remain in public job dir"
+        # Quarantined copy in protected private root
+        q_stderr_b = mock_private / "quarantine" / job_id_b / "stderr.txt"
+        assert q_stderr_b.exists()
+        assert q_stderr_b.read_bytes() == bad_stderr_bytes
+    finally:
+        e.close()
+
+
+def test_concurrent_acceptance_isolation(test_repo, tmp_path):
+    """Concurrent accept() calls on the same Engine instance must be fully isolated without cross-job state."""
+    import concurrent.futures
+    mock_private = tmp_path / "private_concurrent"
+    mock_private.mkdir(parents=True)
+    real_catalog = Path("/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4/account_catalog_20260910_121018.json")
+    shutil.copy2(real_catalog, mock_private / real_catalog.name)
+
+    stub = Stage4Stub()
+    e = Engine(test_repo, launcher=stub)
+    try:
+        desc = {
+            "erp_checkout": "/home/mohamed/frappe-bench/apps/construction",
+            "bench_root": "/home/mohamed/frappe-bench",
+            "site": "v16.localhost",
+            "site_classification": "non-production test",
+            "private_root": str(mock_private),
+        }
+        view = e.adopt_historical("erp-arabic-bilingual-data", erp_descriptor=desc)
+
+        job_specs = []
+        for i in range(4):
+            jid = f"job-concurrent-{i}"
+            dest = test_repo / "orchestrator/var/jobs" / jid
+            dest.mkdir(parents=True)
+
+            is_failing = (i == 2)
+            canary = f"CANARY_CONCURRENT_THREAD_{i}"
+            envelope = {
+                "schema_version": 1,
+                "job_id": jid,
+                "work_item": "erp-arabic-bilingual-data",
+                "stage": "4",
+                "role": "proposer",
+                "tool": "opencode",
+                "model": "opencode-go/gpt-5.6-luna",
+                "status": "COMPLETE",
+                "verdict": "PROPOSED",
+                "failure_class": None,
+                "evidence_paths": [],
+                "findings": [],
+                "candidate_kind": "stage4-proposal",
+                "candidate_id": view["candidate"]["candidate_id"],
+                "plan_revision_hash": "bad-hash" if is_failing else e.config["plan_revision_hash"],
+                "prompt_version": e.config["roles"]["proposer"]["prompt_sha256"],
+                "session_id": f"sess-concurrent-{i}",
+                "export_sha256": view["candidate"]["export_sha256"],
+                "proposal_sha256": None,
+            }
+            wire = {"explanation": f"Canary {canary}", "result_json": json.dumps(envelope), "plan_text": ""}
+            payload = {"body": envelope, "wire": wire}
+            (dest / "stdout.jsonl").write_text(json.dumps(payload), encoding="utf-8")
+            (dest / "stderr.txt").write_text(f"Stderr {canary}", encoding="utf-8")
+
+            job = {
+                "job_id": jid,
+                "role": "proposer",
+                "runtime": str(dest),
+                "spec": {
+                    "expected_artifact_id": f"stage4-proposal-{jid}",
+                    "envelope": {**envelope, "plan_revision_hash": e.config["plan_revision_hash"]},
+                    "tool": "opencode",
+                    "model": "opencode-go/gpt-5.6-luna",
+                    "neutral_mounts": [
+                        {
+                            "host_path": str(mock_private / real_catalog.name),
+                            "sandbox_path": "/tmp/workspace/private_inputs/account_catalog.json",
+                            "writable": False,
+                        }
+                    ],
+                },
+            }
+            if not is_failing:
+                stub.complete(job)
+                (dest / "stdout.jsonl").write_text(json.dumps(payload), encoding="utf-8")
+
+            obs = {"exit_code": 0, "session_id": f"sess-concurrent-{i}", "started_utc": utc(), "finished_utc": utc()}
+            job_specs.append((i, job, obs, is_failing, canary, dest))
+
+        def run_accept(args):
+            idx, job, obs, is_failing, canary, dest = args
+            try:
+                event = e.accept(job, obs, view)
+                return idx, event, None
+            except Exception as exc:
+                return idx, None, exc
+
+        with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
+            results = list(executor.map(run_accept, job_specs))
+
+        for idx, event, exc in results:
+            _, _, _, is_failing, canary, dest = job_specs[idx]
+            if is_failing:
+                assert isinstance(exc, WorkflowError)
+                assert "Stale or mismatched result binding" in str(exc)
+            else:
+                assert exc is None
+                assert event is not None
+                assert event["job_id"] == f"job-concurrent-{idx}"
+                # Assert evidence digest matches the actual retained file
+                retained_bytes = (dest / "stdout.jsonl").read_bytes()
+                recorded_sha = event["result"]["evidence_paths"][0]["sha256"]
+                assert recorded_sha == hashlib.sha256(retained_bytes).hexdigest()
+
+        # Check that no instance-level cache exists on Engine
+        assert not hasattr(e, "_stage4_catalog_terms_cache"), "Engine must not store catalog terms cache on self"
+    finally:
+        e.close()
+
 
 
 

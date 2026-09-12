@@ -7,6 +7,7 @@ relaunches a job with an uncertain launch intent. No commit/import executor exis
 import hashlib
 import json
 import os
+import shutil
 import sqlite3
 import subprocess
 import sys
@@ -33,6 +34,62 @@ from worker import process_identity
 
 class GraphState(TypedDict):
     view: dict
+
+
+def _quarantine_or_delete_file(path, fname, job_id, private_root=None):
+    if private_root:
+        try:
+            q_dir = Path(private_root) / "quarantine" / job_id
+            q_dir.mkdir(parents=True, exist_ok=True)
+            target = q_dir / fname
+            if path.exists() and not path.is_symlink():
+                shutil.move(str(path), str(target))
+                return
+        except Exception:
+            pass
+    try:
+        if path.exists():
+            path.unlink()
+    except OSError:
+        pass
+
+
+def _quarantine_or_delete_runtime_artifacts(destination, job_id, private_root=None):
+    for fname in ("stdout.jsonl", "stderr.txt"):
+        fpath = destination / fname
+        _quarantine_or_delete_file(fpath, fname, job_id, private_root)
+
+
+def _sanitize_stage4_runtime_artifacts(destination, job_id, private_root, catalog_terms):
+    """Sanitizes runtime artifacts on disk for stage4 jobs.
+
+    If catalog_terms is None (terms could not be reliably loaded):
+      Quarantines or deletes runtime artifacts; does NOT leave partially sanitized public files.
+    If catalog_terms is a set:
+      Sanitizes both stdout.jsonl and stderr.txt in-place using sanitize_public_text.
+      If invalid UTF-8 is encountered, quarantines/deletes the affected artifact(s).
+    """
+    if catalog_terms is None:
+        _quarantine_or_delete_runtime_artifacts(destination, job_id, private_root)
+        return
+
+    from stage4 import sanitize_public_text
+
+    for fname in ("stdout.jsonl", "stderr.txt"):
+        fpath = destination / fname
+        if not fpath.exists() or fpath.is_symlink():
+            continue
+        try:
+            raw_bytes = fpath.read_bytes()
+            text = raw_bytes.decode("utf-8")
+            sanitized = sanitize_public_text(text, catalog_terms=catalog_terms)
+            fpath.write_text(sanitized, encoding="utf-8")
+        except UnicodeDecodeError:
+            # Invalid UTF-8: cannot safely sanitize without leaking bytes.
+            # Quarantine or delete this specific artifact.
+            _quarantine_or_delete_file(fpath, fname, job_id, private_root)
+        except Exception:
+            _quarantine_or_delete_file(fpath, fname, job_id, private_root)
 
 
 class Engine:
@@ -790,63 +847,60 @@ class Engine:
     def accept(self, job, observation, view):
         """Public entry point for result acceptance.
 
-        Wraps _accept_inner() in error-path cleanup: if _accept_inner() raises
-        before scrubbing stdout.jsonl / stderr.txt, this wrapper does a
-        best-effort scrub (Arabic RE + any catalog terms loaded so far) to
-        prevent raw private data from persisting on disk after rejection.
+        Wraps _accept_inner() in error-path cleanup. Uses purely job-local state:
+        - If catalog_terms can be loaded reliably, sanitizes artifacts.
+        - If catalog_terms cannot be loaded reliably (missing/corrupt/symlink/schema),
+          quarantines or deletes raw runtime artifacts; does not leave partially
+          sanitized public files.
+        - Invalid UTF-8 is quarantined/deleted without leaking bytes or replacing
+          the original acceptance exception.
         """
-        from stage4 import sanitize_public_text
         destination = Path(job["runtime"])
-        stdout_path = destination / "stdout.jsonl"
-        stderr_path = destination / "stderr.txt"
-        is_stage4 = view["candidate"].get("kind") == "stage4-proposal"
-        # _stage4_catalog_terms is set inside _accept_inner() once the catalog
-        # blob is read; we capture it via a mutable cell so the except clause
-        # can use whatever terms were loaded before the failure.
-        self._stage4_catalog_terms_cache = set()
+        job_id = job["job_id"]
+        is_stage4 = view.get("candidate", {}).get("kind") == "stage4-proposal"
+        private_root = None
+        job_catalog_terms = None
+
         if is_stage4:
-            try:
-                private_root = (
-                    self.config.get("erp_descriptor", {}).get("private_root")
-                    or self.config.get("private_root")
-                    or "/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4"
-                )
-                export_sha = view.get("candidate", {}).get("export_sha256")
-                if export_sha:
-                    cat_path = Path(private_root) / "blobs" / f"{export_sha}.json"
-                    if cat_path.exists() and not cat_path.is_symlink():
-                        cat_doc = json.loads(cat_path.read_text(encoding="utf-8"))
-                        terms = set()
-                        for r in cat_doc.get("rows", []):
-                            if r.get("identity"):
-                                terms.add(r["identity"])
-                            if r.get("english"):
-                                terms.add(r["english"])
-                            if r.get("account_name"):
-                                terms.add(r["account_name"])
-                        self._stage4_catalog_terms_cache = terms
-            except Exception:
-                pass
+            private_root = (
+                self.config.get("erp_descriptor", {}).get("private_root")
+                or self.config.get("private_root")
+                or "/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4"
+            )
+            export_sha = view.get("candidate", {}).get("export_sha256")
+            if export_sha and isinstance(export_sha, str) and len(export_sha) == 64:
+                try:
+                    cat_blob = Path(private_root) / "blobs" / f"{export_sha}.json"
+                    if cat_blob.is_file() and not cat_blob.is_symlink():
+                        cat_doc = json.loads(cat_blob.read_bytes().decode("utf-8"))
+                        if isinstance(cat_doc, dict) and isinstance(cat_doc.get("rows"), list):
+                            expected_ids = [
+                                r["identity"] for r in cat_doc["rows"] if isinstance(r, dict) and "identity" in r
+                            ]
+                            from stage4 import derive_identities_digest
+
+                            if derive_identities_digest(expected_ids) == self.config.get("identities_digest"):
+                                terms = set(expected_ids)
+                                for r in cat_doc["rows"]:
+                                    if isinstance(r, dict):
+                                        if r.get("english"):
+                                            terms.add(r["english"])
+                                        if r.get("account_name"):
+                                            terms.add(r["account_name"])
+                                job_catalog_terms = terms
+                except Exception:
+                    job_catalog_terms = None
+
         try:
             return self._accept_inner(job, observation, view)
         except Exception:
             if is_stage4:
-                terms = getattr(self, "_stage4_catalog_terms_cache", set())
                 try:
-                    if stdout_path.exists() and not stdout_path.is_symlink():
-                        stdout_path.write_text(
-                            sanitize_public_text(stdout_path.read_text(encoding="utf-8"), catalog_terms=terms),
-                            encoding="utf-8",
-                        )
-                except OSError:
-                    pass
-                try:
-                    if stderr_path.exists() and not stderr_path.is_symlink():
-                        stderr_path.write_text(
-                            sanitize_public_text(stderr_path.read_text(encoding="utf-8"), catalog_terms=terms),
-                            encoding="utf-8",
-                        )
-                except OSError:
+                    _sanitize_stage4_runtime_artifacts(
+                        destination, job_id, private_root, catalog_terms=job_catalog_terms
+                    )
+                except Exception:
+                    # Cleanup must NEVER replace the original acceptance exception
                     pass
             raise
 
@@ -855,7 +909,7 @@ class Engine:
         stdout = destination / "stdout.jsonl"
         if not stdout.is_file() or stdout.stat().st_size > 20_000_000:
             raise WorkflowError("EVIDENCE_UNAVAILABLE")
-        raw = stdout.read_text()
+        raw = stdout.read_text(encoding="utf-8")
         spec = job["spec"]
         if observation["exit_code"] != 0 or observation.get("timeout"):
             body = deepcopy(spec["envelope"])
@@ -961,9 +1015,6 @@ class Engine:
                         catalog_terms.add(r["english"])
                     if r.get("account_name"):
                         catalog_terms.add(r["account_name"])
-                # Expose catalog_terms to the error-path scrubber in accept().
-                _stage4_catalog_terms = catalog_terms
-                self._stage4_catalog_terms_cache = catalog_terms
 
                 if record_path.exists():
                     if not record_path.is_file() or record_path.is_symlink():
@@ -1244,9 +1295,6 @@ class Engine:
                     catalog_terms.add(r["english"])
                 if r.get("account_name"):
                     catalog_terms.add(r["account_name"])
-            # Expose catalog_terms to the error-path scrubber in accept().
-            _stage4_catalog_terms = catalog_terms
-            self._stage4_catalog_terms_cache = catalog_terms
 
         from stage4 import sanitize_public_text
         sanitized_explanation = sanitize_public_text(wire.get("explanation", ""), catalog_terms=catalog_terms)
@@ -1259,17 +1307,15 @@ class Engine:
         # Scrub runtime artifacts BEFORE computing evidence_paths so the
         # recorded digest matches the retained post-sanitization artifact.
         if view["candidate"].get("kind") == "stage4-proposal":
+            _sanitize_stage4_runtime_artifacts(
+                destination, job["job_id"], private_root, catalog_terms=catalog_terms
+            )
             if stdout.exists() and not stdout.is_symlink():
-                _scrubbed_raw = sanitize_public_text(raw, catalog_terms=catalog_terms)
-                stdout.write_text(_scrubbed_raw)
-                _native_events_bytes = _scrubbed_raw.encode()
+                _native_events_bytes = stdout.read_bytes()
             else:
-                _native_events_bytes = raw.encode()
-            stderr_path = destination / "stderr.txt"
-            if stderr_path.exists() and not stderr_path.is_symlink():
-                stderr_path.write_text(sanitize_public_text(stderr_path.read_text(), catalog_terms=catalog_terms))
+                _native_events_bytes = raw.encode("utf-8")
         else:
-            _native_events_bytes = raw.encode()
+            _native_events_bytes = raw.encode("utf-8")
 
         # Captured native event log is a real artifact, not an agent-provided path.
         # Digest uses post-sanitization bytes so the hash matches the retained file.
