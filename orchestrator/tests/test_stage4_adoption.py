@@ -92,7 +92,7 @@ def test_adopt_historical_initializes_stages_0_to_3_with_real_evidence_hashes(te
         assert view["candidate"]["export_sha256"] == "206ecfae017b915742abc265016eee094304562e53838a932c7fd56af6db9ed1"
         assert view["candidate"]["identities_digest"] == e.config["identities_digest"]
         assert is_hex64(view["candidate"]["identities_digest"])
-        assert len(e.config["expected_identities"]) == 81
+        assert "expected_identities" not in e.config
 
         stages = view["stages"]
         assert stages["0"]["historical"] is True
@@ -318,8 +318,9 @@ def test_stage4_sub_status_state_transitions_end_to_end(test_repo):
         assert state["next_roles"] == ["proposer"]
         assert state["gate"] is None
 
-        # Step 2: Proposer produces 81 rows covering all expected identities
-        expected_identities = config["expected_identities"]
+        catalog_blob = Path(config["erp_descriptor"]["private_root"]) / "blobs" / f"{state['candidate']['export_sha256']}.json"
+        cat_doc = json.loads(catalog_blob.read_text())
+        expected_identities = [r["identity"] for r in cat_doc.get("rows", [])]
         assert len(expected_identities) == 81
         proposer_rows = [
             {
@@ -808,7 +809,7 @@ class Stage4Stub:
                 body["verdict"] = "PROPOSED"
                 catalog_path = None
                 for nm in spec.get("neutral_mounts", []):
-                    if nm.get("sandbox_path") == "/workspace/private_inputs/account_catalog.json":
+                    if nm.get("sandbox_path") == "/tmp/workspace/private_inputs/account_catalog.json":
                         catalog_path = Path(nm["host_path"])
                         break
                 if catalog_path and catalog_path.exists():
@@ -839,7 +840,7 @@ class Stage4Stub:
                 body["verdict"] = "PASS"
                 proposal_path = None
                 for nm in spec.get("neutral_mounts", []):
-                    if nm.get("sandbox_path") == "/workspace/private_inputs/proposal.json":
+                    if nm.get("sandbox_path") == "/tmp/workspace/private_inputs/proposal.json":
                         proposal_path = Path(nm["host_path"])
                         break
                 if proposal_path and proposal_path.exists():
@@ -858,7 +859,10 @@ class Stage4Stub:
                     })
 
                 out_file.write_text(json.dumps({
+                    "schema": "stage4-panel-review/v1",
+                    "role": role,
                     "session_id": body["session_id"],
+                    "proposal_sha256": spec["envelope"]["proposal_sha256"],
                     "verdict": "PASS",
                     "row_decisions": row_decisions,
                     "findings": [],
@@ -912,9 +916,14 @@ def test_stage4_public_engine_lifecycle_acceptance(test_repo, tmp_path):
     stub = Stage4Stub()
     e = Engine(test_repo, launcher=stub)
     try:
-        view = e.adopt_historical("erp-arabic-bilingual-data")
-        e.config["erp_descriptor"]["private_root"] = str(mock_private)
-        e.config["private_root"] = str(mock_private)
+        desc = {
+            "erp_checkout": "/home/mohamed/frappe-bench/apps/construction",
+            "bench_root": "/home/mohamed/frappe-bench",
+            "site": "v16.localhost",
+            "site_classification": "non-production test",
+            "private_root": str(mock_private),
+        }
+        view = e.adopt_historical("erp-arabic-bilingual-data", erp_descriptor=desc)
 
         # Initial adopted state assertions
         assert view["sub_status"] == "PROPOSAL_PENDING"
@@ -1005,9 +1014,14 @@ def test_exhaustive_privacy_leakage_scan(test_repo, tmp_path):
     stub = Stage4Stub(canary=f"{CANARY_ARABIC} {CANARY_ENGLISH_NOTE}")
     e = Engine(test_repo, launcher=stub)
     try:
-        view = e.adopt_historical("erp-arabic-bilingual-data")
-        e.config["erp_descriptor"]["private_root"] = str(mock_private)
-        e.config["private_root"] = str(mock_private)
+        desc = {
+            "erp_checkout": "/home/mohamed/frappe-bench/apps/construction",
+            "bench_root": "/home/mohamed/frappe-bench",
+            "site": "v16.localhost",
+            "site_classification": "non-production test",
+            "private_root": str(mock_private),
+        }
+        view = e.adopt_historical("erp-arabic-bilingual-data", erp_descriptor=desc)
 
         plan_token = {
             "schema_version": 1,
@@ -1027,44 +1041,459 @@ def test_exhaustive_privacy_leakage_scan(test_repo, tmp_path):
         v_end = e.approve(plan_token)
         assert v_end["sub_status"] == "OWNER_PAYLOAD_AUTHORIZATION"
 
-        # 1. Assert canaries ARE present in private root blobs
+        # Build comprehensive set of private terms from catalog
+        cat_doc = json.loads((mock_private / real_catalog.name).read_text())
+        all_private_terms = {CANARY_ARABIC, CANARY_ENGLISH_NOTE}
+        for r in cat_doc.get("rows", []):
+            if r.get("identity"):
+                all_private_terms.add(r["identity"])
+            if r.get("english"):
+                all_private_terms.add(r["english"])
+            if r.get("account_name"):
+                all_private_terms.add(r["account_name"])
+        for idx in range(len(cat_doc.get("rows", []))):
+            all_private_terms.add(f"حساب {idx}")
+            all_private_terms.add("Valid translation")
+
+        # 1. Assert canaries and identities ARE present in private root blobs
         blobs_dir = mock_private / "blobs"
         all_blob_text = "".join(f.read_text() for f in blobs_dir.glob("*.json"))
         assert CANARY_ARABIC in all_blob_text
         assert CANARY_ENGLISH_NOTE in all_blob_text
+        for r in cat_doc.get("rows", []):
+            assert r["identity"] in all_blob_text
 
-        # 2. Assert canaries are ABSENT from all SQLite tables
+        # 2. Assert all private terms are ABSENT from all SQLite tables
         tables = [r[0] for r in e.store.conn.execute("SELECT name FROM sqlite_master WHERE type='table'").fetchall()]
         for tbl in tables:
             rows = e.store.conn.execute(f"SELECT * FROM {tbl}").fetchall()
             for r in rows:
                 text = str(r)
-                assert CANARY_ARABIC not in text, f"Leaked in table {tbl}"
-                assert CANARY_ENGLISH_NOTE not in text, f"Leaked in table {tbl}"
+                for term in all_private_terms:
+                    assert term not in text, f"Private term '{term}' leaked in table {tbl}"
 
-        # 3. Assert canaries are ABSENT from STATE.json
+        # 3. Assert all private terms are ABSENT from STATE.json
         state_path = test_repo / "docs/ai/work-items/erp-arabic-bilingual-data/STATE.json"
         if state_path.exists():
             state_text = state_path.read_text()
-            assert CANARY_ARABIC not in state_text, "Leaked in STATE.json"
-            assert CANARY_ENGLISH_NOTE not in state_text, "Leaked in STATE.json"
+            for term in all_private_terms:
+                assert term not in state_text, f"Private term '{term}' leaked in STATE.json"
 
-        # 4. Assert canaries are ABSENT from work-item files (runs, inbox, outbox, etc.)
+        # 4. Assert all private terms are ABSENT from work-item files (runs, inbox, outbox, etc.)
         wi_dir = test_repo / "docs/ai/work-items/erp-arabic-bilingual-data"
         for f in wi_dir.rglob("*"):
             if f.is_file():
                 txt = f.read_text(errors="ignore")
-                assert CANARY_ARABIC not in txt, f"Leaked in {f}"
-                assert CANARY_ENGLISH_NOTE not in txt, f"Leaked in {f}"
+                for term in all_private_terms:
+                    assert term not in txt, f"Private term '{term}' leaked in {f}"
 
-        # 5. Assert canaries are ABSENT from orchestrator runtime files
+        # 5. Assert all private terms are ABSENT from orchestrator runtime files
         orch_var = test_repo / "orchestrator/var"
         if orch_var.exists():
             for f in orch_var.rglob("*"):
                 if f.is_file():
                     txt = f.read_text(errors="ignore")
-                    assert CANARY_ARABIC not in txt, f"Leaked in runtime file {f}"
-                    assert CANARY_ENGLISH_NOTE not in txt, f"Leaked in runtime file {f}"
+                    for term in all_private_terms:
+                        assert term not in txt, f"Private term '{term}' leaked in runtime file {f}"
 
     finally:
         e.close()
+
+
+def test_adversarial_explanation_leakage(test_repo, tmp_path):
+    """Adversarial test: an agent explanation containing private text is sanitized before writing to disk or SQLite."""
+    import shutil
+    mock_private = tmp_path / "private_adv_expl"
+    mock_private.mkdir(parents=True)
+    real_catalog = Path("/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4/account_catalog_20260910_121018.json")
+    shutil.copy2(real_catalog, mock_private / real_catalog.name)
+
+    leak_term = "Office Rent"
+    arabic_term = "حساب_خاص_سري"
+
+    class LeakStub(Stage4Stub):
+        def complete(self, job):
+            super().complete(job)
+            destination = Path(job["runtime"])
+            raw_payload = json.loads((destination / "stdout.jsonl").read_text())
+            raw_payload["wire"]["explanation"] = f"Leaked private data: {leak_term} {arabic_term}"
+            (destination / "stdout.jsonl").write_text(json.dumps(raw_payload))
+
+    stub = LeakStub()
+    e = Engine(test_repo, launcher=stub)
+    try:
+        desc = {
+            "erp_checkout": "/home/mohamed/frappe-bench/apps/construction",
+            "bench_root": "/home/mohamed/frappe-bench",
+            "site": "v16.localhost",
+            "site_classification": "non-production test",
+            "private_root": str(mock_private),
+        }
+        view = e.adopt_historical("erp-arabic-bilingual-data", erp_descriptor=desc)
+
+        plan_token = {
+            "schema_version": 1,
+            "token_id": "tok-plan-adv-001",
+            "work_item": "erp-arabic-bilingual-data",
+            "gate_id": view["gate"]["gate_id"],
+            "issuer": "owner",
+            "scope": "PLAN",
+            "status": "ISSUED",
+            "issued_utc": utc(),
+            "plan_revision_hash": e.config["plan_revision_hash"],
+            "scope_hash": e.config["scope_hash"],
+            "stages": ["4"],
+            "repository_id": str(test_repo),
+            "branch": "feature/scope-context-portability",
+        }
+        e.approve(plan_token)
+
+        for p in (test_repo / "docs/ai/work-items/erp-arabic-bilingual-data/runs").rglob("*.md"):
+            txt = p.read_text()
+            assert leak_term not in txt, f"Leak in {p}"
+            assert arabic_term not in txt, f"Leak in {p}"
+
+        for row in e.store.conn.execute("SELECT * FROM workflow_events").fetchall():
+            row_txt = str(row)
+            assert leak_term not in row_txt
+            assert arabic_term not in row_txt
+    finally:
+        e.close()
+
+
+def test_adversarial_finding_leakage(test_repo, tmp_path):
+    """Adversarial test: an agent finding containing private text is sanitized before writing to disk or SQLite."""
+    import shutil
+    mock_private = tmp_path / "private_adv_find"
+    mock_private.mkdir(parents=True)
+    real_catalog = Path("/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4/account_catalog_20260910_121018.json")
+    shutil.copy2(real_catalog, mock_private / real_catalog.name)
+
+    leak_term = "Office Rent"
+    arabic_term = "تفاصيل_سرية"
+
+    class FindingLeakStub(Stage4Stub):
+        def complete(self, job):
+            super().complete(job)
+            destination = Path(job["runtime"])
+            raw_payload = json.loads((destination / "stdout.jsonl").read_text())
+            raw_payload["body"]["findings"] = [{
+                "finding_id": "f-leak-1",
+                "role": job["role"],
+                "blocking": False,
+                "summary": f"Finding leaks {leak_term} and {arabic_term}",
+                "detail": f"Detail leaks {leak_term}",
+            }]
+            (destination / "stdout.jsonl").write_text(json.dumps(raw_payload))
+
+    stub = FindingLeakStub()
+    e = Engine(test_repo, launcher=stub)
+    try:
+        desc = {
+            "erp_checkout": "/home/mohamed/frappe-bench/apps/construction",
+            "bench_root": "/home/mohamed/frappe-bench",
+            "site": "v16.localhost",
+            "site_classification": "non-production test",
+            "private_root": str(mock_private),
+        }
+        view = e.adopt_historical("erp-arabic-bilingual-data", erp_descriptor=desc)
+
+        plan_token = {
+            "schema_version": 1,
+            "token_id": "tok-plan-adv-002",
+            "work_item": "erp-arabic-bilingual-data",
+            "gate_id": view["gate"]["gate_id"],
+            "issuer": "owner",
+            "scope": "PLAN",
+            "status": "ISSUED",
+            "issued_utc": utc(),
+            "plan_revision_hash": e.config["plan_revision_hash"],
+            "scope_hash": e.config["scope_hash"],
+            "stages": ["4"],
+            "repository_id": str(test_repo),
+            "branch": "feature/scope-context-portability",
+        }
+        e.approve(plan_token)
+
+        for p in (test_repo / "docs/ai/work-items/erp-arabic-bilingual-data/runs").rglob("*.json"):
+            txt = p.read_text()
+            assert leak_term not in txt, f"Leak in {p}"
+            assert arabic_term not in txt, f"Leak in {p}"
+    finally:
+        e.close()
+
+
+def test_adversarial_mismatched_review_provenance(test_repo, tmp_path):
+    """Adversarial test: reviewer document with mismatched role, proposal_sha, or session_id is rejected fail-closed."""
+    from stage4 import validate_and_store_review
+    mock_private = tmp_path / "private_prov"
+    mock_private.mkdir(parents=True)
+    out_file = tmp_path / "output.json"
+
+    valid_doc = {
+        "schema": "stage4-panel-review/v1",
+        "role": "ai-a1",
+        "session_id": "sess-correct-123",
+        "proposal_sha256": "a" * 64,
+        "verdict": "PASS",
+        "row_decisions": [{"identity": "id1", "decision": "approved", "rationale": "ok"}],
+        "findings": [],
+    }
+
+    # 1. Role mismatch
+    bad_role_doc = dict(valid_doc, role="ai-a2")
+    out_file.write_text(json.dumps(bad_role_doc))
+    with pytest.raises(WorkflowError, match="Review document role mismatch"):
+        validate_and_store_review(
+            mock_private, out_file, expected_role="ai-a1", expected_proposal_sha="a" * 64,
+            expected_identities=["id1"], expected_session_id="sess-correct-123"
+        )
+
+    # 2. Proposal SHA mismatch
+    bad_prop_doc = dict(valid_doc, proposal_sha256="b" * 64)
+    out_file.write_text(json.dumps(bad_prop_doc))
+    with pytest.raises(WorkflowError, match="Review document proposal_sha256 mismatch"):
+        validate_and_store_review(
+            mock_private, out_file, expected_role="ai-a1", expected_proposal_sha="a" * 64,
+            expected_identities=["id1"], expected_session_id="sess-correct-123"
+        )
+
+    # 3. Session ID mismatch
+    bad_sess_doc = dict(valid_doc, session_id="sess-forged-999")
+    out_file.write_text(json.dumps(bad_sess_doc))
+    with pytest.raises(WorkflowError, match="Review document session_id mismatch"):
+        validate_and_store_review(
+            mock_private, out_file, expected_role="ai-a1", expected_proposal_sha="a" * 64,
+            expected_identities=["id1"], expected_session_id="sess-correct-123"
+        )
+
+
+def test_adversarial_catalog_drift(test_repo, tmp_path):
+    """Adversarial test: catalog blob modified after adoption raises WorkflowError on job prepare."""
+    import shutil
+    mock_private = tmp_path / "private_drift"
+    mock_private.mkdir(parents=True)
+    real_catalog = Path("/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4/account_catalog_20260910_121018.json")
+    shutil.copy2(real_catalog, mock_private / real_catalog.name)
+
+    stub = Stage4Stub()
+    e = Engine(test_repo, launcher=stub)
+    try:
+        desc = {
+            "erp_checkout": "/home/mohamed/frappe-bench/apps/construction",
+            "bench_root": "/home/mohamed/frappe-bench",
+            "site": "v16.localhost",
+            "site_classification": "non-production test",
+            "private_root": str(mock_private),
+        }
+        view = e.adopt_historical("erp-arabic-bilingual-data", erp_descriptor=desc)
+
+        blob_path = mock_private / "blobs" / f"{view['candidate']['export_sha256']}.json"
+        assert blob_path.exists()
+        blob_path.write_bytes(b"tampered catalog content")
+
+        plan_token = {
+            "schema_version": 1,
+            "token_id": "tok-plan-drift-001",
+            "work_item": "erp-arabic-bilingual-data",
+            "gate_id": view["gate"]["gate_id"],
+            "issuer": "owner",
+            "scope": "PLAN",
+            "status": "ISSUED",
+            "issued_utc": utc(),
+            "plan_revision_hash": e.config["plan_revision_hash"],
+            "scope_hash": e.config["scope_hash"],
+            "stages": ["4"],
+            "repository_id": str(test_repo),
+            "branch": "feature/scope-context-portability",
+        }
+        with pytest.raises(WorkflowError, match="Export catalog blob digest mismatch"):
+            e.approve(plan_token)
+    finally:
+        e.close()
+
+
+def test_adversarial_crash_after_blob_store(test_repo, tmp_path):
+    """Adversarial test: crash after storing private blob and writing acceptance record recovers cleanly."""
+    import shutil
+    mock_private = tmp_path / "private_crash_rec"
+    mock_private.mkdir(parents=True)
+    real_catalog = Path("/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4/account_catalog_20260910_121018.json")
+    shutil.copy2(real_catalog, mock_private / real_catalog.name)
+
+    stub = Stage4Stub()
+    e = Engine(test_repo, launcher=stub)
+    try:
+        desc = {
+            "erp_checkout": "/home/mohamed/frappe-bench/apps/construction",
+            "bench_root": "/home/mohamed/frappe-bench",
+            "site": "v16.localhost",
+            "site_classification": "non-production test",
+            "private_root": str(mock_private),
+        }
+        view = e.adopt_historical("erp-arabic-bilingual-data", erp_descriptor=desc)
+
+        job_id = "job-proposer-crash-test"
+        dest = test_repo / "orchestrator/var/jobs" / job_id
+        dest.mkdir(parents=True)
+        private_out = dest / "private_out"
+        private_out.mkdir(parents=True)
+
+        cat_doc = json.loads((mock_private / real_catalog.name).read_text())
+        rows = [
+            {
+                "identity": r["identity"],
+                "english": r["english"],
+                "is_group": r.get("is_group", False),
+                "proposal": {"arabic": f"حساب {i}", "confidence": "high"},
+            }
+            for i, r in enumerate(cat_doc["rows"])
+        ]
+        from stage4 import derive_proposal_hash, project_proposal_rows, store_private_blob
+        sorted_rows = project_proposal_rows(rows)
+        prop_sha = derive_proposal_hash(sorted_rows, view["candidate"]["export_sha256"])
+        canonical_prop = {
+            "schema": "stage4-proposal/v1",
+            "export_sha256": view["candidate"]["export_sha256"],
+            "rows": sorted_rows,
+        }
+        store_private_blob(mock_private, canonical(canonical_prop), expected_sha=prop_sha)
+
+        rec = {
+            "job_id": job_id,
+            "role": "proposer",
+            "artifact_id": f"stage4-proposal-{job_id}",
+            "sha256": prop_sha,
+            "meta": {
+                "proposal_sha256": prop_sha,
+                "artifact_sha256": prop_sha,
+                "rows_count": len(rows),
+                "export_sha256": view["candidate"]["export_sha256"],
+            },
+            "accepted_utc": utc(),
+        }
+        (dest / "private-acceptance-record.json").write_text(json.dumps(rec))
+
+        envelope = {
+            "schema_version": 1,
+            "job_id": job_id,
+            "work_item": "erp-arabic-bilingual-data",
+            "stage": "4",
+            "role": "proposer",
+            "tool": "opencode",
+            "model": "opencode-go/gpt-5.6-luna",
+            "status": "COMPLETE",
+            "verdict": "PROPOSED",
+            "failure_class": None,
+            "evidence_paths": [],
+            "findings": [],
+            "candidate_kind": "stage4-proposal",
+            "candidate_id": view["candidate"]["candidate_id"],
+            "plan_revision_hash": e.config["plan_revision_hash"],
+            "prompt_version": e.config["roles"]["proposer"]["prompt_sha256"],
+            "session_id": "sess-proposer-crash",
+        }
+        wire = {"explanation": "Synthesized", "result_json": json.dumps(envelope), "plan_text": ""}
+        payload = {
+            "body": envelope,
+            "wire": wire,
+        }
+        (dest / "stdout.jsonl").write_text(json.dumps(payload))
+        obs = {"exit_code": 0, "session_id": "sess-proposer-crash", "started_utc": utc(), "finished_utc": utc()}
+        job = {
+            "job_id": job_id,
+            "role": "proposer",
+            "runtime": str(dest),
+            "spec": {
+                "expected_artifact_id": f"stage4-proposal-{job_id}",
+                "envelope": envelope,
+                "tool": "opencode",
+                "model": "opencode-go/gpt-5.6-luna",
+            },
+        }
+        event = e.accept(job, obs, view)
+        assert event["job_id"] == job_id
+        assert event["proposal_sha256"] == prop_sha
+        assert event["verified_private_artifacts"][0]["sha256"] == prop_sha
+    finally:
+        e.close()
+
+
+def test_bubblewrap_neutral_mounts_execution(tmp_path):
+    """Verifies that Bubblewrap neutral mounts under /tmp/workspace execute and protect host."""
+    import shutil
+    import subprocess
+    import sys
+    import adapters
+
+    if not shutil.which("bwrap"):
+        pytest.skip("bwrap not available")
+
+    host_root = tmp_path / "sandbox_repo"
+    host_root.mkdir()
+    (host_root / "test.txt").write_text("initial")
+
+    host_in = tmp_path / "input.json"
+    host_in.write_text(json.dumps({"test_key": "test_value"}))
+
+    host_out_dir = tmp_path / "host_private_out"
+    host_out_dir.mkdir()
+
+    control = tmp_path / "control"
+    control.mkdir()
+    work_item = tmp_path / "work-item"
+    work_item.mkdir()
+
+    wire_schema = tmp_path / "wire.json"
+    wire_schema.write_text(json.dumps({}))
+
+    spec = {
+        "tool": "codex",
+        "binary": "/bin/true",
+        "model": "gpt-6-astra",
+        "root": str(host_root),
+        "runtime": str(control),
+        "control_root": str(control),
+        "work_item_root": str(work_item),
+        "wire_schema": str(wire_schema),
+        "role": "proposer",
+        "prompt": "test",
+        "neutral_mounts": [
+            {
+                "host_path": str(host_in),
+                "sandbox_path": "/tmp/workspace/private_inputs/input.json",
+                "writable": False,
+            },
+            {
+                "host_path": str(host_out_dir),
+                "sandbox_path": "/tmp/workspace/private_output",
+                "writable": True,
+            },
+        ],
+    }
+    cmd, env = adapters.invocation(spec)
+    test_code = """
+import json, sys
+from pathlib import Path
+in_path = Path("/tmp/workspace/private_inputs/input.json")
+assert in_path.exists()
+data = json.loads(in_path.read_text())
+assert data["test_key"] == "test_value"
+out_path = Path("/tmp/workspace/private_output/output.json")
+out_path.write_text(json.dumps({"received": data["test_key"]}))
+"""
+    dd_idx = cmd.index("--")
+    bwrap_prefix = cmd[:dd_idx + 1]
+    test_cmd = bwrap_prefix + [sys.executable, "-c", test_code]
+
+    res = subprocess.run(test_cmd, capture_output=True, text=True)
+    if res.returncode != 0:
+        if any(msg in res.stderr.lower() for msg in ("setting up uid map", "permission denied", "creating new namespace failed", "function not implemented")):
+            pytest.skip("nested container lacks user namespace privileges")
+        raise AssertionError(f"bwrap execution failed: {res.stderr}")
+
+    out_file = host_out_dir / "output.json"
+    assert out_file.exists()
+    out_data = json.loads(out_file.read_text())
+    assert out_data["received"] == "test_value"
+

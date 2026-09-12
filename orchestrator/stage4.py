@@ -49,6 +49,27 @@ def canonical_bundle_sha256(bundle):
     ).hexdigest()
 
 
+ARABIC_RE = re.compile(r"[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]")
+
+
+def sanitize_public_text(text, catalog_terms=()):
+    """Scrub private information from text intended for public artifacts, events, or logs.
+
+    Redacts:
+    - Any Arabic character sequences.
+    - Any catalog identities or catalog English names passed in catalog_terms.
+    """
+    if not isinstance(text, str):
+        return ""
+    sanitized = ARABIC_RE.sub("[REDACTED_ARABIC]", text)
+    if catalog_terms:
+        for term in sorted(catalog_terms, key=len, reverse=True):
+            if term and len(term) >= 2:
+                pattern = re.compile(re.escape(term), re.IGNORECASE)
+                sanitized = pattern.sub("[REDACTED_TERM]", sanitized)
+    return sanitized
+
+
 def canonical_payload_sha256(payload):
     """Deterministic SHA-256 digest of verified import payload."""
     return hashlib.sha256(
@@ -542,6 +563,8 @@ def validate_and_store_review(
     expected_role,
     expected_proposal_sha,
     expected_identities,
+    expected_session_id=None,
+    catalog_terms=(),
 ):
     """Validate reviewer row decisions, store canonical blob, and return metadata."""
     raw_path = Path(raw_review_path)
@@ -557,9 +580,24 @@ def validate_and_store_review(
     if not isinstance(doc, dict):
         raise WorkflowError("Review payload must be a JSON object")
 
+    # Enforce declared provenance on the review document
+    role = doc.get("role")
+    if role != expected_role:
+        raise WorkflowError(f"Review document role mismatch: expected {expected_role}, got {role}")
+
+    proposal_sha = doc.get("proposal_sha256")
+    if proposal_sha != expected_proposal_sha:
+        raise WorkflowError(
+            f"Review document proposal_sha256 mismatch: expected {expected_proposal_sha}, got {proposal_sha}"
+        )
+
     session_id = doc.get("session_id")
     if not session_id or not isinstance(session_id, str):
         raise WorkflowError(f"Review for {expected_role} missing valid session_id")
+    if expected_session_id and session_id != expected_session_id:
+        raise WorkflowError(
+            f"Review document session_id mismatch: expected {expected_session_id}, got {session_id}"
+        )
 
     row_decisions = doc.get("row_decisions")
     if not isinstance(row_decisions, list) or len(row_decisions) != len(expected_identities):
@@ -628,9 +666,9 @@ def validate_and_store_review(
 
     canonical_review = {
         "schema": "stage4-panel-review/v1",
-        "role": expected_role,
+        "role": role,
         "session_id": session_id,
-        "proposal_sha256": expected_proposal_sha,
+        "proposal_sha256": proposal_sha,
         "verdict": "BLOCKED" if blocking_findings else doc.get("verdict", "PASS"),
         "row_decisions": row_decisions,
         "findings": doc.get("findings", []),
@@ -639,13 +677,24 @@ def validate_and_store_review(
     review_sha = hashlib.sha256(canonical_bytes).hexdigest()
     store_private_blob(private_root, canonical_bytes, expected_sha=review_sha)
 
+    sanitized_blocking = [
+        {
+            "finding_id": f.get("finding_id", f"finding-{i}"),
+            "role": expected_role,
+            "blocking": bool(f.get("blocking", True)),
+            "classification": f.get("classification", "generic"),
+            "summary": sanitize_public_text(f.get("summary", ""), catalog_terms=catalog_terms),
+        }
+        for i, f in enumerate(blocking_findings)
+    ]
+
     return {
         "review_sha256": review_sha,
         "role": expected_role,
         "session_id": session_id,
         "verdict": canonical_review["verdict"],
         "renewal_required": renewal_required,
-        "blocking_findings": blocking_findings,
+        "blocking_findings": sanitized_blocking,
     }
 
 
@@ -661,6 +710,24 @@ def compose_and_store_bundle_and_payload(
     required_roles=("ai-a1", "ai-a2", "ai-a3"),
 ):
     """Reads blobs, composes bundle and payload, verifies manifest, stores blobs, and returns metadata."""
+    # Ensure every required review has PASS, no blocking findings, and no renewal
+    for role in required_roles:
+        if role not in panel_digests:
+            raise WorkflowError(f"Missing panel review digest for required role {role}")
+        rev_sha = panel_digests[role]
+        rev_bytes = read_private_blob(private_root, rev_sha)
+        rev_doc = json.loads(rev_bytes)
+        if rev_doc.get("verdict") != "PASS":
+            raise WorkflowError(
+                f"Cannot compose bundle: panel review {role} reported non-PASS verdict {rev_doc.get('verdict')}"
+            )
+        if any(f.get("blocking", True) for f in rev_doc.get("findings", [])):
+            raise WorkflowError(f"Cannot compose bundle: panel review {role} contains blocking findings")
+        if any(r.get("decision") == "rejected" for r in rev_doc.get("row_decisions", [])):
+            raise WorkflowError(f"Cannot compose bundle: panel review {role} contains rejected row decisions")
+        if rev_doc.get("renewal_required", False):
+            raise WorkflowError(f"Cannot compose bundle: panel review {role} requires renewal")
+
     proposal_bytes = read_private_blob(private_root, proposal_sha)
     proposal_doc = json.loads(proposal_bytes)
     proposal_rows = proposal_doc.get("rows", [])

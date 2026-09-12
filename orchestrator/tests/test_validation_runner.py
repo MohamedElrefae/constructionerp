@@ -30,6 +30,12 @@ def test_offline_validations_capture_real_exit_and_protect_source(repo, tmp_path
             [sys.executable, "-c", 'import socket; s=socket.socket(); s.settimeout(1); s.connect(("1.1.1.1", 80))'],
         ],
     )
+    if not validation_runner.can_unshare_net():
+        with pytest.raises(WorkflowError, match="Network isolation unavailable"):
+            run(spec, runtime, time.monotonic() + 30)
+        assert (repo / "new").read_text() == "candidate"
+        return
+
     result = run(spec, runtime, time.monotonic() + 30)
     assert result["complete"] and not result["passed"]
     assert result["records"][0]["exit_code"] == 0

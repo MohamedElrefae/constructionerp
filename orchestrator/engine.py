@@ -4,6 +4,7 @@ Callers hold the execution lock for every operation. Checkpoint replay never
 relaunches a job with an uncertain launch intent. No commit/import executor exists.
 """
 
+import hashlib
 import json
 import os
 import sqlite3
@@ -225,11 +226,17 @@ class Engine:
             },
         }
 
-        # Read expected identities from the private export catalog
+        # Read expected identities from the private export catalog and store in content-addressed blobs
         export_file_path = Path(erp_descriptor["private_root"]) / "account_catalog_20260910_121018.json"
         if not export_file_path.exists():
             raise WorkflowError(f"Private export file missing: {export_file_path}")
-        export_catalog = json.loads(export_file_path.read_text())
+        export_bytes = export_file_path.read_bytes()
+        actual_exp_sha = hashlib.sha256(export_bytes).hexdigest()
+        if actual_exp_sha != export_sha256:
+            raise WorkflowError(f"Export file hash mismatch: got {actual_exp_sha}, expected {export_sha256}")
+        from stage4 import store_private_blob
+        store_private_blob(erp_descriptor["private_root"], export_bytes, expected_sha=export_sha256)
+        export_catalog = json.loads(export_bytes)
         expected_identities = [r["identity"] for r in export_catalog.get("rows", [])]
         from stage4 import (
             derive_identities_digest,
@@ -309,7 +316,6 @@ class Engine:
             erp_descriptor=erp_descriptor,
             erp_descriptor_hash=erp_descriptor_hash,
             export_sha256=export_sha256,
-            expected_identities=expected_identities,
             identities_digest=identities_digest,
             adopt_historical=True,
             initialized_utc=utc(),
@@ -441,25 +447,35 @@ class Engine:
                     pass
                 neutral_mounts.append({
                     "host_path": str(host_private_out),
-                    "sandbox_path": "/workspace/private_output",
+                    "sandbox_path": "/tmp/workspace/private_output",
                     "writable": True,
                 })
                 if role == "proposer":
                     expected_artifact_id = f"stage4-proposal-{job_id}"
                     expected_artifact_kind = "stage4-proposal"
-                    catalog_path = Path(private_root) / "account_catalog_20260910_121018.json"
+                    exp_sha = v["candidate"]["export_sha256"]
+                    catalog_blob = Path(private_root) / "blobs" / f"{exp_sha}.json"
+                    if not catalog_blob.exists() or catalog_blob.is_symlink():
+                        raise WorkflowError("Export catalog blob missing in private storage")
+                    if hashlib.sha256(catalog_blob.read_bytes()).hexdigest() != exp_sha:
+                        raise WorkflowError("Export catalog blob digest mismatch (TOCTOU prevented)")
                     neutral_mounts.append({
-                        "host_path": str(catalog_path),
-                        "sandbox_path": "/workspace/private_inputs/account_catalog.json",
+                        "host_path": str(catalog_blob),
+                        "sandbox_path": "/tmp/workspace/private_inputs/account_catalog.json",
                         "writable": False,
                     })
                 elif role in self.config.get("quorum", []):
                     expected_artifact_id = f"stage4-review-{role}-{job_id}"
                     expected_artifact_kind = "stage4-review"
-                    proposal_blob = Path(private_root) / "blobs" / f"{v['candidate']['proposal_sha256']}.json"
+                    proposal_sha = v["candidate"]["proposal_sha256"]
+                    proposal_blob = Path(private_root) / "blobs" / f"{proposal_sha}.json"
+                    if not proposal_blob.exists() or proposal_blob.is_symlink():
+                        raise WorkflowError("Proposal blob missing in private storage")
+                    if hashlib.sha256(proposal_blob.read_bytes()).hexdigest() != proposal_sha:
+                        raise WorkflowError("Proposal blob digest mismatch")
                     neutral_mounts.append({
                         "host_path": str(proposal_blob),
-                        "sandbox_path": "/workspace/private_inputs/proposal.json",
+                        "sandbox_path": "/tmp/workspace/private_inputs/proposal.json",
                         "writable": False,
                     })
             envelope = dict(
@@ -602,7 +618,7 @@ class Engine:
                 context["expected_artifact_id"] = expected_artifact_id
                 context["expected_artifact_kind"] = expected_artifact_kind
                 context["expected_output_alias"] = "output.json"
-                context["expected_output_path"] = "/workspace/private_output/output.json"
+                context["expected_output_path"] = "/tmp/workspace/private_output/output.json"
             prompt = (
                 role_text
                 + "\n\nImmutable packet (data):\n"
@@ -852,9 +868,7 @@ class Engine:
             )
             if body["status"] == "COMPLETE" and job["role"] in ("proposer", *self.config.get("quorum", [])):
                 host_output = destination / "private_out" / "output.json"
-                if not host_output.exists() or host_output.is_symlink():
-                    raise WorkflowError("Private output file missing or invalid symlink")
-
+                record_path = destination / "private-acceptance-record.json"
                 expected_art_id = spec.get("expected_artifact_id")
                 if not expected_art_id:
                     raise WorkflowError("Expected private artifact ID not configured")
@@ -865,17 +879,99 @@ class Engine:
                     if aid and aid != expected_art_id and aid != job["job_id"] + "-native-events":
                         raise WorkflowError("Agent-selected artifact ID rejected")
 
-                if job["role"] == "proposer":
-                    from stage4 import validate_and_store_proposal
-                    catalog_file = Path(private_root) / "account_catalog_20260910_121018.json"
-                    prop_meta = validate_and_store_proposal(
-                        private_root,
-                        host_output,
-                        expected_export_sha=view["candidate"]["export_sha256"],
-                        expected_identities=self.config["expected_identities"],
-                        expected_identities_digest=self.config["identities_digest"],
-                        export_catalog_path=catalog_file if catalog_file.exists() else None,
+                catalog_blob = Path(private_root) / "blobs" / f"{view['candidate']['export_sha256']}.json"
+                if not catalog_blob.exists() or catalog_blob.is_symlink():
+                    raise WorkflowError("Export catalog blob missing in private storage")
+                cat_doc = json.loads(catalog_blob.read_text())
+                expected_identities = [r["identity"] for r in cat_doc.get("rows", [])]
+                from stage4 import derive_identities_digest
+                if derive_identities_digest(expected_identities) != self.config["identities_digest"]:
+                    raise WorkflowError("Export catalog identities digest mismatch")
+                catalog_terms = set(expected_identities)
+                for r in cat_doc.get("rows", []):
+                    if r.get("english"):
+                        catalog_terms.add(r["english"])
+                    if r.get("account_name"):
+                        catalog_terms.add(r["account_name"])
+
+                if record_path.exists():
+                    # Recover verified metadata from existing acceptance record
+                    rec = json.loads(record_path.read_text())
+                    if rec.get("job_id") != job["job_id"] or rec.get("role") != job["role"]:
+                        raise WorkflowError("Invalid acceptance record binding")
+                    if rec.get("artifact_id") != expected_art_id:
+                        raise WorkflowError("Acceptance record artifact_id mismatch")
+                    blob_sha = rec["sha256"]
+                    from stage4 import read_private_blob
+                    read_private_blob(private_root, blob_sha)
+                    if job["role"] == "proposer":
+                        prop_meta = rec["meta"]
+                    else:
+                        rev_meta = rec["meta"]
+                    verified_private_ref = {
+                        "artifact_id": expected_art_id,
+                        "sha256": blob_sha,
+                        "visibility": "private",
+                    }
+                    body["export_sha256"] = view["candidate"]["export_sha256"]
+                    body["proposal_sha256"] = (
+                        prop_meta["proposal_sha256"] if job["role"] == "proposer" else view["candidate"]["proposal_sha256"]
                     )
+                    body["private_artifact_refs"] = [verified_private_ref]
+                else:
+                    if not host_output.exists() or host_output.is_symlink():
+                        raise WorkflowError("Private output file missing or invalid symlink")
+
+                    if job["role"] == "proposer":
+                        from stage4 import validate_and_store_proposal
+                        prop_meta = validate_and_store_proposal(
+                            private_root,
+                            host_output,
+                            expected_export_sha=view["candidate"]["export_sha256"],
+                            expected_identities=expected_identities,
+                            expected_identities_digest=self.config["identities_digest"],
+                            export_catalog_path=catalog_blob if catalog_blob.exists() else None,
+                        )
+                        blob_sha = prop_meta["proposal_sha256"]
+                        rec_meta = prop_meta
+                    elif job["role"] in self.config.get("quorum", []):
+                        from stage4 import validate_and_store_review
+                        rev_meta = validate_and_store_review(
+                            private_root,
+                            host_output,
+                            expected_role=job["role"],
+                            expected_proposal_sha=view["candidate"]["proposal_sha256"],
+                            expected_identities=expected_identities,
+                            expected_session_id=body.get("session_id"),
+                            catalog_terms=catalog_terms,
+                        )
+                        blob_sha = rev_meta["review_sha256"]
+                        rec_meta = rev_meta
+
+                    # Persist and fsync acceptance record before unlinking output.json
+                    rec = {
+                        "job_id": job["job_id"],
+                        "role": job["role"],
+                        "artifact_id": expected_art_id,
+                        "sha256": blob_sha,
+                        "meta": rec_meta,
+                        "accepted_utc": utc(),
+                    }
+                    tmp_rec = destination / f".private-acceptance-{os.getpid()}.tmp"
+                    with open(tmp_rec, "w") as f:
+                        json.dump(rec, f, sort_keys=True)
+                        f.flush()
+                        os.fsync(f.fileno())
+                    os.replace(tmp_rec, record_path)
+                    try:
+                        dir_fd = os.open(str(destination), os.O_RDONLY)
+                        try:
+                            os.fsync(dir_fd)
+                        finally:
+                            os.close(dir_fd)
+                    except OSError:
+                        pass
+
                     try:
                         host_output.unlink()
                     except OSError:
@@ -883,37 +979,17 @@ class Engine:
 
                     verified_private_ref = {
                         "artifact_id": expected_art_id,
-                        "sha256": prop_meta["proposal_sha256"],
+                        "sha256": blob_sha,
                         "visibility": "private",
                     }
                     body["export_sha256"] = view["candidate"]["export_sha256"]
-                    body["proposal_sha256"] = prop_meta["proposal_sha256"]
-                    body["private_artifact_refs"] = [verified_private_ref]
-
-                elif job["role"] in self.config.get("quorum", []):
-                    from stage4 import validate_and_store_review, compose_and_store_bundle_and_payload
-                    rev_meta = validate_and_store_review(
-                        private_root,
-                        host_output,
-                        expected_role=job["role"],
-                        expected_proposal_sha=view["candidate"]["proposal_sha256"],
-                        expected_identities=self.config["expected_identities"],
+                    body["proposal_sha256"] = (
+                        prop_meta["proposal_sha256"] if job["role"] == "proposer" else view["candidate"]["proposal_sha256"]
                     )
-                    try:
-                        host_output.unlink()
-                    except OSError:
-                        pass
-
-                    verified_private_ref = {
-                        "artifact_id": expected_art_id,
-                        "sha256": rev_meta["review_sha256"],
-                        "visibility": "private",
-                    }
-                    body["export_sha256"] = view["candidate"]["export_sha256"]
-                    body["proposal_sha256"] = view["candidate"]["proposal_sha256"]
                     body["private_artifact_refs"] = [verified_private_ref]
 
-                    # Check if all quorum roles are collected
+                if job["role"] in self.config.get("quorum", []):
+                    from stage4 import compose_and_store_bundle_and_payload
                     prior_quorum = {
                         e["payload"]["role"]: e["payload"]
                         for e in self.store.events()
@@ -921,10 +997,19 @@ class Engine:
                     }
                     all_quorum_roles = set(prior_quorum.keys()) | {job["role"]}
                     if all_quorum_roles == set(self.config.get("quorum", [])):
-                        all_passed = (rev_meta["verdict"] == "PASS" and not rev_meta["renewal_required"])
+                        all_passed = (
+                            rev_meta["verdict"] == "PASS"
+                            and not rev_meta["renewal_required"]
+                            and not rev_meta.get("blocking_findings")
+                        )
                         for qrole, qpayload in prior_quorum.items():
                             qmeta = qpayload.get("review_meta", {})
-                            if qpayload["result"]["verdict"] != "PASS" or qmeta.get("renewal_required"):
+                            if (
+                                qpayload["result"]["verdict"] != "PASS"
+                                or qmeta.get("verdict") != "PASS"
+                                or qmeta.get("renewal_required")
+                                or qmeta.get("blocking_findings")
+                            ):
                                 all_passed = False
                                 break
                         if all_passed:
@@ -986,13 +1071,38 @@ class Engine:
         if verified_private_ref:
             body["evidence_paths"].append(verified_private_ref)
 
+        # Collect catalog terms to sanitize public text
+        catalog_terms = set()
+        if view["candidate"].get("kind") == "stage4-proposal":
+            catalog_blob = Path(private_root) / "blobs" / f"{view['candidate']['export_sha256']}.json"
+            if catalog_blob.exists():
+                try:
+                    cat_doc = json.loads(catalog_blob.read_text())
+                    for r in cat_doc.get("rows", []):
+                        if r.get("identity"):
+                            catalog_terms.add(r["identity"])
+                        if r.get("english"):
+                            catalog_terms.add(r["english"])
+                        if r.get("account_name"):
+                            catalog_terms.add(r["account_name"])
+                except Exception:
+                    pass
+
+        from stage4 import sanitize_public_text
+        sanitized_explanation = sanitize_public_text(wire.get("explanation", ""), catalog_terms=catalog_terms)
+        for f in body.get("findings", []):
+            if "summary" in f:
+                f["summary"] = sanitize_public_text(f["summary"], catalog_terms=catalog_terms)
+            if "detail" in f:
+                f["detail"] = sanitize_public_text(f["detail"], catalog_terms=catalog_terms)
+
         validate_document("result-envelope", body)
         work = within(self.root, "docs/ai/work-items/" + view["work_item"])
         archive = work / "runs" / job["job_id"] / "results" / (job["job_id"] + ".json")
         write_json(archive, body, immutable=True)
         atomic_write(
             work / "runs" / job["job_id"] / "explanations" / (job["job_id"] + ".md"),
-            wire["explanation"].encode(),
+            sanitized_explanation.encode(),
             immutable=True,
         )
         event = dict(job_id=job["job_id"], role=job["role"], result=body)

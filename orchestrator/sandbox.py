@@ -41,6 +41,10 @@ def command(
         "/tmp",
         "--tmpfs",
         "/run",
+    ]
+    if root.is_relative_to("/tmp"):
+        cmd += ["--dir", str(root)]
+    cmd += [
         "--bind" if writable_source else "--ro-bind",
         str(root),
         str(root),
@@ -63,20 +67,35 @@ def command(
     # Role files and job instructions are read-only. Native output returns on stdout.
     for p in protected:
         if p.exists():
+            if p.is_relative_to("/tmp"):
+                if p.is_dir():
+                    cmd += ["--dir", str(p)]
+                else:
+                    cmd += ["--dir", str(p.parent)]
             cmd += ["--ro-bind", str(p), str(p)]
     for p in hidden_roots:
         p = Path(p).resolve()
-        if p.exists():
+        if p.exists() and p not in (Path("/tmp"), Path("/run")):
+            if p.is_relative_to("/tmp"):
+                cmd += ["--dir", str(p)]
             cmd += ["--tmpfs", str(p)]
     for p in read_files:
         p = Path(p).resolve()
         if p.is_file():
+            if p.is_relative_to("/tmp"):
+                cmd += ["--dir", str(p.parent)]
             cmd += ["--ro-bind", str(p), str(p)]
     for m in neutral_mounts:
         host_path = Path(m["host_path"]).resolve()
         sandbox_path = m["sandbox_path"]
+        if not sandbox_path.startswith("/tmp/"):
+            raise WorkflowError(
+                f"Neutral mount sandbox_path must reside within writable sandbox mount (/tmp): {sandbox_path}"
+            )
         parent = str(Path(sandbox_path).parent)
         cmd += ["--dir", parent]
+        if host_path.is_dir():
+            cmd += ["--dir", sandbox_path]
         if m.get("writable", False):
             cmd += ["--bind", str(host_path), sandbox_path]
         else:
