@@ -788,6 +788,69 @@ class Engine:
         return {"view": v}
 
     def accept(self, job, observation, view):
+        """Public entry point for result acceptance.
+
+        Wraps _accept_inner() in error-path cleanup: if _accept_inner() raises
+        before scrubbing stdout.jsonl / stderr.txt, this wrapper does a
+        best-effort scrub (Arabic RE + any catalog terms loaded so far) to
+        prevent raw private data from persisting on disk after rejection.
+        """
+        from stage4 import sanitize_public_text
+        destination = Path(job["runtime"])
+        stdout_path = destination / "stdout.jsonl"
+        stderr_path = destination / "stderr.txt"
+        is_stage4 = view["candidate"].get("kind") == "stage4-proposal"
+        # _stage4_catalog_terms is set inside _accept_inner() once the catalog
+        # blob is read; we capture it via a mutable cell so the except clause
+        # can use whatever terms were loaded before the failure.
+        self._stage4_catalog_terms_cache = set()
+        if is_stage4:
+            try:
+                private_root = (
+                    self.config.get("erp_descriptor", {}).get("private_root")
+                    or self.config.get("private_root")
+                    or "/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4"
+                )
+                export_sha = view.get("candidate", {}).get("export_sha256")
+                if export_sha:
+                    cat_path = Path(private_root) / "blobs" / f"{export_sha}.json"
+                    if cat_path.exists() and not cat_path.is_symlink():
+                        cat_doc = json.loads(cat_path.read_text(encoding="utf-8"))
+                        terms = set()
+                        for r in cat_doc.get("rows", []):
+                            if r.get("identity"):
+                                terms.add(r["identity"])
+                            if r.get("english"):
+                                terms.add(r["english"])
+                            if r.get("account_name"):
+                                terms.add(r["account_name"])
+                        self._stage4_catalog_terms_cache = terms
+            except Exception:
+                pass
+        try:
+            return self._accept_inner(job, observation, view)
+        except Exception:
+            if is_stage4:
+                terms = getattr(self, "_stage4_catalog_terms_cache", set())
+                try:
+                    if stdout_path.exists() and not stdout_path.is_symlink():
+                        stdout_path.write_text(
+                            sanitize_public_text(stdout_path.read_text(encoding="utf-8"), catalog_terms=terms),
+                            encoding="utf-8",
+                        )
+                except OSError:
+                    pass
+                try:
+                    if stderr_path.exists() and not stderr_path.is_symlink():
+                        stderr_path.write_text(
+                            sanitize_public_text(stderr_path.read_text(encoding="utf-8"), catalog_terms=terms),
+                            encoding="utf-8",
+                        )
+                except OSError:
+                    pass
+            raise
+
+    def _accept_inner(self, job, observation, view):
         destination = Path(job["runtime"])
         stdout = destination / "stdout.jsonl"
         if not stdout.is_file() or stdout.stat().st_size > 20_000_000:
@@ -898,6 +961,9 @@ class Engine:
                         catalog_terms.add(r["english"])
                     if r.get("account_name"):
                         catalog_terms.add(r["account_name"])
+                # Expose catalog_terms to the error-path scrubber in accept().
+                _stage4_catalog_terms = catalog_terms
+                self._stage4_catalog_terms_cache = catalog_terms
 
                 if record_path.exists():
                     if not record_path.is_file() or record_path.is_symlink():
@@ -1159,17 +1225,6 @@ class Engine:
                 if "private_artifact_refs" in spec["envelope"]:
                     body["private_artifact_refs"] = deepcopy(spec["envelope"]["private_artifact_refs"])
 
-        # Captured native event log is a real artifact, not an agent-provided path.
-        body["evidence_paths"] = [
-            {
-                "artifact_id": job["job_id"] + "-native-events",
-                "sha256": bytes_hash(raw.encode()),
-                "visibility": "public",
-            }
-        ]
-        if verified_private_ref:
-            body["evidence_paths"].append(verified_private_ref)
-
         # Collect catalog terms to sanitize public text (fail-closed)
         catalog_terms = set()
         if view["candidate"].get("kind") == "stage4-proposal":
@@ -1189,6 +1244,9 @@ class Engine:
                     catalog_terms.add(r["english"])
                 if r.get("account_name"):
                     catalog_terms.add(r["account_name"])
+            # Expose catalog_terms to the error-path scrubber in accept().
+            _stage4_catalog_terms = catalog_terms
+            self._stage4_catalog_terms_cache = catalog_terms
 
         from stage4 import sanitize_public_text
         sanitized_explanation = sanitize_public_text(wire.get("explanation", ""), catalog_terms=catalog_terms)
@@ -1198,13 +1256,32 @@ class Engine:
             if "detail" in f:
                 f["detail"] = sanitize_public_text(f["detail"], catalog_terms=catalog_terms)
 
-        # Scrub runtime artifacts of raw unredacted agent output
+        # Scrub runtime artifacts BEFORE computing evidence_paths so the
+        # recorded digest matches the retained post-sanitization artifact.
         if view["candidate"].get("kind") == "stage4-proposal":
-            if stdout.exists():
-                stdout.write_text(sanitize_public_text(raw, catalog_terms=catalog_terms))
+            if stdout.exists() and not stdout.is_symlink():
+                _scrubbed_raw = sanitize_public_text(raw, catalog_terms=catalog_terms)
+                stdout.write_text(_scrubbed_raw)
+                _native_events_bytes = _scrubbed_raw.encode()
+            else:
+                _native_events_bytes = raw.encode()
             stderr_path = destination / "stderr.txt"
-            if stderr_path.exists():
+            if stderr_path.exists() and not stderr_path.is_symlink():
                 stderr_path.write_text(sanitize_public_text(stderr_path.read_text(), catalog_terms=catalog_terms))
+        else:
+            _native_events_bytes = raw.encode()
+
+        # Captured native event log is a real artifact, not an agent-provided path.
+        # Digest uses post-sanitization bytes so the hash matches the retained file.
+        body["evidence_paths"] = [
+            {
+                "artifact_id": job["job_id"] + "-native-events",
+                "sha256": bytes_hash(_native_events_bytes),
+                "visibility": "public",
+            }
+        ]
+        if verified_private_ref:
+            body["evidence_paths"].append(verified_private_ref)
 
         validate_document("result-envelope", body)
         work = within(self.root, "docs/ai/work-items/" + view["work_item"])

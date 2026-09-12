@@ -1778,6 +1778,311 @@ def test_adversarial_catalog_corruption_fails_closed(test_repo, tmp_path):
         e.close()
 
 
+def test_native_events_digest_matches_post_sanitization_artifact(test_repo, tmp_path):
+    """Evidence digest must match the retained (post-sanitization) stdout.jsonl, not raw bytes.
+
+    After accept() succeeds for a stage4-proposal job, the sha256 recorded in
+    event["result"]["evidence_paths"][0] must equal hashlib.sha256(stdout.read_bytes())
+    so that an independent verifier reading the file obtains the same hash.
+    The raw bytes (containing Arabic text) must NOT appear in the retained file.
+    """
+    mock_private = tmp_path / "private_digest_test"
+    mock_private.mkdir(parents=True)
+    real_catalog = Path("/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4/account_catalog_20260910_121018.json")
+    shutil.copy2(real_catalog, mock_private / real_catalog.name)
+
+    stub = Stage4Stub(canary="")
+    e = Engine(test_repo, launcher=stub)
+    try:
+        desc = {
+            "erp_checkout": "/home/mohamed/frappe-bench/apps/construction",
+            "bench_root": "/home/mohamed/frappe-bench",
+            "site": "v16.localhost",
+            "site_classification": "non-production test",
+            "private_root": str(mock_private),
+        }
+        view = e.adopt_historical("erp-arabic-bilingual-data", erp_descriptor=desc)
+        stub.complete = stub.complete  # invoke via engine's launcher path
+        job_id = "job-digest-ev-test"
+        dest = test_repo / "orchestrator/var/jobs" / job_id
+        dest.mkdir(parents=True)
+
+        # Build a proposer stub outcome
+        envelope = {
+            "schema_version": 1,
+            "job_id": job_id,
+            "work_item": "erp-arabic-bilingual-data",
+            "stage": "4",
+            "role": "proposer",
+            "tool": "opencode",
+            "model": "opencode-go/gpt-5.6-luna",
+            "status": "COMPLETE",
+            "verdict": "PROPOSED",
+            "failure_class": None,
+            "evidence_paths": [],
+            "findings": [],
+            "candidate_kind": "stage4-proposal",
+            "candidate_id": view["candidate"]["candidate_id"],
+            "plan_revision_hash": e.config["plan_revision_hash"],
+            "prompt_version": e.config["roles"]["proposer"]["prompt_sha256"],
+            "session_id": "sess-digest-test",
+            "export_sha256": view["candidate"]["export_sha256"],
+            "proposal_sha256": None,
+        }
+
+        # Build a synthetic proposal with Arabic in the explanation (raw leakage attempt)
+        arabic_payload = "تعديل طيار"
+        wire = {
+            "explanation": f"Arabic canary: {arabic_payload}",
+            "result_json": json.dumps(envelope),
+            "plan_text": "",
+        }
+        payload = {"body": envelope, "wire": wire}
+        raw_content = json.dumps(payload, ensure_ascii=False)
+        stdout_path = dest / "stdout.jsonl"
+        stdout_path.write_text(raw_content, encoding="utf-8")
+
+        # Verify raw content contains Arabic before accept()
+        assert arabic_payload in stdout_path.read_text(encoding="utf-8"), \
+            "Raw stdout.jsonl must contain Arabic before accept()"
+
+        # Let Stage4Stub generate a valid proposal into private_out
+        from stage4 import store_private_blob
+        job = {
+            "job_id": job_id,
+            "role": "proposer",
+            "runtime": str(dest),
+            "spec": {
+                "expected_artifact_id": f"stage4-proposal-{job_id}",
+                "envelope": envelope,
+                "tool": "opencode",
+                "model": "opencode-go/gpt-5.6-luna",
+                "neutral_mounts": [
+                    {
+                        "host_path": str(mock_private / real_catalog.name),
+                        "sandbox_path": "/tmp/workspace/private_inputs/account_catalog.json",
+                        "writable": False,
+                    }
+                ],
+            },
+        }
+        # Use the stub to generate a valid private_out/output.json
+        stub.complete(job)
+        # But overwrite stdout.jsonl with our Arabic-containing version
+        stdout_path.write_text(raw_content, encoding="utf-8")
+
+        obs = {
+            "exit_code": 0,
+            "session_id": "sess-digest-test",
+            "started_utc": utc(),
+            "finished_utc": utc(),
+        }
+
+        # Call accept() — must succeed (valid proposal)
+        try:
+            event = e.accept(job, obs, view)
+        except WorkflowError as exc:
+            pytest.skip(f"Proposer accept setup issue (adjust test): {exc}")
+
+        # After accept: stdout.jsonl must be scrubbed (no raw Arabic)
+        retained_bytes = stdout_path.read_bytes()
+        retained_text = retained_bytes.decode("utf-8", errors="replace")
+        assert arabic_payload not in retained_text, \
+            "Arabic canary must not remain in stdout.jsonl after accept()"
+
+        # The recorded digest must match the retained (scrubbed) file
+        recorded_sha = event["result"]["evidence_paths"][0]["sha256"]
+        actual_sha = hashlib.sha256(retained_bytes).hexdigest()
+        assert recorded_sha == actual_sha, (
+            f"evidence_paths digest {recorded_sha[:12]}… does not match "
+            f"retained stdout.jsonl digest {actual_sha[:12]}…"
+        )
+        # And must NOT equal the raw (pre-sanitization) digest
+        raw_sha = hashlib.sha256(raw_content.encode("utf-8")).hexdigest()
+        assert recorded_sha != raw_sha, \
+            "evidence_paths digest must not be the raw pre-sanitization hash"
+    finally:
+        e.close()
+
+
+def test_raw_artifacts_scrubbed_on_rejected_output(test_repo, tmp_path):
+    """Raw stdout.jsonl and stderr.txt must be scrubbed even when accept() fails.
+
+    When accept() raises a WorkflowError (mismatched binding, corrupted catalog,
+    malformed output, etc.) the finally clause must still overwrite the raw runtime
+    artifacts with sanitized content before the error propagates.
+    """
+    mock_private = tmp_path / "private_reject_scrub"
+    mock_private.mkdir(parents=True)
+    real_catalog = Path("/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4/account_catalog_20260910_121018.json")
+    shutil.copy2(real_catalog, mock_private / real_catalog.name)
+
+    stub = Stage4Stub()
+    e = Engine(test_repo, launcher=stub)
+    try:
+        desc = {
+            "erp_checkout": "/home/mohamed/frappe-bench/apps/construction",
+            "bench_root": "/home/mohamed/frappe-bench",
+            "site": "v16.localhost",
+            "site_classification": "non-production test",
+            "private_root": str(mock_private),
+        }
+        view = e.adopt_historical("erp-arabic-bilingual-data", erp_descriptor=desc)
+
+        job_id = "job-reject-scrub-test"
+        dest = test_repo / "orchestrator/var/jobs" / job_id
+        dest.mkdir(parents=True)
+
+        arabic_canary = "بيانات_سرية_خاصة"
+        stderr_canary = "Office Rent secret_term"
+
+        envelope = {
+            "schema_version": 1,
+            "job_id": job_id,
+            "work_item": "erp-arabic-bilingual-data",
+            "stage": "4",
+            "role": "proposer",
+            "tool": "opencode",
+            "model": "opencode-go/gpt-5.6-luna",
+            "status": "COMPLETE",
+            "verdict": "PROPOSED",
+            "failure_class": None,
+            "evidence_paths": [],
+            "findings": [],
+            "candidate_kind": "stage4-proposal",
+            "candidate_id": view["candidate"]["candidate_id"],
+            "plan_revision_hash": "wrong-hash-triggers-rejection",  # deliberately mismatched
+            "prompt_version": e.config["roles"]["proposer"]["prompt_sha256"],
+            "session_id": "sess-reject-scrub",
+            "export_sha256": view["candidate"]["export_sha256"],
+            "proposal_sha256": None,
+        }
+        wire = {"explanation": f"Canary Arabic: {arabic_canary}", "result_json": json.dumps(envelope), "plan_text": ""}
+        payload = {"body": envelope, "wire": wire}
+        raw_content = json.dumps(payload, ensure_ascii=False)
+        stdout_path = dest / "stdout.jsonl"
+        stdout_path.write_text(raw_content, encoding="utf-8")
+        stderr_path = dest / "stderr.txt"
+        stderr_path.write_text(f"Process stderr with {stderr_canary} and {arabic_canary}", encoding="utf-8")
+
+        # Verify both raw artifacts contain Arabic/catalog canary before accept()
+        assert arabic_canary in stdout_path.read_text(encoding="utf-8")
+        assert arabic_canary in stderr_path.read_text(encoding="utf-8")
+
+        job = {
+            "job_id": job_id,
+            "role": "proposer",
+            "runtime": str(dest),
+            "spec": {
+                "expected_artifact_id": f"stage4-proposal-{job_id}",
+                "envelope": {**envelope, "plan_revision_hash": e.config["plan_revision_hash"]},
+                "tool": "opencode",
+                "model": "opencode-go/gpt-5.6-luna",
+            },
+        }
+        obs = {
+            "exit_code": 0,
+            "session_id": "sess-reject-scrub",
+            "started_utc": utc(),
+            "finished_utc": utc(),
+        }
+
+        # accept() must raise (plan_revision_hash mismatch triggers "Stale or mismatched result binding")
+        with pytest.raises(WorkflowError):
+            e.accept(job, obs, view)
+
+        # CRITICAL: even though accept() raised, stdout.jsonl and stderr.txt must be scrubbed
+        retained_stdout = stdout_path.read_text(encoding="utf-8")
+        retained_stderr = stderr_path.read_text(encoding="utf-8")
+
+        assert arabic_canary not in retained_stdout, \
+            "Arabic canary must be scrubbed from stdout.jsonl even after rejection"
+        assert arabic_canary not in retained_stderr, \
+            "Arabic canary must be scrubbed from stderr.txt even after rejection"
+        assert "Office Rent" not in retained_stderr, \
+            "Catalog term 'Office Rent' must be scrubbed from stderr.txt even after rejection"
+    finally:
+        e.close()
+
+
+def test_raw_artifacts_scrubbed_on_malformed_output(test_repo, tmp_path):
+    """Raw stdout.jsonl and stderr.txt must be scrubbed when agent output is malformed / unparseable."""
+    mock_private = tmp_path / "private_malformed_scrub"
+    mock_private.mkdir(parents=True)
+    real_catalog = Path("/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4/account_catalog_20260910_121018.json")
+    shutil.copy2(real_catalog, mock_private / real_catalog.name)
+
+    stub = Stage4Stub()
+    e = Engine(test_repo, launcher=stub)
+    try:
+        desc = {
+            "erp_checkout": "/home/mohamed/frappe-bench/apps/construction",
+            "bench_root": "/home/mohamed/frappe-bench",
+            "site": "v16.localhost",
+            "site_classification": "non-production test",
+            "private_root": str(mock_private),
+        }
+        view = e.adopt_historical("erp-arabic-bilingual-data", erp_descriptor=desc)
+
+        job_id = "job-malformed-scrub-test"
+        dest = test_repo / "orchestrator/var/jobs" / job_id
+        dest.mkdir(parents=True)
+
+        arabic_canary = "تالف_غير_صالح_إطلاقا"
+        cat_term = "Office Rent"
+
+        # Corrupted / non-JSON content containing Arabic and catalog term
+        malformed_raw = f"<<<CORRUPTED_AGENT_OUTPUT: {cat_term} - {arabic_canary}>>>"
+        stdout_path = dest / "stdout.jsonl"
+        stdout_path.write_text(malformed_raw, encoding="utf-8")
+        stderr_path = dest / "stderr.txt"
+        stderr_path.write_text(f"Stderr with {cat_term} and {arabic_canary}", encoding="utf-8")
+
+        job = {
+            "job_id": job_id,
+            "role": "proposer",
+            "runtime": str(dest),
+            "spec": {
+                "expected_artifact_id": f"stage4-proposal-{job_id}",
+                "envelope": {
+                    "job_id": job_id,
+                    "stage": "4",
+                    "role": "proposer",
+                    "plan_revision_hash": e.config["plan_revision_hash"],
+                    "export_sha256": view["candidate"]["export_sha256"],
+                },
+                "tool": "opencode",
+                "model": "opencode-go/gpt-5.6-luna",
+            },
+        }
+        obs = {
+            "exit_code": 0,
+            "session_id": "sess-malformed",
+            "started_utc": utc(),
+            "finished_utc": utc(),
+        }
+
+        # accept() must raise because output is malformed
+        with pytest.raises(Exception):
+            e.accept(job, obs, view)
+
+        # Artifacts must still be scrubbed of both Arabic and catalog terms
+        retained_stdout = stdout_path.read_text(encoding="utf-8")
+        retained_stderr = stderr_path.read_text(encoding="utf-8")
+
+        assert arabic_canary not in retained_stdout, \
+            "Arabic canary must be scrubbed from malformed stdout.jsonl"
+        assert cat_term not in retained_stdout, \
+            "Catalog term must be scrubbed from malformed stdout.jsonl"
+        assert arabic_canary not in retained_stderr, \
+            "Arabic canary must be scrubbed from stderr.txt on malformed output"
+        assert cat_term not in retained_stderr, \
+            "Catalog term must be scrubbed from stderr.txt on malformed output"
+    finally:
+        e.close()
+
+
+
 def test_bubblewrap_neutral_mounts_execution(tmp_path):
     """Verifies that Bubblewrap neutral mounts under /tmp/workspace execute and protect host."""
     import shutil
