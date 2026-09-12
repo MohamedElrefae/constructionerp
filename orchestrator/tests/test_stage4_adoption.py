@@ -14,6 +14,7 @@ Verifies:
 
 import json
 import shutil
+import hashlib
 import pytest
 from copy import deepcopy
 from pathlib import Path
@@ -1153,6 +1154,14 @@ def test_adversarial_explanation_leakage(test_repo, tmp_path):
             assert leak_term not in txt, f"Leak in {p}"
             assert arabic_term not in txt, f"Leak in {p}"
 
+        orch_var = test_repo / "orchestrator/var"
+        if orch_var.exists():
+            for p in orch_var.rglob("*"):
+                if p.is_file():
+                    txt = p.read_text(errors="ignore")
+                    assert leak_term not in txt, f"Leak in runtime file {p}"
+                    assert arabic_term not in txt, f"Leak in runtime file {p}"
+
         for row in e.store.conn.execute("SELECT * FROM workflow_events").fetchall():
             row_txt = str(row)
             assert leak_term not in row_txt
@@ -1178,13 +1187,16 @@ def test_adversarial_finding_leakage(test_repo, tmp_path):
             destination = Path(job["runtime"])
             raw_payload = json.loads((destination / "stdout.jsonl").read_text())
             raw_payload["body"]["findings"] = [{
-                "finding_id": "f-leak-1",
+                "schema_version": 1,
+                "finding_id": None,
                 "role": job["role"],
+                "classification": "optional_improvement",
+                "affected_requirements": ["CANONICAL_PLAN §11.1"],
                 "blocking": False,
                 "summary": f"Finding leaks {leak_term} and {arabic_term}",
                 "detail": f"Detail leaks {leak_term}",
             }]
-            (destination / "stdout.jsonl").write_text(json.dumps(raw_payload))
+            (destination / "stdout.jsonl").write_text(json.dumps(raw_payload, ensure_ascii=False))
 
     stub = FindingLeakStub()
     e = Engine(test_repo, launcher=stub)
@@ -1214,11 +1226,18 @@ def test_adversarial_finding_leakage(test_repo, tmp_path):
             "branch": "feature/scope-context-portability",
         }
         e.approve(plan_token)
-
         for p in (test_repo / "docs/ai/work-items/erp-arabic-bilingual-data/runs").rglob("*.json"):
             txt = p.read_text()
             assert leak_term not in txt, f"Leak in {p}"
             assert arabic_term not in txt, f"Leak in {p}"
+
+        orch_var = test_repo / "orchestrator/var"
+        if orch_var.exists():
+            for p in orch_var.rglob("*"):
+                if p.is_file():
+                    txt = p.read_text(errors="ignore")
+                    assert leak_term not in txt, f"Leak in runtime file {p}"
+                    assert arabic_term not in txt, f"Leak in runtime file {p}"
     finally:
         e.close()
 
@@ -1415,6 +1434,346 @@ def test_adversarial_crash_after_blob_store(test_repo, tmp_path):
         assert event["job_id"] == job_id
         assert event["proposal_sha256"] == prop_sha
         assert event["verified_private_artifacts"][0]["sha256"] == prop_sha
+    finally:
+        e.close()
+
+
+def test_adversarial_crash_recovery_tampered_record_rejected(test_repo, tmp_path):
+    """Adversarial test: crash recovery revalidates recovered blob against current candidate/export/proposal/session
+
+    and derives metadata strictly from the verified blob, rejecting tampered records and ignoring forged metadata.
+    """
+    mock_private = tmp_path / "private_tampered_rec"
+    mock_private.mkdir(parents=True)
+    real_catalog = Path("/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4/account_catalog_20260910_121018.json")
+    shutil.copy2(real_catalog, mock_private / real_catalog.name)
+
+    stub = Stage4Stub()
+    e = Engine(test_repo, launcher=stub)
+    try:
+        desc = {
+            "erp_checkout": "/home/mohamed/frappe-bench/apps/construction",
+            "bench_root": "/home/mohamed/frappe-bench",
+            "site": "v16.localhost",
+            "site_classification": "non-production test",
+            "private_root": str(mock_private),
+        }
+        view = e.adopt_historical("erp-arabic-bilingual-data", erp_descriptor=desc)
+
+        job_id = "job-tampered-rec-test"
+        dest = test_repo / "orchestrator/var/jobs" / job_id
+        dest.mkdir(parents=True)
+        record_path = dest / "private-acceptance-record.json"
+
+        cat_doc = json.loads((mock_private / real_catalog.name).read_text())
+        rows = [
+            {
+                "identity": r["identity"],
+                "english": r["english"],
+                "is_group": r.get("is_group", False),
+                "proposal": {"arabic": f"حساب {i}", "confidence": "high"},
+            }
+            for i, r in enumerate(cat_doc["rows"])
+        ]
+        from stage4 import derive_proposal_hash, project_proposal_rows, store_private_blob
+        sorted_rows = project_proposal_rows(rows)
+        prop_sha = derive_proposal_hash(sorted_rows, view["candidate"]["export_sha256"])
+        canonical_prop = {
+            "schema": "stage4-proposal/v1",
+            "export_sha256": view["candidate"]["export_sha256"],
+            "rows": sorted_rows,
+        }
+        store_private_blob(mock_private, canonical(canonical_prop), expected_sha=prop_sha)
+
+        envelope = {
+            "schema_version": 1,
+            "job_id": job_id,
+            "work_item": "erp-arabic-bilingual-data",
+            "stage": "4",
+            "role": "proposer",
+            "tool": "opencode",
+            "model": "opencode-go/gpt-5.6-luna",
+            "status": "COMPLETE",
+            "verdict": "PROPOSED",
+            "failure_class": None,
+            "evidence_paths": [],
+            "findings": [],
+            "candidate_kind": "stage4-proposal",
+            "candidate_id": view["candidate"]["candidate_id"],
+            "plan_revision_hash": e.config["plan_revision_hash"],
+            "prompt_version": e.config["roles"]["proposer"]["prompt_sha256"],
+            "session_id": "sess-tamper-test",
+        }
+        wire = {"explanation": "Synthesized", "result_json": json.dumps(envelope), "plan_text": ""}
+        payload = {"body": envelope, "wire": wire}
+        (dest / "stdout.jsonl").write_text(json.dumps(payload))
+        obs = {"exit_code": 0, "session_id": "sess-tamper-test", "started_utc": utc(), "finished_utc": utc()}
+        job = {
+            "job_id": job_id,
+            "role": "proposer",
+            "runtime": str(dest),
+            "spec": {
+                "expected_artifact_id": f"stage4-proposal-{job_id}",
+                "envelope": envelope,
+                "tool": "opencode",
+                "model": "opencode-go/gpt-5.6-luna",
+            },
+        }
+
+        # 1. Corrupted acceptance record JSON -> WorkflowError
+        record_path.write_text("{not-valid-json")
+        with pytest.raises(WorkflowError, match="Corrupted acceptance record"):
+            e.accept(job, obs, view)
+
+        # 2. Acceptance record artifact_id mismatch
+        bad_rec = {
+            "job_id": job_id,
+            "role": "proposer",
+            "artifact_id": "forged-artifact-id",
+            "sha256": prop_sha,
+            "meta": {},
+            "accepted_utc": utc(),
+        }
+        record_path.write_text(json.dumps(bad_rec))
+        with pytest.raises(WorkflowError, match="Acceptance record artifact_id mismatch"):
+            e.accept(job, obs, view)
+
+        # 3. Invalid job binding in record
+        bad_rec["artifact_id"] = f"stage4-proposal-{job_id}"
+        bad_rec["job_id"] = "wrong-job-id"
+        record_path.write_text(json.dumps(bad_rec))
+        with pytest.raises(WorkflowError, match="Invalid acceptance record binding"):
+            e.accept(job, obs, view)
+
+        # 4. Blob sha pointing to missing blob
+        bad_rec["job_id"] = job_id
+        bad_rec["sha256"] = "f" * 64
+        record_path.write_text(json.dumps(bad_rec))
+        with pytest.raises(WorkflowError, match="Private blob missing"):
+            e.accept(job, obs, view)
+
+        # 5. Forged metadata in acceptance record with valid blob:
+        # Verified blob metadata must be derived strictly from the blob, ignoring forged record meta
+        forged_rec = {
+            "job_id": job_id,
+            "role": "proposer",
+            "artifact_id": f"stage4-proposal-{job_id}",
+            "sha256": prop_sha,
+            "meta": {
+                "proposal_sha256": "0" * 64,
+                "artifact_sha256": "0" * 64,
+                "rows_count": 999999,
+                "export_sha256": "forged-export-sha",
+            },
+            "accepted_utc": utc(),
+        }
+        record_path.write_text(json.dumps(forged_rec))
+        event = e.accept(job, obs, view)
+        assert event["proposal_sha256"] == prop_sha
+        assert event["proposal_sha256"] != "0" * 64
+        # candidate_id is derived from blob content; forged meta rows_count/artifact_sha256 are ignored
+        from stage4 import derive_stage4_candidate_id
+        expected_candidate_id = derive_stage4_candidate_id(view["candidate"]["export_sha256"], prop_sha)
+        assert event["candidate_id"] == expected_candidate_id
+        assert event["export_sha256"] == view["candidate"]["export_sha256"]
+        assert event["export_sha256"] != "forged-export-sha"
+    finally:
+        e.close()
+
+
+def test_compose_and_store_bundle_and_payload_rejection_on_renewal(test_repo, tmp_path):
+    """Verifies that compose_and_store_bundle_and_payload rechecks and rejects renewal-needed reviews."""
+    from stage4 import compose_and_store_bundle_and_payload, store_private_blob, project_proposal_rows, derive_proposal_hash
+
+    mock_private = tmp_path / "private_comp_renewal"
+    mock_private.mkdir(parents=True)
+    real_catalog = Path("/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4/account_catalog_20260910_121018.json")
+    shutil.copy2(real_catalog, mock_private / real_catalog.name)
+
+    cat_doc = json.loads(real_catalog.read_text())
+    export_bytes = canonical(cat_doc)
+    export_sha = hashlib.sha256(export_bytes).hexdigest()
+    store_private_blob(mock_private, export_bytes, expected_sha=export_sha)
+
+    rows = [
+        {
+            "identity": r["identity"],
+            "english": r["english"],
+            "is_group": r.get("is_group", False),
+            "proposal": {"arabic": f"حساب {i}", "confidence": "high"},
+        }
+        for i, r in enumerate(cat_doc["rows"])
+    ]
+    sorted_rows = project_proposal_rows(rows)
+    prop_sha = derive_proposal_hash(sorted_rows, export_sha)
+    prop_doc = {"schema": "stage4-proposal/v1", "export_sha256": export_sha, "rows": sorted_rows}
+    store_private_blob(mock_private, canonical(prop_doc), expected_sha=prop_sha)
+
+    # Valid 64-char hex candidate_id
+    valid_candidate_id = hashlib.sha256(b"cand-1").hexdigest()
+
+    # Base valid row decisions
+    base_decisions = [
+        {"identity": r["identity"], "decision": "approved", "proposed_arabic": r["proposal"]["arabic"], "rationale": "Valid"}
+        for r in sorted_rows
+    ]
+
+    # Helper to store review blob
+    def make_review_blob(role, renewal_required=False, row_decisions=None, findings=None):
+        decisions = row_decisions if row_decisions is not None else base_decisions
+        doc = {
+            "schema": "stage4-panel-review/v1",
+            "role": role,
+            "session_id": f"sess-{role}",
+            "proposal_sha256": prop_sha,
+            "verdict": "PASS",
+            "renewal_required": bool(renewal_required),
+            "row_decisions": decisions,
+            "findings": findings or [],
+        }
+        b = canonical(doc)
+        sha = hashlib.sha256(b).hexdigest()
+        store_private_blob(mock_private, b, expected_sha=sha)
+        return sha
+
+    a1_sha = make_review_blob("ai-a1")
+    a3_sha = make_review_blob("ai-a3")
+
+    # Case A: canonical review has renewal_required: True
+    a2_renewal_sha = make_review_blob("ai-a2", renewal_required=True)
+    with pytest.raises(WorkflowError, match="requires renewal"):
+        compose_and_store_bundle_and_payload(
+            mock_private,
+            prop_sha,
+            a2_renewal_sha,
+            "Test Company",
+            valid_candidate_id,
+            export_sha,
+            "0" * 64,
+            {"ai-a1": a1_sha, "ai-a2": a2_renewal_sha, "ai-a3": a3_sha},
+        )
+
+    # Case B: renewal_required is False in blob, but row_decisions has suggested_arabic != proposed_arabic
+    tampered_decisions = deepcopy(base_decisions)
+    tampered_decisions[0]["suggested_arabic"] = "تعديل_عربي"
+    a2_recompute_row_sha = make_review_blob("ai-a2", renewal_required=False, row_decisions=tampered_decisions)
+    with pytest.raises(WorkflowError, match="requires renewal"):
+        compose_and_store_bundle_and_payload(
+            mock_private,
+            prop_sha,
+            a2_recompute_row_sha,
+            "Test Company",
+            valid_candidate_id,
+            export_sha,
+            "0" * 64,
+            {"ai-a1": a1_sha, "ai-a2": a2_recompute_row_sha, "ai-a3": a3_sha},
+        )
+
+    # Case C: renewal_required is False, but finding has classification: "arabic_value_change"
+    findings = [{"finding_id": "f-1", "blocking": False, "classification": "arabic_value_change", "summary": "Changed"}]
+    a2_recompute_finding_sha = make_review_blob("ai-a2", renewal_required=False, findings=findings)
+    with pytest.raises(WorkflowError, match="requires renewal"):
+        compose_and_store_bundle_and_payload(
+            mock_private,
+            prop_sha,
+            a2_recompute_finding_sha,
+            "Test Company",
+            valid_candidate_id,
+            export_sha,
+            "0" * 64,
+            {"ai-a1": a1_sha, "ai-a2": a2_recompute_finding_sha, "ai-a3": a3_sha},
+        )
+
+    # Case D: clean reviews compose successfully
+    a2_clean_sha = make_review_blob("ai-a2", renewal_required=False)
+    result = compose_and_store_bundle_and_payload(
+        mock_private,
+        prop_sha,
+        a2_clean_sha,
+        "Test Company",
+        valid_candidate_id,
+        export_sha,
+        "0" * 64,
+        {"ai-a1": a1_sha, "ai-a2": a2_clean_sha, "ai-a3": a3_sha},
+    )
+    assert is_hex64(result["bundle_sha256"])
+    assert is_hex64(result["payload_sha256"])
+
+
+def test_adversarial_catalog_corruption_fails_closed(test_repo, tmp_path):
+    """Adversarial test: catalog resolution fails closed on missing, corrupted, or invalid schema."""
+    mock_private = tmp_path / "private_adv_cat"
+    mock_private.mkdir(parents=True)
+    real_catalog = Path("/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4/account_catalog_20260910_121018.json")
+    shutil.copy2(real_catalog, mock_private / real_catalog.name)
+
+    stub = Stage4Stub()
+    e = Engine(test_repo, launcher=stub)
+    try:
+        desc = {
+            "erp_checkout": "/home/mohamed/frappe-bench/apps/construction",
+            "bench_root": "/home/mohamed/frappe-bench",
+            "site": "v16.localhost",
+            "site_classification": "non-production test",
+            "private_root": str(mock_private),
+        }
+        view = e.adopt_historical("erp-arabic-bilingual-data", erp_descriptor=desc)
+        cat_blob = mock_private / "blobs" / f"{view['candidate']['export_sha256']}.json"
+        assert cat_blob.exists()
+
+        job_id = "job-adv-cat-test"
+        dest = test_repo / "orchestrator/var/jobs" / job_id
+        dest.mkdir(parents=True)
+        envelope = {
+            "schema_version": 1,
+            "job_id": job_id,
+            "work_item": "erp-arabic-bilingual-data",
+            "stage": "4",
+            "role": "proposer",
+            "tool": "opencode",
+            "model": "opencode-go/gpt-5.6-luna",
+            "status": "COMPLETE",
+            "verdict": "PROPOSED",
+            "failure_class": None,
+            "evidence_paths": [],
+            "findings": [],
+            "candidate_kind": "stage4-proposal",
+            "candidate_id": view["candidate"]["candidate_id"],
+            "plan_revision_hash": e.config["plan_revision_hash"],
+            "prompt_version": e.config["roles"]["proposer"]["prompt_sha256"],
+            "session_id": "sess-cat-test",
+        }
+        wire = {"explanation": "Synthesized", "result_json": json.dumps(envelope), "plan_text": ""}
+        payload = {"body": envelope, "wire": wire}
+        (dest / "stdout.jsonl").write_text(json.dumps(payload))
+        obs = {"exit_code": 0, "session_id": "sess-cat-test", "started_utc": utc(), "finished_utc": utc()}
+        job = {
+            "job_id": job_id,
+            "role": "proposer",
+            "runtime": str(dest),
+            "spec": {
+                "expected_artifact_id": f"stage4-proposal-{job_id}",
+                "envelope": envelope,
+                "tool": "opencode",
+                "model": "opencode-go/gpt-5.6-luna",
+            },
+        }
+
+        # 1. Corrupt catalog JSON -> fails closed
+        orig_content = cat_blob.read_text()
+        cat_blob.write_text("{corrupted-json")
+        with pytest.raises(WorkflowError, match="Export catalog blob corrupted"):
+            e.accept(job, obs, view)
+
+        # 2. Invalid schema (rows is not a list) -> fails closed
+        cat_blob.write_text(json.dumps({"schema": "stage4-account-catalog/v1", "rows": "not-a-list"}))
+        with pytest.raises(WorkflowError, match="Export catalog blob invalid schema"):
+            e.accept(job, obs, view)
+
+        # 3. Missing catalog blob -> fails closed
+        cat_blob.unlink()
+        with pytest.raises(WorkflowError, match="Export catalog blob missing"):
+            e.accept(job, obs, view)
     finally:
         e.close()
 

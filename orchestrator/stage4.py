@@ -49,7 +49,9 @@ def canonical_bundle_sha256(bundle):
     ).hexdigest()
 
 
-ARABIC_RE = re.compile(r"[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]")
+ARABIC_RE = re.compile(
+    r"[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]|\\u0[6-8][0-9a-fA-F]{2}|\\u[fF][b-fB-F][0-9a-fA-F]{2}"
+)
 
 
 def sanitize_public_text(text, catalog_terms=()):
@@ -670,6 +672,7 @@ def validate_and_store_review(
         "session_id": session_id,
         "proposal_sha256": proposal_sha,
         "verdict": "BLOCKED" if blocking_findings else doc.get("verdict", "PASS"),
+        "renewal_required": bool(renewal_required),
         "row_decisions": row_decisions,
         "findings": doc.get("findings", []),
     }
@@ -693,7 +696,7 @@ def validate_and_store_review(
         "role": expected_role,
         "session_id": session_id,
         "verdict": canonical_review["verdict"],
-        "renewal_required": renewal_required,
+        "renewal_required": bool(renewal_required),
         "blocking_findings": sanitized_blocking,
     }
 
@@ -725,7 +728,15 @@ def compose_and_store_bundle_and_payload(
             raise WorkflowError(f"Cannot compose bundle: panel review {role} contains blocking findings")
         if any(r.get("decision") == "rejected" for r in rev_doc.get("row_decisions", [])):
             raise WorkflowError(f"Cannot compose bundle: panel review {role} contains rejected row decisions")
-        if rev_doc.get("renewal_required", False):
+        renewal = (
+            bool(rev_doc.get("renewal_required"))
+            or any(
+                r.get("suggested_arabic") and r.get("suggested_arabic") != r.get("proposed_arabic")
+                for r in rev_doc.get("row_decisions", [])
+            )
+            or any(f.get("classification") == "arabic_value_change" for f in rev_doc.get("findings", []))
+        )
+        if renewal:
             raise WorkflowError(f"Cannot compose bundle: panel review {role} requires renewal")
 
     proposal_bytes = read_private_blob(private_root, proposal_sha)

@@ -882,32 +882,131 @@ class Engine:
                 catalog_blob = Path(private_root) / "blobs" / f"{view['candidate']['export_sha256']}.json"
                 if not catalog_blob.exists() or catalog_blob.is_symlink():
                     raise WorkflowError("Export catalog blob missing in private storage")
-                cat_doc = json.loads(catalog_blob.read_text())
-                expected_identities = [r["identity"] for r in cat_doc.get("rows", [])]
+                try:
+                    cat_doc = json.loads(catalog_blob.read_text())
+                except (ValueError, OSError) as exc:
+                    raise WorkflowError(f"Export catalog blob corrupted: {exc}") from exc
+                if not isinstance(cat_doc, dict) or "rows" not in cat_doc or not isinstance(cat_doc["rows"], list):
+                    raise WorkflowError("Export catalog blob invalid schema")
+                expected_identities = [r["identity"] for r in cat_doc["rows"]]
                 from stage4 import derive_identities_digest
                 if derive_identities_digest(expected_identities) != self.config["identities_digest"]:
                     raise WorkflowError("Export catalog identities digest mismatch")
                 catalog_terms = set(expected_identities)
-                for r in cat_doc.get("rows", []):
+                for r in cat_doc["rows"]:
                     if r.get("english"):
                         catalog_terms.add(r["english"])
                     if r.get("account_name"):
                         catalog_terms.add(r["account_name"])
 
                 if record_path.exists():
-                    # Recover verified metadata from existing acceptance record
-                    rec = json.loads(record_path.read_text())
+                    if not record_path.is_file() or record_path.is_symlink():
+                        raise WorkflowError("Invalid acceptance record file")
+                    try:
+                        rec = json.loads(record_path.read_text())
+                    except (ValueError, OSError) as exc:
+                        raise WorkflowError(f"Corrupted acceptance record: {exc}") from exc
+                    if not isinstance(rec, dict):
+                        raise WorkflowError("Acceptance record must be a JSON object")
                     if rec.get("job_id") != job["job_id"] or rec.get("role") != job["role"]:
                         raise WorkflowError("Invalid acceptance record binding")
                     if rec.get("artifact_id") != expected_art_id:
                         raise WorkflowError("Acceptance record artifact_id mismatch")
-                    blob_sha = rec["sha256"]
+                    blob_sha = rec.get("sha256")
+                    if not blob_sha or not isinstance(blob_sha, str) or len(blob_sha) != 64:
+                        raise WorkflowError("Invalid acceptance record sha256")
+
                     from stage4 import read_private_blob
-                    read_private_blob(private_root, blob_sha)
+                    blob_bytes = read_private_blob(private_root, blob_sha)
+                    if hashlib.sha256(blob_bytes).hexdigest() != blob_sha:
+                        raise WorkflowError("Recovered blob digest mismatch")
+                    try:
+                        blob_doc = json.loads(blob_bytes)
+                    except (ValueError, OSError) as exc:
+                        raise WorkflowError(f"Corrupted private blob in acceptance recovery: {exc}") from exc
+                    if not isinstance(blob_doc, dict):
+                        raise WorkflowError("Recovered private blob must be a JSON object")
+
                     if job["role"] == "proposer":
-                        prop_meta = rec["meta"]
+                        if blob_doc.get("schema") != "stage4-proposal/v1":
+                            raise WorkflowError("Recovered proposal blob invalid schema")
+                        if blob_doc.get("export_sha256") != view["candidate"]["export_sha256"]:
+                            raise WorkflowError("Recovered proposal blob export_sha256 mismatch with current candidate")
+                        prop_rows = blob_doc.get("rows")
+                        if not isinstance(prop_rows, list) or len(prop_rows) != len(expected_identities):
+                            raise WorkflowError("Recovered proposal blob rows count mismatch")
+                        from stage4 import derive_proposal_hash
+                        expected_prop_sha = derive_proposal_hash(prop_rows, view["candidate"]["export_sha256"])
+                        if expected_prop_sha != blob_sha:
+                            raise WorkflowError("Recovered proposal blob content hash mismatch")
+                        if set(r.get("identity") for r in prop_rows) != set(expected_identities):
+                            raise WorkflowError("Recovered proposal blob identities mismatch")
+                        from stage4 import derive_identities_digest
+                        if derive_identities_digest([r.get("identity") for r in prop_rows]) != self.config["identities_digest"]:
+                            raise WorkflowError("Recovered proposal blob identities digest mismatch")
+                        prop_meta = {
+                            "proposal_sha256": blob_sha,
+                            "artifact_sha256": blob_sha,
+                            "rows_count": len(prop_rows),
+                            "export_sha256": view["candidate"]["export_sha256"],
+                        }
+                    elif job["role"] in self.config.get("quorum", []):
+                        if blob_doc.get("schema") != "stage4-panel-review/v1":
+                            raise WorkflowError("Recovered review blob invalid schema")
+                        if blob_doc.get("role") != job["role"]:
+                            raise WorkflowError("Recovered review blob role mismatch")
+                        if blob_doc.get("proposal_sha256") != view["candidate"]["proposal_sha256"]:
+                            raise WorkflowError("Recovered review blob proposal_sha256 mismatch with current candidate")
+                        session = body.get("session_id")
+                        if not session or blob_doc.get("session_id") != session:
+                            raise WorkflowError("Recovered review blob session_id mismatch with observed session")
+                        row_decisions = blob_doc.get("row_decisions")
+                        if not isinstance(row_decisions, list) or len(row_decisions) != len(expected_identities):
+                            raise WorkflowError("Recovered review blob row decisions count mismatch")
+                        if set(r.get("identity") for r in row_decisions) != set(expected_identities):
+                            raise WorkflowError("Recovered review blob identities mismatch")
+                        from stage4 import derive_identities_digest
+                        if derive_identities_digest([r.get("identity") for r in row_decisions]) != self.config["identities_digest"]:
+                            raise WorkflowError("Recovered review blob identities digest mismatch")
+                        renewal_required = (
+                            bool(blob_doc.get("renewal_required"))
+                            or any(
+                                r.get("suggested_arabic") and r.get("suggested_arabic") != r.get("proposed_arabic")
+                                for r in row_decisions
+                            )
+                            or any(f.get("classification") == "arabic_value_change" for f in blob_doc.get("findings", []))
+                        )
+                        blocking = [f for f in blob_doc.get("findings", []) if f.get("blocking", True)]
+                        for idx, r in enumerate(row_decisions):
+                            if r.get("decision") == "rejected":
+                                blocking.append({
+                                    "finding_id": f"rejected-{job['role']}-{idx}",
+                                    "role": job["role"],
+                                    "blocking": True,
+                                    "classification": "row_rejected",
+                                    "summary": f"Reviewer {job['role']} rejected row at index {idx}",
+                                })
+                        sanitized_blocking = [
+                            {
+                                "finding_id": f.get("finding_id", f"finding-{i}"),
+                                "role": job["role"],
+                                "blocking": bool(f.get("blocking", True)),
+                                "classification": f.get("classification", "generic"),
+                                "summary": sanitize_public_text(f.get("summary", ""), catalog_terms=catalog_terms),
+                            }
+                            for i, f in enumerate(blocking)
+                        ]
+                        rev_meta = {
+                            "review_sha256": blob_sha,
+                            "role": job["role"],
+                            "session_id": session,
+                            "verdict": blob_doc.get("verdict", "PASS"),
+                            "renewal_required": renewal_required,
+                            "blocking_findings": sanitized_blocking,
+                        }
                     else:
-                        rev_meta = rec["meta"]
+                        raise WorkflowError(f"Unsupported role for acceptance record recovery: {job['role']}")
+
                     verified_private_ref = {
                         "artifact_id": expected_art_id,
                         "sha256": blob_sha,
@@ -1071,22 +1170,25 @@ class Engine:
         if verified_private_ref:
             body["evidence_paths"].append(verified_private_ref)
 
-        # Collect catalog terms to sanitize public text
+        # Collect catalog terms to sanitize public text (fail-closed)
         catalog_terms = set()
         if view["candidate"].get("kind") == "stage4-proposal":
             catalog_blob = Path(private_root) / "blobs" / f"{view['candidate']['export_sha256']}.json"
-            if catalog_blob.exists():
-                try:
-                    cat_doc = json.loads(catalog_blob.read_text())
-                    for r in cat_doc.get("rows", []):
-                        if r.get("identity"):
-                            catalog_terms.add(r["identity"])
-                        if r.get("english"):
-                            catalog_terms.add(r["english"])
-                        if r.get("account_name"):
-                            catalog_terms.add(r["account_name"])
-                except Exception:
-                    pass
+            if not catalog_blob.exists() or catalog_blob.is_symlink():
+                raise WorkflowError("Export catalog blob missing for public sanitization")
+            try:
+                cat_doc = json.loads(catalog_blob.read_text())
+            except (ValueError, OSError) as exc:
+                raise WorkflowError(f"Export catalog blob unreadable for public sanitization: {exc}") from exc
+            if not isinstance(cat_doc, dict) or "rows" not in cat_doc or not isinstance(cat_doc["rows"], list):
+                raise WorkflowError("Export catalog blob invalid schema for public sanitization")
+            for r in cat_doc["rows"]:
+                if r.get("identity"):
+                    catalog_terms.add(r["identity"])
+                if r.get("english"):
+                    catalog_terms.add(r["english"])
+                if r.get("account_name"):
+                    catalog_terms.add(r["account_name"])
 
         from stage4 import sanitize_public_text
         sanitized_explanation = sanitize_public_text(wire.get("explanation", ""), catalog_terms=catalog_terms)
@@ -1095,6 +1197,14 @@ class Engine:
                 f["summary"] = sanitize_public_text(f["summary"], catalog_terms=catalog_terms)
             if "detail" in f:
                 f["detail"] = sanitize_public_text(f["detail"], catalog_terms=catalog_terms)
+
+        # Scrub runtime artifacts of raw unredacted agent output
+        if view["candidate"].get("kind") == "stage4-proposal":
+            if stdout.exists():
+                stdout.write_text(sanitize_public_text(raw, catalog_terms=catalog_terms))
+            stderr_path = destination / "stderr.txt"
+            if stderr_path.exists():
+                stderr_path.write_text(sanitize_public_text(stderr_path.read_text(), catalog_terms=catalog_terms))
 
         validate_document("result-envelope", body)
         work = within(self.root, "docs/ai/work-items/" + view["work_item"])
