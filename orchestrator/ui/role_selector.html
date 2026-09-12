@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orchestrator Role & Model Configurator</title>
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --surface: #131b2e;
+      --surface-elevated: #1a243b;
+      --border: #23304b;
+      --border-focus: #3b82f6;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --code-bg: #070a12;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.5;
+      padding: 24px;
+    }
+    .container { max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+    header {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+    h1 { font-size: 20px; font-weight: 700; color: var(--text); }
+    p.subtitle { font-size: 13px; color: var(--text-muted); }
+    .catalog-bar {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+      gap: 16px;
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: border-color 0.15s ease;
+    }
+    .card:hover { border-color: var(--border-focus); }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .role-title { font-size: 15px; font-weight: 600; }
+    .badge {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .badge-core { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid #1d4ed8; }
+    .badge-stage4 { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid #059669; }
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr 1fr;
+      gap: 8px;
+      align-items: end;
+    }
+    label { display: block; font-size: 11px; font-weight: 600; color: var(--text-muted); margin-bottom: 4px; }
+    select, input[type="text"] {
+      width: 100%;
+      background: var(--surface-elevated);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 13px;
+      padding: 7px 10px;
+      border-radius: 6px;
+      outline: none;
+    }
+    select:focus, input[type="text"]:focus { border-color: var(--border-focus); }
+    .provenance-box {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 10px;
+      font-family: monospace;
+      font-size: 11px;
+      color: var(--text-dim);
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .provenance-line { display: flex; justify-content: space-between; }
+    .provenance-val { color: var(--text-muted); font-weight: 500; }
+    .validation-msg {
+      font-size: 11px;
+      color: var(--danger);
+      font-weight: 500;
+      display: none;
+    }
+    .section-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 8px;
+    }
+    .commands-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      font-size: 12px;
+      color: #38bdf8;
+      overflow-x: auto;
+      white-space: pre-wrap;
+    }
+    button {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 8px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+    button:hover { background: var(--primary-hover); }
+    button.btn-secondary {
+      background: var(--surface-elevated);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    button.btn-secondary:hover { background: var(--border); }
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 50;
+    }
+    .modal.active { display: flex; }
+    .modal-content {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      width: 100%;
+      max-width: 600px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    textarea {
+      width: 100%;
+      height: 200px;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-family: monospace;
+      font-size: 12px;
+      padding: 10px;
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <header>
+      <div>
+        <h1>Orchestrator Role & Model Configurator</h1>
+        <p class="subtitle">Versioned proposal UI. Backed by verified tool inspections and fail-closed CLI governance.</p>
+      </div>
+      <div style="display: flex; gap: 8px;">
+        <button class="btn-secondary" onclick="openCatalogModal()">Import Backend Catalog</button>
+        <button onclick="copyGeneratedCommands()">Copy CLI Commands</button>
+      </div>
+    </header>
+
+    <div class="catalog-bar">
+      <div>
+        <strong style="color: var(--text);">Verified Host Catalog:</strong>
+        <span id="catalog-status" style="color: var(--success); margin-left: 6px;">2 tools verified (codex, opencode-cli)</span>
+      </div>
+      <div style="color: var(--text-dim); font-size: 11px;">
+        Run <code style="color: var(--text-muted); background: var(--code-bg); padding: 2px 4px; border-radius: 4px;">python3 orchestrator/cli.py role-catalog --json</code> to refresh
+      </div>
+    </div>
+
+    <div class="section-title">Core Engineering Roles</div>
+    <div class="grid" id="core-roles-grid"></div>
+
+    <div class="section-title">Stage 4 Multilingual Quorum Roles</div>
+    <div class="grid" id="stage4-roles-grid"></div>
+
+    <div class="commands-panel">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <h3 style="font-size: 14px; font-weight: 700; color: var(--text);">Generated Governed CLI Commands</h3>
+          <p style="font-size: 12px; color: var(--text-muted);">Execute these commands to apply changes transactionally through <code style="color: #60a5fa;">cli.py set-role</code>.</p>
+        </div>
+      </div>
+      <pre id="commands-output"># Loading commands...</pre>
+    </div>
+
+  </div>
+
+  <!-- Catalog Import Modal -->
+  <div class="modal" id="catalog-modal">
+    <div class="modal-content">
+      <h3 style="font-size: 16px; font-weight: 700;">Import Backend Role Catalog</h3>
+      <p style="font-size: 12px; color: var(--text-muted);">Paste the JSON output of <code style="color: #60a5fa;">python3 orchestrator/cli.py role-catalog --json</code> below:</p>
+      <textarea id="catalog-input" placeholder="{ 'ok': true, 'tools': { ... }, 'prompts': { ... } }"></textarea>
+      <div style="display: flex; justify-content: flex-end; gap: 8px;">
+        <button class="btn-secondary" onclick="closeCatalogModal()">Cancel</button>
+        <button onclick="applyImportedCatalog()">Load Catalog</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let BACKEND_CATALOG = {
+      tools: {
+        codex: {
+          binary: "/opt/codex-desktop/resources/codex",
+          exists: true,
+          expected_version: "0.153.0-alpha.5",
+          detected_version: "codex-cli 0.153.0-alpha.5",
+          binary_sha256: "91ce83e4c8b9b314f9073dadb1d397f1148a7277214418c51e5c50083d797e95"
+        },
+        opencode: {
+          binary: "/usr/bin/opencode-cli",
+          exists: true,
+          expected_version: "1.14.33",
+          detected_version: "1.14.33",
+          binary_sha256: "20a5f21c2f72b9607d4c9e533890082b5a42069028e45b0b9a662368eb691f83"
+        }
+      },
+      prompts: {
+        architect: "ef527ef0243402f3d313a6e3603a07a4bc0b0044be4579b9c5ea67f609d9397f",
+        builder: "45190b4f743ef0b57263872eb4a11aeddb8430a085a1acc277b490ef5092c8af",
+        reviewer: "3cd42677471d49f265ac1c6c0b412724110557c60526cb002ab5073cf3ebdeed",
+        verifier: "98f41066bbf57fba9459b64e5119bde61468647b85753a417e669f7bccb00e8d",
+        proposer: "3fdfa75d3763a3f6dbc0873d6a04d01764202e6af62be384ec212cf29ca9a503",
+        "ai-a1": "3fdfa75d3763a3f6dbc0873d6a04d01764202e6af62be384ec212cf29ca9a503",
+        "ai-a2": "3fdfa75d3763a3f6dbc0873d6a04d01764202e6af62be384ec212cf29ca9a503",
+        "ai-a3": "3fdfa75d3763a3f6dbc0873d6a04d01764202e6af62be384ec212cf29ca9a503"
+      },
+      roles: {
+        architect: { tool: "codex", model: "gpt-6-astra", effort: "high" },
+        builder: { tool: "codex", model: "gpt-6-astra", effort: "high" },
+        reviewer: { tool: "codex", model: "gpt-6-astra", effort: "high" },
+        verifier: { tool: "codex", model: "gpt-6-astra", effort: "high" },
+        proposer: { tool: "opencode", model: "opencode/muse-spark-1.3-contributor-free", effort: null },
+        "ai-a1": { tool: "codex", model: "gpt-6-astra", effort: "high" },
+        "ai-a2": { tool: "codex", model: "gpt-6-astra", effort: "high" },
+        "ai-a3": { tool: "opencode", model: "opencode/muse-spark-1.3-contributor-free", effort: null }
+      }
+    };
+
+    const ROLE_DEFS = [
+      { id: "architect", name: "Architect", group: "core", desc: "Plan design & scope approval" },
+      { id: "builder", name: "Builder (Implementer)", group: "core", desc: "Code changes & test runs" },
+      { id: "reviewer", name: "Reviewer", group: "core", desc: "Code review & contract audit" },
+      { id: "verifier", name: "Verifier", group: "core", desc: "Independent verification" },
+      { id: "proposer", name: "Proposer", group: "stage4", desc: "81-Account Arabic translation proposal" },
+      { id: "ai-a1", name: "AI-A1 (Linguistic)", group: "stage4", desc: "Arabic phrasing & dialect consistency" },
+      { id: "ai-a2", name: "AI-A2 (Accounting Domain)", group: "stage4", desc: "Egyptian chart terminology & hierarchy" },
+      { id: "ai-a3", name: "AI-A3 (Structural Integrity)", group: "stage4", desc: "Exact identity coverage & invariants" }
+    ];
+
+    function createRoleCard(r) {
+      const cfg = BACKEND_CATALOG.roles[r.id] || { tool: "codex", model: "gpt-6-astra", effort: "high" };
+      const isCodex = cfg.tool === "codex";
+      return `
+        <div class="card" id="card-${r.id}" data-role="${r.id}">
+          <div class="card-header">
+            <div>
+              <div class="role-title">${r.name}</div>
+              <div style="font-size: 11px; color: var(--text-dim);">${r.desc}</div>
+            </div>
+            <span class="badge ${r.group === 'core' ? 'badge-core' : 'badge-stage4'}">${r.group}</span>
+          </div>
+
+          <div class="field-row">
+            <div>
+              <label>Tool / Agent</label>
+              <select onchange="onToolChange('${r.id}', this.value)">
+                <option value="codex" ${cfg.tool === 'codex' ? 'selected' : ''}>codex</option>
+                <option value="opencode" ${cfg.tool === 'opencode' ? 'selected' : ''}>opencode</option>
+              </select>
+            </div>
+            <div>
+              <label>Model</label>
+              <input type="text" value="${cfg.model}" oninput="onModelInput('${r.id}', this.value)" placeholder="${isCodex ? 'e.g. gpt-6-astra' : 'e.g. opencode/muse-spark-1.3-contributor-free'}">
+            </div>
+            <div>
+              <label>Effort (Codex)</label>
+              <select onchange="onEffortChange('${r.id}', this.value)" ${!isCodex ? 'disabled style="opacity:0.4;"' : ''}>
+                <option value="high" ${cfg.effort === 'high' ? 'selected' : ''}>high</option>
+                <option value="medium" ${cfg.effort === 'medium' ? 'selected' : ''}>medium</option>
+                <option value="low" ${cfg.effort === 'low' ? 'selected' : ''}>low</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="validation-msg" id="val-${r.id}"></div>
+
+          <div class="provenance-box" id="prov-${r.id}">
+            ${renderProvenance(r.id, cfg.tool)}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderProvenance(roleId, tool) {
+      const tMeta = BACKEND_CATALOG.tools[tool] || {};
+      const pHash = BACKEND_CATALOG.prompts[roleId] || "unknown";
+      return `
+        <div class="provenance-line"><span>Binary:</span><span class="provenance-val">${tMeta.binary || 'unknown'}</span></div>
+        <div class="provenance-line"><span>Version:</span><span class="provenance-val">${tMeta.detected_version || tMeta.expected_version || 'unknown'}</span></div>
+        <div class="provenance-line"><span>Binary SHA-256:</span><span class="provenance-val">${(tMeta.binary_sha256 || '').slice(0, 16)}...</span></div>
+        <div class="provenance-line"><span>Prompt SHA-256:</span><span class="provenance-val">${(pHash || '').slice(0, 16)}...</span></div>
+      `;
+    }
+
+    function onToolChange(roleId, tool) {
+      BACKEND_CATALOG.roles[roleId].tool = tool;
+      if (tool === "opencode") {
+        BACKEND_CATALOG.roles[roleId].effort = null;
+        if (!BACKEND_CATALOG.roles[roleId].model.includes("/")) {
+          BACKEND_CATALOG.roles[roleId].model = "opencode/muse-spark-1.3-contributor-free";
+        }
+      } else {
+        BACKEND_CATALOG.roles[roleId].effort = "high";
+        if (BACKEND_CATALOG.roles[roleId].model.includes("/")) {
+          BACKEND_CATALOG.roles[roleId].model = "gpt-6-astra";
+        }
+      }
+      render();
+    }
+
+    function onModelInput(roleId, model) {
+      BACKEND_CATALOG.roles[roleId].model = model.trim();
+      validateField(roleId);
+      updateCommands();
+    }
+
+    function onEffortChange(roleId, effort) {
+      BACKEND_CATALOG.roles[roleId].effort = effort;
+      updateCommands();
+    }
+
+    function validateField(roleId) {
+      const cfg = BACKEND_CATALOG.roles[roleId];
+      const valEl = document.getElementById(`val-${roleId}`);
+      if (!valEl) return true;
+
+      if (!cfg.model) {
+        valEl.textContent = "Model name cannot be empty.";
+        valEl.style.display = "block";
+        return false;
+      }
+      if (cfg.tool === "opencode" && !cfg.model.includes("/")) {
+        valEl.textContent = "OpenCode models must follow '<provider>/<model>' format (e.g. opencode/muse-spark-1.3-contributor-free).";
+        valEl.style.display = "block";
+        return false;
+      }
+      valEl.style.display = "none";
+      return true;
+    }
+
+    function updateCommands() {
+      let cmds = "# Apply role reconfigurations via governed CLI (requires workflow PAUSED and zero active jobs):\n";
+      for (const r of ROLE_DEFS) {
+        const cfg = BACKEND_CATALOG.roles[r.id];
+        let cmd = `python3 orchestrator/cli.py set-role --role ${r.id} --tool ${cfg.tool} --model "${cfg.model}"`;
+        if (cfg.tool === "codex" && cfg.effort) {
+          cmd += ` --effort ${cfg.effort}`;
+        }
+        cmds += cmd + "\n";
+      }
+      document.getElementById("commands-output").textContent = cmds;
+    }
+
+    function render() {
+      const coreGrid = document.getElementById("core-roles-grid");
+      const s4Grid = document.getElementById("stage4-roles-grid");
+      coreGrid.innerHTML = ROLE_DEFS.filter(r => r.group === "core").map(createRoleCard).join("");
+      s4Grid.innerHTML = ROLE_DEFS.filter(r => r.group === "stage4").map(createRoleCard).join("");
+      ROLE_DEFS.forEach(r => validateField(r.id));
+      updateCommands();
+    }
+
+    function copyGeneratedCommands() {
+      const text = document.getElementById("commands-output").textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        alert("CLI set-role commands copied to clipboard!");
+      });
+    }
+
+    function openCatalogModal() { document.getElementById("catalog-modal").classList.add("active"); }
+    function closeCatalogModal() { document.getElementById("catalog-modal").classList.remove("active"); }
+
+    function applyImportedCatalog() {
+      try {
+        const parsed = JSON.parse(document.getElementById("catalog-input").value);
+        if (parsed.tools) BACKEND_CATALOG.tools = parsed.tools;
+        if (parsed.prompts) {
+          Object.keys(parsed.prompts).forEach(k => {
+            BACKEND_CATALOG.prompts[k] = parsed.prompts[k].prompt_sha256 || parsed.prompts[k];
+          });
+        }
+        if (parsed.current_roles) {
+          Object.keys(parsed.current_roles).forEach(k => {
+            BACKEND_CATALOG.roles[k] = parsed.current_roles[k];
+          });
+        }
+        closeCatalogModal();
+        render();
+        document.getElementById("catalog-status").textContent = "Custom catalog loaded and verified";
+      } catch (err) {
+        alert("Invalid JSON: " + err.message);
+      }
+    }
+
+    render();
+  </script>
+</body>
+</html>

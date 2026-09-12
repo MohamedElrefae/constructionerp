@@ -52,6 +52,8 @@ def invocation(spec):
         permissions = {"*": "deny", "read": "allow", "glob": "allow", "grep": "allow"}
         if spec["role"] == "builder":
             permissions.update(bash="allow", edit="allow")
+        elif spec["role"] == "proposer":
+            permissions.update(edit="allow")
         env["OPENCODE_CONFIG_CONTENT"] = json.dumps(
             {"permission": permissions, "share": "disabled", "autoupdate": False}
         )

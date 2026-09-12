@@ -591,6 +591,19 @@ def apply_event(current, event, config):
             unchanged_rounds=0,
             previous_snapshots=[],
         )
+    elif kind == "role_reconfigured":
+        if state["status"] != "PAUSED" or state["active_jobs"]:
+            raise WorkflowError("Role reconfiguration requires a paused reconciled stage")
+        if body.get("plan_grant_revoked"):
+            state.update(plan_granted=False)
+            if state.get("prior"):
+                state["prior"].update(
+                    status="PLAN_SUBMITTED",
+                    next_roles=[],
+                    gate=body.get("new_gate") or {"scope": "PLAN", "gate_id": gate_id(state, "PLAN")},
+                )
+            if state.get("resume_to") == "APPROVED_FOR_BUILD":
+                state["resume_to"] = "PLAN_SUBMITTED"
     elif kind == "owner_commit":
         state.update(committed=True, gate=None)
     else:

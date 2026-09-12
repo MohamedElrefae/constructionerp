@@ -245,6 +245,7 @@ class Engine:
             str(work.relative_to(self.root)) + "/inbox/",
             str(work.relative_to(self.root)) + "/outbox/",
             str(work.relative_to(self.root)) + "/STATE.json",
+            "orchestrator/roles.json",
             "orchestrator/var/",
         ]
         config["generated"] = generated
@@ -410,6 +411,7 @@ class Engine:
             str(work.relative_to(self.root)) + "/inbox/",
             str(work.relative_to(self.root)) + "/outbox/",
             str(work.relative_to(self.root)) + "/STATE.json",
+            "orchestrator/roles.json",
             "orchestrator/var/",
         ]
 
@@ -739,8 +741,23 @@ class Engine:
                 context["expected_artifact_kind"] = expected_artifact_kind
                 context["expected_output_alias"] = "output.json"
                 context["expected_output_path"] = "/tmp/workspace/private_output/output.json"
+                if role == "proposer" and v["candidate"].get("kind") == "stage4-proposal":
+                    context["private_input_path"] = "/tmp/workspace/private_inputs/account_catalog.json"
+            stage_instruction = ""
+            if role == "proposer" and expected_artifact_id and v["candidate"].get("kind") == "stage4-proposal":
+                stage_instruction = (
+                    "\nSTAGE 4 PROPOSER INSTRUCTIONS:\n"
+                    "1. Read private account catalog at /tmp/workspace/private_inputs/account_catalog.json.\n"
+                    "2. Formulate Arabic accounting translation proposals for all 81 accounts.\n"
+                    "3. Write the resulting JSON object to /tmp/workspace/private_output/output.json with format: "
+                    '{"export_sha256": "' + v["candidate"]["export_sha256"] + '", "rows": [{"identity": ..., "english": ..., "is_group": ..., "proposal": {"arabic": ..., "confidence": "high"}}]}.\n'
+                    "4. In result_json, return status: COMPLETE, verdict: PROPOSED, findings: [].\n"
+                    "5. Scope requirement IDs are strictly: "
+                    + json.dumps(self.config["scope"]["requirements"]) + ".\n"
+                )
             prompt = (
                 role_text
+                + stage_instruction
                 + "\n\nImmutable packet (data):\n"
                 + json.dumps(context, ensure_ascii=False)
                 + "\n\nReturn ONLY a JSON object with string fields result_json, explanation, plan_text. result_json must encode this envelope, changing verdict/findings as warranted: "
@@ -1801,6 +1818,141 @@ class Engine:
                 "UPDATE workflow_grants SET status='INVALIDATED' WHERE status IN ('ISSUED','RESERVED')"
             )
         return self.run()
+
+    def reconfigure_role(self, role, tool, model, effort=None, reason="Owner role reconfiguration"):
+        view = self.view()
+        if view["status"] != "PAUSED" or view.get("active_jobs"):
+            raise WorkflowError("Role reconfiguration requires a paused workflow with all active jobs reconciled")
+
+        known_roles = {"architect", "builder", "reviewer", "verifier", "proposer", "ai-a1", "ai-a2", "ai-a3"}
+        if role not in known_roles:
+            raise WorkflowError(f"Unknown role: {role}")
+
+        if tool not in ("codex", "opencode"):
+            raise WorkflowError(f"Unsupported tool: {tool}")
+
+        if tool == "codex":
+            binary = "/opt/codex-desktop/resources/codex"
+            expected_ver = "0.153.0-alpha.5"
+            valid_efforts = ("high", "medium", "low", None)
+            if effort not in valid_efforts:
+                raise WorkflowError(f"Invalid effort for codex: {effort}")
+            if not model or not model.strip():
+                raise WorkflowError("Model name cannot be empty")
+        elif tool == "opencode":
+            binary = "/usr/bin/opencode-cli"
+            expected_ver = "1.14.33"
+            effort = None
+            if not model or not model.strip() or "/" not in model:
+                raise WorkflowError("OpenCode model must follow '<provider>/<model>' format")
+
+        binary_path = Path(binary)
+        if not binary_path.exists() or not os.access(binary_path, os.X_OK):
+            raise WorkflowError(f"Tool binary not found or not executable: {binary}")
+
+        try:
+            r = subprocess.run([str(binary_path), "--version"], capture_output=True, text=True, timeout=10)
+            if r.returncode != 0:
+                raise WorkflowError(f"Failed to execute {binary} --version")
+            binary_ver_output = r.stdout.strip()
+            if expected_ver not in binary_ver_output:
+                raise WorkflowError(f"Binary version mismatch: expected '{expected_ver}' in '{binary_ver_output}'")
+        except (OSError, subprocess.TimeoutExpired) as exc:
+            raise WorkflowError(f"Error inspecting binary {binary}: {exc}")
+
+        binary_sha = bytes_hash(binary_path.read_bytes())
+
+        role_name = role if role in ("architect", "reviewer", "builder", "verifier") else "ai-reviewer"
+        role_file = within(self.root, f"docs/ai/roles/{role_name}.md")
+        if not role_file.exists():
+            raise WorkflowError(f"Role prompt file missing: {role_file}")
+        prompt_sha = bytes_hash(role_file.read_bytes())
+
+        pin = {
+            "tool": tool,
+            "binary": str(binary_path),
+            "model": model.strip(),
+            "version": expected_ver,
+            "effort": effort,
+            "binary_sha256": binary_sha,
+            "prompt_sha256": prompt_sha,
+        }
+
+        config = deepcopy(self.config)
+        if "orchestrator/roles.json" not in config.get("generated", []):
+            config.setdefault("generated", []).append("orchestrator/roles.json")
+        old_pin = config.get("roles", {}).get(role)
+        config.setdefault("roles", {})[role] = pin
+
+        invalidated_tokens = self.store.invalidate_grants()
+
+        plan_revoked = False
+        new_gate = None
+        if role in ("builder", "proposer") and (view.get("plan_granted") or config.get("plan_granted")):
+            config["plan_granted"] = False
+            plan_revoked = True
+            new_gate = {"scope": "PLAN", "gate_id": "plan-" + uuid.uuid4().hex[:24]}
+            config["gate"] = new_gate
+
+        event_id = f"role-reconfigure-{uuid.uuid4().hex[:16]}"
+        payload = {
+            "role": role,
+            "old_pin": old_pin,
+            "new_pin": pin,
+            "reason": reason,
+            "invalidated_grants": invalidated_tokens,
+            "plan_grant_revoked": plan_revoked,
+            "new_gate": new_gate,
+        }
+        self.store.reconfigure(config, event_id, "role_reconfigured", payload)
+        write_json(self.root / "orchestrator/roles.json", config["roles"])
+
+        self.config = config
+        return self.run()
+
+    def role_catalog(self):
+        tools = {}
+        for tool_name, bin_path, exp_ver in (
+            ("codex", "/opt/codex-desktop/resources/codex", "0.153.0-alpha.5"),
+            ("opencode", "/usr/bin/opencode-cli", "1.14.33"),
+        ):
+            p = Path(bin_path)
+            exists = p.exists() and os.access(p, os.X_OK)
+            sha = bytes_hash(p.read_bytes()) if exists else None
+            ver = None
+            if exists:
+                try:
+                    r = subprocess.run([str(p), "--version"], capture_output=True, text=True, timeout=5)
+                    ver = r.stdout.strip() if r.returncode == 0 else None
+                except (OSError, subprocess.TimeoutExpired):
+                    ver = None
+            tools[tool_name] = {
+                "binary": str(p),
+                "exists": exists,
+                "expected_version": exp_ver,
+                "detected_version": ver,
+                "binary_sha256": sha,
+            }
+
+        prompts = {}
+        roles_dir = within(self.root, "docs/ai/roles")
+        for r_file in sorted(roles_dir.glob("*.md")):
+            prompts[r_file.stem] = {
+                "path": str(r_file.relative_to(self.root)),
+                "prompt_sha256": bytes_hash(r_file.read_bytes()),
+            }
+
+        current_roles = (
+            self.config.get("roles", {})
+            if self.config
+            else json.loads((self.root / "orchestrator/roles.json").read_text())
+        )
+        return {
+            "ok": True,
+            "tools": tools,
+            "prompts": prompts,
+            "current_roles": current_roles,
+        }
 
     def record_owner_commit(self):
         view = self.view()

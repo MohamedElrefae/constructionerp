@@ -81,7 +81,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=ROOT)
     sub = parser.add_subparsers(dest="command", required=True)
-    for command in ("doctor", "init", "status", "run", "approve", "pause", "resume"):
+    for command in ("doctor", "init", "status", "run", "approve", "pause", "resume", "set-role", "role-catalog"):
         p = sub.add_parser(command)
         p.add_argument("--json", action="store_true")
         if command == "init":
@@ -121,6 +121,18 @@ def main():
             p.add_argument("--refresh-candidate", action="store_true")
             p.add_argument("--scope-file", type=Path)
             p.add_argument("--ack-restored-backup", action="store_true")
+        elif command == "set-role":
+            p.add_argument(
+                "--role",
+                required=True,
+                choices=["architect", "builder", "reviewer", "verifier", "proposer", "ai-a1", "ai-a2", "ai-a3"],
+            )
+            p.add_argument("--tool", required=True, choices=["codex", "opencode"])
+            p.add_argument("--model", required=True)
+            p.add_argument("--effort", choices=["high", "medium", "low"])
+            p.add_argument("--reason", default="Owner role reconfiguration")
+        elif command == "role-catalog":
+            pass
     args = parser.parse_args()
     root = args.root.resolve()
     try:
@@ -183,6 +195,16 @@ def main():
                             raise WorkflowError("Doctor failed; approval resumption refused")
                         # Only explicitly provided owner input is accepted, never an outbox token.
                         result = e.approve(json.loads(args.token_file.read_text()))
+                    elif args.command == "set-role":
+                        result = e.reconfigure_role(
+                            role=args.role,
+                            tool=args.tool,
+                            model=args.model,
+                            effort=args.effort,
+                            reason=args.reason,
+                        )
+                    elif args.command == "role-catalog":
+                        result = e.role_catalog()
                     else:
                         payload = {
                             "reason": ("OWNER:" + args.reason) if args.command == "pause" else args.reason

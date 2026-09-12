@@ -475,3 +475,147 @@ assert not Path(sys.argv[2]).exists()
                 v = e.approve(plan_token(e))
     finally:
         e.close()
+
+
+def test_reconfigure_role_fail_closed_checks(configured):
+    root, config = configured
+    stub = Stub(delayed=True)
+    e = Engine(root, launcher=stub)
+    e.initialize(config)
+    e.run()
+
+    # 1. Reconfigure while active jobs exist and status is not PAUSED
+    with pytest.raises(WorkflowError, match="requires a paused workflow"):
+        e.reconfigure_role("builder", "codex", "gpt-6-astra")
+
+    # Pause workflow but keep active job in flight
+    e.store.event("pause", "pause", {"reason": "OWNER:pause"})
+    e.run()
+    assert e.view()["status"] == "PAUSED"
+    assert len(e.view()["active_jobs"]) > 0
+
+    # 2. Reconfigure while paused but active jobs still in flight
+    with pytest.raises(WorkflowError, match="requires a paused workflow with all active jobs reconciled"):
+        e.reconfigure_role("builder", "codex", "gpt-6-astra")
+
+    # Complete the job and run to reconcile
+    job = e.store.job(e.view()["active_jobs"][0])
+    stub.complete(job)
+    e.store.event("resume", "resume", {"reason": "continue", "reset_budget": False})
+    v = e.run()
+    if v["active_jobs"]:
+        job2 = e.store.job(v["active_jobs"][0])
+        stub.complete(job2)
+        v = e.run()
+    # Now at PLAN gate, no active jobs
+    assert len(v["active_jobs"]) == 0
+
+    # Pause again cleanly
+    e.store.event("pause-2", "pause", {"reason": "OWNER:reconfigure"})
+    v = e.run()
+    assert v["status"] == "PAUSED"
+    assert len(v["active_jobs"]) == 0
+
+    # 3. Invalid role
+    with pytest.raises(WorkflowError, match="Unknown role"):
+        e.reconfigure_role("hacker", "codex", "gpt-6-astra")
+
+    # 4. Invalid tool
+    with pytest.raises(WorkflowError, match="Unsupported tool"):
+        e.reconfigure_role("builder", "curl", "model")
+
+    # 5. Invalid effort for codex
+    with pytest.raises(WorkflowError, match="Invalid effort for codex"):
+        e.reconfigure_role("builder", "codex", "gpt-6-astra", effort="super_high")
+
+    # 6. Empty model for codex
+    with pytest.raises(WorkflowError, match="Model name cannot be empty"):
+        e.reconfigure_role("builder", "codex", "   ")
+
+    # 7. OpenCode model missing provider slash
+    with pytest.raises(WorkflowError, match="OpenCode model must follow '<provider>/<model>' format"):
+        e.reconfigure_role("builder", "opencode", "gpt-5")
+
+    e.close()
+
+
+def test_reconfigure_role_grants_invalidation_and_plan_revocation(configured):
+    root, config = configured
+    stub = Stub()
+    e = Engine(root, launcher=stub)
+    e.initialize(config)
+    v = e.run()
+    assert v["gate"]["scope"] == "PLAN"
+
+    # Insert a dummy pending grant in workflow_grants
+    dummy_grant = {
+        "token_id": "test-pending-grant",
+        "gate_id": v["gate"]["gate_id"],
+        "status": "ISSUED",
+        "scope": "PLAN",
+    }
+    e.store.grant(dummy_grant)
+    assert e.store.grant_for(v["gate"]["gate_id"])["status"] == "ISSUED"
+
+    # Pause workflow
+    e.store.event("pause-1", "pause", {"reason": "OWNER:pause"})
+    v = e.run()
+    assert v["status"] == "PAUSED"
+
+    # Reconfigure reviewer (codex) -> grant should be invalidated, but plan was not granted yet
+    v = e.reconfigure_role("reviewer", "codex", "gpt-6-astra", effort="high")
+    assert v["status"] == "PAUSED"
+    assert e.store.grant_for(dummy_grant["gate_id"])["status"] == "INVALIDATED"
+
+    events = [ev for ev in e.store.events() if ev["kind"] == "role_reconfigured"]
+    assert len(events) == 1
+    assert events[0]["payload"]["role"] == "reviewer"
+    assert "test-pending-grant" in events[0]["payload"]["invalidated_grants"]
+    assert events[0]["payload"]["plan_grant_revoked"] is False
+
+    # Resume and approve plan to set plan_granted = True
+    e.store.event("resume-1", "resume", {"reason": "continue", "reset_budget": False})
+    v = e.run()
+    v = e.approve(plan_token(e))
+    assert v["plan_granted"] is True
+
+    # Pause workflow
+    e.store.event("pause-2", "pause", {"reason": "OWNER:pause"})
+    v = e.run()
+    assert v["status"] == "PAUSED"
+    assert v["plan_granted"] is True
+
+    # Reconfigure builder -> plan_granted must be revoked!
+    v = e.reconfigure_role("builder", "codex", "gpt-6-astra", effort="medium")
+    assert v["plan_granted"] is False
+
+    events2 = [ev for ev in e.store.events() if ev["kind"] == "role_reconfigured"]
+    assert len(events2) == 2
+    assert events2[1]["payload"]["role"] == "builder"
+    assert events2[1]["payload"]["plan_grant_revoked"] is True
+
+    e.close()
+
+
+def test_role_catalog_inspection(configured):
+    root, config = configured
+    e = Engine(root)
+    e.initialize(config)
+    cat = e.role_catalog()
+    assert cat["ok"] is True
+    assert "codex" in cat["tools"]
+    assert "opencode" in cat["tools"]
+    assert cat["tools"]["codex"]["exists"] is True
+    assert cat["tools"]["codex"]["binary_sha256"] is not None
+    assert cat["tools"]["opencode"]["exists"] is True
+    assert cat["tools"]["opencode"]["binary_sha256"] is not None
+
+    assert "architect" in cat["prompts"]
+    assert "reviewer" in cat["prompts"]
+    assert "builder" in cat["prompts"]
+    assert "verifier" in cat["prompts"]
+    assert "ai-reviewer" in cat["prompts"]
+    for pinfo in cat["prompts"].values():
+        assert len(pinfo["prompt_sha256"]) == 64
+
+    e.close()

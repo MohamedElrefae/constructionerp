@@ -109,10 +109,17 @@ class Store:
         body = canonical(token).decode()
         with self._lock:
             row = self.conn.execute(
-                "SELECT data FROM workflow_grants WHERE gate_id=?", (token["gate_id"],)
+                "SELECT status, data FROM workflow_grants WHERE gate_id=?", (token["gate_id"],)
             ).fetchone()
             if row:
-                if row[0] != body:
+                if row["status"] == "INVALIDATED":
+                    with self.conn:
+                        self.conn.execute(
+                            "UPDATE workflow_grants SET token_id=?, status='ISSUED', data=? WHERE gate_id=?",
+                            (token["token_id"], body, token["gate_id"]),
+                        )
+                    return
+                if row["data"] != body:
                     raise WorkflowError("Gate already has another grant")
                 return
             with self.conn:
@@ -130,6 +137,19 @@ class Store:
         with self._lock:
             with self.conn:
                 self.conn.execute("UPDATE workflow_grants SET status='CONSUMED' WHERE gate_id=?", (gate,))
+
+    def invalidate_grants(self):
+        with self._lock:
+            with self.conn:
+                rows = self.conn.execute(
+                    "SELECT token_id FROM workflow_grants WHERE status IN ('ISSUED', 'RESERVED')"
+                ).fetchall()
+                invalidated = [r["token_id"] if isinstance(r, sqlite3.Row) else r[0] for r in rows]
+                if invalidated:
+                    self.conn.execute(
+                        "UPDATE workflow_grants SET status='INVALIDATED' WHERE status IN ('ISSUED', 'RESERVED')"
+                    )
+                return invalidated
 
     def reconfigure(self, config, event_id, kind, payload):
         with self._lock:
