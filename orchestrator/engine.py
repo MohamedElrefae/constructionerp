@@ -36,22 +36,85 @@ class GraphState(TypedDict):
     view: dict
 
 
-def _quarantine_or_delete_file(path, fname, job_id, private_root=None):
-    if private_root:
-        try:
-            q_dir = Path(private_root) / "quarantine" / job_id
-            q_dir.mkdir(parents=True, exist_ok=True)
-            target = q_dir / fname
-            if path.exists() and not path.is_symlink():
-                shutil.move(str(path), str(target))
-                return
-        except Exception:
-            pass
+def _ensure_quarantine_dir(private_root, job_id):
+    """Ensures quarantine root and job directory exist, are owned by current user,
+    are not symlinks, and are set to mode 0700.
+    Returns Path(q_dir) on success, or None if verification fails.
+    """
+    if not private_root:
+        return None
     try:
-        if path.exists():
-            path.unlink()
-    except OSError:
-        pass
+        p_root = Path(private_root)
+        if not p_root.exists() or p_root.is_symlink():
+            return None
+
+        q_root = p_root / "quarantine"
+        if q_root.is_symlink():
+            return None
+        q_root.mkdir(mode=0o700, parents=True, exist_ok=True)
+        os.chmod(q_root, 0o700)
+        st_root = q_root.stat()
+        if st_root.st_uid != os.getuid() or not q_root.is_dir() or (st_root.st_mode & 0o777) != 0o700:
+            return None
+
+        q_dir = q_root / job_id
+        if q_dir.is_symlink():
+            return None
+        q_dir.mkdir(mode=0o700, exist_ok=True)
+        os.chmod(q_dir, 0o700)
+        st_dir = q_dir.stat()
+        if st_dir.st_uid != os.getuid() or not q_dir.is_dir() or (st_dir.st_mode & 0o777) != 0o700:
+            return None
+
+        return q_dir
+    except Exception:
+        return None
+
+
+def _quarantine_or_delete_file(path, fname, job_id, private_root=None):
+    """Quarantines a raw artifact to protected private storage with restricted modes.
+
+    - Quarantine root and job dir set to 0700.
+    - Quarantined file set to 0600.
+    - Verifies ownership (os.getuid()) and rejects symlink/non-regular targets.
+    - Always ensures path does not remain in public destination.
+    """
+    path = Path(path)
+    quarantined = False
+    if private_root and (path.is_symlink() or path.exists()):
+        try:
+            # Reject symlinks and non-regular files for source
+            if not path.is_symlink() and path.is_file():
+                st_src = path.stat()
+                if st_src.st_uid == os.getuid():
+                    q_dir = _ensure_quarantine_dir(private_root, job_id)
+                    if q_dir:
+                        target = q_dir / fname
+                        # Reject target if it already exists as symlink, directory, or wrong ownership
+                        if target.is_symlink() or (target.exists() and (not target.is_file() or target.stat().st_uid != os.getuid())):
+                            pass
+                        else:
+                            if target.exists():
+                                target.unlink()
+                            shutil.move(str(path), str(target))
+                            os.chmod(target, 0o600)
+                            st_tgt = target.stat()
+                            if (
+                                st_tgt.st_uid == os.getuid()
+                                and target.is_file()
+                                and not target.is_symlink()
+                                and (st_tgt.st_mode & 0o777) == 0o600
+                            ):
+                                quarantined = True
+        except Exception:
+            quarantined = False
+
+    if not quarantined:
+        try:
+            if path.is_symlink() or path.exists():
+                path.unlink()
+        except OSError:
+            pass
 
 
 def _quarantine_or_delete_runtime_artifacts(destination, job_id, private_root=None):

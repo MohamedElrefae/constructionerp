@@ -12,6 +12,7 @@ Verifies:
 - Zero mutation to apps/construction.
 """
 
+import os
 import json
 import shutil
 import hashlib
@@ -2171,6 +2172,13 @@ def test_missing_or_corrupt_catalog_with_english_canary_quarantines_artifacts(te
         assert q_stderr_a.exists(), "Raw stderr should be safely moved to protected private storage"
         assert english_canary in q_stdout_a.read_text(encoding="utf-8")
 
+        # Mode and ownership verification
+        assert (mock_private / "quarantine").stat().st_mode & 0o777 == 0o700, "Quarantine root must be 0700"
+        assert (mock_private / "quarantine" / job_id_a).stat().st_mode & 0o777 == 0o700, "Job quarantine dir must be 0700"
+        assert q_stdout_a.stat().st_mode & 0o777 == 0o600, "Quarantined stdout.jsonl must be 0600"
+        assert q_stderr_a.stat().st_mode & 0o777 == 0o600, "Quarantined stderr.txt must be 0600"
+        assert q_stdout_a.stat().st_uid == os.getuid(), "Quarantined file must be owned by current user"
+
         # --- Scenario B: Missing catalog blob ---
         job_id_b = "job-missing-cat-canary"
         dest_b = test_repo / "orchestrator/var/jobs" / job_id_b
@@ -2205,7 +2213,10 @@ def test_missing_or_corrupt_catalog_with_english_canary_quarantines_artifacts(te
 
         assert not stdout_b.exists(), "stdout.jsonl must not remain in public job dir on missing catalog"
         assert not stderr_b.exists(), "stderr.txt must not remain in public job dir on missing catalog"
-        assert (mock_private / "quarantine" / job_id_b / "stdout.jsonl").exists()
+        q_stdout_b = mock_private / "quarantine" / job_id_b / "stdout.jsonl"
+        assert q_stdout_b.exists()
+        assert (mock_private / "quarantine" / job_id_b).stat().st_mode & 0o777 == 0o700
+        assert q_stdout_b.stat().st_mode & 0o777 == 0o600
     finally:
         e.close()
 
@@ -2258,10 +2269,13 @@ def test_invalid_utf8_runtime_output_handling(test_repo, tmp_path):
 
         # Raw file with invalid bytes must be removed from public destination
         assert not stdout_a.exists(), "stdout.jsonl with invalid UTF-8 must not remain in public job dir"
-        # Quarantined copy in protected private root preserves exact bytes
+        # Quarantined copy in protected private root preserves exact bytes and modes
         q_stdout_a = mock_private / "quarantine" / job_id_a / "stdout.jsonl"
         assert q_stdout_a.exists()
         assert q_stdout_a.read_bytes() == bad_bytes
+        assert (mock_private / "quarantine").stat().st_mode & 0o777 == 0o700
+        assert (mock_private / "quarantine" / job_id_a).stat().st_mode & 0o777 == 0o700
+        assert q_stdout_a.stat().st_mode & 0o777 == 0o600
 
         # Case B: stdout.jsonl has valid UTF-8 but triggers a WorkflowError,
         # while stderr.txt contains invalid UTF-8 bytes.
@@ -2322,6 +2336,161 @@ def test_invalid_utf8_runtime_output_handling(test_repo, tmp_path):
         q_stderr_b = mock_private / "quarantine" / job_id_b / "stderr.txt"
         assert q_stderr_b.exists()
         assert q_stderr_b.read_bytes() == bad_stderr_bytes
+        assert (mock_private / "quarantine" / job_id_b).stat().st_mode & 0o777 == 0o700
+        assert q_stderr_b.stat().st_mode & 0o777 == 0o600
+    finally:
+        e.close()
+
+
+def test_quarantine_permissions_and_symlink_non_regular_rejection(test_repo, tmp_path):
+    """Quarantine root and job dir must be 0700, files 0600, and symlink/non-regular targets rejected."""
+    mock_private = tmp_path / "private_perm_test"
+    mock_private.mkdir(parents=True)
+    # Simulate production 775 permissions on private directories
+    os.chmod(mock_private, 0o775)
+    assert mock_private.stat().st_mode & 0o777 == 0o775
+
+    real_catalog = Path("/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4/account_catalog_20260910_121018.json")
+    shutil.copy2(real_catalog, mock_private / real_catalog.name)
+
+    stub = Stage4Stub()
+    e = Engine(test_repo, launcher=stub)
+    try:
+        desc = {
+            "erp_checkout": "/home/mohamed/frappe-bench/apps/construction",
+            "bench_root": "/home/mohamed/frappe-bench",
+            "site": "v16.localhost",
+            "site_classification": "non-production test",
+            "private_root": str(mock_private),
+        }
+        view = e.adopt_historical("erp-arabic-bilingual-data", erp_descriptor=desc)
+        export_sha = view["candidate"]["export_sha256"]
+        cat_blob = mock_private / "blobs" / f"{export_sha}.json"
+        cat_blob.write_text("{corrupt-json")
+
+        def make_payload(jid):
+            env = {
+                "schema_version": 1,
+                "job_id": jid,
+                "work_item": "erp-arabic-bilingual-data",
+                "stage": "4",
+                "role": "proposer",
+                "tool": "opencode",
+                "model": "opencode-go/gpt-5.6-luna",
+                "status": "COMPLETE",
+                "verdict": "PROPOSED",
+                "failure_class": None,
+                "evidence_paths": [],
+                "findings": [],
+                "candidate_kind": "stage4-proposal",
+                "candidate_id": view["candidate"]["candidate_id"],
+                "plan_revision_hash": e.config["plan_revision_hash"],
+                "prompt_version": e.config["roles"]["proposer"]["prompt_sha256"],
+                "session_id": f"sess-{jid}",
+                "export_sha256": view["candidate"]["export_sha256"],
+                "proposal_sha256": None,
+            }
+            wire = {"explanation": f"Canary {jid}", "result_json": json.dumps(env), "plan_text": ""}
+            return {"body": env, "wire": wire}
+
+        # 1. Normal quarantine under 775 parent gets 0700 / 0600
+        job_id_1 = "job-perm-1"
+        dest_1 = test_repo / "orchestrator/var/jobs" / job_id_1
+        dest_1.mkdir(parents=True)
+        payload_1 = make_payload(job_id_1)
+        (dest_1 / "stdout.jsonl").write_text(json.dumps(payload_1), encoding="utf-8")
+        job_1 = {
+            "job_id": job_id_1,
+            "role": "proposer",
+            "runtime": str(dest_1),
+            "spec": {
+                "expected_artifact_id": f"stage4-proposal-{job_id_1}",
+                "envelope": payload_1["body"],
+                "tool": "opencode",
+                "model": "opencode-go/gpt-5.6-luna",
+            },
+        }
+        obs_1 = {"exit_code": 0, "session_id": f"sess-{job_id_1}", "started_utc": utc(), "finished_utc": utc()}
+
+        with pytest.raises(WorkflowError):
+            e.accept(job_1, obs_1, view)
+
+        q_root = mock_private / "quarantine"
+        q_dir_1 = q_root / job_id_1
+        q_file_1 = q_dir_1 / "stdout.jsonl"
+        assert q_root.stat().st_mode & 0o777 == 0o700, "Quarantine root must be 0700 despite 775 parent"
+        assert q_dir_1.stat().st_mode & 0o777 == 0o700, "Job quarantine dir must be 0700"
+        assert q_file_1.stat().st_mode & 0o777 == 0o600, "Quarantined file must be 0600"
+        assert not (dest_1 / "stdout.jsonl").exists()
+
+        # 2. Symlink target rejection: if target path is a pre-existing symlink to victim file
+        job_id_2 = "job-perm-2"
+        dest_2 = test_repo / "orchestrator/var/jobs" / job_id_2
+        dest_2.mkdir(parents=True)
+        payload_2 = make_payload(job_id_2)
+        (dest_2 / "stdout.jsonl").write_text(json.dumps(payload_2), encoding="utf-8")
+
+        victim_file = tmp_path / "victim.txt"
+        victim_file.write_text("UNTOUCHED_VICTIM")
+
+        q_dir_2 = q_root / job_id_2
+        q_dir_2.mkdir(mode=0o700, exist_ok=True)
+        os.chmod(q_dir_2, 0o700)
+        symlink_target = q_dir_2 / "stdout.jsonl"
+        symlink_target.symlink_to(victim_file)
+
+        job_2 = {
+            "job_id": job_id_2,
+            "role": "proposer",
+            "runtime": str(dest_2),
+            "spec": {
+                "expected_artifact_id": f"stage4-proposal-{job_id_2}",
+                "envelope": payload_2["body"],
+                "tool": "opencode",
+                "model": "opencode-go/gpt-5.6-luna",
+            },
+        }
+        obs_2 = {"exit_code": 0, "session_id": f"sess-{job_id_2}", "started_utc": utc(), "finished_utc": utc()}
+
+        with pytest.raises(WorkflowError):
+            e.accept(job_2, obs_2, view)
+
+        # Victim file must NOT have been overwritten through symlink
+        assert victim_file.read_text() == "UNTOUCHED_VICTIM"
+        # Public destination file must have been unlinked
+        assert not (dest_2 / "stdout.jsonl").exists()
+
+        # 3. Source symlink rejection: if source in destination is a symlink
+        job_id_3 = "job-perm-3"
+        dest_3 = test_repo / "orchestrator/var/jobs" / job_id_3
+        dest_3.mkdir(parents=True)
+        payload_3 = make_payload(job_id_3)
+        source_victim = tmp_path / "source_victim.txt"
+        source_victim.write_text("ORIGINAL_SECRET")
+        (dest_3 / "stdout.jsonl").symlink_to(source_victim)
+
+        job_3 = {
+            "job_id": job_id_3,
+            "role": "proposer",
+            "runtime": str(dest_3),
+            "spec": {
+                "expected_artifact_id": f"stage4-proposal-{job_id_3}",
+                "envelope": payload_3["body"],
+                "tool": "opencode",
+                "model": "opencode-go/gpt-5.6-luna",
+            },
+        }
+        obs_3 = {"exit_code": 0, "session_id": f"sess-{job_id_3}", "started_utc": utc(), "finished_utc": utc()}
+
+        with pytest.raises((WorkflowError, json.JSONDecodeError)):
+            e.accept(job_3, obs_3, view)
+
+        # Source symlink was unlinked from dest, original source victim intact
+        assert not (dest_3 / "stdout.jsonl").exists()
+        assert source_victim.read_text() == "ORIGINAL_SECRET"
+        # Nothing should have been quarantined
+        assert not (q_root / job_id_3 / "stdout.jsonl").exists()
+
     finally:
         e.close()
 
