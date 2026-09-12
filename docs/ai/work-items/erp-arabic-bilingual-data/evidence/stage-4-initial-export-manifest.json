@@ -1,0 +1,28 @@
+{
+  "schema": "construction-stage4-initial-export-manifest/v1",
+  "work_item": "erp-arabic-bilingual-data",
+  "stage": "4",
+  "sub_status": "PROPOSAL_PENDING",
+  "governance_note": "This artifact records the verified initialization and export baseline for the 81 accounts prior to proposer authorization. The proposal candidate itself will be produced and frozen only after the proposer role is dispatched and authorized.",
+  "company": "Elrefae",
+  "domain": "account-master",
+  "export_file": "account_catalog_20260910_121018.json",
+  "export_sha256": "206ecfae017b915742abc265016eee094304562e53838a932c7fd56af6db9ed1",
+  "private_location": "<site>/private/stage4/account_catalog_20260910_121018.json",
+  "row_count": 81,
+  "groups": 26,
+  "leaves": 55,
+  "with_current_arabic": 0,
+  "initial_candidate": {
+    "kind": "stage4-proposal",
+    "candidate_id": "375f535276973ba30944ac257dff0e74032f916b318bfa40ab8427be034e41a1",
+    "export_sha256": "206ecfae017b915742abc265016eee094304562e53838a932c7fd56af6db9ed1",
+    "initial_empty_proposal_sha256": "bbb4b32dadbab5ee0191d1dd26f68b9608c9fc0c04257597ca6fe2e78f50bdc5",
+    "manifest_hash": "375f535276973ba30944ac257dff0e74032f916b318bfa40ab8427be034e41a1"
+  },
+  "verification_status": "EXPORT_VERIFIED",
+  "zero_mutation_guarantee": {
+    "apps_construction_modified": false,
+    "database_records_modified": false
+  }
+}

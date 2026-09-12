@@ -24,6 +24,7 @@ from langgraph.types import Command, interrupt
 from langsmith import tracing_context
 from normalization import snapshot as finding_snapshot
 from routing import apply_event, initial, pause
+from schema_source import FAILURES
 from store import Store
 from validate import validate_document
 from worker import process_identity
@@ -95,6 +96,20 @@ class Engine:
         graph.add_edge("owner_gate", "synchronize")
         return graph.compile(checkpointer=SqliteSaver(self.checkpoint_conn))
 
+    def _recheck_candidate(self, candidate):
+        if candidate.get("kind") == "stage4-proposal":
+            if not candidate.get("export_sha256") or not candidate.get("proposal_sha256"):
+                raise WorkflowError("Malformed stage4-proposal candidate binding")
+            expected_id = digest({
+                "kind": "stage4-proposal",
+                "export_sha256": candidate["export_sha256"],
+                "proposal_sha256": candidate["proposal_sha256"],
+            })
+            if candidate["candidate_id"] != expected_id:
+                raise WorkflowError("Stage 4 proposal candidate identity mismatch")
+        elif "manifest" in candidate:
+            recheck(self.root, candidate["manifest"], self.config["generated"])
+
     def initialize(self, config):
         if self.config:
             raise WorkflowError("Worktree already initialized")
@@ -125,6 +140,184 @@ class Engine:
         self.config = config
         # Init creates the checkpoint without starting a native engineering job.
         self.graph.update_state(self.graph_config, {"view": initial(config)}, as_node="collect")
+        self.export()
+        return self.view()
+
+    def adopt_historical(self, work_item, erp_descriptor=None):
+        if self.config:
+            raise WorkflowError("Worktree already initialized")
+        if work_item != "erp-arabic-bilingual-data":
+            raise WorkflowError(f"Unsupported historical adoption work-item: {work_item}")
+
+        work = within(self.root, "docs/ai/work-items/" + work_item)
+        for d in ("inbox", "outbox", "runs", "evidence"):
+            (work / d).mkdir(parents=True, exist_ok=True)
+
+        if not erp_descriptor:
+            erp_descriptor = {
+                "erp_checkout": "/home/mohamed/frappe-bench/apps/construction",
+                "bench_root": "/home/mohamed/frappe-bench",
+                "site": "v16.localhost",
+                "site_classification": "non-production test",
+                "private_root": "/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4",
+            }
+        erp_descriptor_hash = digest(erp_descriptor)
+
+        # Directly revalidate all historical provenance from referenced files on disk (fail-closed)
+        from stage4 import derive_stage4_candidate_id, is_hex64, verify_historical_provenance
+
+        verified_prov = verify_historical_provenance(
+            erp_descriptor["erp_checkout"], erp_descriptor["bench_root"]
+        )
+
+        manifest_meta = verified_prov["stage_4_foundation"]
+        export_sha256 = manifest_meta["export_file_sha256"]
+
+        historical_stages = {
+            "0": {
+                "sub_status": None,
+                "historical": True,
+                "evidence_refs": [
+                    {
+                        "artifact_id": verified_prov["stage_0"]["artifact_id"],
+                        "sha256": verified_prov["stage_0"]["evidence_sha256"],
+                        "visibility": "public",
+                    }
+                ],
+            },
+            "1": {
+                "sub_status": None,
+                "historical": True,
+                "evidence_refs": [
+                    {
+                        "artifact_id": verified_prov["stage_1"]["artifact_id"],
+                        "sha256": verified_prov["stage_1"]["evidence_sha256"],
+                        "visibility": "public",
+                    }
+                ],
+            },
+            "2": {
+                "sub_status": None,
+                "historical": True,
+                "evidence_refs": [
+                    {
+                        "artifact_id": verified_prov["stage_2"]["artifact_id"],
+                        "sha256": verified_prov["stage_2"]["evidence_sha256"],
+                        "visibility": "public",
+                    }
+                ],
+            },
+            "3": {
+                "sub_status": None,
+                "historical": True,
+                "evidence_refs": [
+                    {
+                        "artifact_id": verified_prov["stage_3"]["artifact_id"],
+                        "sha256": verified_prov["stage_3"]["evidence_sha256"],
+                        "visibility": "public",
+                    }
+                ],
+            },
+            "4": {
+                "sub_status": "PROPOSAL_PENDING",
+                "historical": False,
+                "evidence_refs": [],
+            },
+        }
+
+        # Read expected identities from the private export catalog
+        export_file_path = Path(erp_descriptor["private_root"]) / "account_catalog_20260910_121018.json"
+        if not export_file_path.exists():
+            raise WorkflowError(f"Private export file missing: {export_file_path}")
+        export_catalog = json.loads(export_file_path.read_text())
+        expected_identities = [r["identity"] for r in export_catalog.get("rows", [])]
+        from stage4 import (
+            derive_identities_digest,
+            derive_stage4_candidate_id,
+            is_hex64,
+            verify_historical_provenance,
+        )
+        identities_digest = derive_identities_digest(expected_identities)
+
+        initial_proposal_hash = digest(
+            {"schema": "stage4-proposal/v1", "export_sha256": export_sha256, "rows": []}
+        )
+        stage4_candidate_id = derive_stage4_candidate_id(export_sha256, initial_proposal_hash)
+
+        initial_candidate = {
+            "kind": "stage4-proposal",
+            "candidate_id": stage4_candidate_id,
+            "export_sha256": export_sha256,
+            "proposal_sha256": initial_proposal_hash,
+            "manifest_hash": stage4_candidate_id,
+            "identities_digest": identities_digest,
+        }
+
+        plan_path = "docs/translation/ERP_ARABIC_AND_BILINGUAL_DATA_END_TO_END_PLAN.md"
+        plan_bytes = (self.root / plan_path).read_bytes()
+        plan_hash = bytes_hash(plan_bytes)
+
+        scope = {
+            "allowed_paths": [
+                "construction/data/localization/stage4_export_manifest.json",
+                "construction/services/account_language_proposal.py",
+                "construction/services/account_review_bundle.py",
+                "construction/services/report_bilingual_extension.py",
+                "construction/tests/test_stage4_review_bundle.py",
+                "construction/tests/test_stage4_account_language.py",
+            ],
+            "requirements": [
+                "CANONICAL_PLAN §11.1",
+                "CANONICAL_PLAN §11.2",
+                "CANONICAL_PLAN §11.3",
+                "CANONICAL_PLAN §11.4",
+            ],
+            "validation_commands": [
+                "python3 construction/tests/test_stage4_review_bundle.py"
+            ],
+        }
+        scope_hash = digest(scope)
+
+        generated = [
+            str(work.relative_to(self.root)) + "/runs/",
+            str(work.relative_to(self.root)) + "/inbox/",
+            str(work.relative_to(self.root)) + "/outbox/",
+            str(work.relative_to(self.root)) + "/STATE.json",
+            "orchestrator/var/",
+        ]
+
+        config = dict(
+            root=str(self.root),
+            work_item=work_item,
+            stages=["0", "1", "2", "3", "4"],
+            stage="4",
+            sub_status="PROPOSAL_PENDING",
+            next_roles=[],
+            historical_stages=historical_stages,
+            plan_granted=False,
+            branch=git(self.root, "branch", "--show-current").decode().strip(),
+            base_commit=git(self.root, "rev-parse", "HEAD").decode().strip(),
+            scope=scope,
+            scope_hash=scope_hash,
+            plan_path=plan_path,
+            plan_revision_hash=plan_hash,
+            candidate=initial_candidate,
+            generated=generated,
+            roles=json.loads((self.root / "orchestrator/roles.json").read_text()),
+            quorum=["ai-a1", "ai-a2", "ai-a3"],
+            erp_target=erp_descriptor,
+            erp_descriptor_hash=erp_descriptor_hash,
+            export_sha256=export_sha256,
+            expected_identities=expected_identities,
+            identities_digest=identities_digest,
+            adopt_historical=True,
+        )
+
+        self.store.set_meta("config", config)
+        self.config = config
+
+        view_state = initial(config)
+        self.graph.update_state(self.graph_config, {"view": view_state}, as_node="collect")
         self.export()
         return self.view()
 
@@ -198,13 +391,13 @@ class Engine:
         v = self._synchronize(state)["view"]
         if v["status"] == "PAUSED" or v["gate"]:
             return {"view": v}
-        if not v["plan_granted"] and "builder" in v["next_roles"]:
-            raise WorkflowError("Builder dispatch requires standing PLAN grant")
-        recheck(self.root, v["candidate"]["manifest"], self.config["generated"])
+        if not v["plan_granted"] and ("builder" in v["next_roles"] or "proposer" in v["next_roles"]):
+            raise WorkflowError("Builder or proposer dispatch requires standing PLAN grant")
+        self._recheck_candidate(v["candidate"])
         plan = within(self.root, self.store.meta("plan_artifact", self.config["plan_path"]))
         if bytes_hash(plan.read_bytes()) != v["plan_revision_hash"]:
             raise WorkflowError("Approved plan artifact drift")
-        if any(
+        if v["candidate"].get("kind") != "stage4-proposal" and any(
             not allowed(p, self.config["scope"]["allowed_paths"]) and not allowed(p, self.config["generated"])
             for p in changed(self.root, self.config["base_commit"])
         ):
@@ -238,12 +431,12 @@ class Engine:
                 model=pin["model"],
                 session_id=None,
                 dispatch_mode="native",
-                candidate_kind="code",
+                candidate_kind=v["candidate"].get("kind", "code"),
                 candidate_id=v["candidate"]["candidate_id"],
                 plan_revision_hash=v["plan_revision_hash"],
                 prompt_version=prompt_version,
                 status="COMPLETE",
-                verdict="PROPOSED" if role == "architect" else "PASS",
+                verdict="PROPOSED" if role in ("architect", "proposer") else "PASS",
                 failure_class=None,
                 findings=[],
                 evidence_paths=[],
@@ -257,7 +450,8 @@ class Engine:
                     for e in self.store.events()
                     if e["kind"] == "result" and e["payload"]["role"] == "builder"
                 ][-1:]
-            read_artifacts = [str(plan)]
+            contract = within(self.root, self.config["plan_path"])
+            read_artifacts = list(dict.fromkeys([str(contract), str(plan)]))
             for dependency in dependencies:
                 prior_job = self.store.job(dependency["job_id"])
                 read_artifacts.append(str(Path(prior_job["runtime"]) / "stdout.jsonl"))
@@ -267,6 +461,67 @@ class Engine:
                     for log in Path(prior_job["runtime"]).glob("validation-*.*"):
                         if log.suffix in (".stdout", ".stderr"):
                             read_artifacts.append(str(log))
+            validation_reports = {}
+            report_refs = []
+            if role in ("reviewer", "verifier"):
+                # Reports are evidence, never verdicts or authorization. Discover only
+                # this work item's validation reports in execution/control checkouts.
+                evidence_roots = {
+                    work / "evidence",
+                    Path(__file__).resolve().parents[1] / "docs/ai/work-items" / v["work_item"] / "evidence",
+                }
+                for evidence_root in sorted(evidence_roots):
+                    for source in sorted(evidence_root.glob("*validation.json")):
+                        if source.is_symlink() or any(p.is_symlink() for p in source.parents):
+                            continue
+                        try:
+                            text = source.read_text()
+                            report = json.loads(text)
+                        except (OSError, UnicodeError, ValueError):
+                            continue
+                        if not isinstance(report, dict):
+                            continue
+                        binding = report.get("candidate")
+                        if not isinstance(binding, dict) or not isinstance(report.get("commands"), list):
+                            continue
+                        if (
+                            binding.get("candidate_id") != v["candidate"]["candidate_id"]
+                            or binding.get("manifest") != v["candidate"]["manifest"]
+                            or binding.get("tree_oid") != v["candidate"]["tree_oid"]
+                            or digest(binding["manifest"]) != binding["candidate_id"]
+                        ):
+                            continue
+                        sha = bytes_hash(text.encode())
+                        name = "candidate-validation-" + sha + ".json"
+                        if name in validation_reports:
+                            continue
+                        validation_reports[name] = text
+                        target = str(destination / name)
+                        read_artifacts.append(target)
+                        report_refs.append(dict(path=target, sha256=sha, source=str(source)))
+            approval = None
+            if role == "builder":
+                grants = [
+                    event["payload"]
+                    for event in self.store.events()
+                    if event["kind"] == "grant"
+                    and event["payload"]["scope"] == "PLAN"
+                    and event["payload"]["token_id"] in v["approval_refs"]
+                    and event["payload"]["plan_revision_hash"] == v["plan_revision_hash"]
+                    and event["payload"]["scope_hash"] == v["scope_hash"]
+                    and v["stage"] in event["payload"]["stages"]
+                ]
+                if not grants:
+                    raise WorkflowError("Standing PLAN grant evidence unavailable")
+                approval = dict(
+                    owner_plan_approved=True,
+                    gate_id=grants[-1]["gate_id"],
+                    plan_revision_hash=v["plan_revision_hash"],
+                    scope_hash=v["scope_hash"],
+                    stage=v["stage"],
+                    repository_id=str(self.root),
+                    authorization="Checkpoint-confirmed builder execution; non-consumable attestation only",
+                )
             context = dict(
                 job_id=job_id,
                 role=role,
@@ -279,6 +534,10 @@ class Engine:
                 backlog=v["backlog"],
                 plan_artifact=self.store.meta("plan_artifact", self.config["plan_path"]),
                 builder_evidence=dependencies,
+                candidate_validation_reports=report_refs,
+                owner_approval_attestation=approval,
+                result_schema=str(within(self.root, "orchestrator/schemas/v1/result-envelope.json")),
+                finding_schema=str(within(self.root, "orchestrator/schemas/v1/finding.json")),
                 read_artifacts=read_artifacts,
                 result_transport="stdout",
                 explanation_transport="stdout",
@@ -326,6 +585,7 @@ class Engine:
                     runtime=str(destination),
                     spec_path=str(destination / "spec.json"),
                     spec=spec,
+                    validation_reports=validation_reports,
                     launch_attempts=0,
                 ),
             )
@@ -340,6 +600,8 @@ class Engine:
         # SQLite records the exact timestamp-bearing inputs before any artifact write.
         # A crash at any file boundary re-exports the same durable inputs on replay.
         destination = Path(job["runtime"])
+        for name, text in job.get("validation_reports", {}).items():
+            atomic_write(destination / name, text.encode(), immutable=True)
         prompt = job["spec"]["prompt"].encode()
         atomic_write(work / "runs" / job["job_id"] / "inputs" / "packet.md", prompt, immutable=True)
         atomic_write(work / "inbox" / (job["role"] + ".md"), prompt)
@@ -355,7 +617,7 @@ class Engine:
             job = self.store.job(job_id)
             if job["status"] != "CREATED":
                 continue
-            recheck(self.root, v["candidate"]["manifest"], self.config["generated"])
+            self._recheck_candidate(v["candidate"])
             plan = within(self.root, self.store.meta("plan_artifact", self.config["plan_path"]))
             if bytes_hash(plan.read_bytes()) != v["plan_revision_hash"]:
                 raise WorkflowError("Approved plan artifact drift before dispatch")
@@ -424,7 +686,11 @@ class Engine:
                     self.store.event("result-" + job_id, "result", event)
                     self.store.update_job(job_id, "ACCEPTED")
                 except (WorkflowError, ValueError, ValidationError, OSError, TypeError, KeyError) as exc:
-                    self.store.update_job(job_id, "RECONCILIATION_REQUIRED", failure=type(exc).__name__)
+                    # Only a known WorkflowError code may cross into durable state.
+                    # Never persist its diagnostic suffix or classify arbitrary text.
+                    code = str(exc).partition(":")[0] if isinstance(exc, WorkflowError) else None
+                    failure = code if code in FAILURES else type(exc).__name__
+                    self.store.update_job(job_id, "RECONCILIATION_REQUIRED", failure=failure)
                     pause(v, "RECONCILIATION_REQUIRED")
             elif job["status"] == "CREATED":
                 # A proven failed launch remains eligible for the one retry on next run.
@@ -542,7 +808,7 @@ class Engine:
                 atomic_write(plan, wire["plan_text"].encode(), immutable=True)
                 event["new_plan_hash"] = bytes_hash(wire["plan_text"].encode())
                 self.store.set_meta("plan_artifact", str(plan.relative_to(self.root)))
-            elif job["role"] == "builder":
+            elif job["role"] == "builder" and view["candidate"].get("kind") != "stage4-proposal":
                 if not self.launcher:
                     validation = json.loads((destination / "validation.json").read_text())
                     if not validation.get("complete"):
@@ -550,7 +816,7 @@ class Engine:
                     event["candidate"] = json.loads(
                         (destination / "tested-candidate/binding.json").read_text()
                     )
-                    recheck(self.root, event["candidate"]["manifest"], self.config["generated"])
+                    self._recheck_candidate(event["candidate"])
                     event["validation"] = validation
                 else:
                     event["candidate"] = freeze(
@@ -563,8 +829,12 @@ class Engine:
                     )
                     event["validation"] = {"complete": True, "passed": True, "mode": "SYNTHETIC"}
             else:
-                recheck(self.root, view["candidate"]["manifest"], self.config["generated"])
-                if job["role"] == "verifier" and body["verdict"] == "PASS":
+                self._recheck_candidate(view["candidate"])
+                if (
+                    job["role"] == "verifier"
+                    and body["verdict"] == "PASS"
+                    and view["candidate"].get("kind") != "stage4-proposal"
+                ):
                     builds = [
                         e["payload"]
                         for e in self.store.events()
@@ -608,6 +878,11 @@ class Engine:
         validate_document("approval-token", token)
         if token["status"] != "ISSUED":
             raise WorkflowError("Only a newly issued owner token can enter approval")
+        row = self.store.conn.execute(
+            "SELECT status FROM workflow_grants WHERE token_id=?", (token["token_id"],)
+        ).fetchone()
+        if row:
+            raise WorkflowError("Token already used or recorded")
         view = self._synchronize_checkpoint()
         if (
             not view["gate"]
@@ -616,6 +891,7 @@ class Engine:
             or token["work_item"] != view["work_item"]
         ):
             raise WorkflowError("Approval does not match pending gate")
+        from stage4 import is_hex64
         if token["scope"] == "PLAN":
             required = dict(
                 plan_revision_hash=view["plan_revision_hash"],
@@ -629,7 +905,7 @@ class Engine:
             ):
                 raise WorkflowError("PLAN binding mismatch")
         elif token["scope"] == "COMMIT":
-            recheck(self.root, view["candidate"]["manifest"], self.config["generated"])
+            self._recheck_candidate(view["candidate"])
             required = dict(
                 candidate_id=view["candidate"]["candidate_id"],
                 manifest_hash=view["candidate"]["manifest_hash"],
@@ -640,11 +916,97 @@ class Engine:
             )
             if any(token.get(k) != value for k, value in required.items()):
                 raise WorkflowError("COMMIT binding mismatch")
+        elif token["scope"] == "DRY_RUN":
+            self._recheck_candidate(view["candidate"])
+            if token.get("operation") != "set_account_name_ar":
+                raise WorkflowError("DRY_RUN operation must be set_account_name_ar")
+            for hkey in ("export_sha256", "proposal_sha256", "bundle_sha256", "payload_sha256", "erp_descriptor_hash"):
+                if not token.get(hkey) or not is_hex64(token[hkey]):
+                    raise WorkflowError(f"DRY_RUN {hkey} must be 64-character lowercase hex")
+
+            # Unconditional check: active hashes must exist in state and match token
+            exp_export = view["candidate"].get("export_sha256")
+            if not exp_export or not is_hex64(exp_export):
+                raise WorkflowError("DRY_RUN requires active export_sha256 in candidate")
+            if token["export_sha256"] != exp_export:
+                raise WorkflowError("DRY_RUN export_sha256 mismatch")
+
+            exp_prop = view["candidate"].get("proposal_sha256") or view["candidate"].get("candidate_id")
+            if not exp_prop or not is_hex64(exp_prop):
+                raise WorkflowError("DRY_RUN requires active proposal_sha256 in candidate")
+            token_prop = token.get("proposal_sha256") or token.get("candidate_id")
+            if token_prop != exp_prop:
+                raise WorkflowError("DRY_RUN proposal_sha256 mismatch")
+
+            exp_bundle = view.get("bundle_sha256") or view["candidate"].get("bundle_sha256")
+            if not exp_bundle or not is_hex64(exp_bundle):
+                raise WorkflowError("DRY_RUN requires active bundle_sha256 in state")
+            if token["bundle_sha256"] != exp_bundle:
+                raise WorkflowError("DRY_RUN bundle_sha256 mismatch")
+
+            exp_payload = view.get("payload_sha256") or view["candidate"].get("payload_sha256")
+            if not exp_payload or not is_hex64(exp_payload):
+                raise WorkflowError("DRY_RUN requires active payload_sha256 in state")
+            if token["payload_sha256"] != exp_payload:
+                raise WorkflowError("DRY_RUN payload_sha256 mismatch")
+
+            exp_desc = self.config.get("erp_descriptor_hash") or view.get("erp_descriptor_hash")
+            if not exp_desc or not is_hex64(exp_desc):
+                raise WorkflowError("DRY_RUN requires active erp_descriptor_hash in config")
+            if token["erp_descriptor_hash"] != exp_desc:
+                raise WorkflowError("DRY_RUN erp_descriptor_hash mismatch")
+
+        elif token["scope"] == "IMPORT":
+            self._recheck_candidate(view["candidate"])
+            if token.get("operation") != "set_account_name_ar":
+                raise WorkflowError("IMPORT operation must be set_account_name_ar")
+            for hkey in ("export_sha256", "proposal_sha256", "bundle_sha256", "payload_sha256", "erp_descriptor_hash"):
+                if not token.get(hkey) or not is_hex64(token[hkey]):
+                    raise WorkflowError(f"IMPORT {hkey} must be 64-character lowercase hex")
+            if not token.get("dry_run_evidence_digest") or not is_hex64(token["dry_run_evidence_digest"]):
+                raise WorkflowError("IMPORT dry_run_evidence_digest must be 64-character lowercase hex")
+
+            exp_export = view["candidate"].get("export_sha256")
+            if not exp_export or not is_hex64(exp_export):
+                raise WorkflowError("IMPORT requires active export_sha256 in candidate")
+            if token["export_sha256"] != exp_export:
+                raise WorkflowError("IMPORT export_sha256 mismatch")
+
+            exp_prop = view["candidate"].get("proposal_sha256") or view["candidate"].get("candidate_id")
+            if not exp_prop or not is_hex64(exp_prop):
+                raise WorkflowError("IMPORT requires active proposal_sha256 in candidate")
+            token_prop = token.get("proposal_sha256") or token.get("candidate_id")
+            if token_prop != exp_prop:
+                raise WorkflowError("IMPORT proposal_sha256 mismatch")
+
+            exp_bundle = view.get("bundle_sha256") or view["candidate"].get("bundle_sha256")
+            if not exp_bundle or not is_hex64(exp_bundle):
+                raise WorkflowError("IMPORT requires active bundle_sha256 in state")
+            if token["bundle_sha256"] != exp_bundle:
+                raise WorkflowError("IMPORT bundle_sha256 mismatch")
+
+            exp_payload = view.get("payload_sha256") or view["candidate"].get("payload_sha256")
+            if not exp_payload or not is_hex64(exp_payload):
+                raise WorkflowError("IMPORT requires active payload_sha256 in state")
+            if token["payload_sha256"] != exp_payload:
+                raise WorkflowError("IMPORT payload_sha256 mismatch")
+
+            exp_desc = self.config.get("erp_descriptor_hash") or view.get("erp_descriptor_hash")
+            if not exp_desc or not is_hex64(exp_desc):
+                raise WorkflowError("IMPORT requires active erp_descriptor_hash in config")
+            if token["erp_descriptor_hash"] != exp_desc:
+                raise WorkflowError("IMPORT erp_descriptor_hash mismatch")
+
+            exp_dry = view.get("dry_run_evidence_digest")
+            if not exp_dry or not is_hex64(exp_dry):
+                raise WorkflowError("IMPORT requires recorded active dry_run_evidence_digest in state")
+            if token["dry_run_evidence_digest"] != exp_dry:
+                raise WorkflowError("IMPORT dry_run_evidence_digest mismatch against recorded evidence")
         else:
-            raise WorkflowError("ERP approvals disabled until adoption gates pass")
+            raise WorkflowError("Unknown or unsupported approval scope")
         self.store.grant(token)
         self.store.event("grant-" + token["token_id"], "grant", token)
-        if token["scope"] == "COMMIT":
+        if token["scope"] in ("COMMIT", "DRY_RUN", "IMPORT"):
             with self.store.conn:
                 self.store.conn.execute(
                     "UPDATE workflow_grants SET status='RESERVED' WHERE token_id=?", (token["token_id"],)

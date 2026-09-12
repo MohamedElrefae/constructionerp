@@ -37,3 +37,23 @@ def test_non_object_result_is_malformed(value):
 )
 def test_adapter_failure_classes(text, timeout, expected):
     assert classify_failure(text, timeout) == expected
+
+
+def test_opencode_commentary_then_fragmented_final():
+    wire = json.dumps({"result_json": json.dumps({"ok": True}), "explanation": "evidence", "plan_text": ""})
+    parts = [("comment", "Inspecting files."), ("final", wire[:20]), ("final", wire[20:])]
+    trace = "\n".join(
+        json.dumps({"type": "text", "sessionID": "native", "part": {"messageID": mid, "text": text}})
+        for mid, text in parts
+    )
+    assert parse_output(trace, "opencode")[1] == {"ok": True}
+
+
+@pytest.mark.parametrize("texts", [["{}", "{}"], ["commentary", "{broken"], ["{}", "later prose"]])
+def test_opencode_rejects_ambiguous_or_malformed_final(texts):
+    trace = "\n".join(
+        json.dumps({"type": "text", "sessionID": "native", "part": {"messageID": str(i), "text": text}})
+        for i, text in enumerate(texts)
+    )
+    with pytest.raises(WorkflowError):
+        parse_output(trace, "opencode")

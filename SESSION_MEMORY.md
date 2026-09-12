@@ -81,6 +81,10 @@
 
 ## 3. In Progress (Active Work — Updated After Every Session)
 
+**2026-09-12 — Phase 3 pilot completion and owner commit (isolated worktree):** Candidate `89f613f94d35c34619d1436ea8556d4fe1412232e6463baca6cefc73897010c1` (tree `5b5f87ff01b16e9d739380e8523eca0698bbfd65`) achieved unanimous PASS across all 7 requirements (SCP-R1 through SCP-R7) and resolved findings SCP-001 through SCP-005. Both Codex builder (`job-0c114c5f...`) and independent Codex verifier (`job-fa5a2cc5...`) issued PASS with zero findings. All 67 offline tests pass, 11 context checks pass, 19 DocTypes linted, and 802-file fresh-copy gate verified in-root. Owner single-use token `owner-commit-grant-phase3-pilot` approved gate `commit-703536a0492e00f385d3f844` and owner commit `72da63dc693e320ea8b73d5bdf7000c4fda57f07` was recorded via `run --record-owner-commit` (`committed=true`, gate null). Zero ERP touch, no unapproved push/merge.
+
+**2026-09-11 — Phase 2 execution:** Against frozen commit `4b77803af418cea8459c4cb7d9a0248674845da3`, the full synthetic suite produced 108 passed / 2 failed. Both failures lose their named class (MALFORMED_RESULT/EVIDENCE_UNAVAILABLE) in Engine._collect; advancement still pauses. Frozen source and checker scripts unchanged. Evidence: `docs/ai/work-items/scope-context-portability/evidence/phase-2-validation.json`. Phase 2 exit blocked; owner amendment required before fixing frozen engine. No project commit, provider run or ERP operation.
+
 **2026-09-11 — Workflow Phases 0–1 (isolated worktree):** Phase 0 passed under the owner consultant directive; all five prompt hashes approved. Phase 1 engine/adapters/operator CLI implemented, with 93 passing tests and native Codex/OpenCode transport proof. Independent review blockers repaired, final bounded review PASS; Phase 1 source freeze recorded. Antigravity uses the explicitly authorized independent Codex substitute. See `docs/ai/work-items/scope-context-portability/IMPLEMENTATION.md`. No project commit or ERP operation; original dirty ERP checkout remains separate.
 
 
@@ -153,6 +157,13 @@
 ---
 
 ## 6. Session Log (Append-Only — Most Recent First)
+
+### Session 2026-09-11 — Codex Phase 2 synthetic qualification
+- Added verification-only tests outside the frozen manifest and executed three recorded runs, ending at 108/110 passing. All 93 frozen regressions still pass.
+- Graph proof includes repair/architecture routing, quorum, persistent escalation, candidate drift and real local VACUUM INTO recovery; synthetic test commits only in disposable repositories.
+- Found P2-F001: collection discards two required failure classes while correctly pausing. Regressions retained; no production fix applied under the freeze.
+- Recorded JSON/XML evidence and bounded correction proposal; Phase 3 remains blocked pending authorized fix and full rerun. All session state kept local.
+
 
 ### Session 2026-09-11 — Codex workflow implementation
 - Local SQLite authority, independent native worker sessions, exact candidate binding, owner grants and conditional defect routing implemented in the isolated workflow worktree.

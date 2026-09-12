@@ -18,12 +18,12 @@
     "prompt_sha256": "3cd42677471d49f265ac1c6c0b412724110557c60526cb002ab5073cf3ebdeed"
   },
   "builder": {
-    "tool": "opencode",
-    "binary": "/usr/bin/opencode-cli",
-    "model": "opencode-go/gpt-5.6-luna",
-    "version": "1.14.33",
-    "effort": null,
-    "binary_sha256": "20a5f21c2f72b9607d4c9e533890082b5a42069028e45b0b9a662368eb691f83",
+    "tool": "codex",
+    "binary": "/opt/codex-desktop/resources/codex",
+    "model": "gpt-6-astra",
+    "version": "0.153.0-alpha.5",
+    "effort": "high",
+    "binary_sha256": "91ce83e4c8b9b314f9073dadb1d397f1148a7277214418c51e5c50083d797e95",
     "prompt_sha256": "45190b4f743ef0b57263872eb4a11aeddb8430a085a1acc277b490ef5092c8af"
   },
   "verifier": {

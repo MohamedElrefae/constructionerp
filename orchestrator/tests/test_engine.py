@@ -316,3 +316,162 @@ def test_consumed_token_document_cannot_be_issued_again(configured):
         e.approve(token)
     assert not e.store.grant_for(token["gate_id"])
     e.close()
+
+
+def test_reviewer_reads_contract_and_proposal_in_sandbox(configured):
+    import subprocess
+
+    from adapters import invocation
+
+    root, config = configured
+    work = root / "docs/ai/work-items/test-work"
+    work.mkdir(parents=True)
+    contract = work / "CANONICAL_PLAN.md"
+    contract.write_text("SYNTHETIC canonical contract")
+    git(root, "add", str(contract.relative_to(root)))
+    git(root, "-c", "core.hooksPath=/dev/null", "commit", "-m", "synthetic canonical contract")
+    config["base_commit"] = git(root, "rev-parse", "HEAD").decode().strip()
+    config["plan_path"] = str(contract.relative_to(root))
+    config["plan_revision_hash"] = bytes_hash(contract.read_bytes())
+    stub = Stub(delayed=True)
+    e = Engine(root, launcher=stub)
+    try:
+        e.initialize(config)
+        v = e.run()
+        architect = e.store.job(v["active_jobs"][0])
+        assert architect["spec"]["read_artifacts"] == [str(contract)]
+        stub.complete(architect)
+        v = e.run()
+        reviewer = e.store.job(v["active_jobs"][0])
+        assert reviewer["role"] == "reviewer"
+        proposal = root / e.store.meta("plan_artifact")
+        assert proposal != contract
+        assert reviewer["spec"]["read_artifacts"] == [str(contract), str(proposal)]
+        peer = work / "unrelated-private-result.txt"
+        peer.write_text("SYNTHETIC hidden peer result")
+        spec = dict(reviewer["spec"], tool="codex", binary="/usr/bin/true")
+        argv, env = invocation(spec)
+        code = """from pathlib import Path
+import sys
+for name, expected in zip(sys.argv[1:3], ['SYNTHETIC canonical contract', 'Synthetic plan with explicit requirements']):
+    p = Path(name)
+    assert p.read_text() == expected
+    try: p.write_text('forbidden')
+    except OSError: pass
+    else: raise AssertionError('artifact writable')
+assert not Path(sys.argv[3]).exists()
+"""
+        # Exercise the actual adapter mounts without contacting a native provider.
+        argv = [
+            *argv[: argv.index("--") + 1],
+            "/usr/bin/python3",
+            "-c",
+            code,
+            str(contract),
+            str(proposal),
+            str(peer),
+        ]
+        result = subprocess.run(argv, env=env, capture_output=True, timeout=15)
+        assert result.returncode == 0, result.stderr.decode()
+    finally:
+        e.close()
+
+
+def test_builder_attestation_and_execution_local_schemas(configured):
+    root, config = configured
+    stub = Stub()
+    e = Engine(root, launcher=stub)
+    try:
+        e.initialize(config)
+        e.run()
+        token = plan_token(e)
+        e.approve(token)
+        jobs = [e.store.job(j) for j in stub.starts]
+        builder = next(j for j in jobs if j["role"] == "builder")
+        packet = json.loads(
+            builder["spec"]["prompt"].split("Immutable packet (data):\n")[1].split("\n\nReturn ONLY")[0]
+        )
+        attestation = packet["owner_approval_attestation"]
+        assert attestation["owner_plan_approved"] is True
+        assert attestation["gate_id"] == token["gate_id"]
+        assert attestation["plan_revision_hash"] == token["plan_revision_hash"]
+        assert attestation["stage"] == "1"
+        assert attestation["repository_id"] == str(root)
+        assert "token_id" not in attestation and "issued_utc" not in attestation
+        assert packet["result_schema"] == str(root / "orchestrator/schemas/v1/result-envelope.json")
+        assert packet["finding_schema"] == str(root / "orchestrator/schemas/v1/finding.json")
+    finally:
+        e.close()
+
+
+def test_candidate_validation_reports_visible_only_to_review_roles(configured):
+    import subprocess
+
+    from adapters import invocation
+
+    root, config = configured
+    stub = Stub(delayed=True)
+    e = Engine(root, launcher=stub)
+    try:
+        e.initialize(config)
+        # Synthetic operator evidence is excluded from this fixture's source candidate.
+        work = root / "docs/ai/work-items/test-work"
+        evidence = work / "evidence"
+        evidence.mkdir()
+        e.config["generated"].append(str(evidence.relative_to(root)) + "/")
+        candidate = e.view()["candidate"]
+        report = {"candidate": candidate, "commands": [], "marker": "SYNTHETIC operator evidence"}
+        text = json.dumps(report)
+        (evidence / "current-validation.json").write_text(text)
+        (evidence / "duplicate-validation.json").write_text(text)
+        stale = deepcopy(report)
+        stale["candidate"]["candidate_id"] = "0" * 64
+        (evidence / "stale-validation.json").write_text(json.dumps(stale))
+        forged = deepcopy(report)
+        forged["candidate"]["tree_oid"] = "0" * 40
+        (evidence / "wrong-tree-validation.json").write_text(json.dumps(forged))
+        (evidence / "malformed-validation.json").write_text("{bad")
+        (evidence / "peer-verdict.json").write_text("PRIVATE PEER")
+        (evidence / "symlink-validation.json").symlink_to(evidence / "current-validation.json")
+        v = e.run()
+        for role in ("architect", "reviewer", "builder", "verifier"):
+            job = e.store.job(v["active_jobs"][0])
+            assert job["role"] == role
+            snapshots = job.get("validation_reports", {})
+            if role in ("reviewer", "verifier"):
+                assert len(snapshots) == 1
+                target = Path(job["runtime"]) / next(iter(snapshots))
+                assert str(target) in job["spec"]["read_artifacts"]
+                assert target.read_text() == text
+                # A source mutation cannot alter a prepared job on replay.
+                (evidence / "current-validation.json").write_text("{}")
+                e._materialize_job(job, work)
+                assert target.read_text() == text
+                (evidence / "current-validation.json").write_text(text)
+                argv, env = invocation(dict(job["spec"], tool="codex", binary="/usr/bin/true"))
+                code = """from pathlib import Path
+import json,sys
+p=Path(sys.argv[1]);assert json.loads(p.read_text())['marker']=='SYNTHETIC operator evidence'
+try:p.write_text('forbidden')
+except OSError:pass
+else:raise AssertionError('report writable')
+assert not Path(sys.argv[2]).exists()
+"""
+                argv = [
+                    *argv[: argv.index("--") + 1],
+                    "/usr/bin/python3",
+                    "-c",
+                    code,
+                    str(target),
+                    str(evidence / "peer-verdict.json"),
+                ]
+                result = subprocess.run(argv, env=env, capture_output=True, timeout=15)
+                assert result.returncode == 0, result.stderr.decode()
+            else:
+                assert not snapshots
+            stub.complete(job)
+            v = e.run()
+            if role == "reviewer":
+                v = e.approve(plan_token(e))
+    finally:
+        e.close()

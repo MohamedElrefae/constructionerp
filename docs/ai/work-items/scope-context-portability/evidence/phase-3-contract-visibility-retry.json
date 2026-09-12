@@ -1,0 +1,84 @@
+{
+  "authority": "Owner Authorization: Reviewer Contract Visibility Amendment (P3-F001), 2026-09-12",
+  "job_id": "job-eb36e5f169894f960d989f64",
+  "source_manifest_sha256": "2753ff07fbe93f84a8e4bfb6e687a966cf52e27476d3c9140a4fa9eed2e6c5c9",
+  "read_artifacts": [
+    {
+      "path": "/home/mohamed/frappe-bench/worktrees/scope-context-portability-pilot/docs/ai/work-items/scope-context-portability/CANONICAL_PLAN.md",
+      "sha256": "93e193cab827f67bbf6cfda794ef51429641e81b30facbbebbfa31eb9dfb2f89"
+    },
+    {
+      "path": "/home/mohamed/frappe-bench/worktrees/scope-context-portability-pilot/docs/ai/work-items/scope-context-portability/runs/job-8e3944c2b9cf5637a53cac50/results/plan.md",
+      "sha256": "8c1c763d6c81a39b010de5c6ad5f319d084ecb2f90027e4cb6a09a90bd292dc1"
+    }
+  ],
+  "previous_failed_job": "job-0c6a7cc3df086796fa2d7353",
+  "note": "Scope packet retains its historical controller hash from initialization; this owner-authorized runtime amendment is bound here and in the current freeze. Candidate, proposed plan and scope permissions are unchanged.",
+  "completed_utc": "2026-09-11T21:25:43.095655Z",
+  "status": "PASSED_OWNER_PLAN_GATE",
+  "native_session": "01a0925b-0edb-7390-9bc9-3fc6c7cd775e",
+  "verdict": "PASS",
+  "findings": [],
+  "review_explanation": "**PASS \u2014 plan review only.** No current findings remain across SCP-R1\u2013SCP-R7. This does not authorize building or establish implementation acceptance.\n\nThe plan preserves existing checks, specifies file-relative root propagation, import-safe execution, noninteractive CLI behavior and recorded failures. Its offline tests cover the required cases, and its real fresh-copy gate explicitly requires genuine inputs and Git metadata without fixture substitutions. Missing execution capabilities block that future gate.\n\nSCP-001\u2019s scope objection affecting SCP-R4 and SCP-R7 is resolved by the owner amendment: the plan restricts the documentation correction to submitted_by, submitted_at, engineer_approved_by, client_approved_by, both 18-to-22 counts and verification date 2026-09-10. It requires verification of the approved patch hash, unchanged DocType JSON and preserved drift checks. Patch application remains gated.\n\nEvidence: captured source reads and SHA-256 output confirm the proposed plan hash 8c1c763d6c81a39b010de5c6ad5f319d084ecb2f90027e4cb6a09a90bd292dc1 and canonical contract hash 93e193cab827f67bbf6cfda794ef51429641e81b30facbbebbfa31eb9dfb2f89. Baseline references baseline-schema-facts, baseline-variation-order-schema and baseline-drift-checker match their packet hashes. Both schema-v1 result definitions were read.\n\nNo checker, pytest suite or historical validation was executed. No files were changed. Native identity and captured evidence references remain runner-supplied.",
+  "approval_binding": {
+    "gate_id": "plan-3f7f6e2b096c64ad049178b4",
+    "scope": "PLAN",
+    "plan_revision_hash": "8c1c763d6c81a39b010de5c6ad5f319d084ecb2f90027e4cb6a09a90bd292dc1",
+    "scope_hash": "f748d729630d1f063433bc4c615643b61e075f3123b3f722cadf8784aa6a191f",
+    "repository_id": "/home/mohamed/frappe-bench/worktrees/scope-context-portability-pilot",
+    "branch": "feature/scope-context-portability",
+    "stages": [
+      "1"
+    ]
+  },
+  "state": {
+    "work_item": "scope-context-portability",
+    "stage": "1",
+    "status": "PLAN_SUBMITTED",
+    "next_roles": [],
+    "active_jobs": [],
+    "candidate": {
+      "archive_sha256": "8251a6f055fcf24d6de781ba10e96b21bead69f0cad85cd89ab3df7c4e553b78",
+      "candidate_id": "38e04df7b6feeef3acd5a726d98c663da05152ef356eb79195bd45c6858e6db2",
+      "manifest": {
+        "base_commit": "4b77803af418cea8459c4cb7d9a0248674845da3",
+        "branch": "feature/scope-context-portability",
+        "entries": [],
+        "kind": "code"
+      },
+      "manifest_hash": "38e04df7b6feeef3acd5a726d98c663da05152ef356eb79195bd45c6858e6db2",
+      "tree_oid": "b72f470db46869199fd9eca2d81fb207ae3515b7"
+    },
+    "plan_revision_hash": "8c1c763d6c81a39b010de5c6ad5f319d084ecb2f90027e4cb6a09a90bd292dc1",
+    "scope_hash": "f748d729630d1f063433bc4c615643b61e075f3123b3f722cadf8784aa6a191f",
+    "round": 1,
+    "attempt": 7,
+    "cursor": 12,
+    "revision": 12,
+    "findings": [],
+    "backlog": [],
+    "next_finding": 2,
+    "unsuccessful_cycles": 0,
+    "unchanged_rounds": 0,
+    "previous_snapshots": [],
+    "gate": {
+      "scope": "PLAN",
+      "gate_id": "plan-3f7f6e2b096c64ad049178b4"
+    },
+    "pause_reason": null,
+    "resume_to": null,
+    "prior": null,
+    "completed_dependencies": [
+      "job-65f2dc51850d479768d6760a",
+      "job-e0ad43a48a20acd89a5eb939",
+      "job-8e3944c2b9cf5637a53cac50",
+      "job-0c6a7cc3df086796fa2d7353",
+      "job-eb36e5f169894f960d989f64"
+    ],
+    "approval_refs": [],
+    "review_results": {},
+    "stages": {},
+    "plan_granted": false,
+    "committed": false
+  }
+}

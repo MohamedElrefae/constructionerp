@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "recorded_utc": "2026-09-11T22:30:00Z",
+  "status": "AI_R_RETRY_NOT_LAUNCHED",
+  "authorization": "Owner Authorization Directive: P3-F003 Engine Amendment & AI-R Verification Retry",
+  "requested_candidate_id": "532f0175dc88f19d111a42c498b60eb0bd832d412af12d4d7df7247b48d6b133",
+  "requested_tree_oid": "2f546c2b88f288a258a3c603ab88ab2b380b06c0",
+  "command_result": {
+    "exit_code": 1,
+    "error": "Candidate file set drift"
+  },
+  "state_export": {
+    "active_jobs": [],
+    "approval_refs": [
+      "owner-plan-grant-phase3-pilot"
+    ],
+    "authority": "sqlite-checkpoint-export-only",
+    "candidate_id": "532f0175dc88f19d111a42c498b60eb0bd832d412af12d4d7df7247b48d6b133",
+    "completed_dependencies": [
+      "job-65f2dc51850d479768d6760a",
+      "job-e0ad43a48a20acd89a5eb939",
+      "job-8e3944c2b9cf5637a53cac50",
+      "job-0c6a7cc3df086796fa2d7353",
+      "job-eb36e5f169894f960d989f64",
+      "job-3c71e7eaa530afb5b7990033",
+      "job-2a8db6e046327a58413177ed",
+      "job-54cc536f7cfbaf59553b46fe",
+      "job-76240f387e35a58cf37c6430",
+      "job-83c42acc9d50346ac7c54635",
+      "job-e48329b23ee1a16e352baf7f",
+      "job-e7199765a542f73848770597",
+      "job-4c836d98d4b4081e2c7c0ce2",
+      "job-2e51cb0f5b5ca414050e50e8",
+      "job-0758eb79b83d8c576d0fa0d3"
+    ],
+    "escalation": {
+      "last_snapshot_digest": null,
+      "unchanged_rounds": 0,
+      "unsuccessful_cycles": 0
+    },
+    "exported_utc": "2026-09-11T22:39:53.514241Z",
+    "pause_reason": null,
+    "plan_revision_hash": "8c1c763d6c81a39b010de5c6ad5f319d084ecb2f90027e4cb6a09a90bd292dc1",
+    "resume_to": null,
+    "revision": 30,
+    "schema_version": 1,
+    "stage": "1",
+    "stages": {},
+    "status": "BUILD_COMPLETE",
+    "work_item": "scope-context-portability"
+  },
+  "pilot_git_status": " M docs/ai/SCHEMA_FACTS.md\n M orchestrator/engine.py\n M orchestrator/tests/test_engine.py\n M scripts/ai_context_check.py\n?? docs/ai/work-items/scope-context-portability/STATE.json\n?? docs/ai/work-items/scope-context-portability/evidence/phase-3-current-complete-source-validation.json\n?? docs/ai/work-items/scope-context-portability/inbox/architect.md\n?? docs/ai/work-items/scope-context-portability/inbox/builder.md\n?? docs/ai/work-items/scope-context-portability/inbox/reviewer.md\n?? docs/ai/work-items/scope-context-portability/inbox/verifier.md\n?? docs/ai/work-items/scope-context-portability/outbox/architect.json\n?? docs/ai/work-items/scope-context-portability/outbox/builder.json\n?? docs/ai/work-items/scope-context-portability/outbox/reviewer.json\n?? docs/ai/work-items/scope-context-portability/outbox/verifier.json\n?? docs/ai/work-items/scope-context-portability/runs/\n?? tests_offline/\n",
+  "pilot_head": "4b77803af418cea8459c4cb7d9a0248674845da3",
+  "pilot_index_empty": true,
+  "diagnosis": "The export shows BUILD_COMPLETE with candidate null, while the authoritative SQLite view reconstructs the prior refreshed 532f candidate and next_roles builder. Engine.config still contains the original base candidate 38e04df7... with empty entries. Reconciliation resume calls recheck against this stale binding and correctly refuses dispatch. No native verifier was launched.",
+  "safety": "No candidate refresh, grant invalidation, file mutation, staging, commit, or ERP operation was performed by the failed command.",
+  "handoff_required": [
+    "Inspect SQLite checkpoint/config and reconcile the stale candidate binding to the owner-authorized 532f candidate without invalidating owner-plan-grant-phase3-pilot.",
+    "Verify the candidate tree OID and complete-source report before retrying AI-R.",
+    "Retry only after the candidate binding is internally consistent; preserve this failed command evidence."
+  ]
+}

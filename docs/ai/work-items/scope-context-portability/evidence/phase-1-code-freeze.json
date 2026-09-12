@@ -2,8 +2,8 @@
   "schema_version": 1,
   "phase": 1,
   "status": "FROZEN",
-  "recorded_utc": "2026-09-10T23:05:22.678947Z",
-  "source_manifest_sha256": "1a31afa2fba2e00be53d03913a574040e4053d898c492ba2ce0bc183cabce67d",
+  "recorded_utc": "2026-09-11T21:49:26.386970Z",
+  "source_manifest_sha256": "12cd1b6e886b30b78c528c1f6c60c438c0fe7d17b64f68818a651138c06e09d7",
   "files": [
     {
       "path": ".gitignore",
@@ -82,7 +82,7 @@
     },
     {
       "path": "orchestrator/adapters.py",
-      "sha256": "e3f90082a2dccca5e657d7da9bf1a58584e5f1d8ef8ca3f1eb202024fef8e9e7",
+      "sha256": "d2b94db7c20ba5478dcd4ddc0fd599622c50a51a348e3c1e2e28a6a9cd16b72d",
       "executable": false
     },
     {
@@ -107,7 +107,7 @@
     },
     {
       "path": "orchestrator/engine.py",
-      "sha256": "10840392f1ccb1fec34c7384c864b5cf6b6a62ed95f504d16387aa629cee94bd",
+      "sha256": "08b5e0a9e5a3b4aa258df4941e6c71d7bbe7aa4d40d84fbbdbfb9bb818dceacf",
       "executable": false
     },
     {
@@ -187,7 +187,7 @@
     },
     {
       "path": "orchestrator/tests/test_adapter_results.py",
-      "sha256": "0463a57e7ce90ca4f6ddb3a224c75811ba4b999e6556078c128579b9259f4c02",
+      "sha256": "94c044ad68a5efb9b4fe7bdfae15c4e38a7ed78dbb945b397c3314ccde971e2c",
       "executable": false
     },
     {
@@ -202,7 +202,7 @@
     },
     {
       "path": "orchestrator/tests/test_engine.py",
-      "sha256": "9f2a2c71671fe89b403855fe0b8ed499cdfb8772cf15b64b0f1e8805c4c50cc9",
+      "sha256": "f67b8addb307227ae399f9e2a58567d7c33067f67b402cdf8ea1173eddfbcdbd",
       "executable": false
     },
     {
@@ -262,11 +262,45 @@
     }
   ],
   "policy": "Code/config/role/template changes require owner approval and Phase 2 requalification. Workflow records and subsequent evidence are outside this source freeze.",
-  "qualification": "Phase 1 only; real pilot and full Phase 2 remain pending",
+  "qualification": "Owner-directed Phase 2 synthetic suite passed; no real pilot or ERP integration acceptance",
   "review_chain": [
     "phase-1-independent-review.json",
     "phase-1-independent-review-r2.json",
     "phase-1-independent-review-r3.json"
   ],
-  "tests_passed": 93
+  "tests_passed": 116,
+  "amendment": {
+    "authority": "Owner Authorization: Builder Attestation & Parser Amendment (P3-F002), 2026-09-12",
+    "finding": "P3-F002",
+    "previous_source_manifest_sha256": "2753ff07fbe93f84a8e4bfb6e687a966cf52e27476d3c9140a4fa9eed2e6c5c9",
+    "modified_frozen_files": [
+      "orchestrator/adapters.py",
+      "orchestrator/engine.py",
+      "orchestrator/tests/test_adapter_results.py",
+      "orchestrator/tests/test_engine.py"
+    ],
+    "project_commit_created": false
+  },
+  "amendment_history": [
+    {
+      "authority": "Owner Authorization: Bounded Engine Correction & Phase 2 Rerun (2026-09-11)",
+      "finding": "P2-F001",
+      "previous_source_manifest_sha256": "1a31afa2fba2e00be53d03913a574040e4053d898c492ba2ce0bc183cabce67d",
+      "base_commit": "4b77803af418cea8459c4cb7d9a0248674845da3",
+      "modified_frozen_files": [
+        "orchestrator/engine.py"
+      ],
+      "project_commit_created": false
+    },
+    {
+      "authority": "Owner Authorization: Reviewer Contract Visibility Amendment (P3-F001), 2026-09-12",
+      "finding": "P3-F001",
+      "previous_source_manifest_sha256": "4e01059e861249015363eabb487731477952c3943f0160f582f33485ebb1cc5c",
+      "modified_frozen_files": [
+        "orchestrator/engine.py",
+        "orchestrator/tests/test_engine.py"
+      ],
+      "project_commit_created": false
+    }
+  ]
 }

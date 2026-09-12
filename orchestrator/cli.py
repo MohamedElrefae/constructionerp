@@ -85,14 +85,21 @@ def main():
         p = sub.add_parser(command)
         p.add_argument("--json", action="store_true")
         if command == "init":
-            p.add_argument("--work-item", required=True)
-            p.add_argument("--plan", required=True)
-            p.add_argument("--scope", type=Path, required=True)
+            p.add_argument("--work-item")
+            p.add_argument("--plan")
+            p.add_argument("--scope", type=Path)
             p.add_argument("--stage", default="1")
             p.add_argument(
                 "--stages", help="Comma-separated ordered stages; optional stage_contracts in scope JSON"
             )
             p.add_argument("--quorum", action="store_true")
+            p.add_argument(
+                "--adopt-historical",
+                nargs="?",
+                const="erp-arabic-bilingual-data",
+                help="Adopt historical stages for work-item (default: erp-arabic-bilingual-data)",
+            )
+            p.add_argument("--descriptor", type=Path, help="ERP target descriptor JSON")
         elif command == "run":
             p.add_argument("--record-owner-commit", action="store_true")
             p.add_argument("--advance-stage", action="store_true")
@@ -124,32 +131,39 @@ def main():
                 e = Engine(root)
                 try:
                     if args.command == "init":
-                        plan = within(root, args.plan)
-                        scope = json.loads(args.scope.read_text())
-                        required = {"allowed_paths", "requirements", "validation_commands"}
-                        if not required <= set(scope) or not all(
-                            isinstance(v, list) for k, v in scope.items() if k in required
-                        ):
-                            raise WorkflowError(
-                                "Scope needs allowed_paths, requirements and validation_commands lists"
+                        if args.adopt_historical:
+                            work_item = args.work_item or args.adopt_historical
+                            descriptor = json.loads(args.descriptor.read_text()) if args.descriptor else None
+                            result = e.adopt_historical(work_item, descriptor)
+                        else:
+                            if not args.work_item or not args.plan or not args.scope:
+                                raise WorkflowError("Standard init requires --work-item, --plan and --scope")
+                            plan = within(root, args.plan)
+                            scope = json.loads(args.scope.read_text())
+                            required = {"allowed_paths", "requirements", "validation_commands"}
+                            if not required <= set(scope) or not all(
+                                isinstance(v, list) for k, v in scope.items() if k in required
+                            ):
+                                raise WorkflowError(
+                                    "Scope needs allowed_paths, requirements and validation_commands lists"
+                                )
+                            stages = args.stages.split(",") if args.stages else [args.stage]
+                            stage_scopes = scope.pop("stage_contracts", {})
+                            scope = stage_scopes.get(stages[0], scope)
+                            config = dict(
+                                root=str(root),
+                                work_item=args.work_item,
+                                stages=stages,
+                                stage_scopes=stage_scopes,
+                                branch=git(root, "branch", "--show-current").decode().strip(),
+                                base_commit=git(root, "rev-parse", "HEAD").decode().strip(),
+                                scope=scope,
+                                plan_path=args.plan,
+                                plan_revision_hash=bytes_hash(plan.read_bytes()),
+                                roles=json.loads((root / "orchestrator/roles.json").read_text()),
+                                quorum=["ai-a1", "ai-a2", "ai-a3"] if args.quorum else [],
                             )
-                        stages = args.stages.split(",") if args.stages else [args.stage]
-                        stage_scopes = scope.pop("stage_contracts", {})
-                        scope = stage_scopes.get(stages[0], scope)
-                        config = dict(
-                            root=str(root),
-                            work_item=args.work_item,
-                            stages=stages,
-                            stage_scopes=stage_scopes,
-                            branch=git(root, "branch", "--show-current").decode().strip(),
-                            base_commit=git(root, "rev-parse", "HEAD").decode().strip(),
-                            scope=scope,
-                            plan_path=args.plan,
-                            plan_revision_hash=bytes_hash(plan.read_bytes()),
-                            roles=json.loads((root / "orchestrator/roles.json").read_text()),
-                            quorum=["ai-a1", "ai-a2", "ai-a3"] if args.quorum else [],
-                        )
-                        result = e.initialize(config)
+                            result = e.initialize(config)
                     elif args.command == "status":
                         result = e.view()
                     elif args.command == "run":

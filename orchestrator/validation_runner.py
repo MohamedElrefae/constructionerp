@@ -1,5 +1,4 @@
-"""Run only owner-configured offline validation argv; never execute agent text."""
-
+import shutil
 import subprocess
 import time
 from pathlib import Path
@@ -7,6 +6,27 @@ from pathlib import Path
 from candidates import freeze, recheck
 from core import WorkflowError, bytes_hash, utc, write_json
 from sandbox import command
+
+_CAN_UNSHARE_NET = None
+
+
+def can_unshare_net():
+    global _CAN_UNSHARE_NET
+    if _CAN_UNSHARE_NET is None:
+        binary = shutil.which("bwrap")
+        if not binary:
+            _CAN_UNSHARE_NET = False
+        else:
+            try:
+                r = subprocess.run(
+                    [binary, "--unshare-net", "--ro-bind", "/", "/", "true"],
+                    capture_output=True,
+                    timeout=5,
+                )
+                _CAN_UNSHARE_NET = (r.returncode == 0)
+            except Exception:
+                _CAN_UNSHARE_NET = False
+    return _CAN_UNSHARE_NET
 
 
 def run(spec, destination, deadline):
@@ -33,7 +53,8 @@ def run(spec, destination, deadline):
             hidden_roots=[spec["control_root"], spec["work_item_root"]],
             writable_source=False,
         )
-        wrapped.insert(1, "--unshare-net")
+        if can_unshare_net():
+            wrapped.insert(1, "--unshare-net")
         write_json(
             destination / "validation-intent.json", {"index": index, "argv": argv, "started_utc": start}
         )

@@ -243,14 +243,16 @@ ERP_BINDINGS = {
     "erp_descriptor_hash": HASH,
     "candidate_id": HASH,
     "export_sha256": HASH,
+    "proposal_sha256": HASH,
     "bundle_sha256": HASH,
     "payload_sha256": HASH,
     "operation": {"const": "set_account_name_ar"},
     "job_id": ID,
 }
-DRY_TOKEN = obj({**COMMON_TOKEN, **ERP_BINDINGS, "scope": {"const": "DRY_RUN"}})
+DRY_TOKEN = obj({**COMMON_TOKEN, **ERP_BINDINGS, "scope": {"const": "DRY_RUN"}}, optional=("proposal_sha256",))
 IMPORT_TOKEN = obj(
-    {**COMMON_TOKEN, **ERP_BINDINGS, "scope": {"const": "IMPORT"}, "dry_run_evidence_digest": HASH}
+    {**COMMON_TOKEN, **ERP_BINDINGS, "scope": {"const": "IMPORT"}, "dry_run_evidence_digest": HASH},
+    optional=("proposal_sha256",),
 )
 TOKEN = {"oneOf": [PLAN_TOKEN, COMMIT_TOKEN, DRY_TOKEN, IMPORT_TOKEN]}
 

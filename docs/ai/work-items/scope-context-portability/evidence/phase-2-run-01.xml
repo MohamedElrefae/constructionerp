@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="4" skipped="0" tests="17" time="25.978" timestamp="2026-09-11T02:14:08.264447+03:00" hostname="mohamed-OptiPlex-3080"><testcase classname="docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios" name="test_repair_packet_all_findings_and_plan_grant_retention" time="2.329" /><testcase classname="docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios" name="test_design_returns_to_architecture_and_independent_plan_review" time="2.382" /><testcase classname="docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios" name="test_optional_backlog_and_disagreement[optional_improvement-VERIFIED_FOR_RELEASE]" time="1.460" /><testcase classname="docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios" name="test_optional_backlog_and_disagreement[owner_decision-PAUSED]" time="1.498" /><testcase classname="docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios" name="test_quorum_incomplete_then_pass_or_fail[PASS]" time="2.269"><failure message="AssertionError: assert 'BUILD_COMPLETE' == 'VERIFIED_FOR_RELEASE'&#10;  &#10;  - VERIFIED_FOR_RELEASE&#10;  + BUILD_COMPLETE">configured = (PosixPath('/tmp/pytest-of-mohamed/pytest-24/test_quorum_incomplete_then_pa0/repo'), {'root': '/tmp/pytest-of-mohamed/..._pa0/repo', 'work_item': 'test-work', 'stages': ['1'], 'base_commit': '77a578cf64cc4d3ce32df3f69f3e79e181b06558', ...})
+last_verdict = 'PASS'
+
+    @pytest.mark.parametrize('last_verdict',['PASS','BLOCKED'])
+    def test_quorum_incomplete_then_pass_or_fail(configured,last_verdict):
+        e,s=ready(configured,quorum=True); complete(e,s,'builder')
+        original={r:job(e,r) for r in ['ai-a1','ai-a2','ai-a3']}
+        for r in ['ai-a1','ai-a2']:
+            v=complete(e,s,r)
+            assert v['gate'] is None and v['status']!='VERIFIED_FOR_RELEASE'
+            assert all(other['job_id'] not in original[r]['spec']['prompt'] for rr,other in original.items() if rr!=r)
+        v=complete(e,s,'ai-a3',verdict=last_verdict,findings=[finding()] if last_verdict=='BLOCKED' else [])
+&gt;       if last_verdict=='PASS': assert v['status']=='VERIFIED_FOR_RELEASE'
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert 'BUILD_COMPLETE' == 'VERIFIED_FOR_RELEASE'
+E         
+E         - VERIFIED_FOR_RELEASE
+E         + BUILD_COMPLETE
+
+docs/ai/work-items/scope-context-portability/verification/phase2/test_scenarios.py:110: AssertionError</failure></testcase><testcase classname="docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios" name="test_quorum_incomplete_then_pass_or_fail[BLOCKED]" time="2.490" /><testcase classname="docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios" name="test_graph_escalation_survives_restart[2]" time="1.678"><failure message="AssertionError: assert 'PAUSED' != 'PAUSED'">configured = (PosixPath('/tmp/pytest-of-mohamed/pytest-24/test_graph_escalation_survives0/repo'), {'root': '/tmp/pytest-of-mohamed/...ves0/repo', 'work_item': 'test-work', 'stages': ['1'], 'base_commit': 'a572de674c8e9789b78351de210d42ebc810f1f3', ...})
+cycles = 2
+
+    @pytest.mark.parametrize('cycles',[2,3])
+    def test_graph_escalation_survives_restart(configured,cycles):
+        e,s=ready(configured)
+        snapshot=dict(reproduction_digest='a'*64,relevant_evidence_digest='b'*64,normalized_material_ref='SYNTHETIC-snapshot') if cycles==2 else None
+        for n in range(cycles):
+            complete(e,s,'builder')
+            v=complete(e,s,'verifier',verdict='BLOCKED',findings=[finding(summary='SYNTHETIC stable' if cycles==2 else f'SYNTHETIC round {n}',snapshot=snapshot)])
+            if n &lt; cycles-1:
+&gt;               assert v['status'] != 'PAUSED'
+E               AssertionError: assert 'PAUSED' != 'PAUSED'
+
+docs/ai/work-items/scope-context-portability/verification/phase2/test_scenarios.py:123: AssertionError</failure></testcase><testcase classname="docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios" name="test_graph_escalation_survives_restart[3]" time="3.611" /><testcase classname="docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios" name="test_commit_token_rejects_candidate_content_drift" time="1.546" /><testcase classname="docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios" name="test_post_commit_pre_record_crash_reconciles_once" time="2.236" /><testcase classname="docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios" name="test_vacuum_into_restore_requires_owner_reconciliation" time="1.945" /><testcase classname="docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios" name="test_failure_classes_block_and_record_named_class[AUTH_FAILURE]" time="0.352" /><testcase classname="docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios" name="test_failure_classes_block_and_record_named_class[DENIED_ACTION]" time="0.340" /><testcase classname="docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios" name="test_failure_classes_block_and_record_named_class[TIMEOUT]" time="0.371" /><testcase classname="docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios" name="test_failure_classes_block_and_record_named_class[MALFORMED_RESULT]" time="0.358"><failure message="AssertionError: Expected durable class MALFORMED_RESULT, observed ['JSONDecodeError', 'RECONCILIATION_REQUIRED']&#10;assert 'MALFORMED_RESULT' in ['JSONDecodeError', 'RECONCILIATION_REQUIRED']">configured = (PosixPath('/tmp/pytest-of-mohamed/pytest-24/test_failure_classes_block_and3/repo'), {'root': '/tmp/pytest-of-mohamed/...and3/repo', 'work_item': 'test-work', 'stages': ['1'], 'base_commit': '04786cb226c4668c3667065b4ec407935b6b9a76', ...})
+failure = 'MALFORMED_RESULT'
+
+    @pytest.mark.parametrize('failure',['AUTH_FAILURE','DENIED_ACTION','TIMEOUT','MALFORMED_RESULT','EVIDENCE_UNAVAILABLE'])
+    def test_failure_classes_block_and_record_named_class(configured,failure):
+        root,config=configured; s=Stub(delayed=True); e=Engine(root,launcher=s); e.initialize(config); e.run()
+        j=job(e,'architect'); d=Path(j['runtime'])
+        text={'AUTH_FAILURE':'SYNTHETIC authentication failed 401','DENIED_ACTION':'SYNTHETIC permission denied','TIMEOUT':'SYNTHETIC timeout','MALFORMED_RESULT':'SYNTHETIC not json'}
+        if failure!='EVIDENCE_UNAVAILABLE': (d/'stdout.jsonl').write_text(text[failure])
+        write_json(d/'terminal.json',dict(job_id=j['job_id'],phase='TERMINAL',exit_code=0 if failure in ('MALFORMED_RESULT','EVIDENCE_UNAVAILABLE') else 1,timeout=failure=='TIMEOUT',started_utc=utc(),finished_utc=utc(),session_id='SYNTHETIC-failed-session'))
+        v=e.run(); assert v['status']=='PAUSED' and len(s.starts)==1
+        event_classes=[r['payload']['result']['failure_class'] for r in e.store.events() if r['kind']=='result']
+        recorded=[e.store.job(j['job_id']).get('failure'),v['pause_reason'],*event_classes]
+&gt;       assert failure in recorded, f'Expected durable class {failure}, observed {recorded}'
+E       AssertionError: Expected durable class MALFORMED_RESULT, observed ['JSONDecodeError', 'RECONCILIATION_REQUIRED']
+E       assert 'MALFORMED_RESULT' in ['JSONDecodeError', 'RECONCILIATION_REQUIRED']
+
+docs/ai/work-items/scope-context-portability/verification/phase2/test_scenarios.py:186: AssertionError</failure></testcase><testcase classname="docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios" name="test_failure_classes_block_and_record_named_class[EVIDENCE_UNAVAILABLE]" time="0.360"><failure message="AssertionError: Expected durable class EVIDENCE_UNAVAILABLE, observed ['WorkflowError', 'RECONCILIATION_REQUIRED']&#10;assert 'EVIDENCE_UNAVAILABLE' in ['WorkflowError', 'RECONCILIATION_REQUIRED']">configured = (PosixPath('/tmp/pytest-of-mohamed/pytest-24/test_failure_classes_block_and4/repo'), {'root': '/tmp/pytest-of-mohamed/...and4/repo', 'work_item': 'test-work', 'stages': ['1'], 'base_commit': '04786cb226c4668c3667065b4ec407935b6b9a76', ...})
+failure = 'EVIDENCE_UNAVAILABLE'
+
+    @pytest.mark.parametrize('failure',['AUTH_FAILURE','DENIED_ACTION','TIMEOUT','MALFORMED_RESULT','EVIDENCE_UNAVAILABLE'])
+    def test_failure_classes_block_and_record_named_class(configured,failure):
+        root,config=configured; s=Stub(delayed=True); e=Engine(root,launcher=s); e.initialize(config); e.run()
+        j=job(e,'architect'); d=Path(j['runtime'])
+        text={'AUTH_FAILURE':'SYNTHETIC authentication failed 401','DENIED_ACTION':'SYNTHETIC permission denied','TIMEOUT':'SYNTHETIC timeout','MALFORMED_RESULT':'SYNTHETIC not json'}
+        if failure!='EVIDENCE_UNAVAILABLE': (d/'stdout.jsonl').write_text(text[failure])
+        write_json(d/'terminal.json',dict(job_id=j['job_id'],phase='TERMINAL',exit_code=0 if failure in ('MALFORMED_RESULT','EVIDENCE_UNAVAILABLE') else 1,timeout=failure=='TIMEOUT',started_utc=utc(),finished_utc=utc(),session_id='SYNTHETIC-failed-session'))
+        v=e.run(); assert v['status']=='PAUSED' and len(s.starts)==1
+        event_classes=[r['payload']['result']['failure_class'] for r in e.store.events() if r['kind']=='result']
+        recorded=[e.store.job(j['job_id']).get('failure'),v['pause_reason'],*event_classes]
+&gt;       assert failure in recorded, f'Expected durable class {failure}, observed {recorded}'
+E       AssertionError: Expected durable class EVIDENCE_UNAVAILABLE, observed ['WorkflowError', 'RECONCILIATION_REQUIRED']
+E       assert 'EVIDENCE_UNAVAILABLE' in ['WorkflowError', 'RECONCILIATION_REQUIRED']
+
+docs/ai/work-items/scope-context-portability/verification/phase2/test_scenarios.py:186: AssertionError</failure></testcase><testcase classname="docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios" name="test_missing_binary_retries_only_one_proven_nonlaunch" time="0.406" /></testsuite></testsuites>

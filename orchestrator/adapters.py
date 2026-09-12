@@ -99,6 +99,7 @@ def session_from(event, tool):
 
 def parse_output(text, tool):
     session, messages, events = None, [], []
+    message_ids = []
     for line in text.splitlines():
         try:
             event = json.loads(line)
@@ -115,11 +116,32 @@ def parse_output(text, tool):
         ):
             messages.append(event["item"].get("text", ""))
         elif tool == "opencode" and event.get("type") == "text":
-            messages.append(event.get("part", {}).get("text", ""))
+            part = event.get("part", {})
+            messages.append(part.get("text", ""))
+            message_ids.append(part.get("messageID"))
     if not session or not messages:
         raise WorkflowError("MALFORMED_RESULT: missing native identity or final message")
     try:
-        wire = json.loads(messages[-1] if tool == "codex" else "".join(messages))
+        final = messages[-1]
+        if tool == "opencode":
+            if all(message_ids):
+                groups = []
+                for identity, fragment in zip(message_ids, messages, strict=True):
+                    if groups and groups[-1][0] == identity:
+                        groups[-1][1] += fragment
+                    else:
+                        if any(g[0] == identity for g in groups):
+                            raise ValueError("interleaved messages")
+                        groups.append([identity, fragment])
+                candidates = [g[1] for g in groups]
+            else:
+                # Metadata-free traces must contain a complete final text event.
+                candidates = messages
+            for earlier in candidates[:-1]:
+                if earlier.lstrip().startswith(("{", "[")):
+                    raise ValueError("ambiguous result messages")
+            final = candidates[-1]
+        wire = json.loads(final)
         if set(wire) != {"result_json", "explanation", "plan_text"}:
             raise ValueError("wire fields")
         if not all(isinstance(wire[k], str) for k in wire):

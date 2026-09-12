@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "finding": "P3-F003",
+  "status": "READY_FOR_OWNER_AUTHORIZATION",
+  "source_manifest_sha256": "12cd1b6e886b30b78c528c1f6c60c438c0fe7d17b64f68818a651138c06e09d7",
+  "candidate_id": "532f0175dc88f19d111a42c498b60eb0bd832d412af12d4d7df7247b48d6b133",
+  "changes": [
+    "Expose candidate-bound validation reports to reviewer/verifier jobs as explicit read-only artifacts.",
+    "Deduplicate reports and reject stale, forged, malformed, symlinked, or mismatched bindings.",
+    "Add sandbox regression proving verifier access and write isolation."
+  ],
+  "tests": {"total": 117, "passed": 117, "failed": 0, "seconds": 57.13},
+  "modified_files": ["orchestrator/engine.py", "orchestrator/tests/test_engine.py"],
+  "freeze_manifest": "orchestrator/var/freeze/manifest.json",
+  "retry_ai_r_authorized": false,
+  "commit_created": false,
+  "erp_operations": 0
+}
