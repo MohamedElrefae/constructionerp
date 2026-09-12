@@ -2,7 +2,7 @@
 
 > Generated from live DocType JSON by `scripts/schema_drift_checker.py --update`.
 > Do not hand-edit field tables. Update the DocType JSON, then regenerate this file.
-> Last verified: 2026-08-19
+> Last verified: 2026-09-10
 
 ## Summary
 
@@ -31,7 +31,7 @@
 | `scope_report_access_log` | Scope Report Access Log | `scope_report_access_log.json` | 12 |  |
 | `user_desk_theme` | User Desk Theme | `user_desk_theme.json` | 25 |  |
 | `user_scope_context` | User Scope Context | `user_scope_context.json` | 10 |  |
-| `variation_order` | Variation Order | `variation_order.json` | 18 |  |
+| `variation_order` | Variation Order | `variation_order.json` | 22 |  |
 | `vo_line` | VO Line | `vo_line.json` | 27 | Child table |
 | `journal_entry` | Journal Entry | - | - | Override only; no local schema JSON |
 
@@ -571,7 +571,7 @@
 | `last_active_at` | Datetime |  | read_only |
 | `client_id` | Data |  |  |
 
-### Variation Order (`variation_order/variation_order.json`) - 18 fields
+### Variation Order (`variation_order/variation_order.json`) - 22 fields
 
 | Field | Type | Options | Flags |
 |---|---|---|---|
@@ -580,13 +580,17 @@
 | `vo_number` | Data |  | read_only |
 | `vo_date` | Date |  | reqd |
 | `status` | Select | Draft / Submitted / Approved by Engineer / Approved by Client / Rejected | reqd |
+| `submitted_by` | Link | User | read_only |
+| `submitted_at` | Datetime |  | read_only |
 | `cb_approval` | Column Break |  |  |
 | `description` | Small Text |  |  |
 | `reason` | Small Text |  |  |
 | `engineer_name` | Data |  |  |
+| `engineer_approved_by` | Link | User | read_only |
 | `engineer_approval_date` | Date |  | read_only |
 | `client_approval_document` | Attach |  |  |
 | `client_approval_ref` | Data |  |  |
+| `client_approved_by` | Link | User | read_only |
 | `client_approval_date` | Date |  | read_only |
 | `sb_lines` | Section Break |  |  |
 | `lines` | Table | VO Line |  |
