@@ -533,12 +533,7 @@ def apply_event(current, event, config):
     elif kind == "pause":
         pause(state, body["reason"])
     elif kind == "resume":
-        if (state["status"] != "PAUSED" and not (
-            state["status"] == "DRAFT"
-            and state.get("sub_status") == "PROPOSAL_PENDING"
-            and state.get("approval_refs")
-            and state.get("attempt", 1) > 1
-        )) or (
+        if state["status"] != "PAUSED" or (
             state["active_jobs"] and not (state.get("pause_reason") or "").startswith("OWNER:")
         ):
             raise WorkflowError("Cannot resume unresolved active/uncertain jobs")
@@ -546,12 +541,9 @@ def apply_event(current, event, config):
             raise WorkflowError("Escalation needs an explicit owner budget-reset decision")
         if body.get("reset_budget"):
             state.update(unsuccessful_cycles=0, unchanged_rounds=0, previous_snapshots=[])
-        if state.get("prior"):
-            prior = state["prior"]
-            state.update(prior)
-            state.update(pause_reason=None, resume_to=None, prior=None)
-        elif state.get("sub_status") == "PROPOSAL_PENDING":
-            state.update(status="APPROVED_FOR_BUILD", plan_granted=True, next_roles=["proposer"], gate=None)
+        prior = state["prior"]
+        state.update(prior)
+        state.update(pause_reason=None, resume_to=None, prior=None)
         if not state["next_roles"] and not state["gate"] and not state["active_jobs"]:
             state["next_roles"] = [
                 "architect"

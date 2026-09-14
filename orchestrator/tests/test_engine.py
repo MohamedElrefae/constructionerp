@@ -739,86 +739,302 @@ def test_role_catalog_inspection(configured):
     e.close()
 
 
-def test_legacy_plan_token_validation_and_lineage_replay():
-    import sqlite3
+def test_legacy_plan_token_contract_and_historical_checkpoint_migration(configured, tmp_path):
+    import hashlib
+    from copy import deepcopy
+
+    from core import canonical, digest
+    from routing import gate_id
+    from store import Store
     from validate import validate_document
-    from routing import initial, apply_event, pause, gate_id
 
-    db_path = Path(__file__).resolve().parent.parent / "var" / "checkpoints.db"
-    conn = sqlite3.connect(db_path)
-    c = conn.cursor()
-    cfg_row = c.execute("SELECT value FROM workflow_meta WHERE key='config'").fetchone()
-    config = json.loads(cfg_row[0])
+    root, config = configured
+    scope_hash = digest(config["scope"])
 
-    events = []
-    for row in c.execute("SELECT seq, event_id, kind, payload, created_utc FROM workflow_events ORDER BY seq"):
-        events.append(dict(seq=row[0], event_id=row[1], kind=row[2], payload=json.loads(row[3]), created_utc=row[4]))
-    conn.close()
+    mock_private = tmp_path / "mock_private"
+    blobs = mock_private / "blobs"
+    blobs.mkdir(parents=True)
+    catalog_bytes = b"{}"
+    catalog_sha = hashlib.sha256(catalog_bytes).hexdigest()
+    (blobs / f"{catalog_sha}.json").write_bytes(catalog_bytes)
 
-    assert len(events) == 4
+    candidate = {
+        "kind": "stage4-proposal",
+        "candidate_id": digest({
+            "kind": "stage4-proposal",
+            "export_sha256": catalog_sha,
+            "proposal_sha256": "0" * 64,
+        }),
+        "export_sha256": catalog_sha,
+        "proposal_sha256": "0" * 64,
+    }
 
-    # 1. Validating the restored legacy token under legacy contract
-    legacy_token = events[0]["payload"]
+    # 1. Historical legacy sequence-1 token contract validation
+    legacy_token = {
+        "schema_version": 1,
+        "token_id": "plan-token-plan-257525eeb45afcf9a81f7c11",
+        "work_item": config["work_item"],
+        "gate_id": "plan-257525eeb45afcf9a81f7c11",
+        "issuer": "project-owner",
+        "issued_utc": "2026-09-12T19:51:01.880486Z",
+        "status": "ISSUED",
+        "scope": "PLAN",
+        "plan_revision_hash": config["plan_revision_hash"],
+        "scope_hash": scope_hash,
+        "repository_id": str(root),
+        "branch": config["branch"],
+        "stages": ["0", "1", "2", "3", "4"],
+    }
     assert legacy_token["schema_version"] == 1
     assert "roles_hash" not in legacy_token
     assert legacy_token["scope"] == "PLAN"
-    # Legacy token must validate cleanly under approval-token contract
     validate_document("approval-token", legacy_token)
 
-    # Exact consumed legacy token is rejected as already used/recorded
-    root = Path(__file__).resolve().parent.parent.parent
-    e = Engine(root)
-    with pytest.raises(WorkflowError, match="Token already used or recorded"):
-        e.approve(legacy_token)
+    # 2. Setup self-contained temporary legacy database & checkpoint
+    runtime = tmp_path / "legacy_runtime"
+    runtime.mkdir()
+    store = Store(runtime / "checkpoints.db")
 
-    # Any new/unrecorded legacy token is rejected because schema_version 1 cannot be reused
-    fresh_legacy_token = dict(legacy_token, token_id="fresh-unrecorded-token", gate_id=e.view()["gate"]["gate_id"])
-    with pytest.raises(WorkflowError, match="Legacy schema_version 1 PLAN tokens cannot be reused"):
-        e.approve(fresh_legacy_token)
-    e.close()
+    # Historical config deliberately lacks roles_hash to verify migration
+    hist_config = deepcopy(config)
+    hist_config["stage"] = "4"
+    hist_config["stages"] = ["4"]
+    hist_config["scope_hash"] = scope_hash
+    hist_config["candidate"] = candidate
+    hist_config["private_root"] = str(mock_private)
+    hist_config["generated"] = ["orchestrator/roles.json", "orchestrator/var/"]
+    hist_config["roles"]["proposer"] = {
+        "tool": "opencode",
+        "binary": "opencode",
+        "model": "opencode/muse-spark-1.3-contributor-free",
+    }
+    hist_config.pop("roles_hash", None)
+    expected_roles_hash = digest(hist_config["roles"])
+    store.set_meta("config", hist_config)
 
-    # 2. Replaying the four-event lineage to the current fail-closed PLAN state
-    state = initial(config)
-    state["gate"] = {"scope": "PLAN", "gate_id": gate_id(state, "PLAN", legacy=True)}
-    assert state["gate"]["gate_id"] == "plan-257525eeb45afcf9a81f7c11"
+    # Historical event lineage
+    store.event("grant-" + legacy_token["token_id"], "grant", legacy_token)
+    store.event("reconcile-job-0e0d4d73f8732d43186d1a13", "reconcile_job", {
+        "job_id": "job-0e0d4d73f8732d43186d1a13",
+        "role": "proposer",
+        "owner_evidence_sha256": "cf1a60cc0c20946ede9eec04ab519ce258c86dd3165162d6755942c2507257aa",
+        "decision": "ABANDONED_AFTER_OWNER_REVIEW",
+    })
+    store.event("owner-5e7c8920a7794739bfe0e4cf6295dc0c", "resume", {
+        "reason": "Switch proposer to opencode/muse-spark-1.3-contributor-free",
+        "reset_budget": False,
+    })
+    store.event("reconcile-job-26261b6a46e9d461b869f6bd", "reconcile_job", {
+        "job_id": "job-26261b6a46e9d461b869f6bd",
+        "role": "proposer",
+        "owner_evidence_sha256": "f6cdb7a328b5b43841bc3b124907ac73a61e41f1d72bc986661da7224ae6cf16",
+        "decision": "ABANDONED_AFTER_OWNER_REVIEW",
+    })
 
-    # Event 1: grant legacy token
-    state = apply_event(state, events[0], config)
-    assert state["status"] == "APPROVED_FOR_BUILD"
-    assert state["plan_granted"] is True
-    assert state["approval_refs"] == ["plan-token-plan-257525eeb45afcf9a81f7c11"]
+    # Historical jobs and grants
+    store.create_job("proposer-1", {"job_id": "job-0e0d4d73f8732d43186d1a13", "role": "proposer"})
+    store.update_job("job-0e0d4d73f8732d43186d1a13", "OWNER_RECONCILED")
+    store.create_job("proposer-2", {"job_id": "job-26261b6a46e9d461b869f6bd", "role": "proposer"})
+    store.update_job("job-26261b6a46e9d461b869f6bd", "OWNER_RECONCILED")
+    store.grant(legacy_token)
+    store.consume(legacy_token["gate_id"])
+    store.close()
 
-    # Proposer job 1 dispatch and pause
-    state["active_jobs"] = ["job-0e0d4d73f8732d43186d1a13"]
-    pause(state, "RECONCILIATION_REQUIRED")
-    assert state["status"] == "PAUSED"
+    # Pre-populate LangGraph checkpoint with historical parked state (roles_hash omitted from view)
+    e_init = Engine(root, runtime=runtime)
+    computed_gate = gate_id({
+        "work_item": config["work_item"],
+        "stage": "4",
+        "plan_revision_hash": config["plan_revision_hash"],
+        "scope_hash": scope_hash,
+        "roles_hash": expected_roles_hash,
+    }, "PLAN")
 
-    # Event 2: reconcile job 1
-    state = apply_event(state, events[1], config)
-    assert state["status"] == "DRAFT"
-    assert state["active_jobs"] == []
+    legacy_view = {
+        "work_item": config["work_item"],
+        "stage": "4",
+        "status": "DRAFT",
+        "sub_status": "PROPOSAL_PENDING",
+        "gate": {"scope": "PLAN", "gate_id": computed_gate},
+        "plan_granted": False,
+        "active_jobs": [],
+        "next_roles": [],
+        "round": 0,
+        "attempt": 2,
+        "cursor": 4,
+        "revision": 4,
+        "approval_refs": [legacy_token["token_id"]],
+        "plan_revision_hash": config["plan_revision_hash"],
+        "scope_hash": scope_hash,
+        "candidate": candidate,
+        "stages": {"4": {"sub_status": "PROPOSAL_PENDING", "historical": False, "evidence_refs": []}},
+        "findings": [],
+        "backlog": [],
+        "completed_dependencies": [],
+        "review_results": {},
+        "unsuccessful_cycles": 0,
+        "unchanged_rounds": 0,
+        "previous_snapshots": [],
+        "pause_reason": None,
+        "resume_to": None,
+        "prior": None,
+        "committed": False,
+    }
+    e_init.graph.update_state(e_init.graph_config, {"view": legacy_view}, as_node="collect")
+    e_init.close()
 
-    # Event 3: resume
-    state = apply_event(state, events[2], config)
-    assert state["status"] == "APPROVED_FOR_BUILD"
-    assert state["plan_granted"] is True
+    # Ensure config in store lacks roles_hash so Engine.__init__ migration can be asserted
+    store = Store(runtime / "checkpoints.db")
+    c = store.meta("config")
+    c.pop("roles_hash", None)
+    store.set_meta("config", c)
+    store.close()
 
-    # Proposer job 2 dispatch and pause
-    state["active_jobs"] = ["job-26261b6a46e9d461b869f6bd"]
-    pause(state, "RECONCILIATION_REQUIRED")
-    assert state["status"] == "PAUSED"
+    # 3. Boot Engine on the legacy runtime and verify automatic migration
+    stub = Stub(delayed=True)
+    e = Engine(root, runtime=runtime, launcher=stub)
+    try:
+        assert "roles_hash" in e.config
+        assert e.config["roles_hash"] == expected_roles_hash
+        assert e.store.meta("config")["roles_hash"] == expected_roles_hash
 
-    # Event 4: reconcile job 2
-    state = apply_event(state, events[3], config)
+        v = e.view()
+        assert v["roles_hash"] == expected_roles_hash
+        assert v["status"] == "DRAFT"
+        assert v["sub_status"] == "PROPOSAL_PENDING"
+        assert v["plan_granted"] is False
+        assert v["active_jobs"] == []
+        assert v["next_roles"] == []
+        assert v["gate"]["scope"] == "PLAN"
+        assert v["gate"]["gate_id"] == computed_gate
+        assert v["approval_refs"] == [legacy_token["token_id"]]
+        assert v["cursor"] == 4
+        assert v["revision"] == 4
 
-    # Assert final replayed state matches current fail-closed PLAN state
-    assert state["status"] == "DRAFT"
-    assert state["sub_status"] == "PROPOSAL_PENDING"
-    assert state["gate"]["scope"] == "PLAN"
-    assert state["gate"]["gate_id"] == "plan-f3b87241968c440279cd1e53"
-    assert state["plan_granted"] is False
-    assert state["active_jobs"] == []
-    assert state["cursor"] == 4
-    assert state["revision"] == 4
-    assert state["approval_refs"] == ["plan-token-plan-257525eeb45afcf9a81f7c11"]
+        # 4. Token validation: consumed legacy token is rejected as used
+        with pytest.raises(WorkflowError, match="Token already used or recorded"):
+            e.approve(legacy_token)
+
+        # Fresh unrecorded v1 token is rejected
+        fresh_v1 = dict(legacy_token, token_id="fresh-v1-token", gate_id=v["gate"]["gate_id"])
+        with pytest.raises(WorkflowError, match="Legacy schema_version 1 PLAN tokens cannot be reused"):
+            e.approve(fresh_v1)
+
+        # Valid v2 token with roles_hash is accepted and grants plan
+        v2_token = dict(
+            schema_version=2,
+            token_id="valid-v2-token",
+            work_item=v["work_item"],
+            gate_id=v["gate"]["gate_id"],
+            issuer="owner",
+            issued_utc="2026-09-14T20:00:00Z",
+            status="ISSUED",
+            scope="PLAN",
+            plan_revision_hash=v["plan_revision_hash"],
+            scope_hash=v["scope_hash"],
+            roles_hash=v["roles_hash"],
+            repository_id=str(root),
+            branch=config["branch"],
+            stages=["4"],
+        )
+        assert e.approve(v2_token)["plan_granted"] is True
+    finally:
+        e.close()
+
+
+def test_resume_rejected_against_parked_draft_plan_state(configured, tmp_path):
+    from routing import apply_event, gate_id
+    from store import Store
+
+    root, config = configured
+    scope_hash = digest(config["scope"])
+    runtime = tmp_path / "parked_runtime"
+    runtime.mkdir()
+    store = Store(runtime / "checkpoints.db")
+
+    candidate = {
+        "kind": "stage4-proposal",
+        "candidate_id": digest({
+            "kind": "stage4-proposal",
+            "export_sha256": "0" * 64,
+            "proposal_sha256": "0" * 64,
+        }),
+        "export_sha256": "0" * 64,
+        "proposal_sha256": "0" * 64,
+    }
+
+    hist_config = deepcopy(config)
+    hist_config["stage"] = "4"
+    hist_config["scope_hash"] = scope_hash
+    hist_config["candidate"] = candidate
+    roles_hash = digest(config["roles"])
+    hist_config["roles_hash"] = roles_hash
+    store.set_meta("config", hist_config)
+    store.close()
+
+    e = Engine(root, runtime=runtime)
+    try:
+        computed_gate = gate_id({
+            "work_item": config["work_item"],
+            "stage": "4",
+            "plan_revision_hash": config["plan_revision_hash"],
+            "scope_hash": scope_hash,
+            "roles_hash": roles_hash,
+        }, "PLAN")
+
+        parked_view = {
+            "work_item": config["work_item"],
+            "stage": "4",
+            "status": "DRAFT",
+            "sub_status": "PROPOSAL_PENDING",
+            "gate": {"scope": "PLAN", "gate_id": computed_gate},
+            "plan_granted": False,
+            "active_jobs": [],
+            "next_roles": [],
+            "round": 0,
+            "attempt": 2,
+            "cursor": 4,
+            "revision": 4,
+            "approval_refs": ["plan-token-plan-257525eeb45afcf9a81f7c11"],
+            "plan_revision_hash": config["plan_revision_hash"],
+            "scope_hash": scope_hash,
+            "roles_hash": roles_hash,
+            "candidate": candidate,
+            "stages": {"4": {"sub_status": "PROPOSAL_PENDING", "historical": False, "evidence_refs": []}},
+            "findings": [],
+            "backlog": [],
+            "completed_dependencies": [],
+            "review_results": {},
+            "unsuccessful_cycles": 0,
+            "unchanged_rounds": 0,
+            "previous_snapshots": [],
+            "pause_reason": None,
+            "resume_to": None,
+            "prior": None,
+            "committed": False,
+        }
+        e.graph.update_state(e.graph_config, {"view": parked_view}, as_node="collect")
+
+        # 1. Pure router check: resume against parked DRAFT state is rejected
+        with pytest.raises(WorkflowError, match="Cannot resume"):
+            apply_event(parked_view, {"seq": 5, "kind": "resume", "payload": {"reason": "router bypass"}}, hist_config)
+        assert parked_view["plan_granted"] is False
+        assert parked_view["next_roles"] == []
+        assert parked_view["gate"]["scope"] == "PLAN"
+        assert parked_view["gate"]["gate_id"] == computed_gate
+        assert parked_view["status"] == "DRAFT"
+
+        # 2. Engine owner_decision check: resume against parked DRAFT state is rejected
+        with pytest.raises(WorkflowError, match="Cannot resume"):
+            e.owner_decision("resume", {"reason": "engine bypass"})
+
+        v = e.view()
+        assert v["plan_granted"] is False
+        assert v["next_roles"] == []
+        assert v["gate"]["scope"] == "PLAN"
+        assert v["gate"]["gate_id"] == computed_gate
+        assert v["status"] == "DRAFT"
+        assert len(e.store.events()) == 0
+    finally:
+        e.close()
 
