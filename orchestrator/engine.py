@@ -165,6 +165,8 @@ class Engine:
         )
         self.checkpoint_conn.execute("PRAGMA synchronous=FULL")
         self.config = self.store.meta("config")
+        if self.config and self.config.get("roles"):
+            self.sync_roles_mirror()
         watermark = self.runtime / "checkpoint-watermark.json"
         if watermark.exists():
             marker = json.loads(watermark.read_text())
@@ -174,6 +176,16 @@ class Engine:
         self.launcher = launcher
         self.graph = self._graph()
         self.graph_config = {"configurable": {"thread_id": "workflow"}, "recursion_limit": 100}
+
+    def sync_roles_mirror(self):
+        """Ensure the derived file mirror orchestrator/roles.json matches authoritative SQLite config."""
+        if not self.config or not self.config.get("roles"):
+            return
+        roles_path = self.root / "orchestrator/roles.json"
+        roles_data = self.config["roles"]
+        expected_bytes = canonical(roles_data) + b"\n"
+        if not roles_path.exists() or roles_path.read_bytes() != expected_bytes:
+            write_json(roles_path, roles_data)
 
     def close(self):
         self.checkpoint_conn.close()
@@ -1884,11 +1896,9 @@ class Engine:
         old_pin = config.get("roles", {}).get(role)
         config.setdefault("roles", {})[role] = pin
 
-        invalidated_tokens = self.store.invalidate_grants()
-
         plan_revoked = False
         new_gate = None
-        if role in ("builder", "proposer") and (view.get("plan_granted") or config.get("plan_granted")):
+        if view.get("plan_granted") or config.get("plan_granted"):
             config["plan_granted"] = False
             plan_revoked = True
             new_gate = {"scope": "PLAN", "gate_id": "plan-" + uuid.uuid4().hex[:24]}
@@ -1900,14 +1910,13 @@ class Engine:
             "old_pin": old_pin,
             "new_pin": pin,
             "reason": reason,
-            "invalidated_grants": invalidated_tokens,
             "plan_grant_revoked": plan_revoked,
             "new_gate": new_gate,
         }
-        self.store.reconfigure(config, event_id, "role_reconfigured", payload)
-        write_json(self.root / "orchestrator/roles.json", config["roles"])
+        self.store.reconfigure(config, event_id, "role_reconfigured", payload, invalidate_grants=True)
 
         self.config = config
+        self.sync_roles_mirror()
         return self.run()
 
     def role_catalog(self):
@@ -1973,6 +1982,7 @@ class Engine:
         return self.run()
 
     def export(self):
+        self.sync_roles_mirror()
         self._export_view(self.view())
 
     def _export_view(self, v):

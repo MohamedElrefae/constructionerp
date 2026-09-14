@@ -151,9 +151,20 @@ class Store:
                     )
                 return invalidated
 
-    def reconfigure(self, config, event_id, kind, payload):
+    def reconfigure(self, config, event_id, kind, payload, invalidate_grants=False):
         with self._lock:
             with self.conn:
+                invalidated = []
+                if invalidate_grants:
+                    rows = self.conn.execute(
+                        "SELECT token_id FROM workflow_grants WHERE status IN ('ISSUED', 'RESERVED')"
+                    ).fetchall()
+                    invalidated = [r["token_id"] if isinstance(r, sqlite3.Row) else r[0] for r in rows]
+                    if invalidated:
+                        self.conn.execute(
+                            "UPDATE workflow_grants SET status='INVALIDATED' WHERE status IN ('ISSUED', 'RESERVED')"
+                        )
+                payload["invalidated_grants"] = invalidated
                 self.conn.execute(
                     "UPDATE workflow_meta SET value=? WHERE key=?", (canonical(config).decode(), "config")
                 )
@@ -161,6 +172,7 @@ class Store:
                     "INSERT INTO workflow_events(event_id,kind,payload,created_utc) VALUES (?,?,?,?)",
                     (event_id, kind, canonical(payload).decode(), utc()),
                 )
+                return invalidated
 
     def complete_grant(self, event_id, gate, payload):
         body = canonical(payload).decode()

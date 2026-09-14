@@ -9,7 +9,7 @@ import time
 from pathlib import Path
 
 from candidates import git
-from core import WorkflowError, bytes_hash, execution_lock, within
+from core import WorkflowError, bytes_hash, canonical, execution_lock, within
 from engine import Engine
 from packaging.requirements import Requirement
 from sandbox import probe
@@ -44,8 +44,33 @@ def doctor(root):
                 )
             except importlib.metadata.PackageNotFoundError:
                 checks["locked:" + requirement.name] = False
+    pins = None
+    if (root / "orchestrator/var/checkpoints.db").exists():
+        e = Engine(root)
+        try:
+            checks["sqlite_integrity"] = e.store.integrity()
+            checks["recovery_cleared"] = not e.store.meta("recovery_required", False)
+            if e.config:
+                checks["configured_root"] = e.config["root"] == str(root)
+                e.sync_roles_mirror()
+                e.export()  # regenerate mirrors, never use them as control input
+                pins = e.config.get("roles")
+                roles_file = root / "orchestrator/roles.json"
+                checks["roles_mirror_synced"] = (
+                    roles_file.exists()
+                    and canonical(json.loads(roles_file.read_text())) == canonical(pins)
+                )
+        finally:
+            e.close()
+
+    if not pins:
+        pins = json.loads((root / "orchestrator/roles.json").read_text())
+
     for tool in {"codex", "opencode"}:
-        pin = next(p for p in pins.values() if p["tool"] == tool)
+        pin = next((p for p in pins.values() if p["tool"] == tool), None)
+        if not pin:
+            checks["binary:" + tool] = False
+            continue
         try:
             r = subprocess.run([pin["binary"], "--version"], capture_output=True, text=True, timeout=20)
             checks["binary:" + tool] = (
@@ -60,16 +85,6 @@ def doctor(root):
         evidence.exists()
         and json.loads(evidence.read_text()).get("phase_exit") == "PASSED_WITH_OWNER_DIRECTIVE"
     )
-    if (root / "orchestrator/var/checkpoints.db").exists():
-        e = Engine(root)
-        try:
-            checks["sqlite_integrity"] = e.store.integrity()
-            checks["recovery_cleared"] = not e.store.meta("recovery_required", False)
-            if e.config:
-                checks["configured_root"] = e.config["root"] == str(root)
-                e.export()  # regenerate mirrors, never use them as control input
-        finally:
-            e.close()
     return {
         "ok": all(checks.values()),
         "checks": checks,

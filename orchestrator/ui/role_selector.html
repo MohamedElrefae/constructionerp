@@ -140,7 +140,7 @@
       padding: 20px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 16px;
     }
     pre {
       background: var(--code-bg);
@@ -240,50 +240,65 @@
     <div class="commands-panel">
       <div style="display: flex; justify-content: space-between; align-items: center;">
         <div>
-          <h3 style="font-size: 14px; font-weight: 700; color: var(--text);">Generated Governed CLI Commands</h3>
+          <h3 style="font-size: 14px; font-weight: 700; color: var(--text);">Generated Governed CLI Commands (POSIX Quoted)</h3>
           <p style="font-size: 12px; color: var(--text-muted);">Execute these commands to apply changes transactionally through <code style="color: #60a5fa;">cli.py set-role</code>.</p>
         </div>
+        <button onclick="copyGeneratedCommands()">Copy CLI Commands</button>
       </div>
       <pre id="commands-output"># Loading commands...</pre>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px;">
+        <div>
+          <h3 style="font-size: 14px; font-weight: 700; color: var(--text);">Structured Argv Representation (JSON)</h3>
+          <p style="font-size: 12px; color: var(--text-muted);">Command line argument vectors for safe programmatic invocation without shell evaluation.</p>
+        </div>
+        <button class="btn-secondary" onclick="copyArgvJson()">Copy Argv JSON</button>
+      </div>
+      <pre id="argv-output">[]</pre>
     </div>
 
   </div>
 
-  <!-- Catalog Import Modal -->
   <div class="modal" id="catalog-modal">
     <div class="modal-content">
-      <h3 style="font-size: 16px; font-weight: 700;">Import Backend Role Catalog</h3>
-      <p style="font-size: 12px; color: var(--text-muted);">Paste the JSON output of <code style="color: #60a5fa;">python3 orchestrator/cli.py role-catalog --json</code> below:</p>
-      <textarea id="catalog-input" placeholder="{ 'ok': true, 'tools': { ... }, 'prompts': { ... } }"></textarea>
+      <h3 style="font-size: 16px; font-weight: 700;">Import Host Role Catalog JSON</h3>
+      <p style="font-size: 12px; color: var(--text-muted);">
+        Paste the output of <code style="color: #60a5fa;">python3 orchestrator/cli.py role-catalog --json</code> below.
+      </p>
+      <div id="modal-error" style="display:none; color:var(--danger); font-size:12px; font-weight:500;"></div>
+      <textarea id="catalog-input" placeholder="Paste catalog JSON here..."></textarea>
       <div style="display: flex; justify-content: flex-end; gap: 8px;">
         <button class="btn-secondary" onclick="closeCatalogModal()">Cancel</button>
-        <button onclick="applyImportedCatalog()">Load Catalog</button>
+        <button onclick="applyImportedCatalog()">Import & Validate</button>
       </div>
     </div>
   </div>
 
   <script>
+    // Safely POSIX-quote arbitrary shell arguments: wrap in single quotes and replace ' with '\''.
+    function shellQuote(str) {
+      if (typeof str !== "string") str = String(str);
+      return "'" + str.replace(/'/g, "'\\''") + "'";
+    }
+
+    // Default static host catalog for offline fallback
     let BACKEND_CATALOG = {
       tools: {
         codex: {
           binary: "/opt/codex-desktop/resources/codex",
-          exists: true,
           expected_version: "0.153.0-alpha.5",
-          detected_version: "codex-cli 0.153.0-alpha.5",
           binary_sha256: "91ce83e4c8b9b314f9073dadb1d397f1148a7277214418c51e5c50083d797e95"
         },
         opencode: {
           binary: "/usr/bin/opencode-cli",
-          exists: true,
           expected_version: "1.14.33",
-          detected_version: "1.14.33",
           binary_sha256: "20a5f21c2f72b9607d4c9e533890082b5a42069028e45b0b9a662368eb691f83"
         }
       },
       prompts: {
         architect: "ef527ef0243402f3d313a6e3603a07a4bc0b0044be4579b9c5ea67f609d9397f",
-        builder: "45190b4f743ef0b57263872eb4a11aeddb8430a085a1acc277b490ef5092c8af",
         reviewer: "3cd42677471d49f265ac1c6c0b412724110557c60526cb002ab5073cf3ebdeed",
+        builder: "45190b4f743ef0b57263872eb4a11aeddb8430a085a1acc277b490ef5092c8af",
         verifier: "98f41066bbf57fba9459b64e5119bde61468647b85753a417e669f7bccb00e8d",
         proposer: "3fdfa75d3763a3f6dbc0873d6a04d01764202e6af62be384ec212cf29ca9a503",
         "ai-a1": "3fdfa75d3763a3f6dbc0873d6a04d01764202e6af62be384ec212cf29ca9a503",
@@ -292,8 +307,8 @@
       },
       roles: {
         architect: { tool: "codex", model: "gpt-6-astra", effort: "high" },
-        builder: { tool: "codex", model: "gpt-6-astra", effort: "high" },
         reviewer: { tool: "codex", model: "gpt-6-astra", effort: "high" },
+        builder: { tool: "codex", model: "gpt-6-astra", effort: "high" },
         verifier: { tool: "codex", model: "gpt-6-astra", effort: "high" },
         proposer: { tool: "opencode", model: "opencode/muse-spark-1.3-contributor-free", effort: null },
         "ai-a1": { tool: "codex", model: "gpt-6-astra", effort: "high" },
@@ -313,59 +328,135 @@
       { id: "ai-a3", name: "AI-A3 (Structural Integrity)", group: "stage4", desc: "Exact identity coverage & invariants" }
     ];
 
-    function createRoleCard(r) {
+    function createRoleCardElement(r) {
       const cfg = BACKEND_CATALOG.roles[r.id] || { tool: "codex", model: "gpt-6-astra", effort: "high" };
       const isCodex = cfg.tool === "codex";
-      return `
-        <div class="card" id="card-${r.id}" data-role="${r.id}">
-          <div class="card-header">
-            <div>
-              <div class="role-title">${r.name}</div>
-              <div style="font-size: 11px; color: var(--text-dim);">${r.desc}</div>
-            </div>
-            <span class="badge ${r.group === 'core' ? 'badge-core' : 'badge-stage4'}">${r.group}</span>
-          </div>
 
-          <div class="field-row">
-            <div>
-              <label>Tool / Agent</label>
-              <select onchange="onToolChange('${r.id}', this.value)">
-                <option value="codex" ${cfg.tool === 'codex' ? 'selected' : ''}>codex</option>
-                <option value="opencode" ${cfg.tool === 'opencode' ? 'selected' : ''}>opencode</option>
-              </select>
-            </div>
-            <div>
-              <label>Model</label>
-              <input type="text" value="${cfg.model}" oninput="onModelInput('${r.id}', this.value)" placeholder="${isCodex ? 'e.g. gpt-6-astra' : 'e.g. opencode/muse-spark-1.3-contributor-free'}">
-            </div>
-            <div>
-              <label>Effort (Codex)</label>
-              <select onchange="onEffortChange('${r.id}', this.value)" ${!isCodex ? 'disabled style="opacity:0.4;"' : ''}>
-                <option value="high" ${cfg.effort === 'high' ? 'selected' : ''}>high</option>
-                <option value="medium" ${cfg.effort === 'medium' ? 'selected' : ''}>medium</option>
-                <option value="low" ${cfg.effort === 'low' ? 'selected' : ''}>low</option>
-              </select>
-            </div>
-          </div>
+      const card = document.createElement("div");
+      card.className = "card";
+      card.id = "card-" + r.id;
+      card.dataset.role = r.id;
 
-          <div class="validation-msg" id="val-${r.id}"></div>
+      // Header
+      const header = document.createElement("div");
+      header.className = "card-header";
 
-          <div class="provenance-box" id="prov-${r.id}">
-            ${renderProvenance(r.id, cfg.tool)}
-          </div>
-        </div>
-      `;
+      const headerText = document.createElement("div");
+      const titleEl = document.createElement("div");
+      titleEl.className = "role-title";
+      titleEl.textContent = r.name;
+      const descEl = document.createElement("div");
+      descEl.style.fontSize = "11px";
+      descEl.style.color = "var(--text-dim)";
+      descEl.textContent = r.desc;
+      headerText.appendChild(titleEl);
+      headerText.appendChild(descEl);
+
+      const badge = document.createElement("span");
+      badge.className = "badge " + (r.group === "core" ? "badge-core" : "badge-stage4");
+      badge.textContent = r.group;
+
+      header.appendChild(headerText);
+      header.appendChild(badge);
+      card.appendChild(header);
+
+      // Field Row
+      const fieldRow = document.createElement("div");
+      fieldRow.className = "field-row";
+
+      // 1. Tool Select
+      const toolCol = document.createElement("div");
+      const toolLabel = document.createElement("label");
+      toolLabel.textContent = "Tool / Agent";
+      const toolSelect = document.createElement("select");
+      ["codex", "opencode"].forEach(t => {
+        const opt = document.createElement("option");
+        opt.value = t;
+        opt.textContent = t;
+        if (cfg.tool === t) opt.selected = true;
+        toolSelect.appendChild(opt);
+      });
+      toolSelect.addEventListener("change", (e) => onToolChange(r.id, e.target.value));
+      toolCol.appendChild(toolLabel);
+      toolCol.appendChild(toolSelect);
+
+      // 2. Model Input
+      const modelCol = document.createElement("div");
+      const modelLabel = document.createElement("label");
+      modelLabel.textContent = "Model";
+      const modelInput = document.createElement("input");
+      modelInput.type = "text";
+      modelInput.value = cfg.model;
+      modelInput.placeholder = isCodex ? "e.g. gpt-6-astra" : "e.g. opencode/muse-spark-1.3-contributor-free";
+      modelInput.addEventListener("input", (e) => onModelInput(r.id, e.target.value));
+      modelCol.appendChild(modelLabel);
+      modelCol.appendChild(modelInput);
+
+      // 3. Effort Select
+      const effortCol = document.createElement("div");
+      const effortLabel = document.createElement("label");
+      effortLabel.textContent = "Effort (Codex)";
+      const effortSelect = document.createElement("select");
+      ["high", "medium", "low"].forEach(eff => {
+        const opt = document.createElement("option");
+        opt.value = eff;
+        opt.textContent = eff;
+        if (cfg.effort === eff) opt.selected = true;
+        effortSelect.appendChild(opt);
+      });
+      if (!isCodex) {
+        effortSelect.disabled = true;
+        effortSelect.style.opacity = "0.4";
+      }
+      effortSelect.addEventListener("change", (e) => onEffortChange(r.id, e.target.value));
+      effortCol.appendChild(effortLabel);
+      effortCol.appendChild(effortSelect);
+
+      fieldRow.appendChild(toolCol);
+      fieldRow.appendChild(modelCol);
+      fieldRow.appendChild(effortCol);
+      card.appendChild(fieldRow);
+
+      // Validation Message
+      const valMsg = document.createElement("div");
+      valMsg.className = "validation-msg";
+      valMsg.id = "val-" + r.id;
+      card.appendChild(valMsg);
+
+      // Provenance Box
+      const provBox = document.createElement("div");
+      provBox.className = "provenance-box";
+      provBox.id = "prov-" + r.id;
+      populateProvenance(provBox, r.id, cfg.tool);
+      card.appendChild(provBox);
+
+      return card;
     }
 
-    function renderProvenance(roleId, tool) {
+    function populateProvenance(container, roleId, tool) {
+      container.replaceChildren();
       const tMeta = BACKEND_CATALOG.tools[tool] || {};
       const pHash = BACKEND_CATALOG.prompts[roleId] || "unknown";
-      return `
-        <div class="provenance-line"><span>Binary:</span><span class="provenance-val">${tMeta.binary || 'unknown'}</span></div>
-        <div class="provenance-line"><span>Version:</span><span class="provenance-val">${tMeta.detected_version || tMeta.expected_version || 'unknown'}</span></div>
-        <div class="provenance-line"><span>Binary SHA-256:</span><span class="provenance-val">${(tMeta.binary_sha256 || '').slice(0, 16)}...</span></div>
-        <div class="provenance-line"><span>Prompt SHA-256:</span><span class="provenance-val">${(pHash || '').slice(0, 16)}...</span></div>
-      `;
+
+      const lines = [
+        { label: "Binary:", val: tMeta.binary || "unknown" },
+        { label: "Version:", val: tMeta.detected_version || tMeta.expected_version || "unknown" },
+        { label: "Binary SHA-256:", val: tMeta.binary_sha256 ? tMeta.binary_sha256.slice(0, 16) + "..." : "none" },
+        { label: "Prompt SHA-256:", val: pHash ? pHash.slice(0, 16) + "..." : "none" }
+      ];
+
+      lines.forEach(item => {
+        const line = document.createElement("div");
+        line.className = "provenance-line";
+        const lSpan = document.createElement("span");
+        lSpan.textContent = item.label;
+        const vSpan = document.createElement("span");
+        vSpan.className = "provenance-val";
+        vSpan.textContent = item.val;
+        line.appendChild(lSpan);
+        line.appendChild(vSpan);
+        container.appendChild(line);
+      });
     }
 
     function onToolChange(roleId, tool) {
@@ -397,11 +488,16 @@
 
     function validateField(roleId) {
       const cfg = BACKEND_CATALOG.roles[roleId];
-      const valEl = document.getElementById(`val-${roleId}`);
+      const valEl = document.getElementById("val-" + roleId);
       if (!valEl) return true;
 
       if (!cfg.model) {
         valEl.textContent = "Model name cannot be empty.";
+        valEl.style.display = "block";
+        return false;
+      }
+      if (/[\x00-\x1f\x7f]/.test(cfg.model)) {
+        valEl.textContent = "Model contains invalid control characters.";
         valEl.style.display = "block";
         return false;
       }
@@ -416,22 +512,42 @@
 
     function updateCommands() {
       let cmds = "# Apply role reconfigurations via governed CLI (requires workflow PAUSED and zero active jobs):\n";
+      const argvList = [];
       for (const r of ROLE_DEFS) {
         const cfg = BACKEND_CATALOG.roles[r.id];
-        let cmd = `python3 orchestrator/cli.py set-role --role ${r.id} --tool ${cfg.tool} --model "${cfg.model}"`;
+        if (!cfg) continue;
+
+        const argv = [
+          "python3", "orchestrator/cli.py", "set-role",
+          "--role", r.id,
+          "--tool", cfg.tool,
+          "--model", cfg.model
+        ];
+        let cmd = "python3 orchestrator/cli.py set-role --role " + shellQuote(r.id) + " --tool " + shellQuote(cfg.tool) + " --model " + shellQuote(cfg.model);
         if (cfg.tool === "codex" && cfg.effort) {
-          cmd += ` --effort ${cfg.effort}`;
+          argv.push("--effort", cfg.effort);
+          cmd += " --effort " + shellQuote(cfg.effort);
         }
         cmds += cmd + "\n";
+        argvList.push(argv);
       }
       document.getElementById("commands-output").textContent = cmds;
+      document.getElementById("argv-output").textContent = JSON.stringify(argvList, null, 2);
     }
 
     function render() {
       const coreGrid = document.getElementById("core-roles-grid");
       const s4Grid = document.getElementById("stage4-roles-grid");
-      coreGrid.innerHTML = ROLE_DEFS.filter(r => r.group === "core").map(createRoleCard).join("");
-      s4Grid.innerHTML = ROLE_DEFS.filter(r => r.group === "stage4").map(createRoleCard).join("");
+      coreGrid.replaceChildren();
+      s4Grid.replaceChildren();
+
+      ROLE_DEFS.filter(r => r.group === "core").forEach(r => {
+        coreGrid.appendChild(createRoleCardElement(r));
+      });
+      ROLE_DEFS.filter(r => r.group === "stage4").forEach(r => {
+        s4Grid.appendChild(createRoleCardElement(r));
+      });
+
       ROLE_DEFS.forEach(r => validateField(r.id));
       updateCommands();
     }
@@ -439,16 +555,94 @@
     function copyGeneratedCommands() {
       const text = document.getElementById("commands-output").textContent;
       navigator.clipboard.writeText(text).then(() => {
-        alert("CLI set-role commands copied to clipboard!");
+        alert("POSIX-safe CLI set-role commands copied to clipboard!");
       });
     }
 
-    function openCatalogModal() { document.getElementById("catalog-modal").classList.add("active"); }
-    function closeCatalogModal() { document.getElementById("catalog-modal").classList.remove("active"); }
+    function copyArgvJson() {
+      const text = document.getElementById("argv-output").textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Argv-safe JSON array copied to clipboard!");
+      });
+    }
+
+    function openCatalogModal() {
+      document.getElementById("modal-error").style.display = "none";
+      document.getElementById("catalog-modal").classList.add("active");
+    }
+    function closeCatalogModal() {
+      document.getElementById("catalog-modal").classList.remove("active");
+    }
+
+    function validateCatalogSchema(parsed) {
+      if (!parsed || typeof parsed !== "object") {
+        throw new Error("Catalog root must be a JSON object.");
+      }
+      if (!parsed.tools || typeof parsed.tools !== "object") {
+        throw new Error("Missing or invalid 'tools' object.");
+      }
+      for (const tName of ["codex", "opencode"]) {
+        const t = parsed.tools[tName];
+        if (!t || typeof t !== "object") {
+          throw new Error("Missing tool object for '" + tName + "'.");
+        }
+        if (typeof t.binary !== "string" || !t.binary.startsWith("/")) {
+          throw new Error("Invalid binary path for '" + tName + "' (must be absolute path).");
+        }
+        if (typeof t.expected_version !== "string" || !t.expected_version) {
+          throw new Error("Missing or invalid expected_version for '" + tName + "'.");
+        }
+        if (t.binary_sha256 !== null && (typeof t.binary_sha256 !== "string" || !/^[0-9a-f]{64}$/.test(t.binary_sha256))) {
+          throw new Error("Invalid binary_sha256 for '" + tName + "' (must be 64-hex string or null).");
+        }
+      }
+
+      if (!parsed.prompts || typeof parsed.prompts !== "object") {
+        throw new Error("Missing or invalid 'prompts' object.");
+      }
+      for (const roleKey of ["architect", "reviewer", "builder", "verifier", "ai-reviewer"]) {
+        const p = parsed.prompts[roleKey];
+        if (!p) continue;
+        const sha = typeof p === "string" ? p : (p.prompt_sha256 || "");
+        if (!/^[0-9a-f]{64}$/.test(sha)) {
+          throw new Error("Invalid prompt hash for '" + roleKey + "' (must be 64-hex string).");
+        }
+      }
+
+      if (parsed.current_roles && typeof parsed.current_roles === "object") {
+        const validRoles = new Set(["architect", "builder", "reviewer", "verifier", "proposer", "ai-a1", "ai-a2", "ai-a3"]);
+        for (const [rId, pin] of Object.entries(parsed.current_roles)) {
+          if (!validRoles.has(rId)) {
+            throw new Error("Unrecognized role '" + rId + "' in current_roles.");
+          }
+          if (!pin || typeof pin !== "object") {
+            throw new Error("Invalid pin object for role '" + rId + "'.");
+          }
+          if (!["codex", "opencode"].includes(pin.tool)) {
+            throw new Error("Invalid tool '" + pin.tool + "' for role '" + rId + "'.");
+          }
+          if (typeof pin.model !== "string" || !pin.model.trim()) {
+            throw new Error("Missing or empty model for role '" + rId + "'.");
+          }
+          if (pin.tool === "opencode" && !pin.model.includes("/")) {
+            throw new Error("OpenCode model for role '" + rId + "' must include provider prefix (e.g. 'opencode/muse-spark-1.3-contributor-free').");
+          }
+          if (pin.tool === "codex" && pin.effort && !["high", "medium", "low"].includes(pin.effort)) {
+            throw new Error("Invalid effort '" + pin.effort + "' for codex role '" + rId + "'.");
+          }
+        }
+      }
+      return true;
+    }
 
     function applyImportedCatalog() {
+      const errorEl = document.getElementById("modal-error");
+      errorEl.style.display = "none";
       try {
-        const parsed = JSON.parse(document.getElementById("catalog-input").value);
+        const raw = document.getElementById("catalog-input").value;
+        const parsed = JSON.parse(raw);
+        validateCatalogSchema(parsed);
+
         if (parsed.tools) BACKEND_CATALOG.tools = parsed.tools;
         if (parsed.prompts) {
           Object.keys(parsed.prompts).forEach(k => {
@@ -457,14 +651,22 @@
         }
         if (parsed.current_roles) {
           Object.keys(parsed.current_roles).forEach(k => {
-            BACKEND_CATALOG.roles[k] = parsed.current_roles[k];
+            BACKEND_CATALOG.roles[k] = {
+              tool: parsed.current_roles[k].tool,
+              model: parsed.current_roles[k].model,
+              effort: parsed.current_roles[k].effort || null
+            };
           });
         }
+
         closeCatalogModal();
         render();
-        document.getElementById("catalog-status").textContent = "Custom catalog loaded and verified";
+        const statusEl = document.getElementById("catalog-status");
+        statusEl.textContent = "Client-Imported Catalog (Schema Validated) — Verify against host 'cli.py role-catalog' before execution";
+        statusEl.style.color = "var(--warning)";
       } catch (err) {
-        alert("Invalid JSON: " + err.message);
+        errorEl.textContent = "Schema validation error: " + err.message;
+        errorEl.style.display = "block";
       }
     }
 

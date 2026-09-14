@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 from candidates import git
-from core import WorkflowError, bytes_hash, utc, write_json
+from core import WorkflowError, bytes_hash, canonical, utc, write_json
 from engine import Engine
 
 
@@ -54,11 +54,11 @@ class Stub:
         return data["body"]["session_id"], data["body"], data["wire"], []
 
 
-def plan_token(engine):
+def plan_token(engine, token_id="owner-plan"):
     v = engine.view()
     return dict(
         schema_version=1,
-        token_id="owner-plan",
+        token_id=token_id,
         work_item=v["work_item"],
         gate_id=v["gate"]["gate_id"],
         issuer="owner",
@@ -585,16 +585,55 @@ def test_reconfigure_role_grants_invalidation_and_plan_revocation(configured):
     assert v["status"] == "PAUSED"
     assert v["plan_granted"] is True
 
-    # Reconfigure builder -> plan_granted must be revoked!
-    v = e.reconfigure_role("builder", "codex", "gpt-6-astra", effort="medium")
+    # Reconfiguring reviewer (not builder/proposer) must ALSO revoke plan_granted and reset gate to PLAN!
+    v = e.reconfigure_role("reviewer", "codex", "gpt-6-astra", effort="low")
     assert v["plan_granted"] is False
+    assert v["status"] == "PAUSED"
+    assert v["prior"]["gate"]["scope"] == "PLAN"
 
     events2 = [ev for ev in e.store.events() if ev["kind"] == "role_reconfigured"]
     assert len(events2) == 2
-    assert events2[1]["payload"]["role"] == "builder"
+    assert events2[1]["payload"]["role"] == "reviewer"
     assert events2[1]["payload"]["plan_grant_revoked"] is True
 
+    # When resumed, the gate is PLAN and plan must be approved again before build
+    e.store.event("resume-2", "resume", {"reason": "continue", "reset_budget": False})
+    v = e.run()
+    assert v["gate"]["scope"] == "PLAN"
+    assert v["plan_granted"] is False
+
     e.close()
+
+
+def test_roles_mirror_recovery_from_sqlite(configured):
+    root, config = configured
+    stub = Stub()
+    e = Engine(root, launcher=stub)
+    e.initialize(config)
+    v = e.run()
+    roles_file = root / "orchestrator/roles.json"
+    assert roles_file.exists()
+    original_roles = json.loads(roles_file.read_text())
+    assert canonical(original_roles) == canonical(e.config["roles"])
+    e.close()
+
+    # Simulate roles.json deletion
+    roles_file.unlink()
+    assert not roles_file.exists()
+
+    # New Engine initialization must automatically recover roles.json from SQLite config
+    e2 = Engine(root, launcher=stub)
+    assert roles_file.exists()
+    recovered_roles = json.loads(roles_file.read_text())
+    assert canonical(recovered_roles) == canonical(e2.config["roles"])
+    e2.close()
+
+    # Corrupt roles.json and test recovery on Engine init
+    roles_file.write_text('{"corrupted": true}')
+    e3 = Engine(root, launcher=stub)
+    recovered_roles3 = json.loads(roles_file.read_text())
+    assert canonical(recovered_roles3) == canonical(e3.config["roles"])
+    e3.close()
 
 
 def test_role_catalog_inspection(configured):
@@ -619,3 +658,4 @@ def test_role_catalog_inspection(configured):
         assert len(pinfo["prompt_sha256"]) == 64
 
     e.close()
+
