@@ -49,6 +49,87 @@
           "type": "string",
           "pattern": "^[0-9a-f]{64}$"
         },
+        "repository_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "branch": {
+          "type": "string",
+          "minLength": 1
+        },
+        "stages": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "schema_version",
+        "token_id",
+        "work_item",
+        "gate_id",
+        "issuer",
+        "issued_utc",
+        "status",
+        "scope",
+        "plan_revision_hash",
+        "scope_hash",
+        "repository_id",
+        "branch",
+        "stages"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": 2
+        },
+        "token_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+        },
+        "work_item": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+        },
+        "gate_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+        },
+        "issuer": {
+          "type": "string",
+          "minLength": 1
+        },
+        "issued_utc": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "status": {
+          "enum": [
+            "ISSUED",
+            "RESERVED",
+            "CONSUMED",
+            "INVALIDATED"
+          ]
+        },
+        "scope": {
+          "const": "PLAN"
+        },
+        "plan_revision_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "scope_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
         "roles_hash": {
           "type": "string",
           "pattern": "^[0-9a-f]{64}$"

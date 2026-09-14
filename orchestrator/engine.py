@@ -1555,6 +1555,12 @@ class Engine:
             raise WorkflowError("Approval does not match pending gate")
         from stage4 import is_hex64
         if token["scope"] == "PLAN":
+            if token.get("schema_version") == 1:
+                raise WorkflowError("Legacy schema_version 1 PLAN tokens cannot be reused for new approvals")
+            if token.get("schema_version") != 2:
+                raise WorkflowError("New PLAN approvals must declare schema_version 2 with roles_hash")
+            if not token.get("roles_hash"):
+                raise WorkflowError("PLAN token must declare roles_hash")
             expected_roles_hash = view.get("roles_hash") or digest(self.config.get("roles", {}))
             required = dict(
                 plan_revision_hash=view["plan_revision_hash"],

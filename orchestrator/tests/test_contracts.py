@@ -48,9 +48,11 @@ def result():
     )
 
 
-def token(scope):
+def token(scope, version=None):
+    if version is None:
+        version = 2 if scope == "PLAN" else 1
     common = dict(
-        schema_version=1,
+        schema_version=version,
         token_id="token-1",
         work_item="scope-context-portability",
         gate_id="gate-1",
@@ -60,14 +62,23 @@ def token(scope):
         scope=scope,
     )
     if scope == "PLAN":
-        common.update(
-            plan_revision_hash=H,
-            scope_hash=H,
-            roles_hash=H,
-            repository_id="repo-1",
-            branch="feature/pilot",
-            stages=["1"],
-        )
+        if version == 1:
+            common.update(
+                plan_revision_hash=H,
+                scope_hash=H,
+                repository_id="repo-1",
+                branch="feature/pilot",
+                stages=["1"],
+            )
+        else:
+            common.update(
+                plan_revision_hash=H,
+                scope_hash=H,
+                roles_hash=H,
+                repository_id="repo-1",
+                branch="feature/pilot",
+                stages=["1"],
+            )
     elif scope == "COMMIT":
         common.update(
             candidate_id=H,
@@ -152,6 +163,29 @@ def test_all_finding_routes_have_valid_contracts(classification):
 @pytest.mark.parametrize("scope", ["PLAN", "COMMIT", "DRY_RUN", "IMPORT"])
 def test_scope_specific_grants(scope):
     validate_document("approval-token", token(scope))
+
+
+def test_plan_token_v1_and_v2_contracts():
+    # Legacy v1 PLAN token without roles_hash validates cleanly
+    t1 = token("PLAN", version=1)
+    assert "roles_hash" not in t1
+    validate_document("approval-token", t1)
+
+    # Legacy v1 PLAN token with extra roles_hash fails (additionalProperties: False)
+    t1_invalid = dict(t1, roles_hash=H)
+    with pytest.raises(ValidationError):
+        validate_document("approval-token", t1_invalid)
+
+    # Role-bound v2 PLAN token with roles_hash validates cleanly
+    t2 = token("PLAN", version=2)
+    assert "roles_hash" in t2
+    validate_document("approval-token", t2)
+
+    # Role-bound v2 PLAN token missing roles_hash fails (required field)
+    t2_invalid = dict(t2)
+    del t2_invalid["roles_hash"]
+    with pytest.raises(ValidationError):
+        validate_document("approval-token", t2_invalid)
 
 
 @pytest.mark.parametrize("failure", FAILURES)

@@ -56,10 +56,13 @@ def initial(config):
     )
 
 
-def gate_id(state, scope):
+def gate_id(state, scope, legacy=False):
     bindings = [state["work_item"], state["stage"], scope, state["plan_revision_hash"], state["scope_hash"]]
     if scope == "PLAN":
-        bindings.append(state.get("roles_hash") or digest(state.get("roles", {})))
+        if not legacy:
+            roles_hash = state.get("roles_hash") or (digest(state["roles"]) if "roles" in state else None)
+            if roles_hash:
+                bindings.append(roles_hash)
     elif scope != "PLAN" and state.get("candidate"):
         bindings.append(state["candidate"]["candidate_id"])
     return scope.lower() + "-" + digest(bindings)[:24]
@@ -395,13 +398,27 @@ def apply_event(current, event, config):
             raise WorkflowError("Stale gate authorization")
         state["approval_refs"].append(token["token_id"])
         if token["scope"] == "PLAN":
-            expected_roles_hash = state.get("roles_hash") or digest(config.get("roles", {}))
-            if (
-                token["plan_revision_hash"] != state["plan_revision_hash"]
-                or token["scope_hash"] != state["scope_hash"]
-                or (expected_roles_hash and token.get("roles_hash") != expected_roles_hash)
-            ):
-                raise WorkflowError("Stale plan grant")
+            schema_ver = token.get("schema_version", 1)
+            if schema_ver == 1:
+                legacy_expected_gate = gate_id(state, "PLAN", legacy=True)
+                if state["gate"]["gate_id"] != legacy_expected_gate:
+                    raise WorkflowError("Stale gate authorization: legacy v1 token cannot authorize role-bound gate")
+                if (
+                    token["plan_revision_hash"] != state["plan_revision_hash"]
+                    or token["scope_hash"] != state["scope_hash"]
+                ):
+                    raise WorkflowError("Stale plan grant")
+            elif schema_ver == 2:
+                expected_roles_hash = state.get("roles_hash") or digest(config.get("roles", {}))
+                if (
+                    token["plan_revision_hash"] != state["plan_revision_hash"]
+                    or token["scope_hash"] != state["scope_hash"]
+                    or not token.get("roles_hash")
+                    or token["roles_hash"] != expected_roles_hash
+                ):
+                    raise WorkflowError("Stale plan grant")
+            else:
+                raise WorkflowError(f"Unsupported PLAN token schema version: {schema_ver}")
             if state.get("sub_status") == "PROPOSAL_PENDING":
                 state.update(plan_granted=True, status="APPROVED_FOR_BUILD", next_roles=["proposer"], gate=None)
             else:
@@ -516,17 +533,25 @@ def apply_event(current, event, config):
     elif kind == "pause":
         pause(state, body["reason"])
     elif kind == "resume":
-        if state["status"] != "PAUSED" or (
-            state["active_jobs"] and not state["pause_reason"].startswith("OWNER:")
+        if (state["status"] != "PAUSED" and not (
+            state["status"] == "DRAFT"
+            and state.get("sub_status") == "PROPOSAL_PENDING"
+            and state.get("approval_refs")
+            and state.get("attempt", 1) > 1
+        )) or (
+            state["active_jobs"] and not (state.get("pause_reason") or "").startswith("OWNER:")
         ):
             raise WorkflowError("Cannot resume unresolved active/uncertain jobs")
-        if state["pause_reason"] == "ESCALATED" and not body.get("reset_budget"):
+        if state.get("pause_reason") == "ESCALATED" and not body.get("reset_budget"):
             raise WorkflowError("Escalation needs an explicit owner budget-reset decision")
         if body.get("reset_budget"):
             state.update(unsuccessful_cycles=0, unchanged_rounds=0, previous_snapshots=[])
-        prior = state["prior"]
-        state.update(prior)
-        state.update(pause_reason=None, resume_to=None, prior=None)
+        if state.get("prior"):
+            prior = state["prior"]
+            state.update(prior)
+            state.update(pause_reason=None, resume_to=None, prior=None)
+        elif state.get("sub_status") == "PROPOSAL_PENDING":
+            state.update(status="APPROVED_FOR_BUILD", plan_granted=True, next_roles=["proposer"], gate=None)
         if not state["next_roles"] and not state["gate"] and not state["active_jobs"]:
             state["next_roles"] = [
                 "architect"

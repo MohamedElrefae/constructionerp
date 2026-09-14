@@ -223,9 +223,29 @@ COMMON_TOKEN = {
     "issued_utc": UTC,
     "status": enum(["ISSUED", "RESERVED", "CONSUMED", "INVALIDATED"]),
 }
-PLAN_TOKEN = obj(
+COMMON_TOKEN_V2 = {
+    "schema_version": {"const": 2},
+    "token_id": ID,
+    "work_item": ID,
+    "gate_id": ID,
+    "issuer": TEXT,
+    "issued_utc": UTC,
+    "status": enum(["ISSUED", "RESERVED", "CONSUMED", "INVALIDATED"]),
+}
+PLAN_TOKEN_V1 = obj(
     {
         **COMMON_TOKEN,
+        "scope": {"const": "PLAN"},
+        "plan_revision_hash": HASH,
+        "scope_hash": HASH,
+        "repository_id": TEXT,
+        "branch": TEXT,
+        "stages": array(ID, 1, True),
+    }
+)
+PLAN_TOKEN_V2 = obj(
+    {
+        **COMMON_TOKEN_V2,
         "scope": {"const": "PLAN"},
         "plan_revision_hash": HASH,
         "scope_hash": HASH,
@@ -235,6 +255,7 @@ PLAN_TOKEN = obj(
         "stages": array(ID, 1, True),
     }
 )
+PLAN_TOKEN = PLAN_TOKEN_V2
 COMMIT_TOKEN = obj(
     {
         **COMMON_TOKEN,
@@ -263,7 +284,7 @@ IMPORT_TOKEN = obj(
     {**COMMON_TOKEN, **ERP_BINDINGS, "scope": {"const": "IMPORT"}, "dry_run_evidence_digest": HASH},
     optional=("proposal_sha256",),
 )
-TOKEN = {"oneOf": [PLAN_TOKEN, COMMIT_TOKEN, DRY_TOKEN, IMPORT_TOKEN]}
+TOKEN = {"oneOf": [PLAN_TOKEN_V1, PLAN_TOKEN_V2, COMMIT_TOKEN, DRY_TOKEN, IMPORT_TOKEN]}
 
 STATE = obj(
     {

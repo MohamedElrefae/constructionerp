@@ -58,7 +58,7 @@ def plan_token(engine, token_id="owner-plan"):
     v = engine.view()
     roles_hash = v.get("roles_hash") or digest(engine.config.get("roles", {}))
     return dict(
-        schema_version=1,
+        schema_version=2,
         token_id=token_id,
         work_item=v["work_item"],
         gate_id=v["gate"]["gate_id"],
@@ -737,4 +737,88 @@ def test_role_catalog_inspection(configured):
         assert len(pinfo["prompt_sha256"]) == 64
 
     e.close()
+
+
+def test_legacy_plan_token_validation_and_lineage_replay():
+    import sqlite3
+    from validate import validate_document
+    from routing import initial, apply_event, pause, gate_id
+
+    db_path = Path(__file__).resolve().parent.parent / "var" / "checkpoints.db"
+    conn = sqlite3.connect(db_path)
+    c = conn.cursor()
+    cfg_row = c.execute("SELECT value FROM workflow_meta WHERE key='config'").fetchone()
+    config = json.loads(cfg_row[0])
+
+    events = []
+    for row in c.execute("SELECT seq, event_id, kind, payload, created_utc FROM workflow_events ORDER BY seq"):
+        events.append(dict(seq=row[0], event_id=row[1], kind=row[2], payload=json.loads(row[3]), created_utc=row[4]))
+    conn.close()
+
+    assert len(events) == 4
+
+    # 1. Validating the restored legacy token under legacy contract
+    legacy_token = events[0]["payload"]
+    assert legacy_token["schema_version"] == 1
+    assert "roles_hash" not in legacy_token
+    assert legacy_token["scope"] == "PLAN"
+    # Legacy token must validate cleanly under approval-token contract
+    validate_document("approval-token", legacy_token)
+
+    # Exact consumed legacy token is rejected as already used/recorded
+    root = Path(__file__).resolve().parent.parent.parent
+    e = Engine(root)
+    with pytest.raises(WorkflowError, match="Token already used or recorded"):
+        e.approve(legacy_token)
+
+    # Any new/unrecorded legacy token is rejected because schema_version 1 cannot be reused
+    fresh_legacy_token = dict(legacy_token, token_id="fresh-unrecorded-token", gate_id=e.view()["gate"]["gate_id"])
+    with pytest.raises(WorkflowError, match="Legacy schema_version 1 PLAN tokens cannot be reused"):
+        e.approve(fresh_legacy_token)
+    e.close()
+
+    # 2. Replaying the four-event lineage to the current fail-closed PLAN state
+    state = initial(config)
+    state["gate"] = {"scope": "PLAN", "gate_id": gate_id(state, "PLAN", legacy=True)}
+    assert state["gate"]["gate_id"] == "plan-257525eeb45afcf9a81f7c11"
+
+    # Event 1: grant legacy token
+    state = apply_event(state, events[0], config)
+    assert state["status"] == "APPROVED_FOR_BUILD"
+    assert state["plan_granted"] is True
+    assert state["approval_refs"] == ["plan-token-plan-257525eeb45afcf9a81f7c11"]
+
+    # Proposer job 1 dispatch and pause
+    state["active_jobs"] = ["job-0e0d4d73f8732d43186d1a13"]
+    pause(state, "RECONCILIATION_REQUIRED")
+    assert state["status"] == "PAUSED"
+
+    # Event 2: reconcile job 1
+    state = apply_event(state, events[1], config)
+    assert state["status"] == "DRAFT"
+    assert state["active_jobs"] == []
+
+    # Event 3: resume
+    state = apply_event(state, events[2], config)
+    assert state["status"] == "APPROVED_FOR_BUILD"
+    assert state["plan_granted"] is True
+
+    # Proposer job 2 dispatch and pause
+    state["active_jobs"] = ["job-26261b6a46e9d461b869f6bd"]
+    pause(state, "RECONCILIATION_REQUIRED")
+    assert state["status"] == "PAUSED"
+
+    # Event 4: reconcile job 2
+    state = apply_event(state, events[3], config)
+
+    # Assert final replayed state matches current fail-closed PLAN state
+    assert state["status"] == "DRAFT"
+    assert state["sub_status"] == "PROPOSAL_PENDING"
+    assert state["gate"]["scope"] == "PLAN"
+    assert state["gate"]["gate_id"] == "plan-f3b87241968c440279cd1e53"
+    assert state["plan_granted"] is False
+    assert state["active_jobs"] == []
+    assert state["cursor"] == 4
+    assert state["revision"] == 4
+    assert state["approval_refs"] == ["plan-token-plan-257525eeb45afcf9a81f7c11"]
 

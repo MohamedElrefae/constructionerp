@@ -299,7 +299,7 @@ def test_stage4_sub_status_state_transitions_end_to_end(test_repo):
 
         # Step 1: Owner grants PLAN token to unlock proposer
         plan_token = {
-            "schema_version": 1,
+            "schema_version": 2,
             "token_id": "tok-plan-001",
             "work_item": "erp-arabic-bilingual-data",
             "gate_id": state["gate"]["gate_id"],
@@ -729,7 +729,7 @@ def test_reused_authorization_token_rejected_in_engine_approve(test_repo):
         view = e.adopt_historical("erp-arabic-bilingual-data")
         assert view["gate"]["scope"] == "PLAN"
         token = {
-            "schema_version": 1,
+            "schema_version": 2,
             "token_id": "tok-single-use-001",
             "work_item": "erp-arabic-bilingual-data",
             "gate_id": view["gate"]["gate_id"],
@@ -943,7 +943,7 @@ def test_stage4_public_engine_lifecycle_acceptance(test_repo, tmp_path):
 
         # Owner grants PLAN token
         plan_token = {
-            "schema_version": 1,
+            "schema_version": 2,
             "token_id": "tok-plan-lifecycle-001",
             "work_item": "erp-arabic-bilingual-data",
             "gate_id": view["gate"]["gate_id"],
@@ -1029,7 +1029,7 @@ def test_exhaustive_privacy_leakage_scan(test_repo, tmp_path):
         view = e.adopt_historical("erp-arabic-bilingual-data", erp_descriptor=desc)
 
         plan_token = {
-            "schema_version": 1,
+            "schema_version": 2,
             "token_id": "tok-plan-canary-001",
             "work_item": "erp-arabic-bilingual-data",
             "gate_id": view["gate"]["gate_id"],
@@ -1138,7 +1138,7 @@ def test_adversarial_explanation_leakage(test_repo, tmp_path):
         view = e.adopt_historical("erp-arabic-bilingual-data", erp_descriptor=desc)
 
         plan_token = {
-            "schema_version": 1,
+            "schema_version": 2,
             "token_id": "tok-plan-adv-001",
             "work_item": "erp-arabic-bilingual-data",
             "gate_id": view["gate"]["gate_id"],
@@ -1217,7 +1217,7 @@ def test_adversarial_finding_leakage(test_repo, tmp_path):
         view = e.adopt_historical("erp-arabic-bilingual-data", erp_descriptor=desc)
 
         plan_token = {
-            "schema_version": 1,
+            "schema_version": 2,
             "token_id": "tok-plan-adv-002",
             "work_item": "erp-arabic-bilingual-data",
             "gate_id": view["gate"]["gate_id"],
@@ -1319,7 +1319,7 @@ def test_adversarial_catalog_drift(test_repo, tmp_path):
         blob_path.write_bytes(b"tampered catalog content")
 
         plan_token = {
-            "schema_version": 1,
+            "schema_version": 2,
             "token_id": "tok-plan-drift-001",
             "work_item": "erp-arabic-bilingual-data",
             "gate_id": view["gate"]["gate_id"],
