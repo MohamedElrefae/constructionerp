@@ -262,6 +262,7 @@ class Engine:
         ]
         config["generated"] = generated
         config["scope_hash"] = digest(config["scope"])
+        config["roles_hash"] = digest(config.get("roles", {}))
         config["candidate"] = freeze(
             self.root,
             config["base_commit"],
@@ -427,6 +428,9 @@ class Engine:
             "orchestrator/var/",
         ]
 
+        roles_data = json.loads((self.root / "orchestrator/roles.json").read_text())
+        roles_hash = digest(roles_data)
+
         config = dict(
             root=str(self.root),
             work_item=work_item,
@@ -444,7 +448,8 @@ class Engine:
             plan_revision_hash=plan_hash,
             candidate=initial_candidate,
             generated=generated,
-            roles=json.loads((self.root / "orchestrator/roles.json").read_text()),
+            roles=roles_data,
+            roles_hash=roles_hash,
             quorum=["ai-a1", "ai-a2", "ai-a3"],
             erp_target=erp_descriptor,
             erp_descriptor=erp_descriptor,
@@ -1544,9 +1549,11 @@ class Engine:
             raise WorkflowError("Approval does not match pending gate")
         from stage4 import is_hex64
         if token["scope"] == "PLAN":
+            expected_roles_hash = view.get("roles_hash") or digest(self.config.get("roles", {}))
             required = dict(
                 plan_revision_hash=view["plan_revision_hash"],
                 scope_hash=view["scope_hash"],
+                roles_hash=expected_roles_hash,
                 repository_id=str(self.root),
                 branch=self.config["branch"],
             )
@@ -1896,13 +1903,13 @@ class Engine:
         old_pin = config.get("roles", {}).get(role)
         config.setdefault("roles", {})[role] = pin
 
-        plan_revoked = False
-        new_gate = None
-        if view.get("plan_granted") or config.get("plan_granted"):
-            config["plan_granted"] = False
-            plan_revoked = True
-            new_gate = {"scope": "PLAN", "gate_id": "plan-" + uuid.uuid4().hex[:24]}
-            config["gate"] = new_gate
+        roles_hash = digest(config["roles"])
+        config["roles_hash"] = roles_hash
+
+        plan_revoked = bool(view.get("plan_granted") or config.get("plan_granted"))
+        config["plan_granted"] = False
+        new_gate = {"scope": "PLAN", "gate_id": "plan-" + uuid.uuid4().hex[:24]}
+        config["gate"] = new_gate
 
         event_id = f"role-reconfigure-{uuid.uuid4().hex[:16]}"
         payload = {
@@ -1910,6 +1917,7 @@ class Engine:
             "old_pin": old_pin,
             "new_pin": pin,
             "reason": reason,
+            "roles_hash": roles_hash,
             "plan_grant_revoked": plan_revoked,
             "new_gate": new_gate,
         }
@@ -2004,6 +2012,7 @@ class Engine:
             status=v["status"],
             revision=v["revision"],
             plan_revision_hash=v["plan_revision_hash"],
+            roles_hash=v.get("roles_hash") or digest(self.config.get("roles", {})),
             candidate_id=v["candidate"]["candidate_id"],
             active_jobs=v["active_jobs"],
             completed_dependencies=v["completed_dependencies"],

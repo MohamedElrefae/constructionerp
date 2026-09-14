@@ -49,6 +49,10 @@
           "type": "string",
           "pattern": "^[0-9a-f]{64}$"
         },
+        "roles_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
         "repository_id": {
           "type": "string",
           "minLength": 1
@@ -78,6 +82,7 @@
         "scope",
         "plan_revision_hash",
         "scope_hash",
+        "roles_hash",
         "repository_id",
         "branch",
         "stages"

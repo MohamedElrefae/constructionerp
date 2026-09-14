@@ -61,7 +61,12 @@ def token(scope):
     )
     if scope == "PLAN":
         common.update(
-            plan_revision_hash=H, scope_hash=H, repository_id="repo-1", branch="feature/pilot", stages=["1"]
+            plan_revision_hash=H,
+            scope_hash=H,
+            roles_hash=H,
+            repository_id="repo-1",
+            branch="feature/pilot",
+            stages=["1"],
         )
     elif scope == "COMMIT":
         common.update(
@@ -97,6 +102,7 @@ def state():
         status="DRAFT",
         revision=0,
         plan_revision_hash=None,
+        roles_hash=H,
         candidate_id=None,
         active_jobs=[],
         completed_dependencies=[],

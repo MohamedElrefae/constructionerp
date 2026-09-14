@@ -11,6 +11,7 @@ from stage4 import derive_stage4_candidate_id, is_hex64
 def initial(config):
     sub_status = config.get("sub_status")
     plan_granted = config.get("plan_granted", False)
+    roles_hash = config.get("roles_hash") or digest(config.get("roles", {}))
 
     # In Stage 4 PROPOSAL_PENDING, fail-closed owner-controlled proposal-dispatch gate
     if sub_status == "PROPOSAL_PENDING" and not plan_granted:
@@ -30,6 +31,7 @@ def initial(config):
         candidate=config["candidate"],
         plan_revision_hash=config["plan_revision_hash"],
         scope_hash=config["scope_hash"],
+        roles_hash=roles_hash,
         round=0,
         attempt=1,
         cursor=0,
@@ -56,8 +58,10 @@ def initial(config):
 
 def gate_id(state, scope):
     bindings = [state["work_item"], state["stage"], scope, state["plan_revision_hash"], state["scope_hash"]]
-    if scope != "PLAN" and state.get("candidate"):
-        bindings += [state["candidate"]["candidate_id"]]
+    if scope == "PLAN":
+        bindings.append(state.get("roles_hash") or digest(state.get("roles", {})))
+    elif scope != "PLAN" and state.get("candidate"):
+        bindings.append(state["candidate"]["candidate_id"])
     return scope.lower() + "-" + digest(bindings)[:24]
 
 
@@ -389,9 +393,11 @@ def apply_event(current, event, config):
             raise WorkflowError("Stale gate authorization")
         state["approval_refs"].append(token["token_id"])
         if token["scope"] == "PLAN":
+            expected_roles_hash = state.get("roles_hash") or digest(config.get("roles", {}))
             if (
                 token["plan_revision_hash"] != state["plan_revision_hash"]
                 or token["scope_hash"] != state["scope_hash"]
+                or (expected_roles_hash and token.get("roles_hash") != expected_roles_hash)
             ):
                 raise WorkflowError("Stale plan grant")
             if state.get("sub_status") == "PROPOSAL_PENDING":
@@ -530,7 +536,18 @@ def apply_event(current, event, config):
             raise WorkflowError("Reconciliation does not match a paused active job")
         state["active_jobs"].remove(body["job_id"])
         state["attempt"] += 1
-        state["prior"]["next_roles"] = list(dict.fromkeys(state["prior"]["next_roles"] + [body["role"]]))
+        if body.get("role") == "proposer" or state.get("sub_status") == "PROPOSAL_PENDING":
+            state.update(
+                plan_granted=False,
+                gate={"scope": "PLAN", "gate_id": gate_id(state, "PLAN")},
+                next_roles=[],
+                status="DRAFT",
+                pause_reason=None,
+                resume_to=None,
+                prior=None,
+            )
+        else:
+            state["prior"]["next_roles"] = list(dict.fromkeys(state["prior"]["next_roles"] + [body["role"]]))
     elif kind == "refresh_candidate":
         if state["status"] != "PAUSED" or state["active_jobs"]:
             raise WorkflowError("Candidate refresh requires all external jobs reconciled")
@@ -594,16 +611,23 @@ def apply_event(current, event, config):
     elif kind == "role_reconfigured":
         if state["status"] != "PAUSED" or state["active_jobs"]:
             raise WorkflowError("Role reconfiguration requires a paused reconciled stage")
+        if body.get("roles_hash"):
+            state["roles_hash"] = body["roles_hash"]
         if body.get("plan_grant_revoked"):
             state.update(plan_granted=False)
-            if state.get("prior"):
-                state["prior"].update(
-                    status="PLAN_SUBMITTED",
-                    next_roles=[],
-                    gate=body.get("new_gate") or {"scope": "PLAN", "gate_id": gate_id(state, "PLAN")},
-                )
             if state.get("resume_to") == "APPROVED_FOR_BUILD":
                 state["resume_to"] = "PLAN_SUBMITTED"
+        new_gate = body.get("new_gate") or {"scope": "PLAN", "gate_id": gate_id(state, "PLAN")}
+        if state.get("prior"):
+            state["prior"].update(
+                status="PLAN_SUBMITTED" if state["stage"] != "4" else "DRAFT",
+                next_roles=[],
+                gate=new_gate,
+            )
+        if state.get("resume_to") in ("APPROVED_FOR_BUILD", "BUILD_PENDING", "PROPOSAL_PENDING"):
+            state["resume_to"] = "PLAN_SUBMITTED" if state["stage"] != "4" else "DRAFT"
+        if state.get("gate") and state["gate"].get("scope") == "PLAN":
+            state["gate"] = new_gate
     elif kind == "owner_commit":
         state.update(committed=True, gate=None)
     else:

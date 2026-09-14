@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 from candidates import git
-from core import WorkflowError, bytes_hash, canonical, utc, write_json
+from core import WorkflowError, bytes_hash, canonical, digest, utc, write_json
 from engine import Engine
 
 
@@ -56,6 +56,7 @@ class Stub:
 
 def plan_token(engine, token_id="owner-plan"):
     v = engine.view()
+    roles_hash = v.get("roles_hash") or digest(engine.config.get("roles", {}))
     return dict(
         schema_version=1,
         token_id=token_id,
@@ -67,6 +68,7 @@ def plan_token(engine, token_id="owner-plan"):
         scope="PLAN",
         plan_revision_hash=v["plan_revision_hash"],
         scope_hash=v["scope_hash"],
+        roles_hash=roles_hash,
         repository_id=str(engine.root),
         branch=engine.config["branch"],
         stages=["1"],
@@ -601,6 +603,83 @@ def test_reconfigure_role_grants_invalidation_and_plan_revocation(configured):
     v = e.run()
     assert v["gate"]["scope"] == "PLAN"
     assert v["plan_granted"] is False
+
+    e.close()
+
+
+def test_offline_plan_token_rejected_after_second_role_change(configured):
+    root, config = configured
+    stub = Stub()
+    e = Engine(root, launcher=stub)
+    e.initialize(config)
+    v0 = e.run()
+    assert v0["gate"]["scope"] == "PLAN"
+    initial_roles_hash = v0["roles_hash"]
+    token_initial = plan_token(e, token_id="offline-token-initial")
+
+    # Pause workflow
+    e.store.event("pause-1", "pause", {"reason": "OWNER:pause"})
+    v1 = e.run()
+    assert v1["status"] == "PAUSED"
+
+    # First role change while plan_granted is False
+    v1 = e.reconfigure_role("reviewer", "codex", "gpt-6-astra", effort="high")
+    assert v1["status"] == "PAUSED"
+    assert v1["plan_granted"] is False
+
+    # Resume to PLAN gate
+    e.store.event("resume-1", "resume", {"reason": "continue", "reset_budget": False})
+    v1 = e.run()
+    assert v1["gate"]["scope"] == "PLAN"
+    gate_id_first_change = v1["gate"]["gate_id"]
+    roles_hash_first_change = v1["roles_hash"]
+    assert roles_hash_first_change != initial_roles_hash
+    assert gate_id_first_change != token_initial["gate_id"]
+
+    # Initial offline token prepared before the first change is rejected
+    with pytest.raises(WorkflowError):
+        e.approve(token_initial)
+
+    # Prepare an offline token for gate_id_first_change with roles_hash_first_change
+    token_first = plan_token(e, token_id="offline-token-first-change")
+
+    # Pause workflow again WITHOUT approving plan (plan_granted remains False)
+    e.store.event("pause-2", "pause", {"reason": "OWNER:pause"})
+    v2 = e.run()
+    assert v2["status"] == "PAUSED"
+    assert v2["plan_granted"] is False
+
+    # Second role change while plan_granted is False
+    v2 = e.reconfigure_role("reviewer", "codex", "gpt-6-astra", effort="low")
+    assert v2["status"] == "PAUSED"
+    assert v2["plan_granted"] is False
+
+    # Resume to PLAN gate
+    e.store.event("resume-2", "resume", {"reason": "continue", "reset_budget": False})
+    v2 = e.run()
+    assert v2["gate"]["scope"] == "PLAN"
+    gate_id_second_change = v2["gate"]["gate_id"]
+    roles_hash_second_change = v2["roles_hash"]
+
+    # Assert that gate rotated even though plan_granted was already False!
+    assert gate_id_second_change != gate_id_first_change
+    assert roles_hash_second_change != roles_hash_first_change
+
+    # Stale offline token from first change is rejected because gate_id doesn't match
+    with pytest.raises(WorkflowError, match="Approval does not match pending gate"):
+        e.approve(token_first)
+
+    # Even if attacker forges gate_id to match current gate, roles_hash mismatch is rejected
+    forged_token = deepcopy(token_first)
+    forged_token["gate_id"] = gate_id_second_change
+    forged_token["token_id"] = "forged-stale-roles-hash"
+    with pytest.raises(WorkflowError, match="PLAN binding mismatch"):
+        e.approve(forged_token)
+
+    # Fresh offline token with current gate_id and roles_hash succeeds
+    token_second = plan_token(e, token_id="offline-token-second-change")
+    v_approved = e.approve(token_second)
+    assert v_approved["plan_granted"] is True
 
     e.close()
 

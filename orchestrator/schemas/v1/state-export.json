@@ -48,6 +48,17 @@
         }
       ]
     },
+    "roles_hash": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
     "candidate_id": {
       "anyOf": [
         {
@@ -232,6 +243,7 @@
     "status",
     "revision",
     "plan_revision_hash",
+    "roles_hash",
     "candidate_id",
     "active_jobs",
     "completed_dependencies",
