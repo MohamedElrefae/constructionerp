@@ -199,6 +199,8 @@ def review_outcome(state, outputs, source, quorum):
 
 def apply_event(current, event, config):
     state = deepcopy(current)
+    if not state.get("roles_hash"):
+        state["roles_hash"] = config.get("roles_hash") or digest(config.get("roles", {}))
     if event["seq"] <= state["cursor"]:
         return state
     kind, body = event["kind"], event["payload"]

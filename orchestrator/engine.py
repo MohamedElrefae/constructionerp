@@ -166,6 +166,9 @@ class Engine:
         self.checkpoint_conn.execute("PRAGMA synchronous=FULL")
         self.config = self.store.meta("config")
         if self.config and self.config.get("roles"):
+            if "roles_hash" not in self.config:
+                self.config["roles_hash"] = digest(self.config["roles"])
+                self.store.set_meta("config", self.config)
             self.sync_roles_mirror()
         watermark = self.runtime / "checkpoint-watermark.json"
         if watermark.exists():
@@ -472,7 +475,10 @@ class Engine:
         snapshot = self.graph.get_state(self.graph_config)
         if not snapshot.values:
             raise WorkflowError("No workflow checkpoint; run init first")
-        return deepcopy(snapshot.values["view"])
+        v = deepcopy(snapshot.values["view"])
+        if not v.get("roles_hash") and self.config:
+            v["roles_hash"] = self.config.get("roles_hash") or digest(self.config.get("roles", {}))
+        return v
 
     def _synchronize(self, state):
         view = deepcopy(state["view"])
