@@ -43,6 +43,7 @@ from dashboard_api import (
     execute_action,
     get_plan_projection,
     get_state_projection,
+    render_plan_as_safe_text_html,
     sanitize_error,
 )
 from engine import Engine, SUPPORTED_STAGES, extract_scope_proposal
@@ -1953,11 +1954,16 @@ def test_html_parser_variants_and_encoded_urls_sanitization():
         "<svg/onload=alert(1)>\n"
         "<iframe/src=\"evil.com\"></iframe>\n"
         "<body/onload=alert(1)>\n"
+        "<img\nsrc=x\nonerror=alert(1)>\n"
+        "<script\nsrc=\"evil.js\"\n></script>\n"
         "Normal math: x < 5 and y > 3"
     )
     clean = sanitize_plan_text(raw_html_variants)
     assert "<img" not in clean
     assert "&lt;img/src=x onerror=alert(1)&gt;" in clean
+    assert "&lt;img\nsrc=x\nonerror=alert(1)&gt;" in clean
+    assert "<script" not in clean
+    assert "&lt;script\nsrc=\"evil.js\"\n&gt;&lt;/script&gt;" in clean
     assert "<a href=" not in clean
     assert '&lt;a href="&#106;avascript:alert(1)"&gt;' in clean
     assert "<svg" not in clean
@@ -1968,7 +1974,7 @@ def test_html_parser_variants_and_encoded_urls_sanitization():
     assert "&lt;body/onload=alert(1)&gt;" in clean
     assert "x < 5 and y > 3" in clean
 
-    # Markdown links with encoded schemes
+    # Markdown links with encoded schemes, nested parens, and blockquote/list ref defs
     md_encoded_links = (
         "[click1](javascript:alert(1))\n"
         "[click2](&#106;avascript:alert(1))\n"
@@ -1980,10 +1986,17 @@ def test_html_parser_variants_and_encoded_urls_sanitization():
         "[safe2](/docs/guide.md)\n"
         "[safe3](#section-heading)\n"
         "[click_trailing](javascript:alert(1))next\n"
+        "[click_nested_parens](javascript:alert((1)))\n"
+        "[click_deep_parens](javascript:alert(((42))))\n"
+        "[safe_parens](https://example.com/wiki/Page_(disambiguation))\n"
         "[click_ref][target]\n\n"
         "[target]: javascript:alert(1)\n"
         "[target_angle]: <javascript:alert(1)> \"Malicious Title\"\n"
         "[target_safe]: https://example.com/safe \"Safe Title\"\n"
+        "> [target_bq]: javascript:alert(1)\n"
+        ">> [target_nested_bq]: javascript:alert(1)\n"
+        "- [target_list]: javascript:alert(1)\n"
+        "1. [target_ordered]: javascript:alert(1)\n"
         "<javascript:alert(1)>\n"
         "[![alt](javascript:alert(2))](https://example.com)\n"
         "[![alt](https://example.com/img.png)](javascript:alert(1))\n"
@@ -1999,10 +2012,17 @@ def test_html_parser_variants_and_encoded_urls_sanitization():
     assert "[safe2](/docs/guide.md)" in clean_md
     assert "[safe3](#section-heading)" in clean_md
     assert "[click_trailing](#blocked)next" in clean_md
+    assert "[click_nested_parens](#blocked)" in clean_md
+    assert "[click_deep_parens](#blocked)" in clean_md
+    assert "[safe_parens](https://example.com/wiki/Page_(disambiguation))" in clean_md
     assert "[click_ref][target]" in clean_md
     assert "[target]: #blocked" in clean_md
     assert "[target_angle]: #blocked \"Malicious Title\"" in clean_md
     assert "[target_safe]: https://example.com/safe \"Safe Title\"" in clean_md
+    assert "> [target_bq]: #blocked" in clean_md
+    assert ">> [target_nested_bq]: #blocked" in clean_md
+    assert "- [target_list]: #blocked" in clean_md
+    assert "1. [target_ordered]: #blocked" in clean_md
     assert "&lt;javascript:alert(1)&gt;" in clean_md
     assert "[![alt](#blocked)](https://example.com)" in clean_md
     assert "[![alt](https://example.com/img.png)](#blocked)" in clean_md
@@ -2238,6 +2258,63 @@ def test_plan_projection_sanitizes_unsafe_html(configured):
 
     # Normal text preserved
     assert "Normal text with **bold** and *italic*." in text
+    assert proj["format"] == "plain_text"
+    assert proj["render_mode"] == "text_content"
+
+
+def test_plain_text_output_contract_and_rendered_boundary(configured):
+    """Verify that plan display strictly adheres to the plain-text contract.
+
+    Ensures that:
+    1. get_plan_projection explicitly specifies format='plain_text' and render_mode='text_content'.
+    2. Malicious inputs (multiline <img> tags with onerror, nested-paren javascript links,
+       and blockquoted/list reference definitions) remain inert plain text.
+    3. render_plan_as_safe_text_html produces safe, escaped <pre> blocks without DOM execution.
+    """
+    root, config = configured
+    e = Engine(root, launcher=Stub())
+    try:
+        e.initialize(config)
+    finally:
+        e.close()
+
+    exploit_plan = (
+        "# Security Test Plan\n\n"
+        "## Multiline Exploit Tag\n"
+        "<img\nsrc=x\nonerror=alert(1)>\n\n"
+        "## Deep Nested Parens\n"
+        "[click](javascript:alert(((1))))\n\n"
+        "## Blockquoted Reference Def\n"
+        "> [target]: javascript:alert(1)\n\n"
+        "## List Reference Def\n"
+        "- [target_list]: javascript:alert(1)\n\n"
+        "## Bilingual Arabic Guidance\n"
+        "يرجى مراجعة الخطة والامتثال للشروط."
+    )
+    (root / config["plan_path"]).write_text(exploit_plan, encoding="utf-8")
+
+    proj = get_plan_projection(root)
+    assert proj["format"] == "plain_text"
+    assert proj["render_mode"] == "text_content"
+
+    text = proj["plan_text"]
+    # Verify raw HTML tags are neutralized in sanitized text
+    assert "<img" not in text
+    assert "&lt;img\nsrc=x\nonerror=alert(1)&gt;" in text
+    assert "[click](#blocked)" in text
+    assert "> [target]: #blocked" in text
+    assert "- [target_list]: #blocked" in text
+    assert "يرجى مراجعة الخطة" in text
+
+    # Verify rendering via safe plain-text HTML container
+    safe_html = render_plan_as_safe_text_html(text)
+    assert safe_html.startswith("<pre class=\"plan-text-display\">")
+    assert safe_html.endswith("</pre>")
+    # Must NOT contain any active HTML elements
+    assert "<img" not in safe_html
+    assert "<script" not in safe_html
+    assert "javascript:" not in safe_html
+    assert "يرجى مراجعة الخطة" in safe_html
 
 
 def test_concurrent_subprocess_locking_serializes_mutations(configured):

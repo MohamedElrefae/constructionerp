@@ -55,14 +55,11 @@ _UNQUOTED_CREDENTIAL_PATTERN = re.compile(
 )
 _BEARER_PATTERN = re.compile(r"(?i)(bearer\s+)(['\"]?)([^\s'\",;]+)(['\"]?)")
 _HTML_TAG_RE = re.compile(
-    r"</?\s*[a-zA-Z][^>\r\n]*>|<!(?:--[\s\S]*?--|[^>]*?)>|<\?[\s\S]*?\?>",
+    r"</?\s*[a-zA-Z][^>]*>|<!(?:--[\s\S]*?--|[\s\S]*?)>|<\?[\s\S]*?\?>",
     re.IGNORECASE,
 )
-_MD_INLINE_LINK_RE = re.compile(
-    r"(!?\[(?:[^\[\]]|\[[^\]]*\])*\])\(\s*(?:<(?P<url_angle>[^>\r\n]+)>|(?P<url_bare>(?:[^\s()]|\([^\s()]*\))+))(?:\s+(?P<title>\"[^\"]*\"|\x27[^\x27]*\x27|\([^)]*\)))?\s*\)"
-)
 _MD_REF_DEF_RE = re.compile(
-    r"^([ \t]{0,3}\[[^\]]+\]:[ \t]*(?:\r?\n[ \t]*)?)(?:<(?P<url_angle>[^>\r\n]+)>|(?P<url_bare>\S+))(?P<tail>[^\r\n]*)$",
+    r"^([ \t]*(?:[>]+\s*)*(?:(?:[-*+]|\d+\.)\s+)?\[[^\]]+\]:[ \t]*(?:\r?\n[ \t]*)?)(?:<(?P<url_angle>[^>\r\n]+)>|(?P<url_bare>\S+))(?P<tail>[^\r\n]*)$",
     re.MULTILINE,
 )
 _MD_REF_LINK_RE = re.compile(r"(!?\[[^\]]*\])\[([^\]]+)\]")
@@ -95,17 +92,81 @@ def _is_safe_url(url: str) -> bool:
     return True
 
 
+def _scan_and_sanitize_inline_links(text: str) -> str:
+    """Scan and sanitize Markdown inline links with arbitrary balanced parentheses.
+
+    Handles nested parens such as [click](javascript:alert((1))) or
+    [safe](https://example.com/a(b(c))) without regex backtracking or depth limits.
+    """
+    out = []
+    i = 0
+    n = len(text)
+    last_end = 0
+    while i < n:
+        if text[i] == "[" or (text[i] == "!" and i + 1 < n and text[i + 1] == "["):
+            start = i
+            is_img = text[i] == "!"
+            if is_img:
+                i += 1
+            bracket_depth = 1
+            i += 1
+            while i < n and bracket_depth > 0:
+                if text[i] == "\\":
+                    i += 2
+                    continue
+                if text[i] == "[":
+                    bracket_depth += 1
+                elif text[i] == "]":
+                    bracket_depth -= 1
+                i += 1
+            if bracket_depth == 0 and i < n and text[i] == "(":
+                label = text[start:i]
+                paren_start = i + 1
+                paren_depth = 1
+                i += 1
+                while i < n and paren_depth > 0:
+                    if text[i] == "\\":
+                        i += 2
+                        continue
+                    if text[i] == "(":
+                        paren_depth += 1
+                    elif text[i] == ")":
+                        paren_depth -= 1
+                    i += 1
+                if paren_depth == 0:
+                    raw_dest = text[paren_start:i - 1].strip()
+                    url = raw_dest
+                    title = ""
+                    if raw_dest.startswith("<"):
+                        gt = raw_dest.find(">")
+                        if gt != -1:
+                            url = raw_dest[1:gt].strip()
+                            title = raw_dest[gt + 1:].strip()
+                    else:
+                        parts = raw_dest.split(None, 1)
+                        if parts:
+                            url = parts[0]
+                            if len(parts) > 1:
+                                title = parts[1]
+                    if "[" in label[1:]:
+                        label = _scan_and_sanitize_inline_links(label)
+                    out.append(text[last_end:start])
+                    if not _is_safe_url(url):
+                        title_suffix = f" {title}" if title else ""
+                        out.append(f"{label}(#blocked{title_suffix})")
+                    else:
+                        out.append(f"{label}({raw_dest})")
+                    last_end = i
+                    continue
+            i = start + 1
+        else:
+            i += 1
+    out.append(text[last_end:])
+    return "".join(out)
+
+
 def _sanitize_md_links(text: str) -> str:
-    def _replace_inline(match: re.Match) -> str:
-        prefix = match.group(1)
-        if "[" in prefix[1:] and "](" in prefix:
-            prefix = _MD_INLINE_LINK_RE.sub(_replace_inline, prefix)
-        url = match.group("url_angle") or match.group("url_bare")
-        title = match.group("title")
-        title_str = f" {title}" if title else ""
-        if not _is_safe_url(url):
-            return f"{prefix}(#blocked{title_str})"
-        return f"{prefix}({url}{title_str})" if prefix != match.group(1) else match.group(0)
+    text = _scan_and_sanitize_inline_links(text)
 
     def _replace_ref(match: re.Match) -> str:
         prefix = match.group(1)
@@ -115,7 +176,6 @@ def _sanitize_md_links(text: str) -> str:
             return f"{prefix}#blocked{tail}"
         return match.group(0)
 
-    text = _MD_INLINE_LINK_RE.sub(_replace_inline, text)
     text = _MD_REF_DEF_RE.sub(_replace_ref, text)
     text = _MD_REF_LINK_RE.sub(
         lambda m: f"{m.group(1)}[#blocked]" if not _is_safe_url(m.group(2)) else m.group(0),
@@ -128,11 +188,35 @@ def _sanitize_md_links(text: str) -> str:
     return text
 
 
+def render_plan_as_safe_text_html(plan_text: str) -> str:
+    """Render plan text as safe HTML using plain-text escaping.
+
+    Contract: The plan output is explicitly plain text. Consuming dashboards and
+    UIs MUST render this text using DOM textContent (or equivalent safe plain text
+    DOM node insertion such as <pre class='plan-display'> with element.textContent = ...),
+    and MUST NEVER render it via innerHTML, outerHTML, or raw HTML injection.
+    """
+    escaped = html.escape(plan_text, quote=True)
+    return f"<pre class=\"plan-text-display\">{escaped}</pre>"
+
+
 def sanitize_plan_text(text: str, root: Path | str | None = None) -> str:
     """Sanitize plan text while preserving legitimate bilingual Arabic content.
 
-    Redacts credentials (JSON & key-value formats, quoted & unquoted), file paths,
-    disables raw HTML, and validates Markdown link protocols (inline & reference).
+    Output Contract:
+    The plan output is explicitly plain text (format='plain_text', render_mode='text_content').
+    Consuming dashboards and UIs MUST render this text using DOM textContent (or equivalent
+    safe plain text DOM node insertion), and MUST NEVER interpret or inject it via innerHTML,
+    outerHTML, or un-sanitized Markdown-to-HTML conversion.
+
+    Defense-in-depth sanitization:
+    - Redacts credentials in JSON, YAML, and key-value formats (quoted and unquoted).
+    - Masks host absolute paths and worktree locations.
+    - Disables raw HTML tags (including multiline tags, scripts, iframes, images).
+    - Neutralizes Markdown links specifying unsafe URL schemes (javascript:, data:, vbscript:, etc.)
+      across arbitrary nested parentheses, angle brackets, and reference definitions inside
+      blockquotes and lists.
+    - Preserves legitimate Arabic bilingual content and safe URLs.
     """
     if not isinstance(text, str):
         return ""
@@ -293,6 +377,12 @@ def get_state_projection(root: Path | str) -> dict:
 def get_plan_projection(root: Path | str) -> dict:
     """Dedicated read-only projection of the workflow's approved plan text.
 
+    Output Contract:
+    The returned plan projection is explicitly plain text (format='plain_text',
+    render_mode='text_content'). Consuming dashboards and UIs MUST render plan_text
+    using DOM textContent (e.g. element.textContent = result.plan_text), and MUST NEVER
+    render or inject it via innerHTML, outerHTML, or raw Markdown-to-HTML conversion.
+
     Does NOT accept request-supplied file paths, instantiate Engine, acquire
     exclusive execution.lock, or mutate any files. Resolves ONLY the workflow's
     approved plan artifact from checkpoints metadata.
@@ -306,7 +396,12 @@ def get_plan_projection(root: Path | str) -> dict:
 
     db_path = runtime_path / "checkpoints.db"
     if not db_path.exists():
-        return {"plan_text": "", "plan_path": ""}
+        return {
+            "plan_text": "",
+            "plan_path": "",
+            "format": "plain_text",
+            "render_mode": "text_content",
+        }
 
     plan_art = None
     plan_cfg_path = ""
@@ -324,7 +419,12 @@ def get_plan_projection(root: Path | str) -> dict:
 
     rel_path = plan_art or plan_cfg_path
     if not rel_path:
-        return {"plan_text": "", "plan_path": ""}
+        return {
+            "plan_text": "",
+            "plan_path": "",
+            "format": "plain_text",
+            "render_mode": "text_content",
+        }
 
     # Reject absolute paths, directory traversal, and symlink escapes before reading
     try:
@@ -335,7 +435,12 @@ def get_plan_projection(root: Path | str) -> dict:
         raise PreconditionError(f"Unsafe plan_path: {rel_path} escapes worktree boundary") from exc
 
     if not full_path.exists():
-        return {"plan_text": "", "plan_path": str(full_path.relative_to(root))}
+        return {
+            "plan_text": "",
+            "plan_path": str(full_path.relative_to(root)),
+            "format": "plain_text",
+            "render_mode": "text_content",
+        }
 
     raw_text = full_path.read_text(encoding="utf-8", errors="replace")
     clean_text = sanitize_plan_text(raw_text, root=root)
@@ -343,6 +448,8 @@ def get_plan_projection(root: Path | str) -> dict:
     return {
         "plan_text": clean_text,
         "plan_path": str(full_path.relative_to(root)),
+        "format": "plain_text",
+        "render_mode": "text_content",
     }
 
 
