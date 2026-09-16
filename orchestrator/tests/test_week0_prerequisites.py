@@ -1978,7 +1978,15 @@ def test_html_parser_variants_and_encoded_urls_sanitization():
         "[click6](vbscript:alert(1))\n"
         "[safe1](https://example.com/guide?id=123)\n"
         "[safe2](/docs/guide.md)\n"
-        "[safe3](#section-heading)"
+        "[safe3](#section-heading)\n"
+        "[click_trailing](javascript:alert(1))next\n"
+        "[click_ref][target]\n\n"
+        "[target]: javascript:alert(1)\n"
+        "[target_angle]: <javascript:alert(1)> \"Malicious Title\"\n"
+        "[target_safe]: https://example.com/safe \"Safe Title\"\n"
+        "<javascript:alert(1)>\n"
+        "[![alt](javascript:alert(2))](https://example.com)\n"
+        "[![alt](https://example.com/img.png)](javascript:alert(1))\n"
     )
     clean_md = sanitize_plan_text(md_encoded_links)
     assert "[click1](#blocked)" in clean_md
@@ -1990,6 +1998,14 @@ def test_html_parser_variants_and_encoded_urls_sanitization():
     assert "[safe1](https://example.com/guide?id=123)" in clean_md
     assert "[safe2](/docs/guide.md)" in clean_md
     assert "[safe3](#section-heading)" in clean_md
+    assert "[click_trailing](#blocked)next" in clean_md
+    assert "[click_ref][target]" in clean_md
+    assert "[target]: #blocked" in clean_md
+    assert "[target_angle]: #blocked \"Malicious Title\"" in clean_md
+    assert "[target_safe]: https://example.com/safe \"Safe Title\"" in clean_md
+    assert "&lt;javascript:alert(1)&gt;" in clean_md
+    assert "[![alt](#blocked)](https://example.com)" in clean_md
+    assert "[![alt](https://example.com/img.png)](#blocked)" in clean_md
 
 
 def test_json_formatted_credentials_redaction():
@@ -2002,10 +2018,14 @@ def test_json_formatted_credentials_redaction():
         '  "password": "demo-secret-123",\n'
         '  "api_key": "sk-test-live-key-456",\n'
         '  "client_secret": "my-client-secret-789",\n'
-        '  "token": "token-xyz-000"\n'
+        '  "token": "token-xyz-000",\n'
+        '  "token_id": "tok-grant-persisted-123"\n'
         '}\n'
         '```\n'
         'Inline settings: password = "demo-secret-123", secret_key: "demo-secret-123", Bearer tok-bearer-12345678.\n'
+        'Quoted credentials with spaces: {"password": "alpha beta gamma"}\n'
+        'Quoted credentials with punctuation: password: "alpha, beta; gamma"\n'
+        'Quoted credentials with escaped quotes: {"secret": "alpha \\"beta\\" gamma"}\n'
         'Bilingual Arabic:\n'
         '# خطة العمل\n'
         'يرجى التأكد من حماية كلمة المرور وعدم نشرها علناً.'
@@ -2016,10 +2036,18 @@ def test_json_formatted_credentials_redaction():
     assert "my-client-secret-789" not in clean
     assert "token-xyz-000" not in clean
     assert "tok-bearer-12345678" not in clean
+    assert "alpha beta gamma" not in clean
+    assert "beta gamma" not in clean
+    assert "alpha, beta; gamma" not in clean
+    assert "alpha \\\"beta\\\" gamma" not in clean
     assert '"password": "[REDACTED_CREDENTIAL]"' in clean
     assert '"api_key": "[REDACTED_CREDENTIAL]"' in clean
     assert '"client_secret": "[REDACTED_CREDENTIAL]"' in clean
     assert 'Bearer [REDACTED_CREDENTIAL]' in clean
+    assert '{"password": "[REDACTED_CREDENTIAL]"}' in clean
+    assert 'password: "[REDACTED_CREDENTIAL]"' in clean
+    assert '{"secret": "[REDACTED_CREDENTIAL]"}' in clean
+    assert '"token_id": "tok-grant-persisted-123"' in clean
     assert "خطة العمل" in clean
     assert "يرجى التأكد من حماية كلمة المرور" in clean
     assert "[REDACTED_ARABIC]" not in clean

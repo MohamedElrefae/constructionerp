@@ -45,16 +45,28 @@ _SECRET_KEYWORDS = (
     r"api[_-]?key|api[_-]?secret|access[_-]?token|auth[_-]?token|secret[_-]?key|"
     r"client[_-]?secret|private[_-]?key|password|passwd|secret|token|bearer"
 )
-_CREDENTIAL_PATTERN = re.compile(
-    rf"""(?i)(?P<prefix>['\"]?(?:{_SECRET_KEYWORDS})['\"]?\s*[:=]\s*['\"]?)(?P<secret>[^'\"\s,;}}\]\)>]+)(?P<suffix>['\"]?)""",
+_QUOTED_CREDENTIAL_PATTERN = re.compile(
+    rf"""(?i)(?P<prefix>['"]?(?:{_SECRET_KEYWORDS})\b['"]?\s*[:=]\s*)(?P<quote>['"])(?P<secret>(?:\\.|(?!(?P=quote))[^\r\n])*?)(?P=quote)""",
     re.VERBOSE,
 )
-_BEARER_PATTERN = re.compile(r"(?i)(bearer\s+)([a-zA-Z0-9_\-\.]{8,})")
+_UNQUOTED_CREDENTIAL_PATTERN = re.compile(
+    rf"""(?i)(?P<prefix>\b(?:{_SECRET_KEYWORDS})\b\s*[:=]\s*)(?P<secret>[^\s'\",;}}\]\)>]+)""",
+    re.VERBOSE,
+)
+_BEARER_PATTERN = re.compile(r"(?i)(bearer\s+)(['\"]?)([^\s'\",;]+)(['\"]?)")
 _HTML_TAG_RE = re.compile(
-    r"</?\s*[a-zA-Z][a-zA-Z0-9:-]*(?:>|[\s/][^>]*>)|<!(?:--[\s\S]*?--|[^>]*?)>|<\?[\s\S]*?\?>",
+    r"</?\s*[a-zA-Z][^>\r\n]*>|<!(?:--[\s\S]*?--|[^>]*?)>|<\?[\s\S]*?\?>",
     re.IGNORECASE,
 )
-_MD_LINK_RE = re.compile(r"(!?\[[^\]]*\])\((.*?)\)(?=[ \t\r\n.,;!?]|$|\n)")
+_MD_INLINE_LINK_RE = re.compile(
+    r"(!?\[(?:[^\[\]]|\[[^\]]*\])*\])\(\s*(?:<(?P<url_angle>[^>\r\n]+)>|(?P<url_bare>(?:[^\s()]|\([^\s()]*\))+))(?:\s+(?P<title>\"[^\"]*\"|\x27[^\x27]*\x27|\([^)]*\)))?\s*\)"
+)
+_MD_REF_DEF_RE = re.compile(
+    r"^([ \t]{0,3}\[[^\]]+\]:[ \t]*(?:\r?\n[ \t]*)?)(?:<(?P<url_angle>[^>\r\n]+)>|(?P<url_bare>\S+))(?P<tail>[^\r\n]*)$",
+    re.MULTILINE,
+)
+_MD_REF_LINK_RE = re.compile(r"(!?\[[^\]]*\])\[([^\]]+)\]")
+_MD_SHORTCUT_RE = re.compile(r"(?<!\])\[([^\]]+)\](?![\[\(])")
 
 
 def strip_paths(text: str, root: Path | str | None = None) -> str:
@@ -84,31 +96,58 @@ def _is_safe_url(url: str) -> bool:
 
 
 def _sanitize_md_links(text: str) -> str:
-    def _replace(match: re.Match) -> str:
+    def _replace_inline(match: re.Match) -> str:
         prefix = match.group(1)
-        url = match.group(2)
+        if "[" in prefix[1:] and "](" in prefix:
+            prefix = _MD_INLINE_LINK_RE.sub(_replace_inline, prefix)
+        url = match.group("url_angle") or match.group("url_bare")
+        title = match.group("title")
+        title_str = f" {title}" if title else ""
         if not _is_safe_url(url):
-            return f"{prefix}(#blocked)"
+            return f"{prefix}(#blocked{title_str})"
+        return f"{prefix}({url}{title_str})" if prefix != match.group(1) else match.group(0)
+
+    def _replace_ref(match: re.Match) -> str:
+        prefix = match.group(1)
+        url = match.group("url_angle") or match.group("url_bare")
+        tail = match.group("tail") or ""
+        if not _is_safe_url(url):
+            return f"{prefix}#blocked{tail}"
         return match.group(0)
 
-    return _MD_LINK_RE.sub(_replace, text)
+    text = _MD_INLINE_LINK_RE.sub(_replace_inline, text)
+    text = _MD_REF_DEF_RE.sub(_replace_ref, text)
+    text = _MD_REF_LINK_RE.sub(
+        lambda m: f"{m.group(1)}[#blocked]" if not _is_safe_url(m.group(2)) else m.group(0),
+        text,
+    )
+    text = _MD_SHORTCUT_RE.sub(
+        lambda m: "[#blocked]" if not _is_safe_url(m.group(1)) else m.group(0),
+        text,
+    )
+    return text
 
 
 def sanitize_plan_text(text: str, root: Path | str | None = None) -> str:
     """Sanitize plan text while preserving legitimate bilingual Arabic content.
 
-    Redacts credentials (JSON & key-value formats), file paths, disables raw HTML,
-    and validates Markdown link protocols.
+    Redacts credentials (JSON & key-value formats, quoted & unquoted), file paths,
+    disables raw HTML, and validates Markdown link protocols (inline & reference).
     """
     if not isinstance(text, str):
         return ""
     sanitized = strip_paths(text, root=root)
-    sanitized = _CREDENTIAL_PATTERN.sub(r"\g<prefix>[REDACTED_CREDENTIAL]\g<suffix>", sanitized)
-    sanitized = _BEARER_PATTERN.sub(r"\1[REDACTED_CREDENTIAL]", sanitized)
+    sanitized = _QUOTED_CREDENTIAL_PATTERN.sub(
+        r"\g<prefix>\g<quote>[REDACTED_CREDENTIAL]\g<quote>", sanitized
+    )
+    sanitized = _UNQUOTED_CREDENTIAL_PATTERN.sub(
+        r"\g<prefix>[REDACTED_CREDENTIAL]", sanitized
+    )
+    sanitized = _BEARER_PATTERN.sub(r"\1\2[REDACTED_CREDENTIAL]\4", sanitized)
+    sanitized = _sanitize_md_links(sanitized)
     sanitized = _HTML_TAG_RE.sub(
         lambda m: m.group(0).replace("<", "&lt;").replace(">", "&gt;"), sanitized
     )
-    sanitized = _sanitize_md_links(sanitized)
     return sanitized
 
 
