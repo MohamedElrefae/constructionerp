@@ -161,12 +161,20 @@ def review_outcome(state, outputs, source, quorum):
             state.update(status="CHANGES_REQUESTED", next_roles=["builder"], gate=None)
         state["attempt"] += 1
         return
-    if source == "reviewer" and state["plan_granted"]:
-        state.update(status="APPROVED_FOR_BUILD", next_roles=["builder"], gate=None)
-    elif source == "reviewer":
-        state.update(
-            status="PLAN_SUBMITTED", next_roles=[], gate={"scope": "PLAN", "gate_id": gate_id(state, "PLAN")}
-        )
+    if source == "reviewer":
+        if state.get("stage") == "plan":
+            state.update(
+                status="PLAN_SUBMITTED",
+                next_roles=[],
+                gate={"scope": "PLAN", "gate_id": gate_id(state, "PLAN")},
+                plan_granted=False,
+            )
+        elif state["plan_granted"]:
+            state.update(status="APPROVED_FOR_BUILD", next_roles=["builder"], gate=None)
+        else:
+            state.update(
+                status="PLAN_SUBMITTED", next_roles=[], gate={"scope": "PLAN", "gate_id": gate_id(state, "PLAN")}
+            )
     elif source == "quorum":
         if state.get("sub_status") == "PANEL_REVIEW":
             state.update(
@@ -647,6 +655,23 @@ def apply_event(current, event, config):
             state["resume_to"] = "PLAN_SUBMITTED" if state["stage"] != "4" else "DRAFT"
         if state.get("gate") and state["gate"].get("scope") == "PLAN":
             state["gate"] = new_gate
+    elif kind == "scope_adopted":
+        impl_stages = body["implementation_stages"]
+        state["stage"] = impl_stages[0]
+        state["scope_hash"] = body["scope_hash"]
+        state["candidate"] = body["candidate_meta"]
+        state["stages"] = {
+            **state.get("stages", {}),
+            "plan": {
+                "sub_status": None,
+                "historical": False,
+                "evidence_refs": [],
+            },
+        }
+        state["gate"] = {"scope": "PLAN", "gate_id": gate_id(state, "PLAN")}
+        state["plan_granted"] = False
+        state["status"] = "PLAN_SUBMITTED"
+        state["next_roles"] = []
     elif kind == "owner_commit":
         state.update(committed=True, gate=None)
     else:

@@ -15,76 +15,63 @@ from packaging.requirements import Requirement
 from sandbox import probe
 from validate import validate_document
 
+from preflight import (
+    check_approved_capabilities,
+    check_binary,
+    check_branch,
+    check_configured_root,
+    check_dependencies,
+    check_recovery_cleared,
+    check_roles_mirror_synced,
+    check_sandbox_probe,
+    check_sqlite_integrity,
+)
+
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def doctor(root):
+def doctor(root, expected_branch=None):
     root = Path(root).resolve()
-    pins = json.loads((root / "orchestrator/roles.json").read_text())
-    checks = {
-        "python": sys.version_info >= (3, 11),
-        "sandbox_control_store_and_git_denial": probe(),
-        "branch": git(root, "branch", "--show-current").decode().strip()
-        == "feature/scope-context-portability",
-        "worktree": root != Path("/home/mohamed/frappe-bench/apps/construction"),
-    }
-    for name in ("langgraph", "langgraph-checkpoint-sqlite", "pydantic", "jsonschema"):
-        try:
-            checks["dependency:" + name] = bool(importlib.metadata.version(name))
-        except importlib.metadata.PackageNotFoundError:
-            checks["dependency:" + name] = False
-    for line in (root / "orchestrator/requirements.txt").read_text().splitlines():
-        if line and not line.startswith((" ", "#", "-")) and "==" in line:
-            requirement = Requirement(line.rstrip(" \\"))
-            if requirement.marker and not requirement.marker.evaluate():
-                continue
-            try:
-                checks["locked:" + requirement.name] = (
-                    importlib.metadata.version(requirement.name) in requirement.specifier
-                )
-            except importlib.metadata.PackageNotFoundError:
-                checks["locked:" + requirement.name] = False
-    pins = None
+    cfg = None
     if (root / "orchestrator/var/checkpoints.db").exists():
         e = Engine(root)
         try:
-            checks["sqlite_integrity"] = e.store.integrity()
-            checks["recovery_cleared"] = not e.store.meta("recovery_required", False)
-            if e.config:
-                checks["configured_root"] = e.config["root"] == str(root)
+            cfg = e.config
+            if cfg:
                 e.sync_roles_mirror()
-                e.export()  # regenerate mirrors, never use them as control input
-                pins = e.config.get("roles")
-                roles_file = root / "orchestrator/roles.json"
-                checks["roles_mirror_synced"] = (
-                    roles_file.exists()
-                    and canonical(json.loads(roles_file.read_text())) == canonical(pins)
-                )
+                e.export()
         finally:
             e.close()
 
+    branch_check = check_branch(cfg, root, expected_branch=expected_branch)
+    checks = {
+        "python": sys.version_info >= (3, 11),
+        "sandbox_control_store_and_git_denial": check_sandbox_probe(root).ok,
+        "branch": branch_check.ok,
+        "worktree": check_configured_root(None, root).ok,
+    }
+    for dep in check_dependencies(root):
+        if dep.name != "python":
+            checks[dep.name] = dep.ok
+
+    if (root / "orchestrator/var/checkpoints.db").exists():
+        checks["sqlite_integrity"] = check_sqlite_integrity(root / "orchestrator/var").ok
+        checks["recovery_cleared"] = check_recovery_cleared(root / "orchestrator/var").ok
+        if cfg:
+            checks["configured_root"] = check_configured_root(cfg, root).ok
+            checks["roles_mirror_synced"] = check_roles_mirror_synced(cfg, root).ok
+
+    pins = cfg.get("roles") if cfg else None
     if not pins:
-        pins = json.loads((root / "orchestrator/roles.json").read_text())
+        roles_file = root / "orchestrator/roles.json"
+        pins = json.loads(roles_file.read_text()) if roles_file.exists() else {}
 
     for tool in {"codex", "opencode"}:
-        pin = next((p for p in pins.values() if p["tool"] == tool), None)
-        if not pin:
-            checks["binary:" + tool] = False
-            continue
-        try:
-            r = subprocess.run([pin["binary"], "--version"], capture_output=True, text=True, timeout=20)
-            checks["binary:" + tool] = (
-                r.returncode == 0
-                and pin["version"] in r.stdout
-                and bytes_hash(Path(pin["binary"]).read_bytes()) == pin["binary_sha256"]
-            )
-        except (OSError, subprocess.TimeoutExpired):
-            checks["binary:" + tool] = False
-    evidence = root / "docs/ai/work-items/scope-context-portability/evidence/phase-0-capabilities.json"
-    checks["phase0_approved_capabilities"] = (
-        evidence.exists()
-        and json.loads(evidence.read_text()).get("phase_exit") == "PASSED_WITH_OWNER_DIRECTIVE"
-    )
+        pin = next((p for p in pins.values() if isinstance(p, dict) and p.get("tool") == tool), None)
+        checks["binary:" + tool] = check_binary(tool, pin).ok
+
+    checks["phase0_approved_capabilities"] = check_approved_capabilities(cfg, worktree=root).ok
+
     return {
         "ok": all(checks.values()),
         "checks": checks,

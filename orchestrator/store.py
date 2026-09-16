@@ -1,6 +1,7 @@
 import json
 import sqlite3
 import threading
+import uuid
 from pathlib import Path
 
 from core import WorkflowError, atomic_write, canonical, utc
@@ -133,6 +134,18 @@ class Store:
             row = self.conn.execute("SELECT * FROM workflow_grants WHERE gate_id=?", (gate,)).fetchone()
             return dict(token=json.loads(row["data"]), status=row["status"]) if row else None
 
+    def lookup_grant(self, token_id: str) -> dict | None:
+        with self._lock:
+            row = self.conn.execute(
+                "SELECT status, data FROM workflow_grants WHERE token_id = ?", (token_id,)
+            ).fetchone()
+            if row is None:
+                return None
+            return {
+                "status": row["status"] if isinstance(row, sqlite3.Row) else row[0],
+                "data": json.loads(row["data"] if isinstance(row, sqlite3.Row) else row[1]),
+            }
+
     def consume(self, gate):
         with self._lock:
             with self.conn:
@@ -173,6 +186,39 @@ class Store:
                     (event_id, kind, canonical(payload).decode(), utc()),
                 )
                 return invalidated
+
+    def adopt_scope_atomic(
+        self,
+        new_config: dict,
+        action_id: str,
+        scope_hash: str,
+        implementation_stages: list[str],
+        candidate_meta: dict,
+        request_hash: str,
+    ) -> tuple[str, int]:
+        with self._lock:
+            with self.conn:
+                self.conn.execute(
+                    "INSERT INTO workflow_meta VALUES ('config', ?) ON CONFLICT(key) DO UPDATE SET value=excluded.value",
+                    (canonical(new_config).decode(),),
+                )
+                self.conn.execute(
+                    "UPDATE workflow_grants SET status='INVALIDATED' WHERE status IN ('ISSUED', 'RESERVED')"
+                )
+                new_event_id = str(uuid.uuid4())
+                payload = {
+                    "scope_hash": scope_hash,
+                    "implementation_stages": implementation_stages,
+                    "candidate_meta": candidate_meta,
+                    "action_id": action_id,
+                    "request_hash": request_hash,
+                }
+                cursor = self.conn.execute(
+                    "INSERT INTO workflow_events(event_id, kind, payload, created_utc) VALUES (?, ?, ?, ?)",
+                    (new_event_id, "scope_adopted", canonical(payload).decode(), utc()),
+                )
+                seq = cursor.lastrowid
+                return (new_event_id, seq)
 
     def complete_grant(self, event_id, gate, payload):
         body = canonical(payload).decode()

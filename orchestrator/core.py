@@ -15,6 +15,27 @@ class WorkflowError(RuntimeError):
     pass
 
 
+class PreconditionError(WorkflowError):
+    pass
+
+
+class ValidationError(WorkflowError):
+    pass
+
+
+class DuplicateKeyConflict(WorkflowError):
+    pass
+
+
+class RecoveryError(WorkflowError):
+    pass
+
+
+class GrantReconciliationRequired(WorkflowError):
+    pass
+
+
+
 def utc():
     return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
 

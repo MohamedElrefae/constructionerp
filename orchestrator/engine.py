@@ -12,14 +12,43 @@ import sqlite3
 import subprocess
 import sys
 import uuid
+import re
 from copy import deepcopy
 from pathlib import Path
 from typing import TypedDict
 
 from adapters import WIRE_SCHEMA, classify_failure, parse_output
 from candidates import allowed, changed, freeze, git, recheck, verify_owner_commit
-from core import WorkflowError, atomic_write, bytes_hash, canonical, digest, utc, within, write_json
-from jsonschema import ValidationError
+from core import (
+    DuplicateKeyConflict,
+    GrantReconciliationRequired,
+    PreconditionError,
+    RecoveryError,
+    ValidationError as CoreValidationError,
+    WorkflowError,
+    atomic_write,
+    bytes_hash,
+    canonical,
+    digest,
+    utc,
+    within,
+    write_json,
+)
+from jsonschema import ValidationError as JsonSchemaValidationError
+
+SUPPORTED_STAGES = {"0", "1", "2", "3", "4"}
+compute_scope_hash = digest
+
+
+def extract_scope_proposal(plan_text: str) -> dict | None:
+    match = re.search(r"```scope-proposal\s*\n(.*?)\n```", plan_text, re.DOTALL)
+    if not match:
+        return None
+    try:
+        return json.loads(match.group(1).strip())
+    except Exception as exc:
+        raise WorkflowError(f"MALFORMED_RESULT: Invalid JSON in scope-proposal block: {exc}")
+
 from langgraph.checkpoint.sqlite import SqliteSaver
 from langgraph.graph import END, START, StateGraph
 from langgraph.types import Command, interrupt
@@ -498,9 +527,14 @@ class Engine:
             return state["view"]
         return view
 
-    def owner_decision(self, kind, payload):
+    def owner_decision(self, kind, payload, *, action_id=None, request_hash=None):
         if kind not in ("pause", "resume"):
             raise WorkflowError("Unsupported owner decision")
+        payload = dict(payload)
+        if action_id is not None:
+            payload["action_id"] = action_id
+        if request_hash is not None:
+            payload["request_hash"] = request_hash
         view = self._synchronize_checkpoint()
         # Reject invalid owner input before it can poison the durable event stream.
         apply_event(view, {"seq": view["cursor"] + 1, "kind": kind, "payload": payload}, self.config)
@@ -925,7 +959,7 @@ class Engine:
                     event = self.accept(job, observation, v)
                     self.store.event("result-" + job_id, "result", event)
                     self.store.update_job(job_id, "ACCEPTED")
-                except (WorkflowError, ValueError, ValidationError, OSError, TypeError, KeyError) as exc:
+                except (WorkflowError, ValueError, JsonSchemaValidationError, OSError, TypeError, KeyError) as exc:
                     # Only a known WorkflowError code may cross into durable state.
                     # Never persist its diagnostic suffix or classify arbitrary text.
                     code = str(exc).partition(":")[0] if isinstance(exc, WorkflowError) else None
@@ -1470,6 +1504,27 @@ class Engine:
                 atomic_write(plan, wire["plan_text"].encode(), immutable=True)
                 event["new_plan_hash"] = bytes_hash(wire["plan_text"].encode())
                 self.store.set_meta("plan_artifact", str(plan.relative_to(self.root)))
+
+                proposal = extract_scope_proposal(wire["plan_text"])
+                if view.get("stage") == "plan" and proposal is None:
+                    raise WorkflowError("MALFORMED_RESULT: Architect in planning stage must provide ```scope-proposal block")
+                if proposal is not None:
+                    schema_path = Path(__file__).parent / "schemas/v1/scope-proposal.json"
+                    if schema_path.exists():
+                        import jsonschema
+                        try:
+                            schema = json.loads(schema_path.read_text())
+                            jsonschema.validate(instance=proposal, schema=schema)
+                        except Exception as exc:
+                            raise WorkflowError(f"MALFORMED_RESULT: Scope proposal schema validation failed: {exc}")
+                    stages = proposal.get("implementation_stages", [])
+                    if not stages or len(stages) != len(set(stages)) or any(s not in SUPPORTED_STAGES for s in stages):
+                        raise WorkflowError(f"MALFORMED_RESULT: Invalid implementation_stages in scope proposal: {stages}")
+                    outbox = work / "outbox"
+                    outbox.mkdir(parents=True, exist_ok=True)
+                    atomic_write(outbox / "scope-proposal.json", canonical(proposal) + b"\n", immutable=False)
+                    event["scope_proposal"] = proposal
+
             elif job["role"] == "builder" and view["candidate"].get("kind") != "stage4-proposal":
                 if not self.launcher:
                     validation = json.loads((destination / "validation.json").read_text())
@@ -1850,7 +1905,128 @@ class Engine:
             )
         return self.run()
 
-    def reconfigure_role(self, role, tool, model, effort=None, reason="Owner role reconfiguration"):
+    def _has_grant_events_for_current_stage(self):
+        view = self.view()
+        current_stage = view.get("stage")
+        for event in self.store.events():
+            if event["kind"] == "grant":
+                payload = event["payload"]
+                if payload.get("scope") == "PLAN":
+                    token_stages = payload.get("stages", [])
+                    gate_id_val = payload.get("gate_id", "")
+                    if current_stage in token_stages or current_stage in gate_id_val:
+                        return True
+        return False
+
+    def _load_scope_proposal(self):
+        work_item = self.config.get("work_item")
+        if not work_item:
+            raise CoreValidationError("No work_item configured")
+        proposal_file = self.root / f"docs/ai/work-items/{work_item}/outbox/scope-proposal.json"
+        if not proposal_file.exists():
+            raise CoreValidationError(f"Scope proposal file missing: {proposal_file}")
+        try:
+            return json.loads(proposal_file.read_text())
+        except (ValueError, OSError) as e:
+            raise CoreValidationError(f"Failed to read scope proposal: {e}")
+
+    def adopt_scope(
+        self,
+        scope: dict,
+        implementation_stages: list[str],
+        action_id: str,
+        request_hash: str,
+    ):
+        view = self.view()
+
+        if not view.get("gate") or view["gate"].get("scope") != "PLAN":
+            raise PreconditionError("adopt_scope requires a PLAN gate")
+        if view.get("plan_granted"):
+            raise PreconditionError("adopt_scope requires plan_granted == false")
+        if view.get("active_jobs"):
+            raise PreconditionError("adopt_scope requires active_jobs == []")
+        if view.get("stage") != "plan":
+            raise PreconditionError(
+                f"adopt_scope only valid from the planning stage; current stage is {view.get('stage')!r}"
+            )
+        if self._has_grant_events_for_current_stage():
+            raise PreconditionError(
+                "adopt_scope prohibited after a PLAN grant for this stage"
+            )
+
+        if not implementation_stages:
+            raise CoreValidationError("implementation_stages must not be empty")
+        if len(implementation_stages) != len(set(implementation_stages)):
+            raise CoreValidationError(
+                f"implementation_stages contains duplicates: {implementation_stages}"
+            )
+        for stage in implementation_stages:
+            if stage not in SUPPORTED_STAGES:
+                raise CoreValidationError(f"unsupported stage: {stage!r}")
+            if stage in self.config.get("stages", []):
+                raise CoreValidationError(
+                    f"stage {stage!r} already present; repeated adoption not allowed"
+                )
+
+        proposal = self._load_scope_proposal()
+        if proposal.get("scope") != scope:
+            raise CoreValidationError("scope does not match persisted scope-proposal.json")
+        if proposal.get("implementation_stages") != implementation_stages:
+            raise CoreValidationError(
+                "implementation_stages do not match persisted scope-proposal.json"
+            )
+
+        new_scope_hash = compute_scope_hash(scope)
+        new_config = deepcopy(self.config)
+        new_config["scope"] = scope
+        new_config["scope_hash"] = new_scope_hash
+        new_config["stages"] = [*self.config.get("stages", []), *implementation_stages]
+
+        candidate_meta = freeze(
+            self.root,
+            self.config["base_commit"],
+            self.config["branch"],
+            scope["allowed_paths"],
+            self.runtime / "scope-adopted-candidate" / uuid.uuid4().hex,
+            new_config.get("generated", []),
+        )
+        new_config["candidate"] = candidate_meta
+
+        event_id, seq = self.store.adopt_scope_atomic(
+            new_config=new_config,
+            action_id=action_id,
+            scope_hash=new_scope_hash,
+            implementation_stages=implementation_stages,
+            candidate_meta=candidate_meta,
+            request_hash=request_hash,
+        )
+
+        self.config = self.store.meta("config")
+        self._synchronize_checkpoint()
+        return self.view()
+
+    def recover_adopt_scope(self, stored_request_hash: str, submitted_request_hash: str):
+        if not stored_request_hash:
+            raise RecoveryError("scope_adopted event missing request_hash")
+        if stored_request_hash != submitted_request_hash:
+            raise DuplicateKeyConflict(
+                "action_id reused with different request contents"
+            )
+        self.config = self.store.meta("config")
+        self._synchronize_checkpoint()
+        return self.view()
+
+    def reconfigure_role(
+        self,
+        role,
+        tool,
+        model,
+        effort=None,
+        reason="Owner role reconfiguration",
+        *,
+        action_id=None,
+        request_hash=None,
+    ):
         view = self.view()
         if view["status"] != "PAUSED" or view.get("active_jobs"):
             raise WorkflowError("Role reconfiguration requires a paused workflow with all active jobs reconciled")
@@ -1933,6 +2109,10 @@ class Engine:
             "plan_grant_revoked": plan_revoked,
             "new_gate": new_gate,
         }
+        if action_id is not None:
+            payload["action_id"] = action_id
+        if request_hash is not None:
+            payload["request_hash"] = request_hash
         self.store.reconfigure(config, event_id, "role_reconfigured", payload, invalidate_grants=True)
 
         self.config = config
