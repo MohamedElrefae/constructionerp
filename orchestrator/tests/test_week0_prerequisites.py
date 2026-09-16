@@ -1766,6 +1766,14 @@ def test_subprocess_run_action_executes_without_type_error(configured):
     for r in config["roles"]:
         role_name = r if r in ("architect", "reviewer", "builder", "verifier") else "ai-reviewer"
         config["roles"][r]["prompt_sha256"] = bytes_hash((root / "docs/ai/roles" / f"{role_name}.md").read_bytes())
+    evidence_dir = root / f"docs/ai/work-items/{config['work_item']}/evidence"
+    evidence_dir.mkdir(parents=True, exist_ok=True)
+    (evidence_dir / "phase-0-capabilities.json").write_text(
+        json.dumps({"phase_exit": "PASSED_WITH_OWNER_DIRECTIVE"})
+    )
+    git(root, "add", ".")
+    git(root, "-c", "core.hooksPath=/dev/null", "commit", "-m", "add capability evidence")
+    config["base_commit"] = git(root, "rev-parse", "HEAD").decode().strip()
     stub = Stub()
     e = Engine(root, launcher=stub)
     try:
@@ -1825,15 +1833,219 @@ def test_state_and_plan_projections_do_not_mutate_state_or_files(configured):
     assert roles_json.stat().st_mtime_ns == roles_mtime_before
 
 
-def test_sanitized_error_masks_worktree_paths_and_arabic(tmp_path):
-    root = tmp_path / "dummy_worktree"
+def test_plan_read_rejects_outside_root_paths(configured, tmp_path):
+    root, config = configured
+    e = Engine(root, launcher=Stub())
+    try:
+        e.initialize(config)
+    finally:
+        e.close()
+
+    # 1. Absolute path outside worktree
+    with pytest.raises(PreconditionError, match="escapes worktree boundary"):
+        get_plan_projection(root, plan_path="/etc/hostname")
+
+    # 2. Directory traversal outside worktree
+    with pytest.raises(PreconditionError, match="escapes worktree boundary"):
+        get_plan_projection(root, plan_path="../../etc/hostname")
+
+    # 3. Via subprocess invocation
+    repo_root = Path(__file__).resolve().parents[2]
+    proc = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "orchestrator.dashboard_api",
+            "--root",
+            str(root),
+            "--action",
+            "plan",
+            "--payload",
+            json.dumps({"plan_path": "/etc/hostname"}),
+        ],
+        cwd=str(repo_root),
+        capture_output=True,
+        text=True,
+    )
+    assert proc.returncode == 1
+    err_json = json.loads(proc.stdout)
+    assert err_json["ok"] is False
+    assert err_json["error_type"] == "PreconditionError"
+    assert "/etc/hostname" not in proc.stdout
+
+
+def test_plan_read_rejects_symlink_escapes(configured, tmp_path):
+    root, config = configured
+    e = Engine(root, launcher=Stub())
+    try:
+        e.initialize(config)
+    finally:
+        e.close()
+
+    # Leaf symlink pointing to an outside file
+    outside_file = tmp_path / "secret_outside.md"
+    outside_file.write_text("TOP SECRET")
+    symlink_file = root / "symlink_plan.md"
+    symlink_file.symlink_to(outside_file)
+
+    with pytest.raises(PreconditionError, match="escapes worktree boundary"):
+        get_plan_projection(root, plan_path="symlink_plan.md")
+
+    # Directory symlink pointing outside
+    outside_dir = tmp_path / "outside_dir"
+    outside_dir.mkdir()
+    (outside_dir / "nested_plan.md").write_text("NESTED TOP SECRET")
+    symlink_dir = root / "symlink_dir"
+    symlink_dir.symlink_to(outside_dir)
+
+    with pytest.raises(PreconditionError, match="escapes worktree boundary"):
+        get_plan_projection(root, plan_path="symlink_dir/nested_plan.md")
+
+
+def test_missing_capability_evidence_fails_preflight_without_source_fallback(tmp_path):
+    empty_worktree = tmp_path / "empty_worktree"
+    empty_worktree.mkdir()
+    res = check_approved_capabilities(None, worktree=empty_worktree)
+    assert res.ok is False
+    assert "Missing evidence" in res.message
+    # Must NOT have fallen back to source repo
+    assert str(empty_worktree) in res.message
+
+
+def test_state_projection_hides_nested_private_state(configured):
+    root, config = configured
+    e = Engine(root, launcher=Stub())
+    try:
+        e.initialize(config)
+        view = e.view()
+        state = e._prepare({"view": view})
+        state["view"]["gate"] = {
+            "gate_id": "gate-secret-12345",
+            "scope": "PLAN",
+            "plan_hash": "a" * 64,
+        }
+        state["view"]["approval_refs"] = ["ref-secret-token-123"]
+        state["view"]["stages"]["1"] = {
+            "status": "RUNNING",
+            "sub_status": "DISPATCHING",
+            "evidence_refs": ["private/evidence.json"],
+            "sha256": "b" * 64,
+            "candidate_id": "cand-secret-999",
+        }
+        state["view"]["pause_reason"] = f"Halted at {root}/secret/path.py"
+        e.graph.update_state(e.graph_config, state, as_node="collect")
+    finally:
+        e.close()
+
+    st = get_state_projection(root)
+    # Check internal hashes and metadata are omitted
+    assert "plan_revision_hash" not in st
+    assert "roles_hash" not in st
+    assert "scope_hash" not in st
+    assert "approval_refs" not in st
+    assert "cursor" not in st
+    assert "revision" not in st
+    assert "completed_dependencies" not in st
+
+    # Check gate_id is NOT exposed
+    assert st["gate"] == {"scope": "PLAN"}
+    assert "gate_id" not in (st["gate"] or {})
+
+    # Check stages do not expose private details
+    stg1 = st["stages"]["1"]
+    assert stg1["status"] == "RUNNING"
+    assert stg1["sub_status"] == "DISPATCHING"
+    assert "evidence_refs" not in stg1
+    assert "sha256" not in stg1
+    assert "candidate_id" not in stg1
+
+    # Check pause_reason masked worktree path
+    assert str(root) not in (st["pause_reason"] or "")
+    assert "[WORKTREE]" in (st["pause_reason"] or "")
+
+
+def test_sanitized_error_masks_external_paths(tmp_path):
+    root = tmp_path / "worktree"
     root.mkdir()
-    exc = RuntimeError(f"Error at {root}/subpath: arabic text حسابات should be masked")
-    sanitized = sanitize_error(exc, root)
-    assert str(root) not in sanitized
-    assert "[WORKTREE]" in sanitized
-    assert "حسابات" not in sanitized
-    assert "[REDACTED_ARABIC]" in sanitized
+    exc = WorkflowError("Failed reading /tmp/other-project/private.txt: access denied")
+    res = sanitize_error(exc, root)
+
+    assert "support_id" in res
+    assert res["support_id"].startswith("ERR-")
+
+    assert res["error"] == "Workflow execution error"
+    assert res["error_type"] == "WorkflowError"
+
+    serialized = json.dumps(res)
+    assert "/tmp/other-project/private.txt" not in serialized
+    assert "/tmp" not in serialized
+
+    from dashboard_api import strip_paths
+    raw = "Error logged in /tmp/other-project/private.txt during execution"
+    stripped = strip_paths(raw, root=root)
+    assert "/tmp/other-project/private.txt" not in stripped
+    assert "[PATH]" in stripped
+
+
+def test_plan_projection_preserves_legitimate_arabic(configured):
+    root, config = configured
+    arabic_plan = root / "docs/ai/arabic_plan.md"
+    arabic_plan.parent.mkdir(parents=True, exist_ok=True)
+    arabic_text = (
+        "# خطة عمل المشروع\n\n"
+        "## الأهداف والمتطلبات\n"
+        "- دعم اللغة العربية بشكل كامل ودقيق.\n"
+        "- التحقق من صحة البيانات المالية والمحاسبية.\n\n"
+        "Bilingual requirement: Arabic and English support."
+    )
+    arabic_plan.write_text(arabic_text, encoding="utf-8")
+
+    proj = get_plan_projection(root, plan_path="docs/ai/arabic_plan.md")
+    assert "خطة عمل المشروع" in proj["plan_text"]
+    assert "الأهداف والمتطلبات" in proj["plan_text"]
+    assert "دعم اللغة العربية" in proj["plan_text"]
+    assert "Bilingual requirement" in proj["plan_text"]
+    assert "[REDACTED_ARABIC]" not in proj["plan_text"]
+
+
+def test_plan_projection_sanitizes_unsafe_html(configured):
+    root, config = configured
+    unsafe_plan = root / "docs/ai/unsafe_plan.md"
+    unsafe_plan.parent.mkdir(parents=True, exist_ok=True)
+    unsafe_content = (
+        "# Implementation Plan\n\n"
+        "<script>alert('xss')</script>\n"
+        "<iframe src=\"https://evil.example.com\"></iframe>\n"
+        "<img src=\"valid.png\" onerror=\"alert('exploit')\">\n"
+        "<a href=\"javascript:alert('pwn')\">Click here</a>\n"
+        "<object data=\"payload.swf\"></object>\n"
+        "Normal text with **bold** and *italic*.\n"
+    )
+    unsafe_plan.write_text(unsafe_content, encoding="utf-8")
+
+    proj = get_plan_projection(root, plan_path="docs/ai/unsafe_plan.md")
+    text = proj["plan_text"]
+
+    # Dangerous tags must be escaped
+    assert "<script>" not in text
+    assert "</script>" not in text
+    assert "&lt;script&gt;" in text
+    assert "&lt;/script&gt;" in text
+
+    assert "<iframe" not in text
+    assert "&lt;iframe" in text
+
+    assert "<object" not in text
+    assert "&lt;object" in text
+
+    # Event handlers and javascript URIs neutralized
+    assert '<img src="valid.png" onerror=' not in text
+    assert '&lt;img src="valid.png" onerror=' in text
+    assert '<a href="javascript:' not in text
+    assert '&lt;a href="javascript:' in text
+
+    # Normal text preserved
+    assert "Normal text with **bold** and *italic*." in text
 
 
 def test_concurrent_subprocess_locking_serializes_mutations(configured):

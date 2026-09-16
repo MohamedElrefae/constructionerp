@@ -7,8 +7,10 @@ and returns JSON to stdout.
 
 import argparse
 import json
+import re
 import sqlite3
 import sys
+import uuid
 from pathlib import Path
 
 # Ensure orchestrator package directory is in sys.path so both
@@ -26,6 +28,7 @@ from core import (
     WorkflowError,
     canonical,
     execution_lock,
+    within,
 )
 from engine import Engine
 from preflight import (
@@ -34,17 +37,80 @@ from preflight import (
     run_init_checks,
     run_owner_action_checks,
 )
-from stage4 import sanitize_public_text
+
+_PATH_RE = re.compile(r"/(?:[\w\.\-]+/)+[\w\.\-]+")
+_CREDENTIAL_RE = re.compile(
+    r"(?i)\b(api[_-]?key|secret|password|bearer|auth[_-]?token|private[_-]?key)(\s*[:=]\s*['\"]?)([\w\-\.]{8,})(['\"]?)"
+)
+_BEARER_RE = re.compile(r"(?i)\b(bearer\s+)([\w\-\.]{8,})")
+_DANGEROUS_TAGS = {"script", "iframe", "object", "embed", "style", "link", "svg", "form", "input", "meta"}
+_DANGEROUS_TAG_RE = re.compile(r"</?\s*([a-zA-Z0-9]+)(\s+[^>]*)?>", re.IGNORECASE)
 
 
-def sanitize_error(exc: Exception, root: Path | str | None = None) -> str:
-    """Sanitize error messages to avoid leaking absolute paths or private content."""
-    msg = str(exc)
+def strip_paths(text: str, root: Path | str | None = None) -> str:
+    """Mask absolute host paths and external filesystem paths."""
+    if not text:
+        return ""
     if root:
         root_str = str(Path(root).resolve())
-        msg = msg.replace(root_str, "[WORKTREE]")
-    msg = sanitize_public_text(msg)
-    return msg
+        text = text.replace(root_str, "[WORKTREE]")
+    return _PATH_RE.sub("[PATH]", text)
+
+
+def _neutralize_tag(match: re.Match) -> str:
+    tag_str = match.group(0)
+    tag_name = match.group(1).lower()
+    attrs = match.group(2) or ""
+    if tag_name in _DANGEROUS_TAGS:
+        return tag_str.replace("<", "&lt;").replace(">", "&gt;")
+    if re.search(r"(?:^|\s)on[a-zA-Z]+\s*=", attrs, re.IGNORECASE) or re.search(
+        r"javascript\s*:", attrs, re.IGNORECASE
+    ):
+        return tag_str.replace("<", "&lt;").replace(">", "&gt;")
+    return tag_str
+
+
+def sanitize_plan_text(text: str, root: Path | str | None = None) -> str:
+    """Sanitize plan text while preserving legitimate bilingual Arabic content.
+
+    Redacts credentials and file paths, and neutralizes dangerous HTML/XSS.
+    """
+    if not isinstance(text, str):
+        return ""
+    sanitized = strip_paths(text, root=root)
+    sanitized = _CREDENTIAL_RE.sub(r"\1\2[REDACTED_CREDENTIAL]\4", sanitized)
+    sanitized = _BEARER_RE.sub(r"\1[REDACTED_CREDENTIAL]", sanitized)
+    sanitized = _DANGEROUS_TAG_RE.sub(_neutralize_tag, sanitized)
+    return sanitized
+
+
+def sanitize_error(exc: Exception, root: Path | str | None = None) -> dict:
+    """Return fixed public error message with support ID and strip all paths."""
+    support_id = f"ERR-{uuid.uuid4().hex[:8].upper()}"
+    exc_type = type(exc).__name__
+
+    if isinstance(exc, PreconditionError):
+        msg = "Precondition check failed"
+    elif isinstance(exc, (CoreValidationError, ValueError)):
+        msg = "Invalid request or validation failed"
+    elif isinstance(exc, DuplicateKeyConflict):
+        msg = "Duplicate action or conflicting request"
+    elif isinstance(exc, GrantReconciliationRequired):
+        msg = "Grant reconciliation required"
+    elif isinstance(exc, RecoveryError):
+        msg = "Workflow recovery error"
+    elif isinstance(exc, WorkflowError):
+        msg = "Workflow execution error"
+    else:
+        msg = "An unexpected error occurred"
+
+    msg = strip_paths(msg, root=root)
+
+    return {
+        "error": msg,
+        "error_type": exc_type,
+        "support_id": support_id,
+    }
 
 
 def get_state_projection(root: Path | str) -> dict:
@@ -72,47 +138,57 @@ def get_state_projection(root: Path | str) -> dict:
         if not checkpoint or not checkpoint.get("channel_values"):
             return {"status": "NOT_INITIALIZED"}
         v = checkpoint["channel_values"]["view"]
-
-        meta_row = conn.execute("SELECT value FROM workflow_meta WHERE key='config'").fetchone()
-        config = json.loads(meta_row[0]) if meta_row else {}
     finally:
         conn.close()
 
-    # Allowlisted projection: exclude host absolute paths and private tokens
+    # Allowlisted projection: exclude host absolute paths, private tokens,
+    # internal hashes, gate IDs, approval refs, and stage evidence
+    gate_data = v.get("gate")
+    gate_proj = None
+    if isinstance(gate_data, dict):
+        gate_proj = {"scope": gate_data.get("scope")}
+
+    projected_stages = {}
+    for stg_id, stg_data in (v.get("stages") or {}).items():
+        if isinstance(stg_data, dict):
+            projected_stages[stg_id] = {
+                "status": stg_data.get("status"),
+                "sub_status": stg_data.get("sub_status"),
+                "historical": bool(stg_data.get("historical", False)),
+            }
+        else:
+            projected_stages[stg_id] = {"status": str(stg_data)}
+
+    raw_pause = v.get("pause_reason")
+    sanitized_pause = strip_paths(str(raw_pause), root=root) if raw_pause else None
+
     return {
         "work_item": v.get("work_item"),
         "stage": v.get("stage"),
         "status": v.get("status"),
         "sub_status": v.get("sub_status"),
-        "pause_reason": v.get("pause_reason"),
+        "pause_reason": sanitized_pause,
         "resume_to": v.get("resume_to"),
-        "gate": v.get("gate"),
+        "gate": gate_proj,
         "plan_granted": bool(v.get("plan_granted")),
         "active_jobs": [
             {
-                "job_id": j.get("job_id") if isinstance(j, dict) else str(j),
                 "role": j.get("role") if isinstance(j, dict) else None,
                 "status": j.get("status") if isinstance(j, dict) else None,
             }
             for j in (v.get("active_jobs") or [])
         ],
-        "stages": v.get("stages", {}),
+        "stages": projected_stages,
         "next_roles": v.get("next_roles", []),
-        "cursor": v.get("cursor"),
-        "revision": v.get("revision"),
-        "plan_revision_hash": v.get("plan_revision_hash"),
-        "roles_hash": v.get("roles_hash") or config.get("roles_hash"),
-        "scope_hash": v.get("scope_hash"),
-        "approval_refs": v.get("approval_refs", []),
-        "completed_dependencies": v.get("completed_dependencies", []),
     }
 
 
-def get_plan_projection(root: Path | str) -> dict:
+def get_plan_projection(root: Path | str, plan_path: Path | str | None = None) -> dict:
     """Dedicated read-only projection of plan text.
 
     Does NOT instantiate Engine, acquire exclusive execution.lock, or mutate
     any files. Returns a relative plan_path and sanitized plan_text.
+    Rejects absolute paths, traversal, and symlink escapes before reading.
     """
     root = Path(root).resolve()
     runtime_path = root / "orchestrator/var"
@@ -137,28 +213,27 @@ def get_plan_projection(root: Path | str) -> dict:
         finally:
             conn.close()
 
-    rel_path = plan_art or plan_cfg_path
+    rel_path = plan_path or plan_art or plan_cfg_path
     if not rel_path:
         return {"plan_text": "", "plan_path": ""}
 
-    full_path = root / rel_path
+    # Reject absolute paths, directory traversal, and symlink escapes before reading
+    try:
+        full_path = within(root, str(rel_path), allow_leaf_symlink=False)
+        if full_path.is_symlink() or not full_path.resolve().is_relative_to(root):
+            raise PreconditionError(f"Unsafe plan_path: {rel_path} escapes worktree boundary")
+    except (WorkflowError, ValueError) as exc:
+        raise PreconditionError(f"Unsafe plan_path: {rel_path} escapes worktree boundary") from exc
+
     if not full_path.exists():
-        return {"plan_text": "", "plan_path": str(rel_path)}
+        return {"plan_text": "", "plan_path": str(full_path.relative_to(root))}
 
     raw_text = full_path.read_text(encoding="utf-8", errors="replace")
-
-    # Sanitize text (scrub private terms/Arabic, replace host paths with [WORKTREE])
-    clean_text = sanitize_public_text(raw_text)
-    clean_text = clean_text.replace(str(root), "[WORKTREE]")
-
-    try:
-        plan_rel = full_path.relative_to(root)
-    except ValueError:
-        plan_rel = Path(rel_path)
+    clean_text = sanitize_plan_text(raw_text, root=root)
 
     return {
         "plan_text": clean_text,
-        "plan_path": str(plan_rel),
+        "plan_path": str(full_path.relative_to(root)),
     }
 
 
@@ -277,7 +352,7 @@ def execute_action(root: Path, action: str, payload: dict | None = None) -> dict
     if action == "state":
         return get_state_projection(root)
     elif action == "plan":
-        return get_plan_projection(root)
+        return get_plan_projection(root, plan_path=payload.get("plan_path") if payload else None)
 
     lock_path = runtime_path / "execution.lock"
 
@@ -435,10 +510,12 @@ def main():
         print(json.dumps(output, default=str))
         sys.exit(0)
     except Exception as exc:
+        err = sanitize_error(exc, args.root)
         output = {
             "ok": False,
-            "error": sanitize_error(exc, args.root),
-            "error_type": type(exc).__name__,
+            "error": err["error"],
+            "error_type": err["error_type"],
+            "support_id": err["support_id"],
         }
         print(json.dumps(output, default=str))
         sys.exit(1)

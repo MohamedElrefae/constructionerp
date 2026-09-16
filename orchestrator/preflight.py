@@ -173,14 +173,7 @@ def check_approved_capabilities(config: dict | None, runtime_path: Path | str | 
         if item_evidence.exists():
             evidence = item_evidence
     if not evidence.exists():
-        fallback = (
-            Path(__file__).resolve().parents[1]
-            / "docs/ai/work-items/scope-context-portability/evidence/phase-0-capabilities.json"
-        )
-        if fallback.exists():
-            evidence = fallback
-        else:
-            return CheckResult("phase0_approved_capabilities", False, f"Missing evidence: {evidence}")
+        return CheckResult("phase0_approved_capabilities", False, f"Missing evidence: {evidence}")
     try:
         data = json.loads(evidence.read_text())
         ok = data.get("phase_exit") == "PASSED_WITH_OWNER_DIRECTIVE"
