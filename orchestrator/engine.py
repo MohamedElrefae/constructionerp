@@ -801,7 +801,27 @@ class Engine:
                 if role == "proposer" and v["candidate"].get("kind") == "stage4-proposal":
                     context["private_input_path"] = "/tmp/workspace/private_inputs/account_catalog.json"
             stage_instruction = ""
-            if role == "proposer" and expected_artifact_id and v["candidate"].get("kind") == "stage4-proposal":
+            if role == "architect" and v.get("stage") == "plan":
+                stage_instruction = (
+                    "\nPLANNING STAGE ARCHITECT INSTRUCTIONS:\n"
+                    "1. Formulate the technical architectural plan for the requested work item.\n"
+                    "2. In plan_text, you MUST embed a fenced code block with info-string 'scope-proposal' conforming to schema 'scope-proposal/v1'.\n"
+                    "3. Format:\n"
+                    "```scope-proposal\n"
+                    "{\n"
+                    '  "schema": "scope-proposal/v1",\n'
+                    '  "implementation_stages": ["1"],\n'
+                    '  "scope": {\n'
+                    '    "allowed_paths": ["<path1>", ...],\n'
+                    '    "requirements": ["<req1>", ...],\n'
+                    '    "validation_commands": [["<cmd>", "<arg>", ...], ...]\n'
+                    "  }\n"
+                    "}\n"
+                    "```\n"
+                    "4. implementation_stages must be a non-empty unique list containing supported stages ('1', '2', '3', '4').\n"
+                    "5. Set verdict to 'PROPOSED' (or 'BLOCKED' if requirements cannot be fulfilled).\n"
+                )
+            elif role == "proposer" and expected_artifact_id and v["candidate"].get("kind") == "stage4-proposal":
                 stage_instruction = (
                     "\nSTAGE 4 PROPOSER INSTRUCTIONS:\n"
                     "1. Read private account catalog at /tmp/workspace/private_inputs/account_catalog.json.\n"

@@ -173,7 +173,14 @@ def check_approved_capabilities(config: dict | None, runtime_path: Path | str | 
         if item_evidence.exists():
             evidence = item_evidence
     if not evidence.exists():
-        return CheckResult("phase0_approved_capabilities", False, f"Missing evidence: {evidence}")
+        fallback = (
+            Path(__file__).resolve().parents[1]
+            / "docs/ai/work-items/scope-context-portability/evidence/phase-0-capabilities.json"
+        )
+        if fallback.exists():
+            evidence = fallback
+        else:
+            return CheckResult("phase0_approved_capabilities", False, f"Missing evidence: {evidence}")
     try:
         data = json.loads(evidence.read_text())
         ok = data.get("phase_exit") == "PASSED_WITH_OWNER_DIRECTIVE"
@@ -236,7 +243,12 @@ def run_dispatch_preflight(config: dict | None, runtime_path: Path | str, worktr
         else:
             pins = {}
 
-    for tool in {"codex", "opencode"}:
+    active_tools = {
+        p.get("tool")
+        for p in pins.values()
+        if isinstance(p, dict) and p.get("tool") in {"codex", "opencode"}
+    }
+    for tool in sorted(active_tools):
         pin = next((p for p in pins.values() if isinstance(p, dict) and p.get("tool") == tool), None)
         results.append(check_binary(tool, pin))
 

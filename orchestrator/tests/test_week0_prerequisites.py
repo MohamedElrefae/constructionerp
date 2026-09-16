@@ -38,7 +38,13 @@ from core import (
     write_json,
 )
 from core import ValidationError as CoreValidationError
-from dashboard_api import deduplicate_action, execute_action
+from dashboard_api import (
+    deduplicate_action,
+    execute_action,
+    get_plan_projection,
+    get_state_projection,
+    sanitize_error,
+)
 from engine import Engine, SUPPORTED_STAGES, extract_scope_proposal
 from preflight import (
     CheckResult,
@@ -1633,3 +1639,292 @@ def test_e2e_task_creation_through_plan_approval_to_builder_dispatch_and_collect
         assert v["gate"]["scope"] == "COMMIT"
     finally:
         e.close()
+
+
+# ==============================================================================
+# 12. Subprocess Integration, Read-Only Privacy Projections & Concurrent Locking
+# ==============================================================================
+
+
+def test_subprocess_help_returns_zero():
+    repo_root = Path(__file__).resolve().parents[2]
+    proc = subprocess.run(
+        [sys.executable, "-m", "orchestrator.dashboard_api", "--help"],
+        cwd=str(repo_root),
+        capture_output=True,
+        text=True,
+    )
+    assert proc.returncode == 0
+    assert "Dashboard Subprocess API" in proc.stdout
+
+
+def test_subprocess_state_read_only_allowlisted_projection(configured):
+    root, config = configured
+    repo_root = Path(__file__).resolve().parents[2]
+    e = Engine(root, launcher=Stub())
+    try:
+        e.initialize(config)
+    finally:
+        e.close()
+
+    proc = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "orchestrator.dashboard_api",
+            "--root",
+            str(root),
+            "--action",
+            "state",
+        ],
+        cwd=str(repo_root),
+        capture_output=True,
+        text=True,
+    )
+    assert proc.returncode == 0, f"Stderr: {proc.stderr}\nStdout: {proc.stdout}"
+    data = json.loads(proc.stdout)
+    assert data["ok"] is True
+    res = data["result"]
+    assert "work_item" in res
+    assert "stage" in res
+    assert "status" in res
+    # Ensure allowlisted projection hides host paths
+    assert "root" not in res
+    assert str(root) not in json.dumps(res)
+
+
+def test_subprocess_plan_relative_and_sanitized(configured):
+    root, config = configured
+    repo_root = Path(__file__).resolve().parents[2]
+    e = Engine(root, launcher=Stub())
+    try:
+        e.initialize(config)
+    finally:
+        e.close()
+
+    proc = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "orchestrator.dashboard_api",
+            "--root",
+            str(root),
+            "--action",
+            "plan",
+        ],
+        cwd=str(repo_root),
+        capture_output=True,
+        text=True,
+    )
+    assert proc.returncode == 0, f"Stderr: {proc.stderr}\nStdout: {proc.stdout}"
+    data = json.loads(proc.stdout)
+    assert data["ok"] is True
+    res = data["result"]
+    assert "plan_path" in res
+    # Must be relative path, not absolute
+    assert not Path(res["plan_path"]).is_absolute()
+    # No host root leaked in plan text
+    assert str(root) not in res["plan_text"]
+
+
+def test_subprocess_bootstrap_task_branch(configured):
+    root, config = configured
+    repo_root = Path(__file__).resolve().parents[2]
+    task_branch = "task/subproc-bootstrap-item"
+    git(root, "checkout", "-b", task_branch)
+
+    cfg = deepcopy(config)
+    cfg["branch"] = task_branch
+    cfg["base_commit"] = git(root, "rev-parse", "HEAD").decode().strip()
+
+    proc = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "orchestrator.dashboard_api",
+            "--root",
+            str(root),
+            "--action",
+            "initialize",
+            "--payload",
+            json.dumps({"config": cfg}),
+        ],
+        cwd=str(repo_root),
+        capture_output=True,
+        text=True,
+    )
+    assert proc.returncode == 0, f"Stderr: {proc.stderr}\nStdout: {proc.stdout}"
+    data = json.loads(proc.stdout)
+    assert data["ok"] is True
+    assert data["result"]["stage"] == cfg.get("stage", cfg["stages"][0])
+
+
+def test_subprocess_run_action_executes_without_type_error(configured):
+    root, config = configured
+    repo_root = Path(__file__).resolve().parents[2]
+    git(root, "checkout", "-B", config["branch"])
+    for r in config["roles"]:
+        role_name = r if r in ("architect", "reviewer", "builder", "verifier") else "ai-reviewer"
+        config["roles"][r]["prompt_sha256"] = bytes_hash((root / "docs/ai/roles" / f"{role_name}.md").read_bytes())
+    stub = Stub()
+    e = Engine(root, launcher=stub)
+    try:
+        e.initialize(config)
+    finally:
+        e.close()
+
+    proc = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "orchestrator.dashboard_api",
+            "--root",
+            str(root),
+            "--action",
+            "run",
+            "--payload",
+            json.dumps({}),
+        ],
+        cwd=str(repo_root),
+        capture_output=True,
+        text=True,
+    )
+    assert proc.returncode == 0, f"Stderr: {proc.stderr}\nStdout: {proc.stdout}"
+    data = json.loads(proc.stdout)
+    assert data["ok"] is True
+
+
+def test_state_and_plan_projections_do_not_mutate_state_or_files(configured):
+    root, config = configured
+    e = Engine(root, launcher=Stub())
+    try:
+        e.initialize(config)
+    finally:
+        e.close()
+
+    runtime_path = root / "orchestrator/var"
+    db_path = runtime_path / "checkpoints.db"
+    state_json = root / f"docs/ai/work-items/{config['work_item']}/STATE.json"
+    roles_json = root / "orchestrator/roles.json"
+
+    db_mtime_before = db_path.stat().st_mtime_ns
+    state_mtime_before = state_json.stat().st_mtime_ns
+    roles_mtime_before = roles_json.stat().st_mtime_ns
+    db_hash_before = bytes_hash(db_path.read_bytes())
+
+    # Invoke read-only projections
+    st = get_state_projection(root)
+    pl = get_plan_projection(root)
+
+    assert st["status"] == "DRAFT"
+    assert "plan_path" in pl
+
+    assert db_path.stat().st_mtime_ns == db_mtime_before
+    assert bytes_hash(db_path.read_bytes()) == db_hash_before
+    assert state_json.stat().st_mtime_ns == state_mtime_before
+    assert roles_json.stat().st_mtime_ns == roles_mtime_before
+
+
+def test_sanitized_error_masks_worktree_paths_and_arabic(tmp_path):
+    root = tmp_path / "dummy_worktree"
+    root.mkdir()
+    exc = RuntimeError(f"Error at {root}/subpath: arabic text حسابات should be masked")
+    sanitized = sanitize_error(exc, root)
+    assert str(root) not in sanitized
+    assert "[WORKTREE]" in sanitized
+    assert "حسابات" not in sanitized
+    assert "[REDACTED_ARABIC]" in sanitized
+
+
+def test_concurrent_subprocess_locking_serializes_mutations(configured):
+    root, config = configured
+    repo_root = Path(__file__).resolve().parents[2]
+    e = Engine(root, launcher=Stub())
+    try:
+        e.initialize(config)
+    finally:
+        e.close()
+
+    # Launch two subprocesses attempting to execute pause concurrently under the same lock
+    payload1 = json.dumps({"action_id": "act-conc-1", "request_hash": "hash-conc-1", "reason": "pause 1"})
+    payload2 = json.dumps({"action_id": "act-conc-2", "request_hash": "hash-conc-2", "reason": "pause 2"})
+
+    p1 = subprocess.Popen(
+        [
+            sys.executable,
+            "-m",
+            "orchestrator.dashboard_api",
+            "--root",
+            str(root),
+            "--action",
+            "pause",
+            "--payload",
+            payload1,
+        ],
+        cwd=str(repo_root),
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    p2 = subprocess.Popen(
+        [
+            sys.executable,
+            "-m",
+            "orchestrator.dashboard_api",
+            "--root",
+            str(root),
+            "--action",
+            "pause",
+            "--payload",
+            payload2,
+        ],
+        cwd=str(repo_root),
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+
+    out1, err1 = p1.communicate(timeout=20)
+    out2, err2 = p2.communicate(timeout=20)
+
+    # Both must complete without crashing or corrupting SQLite
+    assert p1.returncode == 0, f"p1 failed: stderr={err1}, stdout={out1}"
+    assert p2.returncode == 0, f"p2 failed: stderr={err2}, stdout={out2}"
+    d1 = json.loads(out1)
+    d2 = json.loads(out2)
+    assert d1["ok"] is True
+    assert d2["ok"] is True
+
+    # Checkpoints DB remains completely sound
+    e_verify = Engine(root)
+    try:
+        assert e_verify.store.integrity()
+        assert e_verify.view()["status"] == "PAUSED"
+    finally:
+        e_verify.close()
+
+
+def test_architect_role_prompt_sha256_matches_pinned_roles_json():
+    root = Path(__file__).resolve().parents[2]
+    role_file = root / "docs/ai/roles/architect.md"
+    roles_json = json.loads((root / "orchestrator/roles.json").read_text())
+    assert bytes_hash(role_file.read_bytes()) == roles_json["architect"]["prompt_sha256"]
+
+
+def test_architect_dispatch_prompt_includes_scope_proposal_instructions(configured):
+    root, config = configured
+    config["stages"] = ["plan"]
+    e = Engine(root, launcher=Stub())
+    try:
+        e.initialize(config)
+        view = e.view()
+        assert view["stage"] == "plan"
+        state = e._prepare({"view": view})
+        job_id = state["view"]["active_jobs"][0]
+        job = e.store.job(job_id)
+        spec = json.loads(Path(job["spec_path"]).read_text())
+        assert "PLANNING STAGE ARCHITECT INSTRUCTIONS" in spec["prompt"]
+        assert "scope-proposal" in spec["prompt"]
+    finally:
+        e.close()
+

@@ -7,8 +7,15 @@ and returns JSON to stdout.
 
 import argparse
 import json
+import sqlite3
 import sys
 from pathlib import Path
+
+# Ensure orchestrator package directory is in sys.path so both
+# `python -m orchestrator.dashboard_api` and direct script execution work
+_orchestrator_dir = Path(__file__).resolve().parent
+if str(_orchestrator_dir) not in sys.path:
+    sys.path.insert(0, str(_orchestrator_dir))
 
 from core import (
     DuplicateKeyConflict,
@@ -27,6 +34,132 @@ from preflight import (
     run_init_checks,
     run_owner_action_checks,
 )
+from stage4 import sanitize_public_text
+
+
+def sanitize_error(exc: Exception, root: Path | str | None = None) -> str:
+    """Sanitize error messages to avoid leaking absolute paths or private content."""
+    msg = str(exc)
+    if root:
+        root_str = str(Path(root).resolve())
+        msg = msg.replace(root_str, "[WORKTREE]")
+    msg = sanitize_public_text(msg)
+    return msg
+
+
+def get_state_projection(root: Path | str) -> dict:
+    """Dedicated read-only projection of workflow state.
+
+    Does NOT instantiate Engine, acquire exclusive execution.lock, or mutate
+    any files, checkpoints, or role mirrors.
+    """
+    root = Path(root).resolve()
+    runtime_path = root / "orchestrator/var"
+    checks = run_display_checks(runtime_path)
+    failed = [c for c in checks if not c.ok]
+    if failed:
+        raise PreconditionError(f"Display preflight failed: {failed}")
+
+    db_path = runtime_path / "checkpoints.db"
+    if not db_path.exists():
+        return {"status": "NOT_INITIALIZED"}
+
+    conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+    try:
+        from langgraph.checkpoint.sqlite import SqliteSaver
+        saver = SqliteSaver(conn)
+        checkpoint = saver.get({"configurable": {"thread_id": "workflow"}})
+        if not checkpoint or not checkpoint.get("channel_values"):
+            return {"status": "NOT_INITIALIZED"}
+        v = checkpoint["channel_values"]["view"]
+
+        meta_row = conn.execute("SELECT value FROM workflow_meta WHERE key='config'").fetchone()
+        config = json.loads(meta_row[0]) if meta_row else {}
+    finally:
+        conn.close()
+
+    # Allowlisted projection: exclude host absolute paths and private tokens
+    return {
+        "work_item": v.get("work_item"),
+        "stage": v.get("stage"),
+        "status": v.get("status"),
+        "sub_status": v.get("sub_status"),
+        "pause_reason": v.get("pause_reason"),
+        "resume_to": v.get("resume_to"),
+        "gate": v.get("gate"),
+        "plan_granted": bool(v.get("plan_granted")),
+        "active_jobs": [
+            {
+                "job_id": j.get("job_id") if isinstance(j, dict) else str(j),
+                "role": j.get("role") if isinstance(j, dict) else None,
+                "status": j.get("status") if isinstance(j, dict) else None,
+            }
+            for j in (v.get("active_jobs") or [])
+        ],
+        "stages": v.get("stages", {}),
+        "next_roles": v.get("next_roles", []),
+        "cursor": v.get("cursor"),
+        "revision": v.get("revision"),
+        "plan_revision_hash": v.get("plan_revision_hash"),
+        "roles_hash": v.get("roles_hash") or config.get("roles_hash"),
+        "scope_hash": v.get("scope_hash"),
+        "approval_refs": v.get("approval_refs", []),
+        "completed_dependencies": v.get("completed_dependencies", []),
+    }
+
+
+def get_plan_projection(root: Path | str) -> dict:
+    """Dedicated read-only projection of plan text.
+
+    Does NOT instantiate Engine, acquire exclusive execution.lock, or mutate
+    any files. Returns a relative plan_path and sanitized plan_text.
+    """
+    root = Path(root).resolve()
+    runtime_path = root / "orchestrator/var"
+    checks = run_display_checks(runtime_path)
+    failed = [c for c in checks if not c.ok]
+    if failed:
+        raise PreconditionError(f"Display preflight failed: {failed}")
+
+    db_path = runtime_path / "checkpoints.db"
+    plan_art = None
+    plan_cfg_path = ""
+    if db_path.exists():
+        conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+        try:
+            row = conn.execute("SELECT value FROM workflow_meta WHERE key='plan_artifact'").fetchone()
+            if row:
+                plan_art = json.loads(row[0]) if row[0].startswith('"') else row[0]
+            cfg_row = conn.execute("SELECT value FROM workflow_meta WHERE key='config'").fetchone()
+            if cfg_row:
+                cfg = json.loads(cfg_row[0])
+                plan_cfg_path = cfg.get("plan_path", "")
+        finally:
+            conn.close()
+
+    rel_path = plan_art or plan_cfg_path
+    if not rel_path:
+        return {"plan_text": "", "plan_path": ""}
+
+    full_path = root / rel_path
+    if not full_path.exists():
+        return {"plan_text": "", "plan_path": str(rel_path)}
+
+    raw_text = full_path.read_text(encoding="utf-8", errors="replace")
+
+    # Sanitize text (scrub private terms/Arabic, replace host paths with [WORKTREE])
+    clean_text = sanitize_public_text(raw_text)
+    clean_text = clean_text.replace(str(root), "[WORKTREE]")
+
+    try:
+        plan_rel = full_path.relative_to(root)
+    except ValueError:
+        plan_rel = Path(rel_path)
+
+    return {
+        "plan_text": clean_text,
+        "plan_path": str(plan_rel),
+    }
 
 
 def deduplicate_action(
@@ -139,46 +272,57 @@ def execute_action(root: Path, action: str, payload: dict | None = None) -> dict
     payload = payload or {}
     root = Path(root).resolve()
     runtime_path = root / "orchestrator/var"
+
+    # Read-only display actions do not acquire execution.lock and do not construct Engine
+    if action == "state":
+        return get_state_projection(root)
+    elif action == "plan":
+        return get_plan_projection(root)
+
     lock_path = runtime_path / "execution.lock"
 
     with execution_lock(lock_path, timeout=10):
-        # 1. Preflight check selection per action
-        if action in ("state", "plan"):
-            checks = run_display_checks(runtime_path)
-            failed = [c for c in checks if not c.ok]
-            if failed:
-                raise PreconditionError(f"Display preflight failed: {failed}")
-        elif action in ("pause", "resume", "reset_budget", "reconfigure_role"):
+        # 1. Preflight check selection per mutating action
+        if action in ("pause", "resume", "reset_budget", "reconfigure_role"):
             cfg = None
             if (runtime_path / "checkpoints.db").exists():
-                tmp_e = Engine(root)
+                conn = sqlite3.connect(f"file:{runtime_path / 'checkpoints.db'}?mode=ro", uri=True)
                 try:
-                    cfg = tmp_e.config
+                    row = conn.execute("SELECT value FROM workflow_meta WHERE key='config'").fetchone()
+                    if row:
+                        cfg = json.loads(row[0])
                 finally:
-                    tmp_e.close()
+                    conn.close()
             checks = run_owner_action_checks(runtime_path, root, cfg)
             failed = [c for c in checks if not c.ok]
             if failed:
                 raise PreconditionError(f"Owner action preflight failed: {failed}")
         elif action == "initialize":
-            checks = run_init_checks(root)
+            proposed_branch = None
+            if isinstance(payload.get("config"), dict):
+                proposed_branch = payload["config"].get("branch")
+            if not proposed_branch:
+                proposed_branch = payload.get("branch")
+            checks = run_init_checks(root, expected_branch=proposed_branch)
             failed = [c for c in checks if not c.ok]
             if failed:
                 raise PreconditionError(f"Init preflight failed: {failed}")
         elif action in ("run", "approve_plan", "adopt_scope"):
             cfg = None
             if (runtime_path / "checkpoints.db").exists():
-                tmp_e = Engine(root)
+                conn = sqlite3.connect(f"file:{runtime_path / 'checkpoints.db'}?mode=ro", uri=True)
                 try:
-                    cfg = tmp_e.config
+                    row = conn.execute("SELECT value FROM workflow_meta WHERE key='config'").fetchone()
+                    if row:
+                        cfg = json.loads(row[0])
                 finally:
-                    tmp_e.close()
+                    conn.close()
             checks = run_dispatch_preflight(cfg, runtime_path, root)
             failed = [c for c in checks if not c.ok]
             if failed:
                 raise PreconditionError(f"Dispatch preflight failed: {failed}")
 
-        # 2. Initialize Engine
+        # 2. Initialize Engine for mutation
         engine = Engine(root)
         try:
             # 3. Deduplication under lock
@@ -199,21 +343,11 @@ def execute_action(root: Path, action: str, payload: dict | None = None) -> dict
                 return dedup
 
             # 4. Dispatch action
-            if action == "state":
-                return engine.view()
-            elif action == "plan":
-                plan_art = engine.store.meta("plan_artifact")
-                plan_path = (root / plan_art) if plan_art else (root / engine.config.get("plan_path", ""))
-                if plan_path.exists():
-                    text = plan_path.read_text()
-                    return {"plan_text": text, "plan_path": str(plan_path)}
-                return {"plan_text": "", "plan_path": ""}
-            elif action == "initialize":
+            if action == "initialize":
                 config = payload["config"]
                 return engine.initialize(config)
             elif action == "run":
-                once = payload.get("once", False)
-                return engine.run(once=once)
+                return engine.run()
             elif action == "approve_plan":
                 if not submitted_token:
                     raise CoreValidationError("approve_plan requires submitted_token or token in payload")
@@ -303,7 +437,7 @@ def main():
     except Exception as exc:
         output = {
             "ok": False,
-            "error": str(exc),
+            "error": sanitize_error(exc, args.root),
             "error_type": type(exc).__name__,
         }
         print(json.dumps(output, default=str))
