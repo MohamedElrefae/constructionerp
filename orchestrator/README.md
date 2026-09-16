@@ -1,5 +1,7 @@
 # Local workflow orchestrator
 
+For the consolidated operator guide, approval examples, troubleshooting runbook, technical architecture, agent contracts, and extension guidance, see the [end-to-end orchestration system manual](../docs/ai/ORCHESTRATION_SYSTEM_MANUAL.md).
+
 Phase 0 is complete under the owner-supplied [consultant directive](../docs/ai/work-items/scope-context-portability/CONSULTANT_DIRECTIVE_2026-09-11.md). Phase 1 implements the engine, native transports and operator interface. The full Phase 2 qualification and real Phase 3 pilot remain separate gates; no ERP adoption has occurred. See the [implementation record](../docs/ai/work-items/scope-context-portability/IMPLEMENTATION.md).
 
 ## Setup and checks
