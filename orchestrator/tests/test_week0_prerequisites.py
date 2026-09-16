@@ -1841,37 +1841,17 @@ def test_plan_read_rejects_outside_root_paths(configured, tmp_path):
     finally:
         e.close()
 
-    # 1. Absolute path outside worktree
-    with pytest.raises(PreconditionError, match="escapes worktree boundary"):
-        get_plan_projection(root, plan_path="/etc/hostname")
+    conn = sqlite3.connect(root / "orchestrator/var/checkpoints.db")
+    try:
+        conn.execute(
+            "INSERT OR REPLACE INTO workflow_meta (key, value) VALUES ('plan_artifact', '\"/etc/hostname\"')"
+        )
+        conn.commit()
+    finally:
+        conn.close()
 
-    # 2. Directory traversal outside worktree
     with pytest.raises(PreconditionError, match="escapes worktree boundary"):
-        get_plan_projection(root, plan_path="../../etc/hostname")
-
-    # 3. Via subprocess invocation
-    repo_root = Path(__file__).resolve().parents[2]
-    proc = subprocess.run(
-        [
-            sys.executable,
-            "-m",
-            "orchestrator.dashboard_api",
-            "--root",
-            str(root),
-            "--action",
-            "plan",
-            "--payload",
-            json.dumps({"plan_path": "/etc/hostname"}),
-        ],
-        cwd=str(repo_root),
-        capture_output=True,
-        text=True,
-    )
-    assert proc.returncode == 1
-    err_json = json.loads(proc.stdout)
-    assert err_json["ok"] is False
-    assert err_json["error_type"] == "PreconditionError"
-    assert "/etc/hostname" not in proc.stdout
+        get_plan_projection(root)
 
 
 def test_plan_read_rejects_symlink_escapes(configured, tmp_path):
@@ -1882,24 +1862,198 @@ def test_plan_read_rejects_symlink_escapes(configured, tmp_path):
     finally:
         e.close()
 
-    # Leaf symlink pointing to an outside file
     outside_file = tmp_path / "secret_outside.md"
     outside_file.write_text("TOP SECRET")
     symlink_file = root / "symlink_plan.md"
     symlink_file.symlink_to(outside_file)
 
-    with pytest.raises(PreconditionError, match="escapes worktree boundary"):
-        get_plan_projection(root, plan_path="symlink_plan.md")
+    conn = sqlite3.connect(root / "orchestrator/var/checkpoints.db")
+    try:
+        conn.execute(
+            "INSERT OR REPLACE INTO workflow_meta (key, value) VALUES ('plan_artifact', '\"symlink_plan.md\"')"
+        )
+        conn.commit()
+    finally:
+        conn.close()
 
-    # Directory symlink pointing outside
-    outside_dir = tmp_path / "outside_dir"
-    outside_dir.mkdir()
-    (outside_dir / "nested_plan.md").write_text("NESTED TOP SECRET")
-    symlink_dir = root / "symlink_dir"
-    symlink_dir.symlink_to(outside_dir)
-
     with pytest.raises(PreconditionError, match="escapes worktree boundary"):
-        get_plan_projection(root, plan_path="symlink_dir/nested_plan.md")
+        get_plan_projection(root)
+
+
+def test_plan_endpoint_rejects_arbitrary_in_worktree_file_selection(configured, tmp_path):
+    repo_root = Path(__file__).resolve().parents[2]
+
+    # A) Uninitialized worktree: payload plan_path cannot read files
+    uninitialized_root = tmp_path / "uninitialized_worktree"
+    uninitialized_root.mkdir()
+    (uninitialized_root / "core.py").write_text("SENSITIVE_UNINITIALIZED_SOURCE = 99999")
+
+    proc = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "orchestrator.dashboard_api",
+            "--root",
+            str(uninitialized_root),
+            "--action",
+            "plan",
+            "--payload",
+            json.dumps({"plan_path": "core.py"}),
+        ],
+        cwd=str(repo_root),
+        capture_output=True,
+        text=True,
+    )
+    assert proc.returncode == 0
+    data = json.loads(proc.stdout)
+    assert data["ok"] is True
+    assert data["result"]["plan_text"] == ""
+    assert data["result"]["plan_path"] == ""
+    assert "SENSITIVE_UNINITIALIZED_SOURCE" not in proc.stdout
+
+    # B) Initialized worktree: payload plan_path cannot override approved plan
+    root, config = configured
+    e = Engine(root, launcher=Stub())
+    try:
+        e.initialize(config)
+    finally:
+        e.close()
+
+    (root / "private_source.py").write_text("PRIVATE_WORKTREE_CODE = 88888")
+
+    proc2 = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "orchestrator.dashboard_api",
+            "--root",
+            str(root),
+            "--action",
+            "plan",
+            "--payload",
+            json.dumps({"plan_path": "private_source.py"}),
+        ],
+        cwd=str(repo_root),
+        capture_output=True,
+        text=True,
+    )
+    assert proc2.returncode == 0
+    data2 = json.loads(proc2.stdout)
+    assert data2["ok"] is True
+    assert data2["result"]["plan_path"] == config["plan_path"]
+    assert "PRIVATE_WORKTREE_CODE" not in proc2.stdout
+
+
+def test_html_parser_variants_and_encoded_urls_sanitization():
+    from dashboard_api import sanitize_plan_text
+
+    raw_html_variants = (
+        "<img/src=x onerror=alert(1)>\n"
+        "<a href=\"&#106;avascript:alert(1)\">click</a>\n"
+        "<svg/onload=alert(1)>\n"
+        "<iframe/src=\"evil.com\"></iframe>\n"
+        "<body/onload=alert(1)>\n"
+        "Normal math: x < 5 and y > 3"
+    )
+    clean = sanitize_plan_text(raw_html_variants)
+    assert "<img" not in clean
+    assert "&lt;img/src=x onerror=alert(1)&gt;" in clean
+    assert "<a href=" not in clean
+    assert '&lt;a href="&#106;avascript:alert(1)"&gt;' in clean
+    assert "<svg" not in clean
+    assert "&lt;svg/onload=alert(1)&gt;" in clean
+    assert "<iframe" not in clean
+    assert '&lt;iframe/src="evil.com"&gt;' in clean
+    assert "<body" not in clean
+    assert "&lt;body/onload=alert(1)&gt;" in clean
+    assert "x < 5 and y > 3" in clean
+
+    # Markdown links with encoded schemes
+    md_encoded_links = (
+        "[click1](javascript:alert(1))\n"
+        "[click2](&#106;avascript:alert(1))\n"
+        "[click3](javascript&#x3a;alert(1))\n"
+        "[click4](<javascript:alert(1)>)\n"
+        "[click5](data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg==)\n"
+        "[click6](vbscript:alert(1))\n"
+        "[safe1](https://example.com/guide?id=123)\n"
+        "[safe2](/docs/guide.md)\n"
+        "[safe3](#section-heading)"
+    )
+    clean_md = sanitize_plan_text(md_encoded_links)
+    assert "[click1](#blocked)" in clean_md
+    assert "[click2](#blocked)" in clean_md
+    assert "[click3](#blocked)" in clean_md
+    assert "[click4](#blocked)" in clean_md
+    assert "[click5](#blocked)" in clean_md
+    assert "[click6](#blocked)" in clean_md
+    assert "[safe1](https://example.com/guide?id=123)" in clean_md
+    assert "[safe2](/docs/guide.md)" in clean_md
+    assert "[safe3](#section-heading)" in clean_md
+
+
+def test_json_formatted_credentials_redaction():
+    from dashboard_api import sanitize_plan_text
+
+    text = (
+        '# Configuration Guide\n\n'
+        '```json\n'
+        '{\n'
+        '  "password": "demo-secret-123",\n'
+        '  "api_key": "sk-test-live-key-456",\n'
+        '  "client_secret": "my-client-secret-789",\n'
+        '  "token": "token-xyz-000"\n'
+        '}\n'
+        '```\n'
+        'Inline settings: password = "demo-secret-123", secret_key: "demo-secret-123", Bearer tok-bearer-12345678.\n'
+        'Bilingual Arabic:\n'
+        '# خطة العمل\n'
+        'يرجى التأكد من حماية كلمة المرور وعدم نشرها علناً.'
+    )
+    clean = sanitize_plan_text(text)
+    assert "demo-secret-123" not in clean
+    assert "sk-test-live-key-456" not in clean
+    assert "my-client-secret-789" not in clean
+    assert "token-xyz-000" not in clean
+    assert "tok-bearer-12345678" not in clean
+    assert '"password": "[REDACTED_CREDENTIAL]"' in clean
+    assert '"api_key": "[REDACTED_CREDENTIAL]"' in clean
+    assert '"client_secret": "[REDACTED_CREDENTIAL]"' in clean
+    assert 'Bearer [REDACTED_CREDENTIAL]' in clean
+    assert "خطة العمل" in clean
+    assert "يرجى التأكد من حماية كلمة المرور" in clean
+    assert "[REDACTED_ARABIC]" not in clean
+
+
+def test_sensitive_pause_reasons_use_fixed_public_categories(configured):
+    from dashboard_api import categorize_pause_reason
+
+    # Test categorization helper directly
+    assert categorize_pause_reason("OWNER: password=demo-secret-123") == "OPERATOR_PAUSED"
+    assert categorize_pause_reason("operator paused with token=secret123") == "OPERATOR_PAUSED"
+    assert categorize_pause_reason("Budget limit 50000 reached") == "BUDGET_EXHAUSTED"
+    assert categorize_pause_reason("Approval gate pending: plan review") == "GATE_PENDING"
+    assert categorize_pause_reason("Verification failed: lint error") == "VERIFICATION_FAILED"
+    assert categorize_pause_reason("Fatal exception in /private/dir/file.py") == "EXECUTION_ERROR"
+    assert categorize_pause_reason(None) is None
+
+    # Test state projection excludes sensitive pause reasons
+    root, config = configured
+    e = Engine(root, launcher=Stub())
+    try:
+        e.initialize(config)
+        view = e.view()
+        state = e._prepare({"view": view})
+        state["view"]["pause_reason"] = "OWNER: password=demo-secret-123"
+        e.graph.update_state(e.graph_config, state, as_node="collect")
+    finally:
+        e.close()
+
+    st = get_state_projection(root)
+    assert st["pause_reason"] == "OPERATOR_PAUSED"
+    serialized = json.dumps(st)
+    assert "password" not in serialized
+    assert "demo-secret-123" not in serialized
 
 
 def test_missing_capability_evidence_fails_preflight_without_source_fallback(tmp_path):
@@ -1959,9 +2113,9 @@ def test_state_projection_hides_nested_private_state(configured):
     assert "sha256" not in stg1
     assert "candidate_id" not in stg1
 
-    # Check pause_reason masked worktree path
+    # Check pause_reason is categorized into fixed public category
+    assert st["pause_reason"] == "EXECUTION_ERROR"
     assert str(root) not in (st["pause_reason"] or "")
-    assert "[WORKTREE]" in (st["pause_reason"] or "")
 
 
 def test_sanitized_error_masks_external_paths(tmp_path):
@@ -1989,8 +2143,12 @@ def test_sanitized_error_masks_external_paths(tmp_path):
 
 def test_plan_projection_preserves_legitimate_arabic(configured):
     root, config = configured
-    arabic_plan = root / "docs/ai/arabic_plan.md"
-    arabic_plan.parent.mkdir(parents=True, exist_ok=True)
+    e = Engine(root, launcher=Stub())
+    try:
+        e.initialize(config)
+    finally:
+        e.close()
+
     arabic_text = (
         "# خطة عمل المشروع\n\n"
         "## الأهداف والمتطلبات\n"
@@ -1998,9 +2156,9 @@ def test_plan_projection_preserves_legitimate_arabic(configured):
         "- التحقق من صحة البيانات المالية والمحاسبية.\n\n"
         "Bilingual requirement: Arabic and English support."
     )
-    arabic_plan.write_text(arabic_text, encoding="utf-8")
+    (root / config["plan_path"]).write_text(arabic_text, encoding="utf-8")
 
-    proj = get_plan_projection(root, plan_path="docs/ai/arabic_plan.md")
+    proj = get_plan_projection(root)
     assert "خطة عمل المشروع" in proj["plan_text"]
     assert "الأهداف والمتطلبات" in proj["plan_text"]
     assert "دعم اللغة العربية" in proj["plan_text"]
@@ -2010,20 +2168,25 @@ def test_plan_projection_preserves_legitimate_arabic(configured):
 
 def test_plan_projection_sanitizes_unsafe_html(configured):
     root, config = configured
-    unsafe_plan = root / "docs/ai/unsafe_plan.md"
-    unsafe_plan.parent.mkdir(parents=True, exist_ok=True)
+    e = Engine(root, launcher=Stub())
+    try:
+        e.initialize(config)
+    finally:
+        e.close()
+
     unsafe_content = (
         "# Implementation Plan\n\n"
         "<script>alert('xss')</script>\n"
         "<iframe src=\"https://evil.example.com\"></iframe>\n"
         "<img src=\"valid.png\" onerror=\"alert('exploit')\">\n"
-        "<a href=\"javascript:alert('pwn')\">Click here</a>\n"
+        "<img/src=x onerror=alert(1)>\n"
+        "<a href=\"&#106;avascript:alert(1)\">click</a>\n"
         "<object data=\"payload.swf\"></object>\n"
         "Normal text with **bold** and *italic*.\n"
     )
-    unsafe_plan.write_text(unsafe_content, encoding="utf-8")
+    (root / config["plan_path"]).write_text(unsafe_content, encoding="utf-8")
 
-    proj = get_plan_projection(root, plan_path="docs/ai/unsafe_plan.md")
+    proj = get_plan_projection(root)
     text = proj["plan_text"]
 
     # Dangerous tags must be escaped
@@ -2040,9 +2203,10 @@ def test_plan_projection_sanitizes_unsafe_html(configured):
 
     # Event handlers and javascript URIs neutralized
     assert '<img src="valid.png" onerror=' not in text
-    assert '&lt;img src="valid.png" onerror=' in text
-    assert '<a href="javascript:' not in text
-    assert '&lt;a href="javascript:' in text
+    assert '<img/src=x onerror=' not in text
+    assert '&lt;img/src=x onerror=alert(1)&gt;' in text
+    assert '<a href=' not in text
+    assert '&lt;a href="&#106;avascript:alert(1)"&gt;' in text
 
     # Normal text preserved
     assert "Normal text with **bold** and *italic*." in text

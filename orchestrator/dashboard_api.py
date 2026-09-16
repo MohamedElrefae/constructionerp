@@ -6,10 +6,12 @@ and returns JSON to stdout.
 """
 
 import argparse
+import html
 import json
 import re
 import sqlite3
 import sys
+import urllib.parse
 import uuid
 from pathlib import Path
 
@@ -38,13 +40,21 @@ from preflight import (
     run_owner_action_checks,
 )
 
-_PATH_RE = re.compile(r"/(?:[\w\.\-]+/)+[\w\.\-]+")
-_CREDENTIAL_RE = re.compile(
-    r"(?i)\b(api[_-]?key|secret|password|bearer|auth[_-]?token|private[_-]?key)(\s*[:=]\s*['\"]?)([\w\-\.]{8,})(['\"]?)"
+_PATH_RE = re.compile(r"(?<!\]\()(?<![:/\w])/(?:[\w\.\-]+/)+[\w\.\-]+")
+_SECRET_KEYWORDS = (
+    r"api[_-]?key|api[_-]?secret|access[_-]?token|auth[_-]?token|secret[_-]?key|"
+    r"client[_-]?secret|private[_-]?key|password|passwd|secret|token|bearer"
 )
-_BEARER_RE = re.compile(r"(?i)\b(bearer\s+)([\w\-\.]{8,})")
-_DANGEROUS_TAGS = {"script", "iframe", "object", "embed", "style", "link", "svg", "form", "input", "meta"}
-_DANGEROUS_TAG_RE = re.compile(r"</?\s*([a-zA-Z0-9]+)(\s+[^>]*)?>", re.IGNORECASE)
+_CREDENTIAL_PATTERN = re.compile(
+    rf"""(?i)(?P<prefix>['\"]?(?:{_SECRET_KEYWORDS})['\"]?\s*[:=]\s*['\"]?)(?P<secret>[^'\"\s,;}}\]\)>]+)(?P<suffix>['\"]?)""",
+    re.VERBOSE,
+)
+_BEARER_PATTERN = re.compile(r"(?i)(bearer\s+)([a-zA-Z0-9_\-\.]{8,})")
+_HTML_TAG_RE = re.compile(
+    r"</?\s*[a-zA-Z][a-zA-Z0-9:-]*(?:>|[\s/][^>]*>)|<!(?:--[\s\S]*?--|[^>]*?)>|<\?[\s\S]*?\?>",
+    re.IGNORECASE,
+)
+_MD_LINK_RE = re.compile(r"(!?\[[^\]]*\])\((.*?)\)(?=[ \t\r\n.,;!?]|$|\n)")
 
 
 def strip_paths(text: str, root: Path | str | None = None) -> str:
@@ -57,30 +67,48 @@ def strip_paths(text: str, root: Path | str | None = None) -> str:
     return _PATH_RE.sub("[PATH]", text)
 
 
-def _neutralize_tag(match: re.Match) -> str:
-    tag_str = match.group(0)
-    tag_name = match.group(1).lower()
-    attrs = match.group(2) or ""
-    if tag_name in _DANGEROUS_TAGS:
-        return tag_str.replace("<", "&lt;").replace(">", "&gt;")
-    if re.search(r"(?:^|\s)on[a-zA-Z]+\s*=", attrs, re.IGNORECASE) or re.search(
-        r"javascript\s*:", attrs, re.IGNORECASE
-    ):
-        return tag_str.replace("<", "&lt;").replace(">", "&gt;")
-    return tag_str
+def _is_safe_url(url: str) -> bool:
+    url = url.strip()
+    if url.startswith("<") and url.endswith(">"):
+        url = url[1:-1].strip()
+    unescaped = html.unescape(url)
+    unquoted = urllib.parse.unquote(unescaped)
+    cleaned = re.sub(r"[\x00-\x20\s]+", "", unquoted).lower()
+    colon_pos = cleaned.find(":")
+    if colon_pos != -1:
+        scheme = cleaned[:colon_pos]
+        if "/" not in scheme and "?" not in scheme and "#" not in scheme:
+            if scheme not in {"http", "https", "mailto"}:
+                return False
+    return True
+
+
+def _sanitize_md_links(text: str) -> str:
+    def _replace(match: re.Match) -> str:
+        prefix = match.group(1)
+        url = match.group(2)
+        if not _is_safe_url(url):
+            return f"{prefix}(#blocked)"
+        return match.group(0)
+
+    return _MD_LINK_RE.sub(_replace, text)
 
 
 def sanitize_plan_text(text: str, root: Path | str | None = None) -> str:
     """Sanitize plan text while preserving legitimate bilingual Arabic content.
 
-    Redacts credentials and file paths, and neutralizes dangerous HTML/XSS.
+    Redacts credentials (JSON & key-value formats), file paths, disables raw HTML,
+    and validates Markdown link protocols.
     """
     if not isinstance(text, str):
         return ""
     sanitized = strip_paths(text, root=root)
-    sanitized = _CREDENTIAL_RE.sub(r"\1\2[REDACTED_CREDENTIAL]\4", sanitized)
-    sanitized = _BEARER_RE.sub(r"\1[REDACTED_CREDENTIAL]", sanitized)
-    sanitized = _DANGEROUS_TAG_RE.sub(_neutralize_tag, sanitized)
+    sanitized = _CREDENTIAL_PATTERN.sub(r"\g<prefix>[REDACTED_CREDENTIAL]\g<suffix>", sanitized)
+    sanitized = _BEARER_PATTERN.sub(r"\1[REDACTED_CREDENTIAL]", sanitized)
+    sanitized = _HTML_TAG_RE.sub(
+        lambda m: m.group(0).replace("<", "&lt;").replace(">", "&gt;"), sanitized
+    )
+    sanitized = _sanitize_md_links(sanitized)
     return sanitized
 
 
@@ -111,6 +139,46 @@ def sanitize_error(exc: Exception, root: Path | str | None = None) -> dict:
         "error_type": exc_type,
         "support_id": support_id,
     }
+
+
+PUBLIC_PAUSE_CATEGORIES = {
+    "OPERATOR_PAUSED",
+    "BUDGET_EXHAUSTED",
+    "GATE_PENDING",
+    "VERIFICATION_FAILED",
+    "EXECUTION_ERROR",
+    "RECONCILIATION_REQUIRED",
+    "ESCALATED",
+    "MALFORMED_RESULT",
+}
+
+
+def categorize_pause_reason(raw_reason: str | None) -> str | None:
+    """Project internal pause reasons into fixed public categories.
+
+    Prevents leaking private operator instructions, credentials, or paths.
+    """
+    if not raw_reason:
+        return None
+    r_upper = str(raw_reason).strip().upper()
+    if r_upper in PUBLIC_PAUSE_CATEGORIES:
+        return r_upper
+    r = str(raw_reason).lower()
+    if any(k in r for k in ("reconcil", "grant")):
+        return "RECONCILIATION_REQUIRED"
+    if any(k in r for k in ("malform", "corrupt", "schema")):
+        return "MALFORMED_RESULT"
+    if any(k in r for k in ("escalat", "cycle", "loop")):
+        return "ESCALATED"
+    if any(k in r for k in ("budget", "cost", "token_limit", "max_iterations")):
+        return "BUDGET_EXHAUSTED"
+    if any(k in r for k in ("gate", "approval", "plan_review", "scope_review")):
+        return "GATE_PENDING"
+    if any(k in r for k in ("verify", "verification", "check_failed", "lint")):
+        return "VERIFICATION_FAILED"
+    if any(k in r for k in ("error", "exception", "halt", "crash", "failure")):
+        return "EXECUTION_ERROR"
+    return "OPERATOR_PAUSED"
 
 
 def get_state_projection(root: Path | str) -> dict:
@@ -160,7 +228,7 @@ def get_state_projection(root: Path | str) -> dict:
             projected_stages[stg_id] = {"status": str(stg_data)}
 
     raw_pause = v.get("pause_reason")
-    sanitized_pause = strip_paths(str(raw_pause), root=root) if raw_pause else None
+    sanitized_pause = categorize_pause_reason(raw_pause)
 
     return {
         "work_item": v.get("work_item"),
@@ -183,12 +251,12 @@ def get_state_projection(root: Path | str) -> dict:
     }
 
 
-def get_plan_projection(root: Path | str, plan_path: Path | str | None = None) -> dict:
-    """Dedicated read-only projection of plan text.
+def get_plan_projection(root: Path | str) -> dict:
+    """Dedicated read-only projection of the workflow's approved plan text.
 
-    Does NOT instantiate Engine, acquire exclusive execution.lock, or mutate
-    any files. Returns a relative plan_path and sanitized plan_text.
-    Rejects absolute paths, traversal, and symlink escapes before reading.
+    Does NOT accept request-supplied file paths, instantiate Engine, acquire
+    exclusive execution.lock, or mutate any files. Resolves ONLY the workflow's
+    approved plan artifact from checkpoints metadata.
     """
     root = Path(root).resolve()
     runtime_path = root / "orchestrator/var"
@@ -198,22 +266,24 @@ def get_plan_projection(root: Path | str, plan_path: Path | str | None = None) -
         raise PreconditionError(f"Display preflight failed: {failed}")
 
     db_path = runtime_path / "checkpoints.db"
+    if not db_path.exists():
+        return {"plan_text": "", "plan_path": ""}
+
     plan_art = None
     plan_cfg_path = ""
-    if db_path.exists():
-        conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
-        try:
-            row = conn.execute("SELECT value FROM workflow_meta WHERE key='plan_artifact'").fetchone()
-            if row:
-                plan_art = json.loads(row[0]) if row[0].startswith('"') else row[0]
-            cfg_row = conn.execute("SELECT value FROM workflow_meta WHERE key='config'").fetchone()
-            if cfg_row:
-                cfg = json.loads(cfg_row[0])
-                plan_cfg_path = cfg.get("plan_path", "")
-        finally:
-            conn.close()
+    conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+    try:
+        row = conn.execute("SELECT value FROM workflow_meta WHERE key='plan_artifact'").fetchone()
+        if row:
+            plan_art = json.loads(row[0]) if row[0].startswith('"') else row[0]
+        cfg_row = conn.execute("SELECT value FROM workflow_meta WHERE key='config'").fetchone()
+        if cfg_row:
+            cfg = json.loads(cfg_row[0])
+            plan_cfg_path = cfg.get("plan_path", "")
+    finally:
+        conn.close()
 
-    rel_path = plan_path or plan_art or plan_cfg_path
+    rel_path = plan_art or plan_cfg_path
     if not rel_path:
         return {"plan_text": "", "plan_path": ""}
 
@@ -352,7 +422,7 @@ def execute_action(root: Path, action: str, payload: dict | None = None) -> dict
     if action == "state":
         return get_state_projection(root)
     elif action == "plan":
-        return get_plan_projection(root, plan_path=payload.get("plan_path") if payload else None)
+        return get_plan_projection(root)
 
     lock_path = runtime_path / "execution.lock"
 
