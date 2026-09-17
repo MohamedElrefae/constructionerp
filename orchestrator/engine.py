@@ -293,6 +293,24 @@ class Engine:
             "orchestrator/var/",
         ]
         config["generated"] = generated
+        context_paths = config.get("read_only_context_paths", [])
+        if context_paths:
+            mandatory_files = ("AGENTS.md", "SESSION_MEMORY.md")
+            for mf in mandatory_files:
+                if mf not in context_paths:
+                    raise CoreValidationError(f"Mandatory read-only context path missing from configuration: {mf}")
+            for mf in mandatory_files:
+                if not (self.root / mf).is_file():
+                    raise CoreValidationError(f"Mandatory read-only context file does not exist on disk: {mf}")
+            for cp in context_paths:
+                for ap in config.get("scope", {}).get("allowed_paths", []):
+                    ap_clean = ap.rstrip("/*")
+                    if cp == ap or cp.startswith(ap_clean + "/"):
+                        raise CoreValidationError(f"Read-only context path {cp} intersects with scope.allowed_paths {ap}")
+                for gen in generated:
+                    gen_clean = gen.rstrip("/")
+                    if cp == gen or cp.startswith(gen_clean + "/"):
+                        raise CoreValidationError(f"Read-only context path {cp} intersects with generated path {gen}")
         config["scope_hash"] = digest(config["scope"])
         config["roles_hash"] = digest(config.get("roles", {}))
         config["candidate"] = freeze(
@@ -702,6 +720,10 @@ class Engine:
                 ][-1:]
             contract = within(self.root, self.config["plan_path"])
             read_artifacts = list(dict.fromkeys([str(contract), str(plan)]))
+            for cp in self.config.get("read_only_context_paths", []):
+                resolved_cp = self.root / cp
+                if resolved_cp.is_file():
+                    read_artifacts.append(str(resolved_cp))
             for dependency in dependencies:
                 prior_job = self.store.job(dependency["job_id"])
                 read_artifacts.append(str(Path(prior_job["runtime"]) / "stdout.jsonl"))
@@ -1758,6 +1780,58 @@ class Engine:
                 )
             write_json(self.runtime / "operations" / token["job_id"] / "intent.json", token, immutable=True)
         return self.run()
+
+    def grant_and_synchronize(self, token: dict) -> dict:
+        """Approval-only operation.
+        
+        Validates token against schema and pending gate, records grant row and event,
+        and synchronizes LangGraph checkpoint WITHOUT calling run() or dispatching jobs.
+        """
+        if self.store.meta("recovery_required", False):
+            raise WorkflowError("Recovery review required before approval creation")
+        validate_document("approval-token", token)
+        if token["status"] != "ISSUED":
+            raise WorkflowError("Only a newly issued owner token can enter approval")
+        row = self.store.conn.execute(
+            "SELECT status FROM workflow_grants WHERE token_id=?", (token["token_id"],)
+        ).fetchone()
+        if row:
+            raise WorkflowError("Token already used or recorded")
+        view = self._synchronize_checkpoint()
+        if (
+            not view["gate"]
+            or token["scope"] != view["gate"]["scope"]
+            or token["gate_id"] != view["gate"]["gate_id"]
+            or token["work_item"] != view["work_item"]
+        ):
+            raise WorkflowError("Approval does not match pending gate")
+        if token["scope"] == "PLAN":
+            if token.get("schema_version") == 1:
+                raise WorkflowError("Legacy schema_version 1 PLAN tokens cannot be reused for new approvals")
+            if token.get("schema_version") != 2:
+                raise WorkflowError("New PLAN approvals must declare schema_version 2 with roles_hash")
+            if not token.get("roles_hash"):
+                raise WorkflowError("PLAN token must declare roles_hash")
+            expected_roles_hash = view.get("roles_hash") or digest(self.config.get("roles", {}))
+            required = dict(
+                plan_revision_hash=view["plan_revision_hash"],
+                scope_hash=view["scope_hash"],
+                roles_hash=expected_roles_hash,
+                repository_id=str(self.root),
+                branch=self.config["branch"],
+            )
+            if (
+                any(token.get(k) != value for k, value in required.items())
+                or view["stage"] not in token["stages"]
+            ):
+                raise WorkflowError("PLAN binding mismatch")
+        else:
+            raise WorkflowError(f"Unsupported approval scope for grant_and_synchronize: {token['scope']}")
+
+        self.store.grant(token)
+        self.store.event("grant-" + token["token_id"], "grant", token)
+        # Synchronize checkpoint without calling self.run()
+        return self._synchronize_checkpoint()
 
     def recover_backup(self, evidence, reset_budget):
         if not self.store.meta("recovery_required", False) or not reset_budget:

@@ -14,6 +14,7 @@ Covers:
 """
 
 import json
+import os
 import sqlite3
 import subprocess
 import sys
@@ -1728,7 +1729,64 @@ def test_subprocess_plan_relative_and_sanitized(configured):
     assert str(root) not in res["plan_text"]
 
 
-def test_subprocess_bootstrap_task_branch(configured):
+def _setup_test_fenced_action(tmp_path: Path, action_id: str, action_type: str = "test", fencing_token: int = 1, executor_instance_id: str = "inst-test"):
+    test_root = tmp_path / "dashboard_service"
+    var_dir = test_root / "dashboard" / "var"
+    var_dir.mkdir(parents=True, exist_ok=True)
+    for p in (tmp_path, test_root, test_root / "dashboard", var_dir):
+        try:
+            os.chmod(p, 0o700)
+        except Exception:
+            pass
+    db_path = var_dir / "registry.db"
+    conn = sqlite3.connect(db_path)
+    with conn:
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS action_log (
+                action_id TEXT PRIMARY KEY,
+                task_id TEXT NOT NULL,
+                action_type TEXT NOT NULL,
+                state TEXT NOT NULL,
+                idempotency_key TEXT,
+                request_hash TEXT NOT NULL,
+                manifest_json TEXT NOT NULL,
+                response_json TEXT,
+                correlation_id TEXT,
+                executor_instance_id TEXT NOT NULL,
+                executor_pid INTEGER NOT NULL,
+                executor_start_time INTEGER NOT NULL,
+                child_pid INTEGER,
+                child_pgid INTEGER,
+                child_start_time INTEGER,
+                fencing_token INTEGER NOT NULL DEFAULT 0,
+                heartbeat_utc TEXT,
+                error_message TEXT,
+                session_memory_entry TEXT,
+                created_utc TEXT NOT NULL,
+                updated_utc TEXT NOT NULL
+            );
+        """)
+        conn.execute("""
+            INSERT OR REPLACE INTO action_log (
+                action_id, task_id, action_type, state, request_hash, manifest_json,
+                executor_instance_id, executor_pid, executor_start_time, fencing_token,
+                created_utc, updated_utc
+            ) VALUES (
+                ?, 'test-task', ?, 'EXECUTING', 'req-hash', '{}',
+                ?, ?, ?, ?,
+                '2026-09-17T00:00:00Z', '2026-09-17T00:00:00Z'
+            );
+        """, (action_id, action_type, executor_instance_id, os.getpid(), 0, fencing_token))
+    conn.close()
+    os.chmod(db_path, 0o600)
+    env = dict(os.environ)
+    env["DASHBOARD_TEST_MODE"] = "1"
+    env["DASHBOARD_TEST_ROOT"] = str(test_root)
+    env["CANONICAL_DASHBOARD_REGISTRY"] = str(db_path.resolve())
+    return env
+
+
+def test_subprocess_bootstrap_task_branch(configured, tmp_path):
     root, config = configured
     repo_root = Path(__file__).resolve().parents[2]
     task_branch = "task/subproc-bootstrap-item"
@@ -1737,6 +1795,9 @@ def test_subprocess_bootstrap_task_branch(configured):
     cfg = deepcopy(config)
     cfg["branch"] = task_branch
     cfg["base_commit"] = git(root, "rev-parse", "HEAD").decode().strip()
+
+    action_id = "act-subproc-init"
+    env = _setup_test_fenced_action(tmp_path, action_id, "initialize")
 
     proc = subprocess.run(
         [
@@ -1747,12 +1808,19 @@ def test_subprocess_bootstrap_task_branch(configured):
             str(root),
             "--action",
             "initialize",
+            "--action-id",
+            action_id,
+            "--fencing-token",
+            "1",
+            "--executor-instance-id",
+            "inst-test",
             "--payload",
             json.dumps({"config": cfg}),
         ],
         cwd=str(repo_root),
         capture_output=True,
         text=True,
+        env=env,
     )
     assert proc.returncode == 0, f"Stderr: {proc.stderr}\nStdout: {proc.stdout}"
     data = json.loads(proc.stdout)
@@ -1760,7 +1828,7 @@ def test_subprocess_bootstrap_task_branch(configured):
     assert data["result"]["stage"] == cfg.get("stage", cfg["stages"][0])
 
 
-def test_subprocess_run_action_executes_without_type_error(configured):
+def test_subprocess_run_action_executes_without_type_error(configured, tmp_path):
     root, config = configured
     repo_root = Path(__file__).resolve().parents[2]
     git(root, "checkout", "-B", config["branch"])
@@ -1782,6 +1850,9 @@ def test_subprocess_run_action_executes_without_type_error(configured):
     finally:
         e.close()
 
+    action_id = "act-subproc-run"
+    env = _setup_test_fenced_action(tmp_path, action_id, "run")
+
     proc = subprocess.run(
         [
             sys.executable,
@@ -1791,12 +1862,19 @@ def test_subprocess_run_action_executes_without_type_error(configured):
             str(root),
             "--action",
             "run",
+            "--action-id",
+            action_id,
+            "--fencing-token",
+            "1",
+            "--executor-instance-id",
+            "inst-test",
             "--payload",
             json.dumps({}),
         ],
         cwd=str(repo_root),
         capture_output=True,
         text=True,
+        env=env,
     )
     assert proc.returncode == 0, f"Stderr: {proc.stderr}\nStdout: {proc.stdout}"
     data = json.loads(proc.stdout)
@@ -2317,7 +2395,7 @@ def test_plain_text_output_contract_and_rendered_boundary(configured):
     assert "يرجى مراجعة الخطة" in safe_html
 
 
-def test_concurrent_subprocess_locking_serializes_mutations(configured):
+def test_concurrent_subprocess_locking_serializes_mutations(configured, tmp_path):
     root, config = configured
     repo_root = Path(__file__).resolve().parents[2]
     e = Engine(root, launcher=Stub())
@@ -2326,9 +2404,74 @@ def test_concurrent_subprocess_locking_serializes_mutations(configured):
     finally:
         e.close()
 
+    test_root = tmp_path / "dashboard_service"
+    var_dir = test_root / "dashboard" / "var"
+    var_dir.mkdir(parents=True, exist_ok=True)
+    for p in (tmp_path, test_root, test_root / "dashboard", var_dir):
+        try:
+            os.chmod(p, 0o700)
+        except Exception:
+            pass
+    db_path = var_dir / "registry.db"
+    conn = sqlite3.connect(db_path)
+    with conn:
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS action_log (
+                action_id TEXT PRIMARY KEY,
+                task_id TEXT NOT NULL,
+                action_type TEXT NOT NULL,
+                state TEXT NOT NULL,
+                idempotency_key TEXT,
+                request_hash TEXT NOT NULL,
+                manifest_json TEXT NOT NULL,
+                response_json TEXT,
+                correlation_id TEXT,
+                executor_instance_id TEXT NOT NULL,
+                executor_pid INTEGER NOT NULL,
+                executor_start_time INTEGER NOT NULL,
+                child_pid INTEGER,
+                child_pgid INTEGER,
+                child_start_time INTEGER,
+                fencing_token INTEGER NOT NULL DEFAULT 0,
+                heartbeat_utc TEXT,
+                error_message TEXT,
+                session_memory_entry TEXT,
+                created_utc TEXT NOT NULL,
+                updated_utc TEXT NOT NULL
+            );
+        """)
+        conn.execute("""
+            INSERT INTO action_log (
+                action_id, task_id, action_type, state, request_hash, manifest_json,
+                executor_instance_id, executor_pid, executor_start_time, fencing_token,
+                created_utc, updated_utc
+            ) VALUES 
+            ('act-conc-1', 'test-task', 'pause', 'EXECUTING', 'hash-conc-1', '{}', 'inst-conc-1', 1, 0, 1, '2026-09-17T00:00:00Z', '2026-09-17T00:00:00Z'),
+            ('act-conc-2', 'test-task', 'pause', 'EXECUTING', 'hash-conc-2', '{}', 'inst-conc-2', 1, 0, 1, '2026-09-17T00:00:00Z', '2026-09-17T00:00:00Z');
+        """)
+    conn.close()
+    os.chmod(db_path, 0o600)
+
+    env = dict(os.environ)
+    env["DASHBOARD_TEST_MODE"] = "1"
+    env["DASHBOARD_TEST_ROOT"] = str(test_root)
+    env["CANONICAL_DASHBOARD_REGISTRY"] = str(db_path.resolve())
+
     # Launch two subprocesses attempting to execute pause concurrently under the same lock
-    payload1 = json.dumps({"action_id": "act-conc-1", "request_hash": "hash-conc-1", "reason": "pause 1"})
-    payload2 = json.dumps({"action_id": "act-conc-2", "request_hash": "hash-conc-2", "reason": "pause 2"})
+    payload1 = json.dumps({
+        "action_id": "act-conc-1",
+        "fencing_token": 1,
+        "executor_instance_id": "inst-conc-1",
+        "request_hash": "hash-conc-1",
+        "reason": "pause 1",
+    })
+    payload2 = json.dumps({
+        "action_id": "act-conc-2",
+        "fencing_token": 1,
+        "executor_instance_id": "inst-conc-2",
+        "request_hash": "hash-conc-2",
+        "reason": "pause 2",
+    })
 
     p1 = subprocess.Popen(
         [
@@ -2339,6 +2482,12 @@ def test_concurrent_subprocess_locking_serializes_mutations(configured):
             str(root),
             "--action",
             "pause",
+            "--action-id",
+            "act-conc-1",
+            "--fencing-token",
+            "1",
+            "--executor-instance-id",
+            "inst-conc-1",
             "--payload",
             payload1,
         ],
@@ -2346,6 +2495,7 @@ def test_concurrent_subprocess_locking_serializes_mutations(configured):
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True,
+        env=env,
     )
     p2 = subprocess.Popen(
         [
@@ -2356,6 +2506,12 @@ def test_concurrent_subprocess_locking_serializes_mutations(configured):
             str(root),
             "--action",
             "pause",
+            "--action-id",
+            "act-conc-2",
+            "--fencing-token",
+            "1",
+            "--executor-instance-id",
+            "inst-conc-2",
             "--payload",
             payload2,
         ],
@@ -2363,6 +2519,7 @@ def test_concurrent_subprocess_locking_serializes_mutations(configured):
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True,
+        env=env,
     )
 
     out1, err1 = p1.communicate(timeout=20)

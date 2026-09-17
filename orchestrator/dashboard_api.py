@@ -6,8 +6,10 @@ and returns JSON to stdout.
 """
 
 import argparse
+import hashlib
 import html
 import json
+import os
 import re
 import sqlite3
 import sys
@@ -453,6 +455,274 @@ def get_plan_projection(root: Path | str) -> dict:
     }
 
 
+def get_review_context_projection(root: Path | str) -> dict:
+    """Dedicated read-only projection of workflow review context."""
+    root = Path(root).resolve()
+    runtime_path = root / "orchestrator/var"
+    checks = run_display_checks(runtime_path)
+    failed = [c for c in checks if not c.ok]
+    if failed:
+        raise PreconditionError(f"Display preflight failed: {failed}")
+
+    db_path = runtime_path / "checkpoints.db"
+    if not db_path.exists():
+        return {"status": "NOT_INITIALIZED"}
+
+    conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+    try:
+        from langgraph.checkpoint.sqlite import SqliteSaver
+        saver = SqliteSaver(conn)
+        checkpoint = saver.get({"configurable": {"thread_id": "workflow"}})
+        v = {}
+        if checkpoint and checkpoint.get("channel_values"):
+            v = checkpoint["channel_values"]["view"]
+
+        cfg = {}
+        row = conn.execute("SELECT value FROM workflow_meta WHERE key='config'").fetchone()
+        if row:
+            cfg = json.loads(row[0])
+    finally:
+        conn.close()
+
+    work_item = v.get("work_item") or cfg.get("work_item")
+    proposal = None
+    if work_item:
+        proposal_file = root / f"docs/ai/work-items/{work_item}/outbox/scope-proposal.json"
+        if proposal_file.is_file():
+            try:
+                proposal = json.loads(proposal_file.read_text(encoding="utf-8"))
+            except Exception:
+                proposal = None
+
+    context_paths = cfg.get("read_only_context_paths") or [
+        "AGENTS.md",
+        "SESSION_MEMORY.md",
+        "docs/ai/SCHEMA_FACTS.md",
+        "docs/ai/CODING_PATTERNS.md",
+        "docs/ai/CONTEXT_INDEX.md",
+    ]
+    provenance = []
+    for rel_p in context_paths:
+        p = root / rel_p
+        exists = p.is_file()
+        sha = None
+        if exists:
+            sha = hashlib.sha256(p.read_bytes()).hexdigest()
+        provenance.append({
+            "path": rel_p,
+            "exists": exists,
+            "is_mandatory": rel_p in ("AGENTS.md", "SESSION_MEMORY.md"),
+            "sha256": sha,
+        })
+
+    return {
+        "work_item": work_item,
+        "current_stage": v.get("stage"),
+        "status": v.get("status"),
+        "sub_status": v.get("sub_status"),
+        "gate": v.get("gate"),
+        "plan_granted": bool(v.get("plan_granted")),
+        "plan_revision_hash": v.get("plan_revision_hash"),
+        "scope_hash": v.get("scope_hash"),
+        "roles_hash": v.get("roles_hash"),
+        "proposal": proposal,
+        "active_jobs": [
+            {
+                "role": j.get("role") if isinstance(j, dict) else None,
+                "status": j.get("status") if isinstance(j, dict) else None,
+            }
+            for j in (v.get("active_jobs") or [])
+        ],
+        "provenance": provenance,
+    }
+
+
+def get_ai_context_projection(root: Path | str) -> dict:
+    """Dedicated read-only projection of AI conventions and sprint memory."""
+    root = Path(root).resolve()
+    runtime_path = root / "orchestrator/var"
+    checks = run_display_checks(runtime_path)
+    failed = [c for c in checks if not c.ok]
+    if failed:
+        raise PreconditionError(f"Display preflight failed: {failed}")
+
+    db_path = runtime_path / "checkpoints.db"
+    cfg = {}
+    v = {}
+    if db_path.exists():
+        conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+        try:
+            from langgraph.checkpoint.sqlite import SqliteSaver
+            saver = SqliteSaver(conn)
+            checkpoint = saver.get({"configurable": {"thread_id": "workflow"}})
+            if checkpoint and checkpoint.get("channel_values"):
+                v = checkpoint["channel_values"]["view"]
+            row = conn.execute("SELECT value FROM workflow_meta WHERE key='config'").fetchone()
+            if row:
+                cfg = json.loads(row[0])
+        finally:
+            conn.close()
+
+    work_item = v.get("work_item") or cfg.get("work_item")
+
+    agents_content = ""
+    session_memory_content = ""
+    coding_patterns_content = ""
+    schema_facts_content = ""
+
+    for rel_p in ("AGENTS.md", "SESSION_MEMORY.md", "docs/ai/CODING_PATTERNS.md", "docs/ai/SCHEMA_FACTS.md"):
+        p = root / rel_p
+        if p.is_file():
+            text = p.read_text(encoding="utf-8", errors="replace")
+            text = strip_paths(text, root=root)
+            if rel_p == "AGENTS.md":
+                agents_content = text
+            elif rel_p == "SESSION_MEMORY.md":
+                session_memory_content = text
+            elif rel_p == "docs/ai/CODING_PATTERNS.md":
+                coding_patterns_content = text
+            elif rel_p == "docs/ai/SCHEMA_FACTS.md":
+                schema_facts_content = text
+
+    context_paths = cfg.get("read_only_context_paths") or [
+        "AGENTS.md",
+        "SESSION_MEMORY.md",
+        "docs/ai/SCHEMA_FACTS.md",
+        "docs/ai/CODING_PATTERNS.md",
+        "docs/ai/CONTEXT_INDEX.md",
+    ]
+    provenance = []
+    for rel_p in context_paths:
+        p = root / rel_p
+        exists = p.is_file()
+        sha = None
+        if exists:
+            sha = hashlib.sha256(p.read_bytes()).hexdigest()
+        provenance.append({
+            "path": rel_p,
+            "exists": exists,
+            "is_mandatory": rel_p in ("AGENTS.md", "SESSION_MEMORY.md"),
+            "sha256": sha,
+        })
+
+    return {
+        "work_item": work_item,
+        "agents_md": agents_content,
+        "session_memory_md": session_memory_content,
+        "coding_patterns_md": coding_patterns_content,
+        "schema_facts_md": schema_facts_content,
+        "provenance": provenance,
+    }
+
+
+def validate_and_bind_canonical_registry(candidate_path: Path | str, is_test_mode: bool = False) -> Path:
+    """Validate full ancestor chain ownership and permissions for registry.db."""
+    raw_str = str(candidate_path).strip()
+    if any(part == ".." for part in raw_str.replace("\\", "/").split("/")):
+        raise ValueError(f"Parent traversal ('..') prohibited in registry path: {candidate_path}")
+
+    target = Path(raw_str)
+    if not target.is_absolute():
+        raise ValueError(f"Registry path must be absolute: {candidate_path}")
+
+    current = Path(target.parts[0])  # Path("/")
+    for part in target.parts[1:]:
+        current = current / part
+        if os.path.islink(current):
+            raise ValueError(f"Symlink rejected in registry path component: {current}")
+
+        is_var_dir = (current == target.parent)
+        is_db_file = (current == target)
+
+        if current.exists():
+            st = current.stat()
+            if is_var_dir:
+                if st.st_uid != os.geteuid():
+                    raise ValueError(f"Registry directory owner {st.st_uid} != expected {os.geteuid()}")
+                if (st.st_mode & 0o077) != 0:
+                    raise ValueError(f"Registry directory {current} must have mode 0700 (no group/world access)")
+            elif is_db_file:
+                if st.st_uid != os.geteuid():
+                    raise ValueError(f"Registry database owner {st.st_uid} != expected {os.geteuid()}")
+                if (st.st_mode & 0o077) != 0:
+                    raise ValueError(f"Registry database {current} must have mode 0600 (no group/world access)")
+            else:
+                if is_test_mode and current in (Path("/tmp"), Path("/run"), Path("/var"), Path("/var/tmp")):
+                    pass
+                else:
+                    if st.st_uid not in (0, os.geteuid()):
+                        raise ValueError(f"Ancestor directory {current} owner {st.st_uid} is neither root nor current user {os.geteuid()}")
+                    if (st.st_mode & 0o022) != 0:
+                        raise ValueError(f"Ancestor directory {current} must not be group/world-writable (mode {oct(st.st_mode)})")
+        else:
+            if not is_db_file:
+                raise FileNotFoundError(f"Registry path component does not exist: {current}")
+
+    return current.resolve()
+
+
+def get_canonical_registry_path(dashboard_root: Path | None = None) -> Path:
+    """Derive canonical registry path authoritatively and assert env consistency."""
+    is_test_mode = os.environ.get("DASHBOARD_TEST_MODE") == "1"
+    if dashboard_root:
+        base = Path(dashboard_root).resolve()
+        derived = base / "dashboard/var/registry.db"
+    elif is_test_mode and "DASHBOARD_TEST_ROOT" in os.environ:
+        base = Path(os.environ["DASHBOARD_TEST_ROOT"]).resolve()
+        derived = base / "dashboard/var/registry.db"
+    elif is_test_mode and "DASHBOARD_REGISTRY_DB" in os.environ:
+        derived = Path(os.environ["DASHBOARD_REGISTRY_DB"]).resolve()
+    else:
+        base = _orchestrator_dir.parent
+        derived = base / "dashboard/var/registry.db"
+
+    env_asserted = os.environ.get("CANONICAL_DASHBOARD_REGISTRY")
+    if env_asserted:
+        assert_path = Path(env_asserted).resolve()
+        if derived.resolve() != assert_path:
+            raise WorkflowError(
+                f"Registry derivation mismatch: derived {derived.resolve()} != env assertion {assert_path}"
+            )
+    return derived
+
+
+def verify_action_fence(
+    registry_db_path: Path,
+    action_id: str,
+    fencing_token: int,
+    executor_instance_id: str,
+) -> None:
+    """Verify 4-tuple fence against canonical action_log table under lock."""
+    if not registry_db_path.exists():
+        raise WorkflowError(f"Canonical registry database not found: {registry_db_path}")
+    conn = sqlite3.connect(f"file:{registry_db_path}?mode=ro", uri=True)
+    try:
+        row = conn.execute(
+            """
+            SELECT 1 FROM action_log
+            WHERE action_id = ?
+              AND fencing_token = ?
+              AND executor_instance_id = ?
+              AND state IN ('EXECUTING', 'RECOVERING')
+            """,
+            (action_id, fencing_token, executor_instance_id),
+        ).fetchone()
+        if not row:
+            detail = conn.execute(
+                "SELECT fencing_token, executor_instance_id, state FROM action_log WHERE action_id = ?",
+                (action_id,),
+            ).fetchone()
+            if not detail:
+                raise WorkflowError(f"Action {action_id} not found in canonical registry")
+            raise WorkflowError(
+                f"Fencing validation failed for action {action_id}: "
+                f"expected token={fencing_token}, instance={executor_instance_id}, state in (EXECUTING, RECOVERING); "
+                f"found token={detail[0]}, instance={detail[1]}, state={detail[2]}"
+            )
+    finally:
+        conn.close()
+
+
 def deduplicate_action(
     action_id: str | None,
     request_hash: str,
@@ -569,11 +839,90 @@ def execute_action(root: Path, action: str, payload: dict | None = None) -> dict
         return get_state_projection(root)
     elif action == "plan":
         return get_plan_projection(root)
+    elif action == "review_context":
+        return get_review_context_projection(root)
+    elif action == "ai_context":
+        return get_ai_context_projection(root)
 
     lock_path = runtime_path / "execution.lock"
 
     with execution_lock(lock_path, timeout=10):
-        # 1. Preflight check selection per mutating action
+        # 1. Authoritative Identity Resolution under Lock
+        authoritative_work_item = None
+        db_path = runtime_path / "checkpoints.db"
+        if db_path.exists():
+            conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+            try:
+                row = conn.execute("SELECT value FROM workflow_meta WHERE key='work_item'").fetchone()
+                if row and row[0]:
+                    authoritative_work_item = row[0]
+                if not authoritative_work_item:
+                    row = conn.execute("SELECT value FROM workflow_meta WHERE key='config'").fetchone()
+                    if row and row[0]:
+                        try:
+                            cfg = json.loads(row[0])
+                            authoritative_work_item = cfg.get("work_item")
+                        except Exception:
+                            pass
+            finally:
+                conn.close()
+
+        root_work_item = root.name
+        if not authoritative_work_item:
+            if (root / f"docs/ai/work-items/{root_work_item}").exists():
+                authoritative_work_item = root_work_item
+            elif root_work_item == "erp-arabic-bilingual-data":
+                authoritative_work_item = root_work_item
+
+        supplied_identities = set()
+        for k in ("work_item", "worktree_id", "task_id"):
+            val = payload.get(k)
+            if isinstance(val, str) and val.strip():
+                supplied_identities.add(val.strip())
+        for nested in ("config", "submitted_token", "token"):
+            obj = payload.get(nested)
+            if isinstance(obj, dict):
+                for k in ("work_item", "worktree_id", "task_id"):
+                    val = obj.get(k)
+                    if isinstance(val, str) and val.strip():
+                        supplied_identities.add(val.strip())
+
+        # 2. Stage 4 Hard Block Across ALL Mutating Actions
+        is_stage4 = (
+            authoritative_work_item == "erp-arabic-bilingual-data"
+            or root.name == "erp-arabic-bilingual-data"
+            or "erp-arabic-bilingual-data" in root.parts
+            or "erp-arabic-bilingual-data" in supplied_identities
+        )
+        if is_stage4:
+            raise PreconditionError("Stage 4 erp-arabic-bilingual-data is parked and prohibited from dashboard execution")
+
+        # Authoritative identity mismatch rejection across ALL mutating actions
+        if authoritative_work_item and supplied_identities:
+            for supplied in supplied_identities:
+                if supplied != authoritative_work_item:
+                    raise CoreValidationError(
+                        f"Work-item identity mismatch: supplied {supplied!r} != authoritative {authoritative_work_item!r}"
+                    )
+
+        # 3. 4-Tuple Fence Check under lock — required unconditionally for all mutating actions
+        action_id = payload.get("action_id")
+        fencing_token = payload.get("fencing_token")
+        executor_instance_id = payload.get("executor_instance_id")
+
+        if not action_id or fencing_token is None or not executor_instance_id:
+            raise PreconditionError(
+                f"Fencing parameters (action_id, fencing_token, executor_instance_id) are strictly "
+                f"required for mutating action '{action}'"
+            )
+
+        canon_path = get_canonical_registry_path()
+        validate_and_bind_canonical_registry(
+            canon_path, is_test_mode=os.environ.get("DASHBOARD_TEST_MODE") == "1"
+        )
+        verify_action_fence(canon_path, str(action_id), int(fencing_token), str(executor_instance_id))
+
+        # 4. Preflight check selection per mutating action
         if action in ("pause", "resume", "reset_budget", "reconfigure_role"):
             cfg = None
             if (runtime_path / "checkpoints.db").exists():
@@ -613,13 +962,12 @@ def execute_action(root: Path, action: str, payload: dict | None = None) -> dict
             if failed:
                 raise PreconditionError(f"Dispatch preflight failed: {failed}")
 
-        # 2. Initialize Engine for mutation
+        # 5. Initialize Engine for mutation
         engine = Engine(root)
         try:
-            # 3. Deduplication under lock
+            # 6. Deduplication under lock
             token_id = payload.get("token_id")
             submitted_token = payload.get("submitted_token") or payload.get("token")
-            action_id = payload.get("action_id")
             request_hash = payload.get("request_hash", "")
 
             dedup = deduplicate_action(
@@ -633,7 +981,7 @@ def execute_action(root: Path, action: str, payload: dict | None = None) -> dict
             if dedup is not None:
                 return dedup
 
-            # 4. Dispatch action
+            # 7. Dispatch action
             if action == "initialize":
                 config = payload["config"]
                 return engine.initialize(config)
@@ -642,7 +990,7 @@ def execute_action(root: Path, action: str, payload: dict | None = None) -> dict
             elif action == "approve_plan":
                 if not submitted_token:
                     raise CoreValidationError("approve_plan requires submitted_token or token in payload")
-                return engine.approve(submitted_token)
+                return engine.grant_and_synchronize(submitted_token)
             elif action == "adopt_scope":
                 scope = payload["scope"]
                 implementation_stages = payload["implementation_stages"]
@@ -708,6 +1056,9 @@ def main():
     parser.add_argument("--action", type=str, required=True, help="Action to execute")
     parser.add_argument("--payload", type=str, default=None, help="JSON payload string")
     parser.add_argument("--payload-file", type=Path, default=None, help="JSON payload file")
+    parser.add_argument("--action-id", type=str, default=None, help="Action ID")
+    parser.add_argument("--fencing-token", type=int, default=None, help="Fencing token")
+    parser.add_argument("--executor-instance-id", type=str, default=None, help="Executor instance ID")
     args = parser.parse_args()
 
     payload = {}
@@ -720,12 +1071,20 @@ def main():
         if content:
             payload = json.loads(content)
 
+    if args.action_id:
+        payload["action_id"] = args.action_id
+    if args.fencing_token is not None:
+        payload["fencing_token"] = args.fencing_token
+    if args.executor_instance_id:
+        payload["executor_instance_id"] = args.executor_instance_id
+
     try:
         res = execute_action(args.root, args.action, payload)
         output = {"ok": True, "result": res}
         print(json.dumps(output, default=str))
         sys.exit(0)
     except Exception as exc:
+        sys.stderr.write(f"DASHBOARD_API_EXC: {type(exc).__name__}: {exc}\n")
         err = sanitize_error(exc, args.root)
         output = {
             "ok": False,

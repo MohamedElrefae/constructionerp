@@ -34,3 +34,6 @@ construction/public/css/theme_*.css
 # Isolated workflow development/runtime (never app package data)
 /orchestrator/.venv/
 /orchestrator/var/
+/dashboard/.venv/
+/dashboard/var/
+/dashboard/vendor/

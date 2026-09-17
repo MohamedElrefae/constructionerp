@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Civil Engineer Dashboard</title>
+  <link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-brand">
+        <h1>Civil Engineer Dashboard</h1>
+        <span class="badge badge-scope">Week 2 Interactive Control</span>
+      </div>
+      <div id="user-controls" class="user-controls" style="display: none;">
+        <span id="nav-username" class="user-name"></span>
+        <button id="logout-btn" class="btn btn-secondary">Logout</button>
+      </div>
+    </header>
+
+    <!-- Auth View -->
+    <section id="auth-section" class="card auth-card">
+      <h2>Dashboard Login</h2>
+      <p class="subtitle">Enter your credentials to access the orchestrator dashboard.</p>
+      <form id="login-form">
+        <div class="form-group">
+          <label for="login-username">Username</label>
+          <input type="text" id="login-username" name="username" required autocomplete="username">
+        </div>
+        <div class="form-group">
+          <label for="login-password">Password</label>
+          <input type="password" id="login-password" name="password" required autocomplete="current-password">
+        </div>
+        <div id="login-error" class="alert alert-error" style="display: none;"></div>
+        <button type="submit" class="btn btn-primary" id="login-submit-btn">Login</button>
+      </form>
+    </section>
+
+    <!-- Permanent Password Setup View (First-Run) -->
+    <section id="setup-password-section" class="card auth-card" style="display: none;">
+      <h2>Set Permanent Password</h2>
+      <p class="subtitle">Initial credentials detected. You must configure a permanent password to proceed.</p>
+      <form id="setup-password-form">
+        <div class="form-group">
+          <label for="setup-current-password">Current Initial Password</label>
+          <input type="password" id="setup-current-password" required autocomplete="current-password">
+        </div>
+        <div class="form-group">
+          <label for="setup-new-password">New Permanent Password (min 12 characters)</label>
+          <input type="password" id="setup-new-password" required autocomplete="new-password">
+        </div>
+        <div id="setup-password-error" class="alert alert-error" style="display: none;"></div>
+        <button type="submit" class="btn btn-primary" id="setup-password-submit-btn">Save Permanent Password</button>
+      </form>
+    </section>
+
+    <!-- Main Content (Authenticated) -->
+    <main id="main-content" style="display: none;">
+      <!-- Task Bootstrap -->
+      <section class="card bootstrap-card">
+        <h2>Bootstrap New Task</h2>
+        <p class="subtitle">Initialize an isolated git worktree with pre-manifest logging, lock inheritance, and recovery.</p>
+        <form id="bootstrap-form">
+          <div class="form-group" style="margin-bottom: 12px;">
+            <label for="bootstrap-work-item">Work Item Name</label>
+            <input type="text" id="bootstrap-work-item" placeholder="e.g. core-auth-enhancement" required>
+          </div>
+          <div class="form-group" style="margin-bottom: 12px;">
+            <label for="bootstrap-user-brief">Owner Brief</label>
+            <textarea id="bootstrap-user-brief" rows="3" placeholder="Describe requirements and deliverables for this worktree..." required></textarea>
+          </div>
+          <div class="form-group" style="margin-bottom: 12px;">
+            <label for="bootstrap-base-ref">Base Commit / Ref (optional)</label>
+            <input type="text" id="bootstrap-base-ref" placeholder="HEAD">
+          </div>
+          <button type="submit" class="btn btn-primary" id="bootstrap-btn">Bootstrap Task</button>
+        </form>
+        <div id="bootstrap-message" class="alert" style="display: none; margin-top: 12px;"></div>
+      </section>
+
+      <!-- Task Registration -->
+      <section class="card registration-card">
+        <h2>Register Worktree</h2>
+        <p class="subtitle">Register an existing initialized worktree within the allowed bench boundaries.</p>
+        <form id="register-form" class="inline-form">
+          <input type="text" id="worktree-path-input" placeholder="/home/mohamed/frappe-bench/worktrees/..." required>
+          <button type="submit" class="btn btn-secondary" id="register-btn">Register Existing Worktree</button>
+        </form>
+        <div id="register-message" class="alert" style="display: none;"></div>
+      </section>
+
+      <!-- Registered Tasks List -->
+      <section class="card tasks-card">
+        <div class="card-header">
+          <h2>Registered Worktrees</h2>
+          <button id="refresh-tasks-btn" class="btn btn-secondary">Refresh</button>
+        </div>
+        <div id="tasks-table-container">
+          <table class="tasks-table">
+            <thead>
+              <tr>
+                <th>Task ID</th>
+                <th>Work Item</th>
+                <th>Branch</th>
+                <th>Status</th>
+                <th>Stage</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="tasks-tbody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+          <p id="no-tasks-msg" class="empty-state" style="display: none;">No worktrees registered yet.</p>
+        </div>
+      </section>
+
+      <!-- Task Inspection & Progress Detail -->
+      <section id="task-detail-section" class="card detail-card" style="display: none;">
+        <div class="detail-header">
+          <div>
+            <h2 id="detail-task-id">Task Details</h2>
+            <p id="detail-worktree" class="text-muted"></p>
+          </div>
+          <div class="detail-meta">
+            <span id="detail-branch-badge" class="badge badge-info"></span>
+            <span id="detail-status-badge" class="badge"></span>
+          </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="tab-bar">
+          <button class="tab-btn active" data-tab="tab-progress">Progress &amp; Jobs</button>
+          <button class="tab-btn" data-tab="tab-plan">Plan &amp; Approval</button>
+          <button class="tab-btn" data-tab="tab-context">AI Context &amp; Memory</button>
+        </div>
+
+        <!-- Tab 1: Progress & Jobs -->
+        <div id="tab-progress" class="tab-content active">
+          <div class="grid-2col">
+            <div class="col">
+              <div class="section-block">
+                <h3>Workflow Stages</h3>
+                <div id="stages-container" class="stages-list"></div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="section-block">
+                <h3>Active Jobs</h3>
+                <div id="jobs-container" class="jobs-list"></div>
+              </div>
+              <div class="section-block">
+                <h3>Next Roles</h3>
+                <div id="next-roles-container" class="tags-list"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Plan & Approval -->
+        <div id="tab-plan" class="tab-content">
+          <div class="grid-2col">
+            <!-- Left: Plain-Text Plan Display -->
+            <div class="col">
+              <div class="plan-panel">
+                <h3 id="plan-title">Plan</h3>
+                <pre id="plan-display" class="plan-display" aria-label="Plan Plain Text"></pre>
+              </div>
+            </div>
+
+            <!-- Right: Proposal & Approval Controls -->
+            <div class="col">
+              <!-- Architect Scope Proposal Subcard -->
+              <div id="proposal-subcard" class="subcard">
+                <h4>Architect Scope Proposal</h4>
+                <div id="proposal-details" class="proposal-details">No scope proposal submitted.</div>
+                <button id="adopt-scope-btn" class="btn btn-primary" style="display: none;">Adopt Scope Proposal</button>
+                <div id="adopt-scope-msg" class="alert" style="display: none; margin-top: 8px;"></div>
+              </div>
+
+              <!-- Plan Review & Approval Subcard -->
+              <div id="review-subcard" class="subcard">
+                <h4>Plan Review &amp; Approval</h4>
+                <div id="review-hashes-details" class="review-details">Loading gate status...</div>
+                <div class="btn-group">
+                  <button id="create-review-btn" class="btn btn-secondary" style="display: none;">Create Review Snapshot</button>
+                  <button id="approve-plan-btn" class="btn btn-primary" style="display: none;">Approve Plan</button>
+                </div>
+                <div id="approval-msg" class="alert" style="display: none; margin-top: 8px;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 3: AI Context & Memory -->
+        <div id="tab-context" class="tab-content">
+          <div class="section-block">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <h3>Sprint Memory</h3>
+              <button id="copy-memory-btn" class="btn btn-secondary btn-small">Copy Sprint Memory</button>
+            </div>
+            <pre id="sprint-memory-display" class="plan-display" style="min-height: 150px;"></pre>
+            <div id="copy-memory-msg" class="alert" style="display: none; margin-top: 8px;"></div>
+          </div>
+
+          <div class="section-block" style="margin-top: 20px;">
+            <h3>Context File Provenance</h3>
+            <table class="provenance-table">
+              <thead>
+                <tr>
+                  <th>File Path</th>
+                  <th>Mandatory</th>
+                  <th>Status</th>
+                  <th>Content SHA-256</th>
+                </tr>
+              </thead>
+              <tbody id="provenance-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
