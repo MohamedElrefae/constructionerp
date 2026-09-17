@@ -190,6 +190,14 @@ let currentReviewContext = null;
 let currentAiContext = null;
 let currentPlanData = null;
 
+// Week 3 State Caches
+let currentFindingsData = null;
+let activeFindingsFilter = 'all';
+let currentEvidenceList = [];
+let currentDiffData = null;
+let currentSettingsData = null;
+let currentErpData = null;
+
 function updateProposalDisplay(reviewCtx) {
   const details = document.getElementById('proposal-details');
   const btn = document.getElementById('adopt-scope-btn');
@@ -301,6 +309,511 @@ function updateAiContextDisplay(aiCtx) {
 }
 
 // ---------------------------------------------------------------------------
+// Week 3 Inspection & Projection Functions
+// ---------------------------------------------------------------------------
+
+async function loadEvidenceList() {
+  if (!activeTaskId) return;
+  const tbody = document.getElementById('evidence-tbody');
+  const msg = document.getElementById('evidence-msg');
+  if (msg) msg.style.display = 'none';
+  if (!tbody) return;
+
+  try {
+    const res = await apiFetch(`/api/tasks/${encodeURIComponent(activeTaskId)}/evidence`);
+    if (!res.ok) {
+      if (msg) {
+        msg.className = 'alert alert-error';
+        msg.textContent = 'Failed to load evidence list';
+        msg.style.display = 'block';
+      }
+      return;
+    }
+    const data = await res.json();
+    currentEvidenceList = data.files || [];
+    tbody.innerHTML = '';
+
+    if (currentEvidenceList.length === 0) {
+      const tr = document.createElement('tr');
+      const td = document.createElement('td');
+      td.colSpan = 4;
+      td.className = 'empty-state';
+      td.textContent = 'No evidence files found for this worktree.';
+      tr.appendChild(td);
+      tbody.appendChild(tr);
+      return;
+    }
+
+    for (const file of currentEvidenceList) {
+      const tr = document.createElement('tr');
+
+      const tdName = document.createElement('td');
+      tdName.textContent = file.filename;
+      tr.appendChild(tdName);
+
+      const tdSize = document.createElement('td');
+      tdSize.textContent = typeof file.size_bytes === 'number' ? file.size_bytes.toLocaleString() : (file.size_bytes || '-');
+      tr.appendChild(tdSize);
+
+      const tdTime = document.createElement('td');
+      tdTime.textContent = file.modified_utc || '-';
+      tr.appendChild(tdTime);
+
+      const tdAction = document.createElement('td');
+      const viewBtn = document.createElement('button');
+      viewBtn.className = 'btn btn-small btn-secondary';
+      viewBtn.textContent = 'View';
+      viewBtn.onclick = () => viewEvidenceFile(file.filename);
+      tdAction.appendChild(viewBtn);
+      tr.appendChild(tdAction);
+
+      tbody.appendChild(tr);
+    }
+  } catch (err) {
+    console.error('Failed to load evidence list:', err);
+  }
+}
+
+async function viewEvidenceFile(filename) {
+  if (!activeTaskId) return;
+  const panel = document.getElementById('evidence-viewer-panel');
+  const title = document.getElementById('evidence-viewer-title');
+  const display = document.getElementById('evidence-display');
+  const shaBadge = document.getElementById('evidence-sha-badge');
+  const truncBadge = document.getElementById('evidence-trunc-badge');
+  const msg = document.getElementById('evidence-msg');
+  if (msg) msg.style.display = 'none';
+
+  try {
+    const res = await apiFetch(`/api/tasks/${encodeURIComponent(activeTaskId)}/evidence/${encodeURIComponent(filename)}`);
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      if (msg) {
+        msg.className = 'alert alert-error';
+        msg.textContent = data.detail || `Failed to read evidence: HTTP ${res.status}`;
+        msg.style.display = 'block';
+      }
+      if (panel) panel.style.display = 'none';
+      return;
+    }
+    const data = await res.json();
+    if (panel) panel.style.display = 'block';
+    if (title) title.textContent = `Evidence: ${filename}`;
+    if (display) display.textContent = data.content || '';
+    if (shaBadge) {
+      shaBadge.textContent = data.sha256 ? `SHA-256: ${data.sha256.substring(0, 16)}...` : 'SHA-256: N/A';
+    }
+    if (truncBadge) {
+      truncBadge.style.display = data.truncated ? 'inline-block' : 'none';
+    }
+  } catch (err) {
+    console.error('Failed to view evidence file:', err);
+  }
+}
+
+async function loadFindings() {
+  if (!activeTaskId) return;
+  try {
+    const res = await apiFetch(`/api/tasks/${encodeURIComponent(activeTaskId)}/findings`);
+    if (!res.ok) return;
+    const data = await res.json();
+    currentFindingsData = data;
+    updateFindingsDisplay();
+  } catch (err) {
+    console.error('Failed to load findings:', err);
+  }
+}
+
+function updateFindingsDisplay() {
+  if (!currentFindingsData) return;
+  const stats = currentFindingsData.stats || {};
+  const blockingEl = document.getElementById('blocking-count-badge');
+  const totalEl = document.getElementById('total-findings-badge');
+  const backlogEl = document.getElementById('backlog-count-badge');
+
+  if (blockingEl) blockingEl.textContent = `${stats.blocking_findings || 0} Blocking Defects`;
+  if (totalEl) totalEl.textContent = `${stats.total_findings || 0} Total Findings`;
+  if (backlogEl) backlogEl.textContent = `${stats.backlog_items || 0} Backlog Items`;
+
+  const container = document.getElementById('findings-list');
+  if (!container) return;
+  container.innerHTML = '';
+
+  const findings = currentFindingsData.findings || [];
+  const backlog = currentFindingsData.backlog || [];
+
+  let itemsToRender = [];
+  if (activeFindingsFilter === 'all') {
+    itemsToRender = [
+      ...findings.map(f => ({ ...f, _type: 'finding' })),
+      ...backlog.map(b => ({ ...b, _type: 'backlog' })),
+    ];
+  } else if (activeFindingsFilter === 'blocking') {
+    itemsToRender = findings
+      .filter(f => ['implementation_defect', 'design_defect'].includes(f.classification) || ['BLOCKING', 'HIGH'].includes(String(f.severity || '').toUpperCase()))
+      .map(f => ({ ...f, _type: 'finding' }));
+  } else if (activeFindingsFilter === 'backlog') {
+    itemsToRender = backlog.map(b => ({ ...b, _type: 'backlog' }));
+  } else if (activeFindingsFilter === 'implementation_defect') {
+    itemsToRender = findings
+      .filter(f => f.classification === 'implementation_defect')
+      .map(f => ({ ...f, _type: 'finding' }));
+  } else if (activeFindingsFilter === 'design_defect') {
+    itemsToRender = findings
+      .filter(f => f.classification === 'design_defect')
+      .map(f => ({ ...f, _type: 'finding' }));
+  }
+
+  if (itemsToRender.length === 0) {
+    const p = document.createElement('p');
+    p.className = 'empty-state';
+    p.textContent = 'No items match the selected filter.';
+    container.appendChild(p);
+    return;
+  }
+
+  for (const item of itemsToRender) {
+    const card = document.createElement('div');
+    card.className = 'finding-card';
+    if (item._type === 'backlog') {
+      card.classList.add('backlog');
+    } else if (['implementation_defect', 'design_defect'].includes(item.classification) || ['BLOCKING', 'HIGH'].includes(String(item.severity || '').toUpperCase())) {
+      card.classList.add('blocking');
+    }
+
+    const header = document.createElement('div');
+    header.className = 'finding-header';
+
+    const title = document.createElement('span');
+    title.className = 'finding-title';
+    title.textContent = item.id || item.finding_id || item.item_id || item.title || (item._type === 'backlog' ? 'Backlog Item' : 'Finding');
+    header.appendChild(title);
+
+    const badge = document.createElement('span');
+    badge.className = 'badge';
+    if (item._type === 'backlog') {
+      badge.className += ' badge-secondary';
+      badge.textContent = 'BACKLOG';
+    } else {
+      const sev = String(item.severity || item.classification || 'INFO').toUpperCase();
+      if (['BLOCKING', 'HIGH'].includes(sev) || ['implementation_defect', 'design_defect'].includes(item.classification)) {
+        badge.className += ' badge-error';
+      } else {
+        badge.className += ' badge-info';
+      }
+      badge.textContent = item.classification || item.severity || 'FINDING';
+    }
+    header.appendChild(badge);
+    card.appendChild(header);
+
+    const body = document.createElement('div');
+    body.className = 'finding-body';
+    body.textContent = item.description || item.detail || item.summary || (typeof item === 'string' ? item : JSON.stringify(item, null, 2));
+    card.appendChild(body);
+
+    const meta = document.createElement('div');
+    meta.className = 'finding-meta';
+    if (item.stage) {
+      const sSpan = document.createElement('span');
+      sSpan.textContent = `Stage: ${item.stage}`;
+      meta.appendChild(sSpan);
+    }
+    if (item.role) {
+      const rSpan = document.createElement('span');
+      rSpan.textContent = `Role: ${item.role}`;
+      meta.appendChild(rSpan);
+    }
+    if (item.created_utc || item.timestamp) {
+      const tSpan = document.createElement('span');
+      tSpan.textContent = `Date: ${item.created_utc || item.timestamp}`;
+      meta.appendChild(tSpan);
+    }
+    if (meta.childNodes.length > 0) {
+      card.appendChild(meta);
+    }
+
+    container.appendChild(card);
+  }
+}
+
+async function loadDiff() {
+  if (!activeTaskId) return;
+  try {
+    const res = await apiFetch(`/api/tasks/${encodeURIComponent(activeTaskId)}/diff`);
+    if (!res.ok) return;
+    const data = await res.json();
+    currentDiffData = data;
+    updateDiffDisplay(data);
+  } catch (err) {
+    console.error('Failed to load diff:', err);
+  }
+}
+
+function updateDiffDisplay(data) {
+  if (!data) return;
+  const baseBadge = document.getElementById('diff-base-badge');
+  const headBadge = document.getElementById('diff-head-badge');
+  const truncBadge = document.getElementById('diff-trunc-badge');
+  const countEl = document.getElementById('diff-files-count');
+  const filesList = document.getElementById('diff-files-list');
+  const display = document.getElementById('diff-display');
+
+  if (baseBadge) baseBadge.textContent = `Base: ${data.base_commit ? data.base_commit.substring(0, 8) : 'None'}`;
+  if (headBadge) headBadge.textContent = `HEAD: ${data.head_commit ? data.head_commit.substring(0, 8) : 'HEAD'}`;
+  if (truncBadge) truncBadge.style.display = data.truncated ? 'inline-block' : 'none';
+
+  const files = data.files || [];
+  if (countEl) countEl.textContent = files.length;
+  if (filesList) {
+    filesList.innerHTML = '';
+    if (files.length === 0) {
+      const span = document.createElement('span');
+      span.className = 'text-muted';
+      span.textContent = 'No changed files.';
+      filesList.appendChild(span);
+    } else {
+      for (const f of files) {
+        const tag = document.createElement('span');
+        tag.className = 'tag';
+        tag.textContent = `${f.status} ${f.path}`;
+        filesList.appendChild(tag);
+      }
+    }
+  }
+
+  if (display) {
+    display.innerHTML = '';
+    const diffText = data.diff_text || '';
+    if (!diffText.trim()) {
+      display.textContent = 'No changes detected against base commit.';
+      return;
+    }
+
+    const lines = diffText.split('\n');
+    for (const line of lines) {
+      const span = document.createElement('span');
+      if (line.startsWith('+') && !line.startsWith('+++')) {
+        span.className = 'diff-line-add';
+      } else if (line.startsWith('-') && !line.startsWith('---')) {
+        span.className = 'diff-line-del';
+      } else if (line.startsWith('@@') || line.startsWith('diff --git')) {
+        span.className = 'diff-line-hdr';
+      }
+      span.textContent = line + '\n';
+      display.appendChild(span);
+    }
+  }
+}
+
+async function loadSettings() {
+  if (!activeTaskId) return;
+  try {
+    const res = await apiFetch(`/api/tasks/${encodeURIComponent(activeTaskId)}/settings`);
+    if (!res.ok) return;
+    const data = await res.json();
+    currentSettingsData = data;
+    updateSettingsDisplay(data);
+  } catch (err) {
+    console.error('Failed to load settings:', err);
+  }
+}
+
+function updateSettingsDisplay(data) {
+  if (!data) return;
+  const tbody = document.getElementById('settings-roles-tbody');
+  if (tbody) {
+    tbody.innerHTML = '';
+    const roles = data.roles || {};
+    const roleKeys = Object.keys(roles);
+    if (roleKeys.length === 0) {
+      const tr = document.createElement('tr');
+      const td = document.createElement('td');
+      td.colSpan = 6;
+      td.className = 'empty-state';
+      td.textContent = 'No roles configured.';
+      tr.appendChild(td);
+      tbody.appendChild(tr);
+    } else {
+      for (const rName of roleKeys) {
+        const r = roles[rName] || {};
+        const tr = document.createElement('tr');
+
+        const tdRole = document.createElement('td');
+        tdRole.textContent = rName;
+        tr.appendChild(tdRole);
+
+        const tdTool = document.createElement('td');
+        tdTool.textContent = r.tool || '-';
+        tr.appendChild(tdTool);
+
+        const tdModel = document.createElement('td');
+        tdModel.textContent = r.model || '-';
+        tr.appendChild(tdModel);
+
+        const tdEffort = document.createElement('td');
+        tdEffort.textContent = r.effort || '-';
+        tr.appendChild(tdEffort);
+
+        const tdVersion = document.createElement('td');
+        tdVersion.textContent = r.version || '-';
+        tr.appendChild(tdVersion);
+
+        const tdSha = document.createElement('td');
+        tdSha.className = 'code-cell';
+        tdSha.textContent = r.prompt_sha256 ? r.prompt_sha256.substring(0, 16) + '...' : 'N/A';
+        tr.appendChild(tdSha);
+
+        tbody.appendChild(tr);
+      }
+    }
+  }
+
+  const esc = data.escalation_status || {};
+  const blockersEl = document.getElementById('settings-consecutive-blockers');
+  const cyclesEl = document.getElementById('settings-cycles-in-stage');
+  const attemptsEl = document.getElementById('settings-stage-attempts');
+  const pauseEl = document.getElementById('settings-pause-reason');
+
+  if (blockersEl) blockersEl.textContent = esc.consecutive_blockers ?? 0;
+  if (cyclesEl) cyclesEl.textContent = esc.cycles_in_stage ?? 0;
+  if (attemptsEl) attemptsEl.textContent = esc.stage_attempts ?? 1;
+  if (pauseEl) pauseEl.textContent = esc.pause_reason || 'None';
+
+  const timeouts = data.timeouts || {};
+  const softEl = document.getElementById('settings-soft-timeout');
+  const hardEl = document.getElementById('settings-hard-timeout');
+  if (softEl) softEl.textContent = timeouts.soft_timeout ?? 2700;
+  if (hardEl) hardEl.textContent = timeouts.hard_timeout ?? 3600;
+}
+
+async function loadErpStatus() {
+  try {
+    const res = await apiFetch('/api/erp/projection');
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      showErpError(data.detail || `HTTP ${res.status}`);
+      return;
+    }
+    const data = await res.json();
+    currentErpData = data;
+    updateErpDisplay(data);
+  } catch (err) {
+    console.error('Failed to load ERP status:', err);
+    showErpError('Failed to fetch Stage 4 ERP projection');
+  }
+}
+
+function showErpError(errMsg) {
+  const statusBadge = document.getElementById('erp-status-badge');
+  const integBadge = document.getElementById('erp-integrity-badge');
+  const warningsDiv = document.getElementById('erp-integrity-warnings');
+
+  if (statusBadge) statusBadge.textContent = 'UNAVAILABLE';
+  if (integBadge) {
+    integBadge.className = 'badge badge-error';
+    integBadge.textContent = 'ERROR';
+  }
+  if (warningsDiv) {
+    warningsDiv.textContent = errMsg;
+    warningsDiv.style.display = 'block';
+  }
+}
+
+function updateErpDisplay(data) {
+  if (!data) return;
+  const statusBadge = document.getElementById('erp-status-badge');
+  const integBadge = document.getElementById('erp-integrity-badge');
+  const warningsDiv = document.getElementById('erp-integrity-warnings');
+
+  if (statusBadge) {
+    statusBadge.textContent = data.status || 'PARKED';
+    statusBadge.className = 'badge badge-warning';
+  }
+
+  if (integBadge) {
+    const isVerified = (data.integrity_status === 'verified');
+    integBadge.className = 'badge ' + (isVerified ? 'badge-success' : 'badge-warning');
+    integBadge.textContent = (data.integrity_status || 'UNKNOWN').toUpperCase();
+  }
+
+  const setEl = (id, val) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = (val !== undefined && val !== null) ? val : '-';
+  };
+
+  setEl('erp-company', data.company);
+  setEl('erp-domain', data.domain);
+  setEl('erp-export-file', data.export_file);
+  setEl('erp-rows', data.rows);
+  setEl('erp-groups', data.groups);
+  setEl('erp-leaves', data.leaves);
+  setEl('erp-recorded-utc', data.recorded_utc);
+
+  setEl('erp-permissions', data.permissions);
+  setEl('erp-manifest-sha256', data.manifest_sha256);
+  setEl('erp-dataset-sha256', data.export_sha256);
+  setEl('erp-masked-path', data.masked_export_path);
+
+  if (warningsDiv) {
+    const warnings = data.warnings || [];
+    if (warnings.length > 0) {
+      warningsDiv.innerHTML = '';
+      for (const w of warnings) {
+        const p = document.createElement('p');
+        p.textContent = `Warning: ${w}`;
+        warningsDiv.appendChild(p);
+      }
+      warningsDiv.style.display = 'block';
+    } else {
+      warningsDiv.style.display = 'none';
+    }
+  }
+}
+
+function loadTabContent(tabId) {
+  if (tabId === 'tab-evidence') {
+    loadEvidenceList();
+  } else if (tabId === 'tab-findings') {
+    loadFindings();
+  } else if (tabId === 'tab-diff') {
+    loadDiff();
+  } else if (tabId === 'tab-settings') {
+    loadSettings();
+  } else if (tabId === 'tab-erp') {
+    loadErpStatus();
+  }
+}
+
+async function downloadExport(endpoint, fallbackFilename) {
+  if (!activeTaskId) return;
+  try {
+    const res = await apiFetch(`/api/tasks/${encodeURIComponent(activeTaskId)}/${endpoint}`);
+    if (!res.ok) {
+      alert(`Export failed: HTTP ${res.status}`);
+      return;
+    }
+    const disposition = res.headers.get('Content-Disposition');
+    let filename = fallbackFilename;
+    if (disposition && disposition.includes('filename=')) {
+      const match = disposition.match(/filename="?([^"]+)"?/);
+      if (match) filename = match[1];
+    }
+    const blob = await res.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+  } catch (err) {
+    console.error('Export download error:', err);
+    alert('Export download error: ' + err.message);
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Task Detail Loading & Polling
 // ---------------------------------------------------------------------------
 
@@ -311,6 +824,11 @@ async function inspectTask(taskId) {
   detailSection.scrollIntoView({ behavior: 'smooth' });
 
   await refreshTaskDetail();
+
+  const activeTab = document.querySelector('.tab-btn.active');
+  if (activeTab) {
+    loadTabContent(activeTab.getAttribute('data-tab'));
+  }
 
   if (pollTimer) clearInterval(pollTimer);
   pollTimer = setInterval(refreshTaskDetail, 3000);
@@ -352,6 +870,14 @@ async function refreshTaskDetail() {
         const aiCtx = await aiRes.json();
         currentAiContext = aiCtx;
         updateAiContextDisplay(aiCtx);
+      }
+
+      const activeTab = document.querySelector('.tab-btn.active');
+      if (activeTab) {
+        const tabId = activeTab.getAttribute('data-tab');
+        if (['tab-evidence', 'tab-findings', 'tab-diff', 'tab-settings'].includes(tabId)) {
+          loadTabContent(tabId);
+        }
       }
     }
   } catch (err) {
@@ -632,8 +1158,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       const targetId = btn.getAttribute('data-tab');
       const targetEl = document.getElementById(targetId);
       if (targetEl) targetEl.classList.add('active');
+      loadTabContent(targetId);
     });
   });
+
 
   // Bootstrap Form
   const bootstrapForm = document.getElementById('bootstrap-form');
@@ -832,4 +1360,66 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('refresh-tasks-btn').addEventListener('click', () => {
     loadTasks();
   });
+
+  // Findings Filter Buttons
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeFindingsFilter = btn.getAttribute('data-filter') || 'all';
+      updateFindingsDisplay();
+    });
+  });
+
+  // Refresh Evidence Button
+  const refreshEvidenceBtn = document.getElementById('refresh-evidence-btn');
+  if (refreshEvidenceBtn) {
+    refreshEvidenceBtn.addEventListener('click', () => {
+      loadEvidenceList();
+    });
+  }
+
+  // Export Dropdown & Links
+  const exportBtn = document.getElementById('export-menu-btn');
+  const exportMenu = document.getElementById('export-menu');
+  if (exportBtn && exportMenu) {
+    exportBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      exportMenu.style.display = (exportMenu.style.display === 'block') ? 'none' : 'block';
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('#export-dropdown')) {
+        exportMenu.style.display = 'none';
+      }
+    });
+
+    const auditLink = document.getElementById('export-audit-link');
+    if (auditLink) {
+      auditLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        exportMenu.style.display = 'none';
+        downloadExport('export/audit', 'audit.jsonl');
+      });
+    }
+
+    const stateLink = document.getElementById('export-state-link');
+    if (stateLink) {
+      stateLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        exportMenu.style.display = 'none';
+        downloadExport('export/state', 'state.json');
+      });
+    }
+
+    const reviewsLink = document.getElementById('export-reviews-link');
+    if (reviewsLink) {
+      reviewsLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        exportMenu.style.display = 'none';
+        downloadExport('export/reviews', 'reviews.json');
+      });
+    }
+  }
 });
+

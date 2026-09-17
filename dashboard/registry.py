@@ -526,6 +526,18 @@ class TaskRegistry:
         finally:
             conn.close()
 
+    def get_reviews_for_task(self, task_id: str) -> list[dict[str, Any]]:
+        """Retrieve all review records for a task ordered by created_utc ASC."""
+        conn = self._get_connection()
+        try:
+            cur = conn.execute(
+                "SELECT * FROM review_records WHERE task_id = ? ORDER BY created_utc ASC;",
+                (task_id,),
+            )
+            return [dict(row) for row in cur.fetchall()]
+        finally:
+            conn.close()
+
     def mark_review_used(self, review_id: str) -> None:
         """Mark a review record as used upon plan approval."""
         now_iso = datetime.now(timezone.utc).isoformat()

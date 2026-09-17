@@ -35,6 +35,12 @@ ALLOWED_ACTIONS = {
     "adopt_scope",
     "approve_plan",
     "initialize",
+    "findings",
+    "evidence",
+    "read_evidence",
+    "diff",
+    "settings",
+    "audit",
 }
 
 _semaphore = asyncio.Semaphore(MAX_CONCURRENT_SUBPROCESSES)
@@ -246,3 +252,38 @@ async def initialize_task(
         executor_instance_id=executor_instance_id,
         lock_fd=lock_fd,
     )
+
+
+async def query_findings(worktree_path: Path | str) -> dict[str, Any]:
+    """Retrieve the read-only findings and backlog projection for a worktree."""
+    return await run_action(worktree_path, "findings")
+
+
+async def query_evidence_list(worktree_path: Path | str) -> dict[str, Any]:
+    """Retrieve the list of available evidence artifacts for a worktree."""
+    return await run_action(worktree_path, "evidence")
+
+
+async def query_evidence_content(worktree_path: Path | str, filename: str) -> dict[str, Any]:
+    """Read a specific evidence artifact using descriptor-relative validation."""
+    return await run_action(worktree_path, "read_evidence", payload={"filename": filename})
+
+
+async def query_diff(worktree_path: Path | str) -> dict[str, Any]:
+    """Retrieve the git diff projection against stored configuration base commit."""
+    return await run_action(worktree_path, "diff")
+
+
+async def query_settings(worktree_path: Path | str) -> dict[str, Any]:
+    """Retrieve read-only settings, role pins, and escalation counters."""
+    return await run_action(worktree_path, "settings")
+
+
+async def query_audit_events(
+    worktree_path: Path | str, max_events: int = 1000, max_bytes: int = 524288
+) -> dict[str, Any]:
+    """Retrieve sanitized, dual-bounded audit events for a worktree."""
+    return await run_action(
+        worktree_path, "audit", payload={"max_events": max_events, "max_bytes": max_bytes}
+    )
+

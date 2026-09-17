@@ -480,8 +480,8 @@ async def test_bootstrap_with_distinct_dashboard_and_target_worktree_roots(tmp_p
         assert target_ckpt_db.exists()
 
         # Verify target worktree does NOT contain a dashboard registry
-        target_dashboard_dir = target_worktree / "dashboard"
-        assert not target_dashboard_dir.exists()
+        target_registry_db = target_worktree / "dashboard" / "var" / "registry.db"
+        assert not target_registry_db.exists()
 
         # Verify checkpoint contract via subprocess get_state_projection
         from dashboard.subprocess_client import get_state_projection

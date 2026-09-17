@@ -11,11 +11,21 @@ import html
 import json
 import os
 import re
+import select
 import sqlite3
+import stat
+import subprocess
 import sys
+import time
 import urllib.parse
 import uuid
+from datetime import datetime, timezone
 from pathlib import Path
+from typing import Any
+
+class SecurityError(Exception):
+    """Raised when security boundaries, permissions, or isolation rules are violated."""
+    pass
 
 # Ensure orchestrator package directory is in sys.path so both
 # `python -m orchestrator.dashboard_api` and direct script execution work
@@ -242,7 +252,9 @@ def sanitize_error(exc: Exception, root: Path | str | None = None) -> dict:
     support_id = f"ERR-{uuid.uuid4().hex[:8].upper()}"
     exc_type = type(exc).__name__
 
-    if isinstance(exc, PreconditionError):
+    if isinstance(exc, SecurityError):
+        msg = str(exc)
+    elif isinstance(exc, PreconditionError):
         msg = "Precondition check failed"
     elif isinstance(exc, (CoreValidationError, ValueError)):
         msg = "Invalid request or validation failed"
@@ -829,6 +841,702 @@ def deduplicate_action(
     return None
 
 
+ALLOWED_EVIDENCE_EXTENSIONS = {".json", ".md", ".txt", ".xml", ".patch", ".csv"}
+MAX_EVIDENCE_SIZE = 256 * 1024  # 256 KB
+MAX_DIFF_SIZE = 256 * 1024      # 256 KB
+GIT_DIFF_TIMEOUT_SECONDS = 10.0
+
+
+def sanitize_text(text: str, root: Path | str | None = None) -> str:
+    """Mask paths and redact credentials in raw text."""
+    if not isinstance(text, str):
+        return ""
+    sanitized = strip_paths(text, root=root)
+    sanitized = _QUOTED_CREDENTIAL_PATTERN.sub(
+        r"\g<prefix>\g<quote>[REDACTED_CREDENTIAL]\g<quote>", sanitized
+    )
+    sanitized = _UNQUOTED_CREDENTIAL_PATTERN.sub(
+        r"\g<prefix>[REDACTED_CREDENTIAL]", sanitized
+    )
+    sanitized = _BEARER_PATTERN.sub(r"\1\2[REDACTED_CREDENTIAL]\4", sanitized)
+    return sanitized
+
+
+def sanitize_payload(obj: Any, root: Path | str | None = None, max_string_len: int = 16384) -> Any:
+    """Recursively cap and sanitize string values in payloads."""
+    if isinstance(obj, str):
+        s = obj
+        if len(s) > max_string_len:
+            s = s[:max_string_len] + " [TRUNCATED]"
+        return sanitize_text(s, root=root)
+    elif isinstance(obj, dict):
+        sanitized_dict = {}
+        for k, v in obj.items():
+            k_lower = str(k).lower()
+            if any(kw in k_lower for kw in ("password", "passwd", "secret", "token", "api_key", "bearer")):
+                sanitized_dict[k] = "[REDACTED_CREDENTIAL]"
+            else:
+                sanitized_dict[k] = sanitize_payload(v, root=root, max_string_len=max_string_len)
+        return sanitized_dict
+    elif isinstance(obj, list):
+        return [sanitize_payload(v, root=root, max_string_len=max_string_len) for v in obj]
+    else:
+        return obj
+
+
+def open_descriptor_relative(
+    root_dir: Path | str,
+    rel_path: Path | str,
+    strict_permissions: bool = True,
+    is_dir: bool = False,
+) -> tuple[int, list[int], dict]:
+    """Unified descriptor-relative path traversal using openat with O_NOFOLLOW.
+
+    Validates starting root and each intermediate directory relative to its verified parent.
+    In strict_permissions mode, asserts trusted owner (current UID or 0) and (st_mode & 0o022) == 0.
+    In non-strict mode, collects integrity warnings for group/world writability without raising.
+
+    If is_dir is True, the final component is opened as a directory and verified with S_ISDIR.
+    If is_dir is False, the final component is opened as a regular file and verified with S_ISREG.
+
+    Returns:
+        (final_fd, list_of_opened_dir_fds_to_close, integrity_info)
+    """
+    root_path = Path(root_dir).resolve()
+    rel = Path(rel_path)
+    if rel.is_absolute() or ".." in rel.parts:
+        raise SecurityError("Invalid relative path traversal")
+
+    integrity_info = {
+        "integrity_status": "verified",
+        "integrity_warnings": [],
+        "root_permissions": None,
+        "file_permissions": None,
+        "directory_permissions": {},
+    }
+
+    opened_dir_fds: list[int] = []
+
+    # 1. Open starting root descriptor
+    try:
+        root_fd = os.open(str(root_path), os.O_RDONLY | os.O_DIRECTORY | getattr(os, "O_CLOEXEC", 0))
+    except OSError as e:
+        raise SecurityError(f"Cannot open root directory: {e}")
+    opened_dir_fds.append(root_fd)
+
+    st_root = os.fstat(root_fd)
+    if not stat.S_ISDIR(st_root.st_mode):
+        for fd in reversed(opened_dir_fds):
+            os.close(fd)
+        raise SecurityError(f"Root path '{root_path}' is not a directory")
+
+    if st_root.st_uid not in (os.getuid(), 0):
+        for fd in reversed(opened_dir_fds):
+            os.close(fd)
+        raise SecurityError(f"Root path '{root_path}' owned by untrusted UID {st_root.st_uid}")
+
+    integrity_info["root_permissions"] = oct(stat.S_IMODE(st_root.st_mode))
+    if st_root.st_mode & 0o022:
+        msg = f"Root directory '{root_path.name}' has unsafe permissions {oct(stat.S_IMODE(st_root.st_mode))}"
+        integrity_info["integrity_warnings"].append(msg)
+        integrity_info["integrity_status"] = "unverified_permissions"
+        if strict_permissions:
+            for fd in reversed(opened_dir_fds):
+                os.close(fd)
+            raise SecurityError("evidence unavailable: unsafe permissions")
+
+    curr_fd = root_fd
+    parts = rel.parts
+    if not parts:
+        for fd in reversed(opened_dir_fds):
+            os.close(fd)
+        raise SecurityError("Empty relative path")
+
+    dir_components = parts[:-1]
+    final_name = parts[-1]
+
+    # 2. Traverse child directories descriptor-relatively
+    for comp in dir_components:
+        if comp in (".", "..") or "/" in comp or "\\" in comp:
+            for fd in reversed(opened_dir_fds):
+                os.close(fd)
+            raise SecurityError(f"Invalid directory component: {comp!r}")
+        try:
+            child_fd = os.open(
+                comp,
+                os.O_RDONLY | os.O_DIRECTORY | getattr(os, "O_NOFOLLOW", 0) | getattr(os, "O_CLOEXEC", 0),
+                dir_fd=curr_fd,
+            )
+        except OSError as e:
+            for fd in reversed(opened_dir_fds):
+                os.close(fd)
+            raise SecurityError(f"Failed to open directory '{comp}': {e}")
+        opened_dir_fds.append(child_fd)
+
+        st_comp = os.fstat(child_fd)
+        if not stat.S_ISDIR(st_comp.st_mode):
+            for fd in reversed(opened_dir_fds):
+                os.close(fd)
+            raise SecurityError(f"Component '{comp}' is not a directory")
+
+        if st_comp.st_uid not in (os.getuid(), 0):
+            for fd in reversed(opened_dir_fds):
+                os.close(fd)
+            raise SecurityError(f"Directory '{comp}' owned by untrusted UID {st_comp.st_uid}")
+
+        perm_str = oct(stat.S_IMODE(st_comp.st_mode))
+        integrity_info["directory_permissions"][comp] = perm_str
+        if st_comp.st_mode & 0o022:
+            msg = f"Directory component '{comp}' has unsafe permissions {perm_str}"
+            integrity_info["integrity_warnings"].append(msg)
+            integrity_info["integrity_status"] = "unverified_permissions"
+            if strict_permissions:
+                for fd in reversed(opened_dir_fds):
+                    os.close(fd)
+                raise SecurityError("evidence unavailable: unsafe permissions")
+
+        curr_fd = child_fd
+
+    # 3. Open final descriptor relative to parent directory
+    if final_name in (".", "..") or "/" in final_name or "\\" in final_name:
+        for fd in reversed(opened_dir_fds):
+            os.close(fd)
+        raise SecurityError(f"Invalid target name: {final_name!r}")
+
+    if is_dir:
+        try:
+            target_fd = os.open(
+                final_name,
+                os.O_RDONLY | os.O_DIRECTORY | getattr(os, "O_NOFOLLOW", 0) | getattr(os, "O_CLOEXEC", 0),
+                dir_fd=curr_fd,
+            )
+        except OSError as e:
+            for fd in reversed(opened_dir_fds):
+                os.close(fd)
+            raise SecurityError(f"Failed to open directory '{final_name}': {e}")
+        opened_dir_fds.append(target_fd)
+
+        st_final = os.fstat(target_fd)
+        if not stat.S_ISDIR(st_final.st_mode):
+            for fd in reversed(opened_dir_fds):
+                os.close(fd)
+            raise SecurityError(f"Target '{final_name}' is not a directory")
+
+        if st_final.st_uid not in (os.getuid(), 0):
+            for fd in reversed(opened_dir_fds):
+                os.close(fd)
+            raise SecurityError(f"Target directory '{final_name}' owned by untrusted UID {st_final.st_uid}")
+
+        perm_str = oct(stat.S_IMODE(st_final.st_mode))
+        integrity_info["directory_permissions"][final_name] = perm_str
+        if st_final.st_mode & 0o022:
+            msg = f"Target directory '{final_name}' has unsafe permissions {perm_str}"
+            integrity_info["integrity_warnings"].append(msg)
+            integrity_info["integrity_status"] = "unverified_permissions"
+            if strict_permissions:
+                for fd in reversed(opened_dir_fds):
+                    os.close(fd)
+                raise SecurityError("evidence unavailable: unsafe permissions")
+
+        return target_fd, opened_dir_fds, integrity_info
+
+    else:
+        try:
+            file_fd = os.open(
+                final_name,
+                os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0) | getattr(os, "O_CLOEXEC", 0),
+                dir_fd=curr_fd,
+            )
+        except OSError as e:
+            for fd in reversed(opened_dir_fds):
+                os.close(fd)
+            raise SecurityError(f"Failed to open file '{final_name}': {e}")
+
+        st_file = os.fstat(file_fd)
+        if not stat.S_ISREG(st_file.st_mode):
+            os.close(file_fd)
+            for fd in reversed(opened_dir_fds):
+                os.close(fd)
+            raise SecurityError(f"Target '{final_name}' is not a regular file")
+
+        if st_file.st_uid not in (os.getuid(), 0):
+            os.close(file_fd)
+            for fd in reversed(opened_dir_fds):
+                os.close(fd)
+            raise SecurityError(f"Target '{final_name}' owned by untrusted UID {st_file.st_uid}")
+
+        file_perm = oct(stat.S_IMODE(st_file.st_mode))
+        integrity_info["file_permissions"] = file_perm
+        if st_file.st_mode & 0o022:
+            msg = f"Target file '{final_name}' has unsafe permissions {file_perm}"
+            integrity_info["integrity_warnings"].append(msg)
+            integrity_info["integrity_status"] = "unverified_permissions"
+            if strict_permissions:
+                os.close(file_fd)
+                for fd in reversed(opened_dir_fds):
+                    os.close(fd)
+                raise SecurityError("evidence unavailable: unsafe permissions")
+
+        return file_fd, opened_dir_fds, integrity_info
+
+
+def _get_checkpoint_view_and_meta(root: Path) -> tuple[dict, dict]:
+    """Read checkpoint view and metadata without constructing Engine."""
+    runtime_path = root / "orchestrator/var"
+    db_path = runtime_path / "checkpoints.db"
+    if not db_path.exists():
+        return {}, {}
+    conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+    try:
+        meta = {}
+        for k, v in conn.execute("SELECT key, value FROM workflow_meta"):
+            try:
+                meta[k] = json.loads(v)
+            except Exception:
+                meta[k] = v
+        from langgraph.checkpoint.sqlite import SqliteSaver
+        saver = SqliteSaver(conn)
+        checkpoint = saver.get({"configurable": {"thread_id": "workflow"}})
+        view = checkpoint.get("channel_values", {}).get("view", {}) if checkpoint else {}
+        return view, meta
+    finally:
+        conn.close()
+
+
+def get_findings_projection(root: Path | str) -> dict:
+    """Read-only projection of active findings and backlog items."""
+    root = Path(root).resolve()
+    view, meta = _get_checkpoint_view_and_meta(root)
+    work_item = view.get("work_item") or meta.get("work_item") or root.name
+
+    raw_findings = view.get("findings") or []
+    raw_backlog = view.get("backlog") or []
+
+    findings = sanitize_payload(raw_findings, root=root)
+    backlog = sanitize_payload(raw_backlog, root=root)
+
+    blocking = sum(
+        1 for f in findings
+        if f.get("classification") in ("implementation_defect", "design_defect")
+        or str(f.get("severity", "")).upper() in ("BLOCKING", "HIGH")
+    )
+
+    return {
+        "work_item": work_item,
+        "findings": findings,
+        "backlog": backlog,
+        "stats": {
+            "total_findings": len(findings),
+            "blocking_findings": blocking,
+            "backlog_items": len(backlog),
+        },
+    }
+
+
+def get_evidence_projection(root: Path | str) -> dict:
+    """Enumerate available evidence artifacts using strict descriptor-relative traversal."""
+    root = Path(root).resolve()
+    view, meta = _get_checkpoint_view_and_meta(root)
+    work_item = view.get("work_item") or meta.get("work_item") or root.name
+
+    rel_dir = Path("docs/ai/work-items") / work_item / "evidence"
+    try:
+        if not (root / rel_dir).is_dir():
+            return {"work_item": work_item, "files": []}
+    except OSError:
+        return {"work_item": work_item, "files": []}
+
+    dir_fd, opened_fds, _ = open_descriptor_relative(
+        root, rel_dir, strict_permissions=True, is_dir=True
+    )
+    try:
+        files = []
+        with os.scandir(dir_fd) as it:
+            for entry in it:
+                if entry.name.startswith("."):
+                    continue
+                if not re.match(r"^[a-zA-Z0-9_\-\.]+$", entry.name):
+                    continue
+                ext = Path(entry.name).suffix.lower()
+                if ext not in ALLOWED_EVIDENCE_EXTENSIONS:
+                    continue
+                try:
+                    st = entry.stat(follow_symlinks=False)
+                except OSError:
+                    continue
+
+                if not stat.S_ISREG(st.st_mode):
+                    continue
+                if st.st_uid not in (os.getuid(), 0):
+                    continue
+                if st.st_mode & 0o022:
+                    raise SecurityError("evidence unavailable: unsafe permissions")
+
+                files.append({
+                    "filename": entry.name,
+                    "size_bytes": st.st_size,
+                    "modified_utc": datetime.fromtimestamp(st.st_mtime, tz=timezone.utc).isoformat(),
+                })
+
+        files.sort(key=lambda f: f["filename"])
+        return {"work_item": work_item, "files": files}
+    finally:
+        for fd in reversed(opened_fds):
+            try:
+                os.close(fd)
+            except OSError:
+                pass
+
+
+def read_evidence_file(root: Path | str, filename: str) -> dict:
+    """Read an evidence file using descriptor-relative O_NOFOLLOW validation."""
+    if filename.startswith(".") or not re.match(r"^[a-zA-Z0-9_\-\.]+$", filename):
+        raise CoreValidationError(f"Invalid filename: {filename!r}")
+    ext = Path(filename).suffix.lower()
+    if ext not in ALLOWED_EVIDENCE_EXTENSIONS:
+        raise CoreValidationError(f"File extension '{ext}' not permitted in evidence inspection")
+
+    root = Path(root).resolve()
+    view, meta = _get_checkpoint_view_and_meta(root)
+    work_item = view.get("work_item") or meta.get("work_item") or root.name
+    rel_path = Path("docs/ai/work-items") / work_item / "evidence" / filename
+
+    file_fd, dir_fds, _ = open_descriptor_relative(root, rel_path, strict_permissions=True, is_dir=False)
+    try:
+        st = os.fstat(file_fd)
+        file_size = st.st_size
+        chunks = []
+        total_read = 0
+        max_to_read = MAX_EVIDENCE_SIZE + 1
+        while total_read < max_to_read:
+            chunk = os.read(file_fd, min(65536, max_to_read - total_read))
+            if not chunk:
+                break
+            chunks.append(chunk)
+            total_read += len(chunk)
+        raw_bytes = b"".join(chunks)
+
+        if len(raw_bytes) > MAX_EVIDENCE_SIZE:
+            truncated = True
+            sha256 = None
+            content_bytes = raw_bytes[:MAX_EVIDENCE_SIZE]
+        else:
+            truncated = False
+            sha256 = hashlib.sha256(raw_bytes).hexdigest()
+            content_bytes = raw_bytes
+
+        text = content_bytes.decode("utf-8", errors="replace")
+        sanitized_text = sanitize_text(text, root=root)
+
+        return {
+            "filename": filename,
+            "sha256": sha256,
+            "size_bytes": file_size,
+            "content": sanitized_text,
+            "truncated": truncated,
+        }
+    finally:
+        os.close(file_fd)
+        for fd in reversed(dir_fds):
+            try:
+                os.close(fd)
+            except OSError:
+                pass
+
+
+def _read_subprocess_bounded(
+    proc: subprocess.Popen, max_bytes: int, timeout: float = GIT_DIFF_TIMEOUT_SECONDS
+) -> bytes:
+    """Read up to max_bytes from proc.stdout with a strict wall-clock timeout.
+
+    Enforces byte limit and non-blocking deadline polling via select.poll().
+    Always terminates and reaps proc in finally.
+    Raises TimeoutError if wall-clock deadline expires while reading.
+    """
+    fd = proc.stdout.fileno()
+    os.set_blocking(fd, False)
+    poller = select.poll()
+    poller.register(fd, select.POLLIN | select.POLLHUP | select.POLLERR)
+    deadline = time.monotonic() + timeout
+    chunks = []
+    total = 0
+    max_to_read = max_bytes + 1
+
+    try:
+        while total < max_to_read:
+            rem = deadline - time.monotonic()
+            if rem <= 0:
+                raise TimeoutError(f"Subprocess output reading timed out after {timeout} seconds")
+            ms = max(1, int(rem * 1000))
+            evs = poller.poll(ms)
+            if not evs:
+                raise TimeoutError(f"Subprocess output reading timed out after {timeout} seconds")
+
+            for _, ev in evs:
+                if ev & (select.POLLIN | select.POLLHUP):
+                    try:
+                        chunk = os.read(fd, min(65536, max_to_read - total))
+                    except (BlockingIOError, InterruptedError):
+                        continue
+                    except OSError:
+                        chunk = b""
+                    if not chunk:
+                        return b"".join(chunks)
+                    chunks.append(chunk)
+                    total += len(chunk)
+                elif ev & select.POLLERR:
+                    return b"".join(chunks)
+        return b"".join(chunks)
+    finally:
+        if proc.poll() is None:
+            try:
+                proc.terminate()
+            except OSError:
+                pass
+        try:
+            proc.stdout.close()
+        except OSError:
+            pass
+        try:
+            proc.wait(timeout=2)
+        except subprocess.TimeoutExpired:
+            proc.kill()
+            try:
+                proc.wait(timeout=1)
+            except Exception:
+                pass
+
+
+def get_diff_projection(root: Path | str) -> dict:
+    """Inspect worktree diff against stored configuration base commit only."""
+    root = Path(root).resolve()
+    view, meta = _get_checkpoint_view_and_meta(root)
+    cfg = meta.get("config", {})
+
+    base_commit = (
+        cfg.get("task_base_commit")
+        or cfg.get("base_commit")
+        or view.get("candidate", {}).get("base_commit")
+    )
+    if not base_commit or not isinstance(base_commit, str):
+        raise PreconditionError("Base commit not found in workflow configuration")
+
+    base_commit = base_commit.strip()
+    if not re.match(r"^[0-9a-f]{7,40}$", base_commit):
+        raise CoreValidationError(f"Invalid base commit hash: {base_commit!r}")
+
+    verify_cmd = ["git", "rev-parse", "--verify", f"{base_commit}^{{commit}}"]
+    res = subprocess.run(verify_cmd, cwd=str(root), capture_output=True, text=True, timeout=10)
+    if res.returncode != 0:
+        raise PreconditionError(f"Base commit {base_commit} does not exist in repository")
+
+    res_head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=str(root), capture_output=True, text=True, timeout=10)
+    head_sha = res_head.stdout.strip() if res_head.returncode == 0 else "HEAD"
+
+    diff_cmd = [
+        "git", "diff", "--no-ext-diff", "--no-textconv", "--no-color",
+        f"{base_commit}..HEAD"
+    ]
+    proc = subprocess.Popen(
+        diff_cmd,
+        cwd=str(root),
+        stdin=subprocess.DEVNULL,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
+    )
+    raw_diff = _read_subprocess_bounded(proc, max_bytes=MAX_DIFF_SIZE, timeout=GIT_DIFF_TIMEOUT_SECONDS)
+
+    if len(raw_diff) > MAX_DIFF_SIZE:
+        was_truncated = True
+        diff_text = raw_diff[:MAX_DIFF_SIZE].decode("utf-8", errors="replace") + "\n[DIFF TRUNCATED AT 256 KB]\n"
+    else:
+        was_truncated = False
+        diff_text = raw_diff.decode("utf-8", errors="replace")
+
+    sanitized_diff = sanitize_text(diff_text, root=root)
+
+    name_cmd = ["git", "diff", "--name-status", "-z", "--no-ext-diff", "--no-textconv", f"{base_commit}..HEAD"]
+    proc_names = subprocess.Popen(
+        name_cmd,
+        cwd=str(root),
+        stdin=subprocess.DEVNULL,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
+    )
+    raw_names = _read_subprocess_bounded(proc_names, max_bytes=MAX_DIFF_SIZE, timeout=GIT_DIFF_TIMEOUT_SECONDS)
+    files = []
+    if raw_names:
+        tokens = raw_names.split(b"\x00")
+        i = 0
+        while i < len(tokens):
+            if not tokens[i]:
+                i += 1
+                continue
+            status = tokens[i].decode("utf-8", errors="replace").strip()
+            i += 1
+            if i < len(tokens) and tokens[i]:
+                raw_fn = tokens[i].decode("utf-8", errors="replace")
+                safe_fn = raw_fn.encode("unicode_escape").decode("ascii")
+                files.append({"status": status, "path": safe_fn})
+                i += 1
+
+    return {
+        "base_commit": base_commit,
+        "head_commit": head_sha,
+        "files": files,
+        "diff_text": sanitized_diff,
+        "truncated": was_truncated,
+    }
+
+
+def get_settings_projection(root: Path | str) -> dict:
+    """Read-only inspection of role pins, timeout settings, and escalation counters."""
+    root = Path(root).resolve()
+    view, meta = _get_checkpoint_view_and_meta(root)
+    cfg = meta.get("config", {})
+
+    roles = {}
+    for role_name, role_cfg in cfg.get("roles", {}).items():
+        if isinstance(role_cfg, dict):
+            roles[role_name] = {
+                "tool": role_cfg.get("tool"),
+                "binary": strip_paths(role_cfg.get("binary", ""), root=root),
+                "version": role_cfg.get("version"),
+                "model": role_cfg.get("model"),
+                "effort": role_cfg.get("effort"),
+                "prompt_sha256": role_cfg.get("prompt_sha256"),
+            }
+
+    return {
+        "work_item": view.get("work_item") or meta.get("work_item") or root.name,
+        "roles": roles,
+        "escalation_status": {
+            "consecutive_blockers": view.get("consecutive_blockers", 0),
+            "cycles_in_stage": view.get("cycles_in_stage", 0),
+            "stage_attempts": view.get("attempt", 1),
+            "pause_reason": categorize_pause_reason(view.get("pause_reason")),
+        },
+        "timeouts": {
+            "soft_timeout": cfg.get("soft_timeout", 2700),
+            "hard_timeout": cfg.get("hard_timeout", 3600),
+        },
+    }
+
+
+HARD_MAX_AUDIT_EVENTS = 1000
+HARD_MAX_AUDIT_BYTES = 512 * 1024  # 524288
+
+
+def get_sanitized_audit_events(
+    root: Path | str, max_events: int = HARD_MAX_AUDIT_EVENTS, max_bytes: int = HARD_MAX_AUDIT_BYTES
+) -> dict:
+    """Read-only query of workflow events with dual limits and credential sanitization."""
+    try:
+        req_events = int(max_events)
+    except (ValueError, TypeError):
+        req_events = HARD_MAX_AUDIT_EVENTS
+    try:
+        req_bytes = int(max_bytes)
+    except (ValueError, TypeError):
+        req_bytes = HARD_MAX_AUDIT_BYTES
+
+    # Server-side hard cap enforcement: cannot be overridden by callers
+    max_events = min(max(0, req_events), HARD_MAX_AUDIT_EVENTS)
+    max_bytes = min(max(0, req_bytes), HARD_MAX_AUDIT_BYTES)
+
+    root = Path(root).resolve()
+    runtime_path = root / "orchestrator/var"
+    db_path = runtime_path / "checkpoints.db"
+    if not db_path.exists():
+        return {
+            "events": [],
+            "metadata": {
+                "schema": "dashboard-audit-export/v1",
+                "total_available_events": 0,
+                "emitted_events": 0,
+                "emitted_bytes": 0,
+                "truncated": False,
+                "truncation_reason": None,
+            },
+        }
+
+    conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+    try:
+        tbl_exists = conn.execute(
+            "SELECT 1 FROM sqlite_master WHERE type='table' AND name='workflow_events'"
+        ).fetchone()
+        if not tbl_exists:
+            return {
+                "events": [],
+                "metadata": {
+                    "schema": "dashboard-audit-export/v1",
+                    "total_available_events": 0,
+                    "emitted_events": 0,
+                    "emitted_bytes": 0,
+                    "truncated": False,
+                    "truncation_reason": None,
+                },
+            }
+        total_count = conn.execute("SELECT COUNT(*) FROM workflow_events").fetchone()[0]
+        cursor = conn.execute(
+            "SELECT seq, event_id, kind, timestamp, payload FROM workflow_events ORDER BY seq ASC"
+        )
+        events = []
+        emitted_bytes = 0
+        truncated = False
+        truncation_reason = None
+
+        for row in cursor:
+            if len(events) >= max_events:
+                truncated = True
+                truncation_reason = "event_limit_exceeded"
+                break
+
+            seq, event_id, kind, ts, payload_raw = row
+            try:
+                payload = json.loads(payload_raw)
+            except Exception:
+                payload = {"raw": payload_raw}
+
+            sanitized_payload = sanitize_payload(payload, root=root, max_string_len=16384)
+            event_obj = {
+                "seq": seq,
+                "event_id": event_id,
+                "kind": kind,
+                "timestamp": ts,
+                "payload": sanitized_payload,
+            }
+
+            serialized = json.dumps(event_obj, ensure_ascii=False)
+            line_bytes = len(serialized.encode("utf-8")) + 1  # newline
+
+            if emitted_bytes + line_bytes > max_bytes:
+                truncated = True
+                truncation_reason = "byte_limit_exceeded"
+                break
+
+            events.append(event_obj)
+            emitted_bytes += line_bytes
+
+        if not truncated and len(events) < total_count and len(events) >= max_events:
+            truncated = True
+            truncation_reason = "event_limit_exceeded"
+
+        return {
+            "events": events,
+            "metadata": {
+                "schema": "dashboard-audit-export/v1",
+                "total_available_events": total_count,
+                "emitted_events": len(events),
+                "emitted_bytes": emitted_bytes,
+                "truncated": truncated,
+                "truncation_reason": truncation_reason,
+            },
+        }
+    finally:
+        conn.close()
+
+
 def execute_action(root: Path, action: str, payload: dict | None = None) -> dict:
     payload = payload or {}
     root = Path(root).resolve()
@@ -843,6 +1551,34 @@ def execute_action(root: Path, action: str, payload: dict | None = None) -> dict
         return get_review_context_projection(root)
     elif action == "ai_context":
         return get_ai_context_projection(root)
+    elif action == "findings":
+        return get_findings_projection(root)
+    elif action == "evidence":
+        return get_evidence_projection(root)
+    elif action == "read_evidence":
+        return read_evidence_file(root, payload.get("filename", ""))
+    elif action == "diff":
+        return get_diff_projection(root)
+    elif action == "settings":
+        return get_settings_projection(root)
+    elif action == "audit":
+        raw_events = payload.get("max_events", HARD_MAX_AUDIT_EVENTS)
+        raw_bytes = payload.get("max_bytes", HARD_MAX_AUDIT_BYTES)
+        try:
+            req_events = int(raw_events)
+        except (ValueError, TypeError):
+            req_events = HARD_MAX_AUDIT_EVENTS
+        try:
+            req_bytes = int(raw_bytes)
+        except (ValueError, TypeError):
+            req_bytes = HARD_MAX_AUDIT_BYTES
+        capped_events = min(max(0, req_events), HARD_MAX_AUDIT_EVENTS)
+        capped_bytes = min(max(0, req_bytes), HARD_MAX_AUDIT_BYTES)
+        return get_sanitized_audit_events(
+            root,
+            max_events=capped_events,
+            max_bytes=capped_bytes,
+        )
 
     lock_path = runtime_path / "execution.lock"
 

@@ -65,7 +65,14 @@ from dashboard.subprocess_client import (
     get_plan_projection,
     get_review_context,
     get_state_projection,
+    query_audit_events,
+    query_diff,
+    query_evidence_content,
+    query_evidence_list,
+    query_findings,
+    query_settings,
 )
+from dashboard.security import SecurityError, read_authoritative_stage4_manifest
 
 SERVER_INSTANCE_ID = f"inst-srv-{uuid.uuid4().hex[:8]}"
 
@@ -1094,6 +1101,216 @@ async def lifespan(app: Starlette):
         await coordinator.stop()
 
 
+async def get_task_findings(request: Request) -> Response:
+    """Retrieve findings and backlog projection."""
+    auth_err = _require_auth(request)
+    if auth_err:
+        return auth_err
+
+    task_id = request.path_params["task_id"]
+    task = task_registry.get_task(task_id)
+    if not task:
+        return JSONResponse({"detail": "Task not found"}, status_code=404)
+
+    try:
+        res = await query_findings(task["worktree_path"])
+        return JSONResponse(res)
+    except SubprocessClientError as exc:
+        return JSONResponse({"detail": str(exc)}, status_code=502)
+    except Exception as exc:
+        return JSONResponse({"detail": f"Failed to get findings: {exc}"}, status_code=500)
+
+
+async def get_task_evidence(request: Request) -> Response:
+    """List available evidence artifacts."""
+    auth_err = _require_auth(request)
+    if auth_err:
+        return auth_err
+
+    task_id = request.path_params["task_id"]
+    task = task_registry.get_task(task_id)
+    if not task:
+        return JSONResponse({"detail": "Task not found"}, status_code=404)
+
+    try:
+        res = await query_evidence_list(task["worktree_path"])
+        return JSONResponse(res)
+    except SubprocessClientError as exc:
+        err_str = str(exc)
+        if "unsafe permissions" in err_str.lower():
+            return JSONResponse({"detail": "evidence unavailable: unsafe permissions"}, status_code=403)
+        return JSONResponse({"detail": str(exc)}, status_code=502)
+    except Exception as exc:
+        return JSONResponse({"detail": f"Failed to list evidence: {exc}"}, status_code=500)
+
+
+async def get_task_evidence_file(request: Request) -> Response:
+    """Read a specific evidence file with descriptor-relative validation."""
+    auth_err = _require_auth(request)
+    if auth_err:
+        return auth_err
+
+    task_id = request.path_params["task_id"]
+    filename = request.path_params["filename"]
+    task = task_registry.get_task(task_id)
+    if not task:
+        return JSONResponse({"detail": "Task not found"}, status_code=404)
+
+    try:
+        res = await query_evidence_content(task["worktree_path"], filename)
+        return JSONResponse(res)
+    except SubprocessClientError as exc:
+        err_str = str(exc)
+        if "unsafe permissions" in err_str.lower():
+            return JSONResponse({"detail": "evidence unavailable: unsafe permissions"}, status_code=403)
+        if "not permitted" in err_str.lower() or "invalid filename" in err_str.lower() or "invalid relative" in err_str.lower():
+            return JSONResponse({"detail": str(exc)}, status_code=400)
+        return JSONResponse({"detail": str(exc)}, status_code=502)
+    except Exception as exc:
+        return JSONResponse({"detail": f"Failed to read evidence: {exc}"}, status_code=500)
+
+
+async def get_task_diff(request: Request) -> Response:
+    """Retrieve git diff projection against stored configuration base commit."""
+    auth_err = _require_auth(request)
+    if auth_err:
+        return auth_err
+
+    task_id = request.path_params["task_id"]
+    task = task_registry.get_task(task_id)
+    if not task:
+        return JSONResponse({"detail": "Task not found"}, status_code=404)
+
+    try:
+        res = await query_diff(task["worktree_path"])
+        return JSONResponse(res)
+    except SubprocessClientError as exc:
+        return JSONResponse({"detail": str(exc)}, status_code=502)
+    except Exception as exc:
+        return JSONResponse({"detail": f"Failed to get diff: {exc}"}, status_code=500)
+
+
+async def get_task_settings(request: Request) -> Response:
+    """Retrieve read-only role configurations and escalation counters."""
+    auth_err = _require_auth(request)
+    if auth_err:
+        return auth_err
+
+    task_id = request.path_params["task_id"]
+    task = task_registry.get_task(task_id)
+    if not task:
+        return JSONResponse({"detail": "Task not found"}, status_code=404)
+
+    try:
+        res = await query_settings(task["worktree_path"])
+        return JSONResponse(res)
+    except SubprocessClientError as exc:
+        return JSONResponse({"detail": str(exc)}, status_code=502)
+    except Exception as exc:
+        return JSONResponse({"detail": f"Failed to get settings: {exc}"}, status_code=500)
+
+
+async def export_task_audit(request: Request) -> Response:
+    """Export sanitized audit event ledger as JSON Lines."""
+    auth_err = _require_auth(request)
+    if auth_err:
+        return auth_err
+
+    task_id = request.path_params["task_id"]
+    task = task_registry.get_task(task_id)
+    if not task:
+        return JSONResponse({"detail": "Task not found"}, status_code=404)
+
+    work_item = task.get("work_item") or task_id
+    try:
+        res = await query_audit_events(task["worktree_path"], max_events=1000, max_bytes=524288)
+        events = res.get("events", [])
+        meta = res.get("metadata", {})
+
+        lines = [json.dumps(ev, ensure_ascii=False) for ev in events]
+        lines.append(json.dumps({"_metadata": meta}, ensure_ascii=False))
+        content = "\n".join(lines) + "\n"
+
+        headers = {
+            "Content-Type": "application/x-ndjson",
+            "Content-Disposition": f'attachment; filename="{work_item}_audit.jsonl"',
+            "X-Audit-Truncated": str(meta.get("truncated", False)).lower(),
+            "X-Audit-Truncation-Reason": str(meta.get("truncation_reason") or ""),
+            "X-Audit-Events-Count": str(len(events)),
+            "X-Audit-Bytes": str(meta.get("emitted_bytes", len(content.encode("utf-8")))),
+        }
+        return Response(content=content, media_type="application/x-ndjson", headers=headers)
+    except SubprocessClientError as exc:
+        return JSONResponse({"detail": str(exc)}, status_code=502)
+    except Exception as exc:
+        return JSONResponse({"detail": f"Failed to export audit: {exc}"}, status_code=500)
+
+
+async def export_task_state(request: Request) -> Response:
+    """Export state projection as JSON."""
+    auth_err = _require_auth(request)
+    if auth_err:
+        return auth_err
+
+    task_id = request.path_params["task_id"]
+    task = task_registry.get_task(task_id)
+    if not task:
+        return JSONResponse({"detail": "Task not found"}, status_code=404)
+
+    work_item = task.get("work_item") or task_id
+    try:
+        state = await get_state_projection(task["worktree_path"])
+        content = json.dumps(state, indent=2, ensure_ascii=False)
+        headers = {
+            "Content-Type": "application/json",
+            "Content-Disposition": f'attachment; filename="{work_item}_state.json"',
+        }
+        return Response(content=content, media_type="application/json", headers=headers)
+    except SubprocessClientError as exc:
+        return JSONResponse({"detail": str(exc)}, status_code=502)
+    except Exception as exc:
+        return JSONResponse({"detail": f"Failed to export state: {exc}"}, status_code=500)
+
+
+async def export_task_reviews(request: Request) -> Response:
+    """Export review records for a task as JSON."""
+    auth_err = _require_auth(request)
+    if auth_err:
+        return auth_err
+
+    task_id = request.path_params["task_id"]
+    task = task_registry.get_task(task_id)
+    if not task:
+        return JSONResponse({"detail": "Task not found"}, status_code=404)
+
+    work_item = task.get("work_item") or task_id
+    try:
+        reviews = task_registry.get_reviews_for_task(task_id)
+        content = json.dumps({"task_id": task_id, "work_item": work_item, "reviews": reviews}, indent=2, default=str)
+        headers = {
+            "Content-Type": "application/json",
+            "Content-Disposition": f'attachment; filename="{work_item}_reviews.json"',
+        }
+        return Response(content=content, media_type="application/json", headers=headers)
+    except Exception as exc:
+        return JSONResponse({"detail": f"Failed to export reviews: {exc}"}, status_code=500)
+
+
+async def get_erp_projection(request: Request) -> Response:
+    """Read-only inspection of authoritative Stage 4 manifest with integrity disclosure."""
+    auth_err = _require_auth(request)
+    if auth_err:
+        return auth_err
+
+    try:
+        res = read_authoritative_stage4_manifest()
+        return JSONResponse(res)
+    except SecurityError as exc:
+        return JSONResponse({"detail": str(exc)}, status_code=403)
+    except Exception as exc:
+        return JSONResponse({"detail": f"Failed to read Stage 4 manifest: {exc}"}, status_code=500)
+
+
 # ---------------------------------------------------------------------------
 # Application Initialization & Routes
 # ---------------------------------------------------------------------------
@@ -1118,6 +1335,15 @@ routes = [
     Route("/api/tasks/{task_id}/create-review", endpoint=create_review_endpoint, methods=["POST"]),
     Route("/api/tasks/{task_id}/approve-plan", endpoint=approve_plan_endpoint, methods=["POST"]),
     Route("/api/tasks/{task_id}/ai-context", endpoint=get_task_ai_context, methods=["GET"]),
+    Route("/api/tasks/{task_id}/findings", endpoint=get_task_findings, methods=["GET"]),
+    Route("/api/tasks/{task_id}/evidence", endpoint=get_task_evidence, methods=["GET"]),
+    Route("/api/tasks/{task_id}/evidence/{filename}", endpoint=get_task_evidence_file, methods=["GET"]),
+    Route("/api/tasks/{task_id}/diff", endpoint=get_task_diff, methods=["GET"]),
+    Route("/api/tasks/{task_id}/settings", endpoint=get_task_settings, methods=["GET"]),
+    Route("/api/tasks/{task_id}/export/audit", endpoint=export_task_audit, methods=["GET"]),
+    Route("/api/tasks/{task_id}/export/state", endpoint=export_task_state, methods=["GET"]),
+    Route("/api/tasks/{task_id}/export/reviews", endpoint=export_task_reviews, methods=["GET"]),
+    Route("/api/erp/projection", endpoint=get_erp_projection, methods=["GET"]),
     Mount("/static", app=StaticFiles(directory=str(DASHBOARD_DIR / "static")), name="static"),
 ]
 

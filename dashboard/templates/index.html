@@ -12,7 +12,7 @@
     <header class="app-header">
       <div class="header-brand">
         <h1>Civil Engineer Dashboard</h1>
-        <span class="badge badge-scope">Week 2 Interactive Control</span>
+        <span class="badge badge-scope">Week 3 Workflow Inspection</span>
       </div>
       <div id="user-controls" class="user-controls" style="display: none;">
         <span id="nav-username" class="user-name"></span>
@@ -127,6 +127,14 @@
           <div class="detail-meta">
             <span id="detail-branch-badge" class="badge badge-info"></span>
             <span id="detail-status-badge" class="badge"></span>
+            <div class="dropdown" id="export-dropdown" style="position: relative; display: inline-block;">
+              <button class="btn btn-secondary btn-small" id="export-menu-btn">Export ▾</button>
+              <div class="dropdown-menu" id="export-menu" style="display: none; position: absolute; right: 0; top: 100%; background: #fff; border: 1px solid #ccc; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border-radius: 4px; z-index: 1000; min-width: 200px; padding: 4px 0;">
+                <a href="#" id="export-audit-link" class="dropdown-item" style="display: block; padding: 8px 12px; color: #333; text-decoration: none;">Export Audit Ledger (.jsonl)</a>
+                <a href="#" id="export-state-link" class="dropdown-item" style="display: block; padding: 8px 12px; color: #333; text-decoration: none;">Export State (.json)</a>
+                <a href="#" id="export-reviews-link" class="dropdown-item" style="display: block; padding: 8px 12px; color: #333; text-decoration: none;">Export Review Records (.json)</a>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -135,6 +143,11 @@
           <button class="tab-btn active" data-tab="tab-progress">Progress &amp; Jobs</button>
           <button class="tab-btn" data-tab="tab-plan">Plan &amp; Approval</button>
           <button class="tab-btn" data-tab="tab-context">AI Context &amp; Memory</button>
+          <button class="tab-btn" data-tab="tab-evidence">Results &amp; Evidence</button>
+          <button class="tab-btn" data-tab="tab-findings">Findings &amp; Backlog</button>
+          <button class="tab-btn" data-tab="tab-diff">Diff Viewer</button>
+          <button class="tab-btn" data-tab="tab-settings">Settings &amp; Roles</button>
+          <button class="tab-btn" data-tab="tab-erp">ERP Status</button>
         </div>
 
         <!-- Tab 1: Progress & Jobs -->
@@ -218,6 +231,161 @@
               </thead>
               <tbody id="provenance-tbody"></tbody>
             </table>
+          </div>
+        </div>
+
+        <!-- Tab 4: Results & Evidence -->
+        <div id="tab-evidence" class="tab-content">
+          <div class="section-block">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <h3>Validation Records &amp; Stage Evidence</h3>
+              <button id="refresh-evidence-btn" class="btn btn-secondary btn-small">Refresh Evidence</button>
+            </div>
+            <div id="evidence-msg" class="alert" style="display: none; margin-bottom: 8px;"></div>
+            <table class="tasks-table">
+              <thead>
+                <tr>
+                  <th>Filename</th>
+                  <th>Size (bytes)</th>
+                  <th>Modified (UTC)</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="evidence-tbody"></tbody>
+            </table>
+            <div id="evidence-viewer-panel" class="plan-panel" style="margin-top: 20px; display: none;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <h4 id="evidence-viewer-title">Evidence Content</h4>
+                <div id="evidence-meta-badges">
+                  <span id="evidence-sha-badge" class="badge badge-info"></span>
+                  <span id="evidence-trunc-badge" class="badge badge-warning" style="display: none;">TRUNCATED (256 KB)</span>
+                </div>
+              </div>
+              <pre id="evidence-display" class="plan-display" aria-label="Evidence File Content"></pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 5: Findings & Backlog -->
+        <div id="tab-findings" class="tab-content">
+          <div class="section-block">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+              <h3>Findings &amp; Backlog</h3>
+              <div class="stats-summary" id="findings-stats" style="display: flex; gap: 8px;">
+                <span class="badge badge-error" id="blocking-count-badge">0 Blocking Defects</span>
+                <span class="badge badge-info" id="total-findings-badge">0 Total Findings</span>
+                <span class="badge badge-secondary" id="backlog-count-badge">0 Backlog Items</span>
+              </div>
+            </div>
+            <div class="filter-bar" style="margin-bottom: 16px; display: flex; gap: 8px; flex-wrap: wrap;">
+              <button class="filter-btn active btn btn-secondary btn-small" data-filter="all">All</button>
+              <button class="filter-btn btn btn-secondary btn-small" data-filter="blocking">Blocking Only</button>
+              <button class="filter-btn btn btn-secondary btn-small" data-filter="backlog">Backlog Only</button>
+              <button class="filter-btn btn btn-secondary btn-small" data-filter="implementation_defect">Implementation Defects</button>
+              <button class="filter-btn btn btn-secondary btn-small" data-filter="design_defect">Design Defects</button>
+            </div>
+            <div id="findings-list" class="findings-list"></div>
+          </div>
+        </div>
+
+        <!-- Tab 6: Diff Viewer -->
+        <div id="tab-diff" class="tab-content">
+          <div class="section-block">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+              <h3>Hardened Worktree Diff</h3>
+              <div class="diff-meta" style="display: flex; gap: 8px;">
+                <span id="diff-base-badge" class="badge badge-info">Base: None</span>
+                <span id="diff-head-badge" class="badge badge-info">HEAD: None</span>
+                <span id="diff-trunc-badge" class="badge badge-warning" style="display: none;">TRUNCATED (256 KB)</span>
+              </div>
+            </div>
+            <div class="diff-changed-files" style="margin-bottom: 16px;">
+              <h4>Changed Files (<span id="diff-files-count">0</span>)</h4>
+              <div id="diff-files-list" class="tags-list"></div>
+            </div>
+            <div class="diff-container">
+              <pre id="diff-display" class="plan-display diff-view" aria-label="Git Unified Diff"></pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 7: Settings & Roles -->
+        <div id="tab-settings" class="tab-content">
+          <div class="grid-2col">
+            <div class="col">
+              <div class="section-block">
+                <h3>Role Configurations</h3>
+                <table class="tasks-table">
+                  <thead>
+                    <tr>
+                      <th>Role</th>
+                      <th>Tool</th>
+                      <th>Model</th>
+                      <th>Effort</th>
+                      <th>Version</th>
+                      <th>Prompt SHA-256</th>
+                    </tr>
+                  </thead>
+                  <tbody id="settings-roles-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+            <div class="col">
+              <div class="section-block">
+                <h3>Escalation &amp; Circuit Breakers</h3>
+                <div class="subcard" style="margin-bottom: 12px;">
+                  <p><strong>Consecutive Blockers:</strong> <span id="settings-consecutive-blockers">0</span></p>
+                  <p><strong>Cycles in Stage:</strong> <span id="settings-cycles-in-stage">0</span></p>
+                  <p><strong>Stage Attempts:</strong> <span id="settings-stage-attempts">1</span></p>
+                  <p><strong>Current Pause Reason:</strong> <span id="settings-pause-reason" class="text-muted">None</span></p>
+                </div>
+                <h3>Execution Timeouts</h3>
+                <div class="subcard">
+                  <p><strong>Soft Timeout:</strong> <span id="settings-soft-timeout">2700</span> seconds</p>
+                  <p><strong>Hard Timeout:</strong> <span id="settings-hard-timeout">3600</span> seconds</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 8: ERP Status -->
+        <div id="tab-erp" class="tab-content">
+          <div class="section-block">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+              <h3>Authoritative Stage 4 Localization Status</h3>
+              <div style="display: flex; gap: 8px;">
+                <span class="badge badge-warning" id="erp-status-badge">PARKED</span>
+                <span class="badge" id="erp-integrity-badge">CHECKING INTEGRITY...</span>
+              </div>
+            </div>
+            <div class="grid-2col">
+              <div class="col">
+                <div class="subcard">
+                  <h4>Manifest Metadata</h4>
+                  <p><strong>Company:</strong> <span id="erp-company">-</span></p>
+                  <p><strong>Domain:</strong> <span id="erp-domain">-</span></p>
+                  <p><strong>Export File:</strong> <span id="erp-export-file">-</span></p>
+                  <p><strong>Total Catalog Rows:</strong> <span id="erp-rows">-</span></p>
+                  <p><strong>Account Groups:</strong> <span id="erp-groups">-</span></p>
+                  <p><strong>Account Leaves:</strong> <span id="erp-leaves">-</span></p>
+                  <p><strong>Recorded (UTC):</strong> <span id="erp-recorded-utc">-</span></p>
+                </div>
+              </div>
+              <div class="col">
+                <div class="subcard">
+                  <h4>Security &amp; Integrity Verification</h4>
+                  <p><strong>Permissions:</strong> <span id="erp-permissions">-</span></p>
+                  <p><strong>Live Manifest SHA-256:</strong> <code id="erp-manifest-sha256" style="word-break: break-all;">-</code></p>
+                  <p><strong>Export Dataset SHA-256:</strong> <code id="erp-dataset-sha256" style="word-break: break-all;">-</code></p>
+                  <p><strong>Export Path:</strong> <code id="erp-masked-path">[PATH]</code></p>
+                  <div id="erp-integrity-warnings" class="alert alert-error" style="display: none; margin-top: 12px;"></div>
+                  <div class="alert alert-info" style="margin-top: 12px;">
+                    <strong>Stage 4 Invariant:</strong> Stage 4 is parked and strictly read-only. Zero mutations or workflow actions are permitted on ERP Arabic bilingual data.
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>

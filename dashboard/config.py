@@ -49,11 +49,39 @@ ALLOWED_HOSTS = {
     "localhost",
 }
 
+def resolve_frappe_bench_root() -> Path:
+    """Structurally derive the Frappe bench root with fail-closed semantics."""
+    if "FRAPPE_BENCH_ROOT" in os.environ:
+        p = Path(os.environ["FRAPPE_BENCH_ROOT"]).resolve()
+        if p.is_dir() and (p / "apps").is_dir() and (p / "sites").is_dir():
+            return p
+        raise RuntimeError(
+            f"Configured FRAPPE_BENCH_ROOT='{p}' is invalid: must be a directory containing apps/ and sites/"
+        )
+    curr = REPO_ROOT.resolve()
+    while curr != curr.parent:
+        if (curr / "apps").is_dir() and (curr / "sites").is_dir():
+            return curr
+        curr = curr.parent
+    raise RuntimeError(
+        f"Cannot structurally resolve Frappe bench root from REPO_ROOT='{REPO_ROOT}': no ancestor contains apps/ and sites/"
+    )
+
+FRAPPE_BENCH_ROOT = resolve_frappe_bench_root()
+
+# Stage 4 Authoritative Manifest Path (Controlling Installation Root)
+if DASHBOARD_TEST_MODE and "STAGE4_TEST_MANIFEST_PATH" in os.environ:
+    STAGE4_AUTHORITATIVE_MANIFEST_PATH = Path(os.environ["STAGE4_TEST_MANIFEST_PATH"]).resolve()
+else:
+    STAGE4_AUTHORITATIVE_MANIFEST_PATH = (
+        FRAPPE_BENCH_ROOT / "apps" / "construction" / "construction" / "data" / "localization" / "stage4_export_manifest.json"
+    ).resolve()
+
 # Worktree containment settings
-WORKTREES_ROOT = Path(os.environ.get("WORKTREES_ROOT", "/home/mohamed/frappe-bench/worktrees")).resolve()
+WORKTREES_ROOT = Path(os.environ.get("WORKTREES_ROOT", str(FRAPPE_BENCH_ROOT / "worktrees"))).resolve()
 BASE_ALLOWED_ROOTS = [
     WORKTREES_ROOT,
-    Path(os.environ.get("FRAPPE_BENCH_ROOT", "/home/mohamed/frappe-bench")).resolve(),
+    FRAPPE_BENCH_ROOT,
 ]
 
 # Orchestrator paths
