@@ -1,0 +1,8 @@
+{
+  "schema": "site-classification/v1",
+  "site": "v16.localhost",
+  "classification": "non-production test",
+  "basis": "Owner statement 2026-09-04: current DB is used for testing our work; no production data",
+  "production_mutation_authorized": false,
+  "recorded_by": "Stage 2 builder from owner direction"
+}

@@ -1,4 +1,5 @@
 import frappe
+from frappe import _
 from frappe.model.document import Document
 
 
@@ -8,9 +9,9 @@ class ResourcePriceHistory(Document):
 
     def validate_rates(self):
         if self.rate < 0:
-            frappe.throw("Rate cannot be negative.")
+            frappe.throw(_("Rate cannot be negative."))
         if self.exchange_rate and self.exchange_rate <= 0:
-            frappe.throw("Exchange rate must be positive.")
+            frappe.throw(_("Exchange rate must be positive."))
 
 
 def on_doctype_update():

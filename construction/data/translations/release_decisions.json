@@ -1,0 +1,1653 @@
+{
+  "decisions": {
+    "0a4aa1fc0bf912f6c08345cf4cf397eb66ab2cc8d4fece24ec59f90019f71c1e": {
+      "artifacts": [
+        {
+          "ref": "legacy:docs/translation/sign-off-1.0.md",
+          "sha256": "8e51a598d7b742c0ba72dc70ee6d49422971be1b9899cce148be1c13d6c9c24b"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "حساب فرعي",
+        "sha256": "a4ab2d15a86478e728913179907a62d17e41744f4906ab7c534c0a3c47d21c4e"
+      },
+      "references": "glossary v1.0",
+      "release_version": "1.0",
+      "reviewers": [
+        "Mona Khalil - Arabic Localization Lead",
+        "Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA)",
+        "Nadia Mostafa - Translation QA / Structural Review"
+      ],
+      "source_text": "Child Account",
+      "timestamps": [
+        "2026-09-02 10:00:00",
+        "2026-09-02 10:30:00",
+        "2026-09-02 11:00:00"
+      ],
+      "translated_text": "حساب فرعي",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "106284da56a58fcac60049599b420bfb6eb916eee77cc591425d65547ff70e49": {
+      "artifacts": [
+        {
+          "ref": "legacy:docs/translation/sign-off-1.0.md",
+          "sha256": "8e51a598d7b742c0ba72dc70ee6d49422971be1b9899cce148be1c13d6c9c24b"
+        }
+      ],
+      "context": "",
+      "ct_app": "frappe",
+      "domain": "software-hierarchy",
+      "language": "ar",
+      "proposal": {
+        "arabic": "جدول فرعي",
+        "sha256": "fb64b5b08fa4df1fcdf30a7aba4a2860f8fafef92dc8c73e74ab5ee3b3a74aa2"
+      },
+      "references": "glossary v1.0",
+      "release_version": "1.0",
+      "reviewers": [
+        "Mona Khalil - Arabic Localization Lead",
+        "Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA)",
+        "Nadia Mostafa - Translation QA / Structural Review"
+      ],
+      "source_text": "Child Table",
+      "timestamps": [
+        "2026-09-02 10:00:00",
+        "2026-09-02 10:30:00",
+        "2026-09-02 11:00:00"
+      ],
+      "translated_text": "جدول فرعي",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "12f6df15e2b55078cda49299914e2a45793e1108b279df5d0f74b8679f3bc92d": {
+      "artifacts": [
+        {
+          "ref": "legacy:docs/translation/sign-off-1.0.md",
+          "sha256": "8e51a598d7b742c0ba72dc70ee6d49422971be1b9899cce148be1c13d6c9c24b"
+        }
+      ],
+      "context": "",
+      "ct_app": "construction",
+      "domain": "subcontracting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "عقد مقاولات باطن",
+        "sha256": "266664fa5f34cf8c2298e4eb6d5833020383cbaaf2a205498551c5031efe62b1"
+      },
+      "references": "Ministry of Finance contract execution guidance (المستخلص/مقاول من الباطن) + ETA; glossary v2.0 subcontracting domain",
+      "release_version": "1.0",
+      "reviewers": [
+        "Mona Khalil - Arabic Localization Lead",
+        "Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA)",
+        "Nadia Mostafa - Translation QA / Structural Review"
+      ],
+      "source_text": "Subcontract",
+      "timestamps": [
+        "2026-09-02 10:00:00",
+        "2026-09-02 10:30:00",
+        "2026-09-02 11:00:00"
+      ],
+      "translated_text": "عقد مقاولات باطن",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "3f9feb39e587957d995d7a4116536d0f41b994a5918a07c9eaaf8599e04185a6": {
+      "artifacts": [
+        {
+          "ref": "legacy:docs/translation/sign-off-1.0.md",
+          "sha256": "8e51a598d7b742c0ba72dc70ee6d49422971be1b9899cce148be1c13d6c9c24b"
+        }
+      ],
+      "context": "",
+      "ct_app": "frappe",
+      "domain": "software-hierarchy",
+      "language": "ar",
+      "proposal": {
+        "arabic": "إضافة حساب فرعي",
+        "sha256": "3e1649e336221f4660c4f635396325ee213f7d83c580f0536400b0e4d60e8d7c"
+      },
+      "references": "FRA EAS 48 + ETA; Frappe treeview.js:301; glossary v2.0 p.1; Egyptian Civil Code 131-1948 Art 661-662 formal 'مقاول من الباطن'",
+      "release_version": "1.1",
+      "reviewers": [
+        "Mona Khalil - Arabic Localization Lead",
+        "Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA)",
+        "Nadia Mostafa - Translation QA / Structural Review"
+      ],
+      "source_text": "Add Child",
+      "timestamps": [
+        "2026-09-02 10:00:00",
+        "2026-09-02 10:30:00",
+        "2026-09-02 11:00:00"
+      ],
+      "translated_text": "إضافة حساب فرعي",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "4bfb9a5c208de92998ca1eaa4cc66aa7837520b96ab92315b8b399c01d1d7ccd": {
+      "artifacts": [
+        {
+          "ref": "legacy:docs/translation/sign-off-1.0.md",
+          "sha256": "8e51a598d7b742c0ba72dc70ee6d49422971be1b9899cce148be1c13d6c9c24b"
+        }
+      ],
+      "context": "",
+      "ct_app": "frappe",
+      "domain": "core-actions",
+      "language": "ar",
+      "proposal": {
+        "arabic": "حفظ وترحيل",
+        "sha256": "45d7605e248dc0f207ea659d11ef3e63a531c72a2bf5f9a24044a9eb951df55e"
+      },
+      "references": "Frappe lifecycle; UI review 2026-09-02",
+      "release_version": "1.0",
+      "reviewers": [
+        "Mona Khalil - Arabic Localization Lead",
+        "Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA)",
+        "Nadia Mostafa - Translation QA / Structural Review"
+      ],
+      "source_text": "Save and Submit",
+      "timestamps": [
+        "2026-09-02 10:00:00",
+        "2026-09-02 10:30:00",
+        "2026-09-02 11:00:00"
+      ],
+      "translated_text": "حفظ وترحيل",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "629a4e195fb2f93519240ec5e9597ba562108978b89077120c0b9397c98584a6": {
+      "artifacts": [
+        {
+          "ref": "legacy:docs/translation/sign-off-1.0.md",
+          "sha256": "8e51a598d7b742c0ba72dc70ee6d49422971be1b9899cce148be1c13d6c9c24b"
+        }
+      ],
+      "context": "",
+      "ct_app": "construction",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "مستخلص",
+        "sha256": "d9b6caa95883619903fe6ec160e02bab1e13d36ded9aee8fabc0873dd7e0b1d3"
+      },
+      "references": "glossary v1.0",
+      "release_version": "1.0",
+      "reviewers": [
+        "Mona Khalil - Arabic Localization Lead",
+        "Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA)",
+        "Nadia Mostafa - Translation QA / Structural Review"
+      ],
+      "source_text": "Payment Certificate",
+      "timestamps": [
+        "2026-09-02 10:00:00",
+        "2026-09-02 10:30:00",
+        "2026-09-02 11:00:00"
+      ],
+      "translated_text": "مستخلص",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "65bfbb9c7594064b5f02af0cbea7a3b1a428f0107ea269a7b71c9d3e580218bd": {
+      "artifacts": [
+        {
+          "ref": "content:docs/ai/work-items/erp-arabic-bilingual-data/evidence/stage-1c-ai-a1-review.md",
+          "sha256": "788b5070beffd23fa9f21aceebb869a5cd40708128ef6b63c9c2533d9555972c"
+        },
+        {
+          "ref": "content:docs/ai/work-items/erp-arabic-bilingual-data/evidence/stage-1c-ai-a2-review.md",
+          "sha256": "b596d2de87da68da4299759fb360cb3d2f91ff8e385d5f50bf66720d783f39d4"
+        },
+        {
+          "ref": "content:docs/ai/work-items/erp-arabic-bilingual-data/evidence/stage-1c-ai-a3-review.md",
+          "sha256": "2e1d13e2c73276b5368c8d603723f4e69eb6a74f345d0bd2fbc151c606a5bbf7"
+        }
+      ],
+      "context": "",
+      "ct_app": "construction",
+      "domain": "software-display",
+      "language": "ar",
+      "proposal": {
+        "arabic": "إعدادات الخطوط",
+        "sha256": "9a3e511d5fb3627d25bf75c4c14965bd0a3beb5a8b1cd6ff459b75f2ca2fe7b6"
+      },
+      "references": "Stage 1C six-row package ceaddc44; AI-R verification pending",
+      "release_version": "1.0",
+      "reviewers": [
+        "AI-A1 Arabic review — OpenAI Codex GPT-5 family session /root/ai_a1_arabic",
+        "AI-A2 domain review — OpenAI Codex GPT-5 family session /root/ai_a2_domain (explicit dual-meaning review of الخطوط recorded N/A in settings context)",
+        "AI-A3 structural review — OpenAI GPT-5.6-sol session /root/ai_a3_structural"
+      ],
+      "source_text": "Typography Settings",
+      "timestamps": [
+        "2026-09-04 20:41:29",
+        "2026-09-04 20:41:27",
+        "2026-09-04 20:42:01"
+      ],
+      "translated_text": "إعدادات الخطوط",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/ai_a1_arabic"
+        },
+        "AI-A2": {
+          "confidence": 0.98,
+          "decision": "accept N/A after dual-meaning review",
+          "session": "/root/ai_a2_domain"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/ai_a3_structural"
+        }
+      }
+    },
+    "671dec976db0f7c58c724ee085300a094bbef55adb3ddd282dafd17fe700610d": {
+      "artifacts": [
+        {
+          "ref": "legacy:docs/translation/sign-off-1.0.md",
+          "sha256": "8e51a598d7b742c0ba72dc70ee6d49422971be1b9899cce148be1c13d6c9c24b"
+        }
+      ],
+      "context": "",
+      "ct_app": "frappe",
+      "domain": "software-hierarchy",
+      "language": "ar",
+      "proposal": {
+        "arabic": "نوع مستند فرعي",
+        "sha256": "546b4ac1727fc7ffebe1fee8727e1d99396bf93e63e3cbf9b67eb9c1f35f40c5"
+      },
+      "references": "glossary v1.0",
+      "release_version": "1.0",
+      "reviewers": [
+        "Mona Khalil - Arabic Localization Lead",
+        "Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA)",
+        "Nadia Mostafa - Translation QA / Structural Review"
+      ],
+      "source_text": "Child DocType",
+      "timestamps": [
+        "2026-09-02 10:00:00",
+        "2026-09-02 10:30:00",
+        "2026-09-02 11:00:00"
+      ],
+      "translated_text": "نوع مستند فرعي",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "70f7a01bfcee27f384227d1703f8f6dda41b203beb519bb3a69ebe97eab26757": {
+      "artifacts": [
+        {
+          "ref": "legacy:docs/translation/sign-off-1.0.md",
+          "sha256": "8e51a598d7b742c0ba72dc70ee6d49422971be1b9899cce148be1c13d6c9c24b"
+        }
+      ],
+      "context": "",
+      "ct_app": "frappe",
+      "domain": "software-hierarchy",
+      "language": "ar",
+      "proposal": {
+        "arabic": "عنصر فرعي",
+        "sha256": "8309dc14fb9cb845010fd22983bccc6929f1906e980340e063b56dfcef0cc6cc"
+      },
+      "references": "glossary v1.0",
+      "release_version": "1.0",
+      "reviewers": [
+        "Mona Khalil - Arabic Localization Lead",
+        "Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA)",
+        "Nadia Mostafa - Translation QA / Structural Review"
+      ],
+      "source_text": "Child Item",
+      "timestamps": [
+        "2026-09-02 10:00:00",
+        "2026-09-02 10:30:00",
+        "2026-09-02 11:00:00"
+      ],
+      "translated_text": "عنصر فرعي",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "8ba471c8dc0b1908cfd0ac18203ee71c2728dcf93a056b5db2b5a65ec8bc2712": {
+      "artifacts": [
+        {
+          "ref": "legacy:docs/translation/sign-off-1.0.md",
+          "sha256": "8e51a598d7b742c0ba72dc70ee6d49422971be1b9899cce148be1c13d6c9c24b"
+        }
+      ],
+      "context": "",
+      "ct_app": "construction",
+      "domain": "boq",
+      "language": "ar",
+      "proposal": {
+        "arabic": "جدول الكميات",
+        "sha256": "b1c970bbd130942d6cc992ab77164f702773577e79aa0b5c2ada3f6242a20119"
+      },
+      "references": "glossary v1.0",
+      "release_version": "1.0",
+      "reviewers": [
+        "Mona Khalil - Arabic Localization Lead",
+        "Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA)",
+        "Nadia Mostafa - Translation QA / Structural Review"
+      ],
+      "source_text": "Bill of Quantities",
+      "timestamps": [
+        "2026-09-02 10:00:00",
+        "2026-09-02 10:30:00",
+        "2026-09-02 11:00:00"
+      ],
+      "translated_text": "جدول الكميات",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "90f3be1fc6608c19cd3bff988845cce2a17e870832a20ae7318b8de553e5c23d": {
+      "artifacts": [
+        {
+          "ref": "content:docs/ai/work-items/erp-arabic-bilingual-data/evidence/stage-1c-ai-a1-review.md",
+          "sha256": "788b5070beffd23fa9f21aceebb869a5cd40708128ef6b63c9c2533d9555972c"
+        },
+        {
+          "ref": "content:docs/ai/work-items/erp-arabic-bilingual-data/evidence/stage-1c-ai-a2-review.md",
+          "sha256": "b596d2de87da68da4299759fb360cb3d2f91ff8e385d5f50bf66720d783f39d4"
+        },
+        {
+          "ref": "content:docs/ai/work-items/erp-arabic-bilingual-data/evidence/stage-1c-ai-a3-review.md",
+          "sha256": "2e1d13e2c73276b5368c8d603723f4e69eb6a74f345d0bd2fbc151c606a5bbf7"
+        }
+      ],
+      "context": "",
+      "ct_app": "frappe",
+      "domain": "software-display",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تبديل المظهر",
+        "sha256": "80b2cb9f80c1d8576eb457b81f49ac31017e2f16af332e893def61dacc7e4223"
+      },
+      "references": "Stage 1C six-row package ceaddc44; AI-R verification pending",
+      "release_version": "1.0",
+      "reviewers": [
+        "AI-A1 Arabic review — OpenAI Codex GPT-5 family session /root/ai_a1_arabic",
+        "AI-A2 domain review — OpenAI Codex GPT-5 family session /root/ai_a2_domain (reasoned N/A visual appearance control)",
+        "AI-A3 structural review — OpenAI GPT-5.6-sol session /root/ai_a3_structural"
+      ],
+      "source_text": "Toggle Theme",
+      "timestamps": [
+        "2026-09-04 20:41:29",
+        "2026-09-04 20:41:27",
+        "2026-09-04 20:42:01"
+      ],
+      "translated_text": "تبديل المظهر",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/ai_a1_arabic"
+        },
+        "AI-A2": {
+          "confidence": 0.99,
+          "decision": "accept N/A appearance",
+          "session": "/root/ai_a2_domain"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/ai_a3_structural"
+        }
+      }
+    },
+    "98fab5bdb1e238eb94a414a6661cba572578126681b83a014885ccabedb32890": {
+      "artifacts": [
+        {
+          "ref": "legacy:docs/translation/sign-off-1.0.md",
+          "sha256": "8e51a598d7b742c0ba72dc70ee6d49422971be1b9899cce148be1c13d6c9c24b"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "دفعة مقدمة",
+        "sha256": "ede0dcad5065d5d20d7a32b6878a63f31873385dd7dbf4942ebd8404e044c16e"
+      },
+      "references": "glossary v1.0",
+      "release_version": "1.0",
+      "reviewers": [
+        "Mona Khalil - Arabic Localization Lead",
+        "Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA)",
+        "Nadia Mostafa - Translation QA / Structural Review"
+      ],
+      "source_text": "Advance Payment",
+      "timestamps": [
+        "2026-09-02 10:00:00",
+        "2026-09-02 10:30:00",
+        "2026-09-02 11:00:00"
+      ],
+      "translated_text": "دفعة مقدمة",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "99cc16878ae31b7fc7f9c02c5bc3ef7ef10de2f5e50f1bfed0d1186c1d8fc020": {
+      "artifacts": [
+        {
+          "ref": "legacy:docs/translation/sign-off-1.0.md",
+          "sha256": "8e51a598d7b742c0ba72dc70ee6d49422971be1b9899cce148be1c13d6c9c24b"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "قيد يومية",
+        "sha256": "fdee8a13c327350f17df03445320bb2b0153cda96fe5836bd0bb59a4548a0cac"
+      },
+      "references": "ERPNext accounting DocTypes; EAS 48; glossary v2.0 accounts",
+      "release_version": "1.0",
+      "reviewers": [
+        "Mona Khalil - Arabic Localization Lead",
+        "Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA)",
+        "Nadia Mostafa - Translation QA / Structural Review"
+      ],
+      "source_text": "Journal Entry",
+      "timestamps": [
+        "2026-09-02 10:00:00",
+        "2026-09-02 10:30:00",
+        "2026-09-02 11:00:00"
+      ],
+      "translated_text": "قيد يومية",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "a06177fbe564a5f1ccae59b71b5068e0efd8dc78849f2937faa77ef1b3e8be8d": {
+      "artifacts": [
+        {
+          "ref": "legacy:docs/translation/sign-off-1.0.md",
+          "sha256": "8e51a598d7b742c0ba72dc70ee6d49422971be1b9899cce148be1c13d6c9c24b"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "السند",
+        "sha256": "ab57ed20df17dbdc247ce238747dbfc09b8e0578ec57573c8b00b0ddcee752f7"
+      },
+      "references": "glossary v1.0",
+      "release_version": "1.0",
+      "reviewers": [
+        "Mona Khalil - Arabic Localization Lead",
+        "Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA)",
+        "Nadia Mostafa - Translation QA / Structural Review"
+      ],
+      "source_text": "Voucher",
+      "timestamps": [
+        "2026-09-02 10:00:00",
+        "2026-09-02 10:30:00",
+        "2026-09-02 11:00:00"
+      ],
+      "translated_text": "السند",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "aaaaf6dd0e67eea7bbf9f02c9fa81cd2f5789d9337c941423b6c4674d1ac3a95": {
+      "artifacts": [
+        {
+          "ref": "legacy:docs/translation/sign-off-1.0.md",
+          "sha256": "8e51a598d7b742c0ba72dc70ee6d49422971be1b9899cce148be1c13d6c9c24b"
+        }
+      ],
+      "context": "",
+      "ct_app": "frappe",
+      "domain": "software-hierarchy",
+      "language": "ar",
+      "proposal": {
+        "arabic": "عقدة فرعية",
+        "sha256": "95dbfa188255bf5a1d9a65da8dc4a44dd4def6cd76bea2f15e08ba65dd0db0c8"
+      },
+      "references": "glossary v1.0",
+      "release_version": "1.0",
+      "reviewers": [
+        "Mona Khalil - Arabic Localization Lead",
+        "Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA)",
+        "Nadia Mostafa - Translation QA / Structural Review"
+      ],
+      "source_text": "Child Node",
+      "timestamps": [
+        "2026-09-02 10:00:00",
+        "2026-09-02 10:30:00",
+        "2026-09-02 11:00:00"
+      ],
+      "translated_text": "عقدة فرعية",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "ab02b56bf75633919ce673f4c149b83b4509bf96709be6e6154bbbb24fd0a723": {
+      "artifacts": [
+        {
+          "ref": "content:docs/ai/work-items/erp-arabic-bilingual-data/evidence/stage-1c-ai-a1-review.md",
+          "sha256": "788b5070beffd23fa9f21aceebb869a5cd40708128ef6b63c9c2533d9555972c"
+        },
+        {
+          "ref": "content:docs/ai/work-items/erp-arabic-bilingual-data/evidence/stage-1c-ai-a2-review.md",
+          "sha256": "b596d2de87da68da4299759fb360cb3d2f91ff8e385d5f50bf66720d783f39d4"
+        },
+        {
+          "ref": "content:docs/ai/work-items/erp-arabic-bilingual-data/evidence/stage-1c-ai-a3-review.md",
+          "sha256": "2e1d13e2c73276b5368c8d603723f4e69eb6a74f345d0bd2fbc151c606a5bbf7"
+        }
+      ],
+      "context": "",
+      "ct_app": "frappe",
+      "domain": "software-display",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تبديل العرض الكامل",
+        "sha256": "ed8a8499717117391362c3925f07b669dfe0ccf070f8e38a16e9287d1424d8b7"
+      },
+      "references": "Stage 1C six-row package ceaddc44; AI-R verification pending",
+      "release_version": "1.0",
+      "reviewers": [
+        "AI-A1 Arabic review — OpenAI Codex GPT-5 family session /root/ai_a1_arabic",
+        "AI-A2 domain review — OpenAI Codex GPT-5 family session /root/ai_a2_domain (explicit dual-meaning review of العرض recorded N/A in display-toolbar context)",
+        "AI-A3 structural review — OpenAI GPT-5.6-sol session /root/ai_a3_structural"
+      ],
+      "source_text": "Toggle Full Width",
+      "timestamps": [
+        "2026-09-04 20:41:29",
+        "2026-09-04 20:41:27",
+        "2026-09-04 20:42:01"
+      ],
+      "translated_text": "تبديل العرض الكامل",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/ai_a1_arabic"
+        },
+        "AI-A2": {
+          "confidence": 0.97,
+          "decision": "accept N/A after dual-meaning review",
+          "session": "/root/ai_a2_domain"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/ai_a3_structural"
+        }
+      }
+    },
+    "b2197d747f033aef1c1db3e262fe38311688d754a1375009929bde39033f2680": {
+      "artifacts": [
+        {
+          "ref": "legacy:docs/translation/sign-off-1.0.md",
+          "sha256": "8e51a598d7b742c0ba72dc70ee6d49422971be1b9899cce148be1c13d6c9c24b"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "شركة تابعة",
+        "sha256": "d06e1ba61b0cb861efd6c2ae2d014044877330a10037937966873a836006435d"
+      },
+      "references": "glossary v1.0",
+      "release_version": "1.0",
+      "reviewers": [
+        "Mona Khalil - Arabic Localization Lead",
+        "Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA)",
+        "Nadia Mostafa - Translation QA / Structural Review"
+      ],
+      "source_text": "Child Company",
+      "timestamps": [
+        "2026-09-02 10:00:00",
+        "2026-09-02 10:30:00",
+        "2026-09-02 11:00:00"
+      ],
+      "translated_text": "شركة تابعة",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "b40daac784c8dc2eb1b5ca9627bc687a4c6a219f3c6a38e36f86f5f765616d87": {
+      "artifacts": [
+        {
+          "ref": "legacy:docs/translation/sign-off-1.0.md",
+          "sha256": "8e51a598d7b742c0ba72dc70ee6d49422971be1b9899cce148be1c13d6c9c24b"
+        }
+      ],
+      "context": "",
+      "ct_app": "construction",
+      "domain": "site",
+      "language": "ar",
+      "proposal": {
+        "arabic": "التسليم الابتدائي",
+        "sha256": "088e5365d2645d7b6b5409f6c273114ce2c33b76d4a65edd6c4d914403d43766"
+      },
+      "references": "MOF contract execution guidance provisional/final acceptance (assets.mof.gov.eg); glossary v2.0 site domain",
+      "release_version": "1.0",
+      "reviewers": [
+        "Mona Khalil - Arabic Localization Lead",
+        "Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA)",
+        "Nadia Mostafa - Translation QA / Structural Review"
+      ],
+      "source_text": "Handover",
+      "timestamps": [
+        "2026-09-02 10:00:00",
+        "2026-09-02 10:30:00",
+        "2026-09-02 11:00:00"
+      ],
+      "translated_text": "التسليم الابتدائي",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "ba266aba6bb1e1a76d6ec21916ebb23f78fa91fa5d574ed258e3071d08b60ec9": {
+      "artifacts": [
+        {
+          "ref": "legacy:docs/translation/sign-off-1.0.md",
+          "sha256": "8e51a598d7b742c0ba72dc70ee6d49422971be1b9899cce148be1c13d6c9c24b"
+        }
+      ],
+      "context": "",
+      "ct_app": "construction",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "محتجزات ضمان",
+        "sha256": "1e4cd014ebb3583e1dae567db6abda00ba86e19cc730f46e14530607b2c437dd"
+      },
+      "references": "EAS 48 Contract Asset/Liability + MOF final guarantee terminology; glossary v2.0 accounts",
+      "release_version": "1.0",
+      "reviewers": [
+        "Mona Khalil - Arabic Localization Lead",
+        "Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA)",
+        "Nadia Mostafa - Translation QA / Structural Review"
+      ],
+      "source_text": "Retention",
+      "timestamps": [
+        "2026-09-02 10:00:00",
+        "2026-09-02 10:30:00",
+        "2026-09-02 11:00:00"
+      ],
+      "translated_text": "محتجزات ضمان",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "ca6f3108b4b8591cd217e00830c370ffc3bcf522786d293944c80b6bed406a84": {
+      "artifacts": [
+        {
+          "ref": "legacy:docs/translation/sign-off-1.0.md",
+          "sha256": "8e51a598d7b742c0ba72dc70ee6d49422971be1b9899cce148be1c13d6c9c24b"
+        }
+      ],
+      "context": "",
+      "ct_app": "construction",
+      "domain": "subcontracting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "مقاولات الباطن",
+        "sha256": "76e6fc1b4c81f30367ae1f70966a54f6fe113ef777ebc50cce6225363d5e3c14"
+      },
+      "references": "Ministry of Finance contract execution guidance (المستخلص/مقاول من الباطن) + ETA; glossary v2.0 subcontracting domain",
+      "release_version": "1.0",
+      "reviewers": [
+        "Mona Khalil - Arabic Localization Lead",
+        "Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA)",
+        "Nadia Mostafa - Translation QA / Structural Review"
+      ],
+      "source_text": "Subcontracting",
+      "timestamps": [
+        "2026-09-02 10:00:00",
+        "2026-09-02 10:30:00",
+        "2026-09-02 11:00:00"
+      ],
+      "translated_text": "مقاولات الباطن",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "d084dcbabf144187fe26c1ea92b2a334cea1d303acdb1d2fe02294647f4c95c4": {
+      "artifacts": [
+        {
+          "ref": "legacy:docs/translation/sign-off-1.0.md",
+          "sha256": "8e51a598d7b742c0ba72dc70ee6d49422971be1b9899cce148be1c13d6c9c24b"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "مركز التكلفة",
+        "sha256": "941299fc8df84e21b5b1951f96ad6598cf49f7583505aa43668692f77a6a9477"
+      },
+      "references": "glossary v1.0",
+      "release_version": "1.0",
+      "reviewers": [
+        "Mona Khalil - Arabic Localization Lead",
+        "Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA)",
+        "Nadia Mostafa - Translation QA / Structural Review"
+      ],
+      "source_text": "Cost Center",
+      "timestamps": [
+        "2026-09-02 10:00:00",
+        "2026-09-02 10:30:00",
+        "2026-09-02 11:00:00"
+      ],
+      "translated_text": "مركز التكلفة",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "d2e2edf2be2d901bbc2fc9c28b1490649ef182374a344c988cd289800e1de105": {
+      "artifacts": [
+        {
+          "ref": "legacy:docs/translation/sign-off-1.0.md",
+          "sha256": "8e51a598d7b742c0ba72dc70ee6d49422971be1b9899cce148be1c13d6c9c24b"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "دليل الحسابات",
+        "sha256": "0198d2cd15d1e819238e82d1693c25659da5e20a493e474fdb3e9b2260f0939a"
+      },
+      "references": "glossary v1.0",
+      "release_version": "1.0",
+      "reviewers": [
+        "Mona Khalil - Arabic Localization Lead",
+        "Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA)",
+        "Nadia Mostafa - Translation QA / Structural Review"
+      ],
+      "source_text": "Chart of Accounts",
+      "timestamps": [
+        "2026-09-02 10:00:00",
+        "2026-09-02 10:30:00",
+        "2026-09-02 11:00:00"
+      ],
+      "translated_text": "دليل الحسابات",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "d5957a74ba7a02f4b909da25741aac26964644fbfd6d5e0af06f7e091e63849f": {
+      "artifacts": [
+        {
+          "ref": "legacy:docs/translation/sign-off-1.0.md",
+          "sha256": "8e51a598d7b742c0ba72dc70ee6d49422971be1b9899cce148be1c13d6c9c24b"
+        }
+      ],
+      "context": "",
+      "ct_app": "construction",
+      "domain": "boq",
+      "language": "ar",
+      "proposal": {
+        "arabic": "أمر تغيير",
+        "sha256": "e08dcab21681186a5bf6a8d3066a413ba1772e317b37783a312c179d05bcda73"
+      },
+      "references": "glossary v1.0",
+      "release_version": "1.0",
+      "reviewers": [
+        "Mona Khalil - Arabic Localization Lead",
+        "Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA)",
+        "Nadia Mostafa - Translation QA / Structural Review"
+      ],
+      "source_text": "Variation Order",
+      "timestamps": [
+        "2026-09-02 10:00:00",
+        "2026-09-02 10:30:00",
+        "2026-09-02 11:00:00"
+      ],
+      "translated_text": "أمر تغيير",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "d90b903698d46d976a26abba0f31770a0bb27c94a81fc0e1520ebbb27eef2520": {
+      "artifacts": [
+        {
+          "ref": "legacy:docs/translation/sign-off-1.0.md",
+          "sha256": "8e51a598d7b742c0ba72dc70ee6d49422971be1b9899cce148be1c13d6c9c24b"
+        }
+      ],
+      "context": "",
+      "ct_app": "construction",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "محتجزات ضمان",
+        "sha256": "71b60599ab0213df08d4920d0a1edea5b8270b2430e44e0972c8c41e64301e5e"
+      },
+      "references": "EAS 48 Contract Asset/Liability + MOF final guarantee terminology; glossary v2.0 accounts",
+      "release_version": "1.0",
+      "reviewers": [
+        "Mona Khalil - Arabic Localization Lead",
+        "Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA)",
+        "Nadia Mostafa - Translation QA / Structural Review"
+      ],
+      "source_text": "Retention Money",
+      "timestamps": [
+        "2026-09-02 10:00:00",
+        "2026-09-02 10:30:00",
+        "2026-09-02 11:00:00"
+      ],
+      "translated_text": "محتجزات ضمان",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "d98120267b83d8f13ae7bff04364c0aeb3a367044ecae19a8ac618008a476edb": {
+      "artifacts": [
+        {
+          "ref": "legacy:docs/translation/sign-off-1.0.md",
+          "sha256": "8e51a598d7b742c0ba72dc70ee6d49422971be1b9899cce148be1c13d6c9c24b"
+        }
+      ],
+      "context": "",
+      "ct_app": "construction",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "مستخلص جاري",
+        "sha256": "beae395f79cf6b39a02c54f274ca20a6127277c6f32026b1d51fa4f02b04899f"
+      },
+      "references": "glossary v1.0; EAS 48",
+      "release_version": "1.0",
+      "reviewers": [
+        "Mona Khalil - Arabic Localization Lead",
+        "Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA)",
+        "Nadia Mostafa - Translation QA / Structural Review"
+      ],
+      "source_text": "Progress Billing",
+      "timestamps": [
+        "2026-09-02 10:00:00",
+        "2026-09-02 10:30:00",
+        "2026-09-02 11:00:00"
+      ],
+      "translated_text": "مستخلص جاري",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "dbab4e2e0f8e883e3c3614a410461f25899ea5771a87d876912dd82b26e1e297": {
+      "artifacts": [
+        {
+          "ref": "legacy:docs/translation/sign-off-1.0.md",
+          "sha256": "8e51a598d7b742c0ba72dc70ee6d49422971be1b9899cce148be1c13d6c9c24b"
+        }
+      ],
+      "context": "",
+      "ct_app": "frappe",
+      "domain": "software-hierarchy",
+      "language": "ar",
+      "proposal": {
+        "arabic": "مستند فرعي",
+        "sha256": "12fd81e2f003126ffe99ffa65d91f97587ad90e6298c4a437a16aad620d1d197"
+      },
+      "references": "glossary v1.0",
+      "release_version": "1.0",
+      "reviewers": [
+        "Mona Khalil - Arabic Localization Lead",
+        "Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA)",
+        "Nadia Mostafa - Translation QA / Structural Review"
+      ],
+      "source_text": "Child Document",
+      "timestamps": [
+        "2026-09-02 10:00:00",
+        "2026-09-02 10:30:00",
+        "2026-09-02 11:00:00"
+      ],
+      "translated_text": "مستند فرعي",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "de5c3b15340de667ee3012191df769cfcd3ea1bd4cbd5895b36a0e9f3ee67ee5": {
+      "artifacts": [
+        {
+          "ref": "content:docs/ai/work-items/erp-arabic-bilingual-data/evidence/stage-1c-ai-a1-review.md",
+          "sha256": "788b5070beffd23fa9f21aceebb869a5cd40708128ef6b63c9c2533d9555972c"
+        },
+        {
+          "ref": "content:docs/ai/work-items/erp-arabic-bilingual-data/evidence/stage-1c-ai-a2-review.md",
+          "sha256": "b596d2de87da68da4299759fb360cb3d2f91ff8e385d5f50bf66720d783f39d4"
+        },
+        {
+          "ref": "content:docs/ai/work-items/erp-arabic-bilingual-data/evidence/stage-1c-ai-a3-review.md",
+          "sha256": "2e1d13e2c73276b5368c8d603723f4e69eb6a74f345d0bd2fbc151c606a5bbf7"
+        }
+      ],
+      "context": "",
+      "ct_app": "frappe",
+      "domain": "software-navigation",
+      "language": "ar",
+      "proposal": {
+        "arabic": "سطح المكتب",
+        "sha256": "80a1403bae8a65cf3a3d13303d673c5ad7a70eec14478ca98d91379318bf381a"
+      },
+      "references": "Stage 1C six-row package ceaddc44; AI-R verification pending",
+      "release_version": "1.0",
+      "reviewers": [
+        "AI-A1 Arabic review — OpenAI Codex GPT-5 family session /root/ai_a1_arabic",
+        "AI-A2 domain review — OpenAI Codex GPT-5 family session /root/ai_a2_domain (reasoned N/A generic navigation UI)",
+        "AI-A3 structural review — OpenAI GPT-5.6-sol session /root/ai_a3_structural"
+      ],
+      "source_text": "Desktop",
+      "timestamps": [
+        "2026-09-04 20:41:29",
+        "2026-09-04 20:41:27",
+        "2026-09-04 20:42:01"
+      ],
+      "translated_text": "سطح المكتب",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/ai_a1_arabic"
+        },
+        "AI-A2": {
+          "confidence": 0.99,
+          "decision": "accept N/A generic navigation",
+          "session": "/root/ai_a2_domain"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/ai_a3_structural"
+        }
+      }
+    },
+    "decc5f7f3d006426a1c06d695558c9e7b4f6c0208fb51f9d0e8e9e7a28732362": {
+      "artifacts": [
+        {
+          "ref": "legacy:docs/translation/sign-off-1.0.md",
+          "sha256": "8e51a598d7b742c0ba72dc70ee6d49422971be1b9899cce148be1c13d6c9c24b"
+        }
+      ],
+      "context": "",
+      "ct_app": "frappe",
+      "domain": "software-hierarchy",
+      "language": "ar",
+      "proposal": {
+        "arabic": "صف فرعي",
+        "sha256": "87d96a1754fb15cd56f4867e22840991b07031338cd20758c0e40c4868a2ed75"
+      },
+      "references": "glossary v1.0",
+      "release_version": "1.0",
+      "reviewers": [
+        "Mona Khalil - Arabic Localization Lead",
+        "Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA)",
+        "Nadia Mostafa - Translation QA / Structural Review"
+      ],
+      "source_text": "Child Row",
+      "timestamps": [
+        "2026-09-02 10:00:00",
+        "2026-09-02 10:30:00",
+        "2026-09-02 11:00:00"
+      ],
+      "translated_text": "صف فرعي",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "e7261d1bb09c1ff40804f1b88ace2387450039ebeef4fedbaae5f76e19deeffb": {
+      "artifacts": [
+        {
+          "ref": "content:docs/ai/work-items/erp-arabic-bilingual-data/evidence/stage-1c-ai-a1-review.md",
+          "sha256": "788b5070beffd23fa9f21aceebb869a5cd40708128ef6b63c9c2533d9555972c"
+        },
+        {
+          "ref": "content:docs/ai/work-items/erp-arabic-bilingual-data/evidence/stage-1c-ai-a2-review.md",
+          "sha256": "b596d2de87da68da4299759fb360cb3d2f91ff8e385d5f50bf66720d783f39d4"
+        },
+        {
+          "ref": "content:docs/ai/work-items/erp-arabic-bilingual-data/evidence/stage-1c-ai-a3-review.md",
+          "sha256": "2e1d13e2c73276b5368c8d603723f4e69eb6a74f345d0bd2fbc151c606a5bbf7"
+        }
+      ],
+      "context": "",
+      "ct_app": "frappe",
+      "domain": "software-navigation",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تحرير الشريط الجانبي",
+        "sha256": "90ac9c0fa488dc48084f898f81268f14736962d0f7b18288eb483df7afff33da"
+      },
+      "references": "Stage 1C six-row package ceaddc44; AI-R verification pending",
+      "release_version": "1.0",
+      "reviewers": [
+        "AI-A1 Arabic review — OpenAI Codex GPT-5 family session /root/ai_a1_arabic",
+        "AI-A2 domain review — OpenAI Codex GPT-5 family session /root/ai_a2_domain (reasoned N/A UI customization action)",
+        "AI-A3 structural review — OpenAI GPT-5.6-sol session /root/ai_a3_structural (APPROVE WITH NON-BLOCKING UX EXCEPTION narrow-width test required)"
+      ],
+      "source_text": "Edit Sidebar",
+      "timestamps": [
+        "2026-09-04 20:41:29",
+        "2026-09-04 20:41:27",
+        "2026-09-04 20:42:01"
+      ],
+      "translated_text": "تحرير الشريط الجانبي",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/ai_a1_arabic"
+        },
+        "AI-A2": {
+          "confidence": 0.99,
+          "decision": "accept N/A UI action",
+          "session": "/root/ai_a2_domain"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/ai_a3_structural"
+        }
+      }
+    },
+    "e7c8ea3cde3818d27e5abd5ca078de0e7e135ccfa59f1b075f57b00478608976": {
+      "artifacts": [
+        {
+          "ref": "legacy:docs/translation/sign-off-1.0.md",
+          "sha256": "8e51a598d7b742c0ba72dc70ee6d49422971be1b9899cce148be1c13d6c9c24b"
+        }
+      ],
+      "context": "",
+      "ct_app": "frappe",
+      "domain": "core-actions",
+      "language": "ar",
+      "proposal": {
+        "arabic": "ترحيل",
+        "sha256": "a548bd5ad81af5e16bbf0e07e0f1e954db81ddeabdf888a74628fe2cc4aa7534"
+      },
+      "references": "Frappe lifecycle (generic) + EAS 48 accounting submit; UI review 2026-09-02; FRA/MOF not applicable for generic submit but construction-accounting context verified",
+      "release_version": "1.0",
+      "reviewers": [
+        "Mona Khalil - Arabic Localization Lead",
+        "Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA)",
+        "Nadia Mostafa - Translation QA / Structural Review"
+      ],
+      "source_text": "Submit",
+      "timestamps": [
+        "2026-09-02 10:00:00",
+        "2026-09-02 10:30:00",
+        "2026-09-02 11:00:00"
+      ],
+      "translated_text": "ترحيل",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "eaa54a90a37d804f4b033480b08a9a217575a52950b135668809b1f2cc9af67d": {
+      "artifacts": [
+        {
+          "ref": "legacy:docs/translation/sign-off-1.0.md",
+          "sha256": "8e51a598d7b742c0ba72dc70ee6d49422971be1b9899cce148be1c13d6c9c24b"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "سند قبض / سند صرف",
+        "sha256": "d9b08959c9001dae9acc93161695a29b4e91bc817fd3514fbef79cbd5e7e1d2b"
+      },
+      "references": "ERPNext accounting DocTypes; EAS 48; glossary v2.0 accounts",
+      "release_version": "1.0",
+      "reviewers": [
+        "Mona Khalil - Arabic Localization Lead",
+        "Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA)",
+        "Nadia Mostafa - Translation QA / Structural Review"
+      ],
+      "source_text": "Payment Entry",
+      "timestamps": [
+        "2026-09-02 10:00:00",
+        "2026-09-02 10:30:00",
+        "2026-09-02 11:00:00"
+      ],
+      "translated_text": "سند قبض / سند صرف",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "ed84b9cddd2c1d1027e5d2f06cbafc4aa51bf18a0c7b1014eac609418700a9d0": {
+      "artifacts": [
+        {
+          "ref": "content:docs/ai/work-items/erp-arabic-bilingual-data/evidence/stage-1c-ai-a1-review.md",
+          "sha256": "788b5070beffd23fa9f21aceebb869a5cd40708128ef6b63c9c2533d9555972c"
+        },
+        {
+          "ref": "content:docs/ai/work-items/erp-arabic-bilingual-data/evidence/stage-1c-ai-a2-review.md",
+          "sha256": "b596d2de87da68da4299759fb360cb3d2f91ff8e385d5f50bf66720d783f39d4"
+        },
+        {
+          "ref": "content:docs/ai/work-items/erp-arabic-bilingual-data/evidence/stage-1c-ai-a3-review.md",
+          "sha256": "2e1d13e2c73276b5368c8d603723f4e69eb6a74f345d0bd2fbc151c606a5bbf7"
+        }
+      ],
+      "context": "",
+      "ct_app": "frappe",
+      "domain": "software-navigation",
+      "language": "ar",
+      "proposal": {
+        "arabic": "مساحات العمل",
+        "sha256": "c25465e65d60d021c7e15168c34cfcd4e64cbc09361a48403b87ad599a0d76e6"
+      },
+      "references": "Stage 1C six-row package ceaddc44; AI-R verification pending",
+      "release_version": "1.0",
+      "reviewers": [
+        "AI-A1 Arabic review — OpenAI Codex GPT-5 family session /root/ai_a1_arabic",
+        "AI-A2 domain review — OpenAI Codex GPT-5 family session /root/ai_a2_domain (reasoned N/A generic navigation UI)",
+        "AI-A3 structural review — OpenAI GPT-5.6-sol session /root/ai_a3_structural"
+      ],
+      "source_text": "Workspaces",
+      "timestamps": [
+        "2026-09-04 20:41:29",
+        "2026-09-04 20:41:27",
+        "2026-09-04 20:42:01"
+      ],
+      "translated_text": "مساحات العمل",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/ai_a1_arabic"
+        },
+        "AI-A2": {
+          "confidence": 0.98,
+          "decision": "accept N/A generic navigation",
+          "session": "/root/ai_a2_domain"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/ai_a3_structural"
+        }
+      }
+    },
+    "ee04600d269e6fab29cdaa00bec8903372ce16e8a977536016b2f1de79775b2e": {
+      "artifacts": [
+        {
+          "ref": "legacy:docs/translation/sign-off-1.0.md",
+          "sha256": "8e51a598d7b742c0ba72dc70ee6d49422971be1b9899cce148be1c13d6c9c24b"
+        }
+      ],
+      "context": "",
+      "ct_app": "construction",
+      "domain": "subcontracting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "مقاول باطن",
+        "sha256": "584d8efcd8b5d0656436f5e47d218d623f59ce71d5ebaffd93fa8fb8a5c62fb4"
+      },
+      "references": "Ministry of Finance contract execution guidance (المستخلص/مقاول من الباطن) + ETA; glossary v2.0 subcontracting domain",
+      "release_version": "1.0",
+      "reviewers": [
+        "Mona Khalil - Arabic Localization Lead",
+        "Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA)",
+        "Nadia Mostafa - Translation QA / Structural Review"
+      ],
+      "source_text": "Subcontractor",
+      "timestamps": [
+        "2026-09-02 10:00:00",
+        "2026-09-02 10:30:00",
+        "2026-09-02 11:00:00"
+      ],
+      "translated_text": "مقاول باطن",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "ff377b50eb01193ef44c0016cabfbf0698054ecd2110a3e293646c302ec2d652": {
+      "artifacts": [
+        {
+          "ref": "legacy:docs/translation/sign-off-1.0.md",
+          "sha256": "8e51a598d7b742c0ba72dc70ee6d49422971be1b9899cce148be1c13d6c9c24b"
+        }
+      ],
+      "context": "",
+      "ct_app": "construction",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تكلفة تجهيز الموقع",
+        "sha256": "4d338157ca6bd4286d85aaa4dfc128e0d1b53864074feefb288b44bc474b86f6"
+      },
+      "references": "glossary v1.0",
+      "release_version": "1.0",
+      "reviewers": [
+        "Mona Khalil - Arabic Localization Lead",
+        "Hesham Farouk - Egyptian Construction Accountant (EAS 48 / ETA)",
+        "Nadia Mostafa - Translation QA / Structural Review"
+      ],
+      "source_text": "Mobilization Cost",
+      "timestamps": [
+        "2026-09-02 10:00:00",
+        "2026-09-02 10:30:00",
+        "2026-09-02 11:00:00"
+      ],
+      "translated_text": "تكلفة تجهيز الموقع",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    }
+  },
+  "generated_utc": "2026-09-05T09:40:42Z",
+  "note": "Reviewed generation. Verdicts transcribed from independent review evidence (six new rows) or marked historical batch (legacy).",
+  "schema": "release-decision/v2"
+}

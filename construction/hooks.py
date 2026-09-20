@@ -104,6 +104,9 @@ doctype_js = {
     "Scope Report Access Log": "construction/construction/doctype/scope_report_access_log/scope_report_access_log.js",
     "User Desk Theme": "construction/construction/doctype/user_desk_theme/user_desk_theme.js",
     "Variation Order": "construction/construction/doctype/variation_order/variation_order.js",
+    # Stage 3 bilingual pilot — path is resolved from the app module folder
+    # (frappe.get_app_path), so it must NOT repeat the leading "construction/".
+    "Account": "public/js/bilingual/account_form.js",
 }
 
 doctype_list_js = {
@@ -113,7 +116,12 @@ doctype_list_js = {
     "Variation Order": "construction/construction/doctype/variation_order/variation_order_list.js",
 }
 
-doctype_tree_js = {"BOQ Structure": "construction/construction/doctype/boq_structure/boq_structure_tree.js"}
+doctype_tree_js = {
+    "BOQ Structure": "construction/construction/doctype/boq_structure/boq_structure_tree.js",
+    # Stage 3 bilingual pilot — loads AFTER the vendor account_tree.js and
+    # wraps frappe.treeview_settings["Account"] (module-folder-relative path).
+    "Account": "public/js/bilingual/account_tree.js",
+}
 
 # CSS includes for authenticated users (desk)
 # v2.2: Single-file theme — tokens + 1,180 selectors, html.ct-enterprise[data-theme] namespace
@@ -220,6 +228,10 @@ override_whitelisted_methods = {
     "frappe.core.doctype.user.user.switch_theme": "construction.overrides.switch_theme_simple.switch_theme",
     "frappe.utils.change_log.show_update_popup": "construction.api.theme_api.ignore_update_popup",
     "frappe.translate.update_translations_for_source": "construction.api.translation_tools.update_translations_for_source_safe",
+    # Stage 3 P0: the standard Account identity-rename endpoint must never be
+    # callable without the required reason — all callers (including the
+    # vendor form flow) are routed through the governed, atomic wrapper.
+    "erpnext.accounts.doctype.account.account.update_account_number": "construction.services.bilingual_service.governed_rename_account",
 }
 
 # Override core Translation controller so edited catalog rows become runtime translations.
@@ -255,6 +267,10 @@ doc_events = {
     "Sales Invoice": {"validate": "construction.services.boq_transaction_validation.validate_document"},
     "Material Request": {"validate": "construction.services.boq_transaction_validation.validate_document"},
     "BOQ Item Stage": {"before_delete": "construction.services.boq_lifecycle.before_delete_boq_item_stage"},
+    # Stage 3 P0: Arabic account-name writes are confined to the governed
+    # bilingual API; any direct form/REST save that changes the field is
+    # refused. The hook also maintains the normalized Arabic search key.
+    "Account": {"validate": "construction.services.bilingual_service.enforce_account_arabic_policy"},
 }
 
 # Server-side query injection: applies scope filters to ALL database queries

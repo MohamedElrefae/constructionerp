@@ -1,0 +1,32 @@
+COMMAND: bench --site v16.localhost run-tests --app construction --module construction.searchable_dropdown.tests.test_integration
+STARTED_UTC: 2026-09-04T21:13:23Z
+Starting test run with parameters: site=v16.localhost, app=construction, module=construction.searchable_dropdown.tests.test_integration, verbose=False, tests=(), force=False, profile=False, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+View detailed logs (using --verbose): /home/mohamed/frappe-bench/logs/frappe.testing.log
+
+Running 6 unspecified-category tests for construction
+
+construction.searchable_dropdown.tests.test_integration.TestSearchableDropdownIntegration
+[90m  ▹ Warning: Could not create test account: The root account <strong>9991 - Test Cash Account Arabic - _TC</strong> must be a group
+[0m[90m  ▹ Warning: Could not create test account: The root account <strong>9992 - Test Bank Account - _TC</strong> must be a group
+[0m[90m  ▹ Warning: Could not create test account: Root Type is mandatory
+[0m   [32m ✔ [0m test_concurrent_searches
+       ▸  /home/mohamed/frappe-bench/apps/frappe/frappe/model/qb_query.py:153: V17FrappeDeprecationWarning: This codepath was marked (DATE: 2024-01-01) deprecated for removal (from v17 onwards); note:
+       ▸   The 'limit_page_length' parameter is deprecated. Use 'limit' instead.
+       ▸  
+       ▸    deprecation_warning(
+   [32m ✔ [0m test_end_to_end_search_flow
+   [32m ✔ [0m test_search_performance
+       ▹  Search performance: 0.003s
+   [32m ✔ [0m test_search_returns_empty_for_no_matches
+   [32m ✔ [0m test_search_with_company_filter
+
+construction.searchable_dropdown.tests.test_integration.TestSearchableDropdownPermissions
+   [32m ✔ [0m test_user_without_read_permission
+
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.277s
+
+OK
+EXIT_CODE: 0
+FINISHED_UTC: 2026-09-04T21:13:24Z

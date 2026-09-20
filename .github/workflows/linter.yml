@@ -16,15 +16,42 @@ jobs:
   linter:
     name: 'Frappe Linter'
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
+    defaults:
+      run:
+        working-directory: bench/apps/construction
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout construction at bench layout path
+        uses: actions/checkout@v4
+        with:
+          path: bench/apps/construction
+      # Sibling vendor trees pinned to reviewed commits so the localization gate
+      # validates the exact Frappe/ERPNext catalogs (bench layout: bench/apps/<app>).
+      - name: Checkout pinned Frappe catalog
+        uses: actions/checkout@v4
+        with:
+          repository: frappe/frappe
+          ref: 81aadb9ba1bc07abccd8f720af80f4f2fb4a68a0
+          path: bench/apps/frappe
+          sparse-checkout: frappe/locale
+          sparse-checkout-cone-mode: false
+          fetch-depth: 1
+      - name: Checkout pinned ERPNext catalog
+        uses: actions/checkout@v4
+        with:
+          repository: frappe/erpnext
+          ref: 2807c9f08fff3f161c0a2e10745a26aa6331ffd5
+          path: bench/apps/erpnext
+          sparse-checkout: erpnext/locale
+          sparse-checkout-cone-mode: false
+          fetch-depth: 1
       - uses: actions/setup-python@v5
         with:
           python-version: '3.10'
           cache: pip
       - uses: pre-commit/action@v3.0.0
+      - name: Localization gates (bench-layout working directory)
+        run: python3 scripts/check_localization_gates.py
 
       - name: Lint scope-dimension metadata
         run: python3 scripts/lint_scope_metadata.py

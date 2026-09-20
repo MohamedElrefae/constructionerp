@@ -1,4 +1,5 @@
 import frappe
+from frappe import _
 
 IMPROVE_NOW_FLAGS = frozenset(
     {
@@ -16,7 +17,7 @@ IMPROVE_NOW_FLAGS = frozenset(
 def is_enabled(flag_name: str) -> bool:
     """Return whether a known Construction Settings rollout flag is enabled."""
     if flag_name not in IMPROVE_NOW_FLAGS:
-        frappe.throw(f"Unknown Construction Settings rollout flag: {flag_name}")
+        frappe.throw(_("Unknown Construction Settings rollout flag: {0}").format(flag_name))
 
     return bool(frappe.db.get_single_value("Construction Settings", flag_name) or 0)
 
@@ -30,7 +31,7 @@ def set_flag(flag_name: str, value, *, commit: bool = False) -> None:
     transaction.
     """
     if flag_name not in IMPROVE_NOW_FLAGS:
-        frappe.throw(f"Unknown Construction Settings rollout flag: {flag_name}")
+        frappe.throw(_("Unknown Construction Settings rollout flag: {0}").format(flag_name))
 
     frappe.db.set_single_value("Construction Settings", flag_name, 1 if value else 0)
     if commit:

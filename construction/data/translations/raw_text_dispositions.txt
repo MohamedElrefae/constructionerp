@@ -1,0 +1,33 @@
+# Raw (unwrapped) visible/backend strings — reviewed dispositions.
+# Format: text | kind | rationale | reviewer/session
+# kinds: brand (proper noun, language-neutral) | technical (operator/diagnostic, English convention) | deferred (later wave scope)
+# Backend validation messages must be wrapped in _(), never dispositioned here.
+Construction ERP | brand | Product proper noun shown in print brand blocks | Stage 2 builder — brand convention
+<br> join of translated validation errors | technical | form_layout_profile joins already-translated per-field messages; the join itself carries no literal | Stage 2 builder — code inspection
+[v8_7] whitespace-broken runtime rows remain: | technical | one-shot migration operator diagnostics (patch console output), not user UI | Stage 2 builder — migration tooling convention
+Translation key contains embedded NUL character | technical | translation_service input guard diagnostics for operators; service behavior covered by stabilization tests | Stage 2 builder — service-diagnostic convention
+ct_origin must be Packaged Release or Site Override for runtime rows | technical | translation_service invariant diagnostics | Stage 2 builder — service-diagnostic convention
+Quorum missing for | technical | translation_service release-gate diagnostics prefix; row identity interpolated | Stage 2 builder — service-diagnostic convention
+persona must be A1, A2, or A3 | technical | review API diagnostics | Stage 2 builder — service-diagnostic convention
+catalog fields not present | technical | setup diagnostics | Stage 2 builder — service-diagnostic convention
+catalog row not found for key | technical | review API diagnostics | Stage 2 builder — service-diagnostic convention
+invalid key | technical | review API diagnostics | Stage 2 builder — service-diagnostic convention
+no proposed translation to release | technical | review API diagnostics | Stage 2 builder — service-diagnostic convention
+Translation health check failed: | technical | health diagnostics prefix | Stage 2 builder — service-diagnostic convention
+Translation drift detected during mandatory import: | technical | import diagnostics prefix | Stage 2 builder — service-diagnostic convention
+Translation import failed: | technical | import diagnostics prefix | Stage 2 builder — service-diagnostic convention
+<br> | technical | HTML join separator for already-translated validation messages, not visible text | Stage 2 builder — code inspection
+contains embedded NUL | technical | translation_service NUL-guard diagnostics suffix | Stage 2 builder — service-diagnostic convention
+Placeholder reviewer not allowed | technical | translation_service quorum-guard diagnostics prefix | Stage 2 builder — service-diagnostic convention
+{field} contains embedded NUL | technical | translation_service NUL-guard diagnostics template (field name interpolated) | Stage 2 builder — service-diagnostic convention
+source_text contains embedded NUL | technical | translation tools input guard diagnostics | Stage 2 builder — service-diagnostic convention
+NUL in key | technical | v8_6 patch digest guard diagnostics | Stage 2 builder — migration tooling convention
+Cannot add BOQ Structure WBS unique constraint because WBS health check found issues. | technical | one-shot migration health gate diagnostics | Stage 2 builder — migration tooling convention
+persona must be A1, A2, or A3 | technical | review API diagnostics | Stage 2 builder — service-diagnostic convention
+ct_proposed_translation field not yet migrated | technical | review API diagnostics | Stage 2 builder — service-diagnostic convention
+catalog fields not present | technical | review API diagnostics | Stage 2 builder — service-diagnostic convention
+construction/construction/doctype/construction_theme/construction_theme.py :: message | technical | throw/msgprint of message built from a wrapped WCAG template in the same function (verified) | Stage 2 builder — code inspection
+construction/construction/utils/scope_validation.py :: error_message | technical | join of wrapped validation templates (verified in source) | Stage 2 builder — code inspection
+construction/api/cost_database_api.py :: e | technical | rethrow of caught runtime exception (exception chaining, no static text) | Stage 2 builder — code inspection
+form_layout_profile join | technical | "<br>".join of wrapped per-field messages/warnings (verified wrapped at construction) | Stage 2 builder — code inspection
+str(e) | technical | bare str(exception) rethrow passes through the caught exception object; by construction it carries no static localizable UI string at the sink site | Stage 2 builder — sink-shape rule

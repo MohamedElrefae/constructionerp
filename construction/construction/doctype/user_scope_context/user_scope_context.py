@@ -4,6 +4,7 @@ DEL-001: Real implementation with automated hooks
 """
 
 import frappe
+from frappe import _
 from frappe.model.document import Document
 from frappe.utils import now_datetime
 
@@ -36,8 +37,10 @@ class UserScopeContext(Document):
         if not frappe.has_permission(self.doctype, "write", self, user=frappe.session.user):
             if self.user != frappe.session.user:
                 frappe.throw(
-                    f"You can only modify your own User Scope Context. "
-                    f"Current user: {frappe.session.user}, Record owner: {self.user}"
+                    _(
+                        "You can only modify your own User Scope Context. "
+                        "Current user: {0}, Record owner: {1}"
+                    ).format(frappe.session.user, self.user)
                 )
 
         # Cross-dimension validation
@@ -52,11 +55,11 @@ class UserScopeContext(Document):
 
         # Validate user exists
         if self.user and not frappe.db.exists("User", self.user):
-            frappe.throw(f"User '{self.user}' does not exist")
+            frappe.throw(_("User '{0}' does not exist").format(self.user))
 
         # Validate company exists
         if self.company and not frappe.db.exists("Company", self.company):
-            frappe.throw(f"Company '{self.company}' does not exist")
+            frappe.throw(_("Company '{0}' does not exist").format(self.company))
 
     def on_trash(self):
         """
@@ -65,4 +68,4 @@ class UserScopeContext(Document):
         """
         # Allow System Manager to delete for testing purposes
         if not frappe.has_permission(self.doctype, "delete", self, user=frappe.session.user):
-            frappe.throw("User Scope Context records cannot be deleted. Update the record instead.")
+            frappe.throw(_("User Scope Context records cannot be deleted. Update the record instead."))

@@ -81,6 +81,10 @@
 
 ## 3. In Progress (Active Work — Updated After Every Session)
 
+### Workflow orchestration plan — r5 coherence review (2026-09-11)
+- Canonical plan and working handoff: `docs/ai/work-items/scope-context-portability/`. Five pre-Phase-0 corrections resolved; numbered contracts synchronized and locked owner decisions preserved.
+- Consultant coherence sign-off recorded in §18. Phase 0 has not begun; runtime feasibility remains its explicit gate. No commit or ERP execution occurred.
+
 ### Deployment-readiness remediation — Completed (2026-08-20)
 - **Result:** All findings from `docs/USER_GUIDE_DEPLOYMENT_REVIEW_2026-08-19.md` remediated; review verdict updated to release-ready.
 - **Key fixes:** BOQ Header scope enforcement now honors the feature flag, Administrator bypass, and explicit projects; omitted BOQ Items are hidden from transaction and VO item dropdowns after approved omission; User Guide terminology, VFC labels, cache versions, and test evidence synchronized.
@@ -150,6 +154,11 @@
 ---
 
 ## 6. Session Log (Append-Only — Most Recent First)
+
+### Session 2026-09-11 — Workflow plan r5 documentation corrections
+- Corrected restart reconciliation, PLAN versus operation grants, code/proposal/bundle/payload identities and private storage, Flit/legacy packaging guidance, and canonical definitions.
+- Synchronized `CANONICAL_PLAN.md` and `IMPLEMENTATION_HANDOFF.md` numbered bodies; checked references, preserved decisions, and documented consultant sign-off.
+- Documentation-only work. No Phase 0, native agent dispatch, ERP suite rerun, data import or Git commit.
 
 ### Session 2026-08-20 — Deployment-readiness remediation
 - **Worked on:** Remediated all F1–F7 findings in the user-guide deployment review.

@@ -1,0 +1,66 @@
+{
+  "base_commit": "e7be48855bde540464ea302e53c9bfca62b7c462",
+  "categories": [
+    {
+      "app": "<untagged>",
+      "approved_legacy": null,
+      "deprecated": null,
+      "empty": 0.0,
+      "no_status": 2678.0,
+      "pending": null,
+      "populated_nontrivial": 2678.0,
+      "released": null,
+      "source_equal": 0.0,
+      "total": 2678
+    },
+    {
+      "app": "construction",
+      "approved_legacy": 207.0,
+      "deprecated": 0.0,
+      "empty": 596.0,
+      "no_status": 11.0,
+      "pending": 596.0,
+      "populated_nontrivial": 231.0,
+      "released": 13.0,
+      "source_equal": 0.0,
+      "total": 827
+    },
+    {
+      "app": "erpnext",
+      "approved_legacy": 4662.0,
+      "deprecated": 1.0,
+      "empty": 4335.0,
+      "no_status": 5.0,
+      "pending": 4335.0,
+      "populated_nontrivial": 4675.0,
+      "released": 11.0,
+      "source_equal": 5.0,
+      "total": 9014
+    },
+    {
+      "app": "frappe",
+      "approved_legacy": 2912.0,
+      "deprecated": 1.0,
+      "empty": 2987.0,
+      "no_status": 2.0,
+      "pending": 2987.0,
+      "populated_nontrivial": 2934.0,
+      "released": 25.0,
+      "source_equal": 6.0,
+      "total": 5927
+    }
+  ],
+  "generated_utc": "2026-09-10T01:45:59Z",
+  "generator": "construction.localization_inventory.merkle_root over stage2_inventory.sql",
+  "merkle": {
+    "root": "2e284695f67e1cb7d623975df8d82c5c6578b5667857be27ba1f7b6f72587123",
+    "rows": 18446,
+    "scheme": "json(sorted(str-normalized (source,context,app,translated,review))) sha256"
+  },
+  "po_hashes": {
+    "construction": "8d0dcdc7a909cb9b5bea7498154551db7298525de127b657ad633523592a9777",
+    "erpnext": "2dfe0a5d07b091d1d34563fa53aac9f4665519aa9672303b4cd6fe3b2d705275",
+    "frappe": "cc353e76ebd37c0ef0d72f79cf0c081a460cfa5fe6846dcf36d122384c225502"
+  },
+  "target_site": "v16.localhost (test, non-production)"
+}

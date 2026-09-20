@@ -1,0 +1,24 @@
+import hashlib
+import json
+import os
+os.chdir('/home/mohamed/frappe-bench/apps/construction')
+from construction.localization_inventory import merkle_root
+sql_text = open('scripts/stage2_inventory.sql', encoding='utf-8').read()
+lines = [l for l in sql_text.splitlines() if not l.strip().startswith('--')]
+stmts = [s.strip() for s in '\n'.join(lines).split(';') if s.strip()]
+cats = frappe.db.sql(stmts[0], as_dict=True)
+rows = frappe.db.sql(stmts[1])
+n, root = merkle_root(rows)
+inv = json.load(open('construction/data/localization/stage2_inventory_manifest.json', encoding='utf-8'))
+lsha = hashlib.sha256(open('construction/data/localization/localization_manifest.json', 'rb').read()).hexdigest()
+isha = hashlib.sha256(open('construction/data/localization/stage2_inventory_manifest.json', 'rb').read()).hexdigest()
+ssha = hashlib.sha256(open('scripts/stage2_inventory.sql', 'rb').read()).hexdigest()
+ok = (root == (inv.get('merkle') or {}).get('root') and n == (inv.get('merkle') or {}).get('rows'))
+print('LIVE_MATCH: %s' % ok)
+print('MANIFEST: construction/data/localization/stage2_inventory_manifest.json')
+print('MANIFEST_SHA256: ' + lsha)
+print('INVENTORY_MANIFEST_SHA256: ' + isha)
+print('MERKLE_ROOT: ' + root)
+print('MERKLE_ROWS: %d' % n)
+print('SQL_SHA256: ' + ssha)
+exit()

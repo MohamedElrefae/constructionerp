@@ -158,7 +158,7 @@ def create_document(doctype, data):
         # Save
         doc.insert()
 
-        return {"success": True, "data": {"name": doc.name, "message": _(f"{doctype} created successfully")}}
+        return {"success": True, "data": {"name": doc.name, "message": _("{0} created successfully").format(doctype)}}
 
     except frappe.ValidationError as e:
         return {"success": False, "error": str(e)}
@@ -201,7 +201,7 @@ def update_document(doctype, name, data):
         # Save
         doc.save()
 
-        return {"success": True, "data": {"name": doc.name, "message": _(f"{doctype} updated successfully")}}
+        return {"success": True, "data": {"name": doc.name, "message": _("{0} updated successfully").format(doctype)}}
 
     except frappe.DoesNotExistError:
         return {"success": False, "error": f"{doctype} '{name}' not found"}
@@ -234,7 +234,7 @@ def delete_document(doctype, name):
 
         doc.delete()
 
-        return {"success": True, "message": _(f"{doctype} '{name}' deleted successfully")}
+        return {"success": True, "message": _("{0} '{1}' deleted successfully").format(doctype, name)}
 
     except frappe.DoesNotExistError:
         return {"success": False, "error": f"{doctype} '{name}' not found"}

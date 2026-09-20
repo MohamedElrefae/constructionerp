@@ -1,0 +1,9 @@
+import json
+import os
+import pathlib
+os.chdir('/home/mohamed/frappe-bench/apps/construction')
+from construction import localization_freshness
+data = localization_freshness.collect()
+pathlib.Path('construction/data/localization/freshness_evidence.json').write_text(json.dumps(json.loads(data), ensure_ascii=False, indent=2) + "\n", encoding='utf-8')
+print("ARTIFACT_WRITTEN")
+exit()

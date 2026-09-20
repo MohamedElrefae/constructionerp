@@ -1,0 +1,12 @@
+# Intentional source-equal (English) technical tokens — governed allowlist.
+# Format per line: ct_app | context | source_text | rationale | reviewer/provenance
+# A missing file fails the gate closed; every entry needs rationale + provenance.
+# Natural-language strings must NEVER be allowlisted here — they need translation.
+frappe |  | dd-mm-yyyy | date-format token, language-neutral | Stage 2 baseline — technical token convention
+frappe |  | A4 | ISO paper size code | Stage 2 baseline — technical token convention
+frappe |  | Idx | abbreviated DB/index label | Stage 2 baseline — technical token convention
+frappe |  | MyISAM | MySQL engine proper noun | Stage 2 baseline — technical token convention
+frappe |  | StartTLS | protocol proper noun | Stage 2 baseline — technical token convention
+erpnext |  | lft | NestedSet column token, never user-visible | Stage 2 baseline — technical token convention
+erpnext |  | rgt | NestedSet column token, never user-visible | Stage 2 baseline — technical token convention
+erpnext |  | Prevdoc DocType | hidden read-only metadata label (packed_item.prevdoc_doctype); AI-A1 proposes نوع المستند السابق if surfaced — kept English only while hidden | AI-A1 triage 2026-09-04 /root/stage2_ai_a1 (propose on surface, do not rename identifier)

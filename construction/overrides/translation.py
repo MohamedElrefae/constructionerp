@@ -6,6 +6,7 @@ Translation row. This avoids duplicate runtime keys and preserves provenance.
 """
 
 import frappe
+from frappe import _
 from frappe.core.doctype.translation.translation import Translation
 from frappe.translate import MERGED_TRANSLATION_KEY, USER_TRANSLATION_KEY
 
@@ -20,14 +21,14 @@ class CustomTranslation(Translation):
         self.source_text = (self.source_text or "").strip()
         self.context = (self.context or "").strip()
         if not self.source_text:
-            frappe.throw("source_text is required (whitespace-only values are rejected)")
+            frappe.throw(_("source_text is required (whitespace-only values are rejected)"))
         if not self.get("ct_is_catalog_entry") and not (self.translated_text or "").strip():
             # A runtime row with an empty value would blank the UI string
             # (loader shadowing) — reject it; catalog rows may stay empty
             # (they represent untranslated upstream strings).
-            frappe.throw("translated_text is required for runtime (non-catalog) translations")
+            frappe.throw(_("translated_text is required for runtime (non-catalog) translations"))
         if "\x00" in (self.source_text or "") or "\x00" in (self.translated_text or "") or "\x00" in (self.context or ""):
-            frappe.throw("Translation key/value contains embedded NUL")
+            frappe.throw(_("Translation key/value contains embedded NUL"))
         if self.meta.has_field("ct_key_digest"):
             from construction.translation_service import _compute_digest, _search_normalized
 
@@ -44,8 +45,10 @@ class CustomTranslation(Translation):
             )
             if clash:
                 frappe.throw(
-                    f"A translation with this key already exists ({clash}). "
-                    "Edit that row instead of creating a duplicate."
+                    _(
+                        "A translation with this key already exists ({0}). "
+                        "Edit that row instead of creating a duplicate."
+                    ).format(clash)
                 )
         if self.meta.has_field("ct_search_normalized"):
             from construction.translation_service import _search_normalized
@@ -55,14 +58,14 @@ class CustomTranslation(Translation):
             is_catalog = bool(self.get("ct_is_catalog_entry"))
             if is_catalog:
                 if self.get("ct_origin") and self.ct_origin not in ("Packaged Release", "Site Override", ""):
-                    frappe.throw("ct_origin for catalog must be empty, Packaged Release or Site Override")
+                    frappe.throw(_("ct_origin for catalog must be empty, Packaged Release or Site Override"))
                 if not self.get("ct_origin"):
                     self.ct_origin = ""
             else:
                 if not self.get("ct_origin"):
                     self.ct_origin = "Site Override"
                 elif self.ct_origin not in ("Packaged Release", "Site Override"):
-                    frappe.throw("ct_origin for runtime must be Packaged Release or Site Override")
+                    frappe.throw(_("ct_origin for runtime must be Packaged Release or Site Override"))
         if self.get("ct_is_catalog_entry") and self.get("ct_po_translation") is not None:
             if self.meta.has_field("ct_proposed_translation"):
                 po_value = self.ct_po_translation or ""

@@ -1,0 +1,170 @@
+{
+ "lang": "ar",
+ "account": "CT-BROWSER-1 - CT Browser Probe - E",
+ "started_utc": "2026-09-05T23:17:28Z",
+ "checks": [
+  {
+   "page": "form",
+   "results": [
+    {
+     "name": "arabic label uses arabic name without internal name",
+     "ok": true,
+     "error": null
+    },
+    {
+     "name": "arabic fallback to english, then identity — still no internal-name append",
+     "ok": true,
+     "error": null
+    },
+    {
+     "name": "english session prefers english then arabic",
+     "ok": true,
+     "error": null
+    },
+    {
+     "name": "labels are HTML-escaped (XSS)",
+     "ok": true,
+     "error": null
+    },
+    {
+     "name": "identity section renders on the open Account form",
+     "ok": true,
+     "error": null
+    },
+    {
+     "name": "identity section text nodes are escaped (no raw HTML injection)",
+     "ok": true,
+     "error": null
+    },
+    {
+     "name": "tree labels show arabic without internal name (arabic session)",
+     "ok": null,
+     "error": null
+    }
+   ]
+  },
+  {
+   "page": "tree",
+   "results": [
+    {
+     "name": "arabic label uses arabic name without internal name",
+     "ok": true,
+     "error": null
+    },
+    {
+     "name": "arabic fallback to english, then identity — still no internal-name append",
+     "ok": true,
+     "error": null
+    },
+    {
+     "name": "english session prefers english then arabic",
+     "ok": true,
+     "error": null
+    },
+    {
+     "name": "labels are HTML-escaped (XSS)",
+     "ok": true,
+     "error": null
+    },
+    {
+     "name": "identity section renders on the open Account form",
+     "ok": true,
+     "error": null
+    },
+    {
+     "name": "identity section text nodes are escaped (no raw HTML injection)",
+     "ok": true,
+     "error": null
+    },
+    {
+     "name": "tree labels show arabic without internal name (arabic session)",
+     "ok": true,
+     "error": null
+    }
+   ]
+  }
+ ],
+ "form": {
+  "english": "CT Browser Probe",
+  "arabic": "متابعة المتصفح",
+  "code": "CT-BROWSER-1",
+  "preview": "CT-BROWSER-1 - متابعة المتصفح",
+  "completeness": "Complete",
+  "labels": {
+   "english": true,
+   "arabic": true,
+   "edit_button": "Edit Arabic",
+   "rename_button": "Change English name / code (standard path)"
+  }
+ },
+ "tree_state": {
+  "settings_get_label_loaded": true,
+  "method": "construction.services.bilingual_service.get_account_tree_children"
+ },
+ "tree": {
+  "label_count": 83,
+  "labels": [
+   "Accounts",
+   "Application of Funds (Assets)",
+   "Current Assets",
+   "Cash In Hand",
+   "Cash",
+   "Bank Accounts",
+   "Accounts Receivable",
+   "Debtors",
+   "Stock Assets",
+   "Stock In Hand",
+   "Tax Assets",
+   "Loans and Advances (Assets)",
+   "Employee Advances",
+   "Securities and Deposits",
+   "Earnest Money",
+   "Fixed Assets",
+   "Capital Equipments",
+   "Electronic Equipments",
+   "Furnitures and Fixtures",
+   "Office Equipments",
+   "Plants and Machineries",
+   "Buildings",
+   "Softwares",
+   "Accumulated Depreciation",
+   "CWIP Account",
+   "Investments",
+   "Temporary Accounts",
+   "Temporary Opening",
+   "Source of Funds (Liabilities)",
+   "Current Liabilities",
+   "Accounts Payable",
+   "Creditors",
+   "Payroll Payable",
+   "Stock Liabilities",
+   "Stock Received But Not Billed",
+   "Asset Received But Not Billed",
+   "Duties and Taxes",
+   "TDS Payable",
+   "GST",
+   "Loans (Liabilities)",
+   "Secured Loans",
+   "Unsecured Loans",
+   "Bank Overdraft Account",
+   "متابعة المتصفح",
+   "Equity",
+   "Capital Stock",
+   "Dividends Paid",
+   "Opening Balance Equity",
+   "Retained Earnings",
+   "Income",
+   "Direct Income",
+   "Sales",
+   "Service",
+   "Indirect Income",
+   "Expenses",
+   "Direct Expenses",
+   "Stock Expenses",
+   "Cost of Goods Sold",
+   "Expenses Included In Asset Valuation",
+   "Expenses Included In Valuation"
+  ]
+ },
+ "finished_utc": "2026-09-05T23:17:51Z"
+}

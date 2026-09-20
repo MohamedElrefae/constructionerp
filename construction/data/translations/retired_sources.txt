@@ -1,0 +1,7 @@
+schema: retired-lifecycle/v3
+# Retired/dispositioned source paths — versioned lifecycle registry (delete/rename only).
+# Replacement is out of scope: model it as an explicit delete + rename pair, not a silent swap.
+# Format: event | old_path | new_path(-) | reason | reviewer/session | UTC date | evidence#sha256:<hex>
+# event: delete (old absent, new_path '-') | rename (old absent, new exists or retired).
+# Date parses (YYYY-MM-DD), never future. Evidence must exist and match pin. old_path unique.
+# No retired paths currently.
