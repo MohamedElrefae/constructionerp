@@ -56,7 +56,26 @@ AR Aging as the single pilot aging report, no owner-mandated overrides.
 - No production mutation; import ran only on the authorized test site.
 - Temp admin password revoked again; `Administrator.language` restored.
 
-## Batch out for next cycle
+## Audit clarification (owner-confirmed 2026-09-21)
 
-- All remaining W6-1 ledger rows and batches W6-0/W6-2..W6-7 stay deferred
-  (exact file lists + workflow boundaries pending owner review, per 2026-09-21).
+```text
+147 reviewed rows
+= 69 newly imported
++ 78 preserved equivalent Site Override rows
+
+103 managed release rows
+= 69 new release rows
++ 34 pre-existing managed overrides skipped by import
+```
+
+This explains why the review authority contains 147 rows while
+`release_decisions.json` and the managed override catalog contain 103.
+The preserved site-only overrides are intentionally outside the
+importer's managed catalog (plan §12: site overrides are preserved and
+flagged; the importer never rewrites them).
+
+## Owner status (2026-09-21)
+
+W6-1 **operationally complete for the test site**:
+- 69 new Arabic overrides released; 78 equivalent site overrides preserved.
+- AP Aging and the remaining W6 batches deferred.
