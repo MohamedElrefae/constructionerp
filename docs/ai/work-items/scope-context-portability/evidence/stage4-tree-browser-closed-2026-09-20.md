@@ -61,3 +61,21 @@ Stage 4 "Visible bilingual display" — tree-routed DOM evidence now **closed
 headless**, in addition to the earlier form/identity/search evidence. The
 manual devtools paste step is no longer blocking for the non-production
 test site.
+
+Exact conclusion (owner-confirmed): the tree-context run is **5 PASS /
+2 expected SKIP / 0 FAIL**; the seven script checks are closed by the
+**combined form-context + tree-context evidence** (form runs PASS the two
+identity checks; tree run PASSES the tree check — never seven passes in
+one run).
+
+## Production-rollout restrictions for this repair
+
+The stale-workspace deletion was a reasonable test-site repair, documented
+with row ID `aonu1hu7j6` and cause. **It is not a generic cleanup rule.**
+Before any production equivalent:
+1. Verify the same stale reference is not a real user customization
+   (distinguish vendor fixture drift from per-user `Workspace Sidebar Item`
+   content rows).
+2. Preserve a before/after record (targeted export/checksum of affected
+   `Workspace Sidebar Item`/`Workspace` rows) and rehearse the rollback
+   runbook per plan §12 before applying the repair.
