@@ -53,18 +53,45 @@ class TestAccountArabicNameSchema(unittest.TestCase):
         self.assertEqual(after, 1)
 
     def test_arabic_only_write_does_not_rename(self):
-        """Setting account_name_ar leaves document name and English name intact."""
-        name = frappe.db.get_value("Account", {"company": "Elrefae"}, "name")
-        self.assertIsNotNone(name)
-        before = frappe.db.get_value(
-            "Account", name, ["name", "account_name"], as_dict=True
+        """Setting account_name_ar leaves document name and English name intact.
+
+        Uses a disposable CT- fixture account. Never pick an arbitrary real
+        account: get_value() returns the most recently modified row, and an
+        earlier run cleared the live Arabic value on GST - E this way.
+        """
+        parent = frappe.db.get_value(
+            "Account",
+            {"company": "Elrefae", "is_group": 1, "parent_account": ("is", "set")},
+            "name",
         )
-        frappe.db.set_value("Account", name, "account_name_ar", "حساب اختبار")
+        self.assertIsNotNone(parent, "No Elrefae group parent available for fixture")
+        parent_meta = frappe.db.get_value(
+            "Account", parent, ["root_type", "report_type"], as_dict=True
+        )
+        doc = frappe.get_doc(
+            {
+                "doctype": "Account",
+                "company": "Elrefae",
+                "account_name": "CT Schema Arabic Check",
+                "account_number": "CT-SCHEMA-" + frappe.generate_hash(length=6),
+                "parent_account": parent,
+                "is_group": 0,
+                "root_type": parent_meta.root_type,
+                "report_type": parent_meta.report_type,
+            }
+        )
+        doc.insert(ignore_permissions=True)
+        name = doc.name
         try:
+            before = frappe.db.get_value(
+                "Account", name, ["name", "account_name"], as_dict=True
+            )
+            frappe.db.set_value("Account", name, "account_name_ar", "حساب اختبار")
             after = frappe.db.get_value(
                 "Account", name, ["name", "account_name"], as_dict=True
             )
             self.assertEqual(after.name, before.name)
             self.assertEqual(after.account_name, before.account_name)
         finally:
-            frappe.db.set_value("Account", name, "account_name_ar", None)
+            if frappe.db.exists("Account", name):
+                frappe.delete_doc("Account", name, force=True, ignore_permissions=True)

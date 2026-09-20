@@ -1,6 +1,6 @@
 {
   "schema": "construction-bilingual-registry/v1",
-  "recorded_utc": "2026-09-05T00:00:00Z",
+  "recorded_utc": "2026-09-20T00:00:00Z",
   "notes": "Staged registry. States: planned (field may be absent), schema_installed (field exists, values not populated), active (display/search enabled). A missing later-wave field must not prevent app startup. Physical-field adapters resolve the arabic_field against live metadata; unresolved fields degrade silently.",
   "display": {
     "ar_fallback": ["arabic", "english", "identity"],
@@ -19,7 +19,7 @@
   },
   "doctypes": {
     "Account": {
-      "state": "schema_installed",
+      "state": "active",
       "english_field": "account_name",
       "arabic_field": "account_name_ar",
       "code_field": "account_number",
@@ -32,7 +32,7 @@
       "tree": {"enabled": true}
     },
     "Item": {
-      "state": "active",
+      "state": "schema_installed",
       "english_field": "item_name",
       "arabic_field": "item_name_ar",
       "code_field": "item_code",
@@ -45,7 +45,7 @@
       "tree": {"enabled": false}
     },
     "Customer": {
-      "state": "active",
+      "state": "schema_installed",
       "english_field": "customer_name",
       "arabic_field": "customer_name_in_arabic",
       "code_field": null,
@@ -58,7 +58,7 @@
       "tree": {"enabled": false}
     },
     "Supplier": {
-      "state": "active",
+      "state": "schema_installed",
       "english_field": "supplier_name",
       "arabic_field": "supplier_name_in_arabic",
       "code_field": null,

@@ -30,8 +30,8 @@ class TestRegistryLoadAndValidate(unittest.TestCase):
         self.assertEqual(errors, [], errors)
         self.assertEqual(data["schema"], br.REGISTRY_SCHEMA)
         self.assertIn("Account", data["doctypes"])
-        self.assertEqual(data["doctypes"]["Account"]["state"], "schema_installed")
-        self.assertEqual(data["doctypes"]["Item"]["state"], "active")
+        self.assertEqual(data["doctypes"]["Account"]["state"], "active")
+        self.assertEqual(data["doctypes"]["Item"]["state"], "schema_installed")
 
     def test_registry_sha256_is_stable(self):
         self.assertEqual(br.registry_sha256(), br.registry_sha256())
