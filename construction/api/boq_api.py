@@ -29,7 +29,7 @@ def get_children(doctype, parent="", boq_header=None, is_root=False, **filters):
     # Treat root label or is_root as top-level query
     if is_root or parent == "BOQ Structure" or not parent:
         parent_value = ""
-        parent_fields = ""
+        include_parent = False
     else:
         # Validate parent belongs to this boq_header
         parent_header = frappe.db.get_value("BOQ Structure", parent, "boq_header")
@@ -39,9 +39,9 @@ def get_children(doctype, parent="", boq_header=None, is_root=False, **filters):
                 frappe.PermissionError,
             )
         parent_value = parent
-        parent_fields = ", `parent_structure` as parent"
+        include_parent = True
 
-    if parent_fields:
+    if include_parent:
         query = """
 		SELECT
 			`name` as value,
