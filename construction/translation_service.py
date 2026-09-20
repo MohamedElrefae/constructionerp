@@ -12,7 +12,12 @@ def _exact_source(source):
 
 def _compute_digest(language, source_text, context, ct_app, is_catalog):
     source_text = _exact_source(source_text)
-    if "\x00" in source_text or "\x00" in (context or "") or "\x00" in (ct_app or "") or "\x00" in (language or ""):
+    if (
+        "\x00" in source_text
+        or "\x00" in (context or "")
+        or "\x00" in (ct_app or "")
+        or "\x00" in (language or "")
+    ):
         frappe.throw("Translation key contains embedded NUL character")
     if is_catalog:
         payload = [language or "", source_text, context or "", ct_app or "", "catalog"]
@@ -80,13 +85,24 @@ def get_effective_translation(language, source_text, context=""):
     try:
         from frappe.translate import get_all_translations
 
-        return get_all_translations(language).get(source_text if not context else f"{source_text}:{context}", "") or frappe.db.get_value(
-            "Translation", {"language": language, "source_text": source_text, "context": context or ""}, "translated_text"
-        ) or ""
+        return (
+            get_all_translations(language).get(source_text if not context else f"{source_text}:{context}", "")
+            or frappe.db.get_value(
+                "Translation",
+                {"language": language, "source_text": source_text, "context": context or ""},
+                "translated_text",
+            )
+            or ""
+        )
     except Exception:
-        return frappe.db.get_value(
-            "Translation", {"language": language, "source_text": source_text, "context": context or ""}, "translated_text"
-        ) or ""
+        return (
+            frappe.db.get_value(
+                "Translation",
+                {"language": language, "source_text": source_text, "context": context or ""},
+                "translated_text",
+            )
+            or ""
+        )
 
 
 def _prepare_digest_and_search(doc, is_catalog):
@@ -184,7 +200,12 @@ def upsert_runtime_translation(
         doc.ct_key_digest = _compute_digest(language, source_text, context, None, False)
     if doc.meta.has_field("ct_search_normalized"):
         doc.ct_search_normalized = _search_normalized(source_text)
-    _apply_origin(doc, origin, release_version, released_by or frappe.session.user if hasattr(frappe.session, "user") else None)
+    _apply_origin(
+        doc,
+        origin,
+        release_version,
+        released_by or frappe.session.user if hasattr(frappe.session, "user") else None,
+    )
     try:
         if doc.is_new():
             doc.insert(ignore_permissions=ignore_permissions)
@@ -206,7 +227,7 @@ def upsert_runtime_translation(
             return doc2.name
         raise
     invalidate_translation_caches(language)
-    return doc.name if isinstance(doc.name, str) else doc.name
+    return doc.name
 
 
 def delete_or_revert_runtime_translation(language, source_text, context="", reason=None):
@@ -226,7 +247,11 @@ def delete_or_revert_runtime_translation(language, source_text, context="", reas
                     import csv
                     from pathlib import Path
 
-                    p = Path(frappe.get_app_path("construction", "data", "translations", "approved_ar_overrides.csv"))
+                    p = Path(
+                        frappe.get_app_path(
+                            "construction", "data", "translations", "approved_ar_overrides.csv"
+                        )
+                    )
                     if p.exists():
                         with p.open(encoding="utf-8") as fh:
                             reader = csv.DictReader(fh)
@@ -269,7 +294,11 @@ def import_released_overrides(path=None, dry_run=True, _skip_permission=False):
 
     if not _skip_permission:
         frappe.only_for("System Manager")
-    path = Path(path) if path else Path(frappe.get_app_path("construction", "data", "translations", "approved_ar_overrides.csv"))
+    path = (
+        Path(path)
+        if path
+        else Path(frappe.get_app_path("construction", "data", "translations", "approved_ar_overrides.csv"))
+    )
     if not path.exists():
         return {"total": 0, "created": 0, "updated": 0, "skipped": 0, "drift": 0, "preview": []}
     dry_run = bool(cint(dry_run) if isinstance(dry_run, str) else dry_run)
@@ -286,9 +315,13 @@ def import_released_overrides(path=None, dry_run=True, _skip_permission=False):
             a2_at = (row.get("a2_approved_at") or "").strip()
             a3_at = (row.get("a3_approved_at") or "").strip()
             if not a1 or not a3 or not a1_at or not a3_at:
-                frappe.throw(f"Quorum missing for {row.get('source_text')}: A1/A3 reviewer and timestamp required")
+                frappe.throw(
+                    f"Quorum missing for {row.get('source_text')}: A1/A3 reviewer and timestamp required"
+                )
             if not a2:
-                frappe.throw(f"Quorum missing for {row.get('source_text')}: A2 reviewer required (use Not Applicable for non-domain)")
+                frappe.throw(
+                    f"Quorum missing for {row.get('source_text')}: A2 reviewer required (use Not Applicable for non-domain)"
+                )
             if a1 in ("A1", "A2", "A3") or a2 in ("A1", "A2", "A3") or a3 in ("A1", "A2", "A3"):
                 frappe.throw(f"Placeholder reviewer not allowed for {row.get('source_text')}: {a1}/{a2}/{a3}")
             rows.append(row)
@@ -317,7 +350,9 @@ def import_released_overrides(path=None, dry_run=True, _skip_permission=False):
             existing_val = frappe.db.get_value("Translation", existing_rows[0].name, "translated_text") or ""
             existing_origin = frappe.db.get_value("Translation", existing_rows[0].name, "ct_origin") or ""
             existing_app = frappe.db.get_value("Translation", existing_rows[0].name, "ct_app") or ""
-            existing_ver = frappe.db.get_value("Translation", existing_rows[0].name, "ct_release_version") or ""
+            existing_ver = (
+                frappe.db.get_value("Translation", existing_rows[0].name, "ct_release_version") or ""
+            )
         needs_update = False
         if existing_val != val:
             needs_update = True
@@ -326,19 +361,45 @@ def import_released_overrides(path=None, dry_run=True, _skip_permission=False):
         if existing_origin != "Packaged Release" and existing_rows:
             needs_update = True
         if not needs_update:
-            if existing_origin == "Packaged Release" and ver and existing_ver and not _is_newer_version(ver, existing_ver):
+            if (
+                existing_origin == "Packaged Release"
+                and ver
+                and existing_ver
+                and not _is_newer_version(ver, existing_ver)
+            ):
                 skipped += 1
                 continue
             if existing_rows:
                 skipped += 1
                 continue
-        if (existing_app or "") != expected_app and existing_rows and existing_val == val and existing_origin == "Packaged Release":
+        if (
+            (existing_app or "") != expected_app
+            and existing_rows
+            and existing_val == val
+            and existing_origin == "Packaged Release"
+        ):
             if not dry_run:
-                frappe.db.set_value("Translation", existing_rows[0].name, {"ct_app": expected_app, "ct_origin": "Packaged Release", "ct_release_version": ver, "ct_released_at": frappe.utils.now(), "ct_released_by": row.get("a1_reviewer") or "packaged"}, update_modified=False)
+                frappe.db.set_value(
+                    "Translation",
+                    existing_rows[0].name,
+                    {
+                        "ct_app": expected_app,
+                        "ct_origin": "Packaged Release",
+                        "ct_release_version": ver,
+                        "ct_released_at": frappe.utils.now(),
+                        "ct_released_by": row.get("a1_reviewer") or "packaged",
+                    },
+                    update_modified=False,
+                )
                 try:
                     catalog_rows = frappe.get_all(
                         "Translation",
-                        filters={"language": lang, "source_text": src, "context": ctx or "", "ct_is_catalog_entry": 1},
+                        filters={
+                            "language": lang,
+                            "source_text": src,
+                            "context": ctx or "",
+                            "ct_is_catalog_entry": 1,
+                        },
                         fields=["name", "ct_app"],
                         limit_page_length=0,
                     )
@@ -346,28 +407,63 @@ def import_released_overrides(path=None, dry_run=True, _skip_permission=False):
                         if expected_app and crow.ct_app and crow.ct_app != expected_app:
                             continue
                         if (crow.ct_app or "") != expected_app:
-                            frappe.db.set_value("Translation", crow.name, {"ct_app": expected_app}, update_modified=False)
+                            frappe.db.set_value(
+                                "Translation", crow.name, {"ct_app": expected_app}, update_modified=False
+                            )
                 except Exception:
                     pass
             updated += 1
-            preview.append({"source_text": src, "context": ctx, "before": existing_val, "after": val, "action": "metadata_repair"})
+            preview.append(
+                {
+                    "source_text": src,
+                    "context": ctx,
+                    "before": existing_val,
+                    "after": val,
+                    "action": "metadata_repair",
+                }
+            )
             continue
         if existing_origin == "Site Override" and existing_rows:
             drift += 1
-            preview.append({"source_text": src, "context": ctx, "before": existing_val, "after": val, "action": "drift_site_override"})
+            preview.append(
+                {
+                    "source_text": src,
+                    "context": ctx,
+                    "before": existing_val,
+                    "after": val,
+                    "action": "drift_site_override",
+                }
+            )
             continue
-        if existing_origin == "Packaged Release" and ver and existing_ver and not _is_newer_version(ver, existing_ver):
+        if (
+            existing_origin == "Packaged Release"
+            and ver
+            and existing_ver
+            and not _is_newer_version(ver, existing_ver)
+        ):
             skipped += 1
             continue
         action = "update" if existing_rows else "create"
-        preview.append({"source_text": src, "context": ctx, "before": existing_val, "after": val, "action": action})
+        preview.append(
+            {"source_text": src, "context": ctx, "before": existing_val, "after": val, "action": action}
+        )
         if dry_run:
             if action == "create":
                 created += 1
             else:
                 updated += 1
             continue
-        res = upsert_runtime_translation(src, val, language=lang, context=ctx, app=expected_app or None, origin="Packaged Release", release_version=ver, ignore_permissions=True, released_by=row.get("a1_reviewer") or "packaged")
+        res = upsert_runtime_translation(
+            src,
+            val,
+            language=lang,
+            context=ctx,
+            app=expected_app or None,
+            origin="Packaged Release",
+            release_version=ver,
+            ignore_permissions=True,
+            released_by=row.get("a1_reviewer") or "packaged",
+        )
         if isinstance(res, dict) and res.get("skipped"):
             if res.get("reason") == "drift_site_override":
                 drift += 1
@@ -381,7 +477,12 @@ def import_released_overrides(path=None, dry_run=True, _skip_permission=False):
             try:
                 catalog_rows = frappe.get_all(
                     "Translation",
-                    filters={"language": lang, "source_text": src, "context": ctx or "", "ct_is_catalog_entry": 1},
+                    filters={
+                        "language": lang,
+                        "source_text": src,
+                        "context": ctx or "",
+                        "ct_is_catalog_entry": 1,
+                    },
                     fields=["name", "ct_app", "translated_text", "ct_po_translation", "ct_review_status"],
                     limit_page_length=0,
                 )
@@ -392,7 +493,11 @@ def import_released_overrides(path=None, dry_run=True, _skip_permission=False):
                         frappe.db.set_value(
                             "Translation",
                             crow.name,
-                            {"translated_text": val, "ct_review_status": "Released", "ct_proposed_translation": ""},
+                            {
+                                "translated_text": val,
+                                "ct_review_status": "Released",
+                                "ct_proposed_translation": "",
+                            },
                             update_modified=False,
                         )
             except Exception:
@@ -404,7 +509,15 @@ def import_released_overrides(path=None, dry_run=True, _skip_permission=False):
             pass
     if not dry_run and (created or updated):
         frappe.db.commit()
-    return {"total": total, "created": created, "updated": updated, "skipped": skipped, "drift": drift, "preview": preview, "dry_run": dry_run}
+    return {
+        "total": total,
+        "created": created,
+        "updated": updated,
+        "skipped": skipped,
+        "drift": drift,
+        "preview": preview,
+        "dry_run": dry_run,
+    }
 
 
 def submit_review_decision(key, persona, decision, notes="", references=""):
@@ -413,7 +526,7 @@ def submit_review_decision(key, persona, decision, notes="", references=""):
         frappe.throw("persona must be A1, A2, or A3")
     if not frappe.db.has_column("Translation", "ct_proposed_translation"):
         frappe.throw("ct_proposed_translation field not yet migrated")
-    source_text, context, ct_app = key if isinstance(key, (list, tuple)) and len(key) == 3 else (key, "", "")
+    source_text, context, ct_app = key if isinstance(key, list | tuple) and len(key) == 3 else (key, "", "")
     if isinstance(key, dict):
         source_text = key.get("source_text") or ""
         context = key.get("context") or ""
@@ -446,20 +559,46 @@ def release_proposal(key, release_version):
         context = key.get("context") or ""
         ct_app = key.get("ct_app") or ""
         translated = key.get("translated_text") or key.get("ct_proposed_translation") or ""
-    elif isinstance(key, (list, tuple)):
-        source_text, context, ct_app, translated = (list(key) + ["", "", "", ""])[:4]
+    elif isinstance(key, list | tuple):
+        source_text, context, ct_app, translated = ([*list(key), "", "", "", ""])[:4]
     else:
         frappe.throw("invalid key")
     if not translated:
-        row = frappe.db.get_value("Translation", {"language": "ar", "source_text": source_text, "ct_is_catalog_entry": 1, "context": context or ""}, ["ct_proposed_translation"], as_dict=False)
+        row = frappe.db.get_value(
+            "Translation",
+            {
+                "language": "ar",
+                "source_text": source_text,
+                "ct_is_catalog_entry": 1,
+                "context": context or "",
+            },
+            ["ct_proposed_translation"],
+            as_dict=False,
+        )
         translated = row or ""
     if not translated:
         frappe.throw("no proposed translation to release")
-    upsert_runtime_translation(source_text, translated, language="ar", context=context, app=ct_app or None, origin="Packaged Release", release_version=release_version, ignore_permissions=True)
+    upsert_runtime_translation(
+        source_text,
+        translated,
+        language="ar",
+        context=context,
+        app=ct_app or None,
+        origin="Packaged Release",
+        release_version=release_version,
+        ignore_permissions=True,
+    )
     if frappe.db.has_column("Translation", "ct_is_catalog_entry"):
-        for r in frappe.get_all("Translation", filters={"language": "ar", "source_text": source_text, "ct_is_catalog_entry": 1}, fields=["name", "context"], limit_page_length=0):
+        for r in frappe.get_all(
+            "Translation",
+            filters={"language": "ar", "source_text": source_text, "ct_is_catalog_entry": 1},
+            fields=["name", "context"],
+            limit_page_length=0,
+        ):
             if (r.context or "") == (context or ""):
-                frappe.db.set_value("Translation", r.name, {"ct_review_status": "Released", "ct_proposed_translation": ""})
+                frappe.db.set_value(
+                    "Translation", r.name, {"ct_review_status": "Released", "ct_proposed_translation": ""}
+                )
     invalidate_translation_caches("ar")
     return True
 
@@ -536,7 +675,9 @@ def get_translation_health():
     try:
         import frappe.translate as _t
 
-        loader_installed = getattr(_t.get_user_translations, "__name__", "") == "_get_user_translations_excluding_catalog"
+        loader_installed = (
+            getattr(_t.get_user_translations, "__name__", "") == "_get_user_translations_excluding_catalog"
+        )
     except Exception:
         loader_installed = False
     using_safe_fallback = False
@@ -558,9 +699,13 @@ def get_translation_health():
                 "select ct_key_digest, count(*) c from `tabTranslation` where language='ar' and ct_key_digest is not null and ct_key_digest != '' group by ct_key_digest having c>1 limit 1"
             )
             has_duplicates = bool(dup)
-            nulls = frappe.db.sql("select count(*) from `tabTranslation` where language='ar' and (ct_key_digest is null or ct_key_digest='') limit 1")[0][0]
+            nulls = frappe.db.sql(
+                "select count(*) from `tabTranslation` where language='ar' and (ct_key_digest is null or ct_key_digest='') limit 1"
+            )[0][0]
             has_null_digests = bool(nulls)
-            idx_rows = frappe.db.sql("show index from `tabTranslation` where Column_name='ct_key_digest'", as_dict=True)
+            idx_rows = frappe.db.sql(
+                "show index from `tabTranslation` where Column_name='ct_key_digest'", as_dict=True
+            )
             for r in idx_rows:
                 if r.get("Non_unique") == 0 and r.get("Key_name") == "ct_translation_key_digest":
                     constraint_present = True
@@ -572,18 +717,26 @@ def get_translation_health():
     last_drift_checked_at = frappe.utils.now() if has_digest else None
     if has_drift:
         try:
-            frappe.cache.set_value("translation_last_drift", {"checked_at": last_drift_checked_at, "details": drift_details[:5]})
+            frappe.cache.set_value(
+                "translation_last_drift", {"checked_at": last_drift_checked_at, "details": drift_details[:5]}
+            )
         except Exception:
             pass
     else:
         try:
-            last_drift_checked_at = frappe.cache.get_value("translation_last_drift", {}).get("checked_at") if frappe.cache.get_value("translation_last_drift") else last_drift_checked_at
+            last_drift_checked_at = (
+                frappe.cache.get_value("translation_last_drift", {}).get("checked_at")
+                if frappe.cache.get_value("translation_last_drift")
+                else last_drift_checked_at
+            )
         except Exception:
             pass
     has_orphan = False
     try:
         if has_origin and frappe.db.has_column("Translation", "ct_review_status"):
-            orphans = frappe.db.sql("select count(*) from `tabTranslation` where ct_review_status='Deprecated' and ct_origin='Site Override' limit 1")
+            orphans = frappe.db.sql(
+                "select count(*) from `tabTranslation` where ct_review_status='Deprecated' and ct_origin='Site Override' limit 1"
+            )
             has_orphan = bool(orphans and orphans[0][0] > 0)
     except Exception:
         has_orphan = False
@@ -591,10 +744,14 @@ def get_translation_health():
     last_release_import = None
     try:
         if frappe.db.has_column("Translation", "ct_catalog_synced_at"):
-            row = frappe.db.sql("select max(ct_catalog_synced_at) from `tabTranslation` where ct_is_catalog_entry=1 limit 1")
+            row = frappe.db.sql(
+                "select max(ct_catalog_synced_at) from `tabTranslation` where ct_is_catalog_entry=1 limit 1"
+            )
             last_catalog_sync = row[0][0] if row and row[0] else None
         if has_origin and frappe.db.has_column("Translation", "ct_released_at"):
-            row = frappe.db.sql("select max(ct_released_at) from `tabTranslation` where ct_origin is not null limit 1")
+            row = frappe.db.sql(
+                "select max(ct_released_at) from `tabTranslation` where ct_origin is not null limit 1"
+            )
             last_release_import = row[0][0] if row and row[0] else None
         if not last_drift_checked_at:
             last_drift_checked_at = frappe.cache.get_value("translation_last_drift_check")
@@ -642,7 +799,9 @@ def assert_translation_health():
 def import_released_overrides_hook():
     res = import_released_overrides(dry_run=False, _skip_permission=True)
     if res.get("drift"):
-        frappe.throw(f"Translation drift detected during mandatory import: {res['drift']} drift(s) — {res['preview'][:2]}")
+        frappe.throw(
+            f"Translation drift detected during mandatory import: {res['drift']} drift(s) — {res['preview'][:2]}"
+        )
     if res.get("error"):
         frappe.throw(f"Translation import failed: {res['error']}")
     if res.get("total", 0) == 0:
@@ -713,8 +872,16 @@ def diagnose_translation(source_text, context=None, language="ar"):
         for r in frappe.get_all(
             "Translation",
             filters={"language": language, "source_text": source_text},
-            fields=["name", "translated_text", "ct_is_catalog_entry", "ct_origin",
-                    "ct_review_status", "ct_app", "ct_proposed_translation", "context"],
+            fields=[
+                "name",
+                "translated_text",
+                "ct_is_catalog_entry",
+                "ct_origin",
+                "ct_review_status",
+                "ct_app",
+                "ct_proposed_translation",
+                "context",
+            ],
             limit_page_length=0,
         )
         if (r.context or "") == context
@@ -729,7 +896,8 @@ def diagnose_translation(source_text, context=None, language="ar"):
         pass
     # 4) Verdict
     runtime_released = [
-        r for r in result["runtime"]
+        r
+        for r in result["runtime"]
         if not r.get("ct_is_catalog_entry") and (r.get("translated_text") or "").strip()
     ]
     if result["effective"]:

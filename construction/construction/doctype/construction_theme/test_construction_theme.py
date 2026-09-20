@@ -35,9 +35,13 @@ class TestConstructionTheme(unittest.TestCase):
                 doc.delete(force=True)
         # Restore seeded defaults
         if frappe.db.exists("Construction Theme", "Construction Light"):
-            frappe.db.set_value("Construction Theme", "Construction Light", "is_default_light", 1, update_modified=False)
+            frappe.db.set_value(
+                "Construction Theme", "Construction Light", "is_default_light", 1, update_modified=False
+            )
         if frappe.db.exists("Construction Theme", "Construction Dark"):
-            frappe.db.set_value("Construction Theme", "Construction Dark", "is_default_dark", 1, update_modified=False)
+            frappe.db.set_value(
+                "Construction Theme", "Construction Dark", "is_default_dark", 1, update_modified=False
+            )
 
     def test_unique_default_light(self):
         """Only one theme can be default light."""

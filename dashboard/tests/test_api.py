@@ -2,8 +2,9 @@
 
 import json
 from pathlib import Path
-import pytest
+
 import httpx
+import pytest
 
 from dashboard.app import app
 from dashboard.auth import auth_store, session_manager
@@ -57,9 +58,15 @@ async def test_unauthenticated_api_access_rejected():
             if method == "GET":
                 resp = await client.get(path)
             elif method == "POST":
-                resp = await client.post(path, json={"worktree_path": "."}, headers={"x-csrf-token": "csrf123", "origin": "https://127.0.0.1:8080"})
+                resp = await client.post(
+                    path,
+                    json={"worktree_path": "."},
+                    headers={"x-csrf-token": "csrf123", "origin": "https://127.0.0.1:8080"},
+                )
             elif method == "DELETE":
-                resp = await client.delete(path, headers={"x-csrf-token": "csrf123", "origin": "https://127.0.0.1:8080"})
+                resp = await client.delete(
+                    path, headers={"x-csrf-token": "csrf123", "origin": "https://127.0.0.1:8080"}
+                )
             assert resp.status_code == 401
             assert resp.json()["detail"] == "Authentication required"
 
@@ -81,7 +88,9 @@ async def test_absence_of_mutating_workflow_endpoints(auth_headers_and_cookies):
     """Verify strictly read-only scope: pause, resume, reset_budget routes DO NOT exist."""
     headers, cookies = auth_headers_and_cookies
     transport = httpx.ASGITransport(app=app)
-    async with httpx.AsyncClient(transport=transport, base_url="https://127.0.0.1:8080", cookies=cookies) as client:
+    async with httpx.AsyncClient(
+        transport=transport, base_url="https://127.0.0.1:8080", cookies=cookies
+    ) as client:
         mutating_paths = [
             "/api/tasks/task1/pause",
             "/api/tasks/task1/resume",
@@ -101,7 +110,9 @@ async def test_task_lifecycle_api(auth_headers_and_cookies, isolated_worktree):
     """Test full read-only task API lifecycle using isolated worktree fixture (never live repository)."""
     headers, cookies = auth_headers_and_cookies
     transport = httpx.ASGITransport(app=app)
-    async with httpx.AsyncClient(transport=transport, base_url="https://127.0.0.1:8080", cookies=cookies) as client:
+    async with httpx.AsyncClient(
+        transport=transport, base_url="https://127.0.0.1:8080", cookies=cookies
+    ) as client:
         # 1. Register isolated mock worktree
         reg_resp = await client.post(
             "/api/tasks/register",
@@ -155,7 +166,9 @@ async def test_permanent_password_setup_api(auth_headers_and_cookies):
     """Test POST /api/auth/setup-password validations and functionality."""
     headers, cookies = auth_headers_and_cookies
     transport = httpx.ASGITransport(app=app)
-    async with httpx.AsyncClient(transport=transport, base_url="https://127.0.0.1:8080", cookies=cookies) as client:
+    async with httpx.AsyncClient(
+        transport=transport, base_url="https://127.0.0.1:8080", cookies=cookies
+    ) as client:
         # Invalid payload
         resp = await client.post("/api/auth/setup-password", json={}, headers=headers)
         assert resp.status_code == 400
@@ -215,7 +228,9 @@ async def test_initial_password_session_blocked_from_task_apis(isolated_worktree
     }
 
     transport = httpx.ASGITransport(app=app)
-    async with httpx.AsyncClient(transport=transport, base_url="https://127.0.0.1:8080", cookies=cookies) as client:
+    async with httpx.AsyncClient(
+        transport=transport, base_url="https://127.0.0.1:8080", cookies=cookies
+    ) as client:
         # 1. Direct bypass attempt on GET /api/tasks
         resp = await client.get("/api/tasks", headers=headers)
         assert resp.status_code == 403
@@ -249,4 +264,3 @@ async def test_initial_password_session_blocked_from_task_apis(isolated_worktree
         resp = await client.delete("/api/tasks/task1", headers=headers)
         assert resp.status_code == 403
         assert resp.json()["detail"] == "Password setup required"
-

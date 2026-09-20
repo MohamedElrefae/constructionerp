@@ -34,8 +34,8 @@ TEST_EN = "CT Bilingual Pilot"
 TEST_EN_CHILD = "CT Bilingual Pilot Child"
 TEST_AR = "حساب تجريبي ثنائي اللغة"
 TEST_AR_CHILD = "حساب تجريبي فرعي"
-TEST_AR_DIACRITIZED = "أَحْمَـد"          # hamza-alef + diacritics + tatweel
-TEST_AR_BARE = "احمد"                     # bare query form
+TEST_AR_DIACRITIZED = "أَحْمَـد"  # hamza-alef + diacritics + tatweel
+TEST_AR_BARE = "احمد"  # bare query form
 NO_PERM_USER = "ct-bilingual-noperm@example.com"
 WRITER_USER = "ct-bilingual-writer@example.com"
 
@@ -71,7 +71,7 @@ class TestBilingualAccountPilot(unittest.TestCase):
         meta = frappe.get_meta("Account")
         for field in ("account_name_ar", "account_name_ar_norm"):
             if not meta.has_field(field):
-                raise AssertionError("%s missing on Account" % field)
+                raise AssertionError(f"{field} missing on Account")
         # Remove leftovers from any earlier interrupted pilot run (children
         # first — nestedset parents refuse to delete with children present).
         leftovers = frappe.get_all(
@@ -262,7 +262,10 @@ class TestBilingualAccountPilot(unittest.TestCase):
         try:
             self.assertTrue(result["ok"])
             after = frappe.db.get_value(
-                "Account", self.pilot.name, ["name", "account_name", "account_number", "account_name_ar"], as_dict=True
+                "Account",
+                self.pilot.name,
+                ["name", "account_name", "account_number", "account_name_ar"],
+                as_dict=True,
             )
             self.assertEqual(after.name, before.name)
             self.assertEqual(after.account_name, before.account_name)
@@ -414,7 +417,9 @@ class TestBilingualAccountPilot(unittest.TestCase):
         try:
             result = svc.set_account_name_ar(self.pilot.name, TEST_AR)
             self.assertTrue(result["ok"])
-            en = frappe.db.get_value("Account", self.pilot.name, ["account_name", "account_number"], as_dict=True)
+            en = frappe.db.get_value(
+                "Account", self.pilot.name, ["account_name", "account_number"], as_dict=True
+            )
             self.assertEqual(en.account_name, TEST_EN)
             self.assertEqual(en.account_number, self.pilot.account_number)
         finally:
@@ -508,7 +513,9 @@ class TestBilingualAccountPilot(unittest.TestCase):
                 account_number=self.pilot.account_number,  # duplicate in company
                 reason="duplicate number must fail closed",
             )
-        after = frappe.db.get_value("Account", self.pilot_child.name, ["account_number", "account_name"], as_dict=True)
+        after = frappe.db.get_value(
+            "Account", self.pilot_child.name, ["account_number", "account_name"], as_dict=True
+        )
         self.assertEqual(after.account_number, old_number)
         self.assertEqual(after.account_name, TEST_EN_CHILD)
         comments_after = frappe.get_all(
@@ -675,7 +682,9 @@ class TestBilingualAccountPilot(unittest.TestCase):
             try:
                 calls.clear()
                 with mock.patch("frappe.get_list", side_effect=counting):
-                    results = svc.search_bilingual("Account", txt=TEST_AR_DIACRITIZED, lang="ar", page_length=50)
+                    results = svc.search_bilingual(
+                        "Account", txt=TEST_AR_DIACRITIZED, lang="ar", page_length=50
+                    )
                 self.assertEqual(len(calls), 1)
                 values = [r["value"] for r in results]
                 self.assertIn(self.pilot_child.name, values)
@@ -706,7 +715,9 @@ class TestBilingualAccountPilot(unittest.TestCase):
             en_labels = {r["value"]: r for r in en_results}
             self.assertIn(self.pilot.name, en_labels)
             self.assertEqual(en_labels[self.pilot.name]["label_mode"], "english")
-            code_results = svc.search_bilingual("Account", txt=self.pilot.account_number, lang="ar", page_length=50)
+            code_results = svc.search_bilingual(
+                "Account", txt=self.pilot.account_number, lang="ar", page_length=50
+            )
             self.assertTrue(any(r["value"] == self.pilot.name for r in code_results))
         finally:
             _clear_arabic(self.pilot.name)
@@ -758,15 +769,17 @@ class TestBilingualAccountPilot(unittest.TestCase):
         ).insert(ignore_permissions=True)
         fillers = []
         try:
-            old_ts = (frappe.utils.now_datetime() - datetime.timedelta(days=30)).strftime("%Y-%m-%d %H:%M:%S.%f")
+            old_ts = (frappe.utils.now_datetime() - datetime.timedelta(days=30)).strftime(
+                "%Y-%m-%d %H:%M:%S.%f"
+            )
             frappe.db.set_value("Account", exact.name, "modified", old_ts, update_modified=False)
             for i in range(12):
                 doc = frappe.get_doc(
                     {
                         "doctype": "Account",
                         "company": TEST_COMPANY,
-                        "account_name": "CT-RANK-TARGET-FILLER-%02d" % i,
-                        "account_number": "CT-RANK-F%d" % i,
+                        "account_name": f"CT-RANK-TARGET-FILLER-{i:02d}",
+                        "account_number": f"CT-RANK-F{i}",
                         "parent_account": parent,
                         "is_group": 0,
                     }
@@ -780,10 +793,16 @@ class TestBilingualAccountPilot(unittest.TestCase):
             self.assertLessEqual(len(results), 10)
             # Dropdown path: same global behavior.
             drop = searchable_link_search(
-                doctype="Account", txt=query, filters={"company": TEST_COMPANY}, search_fields=["account_name"], page_length=10
+                doctype="Account",
+                txt=query,
+                filters={"company": TEST_COMPANY},
+                search_fields=["account_name"],
+                page_length=10,
             )
             self.assertTrue(drop)
-            self.assertEqual(drop[0]["value"], exact.name, "dropdown path must rank the exact match first too")
+            self.assertEqual(
+                drop[0]["value"], exact.name, "dropdown path must rank the exact match first too"
+            )
             # Cross-page: page 2 contains fillers only, never the exact match.
             page2 = svc.search_bilingual("Account", txt=query, lang="en", page_length=10, start=10)
             self.assertTrue(page2)
@@ -826,15 +845,15 @@ class TestBilingualAccountPilot(unittest.TestCase):
         for i in range(1001):
             rows.append(
                 (
-                    "CT-BULK-%04d - CT-BULK-TARGET - E" % i,
+                    f"CT-BULK-{i:04d} - CT-BULK-TARGET - E",
                     now,
                     now,
                     user,
                     user,
                     0,
                     TEST_COMPANY,
-                    "CT-BULK-TARGET-FILLER-%04d" % i,
-                    "CT-BULK-%04d" % i,
+                    f"CT-BULK-TARGET-FILLER-{i:04d}",
+                    f"CT-BULK-{i:04d}",
                     parent,
                     0,
                     i * 2 + 1,
@@ -843,7 +862,9 @@ class TestBilingualAccountPilot(unittest.TestCase):
                 )
             )
         try:
-            old_ts = (frappe.utils.now_datetime() - datetime.timedelta(days=30)).strftime("%Y-%m-%d %H:%M:%S.%f")
+            old_ts = (frappe.utils.now_datetime() - datetime.timedelta(days=30)).strftime(
+                "%Y-%m-%d %H:%M:%S.%f"
+            )
             frappe.db.set_value("Account", exact.name, "modified", old_ts, update_modified=False)
             for row in rows:
                 frappe.db.sql(
@@ -867,34 +888,47 @@ class TestBilingualAccountPilot(unittest.TestCase):
             from construction.services.bilingual_service import RANK_WINDOW
 
             full = svc.search_bilingual("Account", txt=query, lang="en", page_length=RANK_WINDOW, start=0)
-            match_count = len(frappe.get_list(
-                "Account",
-                filters={"company": TEST_COMPANY},
-                or_filters=[
-                    ["account_name", "like", "%" + query + "%"],
-                    ["name", "like", "%" + query + "%"],
-                    ["account_number", "like", "%" + query + "%"],
-                ],
-                fields=["name"],
-                limit_page_length=0,
-            ))
+            match_count = len(
+                frappe.get_list(
+                    "Account",
+                    filters={"company": TEST_COMPANY},
+                    or_filters=[
+                        ["account_name", "like", "%" + query + "%"],
+                        ["name", "like", "%" + query + "%"],
+                        ["account_number", "like", "%" + query + "%"],
+                    ],
+                    fields=["name"],
+                    limit_page_length=0,
+                )
+            )
             self.assertGreaterEqual(match_count, 1002)
             self.assertIn(exact.name, {r["value"] for r in full})
             self.assertFalse(
-                svc.search_bilingual("Account", txt=query, lang="en", page_length=5, start=0, with_meta=True)["truncated"],
+                svc.search_bilingual("Account", txt=query, lang="en", page_length=5, start=0, with_meta=True)[
+                    "truncated"
+                ],
                 "matches below the window must not be flagged truncated",
             )
             from construction.searchable_dropdown.api.search import searchable_link_search
 
             drop = searchable_link_search(
-                doctype="Account", txt=query, filters={"company": TEST_COMPANY}, search_fields=["account_name"], page_length=10
+                doctype="Account",
+                txt=query,
+                filters={"company": TEST_COMPANY},
+                search_fields=["account_name"],
+                page_length=10,
             )
             self.assertTrue(drop)
             self.assertEqual(
                 drop[0]["value"], exact.name, "dropdown path must surface the beyond-window exact match too"
             )
             drop_full = searchable_link_search(
-                doctype="Account", txt=query, filters={"company": TEST_COMPANY}, search_fields=["account_name"], page_length=RANK_WINDOW, start=0
+                doctype="Account",
+                txt=query,
+                filters={"company": TEST_COMPANY},
+                search_fields=["account_name"],
+                page_length=RANK_WINDOW,
+                start=0,
             )
             self.assertGreaterEqual(len(drop_full), 200)
             self.assertIn(exact.name, {r["value"] for r in drop_full})
@@ -924,15 +958,15 @@ class TestBilingualAccountPilot(unittest.TestCase):
             for i in range(start, start + count):
                 rows.append(
                     (
-                        "CT-CAP-%06d - CT-CAP-TARGET - E" % i,
+                        f"CT-CAP-{i:06d} - CT-CAP-TARGET - E",
                         now,
                         now,
                         user,
                         user,
                         0,
                         TEST_COMPANY,
-                        "CT-CAP-TARGET-FILLER-%06d" % i,
-                        "CT-CAP-%06d" % i,
+                        f"CT-CAP-TARGET-FILLER-{i:06d}",
+                        f"CT-CAP-{i:06d}",
                         parent,
                         0,
                         1,
@@ -955,28 +989,40 @@ class TestBilingualAccountPilot(unittest.TestCase):
         try:
             # Exactly RANK_WINDOW matches: served fully, not truncated.
             insert_bulk(svc.RANK_WINDOW)
-            with_meta = svc.search_bilingual("Account", txt="CT-CAP-TARGET", lang="en", page_length=5, start=0, with_meta=True)
+            with_meta = svc.search_bilingual(
+                "Account", txt="CT-CAP-TARGET", lang="en", page_length=5, start=0, with_meta=True
+            )
             self.assertGreaterEqual(len(with_meta["results"]), 1)
             self.assertFalse(with_meta["truncated"], "exactly-full 5,000 window must NOT be flagged")
-            full = svc.search_bilingual("Account", txt="CT-CAP-TARGET", lang="en", page_length=svc.MAX_PAGE_LENGTH, start=0)
-            self.assertEqual(len(full), svc.MAX_PAGE_LENGTH, "page must be the clamped size (billing out beyond the clamp)")
+            full = svc.search_bilingual(
+                "Account", txt="CT-CAP-TARGET", lang="en", page_length=svc.MAX_PAGE_LENGTH, start=0
+            )
+            self.assertEqual(
+                len(full), svc.MAX_PAGE_LENGTH, "page must be the clamped size (billing out beyond the clamp)"
+            )
             served_first_page_count = len(full)
             self.assertGreater(served_first_page_count, 0)
-            match_count = len(frappe.get_list(
-                "Account",
-                filters={"company": TEST_COMPANY},
-                or_filters=[
-                    ["account_name", "like", "%CT-CAP-TARGET%"],
-                    ["name", "like", "%CT-CAP-TARGET%"],
-                    ["account_number", "like", "%CT-CAP-TARGET%"],
-                ],
-                fields=["name"],
-                limit_page_length=0,
-            ))
+            match_count = len(
+                frappe.get_list(
+                    "Account",
+                    filters={"company": TEST_COMPANY},
+                    or_filters=[
+                        ["account_name", "like", "%CT-CAP-TARGET%"],
+                        ["name", "like", "%CT-CAP-TARGET%"],
+                        ["account_number", "like", "%CT-CAP-TARGET%"],
+                    ],
+                    fields=["name"],
+                    limit_page_length=0,
+                )
+            )
             self.assertEqual(match_count, svc.RANK_WINDOW, "exactly 5,000 matches exist")
             # Dropdown path at the exact boundary: bounded page, no refusal.
             drop = searchable_link_search(
-                doctype="Account", txt="CT-CAP-TARGET", filters={"company": TEST_COMPANY}, search_fields=["account_name"], page_length=5
+                doctype="Account",
+                txt="CT-CAP-TARGET",
+                filters={"company": TEST_COMPANY},
+                search_fields=["account_name"],
+                page_length=5,
             )
             self.assertTrue(drop)
             # Insert the 5,001st row: real overflow -> loud service refusal
@@ -986,21 +1032,29 @@ class TestBilingualAccountPilot(unittest.TestCase):
                 svc.search_bilingual("Account", txt="CT-CAP-TARGET", lang="en", page_length=5)
             with self.assertRaises(frappe.ValidationError):
                 searchable_link_search(
-                    doctype="Account", txt="CT-CAP-TARGET", filters={"company": TEST_COMPANY}, search_fields=["account_name"], page_length=5
+                    doctype="Account",
+                    txt="CT-CAP-TARGET",
+                    filters={"company": TEST_COMPANY},
+                    search_fields=["account_name"],
+                    page_length=5,
                 )
-            flagged = svc.search_bilingual("Account", txt="CT-CAP-TARGET", lang="en", page_length=5, start=0, with_meta=True)
+            flagged = svc.search_bilingual(
+                "Account", txt="CT-CAP-TARGET", lang="en", page_length=5, start=0, with_meta=True
+            )
             self.assertTrue(flagged["truncated"])
-            flagged_count = len(frappe.get_list(
-                "Account",
-                filters={"company": TEST_COMPANY},
-                or_filters=[
-                    ["account_name", "like", "%CT-CAP-TARGET%"],
-                    ["name", "like", "%CT-CAP-TARGET%"],
-                    ["account_number", "like", "%CT-CAP-TARGET%"],
-                ],
-                fields=["name"],
-                limit_page_length=0,
-            ))
+            flagged_count = len(
+                frappe.get_list(
+                    "Account",
+                    filters={"company": TEST_COMPANY},
+                    or_filters=[
+                        ["account_name", "like", "%CT-CAP-TARGET%"],
+                        ["name", "like", "%CT-CAP-TARGET%"],
+                        ["account_number", "like", "%CT-CAP-TARGET%"],
+                    ],
+                    fields=["name"],
+                    limit_page_length=0,
+                )
+            )
             self.assertEqual(flagged_count, svc.RANK_WINDOW + 1, "the 5,001st match exists")
         finally:
             frappe.db.sql("DELETE FROM `tabAccount` WHERE account_number LIKE %s", ("CT-CAP-%",))
@@ -1032,17 +1086,23 @@ class TestBilingualAccountPilot(unittest.TestCase):
             err_svc = str(cm_svc.exception)
             with self.assertRaises(frappe.ValidationError) as cm_dd:
                 searchable_link_search(
-                    doctype="Account", txt="CT-T3-", filters={"company": TEST_COMPANY}, search_fields=["account_name"],
-                    **kwargs
+                    doctype="Account",
+                    txt="CT-T3-",
+                    filters={"company": TEST_COMPANY},
+                    search_fields=["account_name"],
+                    **kwargs,
                 )
             err_dd = str(cm_dd.exception)
-            self.assertEqual(err_svc, err_dd, "identical exception message required (%r)" % kwargs)
+            self.assertEqual(err_svc, err_dd, f"identical exception message required ({kwargs!r})")
         # Integer-valued strings work on both and agree on the first value.
         for kwargs in ({"page_length": "2", "start": 0}, {"page_length": 2, "start": "1"}):
             m = svc.search_bilingual("Account", txt="CT-T3-", lang="en", **kwargs)
             d = searchable_link_search(
-                doctype="Account", txt="CT-T3-", filters={"company": TEST_COMPANY}, search_fields=["account_name"],
-                **kwargs
+                doctype="Account",
+                txt="CT-T3-",
+                filters={"company": TEST_COMPANY},
+                search_fields=["account_name"],
+                **kwargs,
             )
             self.assertTrue(m and d, kwargs)
             self.assertTrue(m[0]["value"] == d[0]["value"], kwargs)
@@ -1061,31 +1121,40 @@ class TestBilingualAccountPilot(unittest.TestCase):
             {"page_length": -3, "start": -5},
             {"page_length": 0, "start": -5},
         ):
-            m = svc.search_bilingual("Account", txt="CT-T3-", page_length=kwargs["page_length"], start=kwargs["start"], lang="en")
+            m = svc.search_bilingual(
+                "Account", txt="CT-T3-", page_length=kwargs["page_length"], start=kwargs["start"], lang="en"
+            )
             self.assertTrue(m, "lower-bounded page must never be empty on real matches")
             self.assertLessEqual(len(m), svc.MAX_PAGE_LENGTH)
             d = searchable_link_search(
-                doctype="Account", txt="CT-T3-", filters={"company": TEST_COMPANY}, search_fields=["account_name"],
-                **kwargs
+                doctype="Account",
+                txt="CT-T3-",
+                filters={"company": TEST_COMPANY},
+                search_fields=["account_name"],
+                **kwargs,
             )
             self.assertTrue(d, "dropdown lower-bounded page must never be empty on real matches")
             self.assertLessEqual(len(d), 200)
         # Oversized inputs remain handled (upper clamp) — sanity re-check.
-        huge = svc.search_bilingual("Account", txt="", page_length=10 ** 9, start=-7)
+        huge = svc.search_bilingual("Account", txt="", page_length=10**9, start=-7)
         self.assertLessEqual(len(huge), svc.MAX_PAGE_LENGTH)
 
     def test_page_length_is_clamped_against_client_input(self):
         # A caller-supplied huge page_length must never trigger unbounded
         # transfer on either path.
-        huge = svc.search_bilingual("Account", txt="", page_length=10 ** 9, start=0)
+        huge = svc.search_bilingual("Account", txt="", page_length=10**9, start=0)
         self.assertLessEqual(len(huge), svc.MAX_PAGE_LENGTH)
-        meta = svc.search_bilingual("Account", txt="", page_length=10 ** 9, start=0, with_meta=True)
+        meta = svc.search_bilingual("Account", txt="", page_length=10**9, start=0, with_meta=True)
         self.assertEqual(len(meta["results"]), len(meta["results"]))  # bounded shape check
         self.assertLessEqual(len(meta["results"]), svc.MAX_PAGE_LENGTH)
         from construction.searchable_dropdown.api.search import searchable_link_search
 
         drop = searchable_link_search(
-            doctype="Account", txt="", filters={"company": TEST_COMPANY}, search_fields=["account_name"], page_length=10 ** 9
+            doctype="Account",
+            txt="",
+            filters={"company": TEST_COMPANY},
+            search_fields=["account_name"],
+            page_length=10**9,
         )
         self.assertLessEqual(len(drop), svc.MAX_PAGE_LENGTH)
 
@@ -1122,7 +1191,11 @@ class TestBilingualAccountPilot(unittest.TestCase):
         with _mock.patch.object(svc, "RANK_WINDOW", 1):
             with self.assertRaises(frappe.ValidationError):
                 searchable_link_search(
-                    doctype="Account", txt="CT-T3-", filters={"company": TEST_COMPANY}, search_fields=["account_name"], page_length=5
+                    doctype="Account",
+                    txt="CT-T3-",
+                    filters={"company": TEST_COMPANY},
+                    search_fields=["account_name"],
+                    page_length=5,
                 )
             with self.assertRaises(frappe.ValidationError):
                 svc.search_bilingual("Account", txt="CT-T3-", page_length=5, start=0)
@@ -1131,10 +1204,20 @@ class TestBilingualAccountPilot(unittest.TestCase):
         from construction.searchable_dropdown.api.search import searchable_link_search
 
         page1 = searchable_link_search(
-            doctype="Account", txt="", filters={"company": TEST_COMPANY}, search_fields=["account_name"], page_length=2, start=0
+            doctype="Account",
+            txt="",
+            filters={"company": TEST_COMPANY},
+            search_fields=["account_name"],
+            page_length=2,
+            start=0,
         )
         page2 = searchable_link_search(
-            doctype="Account", txt="", filters={"company": TEST_COMPANY}, search_fields=["account_name"], page_length=2, start=2
+            doctype="Account",
+            txt="",
+            filters={"company": TEST_COMPANY},
+            search_fields=["account_name"],
+            page_length=2,
+            start=2,
         )
         ids1 = {r["value"] for r in page1}
         ids2 = {r["value"] for r in page2}
@@ -1146,7 +1229,6 @@ class TestBilingualAccountPilot(unittest.TestCase):
         from construction.searchable_dropdown.api.search import searchable_link_search
 
         real_get_meta = frappe.get_meta
-
 
         class ReducedMeta:
             def __init__(self, inner):
@@ -1181,10 +1263,13 @@ class TestBilingualAccountPilot(unittest.TestCase):
         # samples with a TRUE median, and the canonical gate must hold.
         # A separate live measurement (below) re-derives everything.
         import hashlib
-        import math
         import json
+        import math
 
-        artifact_path = ROOT / "docs/ai/work-items/erp-arabic-bilingual-data/evidence/raw-logs/stage3/p95-measurement.json"
+        artifact_path = (
+            ROOT
+            / "docs/ai/work-items/erp-arabic-bilingual-data/evidence/raw-logs/stage3/p95-measurement.json"
+        )
         artifact = json.loads(artifact_path.read_text(encoding="utf-8"))
         m = artifact["measurement"]
         for name, path in (
@@ -1193,7 +1278,7 @@ class TestBilingualAccountPilot(unittest.TestCase):
             ("search.py", "construction/searchable_dropdown/api/search.py"),
         ):
             live = hashlib.sha256((ROOT / path).read_bytes()).hexdigest()
-            self.assertEqual(m["code_hashes"][name], live, "preserved P95 artifact is stale for %s" % name)
+            self.assertEqual(m["code_hashes"][name], live, f"preserved P95 artifact is stale for {name}")
         self.assertTrue(m["match_sets_equal"])
         # Cherry-pick resistance: EVERY round's raw samples are preserved
         # and each round's recorded P95 must equal its own nearest-rank
@@ -1204,10 +1289,11 @@ class TestBilingualAccountPilot(unittest.TestCase):
             self.assertEqual(len(rounds), m.get("round_count", len(rounds)), side)
             for r, raw in enumerate(rounds):
                 expected_r_p95 = sorted(raw)[max(0, math.ceil(0.95 * len(raw)) - 1)]
-                self.assertEqual(m["round_p95_ms"][side][r], round(expected_r_p95, 3), "%s round %d" % (side, r))
+                self.assertEqual(m["round_p95_ms"][side][r], round(expected_r_p95, 3), f"{side} round {r}")
             self.assertEqual(
-                m[side]["p95_ms"], min(m["round_p95_ms"][side]),
-                "selected value must be the min over the preserved rounds (%s)" % side,
+                m[side]["p95_ms"],
+                min(m["round_p95_ms"][side]),
+                f"selected value must be the min over the preserved rounds ({side})",
             )
         for side in ("baseline", "bilingual"):
             raw = sorted(m[side]["samples_ms"])
@@ -1223,8 +1309,9 @@ class TestBilingualAccountPilot(unittest.TestCase):
         self.assertLessEqual(
             m["bilingual"]["p95_ms"],
             limit,
-            "preserved bilingual P95 %.2fms exceeds baseline %.2fms + 10%% (limit %.2fms)"
-            % (m["bilingual"]["p95_ms"], m["baseline"]["p95_ms"], limit),
+            "preserved bilingual P95 {:.2f}ms exceeds baseline {:.2f}ms + 10% (limit {:.2f}ms)".format(
+                m["bilingual"]["p95_ms"], m["baseline"]["p95_ms"], limit
+            ),
         )
 
     def test_comparative_p95_live_measurement_is_balanced_and_bound(self):
@@ -1459,7 +1546,7 @@ class TestBilingualAccountPilot(unittest.TestCase):
                 samples.append((time.perf_counter() - started) * 1000.0)
             samples.sort()
             p95 = samples[int(len(samples) * 0.95) - 1]
-            self.assertLess(p95, 250.0, "bilingual search P95 regressed: %.1fms" % p95)
+            self.assertLess(p95, 250.0, f"bilingual search P95 regressed: {p95:.1f}ms")
         finally:
             _clear_arabic(self.pilot.name)
 

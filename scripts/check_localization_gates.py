@@ -50,10 +50,23 @@ RETIRED_SCHEMA = "event | old_path | new_path(-) | reason | reviewer/session | U
 DECISIONS = Path("construction/data/translations/release_decisions.json")
 
 CSV_HEADER = [
-    "language", "source_text", "context", "ct_app", "translated_text", "domain",
-    "release_status", "release_version", "a1_reviewer", "a1_approved_at",
-    "a2_reviewer", "a2_approved_at", "a3_reviewer", "a3_approved_at",
-    "references", "notes", "decision_ref",
+    "language",
+    "source_text",
+    "context",
+    "ct_app",
+    "translated_text",
+    "domain",
+    "release_status",
+    "release_version",
+    "a1_reviewer",
+    "a1_approved_at",
+    "a2_reviewer",
+    "a2_approved_at",
+    "a3_reviewer",
+    "a3_approved_at",
+    "references",
+    "notes",
+    "decision_ref",
 ]
 TS_RE = re.compile(r"^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$")
 VER_RE = re.compile(r"^\d+\.\d+$")
@@ -67,16 +80,30 @@ WRAP_RE = re.compile(r"(?:_|__)\(\s*(['\"])((?:\\.|(?!\1).)*?)\1", re.DOTALL)
 DYNAMIC_WRAP_RE = re.compile(r"(?:_|__)\(\s*(?:f['\"]|`[^`]*\$\{)")
 SOURCE_SUFFIXES = {".py", ".js", ".html", ".vue"}
 SKIP_SUFFIXES = {
-    ".md", ".css", ".scss", ".png", ".jpg", ".svg", ".ico", ".map", ".txt",
+    ".md",
+    ".css",
+    ".scss",
+    ".png",
+    ".jpg",
+    ".svg",
+    ".ico",
+    ".map",
+    ".txt",
     ".log",
 }
 SOURCE_SCAN_ROOTS = ["construction"]
 PO_SCAN_SUFFIXES = {".py", ".js", ".html", ".vue"}
 EXCLUDE_DIRS = {"__pycache__", "dist", "tests"}
 TEMPLATE_SUFFIXES = {".html", ".vue"}
-JSON_UI_EXCLUDE = ("construction/data/", "construction/construction/doctype/",
-                   "construction/fixtures/", "package.json", "/tests/",
-                   "__pycache__", "/dist/")
+JSON_UI_EXCLUDE = (
+    "construction/data/",
+    "construction/construction/doctype/",
+    "construction/fixtures/",
+    "package.json",
+    "/tests/",
+    "__pycache__",
+    "/dist/",
+)
 TECHNICAL_JSON_RE = re.compile(
     r"^(#[0-9a-fA-F]{3,8}|\[.*\]$|\{.*\}$|[a-z0-9_\-]+$|[A-Z0-9 _()/.\-]{1,4}$|en$)"
 )
@@ -88,9 +115,18 @@ PY_SINK_RE = re.compile(r"frappe\.(?:throw|msgprint)\(\s*[fu]?['\"]")
 BARE_USE_RE = re.compile(r"(^|[^_.a-zA-Z])_\(\s*['\"]")
 FROM_IMPORT_RE = re.compile(r"^\s*from frappe import .*\b_\b", re.M)
 RAW_TEMPLATE_ROOTS = ["construction/templates"]
-EVIDENCE_FILES = ("all-tests.txt", "final-dryrun.txt", "freshness-envelope.txt",
-                  "full-gate.txt", "gate-tests-standalone.txt", "lints-diffcheck.txt",
-                  "merkle.txt", "scoped-gate.txt", "sync.txt", "vendor-audit.txt")
+EVIDENCE_FILES = (
+    "all-tests.txt",
+    "final-dryrun.txt",
+    "freshness-envelope.txt",
+    "full-gate.txt",
+    "gate-tests-standalone.txt",
+    "lints-diffcheck.txt",
+    "merkle.txt",
+    "scoped-gate.txt",
+    "sync.txt",
+    "vendor-audit.txt",
+)
 
 
 def _root(root):
@@ -139,8 +175,13 @@ def parse_po_file(path):
             if line.startswith("#~"):
                 if cur is None or cur.get("started") is not True:
                     cur = {
-                        "context": "", "msgid": None, "plural": None, "targets": {},
-                        "fuzzy": False, "obsolete": True, "started": True,
+                        "context": "",
+                        "msgid": None,
+                        "plural": None,
+                        "targets": {},
+                        "fuzzy": False,
+                        "obsolete": True,
+                        "started": True,
                     }
                 else:
                     cur["obsolete"] = True
@@ -152,11 +193,16 @@ def parse_po_file(path):
                 section = None
                 continue
             if line.startswith("#"):
-                if ", fuzzy" in line or line.startswith("#,") and "fuzzy" in line:
+                if ", fuzzy" in line or (line.startswith("#,") and "fuzzy" in line):
                     if cur is None:
                         cur = {
-                            "context": "", "msgid": None, "plural": None, "targets": {},
-                            "fuzzy": True, "obsolete": False, "started": False,
+                            "context": "",
+                            "msgid": None,
+                            "plural": None,
+                            "targets": {},
+                            "fuzzy": True,
+                            "obsolete": False,
+                            "started": False,
                         }
                     else:
                         cur["fuzzy"] = True
@@ -174,8 +220,13 @@ def parse_po_file(path):
                 val = rest[:-1]
                 if cur is None:
                     cur = {
-                        "context": "", "msgid": None, "plural": None, "targets": {},
-                        "fuzzy": False, "obsolete": False, "started": True,
+                        "context": "",
+                        "msgid": None,
+                        "plural": None,
+                        "targets": {},
+                        "fuzzy": False,
+                        "obsolete": False,
+                        "started": True,
                     }
                 if kind == "msgctxt":
                     cur["context"] = unescape_po(val)
@@ -184,8 +235,13 @@ def parse_po_file(path):
                     if cur["msgid"] is not None:
                         flush()
                         cur = {
-                            "context": "", "msgid": None, "plural": None, "targets": {},
-                            "fuzzy": False, "obsolete": False, "started": True,
+                            "context": "",
+                            "msgid": None,
+                            "plural": None,
+                            "targets": {},
+                            "fuzzy": False,
+                            "obsolete": False,
+                            "started": True,
                         }
                     cur["msgid"] = unescape_po(val)
                     section = ("msgid", None)
@@ -246,6 +302,7 @@ def plural_forms(path):
             if m:
                 return int(m.group(1))
     return None
+
 
 def load_allowlist(errors, root=None):
     root = _root(root)
@@ -314,8 +371,9 @@ def check_po(errors, counts, path=None, root=None):
                         errors.append(f"po-plural: {path} {e['msgid']!r} missing msgstr[{i}]")
             for i, t in sorted(targets.items()):
                 if t:
-                    check_target(errors, e["msgid"], t, str(path), allowed, e["context"], True,
-                                 plural=e["plural"])
+                    check_target(
+                        errors, e["msgid"], t, str(path), allowed, e["context"], True, plural=e["plural"]
+                    )
         else:
             t = targets.get(0, "")
             if t:
@@ -417,8 +475,12 @@ def check_extraction(errors, catalog, scope=None, root=None):
             if JS_SINK_RE.search(line) and "__(" not in line and "_(" not in line:
                 errors.append(f"no-raw-sink: {rel}:{i}: unwrapped user-facing string")
     json_count = len(json_found)
-    return {"files": len(files) + len(json_files), "wrapped": len(wrapped),
-            "missing": missing, "json_labels": json_count}
+    return {
+        "files": len(files) + len(json_files),
+        "wrapped": len(wrapped),
+        "missing": missing,
+        "json_labels": json_count,
+    }
 
 
 def is_excluded_json(rel):
@@ -525,7 +587,7 @@ def raw_template_texts(files, root=None):
             continue
         for chunk in re.split(r"[\n\r]+", strip_template(text)):
             for seg in re.split(r"\s{2,}|[|•·]", chunk):
-                s = seg.strip(" \t-–—:;,.!?\"'")
+                s = seg.strip(" \t-\u2013\u2014:;,.!?\"'")
                 if len(s) >= 2 and re.search(r"[A-Za-z]{2,}", s) and not re.fullmatch(r"[\d\W]+", s):
                     found.setdefault(s, set()).add(str(rel))
     return found
@@ -581,6 +643,7 @@ def check_raw_text(errors, catalog, scope=None, root=None):
 def ast_sink_findings(rel, text, errors):
     """AST/token-aware inspection of frappe.throw/msgprint calls."""
     import ast as _ast
+
     try:
         tree = _ast.parse(text)
     except SyntaxError as exc:
@@ -600,9 +663,18 @@ def ast_sink_findings(rel, text, errors):
                     wrappers.add(a.asname or a.name)
                 elif a.name in ("throw", "msgprint"):
                     aliases.add(a.asname or a.name)
-        if isinstance(node, _ast.Assign) and len(node.targets) == 1 and isinstance(node.targets[0], _ast.Name):
+        if (
+            isinstance(node, _ast.Assign)
+            and len(node.targets) == 1
+            and isinstance(node.targets[0], _ast.Name)
+        ):
             v = node.value
-            if isinstance(v, _ast.Attribute) and isinstance(v.value, _ast.Name) and v.value.id in module_aliases and v.attr in ("throw", "msgprint"):
+            if (
+                isinstance(v, _ast.Attribute)
+                and isinstance(v.value, _ast.Name)
+                and v.value.id in module_aliases
+                and v.attr in ("throw", "msgprint")
+            ):
                 aliases.add(node.targets[0].id)
             elif isinstance(v, _ast.Name) and v.id in module_aliases:
                 module_aliases[node.targets[0].id] = "frappe"
@@ -627,7 +699,7 @@ def ast_sink_findings(rel, text, errors):
         arg = node.args[0]
         lineno = getattr(node, "lineno", "?")
         probe = arg
-        while isinstance(probe, (_ast.Call, _ast.Attribute, _ast.Subscript)):
+        while isinstance(probe, _ast.Call | _ast.Attribute | _ast.Subscript):
             if isinstance(probe, _ast.Attribute) and probe.attr in ("_", "__"):
                 probe = None
                 break
@@ -644,7 +716,9 @@ def ast_sink_findings(rel, text, errors):
         static = None
         if isinstance(arg, _ast.Constant) and isinstance(arg.value, str):
             static = arg.value
-        elif isinstance(arg, _ast.JoinedStr) and not any(isinstance(v, _ast.FormattedValue) for v in arg.values):
+        elif isinstance(arg, _ast.JoinedStr) and not any(
+            isinstance(v, _ast.FormattedValue) for v in arg.values
+        ):
             static = "".join(v.value for v in arg.values if isinstance(v, _ast.Constant))
         if static is not None:
             findings.append((lineno, "static", static, None))
@@ -674,16 +748,16 @@ def check_py_sinks(errors, scope=None, root=None):
             if kind == "static":
                 if val in disposed or any(val.startswith(d) for d in disposed):
                     continue
-                errors.append(f"py-raw-sink: {srel}:{lineno}: unwrapped backend message — wrap or disposition")
+                errors.append(
+                    f"py-raw-sink: {srel}:{lineno}: unwrapped backend message — wrap or disposition"
+                )
                 hits += 1
                 continue
             varname, segment = extra or (None, None)
             label = varname or (segment.strip()[:60] if segment else val[:40])
-            candidates = [c for c in
-                          (f"{srel} :: {varname}" if varname else None,
-                           (segment or "").strip(),
-                           val)
-                          if c]
+            candidates = [
+                c for c in (f"{srel} :: {varname}" if varname else None, (segment or "").strip(), val) if c
+            ]
             if any(c in disposed or any(d in c or c.startswith(d) for d in disposed) for c in candidates):
                 continue
             errors.append(
@@ -705,22 +779,30 @@ def check_underscore_imports(errors, scope=None, root=None):
         if BARE_USE_RE.search(text) and not FROM_IMPORT_RE.search(text):
             errors.append(f"no-underscore-import: {rel} uses _() without 'from frappe import _'")
 
+
 def row_identity_fields(row, src, val):
     """Canonical row-identity fields (checker + recorder share this order)."""
     return [
-        (row.get("language") or "").strip(), (row.get("ct_app") or "").strip(),
-        (row.get("context") or "").strip(), src, val,
-        (row.get("a1_reviewer") or "").strip(), (row.get("a1_approved_at") or "").strip(),
-        (row.get("a2_reviewer") or "").strip(), (row.get("a2_approved_at") or "").strip(),
-        (row.get("a3_reviewer") or "").strip(), (row.get("a3_approved_at") or "").strip(),
+        (row.get("language") or "").strip(),
+        (row.get("ct_app") or "").strip(),
+        (row.get("context") or "").strip(),
+        src,
+        val,
+        (row.get("a1_reviewer") or "").strip(),
+        (row.get("a1_approved_at") or "").strip(),
+        (row.get("a2_reviewer") or "").strip(),
+        (row.get("a2_approved_at") or "").strip(),
+        (row.get("a3_reviewer") or "").strip(),
+        (row.get("a3_approved_at") or "").strip(),
         (row.get("release_version") or "").strip(),
-        (row.get("domain") or "").strip(), (row.get("references") or "").strip(),
-        hashlib.sha256(f"{src}|{val}".encode("utf-8")).hexdigest(),
+        (row.get("domain") or "").strip(),
+        (row.get("references") or "").strip(),
+        hashlib.sha256(f"{src}|{val}".encode()).hexdigest(),
     ]
 
 
 def row_decision_id(ident_parts, ref_entries):
-    ident = "|".join(ident_parts + [json.dumps(sorted(ref_entries, key=lambda d: d["ref"]), sort_keys=True)])
+    ident = "|".join([*ident_parts, json.dumps(sorted(ref_entries, key=lambda d: d["ref"]), sort_keys=True)])
     return hashlib.sha256(ident.encode("utf-8")).hexdigest()
 
 
@@ -764,8 +846,10 @@ def check_csv(errors, root=None):
             continue
         n += 1
         ident = (
-            (row.get("language") or "").strip(), src,
-            (row.get("context") or "").strip(), (row.get("ct_app") or "").strip(),
+            (row.get("language") or "").strip(),
+            src,
+            (row.get("context") or "").strip(),
+            (row.get("ct_app") or "").strip(),
         )
         if ident in seen:
             errors.append(f"csv-duplicate: {ident}")
@@ -782,9 +866,17 @@ def check_csv(errors, root=None):
             errors.append(f"csv-source-equal: {origin} (payload must not ship fallback)")
         if (row.get("release_status") or "").strip() != "Released":
             continue
-        for col in ("a1_reviewer", "a2_reviewer", "a3_reviewer", "a1_approved_at",
-                    "a2_approved_at", "a3_approved_at", "release_version", "references",
-                    "decision_ref"):
+        for col in (
+            "a1_reviewer",
+            "a2_reviewer",
+            "a3_reviewer",
+            "a1_approved_at",
+            "a2_approved_at",
+            "a3_approved_at",
+            "release_version",
+            "references",
+            "decision_ref",
+        ):
             if not (row.get(col) or "").strip():
                 errors.append(f"csv-quorum: {origin} Released without {col}")
         ats = {}
@@ -795,6 +887,7 @@ def check_csv(errors, root=None):
             else:
                 try:
                     import datetime as _dt
+
                     ats[col] = _dt.datetime.strptime(v, "%Y-%m-%d %H:%M:%S")
                 except ValueError:
                     errors.append(f"csv-timestamp-unparseable: {origin} {col}={v!r}")
@@ -812,17 +905,22 @@ def check_csv(errors, root=None):
                 continue
             scheme, _, sub = ref.partition(":")
             if scheme not in ("content", "legacy") or not sub or not (root / sub).exists():
-                errors.append(f"csv-decision-ref: {origin} bad ref {ref!r} (content:|legacy: + existing path)")
+                errors.append(
+                    f"csv-decision-ref: {origin} bad ref {ref!r} (content:|legacy: + existing path)"
+                )
                 continue
             try:
                 content = (root / sub).read_text(encoding="utf-8")
             except OSError:
                 content = ""
-            ref_entries.append({"ref": ref,
-                "sha256": hashlib.sha256(content.encode("utf-8")).hexdigest()})
+            ref_entries.append({"ref": ref, "sha256": hashlib.sha256(content.encode("utf-8")).hexdigest()})
             if scheme == "legacy":
                 try:
-                    legacy = json.loads((root / "construction/data/translations/legacy_batch_decisions.json").read_text(encoding="utf-8"))
+                    legacy = json.loads(
+                        (root / "construction/data/translations/legacy_batch_decisions.json").read_text(
+                            encoding="utf-8"
+                        )
+                    )
                 except (OSError, ValueError):
                     legacy = {}
                 doc = legacy.get("doc", "")
@@ -838,7 +936,7 @@ def check_csv(errors, root=None):
                     f"csv-decision-binding: {origin} not evidenced in {sub} "
                     "(source+translation must appear; edits invalidate)"
                 )
-        proposal_sha = hashlib.sha256(f"{src}|{val}".encode("utf-8")).hexdigest()
+        proposal_sha = hashlib.sha256(f"{src}|{val}".encode()).hexdigest()
         pinned = load_decisions(root)
         did = row_decision_id(ident_parts, ref_entries)
         stored = (pinned.get("decisions") or {}).get(did)
@@ -848,10 +946,23 @@ def check_csv(errors, root=None):
                 "any row or evidence edit invalidates; re-pin under review"
             )
             continue
-        for fkey, rkey in (("language", "language"), ("ct_app", "ct_app"), ("context", "context"),
-                           ("source_text", None), ("translated_text", None), ("domain", "domain"),
-                           ("release_version", "release_version"), ("references", "references")):
-            want = src if rkey is None and fkey == "source_text" else val if rkey is None else (row.get(rkey) or "").strip()
+        for fkey, rkey in (
+            ("language", "language"),
+            ("ct_app", "ct_app"),
+            ("context", "context"),
+            ("source_text", None),
+            ("translated_text", None),
+            ("domain", "domain"),
+            ("release_version", "release_version"),
+            ("references", "references"),
+        ):
+            want = (
+                src
+                if rkey is None and fkey == "source_text"
+                else val
+                if rkey is None
+                else (row.get(rkey) or "").strip()
+            )
             if (stored.get(fkey) or "") != want:
                 errors.append(f"csv-decision-object: {origin} stored {fkey} differs from CSV row")
         for role in ("AI-A1", "AI-A2", "AI-A3"):
@@ -917,6 +1028,7 @@ def check_json_coverage(errors, rels, catalog, root=None):
             errors.append(f"extract-json-missing: {msgid!r} in {sorted(locs)[0]} not in catalog")
     return counts_hit
 
+
 def load_msgid_inventory(app, root=None):
     """Read committed msgid inventory: {(context, msgid): trans_hash}."""
     root = _root(root)
@@ -946,8 +1058,10 @@ def live_msgid_inventory(app, root=None):
         if e["obsolete"] or not e["msgid"]:
             continue
         best[(e["context"] or "", e["msgid"])] = e
-    return {k: hashlib.sha256(repr(sorted(e["targets"].items())).encode("utf-8")).hexdigest()[:16]
-            for k, e in best.items()}
+    return {
+        k: hashlib.sha256(repr(sorted(e["targets"].items())).encode("utf-8")).hexdigest()[:16]
+        for k, e in best.items()
+    }
 
 
 def vendor_po_set(app, root=None):
@@ -974,7 +1088,9 @@ def vendor_commit(app, root=None):
     try:
         out = subprocess.run(
             ["git", "-C", str(root.parent / app), "rev-parse", "HEAD"],
-            capture_output=True, text=True, timeout=30,
+            capture_output=True,
+            text=True,
+            timeout=30,
         )
     except Exception:
         return None
@@ -1048,7 +1164,9 @@ def check_manifest(errors, root=None):
     }
     for key, cur in expect.items():
         if man.get(key) != cur:
-            errors.append(f"manifest-stale: {key} recorded {man.get(key)} != current {cur} — re-record (reviewed)")
+            errors.append(
+                f"manifest-stale: {key} recorded {man.get(key)} != current {cur} — re-record (reviewed)"
+            )
     fp = root / FRESHNESS
     if not fp.exists():
         errors.append(f"freshness-missing: {FRESHNESS} not collected (authorized site only)")
@@ -1069,6 +1187,7 @@ def check_manifest(errors, root=None):
     if fresh.get("health", {}).get("has_drift"):
         errors.append("freshness-drift: packaged/live drift flagged at collection time")
     import datetime as _dt
+
     try:
         collected = _dt.datetime.strptime(fresh.get("collected_utc", ""), "%Y-%m-%dT%H:%M:%SZ")
     except ValueError:
@@ -1081,7 +1200,9 @@ def check_manifest(errors, root=None):
         if (now - collected).days > 30:
             errors.append("freshness-age: evidence is older than 30 days — re-collect")
     try:
-        siteclass = json.loads((root / "construction/data/localization/site_classification.json").read_text(encoding="utf-8"))
+        siteclass = json.loads(
+            (root / "construction/data/localization/site_classification.json").read_text(encoding="utf-8")
+        )
     except (OSError, ValueError):
         siteclass = {}
     if siteclass.get("classification") != "non-production test":
@@ -1096,22 +1217,30 @@ def check_manifest(errors, root=None):
             f"freshness-site: evidence site {fresh.get('site')!r} != classified {siteclass.get('site')!r}"
         )
     try:
-        policy = json.loads((root / "construction/data/translations/critical_labels.json").read_text(encoding="utf-8"))
+        policy = json.loads(
+            (root / "construction/data/translations/critical_labels.json").read_text(encoding="utf-8")
+        )
     except (OSError, ValueError):
         policy = {}
     expected = policy.get("labels") or {}
     if expected and fresh.get("critical_keys") != expected:
         errors.append("freshness-critical-map: critical mappings differ from governed policy")
     health = fresh.get("health") or {}
-    for flag, want in (("loader_installed", True), ("using_safe_fallback", False),
-                       ("has_duplicates", False), ("has_null_digests", False),
-                       ("constraint_present", True), ("has_drift", False),
-                       ("has_orphan_site_overrides", False)):
+    for flag, want in (
+        ("loader_installed", True),
+        ("using_safe_fallback", False),
+        ("has_duplicates", False),
+        ("has_null_digests", False),
+        ("constraint_present", True),
+        ("has_drift", False),
+        ("has_orphan_site_overrides", False),
+    ):
         if health.get(flag) is not want:
             errors.append(f"freshness-health: {flag}={health.get(flag)!r}, required {want!r}")
     if health.get("constraint_name") != "ct_translation_key_digest":
         errors.append("freshness-health: constraint_name must be ct_translation_key_digest")
     import datetime as _dt2
+
     try:
         _collected = _dt2.datetime.strptime(fresh.get("collected_utc", ""), "%Y-%m-%dT%H:%M:%SZ")
     except ValueError:
@@ -1145,7 +1274,11 @@ def check_manifest(errors, root=None):
         if _collected is not None and (_collected - parsed).days > 30:
             errors.append(f"freshness-health: {tskey} older than 30 days — re-collect")
             continue
-            if _dbnow is not None and _collected is not None and abs((_dbnow - _collected).total_seconds()) > 172800:
+            if (
+                _dbnow is not None
+                and _collected is not None
+                and abs((_dbnow - _collected).total_seconds()) > 172800
+            ):
                 errors.append("freshness-clock: DB/app skew exceeds 48h — investigate clock sync")
     top_audit = fresh.get("audit_timestamps") or {}
     for tskey in ("last_catalog_sync_at", "last_release_import_at", "last_drift_checked_at"):
@@ -1153,8 +1286,9 @@ def check_manifest(errors, root=None):
             errors.append(f"freshness-health: audit_timestamps.{tskey} disagrees with health map")
     try:
         with (root / CSV).open(encoding="utf-8", newline="") as _fh:
-            released_now = sum(1 for r in csv.DictReader(_fh)
-                               if (r.get("release_status") or "").strip() == "Released")
+            released_now = sum(
+                1 for r in csv.DictReader(_fh) if (r.get("release_status") or "").strip() == "Released"
+            )
     except OSError:
         released_now = None
     if released_now is not None and fresh.get("packaged_rows") != released_now:
@@ -1186,6 +1320,7 @@ def check_manifest(errors, root=None):
         elif man.get(key) != cur:
             errors.append(f"manifest-binding: {key} manifest {man.get(key)} != live {cur}")
 
+
 RETIRED_SCHEMA = "event | old_path | new_path(-) | reason | reviewer/session | UTC date | evidence#sha256"
 
 
@@ -1200,6 +1335,7 @@ def load_retired(errors, path=None, root=None):
         errors.append(f"retired-version: {RETIRED} must declare '{RETIRED_VERSION}'")
         return set()
     import datetime as _dt
+
     raw_entries = []
     for line in lines:
         line = line.strip()
@@ -1297,21 +1433,6 @@ def classify_files(errors, files, root=None):
     return owned, sources, json_sources, skipped
 
 
-def check_json_coverage(errors, rels, catalog, root=None):
-    root = _root(root)
-    catalog_ids = {m for _, m in catalog}
-    covered = load_vendor_covered(errors, root)
-    found, notes = json_ui_strings([str(r) for r in rels], errors, root)
-    for note in sorted(set(notes)):
-        print("SKIP " + note)
-    counts_hit = 0
-    for msgid, locs in sorted(found.items()):
-        counts_hit += 1
-        if msgid not in catalog_ids and msgid not in covered:
-            errors.append(f"extract-json-missing: {msgid!r} in {sorted(locs)[0]} not in catalog")
-    return counts_hit
-
-
 def full_scan(errors, counts, root=None, skip_evidence=False):
     root = _root(root)
     # Bootstrap for evidence generation only: the recorded full-gate envelope
@@ -1336,9 +1457,7 @@ def full_scan(errors, counts, root=None, skip_evidence=False):
 def scoped_scan(errors, counts, owned, sources, json_sources, root=None):
     root = _root(root)
     catalog = None
-    need_catalog = any(
-        r.suffix in SOURCE_SUFFIXES or r == PO for r in owned + sources
-    ) or bool(json_sources)
+    need_catalog = any(r.suffix in SOURCE_SUFFIXES or r == PO for r in owned + sources) or bool(json_sources)
     if need_catalog:
         catalog = check_po(errors, counts, root=root)
     for rel in owned:
@@ -1414,7 +1533,8 @@ def check_envelope_schema(fname, results, errors, root, live_artifacts):
     total = sum(n for _, n in mods)
     mod_line = ("re", r"^\S+ :: Ran \d+ tests .*?\bOK\b$")
     templates = {
-        "all-tests.txt": [mod_line] * len(mods) + [
+        "all-tests.txt": [mod_line] * len(mods)
+        + [
             ("re", r"^AGGREGATE total=\d+ failed=\d+$"),
             ("re", r"^TESTS_SHA256: [0-9a-f]{64}$"),
         ],
@@ -1458,7 +1578,10 @@ def check_envelope_schema(fname, results, errors, root, live_artifacts):
             ("re", r"^SQL_SHA256: [0-9a-f]{64}$"),
         ],
         "scoped-gate.txt": [
-            ("opt", r"^SKIP construction/workspace/construction/construction\.json: markup/code blob excluded from string gate \(print/CSS/seed-data; covered by bilingual-output waves \+ leak detection\)$"),
+            (
+                "opt",
+                r"^SKIP construction/workspace/construction/construction\.json: markup/code blob excluded from string gate \(print/CSS/seed-data; covered by bilingual-output waves \+ leak detection\)$",
+            ),
             ("re", r"^\S.*$"),
             ("re", r"^PO_SHA256: [0-9a-f]{64}$"),
         ],
@@ -1546,40 +1669,64 @@ def check_envelope_schema(fname, results, errors, root, live_artifacts):
         if not re.search(r"^OK$", text, re.M):
             errors.append(f"evidence-schema: {fname} must record OK")
     if fname == "full-gate.txt":
+
         def _num(pat):
             mm = re.search(pat, text)
             return int(mm.group(1)) if mm else None
-        got = {"catalog": _num(r'"construction/locale/ar\.po": (\d+)'),
-               "wrapped": _num(r'"wrapped": (\d+)'),
-               "json_labels": _num(r'"json_labels": (\d+)'),
-               "missing": _num(r'"missing": (\d+)'),
-               "gate_errors": _num(r"errors=(\d+)")}
-        want = {"catalog": EXPECTED_GATE["catalog"], "wrapped": EXPECTED_GATE["wrapped"],
-                "json_labels": EXPECTED_GATE["json_labels"], "missing": 0, "gate_errors": 0}
+
+        got = {
+            "catalog": _num(r'"construction/locale/ar\.po": (\d+)'),
+            "wrapped": _num(r'"wrapped": (\d+)'),
+            "json_labels": _num(r'"json_labels": (\d+)'),
+            "missing": _num(r'"missing": (\d+)'),
+            "gate_errors": _num(r"errors=(\d+)"),
+        }
+        want = {
+            "catalog": EXPECTED_GATE["catalog"],
+            "wrapped": EXPECTED_GATE["wrapped"],
+            "json_labels": EXPECTED_GATE["json_labels"],
+            "missing": 0,
+            "gate_errors": 0,
+        }
         if got != want:
             errors.append(f"evidence-schema: {fname} gate result object differs from contract")
         if f'"files": {EXPECTED_GATE["files"]}' not in text:
             errors.append(f"evidence-schema: {fname} file count differs from contract")
     if fname == "final-dryrun.txt":
         m = re.search(r"total=(\d+) created=(\d+) updated=(\d+) skipped=(\d+) drift=(\d+)", text)
-        vals = {k: int(v) for k, v in zip(
-            ("total", "created", "updated", "skipped", "drift"), m.groups())} if m else None
-        if vals != EXPECTED_DRYRUN or (vals and vals["total"] != vals["created"] + vals["updated"] + vals["skipped"]):
+        vals = (
+            {
+                k: int(v)
+                for k, v in zip(("total", "created", "updated", "skipped", "drift"), m.groups(), strict=False)
+            }
+            if m
+            else None
+        )
+        if vals != EXPECTED_DRYRUN or (
+            vals and vals["total"] != vals["created"] + vals["updated"] + vals["skipped"]
+        ):
             errors.append(f"evidence-schema: {fname} dry-run arithmetic differs from contract")
     if fname == "scoped-gate.txt" and "errors=0" not in text:
         errors.append(f"evidence-schema: {fname} must record errors=0")
     if fname == "vendor-audit.txt" and "errors=0" not in text:
         errors.append(f"evidence-schema: {fname} must record errors=0")
     if fname == "lints-diffcheck.txt":
-        for mark in ("DIFFCHECK_CLEAN", "Translation write lint PASSED",
-                     "no scope-dimension field has in_standard_filter=1"):
+        for mark in (
+            "DIFFCHECK_CLEAN",
+            "Translation write lint PASSED",
+            "no scope-dimension field has in_standard_filter=1",
+        ):
             if mark not in text:
                 errors.append(f"evidence-schema: {fname} lacks {mark!r}")
     if fname == "merkle.txt":
         mm = re.search(r"MERKLE_ROWS: (\d+)", text)
         if mm:
             try:
-                inv = json.loads((root / "construction/data/localization/stage2_inventory_manifest.json").read_text(encoding="utf-8"))
+                inv = json.loads(
+                    (root / "construction/data/localization/stage2_inventory_manifest.json").read_text(
+                        encoding="utf-8"
+                    )
+                )
                 if int(mm.group(1)) != (inv.get("merkle") or {}).get("rows"):
                     errors.append(f"evidence-merkle: {fname} rows != live inventory manifest")
             except (OSError, ValueError):
@@ -1592,11 +1739,17 @@ def check_envelope_schema(fname, results, errors, root, live_artifacts):
             mm = re.search(r"\b[0-9a-f]{64}\b", line)
             if mark == "MERKLE_ROOT:" and mm:
                 try:
-                    inv = json.loads((root / "construction/data/localization/stage2_inventory_manifest.json").read_text(encoding="utf-8"))
+                    inv = json.loads(
+                        (root / "construction/data/localization/stage2_inventory_manifest.json").read_text(
+                            encoding="utf-8"
+                        )
+                    )
                     if mm.group(0) != (inv.get("merkle") or {}).get("root"):
                         errors.append(f"evidence-merkle-live: {fname} root != live inventory manifest")
                 except (OSError, ValueError):
                     pass
+
+
 def check_evidence_index(errors, root=None):
     """Strict semantic evidence validation (round-16 contract).
 
@@ -1607,6 +1760,7 @@ def check_evidence_index(errors, root=None):
     - UTC validity/recency/order locally and globally; bootstrap ordering.
     """
     import datetime as _dt
+
     root = _root(root)
     if not (root / "construction" / "locale" / "ar.po").exists():
         errors.append("evidence-root: candidate root does not contain a construction checkout")
@@ -1634,8 +1788,9 @@ def check_evidence_index(errors, root=None):
         if m:
             rows.append((m.group(1), m.group(2)))
             continue
-        m2 = re.match(r"^(COMMAND|STARTED_UTC|FINISHED_UTC|EXIT_CODE|ENVELOPE_LINES|ARTIFACTS"
-                      r"|CANDIDATE_ROOT):", s)
+        m2 = re.match(
+            r"^(COMMAND|STARTED_UTC|FINISHED_UTC|EXIT_CODE|ENVELOPE_LINES|ARTIFACTS" r"|CANDIDATE_ROOT):", s
+        )
         m3 = re.match(r"^([A-Za-z_]+_SHA256): ([0-9a-f]{64})$", s)
         if not m2 and not m3:
             errors.append(f"evidence-index-grammar: unparsed line: {s[:80]!r}")
@@ -1666,25 +1821,32 @@ def check_evidence_index(errors, root=None):
             seq_kinds.append("length")
         else:
             seq_kinds.append("unknown")
-    want_kinds = (["version", "command", "started"] + ["hash"] * len(EVIDENCE_FILES)
-                  + ["exit", "finished", "head", "croot", "artifacts"]
-                  + ["artifact"] * len(ARTIFACT_PATHS) + ["length"])
+    want_kinds = (
+        ["version", "command", "started"]
+        + ["hash"] * len(EVIDENCE_FILES)
+        + ["exit", "finished", "head", "croot", "artifacts"]
+        + ["artifact"] * len(ARTIFACT_PATHS)
+        + ["length"]
+    )
     if seq_kinds != want_kinds:
         errors.append("evidence-index-order: index lines are not in the canonical ordered schema")
     hash_order = [s.split()[-1] for s in ordered if re.match(r"^[0-9a-f]{64}\s+", s)]
     if hash_order != list(EVIDENCE_FILES):
         errors.append("evidence-index-hashorder: hash rows must follow EVIDENCE_FILES order")
-    art_order = [s.split(":")[0] for s in ordered
-                 if re.match(r"^[A-Za-z_]+_SHA256: [0-9a-f]{64}$", s)]
+    art_order = [s.split(":")[0] for s in ordered if re.match(r"^[A-Za-z_]+_SHA256: [0-9a-f]{64}$", s)]
     if art_order != list(ARTIFACT_PATHS):
         errors.append("evidence-index-artifact-order: artifact rows must follow ARTIFACT_PATHS order")
     root_rows = [s for s in ordered if s.startswith("CANDIDATE_ROOT:")]
     if len(root_rows) != 1:
-        errors.append(f"evidence-index-root: exactly one CANDIDATE_ROOT row required (found {len(root_rows)})")
+        errors.append(
+            f"evidence-index-root: exactly one CANDIDATE_ROOT row required (found {len(root_rows)})"
+        )
     elif root_rows[0].split(":", 1)[1].strip() != str(root.resolve()):
         errors.append(f"evidence-index-root: {root_rows[0]!r} != invocation root {str(root.resolve())!r}")
     if len(head_rows) != 1:
-        errors.append(f"evidence-index-head: exactly one CANDIDATE_HEAD row required (found {len(head_rows)})")
+        errors.append(
+            f"evidence-index-head: exactly one CANDIDATE_HEAD row required (found {len(head_rows)})"
+        )
     if sorted(f for _, f in rows) != sorted(EVIDENCE_FILES):
         errors.append(
             f"evidence-index-set: must name exactly {sorted(EVIDENCE_FILES)}, "
@@ -1696,8 +1858,8 @@ def check_evidence_index(errors, root=None):
         if f not in EVIDENCE_FILES or ".." in f or "/" in f:
             errors.append(f"evidence-index-path: bad entry {f!r}")
     actual = sorted(f.name for f in evdir.iterdir() if f.is_file() and f.suffix == ".txt")
-    if actual != sorted(EVIDENCE_FILES + ("index.txt",)):
-        errors.append(f"evidence-set: expected {sorted(EVIDENCE_FILES + ('index.txt',))}, found {actual}")
+    if actual != sorted((*EVIDENCE_FILES, "index.txt")):
+        errors.append(f"evidence-set: expected {sorted((*EVIDENCE_FILES, 'index.txt'))}, found {actual}")
     bound_hashes = {}
     seen_content = {}
     live_artifacts = {}
@@ -1712,7 +1874,9 @@ def check_evidence_index(errors, root=None):
     now = _dt.datetime.now(_dt.timezone.utc).replace(tzinfo=None)
     idx_len_rows = [s for s in ordered if s.startswith("ENVELOPE_LINES:")]
     if len(idx_len_rows) != 1:
-        errors.append(f"evidence-index-length: exactly one ENVELOPE_LINES row required (found {len(idx_len_rows)})")
+        errors.append(
+            f"evidence-index-length: exactly one ENVELOPE_LINES row required (found {len(idx_len_rows)})"
+        )
     else:
         try:
             declared = int(idx_len_rows[0].split(":", 1)[1].strip())
@@ -1720,7 +1884,8 @@ def check_evidence_index(errors, root=None):
             declared = None
         if declared != len(index_lines):
             errors.append(
-                f"evidence-index-length: index declares {idx_len_rows[0].split(':', 1)[1].strip()!r} lines, has {len(index_lines)}")
+                f"evidence-index-length: index declares {idx_len_rows[0].split(':', 1)[1].strip()!r} lines, has {len(index_lines)}"
+            )
     idx_art = {}
     for s in ordered:
         m = re.match(r"^([A-Za-z_]+_SHA256): ([0-9a-f]{64})$", s)
@@ -1736,7 +1901,8 @@ def check_evidence_index(errors, root=None):
             errors.append(f"evidence-index-artifact-missing: {ARTIFACT_PATHS[mark]} not in candidate")
         elif vals[0] != live_artifacts[mark]:
             errors.append(
-                f"evidence-index-artifact-value: {mark} index {vals[0][:12]}… != live {live_artifacts[mark][:12]}…")
+                f"evidence-index-artifact-value: {mark} index {vals[0][:12]}… != live {live_artifacts[mark][:12]}…"
+            )
     for mark in idx_art:
         if mark not in ARTIFACT_PATHS:
             errors.append(f"evidence-index-artifact-alias: unknown index artifact marker {mark}")
@@ -1754,9 +1920,15 @@ def check_evidence_index(errors, root=None):
         seen_content[h] = fname
         bound_hashes[fname] = h
         origin = f"evidence-envelope: {fname}"
-        _res_lines = [l for l in content.splitlines() if l.strip() and not any(
-            l.startswith(m) for m in ("COMMAND:", "STARTED_UTC:", "FINISHED_UTC:",
-                                      "EXIT_CODE:", "ENVELOPE_LINES:"))]
+        _res_lines = [
+            l
+            for l in content.splitlines()
+            if l.strip()
+            and not any(
+                l.startswith(m)
+                for m in ("COMMAND:", "STARTED_UTC:", "FINISHED_UTC:", "EXIT_CODE:", "ENVELOPE_LINES:")
+            )
+        ]
         check_envelope_schema(fname, _res_lines, errors, root, live_artifacts)
 
         def one(marker, err):
@@ -1764,7 +1936,7 @@ def check_evidence_index(errors, root=None):
             if len(matches) != 1:
                 errors.append(f"{err}: {fname} must have exactly one {marker} (found {len(matches)})")
                 return None
-            return matches[0][len(marker):].strip()
+            return matches[0][len(marker) :].strip()
 
         cmd = one("COMMAND:", origin)
         start = one("STARTED_UTC:", origin)
@@ -1794,14 +1966,26 @@ def check_evidence_index(errors, root=None):
         nonempty = [l for l in content.splitlines() if l.strip()]
         try:
             if nlines is not None and int(nlines) != len(nonempty):
-                errors.append(
-                    f"evidence-length: {fname} declares {nlines} lines, file has {len(nonempty)}")
+                errors.append(f"evidence-length: {fname} declares {nlines} lines, file has {len(nonempty)}")
         except ValueError:
             errors.append(f"evidence-length: {fname} bad ENVELOPE_LINES value")
-        for bad in ("FAIL ", "FAILED", "Traceback", "AssertionError", "ERROR:",
-                    "error:", "failed=", "errors=", "Error ", "Exception"):
-            hits = [l for l in content.splitlines()
-                    if l.startswith(bad) or (bad in ("FAILED", "failed=") and f" {bad}" in f" {l} ")]
+        for bad in (
+            "FAIL ",
+            "FAILED",
+            "Traceback",
+            "AssertionError",
+            "ERROR:",
+            "error:",
+            "failed=",
+            "errors=",
+            "Error ",
+            "Exception",
+        ):
+            hits = [
+                l
+                for l in content.splitlines()
+                if l.startswith(bad) or (bad in ("FAILED", "failed=") and f" {bad}" in f" {l} ")
+            ]
             if bad in ("FAILED", "failed=", "errors="):
                 hits = [l for l in hits if "failed=0" not in l and "errors=0" not in l]
             if hits:
@@ -1820,30 +2004,52 @@ def check_evidence_index(errors, root=None):
                 errors.append(f"evidence-arithmetic: {fname} module sum != aggregate total or failed != 0")
         if fname == "gate-tests-standalone.txt":
             m = re.search(r"^Ran (\d+) tests", content, re.M)
-            if not m or int(m.group(1)) != dict(EXPECTED_MODULES)["construction.tests.test_localization_gates"]:
+            if (
+                not m
+                or int(m.group(1)) != dict(EXPECTED_MODULES)["construction.tests.test_localization_gates"]
+            ):
                 errors.append(f"evidence-schema: {fname} standalone count differs from contract")
             if not re.search(r"^OK$", content, re.M):
                 errors.append(f"evidence-schema: {fname} must record OK")
         if fname == "full-gate.txt":
+
             def _num(pat):
                 mm = re.search(pat, content)
                 return int(mm.group(1)) if mm else None
-            got = {"catalog": _num(r'"construction/locale/ar\.po": (\d+)'),
-                   "wrapped": _num(r'"wrapped": (\d+)'),
-                   "json_labels": _num(r'"json_labels": (\d+)'),
-                   "missing": _num(r'"missing": (\d+)'),
-                   "gate_errors": _num(r"errors=(\d+)")}
-            want = {"catalog": EXPECTED_GATE["catalog"], "wrapped": EXPECTED_GATE["wrapped"],
-                    "json_labels": EXPECTED_GATE["json_labels"], "missing": 0, "gate_errors": 0}
+
+            got = {
+                "catalog": _num(r'"construction/locale/ar\.po": (\d+)'),
+                "wrapped": _num(r'"wrapped": (\d+)'),
+                "json_labels": _num(r'"json_labels": (\d+)'),
+                "missing": _num(r'"missing": (\d+)'),
+                "gate_errors": _num(r"errors=(\d+)"),
+            }
+            want = {
+                "catalog": EXPECTED_GATE["catalog"],
+                "wrapped": EXPECTED_GATE["wrapped"],
+                "json_labels": EXPECTED_GATE["json_labels"],
+                "missing": 0,
+                "gate_errors": 0,
+            }
             if got != want:
                 errors.append(f"evidence-schema: {fname} gate result object differs from contract")
             if f'"files": {EXPECTED_GATE["files"]}' not in content:
                 errors.append(f"evidence-schema: {fname} file count differs from contract")
         if fname == "final-dryrun.txt":
             m = re.search(r"total=(\d+) created=(\d+) updated=(\d+) skipped=(\d+) drift=(\d+)", content)
-            vals = {k: int(v) for k, v in zip(
-                ("total", "created", "updated", "skipped", "drift"), m.groups())} if m else None
-            if vals != EXPECTED_DRYRUN or (vals and vals["total"] != vals["created"] + vals["updated"] + vals["skipped"]):
+            vals = (
+                {
+                    k: int(v)
+                    for k, v in zip(
+                        ("total", "created", "updated", "skipped", "drift"), m.groups(), strict=False
+                    )
+                }
+                if m
+                else None
+            )
+            if vals != EXPECTED_DRYRUN or (
+                vals and vals["total"] != vals["created"] + vals["updated"] + vals["skipped"]
+            ):
                 errors.append(f"evidence-schema: {fname} dry-run arithmetic differs from contract")
         if fname == "scoped-gate.txt":
             if "errors=0" not in content:
@@ -1852,8 +2058,11 @@ def check_evidence_index(errors, root=None):
             if "errors=0" not in content:
                 errors.append(f"evidence-schema: {fname} must record errors=0")
         if fname == "lints-diffcheck.txt":
-            for mark in ("DIFFCHECK_CLEAN", "Translation write lint PASSED",
-                         "no scope-dimension field has in_standard_filter=1"):
+            for mark in (
+                "DIFFCHECK_CLEAN",
+                "Translation write lint PASSED",
+                "no scope-dimension field has in_standard_filter=1",
+            ):
                 if mark not in content:
                     errors.append(f"evidence-schema: {fname} lacks {mark!r}")
         if fname == "freshness-envelope.txt":
@@ -1866,7 +2075,11 @@ def check_evidence_index(errors, root=None):
             mm = re.search(r"MERKLE_ROWS: (\d+)", content)
             if mm:
                 try:
-                    inv = json.loads((root / "construction/data/localization/stage2_inventory_manifest.json").read_text(encoding="utf-8"))
+                    inv = json.loads(
+                        (root / "construction/data/localization/stage2_inventory_manifest.json").read_text(
+                            encoding="utf-8"
+                        )
+                    )
                     if int(mm.group(1)) != (inv.get("merkle") or {}).get("rows"):
                         errors.append(f"evidence-merkle: {fname} rows != live inventory manifest")
                 except (OSError, ValueError):
@@ -1878,12 +2091,19 @@ def check_evidence_index(errors, root=None):
         if idx_match != [h]:
             errors.append(f"evidence-index-mismatch: {fname} index hash != file hash")
         if fname == "merkle.txt":
-            for mark, key in (("MERKLE_ROOT:", "merkle_root"), ("INVENTORY_MANIFEST_SHA256:", "manifest_sha")):
+            for mark, key in (
+                ("MERKLE_ROOT:", "merkle_root"),
+                ("INVENTORY_MANIFEST_SHA256:", "manifest_sha"),
+            ):
                 line = next((l for l in content.splitlines() if mark in l), "")
                 mm = re.search(r"\b[0-9a-f]{64}\b", line)
                 if mark == "MERKLE_ROOT:" and mm:
                     try:
-                        inv = json.loads((root / "construction/data/localization/stage2_inventory_manifest.json").read_text(encoding="utf-8"))
+                        inv = json.loads(
+                            (
+                                root / "construction/data/localization/stage2_inventory_manifest.json"
+                            ).read_text(encoding="utf-8")
+                        )
                         if mm.group(0) != (inv.get("merkle") or {}).get("root"):
                             errors.append(f"evidence-merkle-live: {fname} root != live inventory manifest")
                     except (OSError, ValueError):
@@ -1905,17 +2125,22 @@ def check_evidence_index(errors, root=None):
         if not seen:
             errors.append(f"evidence-artifact-unbound: {mark} appears in no envelope")
             continue
-        if len(seen) > 1 or list(seen)[0] != live_sha:
+        if len(seen) > 1 or next(iter(seen)) != live_sha:
             errors.append(
                 f"evidence-artifact-mismatch: {mark} values {sorted(seen)} disagree or != live {live_sha[:12]}…"
             )
-        if mark == "PO_SHA256" and list(seen)[0] != live_sha:
+        if mark == "PO_SHA256" and next(iter(seen)) != live_sha:
             pass
     head = subprocess_head_commit(root)
-    idx_heads = [line.strip().split(":", 1)[1].strip() for line in index_lines
-                 if line.strip().startswith("CANDIDATE_HEAD:")]
+    idx_heads = [
+        line.strip().split(":", 1)[1].strip()
+        for line in index_lines
+        if line.strip().startswith("CANDIDATE_HEAD:")
+    ]
     if len(idx_heads) != 1:
-        errors.append(f"evidence-index-head: exactly one CANDIDATE_HEAD row required (found {len(idx_heads)})")
+        errors.append(
+            f"evidence-index-head: exactly one CANDIDATE_HEAD row required (found {len(idx_heads)})"
+        )
     elif head is None:
         errors.append("evidence-index-head: Git HEAD unresolvable at candidate root — fail closed")
     elif idx_heads[0] != head:
@@ -1926,7 +2151,9 @@ def check_evidence_index(errors, root=None):
         latest_finish = max(t1 for _, t1 in envelope_spans.values())
         for fname, (t0, t1) in sorted(envelope_spans.items()):
             if (latest_finish - t0).days > 1:
-                errors.append(f"evidence-order: {fname} started over a day before latest finish — regenerate set atomically")
+                errors.append(
+                    f"evidence-order: {fname} started over a day before latest finish — regenerate set atomically"
+                )
     idx_text = idxp.read_text(encoding="utf-8")
 
     def idx_one(marker):
@@ -1934,7 +2161,7 @@ def check_evidence_index(errors, root=None):
         if len(matches) != 1:
             errors.append(f"evidence-index-envelope: index.txt must have exactly one {marker}")
             return None
-        return matches[0][len(marker):].strip()
+        return matches[0][len(marker) :].strip()
 
     idx_cmd = idx_one("COMMAND:")
     idx_start = idx_one("STARTED_UTC:")
@@ -1953,15 +2180,19 @@ def check_evidence_index(errors, root=None):
     if idx_t0 is not None and envelope_spans:
         latest_env_finish = max(t1 for _, t1 in envelope_spans.values())
         if idx_t0 < latest_env_finish:
-            errors.append("evidence-order: index.txt generated before some envelope finished — regenerate last")
+            errors.append(
+                "evidence-order: index.txt generated before some envelope finished — regenerate last"
+            )
     return bound_hashes
 
 
 def subprocess_head_commit(root):
     import subprocess
+
     try:
-        out = subprocess.run(["git", "-C", str(root), "rev-parse", "HEAD"],
-                             capture_output=True, text=True, timeout=30)
+        out = subprocess.run(
+            ["git", "-C", str(root), "rev-parse", "HEAD"], capture_output=True, text=True, timeout=30
+        )
     except Exception:
         return None
     return out.stdout.strip() if out.returncode == 0 else None
@@ -1974,8 +2205,18 @@ def load_reviewed_delta(path):
         return None
     if delta.get("triage_status") != "reviewed" or not delta.get("disposition"):
         return None
-    for key in ("app", "old", "new", "old_po_sha", "new_po_sha", "added", "removed",
-                "changed", "context_shift", "dispositions"):
+    for key in (
+        "app",
+        "old",
+        "new",
+        "old_po_sha",
+        "new_po_sha",
+        "added",
+        "removed",
+        "changed",
+        "context_shift",
+        "dispositions",
+    ):
         if key not in delta:
             return None
     return delta
@@ -1990,17 +2231,15 @@ def classify_delta(old_map, new_map):
     added = sorted(k for k in new_map if k not in old_map)
     removed = sorted(k for k in old_map if k not in new_map)
     changed = sorted(
-        k for k in old_map if k in new_map
-        and old_map[k].get("targets") != new_map[k].get("targets")
+        k for k in old_map if k in new_map and old_map[k].get("targets") != new_map[k].get("targets")
     )
     old_by_msgid, new_by_msgid = {}, {}
-    for (c, m) in old_map:
+    for c, m in old_map:
         old_by_msgid.setdefault(m, set()).add(c)
-    for (c, m) in new_map:
+    for c, m in new_map:
         new_by_msgid.setdefault(m, set()).add(c)
     context_shift = sorted(
-        {"msgid": m, "old_contexts": sorted(old_by_msgid[m]),
-         "new_contexts": sorted(new_by_msgid[m])}
+        {"msgid": m, "old_contexts": sorted(old_by_msgid[m]), "new_contexts": sorted(new_by_msgid[m])}
         for m in old_by_msgid
         if m in new_by_msgid and old_by_msgid[m] != new_by_msgid[m]
     )
@@ -2013,23 +2252,23 @@ def canonical_delta_sets(added, removed, changed, context_shift):
         "added": sorted([list(k) for k in added]),
         "removed": sorted([list(k) for k in removed]),
         "changed": sorted([list(k) for k in changed]),
-        "context_shift": sorted(context_shift,
-                                key=lambda d: (d.get("msgid"), str(d.get("old_contexts")))),
+        "context_shift": sorted(context_shift, key=lambda d: (d.get("msgid"), str(d.get("old_contexts")))),
     }
 
 
 def recompute_transition(app, old_commit, new_commit, root=None):
     root = _root(root)
+    import shutil as _sh
     import subprocess
     import tempfile
-    import shutil as _sh
 
     def read_sets(ref):
         if ref is None:
             return None
         out = subprocess.run(
             ["git", "-C", str(root.parent / app), "show", f"{ref}:{app}/locale/ar.po"],
-            capture_output=True, timeout=120,
+            capture_output=True,
+            timeout=120,
         )
         if out.returncode != 0:
             return None
@@ -2051,12 +2290,17 @@ def recompute_transition(app, old_commit, new_commit, root=None):
 
 def write_msgid_inventory(app, inv, root=None):
     root = _root(root)
-    hdr = ("# vendor catalog inventory — generated by --update-baselines (reviewed operation).\n"
-           "# format per line: context\\x00msgid\\x00translation-hash16 (literal backslash-n escapes newlines).\n")
-    lines = [c.replace("\n", "\\n") + "\x00" + m.replace("\n", "\\n") + "\x00" + th
-             for (c, m), th in sorted(inv.items())]
+    hdr = (
+        "# vendor catalog inventory — generated by --update-baselines (reviewed operation).\n"
+        "# format per line: context\\x00msgid\\x00translation-hash16 (literal backslash-n escapes newlines).\n"
+    )
+    lines = [
+        c.replace("\n", "\\n") + "\x00" + m.replace("\n", "\\n") + "\x00" + th
+        for (c, m), th in sorted(inv.items())
+    ]
     (root / "construction" / "data" / "localization" / f"vendor_msgids_{app}.txt").write_text(
-        hdr + "\n".join(lines) + "\n", encoding="utf-8")
+        hdr + "\n".join(lines) + "\n", encoding="utf-8"
+    )
 
 
 def refuse(errors, msg):
@@ -2094,9 +2338,12 @@ def update_baselines(args, errors, root=None):
         if committed is None:
             refuse(errors, f"{app} committed inventory unreadable")
             return 1
-        cur = {"commit": vendor_commit(app, root), "po_sha": sha256(po),
-               "count": len(live),
-               "msgid_sha": hashlib.sha256(repr(sorted(live)).encode()).hexdigest()}
+        cur = {
+            "commit": vendor_commit(app, root),
+            "po_sha": sha256(po),
+            "count": len(live),
+            "msgid_sha": hashlib.sha256(repr(sorted(live)).encode()).hexdigest(),
+        }
         if live == committed:
             rec = (base.get("apps") or {}).get(app) or {}
             rec.update({k: v for k, v in cur.items() if v is not None})
@@ -2104,27 +2351,37 @@ def update_baselines(args, errors, root=None):
             continue
         rec = (base.get("apps") or {}).get(app) or {}
         if reviewed is None or reviewed.get("app") != app:
-            refuse(errors,
+            refuse(
+                errors,
                 f"{app} catalog differs from committed inventory — "
-                "a reviewed delta is mandatory (--delta-reviewed <file>)"
+                "a reviewed delta is mandatory (--delta-reviewed <file>)",
             )
             return 1
         live_commit = vendor_commit(app, root)
-        prov = (reviewed.get("old"), reviewed.get("new"),
-                reviewed.get("old_po_sha"), reviewed.get("new_po_sha"))
+        prov = (
+            reviewed.get("old"),
+            reviewed.get("new"),
+            reviewed.get("old_po_sha"),
+            reviewed.get("new_po_sha"),
+        )
         if prov != (rec.get("commit"), live_commit, rec.get("po_sha"), cur.get("po_sha")):
-            refuse(errors,
+            refuse(
+                errors,
                 f"{app} delta provenance mismatch: artifact claims old/new "
                 f"{prov} but recorded->live is "
-                f"{rec.get('commit')}/{rec.get('po_sha')} -> {live_commit}/{cur.get('po_sha')}"
+                f"{rec.get('commit')}/{rec.get('po_sha')} -> {live_commit}/{cur.get('po_sha')}",
             )
             return 1
         old_map = {k: {"targets": {"t": v}} for k, v in committed.items()}
         new_map = {k: {"targets": {"t": v}} for k, v in live.items()}
         added, removed, changed, shift = classify_delta(old_map, new_map)
         want = canonical_delta_sets(added, removed, changed, shift)
-        got = canonical_delta_sets(reviewed.get("added") or [], reviewed.get("removed") or [],
-                                   reviewed.get("changed") or [], reviewed.get("context_shift") or [])
+        got = canonical_delta_sets(
+            reviewed.get("added") or [],
+            reviewed.get("removed") or [],
+            reviewed.get("changed") or [],
+            reviewed.get("context_shift") or [],
+        )
         if want != got:
             refuse(errors, f"{app} delta sets do not match recomputed inventory diff")
             return 1
@@ -2135,13 +2392,20 @@ def update_baselines(args, errors, root=None):
             return 1
         write_msgid_inventory(app, live, root)
         cur["delta_sha"] = hashlib.sha256(
-            json.dumps(reviewed, sort_keys=True, ensure_ascii=False).encode("utf-8")).hexdigest()
+            json.dumps(reviewed, sort_keys=True, ensure_ascii=False).encode("utf-8")
+        ).hexdigest()
         apps[app] = cur
     (root / BASELINE).parent.mkdir(parents=True, exist_ok=True)
     (root / BASELINE).write_text(
         json.dumps(
-            {"recorded_utc": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-             "apps": apps}, indent=2, sort_keys=True) + "\n",
+            {
+                "recorded_utc": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+                "apps": apps,
+            },
+            indent=2,
+            sort_keys=True,
+        )
+        + "\n",
         encoding="utf-8",
     )
     man = {
@@ -2224,6 +2488,7 @@ def main(argv, root=None):
             scoped_scan(errors, counts, owned, sources, json_sources, root)
     else:
         import os as _os
+
         skip = "--skip-evidence" in args
         if skip and _os.environ.get("STAGE2_EVIDENCE_BOOTSTRAP") != "1":
             errors.append("evidence-bootstrap: --skip-evidence requires STAGE2_EVIDENCE_BOOTSTRAP=1")

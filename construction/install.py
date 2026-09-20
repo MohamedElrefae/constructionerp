@@ -171,28 +171,30 @@ def fix_system_manager_permissions():
         for (dt_name,) in doctypes:
             try:
                 meta = frappe.get_meta(dt_name)
-                frappe.get_doc({
-                    "doctype": "DocPerm",
-                    "parent": dt_name,
-                    "parenttype": "DocType",
-                    "parentfield": "permissions",
-                    "role": "System Manager",
-                    "permlevel": 0,
-                    "read": 1,
-                    "write": 1,
-                    "create": 1,
-                    "delete": 1,
-                    "submit": 1 if meta.is_submittable else 0,
-                    "cancel": 1 if meta.is_submittable else 0,
-                    "amend": 1 if meta.is_submittable else 0,
-                    "print": 1,
-                    "email": 1,
-                    "report": 1,
-                    "import": 1,
-                    "export": 1,
-                    "share": 1,
-                    "select": 1,
-                }).db_insert()
+                frappe.get_doc(
+                    {
+                        "doctype": "DocPerm",
+                        "parent": dt_name,
+                        "parenttype": "DocType",
+                        "parentfield": "permissions",
+                        "role": "System Manager",
+                        "permlevel": 0,
+                        "read": 1,
+                        "write": 1,
+                        "create": 1,
+                        "delete": 1,
+                        "submit": 1 if meta.is_submittable else 0,
+                        "cancel": 1 if meta.is_submittable else 0,
+                        "amend": 1 if meta.is_submittable else 0,
+                        "print": 1,
+                        "email": 1,
+                        "report": 1,
+                        "import": 1,
+                        "export": 1,
+                        "share": 1,
+                        "select": 1,
+                    }
+                ).db_insert()
                 inserted += 1
             except Exception:
                 pass
@@ -1134,9 +1136,7 @@ def _enforce_one_active_mr_per_vo():
     stored_col = "custom_variation_order_active"
 
     # 1. Add the generated column only if it does not already exist.
-    exists = frappe.db.sql(
-        "SHOW COLUMNS FROM `tabMaterial Request` LIKE %(col)s", {"col": stored_col}
-    )
+    exists = frappe.db.sql("SHOW COLUMNS FROM `tabMaterial Request` LIKE %(col)s", {"col": stored_col})
     if not exists:
         try:
             frappe.db.sql(
@@ -1258,10 +1258,7 @@ def _ensure_unique_index_or_fail():
     if idx_def:
         # Incorrect (wrong column/order/uniqueness/type) → drop and rebuild.
         frappe.db.sql(f"ALTER TABLE `tabMaterial Request` DROP INDEX `{idx_name}`")
-    frappe.db.sql(
-        f"CREATE UNIQUE INDEX `{idx_name}` "
-        f"ON `tabMaterial Request` (`{stored_col}`)"
-    )
+    frappe.db.sql(f"CREATE UNIQUE INDEX `{idx_name}` " f"ON `tabMaterial Request` (`{stored_col}`)")
     # Post-create verification — a wrong definition must abort, not pass silently.
     idx_after = frappe.db.sql(
         """
@@ -1276,9 +1273,7 @@ def _ensure_unique_index_or_fail():
         as_dict=True,
     )
     if not _index_is_correct(idx_after, stored_col):
-        raise RuntimeError(
-            f"Index '{idx_name}' could not be created correctly on 'tabMaterial Request'."
-        )
+        raise RuntimeError(f"Index '{idx_name}' could not be created correctly on 'tabMaterial Request'.")
 
 
 def _index_is_correct(idx_rows, stored_col):

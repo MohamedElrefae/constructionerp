@@ -19,15 +19,16 @@ Tests:
 
 import json
 import os
-from pathlib import Path
 import sqlite3
-import pytest
+from pathlib import Path
+
 import httpx
+import pytest
 
 from dashboard.app import app, task_registry
 from dashboard.auth import auth_store, session_manager
-from dashboard.tests.conftest import create_isolated_worktree
 from dashboard.security import SecurityError, read_authoritative_stage4_manifest
+from dashboard.tests.conftest import create_isolated_worktree
 
 
 @pytest.fixture
@@ -90,7 +91,9 @@ async def test_findings_projection(auth_headers_and_cookies, tmp_path):
     task_id = reg["task_id"]
 
     transport = httpx.ASGITransport(app=app)
-    async with httpx.AsyncClient(transport=transport, base_url="https://127.0.0.1:8080", cookies=cookies) as client:
+    async with httpx.AsyncClient(
+        transport=transport, base_url="https://127.0.0.1:8080", cookies=cookies
+    ) as client:
         resp = await client.get(f"/api/tasks/{task_id}/findings", headers=headers)
         assert resp.status_code == 200
         data = resp.json()
@@ -144,7 +147,9 @@ async def test_evidence_listing_and_filtering(auth_headers_and_cookies, tmp_path
     task_id = reg["task_id"]
 
     transport = httpx.ASGITransport(app=app)
-    async with httpx.AsyncClient(transport=transport, base_url="https://127.0.0.1:8080", cookies=cookies) as client:
+    async with httpx.AsyncClient(
+        transport=transport, base_url="https://127.0.0.1:8080", cookies=cookies
+    ) as client:
         resp = await client.get(f"/api/tasks/{task_id}/evidence", headers=headers)
         assert resp.status_code == 200
         data = resp.json()
@@ -196,7 +201,9 @@ async def test_evidence_content_reading_and_security(auth_headers_and_cookies, t
     task_id = reg["task_id"]
 
     transport = httpx.ASGITransport(app=app)
-    async with httpx.AsyncClient(transport=transport, base_url="https://127.0.0.1:8080", cookies=cookies) as client:
+    async with httpx.AsyncClient(
+        transport=transport, base_url="https://127.0.0.1:8080", cookies=cookies
+    ) as client:
         # Read normal file
         resp = await client.get(f"/api/tasks/{task_id}/evidence/normal.txt", headers=headers)
         assert resp.status_code == 200
@@ -249,7 +256,7 @@ async def test_diff_projection(auth_headers_and_cookies, tmp_path):
     with conn:
         conn.execute(
             "UPDATE workflow_meta SET value = ? WHERE key = 'config'",
-            (json.dumps({"work_item": "isolated-test-work-item", "task_base_commit": base_commit}),)
+            (json.dumps({"work_item": "isolated-test-work-item", "task_base_commit": base_commit}),),
         )
     conn.close()
 
@@ -264,7 +271,9 @@ async def test_diff_projection(auth_headers_and_cookies, tmp_path):
     task_id = reg["task_id"]
 
     transport = httpx.ASGITransport(app=app)
-    async with httpx.AsyncClient(transport=transport, base_url="https://127.0.0.1:8080", cookies=cookies) as client:
+    async with httpx.AsyncClient(
+        transport=transport, base_url="https://127.0.0.1:8080", cookies=cookies
+    ) as client:
         resp = await client.get(f"/api/tasks/{task_id}/diff", headers=headers)
         assert resp.status_code == 200
         data = resp.json()
@@ -278,8 +287,9 @@ async def test_diff_projection(auth_headers_and_cookies, tmp_path):
 @pytest.mark.anyio
 async def test_diff_wall_clock_timeout_enforced():
     """Verify that _read_subprocess_bounded enforces wall-clock timeout and reaps child."""
-    from dashboard.config import ORCHESTRATOR_PYTHON
     import subprocess
+
+    from dashboard.config import ORCHESTRATOR_PYTHON
 
     check_code = """
 import subprocess
@@ -320,7 +330,9 @@ async def test_settings_projection(auth_headers_and_cookies, tmp_path):
     task_id = reg["task_id"]
 
     transport = httpx.ASGITransport(app=app)
-    async with httpx.AsyncClient(transport=transport, base_url="https://127.0.0.1:8080", cookies=cookies) as client:
+    async with httpx.AsyncClient(
+        transport=transport, base_url="https://127.0.0.1:8080", cookies=cookies
+    ) as client:
         resp = await client.get(f"/api/tasks/{task_id}/settings", headers=headers)
         assert resp.status_code == 200
         data = resp.json()
@@ -358,7 +370,7 @@ async def test_audit_export_and_sanitization(auth_headers_and_cookies, tmp_path)
         }
         conn.execute(
             "INSERT INTO workflow_events (seq, event_id, kind, timestamp, payload) VALUES (?, ?, ?, ?, ?)",
-            (1, "ev-001", "step", "2026-09-17T00:00:00Z", json.dumps(payload))
+            (1, "ev-001", "step", "2026-09-17T00:00:00Z", json.dumps(payload)),
         )
     conn.close()
 
@@ -368,11 +380,15 @@ async def test_audit_export_and_sanitization(auth_headers_and_cookies, tmp_path)
     task_id = reg["task_id"]
 
     transport = httpx.ASGITransport(app=app)
-    async with httpx.AsyncClient(transport=transport, base_url="https://127.0.0.1:8080", cookies=cookies) as client:
+    async with httpx.AsyncClient(
+        transport=transport, base_url="https://127.0.0.1:8080", cookies=cookies
+    ) as client:
         resp = await client.get(f"/api/tasks/{task_id}/export/audit", headers=headers)
         assert resp.status_code == 200
         assert resp.headers.get("content-type") == "application/x-ndjson"
-        assert 'attachment; filename="isolated-test-work-item_audit.jsonl"' in resp.headers.get("content-disposition", "")
+        assert 'attachment; filename="isolated-test-work-item_audit.jsonl"' in resp.headers.get(
+            "content-disposition", ""
+        )
         assert resp.headers.get("x-audit-truncated") == "false"
         assert resp.headers.get("x-audit-events-count") == "1"
 
@@ -392,6 +408,7 @@ async def test_audit_export_and_sanitization(auth_headers_and_cookies, tmp_path)
 
         # Verify server-side audit hard caps are strictly enforced against oversized requests
         from dashboard.subprocess_client import query_audit_events
+
         res_capped = await query_audit_events(wt, max_events=999999, max_bytes=999999999)
         assert res_capped["metadata"]["emitted_events"] <= 1000
         assert res_capped["metadata"]["emitted_bytes"] <= 524288
@@ -409,7 +426,9 @@ async def test_state_and_reviews_exports(auth_headers_and_cookies, tmp_path):
     task_id = reg["task_id"]
 
     transport = httpx.ASGITransport(app=app)
-    async with httpx.AsyncClient(transport=transport, base_url="https://127.0.0.1:8080", cookies=cookies) as client:
+    async with httpx.AsyncClient(
+        transport=transport, base_url="https://127.0.0.1:8080", cookies=cookies
+    ) as client:
         # State export
         resp_state = await client.get(f"/api/tasks/{task_id}/export/state", headers=headers)
         assert resp_state.status_code == 200
@@ -447,7 +466,9 @@ async def test_authoritative_stage4_erp_manifest(auth_headers_and_cookies, tmp_p
 
     # API endpoint verification
     transport = httpx.ASGITransport(app=app)
-    async with httpx.AsyncClient(transport=transport, base_url="https://127.0.0.1:8080", cookies=cookies) as client:
+    async with httpx.AsyncClient(
+        transport=transport, base_url="https://127.0.0.1:8080", cookies=cookies
+    ) as client:
         resp = await client.get("/api/erp/projection", headers=headers)
         assert resp.status_code == 200
         data = resp.json()
@@ -471,8 +492,9 @@ async def test_authoritative_stage4_erp_manifest(auth_headers_and_cookies, tmp_p
     with pytest.raises(SecurityError, match="exceeds maximum allowed size"):
         read_authoritative_stage4_manifest()
 
-    async with httpx.AsyncClient(transport=transport, base_url="https://127.0.0.1:8080", cookies=cookies) as client:
+    async with httpx.AsyncClient(
+        transport=transport, base_url="https://127.0.0.1:8080", cookies=cookies
+    ) as client:
         resp = await client.get("/api/erp/projection", headers=headers)
         assert resp.status_code == 403
         assert "exceeds maximum allowed size" in resp.json()["detail"]
-

@@ -80,7 +80,9 @@ class TestRegistryLoadAndValidate(unittest.TestCase):
         self.assertEqual(errors, [])
         policy = data["unicode_policy"]
         self.assertIn("LRM_U+200E", policy["identity_rejected"])
-        self.assertIn("BIDI_EMBEDDING_OVERRIDE_ISOLATE_U+202A-U+202E_U+2066-U+2069", policy["narrative_rejected"])
+        self.assertIn(
+            "BIDI_EMBEDDING_OVERRIDE_ISOLATE_U+202A-U+202E_U+2066-U+2069", policy["narrative_rejected"]
+        )
 
     def test_unparseable_registry_fails_closed(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -124,10 +126,23 @@ class TestUnicodePolicy(unittest.TestCase):
 
     def test_all_bidi_controls_rejected_in_identity(self):
         # Canonical C1: U+202A–U+202E, U+2066–U+2069, U+200E, U+200F, U+061C
-        for ch in ("\u202a", "\u202b", "\u202c", "\u202d", "\u202e",
-                   "\u2066", "\u2067", "\u2068", "\u2069",
-                   "\u200e", "\u200f", "\u061c"):
-            self.assertFalse(br.is_safe_identity_text("\u062d\u0633\u0627\u0628" + ch), "U+%04X must be rejected" % ord(ch))
+        for ch in (
+            "\u202a",
+            "\u202b",
+            "\u202c",
+            "\u202d",
+            "\u202e",
+            "\u2066",
+            "\u2067",
+            "\u2068",
+            "\u2069",
+            "\u200e",
+            "\u200f",
+            "\u061c",
+        ):
+            self.assertFalse(
+                br.is_safe_identity_text("\u062d\u0633\u0627\u0628" + ch), f"U+{ord(ch):04X} must be rejected"
+            )
 
     def test_narrative_allows_documented_direction_marks(self):
         # Section 8.6 documented policy: LRM/RLM/ALM allowed in narrative

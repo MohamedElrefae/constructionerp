@@ -1,3 +1,4 @@
+/* global vfcDebugLog */
 /* ═══════════════════════════════════════════════════════════════════════
    vfc_layout_engine_tests.js — Browser Console Verification Suite
    ─────────────────────────────────────────────────────────────────────
@@ -49,7 +50,10 @@
     ───────────────────────────────────────────────────────── */
 		checkOrphans() {
 			this._results = [];
-			vfcDebugLog("log", "\n🔍 VFCTest.checkOrphans() — looking for orphaned field wrappers…");
+			vfcDebugLog(
+				"log",
+				"\n🔍 VFCTest.checkOrphans() — looking for orphaned field wrappers…"
+			);
 
 			if (!cur_frm) {
 				this._log(false, "No cur_frm available. Open a form first.");
@@ -176,7 +180,8 @@
 				}
 			});
 
-			vfcDebugLog("log", 
+			vfcDebugLog(
+				"log",
 				`   Visible fields: ${visible}, Hidden fields: ${hidden}, Total cells: ${cells.length}`
 			);
 
@@ -199,7 +204,10 @@
 
 			const LE = window.VFCLayoutEngine;
 			if (!LE) {
-				this._log(false, "window.VFCLayoutEngine is not defined — engine may not be loaded.");
+				this._log(
+					false,
+					"window.VFCLayoutEngine is not defined — engine may not be loaded."
+				);
 				return this._summary();
 			}
 			this._log(true, "window.VFCLayoutEngine is defined.");
@@ -222,7 +230,8 @@
 			}
 
 			// Verify observer counter (debug-gated)
-			vfcDebugLog("log", 
+			vfcDebugLog(
+				"log",
 				"   💡 Tip: Enable VFC_DEBUG and refresh to measure observer callback volume."
 			);
 
@@ -235,7 +244,8 @@
      ───────────────────────────────────────────────────────── */
 		checkNativeShells() {
 			this._results = [];
-			vfcDebugLog("log", 
+			vfcDebugLog(
+				"log",
 				"\n🔍 VFCTest.checkNativeShells() — ensuring native shells are preserved…"
 			);
 
@@ -259,7 +269,8 @@
 				);
 			});
 
-			vfcDebugLog("log", 
+			vfcDebugLog(
+				"log",
 				`   Native sections total: ${nativeSections.length}, visible: ${visibleNative.length}`
 			);
 

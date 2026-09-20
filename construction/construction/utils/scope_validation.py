@@ -9,7 +9,9 @@ def validate_scope_dimensions(company=None, cost_center=None, project=None, depa
     if cost_center and company:
         cc_company = frappe.get_cached_value("Cost Center", cost_center, "company")
         if cc_company and cc_company != company:
-            errors.append(_("Cost Center '{0}' does not belong to Company '{1}'").format(cost_center, company))
+            errors.append(
+                _("Cost Center '{0}' does not belong to Company '{1}'").format(cost_center, company)
+            )
 
     # Project must belong to Company
     if project and company:
@@ -22,11 +24,15 @@ def validate_scope_dimensions(company=None, cost_center=None, project=None, depa
         try:
             dept_company = frappe.db.get_value("Department", department, "company")
             if dept_company and dept_company != company:
-                errors.append(_("Department '{0}' does not belong to Company '{1}'").format(department, company))
+                errors.append(
+                    _("Department '{0}' does not belong to Company '{1}'").format(department, company)
+                )
         except (frappe.DoesNotExistError, frappe.EmptyQueryValuesError):
             pass
         except Exception as e:
-            frappe.logger("scope_validation").error(f"Error checking department company for {department}: {e}")
+            frappe.logger("scope_validation").error(
+                f"Error checking department company for {department}: {e}"
+            )
             if throw:
                 raise e
 

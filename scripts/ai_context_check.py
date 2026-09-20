@@ -41,7 +41,7 @@ def _memory_files(root: Path) -> tuple[bool, list[str]]:
         if path.is_file():
             details.append(f"{filename} exists ({path.stat().st_size} bytes)")
         else:
-            return False, details + [f"{filename} missing at {path}"]
+            return False, [*details, f"{filename} missing at {path}"]
     return True, details
 
 
@@ -52,9 +52,7 @@ def _git_state(root: Path) -> tuple[bool, list[str]]:
         (("rev-parse", "--short", "HEAD"), "Latest commit"),
         (("rev-list", "--count", "HEAD"), "Total commits"),
     ):
-        result = subprocess.run(
-            ["git", *args], cwd=root, text=True, capture_output=True, check=False
-        )
+        result = subprocess.run(["git", *args], cwd=root, text=True, capture_output=True, check=False)
         if result.returncode:
             diagnostic = result.stderr.strip() or result.stdout.strip() or "no output"
             return False, [f"{label} query failed: {diagnostic}"]
@@ -88,7 +86,9 @@ def _boq_structure(root: Path) -> tuple[bool, list[str]]:
     names = {field["fieldname"] for field in _read_json(path).get("fields", [])}
     required = {"lft", "rgt", "old_parent", "is_group", "wbs_code"}
     missing = sorted(required - names)
-    return not missing, [f"'{name}' field {'MISSING' if name in missing else 'exists'}" for name in sorted(required)]
+    return not missing, [
+        f"'{name}' field {'MISSING' if name in missing else 'exists'}" for name in sorted(required)
+    ]
 
 
 def _css(root: Path) -> tuple[bool, list[str]]:
@@ -128,21 +128,42 @@ def _patches(root: Path) -> tuple[bool, list[str]]:
     file_name = "v7_0_migrate_quantity_revisions.py"
     if not (path / file_name).exists():
         missing.append(file_name)
-    return not missing, ["All expected migration paths exist" if not missing else f"Missing: {', '.join(missing)}"]
+    return not missing, [
+        "All expected migration paths exist" if not missing else f"Missing: {', '.join(missing)}"
+    ]
 
 
 def _registry(root: Path) -> tuple[bool, list[str]]:
     expected = {
-        "boq_header", "boq_import_batch", "boq_item", "boq_item_stage", "boq_cost_analysis",
-        "boq_cost_analysis_detail", "boq_quantity_revision", "boq_structure", "construction_settings",
-        "construction_theme", "costitem", "direct_labor_designation", "form_layout_profile", "journal_entry",
-        "modern_theme_settings", "plantresource", "resource_price_history", "scope_report_access_log",
-        "user_desk_theme", "user_scope_context", "variation_order", "vo_line",
+        "boq_header",
+        "boq_import_batch",
+        "boq_item",
+        "boq_item_stage",
+        "boq_cost_analysis",
+        "boq_cost_analysis_detail",
+        "boq_quantity_revision",
+        "boq_structure",
+        "construction_settings",
+        "construction_theme",
+        "costitem",
+        "direct_labor_designation",
+        "form_layout_profile",
+        "journal_entry",
+        "modern_theme_settings",
+        "plantresource",
+        "resource_price_history",
+        "scope_report_access_log",
+        "user_desk_theme",
+        "user_scope_context",
+        "variation_order",
+        "vo_line",
     }
     folders = root / "construction" / "construction" / "doctype"
     found = {entry.name for entry in folders.iterdir() if entry.is_dir() and not entry.name.startswith("_")}
     missing, extra = sorted(expected - found), sorted(found - expected)
-    details = [f"All {len(expected)} expected DocTypes present" if not missing else f"Missing: {', '.join(missing)}"]
+    details = [
+        f"All {len(expected)} expected DocTypes present" if not missing else f"Missing: {', '.join(missing)}"
+    ]
     details.extend(f"Unexpected DocType folder found: '{name}'" for name in extra)
     return not missing and not extra, details
 
@@ -163,7 +184,10 @@ def _schema_drift(root: Path) -> tuple[bool, list[str]]:
 
 def _resource_schema(root: Path) -> tuple[bool, list[str]]:
     base = root / "construction" / "construction" / "doctype"
-    expected = (("costitem", "cost_item.json", "cost_item_code"), ("plantresource", "plant_resource.json", "resource_code"))
+    expected = (
+        ("costitem", "cost_item.json", "cost_item_code"),
+        ("plantresource", "plant_resource.json", "resource_code"),
+    )
     details = []
     passed = True
     for folder, filename, key in expected:
@@ -195,7 +219,10 @@ def run_checks(root: Path) -> list[CheckResult]:
         ("SCP-C9", "CostItem and PlantResource", _resource_schema),
         ("SCP-C10", "Architecture Decisions", _adr),
     )
-    return [_check(check_id, name, lambda callback=callback: callback(root)) for check_id, name, callback in checks]
+    return [
+        _check(check_id, name, lambda callback=callback: callback(root))
+        for check_id, name, callback in checks
+    ]
 
 
 def _report(results: list[CheckResult], root: Path, json_mode: bool) -> int:
@@ -205,7 +232,12 @@ def _report(results: list[CheckResult], root: Path, json_mode: bool) -> int:
         payload = {
             "repo_root": str(root),
             "checks": [
-                {"id": result.check_id, "name": result.name, "status": "PASS" if result.passed else "FAIL", "details": result.details}
+                {
+                    "id": result.check_id,
+                    "name": result.name,
+                    "status": "PASS" if result.passed else "FAIL",
+                    "details": result.details,
+                }
                 for result in results
             ],
             "passed": passed,

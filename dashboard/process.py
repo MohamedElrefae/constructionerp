@@ -7,9 +7,9 @@ child execution wrapped in dashboard.launcher with PR_SET_PDEATHSIG.
 
 import asyncio
 import os
-from pathlib import Path
 import subprocess
 import sys
+from pathlib import Path
 from typing import Any
 
 
@@ -23,7 +23,7 @@ def get_process_start_time(pid: int) -> int | None:
             rparen = content.rfind(")")
             if rparen == -1:
                 return None
-            fields = content[rparen + 2:].split()
+            fields = content[rparen + 2 :].split()
             # field 22 is index 19 after the command closing parenthesis
             return int(fields[19])
     except (FileNotFoundError, ProcessLookupError, IndexError, ValueError, OSError, PermissionError):
@@ -89,7 +89,7 @@ def spawn_supervised_child(
         os.set_inheritable(lock_fd, True)
         pass_fds = kwargs.pop("pass_fds", ())
         if lock_fd not in pass_fds:
-            pass_fds = tuple(pass_fds) + (lock_fd,)
+            pass_fds = (*tuple(pass_fds), lock_fd)
         kwargs["pass_fds"] = pass_fds
 
     wrapped_cmd = build_supervised_cmd(
@@ -124,7 +124,7 @@ async def async_spawn_supervised_child(
     if lock_fd is not None:
         os.set_inheritable(lock_fd, True)
         if lock_fd not in pass_fds:
-            pass_fds = tuple(pass_fds) + (lock_fd,)
+            pass_fds = (*tuple(pass_fds), lock_fd)
 
     wrapped_cmd = build_supervised_cmd(
         cmd,

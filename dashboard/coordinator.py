@@ -11,7 +11,7 @@ import logging
 from typing import Any
 
 from dashboard.registry import TaskRegistry
-from dashboard.subprocess_client import get_state_projection, SubprocessClientError
+from dashboard.subprocess_client import SubprocessClientError, get_state_projection
 
 logger = logging.getLogger(__name__)
 

@@ -41,14 +41,10 @@ class TestAccountArabicNameSchema(unittest.TestCase):
         """Re-running the patch changes nothing (no duplicate Custom Field)."""
         from construction.patches.v8_8.add_account_arabic_name_field import execute
 
-        before = frappe.db.count(
-            "Custom Field", {"dt": "Account", "fieldname": "account_name_ar"}
-        )
+        before = frappe.db.count("Custom Field", {"dt": "Account", "fieldname": "account_name_ar"})
         execute()
         execute()
-        after = frappe.db.count(
-            "Custom Field", {"dt": "Account", "fieldname": "account_name_ar"}
-        )
+        after = frappe.db.count("Custom Field", {"dt": "Account", "fieldname": "account_name_ar"})
         self.assertEqual(before, 1)
         self.assertEqual(after, 1)
 
@@ -65,9 +61,7 @@ class TestAccountArabicNameSchema(unittest.TestCase):
             "name",
         )
         self.assertIsNotNone(parent, "No Elrefae group parent available for fixture")
-        parent_meta = frappe.db.get_value(
-            "Account", parent, ["root_type", "report_type"], as_dict=True
-        )
+        parent_meta = frappe.db.get_value("Account", parent, ["root_type", "report_type"], as_dict=True)
         doc = frappe.get_doc(
             {
                 "doctype": "Account",
@@ -83,13 +77,9 @@ class TestAccountArabicNameSchema(unittest.TestCase):
         doc.insert(ignore_permissions=True)
         name = doc.name
         try:
-            before = frappe.db.get_value(
-                "Account", name, ["name", "account_name"], as_dict=True
-            )
+            before = frappe.db.get_value("Account", name, ["name", "account_name"], as_dict=True)
             frappe.db.set_value("Account", name, "account_name_ar", "حساب اختبار")
-            after = frappe.db.get_value(
-                "Account", name, ["name", "account_name"], as_dict=True
-            )
+            after = frappe.db.get_value("Account", name, ["name", "account_name"], as_dict=True)
             self.assertEqual(after.name, before.name)
             self.assertEqual(after.account_name, before.account_name)
         finally:

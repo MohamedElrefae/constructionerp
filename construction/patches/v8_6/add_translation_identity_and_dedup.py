@@ -10,7 +10,11 @@ from frappe.translate import strip_html_tags
 def _digest(lang, src, ctx, app, is_catalog):
     if "\x00" in (src or "") or "\x00" in (ctx or "") or "\x00" in (app or ""):
         frappe.throw("NUL in key")
-    payload = [lang or "", src or "", ctx or "", app or "", "catalog"] if is_catalog else [lang or "", src or "", ctx or "", "runtime"]
+    payload = (
+        [lang or "", src or "", ctx or "", app or "", "catalog"]
+        if is_catalog
+        else [lang or "", src or "", ctx or "", "runtime"]
+    )
     raw = json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
     return hashlib.sha256(raw.encode("utf-8")).hexdigest()
 
@@ -39,8 +43,19 @@ def execute():
         while True:
             rows = frappe.get_all(
                 "Translation",
-                filters={"ct_is_catalog_entry": is_catalog} if frappe.db.has_column("Translation", "ct_is_catalog_entry") else {},
-                fields=["name", "language", "source_text", "context", "ct_app", "ct_key_digest", "ct_search_normalized", "ct_origin"],
+                filters={"ct_is_catalog_entry": is_catalog}
+                if frappe.db.has_column("Translation", "ct_is_catalog_entry")
+                else {},
+                fields=[
+                    "name",
+                    "language",
+                    "source_text",
+                    "context",
+                    "ct_app",
+                    "ct_key_digest",
+                    "ct_search_normalized",
+                    "ct_origin",
+                ],
                 limit_start=offset,
                 limit_page_length=batch,
             )
@@ -102,7 +117,9 @@ def execute():
         frappe.db.sql("select ct_key_digest from `tabTranslation` limit 1")
         idx = frappe.db.sql("show index from `tabTranslation` where Column_name='ct_key_digest'")
         if not idx:
-            frappe.db.sql("alter table `tabTranslation` add unique index `ct_translation_key_digest` (`ct_key_digest`)")
+            frappe.db.sql(
+                "alter table `tabTranslation` add unique index `ct_translation_key_digest` (`ct_key_digest`)"
+            )
             print("[v8_6] Created unique index ct_translation_key_digest")
             frappe.db.commit()
         else:
@@ -111,7 +128,9 @@ def execute():
         print(f"[v8_6] Index creation skipped/failed: {e}")
 
     try:
-        nulls = frappe.db.sql("select count(*) from `tabTranslation` where ct_key_digest is null or ct_key_digest=''")[0][0]
+        nulls = frappe.db.sql(
+            "select count(*) from `tabTranslation` where ct_key_digest is null or ct_key_digest=''"
+        )[0][0]
         if nulls:
             print(f"[v8_6] WARNING: {nulls} null digests remain")
         else:
@@ -141,8 +160,12 @@ def execute():
         else:
             print(f"[v8_6] CHECK constraint skipped: {e}")
 
-    verify_dup = frappe.db.sql("select count(*) from (select ct_key_digest from `tabTranslation` where language='ar' and ct_key_digest is not null group by ct_key_digest having count(*)>1) t")[0][0]
-    verify_null = frappe.db.sql("select count(*) from `tabTranslation` where ct_key_digest is null or ct_key_digest=''")[0][0]
+    verify_dup = frappe.db.sql(
+        "select count(*) from (select ct_key_digest from `tabTranslation` where language='ar' and ct_key_digest is not null group by ct_key_digest having count(*)>1) t"
+    )[0][0]
+    verify_null = frappe.db.sql(
+        "select count(*) from `tabTranslation` where ct_key_digest is null or ct_key_digest=''"
+    )[0][0]
     print(f"[v8_6] Verification: dup_groups={verify_dup} null_digests={verify_null}")
     if verify_dup or verify_null:
         print("[v8_6] VERIFICATION FAILED")

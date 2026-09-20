@@ -139,9 +139,7 @@ def escalation_cycle(state, blocking_findings):
         if f.get("snapshot")
     )
     if not snapshots:
-        snapshots = sorted(
-            digest([f.get("classification"), f.get("summary", "")]) for f in blocking_findings
-        )
+        snapshots = sorted(digest([f.get("classification"), f.get("summary", "")]) for f in blocking_findings)
     overlap = set(snapshots) & set(state["previous_snapshots"])
     state["unchanged_rounds"] = state["unchanged_rounds"] + 1 if overlap else (1 if snapshots else 0)
     state["previous_snapshots"] = snapshots
@@ -208,7 +206,9 @@ def review_outcome(state, outputs, source, quorum):
             state.update(status="APPROVED_FOR_BUILD", next_roles=["builder"], gate=None)
         else:
             state.update(
-                status="PLAN_SUBMITTED", next_roles=[], gate={"scope": "PLAN", "gate_id": gate_id(state, "PLAN")}
+                status="PLAN_SUBMITTED",
+                next_roles=[],
+                gate={"scope": "PLAN", "gate_id": gate_id(state, "PLAN")},
             )
     elif source == "quorum":
         if state.get("sub_status") == "PANEL_REVIEW":
@@ -284,7 +284,9 @@ def apply_event(current, event, config):
                     state["attempt"] += 1
                     pause(state, "MALFORMED_RESULT")
                 else:
-                    candidate_id = body.get("candidate_id") or derive_stage4_candidate_id(export_sha, proposal_sha)
+                    candidate_id = body.get("candidate_id") or derive_stage4_candidate_id(
+                        export_sha, proposal_sha
+                    )
                     cand = deepcopy(state["candidate"])
                     cand["export_sha256"] = export_sha
                     cand["proposal_sha256"] = proposal_sha
@@ -444,10 +446,21 @@ def apply_event(current, event, config):
                         if escalated:
                             pause(state, "ESCALATED")
                     elif all(q["verdict"] == "PASS" for q in state["review_results"].values()):
-                        bundle_sha = body.get("bundle_sha256") or (body.get("bundle_composed") or {}).get("bundle_sha256")
-                        payload_sha = body.get("payload_sha256") or (body.get("bundle_composed") or {}).get("payload_sha256")
-                        bundle_arts = body.get("bundle_artifacts") or (body.get("bundle_composed") or {}).get("verified_private_artifacts", [])
-                        if not bundle_sha or not payload_sha or not is_hex64(bundle_sha) or not is_hex64(payload_sha):
+                        bundle_sha = body.get("bundle_sha256") or (body.get("bundle_composed") or {}).get(
+                            "bundle_sha256"
+                        )
+                        payload_sha = body.get("payload_sha256") or (body.get("bundle_composed") or {}).get(
+                            "payload_sha256"
+                        )
+                        bundle_arts = body.get("bundle_artifacts") or (body.get("bundle_composed") or {}).get(
+                            "verified_private_artifacts", []
+                        )
+                        if (
+                            not bundle_sha
+                            or not payload_sha
+                            or not is_hex64(bundle_sha)
+                            or not is_hex64(payload_sha)
+                        ):
                             state["attempt"] += 1
                             pause(state, "MALFORMED_RESULT")
                         else:
@@ -465,9 +478,19 @@ def apply_event(current, event, config):
                                 round=state["round"] + 1,
                             )
                     else:
-                        review_outcome(state, [state["review_results"][r] for r in config["quorum"]], "quorum", config["quorum"])
+                        review_outcome(
+                            state,
+                            [state["review_results"][r] for r in config["quorum"]],
+                            "quorum",
+                            config["quorum"],
+                        )
                 else:
-                    review_outcome(state, [state["review_results"][r] for r in config["quorum"]], "quorum", config["quorum"])
+                    review_outcome(
+                        state,
+                        [state["review_results"][r] for r in config["quorum"]],
+                        "quorum",
+                        config["quorum"],
+                    )
             else:
                 state["next_roles"] = []
         else:
@@ -486,7 +509,9 @@ def apply_event(current, event, config):
             if schema_ver == 1:
                 legacy_expected_gate = gate_id(state, "PLAN", legacy=True)
                 if state["gate"]["gate_id"] != legacy_expected_gate:
-                    raise WorkflowError("Stale gate authorization: legacy v1 token cannot authorize role-bound gate")
+                    raise WorkflowError(
+                        "Stale gate authorization: legacy v1 token cannot authorize role-bound gate"
+                    )
                 if (
                     token["plan_revision_hash"] != state["plan_revision_hash"]
                     or token["scope_hash"] != state["scope_hash"]
@@ -504,9 +529,13 @@ def apply_event(current, event, config):
             else:
                 raise WorkflowError(f"Unsupported PLAN token schema version: {schema_ver}")
             if state.get("sub_status") == "PROPOSAL_PENDING":
-                state.update(plan_granted=True, status="APPROVED_FOR_BUILD", next_roles=["proposer"], gate=None)
+                state.update(
+                    plan_granted=True, status="APPROVED_FOR_BUILD", next_roles=["proposer"], gate=None
+                )
             else:
-                state.update(plan_granted=True, status="APPROVED_FOR_BUILD", next_roles=["builder"], gate=None)
+                state.update(
+                    plan_granted=True, status="APPROVED_FOR_BUILD", next_roles=["builder"], gate=None
+                )
         elif token["scope"] == "COMMIT":
             if token["candidate_id"] != state["candidate"]["candidate_id"]:
                 raise WorkflowError("Stale commit grant")
@@ -516,7 +545,13 @@ def apply_event(current, event, config):
                 raise WorkflowError("Stale dry-run grant candidate")
             if token.get("operation") != "set_account_name_ar":
                 raise WorkflowError("Unsupported operation in dry-run grant")
-            for hkey in ("export_sha256", "proposal_sha256", "bundle_sha256", "payload_sha256", "erp_descriptor_hash"):
+            for hkey in (
+                "export_sha256",
+                "proposal_sha256",
+                "bundle_sha256",
+                "payload_sha256",
+                "erp_descriptor_hash",
+            ):
                 if not token.get(hkey) or not is_hex64(token[hkey]):
                     raise WorkflowError(f"Dry-run grant {hkey} must be 64-character lowercase hex")
 
@@ -563,7 +598,13 @@ def apply_event(current, event, config):
                 raise WorkflowError("Stale import grant candidate")
             if token.get("operation") != "set_account_name_ar":
                 raise WorkflowError("Unsupported operation in import grant")
-            for hkey in ("export_sha256", "proposal_sha256", "bundle_sha256", "payload_sha256", "erp_descriptor_hash"):
+            for hkey in (
+                "export_sha256",
+                "proposal_sha256",
+                "bundle_sha256",
+                "payload_sha256",
+                "erp_descriptor_hash",
+            ):
                 if not token.get(hkey) or not is_hex64(token[hkey]):
                     raise WorkflowError(f"Import grant {hkey} must be 64-character lowercase hex")
             if not token.get("dry_run_evidence_digest") or not is_hex64(token["dry_run_evidence_digest"]):

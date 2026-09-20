@@ -144,7 +144,9 @@ def export_account_catalog(company=DEFAULT_COMPANY, write=True):
     if write:
         private_dir = frappe.utils.get_site_path("private", "stage4")
         os.makedirs(private_dir, exist_ok=True)
-        export_filename = "account_catalog_%s.json" % recorded_utc.replace(":", "").replace("-", "").replace("T", "_").replace("Z", "")
+        export_filename = "account_catalog_{}.json".format(
+            recorded_utc.replace(":", "").replace("-", "").replace("T", "_").replace("Z", "")
+        )
         export_path = os.path.join(private_dir, export_filename)
         with open(export_path, "w", encoding="utf-8") as fh:
             json.dump(payload, fh, ensure_ascii=False, indent=1)
@@ -198,7 +200,7 @@ def validate_proposal(record):
         return violations
     for key in ("identity", "english", "is_group", "proposed_arabic", "confidence"):
         if key not in record:
-            violations.append("missing field %s" % key)
+            violations.append(f"missing field {key}")
     return violations
 
 

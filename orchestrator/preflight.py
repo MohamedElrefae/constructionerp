@@ -80,7 +80,9 @@ def check_configured_root(config: dict | None, worktree: Path | str) -> CheckRes
     if config and "root" in config:
         cfg_root = Path(config["root"]).resolve()
         ok = cfg_root == worktree
-        return CheckResult("configured_root", ok, f"Configured root {cfg_root} != {worktree}" if not ok else "")
+        return CheckResult(
+            "configured_root", ok, f"Configured root {cfg_root} != {worktree}" if not ok else ""
+        )
     ok = worktree != Path("/home/mohamed/frappe-bench/apps/construction").resolve()
     return CheckResult("configured_root", ok, "Worktree cannot be apps/construction" if not ok else "")
 
@@ -119,21 +121,23 @@ def check_binary(role: str, pin: dict | None) -> CheckResult:
         return CheckResult(f"binary:{role}", False, str(exc))
 
 
-def check_branch(config: dict | None, worktree: Path | str, expected_branch: str | None = None) -> CheckResult:
+def check_branch(
+    config: dict | None, worktree: Path | str, expected_branch: str | None = None
+) -> CheckResult:
     worktree = Path(worktree).resolve()
     try:
         current = git(worktree, "branch", "--show-current").decode().strip()
     except Exception as exc:
         return CheckResult("branch", False, f"Failed to get branch: {exc}")
-    expected = expected_branch or (config.get("branch") if config else None) or "feature/scope-context-portability"
+    expected = (
+        expected_branch or (config.get("branch") if config else None) or "feature/scope-context-portability"
+    )
     ok = current == expected
     return CheckResult("branch", ok, f"Current branch {current!r} != expected {expected!r}" if not ok else "")
 
 
 def check_dependencies(worktree: Path | str) -> list[CheckResult]:
-    results = [
-        CheckResult("python", sys.version_info >= (3, 11), f"Python version {sys.version}")
-    ]
+    results = [CheckResult("python", sys.version_info >= (3, 11), f"Python version {sys.version}")]
     for name in ("langgraph", "langgraph-checkpoint-sqlite", "pydantic", "jsonschema"):
         try:
             ok = bool(importlib.metadata.version(name))
@@ -165,8 +169,14 @@ def check_sandbox_probe(worktree: Path | str | None = None) -> CheckResult:
         return CheckResult("sandbox_control_store_and_git_denial", False, str(exc))
 
 
-def check_approved_capabilities(config: dict | None, runtime_path: Path | str | None = None, worktree: Path | str | None = None) -> CheckResult:
-    root = Path(worktree).resolve() if worktree else (Path(config["root"]).resolve() if config and "root" in config else Path(".").resolve())
+def check_approved_capabilities(
+    config: dict | None, runtime_path: Path | str | None = None, worktree: Path | str | None = None
+) -> CheckResult:
+    root = (
+        Path(worktree).resolve()
+        if worktree
+        else (Path(config["root"]).resolve() if config and "root" in config else Path(".").resolve())
+    )
     evidence = root / "docs/ai/work-items/scope-context-portability/evidence/phase-0-capabilities.json"
     if config and "work_item" in config:
         item_evidence = root / f"docs/ai/work-items/{config['work_item']}/evidence/phase-0-capabilities.json"
@@ -187,7 +197,9 @@ def run_display_checks(runtime_path: Path | str) -> list[CheckResult]:
     return [check_sqlite_integrity(runtime_path)]
 
 
-def run_owner_action_checks(runtime_path: Path | str, worktree: Path | str, config: dict | None = None) -> list[CheckResult]:
+def run_owner_action_checks(
+    runtime_path: Path | str, worktree: Path | str, config: dict | None = None
+) -> list[CheckResult]:
     """Checks for owner actions (pause, resume, reset_budget, reconfigure_role).
     Includes sqlite_integrity, recovery_cleared, configured_root.
     Skips binary checks so broken binaries don't block repair."""
@@ -208,7 +220,9 @@ def run_init_checks(worktree: Path | str, expected_branch: str | None = None) ->
     return results
 
 
-def run_dispatch_preflight(config: dict | None, runtime_path: Path | str, worktree: Path | str) -> list[CheckResult]:
+def run_dispatch_preflight(
+    config: dict | None, runtime_path: Path | str, worktree: Path | str
+) -> list[CheckResult]:
     """Full check set before dispatching an agent or approving a plan.
     Includes: sqlite_integrity, recovery_cleared, configured_root, roles_mirror_synced,
     branch, dependencies, sandbox_probe, approved_capabilities, and binary per active role."""
@@ -225,7 +239,7 @@ def run_dispatch_preflight(config: dict | None, runtime_path: Path | str, worktr
     results.extend(check_dependencies(worktree))
 
     # Binary checks for active roles
-    pins = (config.get("roles") if config else None)
+    pins = config.get("roles") if config else None
     if not pins:
         roles_file = worktree / "orchestrator/roles.json"
         if roles_file.exists():
@@ -237,9 +251,7 @@ def run_dispatch_preflight(config: dict | None, runtime_path: Path | str, worktr
             pins = {}
 
     active_tools = {
-        p.get("tool")
-        for p in pins.values()
-        if isinstance(p, dict) and p.get("tool") in {"codex", "opencode"}
+        p.get("tool") for p in pins.values() if isinstance(p, dict) and p.get("tool") in {"codex", "opencode"}
     }
     for tool in sorted(active_tools):
         pin = next((p for p in pins.values() if isinstance(p, dict) and p.get("tool") == tool), None)

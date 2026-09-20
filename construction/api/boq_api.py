@@ -501,7 +501,9 @@ def create_material_request_for_vo(vo_name):
     )
     if not resolved_company:
         frappe.throw(
-            _("Cannot create Material Request: Linked Project {0} has no Company assigned.").format(vo.project),
+            _("Cannot create Material Request: Linked Project {0} has no Company assigned.").format(
+                vo.project
+            ),
             frappe.ValidationError,
         )
 
@@ -515,7 +517,9 @@ def create_material_request_for_vo(vo_name):
 
     for line in variation_lines:
         item_qty = (
-            frappe.db.get_value("BOQ Item", line.created_boq_item, "quantity") if line.created_boq_item else None
+            frappe.db.get_value("BOQ Item", line.created_boq_item, "quantity")
+            if line.created_boq_item
+            else None
         )
         raw_item = getattr(line, "item_code", None)
         if not raw_item and line.created_boq_item:

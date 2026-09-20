@@ -20,7 +20,6 @@ from pathlib import Path
 
 from core import WorkflowError, canonical, utc, write_json
 
-
 # Runs inside `bench --site <site> console` in a single execution (no interactive loops).
 # Reads previous values, writes only account_name_ar, then reads back for reconciliation.
 _WRITE_SCRIPT = r"""
@@ -100,7 +99,9 @@ def import_payload(private_root, erp_descriptor, payload, bundle, dry_run_eviden
     after = report.get("after", {})
     if set(after) != {r["identity"] for r in planned}:
         raise WorkflowError("IMPORT_WRITE_FAILED: reconciliation readback identity mismatch")
-    mismatched = [i for i, v in after.items() if v != next(r["arabic"] for r in planned if r["identity"] == i)]
+    mismatched = [
+        i for i, v in after.items() if v != next(r["arabic"] for r in planned if r["identity"] == i)
+    ]
     if mismatched:
         raise WorkflowError("IMPORT_WRITE_FAILED: post-import value mismatch")
     if not report.get("invariant_ok", False):

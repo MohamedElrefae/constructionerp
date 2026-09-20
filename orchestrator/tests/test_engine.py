@@ -760,11 +760,13 @@ def test_legacy_plan_token_contract_and_historical_checkpoint_migration(configur
 
     candidate = {
         "kind": "stage4-proposal",
-        "candidate_id": digest({
-            "kind": "stage4-proposal",
-            "export_sha256": catalog_sha,
-            "proposal_sha256": "0" * 64,
-        }),
+        "candidate_id": digest(
+            {
+                "kind": "stage4-proposal",
+                "export_sha256": catalog_sha,
+                "proposal_sha256": "0" * 64,
+            }
+        ),
         "export_sha256": catalog_sha,
         "proposal_sha256": "0" * 64,
     }
@@ -814,22 +816,34 @@ def test_legacy_plan_token_contract_and_historical_checkpoint_migration(configur
 
     # Historical event lineage
     store.event("grant-" + legacy_token["token_id"], "grant", legacy_token)
-    store.event("reconcile-job-0e0d4d73f8732d43186d1a13", "reconcile_job", {
-        "job_id": "job-0e0d4d73f8732d43186d1a13",
-        "role": "proposer",
-        "owner_evidence_sha256": "cf1a60cc0c20946ede9eec04ab519ce258c86dd3165162d6755942c2507257aa",
-        "decision": "ABANDONED_AFTER_OWNER_REVIEW",
-    })
-    store.event("owner-5e7c8920a7794739bfe0e4cf6295dc0c", "resume", {
-        "reason": "Switch proposer to opencode/muse-spark-1.3-contributor-free",
-        "reset_budget": False,
-    })
-    store.event("reconcile-job-26261b6a46e9d461b869f6bd", "reconcile_job", {
-        "job_id": "job-26261b6a46e9d461b869f6bd",
-        "role": "proposer",
-        "owner_evidence_sha256": "f6cdb7a328b5b43841bc3b124907ac73a61e41f1d72bc986661da7224ae6cf16",
-        "decision": "ABANDONED_AFTER_OWNER_REVIEW",
-    })
+    store.event(
+        "reconcile-job-0e0d4d73f8732d43186d1a13",
+        "reconcile_job",
+        {
+            "job_id": "job-0e0d4d73f8732d43186d1a13",
+            "role": "proposer",
+            "owner_evidence_sha256": "cf1a60cc0c20946ede9eec04ab519ce258c86dd3165162d6755942c2507257aa",
+            "decision": "ABANDONED_AFTER_OWNER_REVIEW",
+        },
+    )
+    store.event(
+        "owner-5e7c8920a7794739bfe0e4cf6295dc0c",
+        "resume",
+        {
+            "reason": "Switch proposer to opencode/muse-spark-1.3-contributor-free",
+            "reset_budget": False,
+        },
+    )
+    store.event(
+        "reconcile-job-26261b6a46e9d461b869f6bd",
+        "reconcile_job",
+        {
+            "job_id": "job-26261b6a46e9d461b869f6bd",
+            "role": "proposer",
+            "owner_evidence_sha256": "f6cdb7a328b5b43841bc3b124907ac73a61e41f1d72bc986661da7224ae6cf16",
+            "decision": "ABANDONED_AFTER_OWNER_REVIEW",
+        },
+    )
 
     # Historical jobs and grants
     store.create_job("proposer-1", {"job_id": "job-0e0d4d73f8732d43186d1a13", "role": "proposer"})
@@ -842,13 +856,16 @@ def test_legacy_plan_token_contract_and_historical_checkpoint_migration(configur
 
     # Pre-populate LangGraph checkpoint with historical parked state (roles_hash omitted from view)
     e_init = Engine(root, runtime=runtime)
-    computed_gate = gate_id({
-        "work_item": config["work_item"],
-        "stage": "4",
-        "plan_revision_hash": config["plan_revision_hash"],
-        "scope_hash": scope_hash,
-        "roles_hash": expected_roles_hash,
-    }, "PLAN")
+    computed_gate = gate_id(
+        {
+            "work_item": config["work_item"],
+            "stage": "4",
+            "plan_revision_hash": config["plan_revision_hash"],
+            "scope_hash": scope_hash,
+            "roles_hash": expected_roles_hash,
+        },
+        "PLAN",
+    )
 
     legacy_view = {
         "work_item": config["work_item"],
@@ -954,11 +971,13 @@ def test_resume_rejected_against_parked_draft_plan_state(configured, tmp_path):
 
     candidate = {
         "kind": "stage4-proposal",
-        "candidate_id": digest({
-            "kind": "stage4-proposal",
-            "export_sha256": "0" * 64,
-            "proposal_sha256": "0" * 64,
-        }),
+        "candidate_id": digest(
+            {
+                "kind": "stage4-proposal",
+                "export_sha256": "0" * 64,
+                "proposal_sha256": "0" * 64,
+            }
+        ),
         "export_sha256": "0" * 64,
         "proposal_sha256": "0" * 64,
     }
@@ -974,13 +993,16 @@ def test_resume_rejected_against_parked_draft_plan_state(configured, tmp_path):
 
     e = Engine(root, runtime=runtime)
     try:
-        computed_gate = gate_id({
-            "work_item": config["work_item"],
-            "stage": "4",
-            "plan_revision_hash": config["plan_revision_hash"],
-            "scope_hash": scope_hash,
-            "roles_hash": roles_hash,
-        }, "PLAN")
+        computed_gate = gate_id(
+            {
+                "work_item": config["work_item"],
+                "stage": "4",
+                "plan_revision_hash": config["plan_revision_hash"],
+                "scope_hash": scope_hash,
+                "roles_hash": roles_hash,
+            },
+            "PLAN",
+        )
 
         parked_view = {
             "work_item": config["work_item"],
@@ -1017,7 +1039,9 @@ def test_resume_rejected_against_parked_draft_plan_state(configured, tmp_path):
 
         # 1. Pure router check: resume against parked DRAFT state is rejected
         with pytest.raises(WorkflowError, match="Cannot resume"):
-            apply_event(parked_view, {"seq": 5, "kind": "resume", "payload": {"reason": "router bypass"}}, hist_config)
+            apply_event(
+                parked_view, {"seq": 5, "kind": "resume", "payload": {"reason": "router bypass"}}, hist_config
+            )
         assert parked_view["plan_granted"] is False
         assert parked_view["next_roles"] == []
         assert parked_view["gate"]["scope"] == "PLAN"
@@ -1037,4 +1061,3 @@ def test_resume_rejected_against_parked_draft_plan_state(configured, tmp_path):
         assert len(e.store.events()) == 0
     finally:
         e.close()
-

@@ -202,7 +202,9 @@ class TestLayoutAPI(unittest.TestCase):
 
     def test_get_active_layout_prefers_role(self):
         user_roles = frappe.get_roles(frappe.session.user)
-        target_role = next(r for r in user_roles if r not in ("Administrator", "System Manager", "All", "Guest"))
+        target_role = next(
+            r for r in user_roles if r not in ("Administrator", "System Manager", "All", "Guest")
+        )
         self._make_profile(is_default=1, profile_name="_Test_Default")
         p = self._make_profile(for_role=target_role, profile_name="_Test_Role", priority=20)
         result = get_active_layout(p.reference_doctype)
@@ -292,7 +294,11 @@ class TestLayoutAPI(unittest.TestCase):
     def test_validate_layout_valid(self):
         valid = {
             "sections": [
-                {"label": "S1", "column_count": 2, "fields": [{"fieldname": "subject"}, {"fieldname": "status"}]}
+                {
+                    "label": "S1",
+                    "column_count": 2,
+                    "fields": [{"fieldname": "subject"}, {"fieldname": "status"}],
+                }
             ]
         }
         result = validate_layout("Task", json.dumps(valid))
@@ -314,7 +320,11 @@ class TestLayoutAPI(unittest.TestCase):
     def test_validate_layout_duplicate_fieldname_errors(self):
         dup = {
             "sections": [
-                {"label": "S1", "fields": [{"fieldname": "subject"}, {"fieldname": "subject"}], "column_count": 2},
+                {
+                    "label": "S1",
+                    "fields": [{"fieldname": "subject"}, {"fieldname": "subject"}],
+                    "column_count": 2,
+                },
             ]
         }
         result = validate_layout("Task", json.dumps(dup))

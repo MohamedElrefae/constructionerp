@@ -16,7 +16,6 @@ from pathlib import Path
 
 from core import WorkflowError, canonical, utc, write_json
 
-
 # Read-only Frappe script. Executed via `bench --site <site> console` with a here-doc.
 # It reads only; it never calls insert/save/rename/delete.
 _READ_SCRIPT = r"""
@@ -135,9 +134,7 @@ def dry_run(private_root, erp_descriptor, payload, bundle, destination):
         "approval_gaps": approval_gaps,
         "planned_values_sha256": hashlib.sha256(canonical(planned)).hexdigest(),
     }
-    blocking = bool(
-        missing_parents or duplicate_codes or blank_names or stale_rows or approval_gaps
-    )
+    blocking = bool(missing_parents or duplicate_codes or blank_names or stale_rows or approval_gaps)
     summary["blocking"] = blocking
 
     evidence = {

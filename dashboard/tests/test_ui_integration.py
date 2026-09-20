@@ -3,11 +3,12 @@
 import asyncio
 import json
 import os
-from pathlib import Path
 import threading
 import time
-import pytest
 from datetime import datetime, timezone
+from pathlib import Path
+
+import pytest
 import uvicorn
 from playwright.async_api import async_playwright
 
@@ -61,12 +62,12 @@ async def test_ui_plain_text_contract_and_network_isolation(live_server):
 
     # Malicious plan payloads designed to trigger XSS or network requests if rendered via innerHTML/markdown
     malicious_payload = (
-        '# Malicious Plan Injection\n\n'
+        "# Malicious Plan Injection\n\n"
         '<img src="/injected_image.png" onerror="alert(\'xss_img\')">\n'
         '<script>alert("xss_script")</script>\n'
-        '<a href="javascript:alert(\'xss_link\')">Click Here</a>\n'
-        '[click](javascript:alert((1)))\n'
-        '> [target]: javascript:alert(1)\n'
+        "<a href=\"javascript:alert('xss_link')\">Click Here</a>\n"
+        "[click](javascript:alert((1)))\n"
+        "> [target]: javascript:alert(1)\n"
     )
 
     EXPECTED_URL_PREFIXES = {
@@ -115,7 +116,7 @@ async def test_ui_plain_text_contract_and_network_isolation(live_server):
             },
             "active_jobs": [
                 {"role": "architect", "status": None},  # Missing status -> must be 'Unknown'
-                {"role": None, "status": "RUNNING"},    # Missing role -> must be 'Role: Unspecified'
+                {"role": None, "status": "RUNNING"},  # Missing role -> must be 'Role: Unspecified'
             ],
             "next_roles": ["reviewer"],
         }
@@ -132,17 +133,27 @@ async def test_ui_plain_text_contract_and_network_isolation(live_server):
                 await route.fulfill(
                     status=200,
                     content_type="application/json",
-                    body=json.dumps({
-                        "plan_text": malicious_payload,
-                        "format": "plain_text",
-                        "render_mode": "text_content",
-                    }),
+                    body=json.dumps(
+                        {
+                            "plan_text": malicious_payload,
+                            "format": "plain_text",
+                            "render_mode": "text_content",
+                        }
+                    ),
                 )
             elif f"/api/tasks/{task_id}/review-context" in url:
                 await route.fulfill(
                     status=200,
                     content_type="application/json",
-                    body=json.dumps({"plan_revision_hash": "a"*64, "scope_hash": "b"*64, "roles_hash": "c"*64, "gate": None, "proposal": None}),
+                    body=json.dumps(
+                        {
+                            "plan_revision_hash": "a" * 64,
+                            "scope_hash": "b" * 64,
+                            "roles_hash": "c" * 64,
+                            "gate": None,
+                            "proposal": None,
+                        }
+                    ),
                 )
             elif f"/api/tasks/{task_id}/ai-context" in url:
                 await route.fulfill(
@@ -154,13 +165,17 @@ async def test_ui_plain_text_contract_and_network_isolation(live_server):
                 await route.fulfill(
                     status=200,
                     content_type="application/json",
-                    body=json.dumps([{
-                        "task_id": task_id,
-                        "work_item": "test-work-item",
-                        "task_branch": "feature/test",
-                        "cached_status": "DRAFT",
-                        "cached_stage": "plan",
-                    }]),
+                    body=json.dumps(
+                        [
+                            {
+                                "task_id": task_id,
+                                "work_item": "test-work-item",
+                                "task_branch": "feature/test",
+                                "cached_status": "DRAFT",
+                                "cached_stage": "plan",
+                            }
+                        ]
+                    ),
                 )
             elif "/api/auth/me" in url:
                 await route.fulfill(
@@ -203,8 +218,7 @@ async def test_ui_plain_text_contract_and_network_isolation(live_server):
         # Every single recorded request must be in the expected allowlist
         for req_url in recorded_requests:
             is_allowed = any(
-                req_url == prefix or req_url.startswith(prefix + "?")
-                for prefix in EXPECTED_URL_PREFIXES
+                req_url == prefix or req_url.startswith(prefix + "?") for prefix in EXPECTED_URL_PREFIXES
             )
             assert is_allowed, f"Violation of Network Isolation: unexpected request to {req_url}"
 
@@ -266,25 +280,32 @@ async def test_ui_first_run_auth_and_permanent_password_setup(live_server):
                 await route.fulfill(
                     status=200,
                     content_type="application/json",
-                    body=json.dumps({
-                        "authenticated": user_state["authenticated"],
-                        "username": "engineer" if user_state["authenticated"] else None,
-                        "must_change_password": user_state["must_change_password"],
-                    }),
+                    body=json.dumps(
+                        {
+                            "authenticated": user_state["authenticated"],
+                            "username": "engineer" if user_state["authenticated"] else None,
+                            "must_change_password": user_state["must_change_password"],
+                        }
+                    ),
                 )
             elif "/api/auth/login" in url and route.request.method == "POST":
                 req_data = json.loads(route.request.post_data)
-                if req_data.get("username") == "engineer" and req_data.get("password") == user_state["password"]:
+                if (
+                    req_data.get("username") == "engineer"
+                    and req_data.get("password") == user_state["password"]
+                ):
                     user_state["authenticated"] = True
                     await route.fulfill(
                         status=200,
                         content_type="application/json",
-                        body=json.dumps({
-                            "ok": True,
-                            "username": "engineer",
-                            "csrf_token": "mock_csrf_tok",
-                            "must_change_password": user_state["must_change_password"],
-                        }),
+                        body=json.dumps(
+                            {
+                                "ok": True,
+                                "username": "engineer",
+                                "csrf_token": "mock_csrf_tok",
+                                "must_change_password": user_state["must_change_password"],
+                            }
+                        ),
                     )
                 else:
                     await route.fulfill(
@@ -306,13 +327,17 @@ async def test_ui_first_run_auth_and_permanent_password_setup(live_server):
                     await route.fulfill(
                         status=400,
                         content_type="application/json",
-                        body=json.dumps({"detail": "New permanent password must be at least 12 characters long"}),
+                        body=json.dumps(
+                            {"detail": "New permanent password must be at least 12 characters long"}
+                        ),
                     )
                 elif cur == new_pw:
                     await route.fulfill(
                         status=400,
                         content_type="application/json",
-                        body=json.dumps({"detail": "New permanent password must be different from current password"}),
+                        body=json.dumps(
+                            {"detail": "New permanent password must be different from current password"}
+                        ),
                     )
                 else:
                     user_state["must_change_password"] = False
@@ -378,7 +403,7 @@ async def test_ui_first_run_auth_and_permanent_password_setup(live_server):
 @pytest.mark.anyio
 async def test_ui_unmocked_end_to_end_auth_and_setup(live_server):
     """Verify real, unmocked browser authentication flow:
-    
+
     1. Reads actual credentials from initial_credentials.txt.
     2. Submits unmocked POST /api/auth/login with CSRF and Host headers.
     3. Browser handles real SameSite=Strict, Secure=True cookies.
@@ -465,7 +490,9 @@ async def test_ui_unmocked_end_to_end_auth_and_setup(live_server):
         assert await page.eval_on_selector("#setup-password-section", "el => el.style.display") == "none"
 
         # 5. Verify on disk that initial_credentials.txt is UNLINKED
-        assert not auth_store.credentials_file_path.exists(), "initial_credentials.txt must be deleted after permanent password setup"
+        assert (
+            not auth_store.credentials_file_path.exists()
+        ), "initial_credentials.txt must be deleted after permanent password setup"
 
         # 6. Verify in auth store that is_initial is now False
         assert auth_store.is_initial_user("engineer") is False

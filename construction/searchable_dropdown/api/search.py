@@ -173,7 +173,9 @@ def searchable_link_search(
             )
             if len(results) > RANK_WINDOW:
                 frappe.throw(
-                    _("Search matches exceed the supported ranking window ({0}); refine the query").format(RANK_WINDOW),
+                    _("Search matches exceed the supported ranking window ({0}); refine the query").format(
+                        RANK_WINDOW
+                    ),
                     frappe.ValidationError,
                 )
             results = results[:RANK_WINDOW]

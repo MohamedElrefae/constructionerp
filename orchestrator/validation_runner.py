@@ -23,7 +23,7 @@ def can_unshare_net():
                     capture_output=True,
                     timeout=5,
                 )
-                _CAN_UNSHARE_NET = (r.returncode == 0)
+                _CAN_UNSHARE_NET = r.returncode == 0
             except Exception:
                 _CAN_UNSHARE_NET = False
     return _CAN_UNSHARE_NET

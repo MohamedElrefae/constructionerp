@@ -18,7 +18,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
-from check_localization_gates import row_decision_id  # noqa: E402
+from check_localization_gates import row_decision_id
 
 AI_A1 = {
     "Desktop": ("approve", "high", "/root/ai_a1_arabic"),
@@ -40,8 +40,11 @@ BATCH = {"decision": "batch-accepted", "confidence": "batch", "session": "histor
 
 
 def main():
-    rows = list(csv.DictReader(
-        open(ROOT / "construction/data/translations/approved_ar_overrides.csv", encoding="utf-8")))
+    rows = list(
+        csv.DictReader(
+            open(ROOT / "construction/data/translations/approved_ar_overrides.csv", encoding="utf-8")
+        )
+    )
     decisions = {}
     for r in rows:
         if (r.get("release_status") or "").strip() != "Released":
@@ -60,23 +63,35 @@ def main():
         else:
             v1 = v2 = v3 = dict(BATCH)
         parts = [
-            r["language"].strip(), r["ct_app"].strip(), (r.get("context") or "").strip(), src, val,
-            r["a1_reviewer"].strip(), r["a1_approved_at"].strip(),
-            r["a2_reviewer"].strip(), r["a2_approved_at"].strip(),
-            r["a3_reviewer"].strip(), r["a3_approved_at"].strip(),
-            r["release_version"].strip(), (r.get("domain") or "").strip(),
+            r["language"].strip(),
+            r["ct_app"].strip(),
+            (r.get("context") or "").strip(),
+            src,
+            val,
+            r["a1_reviewer"].strip(),
+            r["a1_approved_at"].strip(),
+            r["a2_reviewer"].strip(),
+            r["a2_approved_at"].strip(),
+            r["a3_reviewer"].strip(),
+            r["a3_approved_at"].strip(),
+            r["release_version"].strip(),
+            (r.get("domain") or "").strip(),
             (r.get("references") or "").strip(),
             hashlib.sha256(f"{src}|{val}".encode()).hexdigest(),
         ]
         did = row_decision_id(parts, ref_entries)
         decisions[did] = {
-            "language": r["language"], "ct_app": r["ct_app"], "context": r.get("context") or "",
-            "source_text": src, "translated_text": val, "domain": r.get("domain") or "",
+            "language": r["language"],
+            "ct_app": r["ct_app"],
+            "context": r.get("context") or "",
+            "source_text": src,
+            "translated_text": val,
+            "domain": r.get("domain") or "",
             "reviewers": [r["a1_reviewer"], r["a2_reviewer"], r["a3_reviewer"]],
             "timestamps": [r["a1_approved_at"], r["a2_approved_at"], r["a3_approved_at"]],
-            "release_version": r["release_version"], "references": r.get("references") or "",
-            "proposal": {"arabic": val,
-                         "sha256": hashlib.sha256(f"{src}|{val}".encode()).hexdigest()},
+            "release_version": r["release_version"],
+            "references": r.get("references") or "",
+            "proposal": {"arabic": val, "sha256": hashlib.sha256(f"{src}|{val}".encode()).hexdigest()},
             "verdicts": {"AI-A1": v1, "AI-A2": v2, "AI-A3": v3},
             "artifacts": ref_entries,
         }

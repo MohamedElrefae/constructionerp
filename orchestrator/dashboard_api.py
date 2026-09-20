@@ -23,9 +23,12 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+
 class SecurityError(Exception):
     """Raised when security boundaries, permissions, or isolation rules are violated."""
+
     pass
+
 
 # Ensure orchestrator package directory is in sys.path so both
 # `python -m orchestrator.dashboard_api` and direct script execution work
@@ -38,11 +41,13 @@ from core import (
     GrantReconciliationRequired,
     PreconditionError,
     RecoveryError,
-    ValidationError as CoreValidationError,
     WorkflowError,
     canonical,
     execution_lock,
     within,
+)
+from core import (
+    ValidationError as CoreValidationError,
 )
 from engine import Engine
 from preflight import (
@@ -146,14 +151,14 @@ def _scan_and_sanitize_inline_links(text: str) -> str:
                         paren_depth -= 1
                     i += 1
                 if paren_depth == 0:
-                    raw_dest = text[paren_start:i - 1].strip()
+                    raw_dest = text[paren_start : i - 1].strip()
                     url = raw_dest
                     title = ""
                     if raw_dest.startswith("<"):
                         gt = raw_dest.find(">")
                         if gt != -1:
                             url = raw_dest[1:gt].strip()
-                            title = raw_dest[gt + 1:].strip()
+                            title = raw_dest[gt + 1 :].strip()
                     else:
                         parts = raw_dest.split(None, 1)
                         if parts:
@@ -209,7 +214,7 @@ def render_plan_as_safe_text_html(plan_text: str) -> str:
     and MUST NEVER render it via innerHTML, outerHTML, or raw HTML injection.
     """
     escaped = html.escape(plan_text, quote=True)
-    return f"<pre class=\"plan-text-display\">{escaped}</pre>"
+    return f'<pre class="plan-text-display">{escaped}</pre>'
 
 
 def sanitize_plan_text(text: str, root: Path | str | None = None) -> str:
@@ -236,14 +241,10 @@ def sanitize_plan_text(text: str, root: Path | str | None = None) -> str:
     sanitized = _QUOTED_CREDENTIAL_PATTERN.sub(
         r"\g<prefix>\g<quote>[REDACTED_CREDENTIAL]\g<quote>", sanitized
     )
-    sanitized = _UNQUOTED_CREDENTIAL_PATTERN.sub(
-        r"\g<prefix>[REDACTED_CREDENTIAL]", sanitized
-    )
+    sanitized = _UNQUOTED_CREDENTIAL_PATTERN.sub(r"\g<prefix>[REDACTED_CREDENTIAL]", sanitized)
     sanitized = _BEARER_PATTERN.sub(r"\1\2[REDACTED_CREDENTIAL]\4", sanitized)
     sanitized = _sanitize_md_links(sanitized)
-    sanitized = _HTML_TAG_RE.sub(
-        lambda m: m.group(0).replace("<", "&lt;").replace(">", "&gt;"), sanitized
-    )
+    sanitized = _HTML_TAG_RE.sub(lambda m: m.group(0).replace("<", "&lt;").replace(">", "&gt;"), sanitized)
     return sanitized
 
 
@@ -256,7 +257,7 @@ def sanitize_error(exc: Exception, root: Path | str | None = None) -> dict:
         msg = str(exc)
     elif isinstance(exc, PreconditionError):
         msg = "Precondition check failed"
-    elif isinstance(exc, (CoreValidationError, ValueError)):
+    elif isinstance(exc, CoreValidationError | ValueError):
         msg = "Invalid request or validation failed"
     elif isinstance(exc, DuplicateKeyConflict):
         msg = "Duplicate action or conflicting request"
@@ -338,6 +339,7 @@ def get_state_projection(root: Path | str) -> dict:
     conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
     try:
         from langgraph.checkpoint.sqlite import SqliteSaver
+
         saver = SqliteSaver(conn)
         checkpoint = saver.get({"configurable": {"thread_id": "workflow"}})
         if not checkpoint or not checkpoint.get("channel_values"):
@@ -483,6 +485,7 @@ def get_review_context_projection(root: Path | str) -> dict:
     conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
     try:
         from langgraph.checkpoint.sqlite import SqliteSaver
+
         saver = SqliteSaver(conn)
         checkpoint = saver.get({"configurable": {"thread_id": "workflow"}})
         v = {}
@@ -520,12 +523,14 @@ def get_review_context_projection(root: Path | str) -> dict:
         sha = None
         if exists:
             sha = hashlib.sha256(p.read_bytes()).hexdigest()
-        provenance.append({
-            "path": rel_p,
-            "exists": exists,
-            "is_mandatory": rel_p in ("AGENTS.md", "SESSION_MEMORY.md"),
-            "sha256": sha,
-        })
+        provenance.append(
+            {
+                "path": rel_p,
+                "exists": exists,
+                "is_mandatory": rel_p in ("AGENTS.md", "SESSION_MEMORY.md"),
+                "sha256": sha,
+            }
+        )
 
     return {
         "work_item": work_item,
@@ -565,6 +570,7 @@ def get_ai_context_projection(root: Path | str) -> dict:
         conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
         try:
             from langgraph.checkpoint.sqlite import SqliteSaver
+
             saver = SqliteSaver(conn)
             checkpoint = saver.get({"configurable": {"thread_id": "workflow"}})
             if checkpoint and checkpoint.get("channel_values"):
@@ -610,12 +616,14 @@ def get_ai_context_projection(root: Path | str) -> dict:
         sha = None
         if exists:
             sha = hashlib.sha256(p.read_bytes()).hexdigest()
-        provenance.append({
-            "path": rel_p,
-            "exists": exists,
-            "is_mandatory": rel_p in ("AGENTS.md", "SESSION_MEMORY.md"),
-            "sha256": sha,
-        })
+        provenance.append(
+            {
+                "path": rel_p,
+                "exists": exists,
+                "is_mandatory": rel_p in ("AGENTS.md", "SESSION_MEMORY.md"),
+                "sha256": sha,
+            }
+        )
 
     return {
         "work_item": work_item,
@@ -643,8 +651,8 @@ def validate_and_bind_canonical_registry(candidate_path: Path | str, is_test_mod
         if os.path.islink(current):
             raise ValueError(f"Symlink rejected in registry path component: {current}")
 
-        is_var_dir = (current == target.parent)
-        is_db_file = (current == target)
+        is_var_dir = current == target.parent
+        is_db_file = current == target
 
         if current.exists():
             st = current.stat()
@@ -652,20 +660,28 @@ def validate_and_bind_canonical_registry(candidate_path: Path | str, is_test_mod
                 if st.st_uid != os.geteuid():
                     raise ValueError(f"Registry directory owner {st.st_uid} != expected {os.geteuid()}")
                 if (st.st_mode & 0o077) != 0:
-                    raise ValueError(f"Registry directory {current} must have mode 0700 (no group/world access)")
+                    raise ValueError(
+                        f"Registry directory {current} must have mode 0700 (no group/world access)"
+                    )
             elif is_db_file:
                 if st.st_uid != os.geteuid():
                     raise ValueError(f"Registry database owner {st.st_uid} != expected {os.geteuid()}")
                 if (st.st_mode & 0o077) != 0:
-                    raise ValueError(f"Registry database {current} must have mode 0600 (no group/world access)")
+                    raise ValueError(
+                        f"Registry database {current} must have mode 0600 (no group/world access)"
+                    )
             else:
                 if is_test_mode and current in (Path("/tmp"), Path("/run"), Path("/var"), Path("/var/tmp")):
                     pass
                 else:
                     if st.st_uid not in (0, os.geteuid()):
-                        raise ValueError(f"Ancestor directory {current} owner {st.st_uid} is neither root nor current user {os.geteuid()}")
+                        raise ValueError(
+                            f"Ancestor directory {current} owner {st.st_uid} is neither root nor current user {os.geteuid()}"
+                        )
                     if (st.st_mode & 0o022) != 0:
-                        raise ValueError(f"Ancestor directory {current} must not be group/world-writable (mode {oct(st.st_mode)})")
+                        raise ValueError(
+                            f"Ancestor directory {current} must not be group/world-writable (mode {oct(st.st_mode)})"
+                        )
         else:
             if not is_db_file:
                 raise FileNotFoundError(f"Registry path component does not exist: {current}")
@@ -761,10 +777,7 @@ def deduplicate_action(
 
         grant_event = None
         for event in store.events():
-            if (
-                event["kind"] == "grant"
-                and event["payload"].get("token_id") == token_id
-            ):
+            if event["kind"] == "grant" and event["payload"].get("token_id") == token_id:
                 grant_event = event
                 break
 
@@ -825,13 +838,9 @@ def deduplicate_action(
             if event["payload"].get("action_id") == action_id:
                 stored_hash = event["payload"].get("request_hash")
                 if not stored_hash:
-                    raise DuplicateKeyConflict(
-                        "Stored event missing request_hash — rejecting"
-                    )
+                    raise DuplicateKeyConflict("Stored event missing request_hash — rejecting")
                 if stored_hash != request_hash:
-                    raise DuplicateKeyConflict(
-                        "action_id reused with different request contents"
-                    )
+                    raise DuplicateKeyConflict("action_id reused with different request contents")
                 engine._synchronize_checkpoint()
                 return {
                     "status": "already_complete",
@@ -843,7 +852,7 @@ def deduplicate_action(
 
 ALLOWED_EVIDENCE_EXTENSIONS = {".json", ".md", ".txt", ".xml", ".patch", ".csv"}
 MAX_EVIDENCE_SIZE = 256 * 1024  # 256 KB
-MAX_DIFF_SIZE = 256 * 1024      # 256 KB
+MAX_DIFF_SIZE = 256 * 1024  # 256 KB
 GIT_DIFF_TIMEOUT_SECONDS = 10.0
 
 
@@ -855,9 +864,7 @@ def sanitize_text(text: str, root: Path | str | None = None) -> str:
     sanitized = _QUOTED_CREDENTIAL_PATTERN.sub(
         r"\g<prefix>\g<quote>[REDACTED_CREDENTIAL]\g<quote>", sanitized
     )
-    sanitized = _UNQUOTED_CREDENTIAL_PATTERN.sub(
-        r"\g<prefix>[REDACTED_CREDENTIAL]", sanitized
-    )
+    sanitized = _UNQUOTED_CREDENTIAL_PATTERN.sub(r"\g<prefix>[REDACTED_CREDENTIAL]", sanitized)
     sanitized = _BEARER_PATTERN.sub(r"\1\2[REDACTED_CREDENTIAL]\4", sanitized)
     return sanitized
 
@@ -1095,6 +1102,7 @@ def _get_checkpoint_view_and_meta(root: Path) -> tuple[dict, dict]:
             except Exception:
                 meta[k] = v
         from langgraph.checkpoint.sqlite import SqliteSaver
+
         saver = SqliteSaver(conn)
         checkpoint = saver.get({"configurable": {"thread_id": "workflow"}})
         view = checkpoint.get("channel_values", {}).get("view", {}) if checkpoint else {}
@@ -1116,7 +1124,8 @@ def get_findings_projection(root: Path | str) -> dict:
     backlog = sanitize_payload(raw_backlog, root=root)
 
     blocking = sum(
-        1 for f in findings
+        1
+        for f in findings
         if f.get("classification") in ("implementation_defect", "design_defect")
         or str(f.get("severity", "")).upper() in ("BLOCKING", "HIGH")
     )
@@ -1146,9 +1155,7 @@ def get_evidence_projection(root: Path | str) -> dict:
     except OSError:
         return {"work_item": work_item, "files": []}
 
-    dir_fd, opened_fds, _ = open_descriptor_relative(
-        root, rel_dir, strict_permissions=True, is_dir=True
-    )
+    dir_fd, opened_fds, _ = open_descriptor_relative(root, rel_dir, strict_permissions=True, is_dir=True)
     try:
         files = []
         with os.scandir(dir_fd) as it:
@@ -1172,11 +1179,13 @@ def get_evidence_projection(root: Path | str) -> dict:
                 if st.st_mode & 0o022:
                     raise SecurityError("evidence unavailable: unsafe permissions")
 
-                files.append({
-                    "filename": entry.name,
-                    "size_bytes": st.st_size,
-                    "modified_utc": datetime.fromtimestamp(st.st_mtime, tz=timezone.utc).isoformat(),
-                })
+                files.append(
+                    {
+                        "filename": entry.name,
+                        "size_bytes": st.st_size,
+                        "modified_utc": datetime.fromtimestamp(st.st_mtime, tz=timezone.utc).isoformat(),
+                    }
+                )
 
         files.sort(key=lambda f: f["filename"])
         return {"work_item": work_item, "files": files}
@@ -1314,9 +1323,7 @@ def get_diff_projection(root: Path | str) -> dict:
     cfg = meta.get("config", {})
 
     base_commit = (
-        cfg.get("task_base_commit")
-        or cfg.get("base_commit")
-        or view.get("candidate", {}).get("base_commit")
+        cfg.get("task_base_commit") or cfg.get("base_commit") or view.get("candidate", {}).get("base_commit")
     )
     if not base_commit or not isinstance(base_commit, str):
         raise PreconditionError("Base commit not found in workflow configuration")
@@ -1330,13 +1337,12 @@ def get_diff_projection(root: Path | str) -> dict:
     if res.returncode != 0:
         raise PreconditionError(f"Base commit {base_commit} does not exist in repository")
 
-    res_head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=str(root), capture_output=True, text=True, timeout=10)
+    res_head = subprocess.run(
+        ["git", "rev-parse", "HEAD"], cwd=str(root), capture_output=True, text=True, timeout=10
+    )
     head_sha = res_head.stdout.strip() if res_head.returncode == 0 else "HEAD"
 
-    diff_cmd = [
-        "git", "diff", "--no-ext-diff", "--no-textconv", "--no-color",
-        f"{base_commit}..HEAD"
-    ]
+    diff_cmd = ["git", "diff", "--no-ext-diff", "--no-textconv", "--no-color", f"{base_commit}..HEAD"]
     proc = subprocess.Popen(
         diff_cmd,
         cwd=str(root),
@@ -1348,14 +1354,24 @@ def get_diff_projection(root: Path | str) -> dict:
 
     if len(raw_diff) > MAX_DIFF_SIZE:
         was_truncated = True
-        diff_text = raw_diff[:MAX_DIFF_SIZE].decode("utf-8", errors="replace") + "\n[DIFF TRUNCATED AT 256 KB]\n"
+        diff_text = (
+            raw_diff[:MAX_DIFF_SIZE].decode("utf-8", errors="replace") + "\n[DIFF TRUNCATED AT 256 KB]\n"
+        )
     else:
         was_truncated = False
         diff_text = raw_diff.decode("utf-8", errors="replace")
 
     sanitized_diff = sanitize_text(diff_text, root=root)
 
-    name_cmd = ["git", "diff", "--name-status", "-z", "--no-ext-diff", "--no-textconv", f"{base_commit}..HEAD"]
+    name_cmd = [
+        "git",
+        "diff",
+        "--name-status",
+        "-z",
+        "--no-ext-diff",
+        "--no-textconv",
+        f"{base_commit}..HEAD",
+    ]
     proc_names = subprocess.Popen(
         name_cmd,
         cwd=str(root),
@@ -1363,7 +1379,9 @@ def get_diff_projection(root: Path | str) -> dict:
         stdout=subprocess.PIPE,
         stderr=subprocess.DEVNULL,
     )
-    raw_names = _read_subprocess_bounded(proc_names, max_bytes=MAX_DIFF_SIZE, timeout=GIT_DIFF_TIMEOUT_SECONDS)
+    raw_names = _read_subprocess_bounded(
+        proc_names, max_bytes=MAX_DIFF_SIZE, timeout=GIT_DIFF_TIMEOUT_SECONDS
+    )
     files = []
     if raw_names:
         tokens = raw_names.split(b"\x00")
@@ -1631,7 +1649,9 @@ def execute_action(root: Path, action: str, payload: dict | None = None) -> dict
             or "erp-arabic-bilingual-data" in supplied_identities
         )
         if is_stage4:
-            raise PreconditionError("Stage 4 erp-arabic-bilingual-data is parked and prohibited from dashboard execution")
+            raise PreconditionError(
+                "Stage 4 erp-arabic-bilingual-data is parked and prohibited from dashboard execution"
+            )
 
         # Authoritative identity mismatch rejection across ALL mutating actions
         if authoritative_work_item and supplied_identities:

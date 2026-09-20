@@ -3,8 +3,9 @@
 import json
 import sqlite3
 import subprocess
-import pytest
 from pathlib import Path
+
+import pytest
 from starlette.testclient import TestClient
 
 from dashboard.app import app, task_registry
@@ -18,7 +19,9 @@ def create_stage4_worktree(base_dir: Path, name: str = "stage4_wt") -> Path:
     wt = base_dir / name
     wt.mkdir(parents=True, exist_ok=True)
 
-    subprocess.run(["git", "init", "-b", "feature/scope-context-portability", str(wt)], check=True, capture_output=True)
+    subprocess.run(
+        ["git", "init", "-b", "feature/scope-context-portability", str(wt)], check=True, capture_output=True
+    )
     subprocess.run(["git", "-C", str(wt), "config", "user.email", "test@example.com"], check=True)
     subprocess.run(["git", "-C", str(wt), "config", "user.name", "Test User"], check=True)
     (wt / "README.md").write_text("stage 4 worktree")
@@ -34,7 +37,7 @@ def create_stage4_worktree(base_dir: Path, name: str = "stage4_wt") -> Path:
     (plan_dir / "plan.md").write_text("# Stage 4 Parked Plan\n\nRead-only content.")
 
     db_path = var_dir / "checkpoints.db"
-    script = '''
+    script = """
 import sys, sqlite3, json
 from langgraph.checkpoint.sqlite import SqliteSaver
 
@@ -73,7 +76,7 @@ checkpoint = {
 }
 saver.put({"configurable": {"thread_id": "workflow", "checkpoint_ns": ""}}, checkpoint, {"source": "synthetic"}, {})
 conn.close()
-'''
+"""
     subprocess.run([str(ORCHESTRATOR_PYTHON), "-c", script, str(db_path)], check=True)
     return wt
 

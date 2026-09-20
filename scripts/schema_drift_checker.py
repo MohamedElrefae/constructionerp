@@ -248,7 +248,9 @@ def main() -> int:
     current = SCHEMA_FACTS.read_text()
     if normalize_for_compare(current) != normalize_for_compare(rendered):
         print("Schema drift detected: docs/ai/SCHEMA_FACTS.md does not match live DocType JSON.")
-        print("Run `python3 scripts/schema_drift_checker.py --update` after reviewing intended schema changes.")
+        print(
+            "Run `python3 scripts/schema_drift_checker.py --update` after reviewing intended schema changes."
+        )
         return 1
 
     print("Schema facts match live DocType JSON.")

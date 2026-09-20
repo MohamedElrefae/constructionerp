@@ -75,9 +75,7 @@ def _backfill():
 
 def revert():
     """Reversal: remove the derived search key field (column dropped with it)."""
-    name = frappe.db.get_value(
-        "Custom Field", {"dt": "Account", "fieldname": "account_name_ar_norm"}, "name"
-    )
+    name = frappe.db.get_value("Custom Field", {"dt": "Account", "fieldname": "account_name_ar_norm"}, "name")
     if name:
         frappe.delete_doc("Custom Field", name, force=True, ignore_permissions=True)
         frappe.clear_cache(doctype="Account")

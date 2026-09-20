@@ -3,8 +3,8 @@ import re
 from pathlib import Path
 
 import frappe
-from frappe import _
 from babel.messages.pofile import read_po, write_po
+from frappe import _
 
 APP_PO_PATHS = {
     "frappe": Path("apps/frappe/frappe/locale/ar.po"),

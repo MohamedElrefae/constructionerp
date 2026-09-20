@@ -3,7 +3,6 @@
 import importlib.abc
 import sys
 
-
 FORBIDDEN_PREFIXES = ("construction", "frappe", "erpnext")
 
 
@@ -17,8 +16,6 @@ class ForbiddenImport(importlib.abc.MetaPathFinder):
 
 
 assert not any(
-    name == prefix or name.startswith(f"{prefix}.")
-    for name in sys.modules
-    for prefix in FORBIDDEN_PREFIXES
+    name == prefix or name.startswith(f"{prefix}.") for name in sys.modules for prefix in FORBIDDEN_PREFIXES
 ), "forbidden app package already loaded during offline collection"
 sys.meta_path.insert(0, ForbiddenImport())

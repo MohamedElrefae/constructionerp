@@ -1,11 +1,11 @@
-import pytest
 import sys
 import time
 from pathlib import Path
 
+import pytest
+import validation_runner
 from candidates import git
 from core import WorkflowError
-import validation_runner
 from validation_runner import run
 
 
@@ -27,7 +27,11 @@ def test_offline_validations_capture_real_exit_and_protect_source(repo, tmp_path
         validation_commands=[
             [sys.executable, "-c", 'from pathlib import Path; assert Path("new").read_text()=="candidate"'],
             [sys.executable, "-c", 'from pathlib import Path; Path("new").write_text("bad")'],
-            [sys.executable, "-c", 'import socket; s=socket.socket(); s.settimeout(1); s.connect(("1.1.1.1", 80))'],
+            [
+                sys.executable,
+                "-c",
+                'import socket; s=socket.socket(); s.settimeout(1); s.connect(("1.1.1.1", 80))',
+            ],
         ],
     )
     if not validation_runner.can_unshare_net():

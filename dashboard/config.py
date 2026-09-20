@@ -10,7 +10,7 @@ REPO_ROOT = DASHBOARD_DIR.parent
 DASHBOARD_TEST_MODE = os.environ.get("DASHBOARD_TEST_MODE") == "1"
 
 if DASHBOARD_TEST_MODE and "DASHBOARD_TEST_ROOT" in os.environ:
-    VAR_DIR = (Path(os.environ["DASHBOARD_TEST_ROOT"]).resolve() / "dashboard" / "var")
+    VAR_DIR = Path(os.environ["DASHBOARD_TEST_ROOT"]).resolve() / "dashboard" / "var"
     REGISTRY_DB_PATH = (VAR_DIR / "registry.db").resolve()
 elif DASHBOARD_TEST_MODE and "DASHBOARD_REGISTRY_DB" in os.environ:
     REGISTRY_DB_PATH = Path(os.environ["DASHBOARD_REGISTRY_DB"]).resolve()
@@ -34,7 +34,9 @@ try:
 except Exception:
     pass
 
-CREDENTIALS_FILE_PATH = Path(os.environ.get("DASHBOARD_CREDENTIALS_FILE", str(VAR_DIR / "initial_credentials.txt"))).resolve()
+CREDENTIALS_FILE_PATH = Path(
+    os.environ.get("DASHBOARD_CREDENTIALS_FILE", str(VAR_DIR / "initial_credentials.txt"))
+).resolve()
 AUTH_STORE_PATH = Path(os.environ.get("DASHBOARD_AUTH_STORE", str(VAR_DIR / "auth.json"))).resolve()
 
 # Network binding & loopback security
@@ -48,6 +50,7 @@ ALLOWED_HOSTS = {
     "127.0.0.1",
     "localhost",
 }
+
 
 def resolve_frappe_bench_root() -> Path:
     """Structurally derive the Frappe bench root with fail-closed semantics."""
@@ -67,6 +70,7 @@ def resolve_frappe_bench_root() -> Path:
         f"Cannot structurally resolve Frappe bench root from REPO_ROOT='{REPO_ROOT}': no ancestor contains apps/ and sites/"
     )
 
+
 FRAPPE_BENCH_ROOT = resolve_frappe_bench_root()
 
 # Stage 4 Authoritative Manifest Path (Controlling Installation Root)
@@ -74,7 +78,13 @@ if DASHBOARD_TEST_MODE and "STAGE4_TEST_MANIFEST_PATH" in os.environ:
     STAGE4_AUTHORITATIVE_MANIFEST_PATH = Path(os.environ["STAGE4_TEST_MANIFEST_PATH"]).resolve()
 else:
     STAGE4_AUTHORITATIVE_MANIFEST_PATH = (
-        FRAPPE_BENCH_ROOT / "apps" / "construction" / "construction" / "data" / "localization" / "stage4_export_manifest.json"
+        FRAPPE_BENCH_ROOT
+        / "apps"
+        / "construction"
+        / "construction"
+        / "data"
+        / "localization"
+        / "stage4_export_manifest.json"
     ).resolve()
 
 # Worktree containment settings
@@ -88,8 +98,7 @@ BASE_ALLOWED_ROOTS = [
 ORCHESTRATOR_ROOT = Path(os.environ.get("ORCHESTRATOR_ROOT", str(REPO_ROOT))).resolve()
 ORCHESTRATOR_PYTHON = Path(
     os.environ.get(
-        "ORCHESTRATOR_PYTHON",
-        str(ORCHESTRATOR_ROOT / "orchestrator" / ".venv" / "bin" / "python")
+        "ORCHESTRATOR_PYTHON", str(ORCHESTRATOR_ROOT / "orchestrator" / ".venv" / "bin" / "python")
     )
 ).absolute()
 

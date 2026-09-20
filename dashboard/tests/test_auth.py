@@ -1,11 +1,13 @@
 """Tests for authentication, scrypt hashing, atomic credential management, and Host-header validation."""
 
 import os
-from pathlib import Path
 import stat
-import pytest
-import httpx
+from pathlib import Path
 
+import httpx
+import pytest
+
+from dashboard.app import app
 from dashboard.auth import (
     AuthStore,
     HostValidationMiddleware,
@@ -25,7 +27,6 @@ from dashboard.config import (
     SCRYPT_P,
     SCRYPT_R,
 )
-from dashboard.app import app
 
 
 def test_scrypt_hashing_parameters():
@@ -54,7 +55,7 @@ def test_scrypt_hashing_parameters():
 def test_atomic_credential_file_and_autoremoval(tmp_path):
     """Verify atomic credential file creation with 0600 permissions and auto-removal."""
     cred_file = tmp_path / "initial_credentials.txt"
-    username, password = create_initial_credentials_file(cred_file, username="test_engineer")
+    _username, password = create_initial_credentials_file(cred_file, username="test_engineer")
 
     assert cred_file.is_file()
     assert len(password) == 24
@@ -82,7 +83,7 @@ def test_permanent_password_setup_and_credential_file_removal(tmp_path):
     auth_file = tmp_path / "auth.json"
 
     # 1. Create initial credentials file
-    username, initial_password = create_initial_credentials_file(cred_file, username="engineer")
+    _username, initial_password = create_initial_credentials_file(cred_file, username="engineer")
     assert cred_file.is_file()
 
     # 2. Store initial hash with is_initial = True

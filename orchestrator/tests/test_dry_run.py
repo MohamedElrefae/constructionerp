@@ -6,11 +6,9 @@ classification and the deterministic evidence digest without touching ERP data.
 
 import json
 
-import pytest
-
 import dry_run
+import pytest
 from core import canonical, digest
-
 
 DESCRIPTOR = {
     "bench_root": "/tmp/bench",
@@ -49,10 +47,20 @@ def _live(entries):
 def test_dry_run_clean_payload_is_not_blocking(monkeypatch, tmp_path):
     payload = _payload(("1000 - Assets - E", "الأصول"), ("1100 - Cash - E", "النقد"))
     bundle = _bundle([r["identity"] for r in payload])
-    live = _live({
-        "1000 - Assets - E": {"name": "1000 - Assets - E", "account_name_ar": None, "parent_account": None},
-        "1100 - Cash - E": {"name": "1100 - Cash - E", "account_name_ar": None, "parent_account": "1000 - Assets - E"},
-    })
+    live = _live(
+        {
+            "1000 - Assets - E": {
+                "name": "1000 - Assets - E",
+                "account_name_ar": None,
+                "parent_account": None,
+            },
+            "1100 - Cash - E": {
+                "name": "1100 - Cash - E",
+                "account_name_ar": None,
+                "parent_account": "1000 - Assets - E",
+            },
+        }
+    )
     monkeypatch.setattr(dry_run, "_run_read_console", lambda *a, **k: live)
 
     result = dry_run.dry_run(str(tmp_path), DESCRIPTOR, payload, bundle, tmp_path)
@@ -70,11 +78,13 @@ def test_dry_run_reports_stale_missing_and_blank(monkeypatch, tmp_path):
         ("1200 - Bank - E", "   "),
     )
     bundle = _bundle([r["identity"] for r in payload])
-    live = _live({
-        "1000 - Assets - E": {"name": "1000 - Assets - E"},
-        "1100 - Cash - E": None,  # stale row: governed identity absent from live
-        "1200 - Bank - E": {"name": "1200 - Bank - E"},
-    })
+    live = _live(
+        {
+            "1000 - Assets - E": {"name": "1000 - Assets - E"},
+            "1100 - Cash - E": None,  # stale row: governed identity absent from live
+            "1200 - Bank - E": {"name": "1200 - Bank - E"},
+        }
+    )
     monkeypatch.setattr(dry_run, "_run_read_console", lambda *a, **k: live)
 
     result = dry_run.dry_run(str(tmp_path), DESCRIPTOR, payload, bundle, tmp_path)
@@ -87,10 +97,12 @@ def test_dry_run_reports_stale_missing_and_blank(monkeypatch, tmp_path):
 def test_dry_run_reports_unexpected_current_and_duplicate(monkeypatch, tmp_path):
     payload = _payload(("1000 - Assets - E", "الأصول"), ("1000 - Assets Dup - E", "الأصول ٢"))
     bundle = _bundle([r["identity"] for r in payload])
-    live = _live({
-        "1000 - Assets - E": {"name": "1000 - Assets - E", "account_name_ar": "قيمة مختلفة"},
-        "1000 - Assets Dup - E": {"name": "1000 - Assets Dup - E", "account_name_ar": None},
-    })
+    live = _live(
+        {
+            "1000 - Assets - E": {"name": "1000 - Assets - E", "account_name_ar": "قيمة مختلفة"},
+            "1000 - Assets Dup - E": {"name": "1000 - Assets Dup - E", "account_name_ar": None},
+        }
+    )
     monkeypatch.setattr(dry_run, "_run_read_console", lambda *a, **k: live)
 
     result = dry_run.dry_run(str(tmp_path), DESCRIPTOR, payload, bundle, tmp_path)

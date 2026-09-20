@@ -47,7 +47,7 @@ from dashboard_api import (
     render_plan_as_safe_text_html,
     sanitize_error,
 )
-from engine import Engine, SUPPORTED_STAGES, extract_scope_proposal
+from engine import SUPPORTED_STAGES, Engine, extract_scope_proposal
 from preflight import (
     CheckResult,
     check_approved_capabilities,
@@ -97,8 +97,11 @@ class ProposalStub(Stub):
         body.update(role_outcome)
         body["session_id"] = "synthetic-" + job["job_id"]
         wire = {
-            "plan_text": (wire_override.get("plan_text") if wire_override else None) or self.plan_text or "Synthetic plan",
-            "explanation": (wire_override.get("explanation") if wire_override else None) or "SYNTHETIC fixture result",
+            "plan_text": (wire_override.get("plan_text") if wire_override else None)
+            or self.plan_text
+            or "Synthetic plan",
+            "explanation": (wire_override.get("explanation") if wire_override else None)
+            or "SYNTHETIC fixture result",
         }
         payload = {
             "body": body,
@@ -121,14 +124,13 @@ class ProposalStub(Stub):
         )
 
 
-
 # ==============================================================================
 # 1. Host/Branch Portability
 # ==============================================================================
 
 
 def test_doctor_passes_on_configured_task_branch(configured):
-    root, config = configured
+    root, _config = configured
     from cli import doctor
 
     git(root, "checkout", "-b", "task/work-item-123")
@@ -137,7 +139,7 @@ def test_doctor_passes_on_configured_task_branch(configured):
 
 
 def test_doctor_fails_on_unconfigured_branch(configured):
-    root, config = configured
+    root, _config = configured
     from cli import doctor
 
     git(root, "checkout", "-b", "task/unconfigured-456")
@@ -230,7 +232,7 @@ def test_adopt_scope_atomic_inserts_into_payload_column(tmp_path):
     store = Store(tmp_path / "checkpoints.db")
     try:
         new_config = {"root": str(tmp_path), "stages": ["1"]}
-        event_id, seq = store.adopt_scope_atomic(
+        event_id, _seq = store.adopt_scope_atomic(
             new_config=new_config,
             action_id="act-001",
             scope_hash="h" * 64,
@@ -256,7 +258,7 @@ def test_adopt_scope_atomic_inserts_into_payload_column(tmp_path):
 def test_adopt_scope_atomic_seq_from_lastrowid(tmp_path):
     store = Store(tmp_path / "checkpoints.db")
     try:
-        event_id, seq = store.adopt_scope_atomic(
+        _event_id, seq = store.adopt_scope_atomic(
             new_config={"stages": ["1"]},
             action_id="act-002",
             scope_hash="h" * 64,
@@ -272,7 +274,7 @@ def test_adopt_scope_atomic_seq_from_lastrowid(tmp_path):
 def test_adopt_scope_atomic_event_id_supplied_not_null(tmp_path):
     store = Store(tmp_path / "checkpoints.db")
     try:
-        event_id, seq = store.adopt_scope_atomic(
+        event_id, _seq = store.adopt_scope_atomic(
             new_config={},
             action_id="act-003",
             scope_hash="h" * 64,
@@ -314,7 +316,7 @@ def test_adopt_scope_atomic_invalidates_issued_and_reserved(tmp_path):
 def test_adopt_scope_atomic_request_hash_in_payload(tmp_path):
     store = Store(tmp_path / "checkpoints.db")
     try:
-        event_id, seq = store.adopt_scope_atomic(
+        _event_id, _seq = store.adopt_scope_atomic(
             new_config={},
             action_id="act-005",
             scope_hash="s" * 64,
@@ -333,7 +335,7 @@ def test_adopt_scope_atomic_all_three_in_one_transaction(tmp_path):
     try:
         store.grant({"token_id": "tok-active", "gate_id": "gate-act", "scope": "PLAN"})
         new_cfg = {"adopted": True}
-        event_id, seq = store.adopt_scope_atomic(
+        _event_id, _seq = store.adopt_scope_atomic(
             new_config=new_cfg,
             action_id="act-006",
             scope_hash="s" * 64,
@@ -524,16 +526,18 @@ def test_planning_stage_parks_at_plan_gate_after_reviewer(configured):
     proposal = _sample_proposal()
     plan_with_proposal = f"# Proposed Architecture\n\n```scope-proposal\n{json.dumps(proposal)}\n```\n"
 
-    stub = ProposalStub(outcomes={
-        "architect": {
-            "verdict": "PASS",
-            "wire": {"plan_text": plan_with_proposal, "explanation": "OK"},
-        },
-        "reviewer": {
-            "verdict": "PASS",
-            "wire": {"explanation": "Reviewed plan"},
-        },
-    })
+    stub = ProposalStub(
+        outcomes={
+            "architect": {
+                "verdict": "PASS",
+                "wire": {"plan_text": plan_with_proposal, "explanation": "OK"},
+            },
+            "reviewer": {
+                "verdict": "PASS",
+                "wire": {"explanation": "Reviewed plan"},
+            },
+        }
+    )
     e = Engine(root, launcher=stub)
     try:
         e.initialize(config)
@@ -592,16 +596,18 @@ def test_scope_proposal_schema_rejects_additional_properties():
 
 def _setup_engine_at_plan_gate(root, config, proposal):
     plan_with_proposal = f"# Plan\n\n```scope-proposal\n{json.dumps(proposal)}\n```\n"
-    stub = ProposalStub(outcomes={
-        "architect": {
-            "verdict": "PASS",
-            "wire": {"plan_text": plan_with_proposal, "explanation": "OK"},
-        },
-        "reviewer": {
-            "verdict": "PASS",
-            "wire": {"explanation": "Reviewed"},
-        },
-    })
+    stub = ProposalStub(
+        outcomes={
+            "architect": {
+                "verdict": "PASS",
+                "wire": {"plan_text": plan_with_proposal, "explanation": "OK"},
+            },
+            "reviewer": {
+                "verdict": "PASS",
+                "wire": {"explanation": "Reviewed"},
+            },
+        }
+    )
     e = Engine(root, launcher=stub)
     config["stages"] = ["plan"]
     e.initialize(config)
@@ -1362,12 +1368,14 @@ def test_orchestrator_extracts_scope_proposal_at_collection(configured):
     proposal = _sample_proposal(["1", "2"])
     plan_text = f"# Architect Plan\n\n```scope-proposal\n{json.dumps(proposal)}\n```\n"
 
-    stub = ProposalStub(outcomes={
-        "architect": {
-            "verdict": "PASS",
-            "wire": {"plan_text": plan_text, "explanation": "Architect complete"},
-        },
-    })
+    stub = ProposalStub(
+        outcomes={
+            "architect": {
+                "verdict": "PASS",
+                "wire": {"plan_text": plan_text, "explanation": "Architect complete"},
+            },
+        }
+    )
     e = Engine(root, launcher=stub)
     try:
         e.initialize(config)
@@ -1388,12 +1396,14 @@ def test_invalid_proposal_parks_with_error(configured):
     invalid_proposal = _sample_proposal(["1", "1"])
     plan_text = f"# Plan\n\n```scope-proposal\n{json.dumps(invalid_proposal)}\n```\n"
 
-    stub = ProposalStub(outcomes={
-        "architect": {
-            "verdict": "PASS",
-            "wire": {"plan_text": plan_text, "explanation": "Invalid"},
-        },
-    })
+    stub = ProposalStub(
+        outcomes={
+            "architect": {
+                "verdict": "PASS",
+                "wire": {"plan_text": plan_text, "explanation": "Invalid"},
+            },
+        }
+    )
     e = Engine(root, launcher=stub)
     try:
         e.initialize(config)
@@ -1409,9 +1419,7 @@ def test_missing_proposal_blocks_adoption(configured):
     proposal = _sample_proposal(["1"])
     e = _setup_engine_at_plan_gate(root, config, proposal)
     try:
-        proposal_file = (
-            root / "docs/ai/work-items" / config["work_item"] / "outbox/scope-proposal.json"
-        )
+        proposal_file = root / "docs/ai/work-items" / config["work_item"] / "outbox/scope-proposal.json"
         if proposal_file.exists():
             proposal_file.unlink()
         with pytest.raises(CoreValidationError):
@@ -1463,7 +1471,7 @@ def test_adopt_scope_crash_after_commit_recovery_restores_config_and_checkpoint(
         new_cfg["stages"] = ["plan", "1"]
         new_cfg["scope"] = proposal["scope"]
         new_cfg["scope_hash"] = digest(proposal["scope"])
-        event_id, seq = e.store.adopt_scope_atomic(
+        _event_id, _seq = e.store.adopt_scope_atomic(
             new_config=new_cfg,
             action_id="act-crash-test",
             scope_hash=new_cfg["scope_hash"],
@@ -1592,24 +1600,26 @@ def test_e2e_task_creation_through_plan_approval_to_builder_dispatch_and_collect
     proposal = _sample_proposal(["1"])
     plan_with_proposal = f"# System Architecture\n\n```scope-proposal\n{json.dumps(proposal)}\n```\n"
 
-    stub = ProposalStub(outcomes={
-        "architect": {
-            "verdict": "PASS",
-            "wire": {"plan_text": plan_with_proposal, "explanation": "Architectural plan"},
-        },
-        "reviewer": {
-            "verdict": "PASS",
-            "wire": {"explanation": "Review approved"},
-        },
-        "builder": {
-            "verdict": "PASS",
-            "wire": {"explanation": "Build completed"},
-        },
-        "verifier": {
-            "verdict": "PASS",
-            "wire": {"explanation": "Verification passed"},
-        },
-    })
+    stub = ProposalStub(
+        outcomes={
+            "architect": {
+                "verdict": "PASS",
+                "wire": {"plan_text": plan_with_proposal, "explanation": "Architectural plan"},
+            },
+            "reviewer": {
+                "verdict": "PASS",
+                "wire": {"explanation": "Review approved"},
+            },
+            "builder": {
+                "verdict": "PASS",
+                "wire": {"explanation": "Build completed"},
+            },
+            "verifier": {
+                "verdict": "PASS",
+                "wire": {"explanation": "Verification passed"},
+            },
+        }
+    )
     e = Engine(root, launcher=stub)
     try:
         # Step 1-4: Initialize and park at planning stage PLAN gate
@@ -1729,7 +1739,13 @@ def test_subprocess_plan_relative_and_sanitized(configured):
     assert str(root) not in res["plan_text"]
 
 
-def _setup_test_fenced_action(tmp_path: Path, action_id: str, action_type: str = "test", fencing_token: int = 1, executor_instance_id: str = "inst-test"):
+def _setup_test_fenced_action(
+    tmp_path: Path,
+    action_id: str,
+    action_type: str = "test",
+    fencing_token: int = 1,
+    executor_instance_id: str = "inst-test",
+):
     test_root = tmp_path / "dashboard_service"
     var_dir = test_root / "dashboard" / "var"
     var_dir.mkdir(parents=True, exist_ok=True)
@@ -1766,7 +1782,8 @@ def _setup_test_fenced_action(tmp_path: Path, action_id: str, action_type: str =
                 updated_utc TEXT NOT NULL
             );
         """)
-        conn.execute("""
+        conn.execute(
+            """
             INSERT OR REPLACE INTO action_log (
                 action_id, task_id, action_type, state, request_hash, manifest_json,
                 executor_instance_id, executor_pid, executor_start_time, fencing_token,
@@ -1776,7 +1793,9 @@ def _setup_test_fenced_action(tmp_path: Path, action_id: str, action_type: str =
                 ?, ?, ?, ?,
                 '2026-09-17T00:00:00Z', '2026-09-17T00:00:00Z'
             );
-        """, (action_id, action_type, executor_instance_id, os.getpid(), 0, fencing_token))
+        """,
+            (action_id, action_type, executor_instance_id, os.getpid(), 0, fencing_token),
+        )
     conn.close()
     os.chmod(db_path, 0o600)
     env = dict(os.environ)
@@ -1834,7 +1853,9 @@ def test_subprocess_run_action_executes_without_type_error(configured, tmp_path)
     git(root, "checkout", "-B", config["branch"])
     for r in config["roles"]:
         role_name = r if r in ("architect", "reviewer", "builder", "verifier") else "ai-reviewer"
-        config["roles"][r]["prompt_sha256"] = bytes_hash((root / "docs/ai/roles" / f"{role_name}.md").read_bytes())
+        config["roles"][r]["prompt_sha256"] = bytes_hash(
+            (root / "docs/ai/roles" / f"{role_name}.md").read_bytes()
+        )
     evidence_dir = root / f"docs/ai/work-items/{config['work_item']}/evidence"
     evidence_dir.mkdir(parents=True, exist_ok=True)
     (evidence_dir / "phase-0-capabilities.json").write_text(
@@ -2028,12 +2049,12 @@ def test_html_parser_variants_and_encoded_urls_sanitization():
 
     raw_html_variants = (
         "<img/src=x onerror=alert(1)>\n"
-        "<a href=\"&#106;avascript:alert(1)\">click</a>\n"
+        '<a href="&#106;avascript:alert(1)">click</a>\n'
         "<svg/onload=alert(1)>\n"
-        "<iframe/src=\"evil.com\"></iframe>\n"
+        '<iframe/src="evil.com"></iframe>\n'
         "<body/onload=alert(1)>\n"
         "<img\nsrc=x\nonerror=alert(1)>\n"
-        "<script\nsrc=\"evil.js\"\n></script>\n"
+        '<script\nsrc="evil.js"\n></script>\n'
         "Normal math: x < 5 and y > 3"
     )
     clean = sanitize_plan_text(raw_html_variants)
@@ -2041,7 +2062,7 @@ def test_html_parser_variants_and_encoded_urls_sanitization():
     assert "&lt;img/src=x onerror=alert(1)&gt;" in clean
     assert "&lt;img\nsrc=x\nonerror=alert(1)&gt;" in clean
     assert "<script" not in clean
-    assert "&lt;script\nsrc=\"evil.js\"\n&gt;&lt;/script&gt;" in clean
+    assert '&lt;script\nsrc="evil.js"\n&gt;&lt;/script&gt;' in clean
     assert "<a href=" not in clean
     assert '&lt;a href="&#106;avascript:alert(1)"&gt;' in clean
     assert "<svg" not in clean
@@ -2069,8 +2090,8 @@ def test_html_parser_variants_and_encoded_urls_sanitization():
         "[safe_parens](https://example.com/wiki/Page_(disambiguation))\n"
         "[click_ref][target]\n\n"
         "[target]: javascript:alert(1)\n"
-        "[target_angle]: <javascript:alert(1)> \"Malicious Title\"\n"
-        "[target_safe]: https://example.com/safe \"Safe Title\"\n"
+        '[target_angle]: <javascript:alert(1)> "Malicious Title"\n'
+        '[target_safe]: https://example.com/safe "Safe Title"\n'
         "> [target_bq]: javascript:alert(1)\n"
         ">> [target_nested_bq]: javascript:alert(1)\n"
         "- [target_list]: javascript:alert(1)\n"
@@ -2095,8 +2116,8 @@ def test_html_parser_variants_and_encoded_urls_sanitization():
     assert "[safe_parens](https://example.com/wiki/Page_(disambiguation))" in clean_md
     assert "[click_ref][target]" in clean_md
     assert "[target]: #blocked" in clean_md
-    assert "[target_angle]: #blocked \"Malicious Title\"" in clean_md
-    assert "[target_safe]: https://example.com/safe \"Safe Title\"" in clean_md
+    assert '[target_angle]: #blocked "Malicious Title"' in clean_md
+    assert '[target_safe]: https://example.com/safe "Safe Title"' in clean_md
     assert "> [target_bq]: #blocked" in clean_md
     assert ">> [target_nested_bq]: #blocked" in clean_md
     assert "- [target_list]: #blocked" in clean_md
@@ -2110,23 +2131,23 @@ def test_json_formatted_credentials_redaction():
     from dashboard_api import sanitize_plan_text
 
     text = (
-        '# Configuration Guide\n\n'
-        '```json\n'
-        '{\n'
+        "# Configuration Guide\n\n"
+        "```json\n"
+        "{\n"
         '  "password": "demo-secret-123",\n'
         '  "api_key": "sk-test-live-key-456",\n'
         '  "client_secret": "my-client-secret-789",\n'
         '  "token": "token-xyz-000",\n'
         '  "token_id": "tok-grant-persisted-123"\n'
-        '}\n'
-        '```\n'
+        "}\n"
+        "```\n"
         'Inline settings: password = "demo-secret-123", secret_key: "demo-secret-123", Bearer tok-bearer-12345678.\n'
         'Quoted credentials with spaces: {"password": "alpha beta gamma"}\n'
         'Quoted credentials with punctuation: password: "alpha, beta; gamma"\n'
         'Quoted credentials with escaped quotes: {"secret": "alpha \\"beta\\" gamma"}\n'
-        'Bilingual Arabic:\n'
-        '# خطة العمل\n'
-        'يرجى التأكد من حماية كلمة المرور وعدم نشرها علناً.'
+        "Bilingual Arabic:\n"
+        "# خطة العمل\n"
+        "يرجى التأكد من حماية كلمة المرور وعدم نشرها علناً."
     )
     clean = sanitize_plan_text(text)
     assert "demo-secret-123" not in clean
@@ -2137,11 +2158,11 @@ def test_json_formatted_credentials_redaction():
     assert "alpha beta gamma" not in clean
     assert "beta gamma" not in clean
     assert "alpha, beta; gamma" not in clean
-    assert "alpha \\\"beta\\\" gamma" not in clean
+    assert 'alpha \\"beta\\" gamma' not in clean
     assert '"password": "[REDACTED_CREDENTIAL]"' in clean
     assert '"api_key": "[REDACTED_CREDENTIAL]"' in clean
     assert '"client_secret": "[REDACTED_CREDENTIAL]"' in clean
-    assert 'Bearer [REDACTED_CREDENTIAL]' in clean
+    assert "Bearer [REDACTED_CREDENTIAL]" in clean
     assert '{"password": "[REDACTED_CREDENTIAL]"}' in clean
     assert 'password: "[REDACTED_CREDENTIAL]"' in clean
     assert '{"secret": "[REDACTED_CREDENTIAL]"}' in clean
@@ -2261,6 +2282,7 @@ def test_sanitized_error_masks_external_paths(tmp_path):
     assert "/tmp" not in serialized
 
     from dashboard_api import strip_paths
+
     raw = "Error logged in /tmp/other-project/private.txt during execution"
     stripped = strip_paths(raw, root=root)
     assert "/tmp/other-project/private.txt" not in stripped
@@ -2303,11 +2325,11 @@ def test_plan_projection_sanitizes_unsafe_html(configured):
     unsafe_content = (
         "# Implementation Plan\n\n"
         "<script>alert('xss')</script>\n"
-        "<iframe src=\"https://evil.example.com\"></iframe>\n"
-        "<img src=\"valid.png\" onerror=\"alert('exploit')\">\n"
+        '<iframe src="https://evil.example.com"></iframe>\n'
+        '<img src="valid.png" onerror="alert(\'exploit\')">\n'
         "<img/src=x onerror=alert(1)>\n"
-        "<a href=\"&#106;avascript:alert(1)\">click</a>\n"
-        "<object data=\"payload.swf\"></object>\n"
+        '<a href="&#106;avascript:alert(1)">click</a>\n'
+        '<object data="payload.swf"></object>\n'
         "Normal text with **bold** and *italic*.\n"
     )
     (root / config["plan_path"]).write_text(unsafe_content, encoding="utf-8")
@@ -2329,9 +2351,9 @@ def test_plan_projection_sanitizes_unsafe_html(configured):
 
     # Event handlers and javascript URIs neutralized
     assert '<img src="valid.png" onerror=' not in text
-    assert '<img/src=x onerror=' not in text
-    assert '&lt;img/src=x onerror=alert(1)&gt;' in text
-    assert '<a href=' not in text
+    assert "<img/src=x onerror=" not in text
+    assert "&lt;img/src=x onerror=alert(1)&gt;" in text
+    assert "<a href=" not in text
     assert '&lt;a href="&#106;avascript:alert(1)"&gt;' in text
 
     # Normal text preserved
@@ -2386,7 +2408,7 @@ def test_plain_text_output_contract_and_rendered_boundary(configured):
 
     # Verify rendering via safe plain-text HTML container
     safe_html = render_plan_as_safe_text_html(text)
-    assert safe_html.startswith("<pre class=\"plan-text-display\">")
+    assert safe_html.startswith('<pre class="plan-text-display">')
     assert safe_html.endswith("</pre>")
     # Must NOT contain any active HTML elements
     assert "<img" not in safe_html
@@ -2445,7 +2467,7 @@ def test_concurrent_subprocess_locking_serializes_mutations(configured, tmp_path
                 action_id, task_id, action_type, state, request_hash, manifest_json,
                 executor_instance_id, executor_pid, executor_start_time, fencing_token,
                 created_utc, updated_utc
-            ) VALUES 
+            ) VALUES
             ('act-conc-1', 'test-task', 'pause', 'EXECUTING', 'hash-conc-1', '{}', 'inst-conc-1', 1, 0, 1, '2026-09-17T00:00:00Z', '2026-09-17T00:00:00Z'),
             ('act-conc-2', 'test-task', 'pause', 'EXECUTING', 'hash-conc-2', '{}', 'inst-conc-2', 1, 0, 1, '2026-09-17T00:00:00Z', '2026-09-17T00:00:00Z');
         """)
@@ -2458,20 +2480,24 @@ def test_concurrent_subprocess_locking_serializes_mutations(configured, tmp_path
     env["CANONICAL_DASHBOARD_REGISTRY"] = str(db_path.resolve())
 
     # Launch two subprocesses attempting to execute pause concurrently under the same lock
-    payload1 = json.dumps({
-        "action_id": "act-conc-1",
-        "fencing_token": 1,
-        "executor_instance_id": "inst-conc-1",
-        "request_hash": "hash-conc-1",
-        "reason": "pause 1",
-    })
-    payload2 = json.dumps({
-        "action_id": "act-conc-2",
-        "fencing_token": 1,
-        "executor_instance_id": "inst-conc-2",
-        "request_hash": "hash-conc-2",
-        "reason": "pause 2",
-    })
+    payload1 = json.dumps(
+        {
+            "action_id": "act-conc-1",
+            "fencing_token": 1,
+            "executor_instance_id": "inst-conc-1",
+            "request_hash": "hash-conc-1",
+            "reason": "pause 1",
+        }
+    )
+    payload2 = json.dumps(
+        {
+            "action_id": "act-conc-2",
+            "fencing_token": 1,
+            "executor_instance_id": "inst-conc-2",
+            "request_hash": "hash-conc-2",
+            "reason": "pause 2",
+        }
+    )
 
     p1 = subprocess.Popen(
         [
@@ -2565,4 +2591,3 @@ def test_architect_dispatch_prompt_includes_scope_proposal_instructions(configur
         assert "scope-proposal" in spec["prompt"]
     finally:
         e.close()
-

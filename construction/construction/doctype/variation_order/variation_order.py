@@ -97,7 +97,11 @@ class VariationOrder(Document):
         old_status = (
             old_doc.status
             if old_doc
-            else (frappe.db.get_value("Variation Order", self.name, "status") if (self.name and frappe.db.exists("Variation Order", self.name)) else DRAFT_STATUS)
+            else (
+                frappe.db.get_value("Variation Order", self.name, "status")
+                if (self.name and frappe.db.exists("Variation Order", self.name))
+                else DRAFT_STATUS
+            )
         )
         if self.status not in allowed.get(old_status, set()):
             frappe.throw(
@@ -119,23 +123,33 @@ class VariationOrder(Document):
             if self.status == SUBMITTED_STATUS and old_status == DRAFT_STATUS:
                 if not user_roles.intersection({"Project Manager", "Construction Owner", "System Manager"}):
                     frappe.throw(
-                        _("Unauthorized: Only Project Manager or Construction Owner can submit Variation Orders."),
+                        _(
+                            "Unauthorized: Only Project Manager or Construction Owner can submit Variation Orders."
+                        ),
                         frappe.PermissionError,
                     )
             elif self.status == ENGINEER_APPROVED_STATUS and old_status == SUBMITTED_STATUS:
-                if not user_roles.intersection({"Site Engineer", "Project Manager", "Construction Owner", "System Manager"}):
+                if not user_roles.intersection(
+                    {"Site Engineer", "Project Manager", "Construction Owner", "System Manager"}
+                ):
                     frappe.throw(
-                        _("Unauthorized: Only Site Engineer or Project Manager can approve Variation Orders for Engineer stage."),
+                        _(
+                            "Unauthorized: Only Site Engineer or Project Manager can approve Variation Orders for Engineer stage."
+                        ),
                         frappe.PermissionError,
                     )
             elif self.status == CLIENT_APPROVED_STATUS and old_status == ENGINEER_APPROVED_STATUS:
                 if not user_roles.intersection({"Construction Owner", "System Manager"}):
                     frappe.throw(
-                        _("Unauthorized: Only Construction Owner or System Manager can approve Variation Orders for Client stage."),
+                        _(
+                            "Unauthorized: Only Construction Owner or System Manager can approve Variation Orders for Client stage."
+                        ),
                         frappe.PermissionError,
                     )
             elif self.status == REJECTED_STATUS and old_status != REJECTED_STATUS:
-                if not user_roles.intersection({"Site Engineer", "Project Manager", "Construction Owner", "System Manager"}):
+                if not user_roles.intersection(
+                    {"Site Engineer", "Project Manager", "Construction Owner", "System Manager"}
+                ):
                     frappe.throw(
                         _("Unauthorized: Role not permitted to reject Variation Orders."),
                         frappe.PermissionError,
@@ -160,9 +174,15 @@ class VariationOrder(Document):
         elif self.status == ENGINEER_APPROVED_STATUS and old_status == SUBMITTED_STATUS:
             prev_submitter = persisted.get("submitted_by")
             if not is_migration and frappe.session.user != "Administrator":
-                if prev_submitter and prev_submitter == frappe.session.user and "System Manager" not in user_roles:
+                if (
+                    prev_submitter
+                    and prev_submitter == frappe.session.user
+                    and "System Manager" not in user_roles
+                ):
                     frappe.throw(
-                        _("Segregation of duties violation: The submitter cannot approve their own Variation Order."),
+                        _(
+                            "Segregation of duties violation: The submitter cannot approve their own Variation Order."
+                        ),
                         frappe.PermissionError,
                     )
             self.engineer_approved_by = frappe.session.user
@@ -181,7 +201,9 @@ class VariationOrder(Document):
                     or (prev_engineer and prev_engineer == frappe.session.user)
                 ) and "System Manager" not in user_roles:
                     frappe.throw(
-                        _("Segregation of duties violation: Submitter and Engineer approver cannot grant final Client approval."),
+                        _(
+                            "Segregation of duties violation: Submitter and Engineer approver cannot grant final Client approval."
+                        ),
                         frappe.PermissionError,
                     )
             self.client_approved_by = frappe.session.user
@@ -189,11 +211,14 @@ class VariationOrder(Document):
 
         # Reject any client-supplied audit identity/timestamp outside its
         # owning transition (tamper reversion). Persisted values win.
-        self._revert_audit_tampering(persisted, transitioned=bool(
-            (self.status == SUBMITTED_STATUS and old_status == DRAFT_STATUS)
-            or (self.status == ENGINEER_APPROVED_STATUS and old_status == SUBMITTED_STATUS)
-            or (self.status == CLIENT_APPROVED_STATUS and old_status == ENGINEER_APPROVED_STATUS)
-        ))
+        self._revert_audit_tampering(
+            persisted,
+            transitioned=bool(
+                (self.status == SUBMITTED_STATUS and old_status == DRAFT_STATUS)
+                or (self.status == ENGINEER_APPROVED_STATUS and old_status == SUBMITTED_STATUS)
+                or (self.status == CLIENT_APPROVED_STATUS and old_status == ENGINEER_APPROVED_STATUS)
+            ),
+        )
 
     def _persisted_audit_fields(self):
         """Return audit fields as currently persisted in the database.
@@ -260,7 +285,11 @@ class VariationOrder(Document):
         ):
             file_name = frappe.db.get_value(
                 "File",
-                {"file_url": doc_str, "attached_to_doctype": "Variation Order", "attached_to_name": self.name},
+                {
+                    "file_url": doc_str,
+                    "attached_to_doctype": "Variation Order",
+                    "attached_to_name": self.name,
+                },
                 "name",
             )
         elif frappe.db.exists("File", doc_str):
@@ -276,7 +305,9 @@ class VariationOrder(Document):
 
         file_doc = frappe.get_doc("File", file_name)
 
-        if not str(file_doc.file_name or "").lower().endswith(".pdf") and not doc_str.lower().endswith(".pdf"):
+        if not str(file_doc.file_name or "").lower().endswith(".pdf") and not doc_str.lower().endswith(
+            ".pdf"
+        ):
             frappe.throw(_("Client approval document must be a PDF file (.pdf)."), frappe.ValidationError)
 
         # Enforce attachment linkage to this Variation Order
@@ -311,9 +342,11 @@ class VariationOrder(Document):
             if len(reader.pages) < 1:
                 frappe.throw(_("Invalid PDF file: PDF document contains no pages."), frappe.ValidationError)
         except Exception as e:
-            if isinstance(e, (frappe.ValidationError, frappe.PermissionError)):
+            if isinstance(e, frappe.ValidationError | frappe.PermissionError):
                 raise e
-            frappe.throw(_("Failed to verify PDF attachment structure: {0}").format(str(e)), frappe.ValidationError)
+            frappe.throw(
+                _("Failed to verify PDF attachment structure: {0}").format(str(e)), frappe.ValidationError
+            )
 
     def validate_lines(self):
         if not self.lines:

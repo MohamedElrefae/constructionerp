@@ -1,8 +1,8 @@
 """Pytest fixtures and configuration for dashboard tests."""
 
 import os
-from pathlib import Path
 import sys
+from pathlib import Path
 
 # Ensure repository root is on sys.path
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
@@ -31,7 +31,9 @@ import json
 import shutil
 import sqlite3
 import subprocess
+
 import pytest
+
 
 @pytest.fixture
 def anyio_backend():
@@ -40,7 +42,7 @@ def anyio_backend():
 
 def create_isolated_worktree(base_dir: Path, name: str = "isolated_wt") -> Path:
     """Create a completely isolated mock worktree with its own Git repo and synthetic checkpoints DB.
-    
+
     Prevents tests from touching, copying, or locking the live repository.
     """
     wt = base_dir / name
@@ -69,7 +71,7 @@ def create_isolated_worktree(base_dir: Path, name: str = "isolated_wt") -> Path:
 
     # Synthetically create checkpoints.db from scratch without touching or copying the live database
     db_path = var_dir / "checkpoints.db"
-    script = '''
+    script = """
 import sys, sqlite3, json
 from langgraph.checkpoint.sqlite import SqliteSaver
 
@@ -108,8 +110,9 @@ checkpoint = {
 }
 saver.put({"configurable": {"thread_id": "workflow", "checkpoint_ns": ""}}, checkpoint, {"source": "synthetic"}, {})
 conn.close()
-'''
+"""
     from dashboard.config import ORCHESTRATOR_PYTHON
+
     subprocess.run([str(ORCHESTRATOR_PYTHON), "-c", script, str(db_path)], check=True)
     return wt
 
@@ -118,6 +121,7 @@ conn.close()
 def isolated_worktree(tmp_path) -> Path:
     """Fixture providing an isolated worktree in tmp_path."""
     from dashboard.app import task_registry
+
     if tmp_path not in task_registry.allowed_roots:
         task_registry.allowed_roots.append(tmp_path)
     return create_isolated_worktree(tmp_path)

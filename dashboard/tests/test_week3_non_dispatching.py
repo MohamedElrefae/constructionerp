@@ -8,11 +8,12 @@ Asserts:
 """
 
 import json
-from pathlib import Path
 import sqlite3
-import pytest
-import httpx
+from pathlib import Path
 from unittest.mock import patch
+
+import httpx
+import pytest
 
 from dashboard.app import app, task_registry
 from dashboard.auth import auth_store, session_manager
@@ -93,12 +94,13 @@ async def test_strict_non_dispatching_and_zero_db_delta(auth_headers_and_cookies
 
     # Update config to have task_base_commit so diff succeeds
     import subprocess
+
     head_rev = subprocess.check_output(["git", "-C", str(wt), "rev-parse", "HEAD"]).decode().strip()
     conn = sqlite3.connect(str(db_path))
     with conn:
         conn.execute(
             "UPDATE workflow_meta SET value = ? WHERE key = 'config'",
-            (json.dumps({"work_item": "isolated-test-work-item", "task_base_commit": head_rev}),)
+            (json.dumps({"work_item": "isolated-test-work-item", "task_base_commit": head_rev}),),
         )
     conn.close()
 
@@ -106,14 +108,26 @@ async def test_strict_non_dispatching_and_zero_db_delta(auth_headers_and_cookies
     assert initial_fp != {}
 
     transport = httpx.ASGITransport(app=app)
-    async with httpx.AsyncClient(transport=transport, base_url="https://127.0.0.1:8080", cookies=cookies) as client:
+    async with httpx.AsyncClient(
+        transport=transport, base_url="https://127.0.0.1:8080", cookies=cookies
+    ) as client:
         called_actions = []
         import dashboard.subprocess_client as sc
+
         orig_run_action = sc.run_action
 
         async def spy_run_action(worktree_path, action, payload=None):
             # Assert strictly non-mutating / non-dispatching action
-            assert action not in ("run", "dispatch", "pause", "resume", "reset_budget", "reconfigure_role", "adopt_scope", "approve_plan")
+            assert action not in (
+                "run",
+                "dispatch",
+                "pause",
+                "resume",
+                "reset_budget",
+                "reconfigure_role",
+                "adopt_scope",
+                "approve_plan",
+            )
             called_actions.append(action)
             return await orig_run_action(worktree_path, action, payload)
 
@@ -132,16 +146,19 @@ async def test_strict_non_dispatching_and_zero_db_delta(auth_headers_and_cookies
 
             for path, expected_status in endpoints:
                 resp = await client.get(path, headers=headers)
-                assert resp.status_code == expected_status, f"Path {path} returned {resp.status_code}: {resp.text}"
+                assert (
+                    resp.status_code == expected_status
+                ), f"Path {path} returned {resp.status_code}: {resp.text}"
 
                 # Verify database unchanged after every single endpoint call
                 current_fp = get_db_fingerprint(db_path)
-                assert current_fp == initial_fp, f"Database delta detected after calling {path}: {current_fp} vs {initial_fp}"
+                assert (
+                    current_fp == initial_fp
+                ), f"Database delta detected after calling {path}: {current_fp} vs {initial_fp}"
 
         # Confirm that only read-only actions were dispatched
         for act in called_actions:
             assert act in ("findings", "evidence", "read_evidence", "diff", "settings", "audit", "state")
-
 
 
 @pytest.mark.anyio
@@ -149,7 +166,9 @@ async def test_rejection_of_mutating_actions(auth_headers_and_cookies):
     """Verify that mutating owner decision and execution endpoints are strictly rejected."""
     headers, cookies = auth_headers_and_cookies
     transport = httpx.ASGITransport(app=app)
-    async with httpx.AsyncClient(transport=transport, base_url="https://127.0.0.1:8080", cookies=cookies) as client:
+    async with httpx.AsyncClient(
+        transport=transport, base_url="https://127.0.0.1:8080", cookies=cookies
+    ) as client:
         rejected_actions = [
             ("POST", "/api/tasks/task-non-dispatch/pause"),
             ("POST", "/api/tasks/task-non-dispatch/resume"),
@@ -163,4 +182,7 @@ async def test_rejection_of_mutating_actions(auth_headers_and_cookies):
 
         for method, path in rejected_actions:
             resp = await client.post(path, json={}, headers=headers)
-            assert resp.status_code in (404, 405), f"Mutating endpoint {path} should not exist but returned {resp.status_code}"
+            assert resp.status_code in (
+                404,
+                405,
+            ), f"Mutating endpoint {path} should not exist but returned {resp.status_code}"

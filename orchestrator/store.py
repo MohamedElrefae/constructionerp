@@ -50,7 +50,9 @@ class Store:
 
     def event(self, event_id, kind, payload):
         with self._lock:
-            existing = self.conn.execute("SELECT * FROM workflow_events WHERE event_id=?", (event_id,)).fetchone()
+            existing = self.conn.execute(
+                "SELECT * FROM workflow_events WHERE event_id=?", (event_id,)
+            ).fetchone()
             body = canonical(payload).decode()
             if existing:
                 if existing["kind"] != kind or existing["payload"] != body:
@@ -73,7 +75,9 @@ class Store:
                     payload=json.loads(row["payload"]),
                     created_utc=row["created_utc"],
                 )
-                for row in self.conn.execute("SELECT * FROM workflow_events WHERE seq>? ORDER BY seq", (after,))
+                for row in self.conn.execute(
+                    "SELECT * FROM workflow_events WHERE seq>? ORDER BY seq", (after,)
+                )
             ]
 
     def job(self, job_id):

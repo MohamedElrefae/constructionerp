@@ -11,9 +11,7 @@ from construction.construction.utils.scope_validation import validate_scope_dime
 
 
 def _is_privileged_scope_actor():
-    return (
-        frappe.session.user == "Administrator" or "System Manager" in frappe.get_roles()
-    )
+    return frappe.session.user == "Administrator" or "System Manager" in frappe.get_roles()
 
 
 def get_allowed_scope_dimensions(user=None):
@@ -181,9 +179,7 @@ def _load_scope_hierarchy(user, ignore_permissions, cache_key):
 
     # All companies (Company DocType has no disabled field) — permission enforced
     hierarchy = {
-        "companies": _safe_get_list(
-            "Company", ["name", "company_name"], order_by="company_name asc"
-        ),
+        "companies": _safe_get_list("Company", ["name", "company_name"], order_by="company_name asc"),
     }
 
     # All cost centers (NestedSet tree — include lft/rgt for descendant expansion)
@@ -230,6 +226,7 @@ def invalidate_scope_cache(user=None):
     Clears both the user's own permission-context key and any privileged
     cross-user (``xuser``) key that may have cached a hierarchy for them.
     """
+
     def _delete_xuser_keys():
         try:
             frappe.cache().delete_keys("scope_hierarchy:xuser:")

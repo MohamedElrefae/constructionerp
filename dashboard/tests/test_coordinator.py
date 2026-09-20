@@ -2,6 +2,7 @@
 
 import asyncio
 from pathlib import Path
+
 import pytest
 
 from dashboard.config import REPO_ROOT
@@ -37,6 +38,7 @@ async def test_coordinator_poll_once(tmp_path, isolated_worktree):
     # Verify coordinator holds zero locks on the isolated fixture:
     # file is immediately and non-blockingly lockable
     import fcntl
+
     with open(isolated_lock, "a+b") as h:
         fcntl.flock(h, fcntl.LOCK_EX | fcntl.LOCK_NB)
         fcntl.flock(h, fcntl.LOCK_UN)

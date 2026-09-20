@@ -15,6 +15,7 @@ import json
 import os
 import threading
 import time
+
 import pytest
 import uvicorn
 from playwright.async_api import async_playwright
@@ -197,27 +198,71 @@ async def test_ui_week3_eight_tab_navigation_and_features(ui_live_server):
             elif f"/api/tasks/{task_id}/plan" in url:
                 await route.fulfill(status=200, content_type="application/json", body=json.dumps(plan_data))
             elif f"/api/tasks/{task_id}/review-context" in url:
-                await route.fulfill(status=200, content_type="application/json", body=json.dumps({"gate": None, "proposal": None, "plan_revision_hash": "a"*64, "scope_hash": "b"*64, "roles_hash": "c"*64}))
+                await route.fulfill(
+                    status=200,
+                    content_type="application/json",
+                    body=json.dumps(
+                        {
+                            "gate": None,
+                            "proposal": None,
+                            "plan_revision_hash": "a" * 64,
+                            "scope_hash": "b" * 64,
+                            "roles_hash": "c" * 64,
+                        }
+                    ),
+                )
             elif f"/api/tasks/{task_id}/ai-context" in url:
                 await route.fulfill(status=200, content_type="application/json", body=json.dumps(ai_data))
             elif f"/api/tasks/{task_id}/evidence/stage1_output.txt" in url:
-                await route.fulfill(status=200, content_type="application/json", body=json.dumps(evidence_file_data))
+                await route.fulfill(
+                    status=200, content_type="application/json", body=json.dumps(evidence_file_data)
+                )
             elif f"/api/tasks/{task_id}/evidence" in url:
-                await route.fulfill(status=200, content_type="application/json", body=json.dumps(evidence_data))
+                await route.fulfill(
+                    status=200, content_type="application/json", body=json.dumps(evidence_data)
+                )
             elif f"/api/tasks/{task_id}/findings" in url:
-                await route.fulfill(status=200, content_type="application/json", body=json.dumps(findings_data))
+                await route.fulfill(
+                    status=200, content_type="application/json", body=json.dumps(findings_data)
+                )
             elif f"/api/tasks/{task_id}/diff" in url:
                 await route.fulfill(status=200, content_type="application/json", body=json.dumps(diff_data))
             elif f"/api/tasks/{task_id}/settings" in url:
-                await route.fulfill(status=200, content_type="application/json", body=json.dumps(settings_data))
+                await route.fulfill(
+                    status=200, content_type="application/json", body=json.dumps(settings_data)
+                )
             elif "/api/erp/projection" in url:
                 await route.fulfill(status=200, content_type="application/json", body=json.dumps(erp_data))
             elif "/api/tasks" in url and route.request.method == "GET":
-                await route.fulfill(status=200, content_type="application/json", body=json.dumps([{"task_id": task_id, "work_item": "test-week3-item", "task_branch": "feature/test-week3", "cached_status": "IN_PROGRESS", "cached_stage": "1"}]))
+                await route.fulfill(
+                    status=200,
+                    content_type="application/json",
+                    body=json.dumps(
+                        [
+                            {
+                                "task_id": task_id,
+                                "work_item": "test-week3-item",
+                                "task_branch": "feature/test-week3",
+                                "cached_status": "IN_PROGRESS",
+                                "cached_stage": "1",
+                            }
+                        ]
+                    ),
+                )
             elif "/api/auth/csrf-token" in url:
-                await route.fulfill(status=200, content_type="application/json", body=json.dumps({"csrf_token": "mock_csrf_token"}))
+                await route.fulfill(
+                    status=200,
+                    content_type="application/json",
+                    body=json.dumps({"csrf_token": "mock_csrf_token"}),
+                )
             elif "/api/auth/me" in url:
-                await route.fulfill(status=200, content_type="application/json", body=json.dumps({"authenticated": True, "username": "engineer", "must_change_password": False}))
+                await route.fulfill(
+                    status=200,
+                    content_type="application/json",
+                    body=json.dumps(
+                        {"authenticated": True, "username": "engineer", "must_change_password": False}
+                    ),
+                )
             else:
                 await route.continue_()
 

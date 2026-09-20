@@ -21,26 +21,26 @@ class TestReportExtensionPure(unittest.TestCase):
         cols = [{"fieldname": "account", "label": "Account"}]
         data = [{"account": "1100 - Cash - E", "balance": 1}]
         mapping = {"1100 - Cash - E": "نقدية"}
-        nc, nd = rbe.transform_report(cols, data, "en", mapping, ["account"])
+        _nc, nd = rbe.transform_report(cols, data, "en", mapping, ["account"])
         self.assertEqual(nd[0]["account"], "1100 - Cash - E")
 
     def test_arabic_mode_swaps_label(self):
         cols = [{"fieldname": "account", "label": "Account"}]
         data = [{"account": "1100 - Cash - E", "balance": 1}]
         mapping = {"1100 - Cash - E": "نقدية"}
-        nc, nd = rbe.transform_report(cols, data, "ar", mapping, ["account"])
+        _nc, nd = rbe.transform_report(cols, data, "ar", mapping, ["account"])
         self.assertEqual(nd[0]["account"], "نقدية")
 
     def test_both_mode_shows_pair(self):
         data = [{"account": "1100 - Cash - E"}]
         mapping = {"1100 - Cash - E": "نقدية"}
-        nc, nd = rbe.transform_report([], data, "both", mapping, ["account"])
+        _nc, nd = rbe.transform_report([], data, "both", mapping, ["account"])
         self.assertEqual(nd[0]["account"], "1100 - Cash - E — نقدية")
 
     def test_unknown_label_kept_identity(self):
         data = [{"account": "1200 - Receivable - E"}]
         mapping = {"1100 - Cash - E": "نقدية"}
-        nc, nd = rbe.transform_report([], data, "ar", mapping, ["account"])
+        _nc, nd = rbe.transform_report([], data, "ar", mapping, ["account"])
         self.assertEqual(nd[0]["account"], "1200 - Receivable - E")
 
     def test_sources_are_not_mutated(self):
@@ -55,7 +55,7 @@ class TestReportExtensionPure(unittest.TestCase):
         cols = [{"fieldname": "account", "label": "Account"}, {"fieldname": "balance"}]
         data = [["1100 - Cash - E", 10]]
         mapping = {"1100 - Cash - E": "نقدية"}
-        nc, nd = rbe.transform_report(cols, data, "ar", mapping, ["account"])
+        _nc, nd = rbe.transform_report(cols, data, "ar", mapping, ["account"])
         self.assertEqual(nd[0][0], "نقدية")
         self.assertEqual(nd[0][1], 10)
 

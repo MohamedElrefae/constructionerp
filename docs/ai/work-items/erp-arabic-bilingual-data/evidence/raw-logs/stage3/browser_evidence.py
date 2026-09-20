@@ -5,6 +5,7 @@ and captures DOM evidence + screenshots for the Account identity section and
 the Chart of Accounts tree. Usage:
     env/bin/python /tmp/opencode/stage3/browser_evidence.py <ar|en> <account>
 """
+
 import json
 import subprocess
 import sys
@@ -19,7 +20,12 @@ BASE = "http://127.0.0.1:8000"
 OUT = Path(sys.argv[3] if len(sys.argv) > 3 else "/tmp/opencode/stage3")
 script_js = (OUT / "browser_script.js").read_text(encoding="utf-8")
 
-results = {"lang": LANG, "account": ACCOUNT, "started_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"), "checks": []}
+results = {
+    "lang": LANG,
+    "account": ACCOUNT,
+    "started_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+    "checks": [],
+}
 
 with sync_playwright() as p:
     browser = p.chromium.launch(headless=True)
@@ -35,7 +41,7 @@ with sync_playwright() as p:
     from urllib.parse import quote
 
     console_msgs = []
-    page.on("console", lambda m: console_msgs.append("%s: %s" % (m.type, m.text[:200])))
+    page.on("console", lambda m: console_msgs.append(f"{m.type}: {m.text[:200]}"))
     page.goto(BASE + "/app/account/" + quote(ACCOUNT), wait_until="networkidle")
     page.wait_for_timeout(5000)
     try:
@@ -61,7 +67,7 @@ with sync_playwright() as p:
         },
     }
     results["form"] = form_data
-    page.screenshot(path=str(OUT / ("browser-%s-form.png" % LANG)), full_page=False)
+    page.screenshot(path=str(OUT / (f"browser-{LANG}-form.png")), full_page=False)
 
     # Execute the shipped browser script on the open form.
     page.evaluate(script_js)
@@ -124,7 +130,7 @@ with sync_playwright() as p:
     if count:
         labels = [tree.nth(i).text_content().strip() for i in range(min(count, 60))]
     results["tree"] = {"label_count": count, "labels": labels}
-    page.screenshot(path=str(OUT / ("browser-%s-tree.png" % LANG)), full_page=False)
+    page.screenshot(path=str(OUT / (f"browser-{LANG}-tree.png")), full_page=False)
     page.evaluate(script_js)
     page.wait_for_timeout(500)
     tree_checks = page.evaluate("window.ct_bilingual_results")

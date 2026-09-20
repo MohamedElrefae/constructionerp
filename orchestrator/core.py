@@ -35,7 +35,6 @@ class GrantReconciliationRequired(WorkflowError):
     pass
 
 
-
 def utc():
     return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
 

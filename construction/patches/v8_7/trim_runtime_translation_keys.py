@@ -32,12 +32,23 @@ def execute():
     rows = frappe.get_all(
         "Translation",
         filters={"language": "ar", "ct_is_catalog_entry": 0},
-        fields=["name", "source_text", "context", "translated_text", "ct_app",
-                "ct_origin", "ct_release_version", "ct_key_digest", "modified", "creation"],
+        fields=[
+            "name",
+            "source_text",
+            "context",
+            "translated_text",
+            "ct_app",
+            "ct_origin",
+            "ct_release_version",
+            "ct_key_digest",
+            "modified",
+            "creation",
+        ],
         limit_page_length=0,
     )
     broken = [
-        r for r in rows
+        r
+        for r in rows
         if (r.source_text or "") != (r.source_text or "").strip()
         or (r.context or "") != (r.context or "").strip()
     ]
@@ -62,7 +73,8 @@ def _fix_broken(broken):
         for e in frappe.db.sql(
             "select name, source_text, modified, creation from `tabTranslation` "
             "where ct_key_digest=%s and ct_is_catalog_entry=0",
-            (d,), as_dict=1,
+            (d,),
+            as_dict=1,
         ):
             grp.append(e)
 
@@ -90,7 +102,9 @@ def _fix_broken(broken):
         # Provenance nicety: construction workspace strings belong to construction.
         if not winner.get("ct_app") and "Variation" in t:
             updates["ct_app"] = "construction"
-        cur = frappe.db.get_value("Translation", winner.name, ["source_text", "ct_key_digest", "ct_app"], as_dict=1)
+        cur = frappe.db.get_value(
+            "Translation", winner.name, ["source_text", "ct_key_digest", "ct_app"], as_dict=1
+        )
         if cur and (cur.source_text != t or cur.ct_key_digest != d or "ct_app" in updates):
             frappe.db.set_value("Translation", winner.name, updates, update_modified=False)
             fixed += 1
@@ -127,7 +141,8 @@ def _verify():
         limit_page_length=0,
     )
     remaining = [
-        r.name for r in rows2
+        r.name
+        for r in rows2
         if (r.source_text or "") != (r.source_text or "").strip()
         or (r.context or "") != (r.context or "").strip()
     ]

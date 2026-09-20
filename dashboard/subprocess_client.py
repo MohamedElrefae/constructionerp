@@ -62,9 +62,7 @@ async def run_action(
 ) -> dict[str, Any]:
     """Execute an allowlisted action via orchestrator subprocess."""
     if action not in ALLOWED_ACTIONS:
-        raise ValueError(
-            f"Action {action!r} not permitted. Allowed actions: {sorted(ALLOWED_ACTIONS)}"
-        )
+        raise ValueError(f"Action {action!r} not permitted. Allowed actions: {sorted(ALLOWED_ACTIONS)}")
 
     worktree = Path(worktree_path).resolve()
     if not worktree.is_dir():
@@ -104,9 +102,7 @@ async def run_action(
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE,
             )
-            stdout_b, stderr_b = await asyncio.wait_for(
-                proc.communicate(), timeout=timeout
-            )
+            stdout_b, stderr_b = await asyncio.wait_for(proc.communicate(), timeout=timeout)
         except asyncio.TimeoutError as exc:
             if proc is not None:
                 try:
@@ -286,4 +282,3 @@ async def query_audit_events(
     return await run_action(
         worktree_path, "audit", payload={"max_events": max_events, "max_bytes": max_bytes}
     )
-

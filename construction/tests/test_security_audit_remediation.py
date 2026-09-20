@@ -145,7 +145,9 @@ class TestSecurityAuditRemediation(FrappeTestCase):
         if hasattr(self, "_created_themes"):
             for t in self._created_themes:
                 try:
-                    theme_file = os.path.join(frappe.get_site_path("public", "files", "css"), f"theme_{t}.css")
+                    theme_file = os.path.join(
+                        frappe.get_site_path("public", "files", "css"), f"theme_{t}.css"
+                    )
                     if os.path.exists(theme_file):
                         os.remove(theme_file)
                     frappe.db.delete("Construction Theme", {"name": t})
@@ -163,9 +165,7 @@ class TestSecurityAuditRemediation(FrappeTestCase):
         # Persist the tracked-ID cleanup so mid-test commits (worker
         # threads) cannot leave orphaned rows past the framework rollback.
         # Only exact test-created IDs are deleted above — never whole tables.
-        cleanup_errors, deleted_vos, deleted_headers, deleted_projects = (
-            self._delete_tracked_business_graph()
-        )
+        cleanup_errors, deleted_vos, deleted_headers, deleted_projects = self._delete_tracked_business_graph()
         frappe.db.commit()
 
         # Hermeticity assertion against the PRESERVED copies (the self._tracked_*
@@ -282,14 +282,16 @@ class TestSecurityAuditRemediation(FrappeTestCase):
         writer.write(buf)
         pdf_content = buf.getvalue()
 
-        file_doc = frappe.get_doc({
-            "doctype": "File",
-            "file_name": f"approval_{frappe.generate_hash(length=6)}.pdf",
-            "attached_to_doctype": attached_doctype,
-            "attached_to_name": attached_name,
-            "is_private": 1,
-            "content": pdf_content,
-        })
+        file_doc = frappe.get_doc(
+            {
+                "doctype": "File",
+                "file_name": f"approval_{frappe.generate_hash(length=6)}.pdf",
+                "attached_to_doctype": attached_doctype,
+                "attached_to_name": attached_name,
+                "is_private": 1,
+                "content": pdf_content,
+            }
+        )
         file_doc.insert(ignore_permissions=True)
         self._created_files.append(file_doc)
         return file_doc
@@ -326,7 +328,9 @@ class TestSecurityAuditRemediation(FrappeTestCase):
                 "company": malicious_val,
                 "title": malicious_val,
                 "export_date": "2026-08-24",
-                "sections": [{"title": malicious_val, "fields": [{"label": malicious_val, "value": malicious_val}]}],
+                "sections": [
+                    {"title": malicious_val, "fields": [{"label": malicious_val, "value": malicious_val}]}
+                ],
             },
         )
         self.assertNotIn("<script>", rendered_generic)
@@ -372,10 +376,12 @@ class TestSecurityAuditRemediation(FrappeTestCase):
         self.assertNotIn("<script>", rendered_header)
 
         # 4. boq_print_format.html with column width validation
-        sanitized_cols = BOQExportService.apply_column_config([
-            {"field_key": "item_code", "visible": True, "sort_order": 1, "width": malicious_width},
-            {"field_key": "title", "visible": True, "sort_order": 2, "width": 30.5},
-        ])
+        sanitized_cols = BOQExportService.apply_column_config(
+            [
+                {"field_key": "item_code", "visible": True, "sort_order": 1, "width": malicious_width},
+                {"field_key": "title", "visible": True, "sort_order": 2, "width": 30.5},
+            ]
+        )
         # Width must be sanitized to safe numeric float
         self.assertEqual(sanitized_cols[0]["width"], 10.0)
         self.assertEqual(sanitized_cols[1]["width"], 30.5)
@@ -466,11 +472,14 @@ class TestSecurityAuditRemediation(FrappeTestCase):
         vo = frappe.new_doc("Variation Order")
         vo.boq_header = boq.name
         vo.status = "Draft"
-        vo.append("lines", {
-            "line_type": "Quantity Change",
-            "boq_item": item.name,
-            "revised_qty": 115,
-        })
+        vo.append(
+            "lines",
+            {
+                "line_type": "Quantity Change",
+                "boq_item": item.name,
+                "revised_qty": 115,
+            },
+        )
         vo.insert()
         self._track("Variation Order", vo.name)
         vo.status = "Submitted"
@@ -532,15 +541,18 @@ class TestSecurityAuditRemediation(FrappeTestCase):
         vo = frappe.new_doc("Variation Order")
         vo.boq_header = boq.name
         vo.status = "Draft"
-        vo.append("lines", {
-            "line_type": "New Item",
-            "title": "Concurrent New Item",
-            "boq_structure": sec.name,
-            "unit": "Nos",
-            "revised_qty": 20,
-            "revised_unit_price": 75,
-            "rate_change_justification": "Approved concurrent item",
-        })
+        vo.append(
+            "lines",
+            {
+                "line_type": "New Item",
+                "title": "Concurrent New Item",
+                "boq_structure": sec.name,
+                "unit": "Nos",
+                "revised_qty": 20,
+                "revised_unit_price": 75,
+                "rate_change_justification": "Approved concurrent item",
+            },
+        )
         vo.insert(ignore_permissions=True)
         self._track("Variation Order", vo.name)
         vo.db_set("status", "Approved by Engineer", update_modified=False)
@@ -593,7 +605,9 @@ class TestSecurityAuditRemediation(FrappeTestCase):
 
         # 1. Exactly one quantity revision was created
         rev_count = frappe.db.count("BOQ Quantity Revision", {"variation_order": vo.name})
-        self.assertEqual(rev_count, 1, "Exactly one quantity revision must be created across concurrent threads")
+        self.assertEqual(
+            rev_count, 1, "Exactly one quantity revision must be created across concurrent threads"
+        )
 
         # 2. Exactly one variation BOQ Structure and one BOQ Item were created
         structure_count = frappe.db.count("BOQ Structure", {"variation_order": vo.name})
@@ -635,7 +649,7 @@ class TestSecurityAuditRemediation(FrappeTestCase):
         workbook = (
             '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
             '<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
-            "<sheets><sheet name=\"BOQ\" sheetId=\"1\" r:id=\"rId1\" "
+            '<sheets><sheet name="BOQ" sheetId="1" r:id="rId1" '
             'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"/></sheets>'
             "</workbook>"
         )
@@ -655,12 +669,14 @@ class TestSecurityAuditRemediation(FrappeTestCase):
         return buf.getvalue()
 
     def _register_import_file(self, file_name, content):
-        file_doc = frappe.get_doc({
-            "doctype": "File",
-            "file_name": file_name,
-            "is_private": 0,
-            "content": content,
-        })
+        file_doc = frappe.get_doc(
+            {
+                "doctype": "File",
+                "file_name": file_name,
+                "is_private": 0,
+                "content": content,
+            }
+        )
         file_doc.insert(ignore_permissions=True)
         self._created_files.append(file_doc)
         return file_doc
@@ -669,18 +685,16 @@ class TestSecurityAuditRemediation(FrappeTestCase):
         """A tiny handcrafted XLSX declaring a ~13M-cell merged range must be
         rejected through the REAL parse_workbook path BEFORE openpyxl is ever
         invoked, within a strict wall-clock budget."""
-        hostile = self._handcraft_xlsx_bytes(
-            merge_ref="A1:Z500000", dimension_ref="A1:Z500000"
-        )
+        hostile = self._handcraft_xlsx_bytes(merge_ref="A1:Z500000", dimension_ref="A1:Z500000")
 
         from unittest import mock
 
         with mock.patch("openpyxl.load_workbook") as load_spy:
             started = time.monotonic()
             with self.assertRaises(frappe.ValidationError):
-                BOQImportService.parse_workbook(file_path=self._register_import_file(
-                    "merge_bomb.xlsx", hostile
-                ).get_full_path())
+                BOQImportService.parse_workbook(
+                    file_path=self._register_import_file("merge_bomb.xlsx", hostile).get_full_path()
+                )
             elapsed = time.monotonic() - started
             # The pre-scan must reject WITHOUT materializing any workbook.
             load_spy.assert_not_called()
@@ -739,18 +753,20 @@ class TestSecurityAuditRemediation(FrappeTestCase):
     def test_construction_theme_cleans_up_static_css_on_trash(self):
         """Ensure trashing a theme removes its static CSS file from public/files/css."""
         theme_name = f"_Test_Theme_{frappe.generate_hash(length=6)}"
-        theme = frappe.get_doc({
-            "doctype": "Construction Theme",
-            "theme_name": theme_name,
-            "theme_type": "Custom Light",
-            "is_system_theme": 0,
-            "accent_primary": "#2076FF",
-            "navbar_bg": "#ffffff",
-            "sidebar_bg": "#f1f5f9",
-            "surface_bg": "#ffffff",
-            "body_bg": "#f8fafc",
-            "text_primary": "#111827",
-        })
+        theme = frappe.get_doc(
+            {
+                "doctype": "Construction Theme",
+                "theme_name": theme_name,
+                "theme_type": "Custom Light",
+                "is_system_theme": 0,
+                "accent_primary": "#2076FF",
+                "navbar_bg": "#ffffff",
+                "sidebar_bg": "#f1f5f9",
+                "surface_bg": "#ffffff",
+                "body_bg": "#f8fafc",
+                "text_primary": "#111827",
+            }
+        )
         theme.insert(ignore_permissions=True)
         self._created_themes.append(theme.name)
 
@@ -772,13 +788,15 @@ class TestSecurityAuditRemediation(FrappeTestCase):
 
         # Add 5 more items under the same section
         for idx in range(1, 6):
-            sub_struct = frappe.get_doc({
-                "doctype": "BOQ Structure",
-                "boq_header": header.name,
-                "title": f"Sub Item {idx}",
-                "parent_structure": sec.name,
-                "is_group": 0,
-            }).insert(ignore_permissions=True)
+            sub_struct = frappe.get_doc(
+                {
+                    "doctype": "BOQ Structure",
+                    "boq_header": header.name,
+                    "title": f"Sub Item {idx}",
+                    "parent_structure": sec.name,
+                    "is_group": 0,
+                }
+            ).insert(ignore_permissions=True)
             sub_item = frappe.get_doc("BOQ Item", {"structure": sub_struct.name})
             sub_item.quantity = 10
             sub_item.contract_unit_price = 50
@@ -817,22 +835,26 @@ class TestSecurityAuditRemediation(FrappeTestCase):
 
         from construction.construction.utils.rollup import defer_boq_rollups, rollups_deferred
 
-        header = frappe.get_doc({
-            "doctype": "BOQ Header",
-            "title": f"Deferred Rollup Perf {frappe.generate_hash(length=6)}",
-            "project": self.project_name,
-            "company": "_Test Company",
-            "status": "Draft",
-            "boq_type": "Tender",
-        }).insert(ignore_permissions=True)
+        header = frappe.get_doc(
+            {
+                "doctype": "BOQ Header",
+                "title": f"Deferred Rollup Perf {frappe.generate_hash(length=6)}",
+                "project": self.project_name,
+                "company": "_Test Company",
+                "status": "Draft",
+                "boq_type": "Tender",
+            }
+        ).insert(ignore_permissions=True)
         self._track("BOQ Header", header.name)
 
-        sec = frappe.get_doc({
-            "doctype": "BOQ Structure",
-            "boq_header": header.name,
-            "title": "Perf Section",
-            "is_group": 1,
-        }).insert(ignore_permissions=True)
+        sec = frappe.get_doc(
+            {
+                "doctype": "BOQ Structure",
+                "boq_header": header.name,
+                "title": "Perf Section",
+                "is_group": 1,
+            }
+        ).insert(ignore_permissions=True)
 
         # 1. Nest-safety: outer defer, inner must still see rollup deferred and
         #    the flag restored afterwards.
@@ -854,13 +876,15 @@ class TestSecurityAuditRemediation(FrappeTestCase):
         started = _time.monotonic()
         with defer_boq_rollups():
             for idx in range(n_items):
-                sub = frappe.get_doc({
-                    "doctype": "BOQ Structure",
-                    "boq_header": header.name,
-                    "title": f"Perf Item {idx}",
-                    "parent_structure": sec.name,
-                    "is_group": 0,
-                }).insert(ignore_permissions=True)
+                sub = frappe.get_doc(
+                    {
+                        "doctype": "BOQ Structure",
+                        "boq_header": header.name,
+                        "title": f"Perf Item {idx}",
+                        "parent_structure": sec.name,
+                        "is_group": 0,
+                    }
+                ).insert(ignore_permissions=True)
                 item = frappe.get_doc("BOQ Item", {"structure": sub.name})
                 item.quantity = 1
                 item.contract_unit_price = 10
@@ -896,12 +920,14 @@ class TestSecurityAuditRemediation(FrappeTestCase):
             if not frappe.db.exists(
                 "User Permission", {"user": new_user, "allow": "Company", "for_value": co}
             ):
-                frappe.get_doc({
-                    "doctype": "User Permission",
-                    "user": new_user,
-                    "allow": "Company",
-                    "for_value": co,
-                }).insert(ignore_permissions=True)
+                frappe.get_doc(
+                    {
+                        "doctype": "User Permission",
+                        "user": new_user,
+                        "allow": "Company",
+                        "for_value": co,
+                    }
+                ).insert(ignore_permissions=True)
 
         frappe.db.set_single_value("Construction Settings", "enable_scope_context", 1)
 
@@ -931,11 +957,13 @@ class TestSecurityAuditRemediation(FrappeTestCase):
         forged_owner = None
         frappe.set_user(new_user)
         try:
-            forged = frappe.get_doc({
-                "doctype": "User Scope Context",
-                "user": other_user,
-                "company": "_Test Company",
-            })
+            forged = frappe.get_doc(
+                {
+                    "doctype": "User Scope Context",
+                    "user": other_user,
+                    "company": "_Test Company",
+                }
+            )
             with self.assertRaises((frappe.PermissionError, frappe.ValidationError)):
                 forged.insert()
         finally:
@@ -953,11 +981,13 @@ class TestSecurityAuditRemediation(FrappeTestCase):
         )
         frappe.set_user(empty_user)
         try:
-            blocked = frappe.get_doc({
-                "doctype": "User Scope Context",
-                "user": empty_user,
-                "company": "_Test Company",
-            })
+            blocked = frappe.get_doc(
+                {
+                    "doctype": "User Scope Context",
+                    "user": empty_user,
+                    "company": "_Test Company",
+                }
+            )
             with self.assertRaises((frappe.PermissionError, frappe.ValidationError)):
                 blocked.insert()
         finally:
@@ -980,13 +1010,16 @@ class TestSecurityAuditRemediation(FrappeTestCase):
         vo_submitted = frappe.new_doc("Variation Order")
         vo_submitted.boq_header = boq.name
         vo_submitted.status = "Draft"
-        vo_submitted.append("lines", {
-            "line_type": "Quantity Change",
-            "boq_item": item.name,
-            "revised_qty": 10,
-            "revised_unit_price": 50,
-            "rate_change_justification": "IDOR test line",
-        })
+        vo_submitted.append(
+            "lines",
+            {
+                "line_type": "Quantity Change",
+                "boq_item": item.name,
+                "revised_qty": 10,
+                "revised_unit_price": 50,
+                "rate_change_justification": "IDOR test line",
+            },
+        )
         vo_submitted.insert(ignore_permissions=True)
         self._track("Variation Order", vo_submitted.name)
         vo_submitted.db_set("status", "Submitted", update_modified=False)
@@ -995,13 +1028,16 @@ class TestSecurityAuditRemediation(FrappeTestCase):
         vo_parked = frappe.new_doc("Variation Order")
         vo_parked.boq_header = boq.name
         vo_parked.status = "Draft"
-        vo_parked.append("lines", {
-            "line_type": "Quantity Change",
-            "boq_item": item.name,
-            "revised_qty": 5,
-            "revised_unit_price": 50,
-            "rate_change_justification": "IDOR test line",
-        })
+        vo_parked.append(
+            "lines",
+            {
+                "line_type": "Quantity Change",
+                "boq_item": item.name,
+                "revised_qty": 5,
+                "revised_unit_price": 50,
+                "rate_change_justification": "IDOR test line",
+            },
+        )
         vo_parked.insert(ignore_permissions=True)
         self._track("Variation Order", vo_parked.name)
         vo_parked.db_set("status", "Approved by Client", update_modified=False)
@@ -1026,8 +1062,12 @@ class TestSecurityAuditRemediation(FrappeTestCase):
         def _norm(exc, name):
             return str(exc).replace(name, "{name}")
 
-        self.assertEqual(_norm(normal_cm.exception, vo_submitted.name), _norm(missing_cm.exception, missing_name))
-        self.assertEqual(_norm(idempotent_cm.exception, vo_parked.name), _norm(missing_cm.exception, missing_name))
+        self.assertEqual(
+            _norm(normal_cm.exception, vo_submitted.name), _norm(missing_cm.exception, missing_name)
+        )
+        self.assertEqual(
+            _norm(idempotent_cm.exception, vo_parked.name), _norm(missing_cm.exception, missing_name)
+        )
         # No financial data may leak in any denial.
         for cm in (normal_cm, idempotent_cm):
             self.assertNotIn("total_contract_delta", str(cm.exception))
@@ -1224,7 +1264,8 @@ raise SystemExit(1)
         proc = self._run_subprocess_raw(script)
         combined = proc.stdout + "\n" + proc.stderr
         self.assertEqual(
-            proc.returncode, 3,
+            proc.returncode,
+            3,
             f"Expected exit 3 (exact fatal failure mode), got {proc.returncode}. Output:\n{combined}",
         )
         self.assertIn("EXPECTED_FATAL_GUARD", combined, combined)
@@ -1360,9 +1401,7 @@ raise SystemExit(1)
             )
             self.assertEqual(len(active_after), 1)
         finally:
-            frappe.db.sql(
-                "DELETE FROM `tabMaterial Request` WHERE title LIKE 'MR Recon %'"
-            )
+            frappe.db.sql("DELETE FROM `tabMaterial Request` WHERE title LIKE 'MR Recon %'")
             # Always restore the unique index, even if the test fails mid-way.
             try:
                 _enforce_one_active_mr_per_vo()
@@ -1376,9 +1415,6 @@ raise SystemExit(1)
                 )
                 raise
             frappe.db.commit()
-
-
-
 
     # -------------------------------------------------------------------------
     # 13. Theme switch RPC contract (eighth-pass QA)

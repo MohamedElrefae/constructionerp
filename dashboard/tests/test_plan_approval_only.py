@@ -4,6 +4,7 @@ import json
 import subprocess
 import sys
 from pathlib import Path
+
 import pytest
 
 from dashboard.config import ORCHESTRATOR_PYTHON, REPO_ROOT
@@ -19,13 +20,15 @@ def run_in_orchestrator(code: str, *args: str) -> subprocess.CompletedProcess:
         text=True,
     )
     if proc.returncode != 0:
-        raise RuntimeError(f"Orchestrator script failed (code {proc.returncode}):\nSTDOUT:\n{proc.stdout}\nSTDERR:\n{proc.stderr}")
+        raise RuntimeError(
+            f"Orchestrator script failed (code {proc.returncode}):\nSTDOUT:\n{proc.stdout}\nSTDERR:\n{proc.stderr}"
+        )
     return proc
 
 
 def test_grant_and_synchronize_records_grant_and_sets_plan_granted(tmp_path):
     """Verifies grant_and_synchronize validates token v2, records grant row and event, and updates checkpoint."""
-    script = '''
+    script = """
 import sys, json, shutil
 from pathlib import Path
 sys.path.insert(0, str(Path("orchestrator").resolve()))
@@ -119,14 +122,14 @@ assert len(events) == 1
 assert new_view["plan_granted"] is True
 assert new_view["active_jobs"] == []
 print("SUCCESS")
-'''
+"""
     res = run_in_orchestrator(script, str(tmp_path / "repo1"))
     assert "SUCCESS" in res.stdout
 
 
 def test_grant_and_synchronize_never_invokes_run_or_dispatch(tmp_path):
     """Spies on Engine.run, Engine._dispatch, and Engine._prepare; asserts zero calls during approval."""
-    script = '''
+    script = """
 import sys, json, shutil
 from pathlib import Path
 from unittest.mock import MagicMock
@@ -229,14 +232,14 @@ assert len(stub.starts) == launcher_calls_before, "Launcher was called during ap
 assert view["active_jobs"] == [], f"active_jobs is not empty: {view['active_jobs']}"
 
 print("SUCCESS")
-'''
+"""
     res = run_in_orchestrator(script, str(tmp_path / "repo2"))
     assert "SUCCESS" in res.stdout
 
 
 def test_grant_and_synchronize_leaves_active_jobs_empty(tmp_path):
     """Verifies that active_jobs is strictly [] after grant_and_synchronize."""
-    script = '''
+    script = """
 import sys, json, shutil
 from pathlib import Path
 sys.path.insert(0, str(Path("orchestrator").resolve()))
@@ -318,6 +321,6 @@ token = dict(
 view = engine.grant_and_synchronize(token)
 assert view["active_jobs"] == []
 print("SUCCESS")
-'''
+"""
     res = run_in_orchestrator(script, str(tmp_path / "repo3"))
     assert "SUCCESS" in res.stdout

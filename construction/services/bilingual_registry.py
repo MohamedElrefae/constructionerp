@@ -186,7 +186,11 @@ def completeness(values, required=("arabic", "english")):
     values keys may include "arabic", "english", "code", "identity".
     Returns {"present": {...}, "complete": bool}.
     """
-    present = {k: bool((values or {}).get(k) and str(values[k]).strip()) for k in ("arabic", "english", "code", "identity") if k in (values or {})}
+    present = {
+        k: bool((values or {}).get(k) and str(values[k]).strip())
+        for k in ("arabic", "english", "code", "identity")
+        if k in (values or {})
+    }
     complete = all(present.get(k, False) for k in required if k in present or k in ("arabic", "english"))
     missing = [k for k in required if not present.get(k, False)]
     return {"present": present, "missing": missing, "complete": complete and not missing}

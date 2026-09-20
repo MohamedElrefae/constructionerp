@@ -5,6 +5,7 @@ import sqlite3
 import subprocess
 import sys
 from pathlib import Path
+
 import pytest
 
 from dashboard.config import ORCHESTRATOR_PYTHON, REPO_ROOT
@@ -14,7 +15,7 @@ from dashboard.tests.conftest import create_isolated_worktree
 
 def test_duplicate_approval_token_deduplication(tmp_path):
     """Submits duplicate approval token; asserts deduplicate_action returns synchronized view."""
-    script = '''
+    script = """
 import sys, json, shutil
 from pathlib import Path
 sys.path.insert(0, str(Path("orchestrator").resolve()))
@@ -103,7 +104,7 @@ assert dedup is not None
 assert dedup["status"] == "already_complete"
 assert engine.view()["plan_granted"] is True
 print("DEDUP_SUCCESS")
-'''
+"""
     cmd = [str(ORCHESTRATOR_PYTHON), "-c", script, str(tmp_path / "repo_dedup")]
     res = subprocess.run(cmd, cwd=str(REPO_ROOT), capture_output=True, text=True)
     assert res.returncode == 0, f"Stderr: {res.stderr}\nStdout: {res.stdout}"
@@ -112,7 +113,7 @@ print("DEDUP_SUCCESS")
 
 def test_same_key_different_payload_conflict(tmp_path):
     """Submitting same token_id with modified payload raises DuplicateKeyConflict."""
-    script = '''
+    script = """
 import sys, json, shutil
 from pathlib import Path
 sys.path.insert(0, str(Path("orchestrator").resolve()))
@@ -203,7 +204,7 @@ try:
 except DuplicateKeyConflict as exc:
     assert "token_id reused with changed approval bindings" in str(exc)
     print("CONFLICT_DETECTED")
-'''
+"""
     cmd = [str(ORCHESTRATOR_PYTHON), "-c", script, str(tmp_path / "repo_conflict")]
     res = subprocess.run(cmd, cwd=str(REPO_ROOT), capture_output=True, text=True)
     assert res.returncode == 0, f"Stderr: {res.stderr}\nStdout: {res.stdout}"
@@ -244,7 +245,8 @@ def test_action_log_and_review_records_persist_after_task_unregistration(tmp_pat
     # 2. Insert action_log record
     conn = sqlite3.connect(db_path)
     with conn:
-        conn.execute("""
+        conn.execute(
+            """
             INSERT INTO action_log (
                 action_id, task_id, action_type, state, idempotency_key,
                 request_hash, manifest_json, executor_instance_id,
@@ -256,7 +258,9 @@ def test_action_log_and_review_records_persist_after_task_unregistration(tmp_pat
                 1000, 100000, 1,
                 '2026-09-17T00:00:00Z', '2026-09-17T00:00:00Z'
             )
-        """, (task_id,))
+        """,
+            (task_id,),
+        )
     conn.close()
 
     # 3. Insert review_record
@@ -277,8 +281,12 @@ def test_action_log_and_review_records_persist_after_task_unregistration(tmp_pat
     # 5. Assert action_log and review_records still persist
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    action_row = cur.execute("SELECT action_id, state FROM action_log WHERE task_id = ?", (task_id,)).fetchone()
-    review_row = cur.execute("SELECT review_id, reviewed_by FROM review_records WHERE task_id = ?", (task_id,)).fetchone()
+    action_row = cur.execute(
+        "SELECT action_id, state FROM action_log WHERE task_id = ?", (task_id,)
+    ).fetchone()
+    review_row = cur.execute(
+        "SELECT review_id, reviewed_by FROM review_records WHERE task_id = ?", (task_id,)
+    ).fetchone()
     conn.close()
 
     assert action_row is not None
@@ -292,8 +300,10 @@ def test_action_log_and_review_records_persist_after_task_unregistration(tmp_pat
 
 def test_server_side_review_derivation_and_mismatch_rejection(monkeypatch, tmp_path):
     """Asserts that create_review_endpoint derives review hashes and fingerprint server-side and rejects client mismatch with 409."""
-    from starlette.testclient import TestClient
     import hashlib
+
+    from starlette.testclient import TestClient
+
     from dashboard.app import app, task_registry
     from dashboard.auth import auth_store, session_manager
 
@@ -394,4 +404,3 @@ def test_server_side_review_derivation_and_mismatch_rejection(monkeypatch, tmp_p
     assert rev["roles_hash"] == "hash-roles-333"
     assert rev["content_fingerprint"] == expected_fp
     assert rev["reviewed_by"] == "engineer"
-

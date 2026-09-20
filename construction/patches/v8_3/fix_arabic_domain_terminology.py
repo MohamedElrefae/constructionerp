@@ -164,9 +164,7 @@ def execute():
             deduped += before - 1
 
     for source_text, value in ADD.items():
-        if frappe.db.exists(
-            "Translation", {"language": "ar", "source_text": source_text, "context": ""}
-        ):
+        if frappe.db.exists("Translation", {"language": "ar", "source_text": source_text, "context": ""}):
             continue
         doc = frappe.get_doc(
             {
@@ -183,6 +181,4 @@ def execute():
 
     frappe.db.commit()
     _clear_translation_caches()
-    print(
-        f"[v8_3] Arabic domain terminology: fixed={fixed} created={created} deduped={deduped}"
-    )
+    print(f"[v8_3] Arabic domain terminology: fixed={fixed} created={created} deduped={deduped}")

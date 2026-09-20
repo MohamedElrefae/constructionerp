@@ -7,12 +7,12 @@ relaunches a job with an uncertain launch intent. No commit/import executor exis
 import hashlib
 import json
 import os
+import re
 import shutil
 import sqlite3
 import subprocess
 import sys
 import uuid
-import re
 from copy import deepcopy
 from pathlib import Path
 from typing import TypedDict
@@ -24,7 +24,6 @@ from core import (
     GrantReconciliationRequired,
     PreconditionError,
     RecoveryError,
-    ValidationError as CoreValidationError,
     WorkflowError,
     atomic_write,
     bytes_hash,
@@ -33,6 +32,9 @@ from core import (
     utc,
     within,
     write_json,
+)
+from core import (
+    ValidationError as CoreValidationError,
 )
 from jsonschema import ValidationError as JsonSchemaValidationError
 
@@ -71,6 +73,7 @@ def extract_scope_proposal(plan_text: str) -> dict | None:
         return json.loads(match.group(1).strip())
     except Exception as exc:
         raise WorkflowError(f"MALFORMED_RESULT: Invalid JSON in scope-proposal block: {exc}")
+
 
 from langgraph.checkpoint.sqlite import SqliteSaver
 from langgraph.graph import END, START, StateGraph
@@ -143,7 +146,9 @@ def _quarantine_or_delete_file(path, fname, job_id, private_root=None):
                     if q_dir:
                         target = q_dir / fname
                         # Reject target if it already exists as symlink, directory, or wrong ownership
-                        if target.is_symlink() or (target.exists() and (not target.is_file() or target.stat().st_uid != os.getuid())):
+                        if target.is_symlink() or (
+                            target.exists() and (not target.is_file() or target.stat().st_uid != os.getuid())
+                        ):
                             pass
                         else:
                             if target.exists():
@@ -288,11 +293,13 @@ class Engine:
         if candidate.get("kind") == "stage4-proposal":
             if not candidate.get("export_sha256") or not candidate.get("proposal_sha256"):
                 raise WorkflowError("Malformed stage4-proposal candidate binding")
-            expected_id = digest({
-                "kind": "stage4-proposal",
-                "export_sha256": candidate["export_sha256"],
-                "proposal_sha256": candidate["proposal_sha256"],
-            })
+            expected_id = digest(
+                {
+                    "kind": "stage4-proposal",
+                    "export_sha256": candidate["export_sha256"],
+                    "proposal_sha256": candidate["proposal_sha256"],
+                }
+            )
             if candidate["candidate_id"] != expected_id:
                 raise WorkflowError("Stage 4 proposal candidate identity mismatch")
         elif "manifest" in candidate:
@@ -321,19 +328,27 @@ class Engine:
             mandatory_files = ("AGENTS.md", "SESSION_MEMORY.md")
             for mf in mandatory_files:
                 if mf not in context_paths:
-                    raise CoreValidationError(f"Mandatory read-only context path missing from configuration: {mf}")
+                    raise CoreValidationError(
+                        f"Mandatory read-only context path missing from configuration: {mf}"
+                    )
             for mf in mandatory_files:
                 if not (self.root / mf).is_file():
-                    raise CoreValidationError(f"Mandatory read-only context file does not exist on disk: {mf}")
+                    raise CoreValidationError(
+                        f"Mandatory read-only context file does not exist on disk: {mf}"
+                    )
             for cp in context_paths:
                 for ap in config.get("scope", {}).get("allowed_paths", []):
                     ap_clean = ap.rstrip("/*")
                     if cp == ap or cp.startswith(ap_clean + "/"):
-                        raise CoreValidationError(f"Read-only context path {cp} intersects with scope.allowed_paths {ap}")
+                        raise CoreValidationError(
+                            f"Read-only context path {cp} intersects with scope.allowed_paths {ap}"
+                        )
                 for gen in generated:
                     gen_clean = gen.rstrip("/")
                     if cp == gen or cp.startswith(gen_clean + "/"):
-                        raise CoreValidationError(f"Read-only context path {cp} intersects with generated path {gen}")
+                        raise CoreValidationError(
+                            f"Read-only context path {cp} intersects with generated path {gen}"
+                        )
         config["scope_hash"] = digest(config["scope"])
         config["roles_hash"] = digest(config.get("roles", {}))
         config["candidate"] = freeze(
@@ -442,15 +457,15 @@ class Engine:
         if actual_exp_sha != export_sha256:
             raise WorkflowError(f"Export file hash mismatch: got {actual_exp_sha}, expected {export_sha256}")
         from stage4 import store_private_blob
+
         store_private_blob(erp_descriptor["private_root"], export_bytes, expected_sha=export_sha256)
         export_catalog = json.loads(export_bytes)
         expected_identities = [r["identity"] for r in export_catalog.get("rows", [])]
         from stage4 import (
             derive_identities_digest,
-            derive_stage4_candidate_id,
-            is_hex64,
             verify_historical_provenance,
         )
+
         identities_digest = derive_identities_digest(expected_identities)
 
         initial_proposal_hash = digest(
@@ -486,9 +501,7 @@ class Engine:
                 "CANONICAL_PLAN §11.3",
                 "CANONICAL_PLAN §11.4",
             ],
-            "validation_commands": [
-                "python3 construction/tests/test_stage4_review_bundle.py"
-            ],
+            "validation_commands": ["python3 construction/tests/test_stage4_review_bundle.py"],
         }
         scope_hash = digest(scope)
 
@@ -665,11 +678,13 @@ class Engine:
                     os.chmod(str(host_private_out), 0o700)
                 except OSError:
                     pass
-                neutral_mounts.append({
-                    "host_path": str(host_private_out),
-                    "sandbox_path": "/tmp/workspace/private_output",
-                    "writable": True,
-                })
+                neutral_mounts.append(
+                    {
+                        "host_path": str(host_private_out),
+                        "sandbox_path": "/tmp/workspace/private_output",
+                        "writable": True,
+                    }
+                )
                 if role == "proposer":
                     expected_artifact_id = f"stage4-proposal-{job_id}"
                     expected_artifact_kind = "stage4-proposal"
@@ -679,11 +694,13 @@ class Engine:
                         raise WorkflowError("Export catalog blob missing in private storage")
                     if hashlib.sha256(catalog_blob.read_bytes()).hexdigest() != exp_sha:
                         raise WorkflowError("Export catalog blob digest mismatch (TOCTOU prevented)")
-                    neutral_mounts.append({
-                        "host_path": str(catalog_blob),
-                        "sandbox_path": "/tmp/workspace/private_inputs/account_catalog.json",
-                        "writable": False,
-                    })
+                    neutral_mounts.append(
+                        {
+                            "host_path": str(catalog_blob),
+                            "sandbox_path": "/tmp/workspace/private_inputs/account_catalog.json",
+                            "writable": False,
+                        }
+                    )
                 elif role in self.config.get("quorum", []):
                     expected_artifact_id = f"stage4-review-{role}-{job_id}"
                     expected_artifact_kind = "stage4-review"
@@ -715,11 +732,13 @@ class Engine:
                         ).encode(),
                         immutable=True,
                     )
-                    neutral_mounts.append({
-                        "host_path": str(proposal_view),
-                        "sandbox_path": "/tmp/workspace/private_inputs/proposal.json",
-                        "writable": False,
-                    })
+                    neutral_mounts.append(
+                        {
+                            "host_path": str(proposal_view),
+                            "sandbox_path": "/tmp/workspace/private_inputs/proposal.json",
+                            "writable": False,
+                        }
+                    )
                 elif role == "verifier":
                     # The verifier must independently check the exact frozen artifacts.
                     # Mount the proposal, review bundle and import payload read-only under
@@ -747,7 +766,10 @@ class Engine:
                                 continue
                             payload = ev["payload"]
                             result = payload.get("result", {})
-                            if result.get("role") in self.config.get("quorum", []) and result.get("verdict") == "PASS":
+                            if (
+                                result.get("role") in self.config.get("quorum", [])
+                                and result.get("verdict") == "PASS"
+                            ):
                                 latest[result["role"]] = {
                                     "review_sha256": (payload.get("review_meta") or {}).get("review_sha256"),
                                     "session_id": result.get("session_id"),
@@ -755,16 +777,22 @@ class Engine:
                         if set(latest) == set(self.config["quorum"]):
                             panel = []
                             for qrole in self.config["quorum"]:
-                                rev = json.loads(read_private_blob(private_root, latest[qrole]["review_sha256"]))
+                                rev = json.loads(
+                                    read_private_blob(private_root, latest[qrole]["review_sha256"])
+                                )
                                 if rev.get("proposal_sha256") != proposal_sha or rev.get("verdict") != "PASS":
-                                    raise WorkflowError("Verifier panel provenance does not bind the frozen proposal")
-                                panel.append({
-                                    "role": qrole,
-                                    "session_id": rev.get("session_id") or latest[qrole]["session_id"],
-                                    "verdict": rev.get("verdict"),
-                                    "proposal_sha256": proposal_sha,
-                                    "review_sha256": latest[qrole]["review_sha256"],
-                                })
+                                    raise WorkflowError(
+                                        "Verifier panel provenance does not bind the frozen proposal"
+                                    )
+                                panel.append(
+                                    {
+                                        "role": qrole,
+                                        "session_id": rev.get("session_id") or latest[qrole]["session_id"],
+                                        "verdict": rev.get("verdict"),
+                                        "proposal_sha256": proposal_sha,
+                                        "review_sha256": latest[qrole]["review_sha256"],
+                                    }
+                                )
                             a2_review = json.loads(
                                 read_private_blob(private_root, latest["ai-a2"]["review_sha256"])
                             )
@@ -795,21 +823,27 @@ class Engine:
                             raise WorkflowError(f"Verifier artifact missing in private storage: {label}")
                         if hashlib.sha256(blob.read_bytes()).hexdigest() != sha:
                             raise WorkflowError(f"Verifier artifact digest mismatch: {label}")
-                        fmt = "json" if label != "payload" else "json"
+                        fmt = "json"
                         view = inputs_dir / f"{sha}.{label}.view.{fmt}"
                         atomic_write(
                             view,
-                            json.dumps(
-                                json.loads(blob.read_text()), indent=2, ensure_ascii=False
-                            ).encode(),
+                            json.dumps(json.loads(blob.read_text()), indent=2, ensure_ascii=False).encode(),
                             immutable=True,
                         )
-                        neutral_mounts.append({
-                            "host_path": str(view),
-                            "sandbox_path": f"/tmp/workspace/private_inputs/{sandbox_name}",
-                            "writable": False,
-                        })
-                        mounted.append({"label": label, "sha256": sha, "sandbox_path": f"/tmp/workspace/private_inputs/{sandbox_name}"})
+                        neutral_mounts.append(
+                            {
+                                "host_path": str(view),
+                                "sandbox_path": f"/tmp/workspace/private_inputs/{sandbox_name}",
+                                "writable": False,
+                            }
+                        )
+                        mounted.append(
+                            {
+                                "label": label,
+                                "sha256": sha,
+                                "sandbox_path": f"/tmp/workspace/private_inputs/{sandbox_name}",
+                            }
+                        )
                     manifest = inputs_dir / f"{bundle_sha}.verifier-manifest.json"
                     atomic_write(
                         manifest,
@@ -827,11 +861,13 @@ class Engine:
                         ).encode(),
                         immutable=True,
                     )
-                    neutral_mounts.append({
-                        "host_path": str(manifest),
-                        "sandbox_path": "/tmp/workspace/private_inputs/verifier-manifest.json",
-                        "writable": False,
-                    })
+                    neutral_mounts.append(
+                        {
+                            "host_path": str(manifest),
+                            "sandbox_path": "/tmp/workspace/private_inputs/verifier-manifest.json",
+                            "writable": False,
+                        }
+                    )
                     # Mount the frozen independent panel review blobs so the verifier can
                     # confirm each reviewer's exact coverage and absence of blocking findings.
                     panel_refs = stored_bundle.get("panel") or json.loads(
@@ -855,19 +891,23 @@ class Engine:
                             ).encode(),
                             immutable=True,
                         )
-                        neutral_mounts.append({
-                            "host_path": str(review_view),
-                            "sandbox_path": f"/tmp/workspace/private_inputs/panel-{review_role}.json",
-                            "writable": False,
-                        })
+                        neutral_mounts.append(
+                            {
+                                "host_path": str(review_view),
+                                "sandbox_path": f"/tmp/workspace/private_inputs/panel-{review_role}.json",
+                                "writable": False,
+                            }
+                        )
                     # The verifier is instructed to read AGENTS.md; expose it read-only.
                     agents_file = self.root / "AGENTS.md"
                     if agents_file.is_file() and not agents_file.is_symlink():
-                        neutral_mounts.append({
-                            "host_path": str(agents_file),
-                            "sandbox_path": "/tmp/workspace/private_inputs/AGENTS.md",
-                            "writable": False,
-                        })
+                        neutral_mounts.append(
+                            {
+                                "host_path": str(agents_file),
+                                "sandbox_path": "/tmp/workspace/private_inputs/AGENTS.md",
+                                "writable": False,
+                            }
+                        )
             envelope = dict(
                 schema_version=1,
                 job_id=job_id,
@@ -997,9 +1037,7 @@ class Engine:
                 review_round=v["round"] + 1,
                 # Independent panel reviewers receive the frozen candidate without peer
                 # verdicts; only authors/repair roles see the unresolved findings.
-                all_unresolved_findings=(
-                    [] if role in self.config.get("quorum", []) else v["findings"]
-                ),
+                all_unresolved_findings=([] if role in self.config.get("quorum", []) else v["findings"]),
                 backlog=v["backlog"],
                 plan_artifact=self.store.meta("plan_artifact", self.config["plan_path"]),
                 builder_evidence=dependencies,
@@ -1019,7 +1057,9 @@ class Engine:
                 context["expected_output_path"] = "/tmp/workspace/private_output/output.json"
                 if role == "proposer" and v["candidate"].get("kind") == "stage4-proposal":
                     context["private_input_path"] = "/tmp/workspace/private_inputs/account_catalog.json"
-                elif role in self.config.get("quorum", []) and v["candidate"].get("kind") == "stage4-proposal":
+                elif (
+                    role in self.config.get("quorum", []) and v["candidate"].get("kind") == "stage4-proposal"
+                ):
                     context["private_input_path"] = "/tmp/workspace/private_inputs/proposal.json"
             stage_instruction = ""
             if role == "architect" and v.get("stage") == "plan":
@@ -1042,7 +1082,11 @@ class Engine:
                     "4. implementation_stages must be a non-empty unique list containing supported stages ('1', '2', '3', '4').\n"
                     "5. Set verdict to 'PROPOSED' (or 'BLOCKED' if requirements cannot be fulfilled).\n"
                 )
-            elif role == "proposer" and expected_artifact_id and v["candidate"].get("kind") == "stage4-proposal":
+            elif (
+                role == "proposer"
+                and expected_artifact_id
+                and v["candidate"].get("kind") == "stage4-proposal"
+            ):
                 owner_guidance = self.config.get("owner_translation_guidance") or {}
                 guidance_instruction = ""
                 if owner_guidance:
@@ -1060,13 +1104,20 @@ class Engine:
                     "finding, especially each rejected row (its row identity and the reviewer's detail and "
                     "suggested Arabic are provided). Preserve rows that were not rejected.\n"
                     "3. Write the resulting JSON object to /tmp/workspace/private_output/output.json with format: "
-                    '{"export_sha256": "' + v["candidate"]["export_sha256"] + '", "rows": [{"identity": ..., "english": ..., "is_group": ..., "proposal": {"arabic": ..., "confidence": "high"}}]}.\n'
+                    '{"export_sha256": "'
+                    + v["candidate"]["export_sha256"]
+                    + '", "rows": [{"identity": ..., "english": ..., "is_group": ..., "proposal": {"arabic": ..., "confidence": "high"}}]}.\n'
                     "4. In result_json, return status: COMPLETE, verdict: PROPOSED, findings: [].\n"
                     "5. Scope requirement IDs are strictly: "
-                    + json.dumps(self.config["scope"]["requirements"]) + ".\n"
+                    + json.dumps(self.config["scope"]["requirements"])
+                    + ".\n"
                     + guidance_instruction
                 )
-            elif role in self.config.get("quorum", []) and expected_artifact_id and v["candidate"].get("kind") == "stage4-proposal":
+            elif (
+                role in self.config.get("quorum", [])
+                and expected_artifact_id
+                and v["candidate"].get("kind") == "stage4-proposal"
+            ):
                 stage_instruction = (
                     "\nSTAGE 4 INDEPENDENT PANEL REVIEWER INSTRUCTIONS:\n"
                     "1. Read the frozen proposal at /tmp/workspace/private_inputs/proposal.json. "
@@ -1097,7 +1148,8 @@ class Engine:
                     + ', "evidence_refs": []}. If every row is acceptable, return verdict PASS and findings []. '
                     "Never return BLOCKED with empty findings.\n"
                     "9. Scope requirement IDs are strictly: "
-                    + json.dumps(self.config["scope"]["requirements"]) + ".\n"
+                    + json.dumps(self.config["scope"]["requirements"])
+                    + ".\n"
                 )
             elif role == "verifier" and v["candidate"].get("kind") == "stage4-proposal":
                 stage_instruction = (
@@ -1127,7 +1179,8 @@ class Engine:
                     "payload_sha256 from the manifest when verdict is PASS.\n"
                     "6. Emit exactly ONE final JSON object as the last message, then stop.\n"
                     "7. Scope requirement IDs are strictly: "
-                    + json.dumps(self.config["scope"]["requirements"]) + ".\n"
+                    + json.dumps(self.config["scope"]["requirements"])
+                    + ".\n"
                 )
             prompt = (
                 role_text
@@ -1276,7 +1329,14 @@ class Engine:
                     event = self.accept(job, observation, v)
                     self.store.event("result-" + job_id, "result", event)
                     self.store.update_job(job_id, "ACCEPTED")
-                except (WorkflowError, ValueError, JsonSchemaValidationError, OSError, TypeError, KeyError) as exc:
+                except (
+                    WorkflowError,
+                    ValueError,
+                    JsonSchemaValidationError,
+                    OSError,
+                    TypeError,
+                    KeyError,
+                ) as exc:
                     # Only a known WorkflowError code may cross into durable state.
                     # Never persist its diagnostic suffix or classify arbitrary text.
                     code = str(exc).partition(":")[0] if isinstance(exc, WorkflowError) else None
@@ -1329,7 +1389,9 @@ class Engine:
                         cat_doc = json.loads(cat_blob.read_bytes().decode("utf-8"))
                         if isinstance(cat_doc, dict) and isinstance(cat_doc.get("rows"), list):
                             expected_ids = [
-                                r["identity"] for r in cat_doc["rows"] if isinstance(r, dict) and "identity" in r
+                                r["identity"]
+                                for r in cat_doc["rows"]
+                                if isinstance(r, dict) and "identity" in r
                             ]
                             from stage4 import derive_identities_digest
 
@@ -1502,10 +1564,15 @@ class Engine:
                     cat_doc = json.loads(catalog_blob.read_text())
                 except (ValueError, OSError) as exc:
                     raise WorkflowError(f"Export catalog blob corrupted: {exc}") from exc
-                if not isinstance(cat_doc, dict) or "rows" not in cat_doc or not isinstance(cat_doc["rows"], list):
+                if (
+                    not isinstance(cat_doc, dict)
+                    or "rows" not in cat_doc
+                    or not isinstance(cat_doc["rows"], list)
+                ):
                     raise WorkflowError("Export catalog blob invalid schema")
                 expected_identities = [r["identity"] for r in cat_doc["rows"]]
                 from stage4 import derive_identities_digest
+
                 if derive_identities_digest(expected_identities) != self.config["identities_digest"]:
                     raise WorkflowError("Export catalog identities digest mismatch")
                 catalog_terms = set(expected_identities)
@@ -1533,6 +1600,7 @@ class Engine:
                         raise WorkflowError("Invalid acceptance record sha256")
 
                     from stage4 import read_private_blob
+
                     blob_bytes = read_private_blob(private_root, blob_sha)
                     if hashlib.sha256(blob_bytes).hexdigest() != blob_sha:
                         raise WorkflowError("Recovered blob digest mismatch")
@@ -1547,18 +1615,27 @@ class Engine:
                         if blob_doc.get("schema") != "stage4-proposal/v1":
                             raise WorkflowError("Recovered proposal blob invalid schema")
                         if blob_doc.get("export_sha256") != view["candidate"]["export_sha256"]:
-                            raise WorkflowError("Recovered proposal blob export_sha256 mismatch with current candidate")
+                            raise WorkflowError(
+                                "Recovered proposal blob export_sha256 mismatch with current candidate"
+                            )
                         prop_rows = blob_doc.get("rows")
                         if not isinstance(prop_rows, list) or len(prop_rows) != len(expected_identities):
                             raise WorkflowError("Recovered proposal blob rows count mismatch")
                         from stage4 import derive_proposal_hash
-                        expected_prop_sha = derive_proposal_hash(prop_rows, view["candidate"]["export_sha256"])
+
+                        expected_prop_sha = derive_proposal_hash(
+                            prop_rows, view["candidate"]["export_sha256"]
+                        )
                         if expected_prop_sha != blob_sha:
                             raise WorkflowError("Recovered proposal blob content hash mismatch")
                         if set(r.get("identity") for r in prop_rows) != set(expected_identities):
                             raise WorkflowError("Recovered proposal blob identities mismatch")
                         from stage4 import derive_identities_digest
-                        if derive_identities_digest([r.get("identity") for r in prop_rows]) != self.config["identities_digest"]:
+
+                        if (
+                            derive_identities_digest([r.get("identity") for r in prop_rows])
+                            != self.config["identities_digest"]
+                        ):
                             raise WorkflowError("Recovered proposal blob identities digest mismatch")
                         prop_meta = {
                             "proposal_sha256": blob_sha,
@@ -1572,43 +1649,63 @@ class Engine:
                         if blob_doc.get("role") != job["role"]:
                             raise WorkflowError("Recovered review blob role mismatch")
                         if blob_doc.get("proposal_sha256") != view["candidate"]["proposal_sha256"]:
-                            raise WorkflowError("Recovered review blob proposal_sha256 mismatch with current candidate")
+                            raise WorkflowError(
+                                "Recovered review blob proposal_sha256 mismatch with current candidate"
+                            )
                         session = body.get("session_id")
                         if not session or blob_doc.get("session_id") != session:
-                            raise WorkflowError("Recovered review blob session_id mismatch with observed session")
+                            raise WorkflowError(
+                                "Recovered review blob session_id mismatch with observed session"
+                            )
                         row_decisions = blob_doc.get("row_decisions")
-                        if not isinstance(row_decisions, list) or len(row_decisions) != len(expected_identities):
+                        if not isinstance(row_decisions, list) or len(row_decisions) != len(
+                            expected_identities
+                        ):
                             raise WorkflowError("Recovered review blob row decisions count mismatch")
                         if set(r.get("identity") for r in row_decisions) != set(expected_identities):
                             raise WorkflowError("Recovered review blob identities mismatch")
                         from stage4 import derive_identities_digest
-                        if derive_identities_digest([r.get("identity") for r in row_decisions]) != self.config["identities_digest"]:
+
+                        if (
+                            derive_identities_digest([r.get("identity") for r in row_decisions])
+                            != self.config["identities_digest"]
+                        ):
                             raise WorkflowError("Recovered review blob identities digest mismatch")
                         renewal_required = (
                             bool(blob_doc.get("renewal_required"))
                             or any(
-                                r.get("suggested_arabic") and r.get("suggested_arabic") != r.get("proposed_arabic")
+                                r.get("suggested_arabic")
+                                and r.get("suggested_arabic") != r.get("proposed_arabic")
                                 for r in row_decisions
                             )
-                            or any(f.get("classification") == "arabic_value_change" for f in blob_doc.get("findings", []))
+                            or any(
+                                f.get("classification") == "arabic_value_change"
+                                for f in blob_doc.get("findings", [])
+                            )
                         )
                         blocking = [f for f in blob_doc.get("findings", []) if f.get("blocking", True)]
                         for idx, r in enumerate(row_decisions):
                             if r.get("decision") == "rejected":
-                                blocking.append({
-                                    "finding_id": f"rejected-{job['role']}-{idx}",
-                                    "role": job["role"],
-                                    "blocking": True,
-                                    "classification": "row_rejected",
-                                    "summary": f"Reviewer {job['role']} rejected row at index {idx}",
-                                })
+                                blocking.append(
+                                    {
+                                        "finding_id": f"rejected-{job['role']}-{idx}",
+                                        "role": job["role"],
+                                        "blocking": True,
+                                        "classification": "row_rejected",
+                                        "summary": f"Reviewer {job['role']} rejected row at index {idx}",
+                                    }
+                                )
+                        from stage4 import sanitize_public_text
+
                         sanitized_blocking = [
                             {
                                 "finding_id": f.get("finding_id", f"finding-{i}"),
                                 "role": job["role"],
                                 "blocking": bool(f.get("blocking", True)),
                                 "classification": f.get("classification", "generic"),
-                                "summary": sanitize_public_text(f.get("summary", ""), catalog_terms=catalog_terms),
+                                "summary": sanitize_public_text(
+                                    f.get("summary", ""), catalog_terms=catalog_terms
+                                ),
                             }
                             for i, f in enumerate(blocking)
                         ]
@@ -1630,7 +1727,9 @@ class Engine:
                     }
                     body["export_sha256"] = view["candidate"]["export_sha256"]
                     body["proposal_sha256"] = (
-                        prop_meta["proposal_sha256"] if job["role"] == "proposer" else view["candidate"]["proposal_sha256"]
+                        prop_meta["proposal_sha256"]
+                        if job["role"] == "proposer"
+                        else view["candidate"]["proposal_sha256"]
                     )
                     body["private_artifact_refs"] = [verified_private_ref]
                 else:
@@ -1639,6 +1738,7 @@ class Engine:
 
                     if job["role"] == "proposer":
                         from stage4 import validate_and_store_proposal
+
                         prop_meta = validate_and_store_proposal(
                             private_root,
                             host_output,
@@ -1651,6 +1751,7 @@ class Engine:
                         rec_meta = prop_meta
                     elif job["role"] in self.config.get("quorum", []):
                         from stage4 import validate_and_store_review
+
                         rev_meta = validate_and_store_review(
                             private_root,
                             host_output,
@@ -1700,12 +1801,15 @@ class Engine:
                     }
                     body["export_sha256"] = view["candidate"]["export_sha256"]
                     body["proposal_sha256"] = (
-                        prop_meta["proposal_sha256"] if job["role"] == "proposer" else view["candidate"]["proposal_sha256"]
+                        prop_meta["proposal_sha256"]
+                        if job["role"] == "proposer"
+                        else view["candidate"]["proposal_sha256"]
                     )
                     body["private_artifact_refs"] = [verified_private_ref]
 
                 if job["role"] in self.config.get("quorum", []):
                     from stage4 import compose_and_store_bundle_and_payload
+
                     prior_quorum = {
                         e["payload"]["role"]: e["payload"]
                         for e in self.store.events()
@@ -1735,12 +1839,15 @@ class Engine:
                                 else prior_quorum["ai-a2"]["review_meta"]["review_sha256"]
                             )
                             intent_path = destination / "bundle-composition-intent.json"
-                            write_json(intent_path, {
-                                "job_id": job["job_id"],
-                                "candidate_id": view["candidate"]["candidate_id"],
-                                "proposal_sha256": view["candidate"]["proposal_sha256"],
-                                "started_utc": utc(),
-                            })
+                            write_json(
+                                intent_path,
+                                {
+                                    "job_id": job["job_id"],
+                                    "candidate_id": view["candidate"]["candidate_id"],
+                                    "proposal_sha256": view["candidate"]["proposal_sha256"],
+                                    "started_utc": utc(),
+                                },
+                            )
                             panel_digests = {job["role"]: rev_meta["review_sha256"]}
                             for qrole, qpayload in prior_quorum.items():
                                 panel_digests[qrole] = qpayload["review_meta"]["review_sha256"]
@@ -1786,7 +1893,11 @@ class Engine:
                 cat_doc = json.loads(catalog_blob.read_text())
             except (ValueError, OSError) as exc:
                 raise WorkflowError(f"Export catalog blob unreadable for public sanitization: {exc}") from exc
-            if not isinstance(cat_doc, dict) or "rows" not in cat_doc or not isinstance(cat_doc["rows"], list):
+            if (
+                not isinstance(cat_doc, dict)
+                or "rows" not in cat_doc
+                or not isinstance(cat_doc["rows"], list)
+            ):
                 raise WorkflowError("Export catalog blob invalid schema for public sanitization")
             for r in cat_doc["rows"]:
                 if r.get("identity"):
@@ -1797,6 +1908,7 @@ class Engine:
                     catalog_terms.add(r["account_name"])
 
         from stage4 import sanitize_public_text
+
         sanitized_explanation = sanitize_public_text(wire.get("explanation", ""), catalog_terms=catalog_terms)
         for f in body.get("findings", []):
             if "summary" in f:
@@ -1843,6 +1955,7 @@ class Engine:
             event["verified_private_artifacts"] = [verified_private_ref]
         if prop_meta:
             from stage4 import derive_stage4_candidate_id
+
             event["proposal_sha256"] = prop_meta["proposal_sha256"]
             event["export_sha256"] = view["candidate"]["export_sha256"]
             event["candidate_id"] = derive_stage4_candidate_id(
@@ -1870,19 +1983,30 @@ class Engine:
 
                 proposal = extract_scope_proposal(wire["plan_text"])
                 if view.get("stage") == "plan" and proposal is None:
-                    raise WorkflowError("MALFORMED_RESULT: Architect in planning stage must provide ```scope-proposal block")
+                    raise WorkflowError(
+                        "MALFORMED_RESULT: Architect in planning stage must provide ```scope-proposal block"
+                    )
                 if proposal is not None:
                     schema_path = Path(__file__).parent / "schemas/v1/scope-proposal.json"
                     if schema_path.exists():
                         import jsonschema
+
                         try:
                             schema = json.loads(schema_path.read_text())
                             jsonschema.validate(instance=proposal, schema=schema)
                         except Exception as exc:
-                            raise WorkflowError(f"MALFORMED_RESULT: Scope proposal schema validation failed: {exc}")
+                            raise WorkflowError(
+                                f"MALFORMED_RESULT: Scope proposal schema validation failed: {exc}"
+                            )
                     stages = proposal.get("implementation_stages", [])
-                    if not stages or len(stages) != len(set(stages)) or any(s not in SUPPORTED_STAGES for s in stages):
-                        raise WorkflowError(f"MALFORMED_RESULT: Invalid implementation_stages in scope proposal: {stages}")
+                    if (
+                        not stages
+                        or len(stages) != len(set(stages))
+                        or any(s not in SUPPORTED_STAGES for s in stages)
+                    ):
+                        raise WorkflowError(
+                            f"MALFORMED_RESULT: Invalid implementation_stages in scope proposal: {stages}"
+                        )
                     outbox = work / "outbox"
                     outbox.mkdir(parents=True, exist_ok=True)
                     atomic_write(outbox / "scope-proposal.json", canonical(proposal) + b"\n", immutable=False)
@@ -1972,6 +2096,7 @@ class Engine:
         ):
             raise WorkflowError("Approval does not match pending gate")
         from stage4 import is_hex64
+
         if token["scope"] == "PLAN":
             if token.get("schema_version") == 1:
                 raise WorkflowError("Legacy schema_version 1 PLAN tokens cannot be reused for new approvals")
@@ -2008,7 +2133,13 @@ class Engine:
             self._recheck_candidate(view["candidate"])
             if token.get("operation") != "set_account_name_ar":
                 raise WorkflowError("DRY_RUN operation must be set_account_name_ar")
-            for hkey in ("export_sha256", "proposal_sha256", "bundle_sha256", "payload_sha256", "erp_descriptor_hash"):
+            for hkey in (
+                "export_sha256",
+                "proposal_sha256",
+                "bundle_sha256",
+                "payload_sha256",
+                "erp_descriptor_hash",
+            ):
                 if not token.get(hkey) or not is_hex64(token[hkey]):
                     raise WorkflowError(f"DRY_RUN {hkey} must be 64-character lowercase hex")
 
@@ -2048,7 +2179,13 @@ class Engine:
             self._recheck_candidate(view["candidate"])
             if token.get("operation") != "set_account_name_ar":
                 raise WorkflowError("IMPORT operation must be set_account_name_ar")
-            for hkey in ("export_sha256", "proposal_sha256", "bundle_sha256", "payload_sha256", "erp_descriptor_hash"):
+            for hkey in (
+                "export_sha256",
+                "proposal_sha256",
+                "bundle_sha256",
+                "payload_sha256",
+                "erp_descriptor_hash",
+            ):
                 if not token.get(hkey) or not is_hex64(token[hkey]):
                     raise WorkflowError(f"IMPORT {hkey} must be 64-character lowercase hex")
             if not token.get("dry_run_evidence_digest") or not is_hex64(token["dry_run_evidence_digest"]):
@@ -2104,7 +2241,7 @@ class Engine:
 
     def grant_and_synchronize(self, token: dict) -> dict:
         """Approval-only operation.
-        
+
         Validates token against schema and pending gate, records grant row and event,
         and synchronizes LangGraph checkpoint WITHOUT calling run() or dispatching jobs.
         """
@@ -2365,31 +2502,23 @@ class Engine:
                 f"adopt_scope only valid from the planning stage; current stage is {view.get('stage')!r}"
             )
         if self._has_grant_events_for_current_stage():
-            raise PreconditionError(
-                "adopt_scope prohibited after a PLAN grant for this stage"
-            )
+            raise PreconditionError("adopt_scope prohibited after a PLAN grant for this stage")
 
         if not implementation_stages:
             raise CoreValidationError("implementation_stages must not be empty")
         if len(implementation_stages) != len(set(implementation_stages)):
-            raise CoreValidationError(
-                f"implementation_stages contains duplicates: {implementation_stages}"
-            )
+            raise CoreValidationError(f"implementation_stages contains duplicates: {implementation_stages}")
         for stage in implementation_stages:
             if stage not in SUPPORTED_STAGES:
                 raise CoreValidationError(f"unsupported stage: {stage!r}")
             if stage in self.config.get("stages", []):
-                raise CoreValidationError(
-                    f"stage {stage!r} already present; repeated adoption not allowed"
-                )
+                raise CoreValidationError(f"stage {stage!r} already present; repeated adoption not allowed")
 
         proposal = self._load_scope_proposal()
         if proposal.get("scope") != scope:
             raise CoreValidationError("scope does not match persisted scope-proposal.json")
         if proposal.get("implementation_stages") != implementation_stages:
-            raise CoreValidationError(
-                "implementation_stages do not match persisted scope-proposal.json"
-            )
+            raise CoreValidationError("implementation_stages do not match persisted scope-proposal.json")
 
         new_scope_hash = compute_scope_hash(scope)
         new_config = deepcopy(self.config)
@@ -2407,7 +2536,7 @@ class Engine:
         )
         new_config["candidate"] = candidate_meta
 
-        event_id, seq = self.store.adopt_scope_atomic(
+        _event_id, _seq = self.store.adopt_scope_atomic(
             new_config=new_config,
             action_id=action_id,
             scope_hash=new_scope_hash,
@@ -2424,9 +2553,7 @@ class Engine:
         if not stored_request_hash:
             raise RecoveryError("scope_adopted event missing request_hash")
         if stored_request_hash != submitted_request_hash:
-            raise DuplicateKeyConflict(
-                "action_id reused with different request contents"
-            )
+            raise DuplicateKeyConflict("action_id reused with different request contents")
         self.config = self.store.meta("config")
         self._synchronize_checkpoint()
         return self.view()
@@ -2444,7 +2571,9 @@ class Engine:
     ):
         view = self.view()
         if view["status"] != "PAUSED" or view.get("active_jobs"):
-            raise WorkflowError("Role reconfiguration requires a paused workflow with all active jobs reconciled")
+            raise WorkflowError(
+                "Role reconfiguration requires a paused workflow with all active jobs reconciled"
+            )
 
         known_roles = {"architect", "builder", "reviewer", "verifier", "proposer", "ai-a1", "ai-a2", "ai-a3"}
         if role not in known_roles:
@@ -2485,7 +2614,9 @@ class Engine:
                     )
                 expected_ver = ".".join(str(p) for p in detected)
             elif expected_ver not in binary_ver_output:
-                raise WorkflowError(f"Binary version mismatch: expected '{expected_ver}' in '{binary_ver_output}'")
+                raise WorkflowError(
+                    f"Binary version mismatch: expected '{expected_ver}' in '{binary_ver_output}'"
+                )
         except (OSError, subprocess.TimeoutExpired) as exc:
             raise WorkflowError(f"Error inspecting binary {binary}: {exc}")
 

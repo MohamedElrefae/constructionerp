@@ -48,15 +48,16 @@ def record(allow_commit_move=False, root=None):
     old = json.loads(old_text) if old_text.strip() else None
     if old and head and old.get("base_commit") not in (None, head) and not allow_commit_move:
         raise ValueError(
-            "candidate HEAD moved from recorded base commit %s to %s — review before regenerating"
-            % (old.get("base_commit"), head)
+            "candidate HEAD moved from recorded base commit {} to {} — review before regenerating".format(
+                old.get("base_commit"), head
+            )
         )
 
     sql_text = (root / SQL).read_text(encoding="utf-8")
     body = "\n".join(l for l in sql_text.splitlines() if not l.strip().startswith("--"))
     statements = [s.strip() for s in body.split(";") if s.strip()]
     if len(statements) != 2:
-        raise ValueError("stage2_inventory.sql must contain exactly two statements, found %d" % len(statements))
+        raise ValueError(f"stage2_inventory.sql must contain exactly two statements, found {len(statements)}")
     categories = frappe.db.sql(statements[0], as_dict=True)
     rows = frappe.db.sql(statements[1])
     from construction.localization_inventory import merkle_root
@@ -74,14 +75,16 @@ def record(allow_commit_move=False, root=None):
             "erpnext": _sha_file(root.parent / "erpnext/erpnext/locale/ar.po"),
             "frappe": _sha_file(root.parent / "frappe/frappe/locale/ar.po"),
         },
-        "target_site": "%s (test, non-production)" % frappe.local.site,
+        "target_site": f"{frappe.local.site} (test, non-production)",
     }
     (root / MANIFEST).write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     summary = {
         "rows": row_count,
         "root": merkle,
         "base_commit": head,
-        "previous": None if not old else {"rows": (old.get("merkle") or {}).get("rows"), "root": (old.get("merkle") or {}).get("root")},
+        "previous": None
+        if not old
+        else {"rows": (old.get("merkle") or {}).get("rows"), "root": (old.get("merkle") or {}).get("root")},
         "apps": {c.get("app"): c.get("total") for c in categories},
     }
     print(json.dumps(summary, sort_keys=True))

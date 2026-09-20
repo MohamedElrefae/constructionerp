@@ -8,7 +8,6 @@ from pathlib import Path
 
 import pytest
 
-
 ROOT = Path(__file__).resolve().parents[1]
 PYTHON = sys.executable
 
@@ -74,7 +73,17 @@ def test_context_checker_json_cli_passes_from_unrelated_cwd(tmp_path):
     assert payload["repo_root"] == str(ROOT)
     assert payload["failed"] == 0
     assert {check["id"] for check in payload["checks"]} == {
-        "SCP-C1", "SCP-C2", "SCP-C3", "SCP-C4", "SCP-C5", "SCP-C6", "SCP-C7", "SCP-C8", "SCP-C8B", "SCP-C9", "SCP-C10"
+        "SCP-C1",
+        "SCP-C2",
+        "SCP-C3",
+        "SCP-C4",
+        "SCP-C5",
+        "SCP-C6",
+        "SCP-C7",
+        "SCP-C8",
+        "SCP-C8B",
+        "SCP-C9",
+        "SCP-C10",
     }
     assert json.loads((tmp_path / "imports.json").read_text(encoding="utf-8")) == []
 
@@ -124,14 +133,12 @@ def offline_subprocess_env(tmp_path):
         ("malformed", "{", "JSONDecodeError"),
         ("array", "[]", "expected a JSON object"),
         ("null", "null", "expected a JSON object"),
-        ("string", '\"not an object\"', "expected a JSON object"),
+        ("string", '"not an object"', "expected a JSON object"),
         ("invalid-fields", '{"fields": [null]}', "TypeError"),
         ("missing", None, "FileNotFoundError"),
     ],
 )
-def test_context_checker_malformed_and_missing_inputs_are_cli_failures(
-    tmp_path, label, value, diagnostic
-):
+def test_context_checker_malformed_and_missing_inputs_are_cli_failures(tmp_path, label, value, diagnostic):
     """Focused input fixtures; these do not replace the real copied-checkout gate."""
     test_root = tmp_path / label
     boq_item = test_root / "construction" / "construction" / "doctype" / "boq_item"
@@ -189,7 +196,10 @@ def test_schema_drift_passes_selected_root_and_records_child_failure(context_che
     monkeypatch.setattr(context_checker.subprocess, "run", fake_run)
     passed, details = context_checker._schema_drift(tmp_path)
     assert passed
-    assert calls[0][0] == [context_checker.sys.executable, str(tmp_path / "scripts" / "schema_drift_checker.py")]
+    assert calls[0][0] == [
+        context_checker.sys.executable,
+        str(tmp_path / "scripts" / "schema_drift_checker.py"),
+    ]
     assert calls[0][1]["cwd"] == tmp_path
 
     class Failed:
@@ -264,10 +274,18 @@ def test_malformed_json_is_a_recorded_failure(context_checker, tmp_path):
 @pytest.mark.parametrize("exposed", [1, True, "1"])
 def test_scope_linter_covers_violations(metadata_linter, tmp_path, dimension, exposed):
     path = tmp_path / "sample.json"
-    path.write_text(json.dumps({"name": "Sample", "fields": [
-        {"fieldname": dimension, "in_standard_filter": exposed},
-        {"fieldname": "unrelated", "in_standard_filter": 1},
-    ]}), encoding="utf-8")
+    path.write_text(
+        json.dumps(
+            {
+                "name": "Sample",
+                "fields": [
+                    {"fieldname": dimension, "in_standard_filter": exposed},
+                    {"fieldname": "unrelated", "in_standard_filter": 1},
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
     assert metadata_linter.lint_doctype_json(str(path)) == [
         f"FAIL: Sample.json field '{dimension}' has in_standard_filter=1"
     ]
@@ -280,9 +298,18 @@ def test_scope_linter_permits_unexposed_dimensions(metadata_linter, tmp_path, di
     if exposed != "absent":
         field["in_standard_filter"] = exposed
     path = tmp_path / "sample.json"
-    path.write_text(json.dumps({"name": "Sample", "fields": [
-        field, {"fieldname": "unrelated", "in_standard_filter": 1},
-    ]}), encoding="utf-8")
+    path.write_text(
+        json.dumps(
+            {
+                "name": "Sample",
+                "fields": [
+                    field,
+                    {"fieldname": "unrelated", "in_standard_filter": 1},
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
     assert metadata_linter.lint_doctype_json(str(path)) == []
 
 
@@ -309,7 +336,11 @@ def test_linter_is_path_independent_from_relocated_copy(tmp_path):
     (relocated / "scripts").mkdir(parents=True)
     (relocated / "construction" / "construction" / "doctype").mkdir(parents=True)
     shutil.copy(ROOT / "scripts" / "lint_scope_metadata.py", relocated / "scripts" / "lint_scope_metadata.py")
-    shutil.copytree(ROOT / "construction" / "construction" / "doctype", relocated / "construction" / "construction" / "doctype", dirs_exist_ok=True)
+    shutil.copytree(
+        ROOT / "construction" / "construction" / "doctype",
+        relocated / "construction" / "construction" / "doctype",
+        dirs_exist_ok=True,
+    )
     observation = tmp_path / "relocated-imports.json"
     env = offline_subprocess_env(tmp_path / "relocated-run")
     env["OFFLINE_IMPORT_OBSERVATION"] = str(observation)
@@ -332,9 +363,7 @@ def test_real_gate_is_not_replaced_by_fixture_marker():
 
 
 @pytest.mark.parametrize("error", [FileNotFoundError, PermissionError])
-def test_drift_launch_failure_reaches_main_json_report(
-    context_checker, tmp_path, monkeypatch, capsys, error
-):
+def test_drift_launch_failure_reaches_main_json_report(context_checker, tmp_path, monkeypatch, capsys, error):
     """A process-launch double exercises main/reporting, not the real gate."""
     real_run = subprocess.run
     calls = []

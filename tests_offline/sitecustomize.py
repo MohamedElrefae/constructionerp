@@ -6,7 +6,6 @@ import json
 import os
 import sys
 
-
 FORBIDDEN_PREFIXES = ("construction", "frappe", "erpnext")
 observed = []
 
@@ -24,9 +23,7 @@ class ForbiddenImport(importlib.abc.MetaPathFinder):
 
 
 if any(
-    name == prefix or name.startswith(f"{prefix}.")
-    for name in sys.modules
-    for prefix in FORBIDDEN_PREFIXES
+    name == prefix or name.startswith(f"{prefix}.") for name in sys.modules for prefix in FORBIDDEN_PREFIXES
 ):
     raise AssertionError("forbidden app package already loaded in offline subprocess")
 

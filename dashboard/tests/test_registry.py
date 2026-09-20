@@ -1,9 +1,10 @@
 """Tests for Task Registry: path validation, security, and read-only database integrity."""
 
 import os
-from pathlib import Path
 import sqlite3
 import subprocess
+from pathlib import Path
+
 import pytest
 
 from dashboard.registry import (

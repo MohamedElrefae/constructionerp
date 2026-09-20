@@ -239,7 +239,9 @@ def process_approved_vo_lines(vo):
             continue
         if line.line_type in ("Quantity Change", "Omission"):
             if not line.boq_item:
-                frappe.throw(_("Row {0}: Linked BOQ Item is required for {1}.").format(line.idx, line.line_type))
+                frappe.throw(
+                    _("Row {0}: Linked BOQ Item is required for {1}.").format(line.idx, line.line_type)
+                )
             locked = frappe.db.sql(
                 "SELECT name, current_revised_qty, current_revised_unit_price, original_qty FROM `tabBOQ Item` WHERE name = %s FOR UPDATE",
                 line.boq_item,
@@ -262,7 +264,10 @@ def process_approved_vo_lines(vo):
                     continue
 
                 if line.created_boq_item:
-                    existing_rev = frappe.db.get_value("BOQ Quantity Revision", {"variation_order": vo.name, "boq_item": line.created_boq_item})
+                    existing_rev = frappe.db.get_value(
+                        "BOQ Quantity Revision",
+                        {"variation_order": vo.name, "boq_item": line.created_boq_item},
+                    )
                     if existing_rev:
                         line.db_set("created_quantity_revision", existing_rev, update_modified=False)
                         continue
@@ -299,7 +304,9 @@ def process_approved_vo_lines(vo):
                 line.db_set("created_quantity_revision", revision.name, update_modified=False)
 
             elif line.line_type in ("Quantity Change", "Omission"):
-                existing_rev = frappe.db.get_value("BOQ Quantity Revision", {"variation_order": vo.name, "boq_item": line.boq_item})
+                existing_rev = frappe.db.get_value(
+                    "BOQ Quantity Revision", {"variation_order": vo.name, "boq_item": line.boq_item}
+                )
                 if existing_rev:
                     line.db_set("created_quantity_revision", existing_rev, update_modified=False)
                     continue

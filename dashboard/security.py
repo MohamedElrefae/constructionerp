@@ -3,9 +3,9 @@
 import hashlib
 import json
 import os
-from pathlib import Path
 import re
 import stat
+from pathlib import Path
 from typing import Any
 
 from dashboard.config import FRAPPE_BENCH_ROOT, STAGE4_AUTHORITATIVE_MANIFEST_PATH
@@ -13,6 +13,7 @@ from dashboard.config import FRAPPE_BENCH_ROOT, STAGE4_AUTHORITATIVE_MANIFEST_PA
 
 class SecurityError(Exception):
     """Raised when security boundaries, permissions, or isolation rules are violated."""
+
     pass
 
 
@@ -248,9 +249,7 @@ def read_authoritative_stage4_manifest() -> dict[str, Any]:
         raw_bytes = b"".join(chunks)
 
         if len(raw_bytes) > MAX_MANIFEST_SIZE:
-            raise SecurityError(
-                f"Stage 4 manifest exceeds maximum allowed size of {MAX_MANIFEST_SIZE} bytes"
-            )
+            raise SecurityError(f"Stage 4 manifest exceeds maximum allowed size of {MAX_MANIFEST_SIZE} bytes")
 
         computed_sha = hashlib.sha256(raw_bytes).hexdigest()
 
@@ -289,4 +288,3 @@ def read_authoritative_stage4_manifest() -> dict[str, Any]:
                 os.close(fd)
             except OSError:
                 pass
-

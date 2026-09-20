@@ -10,14 +10,14 @@ Provides:
 - Login rate-limiting (429 after 5 failures in 5 min)
 """
 
-from datetime import datetime, timezone, timedelta
 import hashlib
 import hmac
 import json
 import os
-from pathlib import Path
 import re
 import secrets
+from datetime import datetime, timedelta, timezone
+from pathlib import Path
 from typing import Any, Callable
 
 from starlette.middleware.base import BaseHTTPMiddleware
@@ -40,12 +40,14 @@ from dashboard.config import (
     SESSION_MAX_AGE_SECONDS,
     VAR_DIR,
 )
+
 HOST_REGEX = re.compile(r"^[a-zA-Z0-9.\-]+(:[0-9]+)?$")
 
 
 # ---------------------------------------------------------------------------
 # Password Hashing via hashlib.scrypt
 # ---------------------------------------------------------------------------
+
 
 def hash_password(
     password: str,
@@ -57,7 +59,7 @@ def hash_password(
     dklen: int = SCRYPT_DKLEN,
 ) -> str:
     """Hash password using scrypt with explicit parameters.
-    
+
     Format: scrypt$<n>$<r>$<p>$<salt_hex>$<hash_hex>
     """
     if salt is None:
@@ -105,13 +107,14 @@ def verify_password(password: str, stored_hash: str) -> bool:
 # Initial Credential Management
 # ---------------------------------------------------------------------------
 
+
 def create_initial_credentials_file(
     file_path: Path = CREDENTIALS_FILE_PATH,
     username: str = "engineer",
     password_len: int = 24,
 ) -> tuple[str, str]:
     """Atomically create initial credentials file with 0600 permissions.
-    
+
     Uses os.open with O_WRONLY | O_CREAT | O_EXCL | O_NOFOLLOW.
     Returns (username, password).
     """
@@ -253,6 +256,7 @@ auth_store = AuthStore()
 # In-Memory Session Management
 # ---------------------------------------------------------------------------
 
+
 class SessionManager:
     """Manages authenticated sessions with expiration."""
 
@@ -294,6 +298,7 @@ session_manager = SessionManager()
 # Rate Limiting for Login Attempts
 # ---------------------------------------------------------------------------
 
+
 class LoginRateLimiter:
     """Tracks failed login attempts per client IP."""
 
@@ -332,9 +337,10 @@ rate_limiter = LoginRateLimiter()
 # ASGI Middlewares
 # ---------------------------------------------------------------------------
 
+
 class HostValidationMiddleware:
     """Outermost raw ASGI middleware enforcing strict Host-header validation.
-    
+
     Mitigates GHSA-86qp-5c8j-p5mr (BadHost in Starlette <= 1.0.0).
     Runs before any Starlette request parsing or URL reconstruction.
     """

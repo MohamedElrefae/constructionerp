@@ -21,9 +21,7 @@ def main():
     parser.add_argument(
         "--parent-start-time", type=int, required=True, help="Expected parent process start time"
     )
-    parser.add_argument(
-        "--lock-fd", type=int, default=None, help="Inherited file descriptor holding lock"
-    )
+    parser.add_argument("--lock-fd", type=int, default=None, help="Inherited file descriptor holding lock")
     parser.add_argument("cmd", nargs=argparse.REMAINDER, help="Target command to exec")
 
     args = parser.parse_args()
@@ -60,7 +58,7 @@ def main():
             rparen = stat_content.rfind(")")
             if rparen == -1:
                 os._exit(1)
-            remaining_fields = stat_content[rparen + 2:].split()
+            remaining_fields = stat_content[rparen + 2 :].split()
             actual_ppid_start_time = int(remaining_fields[19])
         if actual_ppid_start_time != args.parent_start_time:
             sys.stderr.write(

@@ -6,6 +6,7 @@ import os
 import threading
 import time
 from datetime import datetime, timezone
+
 import pytest
 import uvicorn
 from playwright.async_api import async_playwright
@@ -75,17 +76,63 @@ async def test_ui_three_tab_navigation(ui_live_server):
             if f"/api/tasks/{task_id}/state" in url:
                 await route.fulfill(status=200, content_type="application/json", body=json.dumps(state_data))
             elif f"/api/tasks/{task_id}/plan" in url:
-                await route.fulfill(status=200, content_type="application/json", body=json.dumps({"plan_text": "Tab test plan", "format": "plain_text", "render_mode": "text_content"}))
+                await route.fulfill(
+                    status=200,
+                    content_type="application/json",
+                    body=json.dumps(
+                        {"plan_text": "Tab test plan", "format": "plain_text", "render_mode": "text_content"}
+                    ),
+                )
             elif f"/api/tasks/{task_id}/review-context" in url:
-                await route.fulfill(status=200, content_type="application/json", body=json.dumps({"gate": None, "proposal": None, "plan_revision_hash": "a"*64, "scope_hash": "b"*64, "roles_hash": "c"*64}))
+                await route.fulfill(
+                    status=200,
+                    content_type="application/json",
+                    body=json.dumps(
+                        {
+                            "gate": None,
+                            "proposal": None,
+                            "plan_revision_hash": "a" * 64,
+                            "scope_hash": "b" * 64,
+                            "roles_hash": "c" * 64,
+                        }
+                    ),
+                )
             elif f"/api/tasks/{task_id}/ai-context" in url:
-                await route.fulfill(status=200, content_type="application/json", body=json.dumps({"session_memory_md": "Sprint memory notes", "provenance": []}))
+                await route.fulfill(
+                    status=200,
+                    content_type="application/json",
+                    body=json.dumps({"session_memory_md": "Sprint memory notes", "provenance": []}),
+                )
             elif "/api/tasks" in url and route.request.method == "GET":
-                await route.fulfill(status=200, content_type="application/json", body=json.dumps([{"task_id": task_id, "work_item": "test-tabs-item", "task_branch": "feature/test-tabs", "cached_status": "DRAFT", "cached_stage": "plan"}]))
+                await route.fulfill(
+                    status=200,
+                    content_type="application/json",
+                    body=json.dumps(
+                        [
+                            {
+                                "task_id": task_id,
+                                "work_item": "test-tabs-item",
+                                "task_branch": "feature/test-tabs",
+                                "cached_status": "DRAFT",
+                                "cached_stage": "plan",
+                            }
+                        ]
+                    ),
+                )
             elif "/api/auth/csrf-token" in url:
-                await route.fulfill(status=200, content_type="application/json", body=json.dumps({"csrf_token": "mock_csrf_token"}))
+                await route.fulfill(
+                    status=200,
+                    content_type="application/json",
+                    body=json.dumps({"csrf_token": "mock_csrf_token"}),
+                )
             elif "/api/auth/me" in url:
-                await route.fulfill(status=200, content_type="application/json", body=json.dumps({"authenticated": True, "username": "engineer", "must_change_password": False}))
+                await route.fulfill(
+                    status=200,
+                    content_type="application/json",
+                    body=json.dumps(
+                        {"authenticated": True, "username": "engineer", "must_change_password": False}
+                    ),
+                )
             else:
                 await route.continue_()
 
@@ -158,7 +205,7 @@ async def test_ui_plain_text_plan_and_scope_proposal_adoption(ui_live_server):
     malicious_plan = (
         "# Security Verification Plan\n\n"
         "<b onmouseover=\"alert('xss')\">Safe Hover</b>\n"
-        "<img src=\"/xss.jpg\" onerror=\"alert('img_xss')\">\n"
+        '<img src="/xss.jpg" onerror="alert(\'img_xss\')">\n'
         "<script>alert('script_xss')</script>\n"
     )
 
@@ -180,37 +227,83 @@ async def test_ui_plain_text_plan_and_scope_proposal_adoption(ui_live_server):
             if f"/api/tasks/{task_id}/state" in url:
                 await route.fulfill(status=200, content_type="application/json", body=json.dumps(state_data))
             elif f"/api/tasks/{task_id}/plan" in url:
-                await route.fulfill(status=200, content_type="application/json", body=json.dumps({
-                    "plan_text": malicious_plan,
-                    "format": "plain_text",
-                    "render_mode": "text_content",
-                }))
+                await route.fulfill(
+                    status=200,
+                    content_type="application/json",
+                    body=json.dumps(
+                        {
+                            "plan_text": malicious_plan,
+                            "format": "plain_text",
+                            "render_mode": "text_content",
+                        }
+                    ),
+                )
             elif f"/api/tasks/{task_id}/review-context" in url:
-                await route.fulfill(status=200, content_type="application/json", body=json.dumps({
-                    "gate": {"gate_id": "gate-adopt-1", "scope": "PLAN"},
-                    "proposal": proposal_data,
-                    "plan_revision_hash": "a" * 64,
-                    "scope_hash": "b" * 64,
-                    "roles_hash": "c" * 64,
-                    "plan_granted": False,
-                    "current_stage": "plan",
-                }))
+                await route.fulfill(
+                    status=200,
+                    content_type="application/json",
+                    body=json.dumps(
+                        {
+                            "gate": {"gate_id": "gate-adopt-1", "scope": "PLAN"},
+                            "proposal": proposal_data,
+                            "plan_revision_hash": "a" * 64,
+                            "scope_hash": "b" * 64,
+                            "roles_hash": "c" * 64,
+                            "plan_granted": False,
+                            "current_stage": "plan",
+                        }
+                    ),
+                )
             elif f"/api/tasks/{task_id}/adopt-scope" in url and route.request.method == "POST":
                 scope_adopted = True
                 req = json.loads(route.request.post_data)
                 assert req["scope"]["allowed_paths"] == proposal_data["scope"]["allowed_paths"]
-                await route.fulfill(status=200, content_type="application/json", body=json.dumps({
-                    "ok": True,
-                    "detail": "Scope proposal adopted successfully",
-                }))
+                await route.fulfill(
+                    status=200,
+                    content_type="application/json",
+                    body=json.dumps(
+                        {
+                            "ok": True,
+                            "detail": "Scope proposal adopted successfully",
+                        }
+                    ),
+                )
             elif f"/api/tasks/{task_id}/ai-context" in url:
-                await route.fulfill(status=200, content_type="application/json", body=json.dumps({"session_memory_md": "", "provenance": []}))
+                await route.fulfill(
+                    status=200,
+                    content_type="application/json",
+                    body=json.dumps({"session_memory_md": "", "provenance": []}),
+                )
             elif "/api/tasks" in url and route.request.method == "GET":
-                await route.fulfill(status=200, content_type="application/json", body=json.dumps([{"task_id": task_id, "work_item": "test-adopt-item", "task_branch": "feature/test-adopt", "cached_status": "DRAFT", "cached_stage": "plan"}]))
+                await route.fulfill(
+                    status=200,
+                    content_type="application/json",
+                    body=json.dumps(
+                        [
+                            {
+                                "task_id": task_id,
+                                "work_item": "test-adopt-item",
+                                "task_branch": "feature/test-adopt",
+                                "cached_status": "DRAFT",
+                                "cached_stage": "plan",
+                            }
+                        ]
+                    ),
+                )
             elif "/api/auth/csrf-token" in url:
-                await route.fulfill(status=200, content_type="application/json", body=json.dumps({"csrf_token": "mock_csrf_token"}))
+                await route.fulfill(
+                    status=200,
+                    content_type="application/json",
+                    body=json.dumps({"csrf_token": "mock_csrf_token"}),
+                )
             elif "/api/auth/me" in url:
-                await route.fulfill(status=200, content_type="application/json", body=json.dumps({"authenticated": True, "username": "engineer", "must_change_password": False}))
+                await route.fulfill(
+                    status=200,
+                    content_type="application/json",
+                    body=json.dumps(
+                        {"authenticated": True, "username": "engineer", "must_change_password": False}
+                    ),
+                )
             else:
                 await route.continue_()
 
@@ -290,22 +383,34 @@ async def test_ui_review_snapshot_creation_and_gated_approval(ui_live_server):
             if f"/api/tasks/{task_id}/state" in url:
                 await route.fulfill(status=200, content_type="application/json", body=json.dumps(state_data))
             elif f"/api/tasks/{task_id}/plan" in url:
-                await route.fulfill(status=200, content_type="application/json", body=json.dumps({
-                    "plan_text": "# Plan to be Approved\nDetailed steps.",
-                    "format": "plain_text",
-                    "render_mode": "text_content",
-                }))
+                await route.fulfill(
+                    status=200,
+                    content_type="application/json",
+                    body=json.dumps(
+                        {
+                            "plan_text": "# Plan to be Approved\nDetailed steps.",
+                            "format": "plain_text",
+                            "render_mode": "text_content",
+                        }
+                    ),
+                )
             elif f"/api/tasks/{task_id}/review-context" in url:
-                await route.fulfill(status=200, content_type="application/json", body=json.dumps({
-                    "gate": {"gate_id": "gate-rev-1", "scope": "PLAN"},
-                    "proposal": None,
-                    "plan_revision_hash": plan_revision_hash,
-                    "scope_hash": scope_hash,
-                    "roles_hash": roles_hash,
-                    "plan_granted": state_data["plan_granted"],
-                    "current_stage": "plan",
-                    "active_review": active_review_record,
-                }))
+                await route.fulfill(
+                    status=200,
+                    content_type="application/json",
+                    body=json.dumps(
+                        {
+                            "gate": {"gate_id": "gate-rev-1", "scope": "PLAN"},
+                            "proposal": None,
+                            "plan_revision_hash": plan_revision_hash,
+                            "scope_hash": scope_hash,
+                            "roles_hash": roles_hash,
+                            "plan_granted": state_data["plan_granted"],
+                            "current_stage": "plan",
+                            "active_review": active_review_record,
+                        }
+                    ),
+                )
             elif f"/api/tasks/{task_id}/create-review" in url and route.request.method == "POST":
                 review_created = True
                 req = json.loads(route.request.post_data)
@@ -315,26 +420,66 @@ async def test_ui_review_snapshot_creation_and_gated_approval(ui_live_server):
                     "created_utc": "2026-09-17T12:00:00Z",
                     "content_fingerprint": req["content_fingerprint"],
                 }
-                await route.fulfill(status=200, content_type="application/json", body=json.dumps({
-                    "ok": True,
-                    "review": active_review_record,
-                }))
+                await route.fulfill(
+                    status=200,
+                    content_type="application/json",
+                    body=json.dumps(
+                        {
+                            "ok": True,
+                            "review": active_review_record,
+                        }
+                    ),
+                )
             elif f"/api/tasks/{task_id}/approve-plan" in url and route.request.method == "POST":
                 plan_approved = True
                 state_data["plan_granted"] = True
-                await route.fulfill(status=200, content_type="application/json", body=json.dumps({
-                    "ok": True,
-                    "detail": "Plan approved successfully",
-                    "result": {"status": "already_complete"},
-                }))
+                await route.fulfill(
+                    status=200,
+                    content_type="application/json",
+                    body=json.dumps(
+                        {
+                            "ok": True,
+                            "detail": "Plan approved successfully",
+                            "result": {"status": "already_complete"},
+                        }
+                    ),
+                )
             elif f"/api/tasks/{task_id}/ai-context" in url:
-                await route.fulfill(status=200, content_type="application/json", body=json.dumps({"session_memory_md": "", "provenance": []}))
+                await route.fulfill(
+                    status=200,
+                    content_type="application/json",
+                    body=json.dumps({"session_memory_md": "", "provenance": []}),
+                )
             elif "/api/tasks" in url and route.request.method == "GET":
-                await route.fulfill(status=200, content_type="application/json", body=json.dumps([{"task_id": task_id, "work_item": "test-approval-item", "task_branch": "feature/test-approval", "cached_status": "DRAFT", "cached_stage": "plan"}]))
+                await route.fulfill(
+                    status=200,
+                    content_type="application/json",
+                    body=json.dumps(
+                        [
+                            {
+                                "task_id": task_id,
+                                "work_item": "test-approval-item",
+                                "task_branch": "feature/test-approval",
+                                "cached_status": "DRAFT",
+                                "cached_stage": "plan",
+                            }
+                        ]
+                    ),
+                )
             elif "/api/auth/csrf-token" in url:
-                await route.fulfill(status=200, content_type="application/json", body=json.dumps({"csrf_token": "mock_csrf_token"}))
+                await route.fulfill(
+                    status=200,
+                    content_type="application/json",
+                    body=json.dumps({"csrf_token": "mock_csrf_token"}),
+                )
             elif "/api/auth/me" in url:
-                await route.fulfill(status=200, content_type="application/json", body=json.dumps({"authenticated": True, "username": "engineer", "must_change_password": False}))
+                await route.fulfill(
+                    status=200,
+                    content_type="application/json",
+                    body=json.dumps(
+                        {"authenticated": True, "username": "engineer", "must_change_password": False}
+                    ),
+                )
             else:
                 await route.continue_()
 
@@ -391,11 +536,34 @@ async def test_ui_ai_context_inspector_and_clipboard_copy(ui_live_server):
     base_url = f"http://localhost:{ui_live_server}"
     task_id = "task-ui-context"
 
-    session_memory_content = "### Sprint 1 Notes\n- Architect proposed new boundary.\n- Reviewer validated R1.\n"
+    session_memory_content = (
+        "### Sprint 1 Notes\n- Architect proposed new boundary.\n- Reviewer validated R1.\n"
+    )
     provenance_data = [
-        {"path": "AGENTS.md", "is_mandatory": True, "exists": True, "sha256": "aaaa1111222233334444555566667777888899990000aaaabbbbccccddddeeee", "byte_count": 512, "mode": "ro-bind"},
-        {"path": "SESSION_MEMORY.md", "is_mandatory": True, "exists": True, "sha256": "bbbb1111222233334444555566667777888899990000aaaabbbbccccddddeeee", "byte_count": 256, "mode": "ro-bind"},
-        {"path": "docs/ai/ref.md", "is_mandatory": False, "exists": False, "sha256": None, "byte_count": None, "mode": "ro-bind"},
+        {
+            "path": "AGENTS.md",
+            "is_mandatory": True,
+            "exists": True,
+            "sha256": "aaaa1111222233334444555566667777888899990000aaaabbbbccccddddeeee",
+            "byte_count": 512,
+            "mode": "ro-bind",
+        },
+        {
+            "path": "SESSION_MEMORY.md",
+            "is_mandatory": True,
+            "exists": True,
+            "sha256": "bbbb1111222233334444555566667777888899990000aaaabbbbccccddddeeee",
+            "byte_count": 256,
+            "mode": "ro-bind",
+        },
+        {
+            "path": "docs/ai/ref.md",
+            "is_mandatory": False,
+            "exists": False,
+            "sha256": None,
+            "byte_count": None,
+            "mode": "ro-bind",
+        },
     ]
 
     state_data = {
@@ -423,20 +591,68 @@ async def test_ui_ai_context_inspector_and_clipboard_copy(ui_live_server):
             if f"/api/tasks/{task_id}/state" in url:
                 await route.fulfill(status=200, content_type="application/json", body=json.dumps(state_data))
             elif f"/api/tasks/{task_id}/plan" in url:
-                await route.fulfill(status=200, content_type="application/json", body=json.dumps({"plan_text": "Plan text", "format": "plain_text", "render_mode": "text_content"}))
+                await route.fulfill(
+                    status=200,
+                    content_type="application/json",
+                    body=json.dumps(
+                        {"plan_text": "Plan text", "format": "plain_text", "render_mode": "text_content"}
+                    ),
+                )
             elif f"/api/tasks/{task_id}/review-context" in url:
-                await route.fulfill(status=200, content_type="application/json", body=json.dumps({"gate": None, "proposal": None, "plan_revision_hash": "a"*64, "scope_hash": "b"*64, "roles_hash": "c"*64}))
+                await route.fulfill(
+                    status=200,
+                    content_type="application/json",
+                    body=json.dumps(
+                        {
+                            "gate": None,
+                            "proposal": None,
+                            "plan_revision_hash": "a" * 64,
+                            "scope_hash": "b" * 64,
+                            "roles_hash": "c" * 64,
+                        }
+                    ),
+                )
             elif f"/api/tasks/{task_id}/ai-context" in url:
-                await route.fulfill(status=200, content_type="application/json", body=json.dumps({
-                    "session_memory_md": session_memory_content,
-                    "provenance": provenance_data,
-                }))
+                await route.fulfill(
+                    status=200,
+                    content_type="application/json",
+                    body=json.dumps(
+                        {
+                            "session_memory_md": session_memory_content,
+                            "provenance": provenance_data,
+                        }
+                    ),
+                )
             elif "/api/tasks" in url and route.request.method == "GET":
-                await route.fulfill(status=200, content_type="application/json", body=json.dumps([{"task_id": task_id, "work_item": "test-ctx-item", "task_branch": "feature/test-ctx", "cached_status": "DRAFT", "cached_stage": "plan"}]))
+                await route.fulfill(
+                    status=200,
+                    content_type="application/json",
+                    body=json.dumps(
+                        [
+                            {
+                                "task_id": task_id,
+                                "work_item": "test-ctx-item",
+                                "task_branch": "feature/test-ctx",
+                                "cached_status": "DRAFT",
+                                "cached_stage": "plan",
+                            }
+                        ]
+                    ),
+                )
             elif "/api/auth/csrf-token" in url:
-                await route.fulfill(status=200, content_type="application/json", body=json.dumps({"csrf_token": "mock_csrf_token"}))
+                await route.fulfill(
+                    status=200,
+                    content_type="application/json",
+                    body=json.dumps({"csrf_token": "mock_csrf_token"}),
+                )
             elif "/api/auth/me" in url:
-                await route.fulfill(status=200, content_type="application/json", body=json.dumps({"authenticated": True, "username": "engineer", "must_change_password": False}))
+                await route.fulfill(
+                    status=200,
+                    content_type="application/json",
+                    body=json.dumps(
+                        {"authenticated": True, "username": "engineer", "must_change_password": False}
+                    ),
+                )
             else:
                 await route.continue_()
 

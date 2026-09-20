@@ -134,9 +134,7 @@ class TestGates(unittest.TestCase):
                 if t:
                     if g.fmt_placeholders(e["msgid"]) != g.fmt_placeholders(t):
                         errors.append("po-placeholder")
-                    if sorted(x for _, x in g.html_tags(e["msgid"])) != sorted(
-                        x for _, x in g.html_tags(t)
-                    ):
+                    if sorted(x for _, x in g.html_tags(e["msgid"])) != sorted(x for _, x in g.html_tags(t)):
                         errors.append("po-html")
             return errors
 
@@ -182,7 +180,7 @@ class TestGates(unittest.TestCase):
 
     def test_changed_files_empty_target_set_fails(self):
         errors = []
-        owned, sources, json_sources, skipped = g.classify_files(errors, ["README.md"])
+        owned, sources, json_sources, _skipped = g.classify_files(errors, ["README.md"])
         self.assertEqual(owned, [])
         self.assertEqual(sources, [])
         self.assertEqual(json_sources, [])
@@ -264,29 +262,46 @@ class TestFullCheckPO(unittest.TestCase):
 
     def test_fuzzy_fails(self):
         with tempfile.TemporaryDirectory() as tmp:
-            p = write(tmp, "t.po", "#: a.py:1\n#, fuzzy\nmsgid \"X\"\nmsgstr \"y\"\n")
+            p = write(tmp, "t.po", '#: a.py:1\n#, fuzzy\nmsgid "X"\nmsgstr "y"\n')
             errors, _ = self.run_check_po(p.read_text(encoding="utf-8"))
             self.assertTrue(any("po-fuzzy" in e for e in errors), errors)
 
 
 class TestCSVQuorum(unittest.TestCase):
-    HDR = ("language,source_text,context,ct_app,translated_text,domain,release_status,"
-           "release_version,a1_reviewer,a1_approved_at,a2_reviewer,a2_approved_at,"
-           "a3_reviewer,a3_approved_at,references,notes,decision_ref")
+    HDR = (
+        "language,source_text,context,ct_app,translated_text,domain,release_status,"
+        "release_version,a1_reviewer,a1_approved_at,a2_reviewer,a2_approved_at,"
+        "a3_reviewer,a3_approved_at,references,notes,decision_ref"
+    )
 
     def row(self, **kw):
-        base = dict(language="ar", source_text="S", context="", ct_app="frappe",
-                    translated_text="T", domain="d", release_status="Released",
-                    release_version="1.0", a1_reviewer="AI-A1 session /r1",
-                    a1_approved_at="2026-09-04 20:41:29", a2_reviewer="AI-A2 session /r2",
-                    a2_approved_at="2026-09-04 20:41:27", a3_reviewer="AI-A3 session /r3",
-                    a3_approved_at="2026-09-04 20:42:01", references="ref",
-                    notes="n", decision_ref="content:docs/translation/sign-off-1.0.md")
+        base = dict(
+            language="ar",
+            source_text="S",
+            context="",
+            ct_app="frappe",
+            translated_text="T",
+            domain="d",
+            release_status="Released",
+            release_version="1.0",
+            a1_reviewer="AI-A1 session /r1",
+            a1_approved_at="2026-09-04 20:41:29",
+            a2_reviewer="AI-A2 session /r2",
+            a2_approved_at="2026-09-04 20:41:27",
+            a3_reviewer="AI-A3 session /r3",
+            a3_approved_at="2026-09-04 20:42:01",
+            references="ref",
+            notes="n",
+            decision_ref="content:docs/translation/sign-off-1.0.md",
+        )
         base.update(kw)
         return base
 
     def run_csv(self, rows, pin=True):
-        import csv as csvmod, hashlib, json as jsonmod
+        import csv as csvmod
+        import hashlib
+        import json as jsonmod
+
         with tempfile.TemporaryDirectory() as tmp:
             (Path(tmp) / "docs" / "translation").mkdir(parents=True)
             (Path(tmp) / "docs" / "translation" / "sign-off-1.0.md").write_text("S T")
@@ -304,7 +319,9 @@ class TestCSVQuorum(unittest.TestCase):
                     for r in rows:
                         if (r.get("release_status") or "").strip() != "Released":
                             continue
-                        refs = sorted(x.strip() for x in (r.get("decision_ref") or "").split(";") if x.strip())
+                        refs = sorted(
+                            x.strip() for x in (r.get("decision_ref") or "").split(";") if x.strip()
+                        )
                         entries = []
                         for ref in refs:
                             scheme, sep, sub = ref.partition(":")
@@ -314,20 +331,29 @@ class TestCSVQuorum(unittest.TestCase):
                             if not fpath.is_file():
                                 continue
                             content = fpath.read_text(encoding="utf-8")
-                            entries.append({"ref": ref, "sha256": hashlib.sha256(content.encode()).hexdigest()})
+                            entries.append(
+                                {"ref": ref, "sha256": hashlib.sha256(content.encode()).hexdigest()}
+                            )
                         parts = g.row_identity_fields(r, r["source_text"], r["translated_text"])
                         did = g.row_decision_id(parts, entries)
                         v = {"decision": "d", "confidence": "c", "session": "s"}
                         pins[did] = {
-                            "language": r["language"], "ct_app": r["ct_app"],
-                            "context": r["context"], "source_text": r["source_text"],
-                            "translated_text": r["translated_text"], "domain": r.get("domain") or "",
+                            "language": r["language"],
+                            "ct_app": r["ct_app"],
+                            "context": r["context"],
+                            "source_text": r["source_text"],
+                            "translated_text": r["translated_text"],
+                            "domain": r.get("domain") or "",
                             "release_version": r["release_version"],
                             "references": r.get("references") or "",
-                            "proposal": {"sha256": __import__("hashlib").sha256(
-                                f"{r['source_text']}|{r['translated_text']}".encode()).hexdigest()},
+                            "proposal": {
+                                "sha256": __import__("hashlib")
+                                .sha256(f"{r['source_text']}|{r['translated_text']}".encode())
+                                .hexdigest()
+                            },
                             "verdicts": {"AI-A1": dict(v), "AI-A2": dict(v), "AI-A3": dict(v)},
-                            "artifacts": entries}
+                            "artifacts": entries,
+                        }
                     (Path(tmp) / "dec.json").write_text(jsonmod.dumps({"decisions": pins}))
                 errors = []
                 n = g.check_csv(errors)
@@ -368,7 +394,6 @@ class TestCSVQuorum(unittest.TestCase):
             finally:
                 g.CSV, g.ROOT = real_csv, real_root
 
-
     def test_decision_mutation_invalidates(self):
         row = self.row()
         errors, _ = self.run_csv([row])
@@ -403,14 +428,13 @@ class TestRoutingAndVendor(unittest.TestCase):
         self.assertFalse(g.DYNAMIC_WRAP_RE.search('_("static done")'))
 
 
-
-
 class TestRound3Gates(unittest.TestCase):
     def test_html_vue_routing(self):
         errors = []
-        owned, sources, json_sources, skipped = g.classify_files(
-            errors, ["construction/www/login.html",
-                     "construction/construction/doctype/boq_header/boq_header.js"])
+        _owned, sources, _json_sources, _skipped = g.classify_files(
+            errors,
+            ["construction/www/login.html", "construction/construction/doctype/boq_header/boq_header.js"],
+        )
         self.assertEqual(errors, [])
         self.assertEqual(len(sources), 2)
         self.assertIn(".vue", g.SOURCE_SUFFIXES)
@@ -418,15 +442,17 @@ class TestRound3Gates(unittest.TestCase):
 
     def test_workspace_json_routing(self):
         errors = []
-        owned, sources, json_sources, skipped = g.classify_files(
-            errors, ["construction/config/workspace_sidebar_items.json"])
+        _owned, _sources, json_sources, _skipped = g.classify_files(
+            errors, ["construction/config/workspace_sidebar_items.json"]
+        )
         self.assertEqual(errors, [])
         self.assertEqual(len(json_sources), 1)
 
     def test_data_json_owned(self):
         errors = []
-        owned, sources, json_sources, skipped = g.classify_files(
-            errors, ["construction/data/translations/approved_ar_overrides.csv"])
+        owned, _sources, _json_sources, _skipped = g.classify_files(
+            errors, ["construction/data/translations/approved_ar_overrides.csv"]
+        )
         self.assertEqual(errors, [])
         self.assertEqual(len(owned), 1)
 
@@ -449,8 +475,9 @@ class TestRound3Gates(unittest.TestCase):
             good = Path(tmp) / "retired_sources.txt"
             ev = Path(tmp) / "ev.md"
             ev.write_text("evidence", encoding="utf-8")
-            good.write_text(f"construction/old.js | removed | AI-R /s | 2026-09-05 | {ev}\n",
-                            encoding="utf-8")
+            good.write_text(
+                f"construction/old.js | removed | AI-R /s | 2026-09-05 | {ev}\n", encoding="utf-8"
+            )
             errors = []
             # evidence path is absolute so loader accepts it only if exists-check handles it;
             # loader joins ROOT for relative; absolute passes through Path.exists below
@@ -459,11 +486,13 @@ class TestRound3Gates(unittest.TestCase):
     def test_context_shift_detected(self):
         sys.path.insert(0, "scripts")
         from vendor_upgrade_delta import classify_delta
-        old = {("menu", "Open"): {"targets": {0: "x"}},
-               ("gone_ctx", "Gone"): {"targets": {0: "y"}},
-               ("same", "Same"): {"targets": {0: "a"}}}
-        new = {("dialog", "Open"): {"targets": {0: "x"}},
-               ("same", "Same"): {"targets": {0: "b"}}}
+
+        old = {
+            ("menu", "Open"): {"targets": {0: "x"}},
+            ("gone_ctx", "Gone"): {"targets": {0: "y"}},
+            ("same", "Same"): {"targets": {0: "a"}},
+        }
+        new = {("dialog", "Open"): {"targets": {0: "x"}}, ("same", "Same"): {"targets": {0: "b"}}}
         added, removed, changed, shift = classify_delta(old, new)
         self.assertEqual(added, [("dialog", "Open")])
         self.assertEqual(removed, [("gone_ctx", "Gone"), ("menu", "Open")])
@@ -480,6 +509,7 @@ class TestRound3Gates(unittest.TestCase):
 
     def test_manifest_binding_fields(self):
         import json
+
         man = json.loads((g.ROOT / g.MANIFEST).read_text(encoding="utf-8"))
         for key in ("freshness_sha", "runtime_digest", "packaged_rows", "critical", "site"):
             self.assertIn(key, man, key)
@@ -498,7 +528,7 @@ class TestRound4Gates(unittest.TestCase):
         self.assertTrue(callable(g.raw_template_texts))
 
     def test_strip_template_removes_code(self):
-        html = '<style>.a{color:red}</style><!-- c --><p>Hello {{ x }} {% if y %}z{% endif %}</p>'
+        html = "<style>.a{color:red}</style><!-- c --><p>Hello {{ x }} {% if y %}z{% endif %}</p>"
         stripped = g.strip_template(html)
         self.assertNotIn("color", stripped)
         self.assertNotIn("{{", stripped)
@@ -510,12 +540,14 @@ class TestRound4Gates(unittest.TestCase):
             d.mkdir()
             (d / "a.html").write_text("<p>Visible Label</p><p>Construction ERP</p>", encoding="utf-8")
             import check_localization_gates as gg
+
             real_root = gg.ROOT
             gg.ROOT = Path(tmp)
             try:
                 (Path(tmp) / "construction").mkdir(exist_ok=True)
                 (Path(tmp) / "construction" / "templates").mkdir(exist_ok=True)
                 import shutil
+
                 shutil.move(str(d / "a.html"), str(Path(tmp) / "construction" / "templates" / "a.html"))
                 gg.RAW_TEMPLATE_ROOTS = ["construction/templates"]
                 errors = []
@@ -548,21 +580,34 @@ class TestRound4Gates(unittest.TestCase):
 
     def test_site_classification_present(self):
         import json
-        sc = json.loads((g.ROOT / "construction/data/localization/site_classification.json").read_text(encoding="utf-8"))
+
+        sc = json.loads(
+            (g.ROOT / "construction/data/localization/site_classification.json").read_text(encoding="utf-8")
+        )
         self.assertEqual(sc["classification"], "non-production test")
         self.assertFalse(sc["production_mutation_authorized"])
 
     def test_critical_policy_matches_freshness(self):
         import json
-        policy = json.loads((g.ROOT / "construction/data/translations/critical_labels.json").read_text(encoding="utf-8"))
-        fresh = json.loads((g.ROOT / "construction/data/localization/freshness_evidence.json").read_text(encoding="utf-8"))
+
+        policy = json.loads(
+            (g.ROOT / "construction/data/translations/critical_labels.json").read_text(encoding="utf-8")
+        )
+        fresh = json.loads(
+            (g.ROOT / "construction/data/localization/freshness_evidence.json").read_text(encoding="utf-8")
+        )
         self.assertEqual(fresh["critical_keys"], policy["labels"])
         self.assertTrue(fresh["critical_pass"])
 
     def test_scoped_positive_run_passes(self):
-        code, counts, errors = g.main(["check", "--files",
-                                       "construction/www/login.html",
-                                       "construction/config/workspace_sidebar_items.json"])
+        code, counts, errors = g.main(
+            [
+                "check",
+                "--files",
+                "construction/www/login.html",
+                "construction/config/workspace_sidebar_items.json",
+            ]
+        )
         self.assertEqual(errors, [])
         self.assertEqual(code, 0)
         self.assertIn("json_labels", counts)
@@ -571,9 +616,11 @@ class TestRound4Gates(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             (Path(tmp) / "construction").mkdir()
             (Path(tmp) / "construction" / "x.py").write_text(
-                'import frappe\nfrappe.throw(_("Hi"))\n', encoding="utf-8")
+                'import frappe\nfrappe.throw(_("Hi"))\n', encoding="utf-8"
+            )
             (Path(tmp) / "construction" / "y.py").write_text(
-                'import frappe\nfrom frappe import _\nfrappe.throw(_("Hi"))\n', encoding="utf-8")
+                'import frappe\nfrom frappe import _\nfrappe.throw(_("Hi"))\n', encoding="utf-8"
+            )
             real = g.ROOT
             g.ROOT = Path(tmp)
             try:
@@ -584,10 +631,9 @@ class TestRound4Gates(unittest.TestCase):
             finally:
                 g.ROOT = real
 
-
-
     def test_baseline_refuses_without_delta(self):
         import tempfile
+
         with tempfile.TemporaryDirectory() as tmp:
             # hermetic: explicit tmp root, no global mutation, nothing is written
             code, _, errors = g.main(["check", "--update-baselines", f"--root={tmp}"])
@@ -597,18 +643,22 @@ class TestRound4Gates(unittest.TestCase):
 
     def test_retired_rename_lifecycle(self):
         import tempfile
+
         with tempfile.TemporaryDirectory() as tmp:
             ev = Path(tmp) / "ev.md"
             ev.write_text("disposition evidence", encoding="utf-8")
             import hashlib as _hl
+
             evh = _hl.sha256(b"disposition evidence").hexdigest()
             good = Path(tmp) / "retired_sources.txt"
             newp = Path(tmp) / "a_new.py"
             newp.write_text("x", encoding="utf-8")
             good.write_text(
-                "schema: retired-lifecycle/v3\n" + f"delete | construction/old_gone.py | - | removed dead module | AI-R /s | 2026-09-05 | {ev}#sha256:{evh}\n"
+                "schema: retired-lifecycle/v3\n"
+                + f"delete | construction/old_gone.py | - | removed dead module | AI-R /s | 2026-09-05 | {ev}#sha256:{evh}\n"
                 f"rename | construction/a_old.py | {newp} | renamed for clarity | AI-R /s | 2026-09-05 | {ev}#sha256:{evh}\n",
-                encoding="utf-8")
+                encoding="utf-8",
+            )
             errors = []
             # loader validates schema + evidence existence
             retired = g.load_retired(errors, path=good)
@@ -624,21 +674,25 @@ class TestRound4Gates(unittest.TestCase):
         self.assertIn("Raw multiline", findings[0][2])
 
     def test_ast_alias_and_frappe_underscore_skipped(self):
-        code = ('from frappe import _ as _t\n'
-                'frappe.throw(frappe._("A"))\n'
-                'frappe.throw(_t("B"))\n'
-                'frappe.throw(_("C").format(1))\n')
+        code = (
+            "from frappe import _ as _t\n"
+            'frappe.throw(frappe._("A"))\n'
+            'frappe.throw(_t("B"))\n'
+            'frappe.throw(_("C").format(1))\n'
+        )
         findings = g.ast_sink_findings("x.py", code, [])
         self.assertEqual(findings, [])
 
     def test_ast_variable_flagged(self):
-        code = 'import frappe\nfrappe.throw(err_msg)\n'
+        code = "import frappe\nfrappe.throw(err_msg)\n"
         findings = g.ast_sink_findings("x.py", code, [])
         self.assertEqual(len(findings), 1)
         self.assertEqual(findings[0][1], "dynamic")
 
     def test_baseline_same_commit_change_refused(self):
-        import tempfile, json
+        import json
+        import tempfile
+
         with tempfile.TemporaryDirectory() as tmp:
             # no vendor trees under tmp root -> absent failure (fail closed), never writes real tree
             errors = []
@@ -647,13 +701,19 @@ class TestRound4Gates(unittest.TestCase):
 
     def test_retired_invalid_delete_rejected(self):
         import tempfile
+
         with tempfile.TemporaryDirectory() as tmp:
             bad = Path(tmp) / "retired_sources.txt"
             import hashlib as _hl2
+
             ev2 = Path(tmp) / "ev2.md"
             ev2.write_text("e", encoding="utf-8")
             pin2 = _hl2.sha256(b"e").hexdigest()
-            bad.write_text("schema: retired-lifecycle/v3\n" + f"delete | construction/old.py | arbitrary-new-value | gone | AI-R /s | 2026-09-05 | {ev2}#sha256:{pin2}\n", encoding="utf-8")
+            bad.write_text(
+                "schema: retired-lifecycle/v3\n"
+                + f"delete | construction/old.py | arbitrary-new-value | gone | AI-R /s | 2026-09-05 | {ev2}#sha256:{pin2}\n",
+                encoding="utf-8",
+            )
             errors = []
             retired = g.load_retired(errors, path=bad)
             self.assertEqual(retired, set())
@@ -661,20 +721,28 @@ class TestRound4Gates(unittest.TestCase):
 
     def test_retired_valid_delete_accepted(self):
         import tempfile
+
         with tempfile.TemporaryDirectory() as tmp:
             ev = Path(tmp) / "ev.md"
             ev.write_text("evidence", encoding="utf-8")
             good = Path(tmp) / "retired_sources.txt"
             import hashlib as _hl3
+
             pin3 = _hl3.sha256(b"evidence").hexdigest()
-            good.write_text("schema: retired-lifecycle/v3\n" + f"delete | construction/old_gone.py | - | removed | AI-R /s | 2026-09-05 | {ev}#sha256:{pin3}\n", encoding="utf-8")
+            good.write_text(
+                "schema: retired-lifecycle/v3\n"
+                + f"delete | construction/old_gone.py | - | removed | AI-R /s | 2026-09-05 | {ev}#sha256:{pin3}\n",
+                encoding="utf-8",
+            )
             errors = []
             retired = g.load_retired(errors, path=good)
             self.assertEqual(errors, [])
             self.assertIn("construction/old_gone.py", retired)
 
     def test_same_commit_change_refused_without_delta(self):
-        import tempfile, json
+        import json
+        import tempfile
+
         with tempfile.TemporaryDirectory() as tmp:
             bench = Path(tmp) / "bench"
             root = bench / "apps" / "construction"
@@ -685,15 +753,22 @@ class TestRound4Gates(unittest.TestCase):
             po_content_v1 = 'msgid ""\nmsgstr ""\n\nmsgid "A"\nmsgstr "a"\n'
             (po / "ar.po").write_text(po_content_v1, encoding="utf-8")
             inv = "context\x00A\x00tsha\n"
-            (loc / "vendor_msgids_frappe.txt").write_text(
-                "# h\n" + inv, encoding="utf-8")
+            (loc / "vendor_msgids_frappe.txt").write_text("# h\n" + inv, encoding="utf-8")
             (loc / "vendor_msgids_erpnext.txt").write_text("# h\n", encoding="utf-8")
             import hashlib
-            base = {"recorded_utc": "2026-01-01T00:00:00Z",
-                    "apps": {"frappe": {"commit": "c0",
-                                        "po_sha": hashlib.sha256(po_content_v1.encode()).hexdigest(),
-                                        "count": 1, "msgid_sha": "x"},
-                             "erpnext": {"commit": None, "po_sha": None, "count": 0, "msgid_sha": None}}}
+
+            base = {
+                "recorded_utc": "2026-01-01T00:00:00Z",
+                "apps": {
+                    "frappe": {
+                        "commit": "c0",
+                        "po_sha": hashlib.sha256(po_content_v1.encode()).hexdigest(),
+                        "count": 1,
+                        "msgid_sha": "x",
+                    },
+                    "erpnext": {"commit": None, "po_sha": None, "count": 0, "msgid_sha": None},
+                },
+            }
             (loc / "vendor_catalog_baseline.json").write_text(json.dumps(base))
             # mutate working-tree bytes at the same commit
             (po / "ar.po").write_text(po_content_v1 + '\nmsgid "B"\nmsgstr "b"\n', encoding="utf-8")
@@ -711,14 +786,18 @@ class TestRound4Gates(unittest.TestCase):
         self.assertEqual(s1["added"], [["a", "z"], ["c", "b"]])
 
     def test_unreviewed_delta_rejected(self):
-        import tempfile, json
+        import json
+        import tempfile
+
         with tempfile.TemporaryDirectory() as tmp:
             p = Path(tmp) / "d.json"
             p.write_text(json.dumps({"triage_status": "pending", "disposition": "x"}), encoding="utf-8")
             self.assertIsNone(g.load_reviewed_delta(str(p)))
 
     def test_forged_shift_omission_refused(self):
-        import tempfile, json
+        import json
+        import tempfile
+
         with tempfile.TemporaryDirectory() as tmp:
             bench = Path(tmp) / "bench"
             root = bench / "apps" / "construction"
@@ -729,30 +808,47 @@ class TestRound4Gates(unittest.TestCase):
             v1 = 'msgid ""\nmsgstr ""\n\nmsgctxt "old"\nmsgid "A"\nmsgstr "a"\n'
             (po / "ar.po").write_text(v1, encoding="utf-8")
             import hashlib
-            (loc / "vendor_msgids_frappe.txt").write_text(
-                "# h\nold\x00A\x00tsha\n", encoding="utf-8")
+
+            (loc / "vendor_msgids_frappe.txt").write_text("# h\nold\x00A\x00tsha\n", encoding="utf-8")
             (loc / "vendor_msgids_erpnext.txt").write_text("# h\n", encoding="utf-8")
-            base = {"recorded_utc": "2026-01-01T00:00:00Z",
-                    "apps": {"frappe": {"commit": "c0",
-                                        "po_sha": hashlib.sha256(v1.encode()).hexdigest(),
-                                        "count": 1, "msgid_sha": "x"},
-                             "erpnext": {"commit": None, "po_sha": None, "count": 0, "msgid_sha": None}}}
+            base = {
+                "recorded_utc": "2026-01-01T00:00:00Z",
+                "apps": {
+                    "frappe": {
+                        "commit": "c0",
+                        "po_sha": hashlib.sha256(v1.encode()).hexdigest(),
+                        "count": 1,
+                        "msgid_sha": "x",
+                    },
+                    "erpnext": {"commit": None, "po_sha": None, "count": 0, "msgid_sha": None},
+                },
+            }
             (loc / "vendor_catalog_baseline.json").write_text(json.dumps(base))
             v2 = 'msgid ""\nmsgstr ""\n\nmsgctxt "new"\nmsgid "A"\nmsgstr "a"\n'
             (po / "ar.po").write_text(v2, encoding="utf-8")
-            forged = {"app": "frappe", "old": "c0", "new": None,
-                      "old_po_sha": base["apps"]["frappe"]["po_sha"],
-                      "new_po_sha": hashlib.sha256(v2.encode()).hexdigest(),
-                      "added": [["new", "A"]], "removed": [["old", "A"]],
-                      "changed": [], "context_shift": [],
-                      "triage_status": "reviewed", "disposition": "ok",
-                      "dispositions": {"new\x00A": "new label", "old\x00A": "moved away"}}
+            forged = {
+                "app": "frappe",
+                "old": "c0",
+                "new": None,
+                "old_po_sha": base["apps"]["frappe"]["po_sha"],
+                "new_po_sha": hashlib.sha256(v2.encode()).hexdigest(),
+                "added": [["new", "A"]],
+                "removed": [["old", "A"]],
+                "changed": [],
+                "context_shift": [],
+                "triage_status": "reviewed",
+                "disposition": "ok",
+                "dispositions": {"new\x00A": "new label", "old\x00A": "moved away"},
+            }
             dp = Path(tmp) / "delta.json"
             dp.write_text(json.dumps(forged), encoding="utf-8")
-            code, _, errors = g.main(["check", "--update-baselines",
-                                      f"--delta-reviewed={dp}", f"--root={root}"])
+            code, _, errors = g.main(
+                ["check", "--update-baselines", f"--delta-reviewed={dp}", f"--root={root}"]
+            )
             self.assertEqual(code, 1)
-            self.assertTrue(any("context" in e or "shift" in e or "sets do not match" in e for e in errors), errors)
+            self.assertTrue(
+                any("context" in e or "shift" in e or "sets do not match" in e for e in errors), errors
+            )
             after = json.loads((loc / "vendor_catalog_baseline.json").read_text(encoding="utf-8"))
             self.assertEqual(after, base)
 
@@ -760,11 +856,23 @@ class TestRound4Gates(unittest.TestCase):
         # flip one stored translated value through the pinned file copy path:
         # recompute must differ from the recorded decision id
         import hashlib
-        row = {"language": "ar", "ct_app": "frappe", "context": "", "source_text": "S",
-               "translated_text": "T", "a1_reviewer": "r1", "a1_approved_at": "2026-01-01 00:00:00",
-               "a2_reviewer": "r2", "a2_approved_at": "2026-01-01 00:00:00",
-               "a3_reviewer": "r3", "a3_approved_at": "2026-01-01 00:00:00",
-               "release_version": "1.0", "domain": "d", "references": "ref"}
+
+        row = {
+            "language": "ar",
+            "ct_app": "frappe",
+            "context": "",
+            "source_text": "S",
+            "translated_text": "T",
+            "a1_reviewer": "r1",
+            "a1_approved_at": "2026-01-01 00:00:00",
+            "a2_reviewer": "r2",
+            "a2_approved_at": "2026-01-01 00:00:00",
+            "a3_reviewer": "r3",
+            "a3_approved_at": "2026-01-01 00:00:00",
+            "release_version": "1.0",
+            "domain": "d",
+            "references": "ref",
+        }
         parts = g.row_identity_fields(row, "S", "T")
         id1 = g.row_decision_id(parts, [])
         parts2 = g.row_identity_fields(dict(row, translated_text="T2"), "S", "T2")
@@ -773,23 +881,39 @@ class TestRound4Gates(unittest.TestCase):
 
     def test_manifest_binds_inventory_and_decisions(self):
         import json
+
         man = json.loads((g.ROOT / g.MANIFEST).read_text(encoding="utf-8"))
-        for key in ("inventory_manifest_sha", "inventory_merkle", "inventory_rows",
-                    "decisions_sha", "decision_root", "site_classification_sha"):
+        for key in (
+            "inventory_manifest_sha",
+            "inventory_merkle",
+            "inventory_rows",
+            "decisions_sha",
+            "decision_root",
+            "site_classification_sha",
+        ):
             self.assertIn(key, man, key)
         self.assertEqual(man["decision_root"], g.decision_root())
-        inv = json.loads((g.ROOT / "construction/data/localization/stage2_inventory_manifest.json").read_text(encoding="utf-8"))
+        inv = json.loads(
+            (g.ROOT / "construction/data/localization/stage2_inventory_manifest.json").read_text(
+                encoding="utf-8"
+            )
+        )
         self.assertEqual(man["inventory_merkle"], (inv.get("merkle") or {}).get("root"))
 
     def test_freshness_strict_future_rejected(self):
         import datetime
-        future = (datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(days=1)).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+        future = (datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(days=1)).strftime(
+            "%Y-%m-%dT%H:%M:%SZ"
+        )
         col = datetime.datetime.strptime(future, "%Y-%m-%dT%H:%M:%SZ")
         now = datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)
         self.assertTrue(col > now)
 
     def test_forged_provenance_refused(self):
-        import tempfile, json
+        import json
+        import tempfile
+
         with tempfile.TemporaryDirectory() as tmp:
             bench = Path(tmp) / "bench"
             root = bench / "apps" / "construction"
@@ -799,45 +923,64 @@ class TestRound4Gates(unittest.TestCase):
             po.mkdir(parents=True)
             v1 = 'msgid ""\nmsgstr ""\n\nmsgctxt "old"\nmsgid "A"\nmsgstr "a"\n'
             (po / "ar.po").write_text(v1, encoding="utf-8")
-            (loc / "vendor_msgids_frappe.txt").write_text(
-                "# h\nold\x00A\x00tsha\n", encoding="utf-8")
+            (loc / "vendor_msgids_frappe.txt").write_text("# h\nold\x00A\x00tsha\n", encoding="utf-8")
             (loc / "vendor_msgids_erpnext.txt").write_text("# h\n", encoding="utf-8")
             import hashlib
-            base = {"recorded_utc": "2026-01-01T00:00:00Z",
-                    "apps": {"frappe": {"commit": "c0",
-                                        "po_sha": hashlib.sha256(v1.encode()).hexdigest(),
-                                        "count": 1, "msgid_sha": "x"},
-                             "erpnext": {"commit": None, "po_sha": None, "count": 0, "msgid_sha": None}}}
+
+            base = {
+                "recorded_utc": "2026-01-01T00:00:00Z",
+                "apps": {
+                    "frappe": {
+                        "commit": "c0",
+                        "po_sha": hashlib.sha256(v1.encode()).hexdigest(),
+                        "count": 1,
+                        "msgid_sha": "x",
+                    },
+                    "erpnext": {"commit": None, "po_sha": None, "count": 0, "msgid_sha": None},
+                },
+            }
             (loc / "vendor_catalog_baseline.json").write_text(json.dumps(base))
             v2 = 'msgid ""\nmsgstr ""\n\nmsgctxt "new"\nmsgid "A"\nmsgstr "a"\n'
             (po / "ar.po").write_text(v2, encoding="utf-8")
-            forged = {"app": "frappe", "old": "BOGUS", "new": "BOGUS",
-                      "old_po_sha": "0" * 64, "new_po_sha": "1" * 64,
-                      "added": [["new", "A"]], "removed": [["old", "A"]],
-                      "changed": [],
-                      "context_shift": [{"msgid": "A", "old_contexts": ["old"], "new_contexts": ["new"]}],
-                      "triage_status": "reviewed", "disposition": "forged",
-                      "dispositions": {"new\x00A": "d1", "old\x00A": "d2", "\x00A": "d3"}}
+            forged = {
+                "app": "frappe",
+                "old": "BOGUS",
+                "new": "BOGUS",
+                "old_po_sha": "0" * 64,
+                "new_po_sha": "1" * 64,
+                "added": [["new", "A"]],
+                "removed": [["old", "A"]],
+                "changed": [],
+                "context_shift": [{"msgid": "A", "old_contexts": ["old"], "new_contexts": ["new"]}],
+                "triage_status": "reviewed",
+                "disposition": "forged",
+                "dispositions": {"new\x00A": "d1", "old\x00A": "d2", "\x00A": "d3"},
+            }
             dp = Path(tmp) / "delta.json"
             dp.write_text(json.dumps(forged), encoding="utf-8")
-            code, _, errors = g.main(["check", "--update-baselines",
-                                      f"--delta-reviewed={dp}", f"--root={root}"])
+            code, _, errors = g.main(
+                ["check", "--update-baselines", f"--delta-reviewed={dp}", f"--root={root}"]
+            )
             self.assertEqual(code, 1)
             self.assertTrue(any("provenance" in e for e in errors), errors)
             after = json.loads((loc / "vendor_catalog_baseline.json").read_text(encoding="utf-8"))
             self.assertEqual(after, base)
 
     def _tmp_manifest_root(self, tmp, mutate=None):
-        import shutil, json
+        import json
+        import shutil
+
         root = Path(tmp) / "bench" / "apps" / "construction"
-        for rel in ("construction/data/localization/localization_manifest.json",
-                    "construction/data/localization/freshness_evidence.json",
-                    "construction/data/localization/site_classification.json",
-                    "construction/data/localization/stage2_inventory_manifest.json",
-                    "construction/data/translations/approved_ar_overrides.csv",
-                    "construction/data/translations/critical_labels.json",
-                    "construction/data/translations/release_decisions.json",
-                    "construction/locale/ar.po"):
+        for rel in (
+            "construction/data/localization/localization_manifest.json",
+            "construction/data/localization/freshness_evidence.json",
+            "construction/data/localization/site_classification.json",
+            "construction/data/localization/stage2_inventory_manifest.json",
+            "construction/data/translations/approved_ar_overrides.csv",
+            "construction/data/translations/critical_labels.json",
+            "construction/data/translations/release_decisions.json",
+            "construction/locale/ar.po",
+        ):
             src = g.ROOT / rel
             dst = root / rel
             dst.parent.mkdir(parents=True, exist_ok=True)
@@ -847,57 +990,94 @@ class TestRound4Gates(unittest.TestCase):
         return root
 
     def test_freshness_future_audit_rejected(self):
-        import tempfile, json
+        import json
+        import tempfile
+
         with tempfile.TemporaryDirectory() as tmp:
+
             def mutate(root):
                 fp = root / "construction/data/localization/freshness_evidence.json"
                 fresh = json.loads(fp.read_text(encoding="utf-8"))
                 fresh["health"]["last_drift_checked_at"] = "2099-01-01 00:00:00"
                 fresh["audit_timestamps"]["last_drift_checked_at"] = "2099-01-01 00:00:00"
                 fp.write_text(json.dumps(fresh), encoding="utf-8")
+
             root = self._tmp_manifest_root(tmp, mutate=mutate)
             errors = []
             g.check_manifest(errors, root=root)
             self.assertTrue(any("after collection" in e or "future" in e for e in errors), errors)
 
     def test_freshness_critical_tamper_rejected(self):
-        import tempfile, json
+        import json
+        import tempfile
+
         with tempfile.TemporaryDirectory() as tmp:
+
             def mutate(root):
                 fp = root / "construction/data/localization/freshness_evidence.json"
                 fresh = json.loads(fp.read_text(encoding="utf-8"))
                 fresh["critical_keys"]["Desktop"] = "FORGED"
                 fp.write_text(json.dumps(fresh), encoding="utf-8")
+
             root = self._tmp_manifest_root(tmp, mutate=mutate)
             errors = []
             g.check_manifest(errors, root=root)
             self.assertTrue(any("critical" in e for e in errors), errors)
 
     def test_delta_cli_cross_root_isolation(self):
-        import tempfile, json, subprocess, hashlib
+        import hashlib
+        import json
+        import subprocess
+        import tempfile
+
         with tempfile.TemporaryDirectory() as tmp:
             bench = Path(tmp) / "bench"
             vend = bench / "apps" / "frappe" / "frappe" / "locale"
             vend.mkdir(parents=True)
-            (vend / "ar.po").write_text('msgid ""\nmsgstr ""\n\nmsgid "ISOLATED"\nmsgstr "i"\n', encoding="utf-8")
+            (vend / "ar.po").write_text(
+                'msgid ""\nmsgstr ""\n\nmsgid "ISOLATED"\nmsgstr "i"\n', encoding="utf-8"
+            )
             subprocess.run(["git", "init", "-q"], cwd=bench / "apps" / "frappe", check=True)
             subprocess.run(["git", "-C", str(bench / "apps" / "frappe"), "add", "."], check=True)
-            subprocess.run(["git", "-C", str(bench / "apps" / "frappe"), "-c", "user.email=t@t",
-                            "-c", "user.name=t", "commit", "-qm", "iso"], check=True)
-            sha = subprocess.run(["git", "-C", str(bench / "apps" / "frappe"), "rev-parse", "HEAD"],
-                                 capture_output=True, text=True, check=True).stdout.strip()
+            subprocess.run(
+                [
+                    "git",
+                    "-C",
+                    str(bench / "apps" / "frappe"),
+                    "-c",
+                    "user.email=t@t",
+                    "-c",
+                    "user.name=t",
+                    "commit",
+                    "-qm",
+                    "iso",
+                ],
+                check=True,
+            )
+            sha = subprocess.run(
+                ["git", "-C", str(bench / "apps" / "frappe"), "rev-parse", "HEAD"],
+                capture_output=True,
+                text=True,
+                check=True,
+            ).stdout.strip()
             root = bench / "apps" / "construction"
             sys.path.insert(0, "scripts")
-            from vendor_upgrade_delta import main as delta_main
-            import io, contextlib
+            import contextlib
             import hashlib as _hl
-            before = {f: _hl.sha256((g.ROOT / f).read_bytes()).hexdigest() for f in
-                      ("construction/data/localization/vendor_catalog_baseline.json",
-                       "construction/data/localization/localization_manifest.json")}
+            import io
+
+            from vendor_upgrade_delta import main as delta_main
+
+            before = {
+                f: _hl.sha256((g.ROOT / f).read_bytes()).hexdigest()
+                for f in (
+                    "construction/data/localization/vendor_catalog_baseline.json",
+                    "construction/data/localization/localization_manifest.json",
+                )
+            }
             buf = io.StringIO()
             with contextlib.redirect_stdout(buf):
-                code = delta_main(["delta", "--app", "frappe", "--old", sha, "--new", sha,
-                                   f"--root={root}"])
+                code = delta_main(["delta", "--app", "frappe", "--old", sha, "--new", sha, f"--root={root}"])
             self.assertEqual(code, 0)
             after = {f: _hl.sha256((g.ROOT / f).read_bytes()).hexdigest() for f in before}
             self.assertEqual(before, after)
@@ -907,7 +1087,11 @@ class TestRound4Gates(unittest.TestCase):
             self.assertIn('"added": 0', out)
 
     def test_delta_cli_distinct_commits_and_write_location(self):
-        import tempfile, json, subprocess, hashlib
+        import hashlib
+        import json
+        import subprocess
+        import tempfile
+
         with tempfile.TemporaryDirectory() as tmp:
             bench = Path(tmp) / "bench"
             vend = bench / "apps" / "frappe" / "frappe" / "locale"
@@ -916,27 +1100,65 @@ class TestRound4Gates(unittest.TestCase):
             (vend / "ar.po").write_text(v1, encoding="utf-8")
             subprocess.run(["git", "init", "-q"], cwd=bench / "apps" / "frappe", check=True)
             subprocess.run(["git", "-C", str(bench / "apps" / "frappe"), "add", "."], check=True)
-            subprocess.run(["git", "-C", str(bench / "apps" / "frappe"), "-c", "user.email=t@t",
-                            "-c", "user.name=t", "commit", "-qm", "one"], check=True)
-            sha1 = subprocess.run(["git", "-C", str(bench / "apps" / "frappe"), "rev-parse", "HEAD"],
-                                  capture_output=True, text=True, check=True).stdout.strip()
+            subprocess.run(
+                [
+                    "git",
+                    "-C",
+                    str(bench / "apps" / "frappe"),
+                    "-c",
+                    "user.email=t@t",
+                    "-c",
+                    "user.name=t",
+                    "commit",
+                    "-qm",
+                    "one",
+                ],
+                check=True,
+            )
+            sha1 = subprocess.run(
+                ["git", "-C", str(bench / "apps" / "frappe"), "rev-parse", "HEAD"],
+                capture_output=True,
+                text=True,
+                check=True,
+            ).stdout.strip()
             v2 = 'msgid ""\nmsgstr ""\n\nmsgid "TWO"\nmsgstr "2"\n'
             (vend / "ar.po").write_text(v2, encoding="utf-8")
             subprocess.run(["git", "-C", str(bench / "apps" / "frappe"), "add", "."], check=True)
-            subprocess.run(["git", "-C", str(bench / "apps" / "frappe"), "-c", "user.email=t@t",
-                            "-c", "user.name=t", "commit", "-qm", "two"], check=True)
-            sha2 = subprocess.run(["git", "-C", str(bench / "apps" / "frappe"), "rev-parse", "HEAD"],
-                                  capture_output=True, text=True, check=True).stdout.strip()
+            subprocess.run(
+                [
+                    "git",
+                    "-C",
+                    str(bench / "apps" / "frappe"),
+                    "-c",
+                    "user.email=t@t",
+                    "-c",
+                    "user.name=t",
+                    "commit",
+                    "-qm",
+                    "two",
+                ],
+                check=True,
+            )
+            sha2 = subprocess.run(
+                ["git", "-C", str(bench / "apps" / "frappe"), "rev-parse", "HEAD"],
+                capture_output=True,
+                text=True,
+                check=True,
+            ).stdout.strip()
             self.assertNotEqual(sha1, sha2)
             root = bench / "apps" / "construction"
             (root / "construction" / "data" / "localization").mkdir(parents=True)
             sys.path.insert(0, "scripts")
+            import contextlib
+            import io
+
             from vendor_upgrade_delta import main as delta_main
-            import io, contextlib
+
             buf = io.StringIO()
             with contextlib.redirect_stdout(buf):
-                code = delta_main(["delta", "--app", "frappe", "--old", sha1, "--new", sha2,
-                                   f"--root={root}", "--write"])
+                code = delta_main(
+                    ["delta", "--app", "frappe", "--old", sha1, "--new", sha2, f"--root={root}", "--write"]
+                )
             self.assertEqual(code, 0)
             written = list((root / "construction" / "data" / "localization").glob("vendor_delta_*.json"))
             self.assertEqual(len(written), 1)
@@ -954,11 +1176,12 @@ class TestRound4Gates(unittest.TestCase):
 
     def _evidence_fixture_root(self, tmp, mutate=None, bodies_param=None):
         import datetime as _dt
+
         now = _dt.datetime.now(_dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
         import hashlib as _hl
+
         cmds = dict(g.EXPECTED_COMMANDS)
-        mods = "\n".join(
-            f"{m} :: Ran {n} tests in 0.1s OK" for m, n in g.EXPECTED_MODULES)
+        mods = "\n".join(f"{m} :: Ran {n} tests in 0.1s OK" for m, n in g.EXPECTED_MODULES)
         total = sum(n for _, n in g.EXPECTED_MODULES)
         results = {
             "all-tests.txt": None,  # filled below with real SHAs
@@ -969,6 +1192,7 @@ class TestRound4Gates(unittest.TestCase):
         }
         root = Path(tmp) / "bench" / "apps" / "construction"
         import shutil
+
         for rel in tuple(g.ARTIFACT_PATHS.values()):
             dstf = root / rel
             if rel.startswith("../"):
@@ -986,43 +1210,62 @@ class TestRound4Gates(unittest.TestCase):
         names = tuple(cmds)
         bodies_param = bodies_param or {}
         import json as _json
-        _inv = _json.loads((root / "construction/data/localization/stage2_inventory_manifest.json").read_text(encoding="utf-8"))
+
+        _inv = _json.loads(
+            (root / "construction/data/localization/stage2_inventory_manifest.json").read_text(
+                encoding="utf-8"
+            )
+        )
         _mroot = (_inv.get("merkle") or {}).get("root")
         _mrows = (_inv.get("merkle") or {}).get("rows")
-        _msha = __import__("hashlib").sha256((root / "construction/data/localization/stage2_inventory_manifest.json").read_bytes()).hexdigest()
-        _lsha = __import__("hashlib").sha256((root / "construction/data/localization/localization_manifest.json").read_bytes()).hexdigest()
+        _msha = (
+            __import__("hashlib")
+            .sha256((root / "construction/data/localization/stage2_inventory_manifest.json").read_bytes())
+            .hexdigest()
+        )
+        _lsha = (
+            __import__("hashlib")
+            .sha256((root / "construction/data/localization/localization_manifest.json").read_bytes())
+            .hexdigest()
+        )
         _ssha = __import__("hashlib").sha256((root / "scripts/stage2_inventory.sql").read_bytes()).hexdigest()
-        results["merkle.txt"] = ("MANIFEST: construction/data/localization/stage2_inventory_manifest.json\n"
-                                 f"MANIFEST_SHA256: {_lsha}\nINVENTORY_MANIFEST_SHA256: {_msha}\nMERKLE_ROOT: {_mroot}\nMERKLE_ROWS: {_mrows}\n"
-                                 f"SQL_SHA256: {_ssha}")
+        results["merkle.txt"] = (
+            "MANIFEST: construction/data/localization/stage2_inventory_manifest.json\n"
+            f"MANIFEST_SHA256: {_lsha}\nINVENTORY_MANIFEST_SHA256: {_msha}\nMERKLE_ROOT: {_mroot}\nMERKLE_ROWS: {_mrows}\n"
+            f"SQL_SHA256: {_ssha}"
+        )
         _art = {}
-        for mark, rel in (("PO_SHA256", "construction/locale/ar.po"),
-                          ("CSV_SHA256", "construction/data/translations/approved_ar_overrides.csv"),
-                          ("CHECKER_SHA256", "scripts/check_localization_gates.py"),
-                          ("TESTS_SHA256", "construction/tests/test_localization_gates.py")):
+        for mark, rel in (
+            ("PO_SHA256", "construction/locale/ar.po"),
+            ("CSV_SHA256", "construction/data/translations/approved_ar_overrides.csv"),
+            ("CHECKER_SHA256", "scripts/check_localization_gates.py"),
+            ("TESTS_SHA256", "construction/tests/test_localization_gates.py"),
+        ):
             _art[mark] = _hl.sha256((root / rel).read_bytes()).hexdigest()
-        results["all-tests.txt"] = (
-            mods + f"\nAGGREGATE total={total} failed=0")
-        results["final-dryrun.txt"] = (
-            "In [1]: DRY total=34 created=0 updated=0 skipped=34 drift=0")
+        results["all-tests.txt"] = mods + f"\nAGGREGATE total={total} failed=0"
+        results["final-dryrun.txt"] = "In [1]: DRY total=34 created=0 updated=0 skipped=34 drift=0"
         results["full-gate.txt"] = (
-            'checked={"construction/locale/ar.po": %d, "files": %d, '
-            '"wrapped": %d, "json_labels": %d, "missing": 0} errors=0'
-            % (g.EXPECTED_GATE["catalog"], g.EXPECTED_GATE["files"],
-               g.EXPECTED_GATE["wrapped"], g.EXPECTED_GATE["json_labels"]))
+            f'checked={{"construction/locale/ar.po": {g.EXPECTED_GATE["catalog"]}, '
+            f'"files": {g.EXPECTED_GATE["files"]}, "wrapped": {g.EXPECTED_GATE["wrapped"]}, '
+            f'"json_labels": {g.EXPECTED_GATE["json_labels"]}, "missing": 0}} errors=0'
+        )
         results["sync.txt"] = "In [2]: SYNC:{'created': 0, 'updated': 0}"
-        _fresh_json = ('{"critical_pass": true, "runtime_digest": "' + "ef" * 32 + '", '
-                         '"collected_utc": "2026-01-01T00:00:01Z"}')
+        _fresh_json = (
+            '{"critical_pass": true, "runtime_digest": "' + "ef" * 32 + '", '
+            '"collected_utc": "2026-01-01T00:00:01Z"}'
+        )
         results["freshness-envelope.txt"] = (
             "ARTIFACT: construction/data/localization/freshness_evidence.json\n"
             f"ARTIFACT_SHA256: {_art['PO_SHA256']}\n"
-            "--- JSON START ---\n" + _fresh_json + "\n--- JSON END ---")
+            "--- JSON START ---\n" + _fresh_json + "\n--- JSON END ---"
+        )
         results["gate-tests-standalone.txt"] = (
-            "Ran %d tests in 0.1s\nOK"
-            % dict(g.EXPECTED_MODULES)["construction.tests.test_localization_gates"])
+            f"Ran {dict(g.EXPECTED_MODULES)['construction.tests.test_localization_gates']} tests in 0.1s\nOK"
+        )
         results["lints-diffcheck.txt"] = (
             "PASS: no scope-dimension field has in_standard_filter=1\n"
-            "Translation write lint PASSED\nDIFFCHECK_CLEAN")
+            "Translation write lint PASSED\nDIFFCHECK_CLEAN"
+        )
         results["scoped-gate.txt"] = "checked={} errors=0"
         results["vendor-audit.txt"] = "errors=0"
         extra_markers = {
@@ -1057,21 +1300,29 @@ class TestRound4Gates(unittest.TestCase):
                 body = body + f"ENVELOPE_LINES: {nlines}\n"
             (dst / name).write_text(body, encoding="utf-8")
         import subprocess as _sp
+
         _sp.run(["git", "init", "-q"], cwd=root, check=True)
         _sp.run(["git", "-C", str(root), "add", "."], check=True)
-        _sp.run(["git", "-C", str(root), "-c", "user.email=t@t",
-                 "-c", "user.name=t", "commit", "-qm", "ev"], check=True)
-        _head = _sp.run(["git", "-C", str(root), "rev-parse", "HEAD"],
-                        capture_output=True, text=True, check=True).stdout.strip()
+        _sp.run(
+            ["git", "-C", str(root), "-c", "user.email=t@t", "-c", "user.name=t", "commit", "-qm", "ev"],
+            check=True,
+        )
+        _head = _sp.run(
+            ["git", "-C", str(root), "rev-parse", "HEAD"], capture_output=True, text=True, check=True
+        ).stdout.strip()
         (dst / "index.txt").write_text(
             "INDEX_VERSION: 1\n"
             f"COMMAND: index\nSTARTED_UTC: {now}\n"
             + "\n".join(f"{_hl.sha256((dst / n).read_bytes()).hexdigest()}  {n}" for n in names)
             + f"\nEXIT_CODE: 0\nFINISHED_UTC: {now}\nCANDIDATE_HEAD: {_head}\n"
             + f"CANDIDATE_ROOT: {root.resolve()}\nARTIFACTS:\n"
-            + "\n".join(f"{mark}: {_hl.sha256(((root / rel) if not rel.startswith('../') else root.parent / rel[3:]).read_bytes()).hexdigest()}" for mark, rel in g.ARTIFACT_PATHS.items())
+            + "\n".join(
+                f"{mark}: {_hl.sha256(((root / rel) if not rel.startswith('../') else root.parent / rel[3:]).read_bytes()).hexdigest()}"
+                for mark, rel in g.ARTIFACT_PATHS.items()
+            )
             + "\n",
-            encoding="utf-8")
+            encoding="utf-8",
+        )
         _idx = (dst / "index.txt").read_text(encoding="utf-8")
         _nidx = len([l for l in _idx.splitlines() if l.strip()]) + 1
         (dst / "index.txt").write_text(_idx + f"ENVELOPE_LINES: {_nidx}\n", encoding="utf-8")
@@ -1081,11 +1332,14 @@ class TestRound4Gates(unittest.TestCase):
 
     def test_evidence_truncated_rejected(self):
         import tempfile
+
         with tempfile.TemporaryDirectory() as tmp:
+
             def mutate(dst):
                 p = dst / "merkle.txt"
                 t = p.read_text(encoding="utf-8")
-                p.write_text(t[:t.find("MANIFEST_SHA256:")], encoding="utf-8")
+                p.write_text(t[: t.find("MANIFEST_SHA256:")], encoding="utf-8")
+
             root = self._evidence_fixture_root(tmp, mutate=mutate)
             errors = []
             g.check_evidence_index(errors, root=root)
@@ -1093,11 +1347,14 @@ class TestRound4Gates(unittest.TestCase):
 
     def test_evidence_nonzero_exit_rejected(self):
         import tempfile
+
         with tempfile.TemporaryDirectory() as tmp:
+
             def mutate(dst):
                 p = dst / "sync.txt"
                 t = p.read_text(encoding="utf-8").replace("EXIT_CODE: 0", "EXIT_CODE: 1")
                 p.write_text(t, encoding="utf-8")
+
             root = self._evidence_fixture_root(tmp, mutate=mutate)
             errors = []
             g.check_evidence_index(errors, root=root)
@@ -1105,17 +1362,24 @@ class TestRound4Gates(unittest.TestCase):
 
     def test_evidence_missing_extra_duplicate_rejected(self):
         import tempfile
+
         with tempfile.TemporaryDirectory() as tmp:
             root = self._evidence_fixture_root(tmp)
-            (root / "docs/ai/work-items/erp-arabic-bilingual-data/evidence/raw-logs/stage2" / "sync.txt").unlink()
-            (root / "docs/ai/work-items/erp-arabic-bilingual-data/evidence/raw-logs/stage2" / "extra.txt").write_text("x", encoding="utf-8")
+            (
+                root / "docs/ai/work-items/erp-arabic-bilingual-data/evidence/raw-logs/stage2" / "sync.txt"
+            ).unlink()
+            (
+                root / "docs/ai/work-items/erp-arabic-bilingual-data/evidence/raw-logs/stage2" / "extra.txt"
+            ).write_text("x", encoding="utf-8")
             errors = []
             g.check_evidence_index(errors, root=root)
             self.assertTrue(any("missing" in e for e in errors), errors)
             self.assertTrue(any("expected" in e or "found" in e for e in errors), errors)
 
     def test_evidence_duplicate_content_rejected(self):
-        import tempfile, shutil
+        import shutil
+        import tempfile
+
         with tempfile.TemporaryDirectory() as tmp:
             root = self._evidence_fixture_root(tmp)
             d = root / "docs/ai/work-items/erp-arabic-bilingual-data/evidence/raw-logs/stage2"
@@ -1125,7 +1389,10 @@ class TestRound4Gates(unittest.TestCase):
             self.assertTrue(any("vendor-audit.txt" in e for e in errors), errors)
 
     def test_evidence_duplicate_hash_rejected(self):
-        import tempfile, shutil, hashlib
+        import hashlib
+        import shutil
+        import tempfile
+
         with tempfile.TemporaryDirectory() as tmp:
             root = self._evidence_fixture_root(tmp)
             d = root / "docs/ai/work-items/erp-arabic-bilingual-data/evidence/raw-logs/stage2"
@@ -1146,11 +1413,14 @@ class TestRound4Gates(unittest.TestCase):
 
     def test_evidence_bad_utc_order_rejected(self):
         import tempfile
+
         with tempfile.TemporaryDirectory() as tmp:
+
             def mutate(dst):
                 p = dst / "sync.txt"
                 t = p.read_text(encoding="utf-8").replace("STARTED_UTC:", "STARTED_UTC_X:")
                 p.write_text(t, encoding="utf-8")
+
             root = self._evidence_fixture_root(tmp, mutate=mutate)
             errors = []
             g.check_evidence_index(errors, root=root)
@@ -1158,13 +1428,17 @@ class TestRound4Gates(unittest.TestCase):
 
     def test_evidence_aggregate_arithmetic_rejected(self):
         import tempfile
+
         with tempfile.TemporaryDirectory() as tmp:
             tot = sum(n for _, n in g.EXPECTED_MODULES)
+
             def mutate(dst):
                 p = dst / "all-tests.txt"
                 t = p.read_text(encoding="utf-8").replace(
-                    f"AGGREGATE total={tot} failed=0", f"AGGREGATE total={tot - 1} failed=0")
+                    f"AGGREGATE total={tot} failed=0", f"AGGREGATE total={tot - 1} failed=0"
+                )
                 p.write_text(t, encoding="utf-8")
+
             root = self._evidence_fixture_root(tmp, mutate=mutate)
             errors = []
             g.check_evidence_index(errors, root=root)
@@ -1172,6 +1446,7 @@ class TestRound4Gates(unittest.TestCase):
 
     def test_evidence_traversal_rejected(self):
         import tempfile
+
         with tempfile.TemporaryDirectory() as tmp:
             root = self._evidence_fixture_root(tmp)
             idx = root / "docs/ai/work-items/erp-arabic-bilingual-data/evidence/raw-logs/stage2" / "index.txt"
@@ -1179,19 +1454,28 @@ class TestRound4Gates(unittest.TestCase):
                 fh.write("ab" * 32 + " ../../evil.txt\n")
             errors = []
             g.check_evidence_index(errors, root=root)
-            self.assertTrue(any("traversal" in e or "index-path" in e or "grammar" in e or "expected" in e for e in errors), errors)
+            self.assertTrue(
+                any(
+                    "traversal" in e or "index-path" in e or "grammar" in e or "expected" in e for e in errors
+                ),
+                errors,
+            )
 
     def test_evidence_coherent_totals_forgery_rejected(self):
         import tempfile
+
         with tempfile.TemporaryDirectory() as tmp:
             tot = sum(n for _, n in g.EXPECTED_MODULES)
             last = g.EXPECTED_MODULES[-1][1]
+
             def mutate(dst):
                 p = dst / "all-tests.txt"
                 t = p.read_text(encoding="utf-8")
                 t = t.replace(f"Ran {last} tests", "Ran 999 tests").replace(
-                    f"AGGREGATE total={tot} failed=0", "AGGREGATE total=1034 failed=0")
+                    f"AGGREGATE total={tot} failed=0", "AGGREGATE total=1034 failed=0"
+                )
                 p.write_text(t, encoding="utf-8")
+
             root = self._evidence_fixture_root(tmp, mutate=mutate)
             errors = []
             g.check_evidence_index(errors, root=root)
@@ -1199,11 +1483,14 @@ class TestRound4Gates(unittest.TestCase):
 
     def test_evidence_hidden_failure_rejected(self):
         import tempfile
+
         with tempfile.TemporaryDirectory() as tmp:
+
             def mutate(dst):
                 p = dst / "sync.txt"
                 with p.open("a", encoding="utf-8") as fh:
                     fh.write("FAIL forged\n")
+
             root = self._evidence_fixture_root(tmp, mutate=mutate)
             errors = []
             g.check_evidence_index(errors, root=root)
@@ -1211,13 +1498,17 @@ class TestRound4Gates(unittest.TestCase):
 
     def test_evidence_arbitrary_command_rejected(self):
         import tempfile
+
         with tempfile.TemporaryDirectory() as tmp:
+
             def mutate(dst):
                 p = dst / "sync.txt"
                 t = p.read_text(encoding="utf-8").replace(
                     "COMMAND: bench --site v16.localhost console sync_translation_catalog(dry_run=False)",
-                    "COMMAND: echo forged")
+                    "COMMAND: echo forged",
+                )
                 p.write_text(t, encoding="utf-8")
+
             root = self._evidence_fixture_root(tmp, mutate=mutate)
             errors = []
             g.check_evidence_index(errors, root=root)
@@ -1225,6 +1516,7 @@ class TestRound4Gates(unittest.TestCase):
 
     def test_evidence_junk_index_line_rejected(self):
         import tempfile
+
         with tempfile.TemporaryDirectory() as tmp:
             root = self._evidence_fixture_root(tmp)
             idx = root / "docs/ai/work-items/erp-arabic-bilingual-data/evidence/raw-logs/stage2" / "index.txt"
@@ -1236,11 +1528,14 @@ class TestRound4Gates(unittest.TestCase):
 
     def test_evidence_length_marker_rejected(self):
         import tempfile
+
         with tempfile.TemporaryDirectory() as tmp:
+
             def mutate(dst):
                 p = dst / "sync.txt"
                 t = p.read_text(encoding="utf-8").replace("ENVELOPE_LINES:", "ENVELOPE_LINES_X:")
                 p.write_text(t, encoding="utf-8")
+
             root = self._evidence_fixture_root(tmp, mutate=mutate)
             errors = []
             g.check_evidence_index(errors, root=root)
@@ -1248,13 +1543,13 @@ class TestRound4Gates(unittest.TestCase):
 
     def test_evidence_duplicate_index_row_rejected(self):
         import tempfile
+
         with tempfile.TemporaryDirectory() as tmp:
             root = self._evidence_fixture_root(tmp)
             idx = root / "docs/ai/work-items/erp-arabic-bilingual-data/evidence/raw-logs/stage2" / "index.txt"
             with idx.open("a", encoding="utf-8") as fh:
                 with idx.open(encoding="utf-8") as src:
-                    rows = [l for l in src.readlines()
-                            if __import__("re").match(r"^[0-9a-f]{64}\s+", l)]
+                    rows = [l for l in src.readlines() if __import__("re").match(r"^[0-9a-f]{64}\s+", l)]
                 fh.write(rows[0])
             errors = []
             g.check_evidence_index(errors, root=root)
@@ -1263,12 +1558,15 @@ class TestRound4Gates(unittest.TestCase):
     def test_evidence_index_false_length_rejected(self):
         import re as _re
         import tempfile
+
         with tempfile.TemporaryDirectory() as tmp:
+
             def mutate(dst):
                 p = dst / "index.txt"
                 t = p.read_text(encoding="utf-8")
                 m = _re.search(r"ENVELOPE_LINES: \d+", t)
-                p.write_text(t[:m.start()] + "ENVELOPE_LINES: 999" + t[m.end():], encoding="utf-8")
+                p.write_text(t[: m.start()] + "ENVELOPE_LINES: 999" + t[m.end() :], encoding="utf-8")
+
             root = self._evidence_fixture_root(tmp, mutate=mutate)
             errors = []
             g.check_evidence_index(errors, root=root)
@@ -1277,13 +1575,15 @@ class TestRound4Gates(unittest.TestCase):
     def test_evidence_index_artifact_value_forged_rejected(self):
         import re as _re
         import tempfile
+
         with tempfile.TemporaryDirectory() as tmp:
+
             def mutate(dst):
                 p = dst / "index.txt"
                 t = p.read_text(encoding="utf-8")
-                t = _re.sub(r"CHECKER_SHA256: [0-9a-f]{64}",
-                            "CHECKER_SHA256: " + "0" * 64, t, count=1)
+                t = _re.sub(r"CHECKER_SHA256: [0-9a-f]{64}", "CHECKER_SHA256: " + "0" * 64, t, count=1)
                 p.write_text(t, encoding="utf-8")
+
             root = self._evidence_fixture_root(tmp, mutate=mutate)
             errors = []
             g.check_evidence_index(errors, root=root)
@@ -1291,10 +1591,13 @@ class TestRound4Gates(unittest.TestCase):
 
     def test_evidence_valid_set_passes(self):
         import tempfile
+
         with tempfile.TemporaryDirectory() as tmp:
             root = self._evidence_fixture_root(tmp)
             errors = []
             g.check_evidence_index(errors, root=root)
             self.assertEqual(errors, [])
+
+
 if __name__ == "__main__":
     unittest.main()

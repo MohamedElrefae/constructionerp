@@ -280,9 +280,7 @@ class _BulkRateLookup:
             candidates.append(row)
 
         # Sort by source priority, then price_date desc, modified desc.
-        candidates.sort(
-            key=lambda r: (source_doctype_order.get(r.get("source_doctype"), 3), -_row_ts(r))
-        )
+        candidates.sort(key=lambda r: (source_doctype_order.get(r.get("source_doctype"), 3), -_row_ts(r)))
         for row in candidates:
             rate = flt(row.get("rate"))
             if rate and rate > 0:
@@ -394,7 +392,14 @@ COLUMN_ALIASES = {
     "rate_source": ["rate_source", "مصدر السعر"],
 }
 
-REQUIRED_RESOURCE_COLUMNS = {"resource_code", "name_en", "resource_type", "cost_stream", "uom", "unit_price_egp"}
+REQUIRED_RESOURCE_COLUMNS = {
+    "resource_code",
+    "name_en",
+    "resource_type",
+    "cost_stream",
+    "uom",
+    "unit_price_egp",
+}
 REQUIRED_TEMPLATE_COLUMNS = {"template_name", "description_en", "uom", "overhead_pct", "profit_pct"}
 REQUIRED_RATE_COLUMNS = {"template_name", "resource_code", "qty_per_boq_unit", "cost_stream", "cost_rate"}
 
@@ -479,8 +484,12 @@ def import_cost_database_from_excel(
         return _build_result(False, dry_run, records_created, errors, warnings)
 
     resources_sheet = _find_sheet(wb, ["Resources", "resources", "موارد"])
-    templates_sheet = _find_sheet(wb, ["BOQItemTemplates", "boqitemtemplates", "Templates", "templates", "بنود"])
-    rate_sheet = _find_sheet(wb, ["RateAnalysis", "rateanalysis", "Rate Analysis", "rate analysis", "تحليل الأسعار"])
+    templates_sheet = _find_sheet(
+        wb, ["BOQItemTemplates", "boqitemtemplates", "Templates", "templates", "بنود"]
+    )
+    rate_sheet = _find_sheet(
+        wb, ["RateAnalysis", "rateanalysis", "Rate Analysis", "rate analysis", "تحليل الأسعار"]
+    )
 
     if not resources_sheet:
         errors.append("Resources sheet not found")
@@ -558,7 +567,9 @@ def import_cost_database_from_excel(
         template_name = _clean_string(row.get("template_name"))
         resource_code = _clean_string(row.get("resource_code"))
         if template_name and template_name not in template_names:
-            errors.append(f"RateAnalysis row {idx}: template_name '{template_name}' not found in BOQItemTemplates")
+            errors.append(
+                f"RateAnalysis row {idx}: template_name '{template_name}' not found in BOQItemTemplates"
+            )
         if resource_code and resource_code not in resource_code_to_name:
             errors.append(f"RateAnalysis row {idx}: resource_code '{resource_code}' not found in Resources")
 
@@ -613,18 +624,20 @@ def import_cost_database_from_excel(
         # Create or update Item
         if not frappe.db.exists("Item", resource_code):
             try:
-                item_doc = frappe.get_doc({
-                    "doctype": "Item",
-                    "item_code": resource_code,
-                    "item_name": name_en,
-                    "item_name_ar": name_ar,
-                    "item_group": "All Item Groups",
-                    "stock_uom": uom,
-                    "is_stock_item": 0,
-                    "is_construction_resource": 1,
-                    "construction_resource_type": resource_type,
-                    "default_cost_stream": cost_stream,
-                })
+                item_doc = frappe.get_doc(
+                    {
+                        "doctype": "Item",
+                        "item_code": resource_code,
+                        "item_name": name_en,
+                        "item_name_ar": name_ar,
+                        "item_group": "All Item Groups",
+                        "stock_uom": uom,
+                        "is_stock_item": 0,
+                        "is_construction_resource": 1,
+                        "construction_resource_type": resource_type,
+                        "default_cost_stream": cost_stream,
+                    }
+                )
                 item_doc.insert(ignore_permissions=True)
                 records_created["items"].append(resource_code)
             except Exception as e:
@@ -673,23 +686,25 @@ def import_cost_database_from_excel(
             if existing:
                 records_skipped["resource_price_history"].append(existing)
             else:
-                history = frappe.get_doc({
-                    "doctype": "Resource Price History",
-                    "item_code": resource_code,
-                    "resource_type": resource_type,
-                    "rate": unit_price,
-                    "currency": currency,
-                    "exchange_rate": exchange_rate,
-                    "uom": uom,
-                    "price_date": row_price_date,
-                    "company": company,
-                    "region": row_region,
-                    "supplier": supplier,
-                    "source_doctype": "Import",
-                    "source_name": source_name,
-                    "status": "Active",
-                    "remarks": remarks,
-                })
+                history = frappe.get_doc(
+                    {
+                        "doctype": "Resource Price History",
+                        "item_code": resource_code,
+                        "resource_type": resource_type,
+                        "rate": unit_price,
+                        "currency": currency,
+                        "exchange_rate": exchange_rate,
+                        "uom": uom,
+                        "price_date": row_price_date,
+                        "company": company,
+                        "region": row_region,
+                        "supplier": supplier,
+                        "source_doctype": "Import",
+                        "source_name": source_name,
+                        "status": "Active",
+                        "remarks": remarks,
+                    }
+                )
                 history.insert(ignore_permissions=True)
                 records_created["resource_price_history"].append(history.name)
         except Exception as e:
@@ -716,15 +731,17 @@ def import_cost_database_from_excel(
             resource_code = _clean_string(rate_row.get("resource_code"))
             if not resource_code:
                 continue
-            details.append({
-                "cost_stream": _clean_string(rate_row.get("cost_stream")),
-                "item_code": resource_code,
-                "resource_uom": frappe.db.get_value("Item", resource_code, "stock_uom") or "Nos",
-                "qty_per_boq_unit": flt(rate_row.get("qty_per_boq_unit")),
-                "wastage_pct": flt(rate_row.get("wastage_pct", 0)),
-                "cost_rate": flt(rate_row.get("cost_rate")),
-                "rate_source": _clean_string(rate_row.get("rate_source")) or "Resource Price History",
-            })
+            details.append(
+                {
+                    "cost_stream": _clean_string(rate_row.get("cost_stream")),
+                    "item_code": resource_code,
+                    "resource_uom": frappe.db.get_value("Item", resource_code, "stock_uom") or "Nos",
+                    "qty_per_boq_unit": flt(rate_row.get("qty_per_boq_unit")),
+                    "wastage_pct": flt(rate_row.get("wastage_pct", 0)),
+                    "cost_rate": flt(rate_row.get("cost_rate")),
+                    "rate_source": _clean_string(rate_row.get("rate_source")) or "Resource Price History",
+                }
+            )
 
         try:
             existing_template = frappe.db.get_value(
@@ -760,22 +777,24 @@ def import_cost_database_from_excel(
                 records_updated["boq_cost_analysis_templates"].append(existing_template)
                 continue
 
-            analysis = frappe.get_doc({
-                "doctype": "BOQ Cost Analysis",
-                "title": description_en or template_name,
-                "is_template": 1,
-                "template_name": template_name,
-                "description_ar": description_ar,
-                "category": _clean_string(row.get("category")),
-                "analysis_uom": uom,
-                "analysis_qty": 1,
-                "currency": currency,
-                "company": company,
-                "overhead_pct": overhead_pct,
-                "profit_pct": profit_pct,
-                "analysis_status": "Draft",
-                "details": details,
-            })
+            analysis = frappe.get_doc(
+                {
+                    "doctype": "BOQ Cost Analysis",
+                    "title": description_en or template_name,
+                    "is_template": 1,
+                    "template_name": template_name,
+                    "description_ar": description_ar,
+                    "category": _clean_string(row.get("category")),
+                    "analysis_uom": uom,
+                    "analysis_qty": 1,
+                    "currency": currency,
+                    "company": company,
+                    "overhead_pct": overhead_pct,
+                    "profit_pct": profit_pct,
+                    "analysis_status": "Draft",
+                    "details": details,
+                }
+            )
             analysis.insert(ignore_permissions=True)
 
             if auto_submit:
@@ -791,7 +810,9 @@ def import_cost_database_from_excel(
     return _build_result(
         success=len(errors) == 0,
         dry_run=dry_run,
-        records_created=records_created if not errors else {"items": [], "resource_price_history": [], "boq_cost_analysis_templates": []},
+        records_created=records_created
+        if not errors
+        else {"items": [], "resource_price_history": [], "boq_cost_analysis_templates": []},
         errors=errors,
         warnings=warnings,
         records_updated=records_updated,
@@ -958,9 +979,13 @@ def _add_resource_validation(ws):
         elif header.value == "cost_stream":
             cost_stream_col = idx
     if resource_type_col:
-        resource_type_dv.add(f"{get_column_letter(resource_type_col)}2:{get_column_letter(resource_type_col)}1048576")
+        resource_type_dv.add(
+            f"{get_column_letter(resource_type_col)}2:{get_column_letter(resource_type_col)}1048576"
+        )
     if cost_stream_col:
-        cost_stream_dv.add(f"{get_column_letter(cost_stream_col)}2:{get_column_letter(cost_stream_col)}1048576")
+        cost_stream_dv.add(
+            f"{get_column_letter(cost_stream_col)}2:{get_column_letter(cost_stream_col)}1048576"
+        )
 
 
 def _add_rate_validation(ws):
@@ -997,20 +1022,136 @@ def _add_rate_validation(ws):
         elif header.value == "rate_source":
             rate_source_col = idx
     if cost_stream_col:
-        cost_stream_dv.add(f"{get_column_letter(cost_stream_col)}2:{get_column_letter(cost_stream_col)}1048576")
+        cost_stream_dv.add(
+            f"{get_column_letter(cost_stream_col)}2:{get_column_letter(cost_stream_col)}1048576"
+        )
     if rate_source_col:
-        rate_source_dv.add(f"{get_column_letter(rate_source_col)}2:{get_column_letter(rate_source_col)}1048576")
+        rate_source_dv.add(
+            f"{get_column_letter(rate_source_col)}2:{get_column_letter(rate_source_col)}1048576"
+        )
 
 
 def _add_sample_resources(ws):
     sample = [
-        ["MAT-CEM-001", "Portland Cement", "أسمنت بورتلاندي", "Material", "M", "Ton", 3500, "EGP", 1.0, "_Test Estimation Company", "Cairo", "2026-06-01", "Ministry of Housing June 2026", "", "Illustrative price"],
-        ["MAT-SAND-001", "Clean Sand", "رمل نظيف", "Material", "M", "m³", 400, "EGP", 1.0, "_Test Estimation Company", "Cairo", "2026-06-01", "Ministry of Housing June 2026", "", "Illustrative price"],
-        ["MAT-AGG-001", "Gravel / Aggregate", "زلط / سن", "Material", "M", "m³", 500, "EGP", 1.0, "_Test Estimation Company", "Cairo", "2026-06-01", "Ministry of Housing June 2026", "", "Illustrative price"],
-        ["MAT-STEEL-001", "Reinforcement Steel", "حديد تسليح", "Material", "M", "Ton", 45000, "EGP", 1.0, "_Test Estimation Company", "Cairo", "2026-06-01", "Ezz Steel June 2026", "", "Illustrative price"],
-        ["LAB-MASON-001", "Mason", "عامل بناء / مبيض", "Labor", "L", "Day", 250, "EGP", 1.0, "_Test Estimation Company", "Cairo", "2026-06-01", "Market survey June 2026", "", "Illustrative price"],
-        ["LAB-HELP-001", "Helper", "مساعد عام", "Labor", "L", "Day", 150, "EGP", 1.0, "_Test Estimation Company", "Cairo", "2026-06-01", "Market survey June 2026", "", "Illustrative price"],
-        ["PLT-MIXER-001", "Concrete Mixer", "خلاطة خرسانة", "Plant", "P", "Hour", 80, "EGP", 1.0, "_Test Estimation Company", "Cairo", "2026-06-01", "Market survey June 2026", "", "Illustrative price"],
+        [
+            "MAT-CEM-001",
+            "Portland Cement",
+            "أسمنت بورتلاندي",
+            "Material",
+            "M",
+            "Ton",
+            3500,
+            "EGP",
+            1.0,
+            "_Test Estimation Company",
+            "Cairo",
+            "2026-06-01",
+            "Ministry of Housing June 2026",
+            "",
+            "Illustrative price",
+        ],
+        [
+            "MAT-SAND-001",
+            "Clean Sand",
+            "رمل نظيف",
+            "Material",
+            "M",
+            "m³",
+            400,
+            "EGP",
+            1.0,
+            "_Test Estimation Company",
+            "Cairo",
+            "2026-06-01",
+            "Ministry of Housing June 2026",
+            "",
+            "Illustrative price",
+        ],
+        [
+            "MAT-AGG-001",
+            "Gravel / Aggregate",
+            "زلط / سن",
+            "Material",
+            "M",
+            "m³",
+            500,
+            "EGP",
+            1.0,
+            "_Test Estimation Company",
+            "Cairo",
+            "2026-06-01",
+            "Ministry of Housing June 2026",
+            "",
+            "Illustrative price",
+        ],
+        [
+            "MAT-STEEL-001",
+            "Reinforcement Steel",
+            "حديد تسليح",
+            "Material",
+            "M",
+            "Ton",
+            45000,
+            "EGP",
+            1.0,
+            "_Test Estimation Company",
+            "Cairo",
+            "2026-06-01",
+            "Ezz Steel June 2026",
+            "",
+            "Illustrative price",
+        ],
+        [
+            "LAB-MASON-001",
+            "Mason",
+            "عامل بناء / مبيض",
+            "Labor",
+            "L",
+            "Day",
+            250,
+            "EGP",
+            1.0,
+            "_Test Estimation Company",
+            "Cairo",
+            "2026-06-01",
+            "Market survey June 2026",
+            "",
+            "Illustrative price",
+        ],
+        [
+            "LAB-HELP-001",
+            "Helper",
+            "مساعد عام",
+            "Labor",
+            "L",
+            "Day",
+            150,
+            "EGP",
+            1.0,
+            "_Test Estimation Company",
+            "Cairo",
+            "2026-06-01",
+            "Market survey June 2026",
+            "",
+            "Illustrative price",
+        ],
+        [
+            "PLT-MIXER-001",
+            "Concrete Mixer",
+            "خلاطة خرسانة",
+            "Plant",
+            "P",
+            "Hour",
+            80,
+            "EGP",
+            1.0,
+            "_Test Estimation Company",
+            "Cairo",
+            "2026-06-01",
+            "Market survey June 2026",
+            "",
+            "Illustrative price",
+        ],
     ]
     for row in sample:
         ws.append(row)
@@ -1018,8 +1159,26 @@ def _add_sample_resources(ws):
 
 def _add_sample_templates(ws):
     sample = [
-        ["01-CONC-PLN", "Plain Concrete (Blinding) 10 cm", "خرسانة عادية نظافة 10 سم", "Concrete Works", "m³", 12, 8, "EGP"],
-        ["01-CONC-RC-COL", "Reinforced Concrete Columns", "خرسانة مسلحة أعمدة", "Concrete Works", "m³", 12, 8, "EGP"],
+        [
+            "01-CONC-PLN",
+            "Plain Concrete (Blinding) 10 cm",
+            "خرسانة عادية نظافة 10 سم",
+            "Concrete Works",
+            "m³",
+            12,
+            8,
+            "EGP",
+        ],
+        [
+            "01-CONC-RC-COL",
+            "Reinforced Concrete Columns",
+            "خرسانة مسلحة أعمدة",
+            "Concrete Works",
+            "m³",
+            12,
+            8,
+            "EGP",
+        ],
         ["02-WALL-BRK-10", "10 cm Red Brick Wall", "حائط طوب أحمر 10 سم", "Blockwork", "m²", 10, 8, "EGP"],
     ]
     for row in sample:
@@ -1114,7 +1273,9 @@ def _parse_date(value):
         return None
 
 
-def _build_result(success, dry_run, records_created, errors, warnings, records_updated=None, records_skipped=None):
+def _build_result(
+    success, dry_run, records_created, errors, warnings, records_updated=None, records_skipped=None
+):
     return {
         "success": success,
         "dry_run": dry_run,

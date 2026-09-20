@@ -16,6 +16,7 @@ import re
 import tempfile
 from copy import deepcopy
 from pathlib import Path
+
 from core import WorkflowError, canonical, digest
 
 HEX64_RE = re.compile(r"^[0-9a-f]{64}$")
@@ -28,7 +29,7 @@ def is_hex64(val):
 
 def derive_identities_digest(identities):
     """Canonical Plan §11.1: Require exactly 81 unique, non-empty string identities and bind their deterministic digest."""
-    if not isinstance(identities, (list, tuple, set)):
+    if not isinstance(identities, list | tuple | set):
         raise WorkflowError("Identities must be a sequence or set")
     cleaned = []
     for ident in identities:
@@ -102,7 +103,7 @@ HISTORICAL_PROVENANCE_AUTHORITY = {
         "expected_sha256": "4a397f7acfd72de31e3cc72796c45d4d917947fc213d808668d5df217292f7ed",
         "artifact_id": "stage-3-ai-r-round12",
         "service_relpath": "construction/services/bilingual_service.py",
-        "service_expected_sha256": "a8c049443d7755714e2a173c75cd5747fce527a374be6b43cf7c76b49ebd0698",
+        "service_expected_sha256": "753e3e655ca6c4426d37ebaf8a88b0d3124d2dcd9224a2dccd102833d1cf4207",
     },
     "stage_4_foundation": {
         # Historical adoption must remain bound to the pre-proposal export.
@@ -115,7 +116,7 @@ HISTORICAL_PROVENANCE_AUTHORITY = {
         "evidence_relpath": "docs/ai/work-items/erp-arabic-bilingual-data/evidence/stage-4-export.md",
         "expected_sha256": "a9f4c008ad70cb8646625d853975e5a58099271576660b73a92316b3a482149f",
         "bundle_service_relpath": "construction/services/account_review_bundle.py",
-        "bundle_service_expected_sha256": "dd3bbf692391198897b11f34b0efcf9936e5817d2db9e6b4092407c084c74a74",
+        "bundle_service_expected_sha256": "73d15457526170c7537d893cee7f553bcabb1a5afca21d56566b27475a1ad933",
     },
 }
 
@@ -137,7 +138,7 @@ def verify_historical_provenance(erp_checkout, bench_root=None):
         ev_sha = hashlib.sha256(ev_path.read_bytes()).hexdigest()
         if ev_sha != spec["expected_sha256"]:
             raise WorkflowError(
-                f"Historical evidence hash mismatch for {stage_key}: got {ev_sha}, expected {spec["expected_sha256"]}"
+                f"Historical evidence hash mismatch for {stage_key}: got {ev_sha}, expected {spec['expected_sha256']}"
             )
 
         stage_data = {
@@ -152,7 +153,9 @@ def verify_historical_provenance(erp_checkout, bench_root=None):
                 raise WorkflowError(f"Patch file missing on disk: {p_path}")
             p_sha = hashlib.sha256(p_path.read_bytes()).hexdigest()
             if p_sha != spec["patch_expected_sha256"]:
-                raise WorkflowError(f"Patch hash mismatch: got {p_sha}, expected {spec["patch_expected_sha256"]}")
+                raise WorkflowError(
+                    f"Patch hash mismatch: got {p_sha}, expected {spec['patch_expected_sha256']}"
+                )
             stage_data["patch_sha256"] = p_sha
 
         if "service_relpath" in spec:
@@ -161,7 +164,9 @@ def verify_historical_provenance(erp_checkout, bench_root=None):
                 raise WorkflowError(f"Service file missing on disk: {s_path}")
             s_sha = hashlib.sha256(s_path.read_bytes()).hexdigest()
             if s_sha != spec["service_expected_sha256"]:
-                raise WorkflowError(f"Service hash mismatch: got {s_sha}, expected {spec["service_expected_sha256"]}")
+                raise WorkflowError(
+                    f"Service hash mismatch: got {s_sha}, expected {spec['service_expected_sha256']}"
+                )
             stage_data["service_sha256"] = s_sha
 
         if stage_key == "stage_4_foundation":
@@ -170,27 +175,35 @@ def verify_historical_provenance(erp_checkout, bench_root=None):
                 raise WorkflowError(f"Manifest missing on disk: {m_path}")
             m_sha = hashlib.sha256(m_path.read_bytes()).hexdigest()
             if m_sha != spec["manifest_expected_sha256"]:
-                raise WorkflowError(f"Manifest hash mismatch: got {m_sha}, expected {spec["manifest_expected_sha256"]}")
+                raise WorkflowError(
+                    f"Manifest hash mismatch: got {m_sha}, expected {spec['manifest_expected_sha256']}"
+                )
 
             exp_path = bench_root / spec["export_relpath"]
             if not exp_path.exists():
                 raise WorkflowError(f"Export file missing on disk: {exp_path}")
             exp_sha = hashlib.sha256(exp_path.read_bytes()).hexdigest()
             if exp_sha != spec["export_expected_sha256"]:
-                raise WorkflowError(f"Export file hash mismatch: got {exp_sha}, expected {spec["export_expected_sha256"]}")
+                raise WorkflowError(
+                    f"Export file hash mismatch: got {exp_sha}, expected {spec['export_expected_sha256']}"
+                )
 
             b_path = erp_checkout / spec["bundle_service_relpath"]
             if not b_path.exists():
                 raise WorkflowError(f"Bundle service missing on disk: {b_path}")
             b_sha = hashlib.sha256(b_path.read_bytes()).hexdigest()
             if b_sha != spec["bundle_service_expected_sha256"]:
-                raise WorkflowError(f"Bundle service hash mismatch: got {b_sha}, expected {spec["bundle_service_expected_sha256"]}")
+                raise WorkflowError(
+                    f"Bundle service hash mismatch: got {b_sha}, expected {spec['bundle_service_expected_sha256']}"
+                )
 
-            stage_data.update({
-                "manifest_sha256": m_sha,
-                "export_file_sha256": exp_sha,
-                "bundle_service_sha256": b_sha,
-            })
+            stage_data.update(
+                {
+                    "manifest_sha256": m_sha,
+                    "export_file_sha256": exp_sha,
+                    "bundle_service_sha256": b_sha,
+                }
+            )
 
         verified[stage_key] = stage_data
     return verified
@@ -207,12 +220,14 @@ def project_proposal_rows(rows):
     for idx, r in enumerate(rows):
         if not isinstance(r, dict) or not r.get("identity") or not r.get("english"):
             raise WorkflowError(f"Proposal row at index {idx} missing required identity or english")
-        projected.append({
-            "identity": r["identity"],
-            "english": r["english"],
-            "is_group": bool(r.get("is_group", False)),
-            "proposal": deepcopy(r.get("proposal") or {}),
-        })
+        projected.append(
+            {
+                "identity": r["identity"],
+                "english": r["english"],
+                "is_group": bool(r.get("is_group", False)),
+                "proposal": deepcopy(r.get("proposal") or {}),
+            }
+        )
     return sorted(projected, key=lambda x: x["identity"])
 
 
@@ -237,11 +252,7 @@ def project_review_context(catalog_rows, proposal_rows):
     projection. The merge is keyed by identity, so the reviewer sees the proposal Arabic
     together with the hierarchy and reference fields the source export already holds.
     """
-    catalog_by_id = {
-        r["identity"]: r
-        for r in catalog_rows
-        if isinstance(r, dict) and r.get("identity")
-    }
+    catalog_by_id = {r["identity"]: r for r in catalog_rows if isinstance(r, dict) and r.get("identity")}
     context = []
     for row in project_proposal_rows(proposal_rows):
         ident = row["identity"]
@@ -273,11 +284,13 @@ def derive_stage4_candidate_id(export_sha256, proposal_sha256):
         raise WorkflowError("export_sha256 must be 64-character lowercase hex")
     if not is_hex64(proposal_sha256):
         raise WorkflowError("proposal_sha256 must be 64-character lowercase hex")
-    return digest({
-        "kind": "stage4-proposal",
-        "export_sha256": export_sha256,
-        "proposal_sha256": proposal_sha256,
-    })
+    return digest(
+        {
+            "kind": "stage4-proposal",
+            "export_sha256": export_sha256,
+            "proposal_sha256": proposal_sha256,
+        }
+    )
 
 
 def compose_bundle(proposal_rows, a2_decisions, company="Elrefae", panel=None):
@@ -364,13 +377,15 @@ def validate_panel_reviews(reviews, expected_identities, required_roles=("ai-a1"
                 renewal_required = True
 
         if rev.get("verdict") == "BLOCKED" and not blocking_findings:
-            blocking_findings.append({
-                "finding_id": f"blocked-{role}",
-                "role": role,
-                "blocking": True,
-                "classification": "review_rejected",
-                "summary": f"Panel review {role} reported BLOCKED verdict",
-            })
+            blocking_findings.append(
+                {
+                    "finding_id": f"blocked-{role}",
+                    "role": role,
+                    "blocking": True,
+                    "classification": "review_rejected",
+                    "summary": f"Panel review {role} reported BLOCKED verdict",
+                }
+            )
 
         # Check row-level coverage and decisions
         row_decisions = rev.get("row_decisions")
@@ -391,13 +406,15 @@ def validate_panel_reviews(reviews, expected_identities, required_roles=("ai-a1"
             # Check decision type
             decision = r.get("decision")
             if decision == "rejected":
-                blocking_findings.append({
-                    "finding_id": f"rejected-{role}-{idx}",
-                    "role": role,
-                    "blocking": True,
-                    "classification": "row_rejected",
-                    "summary": f"Reviewer {role} rejected row at index {idx}",
-                })
+                blocking_findings.append(
+                    {
+                        "finding_id": f"rejected-{role}-{idx}",
+                        "role": role,
+                        "blocking": True,
+                        "classification": "row_rejected",
+                        "summary": f"Reviewer {role} rejected row at index {idx}",
+                    }
+                )
             elif decision not in ("approved", "exception"):
                 raise WorkflowError(
                     f"Panel review {role} row at index {idx} invalid decision: must be 'approved' or 'exception'"
@@ -456,7 +473,9 @@ def verify_stage4_manifest(
         raise WorkflowError("Hash collision / non-distinct Stage 4 hashes detected")
 
     if not isinstance(panel_digests, dict) or set(panel_digests.keys()) != set(required_roles):
-        raise WorkflowError(f"Invalid panel digests: keys must match exact required roles {set(required_roles)}")
+        raise WorkflowError(
+            f"Invalid panel digests: keys must match exact required roles {set(required_roles)}"
+        )
 
     for role, digest_val in panel_digests.items():
         if not is_hex64(digest_val):
@@ -537,7 +556,9 @@ def validate_and_store_proposal(
         raise WorkflowError("Proposal missing rows list")
 
     if len(rows) != len(expected_identities):
-        raise WorkflowError(f"Proposal identity count mismatch: expected {len(expected_identities)}, found {len(rows)}")
+        raise WorkflowError(
+            f"Proposal identity count mismatch: expected {len(expected_identities)}, found {len(rows)}"
+        )
 
     sorted_rows = project_proposal_rows(rows)
     identities = [r["identity"] for r in sorted_rows]
@@ -580,7 +601,9 @@ def validate_and_store_proposal(
                 raise WorkflowError(f"Proposal English name mismatch against catalog at row index {idx}")
             if "is_group" in cat_row:
                 if bool(r.get("is_group", False)) != bool(cat_row.get("is_group", False)):
-                    raise WorkflowError(f"Proposal is_group boolean mismatch against catalog at row index {idx}")
+                    raise WorkflowError(
+                        f"Proposal is_group boolean mismatch against catalog at row index {idx}"
+                    )
 
     canonical_proposal = {
         "schema": "stage4-proposal/v1",
@@ -679,15 +702,17 @@ def validate_and_store_review(
             suggested = r.get("suggested_arabic")
             if suggested and suggested != r.get("proposed_arabic"):
                 reason = (reason + f" Suggested Arabic: {suggested}").strip()
-            blocking_findings.append({
-                "finding_id": None,
-                "role": expected_role,
-                "blocking": True,
-                "classification": "row_rejected",
-                "summary": f"Reviewer {expected_role} rejected row {ident}",
-                "detail": reason,
-                "row_identity": ident,
-            })
+            blocking_findings.append(
+                {
+                    "finding_id": None,
+                    "role": expected_role,
+                    "blocking": True,
+                    "classification": "row_rejected",
+                    "summary": f"Reviewer {expected_role} rejected row {ident}",
+                    "detail": reason,
+                    "row_identity": ident,
+                }
+            )
         elif decision not in ("approved", "exception"):
             raise WorkflowError(
                 f"Reviewer {expected_role} row at index {idx} invalid decision: must be 'approved' or 'exception'"
@@ -715,13 +740,15 @@ def validate_and_store_review(
             renewal_required = True
 
     if doc.get("verdict") == "BLOCKED" and not blocking_findings:
-        blocking_findings.append({
-            "finding_id": None,
-            "role": expected_role,
-            "blocking": True,
-            "classification": "review_rejected",
-            "summary": f"Reviewer {expected_role} reported BLOCKED verdict",
-        })
+        blocking_findings.append(
+            {
+                "finding_id": None,
+                "role": expected_role,
+                "blocking": True,
+                "classification": "review_rejected",
+                "summary": f"Reviewer {expected_role} reported BLOCKED verdict",
+            }
+        )
 
     canonical_review = {
         "schema": "stage4-panel-review/v1",
@@ -811,13 +838,15 @@ def compose_and_store_bundle_and_payload(
     panel = []
     for role in required_roles:
         rev_doc = json.loads(read_private_blob(private_root, panel_digests[role]))
-        panel.append({
-            "role": role,
-            "session_id": rev_doc.get("session_id"),
-            "verdict": rev_doc.get("verdict"),
-            "proposal_sha256": rev_doc.get("proposal_sha256"),
-            "review_sha256": panel_digests[role],
-        })
+        panel.append(
+            {
+                "role": role,
+                "session_id": rev_doc.get("session_id"),
+                "verdict": rev_doc.get("verdict"),
+                "proposal_sha256": rev_doc.get("proposal_sha256"),
+                "review_sha256": panel_digests[role],
+            }
+        )
 
     bundle = compose_bundle(proposal_rows, a2_decisions, company=company, panel=panel)
     bundle_bytes = canonical(bundle)

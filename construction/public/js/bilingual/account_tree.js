@@ -14,32 +14,39 @@
 //   never trusted HTML).
 
 (function () {
-  const settings = frappe.treeview_settings && frappe.treeview_settings["Account"];
-  if (!settings) return;
+	const settings = frappe.treeview_settings && frappe.treeview_settings["Account"];
+	if (!settings) return;
 
-  function ct_esc(s) {
-    return frappe.utils.escape_html(String(s == null ? "" : s));
-  }
+	function ct_esc(s) {
+		return frappe.utils.escape_html(String(s == null ? "" : s));
+	}
 
-  function ct_session_lang() {
-    return (frappe.boot && frappe.boot.lang) || (frappe.user_defaults && frappe.user_defaults.language) || "en";
-  }
+	function ct_session_lang() {
+		return (
+			(frappe.boot && frappe.boot.lang) ||
+			(frappe.user_defaults && frappe.user_defaults.language) ||
+			"en"
+		);
+	}
 
-  function ct_account_label(data) {
-    const lang = ct_session_lang();
-    const arabic = data && data.account_name_ar;
-    const english = data && data.account_name;
-    const identity = (data && data.value) || (data && data.name) || "";
-    const is_ar = String(lang || "").toLowerCase().indexOf("ar") === 0;
-    if (is_ar) {
-      return ct_esc(arabic || english || identity);
-    }
-    return ct_esc(english || arabic || identity);
-  }
+	function ct_account_label(data) {
+		const lang = ct_session_lang();
+		const arabic = data && data.account_name_ar;
+		const english = data && data.account_name;
+		const identity = (data && data.value) || (data && data.name) || "";
+		const is_ar =
+			String(lang || "")
+				.toLowerCase()
+				.indexOf("ar") === 0;
+		if (is_ar) {
+			return ct_esc(arabic || english || identity);
+		}
+		return ct_esc(english || arabic || identity);
+	}
 
-  settings.get_tree_nodes = "construction.services.bilingual_service.get_account_tree_children";
-  settings.get_label = function (node) {
-    const data = node && (node.data || node);
-    return ct_account_label(data);
-  };
+	settings.get_tree_nodes = "construction.services.bilingual_service.get_account_tree_children";
+	settings.get_label = function (node) {
+		const data = node && (node.data || node);
+		return ct_account_label(data);
+	};
 })();

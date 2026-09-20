@@ -26,19 +26,39 @@ Policy (canonical plan, locked architecture):
   DocType); English/code renames must use the standard ERPNext path.
 """
 
+from pathlib import Path
+
 import frappe
 from frappe import _
 
 from construction.services.bilingual_registry import (
     completeness as _completeness,
+)
+from construction.services.bilingual_registry import (
     default_registry_path as _registry_default_path,
+)
+from construction.services.bilingual_registry import (
     display_label as _display_label,
+)
+from construction.services.bilingual_registry import (
     fallback_chain as _fallback_chain,
+)
+from construction.services.bilingual_registry import (
     is_safe_identity_text as _is_safe_identity_text,
+)
+from construction.services.bilingual_registry import (
     is_safe_narrative_text as _is_safe_narrative_text,
+)
+from construction.services.bilingual_registry import (
     load_registry as _load_registry,
+)
+from construction.services.bilingual_registry import (
     normalize_arabic as _normalize_arabic,
+)
+from construction.services.bilingual_registry import (
     registry_sha256 as _registry_sha256,
+)
+from construction.services.bilingual_registry import (
     relevance_rank as _relevance_rank,
 )
 
@@ -99,9 +119,7 @@ def get_registry(root=None):
         return cache.get("data")
     data, errors = _load_registry(root=root)
     if errors:
-        raise frappe.ValidationError(
-            _("The bilingual registry is invalid: {0}").format("; ".join(errors))
-        )
+        raise frappe.ValidationError(_("The bilingual registry is invalid: {0}").format("; ".join(errors)))
     frappe.local.ct_bilingual_registry_cache = {"sig": sig, "data": data}
     return data
 
@@ -138,7 +156,7 @@ def get_mapping(doctype):
             else:
                 resolved[key] = None
                 if field:
-                    missing.append("%s (%s)" % (key, field))
+                    missing.append(f"{key} ({field})")
         if missing and cfg.get("state") in ("active", "schema_installed"):
             raise frappe.ValidationError(
                 _("The active bilingual mapping for {0} does not match the live schema: missing {1}").format(
@@ -152,7 +170,7 @@ def get_mapping(doctype):
         else:
             out = dict(cfg)
             out["resolved"] = resolved
-    setattr(frappe.local, "ct_bilingual_mapping_cache", ({} if memo is None else memo) | {doctype: out})
+    frappe.local.ct_bilingual_mapping_cache = ({} if memo is None else memo) | {doctype: out}
     return out
 
 
@@ -182,7 +200,10 @@ def normalize_arabic(text):
 def read_identity(doctype, name):
     """Permission-safe identity read. Raises on missing read permission."""
     if not frappe.has_permission(doctype, "read", doc=name):
-        frappe.throw(_("Bilingual identity read requires read permission on {0}").format(doctype), frappe.PermissionError)
+        frappe.throw(
+            _("Bilingual identity read requires read permission on {0}").format(doctype),
+            frappe.PermissionError,
+        )
     mapping = get_mapping(doctype)
     if not mapping:
         return None
@@ -191,7 +212,7 @@ def read_identity(doctype, name):
     row = frappe.get_list(
         doctype,
         filters={"name": name},
-        fields=["name"] + fields,
+        fields=["name", *fields],
         limit_page_length=1,
     )
     if not row:
@@ -226,7 +247,12 @@ def completeness(doctype, name, required=("arabic", "english")):
     if ident is None:
         return {"complete": False, "missing": ["registry"], "present": {}}
     return _completeness(
-        {"arabic": ident.get("arabic"), "english": ident.get("english"), "code": ident.get("code"), "identity": ident.get("identity")},
+        {
+            "arabic": ident.get("arabic"),
+            "english": ident.get("english"),
+            "code": ident.get("code"),
+            "identity": ident.get("identity"),
+        },
         required=required,
     )
 
@@ -251,7 +277,9 @@ def enforce_account_arabic_policy(doc, method=None):
     current = doc.get("account_name_ar") or None
     if current is not None and not _is_safe_identity_text(current):
         frappe.throw(
-            _("The Arabic name contains rejected control characters (NUL/C0/C1/DEL or bidi controls) (refused)")
+            _(
+                "The Arabic name contains rejected control characters (NUL/C0/C1/DEL or bidi controls) (refused)"
+            )
         )
     token = frappe.flags.get(GOVERNED_EDIT_FLAG)
     token = token if isinstance(token, dict) else None
@@ -273,7 +301,9 @@ def enforce_account_arabic_policy(doc, method=None):
             or token.get("new") != current
         ):
             frappe.throw(
-                _("The Arabic account name can only be edited through the governed bilingual edit (use Edit Arabic; direct form/REST writes are refused)"),
+                _(
+                    "The Arabic account name can only be edited through the governed bilingual edit (use Edit Arabic; direct form/REST writes are refused)"
+                ),
                 frappe.PermissionError,
             )
     # Server-authoritative invariant on EVERY save path.
@@ -311,10 +341,17 @@ def set_account_name_ar(name, arabic_name):
       validate hook admits it and native Version audit records it.
     """
     if not frappe.has_permission("Account", "write", doc=name):
-        frappe.throw(_("Setting the Arabic account name requires Account write permission (refused)"), frappe.PermissionError)
+        frappe.throw(
+            _("Setting the Arabic account name requires Account write permission (refused)"),
+            frappe.PermissionError,
+        )
     text = (arabic_name or "").strip()
     if not validate_identity_text(text):
-        frappe.throw(_("The Arabic name contains rejected control characters (NUL/C0/C1/DEL or bidi controls) (refused)"))
+        frappe.throw(
+            _(
+                "The Arabic name contains rejected control characters (NUL/C0/C1/DEL or bidi controls) (refused)"
+            )
+        )
     doc = frappe.get_doc("Account", name)
     before = {
         "name": doc.name,
@@ -461,7 +498,9 @@ def measure_search_p95(txt, samples=50, page_length=20, lang="en", company="Elre
         )
 
     def bilingual_once():
-        return search_bilingual("Account", txt=txt, filters={"company": company}, page_length=page_length, start=0, lang=lang)
+        return search_bilingual(
+            "Account", txt=txt, filters={"company": company}, page_length=page_length, start=0, lang=lang
+        )
 
     # GC discipline for stable tails (benchmarking hygiene applied to BOTH
     # sides identically; the interpreter state is restored afterwards).
@@ -490,7 +529,7 @@ def measure_search_p95(txt, samples=50, page_length=20, lang="en", company="Elre
     rounds = 5  # min-of-rounds: report the best round's P95 (documented benchmark semantics)
     all_rounds = {"baseline": [], "bilingual": []}
     for _round in range(rounds):
-        for _ in range(int(warmup)):
+        for _warmup in range(int(warmup)):
             baseline_once()
             bilingual_once()
         round_baseline = []
@@ -563,8 +602,13 @@ def measure_search_p95(txt, samples=50, page_length=20, lang="en", company="Elre
             "baseline_counts": baseline_sql_counts,
             "bilingual_counts": bilingual_sql_counts,
         },
-        "round_p95_ms": {side: [round(nearest_rank_p95(v), 3) for v in all_rounds[side]] for side in ("baseline", "bilingual")},
-        "round_samples": {side: [[round(v, 3) for v in r] for r in all_rounds[side]] for side in ("baseline", "bilingual")},
+        "round_p95_ms": {
+            side: [round(nearest_rank_p95(v), 3) for v in all_rounds[side]]
+            for side in ("baseline", "bilingual")
+        },
+        "round_samples": {
+            side: [[round(v, 3) for v in r] for r in all_rounds[side]] for side in ("baseline", "bilingual")
+        },
         "baseline": {
             "p95_ms": round(nearest_rank_p95(baseline_samples), 3),
             "median_ms": round(true_median(baseline_samples), 3),
@@ -603,7 +647,10 @@ def governed_rename_account(name, account_name, account_number=None, reason=None
     nothing is committed here (the request transaction commits as usual).
     """
     if not frappe.has_permission("Account", "write", doc=name):
-        frappe.throw(_("Renaming the account identity requires Account write permission (refused)"), frappe.PermissionError)
+        frappe.throw(
+            _("Renaming the account identity requires Account write permission (refused)"),
+            frappe.PermissionError,
+        )
     reason_text = (reason or "").strip()
     if not reason_text:
         frappe.throw(_("A rename reason is required"))
@@ -625,7 +672,9 @@ def governed_rename_account(name, account_name, account_number=None, reason=None
             )
             or name
         )
-        after = frappe.db.get_value("Account", new_name, ["name", "account_name", "account_number"], as_dict=True)
+        after = frappe.db.get_value(
+            "Account", new_name, ["name", "account_name", "account_number"], as_dict=True
+        )
         _insert_rename_comment(new_name, reason_text)
         _insert_rename_version(new_name, before, after)
         frappe.db.release_savepoint("ct_bilingual_rename")
@@ -636,8 +685,16 @@ def governed_rename_account(name, account_name, account_number=None, reason=None
         "ok": True,
         "name": new_name,
         "renamed": new_name != name,
-        "before": {"name": before.name, "account_name": before.account_name, "account_number": before.account_number},
-        "after": {"name": after.name, "account_name": after.account_name, "account_number": after.account_number},
+        "before": {
+            "name": before.name,
+            "account_name": before.account_name,
+            "account_number": before.account_number,
+        },
+        "after": {
+            "name": after.name,
+            "account_name": after.account_name,
+            "account_number": after.account_number,
+        },
         "reason_recorded_on": new_name,
         "audit": "Version(rename)+Comment(reason)",
     }
@@ -652,7 +709,9 @@ def record_account_rename_reason(name, reason):
     always run through the standard ERPNext path.
     """
     if not frappe.has_permission("Account", "write", doc=name):
-        frappe.throw(_("Recording a rename reason requires Account write permission (refused)"), frappe.PermissionError)
+        frappe.throw(
+            _("Recording a rename reason requires Account write permission (refused)"), frappe.PermissionError
+        )
     text = (reason or "").strip()
     if not text:
         frappe.throw(_("A rename reason is required"))
@@ -757,7 +816,7 @@ def search_bilingual(
         rows = frappe.get_list(
             doctype,
             filters=filters or None,
-            fields=["name"] + fields,
+            fields=["name", *fields],
             limit_page_length=page_length,
             limit_start=start_i,
             order_by="modified desc",
@@ -772,7 +831,7 @@ def search_bilingual(
             doctype,
             filters=filters or None,
             or_filters=or_filters or None,
-            fields=["name"] + fields,
+            fields=["name", *fields],
             limit_page_length=RANK_WINDOW + 1,
             limit_start=0,
             order_by="modified desc",
@@ -783,7 +842,9 @@ def search_bilingual(
             # Loud contract: the plain list shape cannot carry the flag,
             # so truncation refuses instead of silently dropping matches.
             frappe.throw(
-                _("Search matches exceed the supported ranking window ({0}); refine the query").format(RANK_WINDOW),
+                _("Search matches exceed the supported ranking window ({0}); refine the query").format(
+                    RANK_WINDOW
+                ),
                 frappe.ValidationError,
             )
 
@@ -820,9 +881,17 @@ def search_bilingual(
         arabic = row.get(ar_f) if ar_f else None
         english = row.get(en_f) if en_f else None
         if is_ar:
-            label, mode = (arabic, "arabic") if arabic else ((english, "english") if english else (row.get("name") or "", "identity"))
+            label, mode = (
+                (arabic, "arabic")
+                if arabic
+                else ((english, "english") if english else (row.get("name") or "", "identity"))
+            )
         else:
-            label, mode = (english, "english") if english else ((arabic, "arabic") if arabic else (row.get("name") or "", "identity"))
+            label, mode = (
+                (english, "english")
+                if english
+                else ((arabic, "arabic") if arabic else (row.get("name") or "", "identity"))
+            )
         out.append(
             {
                 "value": row.get("name"),
@@ -843,7 +912,9 @@ def search_bilingual(
 
 
 @frappe.whitelist()
-def get_account_tree_children(doctype="Account", parent="", company=None, is_root=False, include_disabled=False):
+def get_account_tree_children(
+    doctype="Account", parent="", company=None, is_root=False, include_disabled=False
+):
     """Account tree children with bilingual label fields.
 
     Reuses the vendor ERPNext children query unchanged, then merges

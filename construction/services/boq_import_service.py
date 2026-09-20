@@ -372,7 +372,9 @@ class BOQImportService:
                 created_by_wbs[structure.wbs_code] = structure.name
 
                 if not structure.is_group:
-                    item = BOQImportService._update_imported_item(structure, row, batch, confirmed_import_mode)
+                    item = BOQImportService._update_imported_item(
+                        structure, row, batch, confirmed_import_mode
+                    )
                     created_items.append(
                         {"name": item.name, "structure": structure.name, "wbs_code": structure.wbs_code}
                     )
@@ -818,14 +820,21 @@ class BOQImportService:
                             ),
                             frappe.ValidationError,
                         )
-                    if info.compress_size > 0 and (info.file_size / info.compress_size) > BOQImportService.MAX_MEMBER_COMPRESSION_RATIO:
+                    if (
+                        info.compress_size > 0
+                        and (info.file_size / info.compress_size)
+                        > BOQImportService.MAX_MEMBER_COMPRESSION_RATIO
+                    ):
                         frappe.throw(
                             _("Suspicious compression ratio detected in '{0}' (potential Zip Bomb).").format(
                                 info.filename
                             ),
                             frappe.ValidationError,
                         )
-                    if info.filename == "xl/sharedStrings.xml" and info.file_size > BOQImportService.MAX_SHARED_STRINGS_BYTES:
+                    if (
+                        info.filename == "xl/sharedStrings.xml"
+                        and info.file_size > BOQImportService.MAX_SHARED_STRINGS_BYTES
+                    ):
                         frappe.throw(
                             _("Workbook shared-string table is too large to process safely."),
                             frappe.ValidationError,
@@ -871,9 +880,9 @@ class BOQImportService:
                         merge_count += 1
                         if merge_count > BOQImportService.MAX_MERGED_RANGES:
                             frappe.throw(
-                                _("Worksheet contains too many merged cell ranges (exceeds safety limit of {0}).").format(
-                                    BOQImportService.MAX_MERGED_RANGES
-                                ),
+                                _(
+                                    "Worksheet contains too many merged cell ranges (exceeds safety limit of {0})."
+                                ).format(BOQImportService.MAX_MERGED_RANGES),
                                 frappe.ValidationError,
                             )
                         ref = elem.get("ref") or ""
@@ -881,9 +890,9 @@ class BOQImportService:
                         total_merged_cells += cells
                         if total_merged_cells > BOQImportService.MAX_TOTAL_MERGED_CELLS:
                             frappe.throw(
-                                _("Total merged cell area ({0} cells) exceeds safety limit of {1} cells.").format(
-                                    total_merged_cells, BOQImportService.MAX_TOTAL_MERGED_CELLS
-                                ),
+                                _(
+                                    "Total merged cell area ({0} cells) exceeds safety limit of {1} cells."
+                                ).format(total_merged_cells, BOQImportService.MAX_TOTAL_MERGED_CELLS),
                                 frappe.ValidationError,
                             )
                     elif tag == "dimension" and not dimension_checked:
@@ -951,7 +960,9 @@ class BOQImportService:
 
         # Reject path traversal sequences
         if ".." in doc_str:
-            frappe.throw(_("Invalid file path (traversal detected): {0}").format(doc_str), frappe.ValidationError)
+            frappe.throw(
+                _("Invalid file path (traversal detected): {0}").format(doc_str), frappe.ValidationError
+            )
 
         site_path = os.path.realpath(frappe.get_site_path())
 
@@ -964,7 +975,9 @@ class BOQImportService:
 
         if not file_doc_name:
             frappe.throw(
-                _("Access denied: File '{0}' is not a registered, authorized File attachment.").format(doc_str),
+                _("Access denied: File '{0}' is not a registered, authorized File attachment.").format(
+                    doc_str
+                ),
                 frappe.PermissionError,
             )
 
@@ -1018,13 +1031,17 @@ class BOQImportService:
                 sig = f.read(4)
                 if sig.startswith(b"\xd0\xcf\x11\xe0"):
                     frappe.throw(
-                        _("Unsupported legacy format: Binary Excel (.xls) is not supported. Please upload an OpenXML Excel workbook (.xlsx)."),
+                        _(
+                            "Unsupported legacy format: Binary Excel (.xls) is not supported. Please upload an OpenXML Excel workbook (.xlsx)."
+                        ),
                         frappe.ValidationError,
                     )
                 if not sig.startswith(b"PK\x03\x04"):
-                    frappe.throw(_("Invalid file format: Expected an Excel workbook (.xlsx)."), frappe.ValidationError)
+                    frappe.throw(
+                        _("Invalid file format: Expected an Excel workbook (.xlsx)."), frappe.ValidationError
+                    )
         except Exception as e:
-            if isinstance(e, (frappe.ValidationError, frappe.PermissionError)):
+            if isinstance(e, frappe.ValidationError | frappe.PermissionError):
                 raise e
             frappe.throw(_("Unable to read import file: {0}").format(str(e)), frappe.ValidationError)
 
@@ -1035,9 +1052,9 @@ class BOQImportService:
                     total_uncompressed = sum(info.file_size for info in zf.infolist())
                     if total_uncompressed > BOQImportService.MAX_UNCOMPRESSED_SIZE:
                         frappe.throw(
-                            _("Uncompressed Excel archive ({0} bytes) exceeds safety threshold of 100MB.").format(
-                                total_uncompressed
-                            ),
+                            _(
+                                "Uncompressed Excel archive ({0} bytes) exceeds safety threshold of 100MB."
+                            ).format(total_uncompressed),
                             frappe.ValidationError,
                         )
                     if file_size > 0 and (total_uncompressed / file_size) > 100:
@@ -1090,13 +1107,18 @@ class BOQImportService:
 
         for merged_range in ws.merged_cells.ranges:
             # Reject out-of-bounds merged ranges to prevent memory explosion
-            if merged_range.max_row > BOQImportService.MAX_ROWS or merged_range.max_col > BOQImportService.MAX_COLS:
+            if (
+                merged_range.max_row > BOQImportService.MAX_ROWS
+                or merged_range.max_col > BOQImportService.MAX_COLS
+            ):
                 frappe.throw(
                     _("Hostile or out-of-bounds merged range detected ({0}).").format(str(merged_range)),
                     frappe.ValidationError,
                 )
 
-            range_cells = (merged_range.max_row - merged_range.min_row + 1) * (merged_range.max_col - merged_range.min_col + 1)
+            range_cells = (merged_range.max_row - merged_range.min_row + 1) * (
+                merged_range.max_col - merged_range.min_col + 1
+            )
             total_merged_cells += range_cells
 
             if total_merged_cells > BOQImportService.MAX_TOTAL_MERGED_CELLS:

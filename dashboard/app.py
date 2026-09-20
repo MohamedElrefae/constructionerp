@@ -10,16 +10,16 @@ Strictly read-only workflow endpoints:
 - No pause, resume, reset_budget, or stage4 dispatching endpoints.
 """
 
-from contextlib import asynccontextmanager
-from datetime import datetime, timezone
 import fcntl
 import hashlib
 import json
 import os
-from pathlib import Path
 import secrets
-from typing import Any
 import uuid
+from contextlib import asynccontextmanager
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any
 
 from starlette.applications import Starlette
 from starlette.middleware import Middleware
@@ -57,6 +57,7 @@ from dashboard.config import (
 from dashboard.coordinator import TaskCoordinator
 from dashboard.process import get_process_start_time, is_process_alive_with_start_time
 from dashboard.registry import TaskRegistry, validate_and_bind_canonical_registry
+from dashboard.security import SecurityError, read_authoritative_stage4_manifest
 from dashboard.subprocess_client import (
     SubprocessClientError,
     adopt_scope,
@@ -72,7 +73,6 @@ from dashboard.subprocess_client import (
     query_findings,
     query_settings,
 )
-from dashboard.security import SecurityError, read_authoritative_stage4_manifest
 
 SERVER_INSTANCE_ID = f"inst-srv-{uuid.uuid4().hex[:8]}"
 
@@ -83,6 +83,7 @@ coordinator = TaskCoordinator(registry=task_registry)
 # ---------------------------------------------------------------------------
 # Authentication Routes
 # ---------------------------------------------------------------------------
+
 
 async def get_csrf_token(request: Request) -> Response:
     """Generate and return an ephemeral CSRF token and set cookie."""
@@ -169,7 +170,7 @@ async def login(request: Request) -> Response:
 
 async def setup_password(request: Request) -> Response:
     """Configure permanent password for authenticated account.
-    
+
     Upon successful permanent password setup, the initial credential file is automatically deleted.
     """
     auth_err = _require_auth(request, allow_initial=True)
@@ -258,6 +259,7 @@ async def me(request: Request) -> Response:
 # ---------------------------------------------------------------------------
 # Task Management Routes (Strictly Read-Only)
 # ---------------------------------------------------------------------------
+
 
 def _require_auth(request: Request, allow_initial: bool = False) -> JSONResponse | None:
     user = getattr(request.state, "user", None)
@@ -501,15 +503,21 @@ async def adopt_scope_endpoint(request: Request) -> Response:
             ex_state, ex_req_hash, ex_resp, ex_err = existing[0], existing[1], existing[2], existing[3]
             if ex_state == "COMPLETE":
                 if ex_req_hash != request_hash:
-                    return JSONResponse({"detail": "action_id reused with different request payload"}, status_code=409)
+                    return JSONResponse(
+                        {"detail": "action_id reused with different request payload"}, status_code=409
+                    )
                 cached_res = json.loads(ex_resp) if ex_resp else {}
                 return JSONResponse({"ok": True, "result": cached_res})
             elif ex_state == "FAILED":
                 return JSONResponse({"detail": f"Action previously failed: {ex_err}"}, status_code=500)
             elif ex_state in ("EXECUTING", "RECOVERING"):
-                return JSONResponse({"detail": f"Action {action_id} is currently in progress"}, status_code=409)
+                return JSONResponse(
+                    {"detail": f"Action {action_id} is currently in progress"}, status_code=409
+                )
             else:
-                return JSONResponse({"detail": f"Action {action_id} in unexpected state: {ex_state}"}, status_code=409)
+                return JSONResponse(
+                    {"detail": f"Action {action_id} in unexpected state: {ex_state}"}, status_code=409
+                )
 
         now_iso = datetime.now(timezone.utc).isoformat()
         manifest = {"scope": scope, "implementation_stages": implementation_stages}
@@ -830,9 +838,13 @@ async def approve_plan_endpoint(request: Request) -> Response:
             elif ex_state == "FAILED":
                 return JSONResponse({"detail": f"Action previously failed: {ex_err}"}, status_code=500)
             elif ex_state in ("EXECUTING", "RECOVERING"):
-                return JSONResponse({"detail": f"Action {action_id} is currently in progress"}, status_code=409)
+                return JSONResponse(
+                    {"detail": f"Action {action_id} is currently in progress"}, status_code=409
+                )
             else:
-                return JSONResponse({"detail": f"Action {action_id} in unexpected state: {ex_state}"}, status_code=409)
+                return JSONResponse(
+                    {"detail": f"Action {action_id} in unexpected state: {ex_state}"}, status_code=409
+                )
 
         conn = task_registry._get_connection()
         try:
@@ -999,12 +1011,14 @@ async def get_context_summary(request: Request) -> Response:
         f = REPO_ROOT / rel_p
         exists = f.is_file()
         sha = hashlib.sha256(f.read_bytes()).hexdigest() if exists else None
-        summary.append({
-            "path": rel_p,
-            "exists": exists,
-            "is_mandatory": rel_p in ("AGENTS.md", "SESSION_MEMORY.md"),
-            "sha256": sha,
-        })
+        summary.append(
+            {
+                "path": rel_p,
+                "exists": exists,
+                "is_mandatory": rel_p in ("AGENTS.md", "SESSION_MEMORY.md"),
+                "sha256": sha,
+            }
+        )
     return JSONResponse({"context_files": summary})
 
 
@@ -1020,12 +1034,11 @@ async def index(request: Request) -> Response:
 # Application Lifespan
 # ---------------------------------------------------------------------------
 
+
 @asynccontextmanager
 async def lifespan(app: Starlette):
     # 1. Startup: Validate full ancestor chain and canonical registry
-    validate_and_bind_canonical_registry(
-        CANONICAL_REGISTRY_PATH, is_test_mode=DASHBOARD_TEST_MODE
-    )
+    validate_and_bind_canonical_registry(CANONICAL_REGISTRY_PATH, is_test_mode=DASHBOARD_TEST_MODE)
 
     # 2. Startup Lifespan Reconciliation under Action Lock -> Execution Lock Hierarchy
     conn = task_registry._get_connection()
@@ -1163,7 +1176,11 @@ async def get_task_evidence_file(request: Request) -> Response:
         err_str = str(exc)
         if "unsafe permissions" in err_str.lower():
             return JSONResponse({"detail": "evidence unavailable: unsafe permissions"}, status_code=403)
-        if "not permitted" in err_str.lower() or "invalid filename" in err_str.lower() or "invalid relative" in err_str.lower():
+        if (
+            "not permitted" in err_str.lower()
+            or "invalid filename" in err_str.lower()
+            or "invalid relative" in err_str.lower()
+        ):
             return JSONResponse({"detail": str(exc)}, status_code=400)
         return JSONResponse({"detail": str(exc)}, status_code=502)
     except Exception as exc:
@@ -1286,7 +1303,9 @@ async def export_task_reviews(request: Request) -> Response:
     work_item = task.get("work_item") or task_id
     try:
         reviews = task_registry.get_reviews_for_task(task_id)
-        content = json.dumps({"task_id": task_id, "work_item": work_item, "reviews": reviews}, indent=2, default=str)
+        content = json.dumps(
+            {"task_id": task_id, "work_item": work_item, "reviews": reviews}, indent=2, default=str
+        )
         headers = {
             "Content-Type": "application/json",
             "Content-Disposition": f'attachment; filename="{work_item}_reviews.json"',
@@ -1363,4 +1382,5 @@ app = HostValidationMiddleware(raw_app)
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host=HOST, port=PORT, log_level="info")

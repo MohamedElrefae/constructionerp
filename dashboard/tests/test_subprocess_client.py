@@ -2,6 +2,7 @@
 
 import asyncio
 from pathlib import Path
+
 import pytest
 
 from dashboard.config import REPO_ROOT

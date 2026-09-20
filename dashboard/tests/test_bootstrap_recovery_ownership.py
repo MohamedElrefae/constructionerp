@@ -10,6 +10,7 @@ import sys
 import tempfile
 import uuid
 from pathlib import Path
+
 import pytest
 
 from dashboard.bootstrap import (
@@ -24,13 +25,13 @@ from dashboard.process import (
     get_process_start_time,
     is_process_alive_with_start_time,
 )
-from dashboard.tests.conftest import create_isolated_worktree
 from dashboard.registry import TaskRegistry, validate_and_bind_canonical_registry
+from dashboard.tests.conftest import create_isolated_worktree
 
 
 def test_bootstrap_initial_checkpoint_predicate_matches_real_engine(tmp_path):
     """Executes real Engine.initialize(config) and asserts checkpoint matches exact contract."""
-    script = '''
+    script = """
 import sys, json, shutil
 from pathlib import Path
 sys.path.insert(0, str(Path("orchestrator").resolve()))
@@ -84,7 +85,7 @@ assert v["committed"] is False
 assert v["scope_hash"] == digest(config["scope"])
 assert v["roles_hash"] == digest(config["roles"])
 print("SUCCESS")
-'''
+"""
     cmd = [str(ORCHESTRATOR_PYTHON), "-c", script, str(tmp_path / "engine_init_repo")]
     res = subprocess.run(cmd, cwd=str(REPO_ROOT), capture_output=True, text=True)
     assert res.returncode == 0, f"Stderr: {res.stderr}\nStdout: {res.stdout}"
@@ -176,7 +177,7 @@ def test_bootstrap_stale_worker_mutation_aborted_after_fencing(tmp_path):
         """)
     conn.close()
 
-    script = f'''
+    script = f"""
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path("orchestrator").resolve()))
@@ -189,8 +190,10 @@ try:
 except WorkflowError as exc:
     assert "Fencing validation failed" in str(exc)
     print("FENCE_BLOCKED")
-'''
-    res = subprocess.run([str(ORCHESTRATOR_PYTHON), "-c", script], cwd=str(REPO_ROOT), capture_output=True, text=True)
+"""
+    res = subprocess.run(
+        [str(ORCHESTRATOR_PYTHON), "-c", script], cwd=str(REPO_ROOT), capture_output=True, text=True
+    )
     assert res.returncode == 0
     assert "FENCE_BLOCKED" in res.stdout
 
@@ -218,7 +221,8 @@ def test_bootstrap_two_simultaneous_recovery_requests(tmp_path):
     def try_claim(inst_id, expected_token):
         c = sqlite3.connect(db_path)
         with c:
-            cur = c.execute("""
+            cur = c.execute(
+                """
                 UPDATE action_log
                 SET state = 'RECOVERING',
                     fencing_token = fencing_token + 1,
@@ -227,7 +231,9 @@ def test_bootstrap_two_simultaneous_recovery_requests(tmp_path):
                 WHERE action_id = 'act-concurrent'
                   AND state IN ('EXECUTING_UNKNOWN', 'FAILED')
                   AND fencing_token = ?
-            """, (inst_id, expected_token))
+            """,
+                (inst_id, expected_token),
+            )
             return cur.rowcount
 
     # First worker claims
@@ -302,7 +308,7 @@ def test_registry_path_traversal_rejected(tmp_path):
 
 def test_subprocess_registry_derivation_consistency_assertion(tmp_path):
     """Subprocess derives canonical path from worktree root and asserts consistency with CANONICAL_DASHBOARD_REGISTRY."""
-    script = '''
+    script = """
 import os, sys
 from pathlib import Path
 sys.path.insert(0, str(Path("orchestrator").resolve()))
@@ -322,8 +328,13 @@ try:
 except Exception as exc:
     if "Registry derivation mismatch" in str(exc):
         print("ASSERTION_HELD")
-'''
-    res = subprocess.run([str(ORCHESTRATOR_PYTHON), "-c", script, str(tmp_path)], cwd=str(REPO_ROOT), capture_output=True, text=True)
+"""
+    res = subprocess.run(
+        [str(ORCHESTRATOR_PYTHON), "-c", script, str(tmp_path)],
+        cwd=str(REPO_ROOT),
+        capture_output=True,
+        text=True,
+    )
     assert res.returncode == 0
     assert "ASSERTION_HELD" in res.stdout
 
@@ -341,13 +352,17 @@ def test_bootstrap_crash_after_config_before_checkpoint_halts_reconciliation(tmp
     with conn:
         conn.execute("CREATE TABLE workflow_meta (key TEXT PRIMARY KEY, value TEXT)")
         conn.execute("INSERT INTO workflow_meta VALUES ('config', '{\"work_item\":\"test-work\"}')")
-        conn.execute("CREATE TABLE checkpoints (thread_id TEXT, checkpoint_ns TEXT, checkpoint_id TEXT, parent_checkpoint_id TEXT, type TEXT, checkpoint BLOB, metadata BLOB)")
+        conn.execute(
+            "CREATE TABLE checkpoints (thread_id TEXT, checkpoint_ns TEXT, checkpoint_id TEXT, parent_checkpoint_id TEXT, type TEXT, checkpoint BLOB, metadata BLOB)"
+        )
     conn.close()
 
     # Recovery check logic
     conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
     has_config = conn.execute("SELECT 1 FROM workflow_meta WHERE key='config'").fetchone() is not None
-    has_checkpoint = conn.execute("SELECT 1 FROM checkpoints WHERE thread_id='workflow'").fetchone() is not None
+    has_checkpoint = (
+        conn.execute("SELECT 1 FROM checkpoints WHERE thread_id='workflow'").fetchone() is not None
+    )
     conn.close()
 
     assert has_config is True
@@ -390,7 +405,7 @@ def test_managed_worktree_requires_fencing_for_all_mutations(tmp_path):
 
 def test_bootstrap_mutation_halted_when_fence_token_incremented(tmp_path):
     """Asserts that if the fencing token is incremented mid-bootstrap, subsequent mutations halt immediately."""
-    from dashboard.bootstrap import _check_bootstrap_fence, BootstrapConflictError
+    from dashboard.bootstrap import _check_bootstrap_fence
     from dashboard.registry import TaskRegistry
 
     db_path = tmp_path / "registry.db"
@@ -400,7 +415,8 @@ def test_bootstrap_mutation_halted_when_fence_token_incremented(tmp_path):
 
     conn = sqlite3.connect(db_path)
     with conn:
-        conn.execute("""
+        conn.execute(
+            """
             INSERT INTO action_log (
                 action_id, task_id, action_type, state, idempotency_key,
                 request_hash, manifest_json, executor_instance_id, executor_pid,
@@ -409,7 +425,9 @@ def test_bootstrap_mutation_halted_when_fence_token_incremented(tmp_path):
                 ?, 't-1', 'bootstrap', 'EXECUTING', 'k-1',
                 'h-1', '{}', ?, 100, 100, 1, '2026-09-17T00:00:00Z', '2026-09-17T00:00:00Z'
             )
-        """, (action_id, executor_inst))
+        """,
+            (action_id, executor_inst),
+        )
     conn.close()
 
     # Step 1 check passes
@@ -442,6 +460,7 @@ async def test_bootstrap_with_distinct_dashboard_and_target_worktree_roots(tmp_p
     registry_db = var_dir / "registry.db"
 
     from dashboard.registry import init_registry_db
+
     init_registry_db(registry_db)
     os.chmod(registry_db, 0o600)
     locks_dir = var_dir / "locks"
@@ -485,6 +504,7 @@ async def test_bootstrap_with_distinct_dashboard_and_target_worktree_roots(tmp_p
 
         # Verify checkpoint contract via subprocess get_state_projection
         from dashboard.subprocess_client import get_state_projection
+
         state = await get_state_projection(target_worktree)
         assert state is not None
         assert state["status"] == "DRAFT"
@@ -517,9 +537,10 @@ async def test_bootstrap_with_distinct_dashboard_and_target_worktree_roots(tmp_p
             conn_reg.close()
     finally:
         if target_worktree.exists():
-            subprocess.run(["git", "-C", str(REPO_ROOT), "worktree", "remove", "--force", str(target_worktree)], capture_output=True)
+            subprocess.run(
+                ["git", "-C", str(REPO_ROOT), "worktree", "remove", "--force", str(target_worktree)],
+                capture_output=True,
+            )
             subprocess.run(["git", "-C", str(REPO_ROOT), "worktree", "prune"], capture_output=True)
         if branch_name:
             subprocess.run(["git", "-C", str(REPO_ROOT), "branch", "-D", branch_name], capture_output=True)
-
-

@@ -12,30 +12,30 @@ Verifies:
 - Zero mutation to apps/construction.
 """
 
-import os
-import json
-import shutil
 import hashlib
-import pytest
+import json
+import os
+import shutil
 from copy import deepcopy
 from pathlib import Path
 
-from core import WorkflowError, digest, utc, canonical, bytes_hash, write_json
+import pytest
+from core import WorkflowError, bytes_hash, canonical, digest, utc, write_json
 from engine import Engine
-from routing import apply_event, initial, gate_id
+from routing import apply_event, gate_id, initial
 from stage4 import (
-    is_hex64,
-    derive_identities_digest,
+    HISTORICAL_PROVENANCE_AUTHORITY,
     canonical_bundle_sha256,
     canonical_payload_sha256,
+    compose_bundle,
+    derive_identities_digest,
     derive_proposal_hash,
     derive_stage4_candidate_id,
+    is_hex64,
     project_proposal_rows,
-    compose_bundle,
     validate_panel_reviews,
-    verify_stage4_manifest,
     verify_historical_provenance,
-    HISTORICAL_PROVENANCE_AUTHORITY,
+    verify_stage4_manifest,
 )
 from validate import validate_document
 
@@ -46,8 +46,13 @@ def test_repo(tmp_path):
     repo.mkdir()
 
     import subprocess
+
     subprocess.run(["git", "-C", str(repo), "init"], check=True, capture_output=True)
-    subprocess.run(["git", "-C", str(repo), "checkout", "-b", "feature/scope-context-portability"], check=True, capture_output=True)
+    subprocess.run(
+        ["git", "-C", str(repo), "checkout", "-b", "feature/scope-context-portability"],
+        check=True,
+        capture_output=True,
+    )
     subprocess.run(["git", "-C", str(repo), "config", "user.email", "test@example.com"], check=True)
     subprocess.run(["git", "-C", str(repo), "config", "user.name", "Tester"], check=True)
 
@@ -57,14 +62,39 @@ def test_repo(tmp_path):
 
     (repo / "orchestrator").mkdir(parents=True)
     roles = {
-        "architect": {"tool": "codex", "binary": "/bin/true", "model": "gpt-6-astra", "prompt_sha256": "0"*64},
-        "reviewer": {"tool": "codex", "binary": "/bin/true", "model": "gpt-6-astra", "prompt_sha256": "0"*64},
-        "builder": {"tool": "codex", "binary": "/bin/true", "model": "gpt-6-astra", "prompt_sha256": "0"*64},
-        "verifier": {"tool": "codex", "binary": "/bin/true", "model": "gpt-6-astra", "prompt_sha256": "0"*64},
-        "proposer": {"tool": "codex", "binary": "/bin/true", "model": "gpt-6-astra", "prompt_sha256": "0"*64},
-        "ai-a1": {"tool": "codex", "binary": "/bin/true", "model": "gpt-6-astra", "prompt_sha256": "0"*64},
-        "ai-a2": {"tool": "codex", "binary": "/bin/true", "model": "gpt-6-astra", "prompt_sha256": "0"*64},
-        "ai-a3": {"tool": "codex", "binary": "/bin/true", "model": "gpt-6-astra", "prompt_sha256": "0"*64},
+        "architect": {
+            "tool": "codex",
+            "binary": "/bin/true",
+            "model": "gpt-6-astra",
+            "prompt_sha256": "0" * 64,
+        },
+        "reviewer": {
+            "tool": "codex",
+            "binary": "/bin/true",
+            "model": "gpt-6-astra",
+            "prompt_sha256": "0" * 64,
+        },
+        "builder": {
+            "tool": "codex",
+            "binary": "/bin/true",
+            "model": "gpt-6-astra",
+            "prompt_sha256": "0" * 64,
+        },
+        "verifier": {
+            "tool": "codex",
+            "binary": "/bin/true",
+            "model": "gpt-6-astra",
+            "prompt_sha256": "0" * 64,
+        },
+        "proposer": {
+            "tool": "codex",
+            "binary": "/bin/true",
+            "model": "gpt-6-astra",
+            "prompt_sha256": "0" * 64,
+        },
+        "ai-a1": {"tool": "codex", "binary": "/bin/true", "model": "gpt-6-astra", "prompt_sha256": "0" * 64},
+        "ai-a2": {"tool": "codex", "binary": "/bin/true", "model": "gpt-6-astra", "prompt_sha256": "0" * 64},
+        "ai-a3": {"tool": "codex", "binary": "/bin/true", "model": "gpt-6-astra", "prompt_sha256": "0" * 64},
     }
     (repo / "orchestrator/roles.json").write_text(json.dumps(roles))
 
@@ -91,7 +121,10 @@ def test_adopt_historical_initializes_stages_0_to_3_with_real_evidence_hashes(te
         assert view["next_roles"] == []
         assert view["plan_granted"] is False
         assert view["candidate"]["kind"] == "stage4-proposal"
-        assert view["candidate"]["export_sha256"] == "206ecfae017b915742abc265016eee094304562e53838a932c7fd56af6db9ed1"
+        assert (
+            view["candidate"]["export_sha256"]
+            == "206ecfae017b915742abc265016eee094304562e53838a932c7fd56af6db9ed1"
+        )
         assert view["candidate"]["identities_digest"] == e.config["identities_digest"]
         assert is_hex64(view["candidate"]["identities_digest"])
         assert "expected_identities" not in e.config
@@ -99,19 +132,31 @@ def test_adopt_historical_initializes_stages_0_to_3_with_real_evidence_hashes(te
         stages = view["stages"]
         assert stages["0"]["historical"] is True
         assert stages["0"]["evidence_refs"][0]["artifact_id"] == "stage-0-baseline"
-        assert stages["0"]["evidence_refs"][0]["sha256"] == "5334c6683a4fd51096c2f6e03d01458dff3ca70072c82998036806fe30d27efd"
+        assert (
+            stages["0"]["evidence_refs"][0]["sha256"]
+            == "5334c6683a4fd51096c2f6e03d01458dff3ca70072c82998036806fe30d27efd"
+        )
 
         assert stages["1"]["historical"] is True
         assert stages["1"]["evidence_refs"][0]["artifact_id"] == "stage-1c-ai-r-durability-final"
-        assert stages["1"]["evidence_refs"][0]["sha256"] == "54ed9554fb2b8f82834598e5213a7aa6c954694497d0c5569754ed1a80dd42d8"
+        assert (
+            stages["1"]["evidence_refs"][0]["sha256"]
+            == "54ed9554fb2b8f82834598e5213a7aa6c954694497d0c5569754ed1a80dd42d8"
+        )
 
         assert stages["2"]["historical"] is True
         assert stages["2"]["evidence_refs"][0]["artifact_id"] == "stage-2-ai-r-round19"
-        assert stages["2"]["evidence_refs"][0]["sha256"] == "3e83a3528fff02a206745df235fcfb5cc212d335129847e3144e0ab68347a880"
+        assert (
+            stages["2"]["evidence_refs"][0]["sha256"]
+            == "3e83a3528fff02a206745df235fcfb5cc212d335129847e3144e0ab68347a880"
+        )
 
         assert stages["3"]["historical"] is True
         assert stages["3"]["evidence_refs"][0]["artifact_id"] == "stage-3-ai-r-round12"
-        assert stages["3"]["evidence_refs"][0]["sha256"] == "4a397f7acfd72de31e3cc72796c45d4d917947fc213d808668d5df217292f7ed"
+        assert (
+            stages["3"]["evidence_refs"][0]["sha256"]
+            == "4a397f7acfd72de31e3cc72796c45d4d917947fc213d808668d5df217292f7ed"
+        )
 
         assert stages["4"]["historical"] is False
         assert stages["4"]["sub_status"] == "PROPOSAL_PENDING"
@@ -123,7 +168,7 @@ def test_adopt_historical_fails_on_tampered_or_missing_file(test_repo, tmp_path)
     """Revalidation must fail closed if any historical evidence file is missing or altered."""
     mock_erp = tmp_path / "mock_erp"
     mock_erp.mkdir()
-    
+
     # Copy partial structure but corrupt stage 0 evidence
     ev_dir = mock_erp / "docs/ai/work-items/erp-arabic-bilingual-data/evidence"
     ev_dir.mkdir(parents=True)
@@ -199,7 +244,12 @@ def test_deterministic_bundle_composition():
             "confidence": "high",
             "rationale": "Matches Egyptian banking conventions",
             "reference": {"status": "absent", "value": None, "source": None},
-            "provenance": {"reviewer": "ai-a2", "model": "gpt-6-astra", "session": "s1", "reviewed_utc": utc()},
+            "provenance": {
+                "reviewer": "ai-a2",
+                "model": "gpt-6-astra",
+                "session": "s1",
+                "reviewed_utc": utc(),
+            },
         }
     }
 
@@ -254,7 +304,9 @@ def test_panel_review_quorum_exact_coverage_and_independent_sessions():
         validate_panel_reviews(missing_revs, expected)
 
     # 4. Duplicate identity in one reviewer
-    dup_row_revs = make_reviews(["s1", "s2", "s3"], [expected, ["acc-1", "acc-2", "acc-3", "acc-2"], expected])
+    dup_row_revs = make_reviews(
+        ["s1", "s2", "s3"], [expected, ["acc-1", "acc-2", "acc-3", "acc-2"], expected]
+    )
     with pytest.raises(WorkflowError, match="Duplicate identity"):
         validate_panel_reviews(dup_row_revs, expected)
 
@@ -269,12 +321,16 @@ def test_panel_review_quorum_exact_coverage_and_independent_sessions():
         validate_panel_reviews(partial_roles, expected)
 
     # 7. Arabic value change triggers renewal_required
-    renewal_revs = make_reviews(["s1", "s2", "s3"], [expected, expected, expected], suggested={"acc-2": "new_arabic"})
+    renewal_revs = make_reviews(
+        ["s1", "s2", "s3"], [expected, expected, expected], suggested={"acc-2": "new_arabic"}
+    )
     val_renew = validate_panel_reviews(renewal_revs, expected)
     assert val_renew["renewal_required"] is True
 
     # 8. Row rejection registers blocking finding
-    rejection_revs = make_reviews(["s1", "s2", "s3"], [expected, expected, expected], decisions={"acc-2": "rejected"})
+    rejection_revs = make_reviews(
+        ["s1", "s2", "s3"], [expected, expected, expected], decisions={"acc-2": "rejected"}
+    )
     val_rej = validate_panel_reviews(rejection_revs, expected)
     assert val_rej["ok"] is False
     assert any(f["classification"] == "row_rejected" for f in val_rej["blocking_findings"])
@@ -321,7 +377,11 @@ def test_stage4_sub_status_state_transitions_end_to_end(test_repo):
         assert state["next_roles"] == ["proposer"]
         assert state["gate"] is None
 
-        catalog_blob = Path(config["erp_descriptor"]["private_root"]) / "blobs" / f"{state['candidate']['export_sha256']}.json"
+        catalog_blob = (
+            Path(config["erp_descriptor"]["private_root"])
+            / "blobs"
+            / f"{state['candidate']['export_sha256']}.json"
+        )
         cat_doc = json.loads(catalog_blob.read_text())
         expected_identities = [r["identity"] for r in cat_doc.get("rows", [])]
         assert len(expected_identities) == 81
@@ -356,7 +416,9 @@ def test_stage4_sub_status_state_transitions_end_to_end(test_repo):
                     "export_sha256": state["candidate"]["export_sha256"],
                     "proposal_sha256": proposal_sha,
                     "findings": [],
-                    "evidence_paths": [{"artifact_id": "job-p1-native-events", "sha256": "e" * 64, "visibility": "public"}],
+                    "evidence_paths": [
+                        {"artifact_id": "job-p1-native-events", "sha256": "e" * 64, "visibility": "public"}
+                    ],
                 },
             },
         }
@@ -383,7 +445,11 @@ def test_stage4_sub_status_state_transitions_end_to_end(test_repo):
                     "job_id": f"job-{role}",
                     "role": role,
                     "verified_private_artifacts": [
-                        {"artifact_id": f"stage4-review-{role}-job-{role}", "sha256": "%064x" % (100 + i), "visibility": "private"}
+                        {
+                            "artifact_id": f"stage4-review-{role}-job-{role}",
+                            "sha256": "%064x" % (100 + i),
+                            "visibility": "private",
+                        }
                     ],
                     "review_meta": {
                         "verdict": "PASS",
@@ -396,7 +462,13 @@ def test_stage4_sub_status_state_transitions_end_to_end(test_repo):
                         "verdict": "PASS",
                         "session_id": f"sess-{role}",
                         "findings": [],
-                        "evidence_paths": [{"artifact_id": f"job-{role}-native-events", "sha256": "e" * 64, "visibility": "public"}],
+                        "evidence_paths": [
+                            {
+                                "artifact_id": f"job-{role}-native-events",
+                                "sha256": "e" * 64,
+                                "visibility": "public",
+                            }
+                        ],
                     },
                 },
             }
@@ -405,8 +477,16 @@ def test_stage4_sub_status_state_transitions_end_to_end(test_repo):
                     "bundle_sha256": bundle_sha,
                     "payload_sha256": payload_sha,
                     "verified_private_artifacts": [
-                        {"artifact_id": f"stage4-bundle-{candidate_id[:16]}", "sha256": bundle_sha, "visibility": "private"},
-                        {"artifact_id": f"stage4-payload-{candidate_id[:16]}", "sha256": payload_sha, "visibility": "private"},
+                        {
+                            "artifact_id": f"stage4-bundle-{candidate_id[:16]}",
+                            "sha256": bundle_sha,
+                            "visibility": "private",
+                        },
+                        {
+                            "artifact_id": f"stage4-payload-{candidate_id[:16]}",
+                            "sha256": payload_sha,
+                            "visibility": "private",
+                        },
                     ],
                 }
             state = apply_event(state, ev_quorum, config)
@@ -543,9 +623,9 @@ def test_dry_run_builder_pass_without_valid_digest_fails_closed():
         "stage": "4",
         "sub_status": "DRY_RUN",
         "next_roles": ["builder"],
-        "candidate": {"kind": "stage4-proposal", "candidate_id": "c"*64},
-        "plan_revision_hash": "p"*64,
-        "scope_hash": "s"*64,
+        "candidate": {"kind": "stage4-proposal", "candidate_id": "c" * 64},
+        "plan_revision_hash": "p" * 64,
+        "scope_hash": "s" * 64,
     }
     state = initial(config)
     state["active_jobs"] = ["job-b1"]
@@ -585,11 +665,11 @@ def test_token_tamper_resistance_across_all_stage4_hashes():
     """Every Stage 4 hash must be strictly validated against the active candidate/config."""
     cand = {
         "kind": "stage4-proposal",
-        "candidate_id": "c"*64,
-        "export_sha256": "e"*64,
-        "proposal_sha256": "1"*64,
-        "bundle_sha256": "b"*64,
-        "payload_sha256": "d"*64,
+        "candidate_id": "c" * 64,
+        "export_sha256": "e" * 64,
+        "proposal_sha256": "1" * 64,
+        "bundle_sha256": "b" * 64,
+        "payload_sha256": "d" * 64,
     }
     config = {
         "work_item": "erp-arabic-bilingual-data",
@@ -598,9 +678,9 @@ def test_token_tamper_resistance_across_all_stage4_hashes():
         "sub_status": "OWNER_PAYLOAD_AUTHORIZATION",
         "next_roles": [],
         "candidate": cand,
-        "plan_revision_hash": "a"*64,
-        "scope_hash": "b"*64,
-        "erp_descriptor_hash": "f"*64,
+        "plan_revision_hash": "a" * 64,
+        "scope_hash": "b" * 64,
+        "erp_descriptor_hash": "f" * 64,
     }
     state = initial(config)
     state["gate"] = {"scope": "DRY_RUN", "gate_id": gate_id(state, "DRY_RUN")}
@@ -621,32 +701,34 @@ def test_token_tamper_resistance_across_all_stage4_hashes():
     }
 
     # Tampered export_sha256
-    t_bad_export = dict(base_valid_token, export_sha256="0"*64)
+    t_bad_export = dict(base_valid_token, export_sha256="0" * 64)
     with pytest.raises(WorkflowError, match="export_sha256 mismatch"):
         apply_event(deepcopy(state), {"seq": 1, "kind": "grant", "payload": t_bad_export}, config)
 
     # Tampered proposal_sha256
-    t_bad_prop = dict(base_valid_token, proposal_sha256="0"*64)
+    t_bad_prop = dict(base_valid_token, proposal_sha256="0" * 64)
     with pytest.raises(WorkflowError, match="proposal_sha256 mismatch"):
         apply_event(deepcopy(state), {"seq": 1, "kind": "grant", "payload": t_bad_prop}, config)
 
     # Tampered bundle_sha256
-    t_bad_bnd = dict(base_valid_token, bundle_sha256="0"*64)
+    t_bad_bnd = dict(base_valid_token, bundle_sha256="0" * 64)
     with pytest.raises(WorkflowError, match="bundle_sha256 mismatch"):
         apply_event(deepcopy(state), {"seq": 1, "kind": "grant", "payload": t_bad_bnd}, config)
 
     # Tampered payload_sha256
-    t_bad_pay = dict(base_valid_token, payload_sha256="0"*64)
+    t_bad_pay = dict(base_valid_token, payload_sha256="0" * 64)
     with pytest.raises(WorkflowError, match="payload_sha256 mismatch"):
         apply_event(deepcopy(state), {"seq": 1, "kind": "grant", "payload": t_bad_pay}, config)
 
     # Tampered erp_descriptor_hash
-    t_bad_desc = dict(base_valid_token, erp_descriptor_hash="0"*64)
+    t_bad_desc = dict(base_valid_token, erp_descriptor_hash="0" * 64)
     with pytest.raises(WorkflowError, match="erp_descriptor_hash mismatch"):
         apply_event(deepcopy(state), {"seq": 1, "kind": "grant", "payload": t_bad_desc}, config)
 
     # Non-hex hash value
-    t_non_hex = dict(base_valid_token, export_sha256="not_a_valid_hex_hash_at_all_000000000000000000000000000000000000")
+    t_non_hex = dict(
+        base_valid_token, export_sha256="not_a_valid_hex_hash_at_all_000000000000000000000000000000000000"
+    )
     with pytest.raises(WorkflowError, match="must be 64-character lowercase hex"):
         apply_event(deepcopy(state), {"seq": 1, "kind": "grant", "payload": t_non_hex}, config)
 
@@ -677,12 +759,12 @@ def test_token_tamper_resistance_across_all_stage4_hashes():
     state_imp = deepcopy(state)
     state_imp["sub_status"] = "IMPORT_AUTHORIZATION"
     state_imp["gate"] = {"scope": "IMPORT", "gate_id": gate_id(state_imp, "IMPORT")}
-    state_imp["dry_run_evidence_digest"] = "d"*64
+    state_imp["dry_run_evidence_digest"] = "d" * 64
     valid_imp_token = dict(
         base_valid_token,
         scope="IMPORT",
         gate_id=state_imp["gate"]["gate_id"],
-        dry_run_evidence_digest="d"*64,
+        dry_run_evidence_digest="d" * 64,
     )
 
     # Missing active hashes in state/config fail closed unconditionally for IMPORT
@@ -704,16 +786,22 @@ def test_token_tamper_resistance_across_all_stage4_hashes():
         apply_event(state_imp_no_export, {"seq": 1, "kind": "grant", "payload": valid_imp_token}, config)
 
     with pytest.raises(WorkflowError, match="Import requires active erp_descriptor_hash in config"):
-        apply_event(deepcopy(state_imp), {"seq": 1, "kind": "grant", "payload": valid_imp_token}, config_no_desc)
+        apply_event(
+            deepcopy(state_imp), {"seq": 1, "kind": "grant", "payload": valid_imp_token}, config_no_desc
+        )
 
     # Missing or mismatched dry_run_evidence_digest
     t_no_digest = dict(valid_imp_token)
     t_no_digest.pop("dry_run_evidence_digest")
-    with pytest.raises(WorkflowError, match="Import grant dry_run_evidence_digest must be 64-character lowercase hex"):
+    with pytest.raises(
+        WorkflowError, match="Import grant dry_run_evidence_digest must be 64-character lowercase hex"
+    ):
         apply_event(deepcopy(state_imp), {"seq": 1, "kind": "grant", "payload": t_no_digest}, config)
 
-    t_bad_digest = dict(valid_imp_token, dry_run_evidence_digest="0"*64)
-    with pytest.raises(WorkflowError, match="Import grant dry_run_evidence_digest does not match recorded evidence"):
+    t_bad_digest = dict(valid_imp_token, dry_run_evidence_digest="0" * 64)
+    with pytest.raises(
+        WorkflowError, match="Import grant dry_run_evidence_digest does not match recorded evidence"
+    ):
         apply_event(deepcopy(state_imp), {"seq": 1, "kind": "grant", "payload": t_bad_digest}, config)
 
 
@@ -755,8 +843,8 @@ def test_reused_authorization_token_rejected_in_engine_approve(test_repo):
 
 def test_verify_stage4_manifest_validates_hex_and_distinct_hashes():
     """verify_stage4_manifest must enforce 5 distinct 64-char hex hashes and valid panel digests."""
-    h = ["%064x" % i for i in range(1, 6)]
-    panel_digests = {"ai-a1": "a"*64, "ai-a2": "b"*64, "ai-a3": "c"*64}
+    h = [f"{i:064x}" for i in range(1, 6)]
+    panel_digests = {"ai-a1": "a" * 64, "ai-a2": "b" * 64, "ai-a3": "c" * 64}
 
     # Valid
     assert verify_stage4_manifest(h[0], h[1], h[2], h[3], h[4], panel_digests) is True
@@ -770,7 +858,7 @@ def test_verify_stage4_manifest_validates_hex_and_distinct_hashes():
         verify_stage4_manifest(h[0], "non_hex_export_hash", h[2], h[3], h[4], panel_digests)
 
     # Missing required role in panel digests
-    bad_panel = {"ai-a1": "a"*64, "ai-a2": "b"*64}
+    bad_panel = {"ai-a1": "a" * 64, "ai-a2": "b" * 64}
     with pytest.raises(WorkflowError, match="keys must match exact required roles"):
         verify_stage4_manifest(h[0], h[1], h[2], h[3], h[4], bad_panel)
 
@@ -823,17 +911,23 @@ class Stage4Stub:
                     eng = r.get("english") or r.get("account_name")
                     is_grp = r.get("is_group", False)
                     ar_text = f"حساب {idx} {self.canary}".strip()
-                    rows.append({
-                        "identity": ident,
-                        "english": eng,
-                        "is_group": is_grp,
-                        "proposal": {"arabic": ar_text, "confidence": "high"},
-                    })
+                    rows.append(
+                        {
+                            "identity": ident,
+                            "english": eng,
+                            "is_group": is_grp,
+                            "proposal": {"arabic": ar_text, "confidence": "high"},
+                        }
+                    )
 
-                out_file.write_text(json.dumps({
-                    "export_sha256": spec["envelope"]["export_sha256"],
-                    "rows": rows,
-                }))
+                out_file.write_text(
+                    json.dumps(
+                        {
+                            "export_sha256": spec["envelope"]["export_sha256"],
+                            "rows": rows,
+                        }
+                    )
+                )
 
             elif role in ("ai-a1", "ai-a2", "ai-a3"):
                 body["verdict"] = "PASS"
@@ -850,22 +944,28 @@ class Stage4Stub:
 
                 row_decisions = []
                 for idx, pr in enumerate(p_rows):
-                    row_decisions.append({
-                        "identity": pr["identity"],
-                        "decision": "approved",
-                        "rationale": f"Valid translation {self.canary}".strip(),
-                        "reference": {"status": "present"},
-                    })
+                    row_decisions.append(
+                        {
+                            "identity": pr["identity"],
+                            "decision": "approved",
+                            "rationale": f"Valid translation {self.canary}".strip(),
+                            "reference": {"status": "present"},
+                        }
+                    )
 
-                out_file.write_text(json.dumps({
-                    "schema": "stage4-panel-review/v1",
-                    "role": role,
-                    "session_id": body["session_id"],
-                    "proposal_sha256": spec["envelope"]["proposal_sha256"],
-                    "verdict": "PASS",
-                    "row_decisions": row_decisions,
-                    "findings": [],
-                }))
+                out_file.write_text(
+                    json.dumps(
+                        {
+                            "schema": "stage4-panel-review/v1",
+                            "role": role,
+                            "session_id": body["session_id"],
+                            "proposal_sha256": spec["envelope"]["proposal_sha256"],
+                            "verdict": "PASS",
+                            "row_decisions": row_decisions,
+                            "findings": [],
+                        }
+                    )
+                )
 
         elif role == "verifier":
             body["verdict"] = "PASS"
@@ -907,9 +1007,12 @@ def test_stage4_public_engine_lifecycle_acceptance(test_repo, tmp_path):
     Engine.adopt_historical -> Engine.approve(PLAN) -> proposer -> panel reviews -> verifier -> DRY_RUN gate.
     """
     import shutil
+
     mock_private = tmp_path / "private_stage4"
     mock_private.mkdir(parents=True)
-    real_catalog = Path("/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4/account_catalog_20260910_121018.json")
+    real_catalog = Path(
+        "/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4/account_catalog_20260910_121018.json"
+    )
     shutil.copy2(real_catalog, mock_private / real_catalog.name)
 
     stub = Stage4Stub()
@@ -1003,9 +1106,12 @@ def test_stage4_public_engine_lifecycle_acceptance(test_repo, tmp_path):
 def test_exhaustive_privacy_leakage_scan(test_repo, tmp_path):
     """Exhaustive privacy scan: verifies zero leak of private account data into SQLite, logs, or exports."""
     import shutil
+
     mock_private = tmp_path / "private_stage4_canary"
     mock_private.mkdir(parents=True)
-    real_catalog = Path("/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4/account_catalog_20260910_121018.json")
+    real_catalog = Path(
+        "/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4/account_catalog_20260910_121018.json"
+    )
     shutil.copy2(real_catalog, mock_private / real_catalog.name)
 
     CANARY_ARABIC = "حساب_كناري_خاص_سري_987654321"
@@ -1065,7 +1171,9 @@ def test_exhaustive_privacy_leakage_scan(test_repo, tmp_path):
             assert r["identity"] in all_blob_text
 
         # 2. Assert all private terms are ABSENT from all SQLite tables
-        tables = [r[0] for r in e.store.conn.execute("SELECT name FROM sqlite_master WHERE type='table'").fetchall()]
+        tables = [
+            r[0] for r in e.store.conn.execute("SELECT name FROM sqlite_master WHERE type='table'").fetchall()
+        ]
         for tbl in tables:
             rows = e.store.conn.execute(f"SELECT * FROM {tbl}").fetchall()
             for r in rows:
@@ -1104,9 +1212,12 @@ def test_exhaustive_privacy_leakage_scan(test_repo, tmp_path):
 def test_adversarial_explanation_leakage(test_repo, tmp_path):
     """Adversarial test: an agent explanation containing private text is sanitized before writing to disk or SQLite."""
     import shutil
+
     mock_private = tmp_path / "private_adv_expl"
     mock_private.mkdir(parents=True)
-    real_catalog = Path("/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4/account_catalog_20260910_121018.json")
+    real_catalog = Path(
+        "/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4/account_catalog_20260910_121018.json"
+    )
     shutil.copy2(real_catalog, mock_private / real_catalog.name)
 
     leak_term = "Office Rent"
@@ -1174,9 +1285,12 @@ def test_adversarial_explanation_leakage(test_repo, tmp_path):
 def test_adversarial_finding_leakage(test_repo, tmp_path):
     """Adversarial test: an agent finding containing private text is sanitized before writing to disk or SQLite."""
     import shutil
+
     mock_private = tmp_path / "private_adv_find"
     mock_private.mkdir(parents=True)
-    real_catalog = Path("/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4/account_catalog_20260910_121018.json")
+    real_catalog = Path(
+        "/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4/account_catalog_20260910_121018.json"
+    )
     shutil.copy2(real_catalog, mock_private / real_catalog.name)
 
     leak_term = "Office Rent"
@@ -1187,16 +1301,18 @@ def test_adversarial_finding_leakage(test_repo, tmp_path):
             super().complete(job)
             destination = Path(job["runtime"])
             raw_payload = json.loads((destination / "stdout.jsonl").read_text())
-            raw_payload["body"]["findings"] = [{
-                "schema_version": 1,
-                "finding_id": None,
-                "role": job["role"],
-                "classification": "optional_improvement",
-                "affected_requirements": ["CANONICAL_PLAN §11.1"],
-                "blocking": False,
-                "summary": f"Finding leaks {leak_term} and {arabic_term}",
-                "detail": f"Detail leaks {leak_term}",
-            }]
+            raw_payload["body"]["findings"] = [
+                {
+                    "schema_version": 1,
+                    "finding_id": None,
+                    "role": job["role"],
+                    "classification": "optional_improvement",
+                    "affected_requirements": ["CANONICAL_PLAN §11.1"],
+                    "blocking": False,
+                    "summary": f"Finding leaks {leak_term} and {arabic_term}",
+                    "detail": f"Detail leaks {leak_term}",
+                }
+            ]
             (destination / "stdout.jsonl").write_text(json.dumps(raw_payload, ensure_ascii=False))
 
     stub = FindingLeakStub()
@@ -1247,6 +1363,7 @@ def test_adversarial_finding_leakage(test_repo, tmp_path):
 def test_adversarial_mismatched_review_provenance(test_repo, tmp_path):
     """Adversarial test: reviewer document with mismatched role, proposal_sha, or session_id is rejected fail-closed."""
     from stage4 import validate_and_store_review
+
     mock_private = tmp_path / "private_prov"
     mock_private.mkdir(parents=True)
     out_file = tmp_path / "output.json"
@@ -1266,8 +1383,12 @@ def test_adversarial_mismatched_review_provenance(test_repo, tmp_path):
     out_file.write_text(json.dumps(bad_role_doc))
     with pytest.raises(WorkflowError, match="Review document role mismatch"):
         validate_and_store_review(
-            mock_private, out_file, expected_role="ai-a1", expected_proposal_sha="a" * 64,
-            expected_identities=["id1"], expected_session_id="sess-correct-123"
+            mock_private,
+            out_file,
+            expected_role="ai-a1",
+            expected_proposal_sha="a" * 64,
+            expected_identities=["id1"],
+            expected_session_id="sess-correct-123",
         )
 
     # 2. Proposal SHA mismatch
@@ -1275,8 +1396,12 @@ def test_adversarial_mismatched_review_provenance(test_repo, tmp_path):
     out_file.write_text(json.dumps(bad_prop_doc))
     with pytest.raises(WorkflowError, match="Review document proposal_sha256 mismatch"):
         validate_and_store_review(
-            mock_private, out_file, expected_role="ai-a1", expected_proposal_sha="a" * 64,
-            expected_identities=["id1"], expected_session_id="sess-correct-123"
+            mock_private,
+            out_file,
+            expected_role="ai-a1",
+            expected_proposal_sha="a" * 64,
+            expected_identities=["id1"],
+            expected_session_id="sess-correct-123",
         )
 
     # 3. Session ID mismatch
@@ -1284,17 +1409,24 @@ def test_adversarial_mismatched_review_provenance(test_repo, tmp_path):
     out_file.write_text(json.dumps(bad_sess_doc))
     with pytest.raises(WorkflowError, match="Review document session_id mismatch"):
         validate_and_store_review(
-            mock_private, out_file, expected_role="ai-a1", expected_proposal_sha="a" * 64,
-            expected_identities=["id1"], expected_session_id="sess-correct-123"
+            mock_private,
+            out_file,
+            expected_role="ai-a1",
+            expected_proposal_sha="a" * 64,
+            expected_identities=["id1"],
+            expected_session_id="sess-correct-123",
         )
 
 
 def test_adversarial_catalog_drift(test_repo, tmp_path):
     """Adversarial test: catalog blob modified after adoption raises WorkflowError on job prepare."""
     import shutil
+
     mock_private = tmp_path / "private_drift"
     mock_private.mkdir(parents=True)
-    real_catalog = Path("/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4/account_catalog_20260910_121018.json")
+    real_catalog = Path(
+        "/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4/account_catalog_20260910_121018.json"
+    )
     shutil.copy2(real_catalog, mock_private / real_catalog.name)
 
     stub = Stage4Stub()
@@ -1338,9 +1470,12 @@ def test_adversarial_catalog_drift(test_repo, tmp_path):
 def test_adversarial_crash_after_blob_store(test_repo, tmp_path):
     """Adversarial test: crash after storing private blob and writing acceptance record recovers cleanly."""
     import shutil
+
     mock_private = tmp_path / "private_crash_rec"
     mock_private.mkdir(parents=True)
-    real_catalog = Path("/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4/account_catalog_20260910_121018.json")
+    real_catalog = Path(
+        "/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4/account_catalog_20260910_121018.json"
+    )
     shutil.copy2(real_catalog, mock_private / real_catalog.name)
 
     stub = Stage4Stub()
@@ -1372,6 +1507,7 @@ def test_adversarial_crash_after_blob_store(test_repo, tmp_path):
             for i, r in enumerate(cat_doc["rows"])
         ]
         from stage4 import derive_proposal_hash, project_proposal_rows, store_private_blob
+
         sorted_rows = project_proposal_rows(rows)
         prop_sha = derive_proposal_hash(sorted_rows, view["candidate"]["export_sha256"])
         canonical_prop = {
@@ -1421,7 +1557,12 @@ def test_adversarial_crash_after_blob_store(test_repo, tmp_path):
             "wire": wire,
         }
         (dest / "stdout.jsonl").write_text(json.dumps(payload))
-        obs = {"exit_code": 0, "session_id": "sess-proposer-crash", "started_utc": utc(), "finished_utc": utc()}
+        obs = {
+            "exit_code": 0,
+            "session_id": "sess-proposer-crash",
+            "started_utc": utc(),
+            "finished_utc": utc(),
+        }
         job = {
             "job_id": job_id,
             "role": "proposer",
@@ -1448,7 +1589,9 @@ def test_adversarial_crash_recovery_tampered_record_rejected(test_repo, tmp_path
     """
     mock_private = tmp_path / "private_tampered_rec"
     mock_private.mkdir(parents=True)
-    real_catalog = Path("/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4/account_catalog_20260910_121018.json")
+    real_catalog = Path(
+        "/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4/account_catalog_20260910_121018.json"
+    )
     shutil.copy2(real_catalog, mock_private / real_catalog.name)
 
     stub = Stage4Stub()
@@ -1479,6 +1622,7 @@ def test_adversarial_crash_recovery_tampered_record_rejected(test_repo, tmp_path
             for i, r in enumerate(cat_doc["rows"])
         ]
         from stage4 import derive_proposal_hash, project_proposal_rows, store_private_blob
+
         sorted_rows = project_proposal_rows(rows)
         prop_sha = derive_proposal_hash(sorted_rows, view["candidate"]["export_sha256"])
         canonical_prop = {
@@ -1576,6 +1720,7 @@ def test_adversarial_crash_recovery_tampered_record_rejected(test_repo, tmp_path
         assert event["proposal_sha256"] != "0" * 64
         # candidate_id is derived from blob content; forged meta rows_count/artifact_sha256 are ignored
         from stage4 import derive_stage4_candidate_id
+
         expected_candidate_id = derive_stage4_candidate_id(view["candidate"]["export_sha256"], prop_sha)
         assert event["candidate_id"] == expected_candidate_id
         assert event["export_sha256"] == view["candidate"]["export_sha256"]
@@ -1586,11 +1731,18 @@ def test_adversarial_crash_recovery_tampered_record_rejected(test_repo, tmp_path
 
 def test_compose_and_store_bundle_and_payload_rejection_on_renewal(test_repo, tmp_path):
     """Verifies that compose_and_store_bundle_and_payload rechecks and rejects renewal-needed reviews."""
-    from stage4 import compose_and_store_bundle_and_payload, store_private_blob, project_proposal_rows, derive_proposal_hash
+    from stage4 import (
+        compose_and_store_bundle_and_payload,
+        derive_proposal_hash,
+        project_proposal_rows,
+        store_private_blob,
+    )
 
     mock_private = tmp_path / "private_comp_renewal"
     mock_private.mkdir(parents=True)
-    real_catalog = Path("/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4/account_catalog_20260910_121018.json")
+    real_catalog = Path(
+        "/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4/account_catalog_20260910_121018.json"
+    )
     shutil.copy2(real_catalog, mock_private / real_catalog.name)
 
     cat_doc = json.loads(real_catalog.read_text())
@@ -1617,7 +1769,12 @@ def test_compose_and_store_bundle_and_payload_rejection_on_renewal(test_repo, tm
 
     # Base valid row decisions
     base_decisions = [
-        {"identity": r["identity"], "decision": "approved", "proposed_arabic": r["proposal"]["arabic"], "rationale": "Valid"}
+        {
+            "identity": r["identity"],
+            "decision": "approved",
+            "proposed_arabic": r["proposal"]["arabic"],
+            "rationale": "Valid",
+        }
         for r in sorted_rows
     ]
 
@@ -1673,7 +1830,14 @@ def test_compose_and_store_bundle_and_payload_rejection_on_renewal(test_repo, tm
         )
 
     # Case C: renewal_required is False, but finding has classification: "arabic_value_change"
-    findings = [{"finding_id": "f-1", "blocking": False, "classification": "arabic_value_change", "summary": "Changed"}]
+    findings = [
+        {
+            "finding_id": "f-1",
+            "blocking": False,
+            "classification": "arabic_value_change",
+            "summary": "Changed",
+        }
+    ]
     a2_recompute_finding_sha = make_review_blob("ai-a2", renewal_required=False, findings=findings)
     with pytest.raises(WorkflowError, match="requires renewal"):
         compose_and_store_bundle_and_payload(
@@ -1707,7 +1871,9 @@ def test_adversarial_catalog_corruption_fails_closed(test_repo, tmp_path):
     """Adversarial test: catalog resolution fails closed on missing, corrupted, or invalid schema."""
     mock_private = tmp_path / "private_adv_cat"
     mock_private.mkdir(parents=True)
-    real_catalog = Path("/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4/account_catalog_20260910_121018.json")
+    real_catalog = Path(
+        "/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4/account_catalog_20260910_121018.json"
+    )
     shutil.copy2(real_catalog, mock_private / real_catalog.name)
 
     stub = Stage4Stub()
@@ -1793,7 +1959,9 @@ def test_native_events_digest_matches_post_sanitization_artifact(test_repo, tmp_
     """
     mock_private = tmp_path / "private_digest_test"
     mock_private.mkdir(parents=True)
-    real_catalog = Path("/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4/account_catalog_20260910_121018.json")
+    real_catalog = Path(
+        "/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4/account_catalog_20260910_121018.json"
+    )
     shutil.copy2(real_catalog, mock_private / real_catalog.name)
 
     stub = Stage4Stub(canary="")
@@ -1848,11 +2016,13 @@ def test_native_events_digest_matches_post_sanitization_artifact(test_repo, tmp_
         stdout_path.write_text(raw_content, encoding="utf-8")
 
         # Verify raw content contains Arabic before accept()
-        assert arabic_payload in stdout_path.read_text(encoding="utf-8"), \
-            "Raw stdout.jsonl must contain Arabic before accept()"
+        assert arabic_payload in stdout_path.read_text(
+            encoding="utf-8"
+        ), "Raw stdout.jsonl must contain Arabic before accept()"
 
         # Let Stage4Stub generate a valid proposal into private_out
         from stage4 import store_private_blob
+
         job = {
             "job_id": job_id,
             "role": "proposer",
@@ -1892,8 +2062,9 @@ def test_native_events_digest_matches_post_sanitization_artifact(test_repo, tmp_
         # After accept: stdout.jsonl must be scrubbed (no raw Arabic)
         retained_bytes = stdout_path.read_bytes()
         retained_text = retained_bytes.decode("utf-8", errors="replace")
-        assert arabic_payload not in retained_text, \
-            "Arabic canary must not remain in stdout.jsonl after accept()"
+        assert (
+            arabic_payload not in retained_text
+        ), "Arabic canary must not remain in stdout.jsonl after accept()"
 
         # The recorded digest must match the retained (scrubbed) file
         recorded_sha = event["result"]["evidence_paths"][0]["sha256"]
@@ -1904,8 +2075,7 @@ def test_native_events_digest_matches_post_sanitization_artifact(test_repo, tmp_
         )
         # And must NOT equal the raw (pre-sanitization) digest
         raw_sha = hashlib.sha256(raw_content.encode("utf-8")).hexdigest()
-        assert recorded_sha != raw_sha, \
-            "evidence_paths digest must not be the raw pre-sanitization hash"
+        assert recorded_sha != raw_sha, "evidence_paths digest must not be the raw pre-sanitization hash"
     finally:
         e.close()
 
@@ -1919,7 +2089,9 @@ def test_raw_artifacts_scrubbed_on_rejected_output(test_repo, tmp_path):
     """
     mock_private = tmp_path / "private_reject_scrub"
     mock_private.mkdir(parents=True)
-    real_catalog = Path("/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4/account_catalog_20260910_121018.json")
+    real_catalog = Path(
+        "/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4/account_catalog_20260910_121018.json"
+    )
     shutil.copy2(real_catalog, mock_private / real_catalog.name)
 
     stub = Stage4Stub()
@@ -1962,7 +2134,11 @@ def test_raw_artifacts_scrubbed_on_rejected_output(test_repo, tmp_path):
             "export_sha256": view["candidate"]["export_sha256"],
             "proposal_sha256": None,
         }
-        wire = {"explanation": f"Canary Arabic: {arabic_canary}", "result_json": json.dumps(envelope), "plan_text": ""}
+        wire = {
+            "explanation": f"Canary Arabic: {arabic_canary}",
+            "result_json": json.dumps(envelope),
+            "plan_text": "",
+        }
         payload = {"body": envelope, "wire": wire}
         raw_content = json.dumps(payload, ensure_ascii=False)
         stdout_path = dest / "stdout.jsonl"
@@ -2000,12 +2176,15 @@ def test_raw_artifacts_scrubbed_on_rejected_output(test_repo, tmp_path):
         retained_stdout = stdout_path.read_text(encoding="utf-8")
         retained_stderr = stderr_path.read_text(encoding="utf-8")
 
-        assert arabic_canary not in retained_stdout, \
-            "Arabic canary must be scrubbed from stdout.jsonl even after rejection"
-        assert arabic_canary not in retained_stderr, \
-            "Arabic canary must be scrubbed from stderr.txt even after rejection"
-        assert "Office Rent" not in retained_stderr, \
-            "Catalog term 'Office Rent' must be scrubbed from stderr.txt even after rejection"
+        assert (
+            arabic_canary not in retained_stdout
+        ), "Arabic canary must be scrubbed from stdout.jsonl even after rejection"
+        assert (
+            arabic_canary not in retained_stderr
+        ), "Arabic canary must be scrubbed from stderr.txt even after rejection"
+        assert (
+            "Office Rent" not in retained_stderr
+        ), "Catalog term 'Office Rent' must be scrubbed from stderr.txt even after rejection"
     finally:
         e.close()
 
@@ -2014,7 +2193,9 @@ def test_raw_artifacts_scrubbed_on_malformed_output(test_repo, tmp_path):
     """Raw stdout.jsonl and stderr.txt must be scrubbed when agent output is malformed / unparseable."""
     mock_private = tmp_path / "private_malformed_scrub"
     mock_private.mkdir(parents=True)
-    real_catalog = Path("/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4/account_catalog_20260910_121018.json")
+    real_catalog = Path(
+        "/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4/account_catalog_20260910_121018.json"
+    )
     shutil.copy2(real_catalog, mock_private / real_catalog.name)
 
     stub = Stage4Stub()
@@ -2075,14 +2256,16 @@ def test_raw_artifacts_scrubbed_on_malformed_output(test_repo, tmp_path):
         retained_stdout = stdout_path.read_text(encoding="utf-8")
         retained_stderr = stderr_path.read_text(encoding="utf-8")
 
-        assert arabic_canary not in retained_stdout, \
-            "Arabic canary must be scrubbed from malformed stdout.jsonl"
-        assert cat_term not in retained_stdout, \
-            "Catalog term must be scrubbed from malformed stdout.jsonl"
-        assert arabic_canary not in retained_stderr, \
-            "Arabic canary must be scrubbed from stderr.txt on malformed output"
-        assert cat_term not in retained_stderr, \
-            "Catalog term must be scrubbed from stderr.txt on malformed output"
+        assert (
+            arabic_canary not in retained_stdout
+        ), "Arabic canary must be scrubbed from malformed stdout.jsonl"
+        assert cat_term not in retained_stdout, "Catalog term must be scrubbed from malformed stdout.jsonl"
+        assert (
+            arabic_canary not in retained_stderr
+        ), "Arabic canary must be scrubbed from stderr.txt on malformed output"
+        assert (
+            cat_term not in retained_stderr
+        ), "Catalog term must be scrubbed from stderr.txt on malformed output"
     finally:
         e.close()
 
@@ -2091,7 +2274,9 @@ def test_missing_or_corrupt_catalog_with_english_canary_quarantines_artifacts(te
     """When catalog is corrupt or missing, raw artifacts with English canary must be quarantined/deleted."""
     mock_private = tmp_path / "private_corrupt_cat"
     mock_private.mkdir(parents=True)
-    real_catalog = Path("/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4/account_catalog_20260910_121018.json")
+    real_catalog = Path(
+        "/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4/account_catalog_20260910_121018.json"
+    )
     shutil.copy2(real_catalog, mock_private / real_catalog.name)
 
     stub = Stage4Stub()
@@ -2137,7 +2322,11 @@ def test_missing_or_corrupt_catalog_with_english_canary_quarantines_artifacts(te
         }
         english_canary = "Office Rent CONFIDENTIAL_TERM_123"
         arabic_canary = "حساب_خاص_سري"
-        wire_a = {"explanation": f"Leaking {english_canary} and {arabic_canary}", "result_json": json.dumps(envelope_a), "plan_text": ""}
+        wire_a = {
+            "explanation": f"Leaking {english_canary} and {arabic_canary}",
+            "result_json": json.dumps(envelope_a),
+            "plan_text": "",
+        }
         payload_a = {"body": envelope_a, "wire": wire_a}
         stdout_a = dest_a / "stdout.jsonl"
         stdout_a.write_text(json.dumps(payload_a), encoding="utf-8")
@@ -2164,8 +2353,12 @@ def test_missing_or_corrupt_catalog_with_english_canary_quarantines_artifacts(te
             e.accept(job_a, obs_a, view)
 
         # Public runtime artifacts must NOT exist in job destination (quarantined/deleted)
-        assert not stdout_a.exists(), "stdout.jsonl must not remain in public job dir when catalog terms cannot be loaded"
-        assert not stderr_a.exists(), "stderr.txt must not remain in public job dir when catalog terms cannot be loaded"
+        assert (
+            not stdout_a.exists()
+        ), "stdout.jsonl must not remain in public job dir when catalog terms cannot be loaded"
+        assert (
+            not stderr_a.exists()
+        ), "stderr.txt must not remain in public job dir when catalog terms cannot be loaded"
 
         # Quarantined copies in protected private root
         q_stdout_a = mock_private / "quarantine" / job_id_a / "stdout.jsonl"
@@ -2176,7 +2369,9 @@ def test_missing_or_corrupt_catalog_with_english_canary_quarantines_artifacts(te
 
         # Mode and ownership verification
         assert (mock_private / "quarantine").stat().st_mode & 0o777 == 0o700, "Quarantine root must be 0700"
-        assert (mock_private / "quarantine" / job_id_a).stat().st_mode & 0o777 == 0o700, "Job quarantine dir must be 0700"
+        assert (
+            mock_private / "quarantine" / job_id_a
+        ).stat().st_mode & 0o777 == 0o700, "Job quarantine dir must be 0700"
         assert q_stdout_a.stat().st_mode & 0o777 == 0o600, "Quarantined stdout.jsonl must be 0600"
         assert q_stderr_a.stat().st_mode & 0o777 == 0o600, "Quarantined stderr.txt must be 0600"
         assert q_stdout_a.stat().st_uid == os.getuid(), "Quarantined file must be owned by current user"
@@ -2188,7 +2383,11 @@ def test_missing_or_corrupt_catalog_with_english_canary_quarantines_artifacts(te
 
         envelope_b = deepcopy(envelope_a)
         envelope_b["job_id"] = job_id_b
-        wire_b = {"explanation": f"Leaking {english_canary}", "result_json": json.dumps(envelope_b), "plan_text": ""}
+        wire_b = {
+            "explanation": f"Leaking {english_canary}",
+            "result_json": json.dumps(envelope_b),
+            "plan_text": "",
+        }
         payload_b = {"body": envelope_b, "wire": wire_b}
         stdout_b = dest_b / "stdout.jsonl"
         stdout_b.write_text(json.dumps(payload_b), encoding="utf-8")
@@ -2227,7 +2426,9 @@ def test_invalid_utf8_runtime_output_handling(test_repo, tmp_path):
     """Invalid UTF-8 in runtime output must not leak bytes or replace original acceptance exception."""
     mock_private = tmp_path / "private_invalid_utf8"
     mock_private.mkdir(parents=True)
-    real_catalog = Path("/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4/account_catalog_20260910_121018.json")
+    real_catalog = Path(
+        "/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4/account_catalog_20260910_121018.json"
+    )
     shutil.copy2(real_catalog, mock_private / real_catalog.name)
 
     stub = Stage4Stub()
@@ -2352,7 +2553,9 @@ def test_quarantine_permissions_and_symlink_non_regular_rejection(test_repo, tmp
     os.chmod(mock_private, 0o775)
     assert mock_private.stat().st_mode & 0o777 == 0o775
 
-    real_catalog = Path("/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4/account_catalog_20260910_121018.json")
+    real_catalog = Path(
+        "/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4/account_catalog_20260910_121018.json"
+    )
     shutil.copy2(real_catalog, mock_private / real_catalog.name)
 
     stub = Stage4Stub()
@@ -2412,7 +2615,12 @@ def test_quarantine_permissions_and_symlink_non_regular_rejection(test_repo, tmp
                 "model": "opencode-go/gpt-5.6-luna",
             },
         }
-        obs_1 = {"exit_code": 0, "session_id": f"sess-{job_id_1}", "started_utc": utc(), "finished_utc": utc()}
+        obs_1 = {
+            "exit_code": 0,
+            "session_id": f"sess-{job_id_1}",
+            "started_utc": utc(),
+            "finished_utc": utc(),
+        }
 
         with pytest.raises(WorkflowError):
             e.accept(job_1, obs_1, view)
@@ -2452,7 +2660,12 @@ def test_quarantine_permissions_and_symlink_non_regular_rejection(test_repo, tmp
                 "model": "opencode-go/gpt-5.6-luna",
             },
         }
-        obs_2 = {"exit_code": 0, "session_id": f"sess-{job_id_2}", "started_utc": utc(), "finished_utc": utc()}
+        obs_2 = {
+            "exit_code": 0,
+            "session_id": f"sess-{job_id_2}",
+            "started_utc": utc(),
+            "finished_utc": utc(),
+        }
 
         with pytest.raises(WorkflowError):
             e.accept(job_2, obs_2, view)
@@ -2482,7 +2695,12 @@ def test_quarantine_permissions_and_symlink_non_regular_rejection(test_repo, tmp
                 "model": "opencode-go/gpt-5.6-luna",
             },
         }
-        obs_3 = {"exit_code": 0, "session_id": f"sess-{job_id_3}", "started_utc": utc(), "finished_utc": utc()}
+        obs_3 = {
+            "exit_code": 0,
+            "session_id": f"sess-{job_id_3}",
+            "started_utc": utc(),
+            "finished_utc": utc(),
+        }
 
         with pytest.raises((WorkflowError, json.JSONDecodeError)):
             e.accept(job_3, obs_3, view)
@@ -2500,9 +2718,12 @@ def test_quarantine_permissions_and_symlink_non_regular_rejection(test_repo, tmp
 def test_concurrent_acceptance_isolation(test_repo, tmp_path):
     """Concurrent accept() calls on the same Engine instance must be fully isolated without cross-job state."""
     import concurrent.futures
+
     mock_private = tmp_path / "private_concurrent"
     mock_private.mkdir(parents=True)
-    real_catalog = Path("/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4/account_catalog_20260910_121018.json")
+    real_catalog = Path(
+        "/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4/account_catalog_20260910_121018.json"
+    )
     shutil.copy2(real_catalog, mock_private / real_catalog.name)
 
     stub = Stage4Stub()
@@ -2523,7 +2744,7 @@ def test_concurrent_acceptance_isolation(test_repo, tmp_path):
             dest = test_repo / "orchestrator/var/jobs" / jid
             dest.mkdir(parents=True)
 
-            is_failing = (i == 2)
+            is_failing = i == 2
             canary = f"CANARY_CONCURRENT_THREAD_{i}"
             envelope = {
                 "schema_version": 1,
@@ -2573,11 +2794,16 @@ def test_concurrent_acceptance_isolation(test_repo, tmp_path):
                 stub.complete(job)
                 (dest / "stdout.jsonl").write_text(json.dumps(payload), encoding="utf-8")
 
-            obs = {"exit_code": 0, "session_id": f"sess-concurrent-{i}", "started_utc": utc(), "finished_utc": utc()}
+            obs = {
+                "exit_code": 0,
+                "session_id": f"sess-concurrent-{i}",
+                "started_utc": utc(),
+                "finished_utc": utc(),
+            }
             job_specs.append((i, job, obs, is_failing, canary, dest))
 
         def run_accept(args):
-            idx, job, obs, is_failing, canary, dest = args
+            idx, job, obs, _is_failing, _canary, _dest = args
             try:
                 event = e.accept(job, obs, view)
                 return idx, event, None
@@ -2602,11 +2828,11 @@ def test_concurrent_acceptance_isolation(test_repo, tmp_path):
                 assert recorded_sha == hashlib.sha256(retained_bytes).hexdigest()
 
         # Check that no instance-level cache exists on Engine
-        assert not hasattr(e, "_stage4_catalog_terms_cache"), "Engine must not store catalog terms cache on self"
+        assert not hasattr(
+            e, "_stage4_catalog_terms_cache"
+        ), "Engine must not store catalog terms cache on self"
     finally:
         e.close()
-
-
 
 
 def test_bubblewrap_neutral_mounts_execution(tmp_path):
@@ -2614,6 +2840,7 @@ def test_bubblewrap_neutral_mounts_execution(tmp_path):
     import shutil
     import subprocess
     import sys
+
     import adapters
 
     if not shutil.which("bwrap"):
@@ -2661,7 +2888,7 @@ def test_bubblewrap_neutral_mounts_execution(tmp_path):
             },
         ],
     }
-    cmd, env = adapters.invocation(spec)
+    cmd, _env = adapters.invocation(spec)
     test_code = """
 import json, sys
 from pathlib import Path
@@ -2673,12 +2900,20 @@ out_path = Path("/tmp/workspace/private_output/output.json")
 out_path.write_text(json.dumps({"received": data["test_key"]}))
 """
     dd_idx = cmd.index("--")
-    bwrap_prefix = cmd[:dd_idx + 1]
-    test_cmd = bwrap_prefix + [sys.executable, "-c", test_code]
+    bwrap_prefix = cmd[: dd_idx + 1]
+    test_cmd = [*bwrap_prefix, sys.executable, "-c", test_code]
 
     res = subprocess.run(test_cmd, capture_output=True, text=True)
     if res.returncode != 0:
-        if any(msg in res.stderr.lower() for msg in ("setting up uid map", "permission denied", "creating new namespace failed", "function not implemented")):
+        if any(
+            msg in res.stderr.lower()
+            for msg in (
+                "setting up uid map",
+                "permission denied",
+                "creating new namespace failed",
+                "function not implemented",
+            )
+        ):
             pytest.skip("nested container lacks user namespace privileges")
         raise AssertionError(f"bwrap execution failed: {res.stderr}")
 
@@ -2686,4 +2921,3 @@ out_path.write_text(json.dumps({"received": data["test_key"]}))
     assert out_file.exists()
     out_data = json.loads(out_file.read_text())
     assert out_data["received"] == "test_value"
-

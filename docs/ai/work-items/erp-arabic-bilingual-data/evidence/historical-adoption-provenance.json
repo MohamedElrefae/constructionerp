@@ -35,7 +35,7 @@
       "evidence_path": "docs/ai/work-items/erp-arabic-bilingual-data/evidence/stage-3-ai-r-round12.md",
       "evidence_sha256": "4a397f7acfd72de31e3cc72796c45d4d917947fc213d808668d5df217292f7ed",
       "service_path": "construction/services/bilingual_service.py",
-      "service_sha256": "a8c049443d7755714e2a173c75cd5747fce527a374be6b43cf7c76b49ebd0698"
+      "service_sha256": "753e3e655ca6c4426d37ebaf8a88b0d3124d2dcd9224a2dccd102833d1cf4207"
     },
     "stage_4_foundation": {
       "status": "FOUNDATION_VERIFIED",
@@ -48,7 +48,7 @@
       "evidence_path": "docs/ai/work-items/erp-arabic-bilingual-data/evidence/stage-4-export.md",
       "evidence_sha256": "a9f4c008ad70cb8646625d853975e5a58099271576660b73a92316b3a482149f",
       "review_bundle_service": "construction/services/account_review_bundle.py",
-      "review_bundle_service_sha256": "dd3bbf692391198897b11f34b0efcf9936e5817d2db9e6b4092407c084c74a74"
+      "review_bundle_service_sha256": "73d15457526170c7537d893cee7f553bcabb1a5afca21d56566b27475a1ad933"
     }
   }
 }

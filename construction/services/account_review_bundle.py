@@ -96,72 +96,73 @@ def bundle_template():
 
 
 def _validate_row(row, index, errors):
-    where = "row[%d]" % index
+    where = f"row[{index}]"
     identity = row.get("identity")
     if not identity:
-        errors.append("%s: identity is required" % where)
+        errors.append(f"{where}: identity is required")
     english = row.get("english")
     if not english:
-        errors.append("%s: english is required" % where)
+        errors.append(f"{where}: english is required")
 
     proposal = row.get("proposal") or {}
     arabic = proposal.get("arabic")
     if not arabic or not str(arabic).strip():
-        errors.append("%s: proposal.arabic is required (no value may be invented)" % where)
+        errors.append(f"{where}: proposal.arabic is required (no value may be invented)")
     if not proposal.get("confidence"):
-        errors.append("%s: proposal.confidence is required" % where)
+        errors.append(f"{where}: proposal.confidence is required")
     pprov = proposal.get("provenance") or {}
     for key in ("reviewer", "model", "session", "submitted_utc"):
         if not pprov.get(key):
-            errors.append("%s: proposal.provenance.%s is required" % (where, key))
+            errors.append(f"{where}: proposal.provenance.{key} is required")
     submitted = _parse_utc(pprov.get("submitted_utc"))
 
     a2 = row.get("a2_review") or {}
     decision = a2.get("decision")
     if decision not in DECISIONS:
-        errors.append(
-            "%s: a2_review.decision must be one of %s (got %r)" % (where, list(DECISIONS), decision)
-        )
+        errors.append(f"{where}: a2_review.decision must be one of {list(DECISIONS)} (got {decision!r})")
     if not a2.get("confidence"):
-        errors.append("%s: a2_review.confidence is required" % where)
+        errors.append(f"{where}: a2_review.confidence is required")
     if not a2.get("rationale") or not str(a2.get("rationale")).strip():
-        errors.append("%s: a2_review.rationale is required" % where)
+        errors.append(f"{where}: a2_review.rationale is required")
 
     ref = a2.get("reference") or {}
     status = ref.get("status")
     if status not in REFERENCE_STATUSES:
         errors.append(
-            "%s: a2_review.reference.status must be one of %s (verified authoritative source or explicit documented absence)"
-            % (where, list(REFERENCE_STATUSES))
+            f"{where}: a2_review.reference.status must be one of {list(REFERENCE_STATUSES)} (verified authoritative source or explicit documented absence)"
         )
     elif status == "verified":
         if not ref.get("value") or not ref.get("source"):
-            errors.append("%s: verified reference requires value and source; references must never be invented" % where)
+            errors.append(
+                f"{where}: verified reference requires value and source; references must never be invented"
+            )
     else:  # absent
         # explicit documented absence: the rationale above plus the flag below
         flags = set(row.get("flags") or [])
         if "no_verified_reference" not in flags:
-            errors.append("%s: absent reference requires the explicit 'no_verified_reference' flag" % where)
+            errors.append(f"{where}: absent reference requires the explicit 'no_verified_reference' flag")
 
     apro = a2.get("provenance") or {}
     for key in ("reviewer", "model", "session", "reviewed_utc"):
         if not apro.get(key):
-            errors.append("%s: a2_review.provenance.%s is required" % (where, key))
+            errors.append(f"{where}: a2_review.provenance.{key} is required")
     reviewed = _parse_utc(apro.get("reviewed_utc"))
 
     # Independence: distinct reviewer identity AND distinct session.
     if pprov.get("session") and apro.get("session") and pprov.get("session") == apro.get("session"):
-        errors.append("%s: proposal and AI-A2 provenance must use DISTINCT sessions (independence)" % where)
+        errors.append(f"{where}: proposal and AI-A2 provenance must use DISTINCT sessions (independence)")
     if pprov.get("reviewer") and apro.get("reviewer") and pprov.get("reviewer") == apro.get("reviewer"):
-        errors.append("%s: proposal and AI-A2 reviewers must be DISTINCT (proposal cannot approve itself)" % where)
+        errors.append(
+            f"{where}: proposal and AI-A2 reviewers must be DISTINCT (proposal cannot approve itself)"
+        )
 
     # Ordering.
     if submitted and reviewed and submitted > reviewed:
-        errors.append("%s: proposal timestamp is after the AI-A2 review timestamp" % where)
+        errors.append(f"{where}: proposal timestamp is after the AI-A2 review timestamp")
     if submitted is None and pprov.get("submitted_utc"):
-        errors.append("%s: proposal.provenance.submitted_utc is not a valid %s timestamp" % (where, _UTC))
+        errors.append(f"{where}: proposal.provenance.submitted_utc is not a valid {_UTC} timestamp")
     if reviewed is None and apro.get("reviewed_utc"):
-        errors.append("%s: a2_review.provenance.reviewed_utc is not a valid %s timestamp" % (where, _UTC))
+        errors.append(f"{where}: a2_review.provenance.reviewed_utc is not a valid {_UTC} timestamp")
 
 
 def validate_bundle(bundle, expected_identities=None, expected_english=None, now_utc=None):
@@ -180,9 +181,15 @@ def validate_bundle(bundle, expected_identities=None, expected_english=None, now
     """
     errors = []
     if not isinstance(bundle, dict):
-        return {"violations": ["bundle is not an object"], "reviewable_exceptions": [], "approved_count": 0, "row_count": 0, "missing_identities": []}
+        return {
+            "violations": ["bundle is not an object"],
+            "reviewable_exceptions": [],
+            "approved_count": 0,
+            "row_count": 0,
+            "missing_identities": [],
+        }
     if bundle.get("schema") != BUNDLE_SCHEMA:
-        errors.append("schema must be %r (got %r)" % (BUNDLE_SCHEMA, bundle.get("schema")))
+        errors.append("schema must be {!r} (got {!r})".format(BUNDLE_SCHEMA, bundle.get("schema")))
     rows = bundle.get("rows")
     if not isinstance(rows, list) or not rows:
         errors.append("rows must be a non-empty list")
@@ -192,40 +199,42 @@ def validate_bundle(bundle, expected_identities=None, expected_english=None, now
     if now_utc is not None:
         now = _parse_utc(now_utc)
         if now is None:
-            errors.append("now_utc is not a valid %s timestamp (future-timestamp control cannot be silently disabled)" % _UTC)
+            errors.append(
+                f"now_utc is not a valid {_UTC} timestamp (future-timestamp control cannot be silently disabled)"
+            )
     now_utc_valid = now_utc is None or now is not None
     seen = set()
     reviewable_exceptions = []
     approved_count = 0
     for i, row in enumerate(rows):
         if not isinstance(row, dict):
-            errors.append("row[%d]: not an object" % i)
+            errors.append(f"row[{i}]: not an object")
             continue
         _validate_row(row, i, errors)
         identity = row.get("identity")
         if identity:
             if identity in seen:
-                errors.append("row[%d]: duplicate identity %r" % (i, identity))
+                errors.append(f"row[{i}]: duplicate identity {identity!r}")
             seen.add(identity)
         if expected_identities is not None and identity and identity not in set(expected_identities):
-            errors.append("row[%d]: identity %r is not in the exported/candidate account set" % (i, identity))
+            errors.append(f"row[{i}]: identity {identity!r} is not in the exported/candidate account set")
         if expected_english and identity in expected_english:
             expected_value = expected_english[identity]
             if expected_value is not None and row.get("english") != expected_value:
                 errors.append(
-                    "row[%d]: english %r does not match the candidate value %r for identity %r"
-                    % (i, row.get("english"), expected_value, identity)
+                    f"row[{i}]: english {row.get('english')!r} does not match the candidate value "
+                    f"{expected_value!r} for identity {identity!r}"
                 )
         if now is not None:
             prop_ts = _parse_utc(((row.get("proposal") or {}).get("provenance") or {}).get("submitted_utc"))
             a2_ts = _parse_utc(((row.get("a2_review") or {}).get("provenance") or {}).get("reviewed_utc"))
             if prop_ts and prop_ts > now:
-                errors.append("row[%d]: proposal timestamp is in the future" % i)
+                errors.append(f"row[{i}]: proposal timestamp is in the future")
             if a2_ts and a2_ts > now:
-                errors.append("row[%d]: AI-A2 timestamp is in the future" % i)
+                errors.append(f"row[{i}]: AI-A2 timestamp is in the future")
         a2 = row.get("a2_review") or {}
         if a2.get("decision") == "exception":
-            reviewable_exceptions.append(identity or "row[%d]" % i)
+            reviewable_exceptions.append(identity or f"row[{i}]")
         elif a2.get("decision") == "approved":
             approved_count += 1
 
@@ -235,8 +244,8 @@ def validate_bundle(bundle, expected_identities=None, expected_english=None, now
         missing_identities = sorted(expected_set - seen)
         for identity in missing_identities:
             errors.append(
-                "identity %r from the exported/candidate set is silently omitted from the bundle "
-                "(record it as approved or exception)" % identity
+                f"identity {identity!r} from the exported/candidate set is silently omitted from the bundle "
+                "(record it as approved or exception)"
             )
 
     return {
@@ -264,7 +273,9 @@ def _governed_manifest_path():
     """
     return os.path.join(
         os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-        "data", "localization", "stage4_export_manifest.json",
+        "data",
+        "localization",
+        "stage4_export_manifest.json",
     )
 
 
@@ -275,22 +286,22 @@ def _load_governed_manifest(manifest_path):
     export path and the export's recorded SHA-256, and carries no account
     rows. A caller cannot supply an object, a mapping, or a SHA.
     """
-    if not isinstance(manifest_path, (str, bytes)) or not manifest_path:
+    if not isinstance(manifest_path, str | bytes) or not manifest_path:
         raise BundleError("governed manifest path must be a filesystem path")
     manifest_path = os.fspath(manifest_path)
     if not os.path.exists(manifest_path):
-        raise BundleError("governed export manifest not found: %s" % manifest_path)
+        raise BundleError(f"governed export manifest not found: {manifest_path}")
     try:
         with open(manifest_path, "rb") as fh:
             raw = fh.read()
         manifest = json.loads(raw.decode("utf-8"))
     except (OSError, UnicodeDecodeError, ValueError) as exc:
-        raise BundleError("governed export manifest is unreadable: %s" % exc)
+        raise BundleError(f"governed export manifest is unreadable: {exc}")
     if not isinstance(manifest, dict) or manifest.get("schema") != GOVERNED_MANIFEST_SCHEMA:
-        raise BundleError("governed manifest schema must be %r" % GOVERNED_MANIFEST_SCHEMA)
+        raise BundleError(f"governed manifest schema must be {GOVERNED_MANIFEST_SCHEMA!r}")
     for key in ("export_path", "export_sha256"):
         if not manifest.get(key):
-            raise BundleError("governed manifest lacks %s" % key)
+            raise BundleError(f"governed manifest lacks {key}")
     return manifest
 
 
@@ -306,32 +317,33 @@ def _reload_verified_export(manifest):
     if not os.path.isabs(export_path):
         raise BundleError("governed manifest export_path must be absolute")
     if not os.path.exists(export_path):
-        raise BundleError("private export referenced by the governed manifest is missing: %s" % export_path)
+        raise BundleError(f"private export referenced by the governed manifest is missing: {export_path}")
     with open(export_path, "rb") as fh:
         raw = fh.read()
     actual = hashlib.sha256(raw).hexdigest()
     if actual != str(manifest["export_sha256"]).strip():
         raise BundleError(
-            "private export SHA-256 mismatch against the governed manifest: recorded %s != actual %s"
-            % (str(manifest["export_sha256"]).strip(), actual)
+            "private export SHA-256 mismatch against the governed manifest: recorded {} != actual {}".format(
+                str(manifest["export_sha256"]).strip(), actual
+            )
         )
     try:
         payload = json.loads(raw.decode("utf-8"))
     except (UnicodeDecodeError, ValueError) as exc:
-        raise BundleError("private export is not valid JSON: %s" % exc)
+        raise BundleError(f"private export is not valid JSON: {exc}")
     if not isinstance(payload, dict) or payload.get("schema") != EXPORT_SCHEMA:
-        raise BundleError("private export schema must be %r" % EXPORT_SCHEMA)
+        raise BundleError(f"private export schema must be {EXPORT_SCHEMA!r}")
     rows = payload.get("rows")
     if not isinstance(rows, list) or not rows:
         raise BundleError("private export has no rows")
     identities = {}
     for i, row in enumerate(rows):
         if not isinstance(row, dict) or not row.get("identity"):
-            raise BundleError("private export row[%d] lacks an identity" % i)
+            raise BundleError(f"private export row[{i}] lacks an identity")
         if row["identity"] in identities:
-            raise BundleError("private export has a duplicate identity %r" % row["identity"])
+            raise BundleError("private export has a duplicate identity {!r}".format(row["identity"]))
         if not row.get("english"):
-            raise BundleError("private export row[%d] (%s) lacks an English value" % (i, row["identity"]))
+            raise BundleError(f"private export row[{i}] ({row['identity']}) lacks an English value")
         identities[row["identity"]] = row["english"]
     return identities, actual
 
@@ -363,13 +375,10 @@ def build_import_payload(bundle, now_utc=None):
     )
     if summary["violations"]:
         raise BundleError(
-            "review bundle is not eligible for an import payload (%d violation(s)): %s"
-            % (len(summary["violations"]), summary["violations"][0])
+            f"review bundle is not eligible for an import payload ({len(summary['violations'])} violation(s)): "
+            f"{summary['violations'][0]}"
         )
-    payload = [
-        {"identity": row["identity"], "arabic": row["proposal"]["arabic"]}
-        for row in bundle["rows"]
-    ]
+    payload = [{"identity": row["identity"], "arabic": row["proposal"]["arabic"]} for row in bundle["rows"]]
     return {
         "payload": payload,
         "manifest": {

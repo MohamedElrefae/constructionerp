@@ -37,7 +37,9 @@ try:
                         limit_page_length=0,
                     )
                 else:
-                    frappe.log_error(f"Translation loader DB error: {e}\n{frappe.get_traceback()}", "Translation Loader")
+                    frappe.log_error(
+                        f"Translation loader DB error: {e}\n{frappe.get_traceback()}", "Translation Loader"
+                    )
                     return {}
             for t in rows:
                 # An empty runtime value must never shadow the .mo catalog:
@@ -59,7 +61,9 @@ except Exception as e:
     _TRANSLATION_LOADER_INSTALLED = False
     _TRANSLATION_LOADER_ERROR = str(e)
     try:
-        frappe.log_error(f"Translation loader install failed: {e}\n{frappe.get_traceback()}", "Translation Loader")
+        frappe.log_error(
+            f"Translation loader install failed: {e}\n{frappe.get_traceback()}", "Translation Loader"
+        )
     except Exception:
         pass
 

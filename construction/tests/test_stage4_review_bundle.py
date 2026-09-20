@@ -19,7 +19,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(ROOT / "construction"))
 
-from services import account_review_bundle as rb  # noqa: E402
+from services import account_review_bundle as rb
 
 
 def good_row(identity="1100 - Cash - E", decision="approved", ref_status="verified"):
@@ -37,14 +37,24 @@ def good_row(identity="1100 - Cash - E", decision="approved", ref_status="verifi
             "arabic": "نقدية",
             "confidence": "high",
             "flags": [],
-            "provenance": {"reviewer": "AI-A1", "model": "proposal-model", "session": "sess-1", "submitted_utc": "2026-09-10T00:00:00Z"},
+            "provenance": {
+                "reviewer": "AI-A1",
+                "model": "proposal-model",
+                "session": "sess-1",
+                "submitted_utc": "2026-09-10T00:00:00Z",
+            },
         },
         "a2_review": {
             "decision": decision,
             "confidence": "high",
             "rationale": "matches glossary",
             "reference": reference,
-            "provenance": {"reviewer": "AI-A2", "model": "a2-model", "session": "sess-2", "reviewed_utc": "2026-09-10T01:00:00Z"},
+            "provenance": {
+                "reviewer": "AI-A2",
+                "model": "a2-model",
+                "session": "sess-2",
+                "reviewed_utc": "2026-09-10T01:00:00Z",
+            },
         },
         "flags": flags,
     }
@@ -86,6 +96,7 @@ def inject_manifest(manifest_path):
     """Test-only DI: monkeypatch the PRIVATE governed-manifest resolver so the
     public entry point (which takes no path) reads the temp manifest."""
     import unittest.mock as _mock
+
     return _mock.patch.object(rb, "_governed_manifest_path", lambda: manifest_path)
 
 
@@ -213,7 +224,13 @@ class TestGovernedManifestBoundary(unittest.TestCase):
         params = set(inspect.signature(rb.build_import_payload).parameters)
         self.assertEqual(params, {"bundle", "now_utc"})
         # No caller-supplied path, object, mapping, or SHA is accepted.
-        for banned in ("manifest_path", "candidate", "expected_identities", "expected_english", "expected_sha256"):
+        for banned in (
+            "manifest_path",
+            "candidate",
+            "expected_identities",
+            "expected_english",
+            "expected_sha256",
+        ):
             self.assertNotIn(banned, params)
         with self.assertRaises(TypeError):
             rb.build_import_payload(bundle_with(good_row()), manifest_path="/tmp/forged.json")
@@ -254,14 +271,16 @@ class TestGovernedManifestBoundary(unittest.TestCase):
                 rb.build_import_payload(bundle_with(good_row()))
 
     def test_tampered_export_rejected(self):
-        manifest_path, export_path, sha = make_export_and_manifest([export_row("1100 - Cash - E", "Cash")])
-        Path(export_path).write_text(json.dumps(export_payload([export_row("1100 - Cash - E", "Forged")])), encoding="utf-8")
+        manifest_path, export_path, _sha = make_export_and_manifest([export_row("1100 - Cash - E", "Cash")])
+        Path(export_path).write_text(
+            json.dumps(export_payload([export_row("1100 - Cash - E", "Forged")])), encoding="utf-8"
+        )
         with inject_manifest(manifest_path):
             with self.assertRaises(rb.BundleError):
                 rb.build_import_payload(bundle_with(good_row()))
 
     def test_manifest_sha_mismatch_rejected(self):
-        manifest_path, export_path, sha = make_export_and_manifest([export_row("1100 - Cash - E", "Cash")])
+        manifest_path, _export_path, _sha = make_export_and_manifest([export_row("1100 - Cash - E", "Cash")])
         m = json.loads(Path(manifest_path).read_text(encoding="utf-8"))
         m["export_sha256"] = "00" * 32
         Path(manifest_path).write_text(json.dumps(m), encoding="utf-8")
@@ -335,7 +354,9 @@ class TestImportPayloadFailClosed(unittest.TestCase):
         )
         with inject_manifest(manifest_path):
             result = rb.build_import_payload(
-                bundle_with(good_row(), good_row(identity="1300 - Y - E", decision="exception", ref_status="absent"))
+                bundle_with(
+                    good_row(), good_row(identity="1300 - Y - E", decision="exception", ref_status="absent")
+                )
             )
         self.assertTrue(result["manifest"]["bundle_sha256"])
         self.assertEqual(result["manifest"]["exception_count"], 1)

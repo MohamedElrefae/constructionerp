@@ -12,9 +12,6 @@ from candidates import git
 from core import WorkflowError, bytes_hash, canonical, execution_lock, within
 from engine import Engine
 from packaging.requirements import Requirement
-from sandbox import probe
-from validate import validate_document
-
 from preflight import (
     check_approved_capabilities,
     check_binary,
@@ -26,6 +23,8 @@ from preflight import (
     check_sandbox_probe,
     check_sqlite_integrity,
 )
+from sandbox import probe
+from validate import validate_document
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -83,7 +82,17 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=ROOT)
     sub = parser.add_subparsers(dest="command", required=True)
-    for command in ("doctor", "init", "status", "run", "approve", "pause", "resume", "set-role", "role-catalog"):
+    for command in (
+        "doctor",
+        "init",
+        "status",
+        "run",
+        "approve",
+        "pause",
+        "resume",
+        "set-role",
+        "role-catalog",
+    ):
         p = sub.add_parser(command)
         p.add_argument("--json", action="store_true")
         if command == "init":
@@ -104,8 +113,15 @@ def main():
             p.add_argument("--descriptor", type=Path, help="ERP target descriptor JSON")
         elif command == "run":
             p.add_argument("--record-owner-commit", action="store_true")
-            p.add_argument("--dry-run", action="store_true", help="Execute the authorized read-only ERP dry-run")
-            p.add_argument("--import", dest="import_erp", action="store_true", help="Execute the authorized idempotent ERP import")
+            p.add_argument(
+                "--dry-run", action="store_true", help="Execute the authorized read-only ERP dry-run"
+            )
+            p.add_argument(
+                "--import",
+                dest="import_erp",
+                action="store_true",
+                help="Execute the authorized idempotent ERP import",
+            )
             p.add_argument("--advance-stage", action="store_true")
             p.add_argument("--backup-to", type=Path)
             p.add_argument(
@@ -129,7 +145,16 @@ def main():
             p.add_argument(
                 "--role",
                 required=True,
-                choices=["architect", "builder", "reviewer", "verifier", "proposer", "ai-a1", "ai-a2", "ai-a3"],
+                choices=[
+                    "architect",
+                    "builder",
+                    "reviewer",
+                    "verifier",
+                    "proposer",
+                    "ai-a1",
+                    "ai-a2",
+                    "ai-a3",
+                ],
             )
             p.add_argument("--tool", required=True, choices=["codex", "opencode"])
             p.add_argument("--model", required=True)
@@ -198,7 +223,9 @@ def main():
                                     else (
                                         e.execute_dry_run()
                                         if args.dry_run
-                                        else (e.record_owner_commit() if args.record_owner_commit else e.run())
+                                        else (
+                                            e.record_owner_commit() if args.record_owner_commit else e.run()
+                                        )
                                     )
                                 )
                             )

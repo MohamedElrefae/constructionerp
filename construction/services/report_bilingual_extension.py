@@ -51,7 +51,7 @@ def _translate_cell(value, mapping, mode):
     if not arabic:
         return value
     if mode == "both":
-        return "%s — %s" % (str(value), arabic)
+        return f"{str(value)} — {arabic}"
     return arabic
 
 
@@ -71,7 +71,7 @@ def transform_report(columns, data, lang, mapping, label_fields):
             for field in label_fields:
                 if field in row and row.get(field) is not None:
                     row[field] = _translate_cell(row[field], mapping, mode)
-        elif isinstance(row, (list, tuple)):
+        elif isinstance(row, list | tuple):
             # Columnar rows: translate the account column index, if known
             # (index resolved from columns fieldname == first label field).
             idx = None
@@ -110,8 +110,12 @@ def bilingualize_report(execute, filters, lang, report_name, mapping=None):
     disk; only the returned structures are localized."""
     columns, data = execute(filters=filters)
     label_fields = REPORT_LABEL_FIELDS.get(report_name) or ["account", "account_name"]
-    mapping = mapping if mapping is not None else load_account_arabic_mapping(
-        (filters or {}).get("company") if isinstance(filters, dict) else None
+    mapping = (
+        mapping
+        if mapping is not None
+        else load_account_arabic_mapping(
+            (filters or {}).get("company") if isinstance(filters, dict) else None
+        )
     )
     return transform_report(columns, data, lang, mapping, label_fields)
 

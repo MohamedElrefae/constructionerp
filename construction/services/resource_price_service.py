@@ -147,7 +147,9 @@ def capture_price_from_purchase_document(doc, method=None):
         history.supplier = doc.get("supplier")
         history.company = doc.get("company")
         history.project = doc.get("project")
-        history.currency = doc.get("currency") or frappe.db.get_value("Company", doc.get("company"), "default_currency")
+        history.currency = doc.get("currency") or frappe.db.get_value(
+            "Company", doc.get("company"), "default_currency"
+        )
         history.source_doctype = source_doctype
         history.source_name = doc.name
         history.source_row = str(row.get("name", ""))

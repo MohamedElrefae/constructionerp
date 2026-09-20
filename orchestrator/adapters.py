@@ -29,9 +29,7 @@ def invocation(spec):
             env.pop(key)
     if tool == "codex":
         write_sandbox = spec["role"] == "builder" or bool(spec.get("neutral_mounts"))
-        writable_roots = [
-            m["sandbox_path"] for m in spec.get("neutral_mounts", []) if m.get("writable")
-        ]
+        writable_roots = [m["sandbox_path"] for m in spec.get("neutral_mounts", []) if m.get("writable")]
         # Codex creates a private .agents directory in its working directory; point it
         # at the writable neutral mount so the read-only execution root is preserved.
         codex_cd = writable_roots[0] if writable_roots else spec["root"]

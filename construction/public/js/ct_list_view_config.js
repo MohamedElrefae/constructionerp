@@ -66,16 +66,13 @@
 	};
 
 	// ─── Patch: update_listview_classes (adds no-activity class) ───
-	const _orig_update_listview_classes =
-		frappe.views.ListView.prototype.update_listview_classes;
+	const _orig_update_listview_classes = frappe.views.ListView.prototype.update_listview_classes;
 	frappe.views.ListView.prototype.update_listview_classes = function () {
 		const result = _orig_update_listview_classes.apply(this, arguments);
 
 		const ct_config = getConfig(this.doctype);
-		const is_comment_disabled =
-			this.list_view_settings?.disable_comment_count;
-		const is_like_disabled =
-			ct_config.disable_like || this.list_view_settings?.disable_like;
+		const is_comment_disabled = this.list_view_settings?.disable_comment_count;
+		const is_like_disabled = ct_config.disable_like || this.list_view_settings?.disable_like;
 
 		if (is_like_disabled && is_comment_disabled) {
 			this.$result.addClass("no-activity");

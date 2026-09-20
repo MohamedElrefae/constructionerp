@@ -27,14 +27,22 @@ class CustomTranslation(Translation):
             # (loader shadowing) — reject it; catalog rows may stay empty
             # (they represent untranslated upstream strings).
             frappe.throw(_("translated_text is required for runtime (non-catalog) translations"))
-        if "\x00" in (self.source_text or "") or "\x00" in (self.translated_text or "") or "\x00" in (self.context or ""):
+        if (
+            "\x00" in (self.source_text or "")
+            or "\x00" in (self.translated_text or "")
+            or "\x00" in (self.context or "")
+        ):
             frappe.throw(_("Translation key/value contains embedded NUL"))
         if self.meta.has_field("ct_key_digest"):
             from construction.translation_service import _compute_digest, _search_normalized
 
             is_catalog = bool(self.get("ct_is_catalog_entry"))
             self.ct_key_digest = _compute_digest(
-                self.language or "", self.source_text or "", self.context or "", self.get("ct_app") or "", is_catalog
+                self.language or "",
+                self.source_text or "",
+                self.context or "",
+                self.get("ct_app") or "",
+                is_catalog,
             )
             # Friendly duplicate message instead of a raw IntegrityError when
             # trimming collapses this row onto an existing key.

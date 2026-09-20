@@ -5,12 +5,12 @@ Git worktree branch verification, and task registration persistence.
 Zero imports from orchestrator.
 """
 
-from datetime import datetime, timezone
 import json
 import os
-from pathlib import Path
 import sqlite3
 import subprocess
+from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any
 
 from dashboard.config import BASE_ALLOWED_ROOTS, REGISTRY_DB_PATH, WORKTREES_ROOT
@@ -34,9 +34,7 @@ def validate_and_resolve_checkpoint_db(
     # 1. Reject parent traversal ('..') BEFORE any normalization
     raw_parts = [p for p in cand_str.replace("\\", "/").split("/") if p]
     if any(part == ".." for part in raw_parts):
-        raise ValueError(
-            f"Parent directory traversal ('..') rejected in worktree path: {candidate_worktree}"
-        )
+        raise ValueError(f"Parent directory traversal ('..') rejected in worktree path: {candidate_worktree}")
 
     cand = Path(cand_str)
     if not cand.is_absolute():
@@ -171,8 +169,8 @@ def validate_and_bind_canonical_registry(candidate_path: Path | str, is_test_mod
         if os.path.islink(current):
             raise ValueError(f"Symlink rejected in registry path component: {current}")
 
-        is_var_dir = (current == target.parent)
-        is_db_file = (current == target)
+        is_var_dir = current == target.parent
+        is_db_file = current == target
 
         if current.exists():
             st = current.stat()
@@ -180,20 +178,28 @@ def validate_and_bind_canonical_registry(candidate_path: Path | str, is_test_mod
                 if st.st_uid != os.geteuid():
                     raise ValueError(f"Registry directory owner {st.st_uid} != expected {os.geteuid()}")
                 if (st.st_mode & 0o077) != 0:
-                    raise ValueError(f"Registry directory {current} must have mode 0700 (no group/world access)")
+                    raise ValueError(
+                        f"Registry directory {current} must have mode 0700 (no group/world access)"
+                    )
             elif is_db_file:
                 if st.st_uid != os.geteuid():
                     raise ValueError(f"Registry database owner {st.st_uid} != expected {os.geteuid()}")
                 if (st.st_mode & 0o077) != 0:
-                    raise ValueError(f"Registry database {current} must have mode 0600 (no group/world access)")
+                    raise ValueError(
+                        f"Registry database {current} must have mode 0600 (no group/world access)"
+                    )
             else:
                 if is_test_mode and current in (Path("/tmp"), Path("/run"), Path("/var"), Path("/var/tmp")):
                     pass
                 else:
                     if st.st_uid not in (0, os.geteuid()):
-                        raise ValueError(f"Ancestor directory {current} owner {st.st_uid} is neither root nor current user {os.geteuid()}")
+                        raise ValueError(
+                            f"Ancestor directory {current} owner {st.st_uid} is neither root nor current user {os.geteuid()}"
+                        )
                     if (st.st_mode & 0o022) != 0:
-                        raise ValueError(f"Ancestor directory {current} must not be group/world-writable (mode {oct(st.st_mode)})")
+                        raise ValueError(
+                            f"Ancestor directory {current} must not be group/world-writable (mode {oct(st.st_mode)})"
+                        )
         else:
             if not is_db_file:
                 raise FileNotFoundError(f"Registry path component does not exist: {current}")
@@ -284,10 +290,16 @@ def init_registry_db(db_path: Path | str = REGISTRY_DB_PATH) -> None:
                 """
             )
             conn.execute("CREATE INDEX IF NOT EXISTS idx_action_log_task_id ON action_log(task_id);")
-            conn.execute("CREATE INDEX IF NOT EXISTS idx_action_log_idempotency ON action_log(idempotency_key);")
+            conn.execute(
+                "CREATE INDEX IF NOT EXISTS idx_action_log_idempotency ON action_log(idempotency_key);"
+            )
             conn.execute("CREATE INDEX IF NOT EXISTS idx_action_log_state ON action_log(state);")
-            conn.execute("CREATE INDEX IF NOT EXISTS idx_review_records_task_gate ON review_records(task_id, gate_id);")
-            conn.execute("CREATE INDEX IF NOT EXISTS idx_provenance_task_id ON task_context_provenance(task_id);")
+            conn.execute(
+                "CREATE INDEX IF NOT EXISTS idx_review_records_task_gate ON review_records(task_id, gate_id);"
+            )
+            conn.execute(
+                "CREATE INDEX IF NOT EXISTS idx_provenance_task_id ON task_context_provenance(task_id);"
+            )
     finally:
         conn.close()
 
@@ -329,9 +341,7 @@ class TaskRegistry:
                 continue
 
         if not matched_base:
-            raise ValueError(
-                f"Worktree path does not reside within any allowed root: {candidate_path}"
-            )
+            raise ValueError(f"Worktree path does not reside within any allowed root: {candidate_path}")
 
         worktree_path, db_path = validate_and_resolve_checkpoint_db(matched_base, candidate_path)
         actual_branch = get_actual_git_branch(worktree_path)
@@ -398,9 +408,7 @@ class TaskRegistry:
         finally:
             conn.close()
 
-    def update_task_cache(
-        self, task_id: str, status: str, stage: str
-    ) -> None:
+    def update_task_cache(self, task_id: str, status: str, stage: str) -> None:
         """Update cached status and stage from polling results."""
         now_iso = datetime.now(timezone.utc).isoformat()
         conn = self._get_connection()
@@ -459,6 +467,7 @@ class TaskRegistry:
     ) -> dict[str, Any]:
         """Create a new content-bound review record."""
         import uuid
+
         review_id = f"rev-{uuid.uuid4().hex[:12]}"
         now_iso = datetime.now(timezone.utc).isoformat()
         conn = self._get_connection()

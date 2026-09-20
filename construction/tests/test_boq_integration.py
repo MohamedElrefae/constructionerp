@@ -251,25 +251,29 @@ class TestBOQIntegration(unittest.TestCase):
         # Build 10 sections with 10 items each (100 items total) through standard document lifecycle
         expected_total = 0
         for s_idx in range(10):
-            sec = frappe.get_doc({
-                "doctype": "BOQ Structure",
-                "boq_header": self.boq_header.name,
-                "title": f"Benchmark Section {s_idx + 1}",
-                "is_group": 1,
-            }).insert(ignore_permissions=True)
+            sec = frappe.get_doc(
+                {
+                    "doctype": "BOQ Structure",
+                    "boq_header": self.boq_header.name,
+                    "title": f"Benchmark Section {s_idx + 1}",
+                    "is_group": 1,
+                }
+            ).insert(ignore_permissions=True)
 
             for i_idx in range(10):
                 qty = (i_idx + 1) * 10
                 rate = (s_idx + 1) * 5.0
-                expected_total += (qty * rate)
+                expected_total += qty * rate
 
-                item_struct = frappe.get_doc({
-                    "doctype": "BOQ Structure",
-                    "boq_header": self.boq_header.name,
-                    "title": f"Benchmark Item {s_idx + 1}.{i_idx + 1}",
-                    "is_group": 0,
-                    "parent_structure": sec.name,
-                }).insert(ignore_permissions=True)
+                item_struct = frappe.get_doc(
+                    {
+                        "doctype": "BOQ Structure",
+                        "boq_header": self.boq_header.name,
+                        "title": f"Benchmark Item {s_idx + 1}.{i_idx + 1}",
+                        "is_group": 0,
+                        "parent_structure": sec.name,
+                    }
+                ).insert(ignore_permissions=True)
 
                 item_doc = frappe.get_doc("BOQ Item", {"structure": item_struct.name})
                 item_doc.quantity = qty
@@ -285,7 +289,9 @@ class TestBOQIntegration(unittest.TestCase):
 
         # Assert performance (< 1.0s) and arithmetic correctness
         self.assertLess(
-            execution_time, 1.0, f"Rollup calculation for 100 items took {execution_time:.3f}s, threshold is 1.0s"
+            execution_time,
+            1.0,
+            f"Rollup calculation for 100 items took {execution_time:.3f}s, threshold is 1.0s",
         )
         self.assertAlmostEqual(
             header.total_contract_value,

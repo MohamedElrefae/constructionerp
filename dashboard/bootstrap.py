@@ -5,14 +5,14 @@ pre-mutation manifest logging, process identity verification (PID + start time),
 git ancestry checks, and exact initial checkpoint contract validation.
 """
 
-from datetime import datetime, timezone
 import fcntl
 import hashlib
 import json
 import os
-from pathlib import Path
 import subprocess
 import uuid
+from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any
 
 from dashboard.config import (
@@ -82,7 +82,11 @@ def _check_bootstrap_fence(
         if not row:
             raise BootstrapConflictError(f"Bootstrap action {action_id} not found in action_log")
         cur_token, cur_inst, cur_state = row[0], row[1], row[2]
-        if cur_token != fencing_token or cur_inst != executor_instance_id or cur_state not in ("EXECUTING", "RECOVERING"):
+        if (
+            cur_token != fencing_token
+            or cur_inst != executor_instance_id
+            or cur_state not in ("EXECUTING", "RECOVERING")
+        ):
             raise BootstrapConflictError(
                 f"Fencing validation failed before mutation for bootstrap action {action_id}: "
                 f"expected token={fencing_token}, instance={executor_instance_id}, state in (EXECUTING, RECOVERING); "
@@ -119,9 +123,7 @@ async def bootstrap_task(
     executor_pid = os.getpid()
     executor_start_time = get_process_start_time(executor_pid) or 0
 
-    request_hash = hashlib.sha256(
-        f"{work_item}:{user_brief.strip()}:{base_ref}".encode("utf-8")
-    ).hexdigest()
+    request_hash = hashlib.sha256(f"{work_item}:{user_brief.strip()}:{base_ref}".encode()).hexdigest()
 
     action_id: str | None = None
     existing_row = None
@@ -134,7 +136,9 @@ async def bootstrap_task(
         action_id = f"act-bootstrap-{uuid.uuid4().hex[:8]}"
 
     # Universal Lock Hierarchy: Acquire Action Lock FIRST
-    locks_dir = (registry.db_path.parent / "locks") if registry and getattr(registry, "db_path", None) else LOCKS_DIR
+    locks_dir = (
+        (registry.db_path.parent / "locks") if registry and getattr(registry, "db_path", None) else LOCKS_DIR
+    )
     locks_dir.mkdir(parents=True, exist_ok=True)
     try:
         os.chmod(locks_dir, 0o700)
@@ -235,7 +239,9 @@ async def bootstrap_task(
             )
 
         # Genuinely new bootstrap request
-        target = Path(target_path or (WORKTREES_ROOT / (task_id or f"task-{work_item}-{uuid.uuid4().hex[:8]}"))).resolve()
+        target = Path(
+            target_path or (WORKTREES_ROOT / (task_id or f"task-{work_item}-{uuid.uuid4().hex[:8]}"))
+        ).resolve()
         task_id = task_id or target.name
         branch_name = f"task/{work_item}-{task_id[-8:]}"
 
@@ -403,7 +409,12 @@ async def bootstrap_task(
                       AND executor_instance_id = ?
                       AND state = 'EXECUTING';
                     """,
-                    (json.dumps(manifest), datetime.now(timezone.utc).isoformat(), action_id, executor_instance_id),
+                    (
+                        json.dumps(manifest),
+                        datetime.now(timezone.utc).isoformat(),
+                        action_id,
+                        executor_instance_id,
+                    ),
                 )
                 if cur.rowcount == 0:
                     raise BootstrapConflictError(f"Fence lost while updating manifest for action {action_id}")
@@ -430,7 +441,9 @@ async def bootstrap_task(
         # Step 5: Validate Checkpoint Contract
         db_path = target / "orchestrator" / "var" / "checkpoints.db"
         if not db_path.exists():
-            _mark_failed(registry, action_id, 1, executor_instance_id, "checkpoints.db missing after initialize")
+            _mark_failed(
+                registry, action_id, 1, executor_instance_id, "checkpoints.db missing after initialize"
+            )
             raise BootstrapConflictError("checkpoints.db missing after initialize")
 
         _validate_checkpoint_contract(db_path, manifest, base_config)
@@ -490,7 +503,9 @@ async def _execute_bootstrap_recovery(
 
     # If target directory does not exist, initialize from scratch
     if not target.exists():
-        _mark_reconciliation(registry, action_id, fencing_token, executor_instance_id, "Worktree directory missing")
+        _mark_reconciliation(
+            registry, action_id, fencing_token, executor_instance_id, "Worktree directory missing"
+        )
         raise BootstrapConflictError(f"Target directory {target} missing. Manual reconciliation required.")
 
     # 1. Verify Git Common Dir and Worktree
@@ -501,7 +516,9 @@ async def _execute_bootstrap_recovery(
         if not Path(common_dir).is_absolute():
             common_dir = str((target / common_dir).resolve())
         if Path(common_dir).resolve() != Path(manifest["git_common_dir"]).resolve():
-            _mark_reconciliation(registry, action_id, fencing_token, executor_instance_id, "git-common-dir mismatch")
+            _mark_reconciliation(
+                registry, action_id, fencing_token, executor_instance_id, "git-common-dir mismatch"
+            )
             raise BootstrapConflictError("Git common-dir mismatch. Manual reconciliation required.")
 
         branch = subprocess.check_output(
@@ -517,21 +534,29 @@ async def _execute_bootstrap_recovery(
             capture_output=True,
         )
         if ancestry.returncode != 0:
-            _mark_reconciliation(registry, action_id, fencing_token, executor_instance_id, "base ancestry check failed")
+            _mark_reconciliation(
+                registry, action_id, fencing_token, executor_instance_id, "base ancestry check failed"
+            )
             raise BootstrapConflictError("Base commit is not ancestor of HEAD")
     except (subprocess.SubprocessError, FileNotFoundError) as exc:
-        _mark_reconciliation(registry, action_id, fencing_token, executor_instance_id, f"Git validation failed: {exc}")
+        _mark_reconciliation(
+            registry, action_id, fencing_token, executor_instance_id, f"Git validation failed: {exc}"
+        )
         raise BootstrapConflictError(f"Git validation failed: {exc}") from exc
 
     # 2. Verify owner brief
     brief_file = target / f"docs/ai/work-items/{work_item}/owner-brief.md"
     if not brief_file.is_file():
-        _mark_reconciliation(registry, action_id, fencing_token, executor_instance_id, "owner-brief.md missing")
+        _mark_reconciliation(
+            registry, action_id, fencing_token, executor_instance_id, "owner-brief.md missing"
+        )
         raise BootstrapConflictError("owner-brief.md missing. Manual reconciliation required.")
 
     actual_brief_sha = hashlib.sha256(brief_file.read_bytes()).hexdigest()
     if actual_brief_sha != manifest["brief_content_sha256"]:
-        _mark_reconciliation(registry, action_id, fencing_token, executor_instance_id, "owner-brief.md content mismatch")
+        _mark_reconciliation(
+            registry, action_id, fencing_token, executor_instance_id, "owner-brief.md content mismatch"
+        )
         raise BootstrapConflictError("owner-brief.md content hash mismatch. Manual reconciliation required.")
 
     # 3. Inspect Checkpoints DB
@@ -578,22 +603,31 @@ async def _execute_bootstrap_recovery(
     else:
         # DB exists: Check SQLite integrity
         import sqlite3
+
         conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
         try:
             check_row = conn.execute("PRAGMA quick_check;").fetchone()
             if not check_row or check_row[0] != "ok":
-                _mark_reconciliation(registry, action_id, fencing_token, executor_instance_id, "checkpoints.db corruption")
-                raise BootstrapConflictError("checkpoints.db failed quick_check. Manual reconciliation required.")
+                _mark_reconciliation(
+                    registry, action_id, fencing_token, executor_instance_id, "checkpoints.db corruption"
+                )
+                raise BootstrapConflictError(
+                    "checkpoints.db failed quick_check. Manual reconciliation required."
+                )
 
             cfg_row = conn.execute("SELECT value FROM workflow_meta WHERE key='config'").fetchone()
             if not cfg_row:
-                _mark_reconciliation(registry, action_id, fencing_token, executor_instance_id, "workflow_meta config missing")
+                _mark_reconciliation(
+                    registry, action_id, fencing_token, executor_instance_id, "workflow_meta config missing"
+                )
                 raise BootstrapConflictError("workflow_meta config missing. Manual reconciliation required.")
 
             stored_cfg = json.loads(cfg_row[0])
             stored_digest = _config_digest(stored_cfg)
             if stored_digest != manifest["base_config_digest"]:
-                _mark_reconciliation(registry, action_id, fencing_token, executor_instance_id, "stored config digest mismatch")
+                _mark_reconciliation(
+                    registry, action_id, fencing_token, executor_instance_id, "stored config digest mismatch"
+                )
                 raise BootstrapConflictError("Stored config digest mismatch. Manual reconciliation required.")
 
             # Check if checkpoint exists
@@ -645,7 +679,9 @@ async def _execute_bootstrap_recovery(
     return registered
 
 
-def _validate_checkpoint_contract(db_path: Path, manifest: dict[str, Any], base_config: dict[str, Any]) -> None:
+def _validate_checkpoint_contract(
+    db_path: Path, manifest: dict[str, Any], base_config: dict[str, Any]
+) -> None:
     """Assert initialized checkpoint adheres strictly to routing.py initial contract."""
     script = """
 import sys, sqlite3, json
@@ -691,24 +727,30 @@ finally:
         raise BootstrapConflictError(f"Initial committed is {view.get('committed')} != False")
 
 
-def _record_task_provenance(registry: TaskRegistry, task_id: str, target: Path, config: dict[str, Any]) -> None:
+def _record_task_provenance(
+    registry: TaskRegistry, task_id: str, target: Path, config: dict[str, Any]
+) -> None:
     context_paths = config.get("read_only_context_paths") or []
     items = []
     for rel_p in context_paths:
         f = target / rel_p
         exists = f.is_file()
         sha = hashlib.sha256(f.read_bytes()).hexdigest() if exists else None
-        items.append({
-            "path": rel_p,
-            "exists": exists,
-            "is_mandatory": rel_p in ("AGENTS.md", "SESSION_MEMORY.md"),
-            "sha256": sha,
-            "commit_sha": config.get("base_commit"),
-        })
+        items.append(
+            {
+                "path": rel_p,
+                "exists": exists,
+                "is_mandatory": rel_p in ("AGENTS.md", "SESSION_MEMORY.md"),
+                "sha256": sha,
+                "commit_sha": config.get("base_commit"),
+            }
+        )
     registry.record_context_provenance(task_id, items)
 
 
-def _mark_failed(registry: TaskRegistry, action_id: str, fencing_token: int, executor_instance_id: str, error: str) -> None:
+def _mark_failed(
+    registry: TaskRegistry, action_id: str, fencing_token: int, executor_instance_id: str, error: str
+) -> None:
     now_iso = datetime.now(timezone.utc).isoformat()
     conn = registry._get_connection()
     try:
@@ -725,7 +767,9 @@ def _mark_failed(registry: TaskRegistry, action_id: str, fencing_token: int, exe
         conn.close()
 
 
-def _mark_reconciliation(registry: TaskRegistry, action_id: str, fencing_token: int, executor_instance_id: str, error: str) -> None:
+def _mark_reconciliation(
+    registry: TaskRegistry, action_id: str, fencing_token: int, executor_instance_id: str, error: str
+) -> None:
     now_iso = datetime.now(timezone.utc).isoformat()
     conn = registry._get_connection()
     try:

@@ -25,7 +25,11 @@ def _sha_file(path):
 
 
 CRITICAL_KEYS = [
-    "Desktop", "Workspaces", "Edit Sidebar", "Toggle Theme", "Toggle Full Width",
+    "Desktop",
+    "Workspaces",
+    "Edit Sidebar",
+    "Toggle Theme",
+    "Toggle Full Width",
     "Typography Settings",
 ]
 
@@ -44,32 +48,34 @@ def collect():
         order_by="source_text, translated_text",
         limit_page_length=0,
     )
-    triples = [
-        (r.get("source_text"), r.get("translated_text"), r.get("ct_release_version"))
-        for r in rows
-    ]
+    triples = [(r.get("source_text"), r.get("translated_text"), r.get("ct_release_version")) for r in rows]
     triples.sort(key=lambda t: (t[0] or "", t[1] or ""))
     runtime_digest = hashlib.sha256(repr(triples).encode()).hexdigest()
     from construction.translation_service import (
-        get_effective_translation, get_translation_health,
+        get_effective_translation,
+        get_translation_health,
     )
 
     health = get_translation_health()
     critical = {k: get_effective_translation("ar", k) for k in CRITICAL_KEYS}
     db_now = str(frappe.db.sql("SELECT NOW()")[0][0])
     collected = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-    return json.dumps({
-        "collected_utc": collected,
-        "site": frappe.local.site,
-        "inputs": {"construction_po_sha": po_sha, "payload_csv_sha": csv_sha},
-        "packaged_rows": len(rows),
-        "runtime_digest": runtime_digest,
-        "critical_keys": critical,
-        "critical_pass": all(bool(v) for v in critical.values()),
-        "health": health,
-        "db_now_at_collection": db_now,
-        "db_now_at_collection": db_now,
-        "audit_timestamps": {k: health.get(k) for k in
-                             ("last_catalog_sync_at", "last_release_import_at",
-                              "last_drift_checked_at")},
-    }, ensure_ascii=False, sort_keys=True)
+    return json.dumps(
+        {
+            "collected_utc": collected,
+            "site": frappe.local.site,
+            "inputs": {"construction_po_sha": po_sha, "payload_csv_sha": csv_sha},
+            "packaged_rows": len(rows),
+            "runtime_digest": runtime_digest,
+            "critical_keys": critical,
+            "critical_pass": all(bool(v) for v in critical.values()),
+            "health": health,
+            "db_now_at_collection": db_now,
+            "audit_timestamps": {
+                k: health.get(k)
+                for k in ("last_catalog_sync_at", "last_release_import_at", "last_drift_checked_at")
+            },
+        },
+        ensure_ascii=False,
+        sort_keys=True,
+    )

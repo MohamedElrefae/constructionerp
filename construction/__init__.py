@@ -76,7 +76,7 @@ else:
 
 
 try:
-    from construction.translation_loader import is_translation_loader_installed  # noqa: F401
+    from construction.translation_loader import is_translation_loader_installed
 except Exception as e:
     import frappe as _f
 

@@ -279,7 +279,9 @@ ERP_BINDINGS = {
     "operation": {"const": "set_account_name_ar"},
     "job_id": ID,
 }
-DRY_TOKEN = obj({**COMMON_TOKEN, **ERP_BINDINGS, "scope": {"const": "DRY_RUN"}}, optional=("proposal_sha256",))
+DRY_TOKEN = obj(
+    {**COMMON_TOKEN, **ERP_BINDINGS, "scope": {"const": "DRY_RUN"}}, optional=("proposal_sha256",)
+)
 IMPORT_TOKEN = obj(
     {**COMMON_TOKEN, **ERP_BINDINGS, "scope": {"const": "IMPORT"}, "dry_run_evidence_digest": HASH},
     optional=("proposal_sha256",),

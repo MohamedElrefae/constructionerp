@@ -210,13 +210,17 @@ class TestUserScopeContext(FrappeTestCase):
         original_user = frappe.session.user
         # Fail-closed scope bootstrap requires the owner to hold a User
         # Permission for the company they establish as their scope.
-        if not frappe.db.exists("User Permission", {"user": owner, "allow": "Company", "for_value": self.test_company}):
-            frappe.get_doc({
-                "doctype": "User Permission",
-                "user": owner,
-                "allow": "Company",
-                "for_value": self.test_company,
-            }).insert(ignore_permissions=True)
+        if not frappe.db.exists(
+            "User Permission", {"user": owner, "allow": "Company", "for_value": self.test_company}
+        ):
+            frappe.get_doc(
+                {
+                    "doctype": "User Permission",
+                    "user": owner,
+                    "allow": "Company",
+                    "for_value": self.test_company,
+                }
+            ).insert(ignore_permissions=True)
         frappe.set_user(owner)
         doc = frappe.get_doc({"doctype": "User Scope Context", "user": owner, "company": self.test_company})
         doc.insert(ignore_permissions=True)

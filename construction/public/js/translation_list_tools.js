@@ -36,7 +36,12 @@
 					const text = (values.search_text || "").trim();
 					if (!text) return;
 					listview.filter_area.clear().then(() => {
-						addFilter(listview, ["Translation", "translated_text", "like", `%${text}%`]);
+						addFilter(listview, [
+							"Translation",
+							"translated_text",
+							"like",
+							`%${text}%`,
+						]);
 					});
 				},
 				__("Search Arabic Text"),
@@ -55,7 +60,9 @@
 				.then((res) => {
 					const sources = res?.message || [];
 					frappe.show_alert({
-						message: __("{0} source texts still have no Arabic entry", [sources.length]),
+						message: __("{0} source texts still have no Arabic entry", [
+							sources.length,
+						]),
 						indicator: "orange",
 					});
 					listview.filter_area.clear().then(() => {
@@ -154,7 +161,9 @@
 							.map(
 								(x) =>
 									`<b>${frappe.utils.xss_safe(x.source_text)}</b><br>` +
-									`${frappe.utils.xss_safe(x.before)} → <b>${frappe.utils.xss_safe(x.after)}</b>`
+									`${frappe.utils.xss_safe(
+										x.before
+									)} → <b>${frappe.utils.xss_safe(x.after)}</b>`
 							)
 							.join("<hr>"),
 					});
@@ -263,10 +272,10 @@
 								.then((res2) => {
 									const rr = res2?.message || {};
 									frappe.show_alert({
-										message: __(
-											"Catalog sync: {0} created, {1} updated",
-											[rr.created || 0, rr.updated || 0]
-										),
+										message: __("Catalog sync: {0} created, {1} updated", [
+											rr.created || 0,
+											rr.updated || 0,
+										]),
 										indicator: "green",
 									});
 									listview.refresh();
