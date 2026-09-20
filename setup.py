@@ -9,7 +9,7 @@ setup(
     description="Construction ERP App for BOQ, Cost Estimation, and Project Management",
     author="Mohamed Elrefae",
     author_email="melrefa3@hotmail.com",
-    packages=find_packages(),
+    packages=find_packages(exclude=("orchestrator", "orchestrator.*", "tests_offline", "tests_offline.*")),
     zip_safe=False,
     include_package_data=True,
     install_requires=install_requires,

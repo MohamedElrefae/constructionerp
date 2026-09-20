@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "phase": 3,
+  "status": "PAUSED_OWNER_DECISION",
+  "recorded_utc": "2026-09-10T23:36:06.273143+00:00",
+  "execution_root": "/home/mohamed/frappe-bench/worktrees/scope-context-portability-pilot",
+  "controller_root": "/home/mohamed/frappe-bench/worktrees/scope-context-portability",
+  "controller_freeze": "4e01059e861249015363eabb487731477952c3943f0160f582f33485ebb1cc5c",
+  "architect": {
+    "job_id": "job-65f2dc51850d479768d6760a",
+    "status": "ACCEPTED",
+    "session_id": "01a08da7-aa29-7731-b936-d11580e628df",
+    "verdict": "BLOCKED"
+  },
+  "owner_gate": {
+    "scope": "DECISION",
+    "gate_id": "decision-0"
+  },
+  "finding": "SCP-001",
+  "finding_summary": "Variation Order schema has 22 fields, generated SCHEMA_FACTS documents 18; preserving drift checks conflicts with all-pass fresh-copy requirement until documentation scope is amended.",
+  "proposed_added_path": "docs/ai/SCHEMA_FACTS.md",
+  "proposed_patch": "phase-3-proposed-schema-facts.patch",
+  "proposed_scope": "phase-3-proposed-scope.json",
+  "reviewer_dispatched": false,
+  "builder_dispatched": false,
+  "owner_plan_granted": false,
+  "source_changes_in_execution_target": 0,
+  "project_commits_created": 0,
+  "erp_operations": 0,
+  "transfer_authorization": "Explicit owner reply: Authorize this scoped Codex transfer",
+  "local_independent_check": "Imported guarded drift renderer read-only; generated proposed document in memory; invariant checks passed; patch saved outside execution target, not applied. Neither checker main nor pytest ran.",
+  "sandbox_note": "Architect observed workflow files as deleted inside its masked work-item mount. Host Git inspection confirms no actual tracked file deletions; this is not a reason to alter the candidate.",
+  "next_action": "Owner authorizes bounded documentation scope amendment, then architect/reviewer resume before separate PLAN grant."
+}

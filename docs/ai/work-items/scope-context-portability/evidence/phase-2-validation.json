@@ -1,0 +1,1642 @@
+{
+  "schema_version": 1,
+  "phase": 2,
+  "status": "PASSED",
+  "recorded_utc": "2026-09-11T21:49:26.387638Z",
+  "reference_commit": "4b77803af418cea8459c4cb7d9a0248674845da3",
+  "source_freeze_sha256": "f2e60c309c81a8e40ddf013bd2f49b8a405eafd1be30ee7b6b3061cd2535d250",
+  "frozen_files_verified_unchanged": 47,
+  "checker_hashes_unchanged": {
+    "scripts/ai_context_check.py": "f0a92853bfe21c097aa7d7a11c2fcdb9bea2bc39deffbe4df278d544e475fa92",
+    "scripts/lint_scope_metadata.py": "8436fed02c0dc5bc0c9f1f3abcf716cdbcbad68e28eb0db575535ad3e0e068c9"
+  },
+  "project_commits_created": 0,
+  "project_index_empty": true,
+  "erp_operations": 0,
+  "native_provider_dispatches": 0,
+  "fixture_mode": "SYNTHETIC: disposable pytest repositories, detached synthetic worker and actual native parser over fabricated output; no real pilot acceptance",
+  "test_fixture_commits": "Only disposable repository baselines and explicitly synthetic owner-operation fixtures for commit-recovery proof",
+  "final_result": {
+    "total": 116,
+    "passed": 116,
+    "failed": 0,
+    "existing_tests_passed": 111,
+    "new_regressions_passed": 5
+  },
+  "runs": [
+    {
+      "run": 1,
+      "description": "Harness assembly: two fixture errors plus two engine contract failures",
+      "artifact": "phase-2-run-01.xml",
+      "sha256": "5de8ba42048d024efce07bd6f232a35bd7511275c349304f84b4c1cf62bfe614",
+      "tests": 17,
+      "passed": 13,
+      "failed": 4,
+      "seconds": 25.978,
+      "cases": [
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_repair_packet_all_findings_and_plan_grant_retention",
+          "outcome": "PASSED",
+          "seconds": 2.329
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_design_returns_to_architecture_and_independent_plan_review",
+          "outcome": "PASSED",
+          "seconds": 2.382
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_optional_backlog_and_disagreement[optional_improvement-VERIFIED_FOR_RELEASE]",
+          "outcome": "PASSED",
+          "seconds": 1.46
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_optional_backlog_and_disagreement[owner_decision-PAUSED]",
+          "outcome": "PASSED",
+          "seconds": 1.498
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_quorum_incomplete_then_pass_or_fail[PASS]",
+          "outcome": "FAILED",
+          "seconds": 2.269,
+          "failure": "AssertionError: assert 'BUILD_COMPLETE' == 'VERIFIED_FOR_RELEASE'\n  \n  - VERIFIED_FOR_RELEASE\n  + BUILD_COMPLETE"
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_quorum_incomplete_then_pass_or_fail[BLOCKED]",
+          "outcome": "PASSED",
+          "seconds": 2.49
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_graph_escalation_survives_restart[2]",
+          "outcome": "FAILED",
+          "seconds": 1.678,
+          "failure": "AssertionError: assert 'PAUSED' != 'PAUSED'"
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_graph_escalation_survives_restart[3]",
+          "outcome": "PASSED",
+          "seconds": 3.611
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_commit_token_rejects_candidate_content_drift",
+          "outcome": "PASSED",
+          "seconds": 1.546
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_post_commit_pre_record_crash_reconciles_once",
+          "outcome": "PASSED",
+          "seconds": 2.236
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_vacuum_into_restore_requires_owner_reconciliation",
+          "outcome": "PASSED",
+          "seconds": 1.945
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_failure_classes_block_and_record_named_class[AUTH_FAILURE]",
+          "outcome": "PASSED",
+          "seconds": 0.352
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_failure_classes_block_and_record_named_class[DENIED_ACTION]",
+          "outcome": "PASSED",
+          "seconds": 0.34
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_failure_classes_block_and_record_named_class[TIMEOUT]",
+          "outcome": "PASSED",
+          "seconds": 0.371
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_failure_classes_block_and_record_named_class[MALFORMED_RESULT]",
+          "outcome": "FAILED",
+          "seconds": 0.358,
+          "failure": "AssertionError: Expected durable class MALFORMED_RESULT, observed ['JSONDecodeError', 'RECONCILIATION_REQUIRED']\nassert 'MALFORMED_RESULT' in ['JSONDecodeError', 'RECONCILIATION_REQUIRED']"
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_failure_classes_block_and_record_named_class[EVIDENCE_UNAVAILABLE]",
+          "outcome": "FAILED",
+          "seconds": 0.36,
+          "failure": "AssertionError: Expected durable class EVIDENCE_UNAVAILABLE, observed ['WorkflowError', 'RECONCILIATION_REQUIRED']\nassert 'EVIDENCE_UNAVAILABLE' in ['WorkflowError', 'RECONCILIATION_REQUIRED']"
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_missing_binary_retries_only_one_proven_nonlaunch",
+          "outcome": "PASSED",
+          "seconds": 0.406
+        }
+      ],
+      "source_manifest_sha256": "1a31afa2fba2e00be53d03913a574040e4053d898c492ba2ce0bc183cabce67d"
+    },
+    {
+      "run": 2,
+      "description": "Corrected fixtures and real native parser over synthetic bytes",
+      "artifact": "phase-2-run-02.xml",
+      "sha256": "bb77a5f2e5b7c3ae4f5fb708d55d4572ba1ad76992f108210947da1de4ef986f",
+      "tests": 17,
+      "passed": 15,
+      "failed": 2,
+      "seconds": 27.655,
+      "cases": [
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_repair_packet_all_findings_and_plan_grant_retention",
+          "outcome": "PASSED",
+          "seconds": 2.506
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_design_returns_to_architecture_and_independent_plan_review",
+          "outcome": "PASSED",
+          "seconds": 2.482
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_optional_backlog_and_disagreement[optional_improvement-VERIFIED_FOR_RELEASE]",
+          "outcome": "PASSED",
+          "seconds": 1.599
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_optional_backlog_and_disagreement[owner_decision-PAUSED]",
+          "outcome": "PASSED",
+          "seconds": 1.46
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_quorum_incomplete_then_pass_or_fail[PASS]",
+          "outcome": "PASSED",
+          "seconds": 2.703
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_quorum_incomplete_then_pass_or_fail[BLOCKED]",
+          "outcome": "PASSED",
+          "seconds": 2.363
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_graph_escalation_survives_restart[2]",
+          "outcome": "PASSED",
+          "seconds": 2.553
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_graph_escalation_survives_restart[3]",
+          "outcome": "PASSED",
+          "seconds": 3.56
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_commit_token_rejects_candidate_content_drift",
+          "outcome": "PASSED",
+          "seconds": 1.71
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_post_commit_pre_record_crash_reconciles_once",
+          "outcome": "PASSED",
+          "seconds": 2.135
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_vacuum_into_restore_requires_owner_reconciliation",
+          "outcome": "PASSED",
+          "seconds": 1.861
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_failure_classes_block_and_record_named_class[AUTH_FAILURE]",
+          "outcome": "PASSED",
+          "seconds": 0.415
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_failure_classes_block_and_record_named_class[DENIED_ACTION]",
+          "outcome": "PASSED",
+          "seconds": 0.392
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_failure_classes_block_and_record_named_class[TIMEOUT]",
+          "outcome": "PASSED",
+          "seconds": 0.396
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_failure_classes_block_and_record_named_class[MALFORMED_RESULT]",
+          "outcome": "FAILED",
+          "seconds": 0.38,
+          "failure": "AssertionError: Expected durable class MALFORMED_RESULT, observed ['WorkflowError', 'RECONCILIATION_REQUIRED']\nassert 'MALFORMED_RESULT' in ['WorkflowError', 'RECONCILIATION_REQUIRED']"
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_failure_classes_block_and_record_named_class[EVIDENCE_UNAVAILABLE]",
+          "outcome": "FAILED",
+          "seconds": 0.381,
+          "failure": "AssertionError: Expected durable class EVIDENCE_UNAVAILABLE, observed ['WorkflowError', 'RECONCILIATION_REQUIRED']\nassert 'EVIDENCE_UNAVAILABLE' in ['WorkflowError', 'RECONCILIATION_REQUIRED']"
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_missing_binary_retries_only_one_proven_nonlaunch",
+          "outcome": "PASSED",
+          "seconds": 0.411
+        }
+      ],
+      "source_manifest_sha256": "1a31afa2fba2e00be53d03913a574040e4053d898c492ba2ce0bc183cabce67d"
+    },
+    {
+      "run": 3,
+      "description": "Final frozen regressions plus full directive scenario suite",
+      "artifact": "phase-2-run-03.xml",
+      "sha256": "1e2a1cd94bff55bb2f6fb52aed3893c49c09955b585015e5b593362a5fc66cb3",
+      "tests": 110,
+      "passed": 108,
+      "failed": 2,
+      "seconds": 49.012,
+      "cases": [
+        {
+          "test": "orchestrator.tests.test_adapter_results::test_native_identity_is_taken_from_transport_not_body",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_adapter_results::test_non_object_result_is_malformed[None]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_adapter_results::test_non_object_result_is_malformed[value1]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_adapter_results::test_non_object_result_is_malformed[1]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_adapter_results::test_non_object_result_is_malformed[invalid]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_adapter_results::test_adapter_failure_classes[401 unauthorized-False-AUTH_FAILURE]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_adapter_results::test_adapter_failure_classes[permission denied-False-DENIED_ACTION]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_adapter_results::test_adapter_failure_classes[-True-TIMEOUT]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_adapter_results::test_adapter_failure_classes[invalid output-False-MALFORMED_RESULT]",
+          "outcome": "PASSED",
+          "seconds": 0.0
+        },
+        {
+          "test": "orchestrator.tests.test_candidates::test_candidate_includes_untracked_deletion_modes_symlinks",
+          "outcome": "PASSED",
+          "seconds": 0.07
+        },
+        {
+          "test": "orchestrator.tests.test_candidates::test_undeclared_and_staged_changes_fail_without_touching_index",
+          "outcome": "PASSED",
+          "seconds": 0.025
+        },
+        {
+          "test": "orchestrator.tests.test_candidates::test_symlink_escape_and_traversal_refused",
+          "outcome": "PASSED",
+          "seconds": 0.018
+        },
+        {
+          "test": "orchestrator.tests.test_candidates::test_owner_commit_reconciliation_requires_exact_tree_parent_trailer",
+          "outcome": "PASSED",
+          "seconds": 0.06
+        },
+        {
+          "test": "orchestrator.tests.test_candidates::test_new_file_after_freeze_invalidates_candidate_even_inside_allowed_scope",
+          "outcome": "PASSED",
+          "seconds": 0.047
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_published_schemas_are_valid_and_match_source[finding-schema0]",
+          "outcome": "PASSED",
+          "seconds": 0.01
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_published_schemas_are_valid_and_match_source[result-envelope-schema1]",
+          "outcome": "PASSED",
+          "seconds": 0.031
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_published_schemas_are_valid_and_match_source[repair-packet-schema2]",
+          "outcome": "PASSED",
+          "seconds": 0.024
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_published_schemas_are_valid_and_match_source[approval-token-schema3]",
+          "outcome": "PASSED",
+          "seconds": 0.021
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_published_schemas_are_valid_and_match_source[state-export-schema4]",
+          "outcome": "PASSED",
+          "seconds": 0.015
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_positive_samples[result-envelope-value0]",
+          "outcome": "PASSED",
+          "seconds": 0.002
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_positive_samples[state-export-value1]",
+          "outcome": "PASSED",
+          "seconds": 0.002
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_positive_samples[repair-packet-value2]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_all_finding_routes_have_valid_contracts[implementation_defect]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_all_finding_routes_have_valid_contracts[design_defect]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_all_finding_routes_have_valid_contracts[optional_improvement]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_all_finding_routes_have_valid_contracts[owner_decision]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_scope_specific_grants[PLAN]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_scope_specific_grants[COMMIT]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_scope_specific_grants[DRY_RUN]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_scope_specific_grants[IMPORT]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_prelaunch_failure_does_not_invent_session_or_model[MISSING_BINARY]",
+          "outcome": "PASSED",
+          "seconds": 0.002
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_prelaunch_failure_does_not_invent_session_or_model[AUTH_FAILURE]",
+          "outcome": "PASSED",
+          "seconds": 0.002
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_prelaunch_failure_does_not_invent_session_or_model[DENIED_ACTION]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_prelaunch_failure_does_not_invent_session_or_model[MALFORMED_RESULT]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_prelaunch_failure_does_not_invent_session_or_model[EVIDENCE_UNAVAILABLE]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_prelaunch_failure_does_not_invent_session_or_model[TIMEOUT]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_invalid_results_cannot_be_accepted[<lambda>0]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_invalid_results_cannot_be_accepted[<lambda>1]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_invalid_results_cannot_be_accepted[<lambda>2]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_invalid_results_cannot_be_accepted[<lambda>3]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_invalid_results_cannot_be_accepted[<lambda>4]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_invalid_results_cannot_be_accepted[<lambda>5]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_invalid_results_cannot_be_accepted[<lambda>6]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_invalid_results_cannot_be_accepted[<lambda>7]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_invalid_results_cannot_be_accepted[<lambda>8]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_invalid_results_cannot_be_accepted[<lambda>9]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_invalid_results_cannot_be_accepted[<lambda>10]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_optional_suggestion_cannot_block",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_plan_grant_cannot_masquerade_as_operation_grant[<lambda>0]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_plan_grant_cannot_masquerade_as_operation_grant[<lambda>1]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_import_requires_accepted_dry_run_binding",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_stage4_verifier_hashes_are_separate_required_fields",
+          "outcome": "PASSED",
+          "seconds": 0.002
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_duplicate_unresolved_findings_rejected",
+          "outcome": "PASSED",
+          "seconds": 0.002
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_stage4_substatus_is_not_a_work_item_status",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_pause_requires_reason_and_resume_target",
+          "outcome": "PASSED",
+          "seconds": 0.002
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_structure_mode_never_creates_authoritative_state",
+          "outcome": "PASSED",
+          "seconds": 0.002
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_structure_rejects_symlinked_state",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_engine::test_happy_path_owner_gate_exports_not_authority",
+          "outcome": "PASSED",
+          "seconds": 0.994
+        },
+        {
+          "test": "orchestrator.tests.test_engine::test_restart_reattaches_without_redispatch_and_duplicate_result",
+          "outcome": "PASSED",
+          "seconds": 0.703
+        },
+        {
+          "test": "orchestrator.tests.test_engine::test_uncertain_launch_pauses_without_retry",
+          "outcome": "PASSED",
+          "seconds": 0.354
+        },
+        {
+          "test": "orchestrator.tests.test_engine::test_quorum_requires_all_independent_responses",
+          "outcome": "PASSED",
+          "seconds": 1.311
+        },
+        {
+          "test": "orchestrator.tests.test_engine::test_stale_grant_rejected",
+          "outcome": "PASSED",
+          "seconds": 0.521
+        },
+        {
+          "test": "orchestrator.tests.test_engine::test_database_restore_cannot_resurrect_old_grants",
+          "outcome": "PASSED",
+          "seconds": 1.134
+        },
+        {
+          "test": "orchestrator.tests.test_engine::test_owner_pause_resume_keeps_inflight_job",
+          "outcome": "PASSED",
+          "seconds": 0.421
+        },
+        {
+          "test": "orchestrator.tests.test_engine::test_owner_reconciliation_allows_new_attempt_after_unknown_launch",
+          "outcome": "PASSED",
+          "seconds": 0.798
+        },
+        {
+          "test": "orchestrator.tests.test_engine::test_stage_advance_requires_reconciled_owner_commit",
+          "outcome": "PASSED",
+          "seconds": 1.947
+        },
+        {
+          "test": "orchestrator.tests.test_engine::test_recovery_requires_owner_review_and_invalidates_all_old_grants",
+          "outcome": "PASSED",
+          "seconds": 1.495
+        },
+        {
+          "test": "orchestrator.tests.test_engine::test_unknown_finding_id_is_rejected_before_authoritative_acceptance",
+          "outcome": "PASSED",
+          "seconds": 0.864
+        },
+        {
+          "test": "orchestrator.tests.test_engine::test_consumed_token_document_cannot_be_issued_again",
+          "outcome": "PASSED",
+          "seconds": 0.436
+        },
+        {
+          "test": "orchestrator.tests.test_packaging::test_flit_sdist_direct_and_rebuilt_wheel_install",
+          "outcome": "PASSED",
+          "seconds": 2.394
+        },
+        {
+          "test": "orchestrator.tests.test_packaging::test_retained_setuptools_discovery_excludes_packages",
+          "outcome": "PASSED",
+          "seconds": 0.041
+        },
+        {
+          "test": "orchestrator.tests.test_process_restart::test_kill_and_resume_keeps_external_job_single_dispatch",
+          "outcome": "PASSED",
+          "seconds": 1.353
+        },
+        {
+          "test": "orchestrator.tests.test_review_regressions::test_commit_scope_cannot_authorize_plan_gate",
+          "outcome": "PASSED",
+          "seconds": 0.585
+        },
+        {
+          "test": "orchestrator.tests.test_review_regressions::test_crash_during_preparation_recovers_original_inputs[packet.md]",
+          "outcome": "PASSED",
+          "seconds": 0.294
+        },
+        {
+          "test": "orchestrator.tests.test_review_regressions::test_crash_during_preparation_recovers_original_inputs[spec.json]",
+          "outcome": "PASSED",
+          "seconds": 0.321
+        },
+        {
+          "test": "orchestrator.tests.test_review_regressions::test_crash_during_preparation_recovers_original_inputs[wire-schema.json]",
+          "outcome": "PASSED",
+          "seconds": 0.284
+        },
+        {
+          "test": "orchestrator.tests.test_review_regressions::test_resume_pending_dispatch_revalidates_before_launch[pause]",
+          "outcome": "PASSED",
+          "seconds": 0.236
+        },
+        {
+          "test": "orchestrator.tests.test_review_regressions::test_resume_pending_dispatch_revalidates_before_launch[candidate]",
+          "outcome": "PASSED",
+          "seconds": 0.18
+        },
+        {
+          "test": "orchestrator.tests.test_review_regressions::test_resume_pending_dispatch_revalidates_before_launch[plan]",
+          "outcome": "PASSED",
+          "seconds": 0.179
+        },
+        {
+          "test": "orchestrator.tests.test_review_regressions::test_owner_pause_enters_during_normal_cli_monitor",
+          "outcome": "PASSED",
+          "seconds": 2.243
+        },
+        {
+          "test": "orchestrator.tests.test_review_regressions::test_approval_after_uncheckpointed_pause_does_not_poison_replay",
+          "outcome": "PASSED",
+          "seconds": 0.739
+        },
+        {
+          "test": "orchestrator.tests.test_review_regressions::test_invalid_resume_is_rejected_before_event_storage",
+          "outcome": "PASSED",
+          "seconds": 0.569
+        },
+        {
+          "test": "orchestrator.tests.test_routing::test_distinct_return_routes[implementation_defect-builder]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_routing::test_distinct_return_routes[design_defect-architect]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_routing::test_optional_backlog_does_not_block",
+          "outcome": "PASSED",
+          "seconds": 0.0
+        },
+        {
+          "test": "orchestrator.tests.test_routing::test_three_failed_cycles_persist_across_architecture_route",
+          "outcome": "PASSED",
+          "seconds": 0.0
+        },
+        {
+          "test": "orchestrator.tests.test_routing::test_same_normalized_blocker_escalates_after_two_rounds",
+          "outcome": "PASSED",
+          "seconds": 0.0
+        },
+        {
+          "test": "orchestrator.tests.test_routing::test_architecture_pass_preserves_unfixed_implementation_findings",
+          "outcome": "PASSED",
+          "seconds": 0.0
+        },
+        {
+          "test": "orchestrator.tests.test_routing::test_new_artifact_reference_does_not_reset_same_blocker",
+          "outcome": "PASSED",
+          "seconds": 0.0
+        },
+        {
+          "test": "orchestrator.tests.test_routing::test_duplicate_finding_reuses_orchestrator_id",
+          "outcome": "PASSED",
+          "seconds": 0.0
+        },
+        {
+          "test": "orchestrator.tests.test_sandbox::test_control_store_and_git_are_not_writable",
+          "outcome": "PASSED",
+          "seconds": 0.025
+        },
+        {
+          "test": "orchestrator.tests.test_sandbox::test_peer_results_hidden_but_explicit_plan_readable",
+          "outcome": "PASSED",
+          "seconds": 0.027
+        },
+        {
+          "test": "orchestrator.tests.test_validation_runner::test_offline_validations_capture_real_exit_and_protect_source",
+          "outcome": "PASSED",
+          "seconds": 0.146
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_repair_packet_all_findings_and_plan_grant_retention",
+          "outcome": "PASSED",
+          "seconds": 2.549
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_design_returns_to_architecture_and_independent_plan_review",
+          "outcome": "PASSED",
+          "seconds": 2.359
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_optional_backlog_and_disagreement[optional_improvement-VERIFIED_FOR_RELEASE]",
+          "outcome": "PASSED",
+          "seconds": 1.505
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_optional_backlog_and_disagreement[owner_decision-PAUSED]",
+          "outcome": "PASSED",
+          "seconds": 1.545
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_quorum_incomplete_then_pass_or_fail[PASS]",
+          "outcome": "PASSED",
+          "seconds": 2.778
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_quorum_incomplete_then_pass_or_fail[BLOCKED]",
+          "outcome": "PASSED",
+          "seconds": 2.214
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_graph_escalation_survives_restart[2]",
+          "outcome": "PASSED",
+          "seconds": 2.412
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_graph_escalation_survives_restart[3]",
+          "outcome": "PASSED",
+          "seconds": 3.758
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_commit_token_rejects_candidate_content_drift",
+          "outcome": "PASSED",
+          "seconds": 1.534
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_post_commit_pre_record_crash_reconciles_once",
+          "outcome": "PASSED",
+          "seconds": 2.542
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_vacuum_into_restore_requires_owner_reconciliation",
+          "outcome": "PASSED",
+          "seconds": 1.965
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_failure_classes_block_and_record_named_class[AUTH_FAILURE]",
+          "outcome": "PASSED",
+          "seconds": 0.402
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_failure_classes_block_and_record_named_class[DENIED_ACTION]",
+          "outcome": "PASSED",
+          "seconds": 0.47
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_failure_classes_block_and_record_named_class[TIMEOUT]",
+          "outcome": "PASSED",
+          "seconds": 0.401
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_failure_classes_block_and_record_named_class[MALFORMED_RESULT]",
+          "outcome": "FAILED",
+          "seconds": 0.348,
+          "failure": "AssertionError: Expected durable class MALFORMED_RESULT, observed ['WorkflowError', 'RECONCILIATION_REQUIRED']\nassert 'MALFORMED_RESULT' in ['WorkflowError', 'RECONCILIATION_REQUIRED']"
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_failure_classes_block_and_record_named_class[EVIDENCE_UNAVAILABLE]",
+          "outcome": "FAILED",
+          "seconds": 0.346,
+          "failure": "AssertionError: Expected durable class EVIDENCE_UNAVAILABLE, observed ['WorkflowError', 'RECONCILIATION_REQUIRED']\nassert 'EVIDENCE_UNAVAILABLE' in ['WorkflowError', 'RECONCILIATION_REQUIRED']"
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_missing_binary_retries_only_one_proven_nonlaunch",
+          "outcome": "PASSED",
+          "seconds": 0.525
+        }
+      ],
+      "source_manifest_sha256": "1a31afa2fba2e00be53d03913a574040e4053d898c492ba2ce0bc183cabce67d"
+    },
+    {
+      "run": 4,
+      "description": "Owner-authorized bounded P2-F001 correction; all 110 tests including diagnostic non-disclosure regression",
+      "artifact": "phase-2-run-04.xml",
+      "sha256": "b66d34dc1b30dbc13ea717e278a2185d603343e01589bdd2bbd7cb6767ed481b",
+      "source_manifest_sha256": "4e01059e861249015363eabb487731477952c3943f0160f582f33485ebb1cc5c",
+      "tests": 110,
+      "passed": 110,
+      "failed": 0,
+      "seconds": 49.944,
+      "cases": [
+        {
+          "test": "orchestrator.tests.test_adapter_results::test_native_identity_is_taken_from_transport_not_body",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_adapter_results::test_non_object_result_is_malformed[None]",
+          "outcome": "PASSED",
+          "seconds": 0.0
+        },
+        {
+          "test": "orchestrator.tests.test_adapter_results::test_non_object_result_is_malformed[value1]",
+          "outcome": "PASSED",
+          "seconds": 0.0
+        },
+        {
+          "test": "orchestrator.tests.test_adapter_results::test_non_object_result_is_malformed[1]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_adapter_results::test_non_object_result_is_malformed[invalid]",
+          "outcome": "PASSED",
+          "seconds": 0.0
+        },
+        {
+          "test": "orchestrator.tests.test_adapter_results::test_adapter_failure_classes[401 unauthorized-False-AUTH_FAILURE]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_adapter_results::test_adapter_failure_classes[permission denied-False-DENIED_ACTION]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_adapter_results::test_adapter_failure_classes[-True-TIMEOUT]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_adapter_results::test_adapter_failure_classes[invalid output-False-MALFORMED_RESULT]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_candidates::test_candidate_includes_untracked_deletion_modes_symlinks",
+          "outcome": "PASSED",
+          "seconds": 0.061
+        },
+        {
+          "test": "orchestrator.tests.test_candidates::test_undeclared_and_staged_changes_fail_without_touching_index",
+          "outcome": "PASSED",
+          "seconds": 0.025
+        },
+        {
+          "test": "orchestrator.tests.test_candidates::test_symlink_escape_and_traversal_refused",
+          "outcome": "PASSED",
+          "seconds": 0.017
+        },
+        {
+          "test": "orchestrator.tests.test_candidates::test_owner_commit_reconciliation_requires_exact_tree_parent_trailer",
+          "outcome": "PASSED",
+          "seconds": 0.064
+        },
+        {
+          "test": "orchestrator.tests.test_candidates::test_new_file_after_freeze_invalidates_candidate_even_inside_allowed_scope",
+          "outcome": "PASSED",
+          "seconds": 0.048
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_published_schemas_are_valid_and_match_source[finding-schema0]",
+          "outcome": "PASSED",
+          "seconds": 0.011
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_published_schemas_are_valid_and_match_source[result-envelope-schema1]",
+          "outcome": "PASSED",
+          "seconds": 0.032
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_published_schemas_are_valid_and_match_source[repair-packet-schema2]",
+          "outcome": "PASSED",
+          "seconds": 0.024
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_published_schemas_are_valid_and_match_source[approval-token-schema3]",
+          "outcome": "PASSED",
+          "seconds": 0.018
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_published_schemas_are_valid_and_match_source[state-export-schema4]",
+          "outcome": "PASSED",
+          "seconds": 0.014
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_positive_samples[result-envelope-value0]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_positive_samples[state-export-value1]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_positive_samples[repair-packet-value2]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_all_finding_routes_have_valid_contracts[implementation_defect]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_all_finding_routes_have_valid_contracts[design_defect]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_all_finding_routes_have_valid_contracts[optional_improvement]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_all_finding_routes_have_valid_contracts[owner_decision]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_scope_specific_grants[PLAN]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_scope_specific_grants[COMMIT]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_scope_specific_grants[DRY_RUN]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_scope_specific_grants[IMPORT]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_prelaunch_failure_does_not_invent_session_or_model[MISSING_BINARY]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_prelaunch_failure_does_not_invent_session_or_model[AUTH_FAILURE]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_prelaunch_failure_does_not_invent_session_or_model[DENIED_ACTION]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_prelaunch_failure_does_not_invent_session_or_model[MALFORMED_RESULT]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_prelaunch_failure_does_not_invent_session_or_model[EVIDENCE_UNAVAILABLE]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_prelaunch_failure_does_not_invent_session_or_model[TIMEOUT]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_invalid_results_cannot_be_accepted[<lambda>0]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_invalid_results_cannot_be_accepted[<lambda>1]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_invalid_results_cannot_be_accepted[<lambda>2]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_invalid_results_cannot_be_accepted[<lambda>3]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_invalid_results_cannot_be_accepted[<lambda>4]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_invalid_results_cannot_be_accepted[<lambda>5]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_invalid_results_cannot_be_accepted[<lambda>6]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_invalid_results_cannot_be_accepted[<lambda>7]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_invalid_results_cannot_be_accepted[<lambda>8]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_invalid_results_cannot_be_accepted[<lambda>9]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_invalid_results_cannot_be_accepted[<lambda>10]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_optional_suggestion_cannot_block",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_plan_grant_cannot_masquerade_as_operation_grant[<lambda>0]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_plan_grant_cannot_masquerade_as_operation_grant[<lambda>1]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_import_requires_accepted_dry_run_binding",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_stage4_verifier_hashes_are_separate_required_fields",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_duplicate_unresolved_findings_rejected",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_stage4_substatus_is_not_a_work_item_status",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_pause_requires_reason_and_resume_target",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_structure_mode_never_creates_authoritative_state",
+          "outcome": "PASSED",
+          "seconds": 0.002
+        },
+        {
+          "test": "orchestrator.tests.test_contracts::test_structure_rejects_symlinked_state",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_engine::test_happy_path_owner_gate_exports_not_authority",
+          "outcome": "PASSED",
+          "seconds": 1.088
+        },
+        {
+          "test": "orchestrator.tests.test_engine::test_restart_reattaches_without_redispatch_and_duplicate_result",
+          "outcome": "PASSED",
+          "seconds": 0.625
+        },
+        {
+          "test": "orchestrator.tests.test_engine::test_uncertain_launch_pauses_without_retry",
+          "outcome": "PASSED",
+          "seconds": 0.318
+        },
+        {
+          "test": "orchestrator.tests.test_engine::test_quorum_requires_all_independent_responses",
+          "outcome": "PASSED",
+          "seconds": 1.441
+        },
+        {
+          "test": "orchestrator.tests.test_engine::test_stale_grant_rejected",
+          "outcome": "PASSED",
+          "seconds": 0.494
+        },
+        {
+          "test": "orchestrator.tests.test_engine::test_database_restore_cannot_resurrect_old_grants",
+          "outcome": "PASSED",
+          "seconds": 1.004
+        },
+        {
+          "test": "orchestrator.tests.test_engine::test_owner_pause_resume_keeps_inflight_job",
+          "outcome": "PASSED",
+          "seconds": 0.406
+        },
+        {
+          "test": "orchestrator.tests.test_engine::test_owner_reconciliation_allows_new_attempt_after_unknown_launch",
+          "outcome": "PASSED",
+          "seconds": 0.969
+        },
+        {
+          "test": "orchestrator.tests.test_engine::test_stage_advance_requires_reconciled_owner_commit",
+          "outcome": "PASSED",
+          "seconds": 2.037
+        },
+        {
+          "test": "orchestrator.tests.test_engine::test_recovery_requires_owner_review_and_invalidates_all_old_grants",
+          "outcome": "PASSED",
+          "seconds": 1.71
+        },
+        {
+          "test": "orchestrator.tests.test_engine::test_unknown_finding_id_is_rejected_before_authoritative_acceptance",
+          "outcome": "PASSED",
+          "seconds": 0.889
+        },
+        {
+          "test": "orchestrator.tests.test_engine::test_consumed_token_document_cannot_be_issued_again",
+          "outcome": "PASSED",
+          "seconds": 0.469
+        },
+        {
+          "test": "orchestrator.tests.test_packaging::test_flit_sdist_direct_and_rebuilt_wheel_install",
+          "outcome": "PASSED",
+          "seconds": 2.378
+        },
+        {
+          "test": "orchestrator.tests.test_packaging::test_retained_setuptools_discovery_excludes_packages",
+          "outcome": "PASSED",
+          "seconds": 0.044
+        },
+        {
+          "test": "orchestrator.tests.test_process_restart::test_kill_and_resume_keeps_external_job_single_dispatch",
+          "outcome": "PASSED",
+          "seconds": 1.317
+        },
+        {
+          "test": "orchestrator.tests.test_review_regressions::test_commit_scope_cannot_authorize_plan_gate",
+          "outcome": "PASSED",
+          "seconds": 0.453
+        },
+        {
+          "test": "orchestrator.tests.test_review_regressions::test_crash_during_preparation_recovers_original_inputs[packet.md]",
+          "outcome": "PASSED",
+          "seconds": 0.257
+        },
+        {
+          "test": "orchestrator.tests.test_review_regressions::test_crash_during_preparation_recovers_original_inputs[spec.json]",
+          "outcome": "PASSED",
+          "seconds": 0.259
+        },
+        {
+          "test": "orchestrator.tests.test_review_regressions::test_crash_during_preparation_recovers_original_inputs[wire-schema.json]",
+          "outcome": "PASSED",
+          "seconds": 0.262
+        },
+        {
+          "test": "orchestrator.tests.test_review_regressions::test_resume_pending_dispatch_revalidates_before_launch[pause]",
+          "outcome": "PASSED",
+          "seconds": 0.221
+        },
+        {
+          "test": "orchestrator.tests.test_review_regressions::test_resume_pending_dispatch_revalidates_before_launch[candidate]",
+          "outcome": "PASSED",
+          "seconds": 0.174
+        },
+        {
+          "test": "orchestrator.tests.test_review_regressions::test_resume_pending_dispatch_revalidates_before_launch[plan]",
+          "outcome": "PASSED",
+          "seconds": 0.162
+        },
+        {
+          "test": "orchestrator.tests.test_review_regressions::test_owner_pause_enters_during_normal_cli_monitor",
+          "outcome": "PASSED",
+          "seconds": 2.217
+        },
+        {
+          "test": "orchestrator.tests.test_review_regressions::test_approval_after_uncheckpointed_pause_does_not_poison_replay",
+          "outcome": "PASSED",
+          "seconds": 0.799
+        },
+        {
+          "test": "orchestrator.tests.test_review_regressions::test_invalid_resume_is_rejected_before_event_storage",
+          "outcome": "PASSED",
+          "seconds": 0.502
+        },
+        {
+          "test": "orchestrator.tests.test_routing::test_distinct_return_routes[implementation_defect-builder]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_routing::test_distinct_return_routes[design_defect-architect]",
+          "outcome": "PASSED",
+          "seconds": 0.001
+        },
+        {
+          "test": "orchestrator.tests.test_routing::test_optional_backlog_does_not_block",
+          "outcome": "PASSED",
+          "seconds": 0.0
+        },
+        {
+          "test": "orchestrator.tests.test_routing::test_three_failed_cycles_persist_across_architecture_route",
+          "outcome": "PASSED",
+          "seconds": 0.0
+        },
+        {
+          "test": "orchestrator.tests.test_routing::test_same_normalized_blocker_escalates_after_two_rounds",
+          "outcome": "PASSED",
+          "seconds": 0.0
+        },
+        {
+          "test": "orchestrator.tests.test_routing::test_architecture_pass_preserves_unfixed_implementation_findings",
+          "outcome": "PASSED",
+          "seconds": 0.0
+        },
+        {
+          "test": "orchestrator.tests.test_routing::test_new_artifact_reference_does_not_reset_same_blocker",
+          "outcome": "PASSED",
+          "seconds": 0.0
+        },
+        {
+          "test": "orchestrator.tests.test_routing::test_duplicate_finding_reuses_orchestrator_id",
+          "outcome": "PASSED",
+          "seconds": 0.0
+        },
+        {
+          "test": "orchestrator.tests.test_sandbox::test_control_store_and_git_are_not_writable",
+          "outcome": "PASSED",
+          "seconds": 0.031
+        },
+        {
+          "test": "orchestrator.tests.test_sandbox::test_peer_results_hidden_but_explicit_plan_readable",
+          "outcome": "PASSED",
+          "seconds": 0.027
+        },
+        {
+          "test": "orchestrator.tests.test_validation_runner::test_offline_validations_capture_real_exit_and_protect_source",
+          "outcome": "PASSED",
+          "seconds": 0.162
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_repair_packet_all_findings_and_plan_grant_retention",
+          "outcome": "PASSED",
+          "seconds": 2.565
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_design_returns_to_architecture_and_independent_plan_review",
+          "outcome": "PASSED",
+          "seconds": 2.575
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_optional_backlog_and_disagreement[optional_improvement-VERIFIED_FOR_RELEASE]",
+          "outcome": "PASSED",
+          "seconds": 1.473
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_optional_backlog_and_disagreement[owner_decision-PAUSED]",
+          "outcome": "PASSED",
+          "seconds": 1.713
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_quorum_incomplete_then_pass_or_fail[PASS]",
+          "outcome": "PASSED",
+          "seconds": 3.249
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_quorum_incomplete_then_pass_or_fail[BLOCKED]",
+          "outcome": "PASSED",
+          "seconds": 2.51
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_graph_escalation_survives_restart[2]",
+          "outcome": "PASSED",
+          "seconds": 2.468
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_graph_escalation_survives_restart[3]",
+          "outcome": "PASSED",
+          "seconds": 3.566
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_commit_token_rejects_candidate_content_drift",
+          "outcome": "PASSED",
+          "seconds": 1.641
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_post_commit_pre_record_crash_reconciles_once",
+          "outcome": "PASSED",
+          "seconds": 1.914
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_vacuum_into_restore_requires_owner_reconciliation",
+          "outcome": "PASSED",
+          "seconds": 2.274
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_failure_classes_block_and_record_named_class[AUTH_FAILURE]",
+          "outcome": "PASSED",
+          "seconds": 0.368
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_failure_classes_block_and_record_named_class[DENIED_ACTION]",
+          "outcome": "PASSED",
+          "seconds": 0.365
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_failure_classes_block_and_record_named_class[TIMEOUT]",
+          "outcome": "PASSED",
+          "seconds": 0.438
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_failure_classes_block_and_record_named_class[MALFORMED_RESULT]",
+          "outcome": "PASSED",
+          "seconds": 0.462
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_failure_classes_block_and_record_named_class[EVIDENCE_UNAVAILABLE]",
+          "outcome": "PASSED",
+          "seconds": 0.433
+        },
+        {
+          "test": "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_missing_binary_retries_only_one_proven_nonlaunch",
+          "outcome": "PASSED",
+          "seconds": 0.45
+        }
+      ]
+    },
+    {
+      "run": 5,
+      "description": "Initial P3-F001 rerun: new fixture omitted baseline commit; host sandbox denied NETLINK_ROUTE in existing validation test",
+      "artifact": "phase-2-run-05.xml",
+      "sha256": "70a3a4a574b8b1a849d5604203fdec8f5adb2ec99ea11c1efb89721787adc297",
+      "tests": 111,
+      "passed": 109,
+      "failed": 2,
+      "seconds": 54.438
+    },
+    {
+      "run": 6,
+      "description": "P3-F001 corrected fixture and host namespace access; complete 111-test qualification",
+      "artifact": "phase-2-run-06.xml",
+      "sha256": "9162d04e35f15ef2d76d63fe237c43f88dac28b6831c131251acf5e313d44e30",
+      "tests": 111,
+      "passed": 111,
+      "failed": 0,
+      "seconds": 55.83
+    },
+    {
+      "run": 7,
+      "description": "P3-F002 attestation/local schema and strict OpenCode final-message regressions",
+      "artifact": "phase-2-run-07.xml",
+      "sha256": "21b8d41ec0631c19ea5f16eb7dca799d13c55fff87738e803c515319b118953a",
+      "tests": 116,
+      "passed": 116,
+      "failed": 0,
+      "seconds": 56.15
+    }
+  ],
+  "coverage": [
+    {
+      "scenario": "implementation_defect_all_unresolved_and_plan_grant_retention",
+      "status": "PASSED",
+      "tests": [
+        "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_repair_packet_all_findings_and_plan_grant_retention"
+      ]
+    },
+    {
+      "scenario": "design_defect_architect_then_review",
+      "status": "PASSED",
+      "tests": [
+        "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_design_returns_to_architecture_and_independent_plan_review"
+      ]
+    },
+    {
+      "scenario": "optional_backlog",
+      "status": "PASSED",
+      "tests": [
+        "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_optional_backlog_and_disagreement[optional_improvement-VERIFIED_FOR_RELEASE]"
+      ]
+    },
+    {
+      "scenario": "owner_disagreement_pause",
+      "status": "PASSED",
+      "tests": [
+        "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_optional_backlog_and_disagreement[owner_decision-PAUSED]"
+      ]
+    },
+    {
+      "scenario": "quorum_pass_fail_incomplete",
+      "status": "PASSED",
+      "tests": [
+        "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_quorum_incomplete_then_pass_or_fail[PASS]",
+        "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_quorum_incomplete_then_pass_or_fail[BLOCKED]"
+      ]
+    },
+    {
+      "scenario": "duplicate_result_no_double_advance",
+      "status": "PASSED",
+      "tests": [
+        "orchestrator.tests.test_engine::test_restart_reattaches_without_redispatch_and_duplicate_result"
+      ]
+    },
+    {
+      "scenario": "stale_approval",
+      "status": "PASSED",
+      "tests": [
+        "orchestrator.tests.test_engine::test_stale_grant_rejected",
+        "orchestrator.tests.test_review_regressions::test_approval_after_uncheckpointed_pause_does_not_poison_replay"
+      ]
+    },
+    {
+      "scenario": "escalation_three_cycles",
+      "status": "PASSED",
+      "tests": [
+        "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_graph_escalation_survives_restart[3]"
+      ]
+    },
+    {
+      "scenario": "escalation_two_unchanged_snapshots",
+      "status": "PASSED",
+      "tests": [
+        "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_graph_escalation_survives_restart[2]"
+      ]
+    },
+    {
+      "scenario": "cross_route_cycle_budget",
+      "status": "PASSED",
+      "tests": [
+        "orchestrator.tests.test_routing::test_three_failed_cycles_persist_across_architecture_route"
+      ]
+    },
+    {
+      "scenario": "coordinator_kill_with_detached_synthetic_worker",
+      "status": "PASSED",
+      "tests": [
+        "orchestrator.tests.test_process_restart::test_kill_and_resume_keeps_external_job_single_dispatch"
+      ]
+    },
+    {
+      "scenario": "commit_binding_content_drift",
+      "status": "PASSED",
+      "tests": [
+        "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_commit_token_rejects_candidate_content_drift"
+      ]
+    },
+    {
+      "scenario": "post_commit_pre_record_crash",
+      "status": "PASSED",
+      "tests": [
+        "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_post_commit_pre_record_crash_reconciles_once"
+      ]
+    },
+    {
+      "scenario": "vacuum_into_restore_reconciliation",
+      "status": "PASSED",
+      "tests": [
+        "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_vacuum_into_restore_requires_owner_reconciliation"
+      ]
+    },
+    {
+      "scenario": "backup_api_restore_reconciliation",
+      "status": "PASSED",
+      "tests": [
+        "orchestrator.tests.test_engine::test_recovery_requires_owner_review_and_invalidates_all_old_grants"
+      ]
+    },
+    {
+      "scenario": "unknown_launch_no_automatic_retry",
+      "status": "PASSED",
+      "tests": [
+        "orchestrator.tests.test_engine::test_uncertain_launch_pauses_without_retry"
+      ]
+    },
+    {
+      "scenario": "missing_binary_proven_nonlaunch_retry_once",
+      "status": "PASSED",
+      "tests": [
+        "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_missing_binary_retries_only_one_proven_nonlaunch"
+      ]
+    },
+    {
+      "scenario": "auth_failure",
+      "status": "PASSED",
+      "tests": [
+        "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_failure_classes_block_and_record_named_class[AUTH_FAILURE]"
+      ]
+    },
+    {
+      "scenario": "denied_action",
+      "status": "PASSED",
+      "tests": [
+        "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_failure_classes_block_and_record_named_class[DENIED_ACTION]"
+      ]
+    },
+    {
+      "scenario": "malformed_result",
+      "status": "PASSED",
+      "tests": [
+        "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_failure_classes_block_and_record_named_class[MALFORMED_RESULT]"
+      ]
+    },
+    {
+      "scenario": "evidence_unavailable",
+      "status": "PASSED",
+      "tests": [
+        "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_failure_classes_block_and_record_named_class[EVIDENCE_UNAVAILABLE]"
+      ]
+    },
+    {
+      "scenario": "timeout",
+      "status": "PASSED",
+      "tests": [
+        "docs.ai.work-items.scope-context-portability.verification.phase2.test_scenarios::test_failure_classes_block_and_record_named_class[TIMEOUT]"
+      ]
+    },
+    {
+      "scenario": "peer_artifact_and_write_isolation",
+      "status": "PASSED",
+      "tests": [
+        "orchestrator.tests.test_sandbox::test_control_store_and_git_are_not_writable",
+        "orchestrator.tests.test_sandbox::test_peer_results_hidden_but_explicit_plan_readable"
+      ]
+    },
+    {
+      "scenario": "stage4_separate_hash_wire_contract_only",
+      "status": "PASSED",
+      "tests": [
+        "orchestrator.tests.test_contracts::test_stage4_verifier_hashes_are_separate_required_fields"
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "P2-F001",
+      "classification": "implementation_defect",
+      "phase_exit_blocker": false,
+      "file": "orchestrator/engine.py",
+      "line": 427,
+      "problem": "Collection records type(exc).__name__ and discards the required MALFORMED_RESULT / EVIDENCE_UNAVAILABLE failure class.",
+      "observed": [
+        "job.status=RECONCILIATION_REQUIRED",
+        "job.failure=WorkflowError",
+        "view.status=PAUSED",
+        "view.pause_reason=RECONCILIATION_REQUIRED"
+      ],
+      "safety_observation": "Both cases block advancement; no repair launch or grant is made. Failure classification/persistent diagnosis violates canonical \u00a76.2.",
+      "requested_correction": "Preserve the known structured adapter failure class in durable job state without accepting unverifiable output or changing reconciliation/retry policy. Rerun full Phase 2 and renew source freeze only after owner authorizes the frozen-engine change.",
+      "status": "RESOLVED",
+      "resolution": "Collector persists only a recognized WorkflowError code from the schema FAILURES allowlist; raw diagnostic suffix remains excluded. Generic unknown exceptions retain their prior type-only diagnosis; pause and retry rules unchanged.",
+      "verification_run": 4
+    }
+  ],
+  "initial_harness_corrections": [
+    "Quorum PASS advances to independent AI-R before release, so the fixture must complete AI-R.",
+    "Normalized snapshots must use the real artifact-reference schema; replaced the string fixture with normalization.snapshot output.",
+    "Malformed output fixture now calls the real Codex parser against synthetic bytes, not just the fixture JSON decoder."
+  ],
+  "limits": [
+    "No real Codex/OpenCode/Antigravity dispatch during Phase 2; prior capability probes remain separate evidence.",
+    "ERP A2 composition and private-site snapshot integration are not certified here; the retained Stage 4 checks cover wire/schema contracts only."
+  ],
+  "next_gate": "Owner-authorized builder reconciliation and retry under standing PLAN grant.",
+  "authorized_frozen_files_modified": [
+    "orchestrator/adapters.py",
+    "orchestrator/engine.py",
+    "orchestrator/tests/test_adapter_results.py",
+    "orchestrator/tests/test_engine.py"
+  ],
+  "amendment_authority": {
+    "authority": "Owner Authorization: Bounded Engine Correction & Phase 2 Rerun (2026-09-11)",
+    "finding": "P2-F001",
+    "previous_source_manifest_sha256": "1a31afa2fba2e00be53d03913a574040e4053d898c492ba2ce0bc183cabce67d",
+    "base_commit": "4b77803af418cea8459c4cb7d9a0248674845da3",
+    "modified_frozen_files": [
+      "orchestrator/engine.py"
+    ],
+    "project_commit_created": false
+  },
+  "verification_source_hashes": {
+    "docs/ai/work-items/scope-context-portability/verification/phase2/test_scenarios.py": "3760a2ce635c32c41a9f1be29ea31243c0d2810d9dec2b7e81c65efa1847be58",
+    "docs/ai/work-items/scope-context-portability/verification/phase2/conftest.py": "0a773409f6aa2f9d4034388f7406fbb032bfac5d72319e0b5955188925216e28"
+  },
+  "checks": {
+    "engine_ruff_passed": true,
+    "git_diff_check_passed": true,
+    "raw_exception_suffix_absent_from_database_and_export": true,
+    "checker_scripts_unchanged": true,
+    "git_head_unchanged": true,
+    "index_empty": true
+  },
+  "p3_f001_amendment": {
+    "authority": "Owner Authorization: Reviewer Contract Visibility Amendment (P3-F001), 2026-09-12",
+    "finding": "P3-F001",
+    "previous_source_manifest_sha256": "4e01059e861249015363eabb487731477952c3943f0160f582f33485ebb1cc5c",
+    "modified_frozen_files": [
+      "orchestrator/engine.py",
+      "orchestrator/tests/test_engine.py"
+    ],
+    "project_commit_created": false
+  },
+  "p3_f002_amendment": {
+    "authority": "Owner Authorization: Builder Attestation & Parser Amendment (P3-F002), 2026-09-12",
+    "finding": "P3-F002",
+    "previous_source_manifest_sha256": "2753ff07fbe93f84a8e4bfb6e687a966cf52e27476d3c9140a4fa9eed2e6c5c9",
+    "modified_frozen_files": [
+      "orchestrator/adapters.py",
+      "orchestrator/engine.py",
+      "orchestrator/tests/test_adapter_results.py",
+      "orchestrator/tests/test_engine.py"
+    ],
+    "project_commit_created": false
+  }
+}

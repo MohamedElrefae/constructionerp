@@ -30,3 +30,15 @@ modern_theme_v16_adapter_v5.css
 
 # Auto-generated theme CSS files (generated at runtime from Construction Theme doctype)
 construction/public/css/theme_*.css
+
+# Isolated workflow development/runtime (never app package data)
+/orchestrator/.venv/
+/orchestrator/var/
+/dashboard/.venv/
+/dashboard/var/
+/dashboard/vendor/
+
+# Workflow run artifacts carry private inputs and account rows; never commit them.
+docs/ai/work-items/*/runs/
+docs/ai/work-items/*/inbox/
+docs/ai/work-items/*/outbox/

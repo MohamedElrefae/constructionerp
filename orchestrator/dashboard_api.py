@@ -1,0 +1,1836 @@
+"""Subprocess API for Civil Engineer Dashboard.
+
+Sole owner of execution.lock during mutations. Executes Engine operations,
+runs action-specific preflight checks, deduplicates requests under lock,
+and returns JSON to stdout.
+"""
+
+import argparse
+import hashlib
+import html
+import json
+import os
+import re
+import select
+import sqlite3
+import stat
+import subprocess
+import sys
+import time
+import urllib.parse
+import uuid
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any
+
+class SecurityError(Exception):
+    """Raised when security boundaries, permissions, or isolation rules are violated."""
+    pass
+
+# Ensure orchestrator package directory is in sys.path so both
+# `python -m orchestrator.dashboard_api` and direct script execution work
+_orchestrator_dir = Path(__file__).resolve().parent
+if str(_orchestrator_dir) not in sys.path:
+    sys.path.insert(0, str(_orchestrator_dir))
+
+from core import (
+    DuplicateKeyConflict,
+    GrantReconciliationRequired,
+    PreconditionError,
+    RecoveryError,
+    ValidationError as CoreValidationError,
+    WorkflowError,
+    canonical,
+    execution_lock,
+    within,
+)
+from engine import Engine
+from preflight import (
+    run_dispatch_preflight,
+    run_display_checks,
+    run_init_checks,
+    run_owner_action_checks,
+)
+
+_PATH_RE = re.compile(r"(?<!\]\()(?<![:/\w])/(?:[\w\.\-]+/)+[\w\.\-]+")
+_SECRET_KEYWORDS = (
+    r"api[_-]?key|api[_-]?secret|access[_-]?token|auth[_-]?token|secret[_-]?key|"
+    r"client[_-]?secret|private[_-]?key|password|passwd|secret|token|bearer"
+)
+_QUOTED_CREDENTIAL_PATTERN = re.compile(
+    rf"""(?i)(?P<prefix>['"]?(?:{_SECRET_KEYWORDS})\b['"]?\s*[:=]\s*)(?P<quote>['"])(?P<secret>(?:\\.|(?!(?P=quote))[^\r\n])*?)(?P=quote)""",
+    re.VERBOSE,
+)
+_UNQUOTED_CREDENTIAL_PATTERN = re.compile(
+    rf"""(?i)(?P<prefix>\b(?:{_SECRET_KEYWORDS})\b\s*[:=]\s*)(?P<secret>[^\s'\",;}}\]\)>]+)""",
+    re.VERBOSE,
+)
+_BEARER_PATTERN = re.compile(r"(?i)(bearer\s+)(['\"]?)([^\s'\",;]+)(['\"]?)")
+_HTML_TAG_RE = re.compile(
+    r"</?\s*[a-zA-Z][^>]*>|<!(?:--[\s\S]*?--|[\s\S]*?)>|<\?[\s\S]*?\?>",
+    re.IGNORECASE,
+)
+_MD_REF_DEF_RE = re.compile(
+    r"^([ \t]*(?:[>]+\s*)*(?:(?:[-*+]|\d+\.)\s+)?\[[^\]]+\]:[ \t]*(?:\r?\n[ \t]*)?)(?:<(?P<url_angle>[^>\r\n]+)>|(?P<url_bare>\S+))(?P<tail>[^\r\n]*)$",
+    re.MULTILINE,
+)
+_MD_REF_LINK_RE = re.compile(r"(!?\[[^\]]*\])\[([^\]]+)\]")
+_MD_SHORTCUT_RE = re.compile(r"(?<!\])\[([^\]]+)\](?![\[\(])")
+
+
+def strip_paths(text: str, root: Path | str | None = None) -> str:
+    """Mask absolute host paths and external filesystem paths."""
+    if not text:
+        return ""
+    if root:
+        root_str = str(Path(root).resolve())
+        text = text.replace(root_str, "[WORKTREE]")
+    return _PATH_RE.sub("[PATH]", text)
+
+
+def _is_safe_url(url: str) -> bool:
+    url = url.strip()
+    if url.startswith("<") and url.endswith(">"):
+        url = url[1:-1].strip()
+    unescaped = html.unescape(url)
+    unquoted = urllib.parse.unquote(unescaped)
+    cleaned = re.sub(r"[\x00-\x20\s]+", "", unquoted).lower()
+    colon_pos = cleaned.find(":")
+    if colon_pos != -1:
+        scheme = cleaned[:colon_pos]
+        if "/" not in scheme and "?" not in scheme and "#" not in scheme:
+            if scheme not in {"http", "https", "mailto"}:
+                return False
+    return True
+
+
+def _scan_and_sanitize_inline_links(text: str) -> str:
+    """Scan and sanitize Markdown inline links with arbitrary balanced parentheses.
+
+    Handles nested parens such as [click](javascript:alert((1))) or
+    [safe](https://example.com/a(b(c))) without regex backtracking or depth limits.
+    """
+    out = []
+    i = 0
+    n = len(text)
+    last_end = 0
+    while i < n:
+        if text[i] == "[" or (text[i] == "!" and i + 1 < n and text[i + 1] == "["):
+            start = i
+            is_img = text[i] == "!"
+            if is_img:
+                i += 1
+            bracket_depth = 1
+            i += 1
+            while i < n and bracket_depth > 0:
+                if text[i] == "\\":
+                    i += 2
+                    continue
+                if text[i] == "[":
+                    bracket_depth += 1
+                elif text[i] == "]":
+                    bracket_depth -= 1
+                i += 1
+            if bracket_depth == 0 and i < n and text[i] == "(":
+                label = text[start:i]
+                paren_start = i + 1
+                paren_depth = 1
+                i += 1
+                while i < n and paren_depth > 0:
+                    if text[i] == "\\":
+                        i += 2
+                        continue
+                    if text[i] == "(":
+                        paren_depth += 1
+                    elif text[i] == ")":
+                        paren_depth -= 1
+                    i += 1
+                if paren_depth == 0:
+                    raw_dest = text[paren_start:i - 1].strip()
+                    url = raw_dest
+                    title = ""
+                    if raw_dest.startswith("<"):
+                        gt = raw_dest.find(">")
+                        if gt != -1:
+                            url = raw_dest[1:gt].strip()
+                            title = raw_dest[gt + 1:].strip()
+                    else:
+                        parts = raw_dest.split(None, 1)
+                        if parts:
+                            url = parts[0]
+                            if len(parts) > 1:
+                                title = parts[1]
+                    if "[" in label[1:]:
+                        label = _scan_and_sanitize_inline_links(label)
+                    out.append(text[last_end:start])
+                    if not _is_safe_url(url):
+                        title_suffix = f" {title}" if title else ""
+                        out.append(f"{label}(#blocked{title_suffix})")
+                    else:
+                        out.append(f"{label}({raw_dest})")
+                    last_end = i
+                    continue
+            i = start + 1
+        else:
+            i += 1
+    out.append(text[last_end:])
+    return "".join(out)
+
+
+def _sanitize_md_links(text: str) -> str:
+    text = _scan_and_sanitize_inline_links(text)
+
+    def _replace_ref(match: re.Match) -> str:
+        prefix = match.group(1)
+        url = match.group("url_angle") or match.group("url_bare")
+        tail = match.group("tail") or ""
+        if not _is_safe_url(url):
+            return f"{prefix}#blocked{tail}"
+        return match.group(0)
+
+    text = _MD_REF_DEF_RE.sub(_replace_ref, text)
+    text = _MD_REF_LINK_RE.sub(
+        lambda m: f"{m.group(1)}[#blocked]" if not _is_safe_url(m.group(2)) else m.group(0),
+        text,
+    )
+    text = _MD_SHORTCUT_RE.sub(
+        lambda m: "[#blocked]" if not _is_safe_url(m.group(1)) else m.group(0),
+        text,
+    )
+    return text
+
+
+def render_plan_as_safe_text_html(plan_text: str) -> str:
+    """Render plan text as safe HTML using plain-text escaping.
+
+    Contract: The plan output is explicitly plain text. Consuming dashboards and
+    UIs MUST render this text using DOM textContent (or equivalent safe plain text
+    DOM node insertion such as <pre class='plan-display'> with element.textContent = ...),
+    and MUST NEVER render it via innerHTML, outerHTML, or raw HTML injection.
+    """
+    escaped = html.escape(plan_text, quote=True)
+    return f"<pre class=\"plan-text-display\">{escaped}</pre>"
+
+
+def sanitize_plan_text(text: str, root: Path | str | None = None) -> str:
+    """Sanitize plan text while preserving legitimate bilingual Arabic content.
+
+    Output Contract:
+    The plan output is explicitly plain text (format='plain_text', render_mode='text_content').
+    Consuming dashboards and UIs MUST render this text using DOM textContent (or equivalent
+    safe plain text DOM node insertion), and MUST NEVER interpret or inject it via innerHTML,
+    outerHTML, or un-sanitized Markdown-to-HTML conversion.
+
+    Defense-in-depth sanitization:
+    - Redacts credentials in JSON, YAML, and key-value formats (quoted and unquoted).
+    - Masks host absolute paths and worktree locations.
+    - Disables raw HTML tags (including multiline tags, scripts, iframes, images).
+    - Neutralizes Markdown links specifying unsafe URL schemes (javascript:, data:, vbscript:, etc.)
+      across arbitrary nested parentheses, angle brackets, and reference definitions inside
+      blockquotes and lists.
+    - Preserves legitimate Arabic bilingual content and safe URLs.
+    """
+    if not isinstance(text, str):
+        return ""
+    sanitized = strip_paths(text, root=root)
+    sanitized = _QUOTED_CREDENTIAL_PATTERN.sub(
+        r"\g<prefix>\g<quote>[REDACTED_CREDENTIAL]\g<quote>", sanitized
+    )
+    sanitized = _UNQUOTED_CREDENTIAL_PATTERN.sub(
+        r"\g<prefix>[REDACTED_CREDENTIAL]", sanitized
+    )
+    sanitized = _BEARER_PATTERN.sub(r"\1\2[REDACTED_CREDENTIAL]\4", sanitized)
+    sanitized = _sanitize_md_links(sanitized)
+    sanitized = _HTML_TAG_RE.sub(
+        lambda m: m.group(0).replace("<", "&lt;").replace(">", "&gt;"), sanitized
+    )
+    return sanitized
+
+
+def sanitize_error(exc: Exception, root: Path | str | None = None) -> dict:
+    """Return fixed public error message with support ID and strip all paths."""
+    support_id = f"ERR-{uuid.uuid4().hex[:8].upper()}"
+    exc_type = type(exc).__name__
+
+    if isinstance(exc, SecurityError):
+        msg = str(exc)
+    elif isinstance(exc, PreconditionError):
+        msg = "Precondition check failed"
+    elif isinstance(exc, (CoreValidationError, ValueError)):
+        msg = "Invalid request or validation failed"
+    elif isinstance(exc, DuplicateKeyConflict):
+        msg = "Duplicate action or conflicting request"
+    elif isinstance(exc, GrantReconciliationRequired):
+        msg = "Grant reconciliation required"
+    elif isinstance(exc, RecoveryError):
+        msg = "Workflow recovery error"
+    elif isinstance(exc, WorkflowError):
+        msg = "Workflow execution error"
+    else:
+        msg = "An unexpected error occurred"
+
+    msg = strip_paths(msg, root=root)
+
+    return {
+        "error": msg,
+        "error_type": exc_type,
+        "support_id": support_id,
+    }
+
+
+PUBLIC_PAUSE_CATEGORIES = {
+    "OPERATOR_PAUSED",
+    "BUDGET_EXHAUSTED",
+    "GATE_PENDING",
+    "VERIFICATION_FAILED",
+    "EXECUTION_ERROR",
+    "RECONCILIATION_REQUIRED",
+    "ESCALATED",
+    "MALFORMED_RESULT",
+}
+
+
+def categorize_pause_reason(raw_reason: str | None) -> str | None:
+    """Project internal pause reasons into fixed public categories.
+
+    Prevents leaking private operator instructions, credentials, or paths.
+    """
+    if not raw_reason:
+        return None
+    r_upper = str(raw_reason).strip().upper()
+    if r_upper in PUBLIC_PAUSE_CATEGORIES:
+        return r_upper
+    r = str(raw_reason).lower()
+    if any(k in r for k in ("reconcil", "grant")):
+        return "RECONCILIATION_REQUIRED"
+    if any(k in r for k in ("malform", "corrupt", "schema")):
+        return "MALFORMED_RESULT"
+    if any(k in r for k in ("escalat", "cycle", "loop")):
+        return "ESCALATED"
+    if any(k in r for k in ("budget", "cost", "token_limit", "max_iterations")):
+        return "BUDGET_EXHAUSTED"
+    if any(k in r for k in ("gate", "approval", "plan_review", "scope_review")):
+        return "GATE_PENDING"
+    if any(k in r for k in ("verify", "verification", "check_failed", "lint")):
+        return "VERIFICATION_FAILED"
+    if any(k in r for k in ("error", "exception", "halt", "crash", "failure")):
+        return "EXECUTION_ERROR"
+    return "OPERATOR_PAUSED"
+
+
+def get_state_projection(root: Path | str) -> dict:
+    """Dedicated read-only projection of workflow state.
+
+    Does NOT instantiate Engine, acquire exclusive execution.lock, or mutate
+    any files, checkpoints, or role mirrors.
+    """
+    root = Path(root).resolve()
+    runtime_path = root / "orchestrator/var"
+    checks = run_display_checks(runtime_path)
+    failed = [c for c in checks if not c.ok]
+    if failed:
+        raise PreconditionError(f"Display preflight failed: {failed}")
+
+    db_path = runtime_path / "checkpoints.db"
+    if not db_path.exists():
+        return {"status": "NOT_INITIALIZED"}
+
+    conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+    try:
+        from langgraph.checkpoint.sqlite import SqliteSaver
+        saver = SqliteSaver(conn)
+        checkpoint = saver.get({"configurable": {"thread_id": "workflow"}})
+        if not checkpoint or not checkpoint.get("channel_values"):
+            return {"status": "NOT_INITIALIZED"}
+        v = checkpoint["channel_values"]["view"]
+    finally:
+        conn.close()
+
+    # Allowlisted projection: exclude host absolute paths, private tokens,
+    # internal hashes, gate IDs, approval refs, and stage evidence
+    gate_data = v.get("gate")
+    gate_proj = None
+    if isinstance(gate_data, dict):
+        gate_proj = {"scope": gate_data.get("scope")}
+
+    projected_stages = {}
+    for stg_id, stg_data in (v.get("stages") or {}).items():
+        if isinstance(stg_data, dict):
+            projected_stages[stg_id] = {
+                "status": stg_data.get("status"),
+                "sub_status": stg_data.get("sub_status"),
+                "historical": bool(stg_data.get("historical", False)),
+            }
+        else:
+            projected_stages[stg_id] = {"status": str(stg_data)}
+
+    raw_pause = v.get("pause_reason")
+    sanitized_pause = categorize_pause_reason(raw_pause)
+
+    return {
+        "work_item": v.get("work_item"),
+        "stage": v.get("stage"),
+        "status": v.get("status"),
+        "sub_status": v.get("sub_status"),
+        "pause_reason": sanitized_pause,
+        "resume_to": v.get("resume_to"),
+        "gate": gate_proj,
+        "plan_granted": bool(v.get("plan_granted")),
+        "active_jobs": [
+            {
+                "role": j.get("role") if isinstance(j, dict) else None,
+                "status": j.get("status") if isinstance(j, dict) else None,
+            }
+            for j in (v.get("active_jobs") or [])
+        ],
+        "stages": projected_stages,
+        "next_roles": v.get("next_roles", []),
+    }
+
+
+def get_plan_projection(root: Path | str) -> dict:
+    """Dedicated read-only projection of the workflow's approved plan text.
+
+    Output Contract:
+    The returned plan projection is explicitly plain text (format='plain_text',
+    render_mode='text_content'). Consuming dashboards and UIs MUST render plan_text
+    using DOM textContent (e.g. element.textContent = result.plan_text), and MUST NEVER
+    render or inject it via innerHTML, outerHTML, or raw Markdown-to-HTML conversion.
+
+    Does NOT accept request-supplied file paths, instantiate Engine, acquire
+    exclusive execution.lock, or mutate any files. Resolves ONLY the workflow's
+    approved plan artifact from checkpoints metadata.
+    """
+    root = Path(root).resolve()
+    runtime_path = root / "orchestrator/var"
+    checks = run_display_checks(runtime_path)
+    failed = [c for c in checks if not c.ok]
+    if failed:
+        raise PreconditionError(f"Display preflight failed: {failed}")
+
+    db_path = runtime_path / "checkpoints.db"
+    if not db_path.exists():
+        return {
+            "plan_text": "",
+            "plan_path": "",
+            "format": "plain_text",
+            "render_mode": "text_content",
+        }
+
+    plan_art = None
+    plan_cfg_path = ""
+    conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+    try:
+        row = conn.execute("SELECT value FROM workflow_meta WHERE key='plan_artifact'").fetchone()
+        if row:
+            plan_art = json.loads(row[0]) if row[0].startswith('"') else row[0]
+        cfg_row = conn.execute("SELECT value FROM workflow_meta WHERE key='config'").fetchone()
+        if cfg_row:
+            cfg = json.loads(cfg_row[0])
+            plan_cfg_path = cfg.get("plan_path", "")
+    finally:
+        conn.close()
+
+    rel_path = plan_art or plan_cfg_path
+    if not rel_path:
+        return {
+            "plan_text": "",
+            "plan_path": "",
+            "format": "plain_text",
+            "render_mode": "text_content",
+        }
+
+    # Reject absolute paths, directory traversal, and symlink escapes before reading
+    try:
+        full_path = within(root, str(rel_path), allow_leaf_symlink=False)
+        if full_path.is_symlink() or not full_path.resolve().is_relative_to(root):
+            raise PreconditionError(f"Unsafe plan_path: {rel_path} escapes worktree boundary")
+    except (WorkflowError, ValueError) as exc:
+        raise PreconditionError(f"Unsafe plan_path: {rel_path} escapes worktree boundary") from exc
+
+    if not full_path.exists():
+        return {
+            "plan_text": "",
+            "plan_path": str(full_path.relative_to(root)),
+            "format": "plain_text",
+            "render_mode": "text_content",
+        }
+
+    raw_text = full_path.read_text(encoding="utf-8", errors="replace")
+    clean_text = sanitize_plan_text(raw_text, root=root)
+
+    return {
+        "plan_text": clean_text,
+        "plan_path": str(full_path.relative_to(root)),
+        "format": "plain_text",
+        "render_mode": "text_content",
+    }
+
+
+def get_review_context_projection(root: Path | str) -> dict:
+    """Dedicated read-only projection of workflow review context."""
+    root = Path(root).resolve()
+    runtime_path = root / "orchestrator/var"
+    checks = run_display_checks(runtime_path)
+    failed = [c for c in checks if not c.ok]
+    if failed:
+        raise PreconditionError(f"Display preflight failed: {failed}")
+
+    db_path = runtime_path / "checkpoints.db"
+    if not db_path.exists():
+        return {"status": "NOT_INITIALIZED"}
+
+    conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+    try:
+        from langgraph.checkpoint.sqlite import SqliteSaver
+        saver = SqliteSaver(conn)
+        checkpoint = saver.get({"configurable": {"thread_id": "workflow"}})
+        v = {}
+        if checkpoint and checkpoint.get("channel_values"):
+            v = checkpoint["channel_values"]["view"]
+
+        cfg = {}
+        row = conn.execute("SELECT value FROM workflow_meta WHERE key='config'").fetchone()
+        if row:
+            cfg = json.loads(row[0])
+    finally:
+        conn.close()
+
+    work_item = v.get("work_item") or cfg.get("work_item")
+    proposal = None
+    if work_item:
+        proposal_file = root / f"docs/ai/work-items/{work_item}/outbox/scope-proposal.json"
+        if proposal_file.is_file():
+            try:
+                proposal = json.loads(proposal_file.read_text(encoding="utf-8"))
+            except Exception:
+                proposal = None
+
+    context_paths = cfg.get("read_only_context_paths") or [
+        "AGENTS.md",
+        "SESSION_MEMORY.md",
+        "docs/ai/SCHEMA_FACTS.md",
+        "docs/ai/CODING_PATTERNS.md",
+        "docs/ai/CONTEXT_INDEX.md",
+    ]
+    provenance = []
+    for rel_p in context_paths:
+        p = root / rel_p
+        exists = p.is_file()
+        sha = None
+        if exists:
+            sha = hashlib.sha256(p.read_bytes()).hexdigest()
+        provenance.append({
+            "path": rel_p,
+            "exists": exists,
+            "is_mandatory": rel_p in ("AGENTS.md", "SESSION_MEMORY.md"),
+            "sha256": sha,
+        })
+
+    return {
+        "work_item": work_item,
+        "current_stage": v.get("stage"),
+        "status": v.get("status"),
+        "sub_status": v.get("sub_status"),
+        "gate": v.get("gate"),
+        "plan_granted": bool(v.get("plan_granted")),
+        "plan_revision_hash": v.get("plan_revision_hash"),
+        "scope_hash": v.get("scope_hash"),
+        "roles_hash": v.get("roles_hash"),
+        "proposal": proposal,
+        "active_jobs": [
+            {
+                "role": j.get("role") if isinstance(j, dict) else None,
+                "status": j.get("status") if isinstance(j, dict) else None,
+            }
+            for j in (v.get("active_jobs") or [])
+        ],
+        "provenance": provenance,
+    }
+
+
+def get_ai_context_projection(root: Path | str) -> dict:
+    """Dedicated read-only projection of AI conventions and sprint memory."""
+    root = Path(root).resolve()
+    runtime_path = root / "orchestrator/var"
+    checks = run_display_checks(runtime_path)
+    failed = [c for c in checks if not c.ok]
+    if failed:
+        raise PreconditionError(f"Display preflight failed: {failed}")
+
+    db_path = runtime_path / "checkpoints.db"
+    cfg = {}
+    v = {}
+    if db_path.exists():
+        conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+        try:
+            from langgraph.checkpoint.sqlite import SqliteSaver
+            saver = SqliteSaver(conn)
+            checkpoint = saver.get({"configurable": {"thread_id": "workflow"}})
+            if checkpoint and checkpoint.get("channel_values"):
+                v = checkpoint["channel_values"]["view"]
+            row = conn.execute("SELECT value FROM workflow_meta WHERE key='config'").fetchone()
+            if row:
+                cfg = json.loads(row[0])
+        finally:
+            conn.close()
+
+    work_item = v.get("work_item") or cfg.get("work_item")
+
+    agents_content = ""
+    session_memory_content = ""
+    coding_patterns_content = ""
+    schema_facts_content = ""
+
+    for rel_p in ("AGENTS.md", "SESSION_MEMORY.md", "docs/ai/CODING_PATTERNS.md", "docs/ai/SCHEMA_FACTS.md"):
+        p = root / rel_p
+        if p.is_file():
+            text = p.read_text(encoding="utf-8", errors="replace")
+            text = strip_paths(text, root=root)
+            if rel_p == "AGENTS.md":
+                agents_content = text
+            elif rel_p == "SESSION_MEMORY.md":
+                session_memory_content = text
+            elif rel_p == "docs/ai/CODING_PATTERNS.md":
+                coding_patterns_content = text
+            elif rel_p == "docs/ai/SCHEMA_FACTS.md":
+                schema_facts_content = text
+
+    context_paths = cfg.get("read_only_context_paths") or [
+        "AGENTS.md",
+        "SESSION_MEMORY.md",
+        "docs/ai/SCHEMA_FACTS.md",
+        "docs/ai/CODING_PATTERNS.md",
+        "docs/ai/CONTEXT_INDEX.md",
+    ]
+    provenance = []
+    for rel_p in context_paths:
+        p = root / rel_p
+        exists = p.is_file()
+        sha = None
+        if exists:
+            sha = hashlib.sha256(p.read_bytes()).hexdigest()
+        provenance.append({
+            "path": rel_p,
+            "exists": exists,
+            "is_mandatory": rel_p in ("AGENTS.md", "SESSION_MEMORY.md"),
+            "sha256": sha,
+        })
+
+    return {
+        "work_item": work_item,
+        "agents_md": agents_content,
+        "session_memory_md": session_memory_content,
+        "coding_patterns_md": coding_patterns_content,
+        "schema_facts_md": schema_facts_content,
+        "provenance": provenance,
+    }
+
+
+def validate_and_bind_canonical_registry(candidate_path: Path | str, is_test_mode: bool = False) -> Path:
+    """Validate full ancestor chain ownership and permissions for registry.db."""
+    raw_str = str(candidate_path).strip()
+    if any(part == ".." for part in raw_str.replace("\\", "/").split("/")):
+        raise ValueError(f"Parent traversal ('..') prohibited in registry path: {candidate_path}")
+
+    target = Path(raw_str)
+    if not target.is_absolute():
+        raise ValueError(f"Registry path must be absolute: {candidate_path}")
+
+    current = Path(target.parts[0])  # Path("/")
+    for part in target.parts[1:]:
+        current = current / part
+        if os.path.islink(current):
+            raise ValueError(f"Symlink rejected in registry path component: {current}")
+
+        is_var_dir = (current == target.parent)
+        is_db_file = (current == target)
+
+        if current.exists():
+            st = current.stat()
+            if is_var_dir:
+                if st.st_uid != os.geteuid():
+                    raise ValueError(f"Registry directory owner {st.st_uid} != expected {os.geteuid()}")
+                if (st.st_mode & 0o077) != 0:
+                    raise ValueError(f"Registry directory {current} must have mode 0700 (no group/world access)")
+            elif is_db_file:
+                if st.st_uid != os.geteuid():
+                    raise ValueError(f"Registry database owner {st.st_uid} != expected {os.geteuid()}")
+                if (st.st_mode & 0o077) != 0:
+                    raise ValueError(f"Registry database {current} must have mode 0600 (no group/world access)")
+            else:
+                if is_test_mode and current in (Path("/tmp"), Path("/run"), Path("/var"), Path("/var/tmp")):
+                    pass
+                else:
+                    if st.st_uid not in (0, os.geteuid()):
+                        raise ValueError(f"Ancestor directory {current} owner {st.st_uid} is neither root nor current user {os.geteuid()}")
+                    if (st.st_mode & 0o022) != 0:
+                        raise ValueError(f"Ancestor directory {current} must not be group/world-writable (mode {oct(st.st_mode)})")
+        else:
+            if not is_db_file:
+                raise FileNotFoundError(f"Registry path component does not exist: {current}")
+
+    return current.resolve()
+
+
+def get_canonical_registry_path(dashboard_root: Path | None = None) -> Path:
+    """Derive canonical registry path authoritatively and assert env consistency."""
+    is_test_mode = os.environ.get("DASHBOARD_TEST_MODE") == "1"
+    if dashboard_root:
+        base = Path(dashboard_root).resolve()
+        derived = base / "dashboard/var/registry.db"
+    elif is_test_mode and "DASHBOARD_TEST_ROOT" in os.environ:
+        base = Path(os.environ["DASHBOARD_TEST_ROOT"]).resolve()
+        derived = base / "dashboard/var/registry.db"
+    elif is_test_mode and "DASHBOARD_REGISTRY_DB" in os.environ:
+        derived = Path(os.environ["DASHBOARD_REGISTRY_DB"]).resolve()
+    else:
+        base = _orchestrator_dir.parent
+        derived = base / "dashboard/var/registry.db"
+
+    env_asserted = os.environ.get("CANONICAL_DASHBOARD_REGISTRY")
+    if env_asserted:
+        assert_path = Path(env_asserted).resolve()
+        if derived.resolve() != assert_path:
+            raise WorkflowError(
+                f"Registry derivation mismatch: derived {derived.resolve()} != env assertion {assert_path}"
+            )
+    return derived
+
+
+def verify_action_fence(
+    registry_db_path: Path,
+    action_id: str,
+    fencing_token: int,
+    executor_instance_id: str,
+) -> None:
+    """Verify 4-tuple fence against canonical action_log table under lock."""
+    if not registry_db_path.exists():
+        raise WorkflowError(f"Canonical registry database not found: {registry_db_path}")
+    conn = sqlite3.connect(f"file:{registry_db_path}?mode=ro", uri=True)
+    try:
+        row = conn.execute(
+            """
+            SELECT 1 FROM action_log
+            WHERE action_id = ?
+              AND fencing_token = ?
+              AND executor_instance_id = ?
+              AND state IN ('EXECUTING', 'RECOVERING')
+            """,
+            (action_id, fencing_token, executor_instance_id),
+        ).fetchone()
+        if not row:
+            detail = conn.execute(
+                "SELECT fencing_token, executor_instance_id, state FROM action_log WHERE action_id = ?",
+                (action_id,),
+            ).fetchone()
+            if not detail:
+                raise WorkflowError(f"Action {action_id} not found in canonical registry")
+            raise WorkflowError(
+                f"Fencing validation failed for action {action_id}: "
+                f"expected token={fencing_token}, instance={executor_instance_id}, state in (EXECUTING, RECOVERING); "
+                f"found token={detail[0]}, instance={detail[1]}, state={detail[2]}"
+            )
+    finally:
+        conn.close()
+
+
+def deduplicate_action(
+    action_id: str | None,
+    request_hash: str,
+    token_id: str | None,
+    submitted_token: dict | None,
+    store=None,
+    engine=None,
+) -> dict | None:
+    """Called under execution.lock before executing any mutation."""
+    if store is None and engine is not None:
+        store = engine.store
+
+    # --- Approval deduplication ---
+    if token_id and submitted_token is not None:
+        # Validate lookup key matches token's own token_id before any DB access.
+        if submitted_token.get("token_id") != token_id:
+            raise CoreValidationError(
+                f"submitted_token['token_id']={submitted_token.get('token_id')!r} "
+                f"does not match lookup token_id={token_id!r}"
+            )
+
+        # Inspect BOTH records independently before any early return
+        grant_row = store.lookup_grant(token_id)
+
+        grant_event = None
+        for event in store.events():
+            if (
+                event["kind"] == "grant"
+                and event["payload"].get("token_id") == token_id
+            ):
+                grant_event = event
+                break
+
+        # Neither present -> genuinely new request; proceed with execution
+        if grant_row is None and grant_event is None:
+            return None
+
+        # One without the other -> inconsistent state; cannot auto-recover
+        if grant_row is None and grant_event is not None:
+            raise GrantReconciliationRequired(
+                f"Grant event for token_id={token_id!r} exists without a "
+                "corresponding grant row. Manual reconciliation required."
+            )
+        if grant_row is not None and grant_event is None:
+            raise GrantReconciliationRequired(
+                f"Grant row for token_id={token_id!r} exists without a "
+                "corresponding grant event. "
+                "_synchronize_checkpoint() cannot create missing events. "
+                "Manual reconciliation required."
+            )
+
+        # Both present — canonical equality: submitted token vs stored token
+        stored_token = grant_row["data"]
+        if submitted_token != stored_token:
+            differing = sorted(
+                f
+                for f in set(submitted_token) | set(stored_token)
+                if submitted_token.get(f) != stored_token.get(f)
+            )
+            raise DuplicateKeyConflict(
+                f"token_id reused with changed approval bindings: {differing}. "
+                f"submitted={submitted_token!r}, stored={stored_token!r}"
+            )
+
+        # Verify event payload consistent with stored token
+        event_payload = grant_event["payload"]
+        if event_payload != stored_token:
+            differing = sorted(
+                f
+                for f in set(event_payload) | set(stored_token)
+                if event_payload.get(f) != stored_token.get(f)
+            )
+            raise GrantReconciliationRequired(
+                f"Grant row and event are inconsistent: {differing}. "
+                f"row={stored_token!r}, event={event_payload!r}"
+            )
+
+        engine._synchronize_checkpoint()
+        return {
+            "status": "already_complete",
+            "source": "grant_event",
+            "event_id": grant_event["event_id"],
+        }
+
+    # --- Non-approval deduplication via action_id in workflow_events.payload ---
+    if action_id:
+        for event in store.events():
+            if event["payload"].get("action_id") == action_id:
+                stored_hash = event["payload"].get("request_hash")
+                if not stored_hash:
+                    raise DuplicateKeyConflict(
+                        "Stored event missing request_hash — rejecting"
+                    )
+                if stored_hash != request_hash:
+                    raise DuplicateKeyConflict(
+                        "action_id reused with different request contents"
+                    )
+                engine._synchronize_checkpoint()
+                return {
+                    "status": "already_complete",
+                    "event_id": event["event_id"],
+                }
+
+    return None
+
+
+ALLOWED_EVIDENCE_EXTENSIONS = {".json", ".md", ".txt", ".xml", ".patch", ".csv"}
+MAX_EVIDENCE_SIZE = 256 * 1024  # 256 KB
+MAX_DIFF_SIZE = 256 * 1024      # 256 KB
+GIT_DIFF_TIMEOUT_SECONDS = 10.0
+
+
+def sanitize_text(text: str, root: Path | str | None = None) -> str:
+    """Mask paths and redact credentials in raw text."""
+    if not isinstance(text, str):
+        return ""
+    sanitized = strip_paths(text, root=root)
+    sanitized = _QUOTED_CREDENTIAL_PATTERN.sub(
+        r"\g<prefix>\g<quote>[REDACTED_CREDENTIAL]\g<quote>", sanitized
+    )
+    sanitized = _UNQUOTED_CREDENTIAL_PATTERN.sub(
+        r"\g<prefix>[REDACTED_CREDENTIAL]", sanitized
+    )
+    sanitized = _BEARER_PATTERN.sub(r"\1\2[REDACTED_CREDENTIAL]\4", sanitized)
+    return sanitized
+
+
+def sanitize_payload(obj: Any, root: Path | str | None = None, max_string_len: int = 16384) -> Any:
+    """Recursively cap and sanitize string values in payloads."""
+    if isinstance(obj, str):
+        s = obj
+        if len(s) > max_string_len:
+            s = s[:max_string_len] + " [TRUNCATED]"
+        return sanitize_text(s, root=root)
+    elif isinstance(obj, dict):
+        sanitized_dict = {}
+        for k, v in obj.items():
+            k_lower = str(k).lower()
+            if any(kw in k_lower for kw in ("password", "passwd", "secret", "token", "api_key", "bearer")):
+                sanitized_dict[k] = "[REDACTED_CREDENTIAL]"
+            else:
+                sanitized_dict[k] = sanitize_payload(v, root=root, max_string_len=max_string_len)
+        return sanitized_dict
+    elif isinstance(obj, list):
+        return [sanitize_payload(v, root=root, max_string_len=max_string_len) for v in obj]
+    else:
+        return obj
+
+
+def open_descriptor_relative(
+    root_dir: Path | str,
+    rel_path: Path | str,
+    strict_permissions: bool = True,
+    is_dir: bool = False,
+) -> tuple[int, list[int], dict]:
+    """Unified descriptor-relative path traversal using openat with O_NOFOLLOW.
+
+    Validates starting root and each intermediate directory relative to its verified parent.
+    In strict_permissions mode, asserts trusted owner (current UID or 0) and (st_mode & 0o022) == 0.
+    In non-strict mode, collects integrity warnings for group/world writability without raising.
+
+    If is_dir is True, the final component is opened as a directory and verified with S_ISDIR.
+    If is_dir is False, the final component is opened as a regular file and verified with S_ISREG.
+
+    Returns:
+        (final_fd, list_of_opened_dir_fds_to_close, integrity_info)
+    """
+    root_path = Path(root_dir).resolve()
+    rel = Path(rel_path)
+    if rel.is_absolute() or ".." in rel.parts:
+        raise SecurityError("Invalid relative path traversal")
+
+    integrity_info = {
+        "integrity_status": "verified",
+        "integrity_warnings": [],
+        "root_permissions": None,
+        "file_permissions": None,
+        "directory_permissions": {},
+    }
+
+    opened_dir_fds: list[int] = []
+
+    # 1. Open starting root descriptor
+    try:
+        root_fd = os.open(str(root_path), os.O_RDONLY | os.O_DIRECTORY | getattr(os, "O_CLOEXEC", 0))
+    except OSError as e:
+        raise SecurityError(f"Cannot open root directory: {e}")
+    opened_dir_fds.append(root_fd)
+
+    st_root = os.fstat(root_fd)
+    if not stat.S_ISDIR(st_root.st_mode):
+        for fd in reversed(opened_dir_fds):
+            os.close(fd)
+        raise SecurityError(f"Root path '{root_path}' is not a directory")
+
+    if st_root.st_uid not in (os.getuid(), 0):
+        for fd in reversed(opened_dir_fds):
+            os.close(fd)
+        raise SecurityError(f"Root path '{root_path}' owned by untrusted UID {st_root.st_uid}")
+
+    integrity_info["root_permissions"] = oct(stat.S_IMODE(st_root.st_mode))
+    if st_root.st_mode & 0o022:
+        msg = f"Root directory '{root_path.name}' has unsafe permissions {oct(stat.S_IMODE(st_root.st_mode))}"
+        integrity_info["integrity_warnings"].append(msg)
+        integrity_info["integrity_status"] = "unverified_permissions"
+        if strict_permissions:
+            for fd in reversed(opened_dir_fds):
+                os.close(fd)
+            raise SecurityError("evidence unavailable: unsafe permissions")
+
+    curr_fd = root_fd
+    parts = rel.parts
+    if not parts:
+        for fd in reversed(opened_dir_fds):
+            os.close(fd)
+        raise SecurityError("Empty relative path")
+
+    dir_components = parts[:-1]
+    final_name = parts[-1]
+
+    # 2. Traverse child directories descriptor-relatively
+    for comp in dir_components:
+        if comp in (".", "..") or "/" in comp or "\\" in comp:
+            for fd in reversed(opened_dir_fds):
+                os.close(fd)
+            raise SecurityError(f"Invalid directory component: {comp!r}")
+        try:
+            child_fd = os.open(
+                comp,
+                os.O_RDONLY | os.O_DIRECTORY | getattr(os, "O_NOFOLLOW", 0) | getattr(os, "O_CLOEXEC", 0),
+                dir_fd=curr_fd,
+            )
+        except OSError as e:
+            for fd in reversed(opened_dir_fds):
+                os.close(fd)
+            raise SecurityError(f"Failed to open directory '{comp}': {e}")
+        opened_dir_fds.append(child_fd)
+
+        st_comp = os.fstat(child_fd)
+        if not stat.S_ISDIR(st_comp.st_mode):
+            for fd in reversed(opened_dir_fds):
+                os.close(fd)
+            raise SecurityError(f"Component '{comp}' is not a directory")
+
+        if st_comp.st_uid not in (os.getuid(), 0):
+            for fd in reversed(opened_dir_fds):
+                os.close(fd)
+            raise SecurityError(f"Directory '{comp}' owned by untrusted UID {st_comp.st_uid}")
+
+        perm_str = oct(stat.S_IMODE(st_comp.st_mode))
+        integrity_info["directory_permissions"][comp] = perm_str
+        if st_comp.st_mode & 0o022:
+            msg = f"Directory component '{comp}' has unsafe permissions {perm_str}"
+            integrity_info["integrity_warnings"].append(msg)
+            integrity_info["integrity_status"] = "unverified_permissions"
+            if strict_permissions:
+                for fd in reversed(opened_dir_fds):
+                    os.close(fd)
+                raise SecurityError("evidence unavailable: unsafe permissions")
+
+        curr_fd = child_fd
+
+    # 3. Open final descriptor relative to parent directory
+    if final_name in (".", "..") or "/" in final_name or "\\" in final_name:
+        for fd in reversed(opened_dir_fds):
+            os.close(fd)
+        raise SecurityError(f"Invalid target name: {final_name!r}")
+
+    if is_dir:
+        try:
+            target_fd = os.open(
+                final_name,
+                os.O_RDONLY | os.O_DIRECTORY | getattr(os, "O_NOFOLLOW", 0) | getattr(os, "O_CLOEXEC", 0),
+                dir_fd=curr_fd,
+            )
+        except OSError as e:
+            for fd in reversed(opened_dir_fds):
+                os.close(fd)
+            raise SecurityError(f"Failed to open directory '{final_name}': {e}")
+        opened_dir_fds.append(target_fd)
+
+        st_final = os.fstat(target_fd)
+        if not stat.S_ISDIR(st_final.st_mode):
+            for fd in reversed(opened_dir_fds):
+                os.close(fd)
+            raise SecurityError(f"Target '{final_name}' is not a directory")
+
+        if st_final.st_uid not in (os.getuid(), 0):
+            for fd in reversed(opened_dir_fds):
+                os.close(fd)
+            raise SecurityError(f"Target directory '{final_name}' owned by untrusted UID {st_final.st_uid}")
+
+        perm_str = oct(stat.S_IMODE(st_final.st_mode))
+        integrity_info["directory_permissions"][final_name] = perm_str
+        if st_final.st_mode & 0o022:
+            msg = f"Target directory '{final_name}' has unsafe permissions {perm_str}"
+            integrity_info["integrity_warnings"].append(msg)
+            integrity_info["integrity_status"] = "unverified_permissions"
+            if strict_permissions:
+                for fd in reversed(opened_dir_fds):
+                    os.close(fd)
+                raise SecurityError("evidence unavailable: unsafe permissions")
+
+        return target_fd, opened_dir_fds, integrity_info
+
+    else:
+        try:
+            file_fd = os.open(
+                final_name,
+                os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0) | getattr(os, "O_CLOEXEC", 0),
+                dir_fd=curr_fd,
+            )
+        except OSError as e:
+            for fd in reversed(opened_dir_fds):
+                os.close(fd)
+            raise SecurityError(f"Failed to open file '{final_name}': {e}")
+
+        st_file = os.fstat(file_fd)
+        if not stat.S_ISREG(st_file.st_mode):
+            os.close(file_fd)
+            for fd in reversed(opened_dir_fds):
+                os.close(fd)
+            raise SecurityError(f"Target '{final_name}' is not a regular file")
+
+        if st_file.st_uid not in (os.getuid(), 0):
+            os.close(file_fd)
+            for fd in reversed(opened_dir_fds):
+                os.close(fd)
+            raise SecurityError(f"Target '{final_name}' owned by untrusted UID {st_file.st_uid}")
+
+        file_perm = oct(stat.S_IMODE(st_file.st_mode))
+        integrity_info["file_permissions"] = file_perm
+        if st_file.st_mode & 0o022:
+            msg = f"Target file '{final_name}' has unsafe permissions {file_perm}"
+            integrity_info["integrity_warnings"].append(msg)
+            integrity_info["integrity_status"] = "unverified_permissions"
+            if strict_permissions:
+                os.close(file_fd)
+                for fd in reversed(opened_dir_fds):
+                    os.close(fd)
+                raise SecurityError("evidence unavailable: unsafe permissions")
+
+        return file_fd, opened_dir_fds, integrity_info
+
+
+def _get_checkpoint_view_and_meta(root: Path) -> tuple[dict, dict]:
+    """Read checkpoint view and metadata without constructing Engine."""
+    runtime_path = root / "orchestrator/var"
+    db_path = runtime_path / "checkpoints.db"
+    if not db_path.exists():
+        return {}, {}
+    conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+    try:
+        meta = {}
+        for k, v in conn.execute("SELECT key, value FROM workflow_meta"):
+            try:
+                meta[k] = json.loads(v)
+            except Exception:
+                meta[k] = v
+        from langgraph.checkpoint.sqlite import SqliteSaver
+        saver = SqliteSaver(conn)
+        checkpoint = saver.get({"configurable": {"thread_id": "workflow"}})
+        view = checkpoint.get("channel_values", {}).get("view", {}) if checkpoint else {}
+        return view, meta
+    finally:
+        conn.close()
+
+
+def get_findings_projection(root: Path | str) -> dict:
+    """Read-only projection of active findings and backlog items."""
+    root = Path(root).resolve()
+    view, meta = _get_checkpoint_view_and_meta(root)
+    work_item = view.get("work_item") or meta.get("work_item") or root.name
+
+    raw_findings = view.get("findings") or []
+    raw_backlog = view.get("backlog") or []
+
+    findings = sanitize_payload(raw_findings, root=root)
+    backlog = sanitize_payload(raw_backlog, root=root)
+
+    blocking = sum(
+        1 for f in findings
+        if f.get("classification") in ("implementation_defect", "design_defect")
+        or str(f.get("severity", "")).upper() in ("BLOCKING", "HIGH")
+    )
+
+    return {
+        "work_item": work_item,
+        "findings": findings,
+        "backlog": backlog,
+        "stats": {
+            "total_findings": len(findings),
+            "blocking_findings": blocking,
+            "backlog_items": len(backlog),
+        },
+    }
+
+
+def get_evidence_projection(root: Path | str) -> dict:
+    """Enumerate available evidence artifacts using strict descriptor-relative traversal."""
+    root = Path(root).resolve()
+    view, meta = _get_checkpoint_view_and_meta(root)
+    work_item = view.get("work_item") or meta.get("work_item") or root.name
+
+    rel_dir = Path("docs/ai/work-items") / work_item / "evidence"
+    try:
+        if not (root / rel_dir).is_dir():
+            return {"work_item": work_item, "files": []}
+    except OSError:
+        return {"work_item": work_item, "files": []}
+
+    dir_fd, opened_fds, _ = open_descriptor_relative(
+        root, rel_dir, strict_permissions=True, is_dir=True
+    )
+    try:
+        files = []
+        with os.scandir(dir_fd) as it:
+            for entry in it:
+                if entry.name.startswith("."):
+                    continue
+                if not re.match(r"^[a-zA-Z0-9_\-\.]+$", entry.name):
+                    continue
+                ext = Path(entry.name).suffix.lower()
+                if ext not in ALLOWED_EVIDENCE_EXTENSIONS:
+                    continue
+                try:
+                    st = entry.stat(follow_symlinks=False)
+                except OSError:
+                    continue
+
+                if not stat.S_ISREG(st.st_mode):
+                    continue
+                if st.st_uid not in (os.getuid(), 0):
+                    continue
+                if st.st_mode & 0o022:
+                    raise SecurityError("evidence unavailable: unsafe permissions")
+
+                files.append({
+                    "filename": entry.name,
+                    "size_bytes": st.st_size,
+                    "modified_utc": datetime.fromtimestamp(st.st_mtime, tz=timezone.utc).isoformat(),
+                })
+
+        files.sort(key=lambda f: f["filename"])
+        return {"work_item": work_item, "files": files}
+    finally:
+        for fd in reversed(opened_fds):
+            try:
+                os.close(fd)
+            except OSError:
+                pass
+
+
+def read_evidence_file(root: Path | str, filename: str) -> dict:
+    """Read an evidence file using descriptor-relative O_NOFOLLOW validation."""
+    if filename.startswith(".") or not re.match(r"^[a-zA-Z0-9_\-\.]+$", filename):
+        raise CoreValidationError(f"Invalid filename: {filename!r}")
+    ext = Path(filename).suffix.lower()
+    if ext not in ALLOWED_EVIDENCE_EXTENSIONS:
+        raise CoreValidationError(f"File extension '{ext}' not permitted in evidence inspection")
+
+    root = Path(root).resolve()
+    view, meta = _get_checkpoint_view_and_meta(root)
+    work_item = view.get("work_item") or meta.get("work_item") or root.name
+    rel_path = Path("docs/ai/work-items") / work_item / "evidence" / filename
+
+    file_fd, dir_fds, _ = open_descriptor_relative(root, rel_path, strict_permissions=True, is_dir=False)
+    try:
+        st = os.fstat(file_fd)
+        file_size = st.st_size
+        chunks = []
+        total_read = 0
+        max_to_read = MAX_EVIDENCE_SIZE + 1
+        while total_read < max_to_read:
+            chunk = os.read(file_fd, min(65536, max_to_read - total_read))
+            if not chunk:
+                break
+            chunks.append(chunk)
+            total_read += len(chunk)
+        raw_bytes = b"".join(chunks)
+
+        if len(raw_bytes) > MAX_EVIDENCE_SIZE:
+            truncated = True
+            sha256 = None
+            content_bytes = raw_bytes[:MAX_EVIDENCE_SIZE]
+        else:
+            truncated = False
+            sha256 = hashlib.sha256(raw_bytes).hexdigest()
+            content_bytes = raw_bytes
+
+        text = content_bytes.decode("utf-8", errors="replace")
+        sanitized_text = sanitize_text(text, root=root)
+
+        return {
+            "filename": filename,
+            "sha256": sha256,
+            "size_bytes": file_size,
+            "content": sanitized_text,
+            "truncated": truncated,
+        }
+    finally:
+        os.close(file_fd)
+        for fd in reversed(dir_fds):
+            try:
+                os.close(fd)
+            except OSError:
+                pass
+
+
+def _read_subprocess_bounded(
+    proc: subprocess.Popen, max_bytes: int, timeout: float = GIT_DIFF_TIMEOUT_SECONDS
+) -> bytes:
+    """Read up to max_bytes from proc.stdout with a strict wall-clock timeout.
+
+    Enforces byte limit and non-blocking deadline polling via select.poll().
+    Always terminates and reaps proc in finally.
+    Raises TimeoutError if wall-clock deadline expires while reading.
+    """
+    fd = proc.stdout.fileno()
+    os.set_blocking(fd, False)
+    poller = select.poll()
+    poller.register(fd, select.POLLIN | select.POLLHUP | select.POLLERR)
+    deadline = time.monotonic() + timeout
+    chunks = []
+    total = 0
+    max_to_read = max_bytes + 1
+
+    try:
+        while total < max_to_read:
+            rem = deadline - time.monotonic()
+            if rem <= 0:
+                raise TimeoutError(f"Subprocess output reading timed out after {timeout} seconds")
+            ms = max(1, int(rem * 1000))
+            evs = poller.poll(ms)
+            if not evs:
+                raise TimeoutError(f"Subprocess output reading timed out after {timeout} seconds")
+
+            for _, ev in evs:
+                if ev & (select.POLLIN | select.POLLHUP):
+                    try:
+                        chunk = os.read(fd, min(65536, max_to_read - total))
+                    except (BlockingIOError, InterruptedError):
+                        continue
+                    except OSError:
+                        chunk = b""
+                    if not chunk:
+                        return b"".join(chunks)
+                    chunks.append(chunk)
+                    total += len(chunk)
+                elif ev & select.POLLERR:
+                    return b"".join(chunks)
+        return b"".join(chunks)
+    finally:
+        if proc.poll() is None:
+            try:
+                proc.terminate()
+            except OSError:
+                pass
+        try:
+            proc.stdout.close()
+        except OSError:
+            pass
+        try:
+            proc.wait(timeout=2)
+        except subprocess.TimeoutExpired:
+            proc.kill()
+            try:
+                proc.wait(timeout=1)
+            except Exception:
+                pass
+
+
+def get_diff_projection(root: Path | str) -> dict:
+    """Inspect worktree diff against stored configuration base commit only."""
+    root = Path(root).resolve()
+    view, meta = _get_checkpoint_view_and_meta(root)
+    cfg = meta.get("config", {})
+
+    base_commit = (
+        cfg.get("task_base_commit")
+        or cfg.get("base_commit")
+        or view.get("candidate", {}).get("base_commit")
+    )
+    if not base_commit or not isinstance(base_commit, str):
+        raise PreconditionError("Base commit not found in workflow configuration")
+
+    base_commit = base_commit.strip()
+    if not re.match(r"^[0-9a-f]{7,40}$", base_commit):
+        raise CoreValidationError(f"Invalid base commit hash: {base_commit!r}")
+
+    verify_cmd = ["git", "rev-parse", "--verify", f"{base_commit}^{{commit}}"]
+    res = subprocess.run(verify_cmd, cwd=str(root), capture_output=True, text=True, timeout=10)
+    if res.returncode != 0:
+        raise PreconditionError(f"Base commit {base_commit} does not exist in repository")
+
+    res_head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=str(root), capture_output=True, text=True, timeout=10)
+    head_sha = res_head.stdout.strip() if res_head.returncode == 0 else "HEAD"
+
+    diff_cmd = [
+        "git", "diff", "--no-ext-diff", "--no-textconv", "--no-color",
+        f"{base_commit}..HEAD"
+    ]
+    proc = subprocess.Popen(
+        diff_cmd,
+        cwd=str(root),
+        stdin=subprocess.DEVNULL,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
+    )
+    raw_diff = _read_subprocess_bounded(proc, max_bytes=MAX_DIFF_SIZE, timeout=GIT_DIFF_TIMEOUT_SECONDS)
+
+    if len(raw_diff) > MAX_DIFF_SIZE:
+        was_truncated = True
+        diff_text = raw_diff[:MAX_DIFF_SIZE].decode("utf-8", errors="replace") + "\n[DIFF TRUNCATED AT 256 KB]\n"
+    else:
+        was_truncated = False
+        diff_text = raw_diff.decode("utf-8", errors="replace")
+
+    sanitized_diff = sanitize_text(diff_text, root=root)
+
+    name_cmd = ["git", "diff", "--name-status", "-z", "--no-ext-diff", "--no-textconv", f"{base_commit}..HEAD"]
+    proc_names = subprocess.Popen(
+        name_cmd,
+        cwd=str(root),
+        stdin=subprocess.DEVNULL,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
+    )
+    raw_names = _read_subprocess_bounded(proc_names, max_bytes=MAX_DIFF_SIZE, timeout=GIT_DIFF_TIMEOUT_SECONDS)
+    files = []
+    if raw_names:
+        tokens = raw_names.split(b"\x00")
+        i = 0
+        while i < len(tokens):
+            if not tokens[i]:
+                i += 1
+                continue
+            status = tokens[i].decode("utf-8", errors="replace").strip()
+            i += 1
+            if i < len(tokens) and tokens[i]:
+                raw_fn = tokens[i].decode("utf-8", errors="replace")
+                safe_fn = raw_fn.encode("unicode_escape").decode("ascii")
+                files.append({"status": status, "path": safe_fn})
+                i += 1
+
+    return {
+        "base_commit": base_commit,
+        "head_commit": head_sha,
+        "files": files,
+        "diff_text": sanitized_diff,
+        "truncated": was_truncated,
+    }
+
+
+def get_settings_projection(root: Path | str) -> dict:
+    """Read-only inspection of role pins, timeout settings, and escalation counters."""
+    root = Path(root).resolve()
+    view, meta = _get_checkpoint_view_and_meta(root)
+    cfg = meta.get("config", {})
+
+    roles = {}
+    for role_name, role_cfg in cfg.get("roles", {}).items():
+        if isinstance(role_cfg, dict):
+            roles[role_name] = {
+                "tool": role_cfg.get("tool"),
+                "binary": strip_paths(role_cfg.get("binary", ""), root=root),
+                "version": role_cfg.get("version"),
+                "model": role_cfg.get("model"),
+                "effort": role_cfg.get("effort"),
+                "prompt_sha256": role_cfg.get("prompt_sha256"),
+            }
+
+    return {
+        "work_item": view.get("work_item") or meta.get("work_item") or root.name,
+        "roles": roles,
+        "escalation_status": {
+            "consecutive_blockers": view.get("consecutive_blockers", 0),
+            "cycles_in_stage": view.get("cycles_in_stage", 0),
+            "stage_attempts": view.get("attempt", 1),
+            "pause_reason": categorize_pause_reason(view.get("pause_reason")),
+        },
+        "timeouts": {
+            "soft_timeout": cfg.get("soft_timeout", 2700),
+            "hard_timeout": cfg.get("hard_timeout", 3600),
+        },
+    }
+
+
+HARD_MAX_AUDIT_EVENTS = 1000
+HARD_MAX_AUDIT_BYTES = 512 * 1024  # 524288
+
+
+def get_sanitized_audit_events(
+    root: Path | str, max_events: int = HARD_MAX_AUDIT_EVENTS, max_bytes: int = HARD_MAX_AUDIT_BYTES
+) -> dict:
+    """Read-only query of workflow events with dual limits and credential sanitization."""
+    try:
+        req_events = int(max_events)
+    except (ValueError, TypeError):
+        req_events = HARD_MAX_AUDIT_EVENTS
+    try:
+        req_bytes = int(max_bytes)
+    except (ValueError, TypeError):
+        req_bytes = HARD_MAX_AUDIT_BYTES
+
+    # Server-side hard cap enforcement: cannot be overridden by callers
+    max_events = min(max(0, req_events), HARD_MAX_AUDIT_EVENTS)
+    max_bytes = min(max(0, req_bytes), HARD_MAX_AUDIT_BYTES)
+
+    root = Path(root).resolve()
+    runtime_path = root / "orchestrator/var"
+    db_path = runtime_path / "checkpoints.db"
+    if not db_path.exists():
+        return {
+            "events": [],
+            "metadata": {
+                "schema": "dashboard-audit-export/v1",
+                "total_available_events": 0,
+                "emitted_events": 0,
+                "emitted_bytes": 0,
+                "truncated": False,
+                "truncation_reason": None,
+            },
+        }
+
+    conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+    try:
+        tbl_exists = conn.execute(
+            "SELECT 1 FROM sqlite_master WHERE type='table' AND name='workflow_events'"
+        ).fetchone()
+        if not tbl_exists:
+            return {
+                "events": [],
+                "metadata": {
+                    "schema": "dashboard-audit-export/v1",
+                    "total_available_events": 0,
+                    "emitted_events": 0,
+                    "emitted_bytes": 0,
+                    "truncated": False,
+                    "truncation_reason": None,
+                },
+            }
+        total_count = conn.execute("SELECT COUNT(*) FROM workflow_events").fetchone()[0]
+        cursor = conn.execute(
+            "SELECT seq, event_id, kind, timestamp, payload FROM workflow_events ORDER BY seq ASC"
+        )
+        events = []
+        emitted_bytes = 0
+        truncated = False
+        truncation_reason = None
+
+        for row in cursor:
+            if len(events) >= max_events:
+                truncated = True
+                truncation_reason = "event_limit_exceeded"
+                break
+
+            seq, event_id, kind, ts, payload_raw = row
+            try:
+                payload = json.loads(payload_raw)
+            except Exception:
+                payload = {"raw": payload_raw}
+
+            sanitized_payload = sanitize_payload(payload, root=root, max_string_len=16384)
+            event_obj = {
+                "seq": seq,
+                "event_id": event_id,
+                "kind": kind,
+                "timestamp": ts,
+                "payload": sanitized_payload,
+            }
+
+            serialized = json.dumps(event_obj, ensure_ascii=False)
+            line_bytes = len(serialized.encode("utf-8")) + 1  # newline
+
+            if emitted_bytes + line_bytes > max_bytes:
+                truncated = True
+                truncation_reason = "byte_limit_exceeded"
+                break
+
+            events.append(event_obj)
+            emitted_bytes += line_bytes
+
+        if not truncated and len(events) < total_count and len(events) >= max_events:
+            truncated = True
+            truncation_reason = "event_limit_exceeded"
+
+        return {
+            "events": events,
+            "metadata": {
+                "schema": "dashboard-audit-export/v1",
+                "total_available_events": total_count,
+                "emitted_events": len(events),
+                "emitted_bytes": emitted_bytes,
+                "truncated": truncated,
+                "truncation_reason": truncation_reason,
+            },
+        }
+    finally:
+        conn.close()
+
+
+def execute_action(root: Path, action: str, payload: dict | None = None) -> dict:
+    payload = payload or {}
+    root = Path(root).resolve()
+    runtime_path = root / "orchestrator/var"
+
+    # Read-only display actions do not acquire execution.lock and do not construct Engine
+    if action == "state":
+        return get_state_projection(root)
+    elif action == "plan":
+        return get_plan_projection(root)
+    elif action == "review_context":
+        return get_review_context_projection(root)
+    elif action == "ai_context":
+        return get_ai_context_projection(root)
+    elif action == "findings":
+        return get_findings_projection(root)
+    elif action == "evidence":
+        return get_evidence_projection(root)
+    elif action == "read_evidence":
+        return read_evidence_file(root, payload.get("filename", ""))
+    elif action == "diff":
+        return get_diff_projection(root)
+    elif action == "settings":
+        return get_settings_projection(root)
+    elif action == "audit":
+        raw_events = payload.get("max_events", HARD_MAX_AUDIT_EVENTS)
+        raw_bytes = payload.get("max_bytes", HARD_MAX_AUDIT_BYTES)
+        try:
+            req_events = int(raw_events)
+        except (ValueError, TypeError):
+            req_events = HARD_MAX_AUDIT_EVENTS
+        try:
+            req_bytes = int(raw_bytes)
+        except (ValueError, TypeError):
+            req_bytes = HARD_MAX_AUDIT_BYTES
+        capped_events = min(max(0, req_events), HARD_MAX_AUDIT_EVENTS)
+        capped_bytes = min(max(0, req_bytes), HARD_MAX_AUDIT_BYTES)
+        return get_sanitized_audit_events(
+            root,
+            max_events=capped_events,
+            max_bytes=capped_bytes,
+        )
+
+    lock_path = runtime_path / "execution.lock"
+
+    with execution_lock(lock_path, timeout=10):
+        # 1. Authoritative Identity Resolution under Lock
+        authoritative_work_item = None
+        db_path = runtime_path / "checkpoints.db"
+        if db_path.exists():
+            conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+            try:
+                row = conn.execute("SELECT value FROM workflow_meta WHERE key='work_item'").fetchone()
+                if row and row[0]:
+                    authoritative_work_item = row[0]
+                if not authoritative_work_item:
+                    row = conn.execute("SELECT value FROM workflow_meta WHERE key='config'").fetchone()
+                    if row and row[0]:
+                        try:
+                            cfg = json.loads(row[0])
+                            authoritative_work_item = cfg.get("work_item")
+                        except Exception:
+                            pass
+            finally:
+                conn.close()
+
+        root_work_item = root.name
+        if not authoritative_work_item:
+            if (root / f"docs/ai/work-items/{root_work_item}").exists():
+                authoritative_work_item = root_work_item
+            elif root_work_item == "erp-arabic-bilingual-data":
+                authoritative_work_item = root_work_item
+
+        supplied_identities = set()
+        for k in ("work_item", "worktree_id", "task_id"):
+            val = payload.get(k)
+            if isinstance(val, str) and val.strip():
+                supplied_identities.add(val.strip())
+        for nested in ("config", "submitted_token", "token"):
+            obj = payload.get(nested)
+            if isinstance(obj, dict):
+                for k in ("work_item", "worktree_id", "task_id"):
+                    val = obj.get(k)
+                    if isinstance(val, str) and val.strip():
+                        supplied_identities.add(val.strip())
+
+        # 2. Stage 4 Hard Block Across ALL Mutating Actions
+        is_stage4 = (
+            authoritative_work_item == "erp-arabic-bilingual-data"
+            or root.name == "erp-arabic-bilingual-data"
+            or "erp-arabic-bilingual-data" in root.parts
+            or "erp-arabic-bilingual-data" in supplied_identities
+        )
+        if is_stage4:
+            raise PreconditionError("Stage 4 erp-arabic-bilingual-data is parked and prohibited from dashboard execution")
+
+        # Authoritative identity mismatch rejection across ALL mutating actions
+        if authoritative_work_item and supplied_identities:
+            for supplied in supplied_identities:
+                if supplied != authoritative_work_item:
+                    raise CoreValidationError(
+                        f"Work-item identity mismatch: supplied {supplied!r} != authoritative {authoritative_work_item!r}"
+                    )
+
+        # 3. 4-Tuple Fence Check under lock — required unconditionally for all mutating actions
+        action_id = payload.get("action_id")
+        fencing_token = payload.get("fencing_token")
+        executor_instance_id = payload.get("executor_instance_id")
+
+        if not action_id or fencing_token is None or not executor_instance_id:
+            raise PreconditionError(
+                f"Fencing parameters (action_id, fencing_token, executor_instance_id) are strictly "
+                f"required for mutating action '{action}'"
+            )
+
+        canon_path = get_canonical_registry_path()
+        validate_and_bind_canonical_registry(
+            canon_path, is_test_mode=os.environ.get("DASHBOARD_TEST_MODE") == "1"
+        )
+        verify_action_fence(canon_path, str(action_id), int(fencing_token), str(executor_instance_id))
+
+        # 4. Preflight check selection per mutating action
+        if action in ("pause", "resume", "reset_budget", "reconfigure_role"):
+            cfg = None
+            if (runtime_path / "checkpoints.db").exists():
+                conn = sqlite3.connect(f"file:{runtime_path / 'checkpoints.db'}?mode=ro", uri=True)
+                try:
+                    row = conn.execute("SELECT value FROM workflow_meta WHERE key='config'").fetchone()
+                    if row:
+                        cfg = json.loads(row[0])
+                finally:
+                    conn.close()
+            checks = run_owner_action_checks(runtime_path, root, cfg)
+            failed = [c for c in checks if not c.ok]
+            if failed:
+                raise PreconditionError(f"Owner action preflight failed: {failed}")
+        elif action == "initialize":
+            proposed_branch = None
+            if isinstance(payload.get("config"), dict):
+                proposed_branch = payload["config"].get("branch")
+            if not proposed_branch:
+                proposed_branch = payload.get("branch")
+            checks = run_init_checks(root, expected_branch=proposed_branch)
+            failed = [c for c in checks if not c.ok]
+            if failed:
+                raise PreconditionError(f"Init preflight failed: {failed}")
+        elif action in ("run", "approve_plan", "adopt_scope"):
+            cfg = None
+            if (runtime_path / "checkpoints.db").exists():
+                conn = sqlite3.connect(f"file:{runtime_path / 'checkpoints.db'}?mode=ro", uri=True)
+                try:
+                    row = conn.execute("SELECT value FROM workflow_meta WHERE key='config'").fetchone()
+                    if row:
+                        cfg = json.loads(row[0])
+                finally:
+                    conn.close()
+            checks = run_dispatch_preflight(cfg, runtime_path, root)
+            failed = [c for c in checks if not c.ok]
+            if failed:
+                raise PreconditionError(f"Dispatch preflight failed: {failed}")
+
+        # 5. Initialize Engine for mutation
+        engine = Engine(root)
+        try:
+            # 6. Deduplication under lock
+            token_id = payload.get("token_id")
+            submitted_token = payload.get("submitted_token") or payload.get("token")
+            request_hash = payload.get("request_hash", "")
+
+            dedup = deduplicate_action(
+                action_id=action_id,
+                request_hash=request_hash,
+                token_id=token_id,
+                submitted_token=submitted_token,
+                store=engine.store,
+                engine=engine,
+            )
+            if dedup is not None:
+                return dedup
+
+            # 7. Dispatch action
+            if action == "initialize":
+                config = payload["config"]
+                return engine.initialize(config)
+            elif action == "run":
+                return engine.run()
+            elif action == "approve_plan":
+                if not submitted_token:
+                    raise CoreValidationError("approve_plan requires submitted_token or token in payload")
+                return engine.grant_and_synchronize(submitted_token)
+            elif action == "adopt_scope":
+                scope = payload["scope"]
+                implementation_stages = payload["implementation_stages"]
+                return engine.adopt_scope(
+                    scope=scope,
+                    implementation_stages=implementation_stages,
+                    action_id=action_id,
+                    request_hash=request_hash,
+                )
+            elif action == "pause":
+                reason = payload.get("reason", "Paused by operator")
+                return engine.owner_decision(
+                    "pause",
+                    {"reason": reason},
+                    action_id=action_id,
+                    request_hash=request_hash,
+                )
+            elif action == "resume":
+                body = {
+                    k: v
+                    for k, v in payload.items()
+                    if k not in ("action_id", "request_hash", "submitted_token", "token")
+                }
+                if "reason" not in body:
+                    body["reason"] = "Resumed by operator"
+                return engine.owner_decision(
+                    "resume",
+                    body,
+                    action_id=action_id,
+                    request_hash=request_hash,
+                )
+            elif action == "reset_budget":
+                return engine.owner_decision(
+                    "resume",
+                    {"reason": "reset_budget", "reset_budget": True},
+                    action_id=action_id,
+                    request_hash=request_hash,
+                )
+            elif action == "reconfigure_role":
+                role = payload["role"]
+                tool = payload["tool"]
+                model = payload["model"]
+                effort = payload.get("effort", None)
+                reason = payload.get("reason", "Owner role reconfiguration")
+                return engine.reconfigure_role(
+                    role=role,
+                    tool=tool,
+                    model=model,
+                    effort=effort,
+                    reason=reason,
+                    action_id=action_id,
+                    request_hash=request_hash,
+                )
+            else:
+                raise WorkflowError(f"Unknown action: {action}")
+        finally:
+            engine.close()
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Dashboard Subprocess API")
+    parser.add_argument("--root", type=Path, required=True, help="Worktree root directory")
+    parser.add_argument("--action", type=str, required=True, help="Action to execute")
+    parser.add_argument("--payload", type=str, default=None, help="JSON payload string")
+    parser.add_argument("--payload-file", type=Path, default=None, help="JSON payload file")
+    parser.add_argument("--action-id", type=str, default=None, help="Action ID")
+    parser.add_argument("--fencing-token", type=int, default=None, help="Fencing token")
+    parser.add_argument("--executor-instance-id", type=str, default=None, help="Executor instance ID")
+    args = parser.parse_args()
+
+    payload = {}
+    if args.payload:
+        payload = json.loads(args.payload)
+    elif args.payload_file and args.payload_file.exists():
+        payload = json.loads(args.payload_file.read_text())
+    elif not sys.stdin.isatty():
+        content = sys.stdin.read().strip()
+        if content:
+            payload = json.loads(content)
+
+    if args.action_id:
+        payload["action_id"] = args.action_id
+    if args.fencing_token is not None:
+        payload["fencing_token"] = args.fencing_token
+    if args.executor_instance_id:
+        payload["executor_instance_id"] = args.executor_instance_id
+
+    try:
+        res = execute_action(args.root, args.action, payload)
+        output = {"ok": True, "result": res}
+        print(json.dumps(output, default=str))
+        sys.exit(0)
+    except Exception as exc:
+        sys.stderr.write(f"DASHBOARD_API_EXC: {type(exc).__name__}: {exc}\n")
+        err = sanitize_error(exc, args.root)
+        output = {
+            "ok": False,
+            "error": err["error"],
+            "error_type": err["error_type"],
+            "support_id": err["support_id"],
+        }
+        print(json.dumps(output, default=str))
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()

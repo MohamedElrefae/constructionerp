@@ -707,14 +707,37 @@ For every English observation in Arabic mode, capture screenshot, route, source 
 | 1B | `account_name_ar` schema foundation (custom field on Account, D1) | Idempotent field migration and live schema test pass. Emergency hotfix only if Stage 0 reproduces an active user workflow failure. |
 | 1C | Screenshot/common UI containment (six Frappe labels + Typography Settings) | Exact visible English labels corrected and tested in a new Arabic session. |
 | 2 | Catalog delta/review pipeline + CI localization gates operational | Current 15,106-row inventory; CI gate blocks hardcoded-string and missing-translation merges. |
-| 3 | Bilingual registry JSON (D3), service, account form section (D2), localized tree, search/tree adapters | Security, fallback, bidi, audit, tree-label, and English regression tests pass. |
-| 4 | AI-proposed and independently AI-reviewed 81-account migration (D4/D5) + financial-report extension-point spike | D5 criteria; complete AI-A1/AI-A2/AI-A3 decisions on every applicable row; AI-R verifies the exact bundle; report extension point confirmed. |
+| 3 | Bilingual registry JSON (D3), service, account form section (D2), localized tree, search/tree adapters | Security, fallback, bidi, audit, tree-label, and English regression tests pass. **This stage provides the user-visible Arabic account name; until it ships, `account_name_ar` is stored but not displayed outside the raw tree field.** |
+| 4 | AI-proposed and independently AI-reviewed 81-account migration (D4/D5) + financial-report extension-point spike | D5 criteria; complete AI-A1/AI-A2/AI-A3 decisions on every applicable row; AI-R verifies the exact bundle; report extension point confirmed. **Data-only: populates `account_name_ar` and produces an independently verified proposal/bundle/payload. It adds no visible bilingual UI (Stage 3 D2/D3 + C2/E1, and Stage 7 for reports/print). Do not treat Stage 4 acceptance as visible bilingual acceptance.** |
 | 5 | Wave 1 masters (Item, Customer, Supplier, Cost Center, Warehouse, Project) | Per-DocType UAT passes; 100% approved names or documented exceptions; bilingual search works. |
 | 6 | Remaining approved UI review batches | No unapproved English in the agreed production workflow matrix. |
 | 7 | Wave 2/3 masters and bilingual output | Each DocType passes its registry-specific acceptance tests. |
 | 8 | Production rollout | Backup/restore rehearsal, AI-R evidence verification, explicit owner operational authorization, monitoring, and rollback ready. |
 
 Do not deploy all 7,339 missing strings and all bilingual fields in one big-bang release. Ship reviewed modules and master-data waves behind explicit gates.
+
+### 11.1 Data storage versus visible bilingual display
+
+Two independently gated concerns are sometimes conflated. They must not be:
+
+- **Storage (Stage 1B + Stage 4).** `account_name_ar` exists as a Construction-owned
+  custom field (Stage 1B) and is populated for the 81 in-scope accounts with an
+  independently verified bundle (Stage 4). After Stage 4, the Arabic value is in the
+  database, but the application does not yet render it in the Chart of Accounts tree, list
+  views, Link fields, searches, forms, reports, or print.
+- **Visible display (Stage 3 D2/D3 + C2/E1; reports in Stage 7).** The `doctype_js`
+  account form identity section, the localized tree label renderer, and the shared
+  language-aware display resolver are what make the stored Arabic name visible. None of
+  these are part of Stage 4.
+
+Confirmation that a value is stored is **not** confirmation that it is displayed. A Stage 4
+acceptance record must state explicitly that it covers storage and evidence only, and that
+the visible bilingual experience remains pending Stage 3 (and Stage 7 for output).
+
+A live site can therefore legitimately show an Arabic account name in the account tree
+via the raw stored field while the rest of the app shows English, because the resolver and
+form extension have not shipped. That state is expected under this sequence, not a defect
+in the Stage 4 data migration.
 
 ---
 
@@ -813,4 +836,7 @@ If any criterion fails, the affected module/data wave remains behind its prior s
 | 0 | Reproducible baseline and active-path audit | ✅ Complete — pre-existing schema-facts drift recorded, not concealed | 2026-09-04 | `docs/ai/work-items/erp-arabic-bilingual-data/evidence/stage-0-baseline.md` |
 | 1A | Defensive searchable-dropdown field projection | ✅ Complete — suspected live silent-`[]` failure disproved; hardening retained | 2026-09-04 | `docs/ai/work-items/erp-arabic-bilingual-data/evidence/stage-1abc.md`; search suites 13/13 + 6/6 pass |
 | 1B | `Account.account_name_ar` schema foundation | ✅ Complete on authorized test site — no account values populated | 2026-09-04 | `docs/ai/work-items/erp-arabic-bilingual-data/evidence/stage-1abc.md`; schema/idempotency/no-rename tests 5/5 pass |
-| 2–8 | All later stages | 🔴 Not started — dependencies unmet | — | — |
+| 3 | Bilingual registry, display service, account form section, localized tree, search/tree adapters | ✅ **Implemented** (Stage 3 pilot) — registry + service, localized Account tree label, Account Identity form section, governed Arabic-only edit, bilingual search; 96 tests pass on the test site | 2026-09-20 | `construction/services/bilingual_service.py`, `construction/public/js/bilingual/`, `construction/tests/test_bilingual_*.py` |
+| 4 | 81-account Arabic data migration (D4/D5): proposal, panel, bundle/payload, DRY_RUN, IMPORT, post-import verification | ✅ **Data-only complete** — `STAGE_4_VERIFIED` on the non-production test site; 81/81 accounts populated; owner-mandated translations applied | 2026-09-20 | `docs/ai/work-items/scope-context-portability/evidence/stage4-complete-2026-09-20.md` |
+| 4 | Visible bilingual display of the migrated Arabic names | 🟡 **Implemented on the feature branch** — tree/identity/form/search shipped; still requires an `ar`-session browser regression and registry promotion from `schema_installed` to `active` before release | 2026-09-20 | `construction/public/js/bilingual/account_bilingual_browser_tests.js` |
+| 2, 5–8 | Remaining later stages | 🔴 Not started — dependencies unmet | — | — |

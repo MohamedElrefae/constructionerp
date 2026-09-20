@@ -1,0 +1,56 @@
+{
+  "authority": "Owner Authorization: Formal PLAN Grant (Phase 3 Pilot), 2026-09-12",
+  "token": {
+    "schema_version": 1,
+    "token_id": "owner-plan-grant-phase3-pilot",
+    "work_item": "scope-context-portability",
+    "gate_id": "plan-3f7f6e2b096c64ad049178b4",
+    "issuer": "owner",
+    "issued_utc": "2026-09-11T21:40:00Z",
+    "status": "ISSUED",
+    "scope": "PLAN",
+    "plan_revision_hash": "8c1c763d6c81a39b010de5c6ad5f319d084ecb2f90027e4cb6a09a90bd292dc1",
+    "scope_hash": "f748d729630d1f063433bc4c615643b61e075f3123b3f722cadf8784aa6a191f",
+    "repository_id": "/home/mohamed/frappe-bench/worktrees/scope-context-portability-pilot",
+    "branch": "feature/scope-context-portability",
+    "stages": [
+      "1"
+    ]
+  },
+  "token_file_sha256": "5d710d8ca46a45b1ee9ff6a8a96a79f01a41ba9e8faad8c11ac8713f60fa2398",
+  "initial_builder_job": "job-0b3f130e287b123d9b20a0b8",
+  "initial_native_session": "ses_f6d92fe1cffeMIGqB5Jdi8lIrX",
+  "source_manifest_sha256": "2753ff07fbe93f84a8e4bfb6e687a966cf52e27476d3c9140a4fa9eed2e6c5c9",
+  "dispatch_state": {
+    "active_jobs": [
+      "job-0b3f130e287b123d9b20a0b8"
+    ],
+    "approval_refs": [
+      "owner-plan-grant-phase3-pilot"
+    ],
+    "authority": "sqlite-checkpoint-export-only",
+    "candidate_id": "38e04df7b6feeef3acd5a726d98c663da05152ef356eb79195bd45c6858e6db2",
+    "completed_dependencies": [
+      "job-65f2dc51850d479768d6760a",
+      "job-e0ad43a48a20acd89a5eb939",
+      "job-8e3944c2b9cf5637a53cac50",
+      "job-0c6a7cc3df086796fa2d7353",
+      "job-eb36e5f169894f960d989f64"
+    ],
+    "escalation": {
+      "last_snapshot_digest": null,
+      "unchanged_rounds": 0,
+      "unsuccessful_cycles": 0
+    },
+    "exported_utc": "2026-09-11T21:43:56.839169Z",
+    "pause_reason": "RECONCILIATION_REQUIRED",
+    "plan_revision_hash": "8c1c763d6c81a39b010de5c6ad5f319d084ecb2f90027e4cb6a09a90bd292dc1",
+    "resume_to": "BUILD_IN_PROGRESS",
+    "revision": 13,
+    "schema_version": 1,
+    "stage": "1",
+    "stages": {},
+    "status": "PAUSED",
+    "work_item": "scope-context-portability"
+  }
+}

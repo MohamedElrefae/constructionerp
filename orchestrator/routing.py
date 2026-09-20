@@ -1,0 +1,812 @@
+"""Deterministic routing over accepted events; no process or filesystem side effects."""
+
+import hashlib
+import json
+from copy import deepcopy
+
+from core import WorkflowError, digest
+from stage4 import derive_stage4_candidate_id, is_hex64
+
+
+def initial(config):
+    sub_status = config.get("sub_status")
+    plan_granted = config.get("plan_granted", False)
+    roles_hash = config.get("roles_hash") or digest(config.get("roles", {}))
+
+    # In Stage 4 PROPOSAL_PENDING, fail-closed owner-controlled proposal-dispatch gate
+    if sub_status == "PROPOSAL_PENDING" and not plan_granted:
+        gate = {"scope": "PLAN", "gate_id": gate_id(config, "PLAN")}
+        next_roles = []
+    else:
+        gate = None
+        next_roles = config.get("next_roles", ["architect"])
+
+    return dict(
+        work_item=config["work_item"],
+        stage=config.get("stage") or config["stages"][0],
+        sub_status=sub_status,
+        status="DRAFT",
+        next_roles=next_roles,
+        active_jobs=[],
+        candidate=config["candidate"],
+        plan_revision_hash=config["plan_revision_hash"],
+        scope_hash=config["scope_hash"],
+        roles_hash=roles_hash,
+        round=0,
+        attempt=1,
+        cursor=0,
+        revision=0,
+        findings=[],
+        backlog=[],
+        next_finding=1,
+        unsuccessful_cycles=0,
+        unchanged_rounds=0,
+        previous_snapshots=[],
+        gate=gate,
+        pause_reason=None,
+        resume_to=None,
+        prior=None,
+        completed_dependencies=[],
+        approval_refs=[],
+        review_results={},
+        stages=deepcopy(config.get("historical_stages", {})),
+        plan_granted=plan_granted,
+        committed=False,
+        dry_run_evidence_digest=None,
+    )
+
+
+def gate_id(state, scope, legacy=False):
+    bindings = [state["work_item"], state["stage"], scope, state["plan_revision_hash"], state["scope_hash"]]
+    if scope == "PLAN":
+        if not legacy:
+            roles_hash = state.get("roles_hash") or (digest(state["roles"]) if "roles" in state else None)
+            if roles_hash:
+                bindings.append(roles_hash)
+    elif scope != "PLAN" and state.get("candidate"):
+        bindings.append(state["candidate"]["candidate_id"])
+    return scope.lower() + "-" + digest(bindings)[:24]
+
+
+def pause(state, reason):
+    if state["status"] != "PAUSED":
+        state["prior"] = dict(status=state["status"], next_roles=state["next_roles"], gate=state["gate"])
+        state["resume_to"] = state["status"]
+    state.update(
+        status="PAUSED",
+        pause_reason=reason,
+        next_roles=[],
+        gate={"scope": "DECISION", "gate_id": "decision-" + str(state["revision"])},
+    )
+
+
+def finding_identity(f):
+    reproduction = (f.get("snapshot") or {}).get("reproduction_digest") or f.get("summary", "").strip()
+    if not reproduction:
+        return None
+    return f["classification"], tuple(sorted(f.get("affected_requirements", []))), reproduction
+
+
+def findings(state, incoming, pending=()):
+    result = []
+    known = {f["finding_id"]: f for f in state["findings"] + state["backlog"] + list(pending)}
+    for f in deepcopy(incoming):
+        if f["finding_id"] is None:
+            identity = finding_identity(f)
+            existing = next(
+                (
+                    key
+                    for key, old in known.items()
+                    if identity is not None and finding_identity(old) == identity
+                ),
+                None,
+            )
+            if existing:
+                f["finding_id"] = existing
+            else:
+                f["finding_id"] = "SCP-" + str(state["next_finding"]).zfill(3)
+                state["next_finding"] += 1
+        elif f["finding_id"] not in known:
+            if f.get("classification") in ("row_rejected", "review_rejected"):
+                # Engine-synthesized panel findings carry no centrally allocated ID.
+                f["finding_id"] = "SCP-" + str(state["next_finding"]).zfill(3)
+                state["next_finding"] += 1
+            else:
+                raise WorkflowError("Reviewer supplied an unallocated finding ID")
+        known[f["finding_id"]] = f
+        result.append(f)
+    return result
+
+
+def escalation_cycle(state, blocking_findings):
+    """Advance the total repair budget and report whether escalation is required.
+
+    Stage 4 panel findings are engine-synthesized and may lack a snapshot; the
+    classification+summary fallback keeps repeated row rejections recognizable.
+    """
+    state["round"] += 1
+    state["unsuccessful_cycles"] += 1
+    snapshots = sorted(
+        digest(
+            [
+                f["finding_id"],
+                f["classification"],
+                (f.get("snapshot") or {}).get("reproduction_digest"),
+                (f.get("snapshot") or {}).get("relevant_evidence_digest"),
+            ]
+        )
+        for f in blocking_findings
+        if f.get("snapshot")
+    )
+    if not snapshots:
+        snapshots = sorted(
+            digest([f.get("classification"), f.get("summary", "")]) for f in blocking_findings
+        )
+    overlap = set(snapshots) & set(state["previous_snapshots"])
+    state["unchanged_rounds"] = state["unchanged_rounds"] + 1 if overlap else (1 if snapshots else 0)
+    state["previous_snapshots"] = snapshots
+    return state["unsuccessful_cycles"] >= 3 or state["unchanged_rounds"] >= 2
+
+
+def review_outcome(state, outputs, source, quorum):
+    accepted = []
+    for output in outputs:
+        accepted += findings(state, output["findings"], accepted)
+    state["backlog"] += [f for f in accepted if not f["blocking"]]
+    # Reviews must explicitly cover all old unresolved IDs; never silently drop one.
+    old = {f["finding_id"]: f for f in state["findings"]}
+    updates = {f["finding_id"]: f for f in accepted}
+    if all(o["verdict"] == "PASS" for o in outputs):
+        # A PASS is an explicit assertion that the entire repair packet was rechecked.
+        old = {
+            k: f
+            for k, f in old.items()
+            if source == "reviewer" and f["classification"] == "implementation_defect"
+        }
+    old.update(updates)
+    state["findings"] = [f for f in old.values() if f["blocking"]]
+    blocked = any(o["verdict"] == "BLOCKED" for o in outputs) or any(
+        source != "reviewer" or f["classification"] != "implementation_defect" for f in state["findings"]
+    )
+    state["round"] += 1
+    if blocked:
+        state["unsuccessful_cycles"] += 1
+        snapshots = sorted(
+            digest(
+                [
+                    f["finding_id"],
+                    f["classification"],
+                    f["snapshot"]["reproduction_digest"],
+                    f["snapshot"]["relevant_evidence_digest"],
+                ]
+            )
+            for f in state["findings"]
+            if f.get("snapshot")
+        )
+        overlap = set(snapshots) & set(state["previous_snapshots"])
+        state["unchanged_rounds"] = state["unchanged_rounds"] + 1 if overlap else (1 if snapshots else 0)
+        state["previous_snapshots"] = snapshots
+        if state["unsuccessful_cycles"] >= 3 or state["unchanged_rounds"] >= 2:
+            pause(state, "ESCALATED")
+        elif any(f["classification"] == "owner_decision" for f in state["findings"]):
+            pause(state, "OWNER_DECISION")
+        elif any(f["classification"] == "design_defect" for f in state["findings"]):
+            state.update(status="NEEDS_REVISION", next_roles=["architect"], gate=None)
+        else:
+            state.update(status="CHANGES_REQUESTED", next_roles=["builder"], gate=None)
+        state["attempt"] += 1
+        return
+    if source == "reviewer":
+        if state.get("stage") == "plan":
+            state.update(
+                status="PLAN_SUBMITTED",
+                next_roles=[],
+                gate={"scope": "PLAN", "gate_id": gate_id(state, "PLAN")},
+                plan_granted=False,
+            )
+        elif state["plan_granted"]:
+            state.update(status="APPROVED_FOR_BUILD", next_roles=["builder"], gate=None)
+        else:
+            state.update(
+                status="PLAN_SUBMITTED", next_roles=[], gate={"scope": "PLAN", "gate_id": gate_id(state, "PLAN")}
+            )
+    elif source == "quorum":
+        if state.get("sub_status") == "PANEL_REVIEW":
+            state.update(
+                sub_status="BUNDLE_VALIDATED",
+                status="BUILD_COMPLETE",
+                next_roles=["verifier"],
+                gate=None,
+            )
+        else:
+            state.update(status="BUILD_COMPLETE", next_roles=["verifier"], gate=None)
+    else:
+        if state.get("sub_status") == "BUNDLE_VALIDATED":
+            state.update(
+                sub_status="OWNER_PAYLOAD_AUTHORIZATION",
+                status="VERIFIED_FOR_RELEASE",
+                next_roles=[],
+                gate={"scope": "DRY_RUN", "gate_id": gate_id(state, "DRY_RUN")},
+            )
+        elif state.get("sub_status") == "POST_IMPORT_EVIDENCE":
+            state.update(
+                sub_status="STAGE_4_VERIFIED",
+                status="VERIFIED_FOR_RELEASE",
+                next_roles=[],
+                gate=None,
+            )
+        else:
+            state.update(
+                status="VERIFIED_FOR_RELEASE",
+                next_roles=[],
+                gate={"scope": "COMMIT", "gate_id": gate_id(state, "COMMIT")},
+            )
+
+
+def apply_event(current, event, config):
+    state = deepcopy(current)
+    if not state.get("roles_hash"):
+        state["roles_hash"] = config.get("roles_hash") or digest(config.get("roles", {}))
+    if event["seq"] <= state["cursor"]:
+        return state
+    kind, body = event["kind"], event["payload"]
+    if kind == "result":
+        role, output = body["role"], body["result"]
+        if body["job_id"] not in state["active_jobs"]:
+            raise WorkflowError("Result does not belong to active jobs")
+        state["active_jobs"].remove(body["job_id"])
+        state["completed_dependencies"].append(body["job_id"])
+        if output["status"] == "FAILED":
+            state["next_roles"] = [role]
+            state["attempt"] += 1
+            pause(state, output["failure_class"])
+        elif role == "architect":
+            if output["verdict"] == "BLOCKED":
+                state["findings"] += findings(state, output["findings"])
+                state["next_roles"] = ["architect"]
+                state["attempt"] += 1
+                pause(state, "OWNER_DECISION")
+            else:
+                state.update(
+                    plan_revision_hash=body["new_plan_hash"],
+                    plan_granted=state["plan_granted"]
+                    and body["new_plan_hash"] == state["plan_revision_hash"],
+                    status="PLAN_SUBMITTED",
+                    next_roles=["reviewer"],
+                    gate=None,
+                )
+        elif role == "proposer":
+            if output["verdict"] == "PROPOSED":
+                verified_arts = body.get("verified_private_artifacts", [])
+                proposal_sha = body.get("proposal_sha256")
+                export_sha = body.get("export_sha256") or state["candidate"].get("export_sha256")
+                if not verified_arts or not proposal_sha or not export_sha:
+                    state["attempt"] += 1
+                    pause(state, "MALFORMED_RESULT")
+                else:
+                    candidate_id = body.get("candidate_id") or derive_stage4_candidate_id(export_sha, proposal_sha)
+                    cand = deepcopy(state["candidate"])
+                    cand["export_sha256"] = export_sha
+                    cand["proposal_sha256"] = proposal_sha
+                    cand["candidate_id"] = candidate_id
+                    cand["manifest_hash"] = candidate_id
+                    cand["private_artifact_refs"] = deepcopy(verified_arts)
+                    state["candidate"] = cand
+                    state.update(
+                        sub_status="PROPOSAL_FROZEN",
+                        status="BUILD_COMPLETE",
+                        next_roles=config.get("quorum", ["ai-a1", "ai-a2", "ai-a3"]),
+                        review_results={},
+                    )
+            elif output["verdict"] == "BLOCKED":
+                pause(state, "OWNER_DECISION")
+            else:
+                state["attempt"] += 1
+                pause(state, output.get("failure_class", "MALFORMED_RESULT"))
+        elif role == "builder":
+            if state.get("sub_status") == "DRY_RUN":
+                digest_val = body.get("dry_run_evidence_digest") or output.get("dry_run_evidence_digest")
+                if not digest_val or not is_hex64(digest_val):
+                    pause(state, "MALFORMED_RESULT")
+                    state["attempt"] += 1
+                elif output["verdict"] == "PASS":
+                    state.update(
+                        sub_status="IMPORT_AUTHORIZATION",
+                        status="VERIFIED_FOR_RELEASE",
+                        next_roles=[],
+                        gate={"scope": "IMPORT", "gate_id": gate_id(state, "IMPORT")},
+                        dry_run_evidence_digest=digest_val,
+                    )
+                else:
+                    pause(state, "DRY_RUN_FAILED")
+            elif state.get("sub_status") == "IMPORT":
+                if output["verdict"] == "PASS":
+                    state.update(
+                        sub_status="POST_IMPORT_EVIDENCE",
+                        status="BUILD_COMPLETE",
+                        next_roles=["verifier"],
+                        gate=None,
+                    )
+                else:
+                    pause(state, "IMPORT_FAILED")
+            else:
+                state["candidate"] = body["candidate"]
+                if output["verdict"] == "BLOCKED":
+                    incoming = findings(state, output["findings"])
+                    state["findings"] += [
+                        f
+                        for f in incoming
+                        if f["blocking"]
+                        and f["finding_id"] not in {old["finding_id"] for old in state["findings"]}
+                    ]
+                    state["backlog"] += [f for f in incoming if not f["blocking"]]
+                    if any(f["classification"] == "owner_decision" for f in incoming):
+                        pause(state, "OWNER_DECISION")
+                    elif any(f["classification"] == "design_defect" for f in incoming):
+                        state.update(status="NEEDS_REVISION", next_roles=["architect"], gate=None)
+                        state["attempt"] += 1
+                    else:
+                        state.update(status="BUILD_COMPLETE", next_roles=["verifier"], gate=None)
+                else:
+                    state.update(
+                        candidate=body["candidate"],
+                        status="BUILD_COMPLETE",
+                        next_roles=config.get("quorum", []) or ["verifier"],
+                        review_results={},
+                    )
+        elif role in config.get("quorum", []):
+            entry = dict(output)
+            entry["verified_artifacts"] = body.get("verified_private_artifacts", [])
+            entry["review_meta"] = body.get("review_meta", {})
+            state["review_results"][role] = entry
+            if set(state["review_results"]) == set(config["quorum"]):
+                if state.get("sub_status") in ("PROPOSAL_FROZEN", "PANEL_REVIEW"):
+                    state["sub_status"] = "PANEL_REVIEW"
+                    all_blocking = []
+                    renewal_required = False
+                    sessions = []
+                    for qrole in config["quorum"]:
+                        qinfo = state["review_results"][qrole]
+                        qmeta = qinfo.get("review_meta", {})
+                        if qmeta.get("blocking_findings"):
+                            all_blocking.extend(qmeta["blocking_findings"])
+                        if qmeta.get("renewal_required"):
+                            renewal_required = True
+                        if qinfo.get("session_id"):
+                            sessions.append(qinfo["session_id"])
+
+                    if len(set(sessions)) != len(sessions):
+                        pause(state, "MALFORMED_RESULT")
+                    elif all_blocking:
+                        incoming = findings(state, all_blocking)
+                        # Reconcile against the current panel verdict: a row-rejection
+                        # finding clears when the current panel approves that row. Without
+                        # this, a repaired row stays blocked forever and the loop escalates.
+                        approved_rows = set()
+                        rejected_rows = set()
+                        approved_summaries = set()
+                        for qinfo in state["review_results"].values():
+                            for r in qinfo.get("review_meta", {}).get("row_decisions", []) or []:
+                                ident = r.get("identity")
+                                if not ident:
+                                    continue
+                                if r.get("decision") == "rejected":
+                                    rejected_rows.add(ident)
+                                else:
+                                    approved_rows.add(ident)
+                                    approved_summaries.add(f"row {ident}")
+                        resolved_row_findings = set()
+                        for old in state["findings"]:
+                            if old.get("classification") != "row_rejected":
+                                continue
+                            ident = old.get("row_identity")
+                            if ident:
+                                if ident in approved_rows and ident not in rejected_rows:
+                                    resolved_row_findings.add(old["finding_id"])
+                            else:
+                                # Legacy findings predate row_identity and summarize by index
+                                # or a redacted identity. Clear them once the current panel
+                                # approves every row (no remaining rejections).
+                                if not rejected_rows:
+                                    resolved_row_findings.add(old["finding_id"])
+                                elif any(s in (old.get("summary") or "") for s in approved_summaries):
+                                    resolved_row_findings.add(old["finding_id"])
+                        survivors = {
+                            old["finding_id"]: old
+                            for old in state["findings"]
+                            if old["finding_id"] not in resolved_row_findings
+                        }
+                        for f in incoming:
+                            if f["blocking"]:
+                                survivors.setdefault(f["finding_id"], f)
+                        state["findings"] = [f for f in survivors.values() if f["blocking"]]
+                        state["backlog"] += [f for f in incoming if not f["blocking"]]
+                        escalated = escalation_cycle(state, state["findings"])
+                        state["attempt"] += 1
+                        if escalated:
+                            state["next_roles"] = ["proposer"]
+                            pause(state, "ESCALATED")
+                        elif any(f["classification"] == "owner_decision" for f in incoming):
+                            pause(state, "OWNER_DECISION")
+                        elif any(f["classification"] == "design_defect" for f in incoming):
+                            state.update(status="NEEDS_REVISION", next_roles=["architect"], gate=None)
+                        else:
+                            state.update(status="NEEDS_REVISION", next_roles=["proposer"], gate=None)
+                    elif renewal_required:
+                        escalated = escalation_cycle(state, state["findings"])
+                        state.update(
+                            sub_status="PANEL_RENEWAL",
+                            status="NEEDS_REVISION",
+                            next_roles=["proposer"],
+                            review_results={},
+                        )
+                        state["attempt"] += 1
+                        if escalated:
+                            pause(state, "ESCALATED")
+                    elif all(q["verdict"] == "PASS" for q in state["review_results"].values()):
+                        bundle_sha = body.get("bundle_sha256") or (body.get("bundle_composed") or {}).get("bundle_sha256")
+                        payload_sha = body.get("payload_sha256") or (body.get("bundle_composed") or {}).get("payload_sha256")
+                        bundle_arts = body.get("bundle_artifacts") or (body.get("bundle_composed") or {}).get("verified_private_artifacts", [])
+                        if not bundle_sha or not payload_sha or not is_hex64(bundle_sha) or not is_hex64(payload_sha):
+                            state["attempt"] += 1
+                            pause(state, "MALFORMED_RESULT")
+                        else:
+                            state["candidate"]["bundle_sha256"] = bundle_sha
+                            state["candidate"]["payload_sha256"] = payload_sha
+                            state["bundle_sha256"] = bundle_sha
+                            state["payload_sha256"] = payload_sha
+                            if "private_artifact_refs" in state["candidate"] and bundle_arts:
+                                state["candidate"]["private_artifact_refs"].extend(bundle_arts)
+                            state.update(
+                                sub_status="BUNDLE_VALIDATED",
+                                status="BUILD_COMPLETE",
+                                next_roles=["verifier"],
+                                review_results={},
+                                round=state["round"] + 1,
+                            )
+                    else:
+                        review_outcome(state, [state["review_results"][r] for r in config["quorum"]], "quorum", config["quorum"])
+                else:
+                    review_outcome(state, [state["review_results"][r] for r in config["quorum"]], "quorum", config["quorum"])
+            else:
+                state["next_roles"] = []
+        else:
+            review_outcome(state, [output], role, config.get("quorum", []))
+    elif kind == "grant":
+        token = body
+        if (
+            not state["gate"]
+            or token["gate_id"] != state["gate"]["gate_id"]
+            or token["scope"] != state["gate"]["scope"]
+        ):
+            raise WorkflowError("Stale gate authorization")
+        state["approval_refs"].append(token["token_id"])
+        if token["scope"] == "PLAN":
+            schema_ver = token.get("schema_version", 1)
+            if schema_ver == 1:
+                legacy_expected_gate = gate_id(state, "PLAN", legacy=True)
+                if state["gate"]["gate_id"] != legacy_expected_gate:
+                    raise WorkflowError("Stale gate authorization: legacy v1 token cannot authorize role-bound gate")
+                if (
+                    token["plan_revision_hash"] != state["plan_revision_hash"]
+                    or token["scope_hash"] != state["scope_hash"]
+                ):
+                    raise WorkflowError("Stale plan grant")
+            elif schema_ver == 2:
+                expected_roles_hash = state.get("roles_hash") or digest(config.get("roles", {}))
+                if (
+                    token["plan_revision_hash"] != state["plan_revision_hash"]
+                    or token["scope_hash"] != state["scope_hash"]
+                    or not token.get("roles_hash")
+                    or token["roles_hash"] != expected_roles_hash
+                ):
+                    raise WorkflowError("Stale plan grant")
+            else:
+                raise WorkflowError(f"Unsupported PLAN token schema version: {schema_ver}")
+            if state.get("sub_status") == "PROPOSAL_PENDING":
+                state.update(plan_granted=True, status="APPROVED_FOR_BUILD", next_roles=["proposer"], gate=None)
+            else:
+                state.update(plan_granted=True, status="APPROVED_FOR_BUILD", next_roles=["builder"], gate=None)
+        elif token["scope"] == "COMMIT":
+            if token["candidate_id"] != state["candidate"]["candidate_id"]:
+                raise WorkflowError("Stale commit grant")
+            state["gate"] = {"scope": "OWNER_COMMIT", "gate_id": token["gate_id"]}
+        elif token["scope"] == "DRY_RUN":
+            if token["candidate_id"] != state["candidate"]["candidate_id"]:
+                raise WorkflowError("Stale dry-run grant candidate")
+            if token.get("operation") != "set_account_name_ar":
+                raise WorkflowError("Unsupported operation in dry-run grant")
+            for hkey in ("export_sha256", "proposal_sha256", "bundle_sha256", "payload_sha256", "erp_descriptor_hash"):
+                if not token.get(hkey) or not is_hex64(token[hkey]):
+                    raise WorkflowError(f"Dry-run grant {hkey} must be 64-character lowercase hex")
+
+            # Unconditional check: active hashes must exist in state and match token
+            exp_export = state["candidate"].get("export_sha256")
+            if not exp_export or not is_hex64(exp_export):
+                raise WorkflowError("Dry-run requires active export_sha256 in state")
+            if token["export_sha256"] != exp_export:
+                raise WorkflowError("Dry-run grant export_sha256 mismatch")
+
+            exp_prop = state["candidate"].get("proposal_sha256") or state["candidate"].get("candidate_id")
+            if not exp_prop or not is_hex64(exp_prop):
+                raise WorkflowError("Dry-run requires active proposal_sha256 in state")
+            token_prop = token.get("proposal_sha256") or token.get("candidate_id")
+            if token_prop != exp_prop:
+                raise WorkflowError("Dry-run grant proposal_sha256 mismatch")
+
+            exp_bundle = state.get("bundle_sha256") or state["candidate"].get("bundle_sha256")
+            if not exp_bundle or not is_hex64(exp_bundle):
+                raise WorkflowError("Dry-run requires active bundle_sha256 in state")
+            if token["bundle_sha256"] != exp_bundle:
+                raise WorkflowError("Dry-run grant bundle_sha256 mismatch")
+
+            exp_payload = state.get("payload_sha256") or state["candidate"].get("payload_sha256")
+            if not exp_payload or not is_hex64(exp_payload):
+                raise WorkflowError("Dry-run requires active payload_sha256 in state")
+            if token["payload_sha256"] != exp_payload:
+                raise WorkflowError("Dry-run grant payload_sha256 mismatch")
+
+            exp_desc = config.get("erp_descriptor_hash") or state.get("erp_descriptor_hash")
+            if not exp_desc or not is_hex64(exp_desc):
+                raise WorkflowError("Dry-run requires active erp_descriptor_hash in config")
+            if token["erp_descriptor_hash"] != exp_desc:
+                raise WorkflowError("Dry-run grant erp_descriptor_hash mismatch")
+
+            state.update(
+                sub_status="DRY_RUN",
+                status="VERIFIED_FOR_RELEASE",
+                next_roles=[],
+                gate=None,
+            )
+        elif token["scope"] == "IMPORT":
+            if token["candidate_id"] != state["candidate"]["candidate_id"]:
+                raise WorkflowError("Stale import grant candidate")
+            if token.get("operation") != "set_account_name_ar":
+                raise WorkflowError("Unsupported operation in import grant")
+            for hkey in ("export_sha256", "proposal_sha256", "bundle_sha256", "payload_sha256", "erp_descriptor_hash"):
+                if not token.get(hkey) or not is_hex64(token[hkey]):
+                    raise WorkflowError(f"Import grant {hkey} must be 64-character lowercase hex")
+            if not token.get("dry_run_evidence_digest") or not is_hex64(token["dry_run_evidence_digest"]):
+                raise WorkflowError("Import grant dry_run_evidence_digest must be 64-character lowercase hex")
+
+            exp_export = state["candidate"].get("export_sha256")
+            if not exp_export or not is_hex64(exp_export):
+                raise WorkflowError("Import requires active export_sha256 in state")
+            if token["export_sha256"] != exp_export:
+                raise WorkflowError("Import grant export_sha256 mismatch")
+
+            exp_prop = state["candidate"].get("proposal_sha256") or state["candidate"].get("candidate_id")
+            if not exp_prop or not is_hex64(exp_prop):
+                raise WorkflowError("Import requires active proposal_sha256 in state")
+            token_prop = token.get("proposal_sha256") or token.get("candidate_id")
+            if token_prop != exp_prop:
+                raise WorkflowError("Import grant proposal_sha256 mismatch")
+
+            exp_bundle = state.get("bundle_sha256") or state["candidate"].get("bundle_sha256")
+            if not exp_bundle or not is_hex64(exp_bundle):
+                raise WorkflowError("Import requires active bundle_sha256 in state")
+            if token["bundle_sha256"] != exp_bundle:
+                raise WorkflowError("Import grant bundle_sha256 mismatch")
+
+            exp_payload = state.get("payload_sha256") or state["candidate"].get("payload_sha256")
+            if not exp_payload or not is_hex64(exp_payload):
+                raise WorkflowError("Import requires active payload_sha256 in state")
+            if token["payload_sha256"] != exp_payload:
+                raise WorkflowError("Import grant payload_sha256 mismatch")
+
+            exp_desc = config.get("erp_descriptor_hash") or state.get("erp_descriptor_hash")
+            if not exp_desc or not is_hex64(exp_desc):
+                raise WorkflowError("Import requires active erp_descriptor_hash in config")
+            if token["erp_descriptor_hash"] != exp_desc:
+                raise WorkflowError("Import grant erp_descriptor_hash mismatch")
+
+            exp_dry = state.get("dry_run_evidence_digest")
+            if not exp_dry or not is_hex64(exp_dry):
+                raise WorkflowError("Import requires recorded active dry_run_evidence_digest in state")
+            if token["dry_run_evidence_digest"] != exp_dry:
+                raise WorkflowError("Import grant dry_run_evidence_digest does not match recorded evidence")
+
+            state.update(
+                sub_status="IMPORT",
+                status="VERIFIED_FOR_RELEASE",
+                next_roles=[],
+                gate=None,
+            )
+        else:
+            raise WorkflowError("ERP operation execution is gated beyond this phase")
+    elif kind == "pause":
+        pause(state, body["reason"])
+    elif kind == "resume":
+        if state["status"] != "PAUSED" or (
+            state["active_jobs"] and not (state.get("pause_reason") or "").startswith("OWNER:")
+        ):
+            raise WorkflowError("Cannot resume unresolved active/uncertain jobs")
+        if state.get("pause_reason") == "ESCALATED" and not body.get("reset_budget"):
+            raise WorkflowError("Escalation needs an explicit owner budget-reset decision")
+        if body.get("reset_budget"):
+            state.update(unsuccessful_cycles=0, unchanged_rounds=0, previous_snapshots=[])
+        prior = state["prior"]
+        state.update(prior)
+        state.update(pause_reason=None, resume_to=None, prior=None)
+        if not state["next_roles"] and not state["gate"] and not state["active_jobs"]:
+            if state.get("sub_status") == "BUNDLE_VALIDATED":
+                # A Stage 4 bundle awaiting verification resumes with the verifier, not a builder.
+                state["next_roles"] = ["verifier"]
+            elif state.get("sub_status") in ("DRY_RUN", "IMPORT_AUTHORIZATION", "IMPORT"):
+                # These are owner-executed operations; no agent role resumes them.
+                state["next_roles"] = []
+            else:
+                state["next_roles"] = [
+                    "architect"
+                    if any(f["classification"] == "design_defect" for f in state["findings"])
+                    else "builder"
+                ]
+    elif kind == "import_evidence":
+        # Owner-executed ERP IMPORT operation. No agent is involved; the evidence digest
+        # binds the written Arabic values and the rollback export.
+        if state.get("sub_status") != "IMPORT":
+            raise WorkflowError("Import evidence only applies in the IMPORT sub-status")
+        digest_val = body.get("evidence_digest")
+        if not digest_val or not is_hex64(digest_val):
+            raise WorkflowError("Import evidence digest must be 64-character lowercase hex")
+        state.update(
+            sub_status="POST_IMPORT_EVIDENCE",
+            status="BUILD_COMPLETE",
+            next_roles=["verifier"],
+            gate=None,
+            import_evidence_digest=digest_val,
+        )
+    elif kind == "dry_run_ready":
+        # Owner reconciliation: settle a DRY_RUN that was entered from a stale prior
+        # status. No agent role is involved; the owner then executes the read-only dry-run.
+        if state.get("sub_status") != "DRY_RUN":
+            raise WorkflowError("dry_run_ready only applies in the DRY_RUN sub-status")
+        state.update(
+            status="VERIFIED_FOR_RELEASE",
+            next_roles=[],
+            gate=None,
+            pause_reason=None,
+            resume_to=None,
+            prior=None,
+        )
+    elif kind == "dry_run_evidence":
+        # Owner-executed read-only DRY_RUN operation. No LLM/agent is involved; the
+        # evidence digest binds the live observed values to the frozen payload.
+        if state.get("sub_status") != "DRY_RUN":
+            raise WorkflowError("Dry-run evidence only applies in the DRY_RUN sub-status")
+        digest_val = body.get("evidence_digest")
+        if not digest_val or not is_hex64(digest_val):
+            raise WorkflowError("Dry-run evidence digest must be 64-character lowercase hex")
+        if body.get("blocking"):
+            state.update(dry_run_evidence_digest=digest_val)
+            pause(state, "DRY_RUN_FAILED")
+        else:
+            state.update(
+                sub_status="IMPORT_AUTHORIZATION",
+                status="VERIFIED_FOR_RELEASE",
+                next_roles=[],
+                gate={"scope": "IMPORT", "gate_id": gate_id(state, "IMPORT")},
+                dry_run_evidence_digest=digest_val,
+            )
+    elif kind == "reconcile_job":
+        if state["status"] != "PAUSED" or body["job_id"] not in state["active_jobs"]:
+            raise WorkflowError("Reconciliation does not match a paused active job")
+        state["active_jobs"].remove(body["job_id"])
+        state["attempt"] += 1
+        if body.get("role") == "proposer" or state.get("sub_status") == "PROPOSAL_PENDING":
+            state.update(
+                plan_granted=False,
+                gate={"scope": "PLAN", "gate_id": gate_id(state, "PLAN")},
+                next_roles=[],
+                status="DRAFT",
+                pause_reason=None,
+                resume_to=None,
+                prior=None,
+            )
+        else:
+            state["prior"]["next_roles"] = list(dict.fromkeys(state["prior"]["next_roles"] + [body["role"]]))
+    elif kind == "refresh_candidate":
+        if state["status"] != "PAUSED" or state["active_jobs"]:
+            raise WorkflowError("Candidate refresh requires all external jobs reconciled")
+        state["candidate"] = body["candidate"]
+        state["review_results"] = {}
+        state["attempt"] += 1
+        state["prior"].update(gate=None, next_roles=["builder" if state["plan_granted"] else "architect"])
+    elif kind == "stage_started":
+        state["stages"][state["stage"]] = {
+            "sub_status": None,
+            "historical": False,
+            "evidence_refs": body["evidence_refs"],
+        }
+        state.update(
+            stage=body["stage"],
+            scope_hash=body["scope_hash"],
+            candidate=body["candidate"],
+            status="DRAFT",
+            next_roles=["architect"],
+            active_jobs=[],
+            round=0,
+            attempt=1,
+            findings=[],
+            review_results={},
+            unsuccessful_cycles=0,
+            unchanged_rounds=0,
+            previous_snapshots=[],
+            gate=None,
+            pause_reason=None,
+            resume_to=None,
+            prior=None,
+            plan_granted=False,
+            committed=False,
+        )
+    elif kind == "scope_revised":
+        if state["status"] != "PAUSED" or state["active_jobs"]:
+            raise WorkflowError("Scope revision requires a paused reconciled stage")
+        state.update(
+            scope_hash=body["scope_hash"], plan_granted=False, review_results={}, candidate=body["candidate"]
+        )
+        state["prior"].update(status="NEEDS_REVISION", next_roles=["architect"], gate=None)
+        state["attempt"] += 1
+    elif kind == "recovery_reviewed":
+        state.update(
+            candidate=body["candidate"],
+            active_jobs=[],
+            next_roles=["architect"],
+            status="DRAFT",
+            gate=None,
+            pause_reason=None,
+            resume_to=None,
+            prior=None,
+            plan_granted=False,
+            committed=False,
+            review_results={},
+            attempt=state["attempt"] + body["attempt_offset"],
+            unsuccessful_cycles=0,
+            unchanged_rounds=0,
+            previous_snapshots=[],
+        )
+    elif kind == "role_reconfigured":
+        if state["status"] != "PAUSED" or state["active_jobs"]:
+            raise WorkflowError("Role reconfiguration requires a paused reconciled stage")
+        if body.get("roles_hash"):
+            state["roles_hash"] = body["roles_hash"]
+        if body.get("plan_grant_revoked"):
+            state.update(plan_granted=False)
+            if state.get("resume_to") == "APPROVED_FOR_BUILD":
+                state["resume_to"] = "PLAN_SUBMITTED"
+        new_gate = body.get("new_gate") or {"scope": "PLAN", "gate_id": gate_id(state, "PLAN")}
+        if state.get("prior"):
+            state["prior"].update(
+                status="PLAN_SUBMITTED" if state["stage"] != "4" else "DRAFT",
+                next_roles=[],
+                gate=new_gate,
+            )
+        if state.get("resume_to") in ("APPROVED_FOR_BUILD", "BUILD_PENDING", "PROPOSAL_PENDING"):
+            state["resume_to"] = "PLAN_SUBMITTED" if state["stage"] != "4" else "DRAFT"
+        if state.get("gate") and state["gate"].get("scope") == "PLAN":
+            state["gate"] = new_gate
+    elif kind == "scope_adopted":
+        impl_stages = body["implementation_stages"]
+        state["stage"] = impl_stages[0]
+        state["scope_hash"] = body["scope_hash"]
+        state["candidate"] = body["candidate_meta"]
+        state["stages"] = {
+            **state.get("stages", {}),
+            "plan": {
+                "sub_status": None,
+                "historical": False,
+                "evidence_refs": [],
+            },
+        }
+        state["gate"] = {"scope": "PLAN", "gate_id": gate_id(state, "PLAN")}
+        state["plan_granted"] = False
+        state["status"] = "PLAN_SUBMITTED"
+        state["next_roles"] = []
+    elif kind == "owner_commit":
+        state.update(committed=True, gate=None)
+    else:
+        raise WorkflowError("Unknown authoritative event")
+    if state.get("sub_status") and state.get("stage") in state.get("stages", {}):
+        state["stages"][state["stage"]]["sub_status"] = state["sub_status"]
+    state.update(cursor=event["seq"], revision=state["revision"] + 1)
+    return state

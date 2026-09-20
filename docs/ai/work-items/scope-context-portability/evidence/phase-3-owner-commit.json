@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "recorded_utc": "2026-09-12T07:40:00Z",
+  "status": "OWNER_COMMIT_RECORDED",
+  "authorization": "Owner Authorization Directive: Phase 3 Owner Commit Approval",
+  "token": {
+    "token_id": "owner-commit-grant-phase3-pilot",
+    "gate_id": "commit-703536a0492e00f385d3f844",
+    "scope": "COMMIT",
+    "job_id": "commit-phase3-pilot",
+    "candidate_id": "89f613f94d35c34619d1436ea8556d4fe1412232e6463baca6cefc73897010c1",
+    "manifest_hash": "89f613f94d35c34619d1436ea8556d4fe1412232e6463baca6cefc73897010c1",
+    "expected_parent_sha": "4b77803af418cea8459c4cb7d9a0248674845da3",
+    "expected_tree_oid": "5b5f87ff01b16e9d739380e8523eca0698bbfd65"
+  },
+  "commit": {
+    "sha": "72da63dc693e320ea8b73d5bdf7000c4fda57f07",
+    "parent": "4b77803af418cea8459c4cb7d9a0248674845da3",
+    "tree": "5b5f87ff01b16e9d739380e8523eca0698bbfd65",
+    "branch": "feature/scope-context-portability",
+    "worktree": "/home/mohamed/frappe-bench/worktrees/scope-context-portability-pilot",
+    "files": ["docs/ai/SCHEMA_FACTS.md", "scripts/ai_context_check.py", "tests_offline/conftest.py", "tests_offline/sitecustomize.py", "tests_offline/test_checkers.py"],
+    "trailer": "Workflow-Job: commit-phase3-pilot",
+    "parent_match": true,
+    "tree_match": true,
+    "trailer_match": true
+  },
+  "workflow_after_record": {
+    "status": "VERIFIED_FOR_RELEASE",
+    "committed": true,
+    "gate": null,
+    "candidate_id": "89f613f94d35c34619d1436ea8556d4fe1412232e6463baca6cefc73897010c1"
+  },
+  "boundaries_kept": {
+    "production_checkout_untouched": "/home/mohamed/frappe-bench/apps/construction not modified",
+    "no_push": true,
+    "no_merge": true,
+    "no_erp_operation": true
+  }
+}

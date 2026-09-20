@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "recorded_utc": "2026-09-12T06:30:00Z",
+  "status": "AI_R_BLOCKED_GENUINE_DEFECTS",
+  "authorization": "Owner Authorization Directive: Phase 3 Verifier Dispatch (Codex AI-R)",
+  "candidate": {
+    "candidate_id": "532f0175dc88f19d111a42c498b60eb0bd832d412af12d4d7df7247b48d6b133",
+    "tree_oid": "2f546c2b88f288a258a3c603ab88ab2b380b06c0"
+  },
+  "reconciliation_recorded": {
+    "job_id": "job-09ecd862eaf1f5bc23bcb21e",
+    "note": "Failed OpenCode builder result already recorded at event seq 33; owner acknowledgment documented in phase-3-builder-resume-outcome.json. No reconcile_job event was injectable (job not in active_jobs); checkpoint was owner-advanced to BUILD_COMPLETE/verifier with cursor held at last applied event."
+  },
+  "verifier_job": {
+    "job_id": "job-e7fef639e1a0e34b2deae40d",
+    "role": "verifier",
+    "tool": "codex",
+    "model": "gpt-6-astra",
+    "session_id": "01a09445-5c45-76b0-89a8-350711d06684",
+    "result": "COMPLETE / BLOCKED",
+    "candidate_validation_report_mounted": "candidate-validation-6fabdab40db63a56528d13c27355c1e21ce47f9bee8a01a86fa2eae4576a4d9b.json",
+    "p3_f003_visibility": "confirmed working: verifier summary explicitly cites the mounted validation report and its inventories"
+  },
+  "verifier_outcome": {
+    "scp_002": "still blocking, unchanged",
+    "scp_003": "still blocking, unchanged",
+    "scp_004": "PARTIALLY RESOLVED: 802-entry source equality verified against frozen base plus candidate; remaining nonconformance is gate location (fresh-copy executions ran under /tmp, outside the permitted execution root)",
+    "scp_005_new": "plan section 5 requires retained tests for all five scope dimensions; only project is covered, company/cost_center/department/branch lack negative cases"
+  },
+  "auto_builder_dispatch": {
+    "job_id": "job-fc24a15e55ab85b109bde818",
+    "role": "builder",
+    "tool": "opencode",
+    "result": "FAILED / MALFORMED_RESULT, stderr 'Session not found'",
+    "note": "Engine auto-dispatched builder per routing after verifier BLOCKED; OpenCode session initialization still failing."
+  },
+  "workflow_after_collection": {
+    "status": "PAUSED",
+    "pause_reason": "MALFORMED_RESULT",
+    "gate": {"scope": "DECISION", "gate_id": "decision-35"},
+    "attempt": 19,
+    "cursor": 35,
+    "revision": 36,
+    "round": 7,
+    "unsuccessful_cycles": 1,
+    "unchanged_rounds": 1,
+    "active_jobs": []
+  },
+  "plan_grant": {
+    "token_id": "owner-plan-grant-phase3-pilot",
+    "status": "CONSUMED, preserved"
+  },
+  "escalation": "Per directive, escalating: Codex AI-R encountered genuine unverified defects (SCP-002/003 unchanged, SCP-004 location nonconformance, new SCP-005). No OWNER_COMMIT gate reached; no commit, push, or ERP operation performed.",
+  "next_owner_decision_required": [
+    "Route SCP-002/003/004-location/SCP-005 repair work to a working builder channel (OpenCode sessions currently failing with 'Session not found').",
+    "Or issue a scoped plan/scope amendment if any finding is to be reclassified.",
+    "Stop at COMMIT unless separately authorized."
+  ]
+}
