@@ -40,8 +40,8 @@
     "stage_4_foundation": {
       "status": "FOUNDATION_VERIFIED",
       "historical": true,
-      "governed_manifest": "construction/data/localization/stage4_export_manifest.json",
-      "governed_manifest_sha256": "cf2e5fed416fdc2626da9e40f37a43c0a1233261d5625c34d8a2f0c0eec9548f",
+      "initial_export_manifest": "docs/ai/work-items/erp-arabic-bilingual-data/evidence/stage-4-initial-export-manifest.json",
+      "initial_export_manifest_sha256": "4d7bfdcea8f0b3fc0f1f862de23ac7d9c31bd014d540f84fd35435f82378ebcb",
       "export_file": "account_catalog_20260910_121018.json",
       "export_file_sha256": "206ecfae017b915742abc265016eee094304562e53838a932c7fd56af6db9ed1",
       "evidence_artifact": "stage-4-export",

@@ -105,8 +105,11 @@ HISTORICAL_PROVENANCE_AUTHORITY = {
         "service_expected_sha256": "a8c049443d7755714e2a173c75cd5747fce527a374be6b43cf7c76b49ebd0698",
     },
     "stage_4_foundation": {
-        "manifest_relpath": "construction/data/localization/stage4_export_manifest.json",
-        "manifest_expected_sha256": "cf2e5fed416fdc2626da9e40f37a43c0a1233261d5625c34d8a2f0c0eec9548f",
+        # Historical adoption must remain bound to the pre-proposal export.
+        # The live governed manifest is intentionally mutable and now describes
+        # a later post-import export, so it is not valid historical evidence.
+        "manifest_relpath": "docs/ai/work-items/erp-arabic-bilingual-data/evidence/stage-4-initial-export-manifest.json",
+        "manifest_expected_sha256": "4d7bfdcea8f0b3fc0f1f862de23ac7d9c31bd014d540f84fd35435f82378ebcb",
         "export_relpath": "sites/v16.localhost/private/stage4/account_catalog_20260910_121018.json",
         "export_expected_sha256": "206ecfae017b915742abc265016eee094304562e53838a932c7fd56af6db9ed1",
         "evidence_relpath": "docs/ai/work-items/erp-arabic-bilingual-data/evidence/stage-4-export.md",

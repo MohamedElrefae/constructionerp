@@ -81,6 +81,14 @@
 
 ## 3. In Progress (Active Work — Updated After Every Session)
 
+### Bilingual integration release validation (2026-09-20)
+- `feature/bilingual-integration` was validated as a combined checkout rather than relying on the two feature branches' isolated results.
+- Fixed historical Stage 4 adoption to bind the immutable initial-export manifest; the live governed manifest may advance after an authorized import without invalidating provenance.
+- Removed the accidental repository-root `__init__.py`, restoring checkout-name-independent offline tests while retaining the real `construction/__init__.py` app package.
+- Made Stage 4 account-language tests valid before and after import and isolated generated manifests/exports in a temporary directory.
+- Corrected dashboard test configuration to use a secured temporary `DASHBOARD_TEST_ROOT` under the supported test-mode contract.
+- Validation: orchestrator 236/236; dashboard 77/77; offline portability 67/67; bilingual schema 5/5, service 38/38, pilot 53/53, localization gates 89/89, Stage 4 account language 6/6, report extension 11/11, review bundle 36/36.
+
 ### Workflow orchestration plan — r5 coherence review (2026-09-11)
 - Canonical plan and working handoff: `docs/ai/work-items/scope-context-portability/`. Five pre-Phase-0 corrections resolved; numbered contracts synchronized and locked owner decisions preserved.
 - Consultant coherence sign-off recorded in §18. Phase 0 has not begun; runtime feasibility remains its explicit gate. No commit or ERP execution occurred.
@@ -161,6 +169,12 @@
 ---
 
 ## 6. Session Log (Append-Only — Most Recent First)
+
+### Session 2026-09-20 — Integration PR release validation
+- Reproduced and repaired a cross-branch Stage 4 provenance mismatch caused by the mutable governed manifest advancing after the historical export.
+- Repaired offline-test checkout portability and removed test writes to tracked release artifacts.
+- Repaired dashboard test-root configuration so registry ownership/permission checks run against isolated `0700` directories.
+- Full affected release suites pass; the integration branch is ready for commit, push, and PR review.
 
 ### Session 2026-09-11 — Workflow plan r5 documentation corrections
 - Corrected restart reconciliation, PLAN versus operation grants, code/proposal/bundle/payload identities and private storage, Flit/legacy packaging guidance, and canonical definitions.

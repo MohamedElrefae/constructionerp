@@ -11,9 +11,17 @@ if str(REPO_ROOT) not in sys.path:
 
 import tempfile
 
-# Set test environment defaults with isolated runtime storage
-TEST_VAR_DIR = Path(tempfile.mkdtemp(prefix="dashboard_test_var_"))
-os.environ["DASHBOARD_VAR_DIR"] = str(TEST_VAR_DIR)
+# Set test environment defaults with isolated runtime storage. These must use
+# the configuration module's supported test-mode contract before dashboard.app
+# is imported by test modules.
+TEST_ROOT = Path(tempfile.mkdtemp(prefix="dashboard_test_root_"))
+os.chmod(TEST_ROOT, 0o700)
+TEST_VAR_DIR = TEST_ROOT / "dashboard" / "var"
+TEST_VAR_DIR.mkdir(parents=True)
+os.chmod(TEST_ROOT / "dashboard", 0o700)
+os.chmod(TEST_VAR_DIR, 0o700)
+os.environ["DASHBOARD_TEST_MODE"] = "1"
+os.environ["DASHBOARD_TEST_ROOT"] = str(TEST_ROOT)
 os.environ["DASHBOARD_HOST"] = "127.0.0.1"
 os.environ["DASHBOARD_PORT"] = "8080"
 os.environ["NO_PROXY"] = "127.0.0.1,localhost"

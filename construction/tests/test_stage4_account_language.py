@@ -4,10 +4,14 @@ Run with: bench --site [site] run-tests --module construction.tests.test_stage4_
 
 Covers the export provenance contract (no invented references, proposal
 scaffold pending, no live mutation), the glossary lookup, the proposal
-record validation, and the zero-mutation dry-run plan.
+record validation, and the zero-mutation dry-run plan. The suite is valid
+both before and after an authorized Arabic-name import.
 """
 
+import tempfile
 import unittest
+from pathlib import Path
+from unittest.mock import patch
 
 import frappe
 
@@ -25,15 +29,18 @@ class TestStage4AccountLanguage(unittest.TestCase):
         self.assertEqual(manifest["proposal_pending"], slp.FLAG_PENDING)
         self.assertIn("export_file_sha256", manifest)
         self.assertIn("recorded_utc", manifest)
-        self.assertEqual(manifest["with_current_arabic"], 0, "no account has an Arabic name yet")
+        self.assertEqual(
+            manifest["with_current_arabic"],
+            sum(1 for row in rows if row["current_arabic"]),
+        )
         self.assertEqual(manifest["groups"] + manifest["leaves"], manifest["rows"])
-        # Every row: pending proposal; no invented reference; no current Arabic.
+        # Every row remains a proposal scaffold with no invented reference.
+        # current_arabic reflects live state and may be populated post-import.
         for row in rows:
             self.assertIn(slp.FLAG_PENDING, row["flags"])
             self.assertIn(slp.FLAG_NO_VERIFIED_REFERENCE, row["flags"])
             self.assertIsNone(row["source_reference"], "no MOF/EAS/ETA reference may be invented")
             self.assertIsNone(row["proposed_arabic"])
-            self.assertIsNone(row["current_arabic"])
 
     def test_export_rows_have_identity_and_english(self):
         rows, _ = slp.export_account_catalog(write=False)
@@ -66,17 +73,36 @@ class TestStage4AccountLanguage(unittest.TestCase):
     def test_dry_run_apply_is_zero_mutation_plan(self):
         rows, _ = slp.export_account_catalog(write=False)
         first = rows[0]["identity"]
-        plan = slp.dry_run_apply_proposals(rows, {first: {"proposed_arabic": "x"}})
+        preview_rows = [dict(row) for row in rows]
+        preview_rows[0]["current_arabic"] = None
+        plan = slp.dry_run_apply_proposals(preview_rows, {first: {"proposed_arabic": "x"}})
         self.assertIn(first, plan["would_update"])
         self.assertEqual(len(plan["missing"]), len(rows) - 1)
         # No mutation can have occurred: nothing writes to the DB.
         self.assertEqual(plan["would_update"], [first])
 
     def test_write_path_uses_private_dir_and_returns_hash(self):
-        rows, manifest = slp.export_account_catalog(write=True)
-        self.assertTrue(manifest["export_file_sha256"])
-        self.assertTrue(manifest["private_location"])
-        self.assertTrue(manifest["private_location"].startswith("<site>/private/"))
+        real_get_app_path = frappe.get_app_path
+        with tempfile.TemporaryDirectory() as temp_dir:
+            private_dir = Path(temp_dir) / "private" / "stage4"
+            manifest_path = Path(temp_dir) / "stage4_export_manifest.json"
+
+            def isolated_app_path(app, *parts):
+                if parts == (slp.GOVERNED_MANIFEST_RELPATH,):
+                    return str(manifest_path)
+                return real_get_app_path(app, *parts)
+
+            with (
+                patch.object(frappe, "get_app_path", side_effect=isolated_app_path),
+                patch.object(frappe.utils, "get_site_path", return_value=str(private_dir)),
+            ):
+                rows, manifest = slp.export_account_catalog(write=True)
+
+            self.assertTrue(rows)
+            self.assertTrue(manifest_path.is_file())
+            self.assertTrue(manifest["export_file_sha256"])
+            self.assertTrue(manifest["private_location"])
+            self.assertTrue(manifest["private_location"].startswith("<site>/private/"))
 
 
 if __name__ == "__main__":
