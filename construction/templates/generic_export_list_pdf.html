@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>{{ doctype | e }} List Export</title>
+    <title>{{ doctype | e }} {{ _("List Export") }}</title>
     <style>
         :root {
             --export-primary: #1a365d;
@@ -156,19 +156,19 @@
     <!-- Header -->
     <div class="doc-header">
         <div>
-            <div class="doc-header__brand">Construction ERP</div>
-            <div class="doc-header__sub">List View Export</div>
+            <div class="doc-header__brand">{{ _("Construction ERP") }}</div>
+            <div class="doc-header__sub">{{ _("List View Export") }}</div>
         </div>
         <div class="doc-header__meta">
             {% if company %}<strong>{{ company | e }}</strong><br>{% endif %}
-            Export Date: {{ export_date | e }}
+            {{ _("Export Date") }}: {{ export_date | e }}
         </div>
     </div>
 
     <!-- Document title block -->
     <div class="doc-title">
         <div class="doc-title__doctype">{{ doctype | e }}</div>
-        <div class="doc-title__name">Total Records: {{ rows|length }}</div>
+        <div class="doc-title__name">{{ _("Total Records") }}: {{ rows|length }}</div>
     </div>
 
     <!-- Data table: grid layout for multiple rows -->
@@ -197,7 +197,7 @@
 
     <!-- Footer -->
     <div class="doc-footer">
-        <span>Construction ERP — List Export</span>
+        <span>{{ _("Construction ERP — List Export") }}</span>
         <span>{{ doctype | e }}</span>
     </div>
 

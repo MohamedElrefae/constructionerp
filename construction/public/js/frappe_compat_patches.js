@@ -111,7 +111,8 @@
 		proto.add_app_item = function (item) {
 			var icon = item.icon
 				? frappe.utils.icon(item.icon)
-				: item.icon_html || (item.icon_url ? '<img class="logo" src="' + item.icon_url + '">' : "");
+				: item.icon_html ||
+				  (item.icon_url ? '<img class="logo" src="' + item.icon_url + '">' : "");
 			$(`<div class="dropdown-menu-item" data-name="${item.name}"
 				data-app-route="${item.route || item.url || ""}">
 				<a ${item.href ? `href="${item.href}"` : ""}>
@@ -122,22 +123,25 @@
 		};
 
 		proto.setup_select_options = function () {
-			this.dropdown_menu.find(".dropdown-menu-item").off("click").on("click", (e) => {
-				var item = $(e.currentTarget);
-				var name = item.attr("data-name");
-				var currentItem = this.dropdown_items.find((entry) => entry.name == name);
-				if (!currentItem) return;
+			this.dropdown_menu
+				.find(".dropdown-menu-item")
+				.off("click")
+				.on("click", (e) => {
+					var item = $(e.currentTarget);
+					var name = item.attr("data-name");
+					var currentItem = this.dropdown_items.find((entry) => entry.name == name);
+					if (!currentItem) return;
 
-				this.dropdown_menu.toggleClass("hidden");
-				this.toggle_active();
-				if (typeof currentItem.onClick === "function") {
-					currentItem.onClick(item);
-				} else if (currentItem.url) {
-					frappe.set_route(currentItem.url);
-				} else if (currentItem.route) {
-					frappe.set_route(currentItem.route);
-				}
-			});
+					this.dropdown_menu.toggleClass("hidden");
+					this.toggle_active();
+					if (typeof currentItem.onClick === "function") {
+						currentItem.onClick(item);
+					} else if (currentItem.url) {
+						frappe.set_route(currentItem.url);
+					} else if (currentItem.route) {
+						frappe.set_route(currentItem.route);
+					}
+				});
 		};
 
 		// Safety net: Frappe's built-in handler calls onClick unconditionally.
@@ -146,19 +150,25 @@
 		if (!proto.__ct_workspace_handler_wrapped && originalSetupSelect) {
 			frappe.ui.SidebarHeader.prototype.setup_select_options = function () {
 				originalSetupSelect.call(this);
-				this.dropdown_menu.find(".dropdown-menu-item").off("click.ctsafe").on("click.ctsafe", (e) => {
-					var item = $(e.currentTarget);
-					var name = item.attr("data-name");
-					var currentItem = this.dropdown_items.find((entry) => entry.name == name);
-					if (!currentItem) return;
-					if (typeof currentItem.onClick !== "function" && (currentItem.url || currentItem.route)) {
-						e.preventDefault();
-						e.stopPropagation();
-						this.dropdown_menu.toggleClass("hidden");
-						this.toggle_active();
-						frappe.set_route(currentItem.url || currentItem.route);
-					}
-				});
+				this.dropdown_menu
+					.find(".dropdown-menu-item")
+					.off("click.ctsafe")
+					.on("click.ctsafe", (e) => {
+						var item = $(e.currentTarget);
+						var name = item.attr("data-name");
+						var currentItem = this.dropdown_items.find((entry) => entry.name == name);
+						if (!currentItem) return;
+						if (
+							typeof currentItem.onClick !== "function" &&
+							(currentItem.url || currentItem.route)
+						) {
+							e.preventDefault();
+							e.stopPropagation();
+							this.dropdown_menu.toggleClass("hidden");
+							this.toggle_active();
+							frappe.set_route(currentItem.url || currentItem.route);
+						}
+					});
 			};
 			proto.__ct_workspace_handler_wrapped = true;
 		}
@@ -195,7 +205,10 @@
 			) {
 				var label = item.label;
 				item.onClick = function () {
-					var slug = frappe.router && frappe.router.slug ? frappe.router.slug(label) : label.toLowerCase().replace(/ /g, "-");
+					var slug =
+						frappe.router && frappe.router.slug
+							? frappe.router.slug(label)
+							: label.toLowerCase().replace(/ /g, "-");
 					frappe.set_route("Workspaces", slug);
 				};
 			}

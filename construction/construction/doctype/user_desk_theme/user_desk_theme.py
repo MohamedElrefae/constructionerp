@@ -2,6 +2,7 @@
 # For license information, please see license.txt
 
 import frappe
+from frappe import _
 from frappe.model.document import Document
 
 
@@ -14,21 +15,21 @@ class UserDeskTheme(Document):
         try:
             site_settings = frappe.get_doc("Modern Theme Settings")
             if not site_settings.allow_user_override and not self.inherit_from_site:
-                frappe.throw("User theme overrides are not allowed by administrator")
+                frappe.throw(_("User theme overrides are not allowed by administrator"))
         except frappe.DoesNotExistError:
             pass  # No site settings yet, allow override
 
         # Validate theme references
         if not self.inherit_from_site:
             if self.light_theme and not frappe.db.exists("Construction Theme", self.light_theme):
-                frappe.throw(f"Light theme '{self.light_theme}' does not exist")
+                frappe.throw(_("Light theme '{0}' does not exist").format(self.light_theme))
 
             if self.dark_theme and not frappe.db.exists("Construction Theme", self.dark_theme):
-                frappe.throw(f"Dark theme '{self.dark_theme}' does not exist")
+                frappe.throw(_("Dark theme '{0}' does not exist").format(self.dark_theme))
 
         # Ensure user is valid
         if not frappe.db.exists("User", self.user):
-            frappe.throw(f"User '{self.user}' does not exist")
+            frappe.throw(_("User '{0}' does not exist").format(self.user))
 
         self.validate_typography()
 
@@ -58,7 +59,7 @@ class UserDeskTheme(Document):
             "Almarai",
         }
         if self.desk_font_family and self.desk_font_family not in allowed_fonts:
-            frappe.throw("Invalid desk font family")
+            frappe.throw(_("Invalid desk font family"))
         if self.desk_font_family == "Inherit":
             self.desk_font_family = "System Default"
         for fieldname in (
@@ -69,7 +70,7 @@ class UserDeskTheme(Document):
             "menu_font_family",
         ):
             if self.get(fieldname) and self.get(fieldname) not in allowed_fonts:
-                frappe.throw(f"Invalid {frappe.unscrub(fieldname)}")
+                frappe.throw(_("Invalid {0}").format(frappe.unscrub(fieldname)))
 
         size_defaults = (
             ("desk_font_size", 14),
@@ -87,10 +88,10 @@ class UserDeskTheme(Document):
             try:
                 value = int(value)
             except (TypeError, ValueError):
-                frappe.throw(f"{frappe.unscrub(fieldname)} must be a number")
+                frappe.throw(_("{0} must be a number").format(frappe.unscrub(fieldname)))
             self.set(fieldname, value)
             if value < 11 or value > 20:
-                frappe.throw(f"{frappe.unscrub(fieldname)} must be between 11 and 20 px")
+                frappe.throw(_("{0} must be between 11 and 20 px").format(frappe.unscrub(fieldname)))
 
         allowed_weights = {"300", "400", "500", "600", "700", 300, 400, 500, 600, 700}
         weight_defaults = (
@@ -106,14 +107,14 @@ class UserDeskTheme(Document):
             if not value:
                 self.set(fieldname, default_value)
             elif str(value) not in allowed_weights:
-                frappe.throw(f"Invalid {frappe.unscrub(fieldname)}")
+                frappe.throw(_("Invalid {0}").format(frappe.unscrub(fieldname)))
             else:
                 self.set(fieldname, str(value))
 
     def before_insert(self):
         """Ensure unique user constraint"""
         if frappe.db.exists("User Desk Theme", {"user": self.user}):
-            frappe.throw(f"Theme settings already exist for user '{self.user}'")
+            frappe.throw(_("Theme settings already exist for user '{0}'").format(self.user))
 
     def on_update(self):
         """Clear cache when user theme is updated"""

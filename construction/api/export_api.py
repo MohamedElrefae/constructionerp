@@ -25,17 +25,31 @@ from construction.construction.utils.export_sanitizer import escape_html_for_pdf
 
 # ── Non-exportable fieldtypes ────────────────────────────────────────────────
 NON_EXPORTABLE_FIELDTYPES = {
-    "Section Break", "Column Break", "Tab Break",
-    "Table", "Table MultiSelect",
-    "HTML", "HTML Editor",
-    "Button", "Attach", "Attach Image",
-    "Signature", "Barcode", "Geolocation",
-    "Fold", "Heading",
+    "Section Break",
+    "Column Break",
+    "Tab Break",
+    "Table",
+    "Table MultiSelect",
+    "HTML",
+    "HTML Editor",
+    "Button",
+    "Attach",
+    "Attach Image",
+    "Signature",
+    "Barcode",
+    "Geolocation",
+    "Fold",
+    "Heading",
 }
 
 # ── System fields hidden by default ─────────────────────────────────────────
 SYSTEM_FIELDS_HIDDEN_BY_DEFAULT = {
-    "owner", "modified_by", "idx", "parent", "parenttype", "parentfield",
+    "owner",
+    "modified_by",
+    "idx",
+    "parent",
+    "parenttype",
+    "parentfield",
     "docstatus",
 }
 
@@ -43,6 +57,7 @@ SYSTEM_FIELDS_HIDDEN_BY_DEFAULT = {
 # ─────────────────────────────────────────────────────────────────────────────
 #  Public whitelisted endpoints
 # ─────────────────────────────────────────────────────────────────────────────
+
 
 @frappe.whitelist()
 def export_doctype_excel(doctype, docname, column_config=None):
@@ -99,7 +114,9 @@ def export_doctype_list_excel(doctype, filters=None, column_config=None):
         if not frappe.has_permission(doctype, ptype="read"):
             frappe.throw(_("You do not have permission to read {0}.").format(doctype), frappe.PermissionError)
         if not frappe.has_permission(doctype, ptype="export"):
-            frappe.throw(_("You do not have export permission for {0}.").format(doctype), frappe.PermissionError)
+            frappe.throw(
+                _("You do not have export permission for {0}.").format(doctype), frappe.PermissionError
+            )
 
         columns = _resolve_columns(doctype, column_config)
         if not columns:
@@ -189,7 +206,9 @@ def export_doctype_list_pdf(doctype, filters=None, column_config=None):
         if not frappe.has_permission(doctype, ptype="read"):
             frappe.throw(_("You do not have permission to read {0}.").format(doctype), frappe.PermissionError)
         if not frappe.has_permission(doctype, ptype="export"):
-            frappe.throw(_("You do not have export permission for {0}.").format(doctype), frappe.PermissionError)
+            frappe.throw(
+                _("You do not have export permission for {0}.").format(doctype), frappe.PermissionError
+            )
 
         columns = _resolve_columns(doctype, column_config)
         if not columns:
@@ -230,6 +249,7 @@ def export_doctype_list_pdf(doctype, filters=None, column_config=None):
 #  Internal helpers
 # ─────────────────────────────────────────────────────────────────────────────
 
+
 def _sanitize_filters(doctype, filters):
     """
     Clean filters to only include valid docfield names or standard fields for the doctype.
@@ -250,7 +270,13 @@ def _sanitize_filters(doctype, filters):
     try:
         meta = frappe.get_meta(doctype)
         valid_fields = {df.fieldname for df in meta.fields} | {
-            "name", "creation", "modified", "modified_by", "owner", "docstatus", "idx"
+            "name",
+            "creation",
+            "modified",
+            "modified_by",
+            "owner",
+            "docstatus",
+            "idx",
         }
         if meta.istable:
             valid_fields.update({"parent", "parenttype", "parentfield"})
@@ -269,7 +295,7 @@ def _sanitize_filters(doctype, filters):
     elif isinstance(parsed, list):
         sanitized = []
         for f in parsed:
-            if isinstance(f, (list, tuple)):
+            if isinstance(f, list | tuple):
                 fname = f[1] if len(f) == 4 else (f[0] if len(f) >= 1 else None)
                 if fname in IGNORED_KEYS:
                     continue
@@ -285,13 +311,15 @@ def _sanitize_filters(doctype, filters):
         return sanitized
     return {}
 
+
 def _check_global_export_enabled():
     """Raise PermissionError if the global export toggle is disabled."""
     try:
         settings = frappe.get_single("Construction Settings")
         if hasattr(settings, "enable_global_export_menu") and not settings.enable_global_export_menu:
-            frappe.throw(_("Global Export Menu is disabled in Construction Settings."),
-                         frappe.PermissionError)
+            frappe.throw(
+                _("Global Export Menu is disabled in Construction Settings."), frappe.PermissionError
+            )
     except frappe.DoesNotExistError:
         pass  # Settings doctype not yet migrated; allow export
 
@@ -340,12 +368,14 @@ def _resolve_columns(doctype, column_config_json):
                 if key not in permitted_fields and key not in standard_allowed:
                     continue
                 meta_f = meta_field_map.get(key)
-                cols.append({
-                    "field_key": key,
-                    "label": c.get("label") or (_(meta_f.label) if meta_f else key),
-                    "fieldtype": c.get("fieldtype") or (meta_f.fieldtype if meta_f else "Data"),
-                    "options": c.get("options") or (meta_f.options or "" if meta_f else ""),
-                })
+                cols.append(
+                    {
+                        "field_key": key,
+                        "label": c.get("label") or (_(meta_f.label) if meta_f else key),
+                        "fieldtype": c.get("fieldtype") or (meta_f.fieldtype if meta_f else "Data"),
+                        "options": c.get("options") or (meta_f.options or "" if meta_f else ""),
+                    }
+                )
             return cols
         except (ValueError, TypeError):
             pass  # Fall through to auto-generate
@@ -361,12 +391,14 @@ def _resolve_columns(doctype, column_config_json):
             continue
         if f.fieldname in SYSTEM_FIELDS_HIDDEN_BY_DEFAULT:
             continue
-        cols.append({
-            "field_key": f.fieldname,
-            "label": _(f.label or f.fieldname),
-            "fieldtype": f.fieldtype,
-            "options": f.options or "",
-        })
+        cols.append(
+            {
+                "field_key": f.fieldname,
+                "label": _(f.label or f.fieldname),
+                "fieldtype": f.fieldtype,
+                "options": f.options or "",
+            }
+        )
     return cols
 
 
@@ -446,6 +478,7 @@ def _render_pdf_template(doctype, docname, columns, row):
     """Render the generic export PDF Jinja template."""
     company = frappe.defaults.get_global_default("company") or ""
     from frappe.utils import now_datetime
+
     export_date = format_datetime(now_datetime())
 
     template_path = "construction/templates/generic_export_pdf.html"
@@ -466,6 +499,7 @@ def _render_list_pdf_template(doctype, columns, rows):
     """Render the generic export list PDF Jinja template."""
     company = frappe.defaults.get_global_default("company") or ""
     from frappe.utils import now_datetime
+
     export_date = format_datetime(now_datetime())
 
     template_path = "construction/templates/generic_export_list_pdf.html"
@@ -483,14 +517,16 @@ def _render_list_pdf_template(doctype, columns, rows):
 
 def _save_file(content, fname, doctype, docname, is_private=1, content_type=None):
     """Save binary content as a Frappe File and return its file_url."""
-    file_doc = frappe.get_doc({
-        "doctype": "File",
-        "file_name": fname,
-        "attached_to_doctype": doctype,
-        "attached_to_name": docname,
-        "is_private": is_private,
-        "content": content,
-    })
+    file_doc = frappe.get_doc(
+        {
+            "doctype": "File",
+            "file_name": fname,
+            "attached_to_doctype": doctype,
+            "attached_to_name": docname,
+            "is_private": is_private,
+            "content": content,
+        }
+    )
     # Save the file. Uses insert() instead of save(ignore_permissions=True)
     # to enforce proper user write permissions on files.
     file_doc.insert(ignore_permissions=False)

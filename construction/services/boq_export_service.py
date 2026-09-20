@@ -70,9 +70,7 @@ class BOQExportService:
     }
 
     @staticmethod
-    def apply_column_config(
-        default_columns: List[Dict], column_config_json: Any = None
-    ) -> List[Dict]:
+    def apply_column_config(default_columns: List[Dict], column_config_json: Any = None) -> List[Dict]:
         """
         Merge user column_config with default columns.
         Returns ordered list of {key, label, width} dicts.
@@ -93,7 +91,7 @@ class BOQExportService:
         if column_config_json is None:
             return sanitized_defaults
 
-        if isinstance(column_config_json, (list, tuple)):
+        if isinstance(column_config_json, list | tuple):
             column_config = column_config_json
         else:
             try:
@@ -102,7 +100,7 @@ class BOQExportService:
                 frappe.log_error("Invalid column_config JSON, falling back to defaults", "BOQ Export")
                 return sanitized_defaults
 
-        if not isinstance(column_config, (list, tuple)):
+        if not isinstance(column_config, list | tuple):
             return sanitized_defaults
 
         # Build lookup of default columns by key
@@ -128,9 +126,7 @@ class BOQExportService:
                 numeric_width = float(default.get("width", 10))
 
             label = col.get("label") or default.get("label") or field_key
-            result.append(
-                {"key": field_key, "label": label, "width": round(numeric_width, 2)}
-            )
+            result.append({"key": field_key, "label": label, "width": round(numeric_width, 2)})
 
         return result
 
@@ -561,7 +557,13 @@ class BOQExportService:
             ws.cell(row=1, column=1).alignment = Alignment(horizontal="center")
 
             ws.cell(row=2, column=1, value=f"{BOQExportService._label('Project')}:")
-            ws.cell(row=2, column=2, value=sanitize_spreadsheet_value(header_data.get("project_name", header_data.get("project", ""))))
+            ws.cell(
+                row=2,
+                column=2,
+                value=sanitize_spreadsheet_value(
+                    header_data.get("project_name", header_data.get("project", ""))
+                ),
+            )
             ws.cell(row=2, column=4, value=f"{BOQExportService._label('BOQ Type')}:")
             ws.cell(row=2, column=5, value=sanitize_spreadsheet_value(header_data.get("boq_type", "")))
             ws.cell(row=2, column=7, value=f"{BOQExportService._label('Status')}:")

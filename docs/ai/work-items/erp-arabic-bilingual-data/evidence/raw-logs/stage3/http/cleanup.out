@@ -1,0 +1,12 @@
+Apps in this namespace:
+frappe, erpnext, construction
+
+In [1]: 
+In [2]: 
+In [3]: 
+In [4]:    ...:    ...:    ...:    ...:    ...:    ...:    ...: 
+In [5]: 
+In [6]: {"cleanup": "done", "removed": ["CT-HTTP-1 - CT HTTP Probe - E"], "leftover": [], "utc": "2026-09-10T00:05:51Z"}
+
+In [7]: 
+exit=0

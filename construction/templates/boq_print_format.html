@@ -219,7 +219,7 @@
     </table>
 
     <div class="footer">
-        <p>Construction ERP - BOQ Management System</p>
+        <p>{{ _("Construction ERP - BOQ Management System") }}</p>
         <p>{{ (labels.get("BOQ ID", "BOQ ID") if labels is defined and labels else "BOQ ID") | e }}: {{ (header.name if header is defined and header else '') | e }} | {{ (labels.get("Total Contract Value", "Total Contract Value") if labels is defined and labels else "Total Contract Value") | e }}: {{ "%.2f"|format((header.total_contract_value if header is defined and header else 0.0) or 0.0) }}</p>
     </div>
 </body>

@@ -1,3 +1,4 @@
+/* global vfcDebugLog */
 /* ═══════════════════════════════════════════════════════════════════════
    vfc_layout_engine.js — Generic Form Layout Engine
    ─────────────────────────────────────────────────────────────────────
@@ -220,7 +221,8 @@
 						if (denClass) {
 							const density = parseInt(denClass.split("-").pop(), 10);
 							if (density !== 2 && !hasTabs) {
-								vfcDebugLog("log", 
+								vfcDebugLog(
+									"log",
 									`[LE] No profile, non-default density (${density}) — density rendering.`
 								);
 								this.renderWithDensity(frm, density);
@@ -237,7 +239,8 @@
 					const retries = this._retryCounts.get(key) || 0;
 					if (retries < 20) {
 						this._retryCounts.set(key, retries + 1);
-						vfcDebugLog("log", 
+						vfcDebugLog(
+							"log",
 							`[LE] layoutRoot not found for ${key}. Scheduling retry ${
 								retries + 1
 							}/20 in 250ms...`
@@ -247,7 +250,8 @@
 						}, 250);
 						this._retryTimers.set(key, timer);
 					} else {
-						vfcDebugLog("warn", 
+						vfcDebugLog(
+							"warn",
 							`[LE] Retry limit reached. Could not find layoutRoot for ${key}.`
 						);
 						this._retryCounts.delete(key);
@@ -372,7 +376,8 @@
 
 					// Unknown field guard
 					if (!knownFieldnames.has(fn)) {
-						vfcDebugLog("warn", 
+						vfcDebugLog(
+							"warn",
 							`[LE] Profile '${profile.profile_name}': unknown fieldname '${fn}' on ${dt} — skipping`
 						);
 						return;
@@ -394,8 +399,14 @@
 					}
 
 					// Handle runtime visibility (user settings, permissions, depends_on)
-					if (fieldObj.df && (fieldObj.df.hidden || fieldObj.df.invisible || fieldObj.df.hidden_due_to_dependency)) {
-						vfcDebugLog("log", 
+					if (
+						fieldObj.df &&
+						(fieldObj.df.hidden ||
+							fieldObj.df.invisible ||
+							fieldObj.df.hidden_due_to_dependency)
+					) {
+						vfcDebugLog(
+							"log",
 							`[LE] Skipping hidden field ${fn} (df.hidden=${fieldObj.df.hidden}, df.invisible=${fieldObj.df.invisible}, df.hidden_due_to_dependency=${fieldObj.df.hidden_due_to_dependency})`
 						);
 						return;
@@ -436,7 +447,7 @@
 					gridEl.appendChild(cell);
 					hasVisibleField = true;
 				});
-    
+
 				// Only append section if it has at least one field (or is collapsible)
 				if (hasVisibleField || sec.collapsible) {
 					if (hasTabs) {
@@ -604,14 +615,19 @@
 			const visibleNativeCount = this._countVisibleNativeLayoutShells(layoutRoot);
 			const hiddenEmptySectionCount = this._hideEmptyCustomSections(layoutRoot);
 			const sectionSummary = this._getSectionSummary(layoutRoot);
-			vfcDebugLog("log", `[LE] Verification ${phase} complete. missingFields=${missingFields}`);
+			vfcDebugLog(
+				"log",
+				`[LE] Verification ${phase} complete. missingFields=${missingFields}`
+			);
 			if (hiddenNativeCount || visibleNativeCount) {
-				vfcDebugLog("log", 
+				vfcDebugLog(
+					"log",
 					`[LE] Verification ${phase}: hiddenNativeShells=${hiddenNativeCount}, visibleNativeShells=${visibleNativeCount}`
 				);
 			}
 			if (hiddenEmptySectionCount) {
-				vfcDebugLog("log", 
+				vfcDebugLog(
+					"log",
 					`[LE] Verification ${phase}: hiddenEmptySections=${hiddenEmptySectionCount}`
 				);
 			}
@@ -621,7 +637,8 @@
 				const retries = this._retryCounts.get(key) || 0;
 				if (retries < 20) {
 					this._retryCounts.set(key, retries + 1);
-					vfcDebugLog("log", 
+					vfcDebugLog(
+						"log",
 						`[LE] Missing field wrappers detected for ${key}. Scheduling retry ${
 							retries + 1
 						}/20 in 250ms...`
@@ -631,7 +648,8 @@
 					}, 250);
 					this._retryTimers.set(key, timer);
 				} else {
-					vfcDebugLog("warn", 
+					vfcDebugLog(
+						"warn",
 						`[LE] Retry limit reached for ${key}. Some field wrappers could not be attached.`
 					);
 					this._retryCounts.delete(key);
@@ -645,7 +663,10 @@
 		_hasMissingFields(frm, state, phase) {
 			const layoutRoot = this._getLayoutRoot(frm);
 			if (!layoutRoot || !layoutRoot.isConnected) {
-				vfcDebugLog("log", `[LE] Verification ${phase}: current layoutRoot missing or detached`);
+				vfcDebugLog(
+					"log",
+					`[LE] Verification ${phase}: current layoutRoot missing or detached`
+				);
 				return true;
 			}
 
@@ -653,7 +674,13 @@
 				const fieldObj = frm.fields_dict[fn];
 				if (!fieldObj) continue;
 
-				if (fieldObj.df && (fieldObj.df.hidden || fieldObj.df.invisible || fieldObj.df.hidden_due_to_dependency)) continue;
+				if (
+					fieldObj.df &&
+					(fieldObj.df.hidden ||
+						fieldObj.df.invisible ||
+						fieldObj.df.hidden_due_to_dependency)
+				)
+					continue;
 				if (state.profileHiddenFieldnames.has(fn)) continue;
 
 				const wrapper = fieldObj.wrapper;
@@ -668,7 +695,8 @@
 					return true;
 				}
 				if (!nativeEl.isConnected) {
-					vfcDebugLog("log", 
+					vfcDebugLog(
+						"log",
 						`[LE] Verification ${phase}: nativeEl not connected to DOM for ${fn}`
 					);
 					return true;
@@ -676,7 +704,8 @@
 
 				const cell = nativeEl.parentNode;
 				if (!cell?.classList?.contains("vfc-le-cell")) {
-					vfcDebugLog("log", 
+					vfcDebugLog(
+						"log",
 						`[LE] Verification ${phase}: nativeEl parent is NOT .vfc-le-cell for ${fn}`
 					);
 					return true;
@@ -684,14 +713,16 @@
 
 				const section = cell.closest(".vfc-le-section");
 				if (!section || !layoutRoot.contains(section)) {
-					vfcDebugLog("log", 
+					vfcDebugLog(
+						"log",
 						`[LE] Verification ${phase}: ${fn} is not inside the current VFC section tree`
 					);
 					return true;
 				}
 
 				if (nativeEl.closest("[data-vfc-hidden='1']")) {
-					vfcDebugLog("log", 
+					vfcDebugLog(
+						"log",
 						`[LE] Verification ${phase}: ${fn} is inside a hidden native Frappe container`
 					);
 					return true;
@@ -706,7 +737,8 @@
 					rect.height < 2 ||
 					rect.width < 2
 				) {
-					vfcDebugLog("log", 
+					vfcDebugLog(
+						"log",
 						`[LE] Verification ${phase}: ${fn} is currently not painted. display=${
 							style.display
 						}, visibility=${style.visibility}, opacity=${
@@ -869,7 +901,8 @@
 					const initCollapsed = !!sec.collapsed_by_default;
 					// Always set the attribute explicitly so state is unambiguous
 					secEl.setAttribute("data-vfc-collapsed", initCollapsed ? "1" : "0");
-					vfcDebugLog("log", 
+					vfcDebugLog(
+						"log",
 						`[LE] Section "${
 							sec.label || sec.id
 						}": collapsible=true, collapsed_by_default=${
@@ -963,7 +996,13 @@
 						const fieldObj = frm.fields_dict[f.fieldname];
 						if (!fieldObj || !fieldObj.wrapper) return;
 
-						if (fieldObj.df && (fieldObj.df.hidden || fieldObj.df.invisible || fieldObj.df.hidden_due_to_dependency)) return;
+						if (
+							fieldObj.df &&
+							(fieldObj.df.hidden ||
+								fieldObj.df.invisible ||
+								fieldObj.df.hidden_due_to_dependency)
+						)
+							return;
 
 						const cell = document.createElement("div");
 						cell.className = "vfc-le-cell";
@@ -1192,7 +1231,8 @@
 				vfcDebugLog("warn", "[LE] renderWithDensity: no profile built");
 				return;
 			}
-			vfcDebugLog("log", 
+			vfcDebugLog(
+				"log",
 				`[LE] renderWithDensity: colCount=${colCount}, profile sections=${profile.sections.length}`
 			);
 
@@ -1276,7 +1316,8 @@
 				if (hasVisibleField || sec.collapsible) {
 					layoutRoot.appendChild(sectionEl);
 					injectedContainers.push(sectionEl);
-					vfcDebugLog("log", 
+					vfcDebugLog(
+						"log",
 						`[LE] renderWithDensity: section "${sec.label || sec.fieldname}" → ${
 							fields.length
 						} fields`
@@ -1284,7 +1325,8 @@
 				}
 			});
 
-			vfcDebugLog("log", 
+			vfcDebugLog(
+				"log",
 				`[LE] renderWithDensity: rendered ${totalFieldsRendered} fields across ${injectedContainers.length} sections`
 			);
 			this._activeSections.set(frm.doctype + "__" + frm.docname, injectedContainers);

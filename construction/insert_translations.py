@@ -189,7 +189,9 @@ def execute(commit=False, dry_run=False):
         frappe.db.commit()
 
     _clear_translation_caches()
-    print(f"Successfully processed {count} translations from {len(translations)} reviewed Arabic entries (insert-only, non-overwriting).")
+    print(
+        f"Successfully processed {count} translations from {len(translations)} reviewed Arabic entries (insert-only, non-overwriting)."
+    )
 
 
 @frappe.whitelist()

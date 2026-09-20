@@ -1,0 +1,70 @@
+{
+  "finding_id": "P3-F001",
+  "recorded_utc": "2026-09-11T21:18:17.054116+00:00",
+  "status": "RESOLVED",
+  "architect_job": "job-8e3944c2b9cf5637a53cac50",
+  "architect_verdict": "PROPOSED",
+  "plan_revision_hash": "8c1c763d6c81a39b010de5c6ad5f319d084ecb2f90027e4cb6a09a90bd292dc1",
+  "reviewer_job": "job-0c6a7cc3df086796fa2d7353",
+  "reviewer_failure_class": "EVIDENCE_UNAVAILABLE",
+  "canonical_contract": "/home/mohamed/frappe-bench/worktrees/scope-context-portability-pilot/docs/ai/work-items/scope-context-portability/CANONICAL_PLAN.md",
+  "canonical_sha256": "93e193cab827f67bbf6cfda794ef51429641e81b30facbbebbfa31eb9dfb2f89",
+  "reviewer_read_artifacts": [
+    "/home/mohamed/frappe-bench/worktrees/scope-context-portability-pilot/docs/ai/work-items/scope-context-portability/runs/job-8e3944c2b9cf5637a53cac50/results/plan.md"
+  ],
+  "cause": "Engine._prepare exposes the current proposed plan only. The native sandbox masks the work-item directory, so the original canonical contract is inaccessible after plan_artifact changes. The canonical contract exists on the host.",
+  "proposed_correction": {
+    "source": "orchestrator/engine.py",
+    "behavior": "Include both the original configured contract and the current proposed plan in explicit read artifacts, deduplicated, without exposing the whole work-item directory. Preserve existing candidate and plan binding checks.",
+    "verification": "Add a regression for reviewer contract visibility after architect proposal; rerun all 110 existing tests plus the new regression; regenerate source freeze after success.",
+    "retry": "Resume the accepted FAILED reviewer through the normal owner resume mechanism; retain all original job artifacts.",
+    "authorization_required": "Canonical Plan section 10 requires owner approval and Phase 2 rerun for any frozen orchestrator change."
+  },
+  "export_snapshot": {
+    "active_jobs": [],
+    "approval_refs": [],
+    "authority": "sqlite-checkpoint-export-only",
+    "candidate_id": "38e04df7b6feeef3acd5a726d98c663da05152ef356eb79195bd45c6858e6db2",
+    "completed_dependencies": [
+      "job-65f2dc51850d479768d6760a",
+      "job-e0ad43a48a20acd89a5eb939",
+      "job-8e3944c2b9cf5637a53cac50",
+      "job-0c6a7cc3df086796fa2d7353"
+    ],
+    "escalation": {
+      "last_snapshot_digest": null,
+      "unchanged_rounds": 0,
+      "unsuccessful_cycles": 0
+    },
+    "exported_utc": "2026-09-11T21:13:23.941911Z",
+    "pause_reason": "EVIDENCE_UNAVAILABLE",
+    "plan_revision_hash": "8c1c763d6c81a39b010de5c6ad5f319d084ecb2f90027e4cb6a09a90bd292dc1",
+    "resume_to": "PLAN_SUBMITTED",
+    "revision": 10,
+    "schema_version": 1,
+    "stage": "1",
+    "stages": {},
+    "status": "PAUSED",
+    "work_item": "scope-context-portability"
+  },
+  "pilot_tracked_diff": "",
+  "changes_applied": "Evidence and implementation log only; no engine correction, builder dispatch, commit or ERP operation.",
+  "amendment": {
+    "authority": "Owner Authorization: Reviewer Contract Visibility Amendment (P3-F001), 2026-09-12",
+    "finding": "P3-F001",
+    "previous_source_manifest_sha256": "4e01059e861249015363eabb487731477952c3943f0160f582f33485ebb1cc5c",
+    "modified_frozen_files": [
+      "orchestrator/engine.py",
+      "orchestrator/tests/test_engine.py"
+    ],
+    "project_commit_created": false
+  },
+  "source_manifest_sha256": "2753ff07fbe93f84a8e4bfb6e687a966cf52e27476d3c9140a4fa9eed2e6c5c9",
+  "validation": "phase-2-run-06.xml",
+  "native_verification": {
+    "job_id": "job-eb36e5f169894f960d989f64",
+    "verdict": "PASS",
+    "session": "01a0925b-0edb-7390-9bc9-3fc6c7cd775e",
+    "evidence": "phase-3-contract-visibility-retry.json"
+  }
+}

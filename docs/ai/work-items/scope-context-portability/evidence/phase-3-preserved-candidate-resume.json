@@ -1,0 +1,305 @@
+{
+  "recorded_utc": "2026-09-11T22:19:35.808919Z",
+  "authority": "Owner Authorization Directive: Reconciliation of Rejected Builder Job (job-95c14f13265eceab3a38e3b4)",
+  "reconciled_job": "job-95c14f13265eceab3a38e3b4",
+  "authorized_candidate_id": "c2af221d73b069cdddaa92dad7d4caec072246854dbde1bb09dfae2df7267d41",
+  "authorized_tree_oid": "b9c328ff603414f652713f61cf745829a728e07d",
+  "reconciliation_events": [
+    {
+      "seq": 23,
+      "event_id": "reconcile-job-95c14f13265eceab3a38e3b4",
+      "kind": "reconcile_job",
+      "payload": {
+        "decision": "ABANDONED_AFTER_OWNER_REVIEW",
+        "job_id": "job-95c14f13265eceab3a38e3b4",
+        "owner_evidence_sha256": "abb9e713a4ad48780ec5507d19b26645e6ce0379d288aeb56ca2bce98671b939",
+        "role": "builder"
+      },
+      "created_utc": "2026-09-11T22:16:33.663329Z"
+    },
+    {
+      "seq": 24,
+      "event_id": "candidate-300ab89c7b724c7cb85caeb2423d3398",
+      "kind": "refresh_candidate",
+      "payload": {
+        "candidate": {
+          "archive_sha256": "457b32aaad4378df971f50e06cc32c339e53aa6cf4cc1b92d50a1b74b3b15483",
+          "candidate_id": "c2af221d73b069cdddaa92dad7d4caec072246854dbde1bb09dfae2df7267d41",
+          "manifest": {
+            "base_commit": "4b77803af418cea8459c4cb7d9a0248674845da3",
+            "branch": "feature/scope-context-portability",
+            "entries": [
+              {
+                "content_sha256": "331e42e98c6ca053564c6a3a41167b7c5be816b454e05f9ff34057443a7c326e",
+                "kind": "file",
+                "mode": "100644",
+                "path": "docs/ai/SCHEMA_FACTS.md"
+              },
+              {
+                "content_sha256": "dc83593b3ac302b5a42aa567ce81f5f4f62eef74a79d80e593c157bc26036d64",
+                "kind": "file",
+                "mode": "100644",
+                "path": "scripts/ai_context_check.py"
+              },
+              {
+                "content_sha256": "9d86d07a58efdc74dab3a5b557df0c059cde5f592984803b28b400e1e070ce7f",
+                "kind": "file",
+                "mode": "100644",
+                "path": "tests_offline/conftest.py"
+              },
+              {
+                "content_sha256": "34811f573b6ae709192d42de9ff9597650402c7846df51b03d1e9e71ac96bc65",
+                "kind": "file",
+                "mode": "100644",
+                "path": "tests_offline/sitecustomize.py"
+              },
+              {
+                "content_sha256": "f792849a832161713684ec71e7a5160108bdea6da53008966c97bf73f20490a6",
+                "kind": "file",
+                "mode": "100644",
+                "path": "tests_offline/test_checkers.py"
+              }
+            ],
+            "kind": "code"
+          },
+          "manifest_hash": "c2af221d73b069cdddaa92dad7d4caec072246854dbde1bb09dfae2df7267d41",
+          "tree_oid": "b9c328ff603414f652713f61cf745829a728e07d"
+        },
+        "reason": "Owner authorized reconciliation of rejected builder job-95c14f13265eceab3a38e3b4 and bound preserved candidate c2af221d73b0"
+      },
+      "created_utc": "2026-09-11T22:16:34.270918Z"
+    }
+  ],
+  "state": {
+    "work_item": "scope-context-portability",
+    "stage": "1",
+    "status": "PAUSED",
+    "next_roles": [],
+    "active_jobs": [],
+    "candidate": {
+      "archive_sha256": "f1c2e090804b322e6fa78efd47b2ae0d144ce12032d02119744d8b4d0b53fc2a",
+      "candidate_id": "532f0175dc88f19d111a42c498b60eb0bd832d412af12d4d7df7247b48d6b133",
+      "manifest": {
+        "base_commit": "4b77803af418cea8459c4cb7d9a0248674845da3",
+        "branch": "feature/scope-context-portability",
+        "entries": [
+          {
+            "content_sha256": "331e42e98c6ca053564c6a3a41167b7c5be816b454e05f9ff34057443a7c326e",
+            "kind": "file",
+            "mode": "100644",
+            "path": "docs/ai/SCHEMA_FACTS.md"
+          },
+          {
+            "content_sha256": "dc83593b3ac302b5a42aa567ce81f5f4f62eef74a79d80e593c157bc26036d64",
+            "kind": "file",
+            "mode": "100644",
+            "path": "scripts/ai_context_check.py"
+          },
+          {
+            "content_sha256": "9d86d07a58efdc74dab3a5b557df0c059cde5f592984803b28b400e1e070ce7f",
+            "kind": "file",
+            "mode": "100644",
+            "path": "tests_offline/conftest.py"
+          },
+          {
+            "content_sha256": "34811f573b6ae709192d42de9ff9597650402c7846df51b03d1e9e71ac96bc65",
+            "kind": "file",
+            "mode": "100644",
+            "path": "tests_offline/sitecustomize.py"
+          },
+          {
+            "content_sha256": "de973c96019c960e1c17bdb2c7d84dedc7e0af8d6c27c6abce7d873f101f2598",
+            "kind": "file",
+            "mode": "100644",
+            "path": "tests_offline/test_checkers.py"
+          }
+        ],
+        "kind": "code"
+      },
+      "manifest_hash": "532f0175dc88f19d111a42c498b60eb0bd832d412af12d4d7df7247b48d6b133",
+      "tree_oid": "2f546c2b88f288a258a3c603ab88ab2b380b06c0"
+    },
+    "plan_revision_hash": "8c1c763d6c81a39b010de5c6ad5f319d084ecb2f90027e4cb6a09a90bd292dc1",
+    "scope_hash": "f748d729630d1f063433bc4c615643b61e075f3123b3f722cadf8784aa6a191f",
+    "round": 6,
+    "attempt": 15,
+    "cursor": 29,
+    "revision": 29,
+    "findings": [
+      {
+        "affected_requirements": [
+          "SCP-R6"
+        ],
+        "blocking": true,
+        "classification": "implementation_defect",
+        "evidence_refs": [
+          {
+            "artifact_id": "job-54cc536f7cfbaf59553b46fe-native-events",
+            "sha256": "57e5a272f64569acdee276528f9f5df811c452961abdae50e0aa2b38cd4b2fee",
+            "visibility": "public"
+          }
+        ],
+        "finding_id": "SCP-002",
+        "schema_version": 1,
+        "snapshot": {
+          "normalized_material_ref": {
+            "artifact_id": "job-76240f387e35a58cf37c6430-normalization-0",
+            "sha256": "d81b864eecacaf4690f0284dc6bd8bff24413a410939688fedc8b6f090065efe",
+            "visibility": "public"
+          },
+          "relevant_evidence_digest": "feb69a2cefb6fd8c6a4fd1d69434e1f086782b51497ab27fa8145c534e602a23",
+          "reproduction_digest": "1510f18200511c606edb9732e5edfded1a2085056d9710448ad13114dd60be69"
+        },
+        "summary": "Partial repair: scripts/ai_context_check.py:22 now rejects non-object JSON and the former exception escape is repaired. The remaining regression requirement is unmet: tests_offline/test_checkers.py:66-72 and :113-118 exercise only _read_json through _check; no committed negative test asserts main/CLI exit 1, parseable JSON with the relevant FAIL, and absence of an uncaught traceback. Normalized reproduction: inspect and execute the frozen suite's negative JSON cases; they never traverse the CLI/reporting boundary. Add retained end-to-end malformed/structurally-invalid and missing-input failure cases, including drift-child error/launch failure assertions required by the approved plan. Route the remaining test implementation to builder."
+      },
+      {
+        "affected_requirements": [
+          "SCP-R6"
+        ],
+        "blocking": true,
+        "classification": "implementation_defect",
+        "evidence_refs": [
+          {
+            "artifact_id": "job-83c42acc9d50346ac7c54635-native-events",
+            "sha256": "9c7c7f94dc83e712f44211bcfbb3a25c15cfb4439420ce7107488015800fb06a",
+            "visibility": "public"
+          }
+        ],
+        "finding_id": "SCP-003",
+        "schema_version": 1,
+        "snapshot": {
+          "normalized_material_ref": {
+            "artifact_id": "job-e48329b23ee1a16e352baf7f-normalization-0",
+            "sha256": "de37b4916a442b3444da194aa6d72ae32ce339fbc2668b942c91d1619340a124",
+            "visibility": "public"
+          },
+          "relevant_evidence_digest": "00fd2ffea02fac7eb4b364274ba154664c7c40154706532e95cc146d55bb2803",
+          "reproduction_digest": "a861c8ad1aac9a3940dcec66eabaf165bc8a1db7e519f537e3e9a044d4f13eba"
+        },
+        "summary": "Partial repair: offline_subprocess_env installs tests_offline/sitecustomize.py for the successful context CLI and malformed/missing-input CLI cases. However, tests_offline/test_checkers.py:62-63 and :217 still launch help, invalid-option and relocated-linter subprocesses without that environment or equivalent import observation. The clean environment captured at builder stdout.jsonl:51 supplies no inherited PYTHONPATH guard, so these children do not inherit the parent conftest MetaPathFinder. Normalized reproduction: inspect these subprocess.run calls and the captured fresh-suite environment; all three lack child import isolation. Apply and regression-test the child guard or equivalent observation across every CLI subprocess, including the relocated linter. Route to builder."
+      },
+      {
+        "affected_requirements": [
+          "SCP-R7"
+        ],
+        "blocking": true,
+        "classification": "implementation_defect",
+        "evidence_refs": [
+          {
+            "artifact_id": "job-2e51cb0f5b5ca414050e50e8-native-events",
+            "sha256": "307a5c7f985dd4635f9aa05c3afcc8da7ce28a37b99658eba43f11bba5c819f1",
+            "visibility": "public"
+          }
+        ],
+        "finding_id": "SCP-004",
+        "schema_version": 1,
+        "snapshot": {
+          "normalized_material_ref": {
+            "artifact_id": "job-0758eb79b83d8c576d0fa0d3-normalization-0",
+            "sha256": "74f36f50a6f63323ab7d894cec4a132415628224b01a0bc68d9b0542a51db44f",
+            "visibility": "public"
+          },
+          "relevant_evidence_digest": "00fd2ffea02fac7eb4b364274ba154664c7c40154706532e95cc146d55bb2803",
+          "reproduction_digest": "1f5a6b92238eedf4ccf0b9846c5f30888904474a0f32d9f663742b2ddb336f77"
+        },
+        "summary": "Partial repair: package-absence evidence and successful copied-suite, copied-checker and unrelated-CWD executions are now captured. Frozen-source equality remains unproven. Normalized reproduction: inspect builder stdout.jsonl:55\u201361 and :73\u201389. The copy is materialized from the live working directory; no complete inventory/hash comparison binds its source contents to frozen base 4b77803af418cea8459c4cb7d9a0248674845da3 plus the candidate manifest. The rsync -an --delete --checksum command at :61 lacks itemized or verbose output, so empty output is not an equality assertion. No source comparison follows testing before deletion at :89. Route the remaining gate work to the authorized builder/execution channel: capture complete frozen-source equality before and after testing, with explicit exclusions and assertions for missing, extra and changed source files. Preserve the successful validation already captured; fixture tests cannot replace this gate."
+      }
+    ],
+    "backlog": [],
+    "next_finding": 5,
+    "unsuccessful_cycles": 2,
+    "unchanged_rounds": 2,
+    "previous_snapshots": [
+      "080565b5dba75e0a4ab863c22e8bdf120a83b0b6c770305a87c937159f898351",
+      "a06928008b5b5a401dae5058671cc209385c5222bf76f363f122a76af0954eb1",
+      "bf25d4b8b6fa88c0708c419590b1ce02b2c8401f8b0a3b1815bdc7aa820693b0"
+    ],
+    "gate": {
+      "scope": "DECISION",
+      "gate_id": "decision-28"
+    },
+    "pause_reason": "ESCALATED",
+    "resume_to": "BUILD_COMPLETE",
+    "prior": {
+      "status": "BUILD_COMPLETE",
+      "next_roles": [],
+      "gate": null
+    },
+    "completed_dependencies": [
+      "job-65f2dc51850d479768d6760a",
+      "job-e0ad43a48a20acd89a5eb939",
+      "job-8e3944c2b9cf5637a53cac50",
+      "job-0c6a7cc3df086796fa2d7353",
+      "job-eb36e5f169894f960d989f64",
+      "job-3c71e7eaa530afb5b7990033",
+      "job-2a8db6e046327a58413177ed",
+      "job-54cc536f7cfbaf59553b46fe",
+      "job-76240f387e35a58cf37c6430",
+      "job-83c42acc9d50346ac7c54635",
+      "job-e48329b23ee1a16e352baf7f",
+      "job-e7199765a542f73848770597",
+      "job-4c836d98d4b4081e2c7c0ce2",
+      "job-2e51cb0f5b5ca414050e50e8",
+      "job-0758eb79b83d8c576d0fa0d3"
+    ],
+    "approval_refs": [
+      "owner-plan-grant-phase3-pilot"
+    ],
+    "review_results": {},
+    "stages": {},
+    "plan_granted": true,
+    "committed": false
+  },
+  "note": "Exact resume command executed. Existing complete-source evidence remains bound to the preserved c2af candidate. Subsequent builder changes require current-candidate evidence and independent verification.",
+  "status": "ESCALATED_SCP004_NATIVE_EVIDENCE_GAP",
+  "completed_utc": "2026-09-11T22:25:30.874610Z",
+  "latest_verifier": {
+    "job_id": "job-0758eb79b83d8c576d0fa0d3",
+    "session": "01a09290-afb5-7843-9b6c-37f85d36bd62",
+    "verdict": "BLOCKED",
+    "findings": [
+      {
+        "schema_version": 1,
+        "finding_id": "SCP-004",
+        "classification": "implementation_defect",
+        "blocking": true,
+        "summary": "Partial repair: package-absence evidence and successful copied-suite, copied-checker and unrelated-CWD executions are now captured. Frozen-source equality remains unproven. Normalized reproduction: inspect builder stdout.jsonl:55\u201361 and :73\u201389. The copy is materialized from the live working directory; no complete inventory/hash comparison binds its source contents to frozen base 4b77803af418cea8459c4cb7d9a0248674845da3 plus the candidate manifest. The rsync -an --delete --checksum command at :61 lacks itemized or verbose output, so empty output is not an equality assertion. No source comparison follows testing before deletion at :89. Route the remaining gate work to the authorized builder/execution channel: capture complete frozen-source equality before and after testing, with explicit exclusions and assertions for missing, extra and changed source files. Preserve the successful validation already captured; fixture tests cannot replace this gate.",
+        "affected_requirements": [
+          "SCP-R7"
+        ],
+        "evidence_refs": [
+          {
+            "artifact_id": "job-2e51cb0f5b5ca414050e50e8-native-events",
+            "sha256": "307a5c7f985dd4635f9aa05c3afcc8da7ce28a37b99658eba43f11bba5c819f1",
+            "visibility": "public"
+          }
+        ],
+        "snapshot": null
+      }
+    ],
+    "explanation": "**BLOCKED \u2014 SCP-004 remains unresolved (SCP-R7).**\n\nThe approved plan hash and all five candidate file hashes match the packet. All six captured validation stream hashes also match. Captured results show 17 tests passing, all 11 context checks passing, and the metadata linter passing. This session inspected source and hashed evidence; it did not rerun tests or modify files.\n\nSCP-002 is resolved: `tests_offline/test_checkers.py:100\u2013130` exercises malformed, structurally invalid and missing inputs through the CLI; lines 151\u2013221 cover drift-child outcomes and launch failure. SCP-003 is resolved: help, invalid-option and relocated-linter subprocesses now receive the import guard and assert captured observations.\n\nSCP-004 is partially repaired. Builder `stdout.jsonl:70` establishes package absence from an unrelated directory. Lines 73\u201385 capture successful copied-suite and checker executions, including both checkers from an unrelated working directory. Environment records show the relevant isolation controls.\n\nThe remaining blocker is source equality. Lines 55\u201361 copy the live working directory and run a silent rsync dry run, without comparing a complete source inventory against frozen base plus candidate. No comparison follows testing before deletion at line 89. Successful executions therefore do not establish the approved frozen-source equality gate.\n\nThe owner amendment resolves SCP-001 by permitting exactly the four Variation Order documentation fields, both 18-to-22 counts, and verification date 2026-09-10. The captured documentation diff contains those changes; no renewed scope objection is returned.\n\nEvidence: supplied artifact `job-2e51cb0f5b5ca414050e50e8-native-events`, captured validation streams, and this verifier\u2019s runner-captured source/hash inspections. Historical ERP evidence was not rerun."
+  },
+  "current_operator_capture": {
+    "evidence": "phase-3-current-complete-source-validation.json",
+    "sha256": "6fabdab40db63a56528d13c27355c1e21ce47f9bee8a01a86fa2eae4576a4d9b",
+    "candidate_id": "532f0175dc88f19d111a42c498b60eb0bd832d412af12d4d7df7247b48d6b133",
+    "complete_source_file_count": 802,
+    "status": "PASSED"
+  },
+  "artifact_delivery_observation": {
+    "verifier_read_artifacts": [
+      "/home/mohamed/frappe-bench/worktrees/scope-context-portability-pilot/docs/ai/work-items/scope-context-portability/CANONICAL_PLAN.md",
+      "/home/mohamed/frappe-bench/worktrees/scope-context-portability-pilot/docs/ai/work-items/scope-context-portability/runs/job-8e3944c2b9cf5637a53cac50/results/plan.md",
+      "/home/mohamed/frappe-bench/worktrees/scope-context-portability-pilot/orchestrator/var/jobs/job-2e51cb0f5b5ca414050e50e8/stdout.jsonl",
+      "/home/mohamed/frappe-bench/worktrees/scope-context-portability-pilot/orchestrator/var/jobs/job-2e51cb0f5b5ca414050e50e8/validation.json",
+      "/home/mohamed/frappe-bench/worktrees/scope-context-portability-pilot/orchestrator/var/jobs/job-2e51cb0f5b5ca414050e50e8/validation-2.stdout",
+      "/home/mohamed/frappe-bench/worktrees/scope-context-portability-pilot/orchestrator/var/jobs/job-2e51cb0f5b5ca414050e50e8/validation-2.stderr",
+      "/home/mohamed/frappe-bench/worktrees/scope-context-portability-pilot/orchestrator/var/jobs/job-2e51cb0f5b5ca414050e50e8/validation-1.stdout",
+      "/home/mohamed/frappe-bench/worktrees/scope-context-portability-pilot/orchestrator/var/jobs/job-2e51cb0f5b5ca414050e50e8/validation-0.stderr",
+      "/home/mohamed/frappe-bench/worktrees/scope-context-portability-pilot/orchestrator/var/jobs/job-2e51cb0f5b5ca414050e50e8/validation-0.stdout",
+      "/home/mohamed/frappe-bench/worktrees/scope-context-portability-pilot/orchestrator/var/jobs/job-2e51cb0f5b5ca414050e50e8/validation-1.stderr"
+    ],
+    "operator_evidence_exposed": false,
+    "explanation": "The exact resume command binds reconciliation evidence by hash in the ledger, but does not add the complete-source report to native read_artifacts. Latest native reviewer receives only plans and latest builder validation logs. Current operator proof is captured and not an AI-R verdict."
+  }
+}

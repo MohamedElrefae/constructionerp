@@ -1,0 +1,74 @@
+{
+  "schema": "construction-bilingual-registry/v1",
+  "recorded_utc": "2026-09-20T00:00:00Z",
+  "notes": "Staged registry. States: planned (field may be absent), schema_installed (field exists, values not populated), active (display/search enabled). A missing later-wave field must not prevent app startup. Physical-field adapters resolve the arabic_field against live metadata; unresolved fields degrade silently.",
+  "display": {
+    "ar_fallback": ["arabic", "english", "identity"],
+    "en_fallback": ["english", "arabic", "identity"]
+  },
+  "unicode_policy": {
+    "identity_rejected": ["C0", "C1", "DEL", "BIDI_EMBEDDING_OVERRIDE_ISOLATE_U+202A-U+202E_U+2066-U+2069", "LRM_U+200E", "RLM_U+200F", "ALM_U+061C"],
+    "narrative_rejected": ["C0", "DEL", "BIDI_EMBEDDING_OVERRIDE_ISOLATE_U+202A-U+202E_U+2066-U+2069"],
+    "narrative_allowed_direction_marks": [
+      {"name": "LRM", "escape": "\\u200e", "codepoint": "U+200E"},
+      {"name": "RLM", "escape": "\\u200f", "codepoint": "U+200F"},
+      {"name": "ALM", "escape": "\\u061c", "codepoint": "U+061C"}
+    ],
+    "canonical_reference": "C1: bidi controls (U+202A-U+202E, U+2066-U+2069, U+200E, U+200F, U+061C) are forbidden in stored Arabic values. Section 8.6 of the handoff permits legitimate direction marks only in unrestricted narrative fields (documented here); embeddings/overrides/isolates are forbidden everywhere.",
+    "rationale": "Identity/name fields (stored Arabic values) reject every bidi control. Narrative fields (rename reasons) reject NUL/C0/DEL/C1 and the embedding/override/isolate controls, while allowing the documented direction marks."
+  },
+  "doctypes": {
+    "Account": {
+      "state": "active",
+      "english_field": "account_name",
+      "arabic_field": "account_name_ar",
+      "code_field": "account_number",
+      "identity_field": "name",
+      "search": {
+        "enabled": true,
+        "fields": ["account_number", "account_name", "account_name_ar"]
+      },
+      "form": {"identity_section": true},
+      "tree": {"enabled": true}
+    },
+    "Item": {
+      "state": "schema_installed",
+      "english_field": "item_name",
+      "arabic_field": "item_name_ar",
+      "code_field": "item_code",
+      "identity_field": "name",
+      "search": {
+        "enabled": true,
+        "fields": ["item_code", "item_name", "item_name_ar"]
+      },
+      "form": {"identity_section": false},
+      "tree": {"enabled": false}
+    },
+    "Customer": {
+      "state": "schema_installed",
+      "english_field": "customer_name",
+      "arabic_field": "customer_name_in_arabic",
+      "code_field": null,
+      "identity_field": "name",
+      "search": {
+        "enabled": true,
+        "fields": ["customer_name", "customer_name_in_arabic"]
+      },
+      "form": {"identity_section": false},
+      "tree": {"enabled": false}
+    },
+    "Supplier": {
+      "state": "schema_installed",
+      "english_field": "supplier_name",
+      "arabic_field": "supplier_name_in_arabic",
+      "code_field": null,
+      "identity_field": "name",
+      "search": {
+        "enabled": true,
+        "fields": ["supplier_name", "supplier_name_in_arabic"]
+      },
+      "form": {"identity_section": false},
+      "tree": {"enabled": false}
+    }
+  }
+}

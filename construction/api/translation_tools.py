@@ -3,9 +3,9 @@ import json
 import frappe
 from frappe import _
 from frappe.translate import (
-	MERGED_TRANSLATION_KEY,
-	USER_TRANSLATION_KEY,
-	strip_html_tags,
+    MERGED_TRANSLATION_KEY,
+    USER_TRANSLATION_KEY,
+    strip_html_tags,
 )
 from frappe.utils import cint
 
@@ -265,8 +265,7 @@ def apply_glossary_corrections(dry_run=True):
         current = effective.get(source_text, "")
         catalog_rows = _get_catalog_translation_rows("ar", source_text)
         catalog_needs_update = any(
-            row.translated_text != canonical or row.ct_review_status != "Approved"
-            for row in catalog_rows
+            row.translated_text != canonical or row.ct_review_status != "Approved" for row in catalog_rows
         )
         if current == canonical and not catalog_needs_update:
             continue
@@ -327,7 +326,10 @@ def import_review_queue(dry_run=True, enable_status_gate=False):
         if not source or not value:
             skipped += 1
             continue
-        if enable_status_gate and (row.get("status") or "unreviewed").strip().lower() not in APPROVED_STATUSES:
+        if (
+            enable_status_gate
+            and (row.get("status") or "unreviewed").strip().lower() not in APPROVED_STATUSES
+        ):
             skipped += 1
             continue
 
@@ -337,8 +339,7 @@ def import_review_queue(dry_run=True, enable_status_gate=False):
         app = (row.get("app") or "").strip() or None
         catalog_rows = _get_catalog_translation_rows("ar", source, app=app)
         catalog_needs_update = any(
-            catalog_row.translated_text != value
-            or catalog_row.ct_review_status != "Approved"
+            catalog_row.translated_text != value or catalog_row.ct_review_status != "Approved"
             for catalog_row in catalog_rows
         )
         if current == value and not catalog_needs_update:
@@ -408,9 +409,7 @@ def get_translation_catalog_stats():
     _ensure_catalog_fields()
     return {
         "total_ar": frappe.db.count("Translation", {"language": "ar"}),
-        "catalog_entries": frappe.db.count(
-            "Translation", {"language": "ar", "ct_is_catalog_entry": 1}
-        ),
+        "catalog_entries": frappe.db.count("Translation", {"language": "ar", "ct_is_catalog_entry": 1}),
         "existing_runtime_translations": frappe.db.count(
             "Translation", {"language": "ar", "ct_is_catalog_entry": 0}
         ),
@@ -529,7 +528,8 @@ def sync_translation_catalog(apps=None, dry_run=True, batch_size=1000):
                             "ct_review_status": "Approved" if po_translation else "Pending",
                         }
                         if has_digest:
-                            import hashlib, json as _json
+                            import hashlib
+                            import json as _json
 
                             payload = ["ar", source_text, context or "", app or "", "catalog"]
                             raw = _json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
@@ -540,7 +540,8 @@ def sync_translation_catalog(apps=None, dry_run=True, batch_size=1000):
                     updated += 1
             else:
                 if not dry_run:
-                    import hashlib, json as _json
+                    import hashlib
+                    import json as _json
 
                     digest_val = ""
                     norm_val = ""
@@ -583,9 +584,7 @@ def sync_translation_catalog(apps=None, dry_run=True, batch_size=1000):
     if not dry_run:
         _flush_inserts()
         frappe.db.commit()
-        frappe.cache.delete_value(
-            keys=["bootinfo", USER_TRANSLATION_KEY, MERGED_TRANSLATION_KEY]
-        )
+        frappe.cache.delete_value(keys=["bootinfo", USER_TRANSLATION_KEY, MERGED_TRANSLATION_KEY])
         frappe.clear_cache()
 
     return {
@@ -639,9 +638,7 @@ def reset_catalog_overrides(apps=None, dry_run=True):
         for name in to_delete:
             frappe.db.delete("Translation", name)
         frappe.db.commit()
-        frappe.cache.delete_value(
-            keys=["bootinfo", USER_TRANSLATION_KEY, MERGED_TRANSLATION_KEY]
-        )
+        frappe.cache.delete_value(keys=["bootinfo", USER_TRANSLATION_KEY, MERGED_TRANSLATION_KEY])
         frappe.clear_cache()
 
     return {"deleted": len(to_delete), "dry_run": dry_run}

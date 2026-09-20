@@ -149,6 +149,35 @@ class TestSearchableLinkSearch(unittest.TestCase):
         # Should not throw error
         self.assertIsInstance(results, list)
 
+    def test_missing_optional_field_does_not_empty_valid_search(self):
+        """Absent optional requested field must not turn a valid search into [].
+
+        Stage 1A regression: `account_name_ar` does not exist on tabAccount
+        yet JS configs request it. The API must drop missing fields from the
+        SELECT projection (as it already does for OR conditions) and still
+        return matching rows.
+        """
+        baseline = searchable_link_search(
+            doctype=self.test_doctype,
+            txt="1",
+            search_fields=["account_name", "account_number"],
+            display_format="{account_number} - {account_name}",
+            page_length=10,
+        )
+        self.assertIsInstance(baseline, list)
+
+        with_missing = searchable_link_search(
+            doctype=self.test_doctype,
+            txt="1",
+            search_fields=["account_name", "account_number", "account_name_ar"],
+            display_format="{account_number} - {account_name}",
+            page_length=10,
+        )
+        self.assertIsInstance(with_missing, list)
+        self.assertEqual(len(with_missing), len(baseline))
+        if baseline:
+            self.assertEqual(with_missing[0]["value"], baseline[0]["value"])
+
 
 class TestGetRecentItems(unittest.TestCase):
     """Test cases for get_recent_items function"""

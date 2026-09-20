@@ -45,7 +45,9 @@ class BOQItem(Document):
         self._trigger_header_rollup()
 
     def _trigger_header_rollup(self):
-        if getattr(frappe.flags, "defer_boq_rollups", False) or getattr(self.flags, "defer_boq_rollups", False):
+        if getattr(frappe.flags, "defer_boq_rollups", False) or getattr(
+            self.flags, "defer_boq_rollups", False
+        ):
             return
         if not self.boq_header:
             return

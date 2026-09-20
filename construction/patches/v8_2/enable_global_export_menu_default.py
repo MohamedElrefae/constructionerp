@@ -18,9 +18,7 @@ def execute():
         # Only set to 1 if the field currently holds a falsy value.
         # frappe.db.set_value with update_modified=False avoids triggering
         # timestamp conflicts on the singleton settings document.
-        current = frappe.db.get_single_value(
-            "Construction Settings", "enable_global_export_menu"
-        )
+        current = frappe.db.get_single_value("Construction Settings", "enable_global_export_menu")
         if not current:
             frappe.db.set_value(
                 "Construction Settings",

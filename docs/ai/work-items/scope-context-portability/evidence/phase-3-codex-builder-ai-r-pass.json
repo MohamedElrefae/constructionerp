@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "recorded_utc": "2026-09-12T07:30:00Z",
+  "status": "AI_R_PASS_PAUSED_AT_COMMIT_GATE",
+  "authorization": "Owner Authorization Directive: Builder Channel Resolution & Repair Dispatch",
+  "builder_channel_resolution": {
+    "roles_json_updated": ["orchestrator/roles.json in control and pilot worktrees"],
+    "builder_pin_before": {"tool": "opencode", "binary": "/usr/bin/opencode-cli", "model": "opencode-go/gpt-5.6-luna"},
+    "builder_pin_after": {"tool": "codex", "binary": "/opt/codex-desktop/resources/codex", "model": "gpt-6-astra", "version": "0.153.0-alpha.5", "effort": "high"},
+    "prompt_sha256_preserved": "45190b4f743ef0b57263872eb4a11aeddb8430a085a1acc277b490ef5092c8af",
+    "sqlite_config_roles_updated": true,
+    "generated_extended": "orchestrator/roles.json added so controller pin file does not pollute candidate freeze",
+    "doctor": "ok true, binary:codex true, sqlite_integrity true",
+    "job_fc24_acknowledged": "already collected as ACCEPTED failed result at seq 35; no active job to abandon"
+  },
+  "events": [
+    {"seq": 36, "kind": "refresh_candidate"},
+    {"seq": 37, "kind": "resume"},
+    {"seq": 38, "kind": "result", "job_id": "job-0c114c5fab696e1f9c042dee", "role": "builder", "verdict": "PASS"},
+    {"seq": 39, "kind": "result", "job_id": "job-fa5a2cc5963b749c677b962f", "role": "verifier", "verdict": "PASS"}
+  ],
+  "builder_pass": {
+    "job_id": "job-0c114c5fab696e1f9c042dee",
+    "tool": "codex",
+    "model": "gpt-6-astra",
+    "session_id": "01a09450-6044-7fd2-9c57-27df7420a475",
+    "result": "COMPLETE / PASS",
+    "new_candidate_id": "89f613f94d35c34619d1436ea8556d4fe1412232e6463baca6cefc73897010c1",
+    "new_tree_oid": "5b5f87ff01b16e9d739380e8523eca0698bbfd65"
+  },
+  "verifier_pass": {
+    "job_id": "job-fa5a2cc5963b749c677b962f",
+    "tool": "codex",
+    "session_id": "01a09455-6d86-7fa0-a56d-f786d525dcc7",
+    "result": "COMPLETE / PASS",
+    "sessions_independent": true
+  },
+  "workflow": {
+    "status": "VERIFIED_FOR_RELEASE",
+    "findings": [],
+    "backlog": [],
+    "gate": {"scope": "COMMIT", "gate_id": "commit-703536a0492e00f385d3f844"},
+    "plan_granted": true,
+    "committed": false,
+    "round": 8,
+    "attempt": 20,
+    "cursor": 39,
+    "revision": 40
+  },
+  "safety": "Paused strictly at COMMIT gate. No owner COMMIT token issued or consumed, no record-owner-commit executed, no Git commit, push, merge, or ERP operation performed. Awaiting separate explicit COMMIT authorization."
+}

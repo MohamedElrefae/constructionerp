@@ -2,6 +2,7 @@
 # For license information, please see license.txt
 
 import frappe
+from frappe import _
 from frappe.model.document import Document
 
 
@@ -24,19 +25,19 @@ class ModernThemeSettings(Document):
         # Validate that referenced themes exist
         if self.default_light_theme:
             if not frappe.db.exists("Construction Theme", self.default_light_theme):
-                frappe.throw(f"Construction Theme '{self.default_light_theme}' does not exist")
+                frappe.throw(_("Construction Theme '{0}' does not exist").format(self.default_light_theme))
 
         if self.default_dark_theme:
             if not frappe.db.exists("Construction Theme", self.default_dark_theme):
-                frappe.throw(f"Construction Theme '{self.default_dark_theme}' does not exist")
+                frappe.throw(_("Construction Theme '{0}' does not exist").format(self.default_dark_theme))
 
         # Validate theme switcher limit
         if self.theme_switcher_limit and self.theme_switcher_limit < 1:
-            frappe.throw("Theme Switcher Limit must be at least 1")
+            frappe.throw(_("Theme Switcher Limit must be at least 1"))
 
         # Validate CSS cache TTL
         if self.css_cache_ttl and self.css_cache_ttl < 60:
-            frappe.throw("CSS Cache TTL must be at least 60 seconds")
+            frappe.throw(_("CSS Cache TTL must be at least 60 seconds"))
 
     def on_update(self):
         """Clear cache when settings are updated"""

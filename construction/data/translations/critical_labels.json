@@ -1,0 +1,13 @@
+{
+  "schema": "critical-labels/v1",
+  "scope": "Stage 1C six screenshot labels; independent policy source for freshness validation",
+  "reviewed_in": "docs/ai/work-items/erp-arabic-bilingual-data/evidence/stage-1c-ai-r-rerun.md",
+  "labels": {
+    "Desktop": "سطح المكتب",
+    "Workspaces": "مساحات العمل",
+    "Edit Sidebar": "تحرير الشريط الجانبي",
+    "Toggle Theme": "تبديل المظهر",
+    "Toggle Full Width": "تبديل العرض الكامل",
+    "Typography Settings": "إعدادات الخطوط"
+  }
+}

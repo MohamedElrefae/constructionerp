@@ -1,0 +1,24 @@
+COMMAND: bench --site v16.localhost run-tests --app construction --module construction.tests.test_translation_stabilization_gates
+STARTED_UTC: 2026-09-04T21:13:38Z
+Starting test run with parameters: site=v16.localhost, app=construction, module=construction.tests.test_translation_stabilization_gates, verbose=False, tests=(), force=False, profile=False, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+View detailed logs (using --verbose): /home/mohamed/frappe-bench/logs/frappe.testing.log
+
+Running 8 old-frappe-test-class-category tests for construction
+
+construction.tests.test_translation_stabilization_gates.TestTranslationStabilizationGates
+   [32m ✔ [0m test_b01_unique_digest_enforced
+   [32m ✔ [0m test_b03_metadata_repair_even_when_value_equal
+   [32m ✔ [0m test_b04_quorum_enforced
+   [32m ✔ [0m test_b06_drift_detection
+   [32m ✔ [0m test_b15_catalog_preserves_po_while_updating_display
+   [32m ✔ [0m test_b16_semantic_version_ordering
+   [32m ✔ [0m test_b17_hook_fail_closed
+   [32m ✔ [0m test_key_trim_friendly_duplicate_and_empty_rejection
+
+
+----------------------------------------------------------------------
+Ran 8 tests in 2.779s
+
+OK
+EXIT_CODE: 0
+FINISHED_UTC: 2026-09-04T21:13:50Z

@@ -62,8 +62,13 @@ def check_file(path: Path):
         if isinstance(node, ast.Call):
             src = ast.unparse(node) if hasattr(ast, "unparse") else ""
             if "Translation" in src:
-                if any(kw in src for kw in ["set_value", "get_doc", "new_doc", "delete", "bulk_insert", "tabTranslation"]):
-                    errors.append(f"{path}:{node.lineno}: forbidden Translation mutation outside canonical service: {src[:120]}")
+                if any(
+                    kw in src
+                    for kw in ["set_value", "get_doc", "new_doc", "delete", "bulk_insert", "tabTranslation"]
+                ):
+                    errors.append(
+                        f"{path}:{node.lineno}: forbidden Translation mutation outside canonical service: {src[:120]}"
+                    )
     if not errors and "tabTranslation" in text and "frappe.db.sql" in text:
         for i, line in enumerate(text.splitlines(), 1):
             if "tabTranslation" in line and "frappe.db.sql" in line:
@@ -84,7 +89,9 @@ def main():
         print("Translation write lint FAILED:")
         for e in errors:
             print(f"  {e}")
-        print(f"\nTotal: {len(errors)} violation(s). All Translation writes must go through construction/translation_service.py")
+        print(
+            f"\nTotal: {len(errors)} violation(s). All Translation writes must go through construction/translation_service.py"
+        )
         sys.exit(1)
     print("Translation write lint PASSED")
     sys.exit(0)

@@ -68,7 +68,7 @@ class TestCostAnalysisEngine(FrappeTestCase):
                 {
                     "doctype": "Project",
                     "project_name": name,
-                "company": self.company,
+                    "company": self.company,
                     "naming_series": "PROJ-.####",
                 }
             )
@@ -334,13 +334,17 @@ class TestCostAnalysisEngine(FrappeTestCase):
     def _make_supplier(self, name="_Test Supplier"):
         if frappe.db.exists("Supplier", name):
             return name
-        return frappe.get_doc(
-            {
-                "doctype": "Supplier",
-                "supplier_name": name,
-                "supplier_group": "All Supplier Groups",
-            }
-        ).insert(ignore_permissions=True).name
+        return (
+            frappe.get_doc(
+                {
+                    "doctype": "Supplier",
+                    "supplier_name": name,
+                    "supplier_group": "All Supplier Groups",
+                }
+            )
+            .insert(ignore_permissions=True)
+            .name
+        )
 
     def test_resource_price_history_capture(self):
         """Resource Price History captures price from purchase document."""
@@ -459,23 +463,27 @@ class TestCostAnalysisEngine(FrappeTestCase):
         supplier = self._make_supplier()
 
         def make_mock_doc(item, rate, date, sup=None):
-            return frappe._dict({
-                "doctype": "Purchase Invoice",
-                "name": f"TEST-PI-{item}-{rate}",
-                "docstatus": 1,
-                "supplier": sup or supplier,
-                "company": self.company,
-                "project": self.project,
-                "posting_date": date,
-                "items": [
-                    frappe._dict({
-                        "item_code": item,
-                        "rate": rate,
-                        "uom": "Nos",
-                        "name": f"ROW-{item}-{rate}",
-                    })
-                ],
-            })
+            return frappe._dict(
+                {
+                    "doctype": "Purchase Invoice",
+                    "name": f"TEST-PI-{item}-{rate}",
+                    "docstatus": 1,
+                    "supplier": sup or supplier,
+                    "company": self.company,
+                    "project": self.project,
+                    "posting_date": date,
+                    "items": [
+                        frappe._dict(
+                            {
+                                "item_code": item,
+                                "rate": rate,
+                                "uom": "Nos",
+                                "name": f"ROW-{item}-{rate}",
+                            }
+                        )
+                    ],
+                }
+            )
 
         capture_price_from_purchase_document(make_mock_doc(item_a, 100, "2026-01-15"))
         capture_price_from_purchase_document(make_mock_doc(item_a, 110, "2026-03-01"))
@@ -504,13 +512,15 @@ class TestCostAnalysisEngine(FrappeTestCase):
 
         for email, role in [(pm_email, "Project Manager"), (se_email, "Site Engineer")]:
             if not frappe.db.exists("User", email):
-                user = frappe.get_doc({
-                    "doctype": "User",
-                    "email": email,
-                    "first_name": role.split()[-1],
-                    "send_welcome_email": 0,
-                    "roles": [{"role": role}],
-                })
+                user = frappe.get_doc(
+                    {
+                        "doctype": "User",
+                        "email": email,
+                        "first_name": role.split()[-1],
+                        "send_welcome_email": 0,
+                        "roles": [{"role": role}],
+                    }
+                )
                 user.insert(ignore_permissions=True)
 
         item_code = self._make_item_doctype()
@@ -669,7 +679,9 @@ class TestCostAnalysisEngine(FrappeTestCase):
                         "project": self.project,
                         "posting_date": "2026-06-01",
                         "items": [
-                            frappe._dict({"item_code": code, "rate": rate, "uom": "Nos", "name": f"ROW-{code}"})
+                            frappe._dict(
+                                {"item_code": code, "rate": rate, "uom": "Nos", "name": f"ROW-{code}"}
+                            )
                         ],
                     }
                 )
@@ -692,42 +704,111 @@ class TestCostAnalysisEngine(FrappeTestCase):
         wb = openpyxl.Workbook()
         resources = wb.active
         resources.title = "Resources"
-        resources.append([
-            "resource_code", "resource_type", "cost_stream", "name_en", "name_ar",
-            "uom", "unit_price_egp", "currency", "exchange_rate", "company",
-            "region", "price_date", "source_name",
-        ])
-        resources.append([
-            "IMP-CEM-001", "Material", "M", "Imported Cement", "أسمنت مستورد",
-            "Ton", 3600, "EGP", 1.0, self.company,
-            "Cairo", "2026-06-01", "Test Import",
-        ])
-        resources.append([
-            "IMP-SAND-001", "Material", "M", "Imported Sand", "رمل مستورد",
-            "m³", 420, "EGP", 1.0, self.company,
-            "Cairo", "2026-06-01", "Test Import",
-        ])
-        resources.append([
-            "IMP-HELP-001", "Labor", "L", "Imported Helper", "معاون مستورد",
-            "Day", 160, "EGP", 1.0, self.company,
-            "Cairo", "2026-06-01", "Test Import",
-        ])
+        resources.append(
+            [
+                "resource_code",
+                "resource_type",
+                "cost_stream",
+                "name_en",
+                "name_ar",
+                "uom",
+                "unit_price_egp",
+                "currency",
+                "exchange_rate",
+                "company",
+                "region",
+                "price_date",
+                "source_name",
+            ]
+        )
+        resources.append(
+            [
+                "IMP-CEM-001",
+                "Material",
+                "M",
+                "Imported Cement",
+                "أسمنت مستورد",
+                "Ton",
+                3600,
+                "EGP",
+                1.0,
+                self.company,
+                "Cairo",
+                "2026-06-01",
+                "Test Import",
+            ]
+        )
+        resources.append(
+            [
+                "IMP-SAND-001",
+                "Material",
+                "M",
+                "Imported Sand",
+                "رمل مستورد",
+                "m³",
+                420,
+                "EGP",
+                1.0,
+                self.company,
+                "Cairo",
+                "2026-06-01",
+                "Test Import",
+            ]
+        )
+        resources.append(
+            [
+                "IMP-HELP-001",
+                "Labor",
+                "L",
+                "Imported Helper",
+                "معاون مستورد",
+                "Day",
+                160,
+                "EGP",
+                1.0,
+                self.company,
+                "Cairo",
+                "2026-06-01",
+                "Test Import",
+            ]
+        )
 
         templates = wb.create_sheet("BOQItemTemplates")
-        templates.append([
-            "template_name", "description_en", "description_ar", "uom",
-            "overhead_pct", "profit_pct", "currency",
-        ])
-        templates.append([
-            "IMP-CONC-PLN", "Imported Plain Concrete", "خرسانة عادية مستوردة",
-            "m³", 12, 8, "EGP",
-        ])
+        templates.append(
+            [
+                "template_name",
+                "description_en",
+                "description_ar",
+                "uom",
+                "overhead_pct",
+                "profit_pct",
+                "currency",
+            ]
+        )
+        templates.append(
+            [
+                "IMP-CONC-PLN",
+                "Imported Plain Concrete",
+                "خرسانة عادية مستوردة",
+                "m³",
+                12,
+                8,
+                "EGP",
+            ]
+        )
 
         rate = wb.create_sheet("RateAnalysis")
-        rate.append([
-            "template_name", "resource_code", "qty_per_boq_unit", "wastage_pct",
-            "cost_stream", "cost_rate", "rate_source",
-        ])
+        rate.append(
+            [
+                "template_name",
+                "resource_code",
+                "qty_per_boq_unit",
+                "wastage_pct",
+                "cost_stream",
+                "cost_rate",
+                "rate_source",
+            ]
+        )
         rate.append(["IMP-CONC-PLN", "IMP-CEM-001", 0.25, 3, "M", 3600, "Import"])
         rate.append(["IMP-CONC-PLN", "IMP-SAND-001", 0.5, 5, "M", 420, "Import"])
         rate.append(["IMP-CONC-PLN", "IMP-HELP-001", 1.0, 0, "L", 160, "Import"])
@@ -796,26 +877,54 @@ class TestCostAnalysisEngine(FrappeTestCase):
         analysis = self._make_cost_analysis(
             self.item.name,
             details=[
-                {"cost_stream": "M", "item_code": item_m, "resource_uom": "Nos",
-                 "qty_per_boq_unit": 1, "cost_rate": 100, "wastage_pct": 0},
-                {"cost_stream": "L", "item_code": item_l, "resource_uom": "Hr",
-                 "qty_per_boq_unit": 1, "cost_rate": 50, "wastage_pct": 0},
+                {
+                    "cost_stream": "M",
+                    "item_code": item_m,
+                    "resource_uom": "Nos",
+                    "qty_per_boq_unit": 1,
+                    "cost_rate": 100,
+                    "wastage_pct": 0,
+                },
+                {
+                    "cost_stream": "L",
+                    "item_code": item_l,
+                    "resource_uom": "Hr",
+                    "qty_per_boq_unit": 1,
+                    "cost_rate": 50,
+                    "wastage_pct": 0,
+                },
             ],
         )
 
         # Capture two DIFFERENT new prices: M item pans to 250, L item pans to 80.
-        capture_price_from_purchase_document(frappe._dict({
-            "doctype": "Purchase Invoice", "name": "STREAM-PI-M", "docstatus": 1,
-            "supplier": supplier, "company": self.company, "project": self.project,
-            "posting_date": "2026-06-01",
-            "items": [frappe._dict({"item_code": item_m, "rate": 250, "uom": "Nos", "name": "R1"})],
-        }))
-        capture_price_from_purchase_document(frappe._dict({
-            "doctype": "Purchase Invoice", "name": "STREAM-PI-L", "docstatus": 1,
-            "supplier": supplier, "company": self.company, "project": self.project,
-            "posting_date": "2026-06-01",
-            "items": [frappe._dict({"item_code": item_l, "rate": 80, "uom": "Hr", "name": "R2"})],
-        }))
+        capture_price_from_purchase_document(
+            frappe._dict(
+                {
+                    "doctype": "Purchase Invoice",
+                    "name": "STREAM-PI-M",
+                    "docstatus": 1,
+                    "supplier": supplier,
+                    "company": self.company,
+                    "project": self.project,
+                    "posting_date": "2026-06-01",
+                    "items": [frappe._dict({"item_code": item_m, "rate": 250, "uom": "Nos", "name": "R1"})],
+                }
+            )
+        )
+        capture_price_from_purchase_document(
+            frappe._dict(
+                {
+                    "doctype": "Purchase Invoice",
+                    "name": "STREAM-PI-L",
+                    "docstatus": 1,
+                    "supplier": supplier,
+                    "company": self.company,
+                    "project": self.project,
+                    "posting_date": "2026-06-01",
+                    "items": [frappe._dict({"item_code": item_l, "rate": 80, "uom": "Hr", "name": "R2"})],
+                }
+            )
+        )
 
         # Reject an invalid stream code up front.
         with self.assertRaises(frappe.ValidationError):
@@ -859,21 +968,43 @@ class TestCostAnalysisEngine(FrappeTestCase):
         analysis = self._make_cost_analysis(
             self.item.name,
             details=[
-                {"cost_stream": "M", "item_code": item, "supplier": supplier,
-                 "resource_uom": "Nos", "qty_per_boq_unit": 1, "cost_rate": 100, "wastage_pct": 0},
-                {"cost_stream": "L", "item_code": item, "supplier": supplier,
-                 "resource_uom": "Hr", "qty_per_boq_unit": 1, "cost_rate": 50, "wastage_pct": 0},
+                {
+                    "cost_stream": "M",
+                    "item_code": item,
+                    "supplier": supplier,
+                    "resource_uom": "Nos",
+                    "qty_per_boq_unit": 1,
+                    "cost_rate": 100,
+                    "wastage_pct": 0,
+                },
+                {
+                    "cost_stream": "L",
+                    "item_code": item,
+                    "supplier": supplier,
+                    "resource_uom": "Hr",
+                    "qty_per_boq_unit": 1,
+                    "cost_rate": 50,
+                    "wastage_pct": 0,
+                },
             ],
         )
 
         # One new price for the (item, supplier) key → would update whichever stream
         # is selected. Pans to 250.
-        capture_price_from_purchase_document(frappe._dict({
-            "doctype": "Purchase Invoice", "name": "COLLIDE-PI", "docstatus": 1,
-            "supplier": supplier, "company": self.company, "project": self.project,
-            "posting_date": "2026-06-01",
-            "items": [frappe._dict({"item_code": item, "rate": 250, "uom": "Nos", "name": "R1"})],
-        }))
+        capture_price_from_purchase_document(
+            frappe._dict(
+                {
+                    "doctype": "Purchase Invoice",
+                    "name": "COLLIDE-PI",
+                    "docstatus": 1,
+                    "supplier": supplier,
+                    "company": self.company,
+                    "project": self.project,
+                    "posting_date": "2026-06-01",
+                    "items": [frappe._dict({"item_code": item, "rate": 250, "uom": "Nos", "name": "R1"})],
+                }
+            )
+        )
 
         m_row_id = None
         for d in analysis.details:

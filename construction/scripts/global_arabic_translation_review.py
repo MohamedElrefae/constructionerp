@@ -4,6 +4,7 @@ from pathlib import Path
 
 import frappe
 from babel.messages.pofile import read_po, write_po
+from frappe import _
 
 APP_PO_PATHS = {
     "frappe": Path("apps/frappe/frappe/locale/ar.po"),
@@ -2903,7 +2904,7 @@ def _parse_apps(apps):
 
 def _validate_app(app):
     if app not in APP_PO_PATHS:
-        frappe.throw(f"Unsupported app: {app}")
+        frappe.throw(_("Unsupported app: {0}").format(app))
 
 
 def _po_path(app):

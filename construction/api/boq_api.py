@@ -29,7 +29,7 @@ def get_children(doctype, parent="", boq_header=None, is_root=False, **filters):
     # Treat root label or is_root as top-level query
     if is_root or parent == "BOQ Structure" or not parent:
         parent_value = ""
-        parent_fields = ""
+        include_parent = False
     else:
         # Validate parent belongs to this boq_header
         parent_header = frappe.db.get_value("BOQ Structure", parent, "boq_header")
@@ -39,10 +39,26 @@ def get_children(doctype, parent="", boq_header=None, is_root=False, **filters):
                 frappe.PermissionError,
             )
         parent_value = parent
-        parent_fields = ", `parent_structure` as parent"
+        include_parent = True
 
-    nodes = frappe.db.sql(
-        f"""
+    if include_parent:
+        query = """
+		SELECT
+			`name` as value,
+			CONCAT(IFNULL(`wbs_code`,''), ' — ', `title`) as title,
+			`is_group` as expandable,
+            `item_count`,
+            `total_contract_value`,
+            `total_budgeted_cost`,
+			`parent_structure` as parent
+		FROM `tabBOQ Structure`
+		WHERE IFNULL(`parent_structure`, '') = %(parent)s
+		AND `docstatus` < 2
+		AND `boq_header` = %(boq_header)s
+		ORDER BY `lft`
+        """
+    else:
+        query = """
 		SELECT
 			`name` as value,
 			CONCAT(IFNULL(`wbs_code`,''), ' — ', `title`) as title,
@@ -50,13 +66,15 @@ def get_children(doctype, parent="", boq_header=None, is_root=False, **filters):
             `item_count`,
             `total_contract_value`,
             `total_budgeted_cost`
-			{parent_fields}
 		FROM `tabBOQ Structure`
 		WHERE IFNULL(`parent_structure`, '') = %(parent)s
 		AND `docstatus` < 2
 		AND `boq_header` = %(boq_header)s
 		ORDER BY `lft`
-	""",
+	    """
+
+    nodes = frappe.db.sql(
+        query,
         {"parent": parent_value, "boq_header": boq_header},
         as_dict=True,
     )
@@ -501,7 +519,9 @@ def create_material_request_for_vo(vo_name):
     )
     if not resolved_company:
         frappe.throw(
-            _("Cannot create Material Request: Linked Project {0} has no Company assigned.").format(vo.project),
+            _("Cannot create Material Request: Linked Project {0} has no Company assigned.").format(
+                vo.project
+            ),
             frappe.ValidationError,
         )
 
@@ -515,7 +535,9 @@ def create_material_request_for_vo(vo_name):
 
     for line in variation_lines:
         item_qty = (
-            frappe.db.get_value("BOQ Item", line.created_boq_item, "quantity") if line.created_boq_item else None
+            frappe.db.get_value("BOQ Item", line.created_boq_item, "quantity")
+            if line.created_boq_item
+            else None
         )
         raw_item = getattr(line, "item_code", None)
         if not raw_item and line.created_boq_item:

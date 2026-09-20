@@ -1,0 +1,21 @@
+COMMAND: bench --site v16.localhost run-tests --app construction --module construction.tests.test_bilingual_account_schema
+STARTED_UTC: 2026-09-04T21:13:24Z
+Starting test run with parameters: site=v16.localhost, app=construction, module=construction.tests.test_bilingual_account_schema, verbose=False, tests=(), force=False, profile=False, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+View detailed logs (using --verbose): /home/mohamed/frappe-bench/logs/frappe.testing.log
+
+Running 5 unspecified-category tests for construction
+
+construction.tests.test_bilingual_account_schema.TestAccountArabicNameSchema
+   [32m ✔ [0m test_arabic_only_write_does_not_rename
+   [32m ✔ [0m test_custom_field_registered
+   [32m ✔ [0m test_db_column_exists
+   [32m ✔ [0m test_meta_exposes_field_after_cache_refresh
+   [32m ✔ [0m test_patch_is_idempotent
+
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.098s
+
+OK
+EXIT_CODE: 0
+FINISHED_UTC: 2026-09-04T21:13:26Z

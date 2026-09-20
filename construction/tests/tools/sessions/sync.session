@@ -1,0 +1,4 @@
+from construction.api.translation_tools import sync_translation_catalog
+res = sync_translation_catalog(dry_run=False)
+print("SYNC:" + repr(res))
+exit()

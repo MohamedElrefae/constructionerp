@@ -1,0 +1,17 @@
+{
+  "apps": {
+    "erpnext": {
+      "commit": "2807c9f08fff3f161c0a2e10745a26aa6331ffd5",
+      "count": 8997,
+      "msgid_sha": "247da6ff1223ba8692be575eb788e35165936fca55d083ea20fa3256c487e2a9",
+      "po_sha": "2dfe0a5d07b091d1d34563fa53aac9f4665519aa9672303b4cd6fe3b2d705275"
+    },
+    "frappe": {
+      "commit": "81aadb9ba1bc07abccd8f720af80f4f2fb4a68a0",
+      "count": 5902,
+      "msgid_sha": "b71294ed6f92cb9eb3e67992a82cbe0706e0f93681b32477b619aaaaabca0fdb",
+      "po_sha": "cc353e76ebd37c0ef0d72f79cf0c081a460cfa5fe6846dcf36d122384c225502"
+    }
+  },
+  "recorded_utc": "2026-09-10T12:09:23Z"
+}

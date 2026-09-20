@@ -15,6 +15,7 @@ class TestCostDatabaseAPI(FrappeTestCase):
 
     def _load_workbook(self, content):
         import openpyxl
+
         return openpyxl.load_workbook(io.BytesIO(content), data_only=True)
 
     def test_generate_blank_template_has_required_sheets(self):
@@ -118,32 +119,79 @@ class TestCostDatabaseAPI(FrappeTestCase):
         wb = openpyxl.Workbook()
         resources = wb.active
         resources.title = "Resources"
-        resources.append([
-            "resource_code", "resource_type", "cost_stream", "name_en", "name_ar",
-            "uom", "unit_price_egp", "currency", "exchange_rate", "company",
-            "region", "price_date", "source_name",
-        ])
-        resources.append([
-            "API-CEM-001", "Material", "M", "API Cement", "أسمنت API",
-            "Ton", rate, "EGP", 1.0, self.company,
-            "Cairo", "2026-06-01", "Test Import",
-        ])
+        resources.append(
+            [
+                "resource_code",
+                "resource_type",
+                "cost_stream",
+                "name_en",
+                "name_ar",
+                "uom",
+                "unit_price_egp",
+                "currency",
+                "exchange_rate",
+                "company",
+                "region",
+                "price_date",
+                "source_name",
+            ]
+        )
+        resources.append(
+            [
+                "API-CEM-001",
+                "Material",
+                "M",
+                "API Cement",
+                "أسمنت API",
+                "Ton",
+                rate,
+                "EGP",
+                1.0,
+                self.company,
+                "Cairo",
+                "2026-06-01",
+                "Test Import",
+            ]
+        )
 
         templates = wb.create_sheet("BOQItemTemplates")
-        templates.append([
-            "template_name", "description_en", "description_ar", "category", "uom",
-            "overhead_pct", "profit_pct", "currency",
-        ])
-        templates.append([
-            "API-CONC-PLN", "API Plain Concrete", "خرسانة عادية API", "Concrete Works",
-            "m³", 12, 8, "EGP",
-        ])
+        templates.append(
+            [
+                "template_name",
+                "description_en",
+                "description_ar",
+                "category",
+                "uom",
+                "overhead_pct",
+                "profit_pct",
+                "currency",
+            ]
+        )
+        templates.append(
+            [
+                "API-CONC-PLN",
+                "API Plain Concrete",
+                "خرسانة عادية API",
+                "Concrete Works",
+                "m³",
+                12,
+                8,
+                "EGP",
+            ]
+        )
 
         rate_sheet = wb.create_sheet("RateAnalysis")
-        rate_sheet.append([
-            "template_name", "resource_code", "qty_per_boq_unit", "wastage_pct",
-            "cost_stream", "cost_rate", "rate_source",
-        ])
+        rate_sheet.append(
+            [
+                "template_name",
+                "resource_code",
+                "qty_per_boq_unit",
+                "wastage_pct",
+                "cost_stream",
+                "cost_rate",
+                "rate_source",
+            ]
+        )
         rate_sheet.append(["API-CONC-PLN", "API-CEM-001", 0.25, 3, "M", rate, "Import"])
 
         buf = io.BytesIO()

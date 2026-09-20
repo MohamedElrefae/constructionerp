@@ -153,12 +153,12 @@
     <!-- Header -->
     <div class="doc-header">
         <div>
-            <div class="doc-header__brand">Construction ERP</div>
-            <div class="doc-header__sub">Document Export</div>
+            <div class="doc-header__brand">{{ _("Construction ERP") }}</div>
+            <div class="doc-header__sub">{{ _("Document Export") }}</div>
         </div>
         <div class="doc-header__meta">
             {% if company %}<strong>{{ company | e }}</strong><br>{% endif %}
-            Export Date: {{ export_date | e }}
+            {{ _("Export Date") }}: {{ export_date | e }}
         </div>
     </div>
 
@@ -172,8 +172,8 @@
     <table class="data-table">
         <thead>
             <tr>
-                <th style="width:35%">Field</th>
-                <th>Value</th>
+                <th style="width:35%">{{ _("Field") }}</th>
+                <th>{{ _("Value") }}</th>
             </tr>
         </thead>
         <tbody>
@@ -190,7 +190,7 @@
 
     <!-- Footer -->
     <div class="doc-footer">
-        <span>Construction ERP — Document Export</span>
+        <span>{{ _("Construction ERP — Document Export") }}</span>
         <span>{{ doctype | e }} / {{ docname | e }}</span>
     </div>
 

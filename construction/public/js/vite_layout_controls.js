@@ -1,3 +1,4 @@
+/* global vfcDebugLog */
 /* ═══════════════════════════════════════════════════════════════════
    vite_layout_controls.js — Global Form Config (Vite UI)
    Attaches to EVERY Frappe form automatically via frappe.ui.form.on('*')
@@ -553,7 +554,8 @@
 			// Unknown-field guard: warn once per unknown field, then skip
 			hiddenFields.forEach((fn) => {
 				if (!knownFieldnames.has(fn)) {
-					vfcDebugLog("warn", 
+					vfcDebugLog(
+						"warn",
 						`[VFC] _renderFieldList: unknown fieldname "${fn}" on ${frm.doctype} — skipping`
 					);
 				}
@@ -677,7 +679,8 @@
 			if (preset.fields) {
 				preset.fields.forEach((fn) => {
 					if (!fieldnames.has(fn)) {
-						vfcDebugLog("warn", 
+						vfcDebugLog(
+							"warn",
 							`[VFC] Preset '${key}' references unknown field '${fn}' on ${doctype} — skipping`
 						);
 					}
@@ -845,7 +848,9 @@
 			const dt = frm.doctype;
 
 			frappe.confirm(
-				__("Revert to default/native layout? This resets your VFC density, hidden fields, preset, and personal layout for this form."),
+				__(
+					"Revert to default/native layout? This resets your VFC density, hidden fields, preset, and personal layout for this form."
+				),
 				async () => {
 					try {
 						const settings = loadUserSettings(dt);
@@ -905,7 +910,8 @@
 			const hiddenFields = settings.vfc_hidden_fields || [];
 			hiddenFields.forEach((fn) => {
 				if (!knownFieldnames.has(fn)) {
-					vfcDebugLog("warn", 
+					vfcDebugLog(
+						"warn",
 						`[VFC] _restoreState: unknown fieldname "${fn}" on ${dt} — skipping`
 					);
 					return;
@@ -1008,9 +1014,7 @@
 
 			// Load SortableJS from local asset (no CDN dependency)
 			if (typeof Sortable === "undefined") {
-				await frappe.require(
-					"/assets/construction/js/vendor/sortablejs.min.js"
-				);
+				await frappe.require("/assets/construction/js/vendor/sortablejs.min.js");
 			}
 
 			// Fetch active profile or build default

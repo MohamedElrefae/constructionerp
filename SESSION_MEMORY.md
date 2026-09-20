@@ -81,6 +81,25 @@
 
 ## 3. In Progress (Active Work — Updated After Every Session)
 
+### Bilingual integration release validation (2026-09-20)
+- `feature/bilingual-integration` was validated as a combined checkout rather than relying on the two feature branches' isolated results.
+- Fixed historical Stage 4 adoption to bind the immutable initial-export manifest; the live governed manifest may advance after an authorized import without invalidating provenance.
+- Removed the accidental repository-root `__init__.py`, restoring checkout-name-independent offline tests while retaining the real `construction/__init__.py` app package.
+- Made Stage 4 account-language tests valid before and after import and isolated generated manifests/exports in a temporary directory.
+- Corrected dashboard test configuration to use a secured temporary `DASHBOARD_TEST_ROOT` under the supported test-mode contract.
+- Validation: orchestrator 236/236; dashboard 77/77; offline portability 67/67; bilingual schema 5/5, service 38/38, pilot 53/53, localization gates 89/89, Stage 4 account language 6/6, report extension 11/11, review bundle 36/36.
+
+### Workflow orchestration plan — r5 coherence review (2026-09-11)
+- Canonical plan and working handoff: `docs/ai/work-items/scope-context-portability/`. Five pre-Phase-0 corrections resolved; numbered contracts synchronized and locked owner decisions preserved.
+- Consultant coherence sign-off recorded in §18. Phase 0 has not begun; runtime feasibility remains its explicit gate. No commit or ERP execution occurred.
+
+**2026-09-12 — Phase 3 pilot completion and owner commit (isolated worktree):** Candidate `89f613f94d35c34619d1436ea8556d4fe1412232e6463baca6cefc73897010c1` (tree `5b5f87ff01b16e9d739380e8523eca0698bbfd65`) achieved unanimous PASS across all 7 requirements (SCP-R1 through SCP-R7) and resolved findings SCP-001 through SCP-005. Both Codex builder (`job-0c114c5f...`) and independent Codex verifier (`job-fa5a2cc5...`) issued PASS with zero findings. All 67 offline tests pass, 11 context checks pass, 19 DocTypes linted, and 802-file fresh-copy gate verified in-root. Owner single-use token `owner-commit-grant-phase3-pilot` approved gate `commit-703536a0492e00f385d3f844` and owner commit `72da63dc693e320ea8b73d5bdf7000c4fda57f07` was recorded via `run --record-owner-commit` (`committed=true`, gate null). Zero ERP touch, no unapproved push/merge.
+
+**2026-09-11 — Phase 2 execution:** Against frozen commit `4b77803af418cea8459c4cb7d9a0248674845da3`, the full synthetic suite produced 108 passed / 2 failed. Both failures lose their named class (MALFORMED_RESULT/EVIDENCE_UNAVAILABLE) in Engine._collect; advancement still pauses. Frozen source and checker scripts unchanged. Evidence: `docs/ai/work-items/scope-context-portability/evidence/phase-2-validation.json`. Phase 2 exit blocked; owner amendment required before fixing frozen engine. No project commit, provider run or ERP operation.
+
+**2026-09-11 — Workflow Phases 0–1 (isolated worktree):** Phase 0 passed under the owner consultant directive; all five prompt hashes approved. Phase 1 engine/adapters/operator CLI implemented, with 93 passing tests and native Codex/OpenCode transport proof. Independent review blockers repaired, final bounded review PASS; Phase 1 source freeze recorded. Antigravity uses the explicitly authorized independent Codex substitute. See `docs/ai/work-items/scope-context-portability/IMPLEMENTATION.md`. No project commit or ERP operation; original dirty ERP checkout remains separate.
+
+
 ### Deployment-readiness remediation — Completed (2026-08-20)
 - **Result:** All findings from `docs/USER_GUIDE_DEPLOYMENT_REVIEW_2026-08-19.md` remediated; review verdict updated to release-ready.
 - **Key fixes:** BOQ Header scope enforcement now honors the feature flag, Administrator bypass, and explicit projects; omitted BOQ Items are hidden from transaction and VO item dropdowns after approved omission; User Guide terminology, VFC labels, cache versions, and test evidence synchronized.
@@ -150,6 +169,36 @@
 ---
 
 ## 6. Session Log (Append-Only — Most Recent First)
+
+### Session 2026-09-20 — Integration PR release validation
+- Reproduced and repaired a cross-branch Stage 4 provenance mismatch caused by the mutable governed manifest advancing after the historical export.
+- Repaired offline-test checkout portability and removed test writes to tracked release artifacts.
+- Repaired dashboard test-root configuration so registry ownership/permission checks run against isolated `0700` directories.
+- Full affected release suites pass; the integration branch is ready for commit, push, and PR review.
+
+### Session 2026-09-11 — Workflow plan r5 documentation corrections
+- Corrected restart reconciliation, PLAN versus operation grants, code/proposal/bundle/payload identities and private storage, Flit/legacy packaging guidance, and canonical definitions.
+- Synchronized `CANONICAL_PLAN.md` and `IMPLEMENTATION_HANDOFF.md` numbered bodies; checked references, preserved decisions, and documented consultant sign-off.
+- Documentation-only work. No Phase 0, native agent dispatch, ERP suite rerun, data import or Git commit.
+
+### Session 2026-09-11 — Codex Phase 2 synthetic qualification
+- Added verification-only tests outside the frozen manifest and executed three recorded runs, ending at 108/110 passing. All 93 frozen regressions still pass.
+- Graph proof includes repair/architecture routing, quorum, persistent escalation, candidate drift and real local VACUUM INTO recovery; synthetic test commits only in disposable repositories.
+- Found P2-F001: collection discards two required failure classes while correctly pausing. Regressions retained; no production fix applied under the freeze.
+- Recorded JSON/XML evidence and bounded correction proposal; Phase 3 remains blocked pending authorized fix and full rerun. All session state kept local.
+
+
+### Session 2026-09-11 — Codex workflow implementation
+- Local SQLite authority, independent native worker sessions, exact candidate binding, owner grants and conditional defect routing implemented in the isolated workflow worktree.
+- Permission wrapper protects control/Git writes and peer artifacts; native Codex and OpenCode probes passed. `/run` masking initially broke DNS; preserving only resolver data fixed the regression.
+- Independent native code review was launched only after explicit scoped transfer authorization. Four P1 findings repaired and regression-tested: approval scope confusion, prepare/replay crash, pause lock starvation, stale dispatch preconditions.
+- Final independent bounded review: PASS; source freeze recorded in phase-1-code-freeze.json. Approval admission also synchronizes pending durable decisions before accepting a token.
+- Full regression suite: 93 passed; real process restart and app packaging excluded workflow code/dependencies. Full Phase 2 qualification and real pilot remain pending.
+- State/memory remain local per owner directive. No project commit, staging, ERP rerun or import.
+
+
+**2026-09-11 — Workflow Phases 0–1 (isolated worktree):** Phase 0 passed under the owner consultant directive; all five prompt hashes approved. Phase 1 engine/adapters/operator CLI implemented, with 93 passing tests and native Codex/OpenCode transport proof. Independent review blockers repaired, final bounded review PASS; Phase 1 source freeze recorded. Antigravity uses the explicitly authorized independent Codex substitute. See `docs/ai/work-items/scope-context-portability/IMPLEMENTATION.md`. No project commit or ERP operation; original dirty ERP checkout remains separate.
+
 
 ### Session 2026-08-20 — Deployment-readiness remediation
 - **Worked on:** Remediated all F1–F7 findings in the user-guide deployment review.
@@ -377,3 +426,5 @@
   - `apps/frappe/frappe/locale/ar.po` — filled `msgstr` for `Add Child`
 - **Verification:** All Python/JS modules pass `py_compile` / `node --check`; `.po` scan shows ~15,106 msgids across apps.
 - **Next steps:** Run `bench --site v16.localhost migrate` to apply patches; hard-refresh browser to load updated list-view tools.
+
+Workflow session capture: external MemoryGraph write was rejected by automatic approval review; this local record is the fallback. No external retry attempted.

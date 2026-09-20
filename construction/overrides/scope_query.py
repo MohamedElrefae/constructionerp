@@ -130,7 +130,9 @@ def add_scope_conditions(user, doctype=None):
     if doctype in SKIP_DOCTYPES or doctype in _get_dynamic_exclusions():
         return ""
 
-    has_any_scope_col = any(_has_column(doctype, col) for col in ("company", "cost_center", "project", "department"))
+    has_any_scope_col = any(
+        _has_column(doctype, col) for col in ("company", "cost_center", "project", "department")
+    )
 
     # 3. Read scope from the CANONICAL User Scope Context record.
     dimensions = _canonical_scope_dimensions(user)

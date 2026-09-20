@@ -48,9 +48,7 @@ def _capture(size, cleanup=True):
     company = frappe.db.get_value("Company", {}, "name") or "_Test Company"
     project = (
         frappe.db.get_value("Project", {"project_name": "_Perf Harness Project"}, "name")
-        or frappe.get_doc(
-            {"doctype": "Project", "project_name": "_Perf Harness Project", "company": company}
-        )
+        or frappe.get_doc({"doctype": "Project", "project_name": "_Perf Harness Project", "company": company})
         .insert(ignore_permissions=True)
         .name
     )
@@ -94,7 +92,9 @@ def _capture(size, cleanup=True):
                 if idx and idx % 25 == 0:
                     try:
                         with open("/tmp/perf_progress.log", "a") as pf:
-                            pf.write(f"size={size} item={idx} elapsed={time.monotonic() - started:.1f}s sql={counters['sql']}\n")
+                            pf.write(
+                                f"size={size} item={idx} elapsed={time.monotonic() - started:.1f}s sql={counters['sql']}\n"
+                            )
                     except Exception:
                         pass
                 sub = frappe.get_doc(

@@ -54,14 +54,16 @@ class TestVariationOrders(FrappeTestCase):
         writer.write(buf)
         pdf_content = buf.getvalue()
 
-        file_doc = frappe.get_doc({
-            "doctype": "File",
-            "file_name": f"approval_{frappe.generate_hash(length=6)}.pdf",
-            "attached_to_doctype": attached_doctype,
-            "attached_to_name": attached_name,
-            "is_private": 1,
-            "content": pdf_content,
-        })
+        file_doc = frappe.get_doc(
+            {
+                "doctype": "File",
+                "file_name": f"approval_{frappe.generate_hash(length=6)}.pdf",
+                "attached_to_doctype": attached_doctype,
+                "attached_to_name": attached_name,
+                "is_private": 1,
+                "content": pdf_content,
+            }
+        )
         file_doc.insert(ignore_permissions=True)
         self._created_files.append(file_doc)
         return file_doc
@@ -604,14 +606,16 @@ class TestVariationOrderAPI(FrappeTestCase):
         writer.write(buf)
         pdf_content = buf.getvalue()
 
-        file_doc = frappe.get_doc({
-            "doctype": "File",
-            "file_name": f"approval_{frappe.generate_hash(length=6)}.pdf",
-            "attached_to_doctype": attached_doctype,
-            "attached_to_name": attached_name,
-            "is_private": 1,
-            "content": pdf_content,
-        })
+        file_doc = frappe.get_doc(
+            {
+                "doctype": "File",
+                "file_name": f"approval_{frappe.generate_hash(length=6)}.pdf",
+                "attached_to_doctype": attached_doctype,
+                "attached_to_name": attached_name,
+                "is_private": 1,
+                "content": pdf_content,
+            }
+        )
         file_doc.insert(ignore_permissions=True)
         self._created_files.append(file_doc)
         return file_doc

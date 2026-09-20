@@ -1,372 +1,267 @@
 #!/usr/bin/env python3
-"""
-AI Context Check — Construction ERP
-====================================
-Validates critical facts against live repo files before seeding AI memory.
+"""Validate critical Construction ERP facts before seeding AI memory."""
 
-Run this script before:
-- Seeding MCP memory databases
-- Generating skill files
-- Starting a new agent session after significant repo changes
+from __future__ import annotations
 
-Usage:
-    cd /home/mohamed/frappe-bench/apps/construction
-    python3 scripts/ai_context_check.py
-
-Exit code:
-    0 = all checks passed
-    1 = one or more checks failed
-"""
-
+import argparse
 import json
-import os
 import subprocess
 import sys
+from dataclasses import dataclass
 from pathlib import Path
 
-# ═══════════════════════════════════════════════════════════════
-# Configuration
-# ═══════════════════════════════════════════════════════════════
 
-REPO_ROOT = Path("/home/mohamed/frappe-bench/apps/construction")
-CONSTRUCTION_PKG = REPO_ROOT / "construction"
-DOCTYPES = CONSTRUCTION_PKG / "construction" / "doctype"
-
-CHECKS_PASSED = 0
-CHECKS_FAILED = 0
+@dataclass
+class CheckResult:
+    check_id: str
+    name: str
+    passed: bool
+    details: list[str]
 
 
-def ok(msg: str):
-    global CHECKS_PASSED
-    CHECKS_PASSED += 1
-    print(f"  ✅ {msg}")
+def _read_json(path: Path) -> dict:
+    value = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(value, dict):
+        raise ValueError(f"expected a JSON object in {path}, got {type(value).__name__}")
+    return value
 
 
-def fail(msg: str):
-    global CHECKS_FAILED
-    CHECKS_FAILED += 1
-    print(f"  ❌ {msg}")
+def _check(check_id: str, name: str, callback) -> CheckResult:
+    try:
+        passed, details = callback()
+        return CheckResult(check_id, name, passed, list(details))
+    except (OSError, UnicodeError, json.JSONDecodeError, KeyError, TypeError, ValueError) as exc:
+        return CheckResult(check_id, name, False, [f"{type(exc).__name__}: {exc}"])
 
 
-def info(msg: str):
-    print(f"  INFO: {msg}")
-
-
-def section(title: str):
-    print(f"\n{'─' * 60}")
-    print(title)
-    print("─" * 60)
-
-
-# ═══════════════════════════════════════════════════════════════
-# Check 1: Core memory files exist
-# ═══════════════════════════════════════════════════════════════
-
-section("1. Core Memory Files")
-
-for fname in ("AGENTS.md", "SESSION_MEMORY.md"):
-    fpath = REPO_ROOT / fname
-    if fpath.exists():
-        ok(f"{fname} exists ({fpath.stat().st_size} bytes)")
-    else:
-        fail(f"{fname} missing at {fpath}")
-
-# ═══════════════════════════════════════════════════════════════
-# Check 2: Git state
-# ═══════════════════════════════════════════════════════════════
-
-section("2. Git State")
-
-try:
-    branch = subprocess.check_output(
-        ["git", "rev-parse", "--abbrev-ref", "HEAD"],
-        cwd=REPO_ROOT,
-        text=True,
-    ).strip()
-    commit = subprocess.check_output(
-        ["git", "rev-parse", "--short", "HEAD"],
-        cwd=REPO_ROOT,
-        text=True,
-    ).strip()
-    commit_count = subprocess.check_output(
-        ["git", "rev-list", "--count", "HEAD"],
-        cwd=REPO_ROOT,
-        text=True,
-    ).strip()
-    ok(f"Branch: {branch}")
-    ok(f"Latest commit: {commit}")
-    ok(f"Total commits: {commit_count}")
-except Exception as e:
-    fail(f"Git check failed: {e}")
-
-# ═══════════════════════════════════════════════════════════════
-# Check 3: BOQ Item Schema (Critical)
-# ═══════════════════════════════════════════════════════════════
-
-section("3. BOQ Item Schema (Critical)")
-
-boq_item_json = DOCTYPES / "boq_item" / "boq_item.json"
-try:
-    with open(boq_item_json, "r") as f:
-        boq_item = json.load(f)
-    fieldnames = {f["fieldname"] for f in boq_item.get("fields", [])}
-
-    if "cost_item" in fieldnames:
-        ok("'cost_item' field exists")
-    else:
-        fail("'cost_item' field MISSING")
-
-    if "item_code" not in fieldnames:
-        ok("'item_code' correctly ABSENT")
-    else:
-        fail("'item_code' unexpectedly PRESENT — schema changed!")
-
-    if "item_name" not in fieldnames:
-        ok("'item_name' correctly ABSENT")
-    else:
-        fail("'item_name' unexpectedly PRESENT — schema changed!")
-
-    if "structure" in fieldnames:
-        ok("'structure' field exists")
-    else:
-        fail("'structure' field MISSING")
-
-    info(f"Total fields: {len(fieldnames)}")
-except Exception as e:
-    fail(f"BOQ Item schema check failed: {e}")
-
-# ═══════════════════════════════════════════════════════════════
-# Check 4: BOQ Structure NestedSet
-# ═══════════════════════════════════════════════════════════════
-
-section("4. BOQ Structure NestedSet")
-
-boq_struct_json = DOCTYPES / "boq_structure" / "boq_structure.json"
-try:
-    with open(boq_struct_json, "r") as f:
-        boq_struct = json.load(f)
-    fieldnames = {f["fieldname"] for f in boq_struct.get("fields", [])}
-    required = {"lft", "rgt", "old_parent", "is_group", "wbs_code"}
-    for req in required:
-        if req in fieldnames:
-            ok(f"'{req}' field exists")
+def _memory_files(root: Path) -> tuple[bool, list[str]]:
+    details = []
+    for filename in ("AGENTS.md", "SESSION_MEMORY.md"):
+        path = root / filename
+        if path.is_file():
+            details.append(f"{filename} exists ({path.stat().st_size} bytes)")
         else:
-            fail(f"'{req}' field MISSING")
-except Exception as e:
-    fail(f"BOQ Structure schema check failed: {e}")
+            return False, [*details, f"{filename} missing at {path}"]
+    return True, details
 
-# ═══════════════════════════════════════════════════════════════
-# Check 5: CSS Registration in hooks.py
-# ═══════════════════════════════════════════════════════════════
 
-section("5. CSS Registration in hooks.py")
+def _git_state(root: Path) -> tuple[bool, list[str]]:
+    values = []
+    for args, label in (
+        (("rev-parse", "--abbrev-ref", "HEAD"), "Branch"),
+        (("rev-parse", "--short", "HEAD"), "Latest commit"),
+        (("rev-list", "--count", "HEAD"), "Total commits"),
+    ):
+        result = subprocess.run(["git", *args], cwd=root, text=True, capture_output=True, check=False)
+        if result.returncode:
+            diagnostic = result.stderr.strip() or result.stdout.strip() or "no output"
+            return False, [f"{label} query failed: {diagnostic}"]
+        values.append(f"{label}: {result.stdout.strip()}")
+    return True, values
 
-hooks_py = CONSTRUCTION_PKG / "hooks.py"
-try:
-    hooks_text = hooks_py.read_text()
-    css_list_start = hooks_text.find("app_include_css = [")
-    css_list_end = hooks_text.find("]", css_list_start)
-    css_block = hooks_text[css_list_start:css_list_end]
 
-    registered_css = [line.strip() for line in css_block.splitlines() if ".css" in line]
-    ok(f"app_include_css has {len(registered_css)} CSS file registrations")
+def _boq_item(root: Path) -> tuple[bool, list[str]]:
+    data = _read_json(root / "construction" / "construction" / "doctype" / "boq_item" / "boq_item.json")
+    names = {field["fieldname"] for field in data.get("fields", [])}
+    details = []
+    passed = True
+    for field in ("cost_item", "structure"):
+        if field in names:
+            details.append(f"'{field}' field exists")
+        else:
+            passed = False
+            details.append(f"'{field}' field MISSING")
+    for field in ("item_code", "item_name"):
+        if field not in names:
+            details.append(f"'{field}' correctly ABSENT")
+        else:
+            passed = False
+            details.append(f"'{field}' unexpectedly PRESENT")
+    details.append(f"Total fields: {len(names)}")
+    return passed, details
 
-    expected_css = [
+
+def _boq_structure(root: Path) -> tuple[bool, list[str]]:
+    path = root / "construction" / "construction" / "doctype" / "boq_structure" / "boq_structure.json"
+    names = {field["fieldname"] for field in _read_json(path).get("fields", [])}
+    required = {"lft", "rgt", "old_parent", "is_group", "wbs_code"}
+    missing = sorted(required - names)
+    return not missing, [
+        f"'{name}' field {'MISSING' if name in missing else 'exists'}" for name in sorted(required)
+    ]
+
+
+def _css(root: Path) -> tuple[bool, list[str]]:
+    path = root / "construction" / "hooks.py"
+    text = path.read_text(encoding="utf-8")
+    start = text.find("app_include_css = [")
+    end = text.find("]", start)
+    block = text[start:end]
+    expected = (
         "modern_theme.css",
         "scope_context.css",
         "vite_extensions.css",
         "vite_form_override.css",
         "vite_list_override.css",
         "vfc_sections.css",
-    ]
-    for expected in expected_css:
-        if expected in css_block:
-            ok(f"'{expected}' registered")
-        else:
-            fail(f"'{expected}' NOT registered in app_include_css")
-except Exception as e:
-    fail(f"CSS registration check failed: {e}")
+    )
+    details = [f"app_include_css has {block.count('.css')} CSS file registrations"]
+    missing = [name for name in expected if name not in block]
+    details.extend(f"'{name}' {'NOT registered' if name in missing else 'registered'}" for name in expected)
+    return not missing, details
 
-# ═══════════════════════════════════════════════════════════════
-# Check 6: Theme API Endpoint Count
-# ═══════════════════════════════════════════════════════════════
 
-section("6. Theme API Endpoints")
-
-theme_api = CONSTRUCTION_PKG / "api" / "theme_api.py"
-try:
-    text = theme_api.read_text()
+def _theme_api(root: Path) -> tuple[bool, list[str]]:
+    text = (root / "construction" / "api" / "theme_api.py").read_text(encoding="utf-8")
     whitelist_count = text.count("@frappe.whitelist")
-    func_count = len(
-        [line for line in text.splitlines() if line.startswith("def ") or line.startswith("async def ")]
+    function_count = sum(
+        line.startswith("def ") or line.startswith("async def ") for line in text.splitlines()
     )
-    if whitelist_count == 17:
-        ok(f"Whitelisted endpoints: {whitelist_count}")
-    else:
-        fail(f"Whitelisted endpoints: {whitelist_count} (expected 17)")
-    if func_count == 33:
-        ok(f"Total functions: {func_count}")
-    else:
-        fail(f"Total functions: {func_count} (expected 33)")
-except Exception as e:
-    fail(f"Theme API check failed: {e}")
+    details = [f"Whitelisted endpoints: {whitelist_count}", f"Total functions: {function_count}"]
+    return whitelist_count == 17 and function_count == 33, details
 
-# ═══════════════════════════════════════════════════════════════
-# Check 7: Patches Directory
-# ═══════════════════════════════════════════════════════════════
 
-section("7. Migration Patches")
-
-patches_dir = CONSTRUCTION_PKG / "patches"
-try:
-    expected = [
-        "v6_0",
-        "v6_1",
-        "v6_2",
-        "v6_3",
-        "v6_4",
-        "v6_5",
-        "v6_6",
-        "v6_7",
-        "v6_8",
-        "v7_1",
-        "v7_2",
+def _patches(root: Path) -> tuple[bool, list[str]]:
+    path = root / "construction" / "patches"
+    expected = ("v6_0", "v6_1", "v6_2", "v6_3", "v6_4", "v6_5", "v6_6", "v6_7", "v6_8", "v7_1", "v7_2")
+    missing = [name for name in expected if not (path / name).exists()]
+    file_name = "v7_0_migrate_quantity_revisions.py"
+    if not (path / file_name).exists():
+        missing.append(file_name)
+    return not missing, [
+        "All expected migration paths exist" if not missing else f"Missing: {', '.join(missing)}"
     ]
-    for exp in expected:
-        if (patches_dir / exp).exists():
-            ok(f"Patch dir '{exp}' exists")
-        else:
-            fail(f"Patch dir '{exp}' MISSING")
-    if (patches_dir / "v7_0_migrate_quantity_revisions.py").exists():
-        ok("Patch file 'v7_0_migrate_quantity_revisions.py' exists")
-    else:
-        fail("Patch file 'v7_0_migrate_quantity_revisions.py' MISSING")
-except Exception as e:
-    fail(f"Patch check failed: {e}")
 
-# ═══════════════════════════════════════════════════════════════
-# Check 8: DocType Registry Completeness
-# ═══════════════════════════════════════════════════════════════
 
-section("8. DocType Registry")
+def _registry(root: Path) -> tuple[bool, list[str]]:
+    expected = {
+        "boq_header",
+        "boq_import_batch",
+        "boq_item",
+        "boq_item_stage",
+        "boq_cost_analysis",
+        "boq_cost_analysis_detail",
+        "boq_quantity_revision",
+        "boq_structure",
+        "construction_settings",
+        "construction_theme",
+        "costitem",
+        "direct_labor_designation",
+        "form_layout_profile",
+        "journal_entry",
+        "modern_theme_settings",
+        "plantresource",
+        "resource_price_history",
+        "scope_report_access_log",
+        "user_desk_theme",
+        "user_scope_context",
+        "variation_order",
+        "vo_line",
+    }
+    folders = root / "construction" / "construction" / "doctype"
+    found = {entry.name for entry in folders.iterdir() if entry.is_dir() and not entry.name.startswith("_")}
+    missing, extra = sorted(expected - found), sorted(found - expected)
+    details = [
+        f"All {len(expected)} expected DocTypes present" if not missing else f"Missing: {', '.join(missing)}"
+    ]
+    details.extend(f"Unexpected DocType folder found: '{name}'" for name in extra)
+    return not missing and not extra, details
 
-expected_doctypes = {
-    "boq_header",
-    "boq_import_batch",
-    "boq_item",
-    "boq_item_stage",
-    "boq_cost_analysis",
-    "boq_cost_analysis_detail",
-    "boq_quantity_revision",
-    "boq_structure",
-    "construction_settings",
-    "construction_theme",
-    "costitem",
-    "direct_labor_designation",
-    "form_layout_profile",
-    "journal_entry",
-    "modern_theme_settings",
-    "plantresource",
-    "resource_price_history",
-    "scope_report_access_log",
-    "user_desk_theme",
-    "user_scope_context",
-    "variation_order",
-    "vo_line",
-}
 
-try:
-    found = {d.name for d in DOCTYPES.iterdir() if d.is_dir() and not d.name.startswith("_")}
-    missing = expected_doctypes - found
-    extra = found - expected_doctypes
-    if not missing:
-        ok(f"All {len(expected_doctypes)} expected DocTypes present")
-    else:
-        for m in missing:
-            fail(f"DocType '{m}' MISSING")
-    if extra:
-        for e in extra:
-            fail(f"Unexpected DocType folder found: '{e}'")
-except Exception as e:
-    fail(f"DocType registry check failed: {e}")
-
-# ═══════════════════════════════════════════════════════════════
-# Check 8B: Schema Facts Drift
-# ═══════════════════════════════════════════════════════════════
-
-section("8B. Schema Facts Drift")
-
-try:
-    result = subprocess.run(
-        [sys.executable, str(REPO_ROOT / "scripts" / "schema_drift_checker.py")],
-        cwd=REPO_ROOT,
-        text=True,
-        capture_output=True,
-        check=False,
-    )
-    if result.returncode == 0:
-        ok("docs/ai/SCHEMA_FACTS.md matches live DocType JSON")
-    else:
-        fail("docs/ai/SCHEMA_FACTS.md drift detected")
-        if result.stdout.strip():
-            info(result.stdout.strip())
-        if result.stderr.strip():
-            info(result.stderr.strip())
-except Exception as e:
-    fail(f"Schema drift check failed: {e}")
-
-# ═══════════════════════════════════════════════════════════════
-# Check 9: CostItem & PlantResource Schema
-# ═══════════════════════════════════════════════════════════════
-
-section("9. CostItem & PlantResource")
-
-for dt_name, json_name, key_field in [
-    ("costitem", "cost_item.json", "cost_item_code"),
-    ("plantresource", "plant_resource.json", "resource_code"),
-]:
+def _schema_drift(root: Path) -> tuple[bool, list[str]]:
+    child = root / "scripts" / "schema_drift_checker.py"
     try:
-        path = DOCTYPES / dt_name / json_name
-        with open(path, "r") as f:
-            data = json.load(f)
-        fieldnames = {f["fieldname"] for f in data.get("fields", [])}
-        if key_field in fieldnames:
-            ok(f"{dt_name}: '{key_field}' field exists")
+        result = subprocess.run(
+            [sys.executable, str(child)], cwd=root, text=True, capture_output=True, check=False
+        )
+    except OSError as exc:
+        return False, [f"schema drift checker could not launch: {type(exc).__name__}: {exc}"]
+    if result.returncode == 0:
+        return True, ["docs/ai/SCHEMA_FACTS.md matches live DocType JSON"]
+    diagnostic = result.stdout.strip() or result.stderr.strip() or "child exited without diagnostics"
+    return False, [f"docs/ai/SCHEMA_FACTS.md drift detected: {diagnostic}"]
+
+
+def _resource_schema(root: Path) -> tuple[bool, list[str]]:
+    base = root / "construction" / "construction" / "doctype"
+    expected = (
+        ("costitem", "cost_item.json", "cost_item_code"),
+        ("plantresource", "plant_resource.json", "resource_code"),
+    )
+    details = []
+    passed = True
+    for folder, filename, key in expected:
+        names = {field["fieldname"] for field in _read_json(base / folder / filename).get("fields", [])}
+        if key in names:
+            details.append(f"{folder}: '{key}' field exists")
         else:
-            fail(f"{dt_name}: '{key_field}' field MISSING")
-    except Exception as e:
-        fail(f"{dt_name} schema check failed: {e}")
+            passed = False
+            details.append(f"{folder}: '{key}' field MISSING")
+    return passed, details
 
-# ═══════════════════════════════════════════════════════════════
-# Check 10: ADR.md
-# ═══════════════════════════════════════════════════════════════
 
-section("10. Architecture Decisions")
+def _adr(root: Path) -> tuple[bool, list[str]]:
+    count = (root / "ADR.md").read_text(encoding="utf-8").count("## ADR-")
+    return count >= 7, [f"ADR.md contains {count} ADRs"]
 
-adr_md = REPO_ROOT / "ADR.md"
-try:
-    text = adr_md.read_text()
-    adr_count = text.count("## ADR-")
-    if adr_count >= 7:
-        ok(f"ADR.md contains {adr_count} ADRs")
+
+def run_checks(root: Path) -> list[CheckResult]:
+    checks = (
+        ("SCP-C1", "Core Memory Files", _memory_files),
+        ("SCP-C2", "Git State", _git_state),
+        ("SCP-C3", "BOQ Item Schema", _boq_item),
+        ("SCP-C4", "BOQ Structure NestedSet", _boq_structure),
+        ("SCP-C5", "CSS Registration", _css),
+        ("SCP-C6", "Theme API Endpoints", _theme_api),
+        ("SCP-C7", "Migration Patches", _patches),
+        ("SCP-C8", "DocType Registry", _registry),
+        ("SCP-C8B", "Schema Facts Drift", _schema_drift),
+        ("SCP-C9", "CostItem and PlantResource", _resource_schema),
+        ("SCP-C10", "Architecture Decisions", _adr),
+    )
+    return [
+        _check(check_id, name, lambda callback=callback: callback(root))
+        for check_id, name, callback in checks
+    ]
+
+
+def _report(results: list[CheckResult], root: Path, json_mode: bool) -> int:
+    passed = sum(result.passed for result in results)
+    failed = len(results) - passed
+    if json_mode:
+        payload = {
+            "repo_root": str(root),
+            "checks": [
+                {
+                    "id": result.check_id,
+                    "name": result.name,
+                    "status": "PASS" if result.passed else "FAIL",
+                    "details": result.details,
+                }
+                for result in results
+            ],
+            "passed": passed,
+            "failed": failed,
+        }
+        print(json.dumps(payload, ensure_ascii=False, sort_keys=True))
     else:
-        fail(f"ADR.md contains only {adr_count} ADRs (expected 7+)")
-except Exception as e:
-    fail(f"ADR check failed: {e}")
+        for result in results:
+            print(f"\n{'-' * 60}\n{result.check_id}. {result.name}\n{'-' * 60}")
+            for detail in result.details:
+                print(f"  {'PASS' if result.passed else 'FAIL'}: {detail}")
+        print(f"\nChecks passed: {passed}\nChecks failed: {failed}")
+        print("\nALL CHECKS PASSED" if not failed else f"\n{failed} CHECK(S) FAILED")
+    return 0 if not failed else 1
 
-# ═══════════════════════════════════════════════════════════════
-# Summary
-# ═══════════════════════════════════════════════════════════════
 
-print(f"\n{'=' * 60}")
-print("SUMMARY")
-print("=" * 60)
-print(f"Checks passed: {CHECKS_PASSED}")
-print(f"Checks failed: {CHECKS_FAILED}")
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description="Validate Construction ERP AI context")
+    parser.add_argument("--repo-root", type=Path, help="repository root to validate")
+    parser.add_argument("--json", action="store_true", help="emit one JSON result object")
+    args = parser.parse_args(argv)
+    root = (args.repo_root or Path(__file__).resolve().parents[1]).resolve()
+    return _report(run_checks(root), root, args.json)
 
-if CHECKS_FAILED == 0:
-    print("\n✅ ALL CHECKS PASSED — Safe to seed AI memory.")
-    sys.exit(0)
-else:
-    print(f"\n❌ {CHECKS_FAILED} CHECK(S) FAILED — Review failures before seeding memory.")
-    sys.exit(1)
+
+if __name__ == "__main__":
+    sys.exit(main())

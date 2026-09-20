@@ -60,24 +60,28 @@ def _grant_scope_permissions(user):
         ("Cost Center", _GROUP_CC),
     ):
         if not frappe.db.exists("User Permission", {"user": user, "allow": allow, "for_value": value}):
-            frappe.get_doc({
-                "doctype": "User Permission",
-                "user": user,
-                "allow": allow,
-                "for_value": value,
-            }).insert(ignore_permissions=True)
+            frappe.get_doc(
+                {
+                    "doctype": "User Permission",
+                    "user": user,
+                    "allow": allow,
+                    "for_value": value,
+                }
+            ).insert(ignore_permissions=True)
 
     # Grant Project User Permissions for any project of the scoped company.
     # A role-less user cannot read Project, so without an explicit grant the
     # allowed-project set stays empty and scope selection would be denied.
     for proj in frappe.get_all("Project", filters={"company": "Elrefae"}, pluck="name", limit=5):
         if not frappe.db.exists("User Permission", {"user": user, "allow": "Project", "for_value": proj}):
-            frappe.get_doc({
-                "doctype": "User Permission",
-                "user": user,
-                "allow": "Project",
-                "for_value": proj,
-            }).insert(ignore_permissions=True)
+            frappe.get_doc(
+                {
+                    "doctype": "User Permission",
+                    "user": user,
+                    "allow": "Project",
+                    "for_value": proj,
+                }
+            ).insert(ignore_permissions=True)
 
 
 def _ensure_test_user():
@@ -1486,16 +1490,12 @@ class TestOptionBReportAccessGate(unittest.TestCase):
     # ── Option B admin toggle tests ──────────────────────────────
 
     def _disable_option_b_toggle(self):
-        frappe.db.set_single_value(
-            "Construction Settings", "enable_option_b_report_access_bypass", 0
-        )
+        frappe.db.set_single_value("Construction Settings", "enable_option_b_report_access_bypass", 0)
         frappe.db.commit()
         frappe.clear_cache()
 
     def _enable_option_b_toggle(self):
-        frappe.db.set_single_value(
-            "Construction Settings", "enable_option_b_report_access_bypass", 1
-        )
+        frappe.db.set_single_value("Construction Settings", "enable_option_b_report_access_bypass", 1)
         frappe.db.commit()
         frappe.clear_cache()
 

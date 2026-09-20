@@ -1,0 +1,8 @@
+COMMAND: python3 construction/tests/test_localization_gates.py (standalone, no site)
+STARTED_UTC: 2026-09-10T12:09:26Z
+Ran 89 tests in 2.569s
+OK
+EXIT_CODE: 0
+FINISHED_UTC: 2026-09-10T12:09:29Z
+TESTS_SHA256: 593d5e61679f2a54cb1be2749a6892d18d44c28e7ef4991fcc1c3dfcac621115
+ENVELOPE_LINES: 8

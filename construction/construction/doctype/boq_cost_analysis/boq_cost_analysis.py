@@ -43,16 +43,16 @@ class BOQCostAnalysis(Document):
             if header_project:
                 if self.project and header_project != self.project:
                     frappe.throw(
-                        _("Project mismatch: Analysis project '{0}' does not match BOQ Header project '{1}'.").format(
-                            self.project, header_project
-                        )
+                        _(
+                            "Project mismatch: Analysis project '{0}' does not match BOQ Header project '{1}'."
+                        ).format(self.project, header_project)
                     )
                 header_company = frappe.db.get_value("Project", header_project, "company")
                 if header_company and header_company != self.company:
                     frappe.throw(
-                        _("Company mismatch: Analysis company '{0}' does not match Project company '{1}'.").format(
-                            self.company, header_company
-                        )
+                        _(
+                            "Company mismatch: Analysis company '{0}' does not match Project company '{1}'."
+                        ).format(self.company, header_company)
                     )
 
     def calculate_totals(self):
@@ -120,7 +120,9 @@ class BOQCostAnalysis(Document):
                 "overhead_amount": flt(item_doc.overhead_amount),
                 "profit_amount": flt(item_doc.profit_amount),
                 "calculated_sell_price": flt(item_doc.calculated_sell_price),
-                "est_line_total": flt(item_doc.quantity) * flt(self.total_unit_cost) * (flt(item_doc.factor) or 1.0),
+                "est_line_total": flt(item_doc.quantity)
+                * flt(self.total_unit_cost)
+                * (flt(item_doc.factor) or 1.0),
             },
             update_modified=False,
         )

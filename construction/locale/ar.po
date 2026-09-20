@@ -1056,3 +1056,2414 @@ msgstr "يجب أن يكون {0} بريدا إلكترونيا صالحا"
 #. Label of a Workspace Sidebar Item and Workspace Link
 msgid "Scope Context Settings"
 msgstr "إعدادات سياق النطاق"
+
+#: construction/public/js/typography_settings.js:634
+msgid "Typography Settings"
+msgstr ""
+
+#: construction/construction/doctype/boq_header/boq_header.js:424
+msgid "BOQ is already Locked."
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "+ Add Section"
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "1 Column"
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "1 Column — stacked, easy reading"
+msgstr ""
+
+#: construction/public/js/typography_settings.js
+msgid "11 to 20 px"
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "2 Columns"
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "2 Columns — balanced default"
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "3 Columns"
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "3 Columns — dense, wide screens"
+msgstr ""
+
+#: construction/construction/doctype/form_layout_profile/form_layout_profile.py
+msgid "A default profile ({0}) already exists for {1}. "
+msgstr ""
+
+#: construction/construction/doctype/form_layout_profile/form_layout_profile.py
+msgid "A field entry in section '{0}' is missing 'fieldname'."
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order.js
+msgid "A signed PDF from the client is required before final approval."
+msgstr ""
+
+#: construction/overrides/scope_report.py
+msgid "Access denied: Active scope context is required to view this report."
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Access denied: File '{0}' is not a registered, authorized File attachment."
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Access denied: Private file belongs to another user."
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Access to file outside site directory is forbidden: {0}"
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "Accountant View"
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "Add New Section"
+msgstr ""
+
+#: construction/construction/doctype/boq_item/boq_item.js
+msgid "Add Stage"
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Adjacent row has identical description, unit, quantity, and rate."
+msgstr ""
+
+#: construction/construction/doctype/boq_header/boq_header.js
+msgid "Advance Status"
+msgstr ""
+
+#: construction/public/js/print_settings_dialog.js
+msgid "All columns are hidden. At least one column must be visible to export."
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "All fields visible"
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "All fields — Admin / Power User"
+msgstr ""
+
+#: construction/public/js/translation_list_tools.js
+msgid "All glossary terms already match"
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "Allow section to be collapsed"
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Ambiguous row must be resolved as Section, Item, or Ignore before commit."
+msgstr ""
+
+#: construction/public/js/print_settings_dialog.js
+msgid "An error occurred during export. Please try again."
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "Apply & Save"
+msgstr ""
+
+#: construction/public/js/translation_list_tools.js
+msgid "Apply Glossary Corrections"
+msgstr ""
+
+#: construction/public/js/translation_list_tools.js
+msgid "Applying glossary corrections..."
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order.py
+msgid "Approval PDF file content could not be found on the server."
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order.js
+msgid "Approval blocked"
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order.js
+msgid "Approve"
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order.js
+msgid "Approve by Client"
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order.js
+msgid "Approve by Engineer"
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order.js
+msgid "Approved by Client"
+msgstr ""
+
+#: construction/construction/doctype/boq_quantity_revision/boq_quantity_revision.py
+msgid "Approved revisions cannot be casually edited."
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order.js
+msgid "Approving Variation Order by Client..."
+msgstr ""
+
+#: construction/public/js/translation_list_tools.js
+msgid "Arabic Only"
+msgstr ""
+
+#: construction/public/js/translation_list_tools.js
+msgid "Arabic text to search"
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Archive member '{0}' is too large to process safely."
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order.py
+msgid "At least one VO Line is required."
+msgstr ""
+
+#: construction/public/js/print_settings_dialog.js
+msgid "At least one column must be visible to export."
+msgstr ""
+
+#: construction/construction/doctype/boq_cost_analysis/boq_cost_analysis.py
+msgid "At least one cost detail row is required."
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "BOQ Excel commit is disabled by Construction Settings."
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "BOQ Excel import can only be committed into a Draft BOQ Header."
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "BOQ Excel import has blocking errors and cannot be committed."
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "BOQ Excel import has no Section or Item rows to commit."
+msgstr ""
+
+#: construction/api/boq_api.py
+msgid "BOQ Header is required"
+msgstr ""
+
+#: construction/construction/doctype/boq_structure/boq_structure.py
+msgid "BOQ Header is required before generating WBS code."
+msgstr ""
+
+#: construction/api/boq_api.py
+#: construction/construction/doctype/variation_order/variation_order.py
+msgid "BOQ Header is required."
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order.js
+msgid "BOQ Header status is {0}; VO can only be saved against Locked BOQs."
+msgstr ""
+
+#: construction/api/boq_api.py
+msgid "BOQ Header {0} does not exist."
+msgstr ""
+
+#: construction/services/boq_import_service.py
+#: construction/services/wbs_generator.py
+msgid "BOQ Header {0} was not found."
+msgstr ""
+
+#: construction/construction/doctype/boq_item/boq_item.py
+msgid "BOQ Item can only be linked to leaf nodes (is_group=0)."
+msgstr ""
+
+#: construction/construction/doctype/boq_item_stage/boq_item_stage.py
+msgid "BOQ Item does not belong to selected BOQ Header."
+msgstr ""
+
+#: construction/construction/doctype/boq_item_stage/boq_item_stage.py
+msgid "BOQ Item does not belong to selected BOQ Structure."
+msgstr ""
+
+#: construction/construction/doctype/boq_item_stage/boq_item_stage.py
+msgid "BOQ Item is required"
+msgstr ""
+
+#: construction/construction/doctype/vo_line/vo_line.py
+msgid "BOQ Item is required for VO line type {0}."
+msgstr ""
+
+#: construction/construction/doctype/boq_cost_analysis/boq_cost_analysis.py
+msgid "BOQ Item is required for non-template analyses."
+msgstr ""
+
+#: construction/construction/doctype/vo_line/vo_line.py
+msgid "BOQ Item must be empty for New Item VO lines."
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "BOQ Item was not created for imported structure {0}."
+msgstr ""
+
+#: construction/construction/doctype/boq_item_stage/boq_item_stage.py
+msgid "BOQ Item {0} does not exist"
+msgstr ""
+
+#: construction/construction/doctype/boq_cost_analysis/boq_cost_analysis.py
+#: construction/construction/doctype/vo_line/vo_line.py
+msgid "BOQ Item {0} does not exist."
+msgstr ""
+
+#: construction/construction/doctype/boq_structure/boq_structure_tree.js
+msgid "BOQ Items"
+msgstr ""
+
+#: construction/construction/doctype/boq_item_stage/boq_item_stage.js
+#: construction/public/js/boq_filters.js
+msgid "BOQ Items are linked to leaf Structure nodes only."
+msgstr ""
+
+#: construction/construction/doctype/boq_item/boq_item.js
+msgid "BOQ Items are linked to leaf Structure nodes only. If no structures appear, ensure a leaf-level Structure exists."
+msgstr ""
+
+#: construction/construction/doctype/boq_structure/boq_structure_tree.js
+msgid "BOQ PDF exported"
+msgstr ""
+
+#: construction/construction/doctype/boq_structure/boq_structure.js
+msgid "BOQ Structure Tree"
+msgstr ""
+
+#: construction/construction/doctype/boq_structure/boq_structure_tree.js
+msgid "BOQ exported"
+msgstr ""
+
+#: construction/overrides/scope_enforcement.py
+msgid "Branch '{0}' belongs to Company '{1}', not '{2}.'"
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order.py
+msgid "Cannot add or remove VO lines after Engineer Approval. Return to Submitted status to edit."
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Cannot commit BOQ Excel import because WBS code(s) already exist in this Draft BOQ: {0}."
+msgstr ""
+
+#: construction/construction/doctype/boq_structure/boq_structure.py
+msgid "Cannot convert BOQ Structure nodes unless BOQ Header is Draft."
+msgstr ""
+
+#: construction/construction/doctype/boq_structure/boq_structure.py
+msgid "Cannot convert to leaf: node has child nodes."
+msgstr ""
+
+#: construction/construction/doctype/boq_header/boq_header.py
+msgid "Cannot create BOQ Header for Project '{0}' outside active Scope Context '{1}'."
+msgstr ""
+
+#: construction/api/boq_api.py
+msgid "Cannot create Material Request: Linked Project {0} has no Company assigned."
+msgstr ""
+
+#: construction/services/boq_lifecycle.py
+msgid "Cannot delete BOQ Item Stage {0}: it is referenced by {1}"
+msgstr ""
+
+#: construction/services/boq_lifecycle.py
+msgid "Cannot delete BOQ Structure {0}: it is referenced by {1}."
+msgstr ""
+
+#: construction/services/boq_lifecycle.py
+msgid "Cannot delete BOQ Structure {0}: linked BOQ Item {1} has stages."
+msgstr ""
+
+#: construction/services/boq_lifecycle.py
+msgid "Cannot delete BOQ Structure {0}: linked BOQ Item {1} is referenced by {2}."
+msgstr ""
+
+#: construction/services/boq_lifecycle.py
+msgid "Cannot delete certified BOQ Item Stage {0}. Create an adjustment stage instead."
+msgstr ""
+
+#: construction/construction/doctype/boq_item/boq_item.py
+msgid "Cannot modify BOQ Item: BOQ is Frozen."
+msgstr ""
+
+#: construction/construction/doctype/boq_item/boq_item.py
+msgid "Cannot modify BOQ Item: BOQ is Locked."
+msgstr ""
+
+#: construction/construction/doctype/boq_structure/boq_structure.py
+msgid "Cannot modify BOQ Structure: BOQ is {0}."
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order.py
+msgid "Cannot modify VO lines after Engineer Approval. Return to Submitted status to edit."
+msgstr ""
+
+#: construction/construction/doctype/boq_item_stage/boq_item_stage.py
+msgid "Cannot modify certified BOQ Item Stage fields: {0}. Create an adjustment stage instead."
+msgstr ""
+
+#: construction/construction/doctype/boq_item/boq_item.py
+msgid "Cannot modify field '{0}': BOQ is in Pricing status. "
+msgstr ""
+
+#: construction/construction/doctype/boq_item_stage/boq_item_stage.py
+msgid "Cannot modify planning fields on BOQ Item Stage when BOQ is {0}: {1}."
+msgstr ""
+
+#: construction/public/js/translation_list_tools.js
+msgid "Catalog sync: {0} created, {1} updated"
+msgstr ""
+
+#: construction/construction/doctype/boq_item_stage/boq_item_stage_list.js
+msgid "Certified"
+msgstr ""
+
+#: construction/services/boq_operational.py
+msgid "Certified quantity cannot exceed measured executed quantity"
+msgstr ""
+
+#: construction/construction/doctype/boq_item_stage/boq_item_stage.js
+msgid "Certified stage is locked. Create an adjustment stage for corrections."
+msgstr ""
+
+#: construction/construction/doctype/boq_item_stage/boq_item_stage.js
+msgid "Certified {0}%"
+msgstr ""
+
+#: construction/public/js/translation_list_tools.js
+msgid "Checking against the Egyptian glossary..."
+msgstr ""
+
+#: construction/construction/doctype/boq_structure/boq_structure_tree.js
+msgid "Choose a BOQ to view its structure..."
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order.js
+msgid "Client Approval Ref"
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order_list.js
+msgid "Client Approved"
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order.py
+msgid "Client approval document '{0}' is not a registered File attachment."
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order.py
+msgid "Client approval document '{0}' is not attached to this Variation Order."
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order.py
+msgid "Client approval document must be a PDF file (.pdf)."
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order.js
+msgid "Client approval document must be a PDF."
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order.js
+msgid "Client approved — variation items and revised quantities are now in effect."
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "Collapse by default initially"
+msgstr ""
+
+#: construction/public/js/print_settings_dialog.js
+msgid "Column Configuration"
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "Column Density"
+msgstr ""
+
+#: construction/public/js/native_frappe_controls_compat.js
+msgid "Column Widths"
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "Column density set to {0}"
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "Compact (Minimal)"
+msgstr ""
+
+#: construction/api/scope_context_api.py
+msgid "Company is mandatory for Scope Context."
+msgstr ""
+
+#: construction/construction/doctype/boq_cost_analysis/boq_cost_analysis.py
+msgid "Company is required."
+msgstr ""
+
+#: construction/construction/doctype/boq_cost_analysis/boq_cost_analysis.py
+msgid "Company mismatch: Analysis company '{0}' does not match Project company '{1}'."
+msgstr ""
+
+#: construction/public/js/typography_settings.js
+msgid "Components"
+msgstr ""
+
+#: construction/construction/doctype/boq_item/boq_item.py
+msgid "Computed field '{0}' must be non-negative. Got: {1}"
+msgstr ""
+
+#: construction/public/js/native_frappe_controls_compat.js
+msgid "Configure visible columns, column order, and list settings"
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Confirmed import mode is required before committing BOQ Excel import."
+msgstr ""
+
+#: construction/overrides/switch_theme_simple.py
+msgid "Conflicting theme arguments: theme='{0}' vs theme_name='{1}'"
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order.js
+msgid "Contract +{0}"
+msgstr ""
+
+#: construction/construction/doctype/boq_header/boq_header.js
+msgid "Contract Qty"
+msgstr ""
+
+#: construction/construction/doctype/boq_header/boq_header.js
+msgid "Contract Value"
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order.js
+msgid "Contract {0}"
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Corrupted Excel archive file."
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Corrupted or hostile worksheet XML: {0}"
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "Costs + Values — hides engineering fields"
+msgstr ""
+
+#: construction/services/boq_operational.py
+msgid "Could not acquire BOQ Item Stage distribution lock. Please retry."
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order.js
+msgid "Could not create Material Request"
+msgstr ""
+
+#: construction/construction/doctype/boq_header/boq_header.js
+msgid "Could not create VO"
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Could not detect a BOQ header row in the first {0} rows."
+msgstr ""
+
+#: construction/construction/doctype/boq_header/boq_header.js
+msgid "Create Draft VO"
+msgstr ""
+
+#: construction/construction/doctype/boq_item/boq_item.js
+msgid "Create Leaf Structure"
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order.js
+msgid "Create Material Request"
+msgstr ""
+
+#: construction/construction/doctype/boq_header/boq_header.js
+msgid "Created {0}"
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order.js
+msgid "Creating Material Request..."
+msgstr ""
+
+#: construction/construction/doctype/boq_header/boq_header.js
+msgid "Creating Variation Order..."
+msgstr ""
+
+#: construction/construction/doctype/construction_theme/construction_theme.py
+msgid "Custom CSS contains blocked pattern: {0}. "
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "Default (All Fields)"
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Description is required."
+msgstr ""
+
+#: construction/public/js/typography_settings.js
+msgid "Desk Font Size"
+msgstr ""
+
+#: construction/public/js/typography_settings.js
+msgid "Desk Font Weight"
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order.js
+msgid "Draft — fill in VO lines and Submit to Engineer to start approval."
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "Drag fields here"
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "Drag sections to reorder. Drag fields inside/between sections to arrange columns. Set 1, 2, or 3 columns per section."
+msgstr ""
+
+#: construction/public/js/native_frappe_controls_compat.js
+msgid "Drag to resize column"
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Duplicate WBS code {0} also appears on row {1}."
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Duplicate proposed WBS codes in import preview: {0}."
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order_list.js
+msgid "Engineer Approved"
+msgstr ""
+
+#: construction/construction/doctype/boq_header/boq_header.js
+msgid "Engineer Name"
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "Engineer View"
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order.js
+msgid "Engineer approved — awaiting signed client approval PDF."
+msgstr ""
+
+#: construction/public/js/generic_export_menu.js
+msgid "Excel (XLSX)"
+msgstr ""
+
+#: construction/construction/doctype/boq_header/boq_header.js
+#: construction/construction/doctype/boq_structure/boq_structure_tree.js
+msgid "Excel - Full BOQ"
+msgstr ""
+
+#: construction/construction/doctype/boq_header/boq_header.js
+msgid "Excel - Header Only"
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Excel archive contains too many parts ({0}; limit {1})."
+msgstr ""
+
+#: construction/api/cost_database_api.py
+msgid "Excel file is required"
+msgstr ""
+
+#: construction/public/js/print_settings_dialog.js
+msgid "Export Failed"
+msgstr ""
+
+#: construction/public/js/generic_export_menu.js
+msgid "Export completed successfully"
+msgstr ""
+
+#: construction/construction/doctype/boq_structure/boq_structure.js
+msgid "Export to Excel"
+msgstr ""
+
+#: construction/construction/doctype/boq_structure/boq_structure.js
+msgid "Export to PDF"
+msgstr ""
+
+#: construction/public/js/print_settings_dialog.js
+msgid "Exporting..."
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Factor must be greater than zero."
+msgstr ""
+
+#: construction/public/js/print_settings_dialog.js
+msgid "Failed to save print settings. Your current configuration is still active and you can proceed with the export."
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order.py
+msgid "Failed to verify PDF attachment structure: {0}"
+msgstr ""
+
+#: construction/construction/doctype/boq_item/boq_item.py
+msgid "Field '{0}' must be between 0 and 100. Got: {1}"
+msgstr ""
+
+#: construction/services/boq_operational.py
+msgid "Field '{0}' must be non-negative"
+msgstr ""
+
+#: construction/construction/doctype/boq_item/boq_item.py
+msgid "Field '{0}' must be non-negative. Got: {1}"
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "Field Visibility"
+msgstr ""
+
+#: construction/construction/doctype/form_layout_profile/form_layout_profile.py
+msgid "Fieldname '{0}' appears more than once in the layout."
+msgstr ""
+
+#: construction/public/js/boq_export_columns.js
+msgid "File Ref"
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "File URL is required."
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "File size ({0} bytes) exceeds maximum allowed limit of 25MB."
+msgstr ""
+
+#: construction/public/js/translation_list_tools.js
+msgid "Filter Missing Arabic"
+msgstr ""
+
+#: construction/public/js/translation_list_tools.js
+msgid "Filter Placeholder (Junk) Arabic"
+msgstr ""
+
+#: construction/public/js/translation_list_tools.js
+msgid "Finding placeholder translations..."
+msgstr ""
+
+#: construction/public/js/translation_list_tools.js
+msgid "Finding source texts missing Arabic..."
+msgstr ""
+
+#: construction/public/js/typography_settings.js
+msgid "Font Family"
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "Form Config"
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "Form Config saved"
+msgstr ""
+
+#: construction/public/js/typography_settings.js
+msgid "Form Font Family"
+msgstr ""
+
+#: construction/public/js/typography_settings.js
+msgid "Form Font Size"
+msgstr ""
+
+#: construction/public/js/typography_settings.js
+msgid "Form Font Weight"
+msgstr ""
+
+#: construction/construction/doctype/form_layout_profile/form_layout_profile.py
+msgid "Form Layout Profile — Warnings"
+msgstr ""
+
+#: construction/services/boq_operational.py
+msgid "Frozen/Locked BOQ requires exact stage distribution. Total: {0}, Expected: {1}"
+msgstr ""
+
+#: construction/api/export_api.py
+msgid "Global Export Menu is disabled in Construction Settings."
+msgstr ""
+
+#: construction/public/js/translation_list_tools.js
+msgid "Glossary corrections preview"
+msgstr ""
+
+#: construction/construction/doctype/boq_item_stage/boq_item_stage.js
+msgid "Got it"
+msgstr ""
+
+#: construction/construction/doctype/boq_structure/boq_structure_tree.js
+msgid "Groups contain child nodes. Non-groups are leaf items for pricing."
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Header row has no description/title column; parsing confidence is reduced."
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Hostile or out-of-bounds merged range detected ({0})."
+msgstr ""
+
+#: construction/construction/doctype/boq_header/boq_header.js
+msgid "Import Excel"
+msgstr ""
+
+#: construction/public/js/translation_list_tools.js
+msgid "Import Review Queue"
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Import file size exceeds the configured limit of {0} bytes."
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Import file was not found on server: {0}"
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Import row count exceeds the configured limit of {0} rows."
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Import row count exceeds the synchronous threshold of {0} rows."
+msgstr ""
+
+#: construction/public/js/translation_list_tools.js
+msgid "Import {0} reviewed translation(s) from the queue? Existing rows will be updated to the reviewed value."
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Imported BOQ row {0} has no proposed WBS code."
+msgstr ""
+
+#: construction/public/js/translation_list_tools.js
+msgid "Imported {0} created, {1} updated from {2} total"
+msgstr ""
+
+#: construction/public/js/translation_list_tools.js
+msgid "Importing review queue..."
+msgstr ""
+
+#: construction/api/cost_database_api.py
+msgid "Insufficient permission to import cost database"
+msgstr ""
+
+#: construction/api/cost_database_api.py
+msgid "Insufficient permission to reprice analyses"
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order.py
+msgid "Invalid PDF file: Missing %PDF- file signature header."
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order.py
+msgid "Invalid PDF file: PDF document contains no pages."
+msgstr ""
+
+#: construction/construction/doctype/vo_line/vo_line.py
+msgid "Invalid VO line type: {0}."
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order.py
+msgid "Invalid Variation Order status transition from {0} to {1}."
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Invalid confirmed import mode."
+msgstr ""
+
+#: construction/services/cost_database_service.py
+msgid "Invalid cost_stream '{0}'. Valid values: {1}"
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Invalid file format: Expected an Excel workbook (.xlsx)."
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Invalid file path (traversal detected): {0}"
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Invalid import mode."
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Invalid row resolution. Use Section, Item, or Ignore."
+msgstr ""
+
+#: construction/api/boq_api.py
+msgid "Invalid status transition from {0}. Next status should be {1}"
+msgstr ""
+
+#: construction/construction/doctype/construction_theme/construction_theme.py
+msgid "Invalid theme CSS path for '{0}'"
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "Layout"
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "Layout Presets"
+msgstr ""
+
+#: construction/public/js/typography_settings.js
+msgid "List Font Family"
+msgstr ""
+
+#: construction/public/js/typography_settings.js
+msgid "List Font Size"
+msgstr ""
+
+#: construction/public/js/typography_settings.js
+msgid "List Font Weight"
+msgstr ""
+
+#: construction/public/js/native_frappe_controls_compat.js
+msgid "List Settings is a native Frappe system-level setting. You need the System Manager role to change list columns globally."
+msgstr ""
+
+#: construction/construction/doctype/boq_header/boq_header.js
+msgid "Loading revised BOQ view..."
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "Loading sections..."
+msgstr ""
+
+#: construction/construction/doctype/construction_theme/construction_theme.py
+msgid "Login Page Background Color is required when "
+msgstr ""
+
+#: construction/construction/doctype/construction_theme/construction_theme.py
+msgid "Login Page Background Image is required when "
+msgstr ""
+
+#: construction/construction/doctype/construction_theme/construction_theme.py
+msgid "Login Page Background Image was set to public. "
+msgstr ""
+
+#: construction/construction/doctype/construction_theme/construction_theme.py
+msgid "Login Page Title must not exceed 30 characters. "
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "Manage Sections"
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "Manager View"
+msgstr ""
+
+#: construction/api/boq_api.py
+msgid "Material Request can only be created from Approved by Client VOs."
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order.js
+msgid "Material Request {0} created"
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "Maximize"
+msgstr ""
+
+#: construction/construction/doctype/boq_item_stage/boq_item_stage.js
+msgid "Measured {0}%"
+msgstr ""
+
+#: construction/construction/doctype/boq_item_stage/boq_item_stage.js
+msgid "Measurement entry is available. Certification is limited to Project Manager roles."
+msgstr ""
+
+#: construction/public/js/typography_settings.js
+msgid "Menu Font Family"
+msgstr ""
+
+#: construction/public/js/typography_settings.js
+msgid "Menu Font Size"
+msgstr ""
+
+#: construction/public/js/typography_settings.js
+msgid "Menu Font Weight"
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order.js
+msgid "Missing PDF"
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "Move Down"
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "Move Up"
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Multiple possible header rows found; earliest highest-scoring row was selected."
+msgstr ""
+
+#: construction/public/js/typography_settings.js
+msgid "Navbar Font Family"
+msgstr ""
+
+#: construction/public/js/typography_settings.js
+msgid "Navbar Font Size"
+msgstr ""
+
+#: construction/public/js/typography_settings.js
+msgid "Navbar Font Weight"
+msgstr ""
+
+#: construction/construction/doctype/vo_line/vo_line.py
+msgid "New Item VO lines require a positive quantity."
+msgstr ""
+
+#: construction/construction/doctype/vo_line/vo_line.py
+msgid "New Item VO lines require an agreed unit price."
+msgstr ""
+
+#: construction/construction/doctype/boq_quantity_revision/boq_quantity_revision.py
+msgid "New Variation Item requires previous quantity to be zero."
+msgstr ""
+
+#: construction/construction/doctype/boq_header/boq_header.js
+msgid "New Variation Order"
+msgstr ""
+
+#: construction/construction/doctype/boq_header/boq_header.js
+msgid "New Variation Order for {0}"
+msgstr ""
+
+#: construction/construction/doctype/boq_header/boq_header.js
+msgid "No BOQ items found for this header."
+msgstr ""
+
+#: construction/public/js/print_settings_dialog.js
+msgid "No columns available for configuration."
+msgstr ""
+
+#: construction/api/export_api.py
+msgid "No columns selected for export."
+msgstr ""
+
+#: construction/public/js/scope_context_ui.js
+msgid "No companies assigned. Contact your administrator."
+msgstr ""
+
+#: construction/public/js/overrides/ct_link_control.js
+msgid "No options available"
+msgstr ""
+
+#: construction/public/js/overrides/ct_link_control.js
+#: construction/public/js/overrides/ct_select_control.js
+msgid "No results"
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "No sections defined."
+msgstr ""
+
+#: construction/api/boq_api.py
+msgid "No variation items found in this VO."
+msgstr ""
+
+#: construction/public/js/translation_list_tools.js
+msgid "Normalize Translation Keys"
+msgstr ""
+
+#: construction/public/js/translation_list_tools.js
+msgid "Normalized {0} translation records"
+msgstr ""
+
+#: construction/public/js/translation_list_tools.js
+msgid "Normalizing translation records..."
+msgstr ""
+
+#: construction/api/scope_context_api.py
+msgid "Not authorized"
+msgstr ""
+
+#: construction/api/scope_context_api.py
+msgid "Not authorized to access this project."
+msgstr ""
+
+#: construction/api/scope_context_api.py
+msgid "Not authorized to inspect scope dimensions of another user."
+msgstr ""
+
+#: construction/api/scope_context_api.py
+msgid "Not authorized to inspect scope hierarchy of another user."
+msgstr ""
+
+#: construction/api/scope_context_api.py
+msgid "Not authorized: Company '{0}'"
+msgstr ""
+
+#: construction/api/scope_context_api.py
+msgid "Not authorized: Cost Center '{0}'"
+msgstr ""
+
+#: construction/api/scope_context_api.py
+msgid "Not authorized: Department '{0}'"
+msgstr ""
+
+#: construction/api/scope_context_api.py
+msgid "Not authorized: Project '{0}'"
+msgstr ""
+
+#: construction/overrides/scope_enforcement.py
+msgid "Not authorized: {0} '{1}' is outside your permitted hierarchy."
+msgstr ""
+
+#: construction/api/scope_context_api.py
+msgid "Not permitted to create {0}"
+msgstr ""
+
+#: construction/overrides/switch_theme_simple.py
+msgid "Not permitted to switch themes from this session."
+msgstr ""
+
+#: construction/construction/doctype/boq_structure/boq_structure.js
+msgid "Note: This is a Group node. BOQ Items are not created for groups."
+msgstr ""
+
+#: construction/construction/doctype/boq_quantity_revision/boq_quantity_revision.py
+msgid "Omission requires revised quantity to be zero."
+msgstr ""
+
+#: construction/construction/doctype/vo_line/vo_line.py
+msgid "Omitted BOQ Items cannot be selected for a new Variation Order line."
+msgstr ""
+
+#: construction/construction/doctype/boq_cost_analysis/boq_cost_analysis.py
+msgid "Only Draft analyses can be submitted."
+msgstr ""
+
+#: construction/construction/doctype/boq_item_stage/boq_item_stage.py
+msgid "Only Project Manager, Construction Owner, or System Manager can certify BOQ Item Stages."
+msgstr ""
+
+#: construction/construction/doctype/form_layout_profile/form_layout_profile.py
+msgid "Only System Manager can create Form Layout Profiles."
+msgstr ""
+
+#: construction/construction/api/layout_api.py
+msgid "Only System Manager can modify Form Layout Profiles."
+msgstr ""
+
+#: construction/services/wbs_generator.py
+msgid "Only System Manager can resequence BOQ WBS codes."
+msgstr ""
+
+#: construction/construction/doctype/construction_theme/construction_theme.py
+msgid "Only one theme can be the default dark theme. "
+msgstr ""
+
+#: construction/construction/doctype/construction_theme/construction_theme.py
+msgid "Only one theme can be the default light theme. "
+msgstr ""
+
+#: construction/construction/doctype/user_desk_theme/user_desk_theme.js
+msgid "Open Typography Settings"
+msgstr ""
+
+#: construction/construction/doctype/boq_quantity_revision/boq_quantity_revision.py
+msgid "Original Lock revisions must be system-generated and approved."
+msgstr ""
+
+#: construction/public/js/vfc_layout_engine.js
+msgid "Other Fields"
+msgstr ""
+
+#: construction/construction/doctype/boq_item_stage/boq_item_stage_list.js
+msgid "Over Measured"
+msgstr ""
+
+#: construction/public/js/translation_list_tools.js
+msgid "Overwrite any mismatching Arabic rows with the canonical Egyptian glossary? This is explicit and non-reversible."
+msgstr ""
+
+#: construction/public/js/boq_export_columns.js
+msgid "Owner Page"
+msgstr ""
+
+#: construction/construction/doctype/boq_header/boq_header.js
+#: construction/construction/doctype/boq_structure/boq_structure_tree.js
+msgid "PDF - Full BOQ"
+msgstr ""
+
+#: construction/construction/doctype/boq_header/boq_header.js
+msgid "PDF - Header Only"
+msgstr ""
+
+#: construction/construction/doctype/boq_structure/boq_structure.py
+msgid "Parent BOQ Structure belongs to another BOQ Header."
+msgstr ""
+
+#: construction/construction/doctype/boq_structure/boq_structure.py
+msgid "Parent BOQ Structure must be a group node."
+msgstr ""
+
+#: construction/construction/doctype/boq_structure/boq_structure.py
+msgid "Parent BOQ Structure must have a WBS code before adding children."
+msgstr ""
+
+#: construction/construction/doctype/boq_structure/boq_structure.py
+msgid "Parent BOQ Structure {0} was not found."
+msgstr ""
+
+#: construction/construction/doctype/vo_line/vo_line.py
+msgid "Parent Structure is required for New Item VO lines."
+msgstr ""
+
+#: construction/construction/doctype/vo_line/vo_line.py
+msgid "Parent Structure must be a group node for New Items."
+msgstr ""
+
+#: construction/construction/doctype/vo_line/vo_line.py
+msgid "Parent Structure must belong to the selected BOQ Header."
+msgstr ""
+
+#: construction/construction/doctype/vo_line/vo_line.py
+msgid "Parent Structure {0} does not exist."
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Parent WBS cannot reference the same row WBS code."
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Parent WBS {0} appears after this child row in the uploaded file."
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Parent WBS {0} exists in BOQ but is not a Section row."
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Parent WBS {0} exists in the uploaded file but is not a Section row."
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Parent WBS {0} was not found in the uploaded file or target Draft BOQ."
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Parent WBS {0} was not resolved during import commit."
+msgstr ""
+
+#: construction/api/boq_api.py
+msgid "Parent structure '{0}' does not belong to BOQ Header '{1}'."
+msgstr ""
+
+#: construction/services/boq_operational.py
+msgid "Percent complete must be between 0 and 100"
+msgstr ""
+
+#: construction/public/js/native_frappe_controls_compat.js
+msgid "Permission Required"
+msgstr ""
+
+#: construction/public/js/frappe_compat_patches.js
+msgid "Please select BOQ Header and load the tree first."
+msgstr ""
+
+#: construction/construction/doctype/boq_structure/boq_structure_tree.js
+msgid "Please select a BOQ Header first."
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "Presets"
+msgstr ""
+
+#: construction/public/js/translation_list_tools.js
+msgid "Preview Glossary Corrections"
+msgstr ""
+
+#: construction/public/js/translation_list_tools.js
+msgid "Previewing review-queue import..."
+msgstr ""
+
+#: construction/construction/doctype/boq_item/boq_item_list.js
+msgid "Priced"
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "Pricing and totals — hides engineering fields"
+msgstr ""
+
+#: construction/construction/doctype/boq_header/boq_header.js
+msgid "Print - Full BOQ"
+msgstr ""
+
+#: construction/construction/doctype/boq_header/boq_header.js
+msgid "Print - Header Only"
+msgstr ""
+
+#: construction/construction/doctype/boq_item_stage/boq_item_stage.js
+msgid "Progress {0}%"
+msgstr ""
+
+#: construction/construction/doctype/boq_header/boq_header.py
+msgid "Project comes from Scope Context. Set a Project in the top bar before creating a BOQ Header."
+msgstr ""
+
+#: construction/construction/doctype/boq_cost_analysis/boq_cost_analysis.py
+msgid "Project mismatch: Analysis project '{0}' does not match BOQ Header project '{1}'."
+msgstr ""
+
+#: construction/api/scope_context_api.py
+#: construction/construction/doctype/boq_header/boq_header.py
+msgid "Project {0} does not exist."
+msgstr ""
+
+#: construction/construction/doctype/boq_item_stage/boq_item_stage.py
+#: construction/construction/doctype/variation_order/variation_order.py
+msgid "Project {0} does not match your active scope project {1}. Switch your scope in the top bar and try again."
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "Project, Title, Status only — mobile / quick view"
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "Quantities + Stages — hides financial totals"
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Quantity must be greater than zero."
+msgstr ""
+
+#: construction/construction/doctype/boq_quantity_revision/boq_quantity_revision.py
+msgid "Rate change justification is required when change exceeds 25% from contract."
+msgstr ""
+
+#: construction/construction/doctype/vo_line/vo_line.py
+msgid "Rate change justification is required when quantity changes by more than 25 percent from contract."
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order.js
+msgid "Reject"
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order.js
+msgid "Rejected — VO is locked; create a new VO if needed."
+msgstr ""
+
+#: construction/construction/doctype/form_layout_profile/form_layout_profile.py
+msgid "Required field '{0}' cannot be hidden by a shared profile."
+msgstr ""
+
+#: construction/public/js/print_settings_dialog.js
+msgid "Reset to Defaults"
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "Revert failed: {0}"
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "Revert to Default / Native"
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "Revert to default/native layout? This resets your VFC density, hidden fields, preset, and personal layout for this form."
+msgstr ""
+
+#: construction/public/js/translation_list_tools.js
+msgid "Review queue has {0} entries, nothing new to apply"
+msgstr ""
+
+#: construction/construction/doctype/boq_header/boq_header.js
+msgid "Revised BOQ View"
+msgstr ""
+
+#: construction/construction/doctype/boq_header/boq_header.js
+msgid "Revised BOQ — {0}"
+msgstr ""
+
+#: construction/construction/doctype/boq_header/boq_header.js
+msgid "Revised Qty"
+msgstr ""
+
+#: construction/construction/doctype/boq_header/boq_header.js
+msgid "Revised Value"
+msgstr ""
+
+#: construction/construction/doctype/boq_quantity_revision/boq_quantity_revision.py
+#: construction/construction/doctype/vo_line/vo_line.py
+msgid "Revised quantity cannot be negative."
+msgstr ""
+
+#: construction/construction/doctype/vo_line/vo_line.py
+msgid "Revised unit price is required when the VO rate change rule is triggered."
+msgstr ""
+
+#: construction/services/boq_accounting.py
+msgid "Row {0}: BOQ Header {1} is {2}. Transaction attribution is allowed only for {3}."
+msgstr ""
+
+#: construction/services/boq_accounting.py
+msgid "Row {0}: BOQ Item Stage requires BOQ Item for BOQ attribution."
+msgstr ""
+
+#: construction/services/boq_accounting.py
+msgid "Row {0}: BOQ Item Stage {1} does not belong to selected BOQ Item {2}."
+msgstr ""
+
+#: construction/services/boq_accounting.py
+msgid "Row {0}: BOQ Item does not exist: {1}"
+msgstr ""
+
+#: construction/services/quantity_revisions.py
+msgid "Row {0}: BOQ Item {1} not found."
+msgstr ""
+
+#: construction/services/boq_accounting.py
+msgid "Row {0}: BOQ attribution is incomplete. Select a BOQ Item or clear the BOQ fields."
+msgstr ""
+
+#: construction/services/quantity_revisions.py
+msgid "Row {0}: Linked BOQ Item is required for {1}."
+msgstr ""
+
+#: construction/services/boq_accounting.py
+msgid "Row {0}: Project mismatch. Transaction: {1}, BOQ: {2}"
+msgstr ""
+
+#: construction/api/boq_api.py
+msgid "Row {0}: Valid ERPNext Item Code is required for variation item '{1}' to generate Material Request."
+msgstr ""
+
+#: construction/public/js/print_settings_dialog.js
+msgid "Save Settings"
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "Saved per-browser. Changes apply immediately."
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "Saved via user settings"
+msgstr ""
+
+#: construction/public/js/typography_settings.js
+msgid "Saving typography settings..."
+msgstr ""
+
+#: construction/overrides/scope_enforcement.py
+msgid "Scope boundary violation: Document company '{0}' does not match active user scope '{1}.'"
+msgstr ""
+
+#: construction/overrides/scope_enforcement.py
+msgid "Scope boundary violation: Document cost center '{0}' is outside active user scope '{1}.'"
+msgstr ""
+
+#: construction/overrides/scope_enforcement.py
+msgid "Scope boundary violation: Document project '{0}' does not match active user scope '{1}.'"
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order.js
+msgid "Scope changed. Selected BOQ and VO lines have been cleared to prevent stale data."
+msgstr ""
+
+#: construction/construction/doctype/boq_item_stage/boq_item_stage.js
+msgid "Scope changed. Selected BOQ details have been cleared to prevent stale data."
+msgstr ""
+
+#: construction/overrides/scope_enforcement.py
+msgid "Scope enforcement is active: An active User Scope Context is required to create or modify scoped documents."
+msgstr ""
+
+#: construction/overrides/scope_enforcement.py
+msgid "Scope enforcement is active: Guest sessions cannot modify scoped documents."
+msgstr ""
+
+#: construction/public/js/scope_context_list_filter.js
+msgid "Scope filter disabled for {0}"
+msgstr ""
+
+#: construction/public/js/scope_context_list_filter.js
+msgid "Scope filter enabled for {0}"
+msgstr ""
+
+#: construction/public/js/translation_list_tools.js
+msgid "Search Arabic Text"
+msgstr ""
+
+#: construction/public/js/overrides/ct_link_control.js
+#: construction/public/js/overrides/ct_select_control.js
+msgid "Search…"
+msgstr ""
+
+#: construction/construction/doctype/form_layout_profile/form_layout_profile.py
+msgid "Section '{0}': column_count must be 1, 2, or 3 (got {1})."
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "Section Name"
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Section rows cannot carry unit, quantity, or rate values."
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "Sections"
+msgstr ""
+
+#: construction/overrides/report_guard.py
+msgid "Security Error: Report scope enforcement is unavailable. "
+msgstr ""
+
+#: construction/overrides/scope_enforcement.py
+#: construction/overrides/scope_report.py
+msgid "Security Error: Scope enforcement configuration could not be loaded."
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order.py
+msgid "Segregation of duties violation: Submitter and Engineer approver cannot grant final Client approval."
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order.py
+msgid "Segregation of duties violation: The submitter cannot approve their own Variation Order."
+msgstr ""
+
+#: construction/construction/doctype/boq_structure/boq_structure_tree.js
+msgid "Select BOQ Header"
+msgstr ""
+
+#: construction/construction/doctype/boq_item/boq_item.js
+#: construction/construction/doctype/boq_item_stage/boq_item_stage.js
+msgid "Select BOQ Header first"
+msgstr ""
+
+#: construction/public/js/boq_filters.js
+msgid "Select BOQ Item first"
+msgstr ""
+
+#: construction/construction/doctype/boq_item_stage/boq_item_stage.js
+#: construction/public/js/boq_filters.js
+msgid "Select BOQ Structure first"
+msgstr ""
+
+#: construction/construction/doctype/boq_item_stage/boq_item_stage.js
+#: construction/public/js/boq_filters.js
+msgid "Select BOQ Structure first — items link to leaf structures only"
+msgstr ""
+
+#: construction/construction/doctype/boq_item_stage/boq_item_stage.js
+#: construction/public/js/boq_filters.js
+msgid "Select Project first"
+msgstr ""
+
+#: construction/public/js/scope_context_ui.js
+msgid "Select Your Working Company"
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "Select a preset, then click Apply & Save. Synced across devices."
+msgstr ""
+
+#: construction/public/js/overrides/ct_link_control.js
+msgid "Select parent field first"
+msgstr ""
+
+#: construction/construction/doctype/boq_item_stage/boq_item_stage.py
+msgid "Selected BOQ Header does not belong to selected Project."
+msgstr ""
+
+#: construction/construction/doctype/boq_item_stage/boq_item_stage.py
+msgid "Selected BOQ Structure does not belong to selected BOQ Header."
+msgstr ""
+
+#: construction/public/js/overrides/ct_link_control.js
+#: construction/public/js/overrides/ct_select_control.js
+msgid "Select…"
+msgstr ""
+
+#: construction/public/js/native_frappe_controls_compat.js
+msgid "Set list column widths"
+msgstr ""
+
+#: construction/public/js/print_settings_dialog.js
+msgid "Settings reset to defaults."
+msgstr ""
+
+#: construction/public/js/print_settings_dialog.js
+msgid "Settings saved."
+msgstr ""
+
+#: construction/public/js/translation_list_tools.js
+msgid "Show Catalog Entries"
+msgstr ""
+
+#: construction/public/js/translation_list_tools.js
+msgid "Show Empty PO Arabic"
+msgstr ""
+
+#: construction/public/js/translation_list_tools.js
+msgid "Show Existing Runtime Translations"
+msgstr ""
+
+#: construction/public/js/typography_settings.js
+msgid "Sidebar Font Family"
+msgstr ""
+
+#: construction/public/js/typography_settings.js
+msgid "Sidebar Font Size"
+msgstr ""
+
+#: construction/public/js/typography_settings.js
+msgid "Sidebar Font Weight"
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order.js
+msgid "Signed client approval PDF"
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order.py
+msgid "Signed client approval PDF is required before approving the Variation Order by Client."
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order.js
+msgid "Signed client approval PDF is required."
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "Site View"
+msgstr ""
+
+#: construction/construction/doctype/boq_item_stage/boq_item_stage.py
+msgid "Stage code {0} already exists for this BOQ Item"
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "Stage identity and completion — hides notes"
+msgstr ""
+
+#: construction/api/boq_api.py
+msgid "Stage measurement UI is disabled by Construction Settings."
+msgstr ""
+
+#: construction/construction/doctype/boq_item/boq_item.js
+msgid "Stages"
+msgstr ""
+
+#: construction/public/js/overrides/ct_link_control.js
+msgid "Start here: select BOQ Header first"
+msgstr ""
+
+#: construction/construction/doctype/boq_item_stage/boq_item_stage.js
+msgid "Start with <b>Project</b> → <b>BOQ Header</b> → <b>BOQ Structure</b> → <b>BOQ Item</b>. Each field unlocks the next."
+msgstr ""
+
+#: construction/construction/doctype/boq_header/boq_header.py
+msgid "Status can only move forward: Draft → Pricing → Frozen → Locked."
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order.js
+msgid "Status → {0}"
+msgstr ""
+
+#: construction/construction/doctype/boq_item/boq_item.js
+msgid "Structure Title"
+msgstr ""
+
+#: construction/construction/doctype/vo_line/vo_line.py
+msgid "Structure linked to BOQ Item {0} does not exist."
+msgstr ""
+
+#: construction/construction/doctype/boq_item/boq_item.js
+msgid "Structure {0} created"
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "Structure, header, type, quantities — hides pricing fields"
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order.js
+msgid "Submit to Engineer"
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order.js
+msgid "Submitted — awaiting Engineer approval."
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "Summary: Project, Status, Totals, Lock info"
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Suspicious compression ratio detected (potential Zip Bomb)."
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Suspicious compression ratio detected in '{0}' (potential Zip Bomb)."
+msgstr ""
+
+#: construction/public/js/translation_list_tools.js
+msgid "Sync Translation Catalog"
+msgstr ""
+
+#: construction/public/js/translation_list_tools.js
+msgid "Sync every msgid from frappe/erpnext/construction .po files into Translation rows? Current catalog rows: {0}. Existing runtime translations are never overwritten."
+msgstr ""
+
+#: construction/public/js/translation_list_tools.js
+msgid "Syncing translation catalog..."
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "System-generated default root for flat import."
+msgstr ""
+
+#: construction/construction/api/layout_api.py
+#: construction/construction/doctype/form_layout_profile/form_layout_profile.py
+msgid "System-seeded profiles cannot be deleted. Disable them instead."
+msgstr ""
+
+#: construction/construction/doctype/boq_header/boq_header.js
+msgid "Table View"
+msgstr ""
+
+#: construction/api/modern_form_api.py
+msgid "This API is deprecated and restricted to System Manager."
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "This BOQ Excel import exceeds the synchronous row threshold and must use async import."
+msgstr ""
+
+#: construction/construction/doctype/vo_line/vo_line.py
+msgid "Title is required for New Item VO lines."
+msgstr ""
+
+#: construction/public/js/scope_context_list_filter.js
+msgid "Toggle Scope Filter"
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "Toggle field visibility. Required fields (★) cannot be hidden."
+msgstr ""
+
+#: construction/public/js/print_settings_dialog.js
+msgid "Total Width"
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Total merged cell area ({0} cells) exceeds safety limit of {1} cells."
+msgstr ""
+
+#: construction/services/boq_operational.py
+msgid "Total planned quantity ({0}) exceeds BOQ Item quantity ({1})"
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order.js
+msgid "Transition blocked"
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order.js
+msgid "Transitioning Variation Order..."
+msgstr ""
+
+#: construction/construction/doctype/user_desk_theme/user_desk_theme.js
+msgid "Typography settings are still loading. Please try again."
+msgstr ""
+
+#: construction/public/js/typography_settings.js
+msgid "Typography settings saved"
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Unable to read import file: {0}"
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "Unassigned Fields"
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order.py
+msgid "Unauthorized: Only Construction Owner or System Manager can approve Variation Orders for Client stage."
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order.py
+msgid "Unauthorized: Only Project Manager or Construction Owner can submit Variation Orders."
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order.py
+msgid "Unauthorized: Only Site Engineer or Project Manager can approve Variation Orders for Engineer stage."
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order.py
+msgid "Unauthorized: Role not permitted to reject Variation Orders."
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Uncompressed Excel archive ({0} bytes) exceeds safety threshold of 100MB."
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Uncompressed Excel archive exceeds safety threshold of {0} bytes."
+msgstr ""
+
+#: construction/construction/doctype/vo_line/vo_line.py
+msgid "Unit is required for New Item VO lines."
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Unit is required for item rows."
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Unit price cannot be negative."
+msgstr ""
+
+#: construction/construction/doctype/form_layout_profile/form_layout_profile.py
+msgid "Unknown fieldname '{0}' in section '{1}' — will be skipped at runtime."
+msgstr ""
+
+#: construction/overrides/switch_theme_simple.py
+msgid "Unknown theme '{0}'. Valid standard themes: Dark, Light, Automatic."
+msgstr ""
+
+#: construction/construction/doctype/boq_item/boq_item_list.js
+msgid "Unpriced"
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Unsupported legacy format: Binary Excel (.xls) is not supported. Please upload an OpenXML Excel workbook (.xlsx)."
+msgstr ""
+
+#: construction/public/js/translation_list_tools.js
+msgid "Updated {0} rows from {1} checked"
+msgstr ""
+
+#: construction/api/boq_api.py
+msgid "Updates must be a list."
+msgstr ""
+
+#: construction/api/cost_database_api.py
+msgid "Uploaded file is empty"
+msgstr ""
+
+#: construction/services/wbs_generator.py
+msgid "Use resequence_wbs for controlled BOQ-wide WBS regeneration. Node-level regeneration is disabled."
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "VFC preferences reset"
+msgstr ""
+
+#: construction/public/js/vite_layout_controls.js
+msgid "VFC preferences reset and personal layout removed"
+msgstr ""
+
+#: construction/construction/doctype/boq_header/boq_header.js
+msgid "VO Delta"
+msgstr ""
+
+#: construction/construction/doctype/boq_header/boq_header.js
+msgid "VO Item"
+msgstr ""
+
+#: construction/construction/doctype/vo_line/vo_line.py
+msgid "VO Line BOQ Item must belong to the selected BOQ Header."
+msgstr ""
+
+#: construction/construction/doctype/vo_line/vo_line.py
+msgid "VO Line leaf structure cannot be a group node."
+msgstr ""
+
+#: construction/construction/doctype/boq_header/boq_header.js
+msgid "VO Δ Value"
+msgstr ""
+
+#: construction/construction/doctype/boq_header/boq_header.js
+msgid "Variation Items (from approved VOs)"
+msgstr ""
+
+#: construction/api/boq_api.py
+msgid "Variation Order name is required."
+msgstr ""
+
+#: construction/api/boq_api.py
+msgid "Variation Order {0} does not exist."
+msgstr ""
+
+#: construction/api/boq_api.py
+msgid "Variation Order {0} not found."
+msgstr ""
+
+#: construction/construction/doctype/boq_header/boq_header.js
+#: construction/construction/doctype/boq_item/boq_item.js
+msgid "Variation Orders"
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order_list.js
+msgid "Variation Orders are disabled by Construction Settings"
+msgstr ""
+
+#: construction/api/boq_api.py
+msgid "Variation Orders are disabled by Construction Settings."
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order.py
+msgid "Variation Orders can only be raised against Locked BOQ Headers."
+msgstr ""
+
+#: construction/construction/doctype/boq_item/boq_item.js
+msgid "View Stages"
+msgstr ""
+
+#: construction/construction/doctype/boq_header/boq_header.js
+msgid "WBS"
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "WBS Code is required in Structured mode."
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "WBS code {0} already exists in target BOQ."
+msgstr ""
+
+#: construction/services/wbs_generator.py
+msgid "WBS resequence is allowed only while BOQ Header is Draft."
+msgstr ""
+
+#: construction/services/wbs_generator.py
+msgid "WBS resequence is disabled in Construction Settings."
+msgstr ""
+
+#: construction/construction/doctype/construction_theme/construction_theme.py
+msgid "Warning: The following color pairs have contrast ratios below "
+msgstr ""
+
+#: construction/public/js/native_frappe_controls_compat.js
+msgid "Width in pixels. Leave empty to use automatic width."
+msgstr ""
+
+#: construction/public/js/print_settings_dialog.js
+msgid "Width must be between 1 and 100"
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Workbook shared-string table is too large to process safely."
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Worksheet '{0}' is too large to process safely."
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Worksheet column count ({0}) exceeds safety limit of {1} columns."
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Worksheet contains too many merged cell ranges (exceeds safety limit of {0})."
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Worksheet declared size ({0} x {1}) exceeds safety limits."
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Worksheet exceeds maximum row limit of {0} rows."
+msgstr ""
+
+#: construction/services/boq_import_service.py
+msgid "Worksheet row count ({0}) exceeds maximum allowed limit of {1} rows."
+msgstr ""
+
+#: construction/construction/doctype/variation_order/variation_order.js
+msgid "Wrong file type"
+msgstr ""
+
+#: construction/api/boq_api.py
+msgid "You are not authorized to access this BOQ Header project."
+msgstr ""
+
+#: construction/overrides/scope_report.py
+msgid "You are not permitted to execute reports on behalf of another user."
+msgstr ""
+
+#: construction/api/export_api.py
+msgid "You do not have export permission for {0}."
+msgstr ""
+
+#: construction/api/export_api.py
+msgid "You do not have permission to read {0} — {1}."
+msgstr ""
+
+#: construction/api/export_api.py
+msgid "You do not have permission to read {0}."
+msgstr ""
+
+#: construction/overrides/scope_enforcement.py
+msgid "You may only manage your own User Scope Context."
+msgstr ""
+
+#: construction/public/js/boq_filters.js
+msgid "Your scope context has changed. Reloading form to prevent invalid attribution."
+msgstr ""
+
+#: construction/api/cost_database_api.py
+msgid "company is required"
+msgstr ""
+
+#: construction/construction/doctype/boq_structure/boq_structure_tree.js
+msgid "items"
+msgstr ""
+
+#: construction/api/cost_database_api.py
+msgid "mode must be 'blank' or 'sample'"
+msgstr ""
+
+#: construction/construction/doctype/form_layout_profile/form_layout_profile.py
+msgid "sections_json is not valid JSON: {0}"
+msgstr ""
+
+#: construction/construction/doctype/form_layout_profile/form_layout_profile.py
+msgid "sections_json must be a JSON object, not an array."
+msgstr ""
+
+#: construction/construction/doctype/form_layout_profile/form_layout_profile.py
+msgid "sections_json.sections must be an array."
+msgstr ""
+
+#: construction/public/js/native_frappe_controls_compat.js
+msgid "{0} Column Widths"
+msgstr ""
+
+#: construction/construction/doctype/boq_header/boq_header.js
+msgid "{0} VOs ({1})"
+msgstr ""
+
+#: construction/construction/doctype/boq_header/boq_header.js
+msgid "{0} VOs ({1}) — Δ {2}"
+msgstr ""
+
+#: construction/public/js/translation_list_tools.js
+msgid "{0} source texts still have no Arabic entry"
+msgstr ""
+
+#: construction/public/js/translation_list_tools.js
+msgid "{0} source texts still have placeholders"
+msgstr ""
+
+#: construction/config/workspace_sidebar_items.json
+msgid "BOQ Management"
+msgstr ""
+
+#: construction/print_format/boq_print_format/boq_print_format.json
+msgid "BOQ Print Format"
+msgstr ""
+
+#: construction/workspace/construction/construction.json
+msgid "Card Break"
+msgstr ""
+
+#: construction/config/workspace_sidebar_items.json
+msgid "Construction Settings"
+msgstr ""
+
+#: construction/config/workspace_sidebar_items.json
+msgid "Home"
+msgstr ""
+
+#: construction/print_format/boq_print_format/boq_print_format.json
+msgid "Print Format"
+msgstr ""
+
+#: construction/config/workspace_sidebar_items.json
+msgid "Scope Management"
+msgstr ""
+
+#: construction/config/workspace_sidebar_items.json
+msgid "Section Break"
+msgstr ""
+
+#: construction/config/workspace_sidebar_items.json
+msgid "User Scope Context"
+msgstr ""
+
+#: construction/config/workspace_sidebar_items.json
+msgid "Variation Management"
+msgstr ""
+
+#: construction/config/workspace_sidebar_items.json
+msgid "Variation Order"
+msgstr ""
+
+#: construction/api/modern_form_api.py
+msgid "{0} created successfully"
+msgstr ""
+
+#: construction/api/modern_form_api.py
+msgid "{0} updated successfully"
+msgstr ""
+
+#: construction/api/modern_form_api.py:237
+msgid "{0} '{1}' deleted successfully"
+msgstr ""
+
+#: construction/templates/generic_export_list_pdf.html
+msgid "Construction ERP"
+msgstr ""
+
+#: construction/templates/boq_header_print.html
+msgid "Construction ERP - BOQ Management System"
+msgstr ""
+
+#: construction/templates/generic_export_pdf.html
+msgid "Construction ERP — Document Export"
+msgstr ""
+
+#: construction/templates/generic_export_list_pdf.html
+msgid "Construction ERP — List Export"
+msgstr ""
+
+#: construction/templates/generic_export_pdf.html
+msgid "Document Export"
+msgstr ""
+
+#: construction/templates/generic_export_list_pdf.html
+msgid "Export Date"
+msgstr ""
+
+#: construction/templates/generic_export_pdf.html
+msgid "Field"
+msgstr ""
+
+#: construction/templates/includes/pdf_footer.html
+msgid "Generated by"
+msgstr ""
+
+#: construction/templates/generic_export_list_pdf.html
+msgid "List Export"
+msgstr ""
+
+#: construction/templates/generic_export_list_pdf.html
+msgid "List View Export"
+msgstr ""
+
+#: construction/templates/includes/pdf_footer.html
+msgid "Page"
+msgstr ""
+
+#: construction/templates/generic_export_list_pdf.html
+msgid "Total Records"
+msgstr ""
+
+#: construction/templates/generic_export_pdf.html
+msgid "Value"
+msgstr ""
+
+#: construction/templates/includes/pdf_footer.html
+msgid "of"
+msgstr ""
+
+#: construction/construction/doctype/modern_theme_settings/modern_theme_settings.py
+msgid "CSS Cache TTL must be at least 60 seconds"
+msgstr ""
+
+#: construction/services/boq_wbs_health.py
+msgid "Cannot add BOQ Structure WBS unique constraint because WBS health check found issues."
+msgstr ""
+
+#: construction/construction/doctype/resource_price_history/resource_price_history.py
+msgid "Exchange rate must be positive."
+msgstr ""
+
+#: construction/construction/doctype/user_desk_theme/user_desk_theme.py
+msgid "Invalid desk font family"
+msgstr ""
+
+#: construction/construction/doctype/user_desk_theme/user_desk_theme.py
+msgid "Invalid {0}"
+msgstr ""
+
+#: construction/patches/v8_6/add_translation_identity_and_dedup.py
+msgid "NUL in key"
+msgstr ""
+
+#: construction/construction/doctype/resource_price_history/resource_price_history.py
+msgid "Rate cannot be negative."
+msgstr ""
+
+#: construction/construction/doctype/modern_theme_settings/modern_theme_settings.py
+msgid "Theme Switcher Limit must be at least 1"
+msgstr ""
+
+#: construction/translation_service.py
+msgid "Translation key contains embedded NUL character"
+msgstr ""
+
+#: construction/overrides/translation.py
+msgid "Translation key/value contains embedded NUL"
+msgstr ""
+
+#: construction/services/feature_flags.py
+msgid "Unknown Construction Settings rollout flag: {0}"
+msgstr ""
+
+#: construction/scripts/global_arabic_translation_review.py
+msgid "Unsupported app: {0}"
+msgstr ""
+
+#: construction/construction/doctype/user_scope_context/user_scope_context.py
+msgid "User Scope Context records cannot be deleted. Update the record instead."
+msgstr ""
+
+#: construction/construction/doctype/user_scope_context/user_scope_context.py
+msgid "You can only modify your own User Scope Context. "
+msgstr ""
+
+#: construction/translation_service.py
+msgid "catalog fields not present"
+msgstr ""
+
+#: construction/translation_service.py
+msgid "catalog row not found for key"
+msgstr ""
+
+#: construction/overrides/translation.py
+msgid "ct_origin for catalog must be empty, Packaged Release or Site Override"
+msgstr ""
+
+#: construction/overrides/translation.py
+msgid "ct_origin for runtime must be Packaged Release or Site Override"
+msgstr ""
+
+#: construction/translation_service.py
+msgid "ct_origin must be Packaged Release or Site Override for runtime rows"
+msgstr ""
+
+#: construction/translation_service.py
+msgid "ct_proposed_translation field not yet migrated"
+msgstr ""
+
+#: construction/translation_service.py
+msgid "invalid key"
+msgstr ""
+
+#: construction/translation_service.py
+msgid "no proposed translation to release"
+msgstr ""
+
+#: construction/translation_service.py
+msgid "persona must be A1, A2, or A3"
+msgstr ""
+
+#: construction/api/translation_tools.py
+msgid "source_text contains embedded NUL"
+msgstr ""
+
+#: construction/overrides/translation.py
+msgid "source_text is required (whitespace-only values are rejected)"
+msgstr ""
+
+#: construction/overrides/translation.py
+msgid "translated_text is required for runtime (non-catalog) translations"
+msgstr ""
+
+#: construction/construction/doctype/user_desk_theme/user_desk_theme.py
+msgid "{0} must be between 11 and 20 px"
+msgstr ""
+
+#: construction/construction/doctype/user_scope_context/user_scope_context.py
+msgid "Company '{0}' does not exist"
+msgstr ""
+
+#: construction/construction/doctype/modern_theme_settings/modern_theme_settings.py
+msgid "Construction Theme '{0}' does not exist"
+msgstr ""
+
+#: construction/construction/doctype/user_desk_theme/user_desk_theme.py
+msgid "Dark theme '{0}' does not exist"
+msgstr ""
+
+#: construction/construction/doctype/user_desk_theme/user_desk_theme.py
+msgid "Light theme '{0}' does not exist"
+msgstr ""
+
+#: construction/construction/doctype/user_desk_theme/user_desk_theme.py
+msgid "Theme settings already exist for user '{0}'"
+msgstr ""
+
+#: construction/construction/doctype/user_desk_theme/user_desk_theme.py
+msgid "User '{0}' does not exist"
+msgstr ""
+
+#: construction/construction/utils/scope_validation.py
+msgid "Cost Center '{0}' does not belong to Company '{1}'"
+msgstr ""
+
+#: construction/construction/utils/scope_validation.py
+msgid "Department '{0}' does not belong to Company '{1}'"
+msgstr ""
+
+#: construction/construction/utils/scope_validation.py
+msgid "Project '{0}' does not belong to Company '{1}'"
+msgstr ""
+
+#: construction/overrides/translation.py
+msgid "A translation with this key already exists ({0}). "
+msgstr ""
+
+#: construction/services/bilingual_service.py
+msgid "Bilingual identity read requires read permission on {0}"
+msgstr ""
+
+#: construction/services/bilingual_service.py
+msgid "{0} {1} not found or not readable"
+msgstr ""
+
+#: construction/services/bilingual_service.py
+msgid "Account bilingual mapping unavailable"
+msgstr ""
+
+#: construction/services/bilingual_service.py
+msgid "Setting the Arabic account name requires Account write permission (refused)"
+msgstr ""
+
+#: construction/services/bilingual_service.py
+msgid "The Arabic name contains rejected control characters (NUL/C0/C1/DEL) (refused)"
+msgstr ""
+
+#: construction/services/bilingual_service.py
+msgid "Identity changed during Arabic-only edit — refusing (identity preserved)"
+msgstr ""
+
+#: construction/services/bilingual_service.py
+msgid "Recording a rename reason requires Account write permission (refused)"
+msgstr ""
+
+#: construction/services/bilingual_service.py
+msgid "A rename reason is required"
+msgstr ""
+
+#: construction/services/bilingual_service.py
+msgid "The rename reason contains rejected control characters (refused)"
+msgstr ""
+
+#: construction/public/js/bilingual/account_form.js
+msgid "English"
+msgstr ""
+
+#: construction/public/js/bilingual/account_form.js
+msgid "Arabic"
+msgstr ""
+
+#: construction/public/js/bilingual/account_form.js
+msgid "Edit Arabic"
+msgstr ""
+
+#: construction/public/js/bilingual/account_form.js
+msgid "Code"
+msgstr ""
+
+#: construction/public/js/bilingual/account_form.js
+msgid "Completeness"
+msgstr ""
+
+#: construction/public/js/bilingual/account_form.js
+msgid "Change English name / code (standard path)"
+msgstr ""
+
+#: construction/public/js/bilingual/account_form.js
+msgid "Complete"
+msgstr ""
+
+#: construction/public/js/bilingual/account_form.js
+msgid "Missing"
+msgstr ""
+
+#: construction/public/js/bilingual/account_form.js
+msgid "Account Name (Arabic)"
+msgstr ""
+
+#: construction/public/js/bilingual/account_form.js
+msgid "Arabic name updated"
+msgstr ""
+
+#: construction/public/js/bilingual/account_form.js
+msgid "Edit Arabic name (identity is not renamed)"
+msgstr ""
+
+#: construction/public/js/bilingual/account_form.js
+msgid "New English account name"
+msgstr ""
+
+#: construction/public/js/bilingual/account_form.js
+msgid "New account number"
+msgstr ""
+
+#: construction/public/js/bilingual/account_form.js
+msgid "Reason (required, recorded)"
+msgstr ""
+
+#: construction/public/js/bilingual/account_form.js
+msgid "Identity updated via the standard path; reason recorded"
+msgstr ""
+
+#: construction/public/js/bilingual/account_form.js
+msgid "Change English name / code (standard ERPNext path)"
+msgstr ""
+
+#: construction/services/bilingual_service.py
+msgid "The bilingual registry is invalid: {0}"
+msgstr ""
+
+#: construction/services/bilingual_service.py
+msgid "The active bilingual mapping for {0} does not match the live schema: missing {1}"
+msgstr ""
+
+#: construction/services/bilingual_service.py
+msgid "The Arabic account name can only be edited through the governed bilingual edit (use Edit Arabic; direct form/REST writes are refused)"
+msgstr ""
+
+#: construction/services/bilingual_service.py
+msgid "The Arabic name contains rejected control characters (NUL/C0/C1/DEL or bidi controls) (refused)"
+msgstr ""
+
+#: construction/services/bilingual_service.py
+msgid "Renaming the account identity requires Account write permission (refused)"
+msgstr ""
+
+#: construction/services/bilingual_service.py
+msgid "Account {0} not found"
+msgstr ""
+
+#: construction/services/bilingual_service.py
+msgid "A new Account cannot carry an Arabic name (create the account, then use Edit Arabic)"
+msgstr ""
+
+#: construction/searchable_dropdown/api/search.py
+msgid "Search matches exceed the supported ranking window ({0}); refine the query"
+msgstr ""
+
+#: construction/services/bilingual_service.py
+msgid "Pagination values must be integers ({0} is not an integer)"
+msgstr ""

@@ -76,9 +76,7 @@ def download_cost_database_template(mode="blank"):
     frappe.response["filename"] = filename
     frappe.response["filecontent"] = content
     frappe.response["type"] = "binary"
-    frappe.response["content_type"] = (
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    )
+    frappe.response["content_type"] = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 
 
 def _read_request_payload():

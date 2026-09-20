@@ -41,9 +41,9 @@ class BOQHeader(Document):
                 and "System Manager" not in frappe.get_roles()
             ):
                 frappe.throw(
-                    _("Cannot create BOQ Header for Project '{0}' outside active Scope Context '{1}'.").format(
-                        self.project, scope_project
-                    ),
+                    _(
+                        "Cannot create BOQ Header for Project '{0}' outside active Scope Context '{1}'."
+                    ).format(self.project, scope_project),
                     frappe.PermissionError,
                 )
             return
@@ -52,9 +52,7 @@ class BOQHeader(Document):
             return
 
         frappe.throw(
-            _(
-                "Project comes from Scope Context. Set a Project in the top bar before creating a BOQ Header."
-            )
+            _("Project comes from Scope Context. Set a Project in the top bar before creating a BOQ Header.")
         )
 
     def sync_project_name(self):

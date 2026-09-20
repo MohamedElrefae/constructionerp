@@ -40,18 +40,32 @@
 
 	// ── Non-exportable fieldtypes ─────────────────────────────────────────
 	var NON_EXPORTABLE = [
-		"Section Break", "Column Break", "Tab Break",
-		"Table", "Table MultiSelect",
-		"HTML", "HTML Editor",
-		"Button", "Attach", "Attach Image",
-		"Signature", "Barcode", "Geolocation",
-		"Fold", "Heading",
+		"Section Break",
+		"Column Break",
+		"Tab Break",
+		"Table",
+		"Table MultiSelect",
+		"HTML",
+		"HTML Editor",
+		"Button",
+		"Attach",
+		"Attach Image",
+		"Signature",
+		"Barcode",
+		"Geolocation",
+		"Fold",
+		"Heading",
 	];
 
 	// System fields hidden by default (user can still enable in dialog)
 	var SYSTEM_FIELDS_HIDDEN = [
-		"owner", "modified_by", "idx",
-		"parent", "parenttype", "parentfield", "docstatus",
+		"owner",
+		"modified_by",
+		"idx",
+		"parent",
+		"parenttype",
+		"parentfield",
+		"docstatus",
 	];
 
 	// ── Width estimation by fieldtype ─────────────────────────────────────
@@ -112,10 +126,12 @@
 	// ── Permission check ─────────────────────────────────────────────────
 	function can_export(doctype) {
 		try {
-			return frappe.model.can_export(doctype) ||
-				frappe.boot.user &&
-				frappe.boot.user.roles &&
-				frappe.boot.user.roles.indexOf("System Manager") !== -1;
+			return (
+				frappe.model.can_export(doctype) ||
+				(frappe.boot.user &&
+					frappe.boot.user.roles &&
+					frappe.boot.user.roles.indexOf("System Manager") !== -1)
+			);
 		} catch (e) {
 			return false;
 		}
@@ -261,7 +277,10 @@
 				callback: function (r) {
 					if (r.message && r.message.file_url) {
 						window.open(r.message.file_url);
-						frappe.show_alert({ message: __("Export completed successfully"), indicator: "green" }, 4);
+						frappe.show_alert(
+							{ message: __("Export completed successfully"), indicator: "green" },
+							4
+						);
 						resolve();
 					} else if (r.message && r.message.error) {
 						frappe.show_alert({ message: r.message.error, indicator: "red" }, 6);
@@ -304,9 +323,9 @@
 								list_view.get_filters_for_args(),
 								column_config
 							);
-						}
+						},
 					}).show();
-				}
+				},
 			});
 
 			items.push({
@@ -324,9 +343,9 @@
 								list_view.get_filters_for_args(),
 								column_config
 							);
-						}
+						},
 					}).show();
-				}
+				},
 			});
 		}
 
@@ -337,7 +356,7 @@
 				separator_before: items.length > 0,
 				action: function () {
 					window.print();
-				}
+				},
 			});
 		}
 
@@ -363,7 +382,12 @@
 			var filters = {};
 			if (tree_view.args && typeof tree_view.args === "object") {
 				for (var k in tree_view.args) {
-					if (k !== "doctype" && k !== "cmd" && k !== "method" && Object.prototype.hasOwnProperty.call(tree_view.args, k)) {
+					if (
+						k !== "doctype" &&
+						k !== "cmd" &&
+						k !== "method" &&
+						Object.prototype.hasOwnProperty.call(tree_view.args, k)
+					) {
 						filters[k] = tree_view.args[k];
 					}
 				}
@@ -387,9 +411,9 @@
 								get_tree_filters(),
 								column_config
 							);
-						}
+						},
 					}).show();
-				}
+				},
 			});
 
 			items.push({
@@ -407,9 +431,9 @@
 								get_tree_filters(),
 								column_config
 							);
-						}
+						},
 					}).show();
-				}
+				},
 			});
 		}
 
@@ -420,7 +444,7 @@
 				separator_before: items.length > 0,
 				action: function () {
 					tree_view.print_tree();
-				}
+				},
 			});
 		}
 

@@ -421,7 +421,7 @@
 						};
 						const next = transitions[frm.doc.status];
 						if (!next) {
-							frappe.msgprint("BOQ is already Locked.");
+							frappe.msgprint(__("BOQ is already Locked."));
 							return;
 						}
 						frappe.confirm(`Advance status to <b>${next}</b>?`, () => {

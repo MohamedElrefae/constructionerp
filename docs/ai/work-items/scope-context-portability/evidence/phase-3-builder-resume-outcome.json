@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "recorded_utc": "2026-09-12T05:45:00Z",
+  "status": "BUILDER_RESUME_FAILED_SESSION_NOT_FOUND",
+  "authorization": "Owner Authorization Directive: Phase 3 Builder Resume & AI-R Verification",
+  "command_executed": "orchestrator/.venv/bin/python orchestrator/cli.py --root /home/mohamed/frappe-bench/worktrees/scope-context-portability-pilot resume --reason 'Owner authorized retry following OpenCode session resolution and P3-F003 verification' --reset-escalation-budget",
+  "control_worktree": "/home/mohamed/frappe-bench/worktrees/scope-context-portability",
+  "pilot_worktree": "/home/mohamed/frappe-bench/worktrees/scope-context-portability-pilot",
+  "candidate_preserved": {
+    "candidate_id": "532f0175dc88f19d111a42c498b60eb0bd832d412af12d4d7df7247b48d6b133",
+    "tree_oid": "2f546c2b88f288a258a3c603ab88ab2b380b06c0"
+  },
+  "plan_grant_preserved": {
+    "token_id": "owner-plan-grant-phase3-pilot",
+    "gate_id": "plan-3f7f6e2b096c64ad049178b4",
+    "status": "CONSUMED"
+  },
+  "events_added": [
+    {"seq": 32, "kind": "resume", "reason": "Owner authorized retry following OpenCode session resolution and P3-F003 verification", "reset_budget": true},
+    {"seq": 33, "kind": "result", "job_id": "job-09ecd862eaf1f5bc23bcb21e", "role": "builder", "verdict": "FAILED", "status": "FAILED"}
+  ],
+  "failed_job": {
+    "job_id": "job-09ecd862eaf1f5bc23bcb21e",
+    "role": "builder",
+    "tool": "opencode",
+    "terminal": {
+      "exit_code": 1,
+      "timeout": false,
+      "started_utc": "2026-09-12T05:41:13.695222Z",
+      "finished_utc": "2026-09-12T05:41:14.921395Z",
+      "stderr_summary": "Session not found",
+      "stdout_bytes": 0
+    },
+    "runtime": "/home/mohamed/frappe-bench/worktrees/scope-context-portability-pilot/orchestrator/var/jobs/job-09ecd862eaf1f5bc23bcb21e"
+  },
+  "workflow_after_resume": {
+    "status": "PAUSED",
+    "pause_reason": "MALFORMED_RESULT",
+    "gate": {"scope": "DECISION", "gate_id": "decision-32"},
+    "attempt": 17,
+    "cursor": 33,
+    "revision": 33,
+    "active_jobs": [],
+    "unsuccessful_cycles": 0,
+    "unchanged_rounds": 0
+  },
+  "assessment": "The OpenCode 'Session not found' failure is not transient; it recurred immediately on the owner-authorized resume. The native transport/session layer is unable to initialize a builder session. This is an environment/provider issue, not a workflow binding or candidate drift issue.",
+  "safety": "No project files staged, no commit created, no merge, no push, no ERP/site operation. The standing PLAN grant remains consumed and bound to the approved plan. Workflow paused at DECISION gate before any COMMIT gate.",
+  "next_agent_should": [
+    "Investigate the OpenCode CLI environment: verify /usr/bin/opencode-cli availability, version, authentication/session state, and any provider-side rate/session limits.",
+    "Check the opencode CLI logs or run a manual headless probe to reproduce the 'Session not found' error outside the workflow.",
+    "Do not resume again without explicit owner authorization and a confirmed fix for the native session initialization.",
+    "Stop at COMMIT unless the owner separately authorizes it."
+  ]
+}

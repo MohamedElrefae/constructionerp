@@ -144,7 +144,9 @@ def validate(doc, method):
     has_scope_fields = any(hasattr(doc, f) and getattr(doc, f, None) for f in _SCOPE_DIMENSION_FIELDS)
     if has_scope_fields and (not scope or not scope.company):
         frappe.throw(
-            frappe._("Scope enforcement is active: An active User Scope Context is required to create or modify scoped documents."),
+            frappe._(
+                "Scope enforcement is active: An active User Scope Context is required to create or modify scoped documents."
+            ),
             frappe.PermissionError,
         )
 
@@ -154,18 +156,18 @@ def validate(doc, method):
     # Enforce company boundary for scoped non-admin users
     if hasattr(doc, "company") and doc.company and scope.company and doc.company != scope.company:
         frappe.throw(
-            frappe._("Scope boundary violation: Document company '{0}' does not match active user scope '{1}.'").format(
-                doc.company, scope.company
-            ),
+            frappe._(
+                "Scope boundary violation: Document company '{0}' does not match active user scope '{1}.'"
+            ).format(doc.company, scope.company),
             frappe.PermissionError,
         )
 
     # Enforce project boundary for scoped non-admin users
     if hasattr(doc, "project") and doc.project and scope.project and doc.project != scope.project:
         frappe.throw(
-            frappe._("Scope boundary violation: Document project '{0}' does not match active user scope '{1}.'").format(
-                doc.project, scope.project
-            ),
+            frappe._(
+                "Scope boundary violation: Document project '{0}' does not match active user scope '{1}.'"
+            ).format(doc.project, scope.project),
             frappe.PermissionError,
         )
 
@@ -176,15 +178,15 @@ def validate(doc, method):
         if scope_cc and doc_cc:
             if not (doc_cc.lft >= scope_cc.lft and doc_cc.rgt <= scope_cc.rgt):
                 frappe.throw(
-                    frappe._("Scope boundary violation: Document cost center '{0}' is outside active user scope '{1}.'").format(
-                        doc.cost_center, scope.cost_center
-                    ),
+                    frappe._(
+                        "Scope boundary violation: Document cost center '{0}' is outside active user scope '{1}.'"
+                    ).format(doc.cost_center, scope.cost_center),
                     frappe.PermissionError,
                 )
         elif doc.cost_center != scope.cost_center:
             frappe.throw(
-                frappe._("Scope boundary violation: Document cost center '{0}' is outside active user scope '{1}.'").format(
-                    doc.cost_center, scope.cost_center
-                ),
+                frappe._(
+                    "Scope boundary violation: Document cost center '{0}' is outside active user scope '{1}.'"
+                ).format(doc.cost_center, scope.cost_center),
                 frappe.PermissionError,
             )

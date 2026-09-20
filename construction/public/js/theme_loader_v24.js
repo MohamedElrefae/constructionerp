@@ -27,15 +27,16 @@
 		// the first paint cannot drift apart.  localStorage remains a fallback
 		// for public pages and an offline convenience only.
 		var bootMode =
-			window.frappe && frappe.boot &&
+			window.frappe &&
+			frappe.boot &&
 			(frappe.boot.construction_theme_mode || frappe.boot.theme);
 		var savedMode = localStorage.getItem("ct-theme-mode");
 		var initialMode =
 			bootMode === "light" || bootMode === "dark"
 				? bootMode
 				: savedMode === "light" || savedMode === "dark"
-					? savedMode
-					: "dark";
+				? savedMode
+				: "dark";
 		html.setAttribute("data-theme", initialMode);
 		localStorage.setItem("ct-theme-mode", initialMode);
 	}
@@ -119,21 +120,23 @@
 			}
 
 			_cleanupAllInjected() {
-				this._injected.forEach(function (data, id) {
-					var item = this.registry.find(function (r) {
-						return r.id === id;
-					});
-					if (data && data.element) {
-						if (item && item.teardown) {
+				this._injected.forEach(
+					function (data, id) {
+						var item = this.registry.find(function (r) {
+							return r.id === id;
+						});
+						if (data && data.element) {
+							if (item && item.teardown) {
+								try {
+									item.teardown(data.element);
+								} catch (e) {}
+							}
 							try {
-								item.teardown(data.element);
+								data.element.remove();
 							} catch (e) {}
 						}
-						try {
-							data.element.remove();
-						} catch (e) {}
-					}
-				}.bind(this));
+					}.bind(this)
+				);
 				this._injected.clear();
 			}
 
@@ -244,14 +247,14 @@
 						return Array.from(record.addedNodes || []).some(function (node) {
 							return (
 								node.nodeType === 1 &&
-								(node.matches &&
-									(node.matches(
-										".desktop-navbar, .page-head, .page-actions, .page-container"
-									) ||
-										(node.querySelector &&
-											node.querySelector(
-												".desktop-navbar, .page-head, .page-actions, .page-container"
-											))))
+								node.matches &&
+								(node.matches(
+									".desktop-navbar, .page-head, .page-actions, .page-container"
+								) ||
+									(node.querySelector &&
+										node.querySelector(
+											".desktop-navbar, .page-head, .page-actions, .page-container"
+										)))
 							);
 						});
 					});
@@ -410,9 +413,7 @@
 					if (z !== activeTarget && !z.contains(activeTarget)) {
 						if (!z.isConnected || z.offsetParent === null) {
 							this.registry.forEach(function (item) {
-								var child = z.querySelector(
-									'[data-ct-topbar="' + item.id + '"]'
-								);
+								var child = z.querySelector('[data-ct-topbar="' + item.id + '"]');
 								if (child && item.teardown) {
 									try {
 										item.teardown(child);
@@ -977,22 +978,16 @@
 				if (manager) {
 					manager._scheduleRender();
 				}
-				setTimeout(
-					function () {
-						if (manager) {
-							manager._scheduleRender();
-						}
-					},
-					150
-				);
-				setTimeout(
-					function () {
-						if (manager) {
-							manager._scheduleRender();
-						}
-					},
-					450
-				);
+				setTimeout(function () {
+					if (manager) {
+						manager._scheduleRender();
+					}
+				}, 150);
+				setTimeout(function () {
+					if (manager) {
+						manager._scheduleRender();
+					}
+				}, 450);
 				setTimeout(installChartGuard, 300);
 				setTimeout(syncSidebarActive, 200);
 			});

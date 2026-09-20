@@ -1,0 +1,4 @@
+from construction.translation_service import import_released_overrides
+res = import_released_overrides(dry_run=True)
+print("DRY total=%d created=%d updated=%d skipped=%d drift=%d" % (res["total"], res["created"], res["updated"], res["skipped"], res["drift"]))
+exit()

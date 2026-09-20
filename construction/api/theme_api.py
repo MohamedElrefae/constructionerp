@@ -2358,7 +2358,6 @@ def set_user_theme(theme, mode):
         desk_theme_value = "Dark" if mode == "dark" else "Light"
         frappe.db.set_value("User", user, "desk_theme", desk_theme_value, update_modified=False)
 
-
         return {"success": True, "message": "Theme preference saved", "theme_doc": theme_doc}
 
     except Exception as e:
@@ -3236,7 +3235,9 @@ def whitelabel_patch():
         "Module Onboarding", "documentation_url"
     ):
         for module_name in frappe.get_all("Module Onboarding", pluck="name"):
-            frappe.db.set_value("Module Onboarding", module_name, "documentation_url", "", update_modified=False)
+            frappe.db.set_value(
+                "Module Onboarding", module_name, "documentation_url", "", update_modified=False
+            )
 
     # Clear onboarding steps via database updates
     if frappe.db.exists("DocType", "Onboarding Step"):

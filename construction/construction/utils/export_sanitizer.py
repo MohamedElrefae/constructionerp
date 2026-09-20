@@ -29,6 +29,6 @@ def escape_html_for_pdf(val: Any) -> str:
     """Escape untrusted database values before rendering into PDF HTML templates."""
     if val is None:
         return ""
-    if isinstance(val, (int, float, bool)):
+    if isinstance(val, int | float | bool):
         return str(val)
     return html.escape(str(val), quote=True)

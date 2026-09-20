@@ -147,7 +147,9 @@ def ensure_custom_fields():
         try:
             create_custom_field(field["dt"], field, ignore_validate=True)
         except Exception:
-            frappe.log_error(f"Failed to create custom field {field['fieldname']}", "Translation Catalog Setup")
+            frappe.log_error(
+                f"Failed to create custom field {field['fieldname']}", "Translation Catalog Setup"
+            )
 
 
 def ensure_translation_identity():
@@ -181,8 +183,17 @@ def ensure_translation_identity():
     rows = frappe.get_all(
         "Translation",
         filters={"ct_key_digest": ("in", ("", None))},
-        fields=["name", "language", "source_text", "context", "ct_app",
-                "ct_is_catalog_entry", "ct_origin", "ct_key_digest", "ct_search_normalized"],
+        fields=[
+            "name",
+            "language",
+            "source_text",
+            "context",
+            "ct_app",
+            "ct_is_catalog_entry",
+            "ct_origin",
+            "ct_key_digest",
+            "ct_search_normalized",
+        ],
         limit_page_length=0,
     )
     for r in rows:
@@ -195,7 +206,11 @@ def ensure_translation_identity():
             "ct_key_digest": _digest(lang, src, ctx, app, is_catalog),
             "ct_search_normalized": strip_html_tags(src).strip(),
         }
-        if not is_catalog and frappe.db.has_column("Translation", "ct_origin") and not (r.get("ct_origin") or "").strip():
+        if (
+            not is_catalog
+            and frappe.db.has_column("Translation", "ct_origin")
+            and not (r.get("ct_origin") or "").strip()
+        ):
             updates["ct_origin"] = "Site Override"
         frappe.db.set_value("Translation", r.name, updates, update_modified=False)
         backfilled += 1

@@ -1,0 +1,21 @@
+{
+ "company": "Elrefae",
+ "domain": "account-master",
+ "export_file": "account_catalog_20260920_144947.json",
+ "export_file_sha256": "b1b48f3f8d022cc7865fb8c2b1e9f67204883924f2fc4299a8491900861fa568",
+ "export_path": "/home/mohamed/frappe-bench/sites/v16.localhost/private/stage4/account_catalog_20260920_144947.json",
+ "export_sha256": "b1b48f3f8d022cc7865fb8c2b1e9f67204883924f2fc4299a8491900861fa568",
+ "glossary_match_count": 0,
+ "groups": 26,
+ "leaves": 55,
+ "no_verified_reference": "no_verified_reference",
+ "private_location": "<site>/private/stage4/account_catalog_20260920_144947.json",
+ "proposal_pending": "pending_proposal",
+ "recorded_by": "Administrator",
+ "recorded_utc": "2026-09-20T14:49:47Z",
+ "rows": 81,
+ "schema": "construction-stage4-export-manifest/v1",
+ "source_classification": "non-production test",
+ "source_site": "v16.localhost",
+ "with_current_arabic": 80
+}

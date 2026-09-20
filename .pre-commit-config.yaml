@@ -38,6 +38,7 @@ repos:
         exclude: |
           (?x)^(
               construction/public/dist/.*|
+              construction/public/js/vendor/.*|
               .*node_modules.*|
               .*boilerplate.*|
               construction/templates/includes/.*|
@@ -55,6 +56,7 @@ repos:
         exclude: |
           (?x)^(
               construction/public/dist/.*|
+              construction/public/js/vendor/.*|
               cypress/.*|
               .*node_modules.*|
               .*boilerplate.*|
