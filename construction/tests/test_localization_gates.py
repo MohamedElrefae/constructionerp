@@ -8,6 +8,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
@@ -565,6 +566,23 @@ class TestRound4Gates(unittest.TestCase):
     def test_delta_refused_without_reviewed_file(self):
         code, _, _ = g.main(["check"])
         self.assertIn(code, (0, 1))
+
+    def test_ci_source_only_is_rejected_outside_github_actions(self):
+        with mock.patch.dict("os.environ", {}, clear=True), mock.patch.object(g, "full_scan") as scan:
+            code, _, errors = g.main(["check", "--ci-source-only"])
+        self.assertEqual(code, 1)
+        self.assertIn("ci-source-only: --ci-source-only requires GITHUB_ACTIONS=true", errors)
+        scan.assert_not_called()
+
+    def test_ci_source_only_runs_full_source_scan_without_historical_evidence(self):
+        with (
+            mock.patch.dict("os.environ", {"GITHUB_ACTIONS": "true"}, clear=True),
+            mock.patch.object(g, "full_scan") as scan,
+        ):
+            code, _, errors = g.main(["check", "--ci-source-only"])
+        self.assertEqual(code, 0)
+        self.assertEqual(errors, [])
+        scan.assert_called_once_with([], {}, g.ROOT, skip_evidence=True)
 
     def test_update_baselines_refuses_unreviewed_move(self):
         with tempfile.TemporaryDirectory() as tmp:

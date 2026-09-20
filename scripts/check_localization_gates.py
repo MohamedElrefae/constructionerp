@@ -1436,7 +1436,9 @@ def classify_files(errors, files, root=None):
 def full_scan(errors, counts, root=None, skip_evidence=False):
     root = _root(root)
     # Bootstrap for evidence generation only: the recorded full-gate envelope
-    # must be a REAL exit-0 run; CI and verification never pass this flag.
+    # must be a REAL exit-0 run. CI uses its own guarded source-only mode because
+    # historical evidence is deliberately bound to its original absolute root
+    # and candidate HEAD, neither of which exists in a GitHub merge checkout.
     catalog = check_po(errors, counts, root=root)
     counts["csv_rows"] = check_csv(errors, root)
     for p in sorted(root.glob("construction/data/**/*.json")):
@@ -2489,12 +2491,17 @@ def main(argv, root=None):
     else:
         import os as _os
 
-        skip = "--skip-evidence" in args
-        if skip and _os.environ.get("STAGE2_EVIDENCE_BOOTSTRAP") != "1":
+        bootstrap_skip = "--skip-evidence" in args
+        ci_source_only = "--ci-source-only" in args
+        if bootstrap_skip and _os.environ.get("STAGE2_EVIDENCE_BOOTSTRAP") != "1":
             errors.append("evidence-bootstrap: --skip-evidence requires STAGE2_EVIDENCE_BOOTSTRAP=1")
             print(f"checked={json.dumps(counts, sort_keys=True, default=str)} errors={len(errors)}")
             return 1, counts, sorted(errors)
-        full_scan(errors, counts, root, skip_evidence=skip)
+        if ci_source_only and _os.environ.get("GITHUB_ACTIONS") != "true":
+            errors.append("ci-source-only: --ci-source-only requires GITHUB_ACTIONS=true")
+            print(f"checked={json.dumps(counts, sort_keys=True, default=str)} errors={len(errors)}")
+            return 1, counts, sorted(errors)
+        full_scan(errors, counts, root, skip_evidence=bootstrap_skip or ci_source_only)
     for err in sorted(errors):
         print("FAIL " + err)
     print(f"checked={json.dumps(counts, sort_keys=True, default=str)} errors={len(errors)}")
