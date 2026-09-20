@@ -1,24 +1,24 @@
 {
   "construction_po_sha": "8d0dcdc7a909cb9b5bea7498154551db7298525de127b657ad633523592a9777",
   "critical": {
-    "Desktop": "\u0633\u0637\u062d \u0627\u0644\u0645\u0643\u062a\u0628",
-    "Edit Sidebar": "\u062a\u062d\u0631\u064a\u0631 \u0627\u0644\u0634\u0631\u064a\u0637 \u0627\u0644\u062c\u0627\u0646\u0628\u064a",
-    "Toggle Full Width": "\u062a\u0628\u062f\u064a\u0644 \u0627\u0644\u0639\u0631\u0636 \u0627\u0644\u0643\u0627\u0645\u0644",
-    "Toggle Theme": "\u062a\u0628\u062f\u064a\u0644 \u0627\u0644\u0645\u0638\u0647\u0631",
-    "Typography Settings": "\u0625\u0639\u062f\u0627\u062f\u0627\u062a \u0627\u0644\u062e\u0637\u0648\u0637",
-    "Workspaces": "\u0645\u0633\u0627\u062d\u0627\u062a \u0627\u0644\u0639\u0645\u0644"
+    "Desktop": "سطح المكتب",
+    "Edit Sidebar": "تحرير الشريط الجانبي",
+    "Toggle Full Width": "تبديل العرض الكامل",
+    "Toggle Theme": "تبديل المظهر",
+    "Typography Settings": "إعدادات الخطوط",
+    "Workspaces": "مساحات العمل"
   },
-  "decision_root": "3389e956c88e307b696a93092e4dfffadfa9816cd7a6a4bc5589ef470b9d3691",
-  "decisions_sha": "7a6ac9a10d49f618e630e21b6e8d4862e7ee7fd20f9c773dc77b9a5bdff3afb4",
-  "freshness_sha": "fe6ce5b275803d2f13eb00f79314aa5ab71c409bea781b1a0c28bdaf7df919e4",
-  "freshness_utc": "2026-09-10T12:09:22Z",
+  "decision_root": "3e57f75f9351278df23b5d69dd8a7992688556a7a7ffa75697c5b82e0f0b9e2e",
+  "decisions_sha": "729e24e943b0bb79cd5be48f970894998cfff6d38ffadf8d3a19120bac07ec6b",
+  "freshness_sha": "a205e0074ea5e73716eff383cd27bbc4e718c0dc7756d9f74830ae29ac72434b",
+  "freshness_utc": "2026-09-20T22:48:49Z",
   "inventory_manifest_sha": "5300fe41a8b6ff6bef82215edfddc3e99164b727d38283bed6d2f1e783c7e2a9",
   "inventory_merkle": "2e284695f67e1cb7d623975df8d82c5c6578b5667857be27ba1f7b6f72587123",
   "inventory_rows": 18446,
-  "packaged_rows": 34,
-  "payload_csv_sha": "037e79c22248481e0ad56ad749d6210f56f038fe5f0efb1d045cc830444a1e8c",
-  "recorded_utc": "2026-09-10T12:09:23Z",
-  "runtime_digest": "ce8e729f2f735dc745cf95cc9d2a59172a5bd15e11c6ce003456ca5b638ac843",
+  "packaged_rows": 103,
+  "payload_csv_sha": "c32c4da3b27f1a0e75320fea3ecb87635f60af5dce09eb4ac21eec61c21a3ba9",
+  "recorded_utc": "2026-09-20T22:48:49Z",
+  "runtime_digest": "74e20f2bd39cce7484b4f53452745ce3c132f0df0f7bac7ac6b7fc868cc3fcaa",
   "site": "v16.localhost",
   "site_classification_sha": "0182069096821435f995338206b1030043413f14a69a01bd8609bb35e7a05b50"
 }

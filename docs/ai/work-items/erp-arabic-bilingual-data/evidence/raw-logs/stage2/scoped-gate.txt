@@ -1,8 +1,8 @@
 COMMAND: python3 scripts/check_localization_gates.py --files construction/www/login.html construction/workspace/construction/construction.json construction/config/workspace_sidebar_items.json construction/templates/generic_export_list_pdf.html
-STARTED_UTC: 2026-09-20T22:23:23Z
+STARTED_UTC: 2026-09-20T22:50:09Z
 SKIP construction/workspace/construction/construction.json: markup/code blob excluded from string gate (print/CSS/seed-data; covered by bilingual-output waves + leak detection)
 checked={"construction/locale/ar.po": 805, "extract_scoped": {"files": 2, "json_labels": 0, "missing": 0, "wrapped": 6}, "json_labels": 19} errors=0
 PO_SHA256: 8d0dcdc7a909cb9b5bea7498154551db7298525de127b657ad633523592a9777
 EXIT_CODE: 0
-FINISHED_UTC: 2026-09-20T22:23:24Z
+FINISHED_UTC: 2026-09-20T22:50:10Z
 ENVELOPE_LINES: 8

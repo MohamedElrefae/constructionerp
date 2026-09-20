@@ -1,5 +1,334 @@
 {
   "decisions": {
+    "023ffce286dcd5ccca4b77c1672532735fe8b71f8595b3e0bdd92625acd0a804": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يرجى اختيار حساب أصول المخزون",
+        "sha256": "19c98eb050ef139bb7ace5359a67eaa0dbbbc6fcea3973302cd36a03f74faca9"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Please select Stock Asset Account",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "يرجى اختيار حساب أصول المخزون",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "0285fc2b22b76f20135ddb413c690d526ea88fe04f5e342db1892ea24486fff7": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لا يمكن إنشاء أو تعديل أي قيود محاسبية حتى هذا التاريخ.",
+        "sha256": "f99dbfcfbd6a764298a9688507c12b19ece8643cdee07558a84481def5aeb931"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "You cannot create/amend any accounting entries till this date.",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "لا يمكن إنشاء أو تعديل أي قيود محاسبية حتى هذا التاريخ.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "053a3bb7d89aadd7ec6da1fbb8963f1129b25566b0b59099fb4da895c70fc0f8": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "{0} مفعّل فيه التخصيص وفق شروط السداد؛ اختر شرط سداد للصف #{1} في قسم مراجع الدفع",
+        "sha256": "600bb09cf95d4cebac7055c58ad9995d9733c9c6e88be8c8242cd8d8d3c757b1"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "{0} has Payment Term based allocation enabled. Select a Payment Term for Row #{1} in Payment References section",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "{0} مفعّل فيه التخصيص وفق شروط السداد؛ اختر شرط سداد للصف #{1} في قسم مراجع الدفع",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "0572f926f278a80260766eb133dd9a647eeb94bc4817197fc1c48bd0ab367efd": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الصف {0}: لا يمكن أن تكون قيمتا المدين والدائن صفرًا معًا",
+        "sha256": "62102a3623bc45f52577eb4e6d807ef7f7cc2fe4bd9f116493d4676fbc87ab2d"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Row {0}: Both Debit and Credit values cannot be zero",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "الصف {0}: لا يمكن أن تكون قيمتا المدين والدائن صفرًا معًا",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "065e4c8c8399cc2bb482e5374a64da04f709fbd6be2bca5adf6c3ca700778855": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "قيمة غير صالحة {0} لـ {1} مقابل الحساب {2}",
+        "sha256": "2de594ec0c5a28bfb30378b6396091bbdbebe932aed92d1039d090f816a45065"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Invalid value {0} for {1} against account {2}",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "قيمة غير صالحة {0} لـ {1} مقابل الحساب {2}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "08998531791220b1a56e0cc5a5980b27bb9bafad4365ea110f3a6466ea2e6539": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "فاتورة شراء غير صالحة",
+        "sha256": "063985aaaea008603e36f2c2e6786066155a6d54a977f9386b72f73ae1707918"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Invalid Purchase Invoice",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "فاتورة شراء غير صالحة",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "08a467cf5e342598887da5ccbc3b0dc5a352cf003aeebb6cbcaef6f8f818e7b1": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "0 - 30 يومًا",
+        "sha256": "27f42302974b8edb30cdddd816ba4894ee7ec91345230ee4b8c851f27a57b6be"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "0 - 30 Days",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "0 - 30 يومًا",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
     "0a4aa1fc0bf912f6c08345cf4cf397eb66ab2cc8d4fece24ec59f90019f71c1e": {
       "artifacts": [
         {
@@ -141,6 +470,758 @@
         }
       }
     },
+    "1646fb655be1a5d9a18a05dba15357db5ed81154e99bae48b96a0f923c12f9bb": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "30 - 60 يومًا",
+        "sha256": "b2713a9d12aecf970bba5528fc1e9721476a7a1feea0b46e3279633058311c8c"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "30 - 60 Days",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "30 - 60 يومًا",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "17e8d162b0007193345df5a0486cbeb24cd61910033f84857e09a3645fe74b8e": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لكل حسابات أصول المخزون",
+        "sha256": "ae73a5c56fb962323469b9b2edafe21e3419d8204c0d626ce8fd673f7319a6e3"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "For All Stock Asset Accounts",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "لكل حسابات أصول المخزون",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "1f0cabe855b576c186730127da3a01e48c3de042d46613ae176adb361e0da0bf": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الصف #{0}: لا يمكن تخصيص أكثر من {1} مقابل شرط السداد {2}",
+        "sha256": "d80fd22a171a600c2712df83759fec4999be26731f2c350cecd481526b0ed3d0"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Row #{0}: Cannot allocate more than {1} against payment term {2}",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "الصف #{0}: لا يمكن تخصيص أكثر من {1} مقابل شرط السداد {2}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "202526ada7456c34d5aceda444708201c439e617fd25773c45c68d3c8ade069c": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "القيود المحاسبية الدورية غير مسموحة للشركة {0} مع تمكين نظام المخزون المستمر",
+        "sha256": "f6a892270779ac5cc64cfd8317e199b315754d9b1d11a0b42186d97f991236ff"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Periodic Accounting Entry is not allowed for company {0} with perpetual inventory enabled",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "القيود المحاسبية الدورية غير مسموحة للشركة {0} مع تمكين نظام المخزون المستمر",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "206256605388a7affa9b60ca233ca1a42c53f1eaef75c2ee7f800c4231238daa": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يرجى تعيين {0} في الشركة {1} لاحتساب أرباح/خسائر فروق الصرف",
+        "sha256": "63966c2003cb7d9326b132ab1082cb154a77ce6047d1284e0f31cbb4f3598100"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Please set {0} in Company {1} to account for Exchange Gain / Loss",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "يرجى تعيين {0} في الشركة {1} لاحتساب أرباح/خسائر فروق الصرف",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "20ad0e4adae56002cad8dad6993734da22fdb8c9b051ec91c35953ceb76b2691": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لا يوجد فرق لحساب المخزون {0}",
+        "sha256": "c04e6995f84c25d80f0b7393c362d99725f883415b0153ee88ba2c9af6e457d8"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "No difference found for stock account {0}",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "لا يوجد فرق لحساب المخزون {0}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "2255e5b61b95cf980b937b2472a04904c27f45177fd350d2a7ba59c3f96ff649": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تم إدراج المهمة في قائمة انتظار الخلفية.",
+        "sha256": "a733fecb716ee71be1a7c8530198a6e546108312b63c263cd5e274996f1302ee"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "The task has been enqueued as a background job.",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "تم إدراج المهمة في قائمة انتظار الخلفية.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "249296a53f87cc4293956dc0fcff8e2136fd0f33fc966311cbfed8a25693f1d8": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "قيد يومية عكسي {0} موجود بالفعل لهذا القيد.",
+        "sha256": "88afcdc5d7b20030acbf8df87bbf8913e6e2120f532faa96fb16caf4dbf4812e"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "A Reverse Journal Entry {0} already exists for this Journal Entry.",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "قيد يومية عكسي {0} موجود بالفعل لهذا القيد.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "24c1a625f303179d30aeed0a9667265ba9c45d724d3f82fed2f703742899bede": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "إثبات قيود يومية على حسابات الدفعات المقدمة: {0} غير مستحسن؛ لن تكون هذه القيود متاحة للتسوية.",
+        "sha256": "3f2da9a1359c65ef3f4f67c35fde9bdb179165439c287f28c6b6340c1786d278"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Making Journal Entries against advance accounts: {0} is not recommended. These Journals won't be available for Reconciliation.",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "إثبات قيود يومية على حسابات الدفعات المقدمة: {0} غير مستحسن؛ لن تكون هذه القيود متاحة للتسوية.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "2d6cb1fcf32dc7f4b3385bc1da8e084ef27f5359ce58ab4a8900a11011e9472a": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "قيود إعادة التقييم",
+        "sha256": "1c172df44c094e91f02f1bb8cc1dd05ce47ae2b1a33ff99bc8262157937d9992"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Revaluation Journals",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "قيود إعادة التقييم",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "3346dc5485bfd40998e3234ab79191e9da7ea21fdffeabcb7e525caf37c13650": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "مدفوع إلى",
+        "sha256": "314c8426effc579b8f5f31a2284db2b01c86329ae2fd3a5091b37c07bc450d9a"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "paid to",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "مدفوع إلى",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "34ad758f59eb8efd77938f72a2dae447de52493d0b2c9b596bbfa9a74fd8e8fb": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "المبلغ المستلم لا يمكن أن يتجاوز المبلغ المدفوع",
+        "sha256": "1c6195c12220004faf653382bda328322ac52bac396ef19aac274008a3443d01"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Received Amount cannot be greater than Paid Amount",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "المبلغ المستلم لا يمكن أن يتجاوز المبلغ المدفوع",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "36d31657d812fbbd129ca76efd70fd2c000855a65cb137d0be454ba0fa0cce24": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "{0} {1} مدفوع جزئيًا؛ استخدم زر «جلب الفواتير المستحقة» أو «جلب الأوامر المستحقة» لجلب أحدث المبالغ المستحقة.",
+        "sha256": "161573cbec3a6b661d2fbdf00967c4cae14f8142891c937b219c1804a39b8fec"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "{0} {1} has already been partly paid. Please use the 'Get Outstanding Invoice' or the 'Get Outstanding Orders' button to get the latest outstanding amounts.",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "{0} {1} مدفوع جزئيًا؛ استخدم زر «جلب الفواتير المستحقة» أو «جلب الأوامر المستحقة» لجلب أحدث المبالغ المستحقة.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "39c25bc85ccfb1cb6aae42e5c8c8750cf5de76671fb113c331f701e3c9f81407": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "إن كان هذا غير مرغوب، فيرجى إلغاء سند الدفع المقابل.",
+        "sha256": "2fa8ea3f3f65fe5747a7a6ad947dac8b7e50c7dde21128b1087568bc5ace210f"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "If this is undesirable please cancel the corresponding Payment Entry.",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "إن كان هذا غير مرغوب، فيرجى إلغاء سند الدفع المقابل.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "3b3075cc19946aa8b73987097422f19775f3fc6b060e28ec39fda1a16d08363c": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "مع قيد إقفال الفترة لأرصدة الافتتاح",
+        "sha256": "5b4e63469bf151dfb1ab55b9ad4b1f211d7b1367b15a3253132e19fe8def80be"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "With Period Closing Entry For Opening Balances",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "مع قيد إقفال الفترة لأرصدة الافتتاح",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "3ecd1ddabd1759698fcd3236dc31988c2044e2897980aae03b7b942da85fb430": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تجاهل إشعارات الدائن/المدين المنشأة تلقائيًا",
+        "sha256": "c4aec927b83a736b4ba3bcd15d7d9ca112886a90ffd3aaeeeb9be28255827a47"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Ignore System Generated Credit / Debit Notes",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "تجاهل إشعارات الدائن/المدين المنشأة تلقائيًا",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
     "3f9feb39e587957d995d7a4116536d0f41b994a5918a07c9eaaf8599e04185a6": {
       "artifacts": [
         {
@@ -170,6 +1251,100 @@
         "2026-09-02 11:00:00"
       ],
       "translated_text": "إضافة حساب فرعي",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "43de89161a950ed28d608e7c7a99de3083893d68c8792d70e364dc8abd92c08c": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يرجى تعيين '{0}' في الشركة: {1}",
+        "sha256": "6d9f4872a0e9fe31ec87aaa6eaa8ee9ff0284c1268fabd2524b25dac4440ab93"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Please set '{0}' in Company: {1}",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "يرجى تعيين '{0}' في الشركة: {1}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "4b71cabb0f9888341e4a7d045b8c208390c063dc62246fad33b3ad308e80c1ee": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لا يمكن إنشاء قيود محاسبية على حسابات معطّلة: {0}",
+        "sha256": "bc0c318ed07e99e177f90503dbcb535af9da403ea56b41d388fa27aaa53f37df"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Cannot create accounting entries against disabled accounts: {0}",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "لا يمكن إنشاء قيود محاسبية على حسابات معطّلة: {0}",
       "verdicts": {
         "AI-A1": {
           "confidence": "batch",
@@ -235,6 +1410,429 @@
         }
       }
     },
+    "4f3a64c72f3a1d9f252434b670f019648986e6155087c88e85dcc70376067369": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "فوائد و/أو رسوم إنذار",
+        "sha256": "4423d7cb89ff9ed7b7ef6b720109b05cbcbd196a38793f5fbbdb4744c0620351"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Interest and/or dunning fee",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "فوائد و/أو رسوم إنذار",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "514f9be67e80079f049de457fb5a1f5a54520f3282316d6a8d254ae7aeafa2d2": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الصف #{0}: المبلغ المخصص لا يمكن أن يتجاوز المبلغ المستحق لطلب الدفع {1}",
+        "sha256": "a10785dcaeaee3b4c26ee6052bba7b52615c4ee0889c582e19ba4489d6642656"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Row #{0}: Allocated Amount cannot be greater than Outstanding Amount of Payment Request {1}",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "الصف #{0}: المبلغ المخصص لا يمكن أن يتجاوز المبلغ المستحق لطلب الدفع {1}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "52b584741f4e19090273bc9ee7678128632fbaeea39aee9777b8071b192c2f21": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لا يمكن {0} من {1} دون فواتير لها رصيد مستحق سالب",
+        "sha256": "9a187d391ac1085837c7f031c902b140662c85c8f279d0ed55ff5719a1e088c9"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Cannot {0} from {1} without any negative outstanding invoice",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "لا يمكن {0} من {1} دون فواتير لها رصيد مستحق سالب",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "53f0a730f0a6b7dddd2121275bb90ce421d7c80d44046f2822791f8014a5d66f": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الحسبة من نوع «فعلي» في الصف {0} لا يمكن إدخالها في سعر البند أو المبلغ المدفوع",
+        "sha256": "327eef17b67f882e8de22602df38a51c0c9bdf75929cb1c7fef418eb11b27254"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Charge of type 'Actual' in row {0} cannot be included in Item Rate or Paid Amount",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "الحسبة من نوع «فعلي» في الصف {0} لا يمكن إدخالها في سعر البند أو المبلغ المدفوع",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "5c3f2e9b343d4eb4860322e12ed584aea4da5cbb87b1c00617804a606402e058": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يرجى اختيار حساب فروق القيود المحاسبية الدورية",
+        "sha256": "65b716e7396786084bb799a237f566db2e3a6acfcd06d890f1562d5e6bbb0809"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Please select Periodic Accounting Entry Difference Account",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "يرجى اختيار حساب فروق القيود المحاسبية الدورية",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "5d78e620034a61907274aae9114ff7798620d72927d4aa142756f83a1eec5a61": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الرقم الضريبي: {0}",
+        "sha256": "b0e8b8e4316cc909f5340ceb9612e0a189d46026247ec1f94020db6f7c038f0f"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Tax Id: {0}",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "الرقم الضريبي: {0}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "61dfd94b1c66ec59fed2344264b6c631837a2687b38aa959e1c58d90adc0a611": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "{0} إلزامي للحساب {1}",
+        "sha256": "cfe407eda454688d888e4b5d92aa78b01dc9df2558c3b55e52aa5501e4e324b3"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "{0} is mandatory for account {1}",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "{0} إلزامي للحساب {1}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "61f3bd9633abc3e741707e951194710af52a823785b439685bac163d22bad61d": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لا يمكن حذف صف أرباح/خسائر فروق العملة",
+        "sha256": "df895f5d145d1c489290eb2a766b503db1558041ea42f89512698999ea5d91d7"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Cannot delete Exchange Gain/Loss row",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "لا يمكن حذف صف أرباح/خسائر فروق العملة",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "6228f475e61e392fde7ee83e0b785db87d3c5a92b1b091773eff4c32712137dd": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لاستخدام سجلات مالية مختلفة، يرجى إلغاء «تضمين منشورات الدفتر المالي الافتراضي»",
+        "sha256": "91d57993c231a5d5efc6fa0f7ece671d624bf760af57d4fa5bf620e1a89b5140"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "To use a different finance book, please uncheck 'Include Default FB Entries'",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "لاستخدام سجلات مالية مختلفة، يرجى إلغاء «تضمين منشورات الدفتر المالي الافتراضي»",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
     "629a4e195fb2f93519240ec5e9597ba562108978b89077120c0b9397c98584a6": {
       "artifacts": [
         {
@@ -264,6 +1862,100 @@
         "2026-09-02 11:00:00"
       ],
       "translated_text": "مستخلص",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "65239258dd41de2f397335964bf6898e1aa0dad6130c542f3cb90ccdd09ae1f3": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لا يمكن التحصيل من العميل مقابل رصيد مستحق سالب (دائن)",
+        "sha256": "eda82ba37b3ed738ab920760790ed30e7c4cddba73aea860599b08145061d5f6"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Cannot receive from customer against negative outstanding",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "لا يمكن التحصيل من العميل مقابل رصيد مستحق سالب (دائن)",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "65299cfad47e030c7b96b9289df1c2bf04d2e62ecc02d582df89e7d7a472085c": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الدفعة المقدمة المدفوعة مقابل {0} {1} لا يمكن أن تتجاوز الإجمالي الكلي {2}",
+        "sha256": "03206949e0ba578a5b25acbced27c00a0c6b9105afb6ffaf552e9a684b523270"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Advance paid against {0} {1} cannot be greater than Grand Total {2}",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "الدفعة المقدمة المدفوعة مقابل {0} {1} لا يمكن أن تتجاوز الإجمالي الكلي {2}",
       "verdicts": {
         "AI-A1": {
           "confidence": "batch",
@@ -334,6 +2026,53 @@
           "confidence": "high",
           "decision": "approve",
           "session": "/root/ai_a3_structural"
+        }
+      }
+    },
+    "65cb1e8f7bdc6a048acc90ebe9ae46e2c772c80c864ca88edb75ed6c5d4f0350": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يجب أن يكون الطرف أحد ما يلي: {0}",
+        "sha256": "b4fa63fc31eab3b590e4726c34e5933eff7a02410af0f7429e4131cd399dba37"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Party can only be one of {0}",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "يجب أن يكون الطرف أحد ما يلي: {0}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
         }
       }
     },
@@ -413,6 +2152,241 @@
         "2026-09-02 11:00:00"
       ],
       "translated_text": "عنصر فرعي",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "7165c5ae0e3cb0072deb4fa93e1288b262ff2818e5198620880479d3d60b5873": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الصف #{0}: المبلغ المخصص {1} أكبر من المبلغ المستحق {2} لشرط السداد {3}",
+        "sha256": "f46f3640ef0f01584df0314da23a91d0fcc4ff48c84d2e9cd3cc8ecbf54053e8"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Row #{0}: Allocated amount:{1} is greater than outstanding amount:{2} for Payment Term {3}",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "الصف #{0}: المبلغ المخصص {1} أكبر من المبلغ المستحق {2} لشرط السداد {3}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "892a9f226a3cd416a88aa3d8eba1672d919d94b0296df1c013dbdc6da23c5b29": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "عرض القيم الصافية في عمودي الافتتاحي والإغلاق",
+        "sha256": "9a11babed2fec1d395e66881aa69017225d45b0a364e71bb5606f02c4115cb2a"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Show net values in opening and closing columns",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "عرض القيم الصافية في عمودي الافتتاحي والإغلاق",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "89722c3d01c65b0c5b0537b3b4723a2edb97427e49a9ff6c366d2ad3671e00f8": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "90 - 120 يومًا",
+        "sha256": "404a7a23a86122e5b2da9e8cd286e2ef4723e50266110df21954d28c9ec44dbb"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "90 - 120 Days",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "90 - 120 يومًا",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "897c42d72b09c25b42fcfa81d414368da4f01c5e9d93798e2a5230b1d06bb39e": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "للصف {0} في {1}. لإدراج {2} في سعر البند يجب إدراج الصفوف {3} أيضًا",
+        "sha256": "94680ebdb3a61df511587723a34bbbfc7c3166613100925124326b43248971cf"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "For row {0} in {1}. To include {2} in Item rate, rows {3} must also be included",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "للصف {0} في {1}. لإدراج {2} في سعر البند يجب إدراج الصفوف {3} أيضًا",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "8a39db1626ead052578a308564bfcd1494b29f38514e2ed6bceedb3720f923ad": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الصف #{0}: في {1} يمكن اختيار مستند مرجعي فقط إذا كان الحساب يُمَدَّن",
+        "sha256": "b1dde5db46a0e37cbd6de0dbbc82cf78bcf0cd432c3b8f0795c5bf5dd2d9d4d2"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Row #{0}: For {1}, you can select reference document only if account gets debited",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "الصف #{0}: في {1} يمكن اختيار مستند مرجعي فقط إذا كان الحساب يُمَدَّن",
       "verdicts": {
         "AI-A1": {
           "confidence": "batch",
@@ -533,6 +2507,147 @@
         }
       }
     },
+    "94426f9ee8758f0706dd7b8db81d674544a8c20062216565c3b777c0fa48ea9f": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لا توجد مبالغ مستحقة {0} للمستند {1} {2} ضمن عوامل التصفية المحددة.",
+        "sha256": "54a893eb994bbca0a9cb72dd62f006f2763bd7612e169ea2892c49d4f85dc126"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "No outstanding {0} found for the {1} {2} which qualify the filters you have specified.",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "لا توجد مبالغ مستحقة {0} للمستند {1} {2} ضمن عوامل التصفية المحددة.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "94ddd6be0640d820ac18752694630b99807830bd5c59158034d3cd4a1697537d": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تجزئة {0} {1} إلى {2} صفوف وفق شروط السداد",
+        "sha256": "413700a48d4bb52d22bc042d2a6459c5f08d61473fc9ecbe3b806d2a0c141fe8"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Splitting {0} {1} into {2} rows as per Payment Terms",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "تجزئة {0} {1} إلى {2} صفوف وفق شروط السداد",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "966d39adfaa70166f61cc2f72b7c734d5ebd9fe7bc266d866c9552a1c338f008": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الإغلاق [الافتتاحي + الإجمالي]",
+        "sha256": "704e85963fd5583d05c48334ee4d5cb7b989403b7bea1b3585f3952bbd5d8549"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Closing [Opening + Total]",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "الإغلاق [الافتتاحي + الإجمالي]",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
     "98fab5bdb1e238eb94a414a6661cba572578126681b83a014885ccabedb32890": {
       "artifacts": [
         {
@@ -627,6 +2742,53 @@
         }
       }
     },
+    "9c1b23d7afb823134e1d192cdd368225c28a63a379c6d858b5aae78838f4ec04": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الصفوف: {0} تستخدم «سند دفع» كنوع مرجع؛ لا يجوز تعيين هذا يدويًا.",
+        "sha256": "015976a7303b70b07940bc438f6cf6becdec7bb50e3dafbc585b595f62f43832"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Rows: {0} have 'Payment Entry' as reference_type. This should not be set manually.",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "الصفوف: {0} تستخدم «سند دفع» كنوع مرجع؛ لا يجوز تعيين هذا يدويًا.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
     "a06177fbe564a5f1ccae59b71b5068e0efd8dc78849f2937faa77ef1b3e8be8d": {
       "artifacts": [
         {
@@ -656,6 +2818,53 @@
         "2026-09-02 11:00:00"
       ],
       "translated_text": "السند",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "a4308cefbeaf14c121d61c7259d02823dbe10c1f96d5a093110a085498981881": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تعذّر إنشاء ميزان المراجعة الموحد؛ لا يوجد سعر صرف من {0} إلى {1} لصالح {2}.",
+        "sha256": "603a6a3e8fad691863acfc2bab27c684db9191f9d2f123bc3a065f2514d41b7d"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Consolidated Trial balance could not be generated as Exchange Rate from {0} to {1} is not available for {2}.",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "تعذّر إنشاء ميزان المراجعة الموحد؛ لا يوجد سعر صرف من {0} إلى {1} لصالح {2}.",
       "verdicts": {
         "AI-A1": {
           "confidence": "batch",
@@ -776,6 +2985,100 @@
         }
       }
     },
+    "ac2d944279e05c10f26ca0fb5e8e07e89151a63e37b6d2ff2d7ab1e67115cd4e": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تم تطبيق خصم {} وفق شروط السداد",
+        "sha256": "9be5dc2e6db76ea4c472f7e3814e347874ea6f74bca7c0c89cd8730e7ba7b87f"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Discount of {} applied as per Payment Term",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "تم تطبيق خصم {} وفق شروط السداد",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "af17f57a21a33befdb04863a7058e12ac09a819308eaa6f4c4e02193841dd66c": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يرجى ذكر '{0}' في الشركة: {1}",
+        "sha256": "9a224fd5f6e012df67d30a5299d87c467f250ac9506ce5c68f8f58fcdb9e479c"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Please mention '{0}' in Company: {1}",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "يرجى ذكر '{0}' في الشركة: {1}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
     "b2197d747f033aef1c1db3e262fe38311688d754a1375009929bde39033f2680": {
       "artifacts": [
         {
@@ -870,6 +3173,194 @@
         }
       }
     },
+    "b523940f0fdd6e9e81724ffcfb5afd44eaeedb565c646f0d47fd3e2f3a2ef80e": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "60 - 90 يومًا",
+        "sha256": "2751c7a39ee536bbcf7a0655b0afffbf72fc137fe5b6b53dec6c7eded1701c4e"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "60 - 90 Days",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "60 - 90 يومًا",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "b73a42a72bcf8e7568855a12833cda2e5891c45325d1d610c84dea98379bd87a": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الصف #{0}: في {1} يمكن اختيار مستند مرجعي فقط إذا حُسِب للحساب على أنه دائن",
+        "sha256": "07685670a838a4aebf3d19e04790e2c89f45dff6254793d93aad8ed2e206503a"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Row #{0}: For {1}, you can select reference document only if account gets credited",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "الصف #{0}: في {1} يمكن اختيار مستند مرجعي فقط إذا حُسِب للحساب على أنه دائن",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "b80ed7924811307df62d74aeaaabe0db76abd746a44dfc205f2d003233a16d5c": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لا يمكن إلغاء قيد يومية إعدام (التخلص من) الأصل؛ يرجى استعادة حالة الأصل.",
+        "sha256": "3ec0806b81cd997feb464ea58e8e5512714b9dfd94d91dd7471515111599ab59"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Journal Entry for Asset scrapping cannot be cancelled. Please restore the Asset.",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "لا يمكن إلغاء قيد يومية إعدام (التخلص من) الأصل؛ يرجى استعادة حالة الأصل.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "b9d356224ba3c45aade165f8fad50841791bcb2b74d0073ee3634d041a72d2c2": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "المبلغ بعملة {0}",
+        "sha256": "7f9dff7b69ab11fe859159f441356244348f5076357bbbe5c7154e9aa265def1"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Amount in {0}",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "المبلغ بعملة {0}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
     "ba266aba6bb1e1a76d6ec21916ebb23f78fa91fa5d574ed258e3071d08b60ec9": {
       "artifacts": [
         {
@@ -917,6 +3408,100 @@
         }
       }
     },
+    "c7648f5720e40dfc33082f262be3abfd4b21da2215d232257a0952af0f7e0644": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "شرط السداد {0} غير مستخدم في {1}",
+        "sha256": "329be095630c8acb4ed83ed5404bb4e21a559e4000bef5e09f76759b2cec812d"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Payment term {0} not used in {1}",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "شرط السداد {0} غير مستخدم في {1}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "c93fc7648441df9929c3caacc5634c434775adf414212518b47b41a3f17e2f8a": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "{0} {1} مدفوع بالكامل بالفعل.",
+        "sha256": "5e26f418889f174d158a938bcd579555f6a2dc32a38d5ef975aa9bb513afecaf"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "{0} {1} has already been fully paid.",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "{0} {1} مدفوع بالكامل بالفعل.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
     "ca6f3108b4b8591cd217e00830c370ffc3bcf522786d293944c80b6bed406a84": {
       "artifacts": [
         {
@@ -946,6 +3531,53 @@
         "2026-09-02 11:00:00"
       ],
       "translated_text": "مقاولات الباطن",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "d06a3875a1788b00dea531dfe987124b8e31b4bd4ab9bf962f86aa6942eec5f9": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لا يمكن تطبيق ضريبة الاستقطاع على أكثر من طرف واحد في القيد نفسه",
+        "sha256": "b38d6c66ac561188f679d86e37e05d2c4ba3f9b415c8437eec2ca210e020315e"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Cannot apply TDS against multiple parties in one entry",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "لا يمكن تطبيق ضريبة الاستقطاع على أكثر من طرف واحد في القيد نفسه",
       "verdicts": {
         "AI-A1": {
           "confidence": "batch",
@@ -1105,6 +3737,100 @@
         }
       }
     },
+    "d6cb222e82450122cfe0db7798155d01057ff3ca8a4a84aac65ef3b0a6464a6a": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يمكن الإحالة إلى الصف فقط عندما يكون نوع الحسبة «على مبلغ الصف السابق» أو «إجمالي الصفوف السابقة»",
+        "sha256": "93241fe6705ad12db20e52acdb63bbffa907aa64b2a207c2b7e1399f31bc40de"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Can refer row only if the charge type is 'On Previous Row Amount' or 'Previous Row Total'",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "يمكن الإحالة إلى الصف فقط عندما يكون نوع الحسبة «على مبلغ الصف السابق» أو «إجمالي الصفوف السابقة»",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "d7cb5b14edb9a870f8ec1a0d47bd3611c30511055579d233448f407965028250": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تقرير التقادم استنادًا إلى {0} حتى {1}",
+        "sha256": "88e58d68c1e8a90ff2e75fe23d771b35aebff312e5e00b4c8ff4205b2ffcb6fc"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Ageing Report based on {0} up to {1}",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "تقرير التقادم استنادًا إلى {0} حتى {1}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
     "d90b903698d46d976a26abba0f31770a0bb27c94a81fc0e1520ebbb27eef2520": {
       "artifacts": [
         {
@@ -1134,6 +3860,53 @@
         "2026-09-02 11:00:00"
       ],
       "translated_text": "محتجزات ضمان",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "d91197028542d2b05c431420795ffc80a8fb347a7be1e4ddfb52d6d941754624": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يمكن إنشاء ميزان مراجعة موحد للشركات التابعة لنفس الشركة الرئيسية.",
+        "sha256": "ad3300525c698998eafb5e190a9bf88c4716db60d5a562cf4976cbd416eb1f8f"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Consolidated Trial Balance can be generated for Companies having same root Company.",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "يمكن إنشاء ميزان مراجعة موحد للشركات التابعة لنفس الشركة الرئيسية.",
       "verdicts": {
         "AI-A1": {
           "confidence": "batch",
@@ -1228,6 +4001,53 @@
         "2026-09-02 11:00:00"
       ],
       "translated_text": "مستند فرعي",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "dbeaeeed0c664890873a4e35c42f534b0545ebac5c745c66a56bcee44cd9329f": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لا يمكن إنشاء قيد الافتتاحي بعد إنشاء مستند إقفال الفترة.",
+        "sha256": "885757d7a4b8daf231f30b41d1f9ac1adc86f09c6c1f6a74931a2bcdefa73c0a"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Opening Entry can not be created after Period Closing Voucher is created.",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "لا يمكن إنشاء قيد الافتتاحي بعد إنشاء مستند إقفال الفترة.",
       "verdicts": {
         "AI-A1": {
           "confidence": "batch",
@@ -1348,6 +4168,100 @@
         }
       }
     },
+    "e2829f75d9891c64c12a9ed7ce3ee5b3bb6fa2f444a22a8e086e1f449b781a2d": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "المراجعات {0} من نوع {1} لم يكن لديها رصيد مستحق عند ترحيل سند الدفع؛ أصبح رصيدها مستحقًا دائنًا.",
+        "sha256": "61220353f9086d37dabe48c1fb2ca15c4d4171252ab328aa3b3cef3d21003b6c"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "References {0} of type {1} had no outstanding amount left before submitting the Payment Entry. Now they have a negative outstanding amount.",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "المراجعات {0} من نوع {1} لم يكن لديها رصيد مستحق عند ترحيل سند الدفع؛ أصبح رصيدها مستحقًا دائنًا.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "e2a0843d514b5bdcc80dbb8dbb165914887d20315f5fe771b69aaa5f48b2495e": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "{0} حتى {1}",
+        "sha256": "4f406ee585e11f47f44304891863129df53a4ff595b3ede45a658657004aca19"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "{0} until {1}",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "{0} حتى {1}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
     "e7261d1bb09c1ff40804f1b88ace2387450039ebeef4fedbaae5f76e19deeffb": {
       "artifacts": [
         {
@@ -1450,6 +4364,100 @@
         }
       }
     },
+    "e7dfd55c45bfae207699fdc404bbc79d8bc83796b33c0d3f0bc0492a79ee895d": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "{0} {1} موقوف (معلّق) حاليًا",
+        "sha256": "ab14d7f68bf0590163ebce6ca4fed35107ed9807c0d18926ef985324c0766265"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "{0} {1} is on hold",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "{0} {1} موقوف (معلّق) حاليًا",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "e830dddd1cc6f7c3448650dc954600f5376a70950dbd1d7fe8a1254cfa7f3edb": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الحساب {0} يجب أن يكون من نوع المصروفات",
+        "sha256": "0a9ae0500346773ee7679313089b0cf3e9798b4812ea5681d0ae05681a8f3baf"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Account {0} should be of type Expense",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "الحساب {0} يجب أن يكون من نوع المصروفات",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
     "eaa54a90a37d804f4b033480b08a9a217575a52950b135668809b1f2cc9af67d": {
       "artifacts": [
         {
@@ -1479,6 +4487,53 @@
         "2026-09-02 11:00:00"
       ],
       "translated_text": "سند قبض / سند صرف",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "ec7e347253cfb85c8ad15a1f1c30a57c622c06d201ba669145d1db4d6b2e6890": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "مجموعة العملاء: {0} غير موجودة",
+        "sha256": "cc9525bba75cd05908a770bae9ab32ac6e3279ffc7accccf6d0af9eca539f803"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Customer Group: {0} does not exist",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "مجموعة العملاء: {0} غير موجودة",
       "verdicts": {
         "AI-A1": {
           "confidence": "batch",
@@ -1552,6 +4607,53 @@
         }
       }
     },
+    "edcec80094f3f70eb2b5dd7b3bf5957a167d31b27912d67c4c0abad030ec0a69": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تجاهل قيود إعادة تقييم أسعار الصرف وقيد الربح/الخسارة",
+        "sha256": "ab211d52016e3aae906f52e8f218539f0f8c271a7812fddb3512bfdd33926d33"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Ignore Exchange Rate Revaluation and Gain / Loss Journals",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "تجاهل قيود إعادة تقييم أسعار الصرف وقيد الربح/الخسارة",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
     "ee04600d269e6fab29cdaa00bec8903372ce16e8a977536016b2f1de79775b2e": {
       "artifacts": [
         {
@@ -1581,6 +4683,147 @@
         "2026-09-02 11:00:00"
       ],
       "translated_text": "مقاول باطن",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "ee0e86b8caad03f0427214f7616c4647b0f9c18736e0ac82d6856b12e4fa990b": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "مقابلة البعد المحاسبي",
+        "sha256": "08598bfbb31964103015545913c0363f0b095c935ca27a4272aaa5cf6d5511d3"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Offsetting for Accounting Dimension",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "مقابلة البعد المحاسبي",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "f33b3eceb1c068b2824f29e47dd5a0c1d5bc1adbcded58ca43ae71e6fc09a172": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "احتياطي فروق ترجمة العملات الأجنبية",
+        "sha256": "26b6f32e28097cabf69c0b8e901a776c6166ef8d96d8f0c22920a5081fabf328"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Foreign Currency Translation Reserve",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "احتياطي فروق ترجمة العملات الأجنبية",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "f9d424e7dc97ea41dbaa797656525df9b76b3d2ef78fdb43006c4db9322b6b93": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w61_payload_applied_rows_2026-09-21.csv",
+          "sha256": "f90c2c9b537d1167b5e1d95a2ca0895fdb2cbe0ef741f8d2ecb6ee2a8d173289"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounting",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الصف {0}: الحساب {1} ونوع الطرف {2} ينتميان لأنواع حسابات مختلفة",
+        "sha256": "38c7cf56cd6510409b0357b30217131755ab30c6cb40761b294ff340186209d2"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5",
+      "release_version": "1.2",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Row {0}: Account {1} and Party Type {2} have different account types",
+      "timestamps": [
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00",
+        "2026-09-21 00:00:00"
+      ],
+      "translated_text": "الصف {0}: الحساب {1} ونوع الطرف {2} ينتميان لأنواع حسابات مختلفة",
       "verdicts": {
         "AI-A1": {
           "confidence": "batch",
@@ -1647,7 +4890,7 @@
       }
     }
   },
-  "generated_utc": "2026-09-05T09:40:42Z",
+  "generated_utc": "2026-09-20T22:47:11Z",
   "note": "Reviewed generation. Verdicts transcribed from independent review evidence (six new rows) or marked historical batch (legacy).",
   "schema": "release-decision/v2"
 }

@@ -506,7 +506,7 @@ class TestRound3Gates(unittest.TestCase):
         # real payload: all Released rows must bind; run against repo (fast enough)
         n = g.check_csv(errors)
         self.assertEqual(errors, [])
-        self.assertEqual(n, 34)
+        self.assertEqual(n, 103)
 
     def test_manifest_binding_fields(self):
         import json
@@ -1261,7 +1261,9 @@ class TestRound4Gates(unittest.TestCase):
         ):
             _art[mark] = _hl.sha256((root / rel).read_bytes()).hexdigest()
         results["all-tests.txt"] = mods + f"\nAGGREGATE total={total} failed=0"
-        results["final-dryrun.txt"] = "In [1]: DRY total=34 created=0 updated=0 skipped=34 drift=0"
+        results["final-dryrun.txt"] = "In [1]: DRY total=%d created=%d updated=%d skipped=%d drift=0" % (
+            g.EXPECTED_DRYRUN["total"], g.EXPECTED_DRYRUN["created"], g.EXPECTED_DRYRUN["updated"], g.EXPECTED_DRYRUN["skipped"],
+        )
         results["full-gate.txt"] = (
             f'checked={{"construction/locale/ar.po": {g.EXPECTED_GATE["catalog"]}, '
             f'"files": {g.EXPECTED_GATE["files"]}, "wrapped": {g.EXPECTED_GATE["wrapped"]}, '

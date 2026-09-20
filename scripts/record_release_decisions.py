@@ -49,7 +49,8 @@ def main():
     for r in rows:
         if (r.get("release_status") or "").strip() != "Released":
             continue
-        src, val = r["source_text"], r["translated_text"]
+        src = (r["source_text"] or "").strip()
+        val = r["translated_text"]
         refs = sorted(x.strip() for x in (r.get("decision_ref") or "").split(";") if x.strip())
         ref_entries = []
         for ref in refs:
