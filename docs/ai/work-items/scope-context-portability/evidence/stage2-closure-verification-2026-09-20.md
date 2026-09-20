@@ -3,9 +3,18 @@
 ## Scope
 
 Independent re-verification of Stage 2 (catalog delta/review pipeline + CI
-localization gates) against merged `develop` @ `b081b2e`, per plan §11 row 2
-gate: "Current 15,106-row inventory; CI gate blocks hardcoded-string and
-missing-translation merges."
+localization gates) against merged `develop` @ `b081b2e` (all operational
+commands ran at that HEAD; the published closure commit `6ab4ae7` adds
+documentation/evidence only and leaves every operational result valid),
+per plan §11 row 2 gate: "Current 15,106-row inventory; CI gate blocks
+hardcoded-string and missing-translation merges."
+
+## Owner decision (2026-09-20)
+
+Stage 2 is **operationally closed** by owner decision. The durable
+evidence-envelope re-pin stays open (deferred to the next real catalog change
+in Stage 6/7). Scope is Stage-2 closure only — the bilingual program as a
+whole is not complete (Stages 6–8 remain).
 
 ## Verification results (all commands executed fresh on 2026-09-20)
 
