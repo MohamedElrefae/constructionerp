@@ -2,9 +2,17 @@
 
 **Work item:** erp-arabic-bilingual-data
 **Stage:** 3 (Bilingual registry, display resolver, account form section, localized tree)
-**Status:** PLAN ONLY — awaiting owner approval before any code change
+**Status:** SUPERSEDED — audit found Stage 3 already implemented (see below); no build needed
 **Author:** agent, for owner review
 **Date:** 2026-09-20
+
+> **Superseded 2026-09-20:** the post-plan audit discovered a substantially complete
+> Stage 3 already present, uncommitted, in `apps/construction` on branch
+> `feature/erp-arabic-bilingual-data` (registry + service, tree/form JS, hooks wiring,
+> 96 passing tests, live-verified). It was committed as `0d96cdc` and merged with the
+> Stage 4 work into `feature/bilingual-integration` (`13bc927`), test guard added and
+> Account registry promoted (`550feca`), all pushed to origin. This plan is retained
+> for its extension-point analysis only; do not implement from it.
 
 ---
 
