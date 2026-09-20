@@ -107,10 +107,45 @@ def findings(state, incoming, pending=()):
                 f["finding_id"] = "SCP-" + str(state["next_finding"]).zfill(3)
                 state["next_finding"] += 1
         elif f["finding_id"] not in known:
-            raise WorkflowError("Reviewer supplied an unallocated finding ID")
+            if f.get("classification") in ("row_rejected", "review_rejected"):
+                # Engine-synthesized panel findings carry no centrally allocated ID.
+                f["finding_id"] = "SCP-" + str(state["next_finding"]).zfill(3)
+                state["next_finding"] += 1
+            else:
+                raise WorkflowError("Reviewer supplied an unallocated finding ID")
         known[f["finding_id"]] = f
         result.append(f)
     return result
+
+
+def escalation_cycle(state, blocking_findings):
+    """Advance the total repair budget and report whether escalation is required.
+
+    Stage 4 panel findings are engine-synthesized and may lack a snapshot; the
+    classification+summary fallback keeps repeated row rejections recognizable.
+    """
+    state["round"] += 1
+    state["unsuccessful_cycles"] += 1
+    snapshots = sorted(
+        digest(
+            [
+                f["finding_id"],
+                f["classification"],
+                (f.get("snapshot") or {}).get("reproduction_digest"),
+                (f.get("snapshot") or {}).get("relevant_evidence_digest"),
+            ]
+        )
+        for f in blocking_findings
+        if f.get("snapshot")
+    )
+    if not snapshots:
+        snapshots = sorted(
+            digest([f.get("classification"), f.get("summary", "")]) for f in blocking_findings
+        )
+    overlap = set(snapshots) & set(state["previous_snapshots"])
+    state["unchanged_rounds"] = state["unchanged_rounds"] + 1 if overlap else (1 if snapshots else 0)
+    state["previous_snapshots"] = snapshots
+    return state["unsuccessful_cycles"] >= 3 or state["unchanged_rounds"] >= 2
 
 
 def review_outcome(state, outputs, source, quorum):
@@ -344,29 +379,70 @@ def apply_event(current, event, config):
                         pause(state, "MALFORMED_RESULT")
                     elif all_blocking:
                         incoming = findings(state, all_blocking)
-                        state["findings"] += [
-                            f
-                            for f in incoming
-                            if f["blocking"]
-                            and f["finding_id"] not in {old["finding_id"] for old in state["findings"]}
-                        ]
+                        # Reconcile against the current panel verdict: a row-rejection
+                        # finding clears when the current panel approves that row. Without
+                        # this, a repaired row stays blocked forever and the loop escalates.
+                        approved_rows = set()
+                        rejected_rows = set()
+                        approved_summaries = set()
+                        for qinfo in state["review_results"].values():
+                            for r in qinfo.get("review_meta", {}).get("row_decisions", []) or []:
+                                ident = r.get("identity")
+                                if not ident:
+                                    continue
+                                if r.get("decision") == "rejected":
+                                    rejected_rows.add(ident)
+                                else:
+                                    approved_rows.add(ident)
+                                    approved_summaries.add(f"row {ident}")
+                        resolved_row_findings = set()
+                        for old in state["findings"]:
+                            if old.get("classification") != "row_rejected":
+                                continue
+                            ident = old.get("row_identity")
+                            if ident:
+                                if ident in approved_rows and ident not in rejected_rows:
+                                    resolved_row_findings.add(old["finding_id"])
+                            else:
+                                # Legacy findings predate row_identity and summarize by index
+                                # or a redacted identity. Clear them once the current panel
+                                # approves every row (no remaining rejections).
+                                if not rejected_rows:
+                                    resolved_row_findings.add(old["finding_id"])
+                                elif any(s in (old.get("summary") or "") for s in approved_summaries):
+                                    resolved_row_findings.add(old["finding_id"])
+                        survivors = {
+                            old["finding_id"]: old
+                            for old in state["findings"]
+                            if old["finding_id"] not in resolved_row_findings
+                        }
+                        for f in incoming:
+                            if f["blocking"]:
+                                survivors.setdefault(f["finding_id"], f)
+                        state["findings"] = [f for f in survivors.values() if f["blocking"]]
                         state["backlog"] += [f for f in incoming if not f["blocking"]]
-                        if any(f["classification"] == "owner_decision" for f in incoming):
+                        escalated = escalation_cycle(state, state["findings"])
+                        state["attempt"] += 1
+                        if escalated:
+                            state["next_roles"] = ["proposer"]
+                            pause(state, "ESCALATED")
+                        elif any(f["classification"] == "owner_decision" for f in incoming):
                             pause(state, "OWNER_DECISION")
                         elif any(f["classification"] == "design_defect" for f in incoming):
                             state.update(status="NEEDS_REVISION", next_roles=["architect"], gate=None)
-                            state["attempt"] += 1
                         else:
                             state.update(status="NEEDS_REVISION", next_roles=["proposer"], gate=None)
-                            state["attempt"] += 1
                     elif renewal_required:
+                        escalated = escalation_cycle(state, state["findings"])
                         state.update(
                             sub_status="PANEL_RENEWAL",
                             status="NEEDS_REVISION",
                             next_roles=["proposer"],
                             review_results={},
-                            round=state["round"] + 1,
                         )
+                        state["attempt"] += 1
+                        if escalated:
+                            pause(state, "ESCALATED")
                     elif all(q["verdict"] == "PASS" for q in state["review_results"].values()):
                         bundle_sha = body.get("bundle_sha256") or (body.get("bundle_composed") or {}).get("bundle_sha256")
                         payload_sha = body.get("payload_sha256") or (body.get("bundle_composed") or {}).get("payload_sha256")
@@ -478,8 +554,8 @@ def apply_event(current, event, config):
 
             state.update(
                 sub_status="DRY_RUN",
-                status="APPROVED_FOR_BUILD",
-                next_roles=["builder"],
+                status="VERIFIED_FOR_RELEASE",
+                next_roles=[],
                 gate=None,
             )
         elif token["scope"] == "IMPORT":
@@ -532,8 +608,8 @@ def apply_event(current, event, config):
 
             state.update(
                 sub_status="IMPORT",
-                status="APPROVED_FOR_BUILD",
-                next_roles=["builder"],
+                status="VERIFIED_FOR_RELEASE",
+                next_roles=[],
                 gate=None,
             )
         else:
@@ -553,11 +629,65 @@ def apply_event(current, event, config):
         state.update(prior)
         state.update(pause_reason=None, resume_to=None, prior=None)
         if not state["next_roles"] and not state["gate"] and not state["active_jobs"]:
-            state["next_roles"] = [
-                "architect"
-                if any(f["classification"] == "design_defect" for f in state["findings"])
-                else "builder"
-            ]
+            if state.get("sub_status") == "BUNDLE_VALIDATED":
+                # A Stage 4 bundle awaiting verification resumes with the verifier, not a builder.
+                state["next_roles"] = ["verifier"]
+            elif state.get("sub_status") in ("DRY_RUN", "IMPORT_AUTHORIZATION", "IMPORT"):
+                # These are owner-executed operations; no agent role resumes them.
+                state["next_roles"] = []
+            else:
+                state["next_roles"] = [
+                    "architect"
+                    if any(f["classification"] == "design_defect" for f in state["findings"])
+                    else "builder"
+                ]
+    elif kind == "import_evidence":
+        # Owner-executed ERP IMPORT operation. No agent is involved; the evidence digest
+        # binds the written Arabic values and the rollback export.
+        if state.get("sub_status") != "IMPORT":
+            raise WorkflowError("Import evidence only applies in the IMPORT sub-status")
+        digest_val = body.get("evidence_digest")
+        if not digest_val or not is_hex64(digest_val):
+            raise WorkflowError("Import evidence digest must be 64-character lowercase hex")
+        state.update(
+            sub_status="POST_IMPORT_EVIDENCE",
+            status="BUILD_COMPLETE",
+            next_roles=["verifier"],
+            gate=None,
+            import_evidence_digest=digest_val,
+        )
+    elif kind == "dry_run_ready":
+        # Owner reconciliation: settle a DRY_RUN that was entered from a stale prior
+        # status. No agent role is involved; the owner then executes the read-only dry-run.
+        if state.get("sub_status") != "DRY_RUN":
+            raise WorkflowError("dry_run_ready only applies in the DRY_RUN sub-status")
+        state.update(
+            status="VERIFIED_FOR_RELEASE",
+            next_roles=[],
+            gate=None,
+            pause_reason=None,
+            resume_to=None,
+            prior=None,
+        )
+    elif kind == "dry_run_evidence":
+        # Owner-executed read-only DRY_RUN operation. No LLM/agent is involved; the
+        # evidence digest binds the live observed values to the frozen payload.
+        if state.get("sub_status") != "DRY_RUN":
+            raise WorkflowError("Dry-run evidence only applies in the DRY_RUN sub-status")
+        digest_val = body.get("evidence_digest")
+        if not digest_val or not is_hex64(digest_val):
+            raise WorkflowError("Dry-run evidence digest must be 64-character lowercase hex")
+        if body.get("blocking"):
+            state.update(dry_run_evidence_digest=digest_val)
+            pause(state, "DRY_RUN_FAILED")
+        else:
+            state.update(
+                sub_status="IMPORT_AUTHORIZATION",
+                status="VERIFIED_FOR_RELEASE",
+                next_roles=[],
+                gate={"scope": "IMPORT", "gate_id": gate_id(state, "IMPORT")},
+                dry_run_evidence_digest=digest_val,
+            )
     elif kind == "reconcile_job":
         if state["status"] != "PAUSED" or body["job_id"] not in state["active_jobs"]:
             raise WorkflowError("Reconciliation does not match a paused active job")

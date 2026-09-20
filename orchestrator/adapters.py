@@ -28,20 +28,32 @@ def invocation(spec):
         if key.startswith(("WORKFLOW_", "LANGSMITH_", "LANGCHAIN_")):
             env.pop(key)
     if tool == "codex":
+        write_sandbox = spec["role"] == "builder" or bool(spec.get("neutral_mounts"))
+        writable_roots = [
+            m["sandbox_path"] for m in spec.get("neutral_mounts", []) if m.get("writable")
+        ]
+        # Codex creates a private .agents directory in its working directory; point it
+        # at the writable neutral mount so the read-only execution root is preserved.
+        codex_cd = writable_roots[0] if writable_roots else spec["root"]
         argv = [
             binary,
             "exec",
             "--ignore-user-config",
             "--sandbox",
-            "workspace-write" if spec["role"] == "builder" else "read-only",
+            "workspace-write" if write_sandbox else "read-only",
             "--cd",
-            spec["root"],
+            codex_cd,
             "--model",
             spec["model"],
             "--json",
             "--output-schema",
             spec["wire_schema"],
         ]
+        if writable_roots:
+            # Only writable mounts may be listed (Codex appends .git to each root).
+            argv += ["-c", "sandbox_workspace_write.writable_roots=" + json.dumps(writable_roots)]
+            # The writable mount is not a git repository.
+            argv += ["--skip-git-repo-check"]
         if spec.get("probe"):
             argv += ["--skip-git-repo-check", "--ephemeral"]
         if spec.get("effort"):
@@ -52,8 +64,14 @@ def invocation(spec):
         permissions = {"*": "deny", "read": "allow", "glob": "allow", "grep": "allow"}
         if spec["role"] == "builder":
             permissions.update(bash="allow", edit="allow")
-        elif spec["role"] == "proposer":
+        if spec["role"] == "proposer" or spec.get("neutral_mounts"):
+            # Proposer and quorum reviewers write their private artifact to the
+            # neutral-mounted /tmp/workspace/private_output directory.
             permissions.update(edit="allow")
+        if spec.get("neutral_mounts"):
+            # Stage 4 private inputs/outputs are neutral-mounted under /tmp/workspace,
+            # outside the execution root; OpenCode gates them behind this permission.
+            permissions["external_directory"] = "allow"
         env["OPENCODE_CONFIG_CONTENT"] = json.dumps(
             {"permission": permissions, "share": "disabled", "autoupdate": False}
         )
@@ -102,6 +120,21 @@ def session_from(event, tool):
     return None
 
 
+def extract_session(text, tool):
+    """Best-effort native session identity, even when the wire envelope is missing."""
+    for line in text.splitlines():
+        try:
+            event = json.loads(line)
+        except ValueError:
+            continue
+        if not isinstance(event, dict):
+            continue
+        session = session_from(event, tool)
+        if session:
+            return session
+    return None
+
+
 def parse_output(text, tool):
     session, messages, events = None, [], []
     message_ids = []
@@ -127,7 +160,7 @@ def parse_output(text, tool):
     if not session or not messages:
         raise WorkflowError("MALFORMED_RESULT: missing native identity or final message")
     try:
-        final = messages[-1]
+        wire = None
         if tool == "opencode":
             if all(message_ids):
                 groups = []
@@ -142,12 +175,23 @@ def parse_output(text, tool):
             else:
                 # Metadata-free traces must contain a complete final text event.
                 candidates = messages
-            for earlier in candidates[:-1]:
-                if earlier.lstrip().startswith(("{", "[")):
-                    raise ValueError("ambiguous result messages")
-            final = candidates[-1]
-        wire = json.loads(final)
-        if set(wire) != {"result_json", "explanation", "plan_text"}:
+            # Models may emit narrative text after the structured result. Select the
+            # last complete wire envelope instead of requiring it to be the last message.
+            for candidate in reversed(candidates):
+                try:
+                    parsed = json.loads(candidate)
+                except (ValueError, TypeError):
+                    continue
+                if (
+                    isinstance(parsed, dict)
+                    and set(parsed) == {"result_json", "explanation", "plan_text"}
+                    and all(isinstance(parsed[k], str) for k in parsed)
+                ):
+                    wire = parsed
+                    break
+        else:
+            wire = json.loads(messages[-1])
+        if wire is None or set(wire) != {"result_json", "explanation", "plan_text"}:
             raise ValueError("wire fields")
         if not all(isinstance(wire[k], str) for k in wire):
             raise ValueError("wire values must be strings")

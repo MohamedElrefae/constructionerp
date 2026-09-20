@@ -37,3 +37,8 @@ construction/public/css/theme_*.css
 /dashboard/.venv/
 /dashboard/var/
 /dashboard/vendor/
+
+# Workflow run artifacts carry private inputs and account rows; never commit them.
+docs/ai/work-items/*/runs/
+docs/ai/work-items/*/inbox/
+docs/ai/work-items/*/outbox/

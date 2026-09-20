@@ -104,6 +104,8 @@ def main():
             p.add_argument("--descriptor", type=Path, help="ERP target descriptor JSON")
         elif command == "run":
             p.add_argument("--record-owner-commit", action="store_true")
+            p.add_argument("--dry-run", action="store_true", help="Execute the authorized read-only ERP dry-run")
+            p.add_argument("--import", dest="import_erp", action="store_true", help="Execute the authorized idempotent ERP import")
             p.add_argument("--advance-stage", action="store_true")
             p.add_argument("--backup-to", type=Path)
             p.add_argument(
@@ -190,7 +192,15 @@ def main():
                             result = (
                                 e.advance_stage()
                                 if args.advance_stage
-                                else (e.record_owner_commit() if args.record_owner_commit else e.run())
+                                else (
+                                    e.execute_import()
+                                    if args.import_erp
+                                    else (
+                                        e.execute_dry_run()
+                                        if args.dry_run
+                                        else (e.record_owner_commit() if args.record_owner_commit else e.run())
+                                    )
+                                )
                             )
                     elif args.command == "approve":
                         if not doctor(root)["ok"]:

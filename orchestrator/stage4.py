@@ -194,11 +194,11 @@ def verify_historical_provenance(erp_checkout, bench_root=None):
 
 
 def project_proposal_rows(rows):
-    """Derive private proposal projection sorted by identity.
+    """Derive the frozen proposal projection sorted by identity.
 
-    Per §5.3:
-    Sort rows by identity; each contains identity, english, is_group, and the complete
-    proposal object. Exclude A2 decisions and review-generated top-level row flags.
+    The projection binds identity and the proposal only; the hash must stay stable
+    across the review lifecycle. Reviewers additionally receive governed catalog
+    metadata via ``project_review_context`` so hierarchy and provenance are verifiable.
     """
     projected = []
     for idx, r in enumerate(rows):
@@ -211,6 +211,44 @@ def project_proposal_rows(rows):
             "proposal": deepcopy(r.get("proposal") or {}),
         })
     return sorted(projected, key=lambda x: x["identity"])
+
+
+# Governed catalog fields surfaced to independent reviewers for structural verification.
+REVIEW_CONTEXT_FIELDS = (
+    "account_number",
+    "parent_account",
+    "is_group",
+    "root_type",
+    "account_type",
+    "report_type",
+    "glossary_match",
+    "source_reference",
+    "flags",
+)
+
+
+def project_review_context(catalog_rows, proposal_rows):
+    """Build the reviewer-facing row view: frozen proposal plus governed catalog metadata.
+
+    ``catalog_rows`` is the authoritative export catalog. ``proposal_rows`` is the frozen
+    projection. The merge is keyed by identity, so the reviewer sees the proposal Arabic
+    together with the hierarchy and reference fields the source export already holds.
+    """
+    catalog_by_id = {
+        r["identity"]: r
+        for r in catalog_rows
+        if isinstance(r, dict) and r.get("identity")
+    }
+    context = []
+    for row in project_proposal_rows(proposal_rows):
+        ident = row["identity"]
+        cat = catalog_by_id.get(ident, {})
+        entry = dict(row)
+        for field in REVIEW_CONTEXT_FIELDS:
+            if field in cat:
+                entry[field] = deepcopy(cat[field])
+        context.append(entry)
+    return context
 
 
 def derive_proposal_hash(rows, export_sha256):
@@ -239,12 +277,14 @@ def derive_stage4_candidate_id(export_sha256, proposal_sha256):
     })
 
 
-def compose_bundle(proposal_rows, a2_decisions, company="Elrefae"):
+def compose_bundle(proposal_rows, a2_decisions, company="Elrefae", panel=None):
     """Per §5.3 and §11.3:
 
     Compose completed bundle deterministically from frozen proposal plus accepted A2 decisions/flags.
     Rows sorted by identity.
     Preserves proposal projection and proves composed bundle matches reviewed candidate.
+    ``panel`` records the independent reviewer provenance (role, session, verdict, digest)
+    so a downstream verifier can confirm the exact artifacts were independently reviewed.
     """
     sorted_proposal = project_proposal_rows(proposal_rows)
     bundle_rows = []
@@ -275,6 +315,8 @@ def compose_bundle(proposal_rows, a2_decisions, company="Elrefae"):
         "workflow": "independent-proposal -> ai-a2-review -> owner-approval -> dry-run -> authorized import",
         "rows": bundle_rows,
     }
+    if panel:
+        bundle["panel"] = deepcopy(panel)
 
     # Prove projection matches
     composed_projection = project_proposal_rows(bundle["rows"])
@@ -566,6 +608,7 @@ def validate_and_store_review(
     expected_proposal_sha,
     expected_identities,
     expected_session_id=None,
+    observed_session_id=None,
     catalog_terms=(),
 ):
     """Validate reviewer row decisions, store canonical blob, and return metadata."""
@@ -594,6 +637,11 @@ def validate_and_store_review(
         )
 
     session_id = doc.get("session_id")
+    if observed_session_id:
+        # Native agents cannot know their own runtime session id, so the runner
+        # attests it from the observed process stream. Cross-job session uniqueness
+        # is still enforced centrally by the engine.
+        session_id = observed_session_id
     if not session_id or not isinstance(session_id, str):
         raise WorkflowError(f"Review for {expected_role} missing valid session_id")
     if expected_session_id and session_id != expected_session_id:
@@ -624,12 +672,18 @@ def validate_and_store_review(
 
         decision = r.get("decision")
         if decision == "rejected":
+            reason = (r.get("rationale") or r.get("exception_reason") or "").strip()
+            suggested = r.get("suggested_arabic")
+            if suggested and suggested != r.get("proposed_arabic"):
+                reason = (reason + f" Suggested Arabic: {suggested}").strip()
             blocking_findings.append({
-                "finding_id": f"rejected-{expected_role}-{idx}",
+                "finding_id": None,
                 "role": expected_role,
                 "blocking": True,
                 "classification": "row_rejected",
-                "summary": f"Reviewer {expected_role} rejected row at index {idx}",
+                "summary": f"Reviewer {expected_role} rejected row {ident}",
+                "detail": reason,
+                "row_identity": ident,
             })
         elif decision not in ("approved", "exception"):
             raise WorkflowError(
@@ -659,7 +713,7 @@ def validate_and_store_review(
 
     if doc.get("verdict") == "BLOCKED" and not blocking_findings:
         blocking_findings.append({
-            "finding_id": f"blocked-{expected_role}",
+            "finding_id": None,
             "role": expected_role,
             "blocking": True,
             "classification": "review_rejected",
@@ -687,6 +741,8 @@ def validate_and_store_review(
             "blocking": bool(f.get("blocking", True)),
             "classification": f.get("classification", "generic"),
             "summary": sanitize_public_text(f.get("summary", ""), catalog_terms=catalog_terms),
+            "detail": sanitize_public_text(f.get("detail", ""), catalog_terms=catalog_terms),
+            "row_identity": sanitize_public_text(f.get("row_identity", ""), catalog_terms=catalog_terms),
         }
         for i, f in enumerate(blocking_findings)
     ]
@@ -748,7 +804,19 @@ def compose_and_store_bundle_and_payload(
     a2_rows = a2_doc.get("row_decisions", [])
     a2_decisions = {r["identity"]: r for r in a2_rows}
 
-    bundle = compose_bundle(proposal_rows, a2_decisions, company=company)
+    # Record independent panel provenance so the verifier can bind the exact artifacts.
+    panel = []
+    for role in required_roles:
+        rev_doc = json.loads(read_private_blob(private_root, panel_digests[role]))
+        panel.append({
+            "role": role,
+            "session_id": rev_doc.get("session_id"),
+            "verdict": rev_doc.get("verdict"),
+            "proposal_sha256": rev_doc.get("proposal_sha256"),
+            "review_sha256": panel_digests[role],
+        })
+
+    bundle = compose_bundle(proposal_rows, a2_decisions, company=company, panel=panel)
     bundle_bytes = canonical(bundle)
     bundle_sha = hashlib.sha256(bundle_bytes).hexdigest()
     store_private_blob(private_root, bundle_bytes, expected_sha=bundle_sha)

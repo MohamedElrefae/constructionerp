@@ -448,7 +448,7 @@ def test_stage4_sub_status_state_transitions_end_to_end(test_repo):
         assert state["sub_status"] == "OWNER_PAYLOAD_AUTHORIZATION"
         assert state["gate"]["scope"] == "DRY_RUN"
 
-        # Step 5: DRY_RUN token granted with all 5 discrete hashes -> DRY_RUN & next_roles = [builder]
+        # Step 5: DRY_RUN token granted with all 5 discrete hashes -> DRY_RUN, owner-executed (no agent)
         token_dry = {
             "schema_version": 1,
             "token_id": "tok-dry-1",
@@ -465,23 +465,20 @@ def test_stage4_sub_status_state_transitions_end_to_end(test_repo):
         }
         state = apply_event(state, {"seq": 7, "kind": "grant", "payload": token_dry}, config)
         assert state["sub_status"] == "DRY_RUN"
-        assert state["next_roles"] == ["builder"]
+        assert state["next_roles"] == []
         assert state["gate"] is None
 
-        # Step 6: Builder completes DRY_RUN with real hex64 evidence digest -> IMPORT_AUTHORIZATION & gate IMPORT
+        # Step 6: Owner-executed dry-run records evidence -> IMPORT_AUTHORIZATION & gate IMPORT
         dry_run_digest = "d" * 64
-        state["active_jobs"] = ["job-b1"]
-        ev_b_dry = {
-            "seq": 8,
-            "kind": "result",
-            "payload": {
-                "job_id": "job-b1",
-                "role": "builder",
-                "dry_run_evidence_digest": dry_run_digest,
-                "result": {"status": "COMPLETE", "verdict": "PASS", "findings": []},
+        state = apply_event(
+            state,
+            {
+                "seq": 8,
+                "kind": "dry_run_evidence",
+                "payload": {"evidence_digest": dry_run_digest, "blocking": False},
             },
-        }
-        state = apply_event(state, ev_b_dry, config)
+            config,
+        )
         assert state["sub_status"] == "IMPORT_AUTHORIZATION"
         assert state["gate"]["scope"] == "IMPORT"
         assert state["dry_run_evidence_digest"] == dry_run_digest
@@ -504,20 +501,18 @@ def test_stage4_sub_status_state_transitions_end_to_end(test_repo):
         }
         state = apply_event(state, {"seq": 9, "kind": "grant", "payload": token_imp}, config)
         assert state["sub_status"] == "IMPORT"
-        assert state["next_roles"] == ["builder"]
+        assert state["next_roles"] == []
 
-        # Step 8: Builder completes IMPORT -> POST_IMPORT_EVIDENCE & next_roles = [verifier]
-        state["active_jobs"] = ["job-b2"]
-        ev_b_imp = {
-            "seq": 10,
-            "kind": "result",
-            "payload": {
-                "job_id": "job-b2",
-                "role": "builder",
-                "result": {"status": "COMPLETE", "verdict": "PASS", "findings": []},
+        # Step 8: Owner-executed import records evidence -> POST_IMPORT_EVIDENCE & verifier
+        state = apply_event(
+            state,
+            {
+                "seq": 10,
+                "kind": "import_evidence",
+                "payload": {"evidence_digest": "e" * 64},
             },
-        }
-        state = apply_event(state, ev_b_imp, config)
+            config,
+        )
         assert state["sub_status"] == "POST_IMPORT_EVIDENCE"
         assert state["next_roles"] == ["verifier"]
 
