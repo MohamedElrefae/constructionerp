@@ -1,0 +1,3 @@
+SKIP construction/print_format/boq_print_format/boq_print_format.json: markup/code blob excluded from string gate (print/CSS/seed-data; covered by bilingual-output waves + leak detection)
+SKIP construction/workspace/construction/construction.json: markup/code blob excluded from string gate (print/CSS/seed-data; covered by bilingual-output waves + leak detection)
+checked={"construction/locale/ar.po": 805, "csv_rows": 34, "extract": {"files": 260, "json_labels": 21, "missing": 0, "wrapped": 664}, "raw_text": {"files": 7, "missing": 0, "texts": 2}} errors=0

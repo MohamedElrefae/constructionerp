@@ -1,0 +1,28 @@
+...........................................................................................
+----------------------------------------------------------------------
+Ran 91 tests in 2.297s
+
+OK
+FAIL files-traversal: rejected '../nope.po'
+checked={} errors=1
+FAIL files-traversal: rejected '../nope2.po'
+checked={} errors=1
+SKIP construction/print_format/boq_print_format/boq_print_format.json: markup/code blob excluded from string gate (print/CSS/seed-data; covered by bilingual-output waves + leak detection)
+SKIP construction/workspace/construction/construction.json: markup/code blob excluded from string gate (print/CSS/seed-data; covered by bilingual-output waves + leak detection)
+FAIL frappe tree absent
+checked={} errors=1
+checked={} errors=0
+SKIP construction/print_format/boq_print_format/boq_print_format.json: markup/code blob excluded from string gate (print/CSS/seed-data; covered by bilingual-output waves + leak detection)
+SKIP construction/workspace/construction/construction.json: markup/code blob excluded from string gate (print/CSS/seed-data; covered by bilingual-output waves + leak detection)
+FAIL evidence-artifact-mismatch: CHECKER_SHA256 values ['aaae4f3678a70d2adf1ed25b96c01b2e7639827891e8d38732ee3b9b23b6fa7c'] disagree or != live 5de8c8ba94db…
+FAIL evidence-artifact-mismatch: TESTS_SHA256 values ['593d5e61679f2a54cb1be2749a6892d18d44c28e7ef4991fcc1c3dfcac621115'] disagree or != live c4eeaf79a2f1…
+FAIL evidence-artifact-mismatch: TRANSLATIONLINT_SHA256 values ['bcf1d242fcb7417a391f42f4ecd3a8edbc7b96c81c760704b8071e7b19b1b738'] disagree or != live c81321a0d35e…
+FAIL evidence-index-artifact-value: CHECKER_SHA256 index aaae4f3678a7… != live 5de8c8ba94db…
+FAIL evidence-index-artifact-value: TESTS_SHA256 index 593d5e61679f… != live c4eeaf79a2f1…
+FAIL evidence-index-artifact-value: TRANSLATIONLINT_SHA256 index bcf1d242fcb7… != live c81321a0d35e…
+FAIL evidence-index-head: 'e7be48855bde540464ea302e53c9bfca62b7c462' != live HEAD 'b081b2e3d657e6513c41d570b05d015f995cfe65'
+checked={"construction/locale/ar.po": 805, "csv_rows": 34, "extract": {"files": 260, "json_labels": 21, "missing": 0, "wrapped": 664}, "raw_text": {"files": 7, "missing": 0, "texts": 2}} errors=7
+FAIL frappe delta provenance mismatch: artifact claims old/new ('BOGUS', 'BOGUS', '0000000000000000000000000000000000000000000000000000000000000000', '1111111111111111111111111111111111111111111111111111111111111111') but recorded->live is c0/843a9e945564ec688b5ec20c363dc8647e8fd17aab08b3c5272cc756c8789eca -> None/0eb29ac0a2ce26dba44d13176e4d09a6d5eaaaf8efec8189301580a07f26007f
+FAIL frappe delta sets do not match recomputed inventory diff
+FAIL frappe catalog differs from committed inventory — a reviewed delta is mandatory (--delta-reviewed <file>)
+checked={"construction/locale/ar.po": 805, "extract_scoped": {"files": 1, "json_labels": 0, "missing": 0, "wrapped": 0}, "json_labels": 18} errors=0
