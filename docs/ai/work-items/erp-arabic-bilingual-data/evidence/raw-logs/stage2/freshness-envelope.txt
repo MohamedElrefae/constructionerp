@@ -1,5 +1,5 @@
 COMMAND: bench --site v16.localhost console construction.localization_freshness.collect()
-STARTED_UTC: 2026-09-10T12:09:21Z
+STARTED_UTC: 2026-09-20T22:23:13Z
 ARTIFACT: construction/data/localization/freshness_evidence.json
 ARTIFACT_SHA256: fe6ce5b275803d2f13eb00f79314aa5ab71c409bea781b1a0c28bdaf7df919e4
 FRESHNESS_SHA256: fe6ce5b275803d2f13eb00f79314aa5ab71c409bea781b1a0c28bdaf7df919e4
@@ -45,5 +45,5 @@ FRESHNESS_SHA256: fe6ce5b275803d2f13eb00f79314aa5ab71c409bea781b1a0c28bdaf7df919
 }
 --- JSON END ---
 EXIT_CODE: 0
-FINISHED_UTC: 2026-09-10T12:09:23Z
+FINISHED_UTC: 2026-09-20T22:23:14Z
 ENVELOPE_LINES: 49

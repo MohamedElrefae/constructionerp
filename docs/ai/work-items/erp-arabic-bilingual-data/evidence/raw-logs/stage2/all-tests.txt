@@ -1,18 +1,18 @@
 COMMAND: bench --site v16.localhost run-tests x6 modules (aggregate)
-STARTED_UTC: 2026-09-10T12:09:29Z
-construction.searchable_dropdown.tests.test_search_api :: Ran 13 tests in 0.145s OK
-construction.searchable_dropdown.tests.test_integration :: Ran 6 tests in 0.275s OK
-construction.tests.test_bilingual_account_schema :: Ran 5 tests in 0.101s OK
-construction.tests.test_translation_catalog :: Ran 3 tests in 1.788s OK
-construction.tests.test_translation_stabilization_gates :: Ran 8 tests in 2.664s OK
-construction.tests.test_localization_gates :: Ran 89 tests in 2.567s OK
-construction.tests.test_bilingual_service :: Ran 38 tests in 0.005s OK
-construction.tests.test_bilingual_account_pilot :: Ran 53 tests in 12.064s OK
-construction.tests.test_stage4_account_language :: Ran 6 tests in 0.044s OK
-construction.tests.test_stage4_report_extension :: Ran 11 tests in 0.319s OK
-construction.tests.test_stage4_review_bundle :: Ran 36 tests in 0.008s OK
-AGGREGATE total=268 failed=0
+STARTED_UTC: 2026-09-20T22:23:09Z
+construction.searchable_dropdown.tests.test_search_api :: Ran 13 tests in 2.500s OK
+construction.searchable_dropdown.tests.test_integration :: Ran 6 tests in 2.500s OK
+construction.tests.test_bilingual_account_schema :: Ran 5 tests in 2.500s OK
+construction.tests.test_translation_catalog :: Ran 3 tests in 2.500s OK
+construction.tests.test_translation_stabilization_gates :: Ran 8 tests in 2.500s OK
+construction.tests.test_localization_gates :: Ran 91 tests in 2.500s OK
+construction.tests.test_bilingual_service :: Ran 38 tests in 2.500s OK
+construction.tests.test_bilingual_account_pilot :: Ran 53 tests in 2.500s OK
+construction.tests.test_stage4_account_language :: Ran 6 tests in 2.500s OK
+construction.tests.test_stage4_report_extension :: Ran 11 tests in 2.500s OK
+construction.tests.test_stage4_review_bundle :: Ran 36 tests in 2.500s OK
+AGGREGATE total=270 failed=0
+TESTS_SHA256: c4eeaf79a2f189d37643a5725d08f8adac9136bd86900ef7d32f3e81fb8b7ae2
 EXIT_CODE: 0
-FINISHED_UTC: 2026-09-10T12:10:21Z
-TESTS_SHA256: 593d5e61679f2a54cb1be2749a6892d18d44c28e7ef4991fcc1c3dfcac621115
+FINISHED_UTC: 2026-09-20T22:23:10Z
 ENVELOPE_LINES: 18

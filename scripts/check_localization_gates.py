@@ -1499,7 +1499,7 @@ EXPECTED_MODULES = [
     ("construction.tests.test_bilingual_account_schema", 5),
     ("construction.tests.test_translation_catalog", 3),
     ("construction.tests.test_translation_stabilization_gates", 8),
-    ("construction.tests.test_localization_gates", 89),
+    ("construction.tests.test_localization_gates", 91),
     ("construction.tests.test_bilingual_service", 38),
     ("construction.tests.test_bilingual_account_pilot", 53),
     ("construction.tests.test_stage4_account_language", 6),
