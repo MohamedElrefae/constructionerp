@@ -41,8 +41,24 @@ def get_children(doctype, parent="", boq_header=None, is_root=False, **filters):
         parent_value = parent
         parent_fields = ", `parent_structure` as parent"
 
-    nodes = frappe.db.sql(
-        f"""
+    if parent_fields:
+        query = """
+		SELECT
+			`name` as value,
+			CONCAT(IFNULL(`wbs_code`,''), ' — ', `title`) as title,
+			`is_group` as expandable,
+            `item_count`,
+            `total_contract_value`,
+            `total_budgeted_cost`,
+			`parent_structure` as parent
+		FROM `tabBOQ Structure`
+		WHERE IFNULL(`parent_structure`, '') = %(parent)s
+		AND `docstatus` < 2
+		AND `boq_header` = %(boq_header)s
+		ORDER BY `lft`
+        """
+    else:
+        query = """
 		SELECT
 			`name` as value,
 			CONCAT(IFNULL(`wbs_code`,''), ' — ', `title`) as title,
@@ -50,13 +66,15 @@ def get_children(doctype, parent="", boq_header=None, is_root=False, **filters):
             `item_count`,
             `total_contract_value`,
             `total_budgeted_cost`
-			{parent_fields}
 		FROM `tabBOQ Structure`
 		WHERE IFNULL(`parent_structure`, '') = %(parent)s
 		AND `docstatus` < 2
 		AND `boq_header` = %(boq_header)s
 		ORDER BY `lft`
-	""",
+	    """
+
+    nodes = frappe.db.sql(
+        query,
         {"parent": parent_value, "boq_header": boq_header},
         as_dict=True,
     )
