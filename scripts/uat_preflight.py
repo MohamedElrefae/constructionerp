@@ -61,11 +61,15 @@ def redis_reachable(port, label):
 
 
 def read_password():
-    """P1 hardening: never accept the secret on argv."""
+    """P1 hardening: never accept the secret on argv; NEVER prompt when
+    stdin is a non-tty — empty input returns None immediately so the
+    caller records an explicit desk-boot failure (the hard preflight can
+    never 'pass' without the fresh Arabic Desk verification)."""
     if not sys.stdin.isatty():
-        pw = sys.stdin.readline().rstrip("\n")
+        pw = sys.stdin.readline().rstrip("\n")  # one line from stdin
         if pw:
             return pw
+        return None  # empty non-tty stdin: fail fast, never echo-prompt
     try:
         return getpass.getpass("UAT preflight password for Administrator: ")
     except (EOFError, KeyboardInterrupt):
@@ -169,7 +173,7 @@ def main():
                                     repr(key) + " absent from fresh boot __messages",
                                 )
         else:
-            print("NOTE: password not provided; desk-boot check skipped")
+            fail("desk-boot", "no password available — the fresh Arabic Desk boot check is mandatory; run the preflight with credentials via STDIN or a TTY")
     finally:
         if sid:
             # unconditional cleanup: log the UAT session out on success OR failure
