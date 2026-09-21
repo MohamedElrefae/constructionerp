@@ -60,6 +60,16 @@ def redis_reachable(port, label):
         fail("redis-" + label, f"port {port} not reachable ({exc})")
 
 
+def http_req_attested(host, path, method="GET", body=None, headers=None):
+    """http_req with connection exceptions recorded as clean preflight
+    failures (never a traceback) — Stage-8-x robustness review 2026-09-21."""
+    try:
+        return http_req(host, path, method=method, body=body, headers=headers)
+    except (TimeoutError, http.client.HTTPException, OSError) as exc:
+        fail("connection: " + path, type(exc).__name__ + ": " + str(exc)[:160])
+        return None, "", None
+
+
 def read_password():
     """P1 hardening: never accept the secret on argv; NEVER prompt when
     stdin is a non-tty — empty input returns None immediately so the
@@ -124,7 +134,7 @@ def main():
         redis_reachable(11000, "queue")
 
         host = target
-        status, _, _s = http_req(host, "/api/method/ping")
+        status, _, _s = http_req_attested(host, "/api/method/ping")
         if status == 200:
             okay("site-http", "/ping 200")
         else:
@@ -132,14 +142,14 @@ def main():
 
         if password:
             login_body = urllib_encode({"usr": "Administrator", "pwd": password})
-            status, _, sid_new = http_req(
-                host, "/api/method/login", body=login_body
-            )
+            status, _, sid_new = http_req_attested(host, "/api/method/login", body=login_body)
             sid = sid_new
+            if sid_new is None and any("connection:" in x for x in FAILURES):
+                pass  # the connection failure is already recorded
             if not sid:
                 fail("desk-boot", f"login failed / no session cookie ({status})")
             else:
-                dstatus, html, _ = http_req(
+                dstatus, html, _ = http_req_attested(
                     host, "/desk", headers={"Cookie": "sid=" + sid}
                 )
                 if dstatus != 200:
