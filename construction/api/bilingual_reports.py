@@ -29,18 +29,18 @@ def _parse_filters(filters):
     import json
 
     if filters is None or filters == "":
-        return None
+        return frappe._dict()
     if not isinstance(filters, str):
         if not isinstance(filters, dict):
             frappe.throw(frappe._("Invalid filters: value must be a JSON object"))
-        return filters
+        return frappe._dict(filters)
     try:
         v = json.loads(filters)
     except ValueError:
         frappe.throw(frappe._("Invalid filters: value must be a JSON object"))
     if v is None or not isinstance(v, dict):
         frappe.throw(frappe._("Invalid filters: value must be a JSON object"))
-    return v
+    return frappe._dict(v)
 
 
 @frappe.whitelist()
@@ -60,5 +60,31 @@ def localized_report(report_name, filters=None, lang=None, mode=None):
     mode = normalize_mode(lang)
     module = frappe.get_module(PILOT_REPORTS[report_name])
     execute = getattr(module, "execute", None) or (module if callable(module) else None)
-    columns, data = bilingualize_report(execute, filters or {}, lang, report_name)
+    filters = _ensure_required(filters, report_name)
+    columns, data = bilingualize_report(execute, filters, lang, report_name)
     return {"report_name": report_name, "mode": normalize_mode(lang), "columns": columns, "data": data}
+
+
+def _ensure_required(filters, report_name):
+    """Vendor-required fiscal year: resolve the company's current financial year."""
+    if report_name not in ("Trial Balance", "Accounts Receivable"):
+        return filters
+    if filters.get("fiscal_year"):
+        return filters
+    company = filters.get("company") or frappe.defaults.get_user_default("Company")
+    if not company:
+        return filters
+    from erpnext.accounts.utils import get_fiscal_year
+
+    fy = get_fiscal_year(
+        company=company, raise_on_missing=False, boolean=0, verbose=0, as_dict=True
+    )
+    if fy:
+        filters["fiscal_year"] = fy.get("name") if isinstance(fy, dict) else fy[0]
+    else:
+        fy_name = frappe.get_all(
+            "Fiscal Year", filters={"disabled": 0}, fields=["name"], order_by="year_start_date desc", limit=1
+        )
+        if fy_name:
+            filters["fiscal_year"] = fy_name[0]["name"]
+    return filters

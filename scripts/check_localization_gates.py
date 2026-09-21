@@ -1506,7 +1506,7 @@ EXPECTED_MODULES = [
     ("construction.tests.test_stage4_report_extension", 11),
     ("construction.tests.test_stage4_review_bundle", 36),
 ]
-EXPECTED_GATE = {"catalog": 807, "files": 261, "wrapped": 666, "json_labels": 21, "missing": 0}
+EXPECTED_GATE = {"catalog": 810, "files": 265, "wrapped": 667, "json_labels": 22, "missing": 0}
 EXPECTED_DRYRUN = {"total": 450, "created": 0, "updated": 0, "skipped": 450, "drift": 0}
 
 

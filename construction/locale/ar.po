@@ -3475,3 +3475,15 @@ msgstr "عوامل التصفية غير صالحة: يجب أن تكون قيم
 #: construction/api/bilingual_reports.py
 msgid "Unsupported report: {0}"
 msgstr "تقرير غير مدعوم: {0}"
+
+#: construction/construction/api/bilingual_reports.py
+msgid "Bilingual Report Viewer"
+msgstr "عارض التقارير ثنائي اللغة"
+
+#: construction/construction/page/bilingual_report_viewer/bilingual_report_viewer.js
+msgid "Loading"
+msgstr "جارٍ التحميل"
+
+#: construction/construction/page/bilingual_report_viewer/bilingual_report_viewer.js
+msgid "No Data"
+msgstr "لا توجد بيانات"
