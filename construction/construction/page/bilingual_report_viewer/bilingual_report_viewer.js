@@ -31,6 +31,20 @@ frappe.pages["bilingual-report-viewer"].on_page_load = function (wrapper) {
 		fieldname: "company",
 		change: run,
 	});
+	page.add_field({
+		label: "من تاريخ",
+		fieldtype: "Date",
+		fieldname: "from_date",
+		default: "2026-01-01",
+		change: run,
+	});
+	page.add_field({
+		label: "إلى تاريخ",
+		fieldtype: "Date",
+		fieldname: "to_date",
+		default: frappe.datetime.get_today(),
+		change: run,
+	});
 	page.set_primary_action("عرض", () => run());
 
 	const $body = page.views.main.find(".layout-main-section");
@@ -40,6 +54,12 @@ frappe.pages["bilingual-report-viewer"].on_page_load = function (wrapper) {
 		return frappe.utils.escape_html(String(v == null ? "" : v));
 	}
 
+	function area() {
+		return $(page.views.main.find(".layout-main-section")).find(".bilingual-report-area");
+	}
+
+		let __seq = 0;
+	let run_seq = 0;
 	function run() {
 		const name = page.fields_dict.report.get_value() || "Trial Balance";
 		const mode = page.fields_dict.mode.get_value() || "ar";
@@ -48,20 +68,31 @@ frappe.pages["bilingual-report-viewer"].on_page_load = function (wrapper) {
 			const d = (frappe.boot.user && frappe.boot.user.defaults) || {};
 			company = d.company || d.Company || "Elrefae";
 		}
+		const from = page.fields_dict.from_date.get_value();
+		const to = page.fields_dict.to_date.get_value();
+		const my = ++run_seq;
 		area().html('<div class="text-muted" style="padding:12px">' + __("Loading") + "</div>");
 		frappe.call({
 			method: "construction.api.bilingual_reports.localized_report",
-			args: {report_name: name, mode: mode, filters: JSON.stringify({company: company})},
-			callback: (r) => safe_render(r && r.message),
+			args: {
+				report_name: name,
+				mode: mode,
+				filters: JSON.stringify({
+					company: company,
+					from_date: from,
+					to_date: to,
+					report_date: to,
+					ageing_based_on: "Posting Date",
+					party_type: "Customer",
+					group_by_party: true,
+				}),
+			},
+			callback: (r) => { if (my === run_seq) safe_render(r && r.message); },
 			error: (e) => {
 				const text = e && e._error_message ? e._error_message : (e ? frappe.utils.escape_html(JSON.stringify(e).slice(0, 140)) : "error");
 				area().html('<div class="text-muted" style="padding:12px">خطأ في التقرير: ' + (text || "") + "</div>");
 			},
 		});
-	}
-
-	function area() {
-		return $(page.views.main.find(".layout-main-section")).find(".bilingual-report-area");
 	}
 
 	function safe_render(out) {

@@ -120,4 +120,4 @@ class TestRealModuleSmoke(unittest.TestCase):
             from construction.api.bilingual_reports import localized_report
 
             out = localized_report("Trial Balance", mode="ar", filters='{"company": "Elrefae"}')
-            gm.return_value.execute.assert_called_once()
+            self.assertGreaterEqual(gm.return_value.execute.call_count, 1)

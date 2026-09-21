@@ -89,19 +89,37 @@ def transform_report(columns, data, lang, mapping, label_fields):
 
 
 def load_account_arabic_mapping(company=None):
-    """Read-only Account.account_name -> account_name_ar mapping (none yet)."""
+    def _raw_map():
+        import frappe
+
+        filters = {}
+        if company:
+            filters["company"] = company
+        rows = frappe.get_all(
+            "Account",
+            filters=filters,
+            fields=["name", "account_name", "account_name_ar"],
+            limit_page_length=0,
+        )
+        return rows
+
     import frappe
 
-    filters = {}
-    if company:
-        filters["company"] = company
     rows = frappe.get_all(
         "Account",
-        filters=filters,
-        fields=["account_name", "account_name_ar"],
+        filters=("company", "=", company) if company else None,
+        fields=["name", "account_name", "account_name_ar"],
         limit_page_length=0,
     )
-    return {r.account_name: r.account_name_ar for r in rows if r.account_name_ar}
+    mapping = {}
+    for r in rows:
+        ar = r.get("account_name_ar")
+        if not ar:
+            continue
+        if r.get("account_name"):
+            mapping[r["account_name"]] = ar
+        mapping[r["name"]] = ar
+    return mapping
 
 
 def bilingualize_report(execute, filters, lang, report_name, mapping=None):
