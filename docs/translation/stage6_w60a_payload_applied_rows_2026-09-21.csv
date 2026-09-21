@@ -1,0 +1,432 @@
+source_text	translated_text	quorum_decision	decision_ref
+'In Global Search' is not allowed for field {0} of type {1}	البحث الشامل غير مسموح للحقل {0} من النوع {1}	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
++ Add / Remove Fields	+ إضافة / إزالة الحقول	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+1 Report	تقرير واحد	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+<div class=\"alert\">Please don't update it as it can mess up your form. Use the Customize Form View and Custom Fields to set properties!</div>	EXCEPTION-technical	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+<div class=\"well\"> " "    Edit list of Series in the box. Rules: " "    <ul> " "        <li>Each Series Prefix on a new line.</li> " "        <li>Allowed special characters are \"/\" and \"-\"</li> " "        <li> " "            Optionally, set the number of digits in the series using dot (.) " "            followed by hashes (#). For example, \".####\" means that the series " "            will have four digits. Default is five digits. " "        </li> " "        <li> " "            You can also use variables in the series name by putting them " "            between (.) dots " "            <br> " "            Supported Variables: " "            <ul> " "                <li><code>.YYYY.</code> - Year in 4 digits</li> " "                <li><code>.YY.</code> - Year in 2 digits</li> " "                <li><code>.MM.</code> - Month</li> " "                <li><code>.DD.</code> - Day of month</li> " "                <li><code>.WW.</code> - Week of the year</li> " "                <li> " "                    <code>.{fieldname}.</code> - fieldname on the document e.g. " "                    <code>branch</code> " "                </li> " "                <li><code>.FY.</code> - Fiscal Year (requires ERPNext to be installed)</li> " "                <li><code>.ABBR.</code> - Company Abbreviation (requires ERPNext to be installed)</li> " "            </ul> " "        </li> " "    </ul> " "    Examples: " "    <ul> " "        <li>INV-</li> " "        <li>INV-10-</li> " "        <li>INVK-</li> " "        <li>INV-.YYYY.-.{branch}.-.MM.-.####</li> " "    </ul> " "</div> " "<br>	DEFERRED-unresolved-location	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+<h3>Custom CSS Help</h3>  " "<p>Notes:</p>  " "<ol> " "<li>All field groups (label + value) are set attributes <code>data-fieldtype</code> and <code>data-fieldname</code></li> " "<li>All values are given class <code>value</code></li> " "<li>All Section Breaks are given class <code>section-break</code></li> " "<li>All Column Breaks are given class <code>column-break</code></li> " "</ol>  " "<h4>Examples</h4>  " "<p>1. Left align integers</p>  " "<pre><code>[data-fieldtype=\"Int\"] .value { text-align: left; }</code></pre>  " "<p>1. Add border to sections except the last section</p>  " "<pre><code>.section-break { padding: 30px 0px; border-bottom: 1px solid #eee; } " ".section-break:last-child { padding-bottom: 0px; border-bottom: 0px;  }</code></pre>	DEFERRED-unresolved-location	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+<h3>Print Format Help</h3> " "<hr> " "<h4>Introduction</h4> " "<p>Print Formats are rendered on the server side using the Jinja Templating Language. All forms have access to the <code>doc</code> object which contains information about the document that is being formatted. You can also access common utilities via the <code>frappe</code> module.</p> " "<p>For styling, the Boostrap CSS framework is provided and you can enjoy the full range of classes.</p> " "<hr> " "<h4>References</h4> " "<ol> " "\t<li><a href=\"http://jinja.pocoo.org/docs/templates/\" target=\"_blank\">Jinja Templating Language</a></li> " "\t<li><a href=\"http://getbootstrap.com\" target=\"_blank\">Bootstrap CSS Framework</a></li> " "</ol> " "<hr> " "<h4>Example</h4> " "<pre><code>&lt;h3&gt;{{ doc.select_print_heading or \"Invoice\" }}&lt;/h3&gt; " "&lt;div class=\"row\"&gt; " "\t&lt;div class=\"col-md-3 text-right\"&gt;Customer Name&lt;/div&gt; " "\t&lt;div class=\"col-md-9\"&gt;{{ doc.customer_name }}&lt;/div&gt; " "&lt;/div&gt; " "&lt;div class=\"row\"&gt; " "\t&lt;div class=\"col-md-3 text-right\"&gt;Date&lt;/div&gt; " "\t&lt;div class=\"col-md-9\"&gt;{{ doc.get_formatted(\"invoice_date\") }}&lt;/div&gt; " "&lt;/div&gt; " "&lt;table class=\"table table-bordered\"&gt; " "\t&lt;tbody&gt; " "\t\t&lt;tr&gt; " "\t\t\t&lt;th&gt;Sr&lt;/th&gt; " "\t\t\t&lt;th&gt;Item Name&lt;/th&gt; " "\t\t\t&lt;th&gt;Description&lt;/th&gt; " "\t\t\t&lt;th class=\"text-right\"&gt;Qty&lt;/th&gt; " "\t\t\t&lt;th class=\"text-right\"&gt;Rate&lt;/th&gt; " "\t\t\t&lt;th class=\"text-right\"&gt;Amount&lt;/th&gt; " "\t\t&lt;/tr&gt; " "\t\t{%- for row in doc.items -%} " "\t\t&lt;tr&gt; " "\t\t\t&lt;td style=\"width: 3%;\"&gt;{{ row.idx }}&lt;/td&gt; " "\t\t\t&lt;td style=\"width: 20%;\"&gt; " "\t\t\t\t{{ row.item_name }} " "\t\t\t\t{% if row.item_code != row.item_name -%} " "\t\t\t\t&lt;br&gt;Item Code: {{ row.item_code}} " "\t\t\t\t{%- endif %} " "\t\t\t&lt;/td&gt; " "\t\t\t&lt;td style=\"width: 37%;\"&gt; " "\t\t\t\t&lt;div style=\"border: 0px;\"&gt;{{ row.description }}&lt;/div&gt;&lt;/td&gt; " "\t\t\t&lt;td style=\"width: 10%; text-align: right;\"&gt;{{ row.qty }} {{ row.uom or row.stock_uom }}&lt;/td&gt; " "\t\t\t&lt;td style=\"width: 15%; text-align: right;\"&gt;{{ " "\t\t\t\trow.get_formatted(\"rate\", doc) }}&lt;/td&gt; " "\t\t\t&lt;td style=\"width: 15%; text-align: right;\"&gt;{{ " "\t\t\t\trow.get_formatted(\"amount\", doc) }}&lt;/td&gt; " "\t\t&lt;/tr&gt; " "\t\t{%- endfor -%} " "\t&lt;/tbody&gt; " "&lt;/table&gt;</code></pre> " "<hr> " "<h4>Common Functions</h4> " "<table class=\"table table-bordered\"> " "\t<tbody> " "\t\t<tr> " "\t\t\t<td style=\"width: 30%;\"><code>doc.get_formatted(\"[fieldname]\", [parent_doc])</code></td> " "\t\t\t<td>Get document value formatted as Date, Currency, etc. Pass parent <code>doc</code> for currency type fields.</td> " "\t\t</tr> " "\t\t<tr> " "\t\t\t<td style=\"width: 30%;\"><code>frappe.db.get_value(\"[doctype]\", \"[name]\", \"fieldname\")</code></td> " "\t\t\t<td>Get value from another document.</td> " "\t\t</tr> " "\t</tbody> " "</table>	DEFERRED-unresolved-location	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+<p><strong>Condition Examples:</strong></p> " "<pre><code class=\"language-python\">doc.status==\"Open\"<br>doc.due_date==nowdate()<br>doc.total &gt; 40000 " "</code></pre>	DEFERRED-unresolved-location	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+<p><strong>Condition Examples:</strong></p> " "<pre>doc.status==\"Open\"<br>doc.due_date==nowdate()<br>doc.total &gt; 40000 " "</pre>	DEFERRED-unresolved-location	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+<p>Multiple webforms can be created for a single doctype. Add filters specific to this webform to display correct record after submission.</p><p>For Example:</p> " "<p>If you create a separate webform every year to capture feedback from employees add a  " " field named year in doctype and add a filter <b>year = 2023</b></p>	DEFERRED-unresolved-location	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+<p>To interact with above HTML you will have to use `root_element` as a parent selector.</p><p>For example:</p><pre class=\"p-3 bg-gray-100 border-radius rounded-sm mb-0\" style=\"width: fit-content;\"><code>// here root_element is provided by default " "let some_class_element = root_element.querySelector('.some-class'); " "some_class_element.textContent = \"New content\"; " "</code></pre>	DEFERRED-unresolved-location	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Action {0} completed successfully on {1} {2}. View it {3}	اكتمل الإجراء {0} بنجاح على {1} {2}. استعرضه {3}	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Action {0} failed on {1} {2}. View it {3}	فشل الإجراء {0} على {1} {2}. استعرضه {3}	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Add / Remove Columns	إضافة / إزالة الأعمدة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Add Card to Dashboard	إضافة بطاقة إلى الشاشة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Add Child	إضافة فرع	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Add Indexes	إضافة فهارس	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Add Multiple	إضافة متعدد	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Add Participants	إضافة مشاركين	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Add Roles	إضافة أدوار	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Add Tags	إضافة وسوم	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Add Template	إضافة قالب	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Add Translate Data	إضافة بيانات الترجمة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Add Video Conferencing	إضافة اجتماع فيديو	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Add a Filter	إضافة تصفية	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Add a New Role	إضافة دور جديد	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Add a Row	إضافة صف	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Add a new section	إضافة قسم جديد	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Add a row above the current row	إضافة صف أعلى الصف الحالي	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Add a row at the bottom	إضافة صف في الأسفل	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Add a row at the top	إضافة صف في الأعلى	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Add a row below the current row	إضافة صف أسفل الصف الحالي	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Add column	إضافة عمود	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Add field	إضافة حقل	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Add new tab	إضافة تبويب جديد	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Add numbers or special characters.	أضف أرقامًا أو رموزًا خاصة.	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Add page break	إضافة فاصل صفحة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Add tab	إضافة تبويب	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Add to this activity by mailing to {0}	أضف إلى هذا النشاط بالمراسلة إلى {0}	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Add {0}	إضافة {0}	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+After Rename	بعد إعادة التسمية	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Apps with Search	تطبيقات مع بحث	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Assign To User Group	تعيين إلى مجموعة مستخدمين	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Assign a user	تعيين مستخدم	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Attach Files	إرفاق ملفات	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Attach Package	إرفاق حزمة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Attach a web link	إرفاق رابط ويب	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Auto Email Report	تقرير بريد إلكتروني تلقائي	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Automatically Assign Documents to Users	إسناد المستندات تلقائيًا إلى المستخدمين	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Background Print (required for >25 documents)	طباعة خلفية (مطلوبة لأكثر من 25 مستندًا)	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Before Print	قبل الطباعة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Before Rename	قبل إعادة التسمية	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Brand Logo with Search	شعار العلامة مع البحث	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Build your own reports, print formats, and dashboards. Create personalized workspaces for easier navigation	أنشئ تقاريرك ونماذج طباعتك ولوحاتك بنفسك؛ اصنع مساحات عمل مخصصة لتنقل أسهل.	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Bulk Edit	تحرير جماعي	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Bulk PDF Export	تصدير PDF جماعي	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Bulk Update	تحديث جماعي	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Cancel All	إلغاء الكل	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Cancel Import	إلغاء الاستيراد	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Cancel Prepared Report	إلغاء التقرير المُجهَّز	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Cannot Download Report due to insufficient permissions	لا يمكن تنزيل التقرير بسبب صلاحيات غير كافية	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Cannot Update After Submit	يتعذر التحديث بعد الترحيل	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Cannot set 'Report' permission if 'Only If Creator' permission is set	لا يمكن تعيين صلاحية التقرير إذا كانت صلاحية «المنشئ فقط» مضبوطة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Certain documents, like an Invoice, should not be changed once final. The final state for such documents is called Submitted. You can restrict which roles can Submit.	مستندات معينة مثل الفاتورة لا تُغيَّر بعد اكتمالها؛ الحالة النهائية تسمى «مُرحَّل»، ويمكنك تقييد الأدوار التي تملك صلاحية الترحيل.	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Change Print Format	تغيير نموذج الطباعة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Clear & Add Template	تفريغ وإضافة القالب	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Clear & Add template	تفريغ وإضافة القالب	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Close properties	إغلاق الخصائص	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Copy Link	نسخ الرابط	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Copy embed code	نسخ كود التضمين	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Copy error to clipboard	نسخ الخطأ إلى الحافظة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Copy to Clipboard	النسخ إلى الحافظة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Copy token to clipboard	نسخ الرمز إلى الحافظة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Create & Continue	إنشاء ومواصلة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Create Address	إنشاء عنوان	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Create Child Doctype	إنشاء نوع مستند فرعي	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Create Letter Head	إنشاء ترويسة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Create New DocType	إنشاء نوع مستند جديد	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Create New Kanban Board	إنشاء لوحة كانبان جديدة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Create Saved Filter	إنشاء بتصفية محفوظة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Create a New Format	إنشاء تنسيق جديد	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Create a Reminder	إنشاء تذكير	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Create a new ...	إنشاء جديد ...	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Create a {0} Account	إنشاء حساب {0}	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Create or Edit Print Format	إنشاء أو تحرير نموذج الطباعة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Create or Edit Workflow	إنشاء أو تحرير سير العمل	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Create your workflow visually using the Workflow Builder.	أنشئ سير عملك بصريًا باستخدام منشئ سير العمل.	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Custom Group Search	بحث مجموعة مخصص	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Custom Group Search if filled needs to contain the user placeholder {0}, eg uid={0},ou=users,dc=example,dc=com	بحث المجموعة المخصص عند تعبئته يجب أن يحتوي على نائب المستخدم {0}، مثل uid={0},ou=users,dc=example,dc=com	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Custom LDAP Directoy Selected, please ensure 'LDAP Group Member attribute' and 'Group Object Class' are entered	تم اختيار LDAP مخصص؛ يرجى التأكد من إدخال «خاصية عضو مجموعة LDAP» و«صنف كائن المجموعة»	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Customize Dashboard	تخصيص شاشة العرض	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Dashboard View	منظر شاشة العرض (Dashboard)	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Data Import Log	سجل استيراد البيانات	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Data Import is not allowed for {0}. Enable 'Allow Import' in DocType settings.	استيراد البيانات غير مسموح لـ {0}؛ فعّل «السماح بالاستيراد» في إعدادات نوع المستند.	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Default View	المنظر الافتراضي	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Delete Account	حذف الحساب	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Delete All	حذف الكل	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Delete Background Exported Reports After (Hours)	حذف التقارير المصدَّرة خلفيًا بعد (ساعات)	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Delete Column	حذف عمود	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Delete Kanban Board	حذف لوحة كانبان	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Delete Section	حذف قسم	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Delete Tab	حذف تبويب	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Delete and Generate New	حذف وتوليد جديد	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Delete column	حذف العمود	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Delete entire column with fields	حذف العمود كاملًا مع حقوله	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Delete entire section with fields	حذف القسم كاملًا مع حقوله	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Delete entire tab with fields	حذف التبويب كاملًا مع حقوله	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Delete section	حذف القسم	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Delete tab	حذف التبويب	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Delete {0} item permanently?	حذف {0} نهائيًا؟	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Disable System Update Notification	تعطيل إشعار تحديث النظام	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Do Not Create New User	عدم إنشاء مستخدم جديد	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Document Share Key	مفتاح مشاركة المستند	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Document Share Key Expiry (in Days)	انتهاء صلاحية مفتاح مشاركة المستند (بالأيام)	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Duplicate Entry	مدخل مكرر	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Duplicate Row	تكرار الصف	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Duplicate current row	تكرار الصف الحالي	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Duplicate field	تكرار الحقل	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Edit Address in Form	تحرير العنوان في النموذج	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Edit Chart	تحرير الرسم البياني	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Edit Custom Block	تحرير كتلة مخصصة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Edit Existing	تحرير موجود	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Edit Filters	تحرير عوامل التصفية	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Edit Footer	تحرير التذييل	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Edit Full Form	تحرير النموذج الكامل	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Edit HTML	تحرير HTML	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Edit Header	تحرير الرأس	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Edit Letter Head	تحرير رأس الرسالة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Edit Letter Head Footer	تحرير تذييل الرأس	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Edit Links	تحرير الروابط	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Edit Number Card	تحرير بطاقة رقمية	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Edit Onboarding	تحرير مسار التهيئة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Edit Print Format	تحرير نموذج الطباعة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Edit Quick List	تحرير القائمة السريعة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Edit Shortcut	تحرير الاختصار	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Edit Sidebar	تحرير الشريط الجانبي	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Edit mode	وضع التحرير	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Edit the {0} Doctype	تحرير نوع المستند {0}	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Edit your response	تحرير ردك	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Edit your workflow visually using the Workflow Builder.	حرر سير عملك بصريًا باستخدام منشئ سير العمل.	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Enable Prepared Report	تمكين التقرير المُجهَّز	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Enable developer mode to create a standard Print Template	فعّل وضع المطوّر لإنشاء نموذج طباعة قياسي	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Export Data	تصدير البيانات	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Export Errored Rows	تصدير الصفوف الفاشلة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Export Import Log	تصدير سجل الاستيراد	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Export all matching rows?	تصدير جميع الصفوف المطابقة؟	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Export all {0} rows?	تصدير جميع صفوف {0}؟	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Export as zip	تصدير كملف مضغوط (zip)	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Export in Background	تصدير في الخلفية	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Export the data without any header notes and column descriptions	تصدير البيانات دون ملاحظات الرأس وأوصاف الأعمدة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Export without main header	تصدير بدون رأس رئيسي	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+External Link	رابط خارجي	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Fetch on Save if Empty	الجلب عند الحفظ إن كان فارغًا	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Field \"title\" is mandatory if \"Website Search Field\" is set.	الحقل "title" إلزامي عند تعيين "حقل بحث الموقع".	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Filter List	قائمة التصفية	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Filter condition missing after operator: {0}	شرط التصفية غائب بعد العامل: {0}	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Filter fields have invalid backtick notation: {0}	حقول التصفية تحتوي على تدوين الفاصلة العكسية غير الصالح: {0}	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Filter...	تصفية...	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Following Report Filters have missing values:	عوامل تصفية التقرير التالية لها قيم مفقودة:	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Force Re-route to Default View	إجبار إعادة التوجيه إلى المنظر الافتراضي	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+From Attach Field	من حقل الإرفاق	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Further sub-groups can only be created under records marked as 'Group'	المجموعات الفرعية الأعمق تُنشأ فقط تحت سجلات مصنفة «مجموعة»	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Gantt View	منظر جانت	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Go to Notification Settings List	الانتقال إلى قائمة إعدادات الإشعارات	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Go to {0} List	الانتقال إلى قائمة {0}	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Google Meet Link	رابط Google Meet	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Grid Empty State	حالة الشبكة الفارغة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Grid Page Length	طول صفحة الشبكة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Grid Shortcuts	اختصارات الشبكة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Group	مجموعة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Group By must be a string	نظام التجميع (Group By) يجب أن يكون نصًا	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Group Object Class	صنف كائن المجموعة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Group your custom doctypes under modules	اجمع أنواع المستندات المخصصة تحت الوحدات	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Help: To link to another record in the system, use \"/desk/note/[Note Name]\" as the Link URL. (don't use \"http://\")	مساعدة: لربط سجل آخر استخدم "/desk/note/[Note Name]" كرابط (وليس http://).	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Hide Previous, Next and Close button on highlight dialog.	إخفاء زرَّي السابق والتالي وزر الإغلاق في نافذة التمييز.	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Hide Sidebar, Menu, and Comments	إخفاء الشريط الجانبي والقائمة والتعليقات	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+I guess you don't have access to any workspace yet, but you can create one just for yourself. Click on the <b>Create Workspace</b> button to create one.<br>	يبدو أنك لا تملك وصولًا إلى أي مساحة عمل بعد؛ انقر زر <b>إنشاء مساحة عمل</b> لإنشاء واحدة.<br>	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+If set, only user with these roles can access this chart. If not set, DocType or Report permissions will be used.	عند التعيين لا يصل إلى الرسم البياني إلا مستخدمو هذه الأدوار؛ وإلا تسري صلاحيات نوع المستند أو التقرير.	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Image View	منظر صور	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Import Log	سجل الاستيراد	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Import Progress	تقدم الاستيراد	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Import timed out, please re-try.	انتهت مهلة الاستيراد؛ يرجى إعادة المحاولة.	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Inbox View	منظر الوارد	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Insufficient Permissions for deleting Report	صلاحيات غير كافية لحذف التقرير	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Insufficient Permissions for editing Report	صلاحيات غير كافية لتحرير التقرير	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Invalid Filter	عامل تصفية غير صالح	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Invalid Filter Format for field {0} of type {1}. Try using filter icon on the field to set it correctly	تنسيق عامل التصفية غير صالح للحقل {0} من النوع {1}؛ استخدم أيقونة التصفية لضبطه	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Is Query Report	تقرير استعلام؟	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Kanban View	منظر كانبان	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+LDAP Group Member attribute	سمة عضو مجموعة LDAP	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+LDAP Search String must be enclosed in '()' and needs to contian the user placeholder {0}, eg sAMAccountName={0}	يجب إحاطة سلسلة بحث LDAP بين قوسين () مع نائب المستخدم {0}، مثل sAMAccountName={0}	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+LDAP Search and Paths	بحث LDAP والمسارات	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Link	رابط	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Link Count	عدد الروابط	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Link Details	تفاصيل الرابط	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Link Field Results Limit	حد نتائج حقل الربط	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Link Filters	عوامل تصفية الربط	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Link To in Row	ربط في الصف	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Link Type	نوع الربط	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Link Type in Row	نوع الربط في الصف	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Link for About Us Page is \"/about\".	رابط صفحة «من نحن» هو «/about».	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Link that is the website home page. Standard Links (home, login, products, blog, about, contact)	رابط الصفحة الرئيسية للموقع؛ الروابط المعيارية (الرئيسية، الدخول، المنتجات، المدونة، من نحن، تواصل).	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+List / Search Settings	إعدادات القائمة / البحث	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+List Columns	أعمدة القائمة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+List View	منظر القائمة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+List of email addresses, separated by comma or new line.	قائمة عناوين بريد، مفصولة بفاصلة أو سطر جديد.	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+List of patches executed	قائمة الترقيعات المنفذة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+List setting message	رسالة إعداد القائمة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Login with Email Link	الدخول برابط البريد الإلكتروني	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Map View	منظر خريطة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Max Report Rows	الحد الأقصى لصفوف التقرير	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Meaning of Submit, Cancel, Amend	معنى الترحيل والإلغاء والتعديل	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+New Address	عنوان جديد	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+New Chart	رسم بياني جديد	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+New Contact	جهة اتصال جديدة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+New Custom Block	كتلة مخصصة جديدة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+New Document Form	نموذج مستند جديد	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+New Event	حدث جديد	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+New Links	روابط جديدة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+New Number Card	بطاقة رقمية جديدة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+New Onboarding	مسار تهيئة جديد	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+New Quick List	قائمة سريعة جديدة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+New Role	دور جديد	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+New Shortcut	اختصار جديد	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+New Users (Last 30 days)	مستخدمون جدد (آخر 30 يومًا)	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+New Value	قيمة جديدة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+New Workflow Name	اسم سير عمل جديد	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+New Workspace	مساحة عمل جديدة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+New line separated list of allowed public client URLs (eg <code>https://frappe.io</code>), or <code>*</code> to accept all. " "<br> " "Public clients are restricted by default.	DEFERRED-unresolved-location	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+New line separated list of scope values.	قائمة قيم النطاق، كل قيمة في سطر جديد.	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+New lines separated list of strings representing ways to contact people responsible for this client, typically email addresses.	قائمة نصوص مفصولة بأسطر جديدة تمثل طرق التواصل مع المسؤولين عن هذا العميل، عادةً عناوين بريد.	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+New password cannot be same as old password	كلمة المرور الجديدة لا يمكن أن تكون مثل القديمة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+New users will have to be manually registered by system managers.	سيقوم مديرو النظام بتسجيل المستخدمين الجدد يدويًا.	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+No New notifications	لا إشعارات جديدة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Nothing New	لا جديد	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Number of days after which the document Web View link shared on email will be expired	عدد الأيام التي تنتهي بعدها صلاحية رابط عرض المستند المشترك بالبريد	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Only reports of type Report Builder can be deleted	يمكن حذف تقارير نوع منشئ التقارير فقط	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Only reports of type Report Builder can be edited	يمكن تحرير تقارير نوع منشئ التقارير فقط	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Open Communication	فتح المراسلة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Open Source Applications for the Web	تطبيقات مفتوحة المصدر للويب	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Open a dialog with mandatory fields to create a new record quickly. There must be at least one mandatory field to show in dialog.	فتح حوار بالحقول الإلزامية لإنشاء سجل جديد بسرعة؛ لا بد من حقل إلزامي واحد على الأقل.	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Open console	فتح لوحة المطور	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Open in a new tab	فتح في تبويب جديد	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Open in new tab	فتح في تبويب جديد	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Open reference document	فتح المستند المرجعي	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+PDF printing via \"Raw Print\" is not supported.	الطباعة إلى PDF عبر «الطباعة الخام» غير مدعومة.	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Package Import	استيراد حزمة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Permissions are set on Roles and Document Types (called DocTypes) by setting rights like Read, Write, Create, Delete, Submit, Cancel, Amend, Report, Import, Export, Print, Email and Set User Permissions.	تُضبط الصلاحيات على الأدوار وأنواع المستندات (DocTypes) بتحديد حقوق مثل القراءة والكتابة والإنشاء والحذف والترحيل والإلغاء والتعديل والتقرير والاستيراد والتصدير والطباعة والبريد وضبط صلاحيات المستخدم.	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Please click Edit on the Workspace for best results	انقر «تحرير» في مساحة العمل للحصول على أفضل النتائج	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Please click on 'Export Errored Rows', fix the errors and import again.	انقر «تصدير الصفوف الفاشلة»، صحح الأخطاء ثم استورد مرة أخرى.	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Please enable atleast one Social Login Key or LDAP or Login With Email Link before disabling username/password based login.	فعّل مفتاح دخول اجتماعي واحدًا على الأقل أو LDAP أو الدخول برابط بريد قبل تعطيل الدخول باسم المستخدم وكلمة المرور.	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Prepared Report Analytics	تحليلات التقارير المُجهَّزة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Press Alt Key to trigger additional shortcuts in Menu and Sidebar	اضغط مفتاح Alt لإظهار اختصارات إضافية في القائمة والشريط الجانبي	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Print Format Builder	منشئ نماذج الطباعة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Print Format Builder Beta	منشئ نماذج الطباعة (تجريبي)	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Print Format Error	خطأ في نموذج الطباعة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Print Format Field Template	قالب حقول نموذج الطباعة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Print Format For	نموذج الطباعة لـ	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Print Format not found	نموذج الطباعة غير موجود	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Print Heading	عنوان الطباعة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Print Style	أسلوب الطباعة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Print document	طباعة المستند	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Quick List Filter	تصفية القائمة السريعة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Referance Doctype and Dashboard Name both can't be used at the same time.	لا يمكن استخدام نوع المستند المرجعي واسم لوحة البيانات معًا.	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Refresh Print Preview	تحديث معاينة الطباعة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Reload List	إعادة تحميل القائمة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Reload Report	إعادة تحميل التقرير	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Remove	إزالة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Remove Failed Jobs	إزالة المهام الفاشلة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Remove all fields in the column	إزالة جميع حقول العمود	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Remove column	إزالة العمود	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Remove field	إزالة الحقل	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Remove last column	إزالة آخر عمود	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Remove page break	إزالة فاصل الصفحة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Remove section	إزالة القسم	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Remove tab	إزالة التبويب	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Rename Fieldname	إعادة تسمية اسم الحقل	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Report Name, Report Field and Fucntion are required to create a number card	اسم التقرير وحقل التقرير والدالة مطلوبة لإنشاء بطاقة رقمية	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Report Ref DocType	نوع المستند المرجعي للتقرير	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Report View	منظر التقرير	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Report bug	الإبلاغ عن خلل	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Report initiated, click to view status	بدأ التقرير؛ انقر لعرض الحالة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Report limit reached	بلغ التقرير حده	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Report timed out.	انتهت مهلة التقرير.	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Report {0} deleted	حُذف التقرير {0}	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Report {0} saved	حُفِظ التقرير {0}	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Reset Dashboard Customizations	إعادة ضبط تخصيصات الشاشة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Reset Password Link Expiry Duration	مدة انتهاء صلاحية رابط إعادة تعيين كلمة المرور	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Rows Threshold for Grid Search	حد صفوف البحث في الشبكة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Save Customizations	حفظ التخصيصات	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Save on Completion	الحفظ عند الاكتمال	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Save the document.	حفظ المستند.	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Saving Sidebar	حفظ الشريط الجانبي	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Search Results	نتائج البحث	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Search by filename or extension	بحث باسم الملف أو الامتداد	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Search fields	حقول البحث	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Search fieldtypes...	بحث في أنواع الحقول...	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Search for {0}	بحث عن {0}	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Search properties...	بحث في الخصائص...	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Select Group By...	اختر نظام التجميع...	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Select List View	اختر منظر القائمة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Select Report	اختر التقرير	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Set the filters here. For example: " "<pre class=\"small text-muted\"><code> " "[{ " "\tfieldname: \"company\", " "\tlabel: __(\"Company\"), " "\tfieldtype: \"Link\", " "\toptions: \"Company\", " "\tdefault: frappe.defaults.get_user_default(\"Company\"), " "\treqd: 1 " "}, " "{ " "\tfieldname: \"account\", " "\tlabel: __(\"Account\"), " "\tfieldtype: \"Link\", " "\toptions: \"Account\", " "\treqd: 1 " "}] " "</code></pre>	DEFERRED-unresolved-location	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Share this document with	مشاركة هذا المستند مع	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Show External Link Warning	إظهار تنبيه الروابط الخارجية	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Show Title in Link Fields	إظهار العنوان في حقول الربط	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Show {0} List	إظهار قائمة {0}	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Sidebar Item Group	مجموعة عناصر الشريط الجانبي	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Sidebar Item Group Link	رابط مجموعة عناصر الشريط الجانبي	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Simple Python Expression, Example: <code class=\"language-python\">status == 'Open' and issue_type == 'Bug'</code>	EXCEPTION-technical	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Sort Options	خيارات الترتيب	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Start Import	بدء الاستيراد	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Submit an Issue	الإبلاغ عن مشكلة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Submit another response	إرسال رد آخر	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Submit button label	تسمية زر الترحيل	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Submit on Creation	الترحيل عند الإنشاء	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+System Health Report	تقرير صحة النظام	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+System Health Report Errors	تقرير صحة النظام — الأخطاء	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+System Health Report Failing Jobs	تقرير صحة النظام — المهام الفاشلة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+System Health Report Queue	تقرير صحة النظام — قائمة الانتظار	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+System Health Report Tables	تقرير صحة النظام — الجداول	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+System Health Report Workers	تقرير صحة النظام — العاملون	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Table MultiSelect requires a table with at least one Link field, but none was found in {0}	الجدول متعدد الاختيار يتطلب جدولًا فيه حقل ربط واحد على الأقل، ولم يُعثر على أحد في {0}	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+To add dynamic subject, use jinja tags like  " "<div><pre><code>New {{ doc.doctype }} #{{ doc.name }}</code></pre></div>	DEFERRED-unresolved-location	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+To use Slack Channel, add a <a href=\"#List/Slack%20Webhook%20URL/List\">Slack Webhook URL</a>.	EXCEPTION-technical	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Translate Link Fields	ترجمة حقول الربط	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Try the new Print Designer	جرب منشئ الطباعة الجديد	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Update Amendment Naming	تحديث تسمية التعديل	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Update Hooks Resolution Order	تحديث ترتيب حل ملفات الخطافات	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Update Order	تحديث الترتيب	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Update Password	تحديث كلمة المرور	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Update Profile	تحديث الملف الشخصي	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Update Series Counter	تحديث عداد السلسلة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Update from Frappe Cloud	التحديث من Frappe Cloud	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Update {0} records	تحديث {0} من السجلات	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Use the new Print Format Builder	استخدم منشئ نماذج الطباعة الجديد	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+User Activity Report	تقرير نشاط المستخدم	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+User Activity Report Without Sort	تقرير نشاط المستخدم بدون ترتيب	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+User Group	مجموعة مستخدمين	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+User Group Member	عضو مجموعة المستخدمين	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+User Menu	قائمة المستخدم	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+View Audit Trail	عرض مسار التدقيق	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+View Doctype Permissions	عرض صلاحيات نوع المستند	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+View File	عرض الملف	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+View Full Log	عرض السجل الكامل	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+View Sidebar	عرض الشريط الجانبي	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+View Switcher	مُبدِّل المنظر	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+View all {0} users	عرض جميع مستخدمي {0}	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+View your response	عرض ردك	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+We do not allow editing of this document. Simply click the Edit button on the workspace page to make your workspace editable and customize it as you wish	لا نسمح بتحرير هذا المستند هنا؛ انقر زر التحرير في صفحة مساحة العمل لجعل مساحتك قابلةً للتحرير وتخصيصها كما تشاء.	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Web Form List Column	عمود قائمة نماذج الويب	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Website Search Field	حقل بحث الموقع	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Website Search Field must be a valid fieldname	حقل بحث الموقع يجب أن يكون اسم حقل صالحًا	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+What's New	ما الجديد	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+When you Amend a document after Cancel and save it, it will get a new number that is a version of the old number.	عند تعديل مستند (Amend) بعد الإلغاء وحفظه يحصل على رقم جديد مشتق من الرقم القديم.	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Workspace Link	رابط مساحة العمل	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Workspace Quick List	القائمة السريعة لمساحة العمل	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Workspace Sidebar	الشريط الجانبي لمساحة العمل	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Workspace Sidebar Item	عنصر الشريط الجانبي لمساحة العمل	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+You haven't added any Dashboard Charts or Number Cards yet.	لم تضف بعد أي رسوم بيانية أو بطاقات رقمية.	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+You've logged in as another user from another tab. Refresh this page to continue using system.	سجّلت الدخول بمستخدم آخر من تبويب آخر؛ أعد تحميل الصفحة لمواصلة استخدام النظام.	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+{0} List View Settings	إعدادات منظر قائمة {0}	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+0 - 30 Days	0 - 30 يومًا	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+30 - 60 Days	30 - 60 يومًا	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+60 - 90 Days	60 - 90 يومًا	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+90 - 120 Days	90 - 120 يومًا	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+A Reverse Journal Entry {0} already exists for this Journal Entry.	قيد يومية عكسي {0} موجود بالفعل لهذا القيد.	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Account {0} should be of type Expense	الحساب {0} يجب أن يكون من نوع المصروفات	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Advance paid against {0} {1} cannot be greater than Grand Total {2}	الدفعة المقدمة المدفوعة مقابل {0} {1} لا يمكن أن تتجاوز الإجمالي الكلي {2}	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Ageing Report based on {0} up to {1}	تقرير التقادم استنادًا إلى {0} حتى {1}	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Amount in {0}	المبلغ بعملة {0}	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Can refer row only if the charge type is 'On Previous Row Amount' or 'Previous Row Total'	يمكن الإحالة إلى الصف فقط عندما يكون نوع الحسبة «على مبلغ الصف السابق» أو «إجمالي الصفوف السابقة»	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Cannot apply TDS against multiple parties in one entry	لا يمكن تطبيق ضريبة الاستقطاع على أكثر من طرف واحد في القيد نفسه	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Cannot create accounting entries against disabled accounts: {0}	لا يمكن إنشاء قيود محاسبية على حسابات معطّلة: {0}	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Cannot delete Exchange Gain/Loss row	لا يمكن حذف صف أرباح/خسائر فروق العملة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Cannot receive from customer against negative outstanding	لا يمكن التحصيل من العميل مقابل رصيد مستحق سالب (دائن)	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Cannot {0} from {1} without any negative outstanding invoice	لا يمكن {0} من {1} دون فواتير لها رصيد مستحق سالب	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Charge of type 'Actual' in row {0} cannot be included in Item Rate or Paid Amount	الحسبة من نوع «فعلي» في الصف {0} لا يمكن إدخالها في سعر البند أو المبلغ المدفوع	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Closing [Opening + Total]	الإغلاق [الافتتاحي + الإجمالي]	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Consolidated Trial Balance can be generated for Companies having same root Company.	يمكن إنشاء ميزان مراجعة موحد للشركات التابعة لنفس الشركة الرئيسية.	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Consolidated Trial balance could not be generated as Exchange Rate from {0} to {1} is not available for {2}.	تعذّر إنشاء ميزان المراجعة الموحد؛ لا يوجد سعر صرف من {0} إلى {1} لصالح {2}.	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Customer Group: {0} does not exist	مجموعة العملاء: {0} غير موجودة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Discount of {} applied as per Payment Term	تم تطبيق خصم {} وفق شروط السداد	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+For All Stock Asset Accounts	لكل حسابات أصول المخزون	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+For row {0} in {1}. To include {2} in Item rate, rows {3} must also be included	للصف {0} في {1}. لإدراج {2} في سعر البند يجب إدراج الصفوف {3} أيضًا	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Foreign Currency Translation Reserve	احتياطي فروق ترجمة العملات الأجنبية	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+If this is undesirable please cancel the corresponding Payment Entry.	إن كان هذا غير مرغوب، فيرجى إلغاء سند الدفع المقابل.	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Ignore Exchange Rate Revaluation and Gain / Loss Journals	تجاهل قيود إعادة تقييم أسعار الصرف وقيد الربح/الخسارة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Ignore System Generated Credit / Debit Notes	تجاهل إشعارات الدائن/المدين المنشأة تلقائيًا	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Interest and/or dunning fee	فوائد و/أو رسوم إنذار	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Invalid Purchase Invoice	فاتورة شراء غير صالحة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Invalid value {0} for {1} against account {2}	قيمة غير صالحة {0} لـ {1} مقابل الحساب {2}	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Journal Entry for Asset scrapping cannot be cancelled. Please restore the Asset.	لا يمكن إلغاء قيد يومية إعدام (التخلص من) الأصل؛ يرجى استعادة حالة الأصل.	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Making Journal Entries against advance accounts: {0} is not recommended. These Journals won't be available for Reconciliation.	إثبات قيود يومية على حسابات الدفعات المقدمة: {0} غير مستحسن؛ لن تكون هذه القيود متاحة للتسوية.	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+No difference found for stock account {0}	لا يوجد فرق لحساب المخزون {0}	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+No outstanding {0} found for the {1} {2} which qualify the filters you have specified.	لا توجد مبالغ مستحقة {0} للمستند {1} {2} ضمن عوامل التصفية المحددة.	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Offsetting for Accounting Dimension	مقابلة البعد المحاسبي	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Opening Entry can not be created after Period Closing Voucher is created.	لا يمكن إنشاء قيد الافتتاحي بعد إنشاء مستند إقفال الفترة.	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Party can only be one of {0}	يجب أن يكون الطرف أحد ما يلي: {0}	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Payment term {0} not used in {1}	شرط السداد {0} غير مستخدم في {1}	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Periodic Accounting Entry is not allowed for company {0} with perpetual inventory enabled	القيود المحاسبية الدورية غير مسموحة للشركة {0} مع تمكين نظام المخزون المستمر	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Please mention '{0}' in Company: {1}	يرجى ذكر '{0}' في الشركة: {1}	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Please select Periodic Accounting Entry Difference Account	يرجى اختيار حساب فروق القيود المحاسبية الدورية	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Please select Stock Asset Account	يرجى اختيار حساب أصول المخزون	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Please set '{0}' in Company: {1}	يرجى تعيين '{0}' في الشركة: {1}	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Please set {0} in Company {1} to account for Exchange Gain / Loss	يرجى تعيين {0} في الشركة {1} لاحتساب أرباح/خسائر فروق الصرف	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Received Amount cannot be greater than Paid Amount	المبلغ المستلم لا يمكن أن يتجاوز المبلغ المدفوع	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+References {0} of type {1} had no outstanding amount left before submitting the Payment Entry. Now they have a negative outstanding amount.	المراجعات {0} من نوع {1} لم يكن لديها رصيد مستحق عند ترحيل سند الدفع؛ أصبح رصيدها مستحقًا دائنًا.	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Revaluation Journals	قيود إعادة التقييم	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Row #{0}: Allocated Amount cannot be greater than Outstanding Amount of Payment Request {1}	الصف #{0}: المبلغ المخصص لا يمكن أن يتجاوز المبلغ المستحق لطلب الدفع {1}	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Row #{0}: Allocated amount:{1} is greater than outstanding amount:{2} for Payment Term {3}	الصف #{0}: المبلغ المخصص {1} أكبر من المبلغ المستحق {2} لشرط السداد {3}	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Row #{0}: Cannot allocate more than {1} against payment term {2}	الصف #{0}: لا يمكن تخصيص أكثر من {1} مقابل شرط السداد {2}	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Row #{0}: For {1}, you can select reference document only if account gets credited	الصف #{0}: في {1} يمكن اختيار مستند مرجعي فقط إذا حُسِب للحساب على أنه دائن	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Row #{0}: For {1}, you can select reference document only if account gets debited	الصف #{0}: في {1} يمكن اختيار مستند مرجعي فقط إذا كان الحساب يُمَدَّن	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Row {0}: Account {1} and Party Type {2} have different account types	الصف {0}: الحساب {1} ونوع الطرف {2} ينتميان لأنواع حسابات مختلفة	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Row {0}: Both Debit and Credit values cannot be zero	الصف {0}: لا يمكن أن تكون قيمتا المدين والدائن صفرًا معًا	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Rows: {0} have 'Payment Entry' as reference_type. This should not be set manually.	الصفوف: {0} تستخدم «سند دفع» كنوع مرجع؛ لا يجوز تعيين هذا يدويًا.	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Show net values in opening and closing columns	عرض القيم الصافية في عمودي الافتتاحي والإغلاق	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Splitting {0} {1} into {2} rows as per Payment Terms	تجزئة {0} {1} إلى {2} صفوف وفق شروط السداد	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+Tax Id: {0}	الرقم الضريبي: {0}	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+The task has been enqueued as a background job.	تم إدراج المهمة في قائمة انتظار الخلفية.	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+To use a different finance book, please uncheck 'Include Default FB Entries'	لاستخدام سجلات مالية مختلفة، يرجى إلغاء «تضمين منشورات الدفتر المالي الافتراضي»	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+With Period Closing Entry For Opening Balances	مع قيد إقفال الفترة لأرصدة الافتتاح	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+You cannot create/amend any accounting entries till this date.	لا يمكن إنشاء أو تعديل أي قيود محاسبية حتى هذا التاريخ.	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+paid to	مدفوع إلى	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+{0} has Payment Term based allocation enabled. Select a Payment Term for Row #{1} in Payment References section	{0} مفعّل فيه التخصيص وفق شروط السداد؛ اختر شرط سداد للصف #{1} في قسم مراجع الدفع	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+{0} is mandatory for account {1}	{0} إلزامي للحساب {1}	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+{0} until {1}	{0} حتى {1}	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+{0} {1} has already been fully paid.	{0} {1} مدفوع بالكامل بالفعل.	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+{0} {1} has already been partly paid. Please use the 'Get Outstanding Invoice' or the 'Get Outstanding Orders' button to get the latest outstanding amounts.	{0} {1} مدفوع جزئيًا؛ استخدم زر «جلب الفواتير المستحقة» أو «جلب الأوامر المستحقة» لجلب أحدث المبالغ المستحقة.	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
+{0} {1} is on hold	{0} {1} موقوف (معلّق) حاليًا	quorum-confirmed (release payload row)	stage6-W6-0a owner-approved 2026-09-21
