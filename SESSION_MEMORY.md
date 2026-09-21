@@ -428,3 +428,12 @@
 - **Next steps:** Run `bench --site v16.localhost migrate` to apply patches; hard-refresh browser to load updated list-view tools.
 
 Workflow session capture: external MemoryGraph write was rejected by automatic approval review; this local record is the fallback. No external retry attempted.
+
+---
+
+## 2026-09-21 — Bilingual program: test-environment closure & HOLD (full session)
+
+**Accomplished:** Stages 0/1A/1B/1C/2/3/4 closed; Stage 2 durable-evidence re-pin (twice contractually); W6-1 governed cycle (69 released / 78 preserved site overrides); W6-0a desk-shell cycle (347 released ver 1.2, 3 real exceptions, 10 deferred-unresolved protected); Stage 7 pilot complete — governed `localized_report` API (P1/P2 hardened), viewer page `/app/bilingual-report-viewer` live-rendering Arabic reports (ar Desk evidence), BOQ ar/en PDF exports via the vendor service (0 vendor edits); `scripts/uat_preflight.py` hardened (stdin-only secret, universal logout, fail-closed missing creds, clean connection-failure records). Site repairs: workspace-sidebar drift row deletion; bench redis 13000/11000 restored.
+**Decisions:** evidence re-pin once per catalog event (contract moved 89→91, then payload 450 / PO 810); Site Overrides preserved per §12; production deferred pending owner provides real master/ledger data + backup/restore rehearsal window + explicit authorization; §18 hold state recorded in the end-to-end plan.
+**Open issues:** MCP memory runtime broken (`pydantic_core._pydantic_core`) — hold-state stored to `docs/ai/memory_store_fallback/` + this file; vendor `SidebarItem.get_path` benchmark recorded only in the tree-evidence context (site-config drift).
+**Next:** HOLD — no W6-0b / Stage 8 work; resume only on owner-provided real data + rehearsal window + production authorization; always run the hardened `uat_preflight.py` before Stage 8 validations.

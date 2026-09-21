@@ -1,0 +1,12 @@
+{
+ "recorded_utc": "2026-09-21T18:30:00Z",
+ "session_type": "hold_state",
+ "importance": 0.9,
+ "summary": "Bilingual program test-env closure: Stages 0/1A/1B/1C/2/3/4 + W6-1 (69/78 split) + W6-0a (347 released, 10 deferred protected) + Stage 7 pilot (viewer page, BOQ ar/en exports, hardened preflight). Production deferred.",
+ "hold_directives": [
+  "no W6-0b or Stage 8 work",
+  "develop clean/synced (505321f, §18 recorded)",
+  "resume only with real master/ledger data + backup/restore rehearsal window + explicit production authorization",
+  "always run scripts/uat_preflight.py for Stage 8 validations"
+ ]
+}
