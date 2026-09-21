@@ -852,3 +852,18 @@ If any criterion fails, the affected module/data wave remains behind its prior s
 | 2026-09-21 | W6-0a quorum-cycle approval with final reclassification (workspace guidance row → candidate; unmatched-location exceptions → DEFERRED/unresolved until AI-R source mapping; approved candidate-only cycle) | `stage6-w60a-cycle-executed-2026-09-21.md`; `stage6_w60a_desk_shell_rows_2026-09-21.csv`; `release_decisions.json` (450 decisions); payload 450 rows (347 new ver 1.2 desk-shell) |
 | 2026-09-21 | W6-0a browser wiring investigation green-lit (W6-0b deferred); root cause = bench redis instances dead (no boot __messages delivery → silent English, later desk 500); managed redis restored, caches cleared; live Desk ar session verified: boot dictionary 10,752 entries, representative W6-0a resolutions Arabic, rendered DOM Arabic present. No code/catalog change; no extra re-pin needed | `stage6-w60a-browser-wiring-closed-2026-09-21.md` |
 | 2026-09-21 | Stage 7 BOQ print/export + pilot viewer UI approved; managed Redis health made a hard UAT preflight (13000/11000 PING, desk 200, fresh ar boot payload populated before browser evidence); W6-0b remains deferred; no production rollout | `stage7-viewer-boq-pilot-2026-09-21.md`; `scripts/uat_preflight.py`; PO catalog 810; evidence re-pin exit-0 pre-commit |
+
+## 18. Hold state (owner directive, 2026-09-21)
+
+Do **not** start W6-0b or Stage 8 work. Keep `develop` clean and synced
+(current head `3b79712`, synced with `origin/develop`). Resume only after
+the owner provides ALL of:
+1. real master/ledger data (for the Stage-5/7/8 governed wave),
+2. a backup/restore rehearsal window,
+3. **explicit production authorization**.
+
+Hard requirement before any Phase-8 validation: run the hardened UAT
+preflight (`scripts/uat_preflight.py` — redis 13000/11000 PING, site 200,
+fresh `ar` Desk boot with ≥1,000 `__messages` + representative key; secrets
+never on argv; sessions logged out on both outcomes; connection failures
+recorded as clean `connection:` failures) before any browser/UAT step.
