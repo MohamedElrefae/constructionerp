@@ -1,0 +1,363 @@
+source_text,classification
+'In Global Search' is not allowed for field {0} of type {1},EXCEPTION-technical
++ Add / Remove Fields,translation-candidate
+1 Report,translation-candidate
+"<div class=\""alert\"">Please don't update it as it can mess up your form. Use the Customize Form View and Custom Fields to set properties!</div>",EXCEPTION-technical
+"<div class=\""well\""> "" ""    Edit list of Series in the box. Rules: "" ""    <ul> "" ""        <li>Each Series Prefix on a new line.</li> "" ""        <li>Allowed special characters are \""/\"" and \""-\""</li> "" ""        <li> "" ""            Optionally, set the number of digits in the series using dot (.) "" ""            followed by hashes (#). For example, \"".####\"" means that the series "" ""            will have four digits. Default is five digits. "" ""        </li> "" ""        <li> "" ""            You can also use variables in the series name by putting them "" ""            between (.) dots "" ""            <br> "" ""            Supported Variables: "" ""            <ul> "" ""                <li><code>.YYYY.</code> - Year in 4 digits</li> "" ""                <li><code>.YY.</code> - Year in 2 digits</li> "" ""                <li><code>.MM.</code> - Month</li> "" ""                <li><code>.DD.</code> - Day of month</li> "" ""                <li><code>.WW.</code> - Week of the year</li> "" ""                <li> "" ""                    <code>.{fieldname}.</code> - fieldname on the document e.g. "" ""                    <code>branch</code> "" ""                </li> "" ""                <li><code>.FY.</code> - Fiscal Year (requires ERPNext to be installed)</li> "" ""                <li><code>.ABBR.</code> - Company Abbreviation (requires ERPNext to be installed)</li> "" ""            </ul> "" ""        </li> "" ""    </ul> "" ""    Examples: "" ""    <ul> "" ""        <li>INV-</li> "" ""        <li>INV-10-</li> "" ""        <li>INVK-</li> "" ""        <li>INV-.YYYY.-.{branch}.-.MM.-.####</li> "" ""    </ul> "" ""</div> "" ""<br>",EXCEPTION-technical
+"<h3>Custom CSS Help</h3>  "" ""<p>Notes:</p>  "" ""<ol> "" ""<li>All field groups (label + value) are set attributes <code>data-fieldtype</code> and <code>data-fieldname</code></li> "" ""<li>All values are given class <code>value</code></li> "" ""<li>All Section Breaks are given class <code>section-break</code></li> "" ""<li>All Column Breaks are given class <code>column-break</code></li> "" ""</ol>  "" ""<h4>Examples</h4>  "" ""<p>1. Left align integers</p>  "" ""<pre><code>[data-fieldtype=\""Int\""] .value { text-align: left; }</code></pre>  "" ""<p>1. Add border to sections except the last section</p>  "" ""<pre><code>.section-break { padding: 30px 0px; border-bottom: 1px solid #eee; } "" "".section-break:last-child { padding-bottom: 0px; border-bottom: 0px;  }</code></pre>",EXCEPTION-technical
+"<h3>Print Format Help</h3> "" ""<hr> "" ""<h4>Introduction</h4> "" ""<p>Print Formats are rendered on the server side using the Jinja Templating Language. All forms have access to the <code>doc</code> object which contains information about the document that is being formatted. You can also access common utilities via the <code>frappe</code> module.</p> "" ""<p>For styling, the Boostrap CSS framework is provided and you can enjoy the full range of classes.</p> "" ""<hr> "" ""<h4>References</h4> "" ""<ol> "" ""\t<li><a href=\""http://jinja.pocoo.org/docs/templates/\"" target=\""_blank\"">Jinja Templating Language</a></li> "" ""\t<li><a href=\""http://getbootstrap.com\"" target=\""_blank\"">Bootstrap CSS Framework</a></li> "" ""</ol> "" ""<hr> "" ""<h4>Example</h4> "" ""<pre><code>&lt;h3&gt;{{ doc.select_print_heading or \""Invoice\"" }}&lt;/h3&gt; "" ""&lt;div class=\""row\""&gt; "" ""\t&lt;div class=\""col-md-3 text-right\""&gt;Customer Name&lt;/div&gt; "" ""\t&lt;div class=\""col-md-9\""&gt;{{ doc.customer_name }}&lt;/div&gt; "" ""&lt;/div&gt; "" ""&lt;div class=\""row\""&gt; "" ""\t&lt;div class=\""col-md-3 text-right\""&gt;Date&lt;/div&gt; "" ""\t&lt;div class=\""col-md-9\""&gt;{{ doc.get_formatted(\""invoice_date\"") }}&lt;/div&gt; "" ""&lt;/div&gt; "" ""&lt;table class=\""table table-bordered\""&gt; "" ""\t&lt;tbody&gt; "" ""\t\t&lt;tr&gt; "" ""\t\t\t&lt;th&gt;Sr&lt;/th&gt; "" ""\t\t\t&lt;th&gt;Item Name&lt;/th&gt; "" ""\t\t\t&lt;th&gt;Description&lt;/th&gt; "" ""\t\t\t&lt;th class=\""text-right\""&gt;Qty&lt;/th&gt; "" ""\t\t\t&lt;th class=\""text-right\""&gt;Rate&lt;/th&gt; "" ""\t\t\t&lt;th class=\""text-right\""&gt;Amount&lt;/th&gt; "" ""\t\t&lt;/tr&gt; "" ""\t\t{%- for row in doc.items -%} "" ""\t\t&lt;tr&gt; "" ""\t\t\t&lt;td style=\""width: 3%;\""&gt;{{ row.idx }}&lt;/td&gt; "" ""\t\t\t&lt;td style=\""width: 20%;\""&gt; "" ""\t\t\t\t{{ row.item_name }} "" ""\t\t\t\t{% if row.item_code != row.item_name -%} "" ""\t\t\t\t&lt;br&gt;Item Code: {{ row.item_code}} "" ""\t\t\t\t{%- endif %} "" ""\t\t\t&lt;/td&gt; "" ""\t\t\t&lt;td style=\""width: 37%;\""&gt; "" ""\t\t\t\t&lt;div style=\""border: 0px;\""&gt;{{ row.description }}&lt;/div&gt;&lt;/td&gt; "" ""\t\t\t&lt;td style=\""width: 10%; text-align: right;\""&gt;{{ row.qty }} {{ row.uom or row.stock_uom }}&lt;/td&gt; "" ""\t\t\t&lt;td style=\""width: 15%; text-align: right;\""&gt;{{ "" ""\t\t\t\trow.get_formatted(\""rate\"", doc) }}&lt;/td&gt; "" ""\t\t\t&lt;td style=\""width: 15%; text-align: right;\""&gt;{{ "" ""\t\t\t\trow.get_formatted(\""amount\"", doc) }}&lt;/td&gt; "" ""\t\t&lt;/tr&gt; "" ""\t\t{%- endfor -%} "" ""\t&lt;/tbody&gt; "" ""&lt;/table&gt;</code></pre> "" ""<hr> "" ""<h4>Common Functions</h4> "" ""<table class=\""table table-bordered\""> "" ""\t<tbody> "" ""\t\t<tr> "" ""\t\t\t<td style=\""width: 30%;\""><code>doc.get_formatted(\""[fieldname]\"", [parent_doc])</code></td> "" ""\t\t\t<td>Get document value formatted as Date, Currency, etc. Pass parent <code>doc</code> for currency type fields.</td> "" ""\t\t</tr> "" ""\t\t<tr> "" ""\t\t\t<td style=\""width: 30%;\""><code>frappe.db.get_value(\""[doctype]\"", \""[name]\"", \""fieldname\"")</code></td> "" ""\t\t\t<td>Get value from another document.</td> "" ""\t\t</tr> "" ""\t</tbody> "" ""</table>",EXCEPTION-technical
+"<p><strong>Condition Examples:</strong></p> "" ""<pre><code class=\""language-python\"">doc.status==\""Open\""<br>doc.due_date==nowdate()<br>doc.total &gt; 40000 "" ""</code></pre>",EXCEPTION-technical
+"<p><strong>Condition Examples:</strong></p> "" ""<pre>doc.status==\""Open\""<br>doc.due_date==nowdate()<br>doc.total &gt; 40000 "" ""</pre>",EXCEPTION-technical
+"<p>Multiple webforms can be created for a single doctype. Add filters specific to this webform to display correct record after submission.</p><p>For Example:</p> "" ""<p>If you create a separate webform every year to capture feedback from employees add a  "" "" field named year in doctype and add a filter <b>year = 2023</b></p>",EXCEPTION-technical
+"<p>To interact with above HTML you will have to use `root_element` as a parent selector.</p><p>For example:</p><pre class=\""p-3 bg-gray-100 border-radius rounded-sm mb-0\"" style=\""width: fit-content;\""><code>// here root_element is provided by default "" ""let some_class_element = root_element.querySelector('.some-class'); "" ""some_class_element.textContent = \""New content\""; "" ""</code></pre>",EXCEPTION-technical
+Action {0} completed successfully on {1} {2}. View it {3},EXCEPTION-technical
+Action {0} failed on {1} {2}. View it {3},EXCEPTION-technical
+Add / Remove Columns,translation-candidate
+Add Card to Dashboard,translation-candidate
+Add Child,translation-candidate
+Add Indexes,translation-candidate
+Add Multiple,translation-candidate
+Add Participants,translation-candidate
+Add Roles,translation-candidate
+Add Tags,translation-candidate
+Add Template,translation-candidate
+Add Translate Data,translation-candidate
+Add Video Conferencing,translation-candidate
+Add a Filter,translation-candidate
+Add a New Role,translation-candidate
+Add a Row,translation-candidate
+Add a new section,translation-candidate
+Add a row above the current row,translation-candidate
+Add a row at the bottom,translation-candidate
+Add a row at the top,translation-candidate
+Add a row below the current row,translation-candidate
+Add column,translation-candidate
+Add field,translation-candidate
+Add new tab,translation-candidate
+Add numbers or special characters.,translation-candidate
+Add page break,translation-candidate
+Add tab,translation-candidate
+Add to this activity by mailing to {0},EXCEPTION-technical
+Add {0},translation-candidate
+After Rename,translation-candidate
+Apps with Search,translation-candidate
+Assign To User Group,translation-candidate
+Assign a user,translation-candidate
+Attach Files,translation-candidate
+Attach Package,translation-candidate
+Attach a web link,translation-candidate
+Auto Email Report,translation-candidate
+Automatically Assign Documents to Users,translation-candidate
+Background Print (required for >25 documents),translation-candidate
+Before Print,translation-candidate
+Before Rename,translation-candidate
+Brand Logo with Search,translation-candidate
+"Build your own reports, print formats, and dashboards. Create personalized workspaces for easier navigation",translation-candidate
+Bulk Edit,translation-candidate
+Bulk PDF Export,translation-candidate
+Bulk Update,translation-candidate
+Cancel All,translation-candidate
+Cancel Import,translation-candidate
+Cancel Prepared Report,translation-candidate
+Cannot Download Report due to insufficient permissions,translation-candidate
+Cannot Update After Submit,translation-candidate
+Cannot set 'Report' permission if 'Only If Creator' permission is set,translation-candidate
+"Certain documents, like an Invoice, should not be changed once final. The final state for such documents is called Submitted. You can restrict which roles can Submit.",translation-candidate
+Change Print Format,translation-candidate
+Clear & Add Template,translation-candidate
+Clear & Add template,translation-candidate
+Close properties,translation-candidate
+Copy Link,translation-candidate
+Copy embed code,translation-candidate
+Copy error to clipboard,translation-candidate
+Copy to Clipboard,translation-candidate
+Copy token to clipboard,translation-candidate
+Create & Continue,translation-candidate
+Create Address,translation-candidate
+Create Child Doctype,translation-candidate
+Create Letter Head,translation-candidate
+Create New DocType,translation-candidate
+Create New Kanban Board,translation-candidate
+Create Saved Filter,translation-candidate
+Create a New Format,translation-candidate
+Create a Reminder,translation-candidate
+Create a new ...,translation-candidate
+Create a {0} Account,translation-candidate
+Create or Edit Print Format,translation-candidate
+Create or Edit Workflow,translation-candidate
+Create your workflow visually using the Workflow Builder.,translation-candidate
+Custom Group Search,translation-candidate
+"Custom Group Search if filled needs to contain the user placeholder {0}, eg uid={0},ou=users,dc=example,dc=com",EXCEPTION-technical
+"Custom LDAP Directoy Selected, please ensure 'LDAP Group Member attribute' and 'Group Object Class' are entered",translation-candidate
+Customize Dashboard,translation-candidate
+Dashboard View,translation-candidate
+Data Import Log,translation-candidate
+Data Import is not allowed for {0}. Enable 'Allow Import' in DocType settings.,EXCEPTION-technical
+Default View,translation-candidate
+Delete Account,translation-candidate
+Delete All,translation-candidate
+Delete Background Exported Reports After (Hours),translation-candidate
+Delete Column,translation-candidate
+Delete Kanban Board,translation-candidate
+Delete Section,translation-candidate
+Delete Tab,translation-candidate
+Delete and Generate New,translation-candidate
+Delete column,translation-candidate
+Delete entire column with fields,translation-candidate
+Delete entire section with fields,translation-candidate
+Delete entire tab with fields,translation-candidate
+Delete section,translation-candidate
+Delete tab,translation-candidate
+Delete {0} item permanently?,translation-candidate
+Disable System Update Notification,translation-candidate
+Do Not Create New User,translation-candidate
+Document Share Key,translation-candidate
+Document Share Key Expiry (in Days),translation-candidate
+Duplicate Entry,translation-candidate
+Duplicate Row,translation-candidate
+Duplicate current row,translation-candidate
+Duplicate field,translation-candidate
+Edit Address in Form,translation-candidate
+Edit Chart,translation-candidate
+Edit Custom Block,translation-candidate
+Edit Existing,translation-candidate
+Edit Filters,translation-candidate
+Edit Footer,translation-candidate
+Edit Full Form,translation-candidate
+Edit HTML,translation-candidate
+Edit Header,translation-candidate
+Edit Letter Head,translation-candidate
+Edit Letter Head Footer,translation-candidate
+Edit Links,translation-candidate
+Edit Number Card,translation-candidate
+Edit Onboarding,translation-candidate
+Edit Print Format,translation-candidate
+Edit Quick List,translation-candidate
+Edit Shortcut,translation-candidate
+Edit Sidebar,translation-candidate
+Edit mode,translation-candidate
+Edit the {0} Doctype,translation-candidate
+Edit your response,translation-candidate
+Edit your workflow visually using the Workflow Builder.,translation-candidate
+Enable Prepared Report,translation-candidate
+Enable developer mode to create a standard Print Template,translation-candidate
+Export Data,translation-candidate
+Export Errored Rows,translation-candidate
+Export Import Log,translation-candidate
+Export all matching rows?,translation-candidate
+Export all {0} rows?,translation-candidate
+Export as zip,translation-candidate
+Export in Background,translation-candidate
+Export the data without any header notes and column descriptions,translation-candidate
+Export without main header,translation-candidate
+External Link,translation-candidate
+Fetch on Save if Empty,translation-candidate
+"Field \""title\"" is mandatory if \""Website Search Field\"" is set.",translation-candidate
+Filter List,translation-candidate
+Filter condition missing after operator: {0},translation-candidate
+Filter fields have invalid backtick notation: {0},EXCEPTION-technical
+Filter...,translation-candidate
+Following Report Filters have missing values:,translation-candidate
+Force Re-route to Default View,translation-candidate
+From Attach Field,translation-candidate
+Further sub-groups can only be created under records marked as 'Group',translation-candidate
+Gantt View,translation-candidate
+Go to Notification Settings List,translation-candidate
+Go to {0} List,translation-candidate
+Google Meet Link,translation-candidate
+Grid Empty State,translation-candidate
+Grid Page Length,translation-candidate
+Grid Shortcuts,translation-candidate
+Group,translation-candidate
+Group By must be a string,translation-candidate
+Group Object Class,translation-candidate
+Group your custom doctypes under modules,translation-candidate
+"Help: To link to another record in the system, use \""/desk/note/[Note Name]\"" as the Link URL. (don't use \""http://\"")",translation-candidate
+"Hide Previous, Next and Close button on highlight dialog.",translation-candidate
+"Hide Sidebar, Menu, and Comments",translation-candidate
+"I guess you don't have access to any workspace yet, but you can create one just for yourself. Click on the <b>Create Workspace</b> button to create one.<br>",translation-candidate
+"If set, only user with these roles can access this chart. If not set, DocType or Report permissions will be used.",translation-candidate
+Image View,translation-candidate
+Import Log,translation-candidate
+Import Progress,translation-candidate
+"Import timed out, please re-try.",translation-candidate
+Inbox View,translation-candidate
+Insufficient Permissions for deleting Report,translation-candidate
+Insufficient Permissions for editing Report,translation-candidate
+Invalid Filter,translation-candidate
+Invalid Filter Format for field {0} of type {1}. Try using filter icon on the field to set it correctly,EXCEPTION-technical
+Is Query Report,translation-candidate
+Kanban View,translation-candidate
+LDAP Group Member attribute,translation-candidate
+"LDAP Search String must be enclosed in '()' and needs to contian the user placeholder {0}, eg sAMAccountName={0}",EXCEPTION-technical
+LDAP Search and Paths,translation-candidate
+Link,translation-candidate
+Link Count,translation-candidate
+Link Details,translation-candidate
+Link Field Results Limit,translation-candidate
+Link Filters,translation-candidate
+Link To in Row,translation-candidate
+Link Type,translation-candidate
+Link Type in Row,translation-candidate
+"Link for About Us Page is \""/about\"".",translation-candidate
+"Link that is the website home page. Standard Links (home, login, products, blog, about, contact)",translation-candidate
+List / Search Settings,translation-candidate
+List Columns,translation-candidate
+List View,translation-candidate
+"List of email addresses, separated by comma or new line.",translation-candidate
+List of patches executed,translation-candidate
+List setting message,translation-candidate
+Login with Email Link,translation-candidate
+Map View,translation-candidate
+Max Report Rows,translation-candidate
+"Meaning of Submit, Cancel, Amend",translation-candidate
+New Address,translation-candidate
+New Chart,translation-candidate
+New Contact,translation-candidate
+New Custom Block,translation-candidate
+New Document Form,translation-candidate
+New Event,translation-candidate
+New Links,translation-candidate
+New Number Card,translation-candidate
+New Onboarding,translation-candidate
+New Quick List,translation-candidate
+New Role,translation-candidate
+New Shortcut,translation-candidate
+New Users (Last 30 days),translation-candidate
+New Value,translation-candidate
+New Workflow Name,translation-candidate
+New Workspace,translation-candidate
+"New line separated list of allowed public client URLs (eg <code>https://frappe.io</code>), or <code>*</code> to accept all. "" ""<br> "" ""Public clients are restricted by default.",translation-candidate
+New line separated list of scope values.,translation-candidate
+"New lines separated list of strings representing ways to contact people responsible for this client, typically email addresses.",translation-candidate
+New password cannot be same as old password,translation-candidate
+New users will have to be manually registered by system managers.,translation-candidate
+No New notifications,translation-candidate
+Nothing New,translation-candidate
+Number of days after which the document Web View link shared on email will be expired,translation-candidate
+Only reports of type Report Builder can be deleted,translation-candidate
+Only reports of type Report Builder can be edited,translation-candidate
+Open Communication,translation-candidate
+Open Source Applications for the Web,translation-candidate
+Open a dialog with mandatory fields to create a new record quickly. There must be at least one mandatory field to show in dialog.,translation-candidate
+Open console,translation-candidate
+Open in a new tab,translation-candidate
+Open in new tab,translation-candidate
+Open reference document,translation-candidate
+"PDF printing via \""Raw Print\"" is not supported.",translation-candidate
+Package Import,translation-candidate
+"Permissions are set on Roles and Document Types (called DocTypes) by setting rights like Read, Write, Create, Delete, Submit, Cancel, Amend, Report, Import, Export, Print, Email and Set User Permissions.",translation-candidate
+Please click Edit on the Workspace for best results,translation-candidate
+"Please click on 'Export Errored Rows', fix the errors and import again.",translation-candidate
+Please enable atleast one Social Login Key or LDAP or Login With Email Link before disabling username/password based login.,translation-candidate
+Prepared Report Analytics,translation-candidate
+Press Alt Key to trigger additional shortcuts in Menu and Sidebar,translation-candidate
+Print Format Builder,translation-candidate
+Print Format Builder Beta,translation-candidate
+Print Format Error,translation-candidate
+Print Format Field Template,translation-candidate
+Print Format For,translation-candidate
+Print Format not found,translation-candidate
+Print Heading,translation-candidate
+Print Style,translation-candidate
+Print document,translation-candidate
+Quick List Filter,translation-candidate
+Referance Doctype and Dashboard Name both can't be used at the same time.,translation-candidate
+Refresh Print Preview,translation-candidate
+Reload List,translation-candidate
+Reload Report,translation-candidate
+Remove,translation-candidate
+Remove Failed Jobs,translation-candidate
+Remove all fields in the column,translation-candidate
+Remove column,translation-candidate
+Remove field,translation-candidate
+Remove last column,translation-candidate
+Remove page break,translation-candidate
+Remove section,translation-candidate
+Remove tab,translation-candidate
+Rename Fieldname,translation-candidate
+"Report Name, Report Field and Fucntion are required to create a number card",translation-candidate
+Report Ref DocType,translation-candidate
+Report View,translation-candidate
+Report bug,translation-candidate
+"Report initiated, click to view status",translation-candidate
+Report limit reached,translation-candidate
+Report timed out.,translation-candidate
+Report {0} deleted,translation-candidate
+Report {0} saved,translation-candidate
+Reset Dashboard Customizations,translation-candidate
+Reset Password Link Expiry Duration,translation-candidate
+Rows Threshold for Grid Search,translation-candidate
+Save Customizations,translation-candidate
+Save on Completion,translation-candidate
+Save the document.,translation-candidate
+Saving Sidebar,translation-candidate
+Search Results,translation-candidate
+Search by filename or extension,translation-candidate
+Search fields,translation-candidate
+Search fieldtypes...,translation-candidate
+Search for {0},translation-candidate
+Search properties...,translation-candidate
+Select Group By...,translation-candidate
+Select List View,translation-candidate
+Select Report,translation-candidate
+"Set the filters here. For example: "" ""<pre class=\""small text-muted\""><code> "" ""[{ "" ""\tfieldname: \""company\"", "" ""\tlabel: __(\""Company\""), "" ""\tfieldtype: \""Link\"", "" ""\toptions: \""Company\"", "" ""\tdefault: frappe.defaults.get_user_default(\""Company\""), "" ""\treqd: 1 "" ""}, "" ""{ "" ""\tfieldname: \""account\"", "" ""\tlabel: __(\""Account\""), "" ""\tfieldtype: \""Link\"", "" ""\toptions: \""Account\"", "" ""\treqd: 1 "" ""}] "" ""</code></pre>",EXCEPTION-technical
+Share this document with,translation-candidate
+Show External Link Warning,translation-candidate
+Show Title in Link Fields,translation-candidate
+Show {0} List,translation-candidate
+Sidebar Item Group,translation-candidate
+Sidebar Item Group Link,translation-candidate
+"Simple Python Expression, Example: <code class=\""language-python\"">status == 'Open' and issue_type == 'Bug'</code>",EXCEPTION-technical
+Sort Options,translation-candidate
+Start Import,translation-candidate
+Submit an Issue,translation-candidate
+Submit another response,translation-candidate
+Submit button label,translation-candidate
+Submit on Creation,translation-candidate
+System Health Report,translation-candidate
+System Health Report Errors,translation-candidate
+System Health Report Failing Jobs,translation-candidate
+System Health Report Queue,translation-candidate
+System Health Report Tables,translation-candidate
+System Health Report Workers,translation-candidate
+"Table MultiSelect requires a table with at least one Link field, but none was found in {0}",EXCEPTION-technical
+"To add dynamic subject, use jinja tags like  "" ""<div><pre><code>New {{ doc.doctype }} #{{ doc.name }}</code></pre></div>",EXCEPTION-technical
+"To use Slack Channel, add a <a href=\""#List/Slack%20Webhook%20URL/List\"">Slack Webhook URL</a>.",EXCEPTION-technical
+Translate Link Fields,translation-candidate
+Try the new Print Designer,translation-candidate
+Update Amendment Naming,translation-candidate
+Update Hooks Resolution Order,translation-candidate
+Update Order,translation-candidate
+Update Password,translation-candidate
+Update Profile,translation-candidate
+Update Series Counter,translation-candidate
+Update from Frappe Cloud,translation-candidate
+Update {0} records,translation-candidate
+Use the new Print Format Builder,translation-candidate
+User Activity Report,translation-candidate
+User Activity Report Without Sort,translation-candidate
+User Group,translation-candidate
+User Group Member,translation-candidate
+User Menu,translation-candidate
+View Audit Trail,translation-candidate
+View Doctype Permissions,translation-candidate
+View File,translation-candidate
+View Full Log,translation-candidate
+View Sidebar,translation-candidate
+View Switcher,translation-candidate
+View all {0} users,translation-candidate
+View your response,translation-candidate
+We do not allow editing of this document. Simply click the Edit button on the workspace page to make your workspace editable and customize it as you wish,translation-candidate
+Web Form List Column,translation-candidate
+Website Search Field,translation-candidate
+Website Search Field must be a valid fieldname,translation-candidate
+What's New,translation-candidate
+"When you Amend a document after Cancel and save it, it will get a new number that is a version of the old number.",translation-candidate
+Workspace Link,translation-candidate
+Workspace Quick List,translation-candidate
+Workspace Sidebar,translation-candidate
+Workspace Sidebar Item,translation-candidate
+You haven't added any Dashboard Charts or Number Cards yet.,translation-candidate
+You've logged in as another user from another tab. Refresh this page to continue using system.,translation-candidate
+{0} List View Settings,translation-candidate

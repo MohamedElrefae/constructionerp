@@ -66,3 +66,27 @@ class TestBilingualReportsAPI(unittest.TestCase):
         with mock.patch.object(ext, "load_account_arabic_mapping", return_value={"Rent": "إيجار"}):
             out = self._call("Trial Balance", mod, mode="en")
         self.assertEqual(out["data"][0]["account"], "Rent")
+
+
+class TestRealModuleSmoke(unittest.TestCase):
+    """Unmocked smoke: every pilot path is a real importable module exposing a
+    callable execute (P1 review note: function paths cannot be imported)."""
+
+    def test_pilot_modules_import_and_expose_execute(self):
+        import frappe
+
+        from construction.api.bilingual_reports import PILOT_REPORTS
+
+        for name, path in PILOT_REPORTS.items():
+            self.assertNotIn(".execute", path, f"{name} module path must stay importable")
+            mod = frappe.get_module(path)
+            self.assertTrue(callable(getattr(mod, "execute", None)), name)
+
+    def test_malformed_filters_fail_closed(self):
+        import frappe
+
+        with mock.patch("frappe.only_for", lambda *a, **k: None):
+            from construction.api.bilingual_reports import localized_report
+
+            with self.assertRaises(frappe.ValidationError):
+                localized_report("Trial Balance", filters="{not-json", mode="ar")

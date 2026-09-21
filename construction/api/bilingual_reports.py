@@ -20,8 +20,8 @@ from construction.services.report_bilingual_extension import bilingualize_report
 
 PILOT_REPORTS = {
     "General Ledger": "erpnext.accounts.report.general_ledger.general_ledger",
-    "Trial Balance": "erpnext.accounts.report.trial_balance.trial_balance.execute",
-    "Accounts Receivable": "erpnext.accounts.report.accounts_receivable.accounts_receivable.execute",
+    "Trial Balance": "erpnext.accounts.report.trial_balance.trial_balance",
+    "Accounts Receivable": "erpnext.accounts.report.accounts_receivable.accounts_receivable",
 }
 
 
@@ -41,9 +41,9 @@ def localized_report(report_name, filters=None, lang=None, mode=None):
 
     if isinstance(filters, str):
         try:
-            filters = json.loads(filters) if filters else {}
+            filters = json.loads(filters) if filters else None
         except ValueError:
-            filters = {}
+            frappe.throw(frappe._("Invalid filters: value must be a JSON object"))
     lang = mode or lang or (frappe.local.lang if getattr(frappe.local, "lang", None) else "en")
     mode = normalize_mode(lang)
     module = frappe.get_module(PILOT_REPORTS[report_name])
