@@ -90,3 +90,34 @@ class TestRealModuleSmoke(unittest.TestCase):
 
             with self.assertRaises(frappe.ValidationError):
                 localized_report("Trial Balance", filters="{not-json", mode="ar")
+
+    def test_non_object_filters_fail_closed(self):
+        # P2 review note: valid JSON that is not an object must be rejected
+        import frappe
+
+        with mock.patch("frappe.only_for", lambda *a, **k: None):
+            from construction.api.bilingual_reports import localized_report
+
+            for bad in ("[]", "null", "42", '"str"', "7.5"):
+                with self.assertRaises(frappe.ValidationError, msg=bad):
+                    localized_report("Trial Balance", filters=bad, mode="ar")
+
+    def test_non_object_native_filters_fail_closed(self):
+        import frappe
+
+        with mock.patch("frappe.only_for", lambda *a, **k: None):
+            from construction.api.bilingual_reports import localized_report
+
+            for native in ([], 42, "x"):
+                with self.assertRaises(frappe.ValidationError, msg=str(native)):
+                    localized_report("Trial Balance", filters=native, mode="ar")
+
+    def test_object_filters_accepted(self):
+        with mock.patch("frappe.only_for", lambda *a, **k: None), mock.patch(
+            "frappe.get_module"
+        ) as gm:
+            gm.return_value.execute = mock.Mock(return_value=([], []))
+            from construction.api.bilingual_reports import localized_report
+
+            out = localized_report("Trial Balance", mode="ar", filters='{"company": "Elrefae"}')
+            gm.return_value.execute.assert_called_once()

@@ -1,363 +1,363 @@
-source_text,classification
-'In Global Search' is not allowed for field {0} of type {1},EXCEPTION-technical
-+ Add / Remove Fields,translation-candidate
-1 Report,translation-candidate
-"<div class=\""alert\"">Please don't update it as it can mess up your form. Use the Customize Form View and Custom Fields to set properties!</div>",EXCEPTION-technical
-"<div class=\""well\""> "" ""    Edit list of Series in the box. Rules: "" ""    <ul> "" ""        <li>Each Series Prefix on a new line.</li> "" ""        <li>Allowed special characters are \""/\"" and \""-\""</li> "" ""        <li> "" ""            Optionally, set the number of digits in the series using dot (.) "" ""            followed by hashes (#). For example, \"".####\"" means that the series "" ""            will have four digits. Default is five digits. "" ""        </li> "" ""        <li> "" ""            You can also use variables in the series name by putting them "" ""            between (.) dots "" ""            <br> "" ""            Supported Variables: "" ""            <ul> "" ""                <li><code>.YYYY.</code> - Year in 4 digits</li> "" ""                <li><code>.YY.</code> - Year in 2 digits</li> "" ""                <li><code>.MM.</code> - Month</li> "" ""                <li><code>.DD.</code> - Day of month</li> "" ""                <li><code>.WW.</code> - Week of the year</li> "" ""                <li> "" ""                    <code>.{fieldname}.</code> - fieldname on the document e.g. "" ""                    <code>branch</code> "" ""                </li> "" ""                <li><code>.FY.</code> - Fiscal Year (requires ERPNext to be installed)</li> "" ""                <li><code>.ABBR.</code> - Company Abbreviation (requires ERPNext to be installed)</li> "" ""            </ul> "" ""        </li> "" ""    </ul> "" ""    Examples: "" ""    <ul> "" ""        <li>INV-</li> "" ""        <li>INV-10-</li> "" ""        <li>INVK-</li> "" ""        <li>INV-.YYYY.-.{branch}.-.MM.-.####</li> "" ""    </ul> "" ""</div> "" ""<br>",EXCEPTION-technical
-"<h3>Custom CSS Help</h3>  "" ""<p>Notes:</p>  "" ""<ol> "" ""<li>All field groups (label + value) are set attributes <code>data-fieldtype</code> and <code>data-fieldname</code></li> "" ""<li>All values are given class <code>value</code></li> "" ""<li>All Section Breaks are given class <code>section-break</code></li> "" ""<li>All Column Breaks are given class <code>column-break</code></li> "" ""</ol>  "" ""<h4>Examples</h4>  "" ""<p>1. Left align integers</p>  "" ""<pre><code>[data-fieldtype=\""Int\""] .value { text-align: left; }</code></pre>  "" ""<p>1. Add border to sections except the last section</p>  "" ""<pre><code>.section-break { padding: 30px 0px; border-bottom: 1px solid #eee; } "" "".section-break:last-child { padding-bottom: 0px; border-bottom: 0px;  }</code></pre>",EXCEPTION-technical
-"<h3>Print Format Help</h3> "" ""<hr> "" ""<h4>Introduction</h4> "" ""<p>Print Formats are rendered on the server side using the Jinja Templating Language. All forms have access to the <code>doc</code> object which contains information about the document that is being formatted. You can also access common utilities via the <code>frappe</code> module.</p> "" ""<p>For styling, the Boostrap CSS framework is provided and you can enjoy the full range of classes.</p> "" ""<hr> "" ""<h4>References</h4> "" ""<ol> "" ""\t<li><a href=\""http://jinja.pocoo.org/docs/templates/\"" target=\""_blank\"">Jinja Templating Language</a></li> "" ""\t<li><a href=\""http://getbootstrap.com\"" target=\""_blank\"">Bootstrap CSS Framework</a></li> "" ""</ol> "" ""<hr> "" ""<h4>Example</h4> "" ""<pre><code>&lt;h3&gt;{{ doc.select_print_heading or \""Invoice\"" }}&lt;/h3&gt; "" ""&lt;div class=\""row\""&gt; "" ""\t&lt;div class=\""col-md-3 text-right\""&gt;Customer Name&lt;/div&gt; "" ""\t&lt;div class=\""col-md-9\""&gt;{{ doc.customer_name }}&lt;/div&gt; "" ""&lt;/div&gt; "" ""&lt;div class=\""row\""&gt; "" ""\t&lt;div class=\""col-md-3 text-right\""&gt;Date&lt;/div&gt; "" ""\t&lt;div class=\""col-md-9\""&gt;{{ doc.get_formatted(\""invoice_date\"") }}&lt;/div&gt; "" ""&lt;/div&gt; "" ""&lt;table class=\""table table-bordered\""&gt; "" ""\t&lt;tbody&gt; "" ""\t\t&lt;tr&gt; "" ""\t\t\t&lt;th&gt;Sr&lt;/th&gt; "" ""\t\t\t&lt;th&gt;Item Name&lt;/th&gt; "" ""\t\t\t&lt;th&gt;Description&lt;/th&gt; "" ""\t\t\t&lt;th class=\""text-right\""&gt;Qty&lt;/th&gt; "" ""\t\t\t&lt;th class=\""text-right\""&gt;Rate&lt;/th&gt; "" ""\t\t\t&lt;th class=\""text-right\""&gt;Amount&lt;/th&gt; "" ""\t\t&lt;/tr&gt; "" ""\t\t{%- for row in doc.items -%} "" ""\t\t&lt;tr&gt; "" ""\t\t\t&lt;td style=\""width: 3%;\""&gt;{{ row.idx }}&lt;/td&gt; "" ""\t\t\t&lt;td style=\""width: 20%;\""&gt; "" ""\t\t\t\t{{ row.item_name }} "" ""\t\t\t\t{% if row.item_code != row.item_name -%} "" ""\t\t\t\t&lt;br&gt;Item Code: {{ row.item_code}} "" ""\t\t\t\t{%- endif %} "" ""\t\t\t&lt;/td&gt; "" ""\t\t\t&lt;td style=\""width: 37%;\""&gt; "" ""\t\t\t\t&lt;div style=\""border: 0px;\""&gt;{{ row.description }}&lt;/div&gt;&lt;/td&gt; "" ""\t\t\t&lt;td style=\""width: 10%; text-align: right;\""&gt;{{ row.qty }} {{ row.uom or row.stock_uom }}&lt;/td&gt; "" ""\t\t\t&lt;td style=\""width: 15%; text-align: right;\""&gt;{{ "" ""\t\t\t\trow.get_formatted(\""rate\"", doc) }}&lt;/td&gt; "" ""\t\t\t&lt;td style=\""width: 15%; text-align: right;\""&gt;{{ "" ""\t\t\t\trow.get_formatted(\""amount\"", doc) }}&lt;/td&gt; "" ""\t\t&lt;/tr&gt; "" ""\t\t{%- endfor -%} "" ""\t&lt;/tbody&gt; "" ""&lt;/table&gt;</code></pre> "" ""<hr> "" ""<h4>Common Functions</h4> "" ""<table class=\""table table-bordered\""> "" ""\t<tbody> "" ""\t\t<tr> "" ""\t\t\t<td style=\""width: 30%;\""><code>doc.get_formatted(\""[fieldname]\"", [parent_doc])</code></td> "" ""\t\t\t<td>Get document value formatted as Date, Currency, etc. Pass parent <code>doc</code> for currency type fields.</td> "" ""\t\t</tr> "" ""\t\t<tr> "" ""\t\t\t<td style=\""width: 30%;\""><code>frappe.db.get_value(\""[doctype]\"", \""[name]\"", \""fieldname\"")</code></td> "" ""\t\t\t<td>Get value from another document.</td> "" ""\t\t</tr> "" ""\t</tbody> "" ""</table>",EXCEPTION-technical
-"<p><strong>Condition Examples:</strong></p> "" ""<pre><code class=\""language-python\"">doc.status==\""Open\""<br>doc.due_date==nowdate()<br>doc.total &gt; 40000 "" ""</code></pre>",EXCEPTION-technical
-"<p><strong>Condition Examples:</strong></p> "" ""<pre>doc.status==\""Open\""<br>doc.due_date==nowdate()<br>doc.total &gt; 40000 "" ""</pre>",EXCEPTION-technical
-"<p>Multiple webforms can be created for a single doctype. Add filters specific to this webform to display correct record after submission.</p><p>For Example:</p> "" ""<p>If you create a separate webform every year to capture feedback from employees add a  "" "" field named year in doctype and add a filter <b>year = 2023</b></p>",EXCEPTION-technical
-"<p>To interact with above HTML you will have to use `root_element` as a parent selector.</p><p>For example:</p><pre class=\""p-3 bg-gray-100 border-radius rounded-sm mb-0\"" style=\""width: fit-content;\""><code>// here root_element is provided by default "" ""let some_class_element = root_element.querySelector('.some-class'); "" ""some_class_element.textContent = \""New content\""; "" ""</code></pre>",EXCEPTION-technical
-Action {0} completed successfully on {1} {2}. View it {3},EXCEPTION-technical
-Action {0} failed on {1} {2}. View it {3},EXCEPTION-technical
-Add / Remove Columns,translation-candidate
-Add Card to Dashboard,translation-candidate
-Add Child,translation-candidate
-Add Indexes,translation-candidate
-Add Multiple,translation-candidate
-Add Participants,translation-candidate
-Add Roles,translation-candidate
-Add Tags,translation-candidate
-Add Template,translation-candidate
-Add Translate Data,translation-candidate
-Add Video Conferencing,translation-candidate
-Add a Filter,translation-candidate
-Add a New Role,translation-candidate
-Add a Row,translation-candidate
-Add a new section,translation-candidate
-Add a row above the current row,translation-candidate
-Add a row at the bottom,translation-candidate
-Add a row at the top,translation-candidate
-Add a row below the current row,translation-candidate
-Add column,translation-candidate
-Add field,translation-candidate
-Add new tab,translation-candidate
-Add numbers or special characters.,translation-candidate
-Add page break,translation-candidate
-Add tab,translation-candidate
-Add to this activity by mailing to {0},EXCEPTION-technical
-Add {0},translation-candidate
-After Rename,translation-candidate
-Apps with Search,translation-candidate
-Assign To User Group,translation-candidate
-Assign a user,translation-candidate
-Attach Files,translation-candidate
-Attach Package,translation-candidate
-Attach a web link,translation-candidate
-Auto Email Report,translation-candidate
-Automatically Assign Documents to Users,translation-candidate
-Background Print (required for >25 documents),translation-candidate
-Before Print,translation-candidate
-Before Rename,translation-candidate
-Brand Logo with Search,translation-candidate
-"Build your own reports, print formats, and dashboards. Create personalized workspaces for easier navigation",translation-candidate
-Bulk Edit,translation-candidate
-Bulk PDF Export,translation-candidate
-Bulk Update,translation-candidate
-Cancel All,translation-candidate
-Cancel Import,translation-candidate
-Cancel Prepared Report,translation-candidate
-Cannot Download Report due to insufficient permissions,translation-candidate
-Cannot Update After Submit,translation-candidate
-Cannot set 'Report' permission if 'Only If Creator' permission is set,translation-candidate
-"Certain documents, like an Invoice, should not be changed once final. The final state for such documents is called Submitted. You can restrict which roles can Submit.",translation-candidate
-Change Print Format,translation-candidate
-Clear & Add Template,translation-candidate
-Clear & Add template,translation-candidate
-Close properties,translation-candidate
-Copy Link,translation-candidate
-Copy embed code,translation-candidate
-Copy error to clipboard,translation-candidate
-Copy to Clipboard,translation-candidate
-Copy token to clipboard,translation-candidate
-Create & Continue,translation-candidate
-Create Address,translation-candidate
-Create Child Doctype,translation-candidate
-Create Letter Head,translation-candidate
-Create New DocType,translation-candidate
-Create New Kanban Board,translation-candidate
-Create Saved Filter,translation-candidate
-Create a New Format,translation-candidate
-Create a Reminder,translation-candidate
-Create a new ...,translation-candidate
-Create a {0} Account,translation-candidate
-Create or Edit Print Format,translation-candidate
-Create or Edit Workflow,translation-candidate
-Create your workflow visually using the Workflow Builder.,translation-candidate
-Custom Group Search,translation-candidate
-"Custom Group Search if filled needs to contain the user placeholder {0}, eg uid={0},ou=users,dc=example,dc=com",EXCEPTION-technical
-"Custom LDAP Directoy Selected, please ensure 'LDAP Group Member attribute' and 'Group Object Class' are entered",translation-candidate
-Customize Dashboard,translation-candidate
-Dashboard View,translation-candidate
-Data Import Log,translation-candidate
-Data Import is not allowed for {0}. Enable 'Allow Import' in DocType settings.,EXCEPTION-technical
-Default View,translation-candidate
-Delete Account,translation-candidate
-Delete All,translation-candidate
-Delete Background Exported Reports After (Hours),translation-candidate
-Delete Column,translation-candidate
-Delete Kanban Board,translation-candidate
-Delete Section,translation-candidate
-Delete Tab,translation-candidate
-Delete and Generate New,translation-candidate
-Delete column,translation-candidate
-Delete entire column with fields,translation-candidate
-Delete entire section with fields,translation-candidate
-Delete entire tab with fields,translation-candidate
-Delete section,translation-candidate
-Delete tab,translation-candidate
-Delete {0} item permanently?,translation-candidate
-Disable System Update Notification,translation-candidate
-Do Not Create New User,translation-candidate
-Document Share Key,translation-candidate
-Document Share Key Expiry (in Days),translation-candidate
-Duplicate Entry,translation-candidate
-Duplicate Row,translation-candidate
-Duplicate current row,translation-candidate
-Duplicate field,translation-candidate
-Edit Address in Form,translation-candidate
-Edit Chart,translation-candidate
-Edit Custom Block,translation-candidate
-Edit Existing,translation-candidate
-Edit Filters,translation-candidate
-Edit Footer,translation-candidate
-Edit Full Form,translation-candidate
-Edit HTML,translation-candidate
-Edit Header,translation-candidate
-Edit Letter Head,translation-candidate
-Edit Letter Head Footer,translation-candidate
-Edit Links,translation-candidate
-Edit Number Card,translation-candidate
-Edit Onboarding,translation-candidate
-Edit Print Format,translation-candidate
-Edit Quick List,translation-candidate
-Edit Shortcut,translation-candidate
-Edit Sidebar,translation-candidate
-Edit mode,translation-candidate
-Edit the {0} Doctype,translation-candidate
-Edit your response,translation-candidate
-Edit your workflow visually using the Workflow Builder.,translation-candidate
-Enable Prepared Report,translation-candidate
-Enable developer mode to create a standard Print Template,translation-candidate
-Export Data,translation-candidate
-Export Errored Rows,translation-candidate
-Export Import Log,translation-candidate
-Export all matching rows?,translation-candidate
-Export all {0} rows?,translation-candidate
-Export as zip,translation-candidate
-Export in Background,translation-candidate
-Export the data without any header notes and column descriptions,translation-candidate
-Export without main header,translation-candidate
-External Link,translation-candidate
-Fetch on Save if Empty,translation-candidate
-"Field \""title\"" is mandatory if \""Website Search Field\"" is set.",translation-candidate
-Filter List,translation-candidate
-Filter condition missing after operator: {0},translation-candidate
-Filter fields have invalid backtick notation: {0},EXCEPTION-technical
-Filter...,translation-candidate
-Following Report Filters have missing values:,translation-candidate
-Force Re-route to Default View,translation-candidate
-From Attach Field,translation-candidate
-Further sub-groups can only be created under records marked as 'Group',translation-candidate
-Gantt View,translation-candidate
-Go to Notification Settings List,translation-candidate
-Go to {0} List,translation-candidate
-Google Meet Link,translation-candidate
-Grid Empty State,translation-candidate
-Grid Page Length,translation-candidate
-Grid Shortcuts,translation-candidate
-Group,translation-candidate
-Group By must be a string,translation-candidate
-Group Object Class,translation-candidate
-Group your custom doctypes under modules,translation-candidate
-"Help: To link to another record in the system, use \""/desk/note/[Note Name]\"" as the Link URL. (don't use \""http://\"")",translation-candidate
-"Hide Previous, Next and Close button on highlight dialog.",translation-candidate
-"Hide Sidebar, Menu, and Comments",translation-candidate
-"I guess you don't have access to any workspace yet, but you can create one just for yourself. Click on the <b>Create Workspace</b> button to create one.<br>",translation-candidate
-"If set, only user with these roles can access this chart. If not set, DocType or Report permissions will be used.",translation-candidate
-Image View,translation-candidate
-Import Log,translation-candidate
-Import Progress,translation-candidate
-"Import timed out, please re-try.",translation-candidate
-Inbox View,translation-candidate
-Insufficient Permissions for deleting Report,translation-candidate
-Insufficient Permissions for editing Report,translation-candidate
-Invalid Filter,translation-candidate
-Invalid Filter Format for field {0} of type {1}. Try using filter icon on the field to set it correctly,EXCEPTION-technical
-Is Query Report,translation-candidate
-Kanban View,translation-candidate
-LDAP Group Member attribute,translation-candidate
-"LDAP Search String must be enclosed in '()' and needs to contian the user placeholder {0}, eg sAMAccountName={0}",EXCEPTION-technical
-LDAP Search and Paths,translation-candidate
-Link,translation-candidate
-Link Count,translation-candidate
-Link Details,translation-candidate
-Link Field Results Limit,translation-candidate
-Link Filters,translation-candidate
-Link To in Row,translation-candidate
-Link Type,translation-candidate
-Link Type in Row,translation-candidate
-"Link for About Us Page is \""/about\"".",translation-candidate
-"Link that is the website home page. Standard Links (home, login, products, blog, about, contact)",translation-candidate
-List / Search Settings,translation-candidate
-List Columns,translation-candidate
-List View,translation-candidate
-"List of email addresses, separated by comma or new line.",translation-candidate
-List of patches executed,translation-candidate
-List setting message,translation-candidate
-Login with Email Link,translation-candidate
-Map View,translation-candidate
-Max Report Rows,translation-candidate
-"Meaning of Submit, Cancel, Amend",translation-candidate
-New Address,translation-candidate
-New Chart,translation-candidate
-New Contact,translation-candidate
-New Custom Block,translation-candidate
-New Document Form,translation-candidate
-New Event,translation-candidate
-New Links,translation-candidate
-New Number Card,translation-candidate
-New Onboarding,translation-candidate
-New Quick List,translation-candidate
-New Role,translation-candidate
-New Shortcut,translation-candidate
-New Users (Last 30 days),translation-candidate
-New Value,translation-candidate
-New Workflow Name,translation-candidate
-New Workspace,translation-candidate
-"New line separated list of allowed public client URLs (eg <code>https://frappe.io</code>), or <code>*</code> to accept all. "" ""<br> "" ""Public clients are restricted by default.",translation-candidate
-New line separated list of scope values.,translation-candidate
-"New lines separated list of strings representing ways to contact people responsible for this client, typically email addresses.",translation-candidate
-New password cannot be same as old password,translation-candidate
-New users will have to be manually registered by system managers.,translation-candidate
-No New notifications,translation-candidate
-Nothing New,translation-candidate
-Number of days after which the document Web View link shared on email will be expired,translation-candidate
-Only reports of type Report Builder can be deleted,translation-candidate
-Only reports of type Report Builder can be edited,translation-candidate
-Open Communication,translation-candidate
-Open Source Applications for the Web,translation-candidate
-Open a dialog with mandatory fields to create a new record quickly. There must be at least one mandatory field to show in dialog.,translation-candidate
-Open console,translation-candidate
-Open in a new tab,translation-candidate
-Open in new tab,translation-candidate
-Open reference document,translation-candidate
-"PDF printing via \""Raw Print\"" is not supported.",translation-candidate
-Package Import,translation-candidate
-"Permissions are set on Roles and Document Types (called DocTypes) by setting rights like Read, Write, Create, Delete, Submit, Cancel, Amend, Report, Import, Export, Print, Email and Set User Permissions.",translation-candidate
-Please click Edit on the Workspace for best results,translation-candidate
-"Please click on 'Export Errored Rows', fix the errors and import again.",translation-candidate
-Please enable atleast one Social Login Key or LDAP or Login With Email Link before disabling username/password based login.,translation-candidate
-Prepared Report Analytics,translation-candidate
-Press Alt Key to trigger additional shortcuts in Menu and Sidebar,translation-candidate
-Print Format Builder,translation-candidate
-Print Format Builder Beta,translation-candidate
-Print Format Error,translation-candidate
-Print Format Field Template,translation-candidate
-Print Format For,translation-candidate
-Print Format not found,translation-candidate
-Print Heading,translation-candidate
-Print Style,translation-candidate
-Print document,translation-candidate
-Quick List Filter,translation-candidate
-Referance Doctype and Dashboard Name both can't be used at the same time.,translation-candidate
-Refresh Print Preview,translation-candidate
-Reload List,translation-candidate
-Reload Report,translation-candidate
-Remove,translation-candidate
-Remove Failed Jobs,translation-candidate
-Remove all fields in the column,translation-candidate
-Remove column,translation-candidate
-Remove field,translation-candidate
-Remove last column,translation-candidate
-Remove page break,translation-candidate
-Remove section,translation-candidate
-Remove tab,translation-candidate
-Rename Fieldname,translation-candidate
-"Report Name, Report Field and Fucntion are required to create a number card",translation-candidate
-Report Ref DocType,translation-candidate
-Report View,translation-candidate
-Report bug,translation-candidate
-"Report initiated, click to view status",translation-candidate
-Report limit reached,translation-candidate
-Report timed out.,translation-candidate
-Report {0} deleted,translation-candidate
-Report {0} saved,translation-candidate
-Reset Dashboard Customizations,translation-candidate
-Reset Password Link Expiry Duration,translation-candidate
-Rows Threshold for Grid Search,translation-candidate
-Save Customizations,translation-candidate
-Save on Completion,translation-candidate
-Save the document.,translation-candidate
-Saving Sidebar,translation-candidate
-Search Results,translation-candidate
-Search by filename or extension,translation-candidate
-Search fields,translation-candidate
-Search fieldtypes...,translation-candidate
-Search for {0},translation-candidate
-Search properties...,translation-candidate
-Select Group By...,translation-candidate
-Select List View,translation-candidate
-Select Report,translation-candidate
-"Set the filters here. For example: "" ""<pre class=\""small text-muted\""><code> "" ""[{ "" ""\tfieldname: \""company\"", "" ""\tlabel: __(\""Company\""), "" ""\tfieldtype: \""Link\"", "" ""\toptions: \""Company\"", "" ""\tdefault: frappe.defaults.get_user_default(\""Company\""), "" ""\treqd: 1 "" ""}, "" ""{ "" ""\tfieldname: \""account\"", "" ""\tlabel: __(\""Account\""), "" ""\tfieldtype: \""Link\"", "" ""\toptions: \""Account\"", "" ""\treqd: 1 "" ""}] "" ""</code></pre>",EXCEPTION-technical
-Share this document with,translation-candidate
-Show External Link Warning,translation-candidate
-Show Title in Link Fields,translation-candidate
-Show {0} List,translation-candidate
-Sidebar Item Group,translation-candidate
-Sidebar Item Group Link,translation-candidate
-"Simple Python Expression, Example: <code class=\""language-python\"">status == 'Open' and issue_type == 'Bug'</code>",EXCEPTION-technical
-Sort Options,translation-candidate
-Start Import,translation-candidate
-Submit an Issue,translation-candidate
-Submit another response,translation-candidate
-Submit button label,translation-candidate
-Submit on Creation,translation-candidate
-System Health Report,translation-candidate
-System Health Report Errors,translation-candidate
-System Health Report Failing Jobs,translation-candidate
-System Health Report Queue,translation-candidate
-System Health Report Tables,translation-candidate
-System Health Report Workers,translation-candidate
-"Table MultiSelect requires a table with at least one Link field, but none was found in {0}",EXCEPTION-technical
-"To add dynamic subject, use jinja tags like  "" ""<div><pre><code>New {{ doc.doctype }} #{{ doc.name }}</code></pre></div>",EXCEPTION-technical
-"To use Slack Channel, add a <a href=\""#List/Slack%20Webhook%20URL/List\"">Slack Webhook URL</a>.",EXCEPTION-technical
-Translate Link Fields,translation-candidate
-Try the new Print Designer,translation-candidate
-Update Amendment Naming,translation-candidate
-Update Hooks Resolution Order,translation-candidate
-Update Order,translation-candidate
-Update Password,translation-candidate
-Update Profile,translation-candidate
-Update Series Counter,translation-candidate
-Update from Frappe Cloud,translation-candidate
-Update {0} records,translation-candidate
-Use the new Print Format Builder,translation-candidate
-User Activity Report,translation-candidate
-User Activity Report Without Sort,translation-candidate
-User Group,translation-candidate
-User Group Member,translation-candidate
-User Menu,translation-candidate
-View Audit Trail,translation-candidate
-View Doctype Permissions,translation-candidate
-View File,translation-candidate
-View Full Log,translation-candidate
-View Sidebar,translation-candidate
-View Switcher,translation-candidate
-View all {0} users,translation-candidate
-View your response,translation-candidate
-We do not allow editing of this document. Simply click the Edit button on the workspace page to make your workspace editable and customize it as you wish,translation-candidate
-Web Form List Column,translation-candidate
-Website Search Field,translation-candidate
-Website Search Field must be a valid fieldname,translation-candidate
-What's New,translation-candidate
-"When you Amend a document after Cancel and save it, it will get a new number that is a version of the old number.",translation-candidate
-Workspace Link,translation-candidate
-Workspace Quick List,translation-candidate
-Workspace Sidebar,translation-candidate
-Workspace Sidebar Item,translation-candidate
-You haven't added any Dashboard Charts or Number Cards yet.,translation-candidate
-You've logged in as another user from another tab. Refresh this page to continue using system.,translation-candidate
-{0} List View Settings,translation-candidate
+source_text,classification,location,suppression_rationale,ai_r_ref
+'In Global Search' is not allowed for field {0} of type {1},translation-candidate,frappe/core/doctype/doctype/doctype.py:1369,,
++ Add / Remove Fields,translation-candidate,frappe/workflow/doctype/workflow_document_state/workflow_document_state.json,,
+1 Report,translation-candidate,frappe/tests/test_utils.py:906,,
+"<div class=\""alert\"">Please don't update it as it can mess up your form. Use the Customize Form View and Custom Fields to set properties!</div>",EXCEPTION-technical,frappe/website/web_form/request_data/request_data.json,Keep vendor HTML/code/help content untouched — markup/developer-facing blob,AI-R suppress-check at the W6-0a AI-R verification pass (evidence: stage6-w60a AI-R record)
+"<div class=\""well\""> "" ""    Edit list of Series in the box. Rules: "" ""    <ul> "" ""        <li>Each Series Prefix on a new line.</li> "" ""        <li>Allowed special characters are \""/\"" and \""-\""</li> "" ""        <li> "" ""            Optionally, set the number of digits in the series using dot (.) "" ""            followed by hashes (#). For example, \"".####\"" means that the series "" ""            will have four digits. Default is five digits. "" ""        </li> "" ""        <li> "" ""            You can also use variables in the series name by putting them "" ""            between (.) dots "" ""            <br> "" ""            Supported Variables: "" ""            <ul> "" ""                <li><code>.YYYY.</code> - Year in 4 digits</li> "" ""                <li><code>.YY.</code> - Year in 2 digits</li> "" ""                <li><code>.MM.</code> - Month</li> "" ""                <li><code>.DD.</code> - Day of month</li> "" ""                <li><code>.WW.</code> - Week of the year</li> "" ""                <li> "" ""                    <code>.{fieldname}.</code> - fieldname on the document e.g. "" ""                    <code>branch</code> "" ""                </li> "" ""                <li><code>.FY.</code> - Fiscal Year (requires ERPNext to be installed)</li> "" ""                <li><code>.ABBR.</code> - Company Abbreviation (requires ERPNext to be installed)</li> "" ""            </ul> "" ""        </li> "" ""    </ul> "" ""    Examples: "" ""    <ul> "" ""        <li>INV-</li> "" ""        <li>INV-10-</li> "" ""        <li>INVK-</li> "" ""        <li>INV-.YYYY.-.{branch}.-.MM.-.####</li> "" ""    </ul> "" ""</div> "" ""<br>",EXCEPTION-technical,in-ledger (no vendor PO location match),Keep vendor HTML/code/help content untouched — markup/developer-facing blob,AI-R suppress-check at the W6-0a AI-R verification pass (evidence: stage6-w60a AI-R record)
+"<h3>Custom CSS Help</h3>  "" ""<p>Notes:</p>  "" ""<ol> "" ""<li>All field groups (label + value) are set attributes <code>data-fieldtype</code> and <code>data-fieldname</code></li> "" ""<li>All values are given class <code>value</code></li> "" ""<li>All Section Breaks are given class <code>section-break</code></li> "" ""<li>All Column Breaks are given class <code>column-break</code></li> "" ""</ol>  "" ""<h4>Examples</h4>  "" ""<p>1. Left align integers</p>  "" ""<pre><code>[data-fieldtype=\""Int\""] .value { text-align: left; }</code></pre>  "" ""<p>1. Add border to sections except the last section</p>  "" ""<pre><code>.section-break { padding: 30px 0px; border-bottom: 1px solid #eee; } "" "".section-break:last-child { padding-bottom: 0px; border-bottom: 0px;  }</code></pre>",EXCEPTION-technical,in-ledger (no vendor PO location match),Keep vendor HTML/code/help content untouched — markup/developer-facing blob,AI-R suppress-check at the W6-0a AI-R verification pass (evidence: stage6-w60a AI-R record)
+"<h3>Print Format Help</h3> "" ""<hr> "" ""<h4>Introduction</h4> "" ""<p>Print Formats are rendered on the server side using the Jinja Templating Language. All forms have access to the <code>doc</code> object which contains information about the document that is being formatted. You can also access common utilities via the <code>frappe</code> module.</p> "" ""<p>For styling, the Boostrap CSS framework is provided and you can enjoy the full range of classes.</p> "" ""<hr> "" ""<h4>References</h4> "" ""<ol> "" ""\t<li><a href=\""http://jinja.pocoo.org/docs/templates/\"" target=\""_blank\"">Jinja Templating Language</a></li> "" ""\t<li><a href=\""http://getbootstrap.com\"" target=\""_blank\"">Bootstrap CSS Framework</a></li> "" ""</ol> "" ""<hr> "" ""<h4>Example</h4> "" ""<pre><code>&lt;h3&gt;{{ doc.select_print_heading or \""Invoice\"" }}&lt;/h3&gt; "" ""&lt;div class=\""row\""&gt; "" ""\t&lt;div class=\""col-md-3 text-right\""&gt;Customer Name&lt;/div&gt; "" ""\t&lt;div class=\""col-md-9\""&gt;{{ doc.customer_name }}&lt;/div&gt; "" ""&lt;/div&gt; "" ""&lt;div class=\""row\""&gt; "" ""\t&lt;div class=\""col-md-3 text-right\""&gt;Date&lt;/div&gt; "" ""\t&lt;div class=\""col-md-9\""&gt;{{ doc.get_formatted(\""invoice_date\"") }}&lt;/div&gt; "" ""&lt;/div&gt; "" ""&lt;table class=\""table table-bordered\""&gt; "" ""\t&lt;tbody&gt; "" ""\t\t&lt;tr&gt; "" ""\t\t\t&lt;th&gt;Sr&lt;/th&gt; "" ""\t\t\t&lt;th&gt;Item Name&lt;/th&gt; "" ""\t\t\t&lt;th&gt;Description&lt;/th&gt; "" ""\t\t\t&lt;th class=\""text-right\""&gt;Qty&lt;/th&gt; "" ""\t\t\t&lt;th class=\""text-right\""&gt;Rate&lt;/th&gt; "" ""\t\t\t&lt;th class=\""text-right\""&gt;Amount&lt;/th&gt; "" ""\t\t&lt;/tr&gt; "" ""\t\t{%- for row in doc.items -%} "" ""\t\t&lt;tr&gt; "" ""\t\t\t&lt;td style=\""width: 3%;\""&gt;{{ row.idx }}&lt;/td&gt; "" ""\t\t\t&lt;td style=\""width: 20%;\""&gt; "" ""\t\t\t\t{{ row.item_name }} "" ""\t\t\t\t{% if row.item_code != row.item_name -%} "" ""\t\t\t\t&lt;br&gt;Item Code: {{ row.item_code}} "" ""\t\t\t\t{%- endif %} "" ""\t\t\t&lt;/td&gt; "" ""\t\t\t&lt;td style=\""width: 37%;\""&gt; "" ""\t\t\t\t&lt;div style=\""border: 0px;\""&gt;{{ row.description }}&lt;/div&gt;&lt;/td&gt; "" ""\t\t\t&lt;td style=\""width: 10%; text-align: right;\""&gt;{{ row.qty }} {{ row.uom or row.stock_uom }}&lt;/td&gt; "" ""\t\t\t&lt;td style=\""width: 15%; text-align: right;\""&gt;{{ "" ""\t\t\t\trow.get_formatted(\""rate\"", doc) }}&lt;/td&gt; "" ""\t\t\t&lt;td style=\""width: 15%; text-align: right;\""&gt;{{ "" ""\t\t\t\trow.get_formatted(\""amount\"", doc) }}&lt;/td&gt; "" ""\t\t&lt;/tr&gt; "" ""\t\t{%- endfor -%} "" ""\t&lt;/tbody&gt; "" ""&lt;/table&gt;</code></pre> "" ""<hr> "" ""<h4>Common Functions</h4> "" ""<table class=\""table table-bordered\""> "" ""\t<tbody> "" ""\t\t<tr> "" ""\t\t\t<td style=\""width: 30%;\""><code>doc.get_formatted(\""[fieldname]\"", [parent_doc])</code></td> "" ""\t\t\t<td>Get document value formatted as Date, Currency, etc. Pass parent <code>doc</code> for currency type fields.</td> "" ""\t\t</tr> "" ""\t\t<tr> "" ""\t\t\t<td style=\""width: 30%;\""><code>frappe.db.get_value(\""[doctype]\"", \""[name]\"", \""fieldname\"")</code></td> "" ""\t\t\t<td>Get value from another document.</td> "" ""\t\t</tr> "" ""\t</tbody> "" ""</table>",EXCEPTION-technical,in-ledger (no vendor PO location match),Keep vendor HTML/code/help content untouched — markup/developer-facing blob,AI-R suppress-check at the W6-0a AI-R verification pass (evidence: stage6-w60a AI-R record)
+"<p><strong>Condition Examples:</strong></p> "" ""<pre><code class=\""language-python\"">doc.status==\""Open\""<br>doc.due_date==nowdate()<br>doc.total &gt; 40000 "" ""</code></pre>",EXCEPTION-technical,in-ledger (no vendor PO location match),Keep vendor HTML/code/help content untouched — markup/developer-facing blob,AI-R suppress-check at the W6-0a AI-R verification pass (evidence: stage6-w60a AI-R record)
+"<p><strong>Condition Examples:</strong></p> "" ""<pre>doc.status==\""Open\""<br>doc.due_date==nowdate()<br>doc.total &gt; 40000 "" ""</pre>",EXCEPTION-technical,in-ledger (no vendor PO location match),Keep vendor HTML/code/help content untouched — markup/developer-facing blob,AI-R suppress-check at the W6-0a AI-R verification pass (evidence: stage6-w60a AI-R record)
+"<p>Multiple webforms can be created for a single doctype. Add filters specific to this webform to display correct record after submission.</p><p>For Example:</p> "" ""<p>If you create a separate webform every year to capture feedback from employees add a  "" "" field named year in doctype and add a filter <b>year = 2023</b></p>",EXCEPTION-technical,in-ledger (no vendor PO location match),Keep vendor HTML/code/help content untouched — markup/developer-facing blob,AI-R suppress-check at the W6-0a AI-R verification pass (evidence: stage6-w60a AI-R record)
+"<p>To interact with above HTML you will have to use `root_element` as a parent selector.</p><p>For example:</p><pre class=\""p-3 bg-gray-100 border-radius rounded-sm mb-0\"" style=\""width: fit-content;\""><code>// here root_element is provided by default "" ""let some_class_element = root_element.querySelector('.some-class'); "" ""some_class_element.textContent = \""New content\""; "" ""</code></pre>",EXCEPTION-technical,in-ledger (no vendor PO location match),Keep vendor HTML/code/help content untouched — markup/developer-facing blob,AI-R suppress-check at the W6-0a AI-R verification pass (evidence: stage6-w60a AI-R record)
+Action {0} completed successfully on {1} {2}. View it {3},translation-candidate,frappe/core/doctype/submission_queue/submission_queue.py:116,,
+Action {0} failed on {1} {2}. View it {3},translation-candidate,frappe/core/doctype/communication/communication.js:66; frappe/core/doctype/communication/communication.js:74; frappe/core/doctype/communication/communication.js:82,,
+Add / Remove Columns,translation-candidate,frappe/core/doctype/user_permission/user_permission_list.js:4,,
+Add Card to Dashboard,translation-candidate,frappe/public/js/frappe/views/reports/query_report.js:210,,
+Add Child,translation-candidate,frappe/public/js/frappe/views/kanban/kanban_board.html:4; frappe/public/js/frappe/views/reports/query_report.js:1862; frappe/public/js/frappe/views/reports/query_report.js:1865,,
+Add Indexes,translation-candidate,frappe/public/js/frappe/form/grid.js:66,,
+Add Multiple,translation-candidate,frappe/core/page/permission_manager/permission_manager.js:495,,
+Add Participants,translation-candidate,frappe/email/doctype/email_group/email_group.json,,
+Add Roles,translation-candidate,frappe/public/js/frappe/form/grid.js:66,,
+Add Tags,translation-candidate,frappe/public/js/frappe/list/list_view.js:2228; frappe/public/js/frappe/views/communication.js:424,,
+Add Template,translation-candidate,frappe/core/doctype/report/report.json,,
+Add Translate Data,translation-candidate,frappe/email/doctype/email_queue/email_queue.json,,
+Add Video Conferencing,translation-candidate,frappe/public/js/frappe/ui/filters/filter_list.js:299,,
+Add a Filter,translation-candidate,frappe/core/page/permission_manager/permission_manager_help.html:9,,
+Add a New Role,translation-candidate,frappe/public/js/frappe/form/form_tour.js:211,,
+Add a Row,translation-candidate,frappe/templates/includes/comments/comments.html:30; frappe/templates/includes/comments/comments.html:47,,
+Add a new section,translation-candidate,frappe/public/js/frappe/form/form.js:194,,
+Add a row above the current row,translation-candidate,frappe/public/js/frappe/form/form.js:206,,
+Add a row at the bottom,translation-candidate,frappe/public/js/frappe/form/form.js:202,,
+Add a row at the top,translation-candidate,frappe/public/js/frappe/form/form.js:198,,
+Add a row below the current row,translation-candidate,frappe/public/js/frappe/views/dashboard/dashboard_view.js:286,,
+Add column,translation-candidate,frappe/public/js/form_builder/components/AddFieldButton.vue:9; frappe/public/js/form_builder/components/AddFieldButton.vue:48,,
+Add field,translation-candidate,frappe/public/js/form_builder/components/Sidebar.vue:46; frappe/public/js/form_builder/components/Tabs.vue:153,,
+Add new tab,translation-candidate,frappe/utils/password_strength.py:191,,
+Add numbers or special characters.,translation-candidate,frappe/public/js/print_format_builder/PrintFormatSection.vue:125,,
+Add page break,translation-candidate,frappe/custom/doctype/client_script/client_script.js:18,,
+Add tab,translation-candidate,frappe/public/js/frappe/utils/dashboard_utils.js:269; frappe/public/js/frappe/views/reports/query_report.js:252,,
+Add to this activity by mailing to {0},translation-candidate,frappe/public/js/frappe/views/kanban/kanban_column.html:20,,
+Add {0},translation-candidate,frappe/public/js/frappe/list/list_view.js:289; frappe/core/doctype/permission_log/permission_log.json,,
+After Rename,translation-candidate,frappe/core/doctype/server_script/server_script.json,,
+Apps with Search,translation-candidate,frappe/public/js/frappe/utils/number_systems.js:41,,
+Assign To User Group,translation-candidate,frappe/automation/doctype/assignment_rule/assignment_rule.json,,
+Assign a user,translation-candidate,frappe/automation/doctype/assignment_rule/assignment_rule.js:52,,
+Attach Files,translation-candidate,frappe/core/doctype/docfield/docfield.json; frappe/custom/doctype/custom_field/custom_field.json; frappe/custom/doctype/customize_form_field/customize_form_field.json,,
+Attach Package,translation-candidate,frappe/email/doctype/notification/notification.json,,
+Attach a web link,translation-candidate,frappe/website/doctype/website_slideshow/website_slideshow.js:8,,
+Auto Email Report,translation-candidate,frappe/core/doctype/doctype/doctype.json; frappe/custom/doctype/customize_form/customize_form.json,,
+Automatically Assign Documents to Users,translation-candidate,frappe/public/js/frappe/list/list_view.js:131,,
+Background Print (required for >25 documents),translation-candidate,frappe/core/doctype/system_settings/system_settings.json; frappe/desk/doctype/system_health_report/system_health_report.json,,
+Before Print,translation-candidate,frappe/core/doctype/server_script/server_script.json,,
+Before Rename,translation-candidate,frappe/core/doctype/server_script/server_script.json,,
+Brand Logo with Search,translation-candidate,frappe/website/doctype/website_settings/website_settings.json,,
+"Build your own reports, print formats, and dashboards. Create personalized workspaces for easier navigation",translation-candidate,frappe/workflow/doctype/workflow/workflow_list.js:18,,
+Bulk Edit,translation-candidate,frappe/public/js/frappe/form/grid.js:1211,,
+Bulk PDF Export,translation-candidate,frappe/desk/doctype/bulk_update/bulk_update.json,,
+Bulk Update,translation-candidate,frappe/model/workflow.py:310,,
+Cancel All,translation-candidate,frappe/public/js/frappe/form/form.js:969,,
+Cancel Import,translation-candidate,frappe/core/doctype/prepared_report/prepared_report.js:66,,
+Cancel Prepared Report,translation-candidate,frappe/public/js/frappe/list/list_view.js:2288,,
+Cannot Download Report due to insufficient permissions,translation-candidate,frappe/client.py:455,,
+Cannot Update After Submit,translation-candidate,frappe/core/doctype/file/file.py:653,,
+Cannot set 'Report' permission if 'Only If Creator' permission is set,translation-candidate,frappe/email/doctype/notification/notification.py:240,,
+"Certain documents, like an Invoice, should not be changed once final. The final state for such documents is called Submitted. You can restrict which roles can Submit.",translation-candidate,frappe/public/js/frappe/form/templates/form_sidebar.html:11; frappe/tests/test_translate.py:111,,
+Change Print Format,translation-candidate,frappe/core/doctype/document_naming_settings/document_naming_settings.json,,
+Clear & Add Template,translation-candidate,frappe/public/js/frappe/views/communication.js:105,,
+Clear & Add template,translation-candidate,frappe/public/js/frappe/form/controls/multiselect_list.js:6,,
+Close properties,translation-candidate,frappe/core/doctype/activity_log/activity_log.json; frappe/core/doctype/communication/communication.json; frappe/desk/doctype/event/event.json,,
+Copy Link,translation-candidate,frappe/website/doctype/web_form/web_form.js:29,,
+Copy embed code,translation-candidate,frappe/public/js/frappe/request.js:621,,
+Copy error to clipboard,translation-candidate,frappe/public/js/frappe/form/toolbar.js:540; frappe/public/js/frappe/list/list_view.js:2371,,
+Copy to Clipboard,translation-candidate,frappe/core/doctype/user/user.js:494,,
+Copy token to clipboard,translation-candidate,frappe/website/doctype/website_settings/website_settings.json,,
+Create & Continue,translation-candidate,frappe/public/js/frappe/ui/address_autocomplete/autocomplete_dialog.js:49,,
+Create Address,translation-candidate,frappe/public/js/frappe/views/reports/query_report.js:187; frappe/public/js/frappe/views/reports/query_report.js:232,,
+Create Child Doctype,translation-candidate,frappe/email/doctype/email_account/email_account.json,,
+Create Letter Head,translation-candidate,frappe/core/doctype/scheduled_job_type/scheduled_job_type.json,,
+Create New DocType,translation-candidate,frappe/public/js/frappe/list/list_view_select.js:186,,
+Create New Kanban Board,translation-candidate,frappe/public/js/frappe/list/list_filter.js:101,,
+Create Saved Filter,translation-candidate,frappe/core/doctype/user/user.js:271,,
+Create a New Format,translation-candidate,frappe/public/js/frappe/form/reminders.js:9,,
+Create a Reminder,translation-candidate,frappe/public/js/frappe/ui/toolbar/search_utils.js:581,,
+Create a new ...,translation-candidate,frappe/public/js/frappe/ui/toolbar/awesome_bar.js:218,,
+Create a {0} Account,translation-candidate,frappe/printing/page/print_format_builder_beta/print_format_builder_beta.js:34,,
+Create or Edit Print Format,translation-candidate,frappe/workflow/page/workflow_builder/workflow_builder.js:34,,
+Create or Edit Workflow,translation-candidate,frappe/public/js/frappe/list/list_view.js:510,,
+Create your workflow visually using the Workflow Builder.,translation-candidate,frappe/core/doctype/comment/comment.json; frappe/public/js/frappe/views/file/file_view.js:371,,
+Custom Group Search,translation-candidate,frappe/integrations/doctype/ldap_settings/ldap_settings.py:122,,
+"Custom Group Search if filled needs to contain the user placeholder {0}, eg uid={0},ou=users,dc=example,dc=com",translation-candidate,frappe/printing/page/print_format_builder/print_format_builder.js:190; frappe/printing/page/print_format_builder/print_format_builder.js:728; frappe/public/js/print_format_builder/PrintFormatControls.vue:162,,
+"Custom LDAP Directoy Selected, please ensure 'LDAP Group Member attribute' and 'Group Object Class' are entered",translation-candidate,frappe/website/doctype/web_form_field/web_form_field.json; frappe/website/doctype/web_form_list_column/web_form_list_column.json,,
+Customize Dashboard,translation-candidate,frappe/automation/doctype/auto_repeat/auto_repeat.js:33; frappe/core/doctype/doctype/doctype.js:61; frappe/core/workspace/build/build.json,,
+Dashboard View,translation-candidate,frappe/desk/doctype/workspace/workspace.json,,
+Data Import Log,translation-candidate,frappe/core/doctype/data_export/exporter.py:174,,
+Data Import is not allowed for {0}. Enable 'Allow Import' in DocType settings.,translation-candidate,frappe/custom/doctype/customize_form/customize_form.py:619,,
+Default View,translation-candidate,frappe/core/doctype/user/user.json,,
+Delete Account,translation-candidate,frappe/public/js/frappe/form/grid.js:66,,
+Delete All,translation-candidate,frappe/core/doctype/system_settings/system_settings.json,,
+Delete Background Exported Reports After (Hours),translation-candidate,frappe/public/js/form_builder/components/Section.vue:196,,
+Delete Column,translation-candidate,frappe/website/doctype/personal_data_deletion_request/personal_data_deletion_request.js:10,,
+Delete Kanban Board,translation-candidate,frappe/public/js/form_builder/components/Section.vue:125,,
+Delete Section,translation-candidate,frappe/public/js/form_builder/components/Tabs.vue:64,,
+Delete Tab,translation-candidate,frappe/public/js/frappe/views/reports/query_report.js:947,,
+Delete and Generate New,translation-candidate,frappe/public/js/form_builder/components/Section.vue:203,,
+Delete column,translation-candidate,frappe/public/js/frappe/form/footer/form_timeline.js:742,,
+Delete entire column with fields,translation-candidate,frappe/public/js/form_builder/components/Section.vue:134,,
+Delete entire section with fields,translation-candidate,frappe/public/js/form_builder/components/Tabs.vue:73,,
+Delete entire tab with fields,translation-candidate,frappe/public/js/form_builder/components/Section.vue:132,,
+Delete section,translation-candidate,frappe/public/js/form_builder/components/Tabs.vue:71,,
+Delete tab,translation-candidate,frappe/email/doctype/email_unsubscribe/email_unsubscribe.py:29,,
+Delete {0} item permanently?,translation-candidate,frappe/public/js/frappe/list/list_view.js:2262,,
+Disable System Update Notification,translation-candidate,frappe/core/doctype/system_settings/system_settings.json,,
+Do Not Create New User,translation-candidate,frappe/integrations/doctype/ldap_settings/ldap_settings.json,,
+Document Share Key,translation-candidate,frappe/core/doctype/system_settings/system_settings.json,,
+Document Share Key Expiry (in Days),translation-candidate,frappe/core/report/document_share_report/document_share_report.json; frappe/core/workspace/users/users.json,,
+Duplicate Entry,translation-candidate,frappe/public/js/frappe/list/list_filter.js:120,,
+Duplicate Row,translation-candidate,frappe/public/js/frappe/form/form.js:210,,
+Duplicate current row,translation-candidate,frappe/public/js/form_builder/components/Field.vue:250,,
+Duplicate field,translation-candidate,frappe/core/doctype/docfield/docfield.json; frappe/core/doctype/recorder/recorder.json; frappe/core/doctype/recorder_query/recorder_query.json,,
+Edit Address in Form,translation-candidate,frappe/templates/emails/auto_email_report.html:63,,
+Edit Chart,translation-candidate,frappe/public/js/frappe/widgets/widget_dialog.js:50,,
+Edit Custom Block,translation-candidate,frappe/printing/page/print_format_builder/print_format_builder.js:727,,
+Edit Existing,translation-candidate,frappe/public/js/frappe/list/list_sidebar_group_by.js:21,,
+Edit Filters,translation-candidate,frappe/public/js/frappe/list/list_view.js:1976; frappe/public/js/print_format_builder/PrintFormat.vue:29,,
+Edit Footer,translation-candidate,frappe/printing/doctype/print_format/print_format.js:29,,
+Edit Full Form,translation-candidate,frappe/printing/page/print_format_builder/print_format_builder_field.html:27; frappe/public/js/print_format_builder/Field.vue:83,,
+Edit HTML,translation-candidate,frappe/public/js/print_format_builder/PrintFormat.vue:9,,
+Edit Header,translation-candidate,frappe/printing/page/print_format_builder/print_format_builder.js:609; frappe/printing/page/print_format_builder/print_format_builder_layout.html:8,,
+Edit Letter Head,translation-candidate,frappe/public/js/print_format_builder/PrintFormat.vue:35,,
+Edit Letter Head Footer,translation-candidate,frappe/public/js/frappe/widgets/widget_dialog.js:42,,
+Edit Links,translation-candidate,frappe/public/js/frappe/widgets/widget_dialog.js:44,,
+Edit Number Card,translation-candidate,frappe/public/js/frappe/widgets/widget_dialog.js:46,,
+Edit Onboarding,translation-candidate,frappe/public/js/print_format_builder/print_format_builder.bundle.js:24,,
+Edit Print Format,translation-candidate,frappe/www/me.html:38,,
+Edit Quick List,translation-candidate,frappe/public/js/frappe/widgets/widget_dialog.js:40,,
+Edit Shortcut,translation-candidate,frappe/public/js/frappe/ui/sidebar/sidebar_header.js:29,,
+Edit Sidebar,translation-candidate,frappe/public/js/frappe/utils/web_template.js:5; frappe/website/doctype/web_page_block/web_page_block.json; frappe/website/doctype/website_settings/website_settings.json,,
+Edit mode,translation-candidate,frappe/public/js/form_builder/components/Field.vue:259,,
+Edit the {0} Doctype,translation-candidate,frappe/printing/page/print_format_builder/print_format_builder.js:721,,
+Edit your response,translation-candidate,frappe/workflow/doctype/workflow/workflow.js:18,,
+Edit your workflow visually using the Workflow Builder.,translation-candidate,frappe/public/js/frappe/views/reports/report_view.js:677; frappe/public/js/frappe/widgets/widget_dialog.js:52,,
+Enable Prepared Report,translation-candidate,frappe/printing/doctype/print_settings/print_settings.json,,
+Enable developer mode to create a standard Print Template,translation-candidate,frappe/website/doctype/web_template/web_template.py:33,,
+Export Data,translation-candidate,frappe/core/doctype/data_import/data_import.js:87; frappe/public/js/frappe/data_import/import_preview.js:199,,
+Export Errored Rows,translation-candidate,frappe/core/doctype/access_log/access_log.json,,
+Export Import Log,translation-candidate,frappe/public/js/frappe/views/reports/report_utils.js:245,,
+Export all matching rows?,translation-candidate,frappe/public/js/frappe/views/reports/report_view.js:1654,,
+Export all {0} rows?,translation-candidate,frappe/public/js/frappe/views/file/file_view.js:154,,
+Export as zip,translation-candidate,frappe/public/js/frappe/views/reports/report_utils.js:184,,
+Export in Background,translation-candidate,frappe/public/js/frappe/utils/tools.js:11,,
+Export the data without any header notes and column descriptions,translation-candidate,frappe/core/doctype/data_export/data_export.json,,
+Export without main header,translation-candidate,frappe/public/js/frappe/data_import/data_exporter.js:247,,
+External Link,translation-candidate,frappe/integrations/doctype/connected_app/connected_app.json,,
+Fetch on Save if Empty,translation-candidate,frappe/desk/doctype/global_search_settings/global_search_settings.py:61,,
+"Field \""title\"" is mandatory if \""Website Search Field\"" is set.",translation-candidate,frappe/desk/doctype/bulk_update/bulk_update.js:17,,
+Filter List,translation-candidate,frappe/email/doctype/auto_email_report/auto_email_report.json,,
+Filter condition missing after operator: {0},translation-candidate,frappe/database/query.py:766,,
+Filter fields have invalid backtick notation: {0},translation-candidate,frappe/printing/page/print_format_builder/print_format_builder_sidebar.html:3,,
+Filter...,translation-candidate,frappe/website/doctype/personal_data_deletion_step/personal_data_deletion_step.json,,
+Following Report Filters have missing values:,translation-candidate,frappe/desk/form/document_follow.py:63,,
+Force Re-route to Default View,translation-candidate,frappe/core/doctype/rq_job/rq_job.js:13,,
+From Attach Field,translation-candidate,frappe/desk/doctype/dashboard_chart/dashboard_chart.json; frappe/website/report/website_analytics/website_analytics.js:8,,
+Further sub-groups can only be created under records marked as 'Group',translation-candidate,frappe/core/doctype/communication/communication.js:291,,
+Gantt View,translation-candidate,frappe/contacts/doctype/contact/contact.json; frappe/contacts/doctype/gender/gender.json; frappe/core/doctype/user/user.json,,
+Go to Notification Settings List,translation-candidate,frappe/desk/doctype/onboarding_step/onboarding_step.json,,
+Go to {0} List,translation-candidate,frappe/core/doctype/page/page.js:11,,
+Google Meet Link,translation-candidate,frappe/integrations/workspace/integrations/integrations.json,,
+Grid Empty State,translation-candidate,frappe/core/doctype/doctype/doctype.json; frappe/custom/doctype/customize_form/customize_form.json,,
+Grid Page Length,translation-candidate,frappe/public/js/frappe/ui/keyboard.js:127,,
+Grid Shortcuts,translation-candidate,frappe/core/doctype/doctype_action/doctype_action.json; frappe/core/doctype/doctype_link/doctype_link.json; frappe/website/doctype/website_sidebar_item/website_sidebar_item.json,,
+Group,translation-candidate,frappe/desk/doctype/dashboard_chart/dashboard_chart.json; frappe/website/report/website_analytics/website_analytics.js:32,,
+Group By must be a string,translation-candidate,frappe/integrations/doctype/ldap_settings/ldap_settings.json,,
+Group Object Class,translation-candidate,frappe/core/workspace/build/build.json,,
+Group your custom doctypes under modules,translation-candidate,frappe/public/js/frappe/ui/group_by/group_by.js:428,,
+"Help: To link to another record in the system, use \""/desk/note/[Note Name]\"" as the Link URL. (don't use \""http://\"")",translation-candidate,frappe/website/doctype/help_article/help_article.json,,
+"Hide Previous, Next and Close button on highlight dialog.",translation-candidate,frappe/core/doctype/docfield/docfield.json; frappe/custom/doctype/custom_field/custom_field.json; frappe/custom/doctype/customize_form_field/customize_form_field.json,,
+"Hide Sidebar, Menu, and Comments",translation-candidate,frappe/website/doctype/portal_settings/portal_settings.json,,
+"I guess you don't have access to any workspace yet, but you can create one just for yourself. Click on the <b>Create Workspace</b> button to create one.<br>",EXCEPTION-technical,frappe/core/doctype/data_import/importer.py:1173; frappe/core/doctype/data_import/importer.py:1179; frappe/core/doctype/data_import/importer.py:1244,Keep vendor HTML/code/help content untouched — markup/developer-facing blob,AI-R suppress-check at the W6-0a AI-R verification pass (evidence: stage6-w60a AI-R record)
+"If set, only user with these roles can access this chart. If not set, DocType or Report permissions will be used.",translation-candidate,frappe/core/doctype/user/user.json,,
+Image View,translation-candidate,frappe/printing/doctype/letter_head/letter_head.json,,
+Import Log,translation-candidate,frappe/core/doctype/data_import/data_import.json,,
+Import Progress,translation-candidate,frappe/email/doctype/email_group/email_group.js:8; frappe/email/doctype/email_group/email_group.js:30,,
+"Import timed out, please re-try.",translation-candidate,frappe/core/doctype/data_import/data_import.py:71,,
+Inbox View,translation-candidate,frappe/public/js/frappe/views/treeview.js:110,,
+Insufficient Permissions for deleting Report,translation-candidate,frappe/desk/reportview.py:334,,
+Insufficient Permissions for editing Report,translation-candidate,frappe/core/doctype/doctype/doctype.py:447,,
+Invalid Filter,translation-candidate,frappe/public/js/form_builder/store.js:221,,
+Invalid Filter Format for field {0} of type {1}. Try using filter icon on the field to set it correctly,translation-candidate,frappe/utils/dashboard.py:61,,
+Is Query Report,translation-candidate,frappe/integrations/doctype/integration_request/integration_request.json,,
+Kanban View,translation-candidate,frappe/desk/doctype/workspace_sidebar_item/workspace_sidebar_item.json,,
+LDAP Group Member attribute,translation-candidate,frappe/integrations/doctype/ldap_settings/ldap_settings.json,,
+"LDAP Search String must be enclosed in '()' and needs to contian the user placeholder {0}, eg sAMAccountName={0}",translation-candidate,frappe/integrations/doctype/ldap_settings/ldap_settings.json,,
+LDAP Search and Paths,translation-candidate,frappe/integrations/doctype/ldap_settings/ldap_settings.json,,
+Link,translation-candidate,frappe/desk/doctype/workspace/workspace.json,,
+Link Count,translation-candidate,frappe/desk/doctype/workspace_link/workspace_link.json,,
+Link Details,translation-candidate,frappe/core/doctype/activity_log/activity_log.json; frappe/core/doctype/communication_link/communication_link.json; frappe/core/doctype/doctype_link/doctype_link.json,,
+Link Field Results Limit,translation-candidate,frappe/core/doctype/doctype_link/doctype_link.json,,
+Link Filters,translation-candidate,frappe/core/doctype/activity_log/activity_log.json; frappe/core/doctype/communication_link/communication_link.json; frappe/core/doctype/dynamic_link/dynamic_link.json,,
+Link To in Row,translation-candidate,frappe/desk/doctype/desktop_icon/desktop_icon.json; frappe/desk/doctype/workspace/workspace.json; frappe/desk/doctype/workspace_link/workspace_link.json,,
+Link Type,translation-candidate,frappe/public/js/frappe/widgets/widget_dialog.js:359,,
+Link Type in Row,translation-candidate,frappe/website/doctype/about_us_settings/about_us_settings.js:6,,
+"Link for About Us Page is \""/about\"".",translation-candidate,frappe/website/doctype/website_settings/website_settings.json,,
+"Link that is the website home page. Standard Links (home, login, products, blog, about, contact)",translation-candidate,frappe/website/doctype/top_bar_item/top_bar_item.json,,
+List / Search Settings,translation-candidate,frappe/website/doctype/web_form/web_form.json,,
+List Columns,translation-candidate,frappe/desk/doctype/list_filter/list_filter.json,,
+List View,translation-candidate,frappe/desk/doctype/list_view_settings/list_view_settings.json,,
+"List of email addresses, separated by comma or new line.",translation-candidate,frappe/core/doctype/patch_log/patch_log.json,,
+List of patches executed,translation-candidate,frappe/website/doctype/web_form/web_form.json,,
+List setting message,translation-candidate,frappe/public/js/frappe/ui/toolbar/search_utils.js:586,,
+Login with Email Link,translation-candidate,frappe/www/login.html:116,,
+Map View,translation-candidate,frappe/public/js/frappe/data_import/import_preview.js:294,,
+Max Report Rows,translation-candidate,frappe/website/doctype/web_form_field/web_form_field.json,,
+"Meaning of Submit, Cancel, Amend",translation-candidate,frappe/desk/doctype/todo/todo.json; frappe/public/js/frappe/form/sidebar/assign_to.js:224; frappe/public/js/frappe/utils/utils.js:1889,,
+New Address,translation-candidate,frappe/public/js/frappe/widgets/widget_dialog.js:58,,
+New Chart,translation-candidate,frappe/public/js/frappe/form/templates/contact_list.html:3,,
+New Contact,translation-candidate,frappe/public/js/frappe/widgets/widget_dialog.js:70,,
+New Custom Block,translation-candidate,frappe/printing/page/print/print.js:327; frappe/printing/page/print/print.js:374,,
+New Document Form,translation-candidate,frappe/desk/doctype/notification_log/notification_log.py:154,,
+New Event,translation-candidate,frappe/public/js/frappe/views/file/file_view.js:94,,
+New Links,translation-candidate,frappe/desk/doctype/notification_log/notification_log.py:152,,
+New Number Card,translation-candidate,frappe/public/js/frappe/widgets/widget_dialog.js:66,,
+New Onboarding,translation-candidate,frappe/core/doctype/user/user.js:183; frappe/www/update-password.html:43,,
+New Quick List,translation-candidate,frappe/public/js/frappe/views/reports/report_view.js:1380,,
+New Role,translation-candidate,frappe/public/js/frappe/widgets/widget_dialog.js:60,,
+New Shortcut,translation-candidate,frappe/desk/doctype/system_health_report/system_health_report.json,,
+New Users (Last 30 days),translation-candidate,frappe/core/doctype/version/version_view.html:15; frappe/core/doctype/version/version_view.html:77,,
+New Value,translation-candidate,frappe/workflow/page/workflow_builder/workflow_builder.js:61,,
+New Workflow Name,translation-candidate,frappe/public/js/frappe/views/workspace/workspace.js:404,,
+New Workspace,translation-candidate,frappe/integrations/doctype/oauth_settings/oauth_settings.json,,
+"New line separated list of allowed public client URLs (eg <code>https://frappe.io</code>), or <code>*</code> to accept all. "" ""<br> "" ""Public clients are restricted by default.",EXCEPTION-technical,in-ledger (no vendor PO location match),Keep vendor HTML/code/help content untouched — markup/developer-facing blob,AI-R suppress-check at the W6-0a AI-R verification pass (evidence: stage6-w60a AI-R record)
+New line separated list of scope values.,translation-candidate,frappe/integrations/doctype/oauth_client/oauth_client.json,,
+"New lines separated list of strings representing ways to contact people responsible for this client, typically email addresses.",translation-candidate,frappe/www/update-password.html:92,,
+New password cannot be same as old password,translation-candidate,frappe/utils/change_log.py:389,,
+New users will have to be manually registered by system managers.,translation-candidate,frappe/custom/doctype/property_setter/property_setter.json,,
+No New notifications,translation-candidate,frappe/core/doctype/doctype/doctype.py:1778,,
+Nothing New,translation-candidate,frappe/public/js/frappe/form/undo_manager.js:43,,
+Number of days after which the document Web View link shared on email will be expired,translation-candidate,frappe/desk/doctype/system_health_report/system_health_report.json,,
+Only reports of type Report Builder can be deleted,translation-candidate,frappe/desk/reportview.py:331,,
+Only reports of type Report Builder can be edited,translation-candidate,frappe/custom/doctype/customize_form/customize_form.py:131,,
+Open Communication,translation-candidate,frappe/templates/emails/new_notification.html:10,,
+Open Source Applications for the Web,translation-candidate,frappe/website/doctype/top_bar_item/top_bar_item.json,,
+Open a dialog with mandatory fields to create a new record quickly. There must be at least one mandatory field to show in dialog.,translation-candidate,frappe/public/js/frappe/ui/toolbar/awesome_bar.js:238,,
+Open console,translation-candidate,frappe/public/js/print_format_builder/Preview.vue:17,,
+Open in a new tab,translation-candidate,frappe/public/js/frappe/ui/toolbar/awesome_bar.js:243,,
+Open in new tab,translation-candidate,frappe/public/js/frappe/list/list_view.js:1441,,
+Open reference document,translation-candidate,frappe/www/qrcode.html:13,,
+"PDF printing via \""Raw Print\"" is not supported.",translation-candidate,frappe/core/doctype/rq_worker/rq_worker.json,,
+Package Import,translation-candidate,frappe/core/doctype/package/package.json,,
+"Permissions are set on Roles and Document Types (called DocTypes) by setting rights like Read, Write, Create, Delete, Submit, Cancel, Amend, Report, Import, Export, Print, Email and Set User Permissions.",translation-candidate,frappe/core/page/permission_manager/permission_manager_help.html:26,,
+Please click Edit on the Workspace for best results,translation-candidate,frappe/core/doctype/data_import/data_import.js:164,,
+"Please click on 'Export Errored Rows', fix the errors and import again.",translation-candidate,frappe/twofactor.py:286,,
+Please enable atleast one Social Login Key or LDAP or Login With Email Link before disabling username/password based login.,translation-candidate,frappe/desk/doctype/notification_log/notification_log.js:45; frappe/email/doctype/auto_email_report/auto_email_report.js:17; frappe/printing/page/print/print.js:697,,
+Prepared Report Analytics,translation-candidate,frappe/core/doctype/prepared_report/prepared_report.json,,
+Press Alt Key to trigger additional shortcuts in Menu and Sidebar,translation-candidate,frappe/public/js/frappe/list/list_filter.js:87,,
+Print Format Builder,translation-candidate,frappe/printing/doctype/print_format/print_format.json,,
+Print Format Builder Beta,translation-candidate,frappe/utils/pdf.py:64,,
+Print Format Error,translation-candidate,frappe/printing/doctype/print_format_field_template/print_format_field_template.json,,
+Print Format Field Template,translation-candidate,frappe/printing/doctype/print_format/print_format.json,,
+Print Format For,translation-candidate,frappe/printing/doctype/print_format/print_format.json,,
+Print Format not found,translation-candidate,frappe/www/printview.py:443,,
+Print Heading,translation-candidate,frappe/core/doctype/docfield/docfield.json; frappe/custom/doctype/custom_field/custom_field.json; frappe/custom/doctype/customize_form_field/customize_form_field.json,,
+Print Style,translation-candidate,frappe/printing/doctype/print_style/print_style.json,,
+Print document,translation-candidate,frappe/printing/doctype/print_settings/print_settings.json,,
+Quick List Filter,translation-candidate,frappe/desk/doctype/workspace/workspace.json,,
+Referance Doctype and Dashboard Name both can't be used at the same time.,translation-candidate,frappe/contacts/doctype/address/address.json; frappe/contacts/doctype/contact/contact.json; frappe/core/doctype/activity_log/activity_log.json,,
+Refresh Print Preview,translation-candidate,frappe/integrations/doctype/google_calendar/google_calendar.json; frappe/integrations/doctype/google_contacts/google_contacts.json; frappe/integrations/doctype/oauth_bearer_token/oauth_bearer_token.json,,
+Reload List,translation-candidate,frappe/public/js/frappe/views/reports/query_report.js:100,,
+Reload Report,translation-candidate,frappe/core/doctype/docfield/docfield.json; frappe/custom/doctype/customize_form_field/customize_form_field.json,,
+Remove,translation-candidate,frappe/core/doctype/rq_job/rq_job_list.js:8,,
+Remove Failed Jobs,translation-candidate,frappe/printing/page/print_format_builder/print_format_builder.js:493,,
+Remove all fields in the column,translation-candidate,frappe/public/js/form_builder/components/Section.vue:278; frappe/public/js/frappe/utils/datatable.js:9; frappe/public/js/print_format_builder/PrintFormatSection.vue:120,,
+Remove column,translation-candidate,frappe/public/js/form_builder/components/Field.vue:265,,
+Remove field,translation-candidate,frappe/public/js/form_builder/components/Section.vue:279,,
+Remove last column,translation-candidate,frappe/public/js/print_format_builder/PrintFormatSection.vue:130,,
+Remove page break,translation-candidate,frappe/public/js/form_builder/components/Section.vue:266; frappe/public/js/print_format_builder/PrintFormatSection.vue:135,,
+Remove section,translation-candidate,frappe/public/js/form_builder/components/Tabs.vue:140,,
+Remove tab,translation-candidate,frappe/core/doctype/permission_log/permission_log.json,,
+Rename Fieldname,translation-candidate,frappe/public/js/frappe/model/model.js:710,,
+"Report Name, Report Field and Fucntion are required to create a number card",translation-candidate,frappe/desk/doctype/workspace_link/workspace_link.json; frappe/desk/doctype/workspace_shortcut/workspace_shortcut.json,,
+Report Ref DocType,translation-candidate,frappe/desk/doctype/onboarding_step/onboarding_step.json,,
+Report View,translation-candidate,frappe/public/js/frappe/form/templates/form_sidebar.html:44,,
+Report bug,translation-candidate,frappe/core/doctype/doctype/doctype.py:1844,,
+"Report initiated, click to view status",translation-candidate,frappe/email/doctype/auto_email_report/auto_email_report.py:110,,
+Report limit reached,translation-candidate,frappe/core/doctype/prepared_report/prepared_report.py:248,,
+Report timed out.,translation-candidate,frappe/desk/query_report.py:686,,
+Report {0} deleted,translation-candidate,frappe/desk/query_report.py:55,,
+Report {0} saved,translation-candidate,frappe/public/js/frappe/views/reports/report_view.js:20,,
+Reset Dashboard Customizations,translation-candidate,frappe/public/js/frappe/list/list_settings.js:228,,
+Reset Password Link Expiry Duration,translation-candidate,frappe/core/doctype/system_settings/system_settings.json,,
+Rows Threshold for Grid Search,translation-candidate,frappe/automation/doctype/assignment_rule/assignment_rule.json,,
+Save Customizations,translation-candidate,frappe/public/js/frappe/views/reports/query_report.js:1990,,
+Save on Completion,translation-candidate,frappe/public/js/frappe/form/form_tour.js:295,,
+Save the document.,translation-candidate,frappe/model/rename_doc.py:106; frappe/printing/page/print_format_builder/print_format_builder.js:858; frappe/public/js/frappe/form/toolbar.js:297,,
+Saving Sidebar,translation-candidate,frappe/desk/doctype/module_onboarding/module_onboarding.js:8,,
+Search Results,translation-candidate,frappe/public/js/frappe/file_uploader/FileBrowser.vue:13,,
+Search by filename or extension,translation-candidate,frappe/core/doctype/doctype/doctype.py:1482,,
+Search fields,translation-candidate,frappe/public/js/form_builder/components/AddFieldButton.vue:19,,
+Search fieldtypes...,translation-candidate,frappe/public/js/frappe/ui/toolbar/search.js:50; frappe/public/js/frappe/ui/toolbar/search.js:69,,
+Search for {0},translation-candidate,frappe/public/js/frappe/ui/toolbar/awesome_bar.js:228,,
+Search properties...,translation-candidate,frappe/templates/includes/search_box.html:8,,
+Select Group By...,translation-candidate,frappe/public/js/frappe/list/list_view_select.js:167,,
+Select List View,translation-candidate,frappe/public/js/frappe/data_import/data_exporter.js:158,,
+Select Report,translation-candidate,frappe/printing/page/print_format_builder/print_format_builder.js:631,,
+"Set the filters here. For example: "" ""<pre class=\""small text-muted\""><code> "" ""[{ "" ""\tfieldname: \""company\"", "" ""\tlabel: __(\""Company\""), "" ""\tfieldtype: \""Link\"", "" ""\toptions: \""Company\"", "" ""\tdefault: frappe.defaults.get_user_default(\""Company\""), "" ""\treqd: 1 "" ""}, "" ""{ "" ""\tfieldname: \""account\"", "" ""\tlabel: __(\""Account\""), "" ""\tfieldtype: \""Link\"", "" ""\toptions: \""Account\"", "" ""\treqd: 1 "" ""}] "" ""</code></pre>",EXCEPTION-technical,in-ledger (no vendor PO location match),Keep vendor HTML/code/help content untouched — markup/developer-facing blob,AI-R suppress-check at the W6-0a AI-R verification pass (evidence: stage6-w60a AI-R record)
+Share this document with,translation-candidate,frappe/public/js/frappe/form/sidebar/share.js:45,,
+Show External Link Warning,translation-candidate,frappe/public/js/frappe/form/layout.js:603,,
+Show Title in Link Fields,translation-candidate,frappe/public/js/frappe/views/reports/report_view.js:1523,,
+Show {0} List,translation-candidate,frappe/public/js/frappe/views/reports/report_view.js:500,,
+Sidebar Item Group,translation-candidate,frappe/desk/doctype/sidebar_item_group_link/sidebar_item_group_link.json,,
+Sidebar Item Group Link,translation-candidate,frappe/website/doctype/website_sidebar/website_sidebar.json,,
+"Simple Python Expression, Example: <code class=\""language-python\"">status == 'Open' and issue_type == 'Bug'</code>",EXCEPTION-technical,frappe/automation/doctype/assignment_rule/assignment_rule.json,Keep vendor HTML/code/help content untouched — markup/developer-facing blob,AI-R suppress-check at the W6-0a AI-R verification pass (evidence: stage6-w60a AI-R record)
+Sort Options,translation-candidate,frappe/custom/doctype/customize_form/customize_form.json,,
+Start Import,translation-candidate,frappe/core/doctype/recorder/recorder_list.js:201,,
+Submit an Issue,translation-candidate,frappe/website/doctype/web_form/templates/web_form.html:163,,
+Submit another response,translation-candidate,frappe/website/doctype/web_form/web_form.json,,
+Submit button label,translation-candidate,frappe/automation/doctype/auto_repeat/auto_repeat.json; frappe/automation/doctype/auto_repeat/auto_repeat.py:132,,
+Submit on Creation,translation-candidate,frappe/public/js/frappe/widgets/onboarding_widget.js:395,,
+System Health Report,translation-candidate,frappe/desk/doctype/system_health_report_errors/system_health_report_errors.json,,
+System Health Report Errors,translation-candidate,frappe/desk/doctype/system_health_report_failing_jobs/system_health_report_failing_jobs.json,,
+System Health Report Failing Jobs,translation-candidate,frappe/desk/doctype/system_health_report_queue/system_health_report_queue.json,,
+System Health Report Queue,translation-candidate,frappe/desk/doctype/system_health_report_tables/system_health_report_tables.json,,
+System Health Report Tables,translation-candidate,frappe/desk/doctype/system_health_report_workers/system_health_report_workers.json,,
+System Health Report Workers,translation-candidate,frappe/core/workspace/build/build.json,,
+"Table MultiSelect requires a table with at least one Link field, but none was found in {0}",translation-candidate,frappe/custom/doctype/customize_form/customize_form.js:229,,
+"To add dynamic subject, use jinja tags like  "" ""<div><pre><code>New {{ doc.doctype }} #{{ doc.name }}</code></pre></div>",EXCEPTION-technical,in-ledger (no vendor PO location match),Keep vendor HTML/code/help content untouched — markup/developer-facing blob,AI-R suppress-check at the W6-0a AI-R verification pass (evidence: stage6-w60a AI-R record)
+"To use Slack Channel, add a <a href=\""#List/Slack%20Webhook%20URL/List\"">Slack Webhook URL</a>.",EXCEPTION-technical,frappe/public/js/frappe/utils/diffview.js:44,Keep vendor HTML/code/help content untouched — markup/developer-facing blob,AI-R suppress-check at the W6-0a AI-R verification pass (evidence: stage6-w60a AI-R record)
+Translate Link Fields,translation-candidate,frappe/public/js/frappe/views/reports/report_view.js:1662,,
+Try the new Print Designer,translation-candidate,frappe/utils/password_strength.py:106,,
+Update Amendment Naming,translation-candidate,frappe/core/doctype/data_import/data_import.json,,
+Update Hooks Resolution Order,translation-candidate,frappe/core/doctype/installed_applications/installed_applications.js:45,,
+Update Order,translation-candidate,frappe/desk/page/setup_wizard/setup_wizard.js:494,,
+Update Password,translation-candidate,frappe/core/web_form/edit_profile/edit_profile.json,,
+Update Profile,translation-candidate,frappe/core/doctype/document_naming_settings/document_naming_settings.json,,
+Update Series Counter,translation-candidate,frappe/core/doctype/document_naming_settings/document_naming_settings.json,,
+Update from Frappe Cloud,translation-candidate,frappe/public/js/frappe/list/bulk_operations.js:375,,
+Update {0} records,translation-candidate,frappe/core/doctype/comment/comment.json; frappe/core/doctype/permission_log/permission_log.json; frappe/desk/doctype/workspace_settings/workspace_settings.py:41,,
+Use the new Print Format Builder,translation-candidate,frappe/custom/doctype/customize_form/customize_form.json,,
+User Activity Report,translation-candidate,frappe/core/doctype/report/user_activity_report_without_sort.json,,
+User Activity Report Without Sort,translation-candidate,frappe/core/doctype/user_session_display/user_session_display.json; frappe/website/doctype/web_page_view/web_page_view.json,,
+User Group,translation-candidate,frappe/core/doctype/user_group_member/user_group_member.json,,
+User Group Member,translation-candidate,frappe/core/doctype/user_group/user_group.json,,
+User Menu,translation-candidate,frappe/website/doctype/personal_data_download_request/personal_data_download_request.json,,
+View Audit Trail,translation-candidate,frappe/core/doctype/user/user.js:149,,
+View Doctype Permissions,translation-candidate,frappe/core/doctype/file/file.js:4,,
+View File,translation-candidate,frappe/public/js/frappe/ui/notifications/notifications.js:251,,
+View Full Log,translation-candidate,frappe/public/js/frappe/views/treeview.js:486; frappe/public/js/frappe/widgets/quick_list_widget.js:258,,
+View Sidebar,translation-candidate,frappe/core/doctype/user/user.json,,
+View Switcher,translation-candidate,frappe/hooks.py; frappe/website/doctype/website_settings/website_settings.js:16,,
+View all {0} users,translation-candidate,frappe/www/confirm_workflow_action.html:12,,
+View your response,translation-candidate,frappe/automation/doctype/auto_repeat/auto_repeat.js:43; frappe/desk/doctype/calendar_view/calendar_view_list.js:10; frappe/desk/doctype/dashboard/dashboard_list.js:10,,
+We do not allow editing of this document. Simply click the Edit button on the workspace page to make your workspace editable and customize it as you wish,translation-candidate,frappe/templates/emails/delete_data_confirmation.html:2,,
+Web Form List Column,translation-candidate,frappe/website/doctype/web_page/web_page.json,,
+Website Search Field,translation-candidate,frappe/core/doctype/doctype/doctype.py:1537,,
+Website Search Field must be a valid fieldname,translation-candidate,frappe/website/doctype/website_settings/website_settings.json; frappe/website/workspace/website/website.json,,
+What's New,translation-candidate,frappe/core/doctype/system_settings/system_settings.json,,
+"When you Amend a document after Cancel and save it, it will get a new number that is a version of the old number.",translation-candidate,frappe/desk/doctype/workspace_shortcut/workspace_shortcut.json; frappe/public/js/frappe/widgets/widget_dialog.js:481,,
+Workspace Link,translation-candidate,frappe/desk/doctype/custom_html_block/custom_html_block.json; frappe/desk/doctype/workspace/workspace.json; frappe/desk/doctype/workspace_settings/workspace_settings.json,,
+Workspace Quick List,translation-candidate,frappe/desk/doctype/workspace_settings/workspace_settings.json; frappe/hooks.py,,
+Workspace Sidebar,translation-candidate,frappe/desk/doctype/workspace_sidebar_item/workspace_sidebar_item.json,,
+Workspace Sidebar Item,translation-candidate,frappe/desk/doctype/workspace_settings/workspace_settings.json,,
+You haven't added any Dashboard Charts or Number Cards yet.,translation-candidate,frappe/public/js/frappe/list/list_view.js:504,,
+You've logged in as another user from another tab. Refresh this page to continue using system.,translation-candidate,frappe/public/js/frappe/ui/toolbar/about.js:11,,
+{0} List View Settings,translation-candidate,frappe/public/js/frappe/utils/pretty_date.js:37,,

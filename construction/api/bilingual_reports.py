@@ -25,6 +25,24 @@ PILOT_REPORTS = {
 }
 
 
+def _parse_filters(filters):
+    import json
+
+    if filters is None or filters == "":
+        return None
+    if not isinstance(filters, str):
+        if not isinstance(filters, dict):
+            frappe.throw(frappe._("Invalid filters: value must be a JSON object"))
+        return filters
+    try:
+        v = json.loads(filters)
+    except ValueError:
+        frappe.throw(frappe._("Invalid filters: value must be a JSON object"))
+    if v is None or not isinstance(v, dict):
+        frappe.throw(frappe._("Invalid filters: value must be a JSON object"))
+    return v
+
+
 @frappe.whitelist()
 def localized_report(report_name, filters=None, lang=None, mode=None):
     """Render a pilot financial report's output with Arabic account labels.
@@ -37,13 +55,7 @@ def localized_report(report_name, filters=None, lang=None, mode=None):
     if report_name not in PILOT_REPORTS:
         frappe.throw(frappe._("Unsupported report: {0}").format(report_name))
     frappe.only_for(("Accounts User", "Accounts Manager", "System Manager"))
-    import json
-
-    if isinstance(filters, str):
-        try:
-            filters = json.loads(filters) if filters else None
-        except ValueError:
-            frappe.throw(frappe._("Invalid filters: value must be a JSON object"))
+    filters = _parse_filters(filters)
     lang = mode or lang or (frappe.local.lang if getattr(frappe.local, "lang", None) else "en")
     mode = normalize_mode(lang)
     module = frappe.get_module(PILOT_REPORTS[report_name])
