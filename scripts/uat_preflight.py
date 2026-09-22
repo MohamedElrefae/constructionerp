@@ -35,6 +35,7 @@ import sys
 import urllib.parse
 
 FAILURES = []
+UAT_PORT = 8000
 
 
 def fail(name, detail):
@@ -60,11 +61,13 @@ def redis_reachable(port, label):
         fail("redis-" + label, f"port {port} not reachable ({exc})")
 
 
-def http_req_attested(host, path, method="GET", body=None, headers=None):
+def http_req_attested(host, path, method="GET", body=None, headers=None, port=None):
     """http_req with connection exceptions recorded as clean preflight
     failures (never a traceback) — Stage-8-x robustness review 2026-09-21."""
+    if port is None:
+        port = UAT_PORT  # the --port flag wins; never silently default to 8000
     try:
-        return http_req(host, path, method=method, body=body, headers=headers)
+        return http_req(host, path, method=method, body=body, headers=headers, port=port)
     except (TimeoutError, http.client.HTTPException, OSError) as exc:
         fail("connection: " + path, type(exc).__name__ + ": " + str(exc)[:160])
         return None, "", None
@@ -86,8 +89,8 @@ def read_password():
         return None
 
 
-def http_req(host, path, method="GET", body=None, headers=None):
-    conn = http.client.HTTPConnection(host, 8000, timeout=30)
+def http_req(host, path, method="GET", body=None, headers=None, port=8000):
+    conn = http.client.HTTPConnection(host, int(port), timeout=30)
     headers = dict(headers or {})
     if body:
         headers["Content-Type"] = "application/x-www-form-urlencoded"
@@ -106,9 +109,9 @@ def http_req(host, path, method="GET", body=None, headers=None):
     return resp.status, data, sid
 
 
-def logout(host, sid):
+def logout(host, sid, port=8000):
     try:
-        http_ok = http.client.HTTPConnection(host, 8000, timeout=15)
+        http_ok = http.client.HTTPConnection(host, int(port), timeout=15)
         http_ok.request("POST", "/api/method/logout", headers={"Cookie": "sid=" + sid})
         http_ok.getresponse().read()
         http_ok.close()
@@ -120,16 +123,20 @@ def logout(host, sid):
 def main():
     target = "v16.localhost"
     key = None
+    uat_port = 8000
     for arg in sys.argv[1:]:
         if arg.startswith("--site="):
             target = arg.split("=", 1)[1]
         elif arg.startswith("--key="):
             key = arg.split("=", 1)[1]
+        elif arg.startswith("--port="):
+            uat_port = arg.split("=", 1)[1]
 
     password = read_password()
 
-    sid = None
+    global UAT_PORT
     try:
+        UAT_PORT = uat_port
         redis_reachable(13000, "cache")
         redis_reachable(11000, "queue")
 
@@ -142,7 +149,9 @@ def main():
 
         if password:
             login_body = urllib_encode({"usr": "Administrator", "pwd": password})
-            status, _, sid_new = http_req_attested(host, "/api/method/login", body=login_body)
+            status, _, sid_new = http_req_attested(
+                host, "/api/method/login", method="POST", body=login_body
+            )
             sid = sid_new
             if sid_new is None and any("connection:" in x for x in FAILURES):
                 pass  # the connection failure is already recorded
@@ -187,7 +196,7 @@ def main():
     finally:
         if sid:
             # unconditional cleanup: log the UAT session out on success OR failure
-            logout(target, sid)
+            logout(host, sid, UAT_PORT)
 
     if FAILURES:
         print(f"UAT PREFLIGHT: {len(FAILURES)} failure(s)")

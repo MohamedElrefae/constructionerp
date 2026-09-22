@@ -94,7 +94,7 @@ def main():
     env = {}
 
     m = re.search(r"^Ran (\d+) tests in [\d.]+s$", clean("standalone.out"), re.M)
-    assert m and int(m.group(1)) == 89, m
+    assert m and int(m.group(1)) == 91, m
     ok = re.search(r"^OK$", clean("standalone.out"), re.M)
     env["gate-tests-standalone.txt"] = (
         ts("standalone.start"),
