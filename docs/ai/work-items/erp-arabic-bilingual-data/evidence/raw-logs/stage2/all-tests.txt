@@ -1,18 +1,18 @@
 COMMAND: bench --site v16.localhost run-tests x6 modules (aggregate)
-STARTED_UTC: 2026-09-22T10:43:17Z
-construction.searchable_dropdown.tests.test_search_api :: Ran 13 tests in 0.094s OK
-construction.searchable_dropdown.tests.test_integration :: Ran 6 tests in 0.223s OK
-construction.tests.test_bilingual_account_schema :: Ran 5 tests in 0.578s OK
-construction.tests.test_translation_catalog :: Ran 3 tests in 1.394s OK
-construction.tests.test_translation_stabilization_gates :: Ran 8 tests in 2.340s OK
-construction.tests.test_localization_gates :: Ran 91 tests in 13.999s OK
+STARTED_UTC: 2026-09-22T11:08:42Z
+construction.searchable_dropdown.tests.test_search_api :: Ran 13 tests in 0.120s OK
+construction.searchable_dropdown.tests.test_integration :: Ran 6 tests in 0.236s OK
+construction.tests.test_bilingual_account_schema :: Ran 5 tests in 0.467s OK
+construction.tests.test_translation_catalog :: Ran 3 tests in 1.479s OK
+construction.tests.test_translation_stabilization_gates :: Ran 8 tests in 2.401s OK
+construction.tests.test_localization_gates :: Ran 91 tests in 23.542s OK
 construction.tests.test_bilingual_service :: Ran 38 tests in 0.004s OK
-construction.tests.test_bilingual_account_pilot :: Ran 53 tests in 10.325s OK
-construction.tests.test_stage4_account_language :: Ran 6 tests in 0.056s OK
-construction.tests.test_stage4_report_extension :: Ran 11 tests in 0.273s OK
+construction.tests.test_bilingual_account_pilot :: Ran 53 tests in 10.317s OK
+construction.tests.test_stage4_account_language :: Ran 6 tests in 0.064s OK
+construction.tests.test_stage4_report_extension :: Ran 11 tests in 0.261s OK
 construction.tests.test_stage4_review_bundle :: Ran 36 tests in 0.007s OK
 AGGREGATE total=270 failed=0
 EXIT_CODE: 0
-FINISHED_UTC: 2026-09-22T10:44:13Z
-TESTS_SHA256: 41df0e4734457ff1a9ca7aa5666282cd6d72711ae278d1ab05603af69d95cdeb
+FINISHED_UTC: 2026-09-22T11:09:48Z
+TESTS_SHA256: 5ee970c14f6a4e88ea0707f7bf4eea4b3d47a839a355a875ca22d56f35512157
 ENVELOPE_LINES: 18
