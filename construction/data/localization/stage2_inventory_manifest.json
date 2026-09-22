@@ -1,5 +1,5 @@
 {
-  "base_commit": "48d95c19819f579c5624858e80dbc2e00baa25b1",
+  "base_commit": "fb604cf4615e648dc508ef1d762ce6730eb2aa27",
   "categories": [
     {
       "app": "<untagged>",
@@ -39,22 +39,22 @@
     },
     {
       "app": "frappe",
-      "approved_legacy": 2897.0,
+      "approved_legacy": 2893.0,
       "deprecated": 1.0,
-      "empty": 2187.0,
+      "empty": 1945.0,
       "no_status": 2.0,
-      "pending": 2187.0,
-      "populated_nontrivial": 4552.0,
-      "released": 1662.0,
+      "pending": 1945.0,
+      "populated_nontrivial": 5052.0,
+      "released": 2166.0,
       "source_equal": 10.0,
-      "total": 6749
+      "total": 7007
     }
   ],
-  "generated_utc": "2026-09-22T16:37:37Z",
+  "generated_utc": "2026-09-22T21:51:19Z",
   "generator": "construction.localization_inventory.merkle_root over stage2_inventory.sql",
   "merkle": {
-    "root": "3412a6758bcf2a03466c5388a1c8497ddb1a9e2bc59f5d22c3d5a45403cd0ba1",
-    "rows": 19342,
+    "root": "34b35f2072087936d7777b3f78024840fb83c6b82dc2dc85df98e456f940e5b1",
+    "rows": 19600,
     "scheme": "json(sorted(str-normalized (source,context,app,translated,review))) sha256"
   },
   "po_hashes": {
