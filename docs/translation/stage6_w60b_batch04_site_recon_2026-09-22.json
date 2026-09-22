@@ -1,0 +1,3513 @@
+{
+  "site": "v16.localhost",
+  "scope_rows": 271,
+  "languages": [
+    {
+      "name": "ar",
+      "enabled": 1
+    },
+    {
+      "name": "en",
+      "enabled": 1
+    }
+  ],
+  "match_count": 291,
+  "site_overrides": [
+    {
+      "source_text": "Missing field",
+      "translated_text": "حقل مفقود",
+      "ct_origin": "Site Override",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Client ID",
+      "translated_text": "معرف العميل",
+      "ct_origin": "Site Override",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Delimiter options",
+      "translated_text": "خيارات الفاصل",
+      "ct_origin": "Site Override",
+      "owner": "Administrator"
+    }
+  ],
+  "other_matches": [
+    {
+      "source_text": "DocType State",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Force Stop job",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Column 1",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Client URI",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Job Id",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Could not start up:",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Hidden Fields",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Image Height",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Error Logs",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Navigation Settings",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Is Hidden",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Last Modified Date",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Embed code copied",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Document Linking",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Intro Video URL",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Frappe Mail",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "No Suggestions",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Log Index",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Enable Scheduler",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Exact Copies",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Form Dict",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Is Setup Complete?",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "IMAP Details",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Footer Image",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Element Selector",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Job Status",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Meets Condition?",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Module Profile Name",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Extra Parameters",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Code Challenge",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Disable Scrolling",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Failure Rate",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Margin Right",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Job is not running.",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Login to {0}",
+      "translated_text": "تسجيل الدخول إلى {0}",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Logs to Clear",
+      "translated_text": "سجلات للمسح",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Meta Title",
+      "translated_text": "عنوان الفوقية",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Log API Requests",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Encrypt Backups",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Missing Permission",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Login required",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Header Icon",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Next Execution",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Next Scheduled Date",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "JS Message",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Filtered By",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Module Profile",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Click here",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Margin Left",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Light Blue",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "For DocType",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Module {} not found",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Icon Style",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Correct version :",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Connected App",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Column {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Is Current",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Client Metadata",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Event Frequency",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Indicator color",
+      "translated_text": "لون المؤشر",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "File Storage",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Last 10 active users",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid request body",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Desk Theme",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "LDAP Auth",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Download as CSV",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid DocType",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Mid Center",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "No Roles Specified",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "LDAP Custom Settings",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Customize Form - {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Last Run",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid Phone Number",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Introspection URI",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Normalized Copies",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid Action",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Handled Emails",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Hide Label",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Naming Rule",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Meta Image",
+      "translated_text": "صورة ميتا",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Minutes Offset",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Deletion Steps",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "License Type",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Job ID",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Finished At",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Frappe Mail Site",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Login To {0}",
+      "translated_text": "تسجيل الدخول إلى {0}",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Click to Set Filters",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Hide footer",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Has Setup Wizard",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Half Yearly",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid Override",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Custom Blocks",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Desk Settings",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Google Drive Picker",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Normalized Query",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Hide navbar",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Email ID",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Ended At",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Custom Translation",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Expires On",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Is Dynamic URL?",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invited By",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Help Articles",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Incorrect value:",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "No failed logs",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Failed Emails",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Code Editor Type",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Filters Editor",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid Credentials",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Image optimized",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Next Sync Token",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Layout Reset",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Is Custom",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Form Builder",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Log DocType",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "No {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "For Document",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Error {0}: {1}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Last Heartbeat",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "invalid key",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid key",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Disable signups",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Next Form Tour",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Delivery Status",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Default App",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "In minutes",
+      "translated_text": "في دقائق",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Email Queue records.",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Image Width",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Indicator Color",
+      "translated_text": "لون المؤشر",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "From Date",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "No changes to update",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "No changes to sync",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "LDAP Mobile Field",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Footer Based On",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Margin Top",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Left Bottom",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "From Field",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Contact Us Settings",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Is Standard",
+      "translated_text": "هو معيار",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Maintenance Manager",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Header, Robots",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Compilation warning",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Default User Role",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Last Updated",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid Doctype",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Database Version",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Incoming Server",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Debug Log",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Is Remote Request?",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Message Type",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Enabled Scheduler",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Desk User",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Meta image",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Logs To Clear",
+      "translated_text": "سجلات للمسح",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Client Secret Post",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Missing DocType",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Domain Name",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Created At",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Frappe Support",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "IMAP Folder",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Download vCards",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Minutes After",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Letter Head Scripts",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Geolocation Settings",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Name (Doc Name)",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid role",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Completed By User",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Failed Job Count",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Last Received At",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Connect to {}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid app",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Hide footer signup",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Emails Pulled",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Failed Jobs",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Configure Recorder",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Method Not Allowed",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Module HTML",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Defaults Updated",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Client Id",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Incoming Settings",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Daily Maintenance",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "DocType Layout Field",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Memory Usage in MB",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Header Script",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Margin Bottom",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Login to {0}",
+      "translated_text": "تسجيل الدخول إلى {0}",
+      "ct_origin": "Packaged Release",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Footer Content",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Field Missing",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Footer Script",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Meta title",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Minutes Before",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Enqueued By",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Email Sent At",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Default User Type",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Hide Buttons",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Field Name",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Hourly Maintenance",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "No of Requested SMS",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Memory Usage",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Impersonate as {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Is Virtual",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Email Retry Limit",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "In Minutes",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "From User",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Completed By Role",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "MariaDB Variables",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Navbar Style",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Left Center",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Icon Type",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Client script",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Not Allowed",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Is Table Field",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invitation not found",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Delimiter Options",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Email Domain",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Entity Type",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Column 2",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Include Name Field",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Missing Field",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Has Next Condition",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid DocType: {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Document Unlocked",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Illegal template",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Connected User",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Download Backups",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Database Processes",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Hide Descendants",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "LDAP Server Settings",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Client ID",
+      "translated_text": "رمز العميل",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Error Message",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Custom Delimiters",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Company Name",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Custom delimiters",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Current Value",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Delimiter options",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Max Height",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "DocType {} not found",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Maintenance User",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid Fieldname",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Job Info",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Download Template",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Job Name",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Current Job ID",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid File URL",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Custom Label",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Default Naming",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Marketing Manager",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Condition Type",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Is standard",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Download vCard",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Client Secret Basic",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Learn more",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Email Id",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Form Tour Step",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Client Script",
+      "translated_text": "العميل النصي",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "In Read Only Mode",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "MIT License",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Footer Details",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Max File Size (MB)",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Email Header",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Logo URI",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Existing Role",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "No of Sent SMS",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Login Methods",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "No subject",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Desktop Settings",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Detect CSV type",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Communication Logs",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Custom Footer",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Is System Generated",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Max attachment size",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Folder Name",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Child Doctype",
+      "translated_text": "نوع مستند فرعي",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid Parameters.",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid docstatus",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Directory Server",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Enable Rate Limit",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Next on Click",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Is Primary Address",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Communication Date",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid Operation",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Condition JSON",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Next Step Condition",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Indicator color",
+      "translated_text": "لون المؤشر",
+      "ct_origin": "Packaged Release",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Logs To Clear",
+      "translated_text": "سجلات للمسح",
+      "ct_origin": "Packaged Release",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Child DocType",
+      "translated_text": "نوع مستند فرعي",
+      "ct_origin": "Packaged Release",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Child DocType",
+      "translated_text": "نوع مستند فرعي",
+      "ct_origin": "",
+      "owner": "Administrator"
+    }
+  ],
+  "matches": [
+    {
+      "source_text": "DocType State",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Force Stop job",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Column 1",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Client URI",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Job Id",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Could not start up:",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Hidden Fields",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Image Height",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Error Logs",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Navigation Settings",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Is Hidden",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Last Modified Date",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Embed code copied",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Document Linking",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Intro Video URL",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Frappe Mail",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "No Suggestions",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Log Index",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Enable Scheduler",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Exact Copies",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Form Dict",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Is Setup Complete?",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "IMAP Details",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Footer Image",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Element Selector",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Job Status",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Meets Condition?",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Module Profile Name",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Extra Parameters",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Code Challenge",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Disable Scrolling",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Failure Rate",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Margin Right",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Job is not running.",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Login to {0}",
+      "translated_text": "تسجيل الدخول إلى {0}",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Logs to Clear",
+      "translated_text": "سجلات للمسح",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Meta Title",
+      "translated_text": "عنوان الفوقية",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Log API Requests",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Encrypt Backups",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Missing Permission",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Login required",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Header Icon",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Next Execution",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Next Scheduled Date",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "JS Message",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Filtered By",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Module Profile",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Click here",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Margin Left",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Light Blue",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "For DocType",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Module {} not found",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Icon Style",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Correct version :",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Connected App",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Column {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Is Current",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Client Metadata",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Event Frequency",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Indicator color",
+      "translated_text": "لون المؤشر",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "File Storage",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Last 10 active users",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid request body",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Desk Theme",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "LDAP Auth",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Download as CSV",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid DocType",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Mid Center",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "No Roles Specified",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "LDAP Custom Settings",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Customize Form - {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Last Run",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid Phone Number",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Introspection URI",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Normalized Copies",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid Action",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Handled Emails",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Hide Label",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Naming Rule",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Meta Image",
+      "translated_text": "صورة ميتا",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Minutes Offset",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Deletion Steps",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "License Type",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Job ID",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Finished At",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Frappe Mail Site",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Login To {0}",
+      "translated_text": "تسجيل الدخول إلى {0}",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Click to Set Filters",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Hide footer",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Has Setup Wizard",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Half Yearly",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid Override",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Custom Blocks",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Desk Settings",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Google Drive Picker",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Normalized Query",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Hide navbar",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Email ID",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Ended At",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Custom Translation",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Expires On",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Is Dynamic URL?",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invited By",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Help Articles",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Incorrect value:",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "No failed logs",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Failed Emails",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Code Editor Type",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Filters Editor",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid Credentials",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Image optimized",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Next Sync Token",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Layout Reset",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Is Custom",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Form Builder",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Log DocType",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "No {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "For Document",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Error {0}: {1}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Last Heartbeat",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "invalid key",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid key",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Disable signups",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Next Form Tour",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Delivery Status",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Default App",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "In minutes",
+      "translated_text": "في دقائق",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Email Queue records.",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Image Width",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Indicator Color",
+      "translated_text": "لون المؤشر",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "From Date",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "No changes to update",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "No changes to sync",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "LDAP Mobile Field",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Footer Based On",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Margin Top",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Left Bottom",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "From Field",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Contact Us Settings",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Is Standard",
+      "translated_text": "هو معيار",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Maintenance Manager",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Header, Robots",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Compilation warning",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Default User Role",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Last Updated",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid Doctype",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Database Version",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Incoming Server",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Debug Log",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Is Remote Request?",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Message Type",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Enabled Scheduler",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Desk User",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Meta image",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Logs To Clear",
+      "translated_text": "سجلات للمسح",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Client Secret Post",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Missing DocType",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Domain Name",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Created At",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Frappe Support",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "IMAP Folder",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Download vCards",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Minutes After",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Letter Head Scripts",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Geolocation Settings",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Name (Doc Name)",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid role",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Completed By User",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Failed Job Count",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Last Received At",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Connect to {}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid app",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Hide footer signup",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Emails Pulled",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Failed Jobs",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Configure Recorder",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Method Not Allowed",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Module HTML",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Defaults Updated",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Client Id",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Incoming Settings",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Daily Maintenance",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "DocType Layout Field",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Memory Usage in MB",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Header Script",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Margin Bottom",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Login to {0}",
+      "translated_text": "تسجيل الدخول إلى {0}",
+      "ct_origin": "Packaged Release",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Footer Content",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Field Missing",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Footer Script",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Meta title",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Minutes Before",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Enqueued By",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Email Sent At",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Default User Type",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Hide Buttons",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Field Name",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Hourly Maintenance",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "No of Requested SMS",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Memory Usage",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Impersonate as {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Is Virtual",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Email Retry Limit",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "In Minutes",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "From User",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Completed By Role",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "MariaDB Variables",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Navbar Style",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Left Center",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Icon Type",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Client script",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Not Allowed",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Is Table Field",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invitation not found",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Delimiter Options",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Email Domain",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Entity Type",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Column 2",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Include Name Field",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Missing Field",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Has Next Condition",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid DocType: {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Document Unlocked",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Illegal template",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Connected User",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Download Backups",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Database Processes",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Hide Descendants",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "LDAP Server Settings",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Client ID",
+      "translated_text": "رمز العميل",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Error Message",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Custom Delimiters",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Company Name",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Custom delimiters",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Current Value",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Delimiter options",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Max Height",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "DocType {} not found",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Maintenance User",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid Fieldname",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Job Info",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Download Template",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Job Name",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Current Job ID",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid File URL",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Custom Label",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Default Naming",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Marketing Manager",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Condition Type",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Is standard",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Download vCard",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Client Secret Basic",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Learn more",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Email Id",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Form Tour Step",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Client Script",
+      "translated_text": "العميل النصي",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "In Read Only Mode",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "MIT License",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Footer Details",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Max File Size (MB)",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Email Header",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Logo URI",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Existing Role",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "No of Sent SMS",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Login Methods",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "No subject",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Desktop Settings",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Detect CSV type",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Communication Logs",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Custom Footer",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Is System Generated",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Max attachment size",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Folder Name",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Child Doctype",
+      "translated_text": "نوع مستند فرعي",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid Parameters.",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid docstatus",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Directory Server",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Enable Rate Limit",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Next on Click",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Is Primary Address",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Communication Date",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid Operation",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Condition JSON",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Next Step Condition",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Indicator color",
+      "translated_text": "لون المؤشر",
+      "ct_origin": "Packaged Release",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Logs To Clear",
+      "translated_text": "سجلات للمسح",
+      "ct_origin": "Packaged Release",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Missing field",
+      "translated_text": "حقل مفقود",
+      "ct_origin": "Site Override",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Client ID",
+      "translated_text": "معرف العميل",
+      "ct_origin": "Site Override",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Delimiter options",
+      "translated_text": "خيارات الفاصل",
+      "ct_origin": "Site Override",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Child DocType",
+      "translated_text": "نوع مستند فرعي",
+      "ct_origin": "Packaged Release",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Child DocType",
+      "translated_text": "نوع مستند فرعي",
+      "ct_origin": "",
+      "owner": "Administrator"
+    }
+  ]
+}
