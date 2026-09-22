@@ -1,0 +1,3297 @@
+{
+  "site": "v16.localhost",
+  "scope_rows": 270,
+  "languages": [
+    {
+      "name": "ar",
+      "enabled": 1
+    },
+    {
+      "name": "en",
+      "enabled": 1
+    }
+  ],
+  "match_count": 273,
+  "site_overrides": [
+    {
+      "source_text": "City",
+      "translated_text": "المدينة",
+      "ct_origin": "Site Override",
+      "owner": "Administrator"
+    }
+  ],
+  "other_matches": [
+    {
+      "source_text": "gray",
+      "translated_text": "رمادي",
+      "ct_origin": "Packaged Release",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Login with Email Link",
+      "translated_text": "الدخول برابط البريد الإلكتروني",
+      "ct_origin": "Packaged Release",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "API Endpoint Args should be valid JSON",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Error in {0}.get_list: {1}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Failing Scheduled Jobs (last 7 days)",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Error connecting via IMAP/POP3: {e}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Is Calendar and Gantt",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Document {0} {1} does not exist",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "App Name (Client Name)",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Importing {0} is not allowed.",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Deleted all documents successfully",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Get Backup Encryption Key",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Failed to update global settings",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Login with Email Link",
+      "translated_text": "الدخول برابط البريد الإلكتروني",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Enqueued creation of indexes",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Cannot edit Standard Dashboards",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Error connecting via SMTP: {e}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "No Email field found in {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Likes",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "HERE",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invitation already exists",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Default Email Template",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Condition",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Module onboarding progress reset",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Failure",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Child DocTypes are not allowed",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Discarded",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Image: Corrupted Data Stream",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Do you still want to proceed?",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Bulk {0} is enqueued in background.",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Failed to render message: {}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Male",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Email Account {0} Disabled",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Location",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Campaign Description (Optional)",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "File type of {0} is not allowed",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Click to Set Dynamic Filters",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "InnoDB",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Empty alias is not allowed",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid field type: {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Failed to optimize image: {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Amendment Naming Override",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Google Analytics anonymise IP",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Cannot use {0} in order/group by",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Mx",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Delayed",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Expired",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invitation is expired",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Adds a custom client script to a DocType",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Either key or IP flag is required.",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Error in Header/Footer Script",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Contains {0} security fix",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Document Name must be a string",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid aggregate function",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Contains {0} security fixes",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Auth URL data should be valid JSON",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "DocType not supported by Log Settings.",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Failed to send email with subject:",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Assignment",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Intermediate",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Join video conference with {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Apply document permissions",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "2 years ago",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Executing...",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Console Logs can not be deleted",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Google Drive Picker Enabled",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Headers must be a dictionary",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Database",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Image link '{0}' is not valid",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Indexing authorization code",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "DocShare",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Disable Product Suggestion",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Failed while calling API {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid request arguments",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Cannot access file path {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Document Types and Permissions",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Importing {0} of {1}, {2}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "About {0} seconds remaining",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Empty string arguments are not allowed",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Get OpenID Configuration",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Misconfigured",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Meeting",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid Table Fieldname",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Nomatim",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Last Reset Password Key Generated On",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Email is mandatory to create User Email",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Backup Encryption Key",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invitation to join {0} expired",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Cannot get file contents of a Folder",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Condition description",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Github flavoured markdown syntax",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Hidden columns include: {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid {0} dictionary format",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Female",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Fetching fields from {0}...",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Mobile",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Minor",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Members",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Frappe Mail OAuth Error",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Collapsible Depends On (JS)",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invitation already accepted",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Clear Logs After (days)",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Email Threads on Assigned Document",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Incoming (POP/IMAP) Settings",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Content data shoud be a list",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Failed to render subject: {}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Authenticate as Service Principal",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Bulk Operation Failed",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Following document {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Mr",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "DocType must be a string",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Genderqueer",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Failed Logins (Last 30 days)",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Brand",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid Condition: {}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Awesomebar",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Code challenge method",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Customize Child Table",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Cannot edit Standard charts",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Amended Document Naming Settings",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Emails",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid value specified for UUID: {}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Middle Name (Optional)",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Dynamic",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Asynchronous",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Introduction",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Incoming Emails (Last 7 days)",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "First Day of the Week",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Allowed embedding domains",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Background Job Activity",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Cannot use sub-query here.",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Beginner",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Failed to decrypt key {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Length",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Disable Comment Count",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Announcements",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Limit must be a non-negative integer",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Fail",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Max auto email report per user",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Make Attachments Public by Default",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Enable Google indexing",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Application is not installed",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Contacts",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Error parsing nested filters: {0}. {1}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Frappe page builder using components",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "3 minutes ago",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Alias must be a string",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Hide Empty Read-Only Fields",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Cannot find file {} on disk",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Gray",
+      "translated_text": "رمادي",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Enable Dynamic Client Registration",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Auto follow documents that you create",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "App not found for module: {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Incoming",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Footer HTML set from attachment {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Helpful",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invitation is cancelled",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Most probably your password is too long.",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "gray",
+      "translated_text": "رمادي",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid Code. Please try again.",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Login with email link",
+      "translated_text": "الدخول برابط البريد الإلكتروني",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Could not parse field: {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid characters in table name: {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Major",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "About {0} minutes remaining",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Job stopped successfully",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Keycloak",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid Webhook Secret",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invitation to join {0} cancelled",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Master",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Allowed File Extensions",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Network Printer Settings",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Common words are easy to guess.",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "5 days ago",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Allowed Public Client Origins",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Compressed",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "City",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Failed to evaluate conditions: {}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "About {0} minute remaining",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "No email addresses to invite",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Endpoints",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Insufficient attachment limit",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Miss",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Apply User Permission On",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Dr",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Enable Action Confirmation",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Keep track of all update feeds",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Let's set up your account",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Job Stopped Successfully",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Document Types (Select Permissions Only)",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Administrator can't follow",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Error: Data missing in table {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Amendment naming rules updated.",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Max signups allowed per hour",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Bulk Operation Successful",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Database Storage Usage By Tables",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Failed to get site info",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Allow multiple responses",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Configuration",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Failed to request login to Frappe Cloud",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Insufficient Permission Level for {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Failed to compute request body: {}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Country Code Required",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Constraints",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invitation cannot be cancelled",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Default Template For Field",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Enable in-app website tracking",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Enable Address Autocompletion",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "HTML with jinja support",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Align",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Ms",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Background Jobs Queue",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "GNU General Public License",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Force Web Capture Mode for Uploads",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Metadata",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Document Naming Settings",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Committed",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Make Attachment Public (by default)",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Allow incomplete forms",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Encryption key is in invalid format!",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Incorrect value in row {0}:",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Allow Consecutive Login Attempts",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Adds a custom field to a DocType",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Background Jobs Check",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Missing Filters Required",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "End Date cannot be today.",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Custom Document Types Limit Exceeded",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Enables Calendar and Gantt views.",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Go to this URL after completing the form",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Disable Automatic Recency Filters",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "GNU Affero General Public License",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Error in print format on line {0}: {1}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Disable Username/Password Login",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid wkhtmltopdf version",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Failed to get method {0} with {1}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Conditions",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Internal record of document shares",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Field not permitted in query",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Highlight",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Cache",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Mrs",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Impersonate",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Madam",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid Naming Series: {}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid redirect regex in row #{}: {}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Assignment of {0} removed by {1}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Errors",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Failed to generate names from the series",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Disable Document Sharing",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Authorization",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Amendment Not Allowed",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "API Key cannot be regenerated",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Failed to enable scheduler: {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Always use this name as sender name",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Keeps track of all communications",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Mandatory Depends On (JS)",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Geoapify",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Field {0} does not exist on {1}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Auto follow documents that you Like",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Document not Relinked",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "DocType {0} does not exist.",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Assignee",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Email Account Disabled.",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Annual",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Default Amendment Naming",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Communication secret not set",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Function {0} is not whitelisted.",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Forward Query Parameters",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Added default log doctypes: {}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Added",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Database Table Row Size Limit",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    }
+  ],
+  "matches": [
+    {
+      "source_text": "gray",
+      "translated_text": "رمادي",
+      "ct_origin": "Packaged Release",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Login with Email Link",
+      "translated_text": "الدخول برابط البريد الإلكتروني",
+      "ct_origin": "Packaged Release",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "API Endpoint Args should be valid JSON",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Error in {0}.get_list: {1}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Failing Scheduled Jobs (last 7 days)",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Error connecting via IMAP/POP3: {e}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Is Calendar and Gantt",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Document {0} {1} does not exist",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "App Name (Client Name)",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Importing {0} is not allowed.",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Deleted all documents successfully",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Get Backup Encryption Key",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Failed to update global settings",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Login with Email Link",
+      "translated_text": "الدخول برابط البريد الإلكتروني",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Enqueued creation of indexes",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Cannot edit Standard Dashboards",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Error connecting via SMTP: {e}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "No Email field found in {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Likes",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "HERE",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invitation already exists",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Default Email Template",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Condition",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Module onboarding progress reset",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Failure",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Child DocTypes are not allowed",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Discarded",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Image: Corrupted Data Stream",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Do you still want to proceed?",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Bulk {0} is enqueued in background.",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Failed to render message: {}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Male",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Email Account {0} Disabled",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Location",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Campaign Description (Optional)",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "File type of {0} is not allowed",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Click to Set Dynamic Filters",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "InnoDB",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Empty alias is not allowed",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid field type: {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Failed to optimize image: {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Amendment Naming Override",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Google Analytics anonymise IP",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Cannot use {0} in order/group by",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Mx",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Delayed",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Expired",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invitation is expired",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Adds a custom client script to a DocType",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Either key or IP flag is required.",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Error in Header/Footer Script",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Contains {0} security fix",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Document Name must be a string",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid aggregate function",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Contains {0} security fixes",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Auth URL data should be valid JSON",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "DocType not supported by Log Settings.",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Failed to send email with subject:",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Assignment",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Intermediate",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Join video conference with {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Apply document permissions",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "2 years ago",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Executing...",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Console Logs can not be deleted",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Google Drive Picker Enabled",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Headers must be a dictionary",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Database",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Image link '{0}' is not valid",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Indexing authorization code",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "DocShare",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Disable Product Suggestion",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Failed while calling API {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid request arguments",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Cannot access file path {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Document Types and Permissions",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Importing {0} of {1}, {2}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "About {0} seconds remaining",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Empty string arguments are not allowed",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Get OpenID Configuration",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Misconfigured",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Meeting",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid Table Fieldname",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Nomatim",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Last Reset Password Key Generated On",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Email is mandatory to create User Email",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Backup Encryption Key",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invitation to join {0} expired",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Cannot get file contents of a Folder",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Condition description",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Github flavoured markdown syntax",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Hidden columns include: {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid {0} dictionary format",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Female",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Fetching fields from {0}...",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Mobile",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Minor",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Members",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Frappe Mail OAuth Error",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Collapsible Depends On (JS)",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invitation already accepted",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Clear Logs After (days)",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Email Threads on Assigned Document",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Incoming (POP/IMAP) Settings",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Content data shoud be a list",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Failed to render subject: {}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Authenticate as Service Principal",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Bulk Operation Failed",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Following document {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Mr",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "DocType must be a string",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Genderqueer",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Failed Logins (Last 30 days)",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Brand",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid Condition: {}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Awesomebar",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Code challenge method",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Customize Child Table",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Cannot edit Standard charts",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Amended Document Naming Settings",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Emails",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid value specified for UUID: {}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Middle Name (Optional)",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Dynamic",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Asynchronous",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Introduction",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Incoming Emails (Last 7 days)",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "First Day of the Week",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Allowed embedding domains",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Background Job Activity",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Cannot use sub-query here.",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Beginner",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Failed to decrypt key {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Length",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Disable Comment Count",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Announcements",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Limit must be a non-negative integer",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Fail",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Max auto email report per user",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Make Attachments Public by Default",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Enable Google indexing",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Application is not installed",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Contacts",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Error parsing nested filters: {0}. {1}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Frappe page builder using components",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "3 minutes ago",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Alias must be a string",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Hide Empty Read-Only Fields",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Cannot find file {} on disk",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Gray",
+      "translated_text": "رمادي",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Enable Dynamic Client Registration",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Auto follow documents that you create",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "App not found for module: {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Incoming",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Footer HTML set from attachment {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Helpful",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invitation is cancelled",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Most probably your password is too long.",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "gray",
+      "translated_text": "رمادي",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid Code. Please try again.",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Login with email link",
+      "translated_text": "الدخول برابط البريد الإلكتروني",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Could not parse field: {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid characters in table name: {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Major",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "About {0} minutes remaining",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Job stopped successfully",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Keycloak",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid Webhook Secret",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invitation to join {0} cancelled",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Master",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Allowed File Extensions",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Network Printer Settings",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Common words are easy to guess.",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "5 days ago",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Allowed Public Client Origins",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Compressed",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "City",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Failed to evaluate conditions: {}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "About {0} minute remaining",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "No email addresses to invite",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Endpoints",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Insufficient attachment limit",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Miss",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Apply User Permission On",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Dr",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Enable Action Confirmation",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Keep track of all update feeds",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Let's set up your account",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Job Stopped Successfully",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Document Types (Select Permissions Only)",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Administrator can't follow",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Error: Data missing in table {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Amendment naming rules updated.",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Max signups allowed per hour",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Bulk Operation Successful",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Database Storage Usage By Tables",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Failed to get site info",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Allow multiple responses",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Configuration",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Failed to request login to Frappe Cloud",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Insufficient Permission Level for {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Failed to compute request body: {}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Country Code Required",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Constraints",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invitation cannot be cancelled",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Default Template For Field",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Enable in-app website tracking",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Enable Address Autocompletion",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "HTML with jinja support",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Align",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Ms",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Background Jobs Queue",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "GNU General Public License",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Force Web Capture Mode for Uploads",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Metadata",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Document Naming Settings",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Committed",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Make Attachment Public (by default)",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Allow incomplete forms",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Encryption key is in invalid format!",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Incorrect value in row {0}:",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Allow Consecutive Login Attempts",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Adds a custom field to a DocType",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Background Jobs Check",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Missing Filters Required",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "End Date cannot be today.",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Custom Document Types Limit Exceeded",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Enables Calendar and Gantt views.",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Go to this URL after completing the form",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Disable Automatic Recency Filters",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "GNU Affero General Public License",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Error in print format on line {0}: {1}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Disable Username/Password Login",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid wkhtmltopdf version",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Failed to get method {0} with {1}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Conditions",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Internal record of document shares",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Field not permitted in query",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Highlight",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Cache",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Mrs",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Impersonate",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Madam",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid Naming Series: {}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Invalid redirect regex in row #{}: {}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Assignment of {0} removed by {1}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Errors",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Failed to generate names from the series",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Disable Document Sharing",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Authorization",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Amendment Not Allowed",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "API Key cannot be regenerated",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Failed to enable scheduler: {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Always use this name as sender name",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Keeps track of all communications",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Mandatory Depends On (JS)",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Geoapify",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Field {0} does not exist on {1}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Auto follow documents that you Like",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Document not Relinked",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "DocType {0} does not exist.",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Assignee",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Email Account Disabled.",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Annual",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Default Amendment Naming",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Communication secret not set",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Function {0} is not whitelisted.",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Forward Query Parameters",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Added default log doctypes: {}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Added",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Database Table Row Size Limit",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "City",
+      "translated_text": "المدينة",
+      "ct_origin": "Site Override",
+      "owner": "Administrator"
+    }
+  ]
+}

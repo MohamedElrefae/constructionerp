@@ -1,0 +1,271 @@
+source_text	translated_text	quorum_decision	decision_ref
+2 years ago	منذ عامين	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+3 minutes ago	منذ 3 دقائق	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+5 days ago	منذ 5 أيام	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+API Endpoint Args should be valid JSON	يجب أن تكون وسيطات نقطة نهاية API قيمة JSON صالحة	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+API Key cannot be regenerated	لا يمكن إعادة إنشاء مفتاح API	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+About {0} minute remaining	بقيت دقيقة تقريبًا {0}	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+About {0} minutes remaining	بقيت حوالي {0} دقائق	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+About {0} seconds remaining	بقيت حوالي {0} ثانية	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Added	تمت الإضافة	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Added default log doctypes: {}	تمت إضافة أنواع مستندات السجل الافتراضية: {}	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Adds a custom client script to a DocType	يضيف سكربت عميل مخصصًا إلى نوع مستند	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Adds a custom field to a DocType	يضيف حقلًا مخصصًا إلى نوع مستند	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Administrator can't follow	لا يمكن للمدير التنفيذي المتابعة	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Alias must be a string	يجب أن يكون الاسم المستعار نصًا	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Align	محاذاة	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Allow Consecutive Login Attempts	السماح بمحاولات تسجيل الدخول المتتالية	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Allow incomplete forms	السماح بالنماذج غير المكتملة	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Allow multiple responses	السماح بردود متعددة	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Allowed File Extensions	امتدادات الملفات المسموح بها	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Allowed Public Client Origins	مصادر العميل العام المسموح بها	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Allowed embedding domains	نطاقات التضمين المسموح بها	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Always use this name as sender name	استخدم دائمًا هذا الاسم كاسم المرسل	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Amended Document Naming Settings	إعدادات تسمية المستندات المعدّلة	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Amendment Naming Override	تجاوز تسمية التسوية	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Amendment Not Allowed	التسوية غير مسموح بها	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Amendment naming rules updated.	تم تحديث قواعد تسمية التسوية.	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Announcements	الإعلانات	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Annual	سنوي	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+App Name (Client Name)	اسم التطبيق (اسم العميل)	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+App not found for module: {0}	التطبيق غير موجود للوحدة: {0}	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Application is not installed	التطبيق غير مثبت	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Apply User Permission On	تطبيق إذن المستخدم على	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Apply document permissions	تطبيق أذونات المستند	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Assignee	المفوّض	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Assignment	التكليف	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Assignment of {0} removed by {1}	أُزيل تكليف {0} بواسطة {1}	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Asynchronous	غير متزامن	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Auth URL data should be valid JSON	يجب أن تكون بيانات رابط المصادقة قيمة JSON صالحة	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Authenticate as Service Principal	المصادقة كجهة خدمة رئيسية	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Authorization	التفويض	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Auto follow documents that you Like	متابعة تلقائية للمستندات التي تُعجب بها	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Auto follow documents that you create	متابعة تلقائية للمستندات التي تنشئها	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Awesomebar	EXCEPTION-technical	EXCEPTION-technical (keep vendor rendering; no translation)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Background Job Activity	نشاط المهام الخلفية	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Background Jobs Check	فحص المهام الخلفية	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Background Jobs Queue	طابور المهام الخلفية	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Backup Encryption Key	مفتاح تشفير النسخ الاحتياطي	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Beginner	مبتدئ	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Brand	العلامة التجارية	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Bulk Operation Failed	فشلت العملية الجماعية	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Bulk Operation Successful	نجحت العملية الجماعية	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Bulk {0} is enqueued in background.	تمت في قائمة {0} في الخلفية.	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+By \"Naming Series\" field	EXCEPTION-technical	EXCEPTION-technical (keep vendor rendering; no translation)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Cache	الذاكرة المؤقتة	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Campaign Description (Optional)	وصف الحملة (اختياري)	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Cannot access file path {0}	لا يمكن الوصول إلى مسار الملف {0}	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Cannot edit Standard Dashboards	لا يمكن تحرير لوحات المعلومات القياسية	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Cannot edit Standard charts	لا يمكن تحرير الرسوم البيانية القياسية	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Cannot find file {} on disk	لا يمكن العثور على الملف {} على القرص	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Cannot get file contents of a Folder	لا يمكن الحصول على محتويات المجلد	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Cannot use sub-query here.	لا يمكن استخدام الاستعلام الفرعي هنا.	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Cannot use {0} in order/group by	لا يمكن استخدام {0} في order/group by	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Child DocTypes are not allowed	أنواع مستندات فرعية غير مسموح بها	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+City	المدينة	preserved-site-override (not imported, plan §12)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Clear Logs After (days)	مسح السجلات بعد (أيام)	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Click to Set Dynamic Filters	انقر لتعيين عوامل التصفية الديناميكية	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Code challenge method	EXCEPTION-technical	EXCEPTION-technical (keep vendor rendering; no translation)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Collapsible Depends On (JS)	EXCEPTION-technical	EXCEPTION-technical (keep vendor rendering; no translation)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Committed	تم الإيداع	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Common words are easy to guess.	الكلمات الشائعة يسهل تخمينها.	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Communication secret not set	سر التواصل غير معيّن	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Compressed	مضغوط	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Condition	الشرط	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Condition description	وصف الشرط	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Conditions	الشروط	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Configuration	الإعدادات	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Console Logs can not be deleted	لا يمكن حذف سجلات وحدة التحكم	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Constraints	القيود	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Contacts	جهات الاتصال	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Contains {0} security fix	يتضمن إصلاح أمني {0}	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Contains {0} security fixes	يتضمن إصلاحات أمنية {0}	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Content data shoud be a list	يجب أن تكون بيانات المحتوى قائمة	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Could not parse field: {0}	تعذر تحليل الحقل: {0}	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Country Code Required	رمز الدولة مطلوب	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Custom Document Types Limit Exceeded	تم تجاوز حد أنواع المستندات المخصصة	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Customize Child Table	تخصيص الجدول الفرعي	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Database	قاعدة البيانات	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Database Storage Usage By Tables	استخدام التخزين في قاعدة البيانات حسب الجداول	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Database Table Row Size Limit	حد حجم صفوف جدول قاعدة البيانات	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Default Amendment Naming	تسمية التسوية الافتراضية	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Default Email Template	قالب البريد الإلكتروني الافتراضي	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Default Template For Field	القالب الافتراضي للحقل	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Delayed	متأخر	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Deleted all documents successfully	تم حذف جميع المستندات بنجاح	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Disable Automatic Recency Filters	تعطيل عوامل التصفية الحديثة التلقائية	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Disable Comment Count	تعطيل عدّاد التعليقات	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Disable Document Sharing	تعطيل مشاركة المستندات	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Disable Product Suggestion	تعطيل اقتراح المنتجات	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Disable Username/Password Login	تعطيل تسجيل الدخول باسم المستخدم وكلمة المرور	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Discarded	مهمل	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Do you still want to proceed?	هل ما زلت تريد المتابعة؟	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+DocShare	EXCEPTION-technical	EXCEPTION-technical (keep vendor rendering; no translation)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+DocType must be a string	يجب أن يكون نوع المستند نصًا	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+DocType not supported by Log Settings.	إعدادات السجل لا تدعم نوع المستند هذا.	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+DocType {0} does not exist.	نوع المستند {0} غير موجود.	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Document Name must be a string	يجب أن يكون اسم المستند نصًا	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Document Naming Settings	إعدادات تسمية المستندات	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Document Types (Select Permissions Only)	أنواع المستندات (أذونات الاختيار فقط)	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Document Types and Permissions	أنواع المستندات والأذونات	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Document not Relinked	لم يُعاد ربط المستند	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Document {0} {1} does not exist	المستند {0} {1} غير موجود	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Dr	الدكتور	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Dynamic	ديناميكي	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Either key or IP flag is required.	المفتاح أو علامة IP مطلوب.	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Email Account Disabled.	حساب البريد معطّل.	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Email Account {0} Disabled	حساب البريد {0} معطّل	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Email Threads on Assigned Document	سلاسل البريد على المستند المكلف به	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Email is mandatory to create User Email	البريد إلزامي لإنشاء بريد المستخدم	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Emails	رسائل البريد	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Empty alias is not allowed	الاسم المستعار الفارغ غير مسموح به	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Empty string arguments are not allowed	وسائط النص الفارغ غير مسموح بها	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Enable Action Confirmation	تفعيل تأكيد الإجراء	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Enable Address Autocompletion	تفعيل الإكمال التلقائي للعنوان	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Enable Dynamic Client Registration	تفعيل تسجيل العميل الديناميكي	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Enable Google indexing	تفعيل فهرسة Google	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Enable in-app website tracking	تفعيل تتبع الموقع داخل التطبيق	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Enables Calendar and Gantt views.	يمكّن عروض التقويم وغانت.	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Encryption key is in invalid format!	مفتاح التشفير بتنسيق غير صالح!	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+End Date cannot be today.	لا يمكن أن يكون تاريخ النهاية اليوم.	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Endpoints	نقاط النهاية	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Enqueued creation of indexes	تمت جدولة إنشاء الفهارس	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Error connecting via IMAP/POP3: {e}	خطأ في الاتصال عبر IMAP/POP3: {e}	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Error connecting via SMTP: {e}	خطأ في الاتصال عبر SMTP: {e}	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Error in Header/Footer Script	خطأ في سكربت الترويسة/التذييل	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Error in print format on line {0}: {1}	خطأ في تنسيق الطباعة في السطر {0}: {1}	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Error in {0}.get_list: {1}	خطأ في {0}.get_list: {1}	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Error parsing nested filters: {0}. {1}	خطأ في تحليل عوامل التصفية المتداخلة: {0}. {1}	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Error: Data missing in table {0}	خطأ: بيانات مفقودة في الجدول {0}	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Errors	الأخطاء	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Executing...	جارٍ التنفيذ...	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Expired	منتهي الصلاحية	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Fail	فشل	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Failed Logins (Last 30 days)	محاولات دخول فاشلة (آخر 30 يومًا)	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Failed to compute request body: {}	فشل حساب جسم الطلب: {}	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Failed to decrypt key {0}	فشل فك تشفير المفتاح {0}	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Failed to enable scheduler: {0}	فشل تفعيل المجدول: {0}	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Failed to evaluate conditions: {}	فشل تقييم الشروط: {}	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Failed to generate names from the series	فشل توليد الأسماء من السلسلة	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Failed to get method {0} with {1}	فشل الحصول على الدالة {0} بوساطة {1}	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Failed to get site info	فشل الحصول على معلومات الموقع	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Failed to optimize image: {0}	فشل تحسين الصورة: {0}	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Failed to render message: {}	فشل عرض الرسالة: {}	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Failed to render subject: {}	فشل عرض الموضوع: {}	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Failed to request login to Frappe Cloud	فشل طلب تسجيل الدخول إلى Frappe Cloud	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Failed to send email with subject:	فشل إرسال البريد بالموضوع:	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Failed to update global settings	فشل تحديث الإعدادات العامة	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Failed while calling API {0}	فشل أثناء استدعاء API {0}	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Failing Scheduled Jobs (last 7 days)	المهام المجدولة الفاشلة (آخر 7 أيام)	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Failure	فشل	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Female	أنثى	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Fetching fields from {0}...	جارٍ جلب الحقول من {0}...	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Field not permitted in query	الحقل غير مسموح به في الاستعلام	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Field {0} does not exist on {1}	الحقل {0} غير موجود على {1}	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+File type of {0} is not allowed	نوع الملف {0} غير مسموح به	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+First Day of the Week	أول يوم في الأسبوع	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Following document {0}	المستند التالي {0}	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Footer HTML set from attachment {0}	تم تعيين HTML التذييل من المرفق {0}	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Footer \"Powered By\"	تذييل "مدفوع بواسطة"	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Force Web Capture Mode for Uploads	فرض وضع التقاط الويب للرفع	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Forward Query Parameters	إعادة توجيه معاملات الاستعلام	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Frappe Mail OAuth Error	خطأ OAuth في Frappe Mail	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Frappe page builder using components	منشئ صفحات Frappe باستخدام المكوّنات	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Function {0} is not whitelisted.	الدالة {0} غير مدرجة في القائمة البيضاء.	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+GNU Affero General Public License	رخصة GNU Affero العامة	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+GNU General Public License	رخصة GNU العامة	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Genderqueer	هوية جندرية غير تقليدية	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Geoapify	EXCEPTION-technical	EXCEPTION-technical (keep vendor rendering; no translation)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Get Backup Encryption Key	الحصول على مفتاح تشفير النسخ الاحتياطي	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Get OpenID Configuration	الحصول على تهيئة OpenID	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Github flavoured markdown syntax	صياغة Markdown بنكهة Github	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Go to this URL after completing the form	انتقل إلى رابط URL بعد إكمال النموذج	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Google Analytics anonymise IP	تعقيم Google Analytics لعنوان IP	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Google Drive Picker Enabled	تم تفعيل منتقي Google Drive	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Gray	رمادي	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+HERE	هنا	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+HTML with jinja support	HTML مع دعم jinja	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Headers must be a dictionary	يجب أن تكون الترويسات قاموسًا	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Helpful	مفيد	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Hidden columns include: {0}	الأعمدة المخفية تشمل: {0}	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Hide Empty Read-Only Fields	إخفاء الحقول للقراءة فقط الفارغة	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Highlight	تمييز	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Image link '{0}' is not valid	رابط الصورة '{0}' غير صالح	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Image: Corrupted Data Stream	الصورة: تدفق بيانات تالف	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Impersonate	انتحال الهوية	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Importing {0} is not allowed.	لا يُسمح باستيراد {0}.	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Importing {0} of {1}, {2}	جارٍ استيراد {0} من {1}، {2}	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Incoming	وارد	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Incoming (POP/IMAP) Settings	إعدادات الوارد (POP/IMAP)	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Incoming Emails (Last 7 days)	رسائل البريد الواردة (آخر 7 أيام)	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Incorrect value in row {0}:	قيمة غير صحيحة في الصف {0}:	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Indexing authorization code	رمز تفويض الفهرسة	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+InnoDB	EXCEPTION-technical	EXCEPTION-technical (keep vendor rendering; no translation)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Insufficient Permission Level for {0}	مستوى إذن غير كافٍ لـ {0}	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Insufficient attachment limit	حد المرفقات غير كافٍ	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Intermediate	متوسط	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Internal record of document shares	سجل داخلي لمشاركات المستندات	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Introduction	مقدمة	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Invalid	غير صالح	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Invalid Code. Please try again.	رمز غير صالح. يرجى المحاولة مرة أخرى.	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Invalid Condition: {}	شرط غير صالح: {}	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Invalid Naming Series: {}	سلسلة تسمية غير صالحة: {}	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Invalid Table Fieldname	اسم حقل الجدول غير صالح	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Invalid Webhook Secret	سر Webhook غير صالح	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Invalid aggregate function	دالة تجميع غير صالحة	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Invalid characters in table name: {0}	أحرف غير صالحة في اسم الجدول: {0}	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Invalid field type: {0}	نوع حقل غير صالح: {0}	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Invalid redirect regex in row #{}: {}	تعبير توجيه إعادة غير صالح في الصف #{}: {}	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Invalid request arguments	وسائط طلب غير صالحة	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Invalid value specified for UUID: {}	قيمة غير صالحة لـ UUID: {}	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Invalid wkhtmltopdf version	إصدار wkhtmltopdf غير صالح	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Invalid {0} dictionary format	تنسيق قاموس {0} غير صالح	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Invitation already accepted	تم قبول الدعوة بالفعل	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Invitation already exists	الدعوة موجودة بالفعل	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Invitation cannot be cancelled	لا يمكن إلغاء الدعوة	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Invitation is cancelled	تم إلغاء الدعوة	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Invitation is expired	انتهت صلاحية الدعوة	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Invitation to join {0} cancelled	تم إلغاء دانضمام {0}	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Invitation to join {0} expired	انتهت صلاحية دعوة الانضمام إلى {0}	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Is Calendar and Gantt	هو التقويم وغانت	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Job Stopped Successfully	تم إيقاف المهمة بنجاح	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Job stopped successfully	تم إيقاف المهمة بنجاح	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Join video conference with {0}	الانضمام إلى مؤتمر فيديو مع {0}	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Keep track of all update feeds	تتبع جميع تدفقات التحديث	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Keeps track of all communications	يتتبع جميع الاتصالات	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Keycloak	EXCEPTION-technical	EXCEPTION-technical (keep vendor rendering; no translation)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Last Reset Password Key Generated On	تاريخ آخر إنشاء لمفتاح إعادة تعيين كلمة المرور	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Length	الطول	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Let's set up your account	لنقم بإعداد حسابك	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Likes	الإعجابات	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Limit must be a non-negative integer	يجب أن يكون الحد عددًا صحيحًا غير سالب	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Location	الموقع	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Login with email link	الدخول برابط البريد الإلكتروني	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Madam	السيدة	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Major	رئيسي	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Make Attachment Public (by default)	جعل المرفق عامًا (افتراضيًا)	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Make Attachments Public by Default	جعل المرفقات عامة افتراضيًا	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Male	ذكر	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Mandatory Depends On (JS)	EXCEPTION-technical	EXCEPTION-technical (keep vendor rendering; no translation)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Master	الماستر	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Max auto email report per user	الحد الأقصى لتقرير البريد الآلي لكل مستخدم	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Max signups allowed per hour	الحد الأقصى للتسجيلات المسموح بها في الساعة	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Meeting	اجتماع	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Members	الأعضاء	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Metadata	البيانات الوصفية	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Middle Name (Optional)	الاسم الأوسط (اختياري)	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Minor	ثانوي	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Misconfigured	إعداد خاطئ	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Miss	الآنسة	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Missing Filters Required	عوامل تصفية مطلوبة مفقودة	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Mobile	جوال	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Module onboarding progress reset	تمت إعادة تعيين تقدم إعداد الوحدة	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Most probably your password is too long.	على الأرجح كلمة مرورك طويلة جدًا.	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Mr	السيد	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Mrs	السيدة	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Ms	السيدة	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Mx	EXCEPTION-technical	EXCEPTION-technical (keep vendor rendering; no translation)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Network Printer Settings	إعدادات الطابعة الشبكية	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+No Email field found in {0}	لم يُعثر على حقل بريد في {0}	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+No email addresses to invite	لا توجد عناوين بريد لدعوتها	quorum-confirmed (release payload row)	stage6-W6-0b batch-6 owner-approved 2026-09-22
+Nomatim	EXCEPTION-technical	EXCEPTION-technical (keep vendor rendering; no translation)	stage6-W6-0b batch-6 owner-approved 2026-09-22
