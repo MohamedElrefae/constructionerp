@@ -1,5 +1,5 @@
 {
-  "base_commit": "e7be48855bde540464ea302e53c9bfca62b7c462",
+  "base_commit": "8c9fece8aa00fded0554594fe2db7b01f875a9f7",
   "categories": [
     {
       "app": "<untagged>",
@@ -15,50 +15,50 @@
     },
     {
       "app": "construction",
-      "approved_legacy": 207.0,
+      "approved_legacy": 212.0,
       "deprecated": 0.0,
       "empty": 596.0,
       "no_status": 11.0,
       "pending": 596.0,
-      "populated_nontrivial": 231.0,
+      "populated_nontrivial": 236.0,
       "released": 13.0,
       "source_equal": 0.0,
-      "total": 827
+      "total": 832
     },
     {
       "app": "erpnext",
       "approved_legacy": 4662.0,
       "deprecated": 1.0,
-      "empty": 4335.0,
+      "empty": 4266.0,
       "no_status": 5.0,
-      "pending": 4335.0,
-      "populated_nontrivial": 4675.0,
-      "released": 11.0,
+      "pending": 4266.0,
+      "populated_nontrivial": 4813.0,
+      "released": 149.0,
       "source_equal": 5.0,
-      "total": 9014
+      "total": 9083
     },
     {
       "app": "frappe",
-      "approved_legacy": 2912.0,
+      "approved_legacy": 2901.0,
       "deprecated": 1.0,
-      "empty": 2987.0,
+      "empty": 2421.0,
       "no_status": 2.0,
-      "pending": 2987.0,
-      "populated_nontrivial": 2934.0,
-      "released": 25.0,
-      "source_equal": 6.0,
-      "total": 5927
+      "pending": 2421.0,
+      "populated_nontrivial": 4076.0,
+      "released": 1181.0,
+      "source_equal": 9.0,
+      "total": 6506
     }
   ],
-  "generated_utc": "2026-09-10T01:45:59Z",
+  "generated_utc": "2026-09-22T16:15:28Z",
   "generator": "construction.localization_inventory.merkle_root over stage2_inventory.sql",
   "merkle": {
-    "root": "2e284695f67e1cb7d623975df8d82c5c6578b5667857be27ba1f7b6f72587123",
-    "rows": 18446,
+    "root": "73e7161c291c0d5f87d50520e6386cd002a68f25139ad71f0bb64c718af67f9a",
+    "rows": 19099,
     "scheme": "json(sorted(str-normalized (source,context,app,translated,review))) sha256"
   },
   "po_hashes": {
-    "construction": "8d0dcdc7a909cb9b5bea7498154551db7298525de127b657ad633523592a9777",
+    "construction": "28362a98f1e1d4e9f5dee0a04945abe88154b29ff12d9e57ba738c98427d3812",
     "erpnext": "2dfe0a5d07b091d1d34563fa53aac9f4665519aa9672303b4cd6fe3b2d705275",
     "frappe": "cc353e76ebd37c0ef0d72f79cf0c081a460cfa5fe6846dcf36d122384c225502"
   },
