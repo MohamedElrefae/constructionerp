@@ -91654,5 +91654,2435 @@
   },
   "generated_utc": "2026-09-22T20:35:48Z",
   "note": "Reviewed generation. Verdicts transcribed from independent review evidence (six new rows) or marked historical batch (legacy).",
-  "schema": "release-decision/v2"
+  "schema": "release-decision/v2",
+  "Non-Conforming||quorum-confirmed (release payload row)": {
+    "source_text": "Non-Conforming",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "c8279dac3fe21780"
+  },
+  "Not Allowed: Disabled User||quorum-confirmed (release payload row)": {
+    "source_text": "Not Allowed: Disabled User",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "43f0a64e78fee3ef"
+  },
+  "Not Permitted to read {0}||quorum-confirmed (release payload row)": {
+    "source_text": "Not Permitted to read {0}",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "0b8226c12f24c012"
+  },
+  "Note: This will be shared with user.||quorum-confirmed (release payload row)": {
+    "source_text": "Note: This will be shared with user.",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "357a979a7de95373"
+  },
+  "Number of onsite backups||quorum-confirmed (release payload row)": {
+    "source_text": "Number of onsite backups",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "bbb5bd2f5e6f1a5f"
+  },
+  "OAuth||quorum-confirmed (release payload row)": {
+    "source_text": "OAuth",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "27f8943c6eba9818"
+  },
+  "OTP Secret Reset - {0}||quorum-confirmed (release payload row)": {
+    "source_text": "OTP Secret Reset - {0}",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "8e84ed0a01e4c5f7"
+  },
+  "Occurrences||quorum-confirmed (release payload row)": {
+    "source_text": "Occurrences",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "6c58d39cec6d77d2"
+  },
+  "Official Documentation||quorum-confirmed (release payload row)": {
+    "source_text": "Official Documentation",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "628e39a94703608c"
+  },
+  "Offset must be a non-negative integer||quorum-confirmed (release payload row)": {
+    "source_text": "Offset must be a non-negative integer",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "e569a2f05531d728"
+  },
+  "Old and new fieldnames are same.||quorum-confirmed (release payload row)": {
+    "source_text": "Old and new fieldnames are same.",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "dfaa59fe5706e310"
+  },
+  "Oldest Unscheduled Job||quorum-confirmed (release payload row)": {
+    "source_text": "Oldest Unscheduled Job",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "aaaf50cb3fd4b086"
+  },
+  "Only draft documents can be discarded||quorum-confirmed (release payload row)": {
+    "source_text": "Only draft documents can be discarded",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "f390d0c6b19b8b65"
+  },
+  "OpenLDAP||quorum-confirmed (release payload row)": {
+    "source_text": "OpenLDAP",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "2cf0a0aa3053e1ea"
+  },
+  "Order By must be a string||quorum-confirmed (release payload row)": {
+    "source_text": "Order By must be a string",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "c9a4b4fa9735173c"
+  },
+  "Outgoing||quorum-confirmed (release payload row)": {
+    "source_text": "Outgoing",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "3619cf0b90923a4b"
+  },
+  "Outgoing (SMTP) Settings||quorum-confirmed (release payload row)": {
+    "source_text": "Outgoing (SMTP) Settings",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "6ab9c86dbc9947d0"
+  },
+  "Outgoing Emails (Last 7 days)||quorum-confirmed (release payload row)": {
+    "source_text": "Outgoing Emails (Last 7 days)",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "ffeb6c8e8883ad5c"
+  },
+  "Outlook.com||quorum-confirmed (release payload row)": {
+    "source_text": "Outlook.com",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "d57114f531726a89"
+  },
+  "PATCH||quorum-confirmed (release payload row)": {
+    "source_text": "PATCH",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "8dce33b49f31396a"
+  },
+  "PDF Generation in Progress||quorum-confirmed (release payload row)": {
+    "source_text": "PDF Generation in Progress",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "e838c6abde02c045"
+  },
+  "PDF Page Height (in mm)||quorum-confirmed (release payload row)": {
+    "source_text": "PDF Page Height (in mm)",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "81f40e80e7e5da79"
+  },
+  "PDF Page Width (in mm)||quorum-confirmed (release payload row)": {
+    "source_text": "PDF Page Width (in mm)",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "318e425ad5ad5148"
+  },
+  "PDF generation may not work as expected.||quorum-confirmed (release payload row)": {
+    "source_text": "PDF generation may not work as expected.",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "a46cfb680e59ff24"
+  },
+  "PID||quorum-confirmed (release payload row)": {
+    "source_text": "PID",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "3f302a2a7158a024"
+  },
+  "PUT||quorum-confirmed (release payload row)": {
+    "source_text": "PUT",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "907bf9a40f9ce996"
+  },
+  "Packages||quorum-confirmed (release payload row)": {
+    "source_text": "Packages",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "40a2085371b8effb"
+  },
+  "Page to show on the website||quorum-confirmed (release payload row)": {
+    "source_text": "Page to show on the website",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "19bec73d4a4bc518"
+  },
+  "Parameter||quorum-confirmed (release payload row)": {
+    "source_text": "Parameter",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "dd066ec1bf1d4485"
+  },
+  "Parent Element Selector||quorum-confirmed (release payload row)": {
+    "source_text": "Parent Element Selector",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "a4cb9b90c25d1c10"
+  },
+  "Parentfield not specified in {0}: {1}||quorum-confirmed (release payload row)": {
+    "source_text": "Parentfield not specified in {0}: {1}",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "bcd8a6c9fdf274c3"
+  },
+  "Pass||quorum-confirmed (release payload row)": {
+    "source_text": "Pass",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "ebdf8cc00bc4d9ce"
+  },
+  "Password not found for {0} {1} {2}||quorum-confirmed (release payload row)": {
+    "source_text": "Password not found for {0} {1} {2}",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "d821678dca765503"
+  },
+  "Password requirements not met||quorum-confirmed (release payload row)": {
+    "source_text": "Password requirements not met",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "a8f13cf53b7f30cd"
+  },
+  "Patch type {} not found in patches.txt||quorum-confirmed (release payload row)": {
+    "source_text": "Patch type {} not found in patches.txt",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "35e44c91e29dd2c7"
+  },
+  "Path {0} is not within module {1}||quorum-confirmed (release payload row)": {
+    "source_text": "Path {0} is not within module {1}",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "2c61700b339d6622"
+  },
+  "Path {0} it not a valid path||quorum-confirmed (release payload row)": {
+    "source_text": "Path {0} it not a valid path",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "d94bdca8f02f36a0"
+  },
+  "Personal Data Deletion Step||quorum-confirmed (release payload row)": {
+    "source_text": "Personal Data Deletion Step",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "7b1b310d63797c6f"
+  },
+  "Please attach the package||quorum-confirmed (release payload row)": {
+    "source_text": "Please attach the package",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "90e97f5171596474"
+  },
+  "Please enable {} before continuing.||quorum-confirmed (release payload row)": {
+    "source_text": "Please enable {} before continuing.",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "d09cb5716e4eb5a5"
+  },
+  "Please enter OpenID Configuration URL||quorum-confirmed (release payload row)": {
+    "source_text": "Please enter OpenID Configuration URL",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "2503bccd6a11a1af"
+  },
+  "Please login to post a comment.||quorum-confirmed (release payload row)": {
+    "source_text": "Please login to post a comment.",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "c844a76b4b93b4a6"
+  },
+  "Please set the document name||quorum-confirmed (release payload row)": {
+    "source_text": "Please set the document name",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "0322eb770430c1a8"
+  },
+  "Please specify the minutes offset||quorum-confirmed (release payload row)": {
+    "source_text": "Please specify the minutes offset",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "a46d9942a46e42e6"
+  },
+  "Please update {} before continuing.||quorum-confirmed (release payload row)": {
+    "source_text": "Please update {} before continuing.",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "e8cbc003040af834"
+  },
+  "Polling||quorum-confirmed (release payload row)": {
+    "source_text": "Polling",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "78736a93bedae5ca"
+  },
+  "Prepared report render failed||quorum-confirmed (release payload row)": {
+    "source_text": "Prepared report render failed",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "df941a4a9dcf53ac"
+  },
+  "Printer mapping not set.||quorum-confirmed (release payload row)": {
+    "source_text": "Printer mapping not set.",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "2ad8b0b1e2706193"
+  },
+  "Proceed||quorum-confirmed (release payload row)": {
+    "source_text": "Proceed",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "f01847dfc9412642"
+  },
+  "Prof||quorum-confirmed (release payload row)": {
+    "source_text": "Prof",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "a761aecca8680ee1"
+  },
+  "Profile||quorum-confirmed (release payload row)": {
+    "source_text": "Profile",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "d696a35bdd1883da"
+  },
+  "Protect Attached Files||quorum-confirmed (release payload row)": {
+    "source_text": "Protect Attached Files",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "77c166a8de188f89"
+  },
+  "Purchase Master Manager||quorum-confirmed (release payload row)": {
+    "source_text": "Purchase Master Manager",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "fa251c4d0cfde801"
+  },
+  "Purple||quorum-confirmed (release payload row)": {
+    "source_text": "Purple",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "7d465fb9b9314846"
+  },
+  "Queue||quorum-confirmed (release payload row)": {
+    "source_text": "Queue",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "3b2fe03e36893916"
+  },
+  "Queue in Background (BETA)||quorum-confirmed (release payload row)": {
+    "source_text": "Queue in Background (BETA)",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "6a60cf9df5899aa3"
+  },
+  "Queue(s)||quorum-confirmed (release payload row)": {
+    "source_text": "Queue(s)",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "bbbe1ea284733b43"
+  },
+  "Queues||quorum-confirmed (release payload row)": {
+    "source_text": "Queues",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "be77db1156d1f1b5"
+  },
+  "Queuing {0} for Submission||quorum-confirmed (release payload row)": {
+    "source_text": "Queuing {0} for Submission",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "e88f1cea7d3529a3"
+  },
+  "Quick Help for Setting Permissions||quorum-confirmed (release payload row)": {
+    "source_text": "Quick Help for Setting Permissions",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "b43747a83d4a7c20"
+  },
+  "Range||quorum-confirmed (release payload row)": {
+    "source_text": "Range",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "5de74a81b192304c"
+  },
+  "Rate limit for email link login||quorum-confirmed (release payload row)": {
+    "source_text": "Rate limit for email link login",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "173efda5a80e826f"
+  },
+  "Read Only Depends On (JS)||quorum-confirmed (release payload row)": {
+    "source_text": "Read Only Depends On (JS)",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "d0588edb2dbd4e24"
+  },
+  "Read the documentation to know more||quorum-confirmed (release payload row)": {
+    "source_text": "Read the documentation to know more",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "8dd4ebfe8507f487"
+  },
+  "Readme||quorum-confirmed (release payload row)": {
+    "source_text": "Readme",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "44ff26388205705f"
+  },
+  "Reason||quorum-confirmed (release payload row)": {
+    "source_text": "Reason",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "f81ab834de5f8491"
+  },
+  "Received an invalid token type.||quorum-confirmed (release payload row)": {
+    "source_text": "Received an invalid token type.",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "51fdd442ba3f106e"
+  },
+  "Recipient Account Field||quorum-confirmed (release payload row)": {
+    "source_text": "Recipient Account Field",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "ccb058b2d0bf2f1e"
+  },
+  "Recorder Suggested Index||quorum-confirmed (release payload row)": {
+    "source_text": "Recorder Suggested Index",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "601033338530d67f"
+  },
+  "Redirect to the selected app after login||quorum-confirmed (release payload row)": {
+    "source_text": "Redirect to the selected app after login",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "5261328d0f83e323"
+  },
+  "Redirects||quorum-confirmed (release payload row)": {
+    "source_text": "Redirects",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "4340f2850559b250"
+  },
+  "Reference Document Name||quorum-confirmed (release payload row)": {
+    "source_text": "Reference Document Name",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "3e16499cce71c60a"
+  },
+  "Relay Server URL missing||quorum-confirmed (release payload row)": {
+    "source_text": "Relay Server URL missing",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "6217966d7be262a5"
+  },
+  "Release||quorum-confirmed (release payload row)": {
+    "source_text": "Release",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "e020e3c67bd0c312"
+  },
+  "Reminder||quorum-confirmed (release payload row)": {
+    "source_text": "Reminder",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "31757bbfa17e6e3d"
+  },
+  "Reminder cannot be created in past.||quorum-confirmed (release payload row)": {
+    "source_text": "Reminder cannot be created in past.",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "8fd0010469f93012"
+  },
+  "Removed||quorum-confirmed (release payload row)": {
+    "source_text": "Removed",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "4118fb4fed0ecec9"
+  },
+  "Reopen||quorum-confirmed (release payload row)": {
+    "source_text": "Reopen",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "a886d1dc4f128e27"
+  },
+  "Repeat Header and Footer||quorum-confirmed (release payload row)": {
+    "source_text": "Repeat Header and Footer",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "78f101263eb2f57f"
+  },
+  "Replicate||quorum-confirmed (release payload row)": {
+    "source_text": "Replicate",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "e014d9622f4de177"
+  },
+  "Replicating...||quorum-confirmed (release payload row)": {
+    "source_text": "Replicating...",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "23187585030d466c"
+  },
+  "Replication completed.||quorum-confirmed (release payload row)": {
+    "source_text": "Replication completed.",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "eecd918d392fd799"
+  },
+  "Represents a User in the system.||quorum-confirmed (release payload row)": {
+    "source_text": "Represents a User in the system.",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "b8a444e26812e56b"
+  },
+  "Request for Account Deletion||quorum-confirmed (release payload row)": {
+    "source_text": "Request for Account Deletion",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "fe04c7a92a55f113"
+  },
+  "Reset All Customizations||quorum-confirmed (release payload row)": {
+    "source_text": "Reset All Customizations",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "acaab86db4cbdbff"
+  },
+  "Reset Password Template||quorum-confirmed (release payload row)": {
+    "source_text": "Reset Password Template",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "795ed3ac6430cf5f"
+  },
+  "Resource||quorum-confirmed (release payload row)": {
+    "source_text": "Resource",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "eb7a842ff958c49c"
+  },
+  "Resource Documentation||quorum-confirmed (release payload row)": {
+    "source_text": "Resource Documentation",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "c1d3c103bb3ffe26"
+  },
+  "Route: Example \\\"/app\\\"||quorum-confirmed (release payload row)": {
+    "source_text": "Route: Example \\\"/app\\\"",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "660e41fe4b12df2f"
+  },
+  "Row #{}: Fieldname is required||quorum-confirmed (release payload row)": {
+    "source_text": "Row #{}: Fieldname is required",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "cab8ee70e8892953"
+  },
+  "Rules||quorum-confirmed (release payload row)": {
+    "source_text": "Rules",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "4228aeb07c410ffc"
+  },
+  "SMS sent successfully||quorum-confirmed (release payload row)": {
+    "source_text": "SMS sent successfully",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "84558ea08896ffc0"
+  },
+  "SMTP Server is required||quorum-confirmed (release payload row)": {
+    "source_text": "SMTP Server is required",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "d8f54a11a81d5034"
+  },
+  "Saving Customization...||quorum-confirmed (release payload row)": {
+    "source_text": "Saving Customization...",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "d46ce7ef25d50cd4"
+  },
+  "Schedule||quorum-confirmed (release payload row)": {
+    "source_text": "Schedule",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "f4830a1dae298044"
+  },
+  "Scheduler||quorum-confirmed (release payload row)": {
+    "source_text": "Scheduler",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "d3a27d96cd0791a2"
+  },
+  "Scope||quorum-confirmed (release payload row)": {
+    "source_text": "Scope",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "b073f6c68ef87211"
+  },
+  "Script to attach to all web pages.||quorum-confirmed (release payload row)": {
+    "source_text": "Script to attach to all web pages.",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "943ce5cf5581a996"
+  },
+  "Scripting||quorum-confirmed (release payload row)": {
+    "source_text": "Scripting",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "01846401bd51c630"
+  },
+  "Scripts||quorum-confirmed (release payload row)": {
+    "source_text": "Scripts",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "8d0e6b4ab60543cf"
+  },
+  "See previous responses||quorum-confirmed (release payload row)": {
+    "source_text": "See previous responses",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "835f28b7805cee0e"
+  },
+  "Select Network Printer||quorum-confirmed (release payload row)": {
+    "source_text": "Select Network Printer",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "d814c0b592614c09"
+  },
+  "Send Email To Creator||quorum-confirmed (release payload row)": {
+    "source_text": "Send Email To Creator",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "4bc5411bd8a7c079"
+  },
+  "Sender||quorum-confirmed (release payload row)": {
+    "source_text": "Sender",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "c299f9b85cb236ab"
+  },
+  "Sendgrid||quorum-confirmed (release payload row)": {
+    "source_text": "Sendgrid",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "f66af83f099932ff"
+  },
+  "Series Updated for {}||quorum-confirmed (release payload row)": {
+    "source_text": "Series Updated for {}",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "b009e9d7eb4fd569"
+  },
+  "Service||quorum-confirmed (release payload row)": {
+    "source_text": "Service",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "d677190e0a9990e7"
+  },
+  "Session Expiry (idle timeout)||quorum-confirmed (release payload row)": {
+    "source_text": "Session Expiry (idle timeout)",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "ab067583466cc936"
+  },
+  "Sessions||quorum-confirmed (release payload row)": {
+    "source_text": "Sessions",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "6fa3cbf451b2a1d5"
+  },
+  "Settings for Contact Us Page||quorum-confirmed (release payload row)": {
+    "source_text": "Settings for Contact Us Page",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "9fe00e4b20b434dd"
+  },
+  "Settings for the About Us Page||quorum-confirmed (release payload row)": {
+    "source_text": "Settings for the About Us Page",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "612b294271bd5881"
+  },
+  "Setup > Customize Form||quorum-confirmed (release payload row)": {
+    "source_text": "Setup > Customize Form",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "66dc5c7fb2dca62c"
+  },
+  "Setup > User Permissions||quorum-confirmed (release payload row)": {
+    "source_text": "Setup > User Permissions",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "97a7230d8a7301fb"
+  },
+  "Setup Series for transactions||quorum-confirmed (release payload row)": {
+    "source_text": "Setup Series for transactions",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "e31e4928cf2a4ebd"
+  },
+  "Show Absolute Datetime in Timeline||quorum-confirmed (release payload row)": {
+    "source_text": "Show Absolute Datetime in Timeline",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "d7b251d73b52ffa2"
+  },
+  "Show App Icons As Folder||quorum-confirmed (release payload row)": {
+    "source_text": "Show App Icons As Folder",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "edde0be6233fc184"
+  },
+  "Show Auth Server Metadata||quorum-confirmed (release payload row)": {
+    "source_text": "Show Auth Server Metadata",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "ffdc39d00dbafddf"
+  },
+  "Show First Document Tour||quorum-confirmed (release payload row)": {
+    "source_text": "Show First Document Tour",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "f3d45ec1e4f7d320"
+  },
+  "Show Only Failed Logs||quorum-confirmed (release payload row)": {
+    "source_text": "Show Only Failed Logs",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "33c61c0d70157441"
+  },
+  "Show Protected Resource Metadata||quorum-confirmed (release payload row)": {
+    "source_text": "Show Protected Resource Metadata",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "024b23d36c319ad5"
+  },
+  "Show Values over Chart||quorum-confirmed (release payload row)": {
+    "source_text": "Show Values over Chart",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "0946584818cb2fce"
+  },
+  "Show in Resource Metadata||quorum-confirmed (release payload row)": {
+    "source_text": "Show in Resource Metadata",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "8d1775d5361a34b8"
+  },
+  "Show link to document||quorum-confirmed (release payload row)": {
+    "source_text": "Show link to document",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "e0d9ea4c27a741f4"
+  },
+  "Sign Up and Confirmation||quorum-confirmed (release payload row)": {
+    "source_text": "Sign Up and Confirmation",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "b3e1720fa9a38ade"
+  },
+  "Skipped||quorum-confirmed (release payload row)": {
+    "source_text": "Skipped",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "12698ce1ea5cd4ab"
+  },
+  "Skipping {0} of {1}, {2}||quorum-confirmed (release payload row)": {
+    "source_text": "Skipping {0} of {1}, {2}",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "3a8bb15ee261e399"
+  },
+  "Slideshow like display for the website||quorum-confirmed (release payload row)": {
+    "source_text": "Slideshow like display for the website",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "90ed700f4ec81ff3"
+  },
+  "Slug||quorum-confirmed (release payload row)": {
+    "source_text": "Slug",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "d15387ecc6c5e22d"
+  },
+  "Snippet and more variables:  {0}||quorum-confirmed (release payload row)": {
+    "source_text": "Snippet and more variables:  {0}",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "d36aae03a8d48af7"
+  },
+  "SocketIO Transport Mode||quorum-confirmed (release payload row)": {
+    "source_text": "SocketIO Transport Mode",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "f1a0dca409495136"
+  },
+  "SparkPost||quorum-confirmed (release payload row)": {
+    "source_text": "SparkPost",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "74958a3be41962d6"
+  },
+  "Spawns actions in a background job||quorum-confirmed (release payload row)": {
+    "source_text": "Spawns actions in a background job",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "5495e9398fec5244"
+  },
+  "Standard DocType can not be deleted.||quorum-confirmed (release payload row)": {
+    "source_text": "Standard DocType can not be deleted.",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "2d5810f2cb1c8c50"
+  },
+  "Standard Reports cannot be deleted||quorum-confirmed (release payload row)": {
+    "source_text": "Standard Reports cannot be deleted",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "a9f5093200931323"
+  },
+  "Standard Reports cannot be edited||quorum-confirmed (release payload row)": {
+    "source_text": "Standard Reports cannot be edited",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "4adcb67d7a36875e"
+  },
+  "Standard rich text editor with controls||quorum-confirmed (release payload row)": {
+    "source_text": "Standard rich text editor with controls",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "169cdc8bc6a0f1a1"
+  },
+  "State||quorum-confirmed (release payload row)": {
+    "source_text": "State",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "a3b50c476732c740"
+  },
+  "Statistics||quorum-confirmed (release payload row)": {
+    "source_text": "Statistics",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "a656107e99c71dea"
+  },
+  "Stop||quorum-confirmed (release payload row)": {
+    "source_text": "Stop",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "cae7d57bc067a514"
+  },
+  "Storage Usage By Table||quorum-confirmed (release payload row)": {
+    "source_text": "Storage Usage By Table",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "b748a0439ddf5c44"
+  },
+  "Store Attached PDF Document||quorum-confirmed (release payload row)": {
+    "source_text": "Store Attached PDF Document",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "2c9b8919db05b400"
+  },
+  "Strip EXIF tags from uploaded images||quorum-confirmed (release payload row)": {
+    "source_text": "Strip EXIF tags from uploaded images",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "29decd8d364028fd"
+  },
+  "Subtle||quorum-confirmed (release payload row)": {
+    "source_text": "Subtle",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "3eadecfbd53379b9"
+  },
+  "Successfully imported {0}||quorum-confirmed (release payload row)": {
+    "source_text": "Successfully imported {0}",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "aa36bd72b95719d0"
+  },
+  "Successfully signed out||quorum-confirmed (release payload row)": {
+    "source_text": "Successfully signed out",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "9c60204cffd07806"
+  },
+  "Successfully updated {0}||quorum-confirmed (release payload row)": {
+    "source_text": "Successfully updated {0}",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "455ef5d3c8a2ad64"
+  },
+  "Suggest Optimizations||quorum-confirmed (release payload row)": {
+    "source_text": "Suggest Optimizations",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "f1caf7bb57904225"
+  },
+  "Sync events from Google as public||quorum-confirmed (release payload row)": {
+    "source_text": "Sync events from Google as public",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "78ff0d7c2834f8e6"
+  },
+  "System Manager privileges required.||quorum-confirmed (release payload row)": {
+    "source_text": "System Manager privileges required.",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "d49ccbb12c52fce4"
+  },
+  "Table Fieldname Missing||quorum-confirmed (release payload row)": {
+    "source_text": "Table Fieldname Missing",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "76834d101ee3bd5a"
+  },
+  "Target||quorum-confirmed (release payload row)": {
+    "source_text": "Target",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "978354db0c00fc78"
+  },
+  "Team Members Subtitle||quorum-confirmed (release payload row)": {
+    "source_text": "Team Members Subtitle",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "0b61321db1c6d883"
+  },
+  "Telemetry||quorum-confirmed (release payload row)": {
+    "source_text": "Telemetry",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "e87c57f595420aa9"
+  },
+  "The Condition '{0}' is invalid||quorum-confirmed (release payload row)": {
+    "source_text": "The Condition '{0}' is invalid",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "cfd0c87a1d5a07d9"
+  },
+  "The File URL you've entered is incorrect||quorum-confirmed (release payload row)": {
+    "source_text": "The File URL you've entered is incorrect",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "b9039e9bc45b88f0"
+  },
+  "The changes have been reverted.||quorum-confirmed (release payload row)": {
+    "source_text": "The changes have been reverted.",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "41dc8e820ea145e4"
+  },
+  "The country's ISO 3166 ALPHA-2 code.||quorum-confirmed (release payload row)": {
+    "source_text": "The country's ISO 3166 ALPHA-2 code.",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "5aefa063f799f216"
+  },
+  "The field {0} is mandatory||quorum-confirmed (release payload row)": {
+    "source_text": "The field {0} is mandatory",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "e24efc6e75616af6"
+  },
+  "The reset password link has been expired||quorum-confirmed (release payload row)": {
+    "source_text": "The reset password link has been expired",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "0357964882bfb340"
+  },
+  "The role {0} should be a custom role.||quorum-confirmed (release payload row)": {
+    "source_text": "The role {0} should be a custom role.",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "77db30fc3df028ab"
+  },
+  "The selected document {0} is not a {1}.||quorum-confirmed (release payload row)": {
+    "source_text": "The selected document {0} is not a {1}.",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "cc7ad6e2b5be8b58"
+  },
+  "There is no task called \\\"{}\\\"||quorum-confirmed (release payload row)": {
+    "source_text": "There is no task called \\\"{}\\\"",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "ebdc39e86c0b8838"
+  },
+  "Time Window (Seconds)||quorum-confirmed (release payload row)": {
+    "source_text": "Time Window (Seconds)",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "84fd4a2ff5619ad8"
+  },
+  "Timeline||quorum-confirmed (release payload row)": {
+    "source_text": "Timeline",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "9dcff98e275f0cb9"
+  },
+  "Tip: Try the new dropdown console using||quorum-confirmed (release payload row)": {
+    "source_text": "Tip: Try the new dropdown console using",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "d23c7c9ae06b5d1e"
+  },
+  "To enable server scripts, read the {0}.||quorum-confirmed (release payload row)": {
+    "source_text": "To enable server scripts, read the {0}.",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "197d5e5862cb077c"
+  },
+  "To generate password click {0}||quorum-confirmed (release payload row)": {
+    "source_text": "To generate password click {0}",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "856cc18d15b7e3ff"
+  },
+  "To know more click {0}||quorum-confirmed (release payload row)": {
+    "source_text": "To know more click {0}",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "ada459266f98911d"
+  },
+  "Token Endpoint Auth Method||quorum-confirmed (release payload row)": {
+    "source_text": "Token Endpoint Auth Method",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "dcb7acc1c80f74ad"
+  },
+  "Total Background Workers||quorum-confirmed (release payload row)": {
+    "source_text": "Total Background Workers",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "580cc55ccde6eae3"
+  },
+  "Total Errors (last 1 day)||quorum-confirmed (release payload row)": {
+    "source_text": "Total Errors (last 1 day)",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "05137bd8ffd4f8a8"
+  },
+  "Total Outgoing Emails||quorum-confirmed (release payload row)": {
+    "source_text": "Total Outgoing Emails",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "d89eec62a542ee0f"
+  },
+  "Traceback||quorum-confirmed (release payload row)": {
+    "source_text": "Traceback",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "3f0c6f46bed773a4"
+  },
+  "Track milestones for any document||quorum-confirmed (release payload row)": {
+    "source_text": "Track milestones for any document",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "9565b5592f9e596c"
+  },
+  "Transgender||quorum-confirmed (release payload row)": {
+    "source_text": "Transgender",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "f2573a9f8ae062f5"
+  },
+  "Translator||quorum-confirmed (release payload row)": {
+    "source_text": "Translator",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "e6fe8ee281de7e49"
+  },
+  "UIDNEXT||quorum-confirmed (release payload row)": {
+    "source_text": "UIDNEXT",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "2c3432ed05dfd586"
+  },
+  "UIDVALIDITY||quorum-confirmed (release payload row)": {
+    "source_text": "UIDVALIDITY",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "90d7e3a48f7dfc2a"
+  },
+  "URL must start with http:// or https://||quorum-confirmed (release payload row)": {
+    "source_text": "URL must start with http:// or https://",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "bd6dcfaaa23f4577"
+  },
+  "Un-following document {0}||quorum-confirmed (release payload row)": {
+    "source_text": "Un-following document {0}",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "2bd6aeb0cdde50b5"
+  },
+  "Unknown Rounding Method: {}||quorum-confirmed (release payload row)": {
+    "source_text": "Unknown Rounding Method: {}",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "03e8b0f79c7ba3da"
+  },
+  "Unknown file encoding. Tried to use: {0}||quorum-confirmed (release payload row)": {
+    "source_text": "Unknown file encoding. Tried to use: {0}",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "0aeeccd53ffba2f3"
+  },
+  "Unlock Reference Document||quorum-confirmed (release payload row)": {
+    "source_text": "Unlock Reference Document",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "da4396d2c77ce757"
+  },
+  "Unsupported function or operator: {0}||quorum-confirmed (release payload row)": {
+    "source_text": "Unsupported function or operator: {0}",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "9c9d4171d7d22a42"
+  },
+  "Updating global settings||quorum-confirmed (release payload row)": {
+    "source_text": "Updating global settings",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "8685a0d40ee02a76"
+  },
+  "Updating naming series options||quorum-confirmed (release payload row)": {
+    "source_text": "Updating naming series options",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "89e6f417cb9c449c"
+  },
+  "Updating {0} of {1}, {2}||quorum-confirmed (release payload row)": {
+    "source_text": "Updating {0} of {1}, {2}",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "2e3ac95fb03872b7"
+  },
+  "Use % for any non empty value.||quorum-confirmed (release payload row)": {
+    "source_text": "Use % for any non empty value.",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "39d0cbae3bca234e"
+  },
+  "Use First Day of Period||quorum-confirmed (release payload row)": {
+    "source_text": "Use First Day of Period",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "367d2fdf08a29221"
+  },
+  "Use a few uncommon words together.||quorum-confirmed (release payload row)": {
+    "source_text": "Use a few uncommon words together.",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "1edbcd715919c8d2"
+  },
+  "Use different Email ID||quorum-confirmed (release payload row)": {
+    "source_text": "Use different Email ID",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "996582a09c7a59ac"
+  },
+  "User Doctype Permissions||quorum-confirmed (release payload row)": {
+    "source_text": "User Doctype Permissions",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "bf0964a980352633"
+  },
+  "User Document Types Limit Exceeded||quorum-confirmed (release payload row)": {
+    "source_text": "User Document Types Limit Exceeded",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "2f830862b726a9ae"
+  },
+  "User Permissions created successfully||quorum-confirmed (release payload row)": {
+    "source_text": "User Permissions created successfully",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "339e6e393c7df4f2"
+  },
+  "User {0} impersonated as {1}||quorum-confirmed (release payload row)": {
+    "source_text": "User {0} impersonated as {1}",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "22d86dea1c63e796"
+  },
+  "Utilization||quorum-confirmed (release payload row)": {
+    "source_text": "Utilization",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "dee34f535f3e9041"
+  },
+  "Validate Frappe Mail Settings||quorum-confirmed (release payload row)": {
+    "source_text": "Validate Frappe Mail Settings",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "0dbcf43055e90869"
+  },
+  "Validate SSL Certificate||quorum-confirmed (release payload row)": {
+    "source_text": "Validate SSL Certificate",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "ae978788aaacd0ab"
+  },
+  "Views||quorum-confirmed (release payload row)": {
+    "source_text": "Views",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "69c404591e99d86f"
+  },
+  "Virtual||quorum-confirmed (release payload row)": {
+    "source_text": "Virtual",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "d02c86fe26e741c6"
+  },
+  "Virtual tables must be virtual fields||quorum-confirmed (release payload row)": {
+    "source_text": "Virtual tables must be virtual fields",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "2b259e6275b4f3c8"
+  },
+  "Visibility||quorum-confirmed (release payload row)": {
+    "source_text": "Visibility",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "7448611d5f93aa8a"
+  },
+  "Warning: Naming is not set||quorum-confirmed (release payload row)": {
+    "source_text": "Warning: Naming is not set",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "876eff8450d774b6"
+  },
+  "We've received your query!||quorum-confirmed (release payload row)": {
+    "source_text": "We've received your query!",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "9894f9c3242ebb31"
+  },
+  "Web Template is not specified||quorum-confirmed (release payload row)": {
+    "source_text": "Web Template is not specified",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "cf5ac5e0b46e5b86"
+  },
+  "Webhook||quorum-confirmed (release payload row)": {
+    "source_text": "Webhook",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "4814f62c108d82de"
+  },
+  "Website Theme image link||quorum-confirmed (release payload row)": {
+    "source_text": "Website Theme image link",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "c447b0e181253eda"
+  },
+  "Website Themes Available||quorum-confirmed (release payload row)": {
+    "source_text": "Website Themes Available",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "e6e8a501aae33986"
+  },
+  "Websocket||quorum-confirmed (release payload row)": {
+    "source_text": "Websocket",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "748a3a01d9aa2edc"
+  },
+  "Widths can be set in px or %.||quorum-confirmed (release payload row)": {
+    "source_text": "Widths can be set in px or %.",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "6250a7f1520d15e1"
+  },
+  "Workflow Action Permitted Role||quorum-confirmed (release payload row)": {
+    "source_text": "Workflow Action Permitted Role",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "a6f0ec6a24d608ff"
+  },
+  "Workflow States Don't Exist||quorum-confirmed (release payload row)": {
+    "source_text": "Workflow States Don't Exist",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "19241781ae9357b3"
+  },
+  "Workflow Transition Task||quorum-confirmed (release payload row)": {
+    "source_text": "Workflow Transition Task",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "e865ee13979da4c3"
+  },
+  "Workflow Transition Tasks||quorum-confirmed (release payload row)": {
+    "source_text": "Workflow Transition Tasks",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "f60bc1724f181015"
+  },
+  "XLSX||quorum-confirmed (release payload row)": {
+    "source_text": "XLSX",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "b338f6776fab63ae"
+  },
+  "Yandex.Mail||quorum-confirmed (release payload row)": {
+    "source_text": "Yandex.Mail",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "fe616939a55982a8"
+  },
+  "Year||quorum-confirmed (release payload row)": {
+    "source_text": "Year",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "89f6832560dec0b7"
+  },
+  "You are impersonating as another user.||quorum-confirmed (release payload row)": {
+    "source_text": "You are impersonating as another user.",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "d0b712bb6069da2f"
+  },
+  "You are not allowed to edit the report.||quorum-confirmed (release payload row)": {
+    "source_text": "You are not allowed to edit the report.",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "34c6848e2b1fd43d"
+  },
+  "You can select one from the following,||quorum-confirmed (release payload row)": {
+    "source_text": "You can select one from the following,",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "992d0ea567b69f21"
+  },
+  "You can use wildcard %||quorum-confirmed (release payload row)": {
+    "source_text": "You can use wildcard %",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "2ea354896bb66e97"
+  },
+  "You must be logged in to use this form.||quorum-confirmed (release payload row)": {
+    "source_text": "You must be logged in to use this form.",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "de3dfd8e6cc6bc23"
+  },
+  "You need to set one IMAP folder for {0}||quorum-confirmed (release payload row)": {
+    "source_text": "You need to set one IMAP folder for {0}",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "ecea81e0659670e9"
+  },
+  "You've been invited to join {0}||quorum-confirmed (release payload row)": {
+    "source_text": "You've been invited to join {0}",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "b09238b3428902f9"
+  },
+  "Your account has been deleted||quorum-confirmed (release payload row)": {
+    "source_text": "Your account has been deleted",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "ded8c719c801026d"
+  },
+  "Your exported report: {0}||quorum-confirmed (release payload row)": {
+    "source_text": "Your exported report: {0}",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "f3383fee15d01c2f"
+  },
+  "cProfile Output||quorum-confirmed (release payload row)": {
+    "source_text": "cProfile Output",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "fbecb6e7ecb9b68a"
+  },
+  "deferred||quorum-confirmed (release payload row)": {
+    "source_text": "deferred",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "a706016085b2165e"
+  },
+  "emacs||quorum-confirmed (release payload row)": {
+    "source_text": "emacs",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "9dc3436295dbfdac"
+  },
+  "fairlogin||quorum-confirmed (release payload row)": {
+    "source_text": "fairlogin",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "232e69f0442cd970"
+  },
+  "login_required||quorum-confirmed (release payload row)": {
+    "source_text": "login_required",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "ff7ef6fe8eda0df9"
+  },
+  "macOS Launchpad||quorum-confirmed (release payload row)": {
+    "source_text": "macOS Launchpad",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "7c44048b951c35ce"
+  },
+  "notified||quorum-confirmed (release payload row)": {
+    "source_text": "notified",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "f5f4ab8edd1332c4"
+  },
+  "on_cancel||quorum-confirmed (release payload row)": {
+    "source_text": "on_cancel",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "12fe97b6fcb768f2"
+  },
+  "on_trash||quorum-confirmed (release payload row)": {
+    "source_text": "on_trash",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "22c3879a30bdcebd"
+  },
+  "on_update||quorum-confirmed (release payload row)": {
+    "source_text": "on_update",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "f292f60214496975"
+  },
+  "on_update_after_submit||quorum-confirmed (release payload row)": {
+    "source_text": "on_update_after_submit",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "e4024a28f90374f0"
+  },
+  "processlist||quorum-confirmed (release payload row)": {
+    "source_text": "processlist",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "0ed4218b53fe6db2"
+  },
+  "s256||quorum-confirmed (release payload row)": {
+    "source_text": "s256",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "d7839b75b20d8325"
+  },
+  "starting the setup...||quorum-confirmed (release payload row)": {
+    "source_text": "starting the setup...",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "e7d1a07051fed5e2"
+  },
+  "string value, i.e. group||quorum-confirmed (release payload row)": {
+    "source_text": "string value, i.e. group",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "9d73ae66da9f0b06"
+  },
+  "string value, i.e. member||quorum-confirmed (release payload row)": {
+    "source_text": "string value, i.e. member",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "7ab8a7a3602aef49"
+  },
+  "this shouldn't break||quorum-confirmed (release payload row)": {
+    "source_text": "this shouldn't break",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "1ddd367a9f2b338f"
+  },
+  "version_table||quorum-confirmed (release payload row)": {
+    "source_text": "version_table",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "0f08cd03049c03d5"
+  },
+  "via Auto Repeat||quorum-confirmed (release payload row)": {
+    "source_text": "via Auto Repeat",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "fc25292231189c31"
+  },
+  "via Google Meet||quorum-confirmed (release payload row)": {
+    "source_text": "via Google Meet",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "867ce900c5da72d2"
+  },
+  "vim||quorum-confirmed (release payload row)": {
+    "source_text": "vim",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "0f2ed9e33d29ff4f"
+  },
+  "wkhtmltopdf||quorum-confirmed (release payload row)": {
+    "source_text": "wkhtmltopdf",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "e61cbf7111188a2b"
+  },
+  "wkhtmltopdf 0.12.x (with patched qt).||quorum-confirmed (release payload row)": {
+    "source_text": "wkhtmltopdf 0.12.x (with patched qt).",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "756dda607239d032"
+  },
+  "workflow_transition||quorum-confirmed (release payload row)": {
+    "source_text": "workflow_transition",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "01e6c3dcc74e1798"
+  },
+  "{0} and {1}||quorum-confirmed (release payload row)": {
+    "source_text": "{0} and {1}",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "8bfee7217ac58322"
+  },
+  "{0} can not be more than {1}||quorum-confirmed (release payload row)": {
+    "source_text": "{0} can not be more than {1}",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "809ad78a3cd04f5e"
+  },
+  "{0} has invalid backtick notation: {1}||quorum-confirmed (release payload row)": {
+    "source_text": "{0} has invalid backtick notation: {1}",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "6bdc33a4aa2af05c"
+  },
+  "{0} is a not a valid zip file||quorum-confirmed (release payload row)": {
+    "source_text": "{0} is a not a valid zip file",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "e563a7dd010debc7"
+  },
+  "{0} is mandatory||quorum-confirmed (release payload row)": {
+    "source_text": "{0} is mandatory",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "57be330230d21f2c"
+  },
+  "{0} is not a child table of {1}||quorum-confirmed (release payload row)": {
+    "source_text": "{0} is not a child table of {1}",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "af27bff2827d9699"
+  },
+  "{0} is not a field of doctype {1}||quorum-confirmed (release payload row)": {
+    "source_text": "{0} is not a field of doctype {1}",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "395823aaa8410974"
+  },
+  "{0} is not a valid Cron expression.||quorum-confirmed (release payload row)": {
+    "source_text": "{0} is not a valid Cron expression.",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "896b26aa156e69b9"
+  },
+  "{0} is not a valid parentfield for {1}||quorum-confirmed (release payload row)": {
+    "source_text": "{0} is not a valid parentfield for {1}",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "beb48908f7b15414"
+  },
+  "{0} is not a zip file||quorum-confirmed (release payload row)": {
+    "source_text": "{0} is not a zip file",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "a03e855a289d5207"
+  },
+  "{0} is not an allowed role for {1}||quorum-confirmed (release payload row)": {
+    "source_text": "{0} is not an allowed role for {1}",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "36deac11fa4bd2fc"
+  },
+  "{0} must be beginning with '{1}'||quorum-confirmed (release payload row)": {
+    "source_text": "{0} must be beginning with '{1}'",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "15ed9b40aa470d76"
+  },
+  "{0} must be equal to '{1}'||quorum-confirmed (release payload row)": {
+    "source_text": "{0} must be equal to '{1}'",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "3d1bbff5ca62a748"
+  },
+  "{0} must be none of {1}||quorum-confirmed (release payload row)": {
+    "source_text": "{0} must be none of {1}",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "6df6525aba54cf4f"
+  },
+  "{0} must be {1} {2}||quorum-confirmed (release payload row)": {
+    "source_text": "{0} must be {1} {2}",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "99f154f1d2f35e67"
+  },
+  "{0} only.||quorum-confirmed (release payload row)": {
+    "source_text": "{0} only.",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "f442271d2f55dc75"
+  },
+  "{0} removed their assignment.||quorum-confirmed (release payload row)": {
+    "source_text": "{0} removed their assignment.",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "a9a5c57ce963aff9"
+  },
+  "{0} row #{1}:||quorum-confirmed (release payload row)": {
+    "source_text": "{0} row #{1}:",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "7198a719a67e6158"
+  },
+  "{} Invalid python code on line {}||quorum-confirmed (release payload row)": {
+    "source_text": "{} Invalid python code on line {}",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "c7cf2f2f83d36c76"
+  },
+  "{} field cannot be empty.||quorum-confirmed (release payload row)": {
+    "source_text": "{} field cannot be empty.",
+    "translated_text": "",
+    "decision": "quorum-confirmed (release payload row)",
+    "decision_ref": "stage6-W6-0b batch-7 owner-approved 2026-09-22",
+    "release_version": "1.4",
+    "release_date": "2026-09-22",
+    "source_hash": "3312fee8500aefe5"
+  }
 }

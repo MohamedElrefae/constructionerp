@@ -1,5 +1,5 @@
 {
-  "base_commit": "f7a1c1648261c8944aa82c6677dfb568aad7af3c",
+  "base_commit": "dfbced4cc8b5bc568758c438204e88b29d049303",
   "categories": [
     {
       "app": "<untagged>",
@@ -50,7 +50,7 @@
       "total": 7773
     }
   ],
-  "generated_utc": "2026-09-23T02:08:45Z",
+  "generated_utc": "2026-09-23T03:10:09Z",
   "generator": "construction.localization_inventory.merkle_root over stage2_inventory.sql",
   "merkle": {
     "root": "f8c526c947897504ce2e7b2a13d7881bf76a0ad4b1ce11175674714c676f8c4d",

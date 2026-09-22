@@ -1,0 +1,15 @@
+{
+  "batch": "07",
+  "total_keys": 270,
+  "site_overrides_found": 269,
+  "site_overrides_with_arabic": [
+    "Patch",
+    "purple"
+  ],
+  "missing_keys": [
+    "Route: Example \"/app\"",
+    "There is no task called \"{}\"",
+    "Page to show on the website"
+  ],
+  "preserved": []
+}

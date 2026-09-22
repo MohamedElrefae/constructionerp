@@ -1,0 +1,270 @@
+Non-Conforming
+Not Allowed: Disabled User
+Not Permitted to read {0}
+Note: This will be shared with user.
+Number of onsite backups
+OAuth
+OTP Secret Reset - {0}
+Occurrences
+Official Documentation
+Offset must be a non-negative integer
+Old and new fieldnames are same.
+Oldest Unscheduled Job
+Only draft documents can be discarded
+OpenLDAP
+Order By must be a string
+Outgoing
+Outgoing (SMTP) Settings
+Outgoing Emails (Last 7 days)
+Outlook.com
+PATCH
+PDF Generation in Progress
+PDF Page Height (in mm)
+PDF Page Width (in mm)
+PDF generation may not work as expected.
+PID
+PUT
+Packages
+Page to show on the website
+Parameter
+Parent Element Selector
+Parentfield not specified in {0}: {1}
+Pass
+Password not found for {0} {1} {2}
+Password requirements not met
+Patch type {} not found in patches.txt
+Path {0} is not within module {1}
+Path {0} it not a valid path
+Personal Data Deletion Step
+Please attach the package
+Please enable {} before continuing.
+Please enter OpenID Configuration URL
+Please login to post a comment.
+Please set the document name
+Please specify the minutes offset
+Please update {} before continuing.
+Polling
+Prepared report render failed
+Printer mapping not set.
+Proceed
+Prof
+Profile
+Protect Attached Files
+Purchase Master Manager
+Purple
+Queue
+Queue in Background (BETA)
+Queue(s)
+Queues
+Queuing {0} for Submission
+Quick Help for Setting Permissions
+Range
+Rate limit for email link login
+Read Only Depends On (JS)
+Read the documentation to know more
+Readme
+Reason
+Received an invalid token type.
+Recipient Account Field
+Recorder Suggested Index
+Redirect to the selected app after login
+Redirects
+Reference Document Name
+Relay Server URL missing
+Release
+Reminder
+Reminder cannot be created in past.
+Removed
+Reopen
+Repeat Header and Footer
+Replicate
+Replicating...
+Replication completed.
+Represents a User in the system.
+Request for Account Deletion
+Reset All Customizations
+Reset Password Template
+Resource
+Resource Documentation
+Route: Example \"/app\"
+Row #{}: Fieldname is required
+Rules
+SMS sent successfully
+SMTP Server is required
+Saving Customization...
+Schedule
+Scheduler
+Scope
+Script to attach to all web pages.
+Scripting
+Scripts
+See previous responses
+Select Network Printer
+Send Email To Creator
+Sender
+Sendgrid
+Series Updated for {}
+Service
+Session Expiry (idle timeout)
+Sessions
+Settings for Contact Us Page
+Settings for the About Us Page
+Setup > Customize Form
+Setup > User Permissions
+Setup Series for transactions
+Show Absolute Datetime in Timeline
+Show App Icons As Folder
+Show Auth Server Metadata
+Show First Document Tour
+Show Only Failed Logs
+Show Protected Resource Metadata
+Show Values over Chart
+Show in Resource Metadata
+Show link to document
+Sign Up and Confirmation
+Skipped
+Skipping {0} of {1}, {2}
+Slideshow like display for the website
+Slug
+Snippet and more variables:  {0}
+SocketIO Transport Mode
+SparkPost
+Spawns actions in a background job
+Standard DocType can not be deleted.
+Standard Reports cannot be deleted
+Standard Reports cannot be edited
+Standard rich text editor with controls
+State
+Statistics
+Stop
+Storage Usage By Table
+Store Attached PDF Document
+Strip EXIF tags from uploaded images
+Subtle
+Successfully imported {0}
+Successfully signed out
+Successfully updated {0}
+Suggest Optimizations
+Sync events from Google as public
+System Manager privileges required.
+Table Fieldname Missing
+Target
+Team Members Subtitle
+Telemetry
+The Condition '{0}' is invalid
+The File URL you've entered is incorrect
+The changes have been reverted.
+The country's ISO 3166 ALPHA-2 code.
+The field {0} is mandatory
+The reset password link has been expired
+The role {0} should be a custom role.
+The selected document {0} is not a {1}.
+There is no task called \"{}\"
+Time Window (Seconds)
+Timeline
+Tip: Try the new dropdown console using
+To enable server scripts, read the {0}.
+To generate password click {0}
+To know more click {0}
+Token Endpoint Auth Method
+Total Background Workers
+Total Errors (last 1 day)
+Total Outgoing Emails
+Traceback
+Track milestones for any document
+Transgender
+Translator
+UIDNEXT
+UIDVALIDITY
+URL must start with http:// or https://
+Un-following document {0}
+Unknown Rounding Method: {}
+Unknown file encoding. Tried to use: {0}
+Unlock Reference Document
+Unsupported function or operator: {0}
+Updating global settings
+Updating naming series options
+Updating {0} of {1}, {2}
+Use % for any non empty value.
+Use First Day of Period
+Use a few uncommon words together.
+Use different Email ID
+User Doctype Permissions
+User Document Types Limit Exceeded
+User Permissions created successfully
+User {0} impersonated as {1}
+Utilization
+Validate Frappe Mail Settings
+Validate SSL Certificate
+Views
+Virtual
+Virtual tables must be virtual fields
+Visibility
+Warning: Naming is not set
+We've received your query!
+Web Template is not specified
+Webhook
+Website Theme image link
+Website Themes Available
+Websocket
+Widths can be set in px or %.
+Workflow Action Permitted Role
+Workflow States Don't Exist
+Workflow Transition Task
+Workflow Transition Tasks
+XLSX
+Yandex.Mail
+Year
+You are impersonating as another user.
+You are not allowed to edit the report.
+You can select one from the following,
+You can use wildcard %
+You must be logged in to use this form.
+You need to set one IMAP folder for {0}
+You've been invited to join {0}
+Your account has been deleted
+Your exported report: {0}
+cProfile Output
+deferred
+emacs
+fairlogin
+login_required
+macOS Launchpad
+notified
+on_cancel
+on_trash
+on_update
+on_update_after_submit
+processlist
+s256
+starting the setup...
+string value, i.e. group
+string value, i.e. member
+this shouldn't break
+version_table
+via Auto Repeat
+via Google Meet
+vim
+wkhtmltopdf
+wkhtmltopdf 0.12.x (with patched qt).
+workflow_transition
+{0} and {1}
+{0} can not be more than {1}
+{0} has invalid backtick notation: {1}
+{0} is a not a valid zip file
+{0} is mandatory
+{0} is not a child table of {1}
+{0} is not a field of doctype {1}
+{0} is not a valid Cron expression.
+{0} is not a valid parentfield for {1}
+{0} is not a zip file
+{0} is not an allowed role for {1}
+{0} must be beginning with '{1}'
+{0} must be equal to '{1}'
+{0} must be none of {1}
+{0} must be {1} {2}
+{0} only.
+{0} removed their assignment.
+{0} row #{1}:
+{} Invalid python code on line {}
+{} field cannot be empty.
