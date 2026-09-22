@@ -134,6 +134,7 @@ def main():
 
     password = read_password()
 
+    sid = None
     global UAT_PORT
     try:
         UAT_PORT = uat_port
