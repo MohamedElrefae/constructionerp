@@ -1,0 +1,178 @@
+{
+ "batch": "stage6-w60b-batch3",
+ "started_utc": "2026-09-22T16:44:54Z",
+ "site": "v16.localhost",
+ "checks": [
+  {
+   "name": "boot-lang-ar",
+   "ok": true,
+   "detail": "ar"
+  },
+  {
+   "name": "boot-messages-ge-1000",
+   "ok": true,
+   "detail": 11485
+  },
+  {
+   "name": "translate:Workspace Visibility",
+   "ok": true,
+   "detail": {
+    "expected": "ظهور مساحة العمل",
+    "got": "ظهور مساحة العمل"
+   }
+  },
+  {
+   "name": "translate:API Keys",
+   "ok": true,
+   "detail": {
+    "expected": "مفاتيح واجهة برمجة التطبيقات (API)",
+    "got": "مفاتيح واجهة برمجة التطبيقات (API)"
+   }
+  },
+  {
+   "name": "translate:Allow Bulk Editing",
+   "ok": true,
+   "detail": {
+    "expected": "السماح بالتحرير الجماعي",
+    "got": "السماح بالتحرير الجماعي"
+   }
+  },
+  {
+   "name": "translate:Amended Documents",
+   "ok": true,
+   "detail": {
+    "expected": "المستندات المُعدَّلة",
+    "got": "المستندات المُعدَّلة"
+   }
+  },
+  {
+   "name": "translate:Bad Cron Expression",
+   "ok": true,
+   "detail": {
+    "expected": "تعبير Cron غير صالح",
+    "got": "تعبير Cron غير صالح"
+   }
+  },
+  {
+   "name": "translate:Workspace Settings",
+   "ok": true,
+   "detail": {
+    "expected": "إعدادات مساحة العمل",
+    "got": "إعدادات مساحة العمل"
+   }
+  },
+  {
+   "name": "translate:Show sidebar",
+   "ok": true,
+   "detail": {
+    "expected": "إظهار الشريط الجانبي",
+    "got": "إظهار الشريط الجانبي"
+   }
+  },
+  {
+   "name": "translate:Workspace Manager",
+   "ok": true,
+   "detail": {
+    "expected": "مدير مساحة العمل",
+    "got": "مدير مساحة العمل"
+   }
+  },
+  {
+   "name": "translate:Active Directory",
+   "ok": true,
+   "detail": {
+    "expected": "دليل Active Directory",
+    "got": "دليل Active Directory"
+   }
+  },
+  {
+   "name": "translate:Module (for Export)",
+   "ok": true,
+   "detail": {
+    "expected": "الوحدة (للتصدير)",
+    "got": "الوحدة (للتصدير)"
+   }
+  },
+  {
+   "name": "all-probe-translations",
+   "ok": true,
+   "detail": "10/10"
+  },
+  {
+   "name": "translate-placeholder",
+   "ok": true,
+   "detail": {
+    "expected": "لا يمكن delete item.",
+    "got": "لا يمكن delete item."
+   }
+  },
+  {
+   "name": "boot-messages-lookup",
+   "ok": true,
+   "detail": {
+    "Workspace Visibility": "ظهور مساحة العمل",
+    "API Keys": "مفاتيح واجهة برمجة التطبيقات (API)",
+    "Allow Bulk Editing": "السماح بالتحرير الجماعي",
+    "Amended Documents": "المستندات المُعدَّلة"
+   }
+  },
+  {
+   "name": "rendered-dom-arabic-words",
+   "ok": true,
+   "detail": {
+    "count": 13,
+    "sample": [
+     "الأدوات",
+     "الأصول",
+     "الباطن",
+     "البيع",
+     "التصنيع",
+     "الجودة",
+     "المحاسبة",
+     "المخزون",
+     "المشاريع",
+     "المشتريات",
+     "بحث",
+     "مقاولات",
+     "منظمة"
+    ]
+   }
+  },
+  {
+   "name": "rendered-workspace-modules",
+   "ok": true,
+   "detail": [
+    "الأدوات",
+    "المحاسبة",
+    "المشتريات",
+    "المشاريع",
+    "المخزون",
+    "البيع"
+   ]
+  },
+  {
+   "name": "sidebar-arabic-items",
+   "ok": true,
+   "detail": [
+    "بحث                                       Ctrl+K",
+    "إشعار",
+    "سجل الطريق",
+    "إعدادات الإشعارات",
+    "قائمة المهام",
+    "التقارير",
+    "قائمة المهام",
+    "سطح المكتب"
+   ]
+  },
+  {
+   "name": "desk-title-captured",
+   "ok": true,
+   "detail": "Desktop"
+  }
+ ],
+ "finished_utc": "2026-09-22T16:45:05Z",
+ "summary": {
+  "pass": 19,
+  "fail": 0
+ }
+}
