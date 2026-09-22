@@ -1,11 +1,19 @@
 # Stage 6 — W6-0b short-UI exact CSV (2026-09-22)
 
-**Status: exact proposal delivered for owner review — no translation import authorized by this note.**
+**Status: proposal inventory only — do NOT approve the 1,915-row cut as one governed import batch.**
+
+Owner directive (2026-09-22, same day): commit this cut as the bounded
+inventory, then split the **1,894 translation-candidates** into workflow
+batches of ~200–300 rows (`stage6_w60b_batch_plan_2026-09-22.csv` /
+`stage6_w60b_batch_split_2026-09-22.py`). **Only batch 1 is presented for
+approval** — see `stage6_w60b_batch01_proposal_2026-09-22.md`. The 21
+`EXCEPTION-technical` rows remain documented exclusions
+(`stage6_w60b_technical_exclusions_2026-09-22.csv`).
 
 Basis: Owner Annotation 1 (2026-09-22) — prepare the exact bounded W6-0b CSV
 scope and this review package on `v16.localhost` as a **non-production test
-batch**; **no import and no batch expansion** until the owner approves this
-exact scope. Plan §18 hold (`production_mutation_authorized: false`, commit
+batch**; **no import and no batch expansion** until the owner approves an
+exact batch scope. Plan §18 hold (`production_mutation_authorized: false`, commit
 `e669102`) still applies to production, Stage-8 rollout, and unrelated W6
 batches.
 
@@ -80,10 +88,10 @@ is **not** used in W6-0b (short UI labels without a path remain candidates).
 
 ## Owner mark-up requested
 
-- [ ] Approve W6-0b as the next batch **exactly as the 1,915-row scope CSV**
-      (sha256 above), with the 21 technical rows as suppress-exceptions.
+Approval is **per bounded batch**, not for this full inventory:
+
+- [ ] Review **batch 1 only** in `stage6_w60b_batch01_proposal_2026-09-22.md`
+      (271 rows) — batches 02–07 stay unapproved.
 - [ ] Accept the 302 `prior_approved_a1a2` exclusions as out of scope.
-- [ ] Adjust scope/priority (e.g. move rows to W6-0c, change P2) — reply with
-      the delta; the cut script will be re-run and sha re-pinned.
-- [ ] Confirm terminology overrides (if any) go to the terminology sheet before
-      the quorum panel runs.
+- [ ] Acknowledge the 21 technical rows as non-translation exclusions.
+- [ ] Adjust batching rules if needed — re-run the split script; sha re-pinned.
