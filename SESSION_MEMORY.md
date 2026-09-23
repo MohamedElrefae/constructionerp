@@ -489,3 +489,15 @@ Workflow session capture: external MemoryGraph write was rejected by automatic a
 **Decisions:** batch-02 is closed for the test site only. Batch-03 remains unapproved. Stage 8/production remains gated on real production data, a named production site and rollout window, plus explicit production authorization. Leave the pre-existing untracked `v16.localhost/` logs untouched; do not push without explicit request.
 
 **Next:** prepare a bounded batch-03 proposal and present the exact CSV/SHA for separate owner approval. No batch-03 run or production work is authorized.
+
+---
+
+## 2026-09-24 — W6-3 batch-03 governed cycle CLOSED (test site)
+
+**Accomplished:** Owner approved the exact 234-row W6-3 batch-03 scope CSV (sha `a5f0e9f604ea52d89072d2c744864fdcbc733bc8307fd427a5c2658f4855dbc9`) for `v16.localhost` only. Independent AI-A1/A2/A3 and AI-R passed. Exact result: 111 payload releases + 121 preserved Site Overrides + 2 technical exceptions (`UPC`, `UPC-A`). Live import created 111, updated 0, skipped 2540, drift 0; final dry-run **2651/0/0/2651/0**, catalog sync 0/0. Catalog now 2,651 Released; freshness `critical_pass=true`; inventory 21,068 rows / Merkle `57951175001159a0187ef6ea876b06ee67ae9b13f63524fa7cb89f9456f8e70c`.
+
+**Verification:** hardened UAT preflight PASS (Redis 13000/11000, site 200, ar boot 12,953 messages, representative key, logout); browser 8/8 PASS with exact matches for all 232 payload/preserved values and no page errors; 270/270 module suite, 91/91 standalone; lints/scoped/vendor checks PASS; evidence-inclusive gate errors=0 on pre-commit HEAD `fb3e056` after atomic ten-envelope/index re-pin. Evidence index is expected to have the established HEAD mismatch after the closure commit, until next approved catalog event.
+
+**Credential audit:** First console invocation exited before running UAT. During recovery the local test Administrator password was briefly set to literal `test`, immediately replaced with a fresh random credential before UAT, then the UAT credential was rotated again in teardown; final Administrator language is `en`. No production site/credential was involved. See the cycle report for the disclosure.
+
+**Boundaries:** batch 04 and all other unapproved scopes untouched; no Stage 8 or production activity. Production remains held until real production data, named production site, rollout window, and explicit authorization are provided together. Existing untracked `v16.localhost/` logs remain excluded and untouched.

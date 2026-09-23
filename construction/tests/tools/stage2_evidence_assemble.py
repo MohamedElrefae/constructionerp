@@ -6,6 +6,7 @@ ten governed envelopes + index.txt. See docs/ai/work-items/.../evidence.
 
 import hashlib
 import json
+import os
 import re
 import subprocess
 from datetime import datetime, timezone
@@ -13,7 +14,7 @@ from pathlib import Path
 
 APP = Path(__file__).resolve().parents[3]  # apps/construction
 ROOT = APP
-CAP = Path("/tmp/opencode/stage2")
+CAP = Path(os.environ.get("STAGE2_EVIDENCE_CAPTURE_DIR", "/tmp/opencode/stage2"))
 EV = ROOT / "docs/ai/work-items/erp-arabic-bilingual-data/evidence/raw-logs/stage2"
 
 ARTIFACT_PATHS = {
