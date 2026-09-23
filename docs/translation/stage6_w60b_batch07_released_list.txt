@@ -3,7 +3,6 @@ Not Allowed: Disabled User
 Not Permitted to read {0}
 Note: This will be shared with user.
 Number of onsite backups
-OAuth
 OTP Secret Reset - {0}
 Occurrences
 Official Documentation
@@ -11,19 +10,14 @@ Offset must be a non-negative integer
 Old and new fieldnames are same.
 Oldest Unscheduled Job
 Only draft documents can be discarded
-OpenLDAP
 Order By must be a string
 Outgoing
 Outgoing (SMTP) Settings
 Outgoing Emails (Last 7 days)
-Outlook.com
-PATCH
 PDF Generation in Progress
 PDF Page Height (in mm)
 PDF Page Width (in mm)
 PDF generation may not work as expected.
-PID
-PUT
 Packages
 Page to show on the website
 Parameter
@@ -60,7 +54,6 @@ Queuing {0} for Submission
 Quick Help for Setting Permissions
 Range
 Rate limit for email link login
-Read Only Depends On (JS)
 Read the documentation to know more
 Readme
 Reason
@@ -102,7 +95,6 @@ See previous responses
 Select Network Printer
 Send Email To Creator
 Sender
-Sendgrid
 Series Updated for {}
 Service
 Session Expiry (idle timeout)
@@ -128,7 +120,6 @@ Slideshow like display for the website
 Slug
 Snippet and more variables:  {0}
 SocketIO Transport Mode
-SparkPost
 Spawns actions in a background job
 Standard DocType can not be deleted.
 Standard Reports cannot be deleted
@@ -174,8 +165,6 @@ Traceback
 Track milestones for any document
 Transgender
 Translator
-UIDNEXT
-UIDVALIDITY
 URL must start with http:// or https://
 Un-following document {0}
 Unknown Rounding Method: {}
@@ -203,17 +192,13 @@ Visibility
 Warning: Naming is not set
 We've received your query!
 Web Template is not specified
-Webhook
 Website Theme image link
 Website Themes Available
-Websocket
 Widths can be set in px or %.
 Workflow Action Permitted Role
 Workflow States Don't Exist
 Workflow Transition Task
 Workflow Transition Tasks
-XLSX
-Yandex.Mail
 Year
 You are impersonating as another user.
 You are not allowed to edit the report.
@@ -226,28 +211,14 @@ Your account has been deleted
 Your exported report: {0}
 cProfile Output
 deferred
-emacs
-fairlogin
-login_required
-macOS Launchpad
 notified
-on_cancel
-on_trash
-on_update
-on_update_after_submit
-processlist
-s256
 starting the setup...
 string value, i.e. group
 string value, i.e. member
 this shouldn't break
-version_table
 via Auto Repeat
 via Google Meet
-vim
-wkhtmltopdf
 wkhtmltopdf 0.12.x (with patched qt).
-workflow_transition
 {0} and {1}
 {0} can not be more than {1}
 {0} has invalid backtick notation: {1}

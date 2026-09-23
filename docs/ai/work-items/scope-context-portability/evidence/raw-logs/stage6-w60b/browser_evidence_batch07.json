@@ -1,0 +1,194 @@
+{
+ "batch": "stage6-w60b-batch7",
+ "started_utc": "2026-09-23T09:56:51Z",
+ "site": "v16.localhost",
+ "checks": [
+  {
+   "name": "boot-lang-ar",
+   "ok": true,
+   "detail": "ar"
+  },
+  {
+   "name": "boot-messages-ge-1000",
+   "ok": true,
+   "detail": 12492
+  },
+  {
+   "name": "translate:Non-Conforming",
+   "ok": true,
+   "detail": {
+    "expected": "غير مطابق",
+    "got": "غير مطابق"
+   }
+  },
+  {
+   "name": "translate:Outgoing Emails (Last 7 days)",
+   "ok": true,
+   "detail": {
+    "expected": "رسائل البريد الصادرة (آخر 7 أيام)",
+    "got": "رسائل البريد الصادرة (آخر 7 أيام)"
+   }
+  },
+  {
+   "name": "translate:PDF Generation in Progress",
+   "ok": true,
+   "detail": {
+    "expected": "جارٍ إنشاء PDF",
+    "got": "جارٍ إنشاء PDF"
+   }
+  },
+  {
+   "name": "translate:Reset All Customizations",
+   "ok": true,
+   "detail": {
+    "expected": "إعادة تعيين كل التخصيصات",
+    "got": "إعادة تعيين كل التخصيصات"
+   }
+  },
+  {
+   "name": "translate:Show First Document Tour",
+   "ok": true,
+   "detail": {
+    "expected": "إظهار جولة المستند الأولى",
+    "got": "إظهار جولة المستند الأولى"
+   }
+  },
+  {
+   "name": "translate:Successfully signed out",
+   "ok": true,
+   "detail": {
+    "expected": "تم تسجيل الخروج بنجاح",
+    "got": "تم تسجيل الخروج بنجاح"
+   }
+  },
+  {
+   "name": "translate:System Manager privileges required.",
+   "ok": true,
+   "detail": {
+    "expected": "مطلوب صلاحيات مدير النظام.",
+    "got": "مطلوب صلاحيات مدير النظام."
+   }
+  },
+  {
+   "name": "translate:You've been invited to join {0}",
+   "ok": true,
+   "detail": {
+    "expected": "تمت دعوتك للانضمام إلى {0}",
+    "got": "تمت دعوتك للانضمام إلى {0}"
+   }
+  },
+  {
+   "name": "translate:The field {0} is mandatory",
+   "ok": true,
+   "detail": {
+    "expected": "الحقل {0} إلزامي",
+    "got": "الحقل {0} إلزامي"
+   }
+  },
+  {
+   "name": "translate:{} field cannot be empty.",
+   "ok": true,
+   "detail": {
+    "expected": "لا يمكن أن يكون حقل {} فارغًا.",
+    "got": "لا يمكن أن يكون حقل {} فارغًا."
+   }
+  },
+  {
+   "name": "translate:Sign Up and Confirmation",
+   "ok": true,
+   "detail": {
+    "expected": "التسجيل والتأكيد",
+    "got": "التسجيل والتأكيد"
+   }
+  },
+  {
+   "name": "translate:Track milestones for any document",
+   "ok": true,
+   "detail": {
+    "expected": "تتبع المحطات لأي مستند",
+    "got": "تتبع المحطات لأي مستند"
+   }
+  },
+  {
+   "name": "all-probe-translations",
+   "ok": true,
+   "detail": "12/12"
+  },
+  {
+   "name": "translate-placeholder",
+   "ok": true,
+   "detail": {
+    "expected": "غير مسموح بقراءة Widgets",
+    "got": "غير مسموح بقراءة Widgets"
+   }
+  },
+  {
+   "name": "boot-messages-lookup",
+   "ok": true,
+   "detail": {
+    "Non-Conforming": "غير مطابق",
+    "Outgoing Emails (Last 7 days)": "رسائل البريد الصادرة (آخر 7 أيام)",
+    "PDF Generation in Progress": "جارٍ إنشاء PDF",
+    "Reset All Customizations": "إعادة تعيين كل التخصيصات"
+   }
+  },
+  {
+   "name": "rendered-dom-arabic-words",
+   "ok": true,
+   "detail": {
+    "count": 13,
+    "sample": [
+     "الأدوات",
+     "الأصول",
+     "الباطن",
+     "البيع",
+     "التصنيع",
+     "الجودة",
+     "المحاسبة",
+     "المخزون",
+     "المشاريع",
+     "المشتريات",
+     "بحث",
+     "مقاولات",
+     "منظمة"
+    ]
+   }
+  },
+  {
+   "name": "rendered-workspace-modules",
+   "ok": true,
+   "detail": [
+    "الأدوات",
+    "المحاسبة",
+    "المشتريات",
+    "المشاريع",
+    "المخزون",
+    "البيع"
+   ]
+  },
+  {
+   "name": "sidebar-arabic-items",
+   "ok": true,
+   "detail": [
+    "بحث                                       Ctrl+K",
+    "إشعار",
+    "سجل الطريق",
+    "إعدادات الإشعارات",
+    "قائمة المهام",
+    "التقارير",
+    "قائمة المهام",
+    "تنزيل النسخ الاحتياطية"
+   ]
+  },
+  {
+   "name": "desk-title-captured",
+   "ok": true,
+   "detail": "Desktop"
+  }
+ ],
+ "finished_utc": "2026-09-23T09:57:03Z",
+ "summary": {
+  "pass": 21,
+  "fail": 0
+ }
+}

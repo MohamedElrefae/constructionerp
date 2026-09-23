@@ -1,15 +1,33 @@
 {
   "batch": "07",
+  "generated": "2026-09-22",
+  "site": "v16.localhost",
+  "scope_sha256": "1716d01c20129b86d629034d2c826a17a3029feb44b7006e1e19b7faa9bc76d4",
   "total_keys": 270,
-  "site_overrides_found": 269,
-  "site_overrides_with_arabic": [
-    "Patch",
-    "purple"
+  "runtime_rows_scanned": 20367,
+  "exact_case_matches": 267,
+  "case_variant_rows_with_arabic": [
+    {
+      "source_text": "Patch",
+      "translated_text": "بقعة",
+      "ct_origin": ""
+    },
+    {
+      "source_text": "purple",
+      "translated_text": "أرجواني",
+      "ct_origin": ""
+    }
   ],
   "missing_keys": [
-    "Route: Example \"/app\"",
-    "There is no task called \"{}\"",
+    "Route: Example \\\"/app\\\"",
+    "There is no task called \\\"{}\\\"",
     "Page to show on the website"
   ],
-  "preserved": []
+  "matched_origins": {
+    "": 267
+  },
+  "matched_nonempty_values": 0,
+  "site_override_origin_rows": 0,
+  "preserved": [],
+  "note": "Authoritative dump 20367 runtime rows. Zero ct_origin='Site Override' among batch-7 keys -> PRESERVED=0, drift=0 expected. PATCH/Purple have exact-cased empty runtime rows; case-variant Patch/purple carry operator values but are separate rows (PATCH is EXCEPTION-technical; Purple imports against its exact-cased row). 238 of 241 Released keys have exact-cased empty-origin runtime rows (-> updates); 3 have no runtime row (-> creates)."
 }
