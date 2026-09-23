@@ -38,6 +38,7 @@ The repaired `%` translation retains the source placeholder. Final catalog: 2,31
 - Arabic UAT preflight: pass; fresh Desk boot `lang=ar`, 12,739 messages, batch key present.
 - Arabic browser evidence: **21/21 PASS**, 0 failures.
 - Evidence index: `docs/ai/work-items/erp-arabic-bilingual-data/evidence/raw-logs/stage2/index.txt`, sha256 `eba181bce1b93f50ae1614e079fa9a6736cf039fa4924eb833f0edccf83e7190`, bound to base HEAD `9a3f44fbd1fd4ab5a94da1bee86ef6db7bd77753`.
+- Cycle commit: `0bfc062e12ed1c96da253dadbaa230fa41009a60` (parent/base `9a3f44f`).
 - Browser JSON sha256: `dfc42440b9e2917a5bd68be4f33a1cda47904e1a7aff514725c16bf21219617b`.
 - Browser screenshot sha256: `0c4ed9acba6187cdf00a93f600da40d5d3bc2dda804885059823d5159a7ac391`.
 - Teardown completed: temporary credential rotated to `ct-w60b-rotated-off` and `Administrator.language` restored to `en`.

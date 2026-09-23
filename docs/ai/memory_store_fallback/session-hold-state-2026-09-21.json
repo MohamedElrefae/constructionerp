@@ -1,5 +1,5 @@
 {
-  "recorded_utc": "2026-09-23T20:17:57Z",
+  "recorded_utc": "2026-09-23T20:25:33Z",
   "session_type": "hold_state",
   "importance": 0.9,
   "summary": "W6-0b batches 1-7 closed (a0f01cb); W6-2 batch-01 closed (073458e); W6-2 batch-02 governed cycle CLOSED (b3b0681); W6-3 batch-01 governed cycle CLOSED on v16.localhost (catalog 2437, browser 21/21, evidence HEAD-bound). Batches 02/03 and production remain gated.",
@@ -8,7 +8,7 @@
     "W6-0b batches 1-7 COMPLETE and accepted (a0f01cb); 8bfc23a rejected history only",
     "W6-2 batch-01 COMPLETE and closed on v16.localhost 2026-09-23 (exact scope CSV sha b017df47… only)",
     "W6-2 batch-02 COMPLETE and closed on v16.localhost 2026-09-23 (exact scope CSV sha 9a096273… only); catalog 2319; commit b3b0681",
-    "W6-3 batch-01 COMPLETE and closed on v16.localhost 2026-09-23 (exact scope CSV sha 5eb34bc2… only); final disposition 115 preserved + 17 technical + 118 payload; catalog 2437; browser 21/21; evidence HEAD-bound to 9a3f44f",
+    "W6-3 batch-01 COMPLETE and closed on v16.localhost 2026-09-23 (exact scope CSV sha 5eb34bc2… only); final disposition 115 preserved + 17 technical + 118 payload; catalog 2437; browser 21/21; evidence HEAD-bound to 9a3f44f; cycle commit 0bfc062",
     "W6-3 batch-02 and batch-03 remain UNAPPROVED; no import or cycle execution for either",
     "next Stage 6 workflow-matrix batch requires explicit owner-approved scope proposal before any run",
     "no production mutation, production catalog/DB rollout, or Stage 8 production work",
