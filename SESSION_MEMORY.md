@@ -455,3 +455,12 @@ Workflow session capture: external MemoryGraph write was rejected by automatic a
 **Decisions:** Batch-01 closed under owner approval of that exact CSV only; all other scopes + production work excluded. Production Stage 8 still gated on real production data + named production site + rollout window + AI-R on exact release commit. Next Stage 6 matrix batch still requires a **new** owner-approved scope proposal before any run.
 **Open issues:** Historical build script still asserts 2276 — do not rerun. Owner-approved scope CSV historical trailing-space form intentionally untouched.
 **Next:** Propose next bounded Stage 6 workflow-matrix scope (PROPOSAL ONLY) → owner approval → only then run. Always run hardened `uat_preflight.py` before Stage 8 validations. No production work authorized.
+
+---
+
+## 2026-09-23 — W6-2 batch-02 proposal filed (PROPOSAL ONLY)
+
+**Accomplished:** Deterministic remainder cut from W6-2 raw 337 (first-location buying/selling) after batch-01 closed. Exact scope CSV `stage6_w602_batch02_rows_2026-09-23.csv` — **48 rows**, sha256 `9a096273f2f7ef05a403edffbb4b75604b73ce7f854382c8fd570f5c329e44ce` (48 selling: 1 pre-filled `Address` + 47 unfilled; 17 placeholders; all ≤120; no HTML). Overlap **0** vs released catalog 2275, batch 01 (270), all prior W6-0b scope/payload/released files (26), technical exclusions (21), a1/a2 dedup (302). Residual not proposed: 15 `len>120` + 5 HTML + 1 already-released (`Could not find path for`). Proposal md filed; **no quorum, no import, no catalog change, no evidence re-pin**.
+**Decisions:** Awaiting owner approval of that exact 48-row CSV only. Evidence re-pin deferred to the next catalog-changing cycle. Production Stage 8 still gated.
+**Open issues:** None new. Untracked `v16.localhost/` at app root is cwd-relative Frappe/ipython log debris (4 files, 116K) — left unstaged/untracked pending owner word.
+**Next:** Owner mark-up on batch-02 proposal → only then governed cycle on `v16.localhost`. No production work authorized.
