@@ -175,7 +175,12 @@ def upsert_runtime_translation(
         existing_origin = doc.get("ct_origin") or ""
         if existing_origin == "Site Override" and origin == "Packaged Release":
             return {"name": doc.name, "skipped": True, "reason": "drift_site_override"}
-        if existing_origin == "Packaged Release" and origin == "Packaged Release" and release_version:
+        if (
+            existing_origin == "Packaged Release"
+            and origin == "Packaged Release"
+            and release_version
+            and doc.translated_text == translated_text
+        ):
             existing_ver = doc.get("ct_release_version") or ""
             if existing_ver and release_version and not _is_newer_version(release_version, existing_ver):
                 return {"name": doc.name, "skipped": True, "reason": "not_newer_version"}
@@ -341,7 +346,9 @@ def import_released_overrides(path=None, dry_run=True, _skip_permission=False):
             continue
         ver = (row.get("release_version") or "").strip()
         expected_app = (row.get("ct_app") or "").strip()
-        existing_rows = _get_runtime_rows(lang, src, ctx)
+        # Runtime lookups strip edge whitespace (same as upsert); catalog
+        # bulk rows keep exact upstream msgid bytes (may be unstripped).
+        existing_rows = _get_runtime_rows(lang, _runtime_source(src), ctx)
         existing_val = ""
         existing_origin = ""
         existing_app = ""
@@ -439,6 +446,7 @@ def import_released_overrides(path=None, dry_run=True, _skip_permission=False):
             existing_origin == "Packaged Release"
             and ver
             and existing_ver
+            and existing_val == val
             and not _is_newer_version(ver, existing_ver)
         ):
             skipped += 1

@@ -1,11 +1,49 @@
 COMMAND: bench --site v16.localhost console construction.localization_freshness.collect()
-STARTED_UTC: 2026-09-23T09:48:12Z
+STARTED_UTC: 2026-09-23T11:41:11Z
 ARTIFACT: construction/data/localization/freshness_evidence.json
-ARTIFACT_SHA256: 783fbc2d4e12b8686e464adb80b4bd060d66384a7d5974fcdb0fac90bbdc9104
-FRESHNESS_SHA256: 783fbc2d4e12b8686e464adb80b4bd060d66384a7d5974fcdb0fac90bbdc9104
+ARTIFACT_SHA256: fa2491c23a063637a63284d0b864ba67a64e9be2a868dc1dfad8ccb9c80ad387
+FRESHNESS_SHA256: fa2491c23a063637a63284d0b864ba67a64e9be2a868dc1dfad8ccb9c80ad387
 --- JSON START ---
-{"audit_timestamps": {"last_catalog_sync_at": "2026-09-22 13:07:14.851379", "last_drift_checked_at": "2026-09-23 15:03:29.104861", "last_release_import_at": "2026-09-23 15:01:35.457965"}, "collected_utc": "2026-09-23T09:33:29Z", "critical_keys": {"Desktop": "سطح المكتب", "Edit Sidebar": "تحرير الشريط الجانبي", "Toggle Full Width": "تبديل العرض الكامل", "Toggle Theme": "تبديل المظهر", "Typography Settings": "إعدادات الخطوط", "Workspaces": "مساحات العمل"}, "critical_pass": true, "db_now_at_collection": "2026-09-23 12:33:29", "health": {"constraint_name": "ct_translation_key_digest", "constraint_present": true, "drift_details": [], "has_drift": false, "has_duplicates": false, "has_null_digests": false, "has_orphan_site_overrides": false, "last_catalog_sync_at": "2026-09-22 13:07:14.851379", "last_drift_checked_at": "2026-09-23 15:03:29.104861", "last_release_import_at": "2026-09-23 15:01:35.457965", "loader_installed": true, "using_safe_fallback": false}, "inputs": {"construction_po_sha": "28362a98f1e1d4e9f5dee0a04945abe88154b29ff12d9e57ba738c98427d3812", "payload_csv_sha": "30572f1ffa9ad422fffab9e75ff328e0a6f03e229330cd4f9eb9ed0452a960a6"}, "packaged_rows": 2190, "runtime_digest": "f479a4a8793dd853495731d7307196df5fbb66558a62231c7489a6cf214aa128", "site": "v16.localhost"}
+{
+  "audit_timestamps": {
+    "last_catalog_sync_at": "2026-09-22 13:07:14.851379",
+    "last_drift_checked_at": "2026-09-23 17:11:12.011970",
+    "last_release_import_at": "2026-09-23 17:11:04.365881"
+  },
+  "collected_utc": "2026-09-23T11:41:12Z",
+  "critical_keys": {
+    "Desktop": "سطح المكتب",
+    "Edit Sidebar": "تحرير الشريط الجانبي",
+    "Toggle Full Width": "تبديل العرض الكامل",
+    "Toggle Theme": "تبديل المظهر",
+    "Typography Settings": "إعدادات الخطوط",
+    "Workspaces": "مساحات العمل"
+  },
+  "critical_pass": true,
+  "db_now_at_collection": "2026-09-23 14:41:12",
+  "health": {
+    "constraint_name": "ct_translation_key_digest",
+    "constraint_present": true,
+    "drift_details": [],
+    "has_drift": false,
+    "has_duplicates": false,
+    "has_null_digests": false,
+    "has_orphan_site_overrides": false,
+    "last_catalog_sync_at": "2026-09-22 13:07:14.851379",
+    "last_drift_checked_at": "2026-09-23 17:11:12.011970",
+    "last_release_import_at": "2026-09-23 17:11:04.365881",
+    "loader_installed": true,
+    "using_safe_fallback": false
+  },
+  "inputs": {
+    "construction_po_sha": "28362a98f1e1d4e9f5dee0a04945abe88154b29ff12d9e57ba738c98427d3812",
+    "payload_csv_sha": "44dfdfa89e31990fc0cbbd37ef5efe8fe75dcbc4079602262b4ae7cab2f9b917"
+  },
+  "packaged_rows": 2275,
+  "runtime_digest": "c8d95f3ceff99fc57f1124f77c85746c2ad160a605bf28d3dce3c008019217c0",
+  "site": "v16.localhost"
+}
 --- JSON END ---
 EXIT_CODE: 0
-FINISHED_UTC: 2026-09-23T09:48:12Z
-ENVELOPE_LINES: 11
+FINISHED_UTC: 2026-09-23T11:41:12Z
+ENVELOPE_LINES: 49

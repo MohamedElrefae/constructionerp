@@ -1,0 +1,271 @@
+source_text	translated_text	quorum_decision	decision_ref
+% Billed	نسبة المفوتر	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Action If Same Rate is Not Maintained	الإجراء إذا لم يتم الحفاظ على نفس السعر	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Added Supplier Role to User {0}.	تمت إضافة دور المورد للمستخدم {0}.	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Advance Paid	المدفوع مسبقا	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Advance Payment	دفعة مقدمة	already-released (catalog row retained; not re-appended)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Advance Payment Status	حالة الدفعة المقدمة	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Allow Purchase Order with Zero Quantity	السماح بأمر شراء بكمية صفر	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Allow Request for Quotation with Zero Quantity	السماح بطلب عرض سعر بكمية صفر	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Allow Supplier Quotation with Zero Quantity	السماح بعرض سعر مورد بكمية صفر	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Allowed Items	الأصناف المسموحة	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Amount to Bill	المبلغ المطلوب فوترته	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Analysis Chart	مخطط التحليل	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Auto Create Purchase Receipt	إنشاء إيصال شراء تلقائيا	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Auto Create Subcontracting Order	إنشاء أمر مقاولات باطن تلقائيًا	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Available Qty For Consumption	الكمية المتاحة للاستهلاك	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Available Qty at Company	الكمية المتاحة في الشركة	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Available Qty at Target Warehouse	الكمية المتاحة في المستودع الهدف	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Average Order Values	متوسط قيم الأوامر	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Bill for Rejected Quantity in Purchase Invoice	فوترة الكمية المرفوضة في فاتورة الشراء	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Billed, Received & Returned	مفوتر، مستلَم، ومرتجع	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Billing Address Details	تفاصيل عنوان الفوترة	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Blanket Order Allowance (%)	نسبة سماحية الأمر المفتوح	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Categorize by Item	تصنيف حسب الصنف	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Categorize by Supplier	تصنيف حسب المورد	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Configure the action to stop the transaction or just warn if the same rate is not maintained.	تكوين الإجراء لإيقاف المعاملة أو مجرد تنبيه في حال عدم الالتزام بنفس السعر.	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Could not find path for	تعذّر العثور على المسار لـ	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Create Link	إنشاء رابط	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Created {0} scorecards for {1} between:	تم إنشاء {0} بطاقات تقييم لـ {1} بين:	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Creating Stock Entry	جار إنشاء قيد مخزون	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Creating Subcontracting Order ...	جارٍ إنشاء أمر مقاولة باطن ...	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Criteria	المعايير	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Criteria weights must add up to 100%	يجب أن يكون مجموع أوزان المعايير 100%	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Customer Number	رقم العميل	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Customer Number At Supplier	رقم العميل لدى المورد	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Customer Numbers	أرقام العملاء	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Disable Last Purchase Rate	تعطيل آخر سعر شراء	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Dispatch Address Details	تفاصيل عنوان الإرسال	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Download PDF for Supplier	تنزيل PDF للمورد	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Expires in a week or less	تنتهي صلاحيته خلال أسبوع أو أقل	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Expires today or already expired	تنتهي صلاحيته اليوم أو انتهت بالفعل	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Finished Good Qty	كمية المنتج النهائي	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Fixed Outgoing Email Account	حساب البريد الصادر الثابت	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Fully Paid	مدفوع بالكامل	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Get Supplier Group Details	جلب تفاصيل مجموعة الموردين	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Has Unit Price Items	يحتوي على أصناف بسعر وحدة	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+How often should Project be updated of Total Purchase Cost ?	كم مرة يجب تحديث إجمالي تكلفة الشراء في المشروع؟	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+If checked, Rejected Quantity will be included while making Purchase Invoice from Purchase Receipt.	عند التحديد، ستُضمَّن الكمية المرفوضة عند إنشاء فاتورة الشراء من إيصال الشراء.	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+If enabled, a print of this document will be attached to each email	عند التفعيل، ستُرفق طباعة لهذا المستند مع كل رسالة بريد إلكتروني	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+If enabled, all files attached to this document will be attached to each email	عند التفعيل، ستُرفق جميع الملفات المرفقة بهذا المستند مع كل رسالة بريد إلكتروني	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+If enabled, the system will generate an accounting entry for materials rejected in the Purchase Receipt.	عند التفعيل، سيُنشئ النظام قيدًا محاسبيًا للمواد المرفوضة في إيصال الشراء.	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Include Closed Orders	تضمين الأوامر المغلقة	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Inter Company Sales Order	أمر بيع بين الشركات	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Internal Sales Order	أمر بيع داخلي	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Internal Supplier	مورد داخلي	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Internal Supplier for company {0} already exists	يوجد مورد داخلي بالفعل للشركة {0}	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Items & Pricing	الأصناف والتسعير	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Items to Order and Receive	أصناف للطلب والاستلام	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Learn Procurement	تعرّف على المشتريات	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Link with Customer	ربط مع عميل	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Linking Failed	فشل الربط	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Linking to Customer Failed. Please try again.	فشل الربط بالعميل. يرجى المحاولة مرة أخرى.	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+MPS	خطة الإنتاج الرئيسية	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Naming Series and Price Defaults	سلاسل التسمية وإعدادات السعر الافتراضية	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Not Initiated	لم يبدأ	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Order Status	حالة الأمر	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Over Transfer Allowance (%)	نسبة سماحية النقل الزائد	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Partnership	شراكة	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Percentage you are allowed to order beyond the Blanket Order quantity.	النسبة المسموح بها للطلب بما زاد عن كمية الأمر المفتوح.	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Please add 'Supplier' role to user {0}.	يرجى إضافة دور 'المورد' للمستخدم {0}.	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Please add Request for Quotation to the sidebar in Portal Settings.	يرجى إضافة طلب عرض السعر إلى الشريط الجانبي في إعدادات البوابة.	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Portal Users	مستخدمو البوابة	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Price ({0})	السعر ({0})	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Price Per Unit ({0})	السعر لكل وحدة ({0})	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Primary Address and Contact	العنوان وجهة الاتصال الرئيسية	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Production Plan Sub Assembly Item	عنصر تجميع فرعي لخطة الإنتاج	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Purchase Orders Count	عدد أوامر الشراء	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Purchase Receipt (Draft) will be auto-created on submission of Subcontracting Receipt.	سيُنشأ إيصال الشراء (مسودة) تلقائيًا عند ترحيل إيصال مقاولة الباطن.	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Purchase Value	قيمة الشراء	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Qty in Stock UOM	الكمية بوحدة قياس المخزون	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Qty to Be Consumed	الكمية المطلوب استهلاكها	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Quotation Number	رقم عرض السعر	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Raw materials consumed qty will be validated based on FG BOM required qty	ستُتحقق الكمية المستهلكة من المواد الخام بناءً على الكمية المطلوبة في قائمة مواد المنتج النهائي	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Return of Components	إرجاع المكونات	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Row #{0}: BOM is not specified for subcontracting item {0}	الصف #{0}: لم يُحدد إجراء قائمة المواد لصنف مقاولة الباطن {0}	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Row #{0}: Default BOM not found for FG Item {1}	الصف #{0}: لم يتم العثور على قائمة المواد الافتراضية لصنف المنتج النهائي {1}	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Row #{0}: Finished Good Item Qty can not be zero	الصف #{0}: لا يمكن أن تكون كمية صنف المنتج النهائي صفرًا	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Row #{0}: Finished Good Item is not specified for service item {1}	الصف #{0}: لم يُحدد صنف المنتج النهائي للصنف الخدمي {1}	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Row #{0}: Finished Good Item {1} must be a sub-contracted item	الصف #{0}: يجب أن يكون صنف المنتج النهائي {1} صنف مقاولة باطن	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Row #{0}: Item {1} does not exist	الصف #{0}: الصنف {1} غير موجود	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Row #{1}: Warehouse is mandatory for stock Item {0}	الصف #{1}: المستودع إلزامي لصنف المخزون {0}	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Sales Order Packed Item	صنف معبأ لأمر البيع	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Select Finished Good	تحديد المنتج النهائي	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Select a Customer	تحديد عميل	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Send Document Print	إرسال نسخة مطبوعة من المستند	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Set Default Supplier	تعيين المورد الافتراضي	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Set Landed Cost Based on Purchase Invoice Rate	تعيين التكلفة الإضافية بناء على سعر فاتورة الشراء	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Set Valuation Rate for Rejected Materials	تعيين سعر التقييم للمواد المرفوضة	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Shipping Address Details	تفاصيل عنوان الشحن	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Show Pay Button in Purchase Order Portal	إظهار زر الدفع في بوابة أمر الشراء	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Subcontract Order	أمر مقاولات باطن	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Subcontract Order Summary	ملخص أمر مقاولات باطن	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Subcontracted Quantity	الكمية المنفذة من الباطن	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Subcontracting Order	أمر مقاولات باطن	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Subcontracting Order (Draft) will be auto-created on submission of Purchase Order.	سيُنشأ أمر مقاولة الباطن (مسودة) تلقائيًا عند ترحيل أمر الشراء.	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Subcontracting Order {0} created.	تم إنشاء أمر مقاولة الباطن {0}.	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Subcontracting Settings	إعدادات مقاولات الباطن	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Submit Action Failed	فشل إجراء الترحيل	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Submit your Quotation	ترحيل عرض السعر	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Successfully linked to Customer	تم الربط بالعميل بنجاح	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Supplied Item	الصنف المورَّد	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Supplier Address Details	تفاصيل عنوان المورد	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Supplier Contact	جهة اتصال المورد	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Supplier Portal Users	مستخدمو بوابة الموردين	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Supplier Primary Address	العنوان الرئيسي للمورد	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Supplier Primary Contact	جهة الاتصال الرئيسية للمورد	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Supplier of Goods or Services.	مورد للسلع أو الخدمات.	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Terms & Conditions	الشروط والأحكام	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Terms Template	قالب الشروط	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+This Purchase Order has been fully subcontracted.	تمت مقاولة الباطن لأمر الشراء هذا بالكامل.	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+This is a preview of the email to be sent. A PDF of the document will automatically be attached with the email.	هذه معاينة للرسالة المراد إرسالها. ستُرفق تلقائيًا نسخة PDF من المستند مع البريد الإلكتروني.	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+To Pay	مستحق الدفع	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+To be Delivered to Customer	للتسليم للعميل	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Tools	الأدوات	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Total Purchase Amount	إجمالي مبلغ الشراء	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Total Supplied Qty	إجمالي الكمية المزودة	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Transaction Settings	إعدادات المعاملة	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Unable to find variable:	تعذّر العثور على المتغير:	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Update Rate as per Last Purchase	تحديث السعر حسب آخر شراء	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Update frequency of Project	تكرار تحديث المشروع	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Validate Consumed Qty (as per BOM)	التحقق من الكمية المستهلكة (حسب قائمة المواد)	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Warehouse Settings	إعدادات المستودع	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+{}  To Receive	{}  للمستلَم	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+{} Pending	{} معلّق	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+ Address	 العنوان	preserved-site-override (not imported, plan §12; strip-collision with runtime Address SO at import)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+%  Delivered	نسبة التسليم	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+% Picked	نسبة المنتقى	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+% of materials billed against this Sales Order	% o نسبة المواد المفوترة ضد أمر البيع هذا	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+% of materials delivered against this Sales Order	% o نسبة المواد المسلَّمة ضد أمر البيع هذا	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+'Allow Multiple Sales Orders Against a Customer's Purchase Order'	السماح بأوامر بيع متعددة ضد أمر شراء العميل	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Action if Same Rate is Not Maintained Throughout Sales Cycle	الإجراء إذا لم يُحافظ على نفس السعر طوال دورة البيع	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Add Discount	إضافة خصم	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Add Schedule	إضافة جدول	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Additional	إضافي	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Additional Information updated successfully.	تم تحديث المعلومات الإضافية بنجاح.	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+All Items	كل الأصناف	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+All the items have been already returned.	تم إرجاع جميع الأصناف بالفعل.	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Allow Delivery of Overproduced Qty	السماح بتسليم الكمية المنتجة الزائدة	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Allow Item to be Added Multiple Times in a Transaction	السماح بإضافة الصنف عدة مرات في المعاملة	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Allow Negative rates for Items	السماح بأسعار سالبة للأصناف	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Allow Quotation with Zero Quantity	السماح بعرض سعر بكمية صفر	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Allow Sales Order Creation For Expired Quotation	السماح بإنشاء أمر بيع لعرض سعر منتهي الصلاحية	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Allow Sales Order with Zero Quantity	السماح بأمر بيع بكمية صفر	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Alternative Items	الأصناف البديلة	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Auto Fetch Serial Numbers	جلب الأرقام التسلسلية تلقائيا	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Based On Value	بناء على القيمة	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Bundle Items	أصناف المجموعة	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Buyer of Goods and Services.	مشتري للسلع والخدمات.	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Bypass credit check at Sales Order	تجاوز فحص الائتمان عند أمر البيع	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Calculate Product Bundle Price based on Child Items' Rates	احتساب سعر حزمة المنتج بناءً على أسعار الأصناف الفرعية	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Changed customer name to '{}' as '{}' already exists.	تم تغيير اسم العميل إلى '{}' لوجود '{}' بالفعل.	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Checkout	إتمام البيع	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Click to add email / phone	انقر لإضافة بريد إلكتروني / هاتف	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Commission Rate %	نسبة العمولة	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Complete Order	إكمال الطلب	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Contact No.	رقم جهة الاتصال	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Contribution %	نسبة المساهمة	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Contribution (%)	نسبة المساهمة	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Contribution Qty	كمية المساهمة	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Creating Delivery Note ...	جار إنشاء إذن التسليم ...	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Creating Delivery Schedule...	جارٍ إنشاء جدول التسليم...	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Creating Subcontracting Inward Order ...	جارٍ إنشاء أمر مقاولة الباطن الوارد ...	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Credit Limit Crossed	تم تجاوز حد الائتمان	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Curves	منحنيات	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Customer Defaults	إعدادات العميل الافتراضية	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Customer Portal Users	مستخدمو بوابة العملاء	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Deliver Scrap Items	تسليم أصناف الهالك	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Delivery Schedule	جدول التسليم	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Delivery Schedule Item	عنصر جدول التسليم	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Discount (%)	الخصم (%)	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Discount cannot be greater than 100%	لا يمكن أن يتجاوز الخصم 100%	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Discount cannot be greater than 100%.	لا يمكن أن يتجاوز الخصم 100%.	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Don't Reserve Sales Order Qty on Sales Return	لا تحجز كمية أمر البيع عند مرتجع المبيعات	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Edit Cart	تعديل السلة	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Editing {0} is not allowed as per POS Profile settings	التعديل على {0} غير مسموح وفقًا لإعدادات ملف نقطة البيع	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Email Receipt	إرسال الإيصال بالبريد	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Enable Cut-Off Date on Bulk Delivery Note Creation	تفعيل تاريخ القطع عند إنشاء أذونات التسليم الجماعية	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Enable Discount Accounting for Selling	تمكين محاسبة الخصم للبيع	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Fetched only {0} available serial numbers.	تم جلب {0} من أرقام تسلسلية متاحة فقط.	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+First Delivery Date	تاريخ أول تسليم	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+From Due Date	من تاريخ الاستحقاق	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+From Opportunity	من الفرصة	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+From Prospect	من فرصة البيع	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Get Customer Group Details	جلب تفاصيل مجموعة العملاء	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Get Delivery Schedule	جلب جدول التسليم	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Has Alternative Item	له صنف بديل	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Hide Recent Orders	إخفاء الطلبات الأخيرة	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+If enabled, additional ledger entries will be made for discounts in a separate Discount Account	عند التفعيل، ستُنشأ قيود دفتر إضافية للخصومات في حساب خصم منفصل	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Ignore Pricing Rule is enabled. Cannot apply coupon code.	تم تمكين تجاهل قاعدة التسعير. لا يمكن تطبيق كود القسيمة.	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Inter Company Purchase Order	أمر شراء بين الشركات	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Inter Transfer Reference	مرجع النقل الداخلي	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Internal Customer	عميل داخلي	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Internal Customer for company {0} already exists	يوجد عميل داخلي بالفعل للشركة {0}	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Internal Purchase Order	أمر شراء داخلي	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Invalid Delivery Date	تاريخ تسليم غير صالح	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Invalid Discount	خصم غير صالح	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Invalid Group By	تجميع حسب غير صالح	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Invalid Return	مرتجع غير صالح	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Is Alternative	بديل	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Item Cart	سلة الأصناف	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Item is removed since no serial / batch no selected.	تمت إزالة الصنف لعدم اختيار رقم تسلسلي / دفعة.	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Item {0} has no Serial No. Only serialized items can have delivery based on Serial No	الصنف {0} ليس له رقم تسلسلي. الأصناف المسلسلة فقط يمكن تسليمها برقم تسلسلي	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Last transacted	آخر تعامل	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Learn Sales Management	تعرّف على إدارة المبيعات	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Link with Supplier	ربط مع مورد	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Linking to Supplier Failed. Please try again.	فشل الربط بالمورد. يرجى المحاولة مرة أخرى.	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Lost Quotations	عروض الأسعار المفقودة	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Lost Quotations %	نسبة عروض الأسعار المفقودة	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Lost Value	القيمة المفقودة	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Lost Value %	نسبة القيمة المفقودة	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Mention if non-standard Receivable account	اذكر إذا كان حساب المدينون غير قياسي	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Multiple Loyalty Programs found for Customer {}. Please select manually.	تم العثور على برامج ولاء متعددة للعميل {}. يرجى الاختيار يدويًا.	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+New Invoice	فاتورة جديدة	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+No items in cart	لا توجد أصناف في السلة	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+No of Deliveries	عدد التسليمات	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+No recent transactions found	لم يتم العثور على معاملات حديثة	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Non-Zeros	غير الأصفار	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Not Requested	غير مطلوب	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Only Value available for Payment Entry	القيمة المتاحة فقط لقيد الدفع	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Opportunities by Campaign	الفرص حسب الحملة	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Opportunities by Medium	الفرص حسب الوسيط	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Opportunities by Source	الفرص حسب المصدر	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+POS Closed	تم إغلاق نقطة البيع	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+POS Opening Entry Cancelled	تم إلغاء قيد فتح نقطة البيع	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+POS Opening Entry has been cancelled. Please refresh the page.	تم إلغاء قيد فتح نقطة البيع. يرجى تحديث الصفحة.	quorum-confirmed (release payload row)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Party Specific Item	صنف خاص بالجهة	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Payment Terms Status for Sales Order	حالة شروط الدفع لأمر البيع	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Picked Qty (in Stock UOM)	الكمية المنتقاة (بوحدة قياس المخزون)	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Please enter a valid quantity	يرجى إدخال كمية صالحة	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Price is not set for the item.	لم يتم تعيين سعر للصنف.	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Production Plan Qty	كمية خطة الإنتاج	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Quoted Amount	المبلغ المعروض	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Recent Orders	الطلبات الحديثة	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Recent Transactions	المعاملات الحديثة	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Remaining Amount	المبلغ المتبقي	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Returned	مرتجع	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+SO Total Qty	إجمالي كمية أمر البيع	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Sales Order Schedule	جدول أمر البيع	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Sales Update Frequency in Company and Project	تكرار تحديث المبيعات في الشركة والمشروع	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Sales Value	قيمة المبيعات	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Search by item code, serial number or barcode	البحث بكود الصنف أو الرقم التسلسلي أو الباركود	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Select Alternative Items for Sales Order	تحديد أصناف بديلة لأمر البيع	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Select Items up to Delivery Date	تحديد الأصناف حتى تاريخ التسليم	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Select a Payment Method.	تحديد طريقة دفع.	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Select an invoice to load summary data	حدد فاتورة لتحميل بيانات الملخص	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Set Supplier	تعيين المورد	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Set Warehouse	تعيين المستودع	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Show only the Immediate Upcoming Term	إظهار الشرط القادم مباشرة فقط	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Stock Reserved Qty (in Stock UOM)	كمية المخزون المحجوزة (بوحدة قياس المخزون)	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Subcontracting Inward	استلام مقاولات الباطن	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Subcontracting Inward Settings	إعدادات استلام مقاولات باطن	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Supplier Number	رقم المورد	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Supplier Number At Customer	رقم المورد لدى العميل	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Supplier Numbers	أرقام الموردين	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Supplier Required	المورد مطلوب	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Time Taken to Deliver	الوقت المستغرق للتسليم	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+To Due Date	إلى تاريخ الاستحقاق	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Total Items	إجمالي الأصناف	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Total Sales Amount	إجمالي مبلغ المبيعات	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Update Additional Information	تحديث المعلومات الإضافية	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22
+Use Prices from Default Price List as Fallback	استخدام أسعار قائمة الأسعار الافتراضية كاحتياط	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-01 owner-approved 2026-09-22

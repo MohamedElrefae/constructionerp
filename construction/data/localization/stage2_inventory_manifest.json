@@ -1,5 +1,5 @@
 {
-  "base_commit": "8bfc23a57679f5156dc42bc55b54e1eb5f6b5574",
+  "base_commit": "e522739b18f9e38eb8b83d5c5db79cbe99417b01",
   "categories": [
     {
       "app": "<untagged>",
@@ -27,15 +27,15 @@
     },
     {
       "app": "erpnext",
-      "approved_legacy": 4662.0,
+      "approved_legacy": 4661.0,
       "deprecated": 1.0,
-      "empty": 4266.0,
+      "empty": 4180.0,
       "no_status": 5.0,
-      "pending": 4266.0,
-      "populated_nontrivial": 4813.0,
-      "released": 149.0,
+      "pending": 4180.0,
+      "populated_nontrivial": 4984.0,
+      "released": 321.0,
       "source_equal": 5.0,
-      "total": 9083
+      "total": 9168
     },
     {
       "app": "frappe",
@@ -50,11 +50,11 @@
       "total": 8014
     }
   ],
-  "generated_utc": "2026-09-23T15:03:43Z",
+  "generated_utc": "2026-09-23T17:11:56Z",
   "generator": "construction.localization_inventory.merkle_root over stage2_inventory.sql",
   "merkle": {
-    "root": "453b676950e1ccb7b878ae98732ed59592db9011c58793d6b03f7b0b861bb931",
-    "rows": 20607,
+    "root": "3905ee76849de3d1be03c9860901e304606c85f1f122adffd2910ddd6b110195",
+    "rows": 20692,
     "scheme": "json(sorted(str-normalized (source,context,app,translated,review))) sha256"
   },
   "po_hashes": {
