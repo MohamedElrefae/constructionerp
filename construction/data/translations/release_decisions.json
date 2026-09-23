@@ -2867,6 +2867,53 @@
         }
       }
     },
+    "06289842245fc09b5ff2db756da04fadfc8a14fed076981b5a924650533dbd12": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w602_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "09c492039774180b5cdc6d374c6979730d6d60adb1f05b0788ee4ae9ca6fab64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "selling-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يجب ألا يكون الصنف الأعلى {0} أصلًا ثابتًا",
+        "sha256": "505458ace3adb221182def820b2828246bdd4fdbaf94ec00960c2f35c55e481d"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5; W6-2 batch-02",
+      "release_version": "1.5",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Parent Item {0} must not be a Fixed Asset",
+      "timestamps": [
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00"
+      ],
+      "translated_text": "يجب ألا يكون الصنف الأعلى {0} أصلًا ثابتًا",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
     "063039dc55e356699ecc1976d879a2edcca5810d4ea7d252d90e52ddd010244a": {
       "artifacts": [
         {
@@ -4136,6 +4183,53 @@
         }
       }
     },
+    "0830b34717cff94dc0c37a382e9b1c306907a9fce38f2f2949aa008d6dffd98b": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w602_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "09c492039774180b5cdc6d374c6979730d6d60adb1f05b0788ee4ae9ca6fab64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "selling-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الأرقام التسلسلية غير متاحة للصنف {0} في المستودع {1}. يرجى تجريب تغيير المستودع.",
+        "sha256": "55780661470c7becb38575faf4deb11e816025fd494529e02240f7f6ff7b7d0f"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5; W6-2 batch-02",
+      "release_version": "1.5",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Serial numbers unavailable for Item {0} under warehouse {1}. Please try changing warehouse.",
+      "timestamps": [
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00"
+      ],
+      "translated_text": "الأرقام التسلسلية غير متاحة للصنف {0} في المستودع {1}. يرجى تجريب تغيير المستودع.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
     "0834e27a3cd418360481985c4b84e1bd27b7326efde17a30830870fbe3252b73": {
       "artifacts": [
         {
@@ -5387,6 +5481,53 @@
         "2026-09-22 00:00:00"
       ],
       "translated_text": "تم إرسال رابط تسجيل الدخول إلى بريدك الإلكتروني",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "0b076dd51c9d16f38a19f68710196e6655dfc3b21945948bd05d569b76dc93e7": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w602_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "09c492039774180b5cdc6d374c6979730d6d60adb1f05b0788ee4ae9ca6fab64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "selling-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الإجمالي فقط",
+        "sha256": "f02c8b6dc0c5227e1533a17def7ec69f7c7a1bbc37b2e9158e305affc4725302"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5; W6-2 batch-02",
+      "release_version": "1.5",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Total Only",
+      "timestamps": [
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00"
+      ],
+      "translated_text": "الإجمالي فقط",
       "verdicts": {
         "AI-A1": {
           "confidence": "batch",
@@ -7878,6 +8019,53 @@
         "2026-09-22 00:00:00"
       ],
       "translated_text": "قيمة نصية، أي عضو",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "1134e34a53da2f75aecdb0ecb0dc16b21919ddf5c5b11a95498468a60d798cfb": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w602_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "09c492039774180b5cdc6d374c6979730d6d60adb1f05b0788ee4ae9ca6fab64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "selling-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الأسبوع {0} {1}",
+        "sha256": "86145e89ed1da58d17738b18e330ddb0c0a526faa350e983c43ed3977bdcb503"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5; W6-2 batch-02",
+      "release_version": "1.5",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Week {0} {1}",
+      "timestamps": [
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00"
+      ],
+      "translated_text": "الأسبوع {0} {1}",
       "verdicts": {
         "AI-A1": {
           "confidence": "batch",
@@ -10951,6 +11139,53 @@
         }
       }
     },
+    "1818711f1cae78f3c727268a1753154e93a22cbbef37797b44b43b059a3d69b0": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w602_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "09c492039774180b5cdc6d374c6979730d6d60adb1f05b0788ee4ae9ca6fab64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "selling-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تم استلام دفعة {0} بنجاح. بانتظار اكتمال الطلبات الأخرى...",
+        "sha256": "24ab075257c8a1a5d5bae415eb6f58001c2f43c5a1ee69877eb84608cf280a95"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5; W6-2 batch-02",
+      "release_version": "1.5",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Payment of {0} received successfully. Waiting for other requests to complete...",
+      "timestamps": [
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00"
+      ],
+      "translated_text": "تم استلام دفعة {0} بنجاح. بانتظار اكتمال الطلبات الأخرى...",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
     "182c46ed45bae820c400bbb6af0b549cb9ff34d1604d309ed958d15ea9245fde": {
       "artifacts": [
         {
@@ -12643,6 +12878,53 @@
         }
       }
     },
+    "1d0e4b51d07fd7acc0bebc1b3cbe37853fbc36da3f699be0241acb6041eef88a": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w602_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "09c492039774180b5cdc6d374c6979730d6d60adb1f05b0788ee4ae9ca6fab64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "selling-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يرجى حفظ أمر البيع قبل إضافة جدول التسليم.",
+        "sha256": "8d59d271840ccccc4ae4e47b17d0fbab10700bd6cba89009c5aacfa0a1dc7b35"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5; W6-2 batch-02",
+      "release_version": "1.5",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Please save the Sales Order before adding a delivery schedule.",
+      "timestamps": [
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00"
+      ],
+      "translated_text": "يرجى حفظ أمر البيع قبل إضافة جدول التسليم.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
     "1d2b3607e40e474c8683799094efd2f3e3e46d7d2ae9d62c199a68c4b03e45dc": {
       "artifacts": [
         {
@@ -13894,6 +14176,53 @@
         "2026-09-21 00:00:00"
       ],
       "translated_text": "يرجى تعيين {0} في الشركة {1} لاحتساب أرباح/خسائر فروق الصرف",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "20728382eb8b317f762ee72a674dff777f8357e2471d7b9dad82edff5332e1a0": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w602_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "09c492039774180b5cdc6d374c6979730d6d60adb1f05b0788ee4ae9ca6fab64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "selling-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "النسبة المسموح لك بيعها زائدًا عن كمية أمر البيع المفتوح.",
+        "sha256": "d1e1b6770cde3e2297af08812128789ba1b46a88e2e2e90d9b7fb6b52c114898"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5; W6-2 batch-02",
+      "release_version": "1.5",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Percentage you are allowed to sell beyond the Blanket Order quantity.",
+      "timestamps": [
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00"
+      ],
+      "translated_text": "النسبة المسموح لك بيعها زائدًا عن كمية أمر البيع المفتوح.",
       "verdicts": {
         "AI-A1": {
           "confidence": "batch",
@@ -15492,6 +15821,53 @@
         "2026-09-22 00:00:00"
       ],
       "translated_text": "تحديد الحقول (حتى {0})",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "24a549b2e49b09cfde14b0efb8758144d2bf27a9a9ba76fb9a107d6a5c3272d2": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w602_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "09c492039774180b5cdc6d374c6979730d6d60adb1f05b0788ee4ae9ca6fab64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "selling-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "سبب الإيقاف:",
+        "sha256": "432806d79345bf2eaa2b4f2996107655b38d267a39977931cac1e386a8cb9807"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5; W6-2 batch-02",
+      "release_version": "1.5",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Reason for hold:",
+      "timestamps": [
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00"
+      ],
+      "translated_text": "سبب الإيقاف:",
       "verdicts": {
         "AI-A1": {
           "confidence": "batch",
@@ -17701,6 +18077,53 @@
         "2026-09-22 00:00:00"
       ],
       "translated_text": "الدور المسموح به لإجراء سير العمل",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "2944d49f5326d2063774ed68469af987e72b216ba7c03a7cd30d74b02ce41e77": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w602_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "09c492039774180b5cdc6d374c6979730d6d60adb1f05b0788ee4ae9ca6fab64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "selling-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تم تطبيق عامل تصفية الأصناف هذا بالفعل للـ {0}",
+        "sha256": "de7c3f801fce55cd511509b7eaa86fa9a0d342c696bd97032269e26b8a868a44"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5; W6-2 batch-02",
+      "release_version": "1.5",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "This item filter has already been applied for the {0}",
+      "timestamps": [
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00"
+      ],
+      "translated_text": "تم تطبيق عامل تصفية الأصناف هذا بالفعل للـ {0}",
       "verdicts": {
         "AI-A1": {
           "confidence": "batch",
@@ -23829,6 +24252,53 @@
         }
       }
     },
+    "3797984727b1cccc8350a75959f8e0f76a2a37885fa1adc4a1560650019fac23": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w602_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "09c492039774180b5cdc6d374c6979730d6d60adb1f05b0788ee4ae9ca6fab64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "selling-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "إجمالي الكمية في جدول التسليم لا يمكن أن يكون أكبر من كمية الصنف",
+        "sha256": "cd2d6435c610f0c748be9b8bcdf33bf235ecc9407797505682d42db52b78687f"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5; W6-2 batch-02",
+      "release_version": "1.5",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Total quantity in delivery schedule cannot be greater than the item quantity",
+      "timestamps": [
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00"
+      ],
+      "translated_text": "إجمالي الكمية في جدول التسليم لا يمكن أن يكون أكبر من كمية الصنف",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
     "379ee46fe79d7f045e3b3f3d19bb077639f606e057c4d8eab82a3b4f71b9f818": {
       "artifacts": [
         {
@@ -26179,6 +26649,53 @@
         }
       }
     },
+    "3d0837bd2f433d626b3b7bede3d38b97d13238f554a32fd1e14b4716625abfcd": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w602_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "09c492039774180b5cdc6d374c6979730d6d60adb1f05b0788ee4ae9ca6fab64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "selling-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "استخدام نموذج التفاعلية القديم (من جهة العميل)",
+        "sha256": "9f3b5eb0b7bd5d92e63c33a69b5ae17fb2a7aa154361a8a78377ffb7cc855ec6"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5; W6-2 batch-02",
+      "release_version": "1.5",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Use Legacy (Client side) Reactivity",
+      "timestamps": [
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00"
+      ],
+      "translated_text": "استخدام نموذج التفاعلية القديم (من جهة العميل)",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
     "3d2d9f9d089ff62aa9fca0af33139763d5487d40e9dadf6ef600120ba0a0ac0c": {
       "artifacts": [
         {
@@ -27242,6 +27759,53 @@
         "2026-09-22 00:00:00"
       ],
       "translated_text": "عملة العرض الافتراضية",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "3f8770e778165d87c22366ac500b94c7c2abc515301ca67987212ad9df55476f": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w602_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "09c492039774180b5cdc6d374c6979730d6d60adb1f05b0788ee4ae9ca6fab64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "selling-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "كمية المخزون غير كافية لرمز الصنف: {0} في المستودع {1}. الكمية المتاحة {2} {3}.",
+        "sha256": "e5c478fe6adfb719d15e3c03797fcabe8c5549552fdb88f7995e5911024f2d2f"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5; W6-2 batch-02",
+      "release_version": "1.5",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Stock quantity not enough for Item Code: {0} under warehouse {1}. Available quantity {2} {3}.",
+      "timestamps": [
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00"
+      ],
+      "translated_text": "كمية المخزون غير كافية لرمز الصنف: {0} في المستودع {1}. الكمية المتاحة {2} {3}.",
       "verdicts": {
         "AI-A1": {
           "confidence": "batch",
@@ -30879,6 +31443,53 @@
         }
       }
     },
+    "4823b7a60dec894da8a5e4590462003d79096d6ae8926d22c1bbd8dc3b66b74e": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w602_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "09c492039774180b5cdc6d374c6979730d6d60adb1f05b0788ee4ae9ca6fab64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "selling-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "فرص البيع حسب الحملة",
+        "sha256": "22cb485534944c7bfa5cc9ee8400f941939dde4eb4804c2ad11782f8358cec92"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5; W6-2 batch-02",
+      "release_version": "1.5",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Sales Opportunities by Campaign",
+      "timestamps": [
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00"
+      ],
+      "translated_text": "فرص البيع حسب الحملة",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
     "482fb857318f3336011b36c53ec0b83d237fe696d15b45ae5b215a737579ba69": {
       "artifacts": [
         {
@@ -32994,6 +33605,53 @@
         }
       }
     },
+    "4c3e672922401fad252c2c343a5f9d062e2954d6a45d3dc003362d6ec4eb147a": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w602_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "09c492039774180b5cdc6d374c6979730d6d60adb1f05b0788ee4ae9ca6fab64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "selling-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "فرص البيع حسب المصدر",
+        "sha256": "9052d628c30a583bac7fd256bee78505302d2a4dd81dc4dff6c8e3c968e19d68"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5; W6-2 batch-02",
+      "release_version": "1.5",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Sales Opportunities by Source",
+      "timestamps": [
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00"
+      ],
+      "translated_text": "فرص البيع حسب المصدر",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
     "4ca2119c139fd1e09f8e32bae51bb7303938e12bfd697865358ace7aba974bf0": {
       "artifacts": [
         {
@@ -33681,6 +34339,53 @@
         "2026-09-22 00:00:00"
       ],
       "translated_text": "سجلات للمسح",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "4e6317864f9cd6e67e863b796e1ca5228142e8d7bf025a0b4d3a4c70c74faa60": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w602_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "09c492039774180b5cdc6d374c6979730d6d60adb1f05b0788ee4ae9ca6fab64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "selling-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يرجى التواصل مع المسؤول لتمديد حدود الائتمان لـ {0}.",
+        "sha256": "5af1446a2591e35e97c7485eeed3be62d7fc20ca7b92512825f39c13d1ce9e40"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5; W6-2 batch-02",
+      "release_version": "1.5",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Please contact your administrator to extend the credit limits for {0}.",
+      "timestamps": [
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00"
+      ],
+      "translated_text": "يرجى التواصل مع المسؤول لتمديد حدود الائتمان لـ {0}.",
       "verdicts": {
         "AI-A1": {
           "confidence": "batch",
@@ -37976,6 +38681,53 @@
         }
       }
     },
+    "5a09cfd318bda469a5dc44bb25f5381dbf19ca58705d5e396ad1d82870a62c57": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w602_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "09c492039774180b5cdc6d374c6979730d6d60adb1f05b0788ee4ae9ca6fab64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "selling-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تم إنشاء فاتورة نقطة البيع {0} بنجاح",
+        "sha256": "6f6e439d6bbf82e695a2235939498960758dba8604e9d3aa57eb5374f955bf83"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5; W6-2 batch-02",
+      "release_version": "1.5",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "POS invoice {0} created successfully",
+      "timestamps": [
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00"
+      ],
+      "translated_text": "تم إنشاء فاتورة نقطة البيع {0} بنجاح",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
     "5a2b8899d5673b7c93a040b0a84f2f7f30c16d367f484df20ce0058cf5dd5eb6": {
       "artifacts": [
         {
@@ -39856,6 +40608,53 @@
         }
       }
     },
+    "5e9e9cb611b8153d5fb984824761ff310cf434b203ed054232793d924ade1bff": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w602_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "09c492039774180b5cdc6d374c6979730d6d60adb1f05b0788ee4ae9ca6fab64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "selling-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يرجى إدخال تاريخ التسليم الأول",
+        "sha256": "245226902558a107cdf6b4e4bfed4d5b7e2cce0e2ce3e7f6813720f11cce56c6"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5; W6-2 batch-02",
+      "release_version": "1.5",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Please enter the first delivery date",
+      "timestamps": [
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00"
+      ],
+      "translated_text": "يرجى إدخال تاريخ التسليم الأول",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
     "5ec9cecdb02255712816f0f3fe29f4d33b447fcf31356e6535abd12ce74bbfe1": {
       "artifacts": [
         {
@@ -41342,6 +42141,53 @@
         "2026-09-21 00:00:00"
       ],
       "translated_text": "إضافة صف أسفل الصف الحالي",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "626f5fccdcdb45a3d7a600e3a437c12e66ca6ab63017fbc13ba06a8c100166f8": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w602_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "09c492039774180b5cdc6d374c6979730d6d60adb1f05b0788ee4ae9ca6fab64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "selling-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تم البيع بواسطة",
+        "sha256": "273bddf478d50ff0a271d3ea1546a29290a4c7727dc4b24498fb1ee0065ff0ba"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5; W6-2 batch-02",
+      "release_version": "1.5",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Sold by",
+      "timestamps": [
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00"
+      ],
+      "translated_text": "تم البيع بواسطة",
       "verdicts": {
         "AI-A1": {
           "confidence": "batch",
@@ -43530,6 +44376,53 @@
         }
       }
     },
+    "68bac09a541381d3fcdb07e9ef7dd1abd8abb53bcdce07a2e44edfe5b33e922d": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w602_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "09c492039774180b5cdc6d374c6979730d6d60adb1f05b0788ee4ae9ca6fab64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "selling-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "أرقام الموردين التي يعينها العميل",
+        "sha256": "729a615af97f980cfcbbc291faaeda006364f2e515a61910b92658052677623e"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5; W6-2 batch-02",
+      "release_version": "1.5",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Supplier numbers assigned by the customer",
+      "timestamps": [
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00"
+      ],
+      "translated_text": "أرقام الموردين التي يعينها العميل",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
     "68cfc5ed30e52aac0a7ebd47f2052e98da1d98392ff5ed9146666ce196a70f24": {
       "artifacts": [
         {
@@ -43888,6 +44781,53 @@
         "2026-09-22 00:00:00"
       ],
       "translated_text": "خطأ في {0}.get_list: {1}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "69e17cd2a98d7c2081c03de0cdafd3b52e4e62cc89c1c81c7b3d5f44b9b39f76": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w602_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "09c492039774180b5cdc6d374c6979730d6d60adb1f05b0788ee4ae9ca6fab64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "selling-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "إجمالي الكمية الملتقطة {0} أكبر من الكمية المطلوبة {1}. يمكنك ضبط حصة الالتقاط الزائد في إعدادات المخزون.",
+        "sha256": "5509a000d5a0015d03ab9132f84689837be1eb3b8b5e344dbc627d43691f5092"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5; W6-2 batch-02",
+      "release_version": "1.5",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Total Picked Quantity {0} is more than ordered qty {1}. You can set the Over Picking Allowance in Stock Settings.",
+      "timestamps": [
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00"
+      ],
+      "translated_text": "إجمالي الكمية الملتقطة {0} أكبر من الكمية المطلوبة {1}. يمكنك ضبط حصة الالتقاط الزائد في إعدادات المخزون.",
       "verdicts": {
         "AI-A1": {
           "confidence": "batch",
@@ -44311,6 +45251,53 @@
         "2026-09-22 00:00:00"
       ],
       "translated_text": "تعرّف على إدارة المبيعات",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "6ad0f43cf34154d85448bc8a97e4f781cda9d4ebb82d50b3dbd8440dd646db9a": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w602_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "09c492039774180b5cdc6d374c6979730d6d60adb1f05b0788ee4ae9ca6fab64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "selling-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تم التعاقد بأكمله بمقاولة الباطن لأمر البيع هذا.",
+        "sha256": "37ccc39e7628496987d4b48100f294adaff86492a52747981c88f89f73cfa1b8"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5; W6-2 batch-02",
+      "release_version": "1.5",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "This Sales Order has been fully subcontracted.",
+      "timestamps": [
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00"
+      ],
+      "translated_text": "تم التعاقد بأكمله بمقاولة الباطن لأمر البيع هذا.",
       "verdicts": {
         "AI-A1": {
           "confidence": "batch",
@@ -44875,6 +45862,53 @@
         "2026-09-21 00:00:00"
       ],
       "translated_text": "تحرير كتلة مخصصة",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "6cc8586d01a5f5c1674ee89e779a7a2f35d37579a1b1ebb9695eccae9587ff3b": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w602_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "09c492039774180b5cdc6d374c6979730d6d60adb1f05b0788ee4ae9ca6fab64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "selling-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "المورد مطلوب لجميع الأصناف المحددة",
+        "sha256": "14eb49a093e0c3de85e99200318406921f366c19e68acdcc6fde79438451804a"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5; W6-2 batch-02",
+      "release_version": "1.5",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Supplier is required for all selected Items",
+      "timestamps": [
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00"
+      ],
+      "translated_text": "المورد مطلوب لجميع الأصناف المحددة",
       "verdicts": {
         "AI-A1": {
           "confidence": "batch",
@@ -49969,6 +51003,53 @@
         }
       }
     },
+    "7a3fd8692ce0a89d13c82e4c5bf74e412388ce2fd3510172942a83c01fbd6402": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w602_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "09c492039774180b5cdc6d374c6979730d6d60adb1f05b0788ee4ae9ca6fab64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "selling-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يرجى التواصل مع أحد المستخدمين التاليين لتمديد حدود الائتمان لـ {0}: {1}",
+        "sha256": "87b08ce3b8213a0be6053ba1b63c163b1bf0403ed7c5abf98bfa741ab0e5b732"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5; W6-2 batch-02",
+      "release_version": "1.5",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Please contact any of the following users to extend the credit limits for {0}: {1}",
+      "timestamps": [
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00"
+      ],
+      "translated_text": "يرجى التواصل مع أحد المستخدمين التاليين لتمديد حدود الائتمان لـ {0}: {1}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
     "7a45478c4c5b15c026a107eb56ee1cb90812823253aa915db1dabaea86a19e0c": {
       "artifacts": [
         {
@@ -53588,6 +54669,53 @@
         }
       }
     },
+    "83851a635c7e1a84a34d275ce39bd019cc54ab2d827286ffae1a3fed628cdab8": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w602_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "09c492039774180b5cdc6d374c6979730d6d60adb1f05b0788ee4ae9ca6fab64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "selling-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تقييد الأصناف بناءً على",
+        "sha256": "18254b0c08eb803b57d210b2236025d9adede8f5c777e4b07d70bc294a5495fc"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5; W6-2 batch-02",
+      "release_version": "1.5",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Restrict Items Based On",
+      "timestamps": [
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00"
+      ],
+      "translated_text": "تقييد الأصناف بناءً على",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
     "83d57e6dd4e7d659cbe1aca9d5e8c97eb0cf6067d02961de5265f7417d16a032": {
       "artifacts": [
         {
@@ -54886,6 +56014,53 @@
         "2026-09-22 00:00:00"
       ],
       "translated_text": "وسط اليمين",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "869755d115445ffe201a3c2a20f4ad8c68af9857294c4fb24b8354caf356caa0": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w602_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "09c492039774180b5cdc6d374c6979730d6d60adb1f05b0788ee4ae9ca6fab64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "selling-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "مسار البيع حسب المرحلة",
+        "sha256": "699a7e4c51b2bf47ca01ca3a53f118ffbbcba8352a2f9525ffb27661446b5f9c"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5; W6-2 batch-02",
+      "release_version": "1.5",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Sales Pipeline by Stage",
+      "timestamps": [
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00"
+      ],
+      "translated_text": "مسار البيع حسب المرحلة",
       "verdicts": {
         "AI-A1": {
           "confidence": "batch",
@@ -58053,6 +59228,53 @@
         }
       }
     },
+    "8d928f4b8c584403be0b4d86e08761907696bdb393c298001df798626ecb90f7": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w602_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "09c492039774180b5cdc6d374c6979730d6d60adb1f05b0788ee4ae9ca6fab64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "selling-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يرجى تحديد تكرار جدول التسليم",
+        "sha256": "ff4988c3b07ce6b25f292d18f4250fdd7d7ce1fadb5ff8549fda20c3cfc14741"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5; W6-2 batch-02",
+      "release_version": "1.5",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Please select a frequency for delivery schedule",
+      "timestamps": [
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00"
+      ],
+      "translated_text": "يرجى تحديد تكرار جدول التسليم",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
     "8d9ca8dd7407a11321eaa35d8024885efc8b9e09d8723110bf7956d76d444dab": {
       "artifacts": [
         {
@@ -58458,6 +59680,53 @@
         "2026-09-22 00:00:00"
       ],
       "translated_text": "الحقل {0} غير موجود على {1}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "8e5952c75324b2eb937f7e8698300b89a4adef67e9dfd92d135327b11be2de95": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w602_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "09c492039774180b5cdc6d374c6979730d6d60adb1f05b0788ee4ae9ca6fab64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "selling-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "حدد صنفًا من كل مجموعة لاستخدامه في أمر البيع.",
+        "sha256": "9bfeaecb5c84b9541537ec2c7b2d0a15e5ef97bf577ba5b90638a8b62caa3adb"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5; W6-2 batch-02",
+      "release_version": "1.5",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Select an item from each set to be used in the Sales Order.",
+      "timestamps": [
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00"
+      ],
+      "translated_text": "حدد صنفًا من كل مجموعة لاستخدامه في أمر البيع.",
       "verdicts": {
         "AI-A1": {
           "confidence": "batch",
@@ -63184,6 +64453,53 @@
         }
       }
     },
+    "989336b614cb5ba37cb282455c12a6a263f96ccc8b20fa3e70385813f942f1c0": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w602_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "09c492039774180b5cdc6d374c6979730d6d60adb1f05b0788ee4ae9ca6fab64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "selling-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يرجى إدخال تاريخ تسليم وكمية على الأقل",
+        "sha256": "81d32f72dfa11f2fa72c98a2e522d517ffff0f0e36ed123fbec1413ab1c01dff"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5; W6-2 batch-02",
+      "release_version": "1.5",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Please enter at least one delivery date and quantity",
+      "timestamps": [
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00"
+      ],
+      "translated_text": "يرجى إدخال تاريخ تسليم وكمية على الأقل",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
     "98c06884c102bde68b9516bc2a486e7b5f94d33c76390f675972028a846d747c": {
       "artifacts": [
         {
@@ -63354,6 +64670,53 @@
         "2026-09-22 00:00:00"
       ],
       "translated_text": "اتجاه الحقل (أعلى-أسفل)",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "994557a8d87c5bb2174a68b87ef1326212f7cf3286be38ed7cf7d836adb29aed": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w602_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "09c492039774180b5cdc6d374c6979730d6d60adb1f05b0788ee4ae9ca6fab64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "selling-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "قيد فتح نقطة البيع الحالي قديم. يرجى إغلاقه وإنشاء قيد جديد.",
+        "sha256": "af6259c32e3cf997cc0e447da53e17dd83f5cf237a9f102a534dce0be239f3f4"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5; W6-2 batch-02",
+      "release_version": "1.5",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "The current POS opening entry is outdated. Please close it and create a new one.",
+      "timestamps": [
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00"
+      ],
+      "translated_text": "قيد فتح نقطة البيع الحالي قديم. يرجى إغلاقه وإنشاء قيد جديد.",
       "verdicts": {
         "AI-A1": {
           "confidence": "batch",
@@ -64312,6 +65675,53 @@
         }
       }
     },
+    "9c7b3c8b518e6f21bbe792f8b0efd0bcabd7b54e6883c49bd0181fac884b2c97": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w602_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "09c492039774180b5cdc6d374c6979730d6d60adb1f05b0788ee4ae9ca6fab64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "selling-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لديك تغييرات غير محفوظة. هل تريد حفظ الفاتورة؟",
+        "sha256": "5344fece3f246a7a574d569ea27195e38c46f0e4e46bfa56a0cb786100acf816"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5; W6-2 batch-02",
+      "release_version": "1.5",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "You have unsaved changes. Do you want to save the invoice?",
+      "timestamps": [
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00"
+      ],
+      "translated_text": "لديك تغييرات غير محفوظة. هل تريد حفظ الفاتورة؟",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
     "9c90e730cd8d5c36825734da68d5b6ca8fd55b5f314bb4c861e5bf7121cd9390": {
       "artifacts": [
         {
@@ -65111,6 +66521,53 @@
         }
       }
     },
+    "9efcc312cb488faf19ed34ec25fa23b4b3695a44532027522e781e4f7035c729": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w602_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "09c492039774180b5cdc6d374c6979730d6d60adb1f05b0788ee4ae9ca6fab64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "selling-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يجب حذف فاتورة البيع {0} قبل إلغاء أمر البيع هذا",
+        "sha256": "26e4e795eda1f65fc10b4cde47bb8143119da8eea5f3747eafa3d1b291b764c1"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5; W6-2 batch-02",
+      "release_version": "1.5",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Sales Invoice {0} must be deleted before cancelling this Sales Order",
+      "timestamps": [
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00"
+      ],
+      "translated_text": "يجب حذف فاتورة البيع {0} قبل إلغاء أمر البيع هذا",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
     "9f1113e274a16324e18fbdc0d69bf3b9dc25e825f0cbb832be417010c8ff9b07": {
       "artifacts": [
         {
@@ -65281,6 +66738,53 @@
         "2026-09-22 00:00:00"
       ],
       "translated_text": "مهام معلّقة",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "a001a956f4ecce74013327c08c115ecc5dc88389ab6fdf5c6266e82247fe4c3a": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w602_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "09c492039774180b5cdc6d374c6979730d6d60adb1f05b0788ee4ae9ca6fab64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "selling-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الفرق المستهدف لشركاء البيع بناءً على مجموعة الأصناف",
+        "sha256": "23bf403e46477088c312ad2a2031f36adb4a64b1a13230438adf578a1e13c613"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5; W6-2 batch-02",
+      "release_version": "1.5",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Sales Partner Target Variance Based On Item Group",
+      "timestamps": [
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00"
+      ],
+      "translated_text": "الفرق المستهدف لشركاء البيع بناءً على مجموعة الأصناف",
       "verdicts": {
         "AI-A1": {
           "confidence": "batch",
@@ -66550,6 +68054,53 @@
         "2026-09-22 00:00:00"
       ],
       "translated_text": "حسب الدور",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "a37afcf8e61e02f27df861d4b01f10d14932cc93bf6cea87a3daa4dd49a14479": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w602_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "09c492039774180b5cdc6d374c6979730d6d60adb1f05b0788ee4ae9ca6fab64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "selling-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تم تطبيق الخصم",
+        "sha256": "17bf887684dabc371ebdf8a0082e6952bf33656387ce46ce1e5533289a512cd3"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5; W6-2 batch-02",
+      "release_version": "1.5",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "discount applied",
+      "timestamps": [
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00"
+      ],
+      "translated_text": "تم تطبيق الخصم",
       "verdicts": {
         "AI-A1": {
           "confidence": "batch",
@@ -70900,6 +72451,53 @@
         }
       }
     },
+    "addc2b74a3a349b193de6f2300a0f60c45100b934169c75111338f71c0e93d8a": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w602_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "09c492039774180b5cdc6d374c6979730d6d60adb1f05b0788ee4ae9ca6fab64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "selling-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الربع {0} {1}",
+        "sha256": "f6e6ddbd716acc26f8321c0c33aa09402a93f0e325db4e114c7e30ec9a51d721"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5; W6-2 batch-02",
+      "release_version": "1.5",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Quarter {0} {1}",
+      "timestamps": [
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00"
+      ],
+      "translated_text": "الربع {0} {1}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
     "addf625e65d354f4cf27575056f9daf4c07d55252dae748cbd0e4e658c166626": {
       "artifacts": [
         {
@@ -74425,6 +76023,53 @@
         }
       }
     },
+    "b5a62ba3fb4789dd6a2115eb9115c67f5967cf1ea6b6f7f5e3720d1ff57e0376": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w602_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "09c492039774180b5cdc6d374c6979730d6d60adb1f05b0788ee4ae9ca6fab64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "selling-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الصف #{0}: لم يتم العثور على قائمة المواد لصنف المنتج النهائي {1}",
+        "sha256": "5416a31d6d481410485b18e694f522632f508e7e9b8e8c933916e57418c19f44"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5; W6-2 batch-02",
+      "release_version": "1.5",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Row #{0}: BOM not found for FG Item {1}",
+      "timestamps": [
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00"
+      ],
+      "translated_text": "الصف #{0}: لم يتم العثور على قائمة المواد لصنف المنتج النهائي {1}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
     "b5ac7603f15b6c8444ede546b3f0c83d18dcdc724cf3551118fb95606dd3db27": {
       "artifacts": [
         {
@@ -74689,6 +76334,53 @@
         "2026-09-22 00:00:00"
       ],
       "translated_text": "المهام المجدولة الفاشلة (آخر 7 أيام)",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "b66c43d4229af08cb93d091f130099e99a181c852dbfd4d7b99fb365b8f1749d": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w602_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "09c492039774180b5cdc6d374c6979730d6d60adb1f05b0788ee4ae9ca6fab64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "selling-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تم الربط بالمورد بنجاح",
+        "sha256": "03ac8b7e0d89e474f8ff43670af49e01ccb70b50265eba5baeefbde1afa99273"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5; W6-2 batch-02",
+      "release_version": "1.5",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Successfully linked to Supplier",
+      "timestamps": [
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00"
+      ],
+      "translated_text": "تم الربط بالمورد بنجاح",
       "verdicts": {
         "AI-A1": {
           "confidence": "batch",
@@ -79595,6 +81287,53 @@
         }
       }
     },
+    "c0f23209c2e52cdf569780762b63d8d7a8906e1c6cc1f38b463e2b11ac7473ab": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w602_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "09c492039774180b5cdc6d374c6979730d6d60adb1f05b0788ee4ae9ca6fab64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "selling-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الصف #{0}: لا يمكن أن تكون الكمية رقمًا غير موجب. يرجى زيادة الكمية أو إزالة الصنف {1}",
+        "sha256": "c8365e63092cd62f53b747bc9ee3ae757abfd7f33ee1d8b6238f245fe037f5b3"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5; W6-2 batch-02",
+      "release_version": "1.5",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Row #{0}: Quantity cannot be a non-positive number. Please increase the quantity or remove the Item {1}",
+      "timestamps": [
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00"
+      ],
+      "translated_text": "الصف #{0}: لا يمكن أن تكون الكمية رقمًا غير موجب. يرجى زيادة الكمية أو إزالة الصنف {1}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
     "c10c8a1429fc5b5fffede47ac00113a756fe0a020227a0e57fef0afde317f1b1": {
       "artifacts": [
         {
@@ -80564,6 +82303,53 @@
         "2026-09-22 00:00:00"
       ],
       "translated_text": "فشل إرسال بريد الإشعار الإلكتروني",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "c2e16505b17e800c9c20d183ecc32ad5b8b1605b61e348fc85f094806e52258f": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w602_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "09c492039774180b5cdc6d374c6979730d6d60adb1f05b0788ee4ae9ca6fab64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "selling-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "{}  للتسليم",
+        "sha256": "c67576c8709b2c3c222ef25f307b12fb408ba414d250f6b739ff0ca32bc82684"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5; W6-2 batch-02",
+      "release_version": "1.5",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "{}  To Deliver",
+      "timestamps": [
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00"
+      ],
+      "translated_text": "{}  للتسليم",
       "verdicts": {
         "AI-A1": {
           "confidence": "batch",
@@ -82791,6 +84577,53 @@
         }
       }
     },
+    "c7d75b1e8d4f378e8a0a47d96ab1f2a007ead2fa1a6f43f8a06e182bf9164d04": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w602_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "09c492039774180b5cdc6d374c6979730d6d60adb1f05b0788ee4ae9ca6fab64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "selling-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يرجى تحديد صنف واحد على الأقل للمتابعة",
+        "sha256": "8781355854ae6ca1ababb199a6d78d9a0bc9950cfcde402d902a38766627ebf2"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5; W6-2 batch-02",
+      "release_version": "1.5",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Please select atleast one item to continue",
+      "timestamps": [
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00"
+      ],
+      "translated_text": "يرجى تحديد صنف واحد على الأقل للمتابعة",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
     "c7dab59f2b6c918bfd820e5c7ddd2cba34e25b492a5c79f53f51bbc1a88e4da0": {
       "artifacts": [
         {
@@ -84324,6 +86157,53 @@
         "2026-09-21 00:00:00"
       ],
       "translated_text": "النسخ إلى الحافظة",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "cb4eb2acff387c4c48d712ca6fc44a8adf7f5a403051d9436bd69c10eceb4f7b": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w602_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "09c492039774180b5cdc6d374c6979730d6d60adb1f05b0788ee4ae9ca6fab64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "selling-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "عرض القيمة الإجمالية للشركات التابعة",
+        "sha256": "e77e47d41c72652954c218664c9930d48046a4faa6f6d47a30744d88d5779660"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5; W6-2 batch-02",
+      "release_version": "1.5",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Show Aggregate Value from Subsidiary Companies",
+      "timestamps": [
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00"
+      ],
+      "translated_text": "عرض القيمة الإجمالية للشركات التابعة",
       "verdicts": {
         "AI-A1": {
           "confidence": "batch",
@@ -93309,6 +95189,53 @@
         "2026-09-22 00:00:00"
       ],
       "translated_text": "وقت البدء",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "de8ccd2e0c4d6be06ac452c07057f38db8fab16d99cfcd8de5da1d12cc5ffc8f": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w602_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "09c492039774180b5cdc6d374c6979730d6d60adb1f05b0788ee4ae9ca6fab64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "selling-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "فرص البيع حسب الوسيط",
+        "sha256": "a4c02406c6ebd5b5278b19fde7de9735187c86477ab9ecd424f30ddfe7bb74ad"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5; W6-2 batch-02",
+      "release_version": "1.5",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Sales Opportunities by Medium",
+      "timestamps": [
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00"
+      ],
+      "translated_text": "فرص البيع حسب الوسيط",
       "verdicts": {
         "AI-A1": {
           "confidence": "batch",
@@ -104482,6 +106409,53 @@
         }
       }
     },
+    "f9a6135c1ca4ed81867fd9e192761138cc6b5a445f7cfc6d88f4b474312a8329": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w602_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "09c492039774180b5cdc6d374c6979730d6d60adb1f05b0788ee4ae9ca6fab64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "selling-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يرجى إدخال عدد تسليمات صالح",
+        "sha256": "3f733e1e679cd91cb0372576c61ad8c9cee12a4db68bd2225f062d761dfd3aeb"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5; W6-2 batch-02",
+      "release_version": "1.5",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Please enter a valid number of deliveries",
+      "timestamps": [
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00"
+      ],
+      "translated_text": "يرجى إدخال عدد تسليمات صالح",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
     "f9a93384ad72586b27cfc274f9960ed01efbe8cd2f5a6b8dcd5e79e496b7a665": {
       "artifacts": [
         {
@@ -105357,6 +107331,53 @@
         "2026-09-21 00:00:00"
       ],
       "translated_text": "عوامل تصفية التقرير التالية لها قيم مفقودة:",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "fb978e51e2eff25065a844e33fa350d32c679df5c36afe49d288aec534e74029": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w602_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "09c492039774180b5cdc6d374c6979730d6d60adb1f05b0788ee4ae9ca6fab64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "selling-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "أُغلقت نقطة البيع في {0}. يرجى تحديث الصفحة.",
+        "sha256": "0877c82999f201bbbaf8ea7eb67bddcd3aeee5ae0ebf0e7aa5dcf06e1b6f2104"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5; W6-2 batch-02",
+      "release_version": "1.5",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "POS has been closed at {0}. Please refresh the page.",
+      "timestamps": [
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00"
+      ],
+      "translated_text": "أُغلقت نقطة البيع في {0}. يرجى تحديث الصفحة.",
       "verdicts": {
         "AI-A1": {
           "confidence": "batch",
@@ -106832,6 +108853,53 @@
         }
       }
     },
+    "ff98b5050e3c29c935cede0f260e9e3cf333f67be76f47cefccc29365145df89": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w602_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "09c492039774180b5cdc6d374c6979730d6d60adb1f05b0788ee4ae9ca6fab64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "selling-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يوجد أمر بيع {0} بالفعل مقابل أمر شراء العميل {1}. للسماح بأوامر بيع متعددة، فعّل {2} في {3}",
+        "sha256": "fb69749a762028e1cf99df41cf175ad20f0cacd3a6cf355378e3865c4bc476cc"
+      },
+      "references": "glossary v2.0; vendor ledger erpnext_ar_missing_review_filled.csv; plan D5; W6-2 batch-02",
+      "release_version": "1.5",
+      "reviewers": [
+        "AI-A1 (recorded review run)",
+        "AI-A2 (recorded review run)",
+        "AI-A3 (recorded review run)"
+      ],
+      "source_text": "Sales Order {0} already exists against Customer's Purchase Order {1}. To allow multiple Sales Orders, Enable {2} in {3}",
+      "timestamps": [
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00",
+        "2026-09-23 00:00:00"
+      ],
+      "translated_text": "يوجد أمر بيع {0} بالفعل مقابل أمر شراء العميل {1}. للسماح بأوامر بيع متعددة، فعّل {2} في {3}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A2": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        },
+        "AI-A3": {
+          "confidence": "batch",
+          "decision": "batch-accepted",
+          "session": "historical pre-v4 workflow"
+        }
+      }
+    },
     "ff99e0bdd2f612194cdf4b8f01da927b6f20ff380569cb6db1ffd5c90bae5249": {
       "artifacts": [
         {
@@ -106974,7 +109042,7 @@
       }
     }
   },
-  "generated_utc": "2026-09-23T11:36:36Z",
+  "generated_utc": "2026-09-23T13:03:59Z",
   "note": "Reviewed generation. Verdicts transcribed from independent review evidence (six new rows) or marked historical batch (legacy).",
   "schema": "release-decision/v2"
 }

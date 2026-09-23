@@ -1,10 +1,10 @@
 {
   "audit_timestamps": {
     "last_catalog_sync_at": "2026-09-22 13:07:14.851379",
-    "last_drift_checked_at": "2026-09-23 17:11:12.011970",
-    "last_release_import_at": "2026-09-23 17:11:04.365881"
+    "last_drift_checked_at": "2026-09-23 18:36:09.516705",
+    "last_release_import_at": "2026-09-23 18:33:00.960108"
   },
-  "collected_utc": "2026-09-23T11:41:12Z",
+  "collected_utc": "2026-09-23T13:06:09Z",
   "critical_keys": {
     "Desktop": "سطح المكتب",
     "Edit Sidebar": "تحرير الشريط الجانبي",
@@ -14,7 +14,7 @@
     "Workspaces": "مساحات العمل"
   },
   "critical_pass": true,
-  "db_now_at_collection": "2026-09-23 14:41:12",
+  "db_now_at_collection": "2026-09-23 16:06:09",
   "health": {
     "constraint_name": "ct_translation_key_digest",
     "constraint_present": true,
@@ -24,16 +24,16 @@
     "has_null_digests": false,
     "has_orphan_site_overrides": false,
     "last_catalog_sync_at": "2026-09-22 13:07:14.851379",
-    "last_drift_checked_at": "2026-09-23 17:11:12.011970",
-    "last_release_import_at": "2026-09-23 17:11:04.365881",
+    "last_drift_checked_at": "2026-09-23 18:36:09.516705",
+    "last_release_import_at": "2026-09-23 18:33:00.960108",
     "loader_installed": true,
     "using_safe_fallback": false
   },
   "inputs": {
     "construction_po_sha": "28362a98f1e1d4e9f5dee0a04945abe88154b29ff12d9e57ba738c98427d3812",
-    "payload_csv_sha": "44dfdfa89e31990fc0cbbd37ef5efe8fe75dcbc4079602262b4ae7cab2f9b917"
+    "payload_csv_sha": "73f40e324f3169ec0d6fa1ff53fae5eb5850489825c04d744e995da2d31e8df3"
   },
-  "packaged_rows": 2275,
-  "runtime_digest": "c8d95f3ceff99fc57f1124f77c85746c2ad160a605bf28d3dce3c008019217c0",
+  "packaged_rows": 2319,
+  "runtime_digest": "629345db4b01adb9a2fcc98caff13c1d88666b1cf8d021318b659e64dac834e8",
   "site": "v16.localhost"
 }

@@ -1,0 +1,44 @@
+POS has been closed at {0}. Please refresh the page.
+POS invoice {0} created successfully
+Parent Item {0} must not be a Fixed Asset
+Payment of {0} received successfully. Waiting for other requests to complete...
+Percentage you are allowed to sell beyond the Blanket Order quantity.
+Please contact any of the following users to extend the credit limits for {0}: {1}
+Please contact your administrator to extend the credit limits for {0}.
+Please enter a valid number of deliveries
+Please enter at least one delivery date and quantity
+Please enter the first delivery date
+Please save the Sales Order before adding a delivery schedule.
+Please select a frequency for delivery schedule
+Please select atleast one item to continue
+Quarter {0} {1}
+Reason for hold:
+Restrict Items Based On
+Row #{0}: BOM not found for FG Item {1}
+Row #{0}: Quantity cannot be a non-positive number. Please increase the quantity or remove the Item {1}
+Sales Invoice {0} must be deleted before cancelling this Sales Order
+Sales Opportunities by Campaign
+Sales Opportunities by Medium
+Sales Opportunities by Source
+Sales Order {0} already exists against Customer's Purchase Order {1}. To allow multiple Sales Orders, Enable {2} in {3}
+Sales Partner Target Variance Based On Item Group
+Sales Pipeline by Stage
+Select an item from each set to be used in the Sales Order.
+Serial numbers unavailable for Item {0} under warehouse {1}. Please try changing warehouse.
+Show Aggregate Value from Subsidiary Companies
+Sold by
+Stock quantity not enough for Item Code: {0} under warehouse {1}. Available quantity {2} {3}.
+Successfully linked to Supplier
+Supplier is required for all selected Items
+Supplier numbers assigned by the customer
+The current POS opening entry is outdated. Please close it and create a new one.
+This Sales Order has been fully subcontracted.
+This item filter has already been applied for the {0}
+Total Only
+Total Picked Quantity {0} is more than ordered qty {1}. You can set the Over Picking Allowance in Stock Settings.
+Total quantity in delivery schedule cannot be greater than the item quantity
+Use Legacy (Client side) Reactivity
+Week {0} {1}
+You have unsaved changes. Do you want to save the invoice?
+discount applied
+{}  To Deliver
