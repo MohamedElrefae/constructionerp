@@ -2,7 +2,11 @@
 
 **Status: PROPOSAL ONLY — owner mark-up pending. No quorum, no import, no catalog change, no evidence re-pin, no production, no Stage-8.**
 
-**PROPOSAL ONLY — no quorum, no import, no evidence re-pin, no catalog mutation. Awaiting owner approval of the exact scope. Stage 8 and production remain gated.**
+**Proposal only. No quorum, no import, no evidence re-pin. Awaiting owner approval of exact scope. Stage 8 and production remain gated.**
+
+(Also no catalog mutation: `approved_ar_overrides.csv`,
+`release_decisions.json`, manifests, pins, and evidence are untouched by
+this proposal.)
 
 Canonical scope file is `docs/translation/stage6_w603_stock_rows_2026-09-23.csv`
 (W6-2 `_rows_` naming convention; 734 rows; sha256
@@ -47,12 +51,31 @@ Sorted by `area`, `source_text`. All 734 rows carry `area=stock`.
 | Embedded-newline rows | **0** (excluded by cut rule) |
 | Overlap with released catalog (2,319 Released) | **0** |
 | Overlap with `release_decisions.json` (2,319 decision keys) | **0** |
-| Overlap with prior W6-0a / W6-0b / W6-1 / W6-2 scope ∪ payload ∪ released-list keys (union **2,746** across 40 files) | **0** |
+| Overlap with prior W6-0a / W6-0b / W6-1 / W6-2 scope ∪ payload ∪ released-list keys (union **2,751** across 33 files) | **0** |
 | Overlap with W6-2 batch 01 (270) / batch 02 (48) | **0 / 0** |
 | Overlap with W6-1 accounting subset (`msgid`) | **0** |
 | Overlap with 21 technical exclusions | **0** |
 | Overlap with 302 a1/a2 dedup exclusions | **0** |
 | Duplicates within the proposal itself | **0** (734 unique `source_text`) |
+
+### Disposition breakdown (proposal recommendations; quorum still decides)
+
+Batch-02 taxonomy with proposal-stage labels — **no row has been through
+A1/A2/A3 quorum yet**:
+
+| Proposed disposition | Rows | Basis |
+|---|---:|---|
+| PROPOSED `quorum-confirmed-payload` | **720** | natural-language stock-desk strings (would become payload rows if quorum accepts) |
+| PROPOSED `EXCEPTION-technical` | **14** | code/acronym tokens retained in the CSV, flagged for quorum: `CODE-39`, `EAN`, `EAN-8`, `EAN-12`, `GS1`, `GTIN`, `ISBN`, `ISBN-10`, `ISBN-13`, `ISSN`, `JAN`, `PZN`, `UPC`, `UPC-A` |
+| `already-released` | **0** | no scope key is in the 2,319 Released catalog |
+| `preserved-site-override` | **0 pre-detected** | unknown until the cycle-time site probe (plan §12); none pre-removed |
+| **Total scope** | **734** | 379 pre-filled + 355 unfilled |
+
+Final APPROVE / PASS / EXCEPTION dispositions are set by A1/A2/A3 + AI-R
+**after** owner approval and the cycle-time site recon — the table above
+is a recommendation only. Reproduce and re-verify byte-identically with
+`python3 scripts/stage6_w603_stock_cut_2026-09-23.py` (fail-closed
+sha256 assert; prints partition, overlap proof, and this breakdown).
 
 ### Screens inside scope (first-location under `erpnext/stock/`)
 
@@ -81,6 +104,9 @@ Sorted by `area`, `source_text`. All 734 rows carry `area=stock`.
    keys (W6-0a, W6-0b, W6-1, W6-2), technical exclusions (21), and a1/a2
    dedup exclusions (302).
 7. Write CSV sorted by `area`, `source_text`.
+8. Reproduce byte-identically (fail-closed): `python3 scripts/stage6_w603_stock_cut_2026-09-23.py`
+   — asserts scope sha256 `a60b1c8e…` before writing; read-only against
+   catalog/decisions/evidence.
 
 ### Full W6-3 raw accounting (789 unique first-location msgids)
 
@@ -134,7 +160,7 @@ The 3 newline keys (for owner visibility, not proposed):
 | 1 | Other matrix rows — W6-0 desk shell, W6-1 accounting, W6-2 buying/selling (closed), W6-4 projects/BOQ, W6-5 setup, W6-6 deferred modules, W6-7 frappe remainder | untouched; 0 key overlap with this CSV |
 | 2 | Non-`stock` vendor areas in the ledger (accounts 1,265, setup 484, manufacturing 481, …) | outside matrix row W6-3 |
 | 3 | Already-released catalog keys (`approved_ar_overrides.csv`, 2,319 Released; `release_decisions.json`, 2,319 decisions) | **0 keys from the raw 789 are in the catalog/decisions** — noted separately, nothing removed on this ground |
-| 4 | Prior Stage-6 scope/payload/released keys (W6-0a desk shell, W6-0b batches 01–07 + short-UI plan, W6-1 subset, W6-2 batches 01–02; union 2,746 across 40 files) | intersection with raw = **0**; with scope = **0** |
+| 4 | Prior Stage-6 scope/payload/released keys (W6-0a desk shell, W6-0b batches 01–07 + short-UI plan, W6-1 subset, W6-2 batches 01–02; union 2,751 across 33 files) | intersection with raw = **0**; with scope = **0** |
 | 5 | Technical exclusions — `stage6_w60b_technical_exclusions_2026-09-22.csv`, **21** rows, sha256 `6400f6d3bc73aa290c09d442f7158d167df5369ac810c9b4e67796bb3f9b6095` | ∩ raw = **0**; unchanged |
 | 6 | a1/a2 dedup exclusions — `stage6_w60b_dedup_exclusions_2026-09-22.csv`, **302** rows, sha256 `ee24f18fdfd451204e18e26c17c8d9e2fc6a7539efa634087f5f7de4848fe37b` | ∩ raw = **0**; unchanged |
 | 7 | HTML/template rows in the raw 789 | **13** — not proposed |
@@ -153,7 +179,7 @@ Run on exact `source_text` / `msgid` keys after writing the CSV (read-back):
 |---|---|---|---:|
 | Released catalog | scope (734) | `approved_ar_overrides.csv` Released (2,319) | **0** |
 | Release decisions | scope (734) | `release_decisions.json` decisions keys (2,319) | **0** |
-| Prior scopes union | scope (734) | 40 prior stage6 scope/payload/released files (2,746) | **0** |
+| Prior scopes union | scope (734) | 33 prior stage6 scope/payload/released files (2,751) | **0** |
 | W6-2 batch 01 | scope (734) | batch-01 CSV (270) | **0** |
 | W6-2 batch 02 | scope (734) | batch-02 CSV (48) | **0** |
 | W6-1 subset | scope (734) | accounting subset `msgid` (`stage6_w61_accounting_subset_rows_2026-09-21.csv`) | **0** |
