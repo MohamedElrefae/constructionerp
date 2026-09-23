@@ -1,0 +1,589 @@
+{
+  "batch": "w603-02",
+  "site": "v16.localhost",
+  "generated": "2026-09-23",
+  "scope_rows": 250,
+  "scope_sha256": "701ad13e6b4cc530ebd7dbd95705979b70055c46f39da37d4532a26ba60439ef",
+  "runtime_rows_scanned": 20854,
+  "exact_match_rows": 394,
+  "scope_keys_with_exact_match": 250,
+  "missing_keys": [],
+  "site_override_key_count": 143,
+  "site_overrides": [
+    {
+      "source_text": "Incompatible Setting Detected",
+      "translated_text": "تم اكتشاف إعداد غير متوافق"
+    },
+    {
+      "source_text": "Incorrect Balance Qty After Transaction",
+      "translated_text": "كمية الرصيد غير الصحيحة بعد المعاملة"
+    },
+    {
+      "source_text": "Incorrect Invoice",
+      "translated_text": "فاتورة غير صحيحة"
+    },
+    {
+      "source_text": "Incorrect Serial No Valuation",
+      "translated_text": "تقييم الرقم التسلسلي غير الصحيح"
+    },
+    {
+      "source_text": "Incorrect Serial and Batch Bundle",
+      "translated_text": "مجموعة التسلسل والدفعة غير الصحيحة"
+    },
+    {
+      "source_text": "Incorrect Stock Value Report",
+      "translated_text": "تقرير قيمة المخزون غير الصحيحة"
+    },
+    {
+      "source_text": "Insufficient Capacity",
+      "translated_text": "سعة غير كافية"
+    },
+    {
+      "source_text": "Insufficient Stock for Batch",
+      "translated_text": "مخزون غير كاف للدفعة"
+    },
+    {
+      "source_text": "Invalid Document",
+      "translated_text": "مستند غير صالح"
+    },
+    {
+      "source_text": "Invalid Formula",
+      "translated_text": "صيغة غير صالحة"
+    },
+    {
+      "source_text": "Invalid Warehouse",
+      "translated_text": "مستودع غير صالح"
+    },
+    {
+      "source_text": "Inventory Account Currency",
+      "translated_text": "عملة حساب المخزون"
+    },
+    {
+      "source_text": "Inventory Dimension Negative Stock",
+      "translated_text": "مخزون سالب لبُعد المخزون"
+    },
+    {
+      "source_text": "Inventory Dimension key",
+      "translated_text": "مفتاح بُعد المخزون"
+    },
+    {
+      "source_text": "Inventory Settings",
+      "translated_text": "إعدادات المخزون"
+    },
+    {
+      "source_text": "Is Additional Transfer Entry",
+      "translated_text": "قيد نقل إضافي"
+    },
+    {
+      "source_text": "Is Adjustment Entry",
+      "translated_text": "قيد تسوية"
+    },
+    {
+      "source_text": "Is Finished Item",
+      "translated_text": "صنف نهائي"
+    },
+    {
+      "source_text": "Is Group Warehouse",
+      "translated_text": "مستودع مجموعة"
+    },
+    {
+      "source_text": "Is Outward",
+      "translated_text": "صادر"
+    },
+    {
+      "source_text": "Is Packed",
+      "translated_text": "معبأ"
+    },
+    {
+      "source_text": "Is Rejected",
+      "translated_text": "مرفوض"
+    },
+    {
+      "source_text": "Is Rejected Warehouse",
+      "translated_text": "مستودع مرفوضات"
+    },
+    {
+      "source_text": "Is Scrap Item",
+      "translated_text": "صنف هالك"
+    },
+    {
+      "source_text": "Is Subcontracted Item",
+      "translated_text": "بند منفذ من الباطن"
+    },
+    {
+      "source_text": "Item Information",
+      "translated_text": "معلومات الصنف"
+    },
+    {
+      "source_text": "Items Catalogue",
+      "translated_text": "كتالوج الأصناف"
+    },
+    {
+      "source_text": "Items to Be Repost",
+      "translated_text": "الأصناف المطلوب إعادة ترحيلها"
+    },
+    {
+      "source_text": "Landed Cost",
+      "translated_text": "التكلفة الإضافية"
+    },
+    {
+      "source_text": "Landed Cost Id",
+      "translated_text": "معرف التكلفة الإضافية"
+    },
+    {
+      "source_text": "Landed Cost Report",
+      "translated_text": "تقرير التكلفة الإضافية"
+    },
+    {
+      "source_text": "Landed Cost Vendor Invoice",
+      "translated_text": "فاتورة مورد التكلفة الإضافية"
+    },
+    {
+      "source_text": "Length (cm)",
+      "translated_text": "الطول (سم)"
+    },
+    {
+      "source_text": "Locked",
+      "translated_text": "مقفل"
+    },
+    {
+      "source_text": "Make Lead Time",
+      "translated_text": "إنشاء مدة التوريد"
+    },
+    {
+      "source_text": "Make Return Entry",
+      "translated_text": "إنشاء قيد مرتجع"
+    },
+    {
+      "source_text": "Mandatory Section",
+      "translated_text": "قسم إلزامي"
+    },
+    {
+      "source_text": "Manual Inspection",
+      "translated_text": "فحص يدوي"
+    },
+    {
+      "source_text": "Manufacturing Time",
+      "translated_text": "وقت التصنيع"
+    },
+    {
+      "source_text": "Material Returned from WIP",
+      "translated_text": "مواد مرتجعة من تحت التشغيل"
+    },
+    {
+      "source_text": "Material Transfer (In Transit)",
+      "translated_text": "نقل مواد (قيد العبور)"
+    },
+    {
+      "source_text": "Max Discount (%)",
+      "translated_text": "أقصى خصم (%)"
+    },
+    {
+      "source_text": "Maximum Net Rate",
+      "translated_text": "أقصى سعر صافي"
+    },
+    {
+      "source_text": "Maximum Value",
+      "translated_text": "القيمة القصوى"
+    },
+    {
+      "source_text": "Minimum Net Rate",
+      "translated_text": "أدنى سعر صافي"
+    },
+    {
+      "source_text": "Missing",
+      "translated_text": "مفقود"
+    },
+    {
+      "source_text": "Missing Filters",
+      "translated_text": "عوامل تصفية مفقودة"
+    },
+    {
+      "source_text": "Missing Finished Good",
+      "translated_text": "منتج نهائي مفقود"
+    },
+    {
+      "source_text": "Missing Formula",
+      "translated_text": "صيغة مفقودة"
+    },
+    {
+      "source_text": "Missing Item",
+      "translated_text": "صنف مفقود"
+    },
+    {
+      "source_text": "Multiple Warehouse Accounts",
+      "translated_text": "حسابات مستودعات متعددة"
+    },
+    {
+      "source_text": "Naming Series is mandatory",
+      "translated_text": "سلسلة التسمية إلزامية"
+    },
+    {
+      "source_text": "Negative Stock Error",
+      "translated_text": "خطأ مخزون سالب"
+    },
+    {
+      "source_text": "No Stock Available Currently",
+      "translated_text": "لا يوجد مخزون متاح حاليا"
+    },
+    {
+      "source_text": "Notify Reposting Error to Role",
+      "translated_text": "إشعار الدور بخطأ إعادة الترحيل"
+    },
+    {
+      "source_text": "Numeric",
+      "translated_text": "رقمي"
+    },
+    {
+      "source_text": "Numeric Inspection",
+      "translated_text": "فحص رقمي"
+    },
+    {
+      "source_text": "On This Date",
+      "translated_text": "في هذا التاريخ"
+    },
+    {
+      "source_text": "Open Sales Orders",
+      "translated_text": "أوامر البيع المفتوحة"
+    },
+    {
+      "source_text": "Over Delivery/Receipt Allowance (%)",
+      "translated_text": "نسبة سماحية زيادة التسليم/الاستلام"
+    },
+    {
+      "source_text": "Over Picking Allowance",
+      "translated_text": "سماحية الانتقاء الزائد"
+    },
+    {
+      "source_text": "Over Transfer Allowance",
+      "translated_text": "سماحية النقل الزائد"
+    },
+    {
+      "source_text": "Package No(s) already in use. Try from Package No {0}",
+      "translated_text": "رقم/أرقام الطرود مستخدمة بالفعل. جرب من رقم الطرد {0}"
+    },
+    {
+      "source_text": "Packaging Slip From Delivery Note",
+      "translated_text": "قسيمة تعبئة من إذن التسليم"
+    },
+    {
+      "source_text": "Packed Qty",
+      "translated_text": "الكمية المعبأة"
+    },
+    {
+      "source_text": "Parameter Group",
+      "translated_text": "مجموعة المعايير"
+    },
+    {
+      "source_text": "Parameter Group Name",
+      "translated_text": "اسم مجموعة المعايير"
+    },
+    {
+      "source_text": "Parcel Template",
+      "translated_text": "قالب الطرد"
+    },
+    {
+      "source_text": "Parcel Template Name",
+      "translated_text": "اسم قالب الطرد"
+    },
+    {
+      "source_text": "Parcels",
+      "translated_text": "الطرود"
+    },
+    {
+      "source_text": "Partial Stock Reservation",
+      "translated_text": "حجز مخزون جزئي"
+    },
+    {
+      "source_text": "Partially Delivered",
+      "translated_text": "مسلم جزئيا"
+    },
+    {
+      "source_text": "Partially Reserved",
+      "translated_text": "محجوز جزئيا"
+    },
+    {
+      "source_text": "Partially Used",
+      "translated_text": "مستخدم جزئيا"
+    },
+    {
+      "source_text": "Pending processing",
+      "translated_text": "بانتظار المعالجة"
+    },
+    {
+      "source_text": "Pick List Incomplete",
+      "translated_text": "قائمة الانتقاء غير مكتملة"
+    },
+    {
+      "source_text": "Pick Manually",
+      "translated_text": "انتقاء يدويا"
+    },
+    {
+      "source_text": "Pick Serial / Batch Based On",
+      "translated_text": "انتقاء التسلسل/الدفعة بناء على"
+    },
+    {
+      "source_text": "Pickup",
+      "translated_text": "استلام"
+    },
+    {
+      "source_text": "Pickup Contact Person",
+      "translated_text": "شخص اتصال الاستلام"
+    },
+    {
+      "source_text": "Pickup Date",
+      "translated_text": "تاريخ الاستلام"
+    },
+    {
+      "source_text": "Pickup From",
+      "translated_text": "الاستلام من"
+    },
+    {
+      "source_text": "Pickup Type",
+      "translated_text": "نوع الاستلام"
+    },
+    {
+      "source_text": "Please attach CSV file",
+      "translated_text": "يرجى إرفاق ملف CSV"
+    },
+    {
+      "source_text": "Please enter serial nos",
+      "translated_text": "يرجى إدخال الأرقام التسلسلية"
+    },
+    {
+      "source_text": "Please select at least one row to fix",
+      "translated_text": "يرجى تحديد صف واحد على الأقل للإصلاح"
+    },
+    {
+      "source_text": "Please select the Warehouse first",
+      "translated_text": "يرجى تحديد المستودع أولا"
+    },
+    {
+      "source_text": "Please try again in an hour.",
+      "translated_text": "يرجى المحاولة مرة أخرى بعد ساعة."
+    },
+    {
+      "source_text": "Posting Datetime",
+      "translated_text": "تاريخ ووقت الترحيل"
+    },
+    {
+      "source_text": "Price List Defaults",
+      "translated_text": "إعدادات قائمة الأسعار الافتراضية"
+    },
+    {
+      "source_text": "Printing Details",
+      "translated_text": "تفاصيل الطباعة"
+    },
+    {
+      "source_text": "Projected On Hand",
+      "translated_text": "المتوفر المتوقع"
+    },
+    {
+      "source_text": "Prompt Qty",
+      "translated_text": "طلب الكمية"
+    },
+    {
+      "source_text": "Provisional Expense Account",
+      "translated_text": "حساب مصروف مؤقت"
+    },
+    {
+      "source_text": "Purchase Time",
+      "translated_text": "وقت الشراء"
+    },
+    {
+      "source_text": "Purchase Voucher No",
+      "translated_text": "رقم سند الشراء"
+    },
+    {
+      "source_text": "Purchase Voucher Type",
+      "translated_text": "نوع سند الشراء"
+    },
+    {
+      "source_text": "Putaway Rule",
+      "translated_text": "قاعدة التخزين"
+    },
+    {
+      "source_text": "Qty (in Stock UOM)",
+      "translated_text": "الكمية (بوحدة قياس المخزون)"
+    },
+    {
+      "source_text": "Qty After Transaction",
+      "translated_text": "الكمية بعد المعاملة"
+    },
+    {
+      "source_text": "Qty Change",
+      "translated_text": "تغير الكمية"
+    },
+    {
+      "source_text": "Qty To Produce",
+      "translated_text": "الكمية المطلوب إنتاجها"
+    },
+    {
+      "source_text": "Qty as Per Stock UOM",
+      "translated_text": "الكمية حسب وحدة قياس المخزون"
+    },
+    {
+      "source_text": "Quality Inspection Parameter",
+      "translated_text": "معيار فحص الجودة"
+    },
+    {
+      "source_text": "Quality Inspection Parameter Group",
+      "translated_text": "مجموعة معايير فحص الجودة"
+    },
+    {
+      "source_text": "Quality Inspection Settings",
+      "translated_text": "إعدادات فحص الجودة"
+    },
+    {
+      "source_text": "Quantity (A - B)",
+      "translated_text": "الكمية (أ - ب)"
+    },
+    {
+      "source_text": "Rate Section",
+      "translated_text": "قسم السعر"
+    },
+    {
+      "source_text": "Raw Material Voucher No",
+      "translated_text": "رقم سند المادة الخام"
+    },
+    {
+      "source_text": "Raw Material Voucher Type",
+      "translated_text": "نوع سند المادة الخام"
+    },
+    {
+      "source_text": "Reading Value",
+      "translated_text": "قيمة القراءة"
+    },
+    {
+      "source_text": "Recalculate Batch Qty",
+      "translated_text": "إعادة حساب كمية الدفعة"
+    },
+    {
+      "source_text": "Recalculate Bin Qty",
+      "translated_text": "إعادة حساب كمية الحاوية"
+    },
+    {
+      "source_text": "Recalculate Incoming/Outgoing Rate",
+      "translated_text": "إعادة حساب سعر الوارد/الصادر"
+    },
+    {
+      "source_text": "Receipt Items",
+      "translated_text": "أصناف الإيصال"
+    },
+    {
+      "source_text": "Received Qty in Stock UOM",
+      "translated_text": "الكمية المستلمة بوحدة قياس المخزون"
+    },
+    {
+      "source_text": "Reconcile All Serial Nos / Batches",
+      "translated_text": "تسوية كل الأرقام التسلسلية/الدفعات"
+    },
+    {
+      "source_text": "Recreate Stock Ledgers",
+      "translated_text": "إعادة إنشاء دفاتر أستاذ المخزون"
+    },
+    {
+      "source_text": "Reference for Reservation",
+      "translated_text": "مرجع الحجز"
+    },
+    {
+      "source_text": "Regenerate Stock Closing Entry",
+      "translated_text": "إعادة إنشاء قيد إغلاق المخزون"
+    },
+    {
+      "source_text": "Repost Item Valuation",
+      "translated_text": "إعادة تقييم عنصر المخزون"
+    },
+    {
+      "source_text": "Repost Only Accounting Ledgers",
+      "translated_text": "إعادة ترحيل دفاتر الأستاذ المحاسبية فقط"
+    },
+    {
+      "source_text": "Reposting Data File",
+      "translated_text": "ملف بيانات إعادة الترحيل"
+    },
+    {
+      "source_text": "Reposting Info",
+      "translated_text": "معلومات إعادة الترحيل"
+    },
+    {
+      "source_text": "Reposting Progress",
+      "translated_text": "تقدم إعادة الترحيل"
+    },
+    {
+      "source_text": "Reposting Reference",
+      "translated_text": "مرجع إعادة الترحيل"
+    },
+    {
+      "source_text": "Reservation Based On",
+      "translated_text": "الحجز بناء على"
+    },
+    {
+      "source_text": "Reserved Qty for Production Plan",
+      "translated_text": "الكمية المحجوزة لخطة الإنتاج"
+    },
+    {
+      "source_text": "Reserved Qty for Subcontract",
+      "translated_text": "الكمية المحجوزة لمقاول الباطن"
+    },
+    {
+      "source_text": "Reserved Serial No.",
+      "translated_text": "رقم تسلسلي محجوز"
+    },
+    {
+      "source_text": "Reserved Stock for Batch",
+      "translated_text": "مخزون محجوز للدفعة"
+    },
+    {
+      "source_text": "Reserved for POS Transactions",
+      "translated_text": "محجوز لمعاملات نقطة البيع"
+    },
+    {
+      "source_text": "Reserved for Production",
+      "translated_text": "محجوز للإنتاج"
+    },
+    {
+      "source_text": "Reserved for Production Plan",
+      "translated_text": "محجوز لخطة الإنتاج"
+    },
+    {
+      "source_text": "Reserved for Sub Contracting",
+      "translated_text": "محجوز للتصنيع بالعقد"
+    },
+    {
+      "source_text": "Return Issued",
+      "translated_text": "تم إصدار المرتجع"
+    },
+    {
+      "source_text": "Return Qty",
+      "translated_text": "كمية المرتجع"
+    },
+    {
+      "source_text": "Return Qty from Rejected Warehouse",
+      "translated_text": "كمية المرتجع من مستودع المرفوضات"
+    },
+    {
+      "source_text": "Returned Against",
+      "translated_text": "مرتجع مقابل"
+    },
+    {
+      "source_text": "Returned Qty in Stock UOM",
+      "translated_text": "الكمية المرتجعة بوحدة قياس المخزون"
+    },
+    {
+      "source_text": "Role Allowed to Create/Edit Back-dated Transactions",
+      "translated_text": "الدور المسموح له بإنشاء/تعديل معاملات بتاريخ سابق"
+    },
+    {
+      "source_text": "Role Allowed to Over Deliver/Receive",
+      "translated_text": "الدور المسموح له بزيادة التسليم/الاستلام"
+    },
+    {
+      "source_text": "Row # {0}:",
+      "translated_text": "الصف رقم {0}:"
+    }
+  ],
+  "nonempty_non_site_override_keys": [],
+  "catalog_key_count": 250,
+  "note": "Read-only exact-key dump of Arabic Translation rows on the test site. Site Override values are preserved under plan §12."
+}

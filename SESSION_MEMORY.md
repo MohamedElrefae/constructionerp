@@ -477,3 +477,15 @@ Workflow session capture: external MemoryGraph write was rejected by automatic a
 **Open issues:** Untracked `v16.localhost/` at app root remains unstaged per owner directive. Never run governed IMPORT concurrently; use one sequential site mutation at a time.
 
 **Next:** Commit the closure records, then leave production and batches 02/03 gated. Do not run browser evidence after teardown. No production work authorized.
+
+---
+
+## 2026-09-24 — W6-3 batch-02 governed cycle CLOSED (test site)
+
+**Accomplished:** Executed only the exact 250-row scope CSV `stage6_w603_batch02_rows_2026-09-23.csv` (SHA-256 `701ad13e6b4cc530ebd7dbd95705979b70055c46f39da37d4532a26ba60439ef`) on `v16.localhost`. Final disposition: **103 quorum-approved releases + 143 preserved Site Overrides + 2 technical exceptions + 2 deferred source defects**. Independent AI-R readback confirmed all 103 Packaged Releases at v1.6 and all 143 preserved values match; the four withheld rows were not released. Catalog 2,540 (sha `0101fc9d…`); decisions sha `dfdd4633…`; current live DRY `2540/0/0/2540/0`, drift=0; sync 0/0; freshness critical_pass; inventory 20,957 rows / Merkle `7ff7884d…`; full evidence-inclusive gate independently rerun errors=0 at base HEAD `e8d4846`; test envelopes bind 270 module tests and 91 standalone tests; Arabic browser evidence 8/8 with 246/246 translation matches. Administrator/System Settings language restored to `en`; temporary password file absent. AI-R report: `stage6-w603-ai-r-batch02-2026-09-24.md`.
+
+**Evidence caveat:** some same-named `/tmp/opencode/stage2/` files were stale prior-batch captures and excluded. Tracked envelopes/index, fresh live DRY, fresh gate rerun and AI-R SELECT-only live readback were used. Host/DB timestamps are not a synchronized chronology. Evidence index binds pre-commit `e8d4846`; expected HEAD staleness applies after the closure commit until the next approved catalog event/re-pin.
+
+**Decisions:** batch-02 is closed for the test site only. Batch-03 remains unapproved. Stage 8/production remains gated on real production data, a named production site and rollout window, plus explicit production authorization. Leave the pre-existing untracked `v16.localhost/` logs untouched; do not push without explicit request.
+
+**Next:** prepare a bounded batch-03 proposal and present the exact CSV/SHA for separate owner approval. No batch-03 run or production work is authorized.

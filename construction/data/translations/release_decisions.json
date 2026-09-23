@@ -611,6 +611,56 @@
         }
       }
     },
+    "013538fb6e3f8bb0392aa96edacb52b49dccd9983ec2d0eebc87c8ccf668b1da": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "أولوية غير صالحة",
+        "sha256": "678bd1ebd86be40092f89e763c14679235af023498aff9b95c70b8c83e0433e6"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Invalid Priority",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "أولوية غير صالحة",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "016d381e1d5866675f4b3ca55e99af3a3ede085e6f81e115e0e68b5417cda8c1": {
       "artifacts": [
         {
@@ -1501,6 +1551,56 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "02a34de6a7e76f46cc1b24f8c4aee349b1e31359744cce139baa56f99719ba76": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يُرجى تحديد صف واحد فقط لإنشاء قيد إعادة الترحيل",
+        "sha256": "f069c423f1dda1bf289351b3b90d1cd83d5d66ee265d71a0c61fba8c9d1080b4"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Please select only one row to create a Reposting Entry",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "يُرجى تحديد صف واحد فقط لإنشاء قيد إعادة الترحيل",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -3337,6 +3437,56 @@
         }
       }
     },
+    "06b07dace8a07c7b1c8d0da11b2f50f851211ec6163b3dccbc095b7293f3c4a2": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "إعادة تشغيل القيود الفاشلة",
+        "sha256": "78c5bb5132300e8ea6067564d2ed0dbf72e68b853aed6e02bf3ca2a2b7f2f19f"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Restart Failed Entries",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "إعادة تشغيل القيود الفاشلة",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "06b2b1526f4a256f79cc0dffb8a30ef7b6d753e1a69db11be9a6ef08415900f8": {
       "artifacts": [
         {
@@ -3616,6 +3766,56 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "0728de701b217f3ad6e6fc396efece93fd1148eed842cc7f4e92ca08e730b2be": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "حزمة الأرقام التسلسلية والدفعات غير صالحة",
+        "sha256": "71ddbc91deb450af076792ba78e7f857db50c4a4904432dbd0c1368b9e1b5d63"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Invalid Serial and Batch Bundle",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "حزمة الأرقام التسلسلية والدفعات غير صالحة",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -4230,6 +4430,56 @@
         }
       }
     },
+    "07e687dc2dd56f963fd420ae359fb2b522a34905550162798c668eaf0bac7799": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "مرتبط بمستندات مُقدَّمة",
+        "sha256": "49a6f749359aaa9f2a00a1f61614d0a26f2503c16a191733b0f29a330823f460"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Linked with submitted documents",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "مرتبط بمستندات مُقدَّمة",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "07f178a1eea2e1d5400da98ca2c84a93ba6338d1bdd6617074e25d428458187e": {
       "artifacts": [
         {
@@ -4274,6 +4524,56 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "080277cff81b9a6da4eac6f7e96886a6471e9f01bce5051fd5746cb45383bfb8": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يُرجى تحديد صف واحد على الأقل يتضمن قيمة الفرق",
+        "sha256": "786a4d88b3a6292b6fb2e6985be5fb1d0f6c6d83dd985aabeb4af8e353ff4e88"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Please select at least one row with difference value",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "يُرجى تحديد صف واحد على الأقل يتضمن قيمة الفرق",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -5123,6 +5423,56 @@
         }
       }
     },
+    "095607c866465d71d1489b5f2eed37fe5d2cc0e276e064164d172252c6cadd1e": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يوميًا",
+        "sha256": "3b399dce4c2a54b9e001178eb523ac8662314fe6c9b019c65c2ac2c707c8ef5f"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Per Day",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "يوميًا",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "0977876be32350eca13d329e1bd61b1e0bbb3e493cf9297e4f5cb930e6cafe05": {
       "artifacts": [
         {
@@ -5919,6 +6269,56 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "0b5ebf7e759aaf270886f702100a61fc0a6227d06c0473050aaae0a9183ac8fd": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "نوع المعاملة غير صحيح",
+        "sha256": "dcb0f87d5faae92a927bf0de96d8569eb4450929b89c97880e09378163368308"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Incorrect Type of Transaction",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "نوع المعاملة غير صحيح",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -8366,6 +8766,56 @@
         }
       }
     },
+    "10dc8348a36b1e878597d1bc5027a39716afce1c53a3a44a0d2b5f35b262e1a3": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الصف رقم {0}: يوجد بالفعل قيد إعادة طلب للمستودع {1} من النوع {2}.",
+        "sha256": "15bda54697261bf8a46be56551b681d8049973935960de2755bea35ecccac116"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Row #{0}: A reorder entry already exists for warehouse {1} with reorder type {2}.",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "الصف رقم {0}: يوجد بالفعل قيد إعادة طلب للمستودع {1} من النوع {2}.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "10f77002c8b4a25ce8993b79b3aaf38cc3f6be83df421d35bfc76daefa96e63c": {
       "artifacts": [
         {
@@ -9494,6 +9944,56 @@
         }
       }
     },
+    "13525d68b1a827f254f6c155f50d1c0dab05f6060cb9020b5240cf085d4515ad": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تم تجاوز سماحية الفوترة لصنف سند استلام الشراء {0} ({1}) بنسبة {2}%",
+        "sha256": "3b0258c5194659d75105a29ddcfb9f79d37d84c9d91a34e141f32a7632e0ffa6"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Over Billing Allowance exceeded for Purchase Receipt Item {0} ({1}) by {2}%",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "تم تجاوز سماحية الفوترة لصنف سند استلام الشراء {0} ({1}) بنسبة {2}%",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "1366fce49d3a365b685ea58aa455f05f7ccbcf3d8470e6bf1c849af8bcdcd05c": {
       "artifacts": [
         {
@@ -10431,6 +10931,56 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "15483cb16c3a76fc958d11e30020a695a1f99575bbad2ad5adc67142d80e38d5": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يلزم إدخال اسم العائلة والبريد الإلكتروني أو رقم الهاتف/الجوال للمستخدم للمتابعة.",
+        "sha256": "227fc408fcfd482e4caa95d3028036b8d8346d0aaa0def8cd1b584905a45df2c"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Last Name, Email or Phone/Mobile of the user are mandatory to continue.",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "يلزم إدخال اسم العائلة والبريد الإلكتروني أو رقم الهاتف/الجوال للمستخدم للمتابعة.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -16262,6 +16812,56 @@
         }
       }
     },
+    "232ee34f72dfb29ae546bb3207b02578db81f8d510f5dfaf15c36b39228f5be0": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "سجّل سعر بيع وشراء الصنف",
+        "sha256": "7f9804886ca924e9b4d7f240ded1ad36583c44c1596be5d614100a1dd1905136"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Log the selling and buying rate of an Item",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "سجّل سعر بيع وشراء الصنف",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "238768d9b77842998ba278ff9e54e4c535f5a5433e0f1197e80117097ad32d67": {
       "artifacts": [
         {
@@ -17296,6 +17896,56 @@
         }
       }
     },
+    "25bdc360beaabffefb1576842a5bf7a1a5c23fe978754fb047877b494f474fd4": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الصف رقم {0}: لا يمكن أن يكون مستودع المصدر والوجهة واحدًا عند تحويل المواد",
+        "sha256": "bca611c5d6b966a7668e43b8311271eca25069349d6e34fc1906875f11ac25d5"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Row #{0}: Source and Target Warehouse cannot be the same for Material Transfer",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "الصف رقم {0}: لا يمكن أن يكون مستودع المصدر والوجهة واحدًا عند تحويل المواد",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "25c6eeeb5aca2176cc14fd33923c2152c795da6f605cb4634396f6b2215f26cb": {
       "artifacts": [
         {
@@ -17716,6 +18366,56 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "265d1f324bd901229019fc1a48de5a238ef0f4e3dd6812322b207cd301ec8c56": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الصنف {} غير موجود.",
+        "sha256": "7621f99e25707bd33a8d345c55d7d84ee78269866bd20417c1c2165cf8e54cab"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Item {} does not exist.",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "الصنف {} غير موجود.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -19126,6 +19826,56 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "294e3a9e391c243ef52f6c81f61d27256a9336424acb78afca4838fbf3a2d5af": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يُرجى تحديد الصفوف لإنشاء قيود إعادة الترحيل",
+        "sha256": "1a2e211baa3ac41a85f7ec6d9b47959169ee4109057d55224b9275110d487df9"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Please select rows to create Reposting Entries",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "يُرجى تحديد الصفوف لإنشاء قيود إعادة الترحيل",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -20774,6 +21524,56 @@
         }
       }
     },
+    "2cabafd012f42c192a152d38de7ae59e18764ff202b31e09e710f8de50abfdb2": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يُرجى إدخال بيانات طرد الشحنة",
+        "sha256": "dd5c134475af5029925cd94a02c5b00809f68dcca458b2f32d7a12836ec09c2b"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Please enter Shipment Parcel information",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "يُرجى إدخال بيانات طرد الشحنة",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "2d208fc3fa6c1bc0f073385b0eb9a10124006bb77ec1fad4a7fae0ecb87be8a5": {
       "artifacts": [
         {
@@ -21667,6 +22467,56 @@
         }
       }
     },
+    "2ea31a50e59e2f0c6a34414a47d25ce504b88172c9c6df5825dfffeb30ae8067": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لا يمكن أن يسبق تاريخ الاستلام هذا اليوم",
+        "sha256": "be86f86e98d2e65efb6606ca6d6c08249d0c133ed26f7ad63c3fdca2b5ecd779"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Pickup Date cannot be before this day",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "لا يمكن أن يسبق تاريخ الاستلام هذا اليوم",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "2eab36e9960d31cda876e0ebf97dc377742287d8876b571b6dcb45008703a641": {
       "artifacts": [
         {
@@ -22275,6 +23125,56 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "2fed1dce766b59cbd804d4cc8b70525d3c9eeb7c46d72c1f093eba7b26bf3a41": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "عدد الورديات",
+        "sha256": "9c4c5a6c56aace0f4a0862ff55106c62337fcbab7b8d78b890648a55d1d63b36"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "No of Shift",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "عدد الورديات",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -26132,6 +27032,56 @@
         }
       }
     },
+    "38bb2c33549324a70f974d40b177f096964a2a64d444848ca8aedc40494e189e": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يجب أن يكون وقت انتهاء الاستلام بعد وقت بدايته",
+        "sha256": "c49b6652294adb04e3b6433d621043daddfdde5d374d27a20975c3ce56456f79"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Pickup To time should be greater than Pickup From time",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "يجب أن يكون وقت انتهاء الاستلام بعد وقت بدايته",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "38d4c9864793106a2033dd17596408a11641541930261220eaf5ae618d05d5c7": {
       "artifacts": [
         {
@@ -26270,6 +27220,56 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "38feb8bb7f3347c7873249810a8003c8d51230a68d0adac82926ef4c86561c0f": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تعلّم إدارة المخزون",
+        "sha256": "d57ee63866e3a6b60f9e21a5d0f2128accada6a0c1f712f3d5f9e972ea0bf6bc"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Learn Inventory Management",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "تعلّم إدارة المخزون",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -27025,6 +28025,56 @@
         }
       }
     },
+    "3a9fb19e08d8bc30a46dd020d74ff0c24e21371d2a09abb4b465ceec23e4aa61": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لا يمكن أن تكون الأولوية أقل من 1.",
+        "sha256": "843fc76267c7d6149b0096a7bb310005b4cf6ba87e9dc1fd02a4ca97a8a2e252"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Priority cannot be lesser than 1.",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "لا يمكن أن تكون الأولوية أقل من 1.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "3aaff9fcfcbe65907d586b79c8601e1ae59ee52359784d66b13c3bbac4b0a286": {
       "artifacts": [
         {
@@ -27492,6 +28542,56 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "3bd8ee0590e024e183571734333f84df2c61b7f0a86f3e04d0e40e8ff52573d1": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "مراجع فواتير المبيعات غير مكتملة",
+        "sha256": "fe9c94c85f433109d5987b6d066cf8348cc01dcf16b214803319b589814f3cd0"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "References to Sales Invoices are Incomplete",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "مراجع فواتير المبيعات غير مكتملة",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -29137,6 +30237,56 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "3f0a3f024b3db98b1ca97358e404a0d43b5deef942ffc7d223d9ce3f33b27785": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يُرجى التصحيح والمحاولة مجددًا.",
+        "sha256": "619e33e685c407aac13d887118197b360c1034d5bc02532106ed4e7e2ceaace6"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Please rectify and try again.",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "يُرجى التصحيح والمحاولة مجددًا.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -30926,6 +32076,56 @@
         }
       }
     },
+    "42e0626de5c09082f9907eecc81535ff8201c2fa374f06ed2d51f4b2be15daff": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يُرجى تحديد 'وحدة قياس الوزن' مع الوزن.",
+        "sha256": "01973952609b2f4bbc0fcddc1947a0219fc07bdda3170814d4d5e33322890564"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Please mention 'Weight UOM' along with Weight.",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "يُرجى تحديد 'وحدة قياس الوزن' مع الوزن.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "42fe5e0ba7aacb05a256ab97e92a12242e2fad951446471b1f9cc81c2eaace85": {
       "artifacts": [
         {
@@ -31205,6 +32405,56 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "43403394b0cf5fd566431d8e58d6d2ba5684443d344d45d48ab8f221a07dc441": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الصنف {0} محجوز أو تم تسليمه بالفعل مقابل أمر البيع {1}.",
+        "sha256": "af9f5235ac4eed78e405b46749d094ac6d4f836bd5012bcfc50128f5e852d44f"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Item {0} is already reserved/delivered against Sales Order {1}.",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "الصنف {0} محجوز أو تم تسليمه بالفعل مقابل أمر البيع {1}.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -32571,6 +33821,56 @@
         }
       }
     },
+    "46fefee60680a608ae76b67aaf25f289dddc2b80273dccfa105311cf627ea6c5": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لا يمكن أن تتجاوز كمية الصنف {1} القيمة {0}",
+        "sha256": "639deefe409bfbcf5611724343630a237ed3800a5811979a9402ee0dc0b831b4"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Quantity cannot be greater than {0} for Item {1}",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "لا يمكن أن تتجاوز كمية الصنف {1} القيمة {0}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "47059cdb82764924762eda0eec36f8f439b8832815952ffd28378297c48382e2": {
       "artifacts": [
         {
@@ -33840,6 +35140,56 @@
         }
       }
     },
+    "491dc6362bb7d730c1a778fb1813f2cfd05e42d5b8d055bc8cc698b4b9bdfcaf": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "توجد بالفعل قاعدة تخزين للصنف {0} في المستودع {1}.",
+        "sha256": "540b2eb3b0ad418a0bb3d3044afd196c8dde556347b3243ff96779463713e0f8"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Putaway Rule already exists for Item {0} in Warehouse {1}.",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "توجد بالفعل قاعدة تخزين للصنف {0} في المستودع {1}.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "493fcdd97d3d258db993a603776d2a1a098a943150a0f620fcfb78ca812c372d": {
       "artifacts": [
         {
@@ -34733,6 +36083,56 @@
         }
       }
     },
+    "4a9fef5a44e8dd2b5d57605bbebbf339011fde8061892c8a2fd2a2133c12f58b": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لم يتم العثور على الصنف {0} في جدول 'المواد الخام الموردة' ضمن {1} {2}",
+        "sha256": "f6e252d17d28e7b3dd5327d2c10fe7ead6090206c50c4dd1272645407b2da35f"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Item {0} not found in 'Raw Materials Supplied' table in {1} {2}",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "لم يتم العثور على الصنف {0} في جدول 'المواد الخام الموردة' ضمن {1} {2}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "4ac681f9c2045234064ab6f6ee07185d130eedae68811bd3672d884bf434c277": {
       "artifacts": [
         {
@@ -35482,6 +36882,56 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "4cad52d3a9b65b44828218566535b79f6de6de93e3a6b29cbdfa8f06a4ef732f": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "استعلام غير صالح",
+        "sha256": "4d098bb630a50e10b4488ae0cea65fafe085623f1c1cf82573e7599dcfb94ca2"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Invalid Query",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "استعلام غير صالح",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -36707,6 +38157,56 @@
         }
       }
     },
+    "4f81a94cf334dbff3d8e43c97db33965dd1c6f7b243f732cfb891116074c82c7": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "إنشاء متغيرات للصنف {0}",
+        "sha256": "82825bb2177b45f9373822d2ba5d97a36a9b885edbc1f6b7af597051d9c5fdc2"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Make {0} Variants",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "إنشاء متغيرات للصنف {0}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "4f92bd90f9e9e52001a7674c0523a3baf3e587f64379a93bc50d9dd767e89e70": {
       "artifacts": [
         {
@@ -37882,6 +39382,56 @@
         }
       }
     },
+    "51f85aca3a6b1f103886cf3fadffa99aa301ebfd2cec1b5dd87632f874d3940f": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يلزم تحديد الصنف/رمز الصنف للحصول على قالب ضريبة الصنف.",
+        "sha256": "d26c5849a6f1e98071fcf0f5828e886fe79ba5748858b8ecda9529c53f470c89"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Item/Item Code required to get Item Tax Template.",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "يلزم تحديد الصنف/رمز الصنف للحصول على قالب ضريبة الصنف.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "52033fc176b651f0393045b27477b799fce369bd8595387e8ea450eb88796edd": {
       "artifacts": [
         {
@@ -37973,6 +39523,56 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "5232b5bc2872526a34790ee38099090cc8044d4e5fcf3c2ccd5b9c602132cb0c": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الإعدادات الافتراضية للصنف غير صالحة",
+        "sha256": "2bd47897929fbe51a1ac8aeaf38847aec214f7adaa862fcda6f451a967c2b22d"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Invalid Item Defaults",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "الإعدادات الافتراضية للصنف غير صالحة",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -38396,6 +39996,56 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "53867b0d0e2714307ba10a5329d7c797327b6b11f8b4533f06fc9a90ed7968e6": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "مستودع المجموعة المحدد لإعادة الطلب غير صحيح",
+        "sha256": "98b3e4fd68de9663297f1719939429bc252a28e98ac8dc7180958f7adc5eac04"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Incorrect Check in (group) Warehouse for Reorder",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "مستودع المجموعة المحدد لإعادة الطلب غير صحيح",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -41642,6 +43292,106 @@
         }
       }
     },
+    "5b150aa05f1e50ea342215041efe8ff5043abfe6c058020398220de1d0f9d539": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "عدد محطات العمل",
+        "sha256": "1205592774257e3479581d387c66957ff6df51bf5887838471a4ca1a498312fc"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "No of Workstations",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "عدد محطات العمل",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
+    "5b1722d420df5b503d4506834d9bfef2790a1218d0fbe44e468a1ba3de35c561": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "أزل الصنف إذا لم تنطبق عليه الرسوم",
+        "sha256": "b698f2878db3a2addba6674c90f8bc509ef10954ace2716ed0e7adc16d7e3e1d"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Remove item if charges is not applicable to that item",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "أزل الصنف إذا لم تنطبق عليه الرسوم",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "5b2e1a99dc8dccf78c690143510ebb2c1d97d6c0e0bd10ce0a7c73d03f48d926": {
       "artifacts": [
         {
@@ -41827,6 +43577,56 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "5ba43f28838380ee83f94410c0638795ce60c8a42795efa1a172d8cb895cf3d7": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "أُعيد احتساب سعر تقييم الصنف مع مراعاة مبلغ سند تكاليف الوصول",
+        "sha256": "41ec34867dc5fbb311d1e037e6decaa6f1f984c5cb13648517ebe567a4b02b32"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Item valuation rate is recalculated considering landed cost voucher amount",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "أُعيد احتساب سعر تقييم الصنف مع مراعاة مبلغ سند تكاليف الوصول",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -43237,6 +45037,56 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "5efcd56de73b7b3537cb480dd311c03fabc456027d4e62738897e68ce2744b68": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لا تنطبق الحدود على",
+        "sha256": "98f4fb467e1c832e9e64902387b2dfe0c68474e6767ca1bde255cb488b9ef3e1"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Limits don't apply on",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "لا تنطبق الحدود على",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -44697,6 +46547,56 @@
         }
       }
     },
+    "62592d13629264df553c8dec7167d2375e5075bf9a8faaf9503caf93a189c8ee": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "عدد الأشهر (المصروف)",
+        "sha256": "63ab16b0a7c61e23b9eac54ade39a348d88daef943416e7069f07adaf423c04c"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "No of Months (Expense)",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "عدد الأشهر (المصروف)",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "626f5fccdcdb45a3d7a600e3a437c12e66ca6ab63017fbc13ba06a8c100166f8": {
       "artifacts": [
         {
@@ -45120,6 +47020,56 @@
         }
       }
     },
+    "63528c345ed56e225d1ef5482af11e2ecceaf4dc553178752ccebe25bcccb90c": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لم تُنشأ قيود في دفتر الأستاذ المخزني. يُرجى ضبط كمية الأصناف أو سعر تقييمها بشكل صحيح ثم المحاولة مجددًا.",
+        "sha256": "b9af47246047bd949efa2ab7d05e8d001d1b395386b03ac7c3772537384c2353"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "No stock ledger entries were created. Please set the quantity or valuation rate for the items properly and try again.",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "لم تُنشأ قيود في دفتر الأستاذ المخزني. يُرجى ضبط كمية الأصناف أو سعر تقييمها بشكل صحيح ثم المحاولة مجددًا.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "637b9ec80fcccae5adba76a437068a255e713246a3f07503e1f609d4eb067bef": {
       "artifacts": [
         {
@@ -45446,6 +47396,56 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "6472a9c4a9d9165bec96f685f846fd8ceffe6aa1ee697463dff35ecf8defc5f4": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تم تفعيل إعادة الترحيل بحسب الصنف والمستودع.",
+        "sha256": "524a1fdd7b85795070985008016d217659959831ca06d1625f7fcd0d4c88b442"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Item Warehouse based reposting has been enabled.",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "تم تفعيل إعادة الترحيل بحسب الصنف والمستودع.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -46350,6 +48350,56 @@
         }
       }
     },
+    "66d2850f86672582ed138da9448dc9d8914bac5873a6240d36615d4b93a5d1c3": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "كمية المكوّن غير صحيحة",
+        "sha256": "248169fdad7966d9a1f747fcd68559b3184db6e4f9843589f00ae1f1e2368300"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Incorrect Component Quantity",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "كمية المكوّن غير صحيحة",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "66f34d670488f9a1a75bc01f8ad2ba3444ae89999c4ed444b9a70c8b5b1e5244": {
       "artifacts": [
         {
@@ -46441,6 +48491,56 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "6783a449e770516e428d8535e8596c2f398620e6f95caca081295bf5821cee44": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لا يمكن إنشاء معاملات المخزون أو تعديلها قبل هذا التاريخ.",
+        "sha256": "63caf0a7527d60b8a3974a0aa54070f1cd65a3189ac74a872cf81b22b29465c2"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "No stock transactions can be created or modified before this date.",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "لا يمكن إنشاء معاملات المخزون أو تعديلها قبل هذا التاريخ.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -49734,6 +51834,56 @@
         }
       }
     },
+    "6edb58ed72ac64dc3542f7d0954e561503c3886db3bee984a2fdba1207da525f": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يجب أن تكون الكمية أكبر من صفر وأقل من أو مساوية لـ {0}",
+        "sha256": "09c93a63fbe82e967821d3333e2b62a617664c51f19c2f2310a942a08bd6f8f1"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Quantity must be greater than zero, and less or equal to {0}",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "يجب أن تكون الكمية أكبر من صفر وأقل من أو مساوية لـ {0}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "6effc795188a19fee29fac2db04742c89f73c831bf9fd558d0d2d140931f7cb0": {
       "artifacts": [
         {
@@ -49966,6 +52116,56 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "6fad79528c6e33a60f2563e4763533a6b473cea36d453ab30255b60f1fc57910": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لم يتم العثور على الصنف {0}.",
+        "sha256": "9c41f7dfc42ccded9ca7c83ed89e8811248c4080d3c274c4028f0c4105b48573"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Item {0} not found.",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "لم يتم العثور على الصنف {0}.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -51661,6 +53861,56 @@
         }
       }
     },
+    "73e38a6b591897950a2b38b15f5be4774c716ff27134b22c3513ecb8b3422f31": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "مستند مرجعي غير صحيح (صنف سند استلام الشراء)",
+        "sha256": "139727ea013372d277bf498275932b2fa8e28ed985e3f3cf4c53c5277550169f"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Incorrect Reference Document (Purchase Receipt Item)",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "مستند مرجعي غير صحيح (صنف سند استلام الشراء)",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "73e71241a3f0b76c06fe44345d09b7c2f2eddeac3e78ebc2995299b851389128": {
       "artifacts": [
         {
@@ -52930,6 +55180,56 @@
         }
       }
     },
+    "7733a9cbc04605299ba42ef9b937705300271ab85a4e7fff97cb4c229f18b73a": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "للاستخدام في استلام مقاولات الباطن فقط.",
+        "sha256": "6577154813425444484bd153e1f057d36afa8fb2841d3b9da0907be68bd73df9"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Only to be used for Subcontracting Inward.",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "للاستخدام في استلام مقاولات الباطن فقط.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "773847c54c85f95c3609c7ba90e19f8fbd8fd7988be3c22f930c7b1cf96cada5": {
       "artifacts": [
         {
@@ -54152,6 +56452,56 @@
         }
       }
     },
+    "7ad8a0cd1087abde440077d45f5f63a5f5b9f3694528c85a284d292453ef66d9": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "بدأت إعادة الترحيل في الخلفية.",
+        "sha256": "3b1194e828cbdcbb4a575e962d23602b30df76da25ce6b66e9681b67b6692e51"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Reposting has been started in the background.",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "بدأت إعادة الترحيل في الخلفية.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "7b007ab708a4aa50813a4f56b8a4323236592c95e875f0ea60e32b9422121851": {
       "artifacts": [
         {
@@ -54713,6 +57063,56 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "7bae09b6ea6acae8c8e92f156773fdb8fa043a92c8960edd6cf78b8d8164eb4c": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الصف رقم {0}: تم تحديد الرقم التسلسلي {1} بالفعل.",
+        "sha256": "5390a5310f60a7a55b8dd08b00fe770b7fea5b0a1910fec8fe9bdafb7929721a"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Row #{0}: Serial No {1} is already selected.",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "الصف رقم {0}: تم تحديد الرقم التسلسلي {1} بالفعل.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -55750,6 +58150,56 @@
         }
       }
     },
+    "7dbefdf2adbfe5ad3a651a0b1d1000f56b1938796bea7e18d4921674f1399848": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تم تحديث أسعار تقييم الأصناف التالية إلى صفر لأن خيار السماح بسعر تقييم صفري محدد لها: {0}",
+        "sha256": "1ef8bf8d1075e9f4661f5f90759d9499b6c74f2bf653863e7109b5079ae2b13b"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Items rate has been updated to zero as Allow Zero Valuation Rate is checked for the following items: {0}",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "تم تحديث أسعار تقييم الأصناف التالية إلى صفر لأن خيار السماح بسعر تقييم صفري محدد لها: {0}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "7ddd9e7f51432296bc12f773904004da05bc4278df536929cde9099b0ab6a3ec": {
       "artifacts": [
         {
@@ -55935,6 +58385,56 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "7e6827a3ffe795e0bbac81713b50e3ba92587ffbf2102ddd2be615fa55cbbd3e": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الصف رقم {0}: تم تحديد رقم الدفعة {1} بالفعل.",
+        "sha256": "9f0b2a8fbe6beb243fdbc43c411251fb8a4a24089ff3e1c89e036bcca091adf4"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Row #{0}: Batch No {1} is already selected.",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "الصف رقم {0}: تم تحديد رقم الدفعة {1} بالفعل.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -59792,6 +62292,56 @@
         }
       }
     },
+    "87ce6617429bfd97358d68abd3e046274c5056d8b84dd2cbad3a24ac5383c400": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لا يمكن أن يكون وزن الطرد 0",
+        "sha256": "33dca39d249cfce4f0aba435970113dfa972e5bb7d1406c5e6cd5e7081ab7a7f"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Parcel weight cannot be 0",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "لا يمكن أن يكون وزن الطرد 0",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "87f939c6772a2c3cfd830e9bca0fb3d909d4496f2bc11e1b3f35c757a8214244": {
       "artifacts": [
         {
@@ -59930,6 +62480,56 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "8870f1181e50f5affdb1b464b22f98102c895bd8d385d4d00f5453c3b559d394": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يجب أن يكون الصنف {0} غير مخزني",
+        "sha256": "2841361d4ce6c814dc4796c1499f1414da4b255542e1302a8c4cfc5107e2df8e"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Item {0} must be a Non-Stock Item",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "يجب أن يكون الصنف {0} غير مخزني",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -63646,6 +66246,56 @@
         }
       }
     },
+    "8f7ceef4a7c33fcf1615880322dc197061c2cf3a9341a4f7af2c45191b075ceb": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يُرجى اختيار أمر مقاولات الباطن بدلًا من أمر الشراء {0}",
+        "sha256": "4cfee188c8e291298cad07ec87f27205ec6622314e879e8018fa456c53f74b54"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Please select Subcontracting Order instead of Purchase Order {0}",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "يُرجى اختيار أمر مقاولات الباطن بدلًا من أمر الشراء {0}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "8f8c66fe21bf59e41bd7e53a527318ad3e143850f782df8961e0d5d04ee27a4c": {
       "artifacts": [
         {
@@ -65766,6 +68416,56 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "93fe3dc1bb8b0e094ae1b21e129f71f0b5ef00df9ab5642f39bcbf44b75a142e": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الصف رقم {0}: تم انتقاء الصنف {1}، يُرجى حجز المخزون من قائمة الانتقاء.",
+        "sha256": "3565fd0208e89550880bab8db02c32eb0f91477f40dc8e35db6e5fe1d0fe6cc4"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Row #{0}: Item {1} has been picked, please reserve stock from the Pick List.",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "الصف رقم {0}: تم انتقاء الصنف {1}، يُرجى حجز المخزون من قائمة الانتقاء.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -68401,6 +71101,56 @@
         }
       }
     },
+    "9af5e2fd8ab3a416d43e9c10929504bceb7072d70980bf45d9fc11d5d45c8f80": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "مراجع أوامر البيع غير مكتملة",
+        "sha256": "b7ae649896038f804d8f7d7bc51e29a9dd93f201de69995485a1968186d026dc"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "References to Sales Orders are Incomplete",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "مراجع أوامر البيع غير مكتملة",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "9b16c19e0d3250b1a09209dc6bd065080ac43fb00efdbf4a9637f03f3752e465": {
       "artifacts": [
         {
@@ -69012,6 +71762,56 @@
         }
       }
     },
+    "9c1bd0e16f960582fb4a116eedb3716fb1a7379a0722761a56b96a726d48c195": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "عدد قيود إعادة الترحيل المنشأة: {0}",
+        "sha256": "f2c7daad2436ea60fb09ed341f79c00251b94f2a892e818ed0547bd552767beb"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Reposting entries created: {0}",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "عدد قيود إعادة الترحيل المنشأة: {0}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "9c3c649a106ddbdd2f1578eeda1a4afa74f5500151f70c4e438003be0df7d7ba": {
       "artifacts": [
         {
@@ -69103,6 +71903,56 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "9c7afc7b33b5e3e5bdd7c7aed54cf9ccd136f413a5f2349328bf21b8e8f9368c": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الصف رقم {0}: يُرجى إضافة حزمة الأرقام التسلسلية والدفعات للصنف {1}",
+        "sha256": "b55fb307b3582317202c2b4a1865f484c5a807bd41fdf7b4975dcb0a06ac20fb"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Row # {0}: Please add Serial and Batch Bundle for Item {1}",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "الصف رقم {0}: يُرجى إضافة حزمة الأرقام التسلسلية والدفعات للصنف {1}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -69761,6 +72611,56 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "9dc197c591c7cbba35423f2e5d4856ccf7efb13d7770aa98f6d74166f693845d": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "أُعيد بدء ترحيل تقييم الأصناف للسجلات المحددة التي فشلت.",
+        "sha256": "9e57d305bda54c82806f5808c294ec00fc70d40354588bb9f9b6687442bd57dd"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Repost Item Valuation restarted for selected failed records.",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "أُعيد بدء ترحيل تقييم الأصناف للسجلات المحددة التي فشلت.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -71174,6 +74074,56 @@
         }
       }
     },
+    "a1543fd4142719f1213b72fed3a257003e91ae62efc4d858e472b7da4f6032f2": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "منصات التحميل",
+        "sha256": "e49d4e7c2df925546cba7cd957c44cf6083e6eaff975ec82faf4e8d1723e3097"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Pallets",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "منصات التحميل",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "a191289ede7131c68dad6579f7bcf473882c9686084f2ca021e704249174d150": {
       "artifacts": [
         {
@@ -71738,6 +74688,106 @@
         }
       }
     },
+    "a331f9c884b3dc4e9bdb4ffb0a7caa8a85e416ab4ec81059bdd3cb8cde9e9b07": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يجب أن تكون كمية الصنف النهائي أكبر من 0.",
+        "sha256": "22b7dbf4816508bcdf497d33a568257b29763eb3d4a1f3ab3b95a0be6d71053a"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Qty of Finished Goods Item should be greater than 0.",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "يجب أن تكون كمية الصنف النهائي أكبر من 0.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
+    "a33eff7b4334b3ebc3814d747a77a4dd98f03b9f4d06f3b018bcc7024d4bfb59": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "عدد عمليات إعادة الترحيل المتوازية (لكل صنف)",
+        "sha256": "c2c04ea52ee96a1608726dc7296e56d3a2ad0f85152323261fa465c73c875f91"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "No of Parallel Reposting (Per Item)",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "عدد عمليات إعادة الترحيل المتوازية (لكل صنف)",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "a37afcf8e61e02f27df861d4b01f10d14932cc93bf6cea87a3daa4dd49a14479": {
       "artifacts": [
         {
@@ -72208,6 +75258,56 @@
         }
       }
     },
+    "a43da5c52925175d98ffae90aeec94effa5e1d729d843b8364865fa20fb55976": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الصف رقم {0}: يجب أن تكون كمية الصنف {1} المراد حجزها أكبر من 0.",
+        "sha256": "46a6d8e96c891d91ea39a0d01a10e9dbbba903f98e6cfdd6ae689cc9facac8b7"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Row #{0}: Quantity to reserve for the Item {1} should be greater than 0.",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "الصف رقم {0}: يجب أن تكون كمية الصنف {1} المراد حجزها أكبر من 0.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "a43f55cb9a2ba99ee827e2de996cf27b9efd279a7523f6616609f14f4d03c8f8": {
       "artifacts": [
         {
@@ -72628,6 +75728,56 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "a5de9bd5d883135aabcd50dfad35f6553dff542c7c7fc890a3a63e44fa68525d": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لا يمكن إلغاء قيد فردي في دفتر الأستاذ المخزني.",
+        "sha256": "af2121c369172b4aa086fefb071883d889cbbbb2444ed1885d4d4b10e71498cc"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Individual Stock Ledger Entry cannot be cancelled.",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "لا يمكن إلغاء قيد فردي في دفتر الأستاذ المخزني.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -73427,6 +76577,56 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "a7c74c2f3a34cd8ff188456528a95aede7a3e381ec6f352d4c4bd34c97eb1f81": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الصف رقم {0}: الرقم التسلسلي {1} للصنف {2} غير متاح في {3} {4} أو ربما يكون محجوزًا في {5} آخر.",
+        "sha256": "471d395dc2845d407f4fecadbcb0a704b8c3f5fcc6c414d91b9d2688d7ff1fe4"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Row #{0}: Serial No {1} for Item {2} is not available in {3} {4} or might be reserved in another {5}.",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "الصف رقم {0}: الرقم التسلسلي {1} للصنف {2} غير متاح في {3} {4} أو ربما يكون محجوزًا في {5} آخر.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -75365,6 +78565,56 @@
         }
       }
     },
+    "ab8768462b93499500e9c956ce1ebd0de84547878b68911d3bdf671c1a90678a": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يُرجى إنشاء سندات تكاليف الوصول للفواتير التي فُعّل فيها خيار 'تحديث المخزون'.",
+        "sha256": "a6095e6191d4c00db4ae0c4587d86b174b7bc10cb83f2842980a2c8cdea3e620"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Please create Landed Cost Vouchers against Invoices that have 'Update Stock' enabled.",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "يُرجى إنشاء سندات تكاليف الوصول للفواتير التي فُعّل فيها خيار 'تحديث المخزون'.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "ab8cc5b8e9b96b68c11a5eaacb29e645ef72c907ea95e0a1c37968c6e90556fa": {
       "artifacts": [
         {
@@ -76916,6 +80166,56 @@
         }
       }
     },
+    "ae6d9316393031a414c77826ad823a0da46be3d407ecfc610300173fed569688": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "قد يظهر سعر الصنف عدة مرات بحسب قائمة الأسعار والمورد/العميل والعملة والصنف والدفعة ووحدة القياس والكمية والتواريخ.",
+        "sha256": "62f0b81800696c75682f6bee29773a421bcc6fa6da1fd08a4fa11cf89e555c48"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Item Price appears multiple times based on Price List, Supplier/Customer, Currency, Item, Batch, UOM, Qty, and Dates.",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "قد يظهر سعر الصنف عدة مرات بحسب قائمة الأسعار والمورد/العميل والعملة والصنف والدفعة ووحدة القياس والكمية والتواريخ.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "aebc465994960675091d81bcc9bc06b8b805462ad441b26bce2f36ce363e4f8d": {
       "artifacts": [
         {
@@ -77809,6 +81109,56 @@
         }
       }
     },
+    "b0601094cfcea5976923eeb9709bf47a25ee90d073eba16fd75f29ae2c8369e1": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الصف رقم {0}: صيغة معايير القبول مطلوبة.",
+        "sha256": "b622c2ec968ce55552bee1fab2e4dad2995bf1cc78ce5b00125475b9b5ed72bd"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Row #{0}: Acceptance Criteria Formula is required.",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "الصف رقم {0}: صيغة معايير القبول مطلوبة.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "b065f163bc5778f8f05ae43bce901b2effbf7e1afb21022b0423a5a87b32e88f": {
       "artifacts": [
         {
@@ -78467,6 +81817,56 @@
         }
       }
     },
+    "b21c6a89d2fa7592407ad43a71264da32ed2c4188bf799240208025298be65d6": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "عدد الأشهر (الإيراد)",
+        "sha256": "977fec3b9203cd7be2ce29bcb0e9596dd215bd22e180ae8d473bfa2e8d477d9d"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "No of Months (Revenue)",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "عدد الأشهر (الإيراد)",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "b230685606eb5ac7cd9fcc84f4952841d6c374034efeb1a75807e3aa3057e7c8": {
       "artifacts": [
         {
@@ -78652,6 +82052,56 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "b2e490e5ccf222ac069adad33d6796dafc1658c732c99209c5852ed5328143db": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "عدد الوحدات المنتجة",
+        "sha256": "fa1453cb768edbf0a7475679b8e72ddca3d38f22e13f89f00a4df5112e5dabb4"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "No of Units Produced",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "عدد الوحدات المنتجة",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -79075,6 +82525,56 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "b3a2391c87dcb26cd43d169101de13a66a0c6846e6f7af47f51f99f195752c8f": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "قد يستغرق ظهور قيم المخزون الدقيقة بضع ساعات بعد دمج الأصناف.",
+        "sha256": "80b6aebefb58109ed4a28cfc056d148e2347984f5ed352d0dd972a1dc4859526"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "It can take upto few hours for accurate stock values to be visible after merging items.",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "قد يستغرق ظهور قيم المخزون الدقيقة بضع ساعات بعد دمج الأصناف.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -81616,6 +85116,106 @@
         }
       }
     },
+    "b821db0fa295734c12bd22a76a43b49f0e4e3461ee60688f0d46ee413c84b109": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الشركات المصنّعة المرتبطة بالأصناف",
+        "sha256": "e6e2b96a3f9e5c882999fb2053f19b8119944b5f0ea76fecb306ca0b5f9c7375"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Manufacturers used in Items",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "الشركات المصنّعة المرتبطة بالأصناف",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
+    "b82df6c810c98a9458d46474df5556938a80bb68cf9b563d882127c6b976e2bc": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يُرجى إدخال البريد الإلكتروني/الهاتف لجهة الاتصال",
+        "sha256": "6f5f18e41886dd82f9294e87fbc8c300a487862fca9a176dba7218e0c52ee1dc"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Please set Email/Phone for the contact",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "يُرجى إدخال البريد الإلكتروني/الهاتف لجهة الاتصال",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "b83087f8bc16172d4173aab290720525ce4b154f99cf194ac279130d24d12c42": {
       "artifacts": [
         {
@@ -82788,6 +86388,56 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "b9f8ae92420e79e06e2188237ac933853e1266211cc50c6a5fd4ab513fcb0514": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يُرجى حذف حزمة المنتج {0} قبل دمج {1} في {2}",
+        "sha256": "16f57c324b9f8fd2caf92da097ca96b39e308eb87edfd12141f239651198a6a3"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Please delete Product Bundle {0}, before merging {1} into {2}",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "يُرجى حذف حزمة المنتج {0} قبل دمج {1} في {2}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -84201,6 +87851,56 @@
         }
       }
     },
+    "bddf182abfd48839d7d7c20da7f4ef68ee4255e7da438c628e4431b8ad6134c1": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "وقت انتهاء الاستلام",
+        "sha256": "684f17678afa2b38680af0a0d28fa942431fcdccf9159d495a81e10ad0d9d47c"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Pickup to",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "وقت انتهاء الاستلام",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "bdea35e4935d757a99283e2cfa124e090299171c62c23192529ac750e1d4d50a": {
       "artifacts": [
         {
@@ -85141,6 +88841,106 @@
         }
       }
     },
+    "bf6fb0adbeee4307920ba5ccbe582fae182f8048f0b129590ae26faf4277aa58": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لا توجد كمية متاحة لحجزها للصنف {0} في المستودع {1}",
+        "sha256": "24c84d8fae13482cd9266d62ae4c555886eb345ef9482f52c2a68f918751c5ee"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "No available quantity to reserve for item {0} in warehouse {1}",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "لا توجد كمية متاحة لحجزها للصنف {0} في المستودع {1}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
+    "bf91f04795c63e4d40d058653c1ea1537128b7b3151ac96a9b0779e0b878f493": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يُرجى تحديد عامل تصفية الصنف أو المستودع أو نوع المستودع لإنشاء التقرير.",
+        "sha256": "4e5f054d6fe85cb4224fb50556b87b3032415638b96555a10333cee8ba8da98f"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Please select either the Item or Warehouse or Warehouse Type filter to generate the report.",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "يُرجى تحديد عامل تصفية الصنف أو المستودع أو نوع المستودع لإنشاء التقرير.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "bf9497e82139bb3b239f90c8cca42b6fc9cf18dad7395fee0a964b9131e9f856": {
       "artifacts": [
         {
@@ -85373,6 +89173,56 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "c0443ca1c980b0f4fc674fb18cda42deab5d56d45570722821b034bcd1499e32": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يجب أن تكون الكمية المحجوزة أكبر من الكمية المسلّمة.",
+        "sha256": "5fd4d9484ca39d5e17d511e8bcd1b8083dc9c2d6bc45145e6cec6fc8d26222cf"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Reserved Qty should be greater than Delivered Qty.",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "يجب أن تكون الكمية المحجوزة أكبر من الكمية المسلّمة.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -85890,6 +89740,56 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "c15fa5f287afe90338f2f6296b8580bbc402e03ccf05683ebdf288ccd51df43e": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يُرجى التواصل مع أحد المستخدمين التاليين لإجراء {} لهذه المعاملة.",
+        "sha256": "ba7b531bb29c3cdd8f074e95a0262c20492df70f1f81272aef50a018c31a86fb"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Please contact any of the following users to {} this transaction.",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "يُرجى التواصل مع أحد المستخدمين التاليين لإجراء {} لهذه المعاملة.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -87958,6 +91858,56 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "c60c4c5f7ad3440c08d058a475ce3d30dc0faad35df29aaea4df48c4396523fb": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يُرجى تحديد عوامل التصفية المطلوبة",
+        "sha256": "db31f48772fb6d2f0a27dea1ab667a5b56de7601e3820353405157940d106e46"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Please select the required filters",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "يُرجى تحديد عوامل التصفية المطلوبة",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -91674,6 +95624,56 @@
         }
       }
     },
+    "cdf8112666badccc7017e90e1963108e583890049cf67d19092aa6cd4bcc7af2": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "مستودعا المصدر والوجهة غير صالحين",
+        "sha256": "90d2e5c3386d76cf268e960c3cba6990794150a4d63474403a5f37f4f4301604"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Invalid Source and Target Warehouse",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "مستودعا المصدر والوجهة غير صالحين",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "ce2c93d001a03973e0d49c4049c1f4b03141adc8896196bc6c549b57d7387852": {
       "artifacts": [
         {
@@ -91956,6 +95956,56 @@
         }
       }
     },
+    "ce4c90e99fed54225d627695daba494f6d914b188efc0f9340a33ab2f2c04de3": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لا يمكن تحديد عدة أصناف كمنتج نهائي",
+        "sha256": "373c974355f607ec856f1551339fa87b1049607fc51e7340f87c9e52a33c2f68"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Multiple items cannot be marked as finished item",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "لا يمكن تحديد عدة أصناف كمنتج نهائي",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "ce7c7cd42fc19346a3ac4536c81593daae0d0ebae41d9d70a1e8e4ff2c389141": {
       "artifacts": [
         {
@@ -92047,6 +96097,56 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "ceb6e4b9238b6b6417159c1f8dad08d66563b4b0e70d5cc0cd3234cf16083ed5": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "حدّد الفترة الزمنية لإعادة ترحيل المخزون",
+        "sha256": "4ed0f16e129fa217034f222e7217124bc4e4d86d04d821fa8788bfc5ea901973"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Limit timeslot for Stock Reposting",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "حدّد الفترة الزمنية لإعادة ترحيل المخزون",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -93739,6 +97839,56 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "d2d6ff3e124b863f577655f961befc13bb2adb82152b688d980507e72e14d724": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "إعادة التشغيل",
+        "sha256": "b9458404ca07a28826a9fa10ebab89cf9c678b51e4c23436348f92829171112e"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Restart",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "إعادة التشغيل",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -95622,6 +99772,56 @@
         }
       }
     },
+    "d619aefdd5f8e0e90bbd4dd200cd1ce8a86e94614e076fa0590eaa1cc8e2c8e1": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الحد الأدنى: {0}، الحد الأقصى: {1}، بخطوات قدرها: {2}",
+        "sha256": "46daffe9aad8bc0e962d59392ded6bf638697504c4fb3a8fea7298291aeb262b"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Min Value: {0}, Max Value: {1}, in Increments of: {2}",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "الحد الأدنى: {0}، الحد الأقصى: {1}، بخطوات قدرها: {2}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "d63992dbbaecfa5b53bbeafd38ffcc3ca6217d8c98cb88c17d206eb6518361cb": {
       "artifacts": [
         {
@@ -97502,6 +101702,56 @@
         }
       }
     },
+    "d9c23967de3767ed0752dfe438233d3cb7a7f263dde72cb2ceda606ed6a27cd1": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الوقت لكل وحدة بالدقائق",
+        "sha256": "b2c12742a27ad5b9e766e72bb9ddc508384942b5a95ceafaddb5530530c28d4f"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Per Unit Time in Mins",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "الوقت لكل وحدة بالدقائق",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "d9f542a08c0bc1fa679b78bb9d0d4013001916b2f6c13968f591417425f46dc3": {
       "artifacts": [
         {
@@ -97784,6 +102034,56 @@
         }
       }
     },
+    "da5f7229628ed19d56a6e581a707b17a88f514c7b28b38967d5ea3a959845e12": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تم تحديث سعر تقييم الصنف إلى صفر لأن خيار السماح بسعر تقييم صفري محدد للصنف {0}",
+        "sha256": "e01fc2ed7667c191cbb33cb36aafedcce25bf04068dcc88d7412dc52501aef3d"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Item rate has been updated to zero as Allow Zero Valuation Rate is checked for item {0}",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "تم تحديث سعر تقييم الصنف إلى صفر لأن خيار السماح بسعر تقييم صفري محدد للصنف {0}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "da6bb8d07947584be5936d9b0407ec20731235c33f2659194816c8671afd537a": {
       "artifacts": [
         {
@@ -97969,6 +102269,56 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "dae41b1ef1d557d8c8a887fc03809b456a78ce286f102e9ea5055d61bd9b98a5": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الصف رقم {0}: يجب أن يكون المنتج النهائي {1}",
+        "sha256": "07602a66cc2b3a46ed384b261ab3c2e68fd94a0df27701526067a66226291392"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Row #{0}: Finished Good must be {1}",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "الصف رقم {0}: يجب أن يكون المنتج النهائي {1}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -98392,6 +102742,56 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "dba55c7d7f33908495cb798e1f67aa4cee3df946ec7265339ec4e8b396eb37aa": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يُرجى مراجعة رسالة الخطأ واتخاذ الإجراءات اللازمة لإصلاحه، ثم إعادة بدء الترحيل.",
+        "sha256": "6503e9a59fa6bda503024b5e8b4fc638101e084b47a09e90d6ac7440482a706f"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Please check the error message and take necessary actions to fix the error and then restart the reposting again.",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "يُرجى مراجعة رسالة الخطأ واتخاذ الإجراءات اللازمة لإصلاحه، ثم إعادة بدء الترحيل.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -99285,6 +103685,56 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "dd207b4561dbe73e96d33771fc45aff770b8fca77ca3187a0da93fe7017997a8": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يمكن إنشاء قيد واحد فقط من النوع {0} مقابل أمر العمل {1}",
+        "sha256": "bcb419c99f04ae25565ed92614cb86989f7e7f66738bf8e5806fe875fb12e917"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Only one {0} entry can be created against the Work Order {1}",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "يمكن إنشاء قيد واحد فقط من النوع {0} مقابل أمر العمل {1}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -100424,6 +104874,56 @@
         }
       }
     },
+    "e03328438dbda12c422981ec7433e7067e38086aafd62cd7e681926152b2c4b4": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الصف رقم {0}: المتاح لحجزه للصنف {2} هو {1} فقط",
+        "sha256": "9fedf093427255300d87289ae68472c07642023150acadefab19ebc3acdd03e0"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Row #{0}: Only {1} available to reserve for the Item {2}",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "الصف رقم {0}: المتاح لحجزه للصنف {2} هو {1} فقط",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "e0444075f35696203624f82c4d770bf2f4882142271121a502126f919652d718": {
       "artifacts": [
         {
@@ -100703,6 +105203,56 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "e0c0fd48f6ea57bc936165c5b64becdfc0a3e086f89b5037f9daf28adc0cb31b": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يُرجى إدخال اسم العائلة والبريد الإلكتروني والهاتف للمستخدم أولًا",
+        "sha256": "1fc24d11aa49157730296c2edf9bbb29c3d8d7d674ea04a4be0dc0e863a181c2"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Please first set Last Name, Email and Phone for the user",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "يُرجى إدخال اسم العائلة والبريد الإلكتروني والهاتف للمستخدم أولًا",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -101267,6 +105817,56 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "e202aabc0b1ae7a1bb530552d9b6d492b710b62c0f6140f9e0a8476695b3ec2e": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "اكتملت إعادة الترحيل بنسبة {0}%",
+        "sha256": "e7996137b0210b4039b554e7ff1e0e31ee6d34534e2a62c3da79adc253c0351c"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Reposting Completed {0}%",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "اكتملت إعادة الترحيل بنسبة {0}%",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -102019,6 +106619,56 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "e3d0136286f3c0a4e1d9f3b5299bce531f891406d03e476db9745fd7bb0a32a0": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "ملاحظة: لدمج الأصناف، أنشئ تسوية مخزون منفصلة للصنف القديم {0}",
+        "sha256": "eab87c0ba936ae35ccbc6ca62d3116bdc3ea3d5ff94a5dd2c3a4d52742abe21b"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Note: To merge the items, create a separate Stock Reconciliation for the old item {0}",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "ملاحظة: لدمج الأصناف، أنشئ تسوية مخزون منفصلة للصنف القديم {0}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -103628,6 +108278,56 @@
         }
       }
     },
+    "e72f5c8931c5f928a5ba4fcbc91fc9f2471683689c2a7132422ab91301d8cb52": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الصف رقم {0}: صيغة معايير القبول غير صحيحة.",
+        "sha256": "5c46dcbb06e7206d1a14aecb96a4a989870cb8a1080c749bc183f5d7e55ab241"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Row #{0}: Acceptance Criteria Formula is incorrect.",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "الصف رقم {0}: صيغة معايير القبول غير صحيحة.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "e7c8ea3cde3818d27e5abd5ca078de0e7e135ccfa59f1b075f57b00478608976": {
       "artifacts": [
         {
@@ -103766,6 +108466,56 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "e7e34c88af3d0f6e332c50318ce0fe280a27289ed5298a1396fb7fad6a66b424": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لا توجد حقول إضافية متاحة",
+        "sha256": "2e362d44fd4d1d6f3d70b332c2e037c5f51dbe96c271c32f38dcd54f5a1919e2"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "No additional fields available",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "لا توجد حقول إضافية متاحة",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -104048,6 +108798,56 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "e87680dcfdff47c7c6a0077e4703aa9aa6a1ce8fcdf2cd0bad933788f0470b21": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يُرجى تفعيل «استخدام حقول الرقم التسلسلي/الدفعة القديمة» لإنشاء الحزمة.",
+        "sha256": "5c83c175b6c83c5f7b680fc0f4206320a6049e3e7391ea0ebec158f3539f2618"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Please enable Use Old Serial / Batch Fields to make_bundle",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "يُرجى تفعيل «استخدام حقول الرقم التسلسلي/الدفعة القديمة» لإنشاء الحزمة.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -104377,6 +109177,56 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "e8d108c5a88e3512b72158e59cab39fb8ffcd454390d0af65048226706055aa3": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "جارٍ إعادة ترحيل تقييم الصنف. قد يعرض التقرير تقييمًا غير صحيح للصنف.",
+        "sha256": "f4bfaca31671a9acbf51f7747b7d8e5d304586faf201ca088b74664a4d3edd4c"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Item valuation reposting in progress. Report might show incorrect item valuation.",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "جارٍ إعادة ترحيل تقييم الصنف. قد يعرض التقرير تقييمًا غير صحيح للصنف.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -105696,6 +110546,56 @@
         }
       }
     },
+    "eb38d70fa6a29302dc6a78ce9bd68321aa1af5e38865a98d3323cef612519293": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يُرجى تحديد عامل تصفية واحد على الأقل: رمز الصنف أو الدفعة أو الرقم التسلسلي.",
+        "sha256": "cb2e7c404f197bb8533638953f59fac641ac1c5a8429945a812cde59aed958f0"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Please select at least one filter: Item Code, Batch, or Serial No.",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "يُرجى تحديد عامل تصفية واحد على الأقل: رمز الصنف أو الدفعة أو الرقم التسلسلي.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "eb6428fe0ffa94e46d890cb2b4130a1b59a196463a0b5733def5d6205d673a0e": {
       "artifacts": [
         {
@@ -106970,6 +111870,56 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "ee416795696e0f73fd77acc7ca47bad101d76561c5f3bc23a373e72040dc5d91": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "وقت بدء الاستلام",
+        "sha256": "de028fe326bdb16bf445b310b036e3959c810f69739e20e67bbd393e003a34f4"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Pickup from",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "وقت بدء الاستلام",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -110122,6 +115072,56 @@
         }
       }
     },
+    "f5af8dffe37d19a5229c5afc1f60b9d39448f92abfa332fcfbcdd8c0b0cee09e": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "استعلام البحث غير صالح",
+        "sha256": "98e0db04e6aeb4e5f3702d46595a2a4e9da01463d4233e3a813901fcf66a948c"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Invalid search query",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "استعلام البحث غير صالح",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "f5cc0d5f5d3777a1770b8194ca56790456af4fdf4dbb98a7e9c20ab246d8492f": {
       "artifacts": [
         {
@@ -112190,6 +117190,56 @@
         }
       }
     },
+    "fa3421501bce9edd282f274dfc927d4dbbb5d7e639f21c14811ee17c16fba567": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "إنشاء متغير للصنف {0}",
+        "sha256": "3d2e55ed612d459cb7d36f1a93c377519e10fb4d72b7047785ef7f35cb9c029d"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Make {0} Variant",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "إنشاء متغير للصنف {0}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "fa401150e88fbe27ccf3812a4e8bd217ae2b5c7184c2cd2d73a9b3f5c93ff33b": {
       "artifacts": [
         {
@@ -113130,6 +118180,56 @@
         }
       }
     },
+    "fc26d24f568943ee66c31249717c6135750fd0eace30caefbc8e0669df41b3e1": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يُرجى تحديد الأرقام التسلسلية/الدفعات لحجزها، أو تغيير أساس الحجز إلى الكمية.",
+        "sha256": "c86f629365cad9d9d680a8adde149b5280abcbf3b6ad2ba2efdab6c41d1bfd2d"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Please select Serial/Batch Nos to reserve or change Reservation Based On to Qty.",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "يُرجى تحديد الأرقام التسلسلية/الدفعات لحجزها، أو تغيير أساس الحجز إلى الكمية.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "fc3f0692841a0aa34ec92c93436b415cbc6f25c18131572e2c8fd453643e3497": {
       "artifacts": [
         {
@@ -113976,6 +119076,56 @@
         }
       }
     },
+    "fe3b20d3d0f74f079e22aff89387e55399fdb6b95a25f49e37f6c16394b1182d": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w603_payload_applied_rows_batch02_2026-09-23.csv",
+          "sha256": "47f5c970e78e376eedfa89bf0f9ca6f58d8aa75aa8ba1998f4ad1aca3adfb88a"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "stock-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يُرجى تفعيل {0} في {1}.",
+        "sha256": "94ea84737feee69473e96f0c5b09a0aabe97b47212732b65bc1f51f3aef1708c"
+      },
+      "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-02",
+      "release_version": "1.6",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Please enable {0} in the {1}.",
+      "timestamps": [
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49",
+        "2026-09-23 20:53:49"
+      ],
+      "translated_text": "يُرجى تفعيل {0} في {1}.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "GPT-6",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "fe44fab251cad36c4158b229d2046003f91e676e68b9e9d016a8b85cf0458330": {
       "artifacts": [
         {
@@ -114588,7 +119738,7 @@
       }
     }
   },
-  "generated_utc": "2026-09-23T19:52:16Z",
-  "note": "Reviewed generation. Verdicts transcribed from independent review evidence (six new rows) or marked historical batch (legacy).",
+  "generated_utc": "2026-09-23T20:53:49Z",
+  "note": "W6-3 batch-02 additions bind quorum PASS to the exact proposal SHA; existing historical decisions retained.",
   "schema": "release-decision/v2"
 }
