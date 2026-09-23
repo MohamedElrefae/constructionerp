@@ -1,7 +1,7 @@
 COMMAND: bench --site v16.localhost console sync_translation_catalog(dry_run=False)
-STARTED_UTC: 2026-09-23T13:22:58Z
+STARTED_UTC: 2026-09-23T20:05:28Z
 In [3]: SYNC: {'apps': ['frappe', 'erpnext', 'construction'], 'created': 0, 'updated': 0, 'dry_run': False}
 EXIT_CODE: 0
-FINISHED_UTC: 2026-09-23T13:23:03Z
+FINISHED_UTC: 2026-09-23T20:05:33Z
 PO_SHA256: 28362a98f1e1d4e9f5dee0a04945abe88154b29ff12d9e57ba738c98427d3812
 ENVELOPE_LINES: 7

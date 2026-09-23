@@ -1,0 +1,118 @@
+% of materials delivered against this Pick List
+'Inspection Required before Delivery' has disabled for the item {0}, no need to create the QI
+'Inspection Required before Purchase' has disabled for the item {0}, no need to create the QI
+'To Package No.' cannot be less than 'From Package No.'
+(A) Qty After Transaction
+(B) Expected Qty After Transaction
+(C) Total Qty in Queue
+(C) Total qty in queue
+(D) Balance Stock Value
+(Daily Yield * No of Units Produced) / 100
+(E) Balance Stock Value in Queue
+(F) Change in Stock Value
+(G) Sum of Change in Stock Value
+(Good Units Produced / Total Units Produced) × 100
+(H) Change in Stock Value (FIFO Queue)
+(H) Valuation Rate
+(I) Valuation Rate
+(J) Valuation Rate as per FIFO
+(K) Valuation = Value (D) ÷ Qty (A)
+(Total Workstation Time / Manufacturing Time) * 60
+A Packing Slip can only be created for Draft Delivery Note.
+A Price List is a collection of Item Prices either Selling, Buying, or both
+A Product or a Service that is bought, sold or kept in stock.
+A driver must be set to submit.
+A logical Warehouse against which stock entries are made.
+A naming series conflict occurred while creating serial numbers. Please change the naming series for the item {0}.
+AMC Expiry (Serial)
+AWB Number
+Abbreviation: {0} must appear only once
+Acceptance Criteria Formula
+Acceptance Criteria Value
+According to the BOM {0}, the Item '{1}' is missing in the stock entry.
+Accounting Entry for {0}
+Add Serial / Batch No (Rejected Qty)
+Adjustment based on Purchase Invoice rate
+All items have already been received
+Allow Alternative Item must be checked on Item {}
+Allow UOM with Conversion Rate Defined in Item
+Allow Variant UOM to be different from Template UOM
+Allow existing Serial No to be Manufactured/Received again
+Allow to Edit Stock UOM Qty for Purchase Documents
+Allow to Edit Stock UOM Qty for Sales Documents
+Allow to Make Quality Inspection after Purchase / Delivery
+Allows to keep aside a specific quantity of inventory for a particular order.
+Also you can't switch back to FIFO after setting the valuation method to Moving Average for this item.
+An error has been appeared while reposting item valuation via {0}
+Any one of following filters required: warehouse, Item Code, Item Group
+Applied on each reading.
+Applied putaway rules.
+As there are existing submitted transactions against item {0}, you can not change the value of {1}.
+As there are reserved stock, you cannot disable {0}.
+As {0} is enabled, you can not enable {1}.
+At Row #{0}: The picked quantity {1} for the item {2} is greater than available stock {3} in the warehouse {4}.
+At least one warehouse is mandatory
+At row {0}: Batch No is mandatory for Item {1}
+At row {0}: Qty is mandatory for the batch {1}
+At row {0}: Serial No is mandatory for Item {1}
+Attribute value: {0} must appear only once
+Auto Insert Item Price If Missing
+Auto Reserve Stock for Sales Order on Purchase
+Batch No {0} does not exists
+Batch No {0} is linked with Item {1} which has serial no. Please scan serial no instead.
+Batch No {0} is not present in the original {1} {2}, hence you can't return it against the {1} {2}
+Batch Nos are created successfully
+Batch Qty updated to {0}
+Batch {0} and Warehouse
+Booking stock value across multiple accounts will make it harder to track stock and account value.
+Cannot amend {0} {1}, please create a new one instead.
+Cannot cancel as processing of cancelled documents is pending.
+Cannot cancel the transaction. Reposting of item valuation on submission is not completed yet.
+Cannot create Stock Reservation Entries for future dated Purchase Receipts.
+Charges are updated in Purchase Receipt against each item
+Charges will be distributed proportionately based on item qty or amount, as per your selection
+Company which internal customer represents.
+Conditional Rule Examples
+Consumed quantity of item {0} exceeds transferred quantity.
+Cost of Goods Sold Account in Items Table
+Create a variant with the template image.
+Creating Packing Slip ...
+Default settings for your stock-related transactions
+Delivery to
+Dependant SLE Voucher Detail No
+Different 'Source Warehouse' and 'Target Warehouse' can be set for each row.
+Disabled Warehouse {0} cannot be used for this transaction.
+Disables auto-fetching of existing quantity
+Distinct Item and Warehouse
+Distinct unit of an Item
+Distribute Manually
+Do you still want to enable negative inventory?
+Do you want to change valuation method?
+Due to stock closing entry {0}, you cannot repost item valuation before {1}
+Duplicate Stock Closing Entry
+Email or Phone/Mobile of the Contact are mandatory to continue.
+Enable Allow Partial Reservation in the Stock Settings to reserve partial stock.
+Enable it if users want to consider rejected materials to dispatch.
+Enter an Item Code, the name will be auto-filled the same as Item Code on clicking inside the Item Name field.
+Enter the opening stock units.
+Error while reposting item valuation
+Example of a linked document: {0}
+Example: Serial No {0} reserved in {1}.
+FIFO Stock Queue (qty, rate)
+Finished Item {0} does not match with Work Order {1}
+Fix SABB Entry
+For quantity {0} should not be greater than allowed quantity {1}
+For the convenience of customers, these codes can be used in print formats like Invoices and Delivery Notes
+For the item {0}, the quantity should be {1} according to the BOM {2}.
+From and To dates are required
+Generate packing slips for packages to be delivered. Used to notify package number, package contents and its weight.
+Get stops from
+Have Default Naming Series for Batch ID?
+Here are the options to proceed:
+Hi,
+If checked, picked qty won't automatically be fulfilled on submit of pick list.
+If enabled then system won't apply the pricing rule on the delivery note which will be create from the pick list
+If enabled then system won't override the picked qty / batches / serial numbers / warehouse.
+If not, you can Cancel / Submit this entry
+If yes, then this warehouse will be used to store rejected materials
+In Transit Warehouse

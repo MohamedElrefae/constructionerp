@@ -1,17 +1,19 @@
 {
- "recorded_utc": "2026-09-23T17:00:00Z",
- "session_type": "hold_state",
- "importance": 0.9,
- "summary": "W6-0b batches 1-7 closed (a0f01cb); W6-2 batch-01 closed (073458e); W6-2 batch-02 governed cycle CLOSED (b3b0681) — catalog 2319, browser 21/21, evidence HEAD-bound. Production Stage 8 still gated.",
- "supersedes": "session-hold-state-2026-09-21.json + in-place update 2026-09-23 (batch-02 proposal; now records batch-02 cycle closure)",
- "hold_directives": [
-  "W6-0b batches 1-7 COMPLETE and accepted (a0f01cb); 8bfc23a rejected history only",
-  "W6-2 batch-01 COMPLETE and closed on v16.localhost 2026-09-23 (exact scope CSV sha b017df47… only)",
-  "W6-2 batch-02 COMPLETE and closed on v16.localhost 2026-09-23 (exact scope CSV sha 9a096273… only); catalog 2319; commit b3b0681",
-  "next Stage 6 workflow-matrix batch requires explicit owner-approved scope proposal before any run",
-  "no production mutation, production catalog/DB rollout, or Stage 8 production work",
-  "develop clean; production waits on real master/ledger data + named production site + explicit rollout window together",
-  "always run scripts/uat_preflight.py for Stage 8 validations",
-  "untracked v16.localhost/ log dir left as-is (owner directive)"
- ]
+  "recorded_utc": "2026-09-23T20:17:57Z",
+  "session_type": "hold_state",
+  "importance": 0.9,
+  "summary": "W6-0b batches 1-7 closed (a0f01cb); W6-2 batch-01 closed (073458e); W6-2 batch-02 governed cycle CLOSED (b3b0681); W6-3 batch-01 governed cycle CLOSED on v16.localhost (catalog 2437, browser 21/21, evidence HEAD-bound). Batches 02/03 and production remain gated.",
+  "supersedes": "session-hold-state-2026-09-21.json + in-place updates through W6-2 batch-02; now records W6-3 batch-01 cycle closure",
+  "hold_directives": [
+    "W6-0b batches 1-7 COMPLETE and accepted (a0f01cb); 8bfc23a rejected history only",
+    "W6-2 batch-01 COMPLETE and closed on v16.localhost 2026-09-23 (exact scope CSV sha b017df47… only)",
+    "W6-2 batch-02 COMPLETE and closed on v16.localhost 2026-09-23 (exact scope CSV sha 9a096273… only); catalog 2319; commit b3b0681",
+    "W6-3 batch-01 COMPLETE and closed on v16.localhost 2026-09-23 (exact scope CSV sha 5eb34bc2… only); final disposition 115 preserved + 17 technical + 118 payload; catalog 2437; browser 21/21; evidence HEAD-bound to 9a3f44f",
+    "W6-3 batch-02 and batch-03 remain UNAPPROVED; no import or cycle execution for either",
+    "next Stage 6 workflow-matrix batch requires explicit owner-approved scope proposal before any run",
+    "no production mutation, production catalog/DB rollout, or Stage 8 production work",
+    "develop clean; production waits on real master/ledger data + named production site + explicit rollout window together",
+    "always run scripts/uat_preflight.py for Stage 8 validations",
+    "untracked v16.localhost/ log dir left as-is (owner directive)"
+  ]
 }

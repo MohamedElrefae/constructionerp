@@ -1,16 +1,16 @@
 COMMAND: bench --site v16.localhost console construction.localization_freshness.collect()
-STARTED_UTC: 2026-09-23T13:06:08Z
+STARTED_UTC: 2026-09-23T20:08:00Z
 ARTIFACT: construction/data/localization/freshness_evidence.json
-ARTIFACT_SHA256: e1bc6d8583757724a167f87f5d201de7cc75bcc221ccd8214296b9f68dca4cb9
-FRESHNESS_SHA256: e1bc6d8583757724a167f87f5d201de7cc75bcc221ccd8214296b9f68dca4cb9
+ARTIFACT_SHA256: f2d690ba5f19ee5ece97e48c1f3128976dc8229095eaf71633d1d0064b41b847
+FRESHNESS_SHA256: f2d690ba5f19ee5ece97e48c1f3128976dc8229095eaf71633d1d0064b41b847
 --- JSON START ---
 {
   "audit_timestamps": {
     "last_catalog_sync_at": "2026-09-22 13:07:14.851379",
-    "last_drift_checked_at": "2026-09-23 18:36:09.516705",
-    "last_release_import_at": "2026-09-23 18:33:00.960108"
+    "last_drift_checked_at": "2026-09-24 01:36:00.537387",
+    "last_release_import_at": "2026-09-24 01:23:10.448958"
   },
-  "collected_utc": "2026-09-23T13:06:09Z",
+  "collected_utc": "2026-09-23T20:06:00Z",
   "critical_keys": {
     "Desktop": "سطح المكتب",
     "Edit Sidebar": "تحرير الشريط الجانبي",
@@ -20,7 +20,7 @@ FRESHNESS_SHA256: e1bc6d8583757724a167f87f5d201de7cc75bcc221ccd8214296b9f68dca4c
     "Workspaces": "مساحات العمل"
   },
   "critical_pass": true,
-  "db_now_at_collection": "2026-09-23 16:06:09",
+  "db_now_at_collection": "2026-09-23 23:06:00",
   "health": {
     "constraint_name": "ct_translation_key_digest",
     "constraint_present": true,
@@ -30,20 +30,20 @@ FRESHNESS_SHA256: e1bc6d8583757724a167f87f5d201de7cc75bcc221ccd8214296b9f68dca4c
     "has_null_digests": false,
     "has_orphan_site_overrides": false,
     "last_catalog_sync_at": "2026-09-22 13:07:14.851379",
-    "last_drift_checked_at": "2026-09-23 18:36:09.516705",
-    "last_release_import_at": "2026-09-23 18:33:00.960108",
+    "last_drift_checked_at": "2026-09-24 01:36:00.537387",
+    "last_release_import_at": "2026-09-24 01:23:10.448958",
     "loader_installed": true,
     "using_safe_fallback": false
   },
   "inputs": {
     "construction_po_sha": "28362a98f1e1d4e9f5dee0a04945abe88154b29ff12d9e57ba738c98427d3812",
-    "payload_csv_sha": "73f40e324f3169ec0d6fa1ff53fae5eb5850489825c04d744e995da2d31e8df3"
+    "payload_csv_sha": "f762440740d97446dca6945c63da9754c9de3e90248641500d1c5aecfcfe7124"
   },
-  "packaged_rows": 2319,
-  "runtime_digest": "629345db4b01adb9a2fcc98caff13c1d88666b1cf8d021318b659e64dac834e8",
+  "packaged_rows": 2437,
+  "runtime_digest": "bda154122dd8e71214044c18312a9b54b8584c554e802831c4bf58bcf303725f",
   "site": "v16.localhost"
 }
 --- JSON END ---
 EXIT_CODE: 0
-FINISHED_UTC: 2026-09-23T13:06:09Z
+FINISHED_UTC: 2026-09-23T20:08:01Z
 ENVELOPE_LINES: 49

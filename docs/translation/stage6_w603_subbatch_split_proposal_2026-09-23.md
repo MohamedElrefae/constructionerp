@@ -61,7 +61,7 @@ Columns identical to parent: `source_text,suggested_ar,locations,area,has_pre_fi
 | File | `docs/translation/stage6_w603_batch01_rows_2026-09-23.csv` |
 | Rows | **250** |
 | sha256 | `5eb34bc2dbaf3cf201efc5d856085e32375a68fca959082b3afd8111f7b08380` |
-| Dispositions (proposal recommendations) | PROPOSED-payload **240** · PROPOSED-EXCEPTION-technical **10** · already-released **0** · total **250** |
+| Dispositions (pre-cycle proposal recommendations) | PROPOSED-payload **240** · PROPOSED-EXCEPTION-technical **10** · already-released **0** · total **250** |
 | Pre-filled / unfilled | 115 / 135 |
 | Overlap | catalog **0** · prior stage6 **0** · tech/dedup **0/0** · other batches **0** · internal dups **0** |
 | Site (if approved to run) | `v16.localhost` test site only |
@@ -77,7 +77,11 @@ Batch 02 and batch 03 remain **unapproved** until separate owner mark-up after b
 - Production / Stage-8 / evidence re-pin / site import — gated
 - Site overrides deferred to cycle-time recon (plan §12); none pre-removed
 
-Evidence re-pin remains **deferred** to the next governed catalog cycle that actually changes the packaged catalog (owner directive unchanged).
+Evidence re-pin was performed as part of the approved batch-01 governed cycle.
+
+## Post-approval disposition correction
+
+The governed gate reclassified seven formula/letter source-equal keys (`A - B`, `A - C`, `D - E`, `G - D`, `H - F`, `I - J`, `I - K`) from payload to `EXCEPTION-technical`. Final batch-01 disposition is **115 preserved + 17 technical + 0 already-released + 118 payload = 250**. The approved scope CSV sha is unchanged; batch 02 and batch 03 remain unapproved.
 
 ## Boundary
 
@@ -90,10 +94,10 @@ Evidence re-pin remains **deferred** to the next governed catalog cycle that act
 
 ## Owner mark-up requested
 
-- [ ] **Approve W6-3 batch 01 only** — the 250-row CSV
+- [x] **Approve W6-3 batch 01 only** — the 250-row CSV
       (`docs/translation/stage6_w603_batch01_rows_2026-09-23.csv`,
       sha256 `5eb34bc2dbaf3cf201efc5d856085e32375a68fca959082b3afd8111f7b08380`)
       as the exact next governed import batch.
-- [ ] Acknowledge batch 02 and batch 03 are split inventory only (not approved for quorum/import).
-- [ ] Acknowledge partition integrity: 250+250+234=734, pairwise overlap 0, catalog overlap 0.
-- [ ] Leave production / Stage-8 gated.
+- [x] Acknowledge batch 02 and batch 03 are split inventory only (not approved for quorum/import).
+- [x] Acknowledge partition integrity: 250+250+234=734, pairwise overlap 0, catalog overlap 0.
+- [x] Leave production / Stage-8 gated.

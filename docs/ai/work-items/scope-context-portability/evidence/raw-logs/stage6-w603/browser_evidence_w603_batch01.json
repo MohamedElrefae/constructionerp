@@ -1,0 +1,194 @@
+{
+ "batch": "stage6-w603-batch01",
+ "started_utc": "2026-09-23T20:13:55Z",
+ "site": "v16.localhost",
+ "checks": [
+  {
+   "name": "boot-lang-ar",
+   "ok": true,
+   "detail": "ar"
+  },
+  {
+   "name": "boot-messages-ge-1000",
+   "ok": true,
+   "detail": 12739
+  },
+  {
+   "name": "translate:% of materials delivered against this Pick List",
+   "ok": true,
+   "detail": {
+    "expected": "% o نسبة المواد المسلمة مقابل قائمة الانتقاء هذه",
+    "got": "% o نسبة المواد المسلمة مقابل قائمة الانتقاء هذه"
+   }
+  },
+  {
+   "name": "translate:A Packing Slip can only be created for Draft Delivery Note.",
+   "ok": true,
+   "detail": {
+    "expected": "يمكن إنشاء سند التعبئة فقط لإذن التسليم المبدئي.",
+    "got": "يمكن إنشاء سند التعبئة فقط لإذن التسليم المبدئي."
+   }
+  },
+  {
+   "name": "translate:A Price List is a collection of Item Prices either Selling, Buying, or both",
+   "ok": true,
+   "detail": {
+    "expected": "قائمة الأسعار هي مجموعة أسعار أصناف للبيع أو الشراء أو كليهما",
+    "got": "قائمة الأسعار هي مجموعة أسعار أصناف للبيع أو الشراء أو كليهما"
+   }
+  },
+  {
+   "name": "translate:A driver must be set to submit.",
+   "ok": true,
+   "detail": {
+    "expected": "يجب تحديد السائق قبل الإرسال.",
+    "got": "يجب تحديد السائق قبل الإرسال."
+   }
+  },
+  {
+   "name": "translate:All items have already been received",
+   "ok": true,
+   "detail": {
+    "expected": "تم استلام جميع الأصناف بالفعل",
+    "got": "تم استلام جميع الأصناف بالفعل"
+   }
+  },
+  {
+   "name": "translate:At least one warehouse is mandatory",
+   "ok": true,
+   "detail": {
+    "expected": "مستودع واحد على الأقل إلزامي",
+    "got": "مستودع واحد على الأقل إلزامي"
+   }
+  },
+  {
+   "name": "translate:Batch Nos are created successfully",
+   "ok": true,
+   "detail": {
+    "expected": "تم إنشاء أرقام الدفعات بنجاح",
+    "got": "تم إنشاء أرقام الدفعات بنجاح"
+   }
+  },
+  {
+   "name": "translate:Distinct Item and Warehouse",
+   "ok": true,
+   "detail": {
+    "expected": "صنف ومستودع مميزين",
+    "got": "صنف ومستودع مميزين"
+   }
+  },
+  {
+   "name": "translate:Get stops from",
+   "ok": true,
+   "detail": {
+    "expected": "الحصول على المحطات من",
+    "got": "الحصول على المحطات من"
+   }
+  },
+  {
+   "name": "translate:Have Default Naming Series for Batch ID?",
+   "ok": true,
+   "detail": {
+    "expected": "هل توجد سلسلة تسمية افتراضية لمعرف الدفعة؟",
+    "got": "هل توجد سلسلة تسمية افتراضية لمعرف الدفعة؟"
+   }
+  },
+  {
+   "name": "translate:Here are the options to proceed:",
+   "ok": true,
+   "detail": {
+    "expected": "هذه خيارات المتابعة:",
+    "got": "هذه خيارات المتابعة:"
+   }
+  },
+  {
+   "name": "translate:In Transit Warehouse",
+   "ok": true,
+   "detail": {
+    "expected": "مستودع قيد العبور",
+    "got": "مستودع قيد العبور"
+   }
+  },
+  {
+   "name": "all-probe-translations",
+   "ok": true,
+   "detail": "12/12"
+  },
+  {
+   "name": "translate-placeholder",
+   "ok": true,
+   "detail": {
+    "expected": "الصنف النهائي X لا يتطابق بأمر العمل Y",
+    "got": "الصنف النهائي X لا يتطابق بأمر العمل Y"
+   }
+  },
+  {
+   "name": "boot-messages-lookup",
+   "ok": true,
+   "detail": {
+    "% of materials delivered against this Pick List": "% o نسبة المواد المسلمة مقابل قائمة الانتقاء هذه",
+    "A Packing Slip can only be created for Draft Delivery Note.": "يمكن إنشاء سند التعبئة فقط لإذن التسليم المبدئي.",
+    "A Price List is a collection of Item Prices either Selling, Buying, or both": "قائمة الأسعار هي مجموعة أسعار أصناف للبيع أو الشراء أو كليهما",
+    "A driver must be set to submit.": "يجب تحديد السائق قبل الإرسال."
+   }
+  },
+  {
+   "name": "rendered-dom-arabic-words",
+   "ok": true,
+   "detail": {
+    "count": 13,
+    "sample": [
+     "الأدوات",
+     "الأصول",
+     "الباطن",
+     "البيع",
+     "التصنيع",
+     "الجودة",
+     "المحاسبة",
+     "المخزون",
+     "المشاريع",
+     "المشتريات",
+     "بحث",
+     "مقاولات",
+     "منظمة"
+    ]
+   }
+  },
+  {
+   "name": "rendered-workspace-modules",
+   "ok": true,
+   "detail": [
+    "الأدوات",
+    "المحاسبة",
+    "المشتريات",
+    "المشاريع",
+    "المخزون",
+    "البيع"
+   ]
+  },
+  {
+   "name": "sidebar-arabic-items",
+   "ok": true,
+   "detail": [
+    "بحث                                       Ctrl+K",
+    "إشعار",
+    "سجل الطريق",
+    "إعدادات الإشعارات",
+    "قائمة المهام",
+    "التقارير",
+    "قائمة المهام",
+    "تنزيل النسخ الاحتياطية"
+   ]
+  },
+  {
+   "name": "desk-title-captured",
+   "ok": true,
+   "detail": "Desktop"
+  }
+ ],
+ "finished_utc": "2026-09-23T20:14:06Z",
+ "summary": {
+  "pass": 21,
+  "fail": 0
+ }
+}
