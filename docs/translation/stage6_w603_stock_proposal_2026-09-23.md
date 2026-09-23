@@ -2,6 +2,15 @@
 
 **Status: PROPOSAL ONLY — owner mark-up pending. No quorum, no import, no catalog change, no evidence re-pin, no production, no Stage-8.**
 
+**PROPOSAL ONLY — no quorum, no import, no evidence re-pin, no catalog mutation. Awaiting owner approval of the exact scope. Stage 8 and production remain gated.**
+
+Canonical scope file is `docs/translation/stage6_w603_stock_rows_2026-09-23.csv`
+(W6-2 `_rows_` naming convention; 734 rows; sha256
+`a60b1c8ec3bae8977826ed9101ee59a9206c699425e921da3f3d7341a7604535`).
+An intermediate concurrent run also tracked the same bytes as
+`stage6_w603_stock_scope_2026-09-23.csv`; that byte-identical alias was
+removed in this commit so exactly one exact-scope CSV remains.
+
 W6-2 is **exhausted** after batch 02 (batch 01 closed `073458e`, batch 02
 governed cycle `b3b0681`; raw identity `337 = 268 + 48 + 21`). This note
 proposes the **next bounded** Stage 6 workflow-matrix scope: matrix row
@@ -15,7 +24,7 @@ changes the packaged catalog (owner directive unchanged).
 
 | Item | Value |
 |---|---|
-| File | `docs/translation/stage6_w603_stock_scope_2026-09-23.csv` |
+| File | `docs/translation/stage6_w603_stock_rows_2026-09-23.csv` |
 | Rows | **734** translation-candidates (735 physical lines incl. header; no embedded newlines) |
 | sha256 | `a60b1c8ec3bae8977826ed9101ee59a9206c699425e921da3f3d7341a7604535` |
 | Source ledger | `docs/erpnext_ar_missing_review_filled.csv` (4,342 rows; W6-3 raw first-location `stock` = **789**, matching the matrix row count) |
@@ -224,7 +233,7 @@ with `0` already-released, `0` prior-scope, `0` tech, `0` dedup hits in raw.
 ## Owner mark-up requested
 
 - [ ] **Approve W6-3 Stock only** — the 734-row CSV
-      (`docs/translation/stage6_w603_stock_scope_2026-09-23.csv`,
+      (`docs/translation/stage6_w603_stock_rows_2026-09-23.csv`,
       sha256 `a60b1c8ec3bae8977826ed9101ee59a9206c699425e921da3f3d7341a7604535`)
       as the exact next Stage 6 translation scope.
 - [ ] Acknowledge shared **21** technical + **302** dedup exclusions remain
