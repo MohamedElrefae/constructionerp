@@ -1,12 +1,14 @@
 {
- "recorded_utc": "2026-09-21T18:30:00Z",
+ "recorded_utc": "2026-09-22T00:00:00Z",
  "session_type": "hold_state",
  "importance": 0.9,
- "summary": "Bilingual program test-env closure: Stages 0/1A/1B/1C/2/3/4 + W6-1 (69/78 split) + W6-0a (347 released, 10 deferred protected) + Stage 7 pilot (viewer page, BOQ ar/en exports, hardened preflight). Production deferred.",
+ "summary": "W6-0b batches 1-7 closed on test site; batch 7 corrected cycle owner-accepted at a0f01cb (rejected attempt 8bfc23a in history). Short-UI cut exhausted. Production Stage 8 still gated.",
+ "supersedes": "session-hold-state-2026-09-21.json (directive 'no W6-0b or Stage 8 work' partially retired for test-site W6-0b only)",
  "hold_directives": [
-  "no W6-0b or Stage 8 work",
-  "develop clean/synced (505321f, §18 recorded)",
-  "resume only with real master/ledger data + backup/restore rehearsal window + explicit production authorization",
+  "W6-0b batches 1-7 COMPLETE and accepted (a0f01cb); 8bfc23a rejected history only",
+  "no production mutation, production catalog/DB rollout, or Stage 8 production work",
+  "new Stage 6 workflow-matrix batch requires explicit owner-approved scope proposal before any run",
+  "develop clean; production waits on real master/ledger data + named production site + explicit rollout window together",
   "always run scripts/uat_preflight.py for Stage 8 validations"
  ]
 }

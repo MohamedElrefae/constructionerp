@@ -1,0 +1,271 @@
+source_text,suggested_ar,locations,area,has_pre_filled
+% Billed,نسبة المفوتر,erpnext/buying/doctype/purchase_order/purchase_order.json:None,buying,1
+Action If Same Rate is Not Maintained,الإجراء إذا لم يتم الحفاظ على نفس السعر,erpnext/buying/doctype/buying_settings/buying_settings.json:None,buying,1
+Added Supplier Role to User {0}.,,erpnext/buying/doctype/supplier/supplier.py:132,buying,0
+Advance Paid,المدفوع مسبقا,erpnext/buying/doctype/purchase_order/purchase_order.json:None; erpnext/selling/doctype/sales_order/sales_order.json:None,buying,1
+Advance Payment,دفعة مقدمة,erpnext/buying/doctype/purchase_order/purchase_order_list.js:75; erpnext/selling/doctype/sales_order/sales_order_list.js:122,buying,1
+Advance Payment Status,حالة الدفعة المقدمة,erpnext/buying/doctype/purchase_order/purchase_order.json:None; erpnext/selling/doctype/sales_order/sales_order.json:None,buying,1
+Allow Purchase Order with Zero Quantity,,erpnext/buying/doctype/buying_settings/buying_settings.json:None,buying,0
+Allow Request for Quotation with Zero Quantity,,erpnext/buying/doctype/buying_settings/buying_settings.json:None,buying,0
+Allow Supplier Quotation with Zero Quantity,,erpnext/buying/doctype/buying_settings/buying_settings.json:None,buying,0
+Allowed Items,الأصناف المسموحة,erpnext/buying/doctype/supplier/supplier.json:None; erpnext/selling/doctype/customer/customer.json:None,buying,1
+Amount to Bill,المبلغ المطلوب فوترته,erpnext/buying/report/purchase_order_analysis/purchase_order_analysis.py:189; erpnext/selling/report/sales_order_analysis/sales_order_analysis.py:209,buying,1
+Analysis Chart,,erpnext/buying/report/supplier_quotation_comparison/supplier_quotation_comparison.html:124,buying,0
+Auto Create Purchase Receipt,إنشاء إيصال شراء تلقائيا,erpnext/buying/doctype/buying_settings/buying_settings.json:None,buying,1
+Auto Create Subcontracting Order,إنشاء أمر مقاولات باطن تلقائيًا,erpnext/buying/doctype/buying_settings/buying_settings.json:None,buying,1
+Available Qty For Consumption,الكمية المتاحة للاستهلاك,erpnext/buying/doctype/purchase_receipt_item_supplied/purchase_receipt_item_supplied.json:None; erpnext/subcontracting/doctype/subcontracting_receipt_supplied_item/subcontracting_receipt_supplied_item.json:None,buying,1
+Available Qty at Company,الكمية المتاحة في الشركة,erpnext/buying/doctype/purchase_order_item/purchase_order_item.json:None,buying,1
+Available Qty at Target Warehouse,الكمية المتاحة في المستودع الهدف,erpnext/buying/doctype/purchase_order_item/purchase_order_item.json:None,buying,1
+Average Order Values,متوسط قيم الأوامر,erpnext/buying/workspace/buying/buying.json:None,buying,1
+Bill for Rejected Quantity in Purchase Invoice,فوترة الكمية المرفوضة في فاتورة الشراء,erpnext/buying/doctype/buying_settings/buying_settings.json:None,buying,1
+"Billed, Received & Returned",,erpnext/buying/doctype/purchase_order_item/purchase_order_item.json:None,buying,0
+Billing Address Details,تفاصيل عنوان الفوترة,erpnext/buying/doctype/purchase_order/purchase_order.json:None; erpnext/buying/doctype/request_for_quotation/request_for_quotation.json:None; erpnext/buying/doctype/supplier_quotation/supplier_quotation.json:None; erpnext/subcontracting/doctype/subcontracting_order/subcontracting_order.json:None,buying,1
+Blanket Order Allowance (%),نسبة سماحية الأمر المفتوح,erpnext/buying/doctype/buying_settings/buying_settings.json:None; erpnext/selling/doctype/selling_settings/selling_settings.json:None,buying,1
+Categorize by Item,تصنيف حسب الصنف,erpnext/buying/report/supplier_quotation_comparison/supplier_quotation_comparison.js:84,buying,1
+Categorize by Supplier,تصنيف حسب المورد,erpnext/buying/report/supplier_quotation_comparison/supplier_quotation_comparison.js:83; erpnext/buying/report/supplier_quotation_comparison/supplier_quotation_comparison.js:86,buying,1
+Configure the action to stop the transaction or just warn if the same rate is not maintained.,,erpnext/buying/doctype/buying_settings/buying_settings.json:None,buying,0
+Could not find path for ,,erpnext/buying/doctype/supplier_scorecard_variable/supplier_scorecard_variable.py:46; erpnext/buying/doctype/supplier_scorecard_variable/supplier_scorecard_variable.py:50,buying,0
+Create Link,إنشاء رابط,erpnext/buying/doctype/supplier/supplier.js:226; erpnext/selling/doctype/customer/customer.js:285,buying,1
+Created {0} scorecards for {1} between:,تم إنشاء {0} بطاقات تقييم لـ {1} بين:,erpnext/buying/doctype/supplier_scorecard/supplier_scorecard.py:250,buying,1
+Creating Stock Entry,جار إنشاء قيد مخزون,erpnext/buying/doctype/purchase_order/purchase_order.js:136; erpnext/subcontracting/doctype/subcontracting_order/subcontracting_order.js:485,buying,1
+Creating Subcontracting Order ...,,erpnext/buying/doctype/purchase_order/purchase_order.js:575,buying,0
+Criteria,المعايير,erpnext/buying/doctype/supplier_scorecard_period/supplier_scorecard_period.json:None,buying,1
+Criteria weights must add up to 100%,,erpnext/buying/doctype/supplier_scorecard/supplier_scorecard.py:89; erpnext/buying/doctype/supplier_scorecard_period/supplier_scorecard_period.py:55,buying,0
+Customer Number,رقم العميل,erpnext/buying/doctype/customer_number_at_supplier/customer_number_at_supplier.json:None,buying,1
+Customer Number At Supplier,رقم العميل لدى المورد,erpnext/buying/doctype/customer_number_at_supplier/customer_number_at_supplier.json:None,buying,1
+Customer Numbers,أرقام العملاء,erpnext/buying/doctype/supplier/supplier.json:None,buying,1
+Disable Last Purchase Rate,تعطيل آخر سعر شراء,erpnext/buying/doctype/buying_settings/buying_settings.json:None,buying,1
+Dispatch Address Details,تفاصيل عنوان الإرسال,erpnext/buying/doctype/purchase_order/purchase_order.json:None,buying,1
+Download PDF for Supplier,تنزيل PDF للمورد,erpnext/buying/doctype/request_for_quotation/request_for_quotation.js:153,buying,1
+Expires in a week or less,,erpnext/buying/report/supplier_quotation_comparison/supplier_quotation_comparison.py:291,buying,0
+Expires today or already expired,,erpnext/buying/report/supplier_quotation_comparison/supplier_quotation_comparison.py:295,buying,0
+Finished Good Qty,كمية المنتج النهائي,erpnext/buying/doctype/purchase_order_item/purchase_order_item.json:None; erpnext/selling/doctype/sales_order_item/sales_order_item.json:None; erpnext/subcontracting/doctype/subcontracting_bom/subcontracting_bom.json:None,buying,1
+Fixed Outgoing Email Account,حساب البريد الصادر الثابت,erpnext/buying/doctype/buying_settings/buying_settings.json:None,buying,1
+Fully Paid,مدفوع بالكامل,erpnext/buying/doctype/purchase_order/purchase_order.json:None; erpnext/selling/doctype/sales_order/sales_order.json:None,buying,1
+Get Supplier Group Details,جلب تفاصيل مجموعة الموردين,erpnext/buying/doctype/supplier/supplier.js:115,buying,1
+Has Unit Price Items,يحتوي على أصناف بسعر وحدة,erpnext/buying/doctype/purchase_order/purchase_order.json:None; erpnext/buying/doctype/request_for_quotation/request_for_quotation.json:None; erpnext/buying/doctype/supplier_quotation/supplier_quotation.json:None; erpnext/selling/doctype/quotation/quotation.json:None; erpnext/selling/doctype/sales_order/sales_order.json:None,buying,1
+How often should Project be updated of Total Purchase Cost ?,,erpnext/buying/doctype/buying_settings/buying_settings.json:None,buying,0
+"If checked, Rejected Quantity will be included while making Purchase Invoice from Purchase Receipt.",,erpnext/buying/doctype/buying_settings/buying_settings.json:None,buying,0
+"If enabled, a print of this document will be attached to each email",,erpnext/buying/doctype/request_for_quotation/request_for_quotation.json:None,buying,0
+"If enabled, all files attached to this document will be attached to each email",,erpnext/buying/doctype/request_for_quotation/request_for_quotation.json:None,buying,0
+"If enabled, the system will generate an accounting entry for materials rejected in the Purchase Receipt.",,erpnext/buying/doctype/buying_settings/buying_settings.json:None,buying,0
+Include Closed Orders,تضمين الأوامر المغلقة,erpnext/buying/report/purchase_order_trends/purchase_order_trends.js:8; erpnext/selling/report/sales_order_trends/sales_order_trends.js:8,buying,1
+Inter Company Sales Order,أمر بيع بين الشركات,erpnext/buying/doctype/purchase_order/purchase_order.js:486,buying,1
+Internal Sales Order,أمر بيع داخلي,erpnext/buying/doctype/purchase_order/purchase_order.js:485,buying,1
+Internal Supplier,مورد داخلي,erpnext/buying/doctype/supplier/supplier.json:None,buying,1
+Internal Supplier for company {0} already exists,,erpnext/buying/doctype/supplier/supplier.py:180,buying,0
+Items & Pricing,الأصناف والتسعير,erpnext/buying/workspace/buying/buying.json:None,buying,1
+Items to Order and Receive,أصناف للطلب والاستلام,erpnext/buying/workspace/buying/buying.json:None,buying,1
+Learn Procurement,,erpnext/buying/workspace/buying/buying.json:None,buying,0
+Link with Customer,ربط مع عميل,erpnext/buying/doctype/supplier/supplier.js:127,buying,1
+Linking Failed,فشل الربط,erpnext/buying/doctype/supplier/supplier.js:220; erpnext/selling/doctype/customer/customer.js:279,buying,1
+Linking to Customer Failed. Please try again.,,erpnext/buying/doctype/supplier/supplier.js:219,buying,0
+MPS,خطة الإنتاج الرئيسية,erpnext/buying/doctype/purchase_order/purchase_order.json:None; erpnext/manufacturing/doctype/sales_forecast/sales_forecast_dashboard.py:9; erpnext/manufacturing/doctype/work_order/work_order.json:None; erpnext/manufacturing/report/material_requirements_planning_report/material_requirements_planning_report.js:51,buying,1
+Naming Series and Price Defaults,سلاسل التسمية وإعدادات السعر الافتراضية,erpnext/buying/doctype/buying_settings/buying_settings.json:None,buying,1
+Not Initiated,لم يبدأ,erpnext/buying/doctype/purchase_order/purchase_order.json:None,buying,1
+Order Status,حالة الأمر,erpnext/buying/doctype/purchase_order/purchase_order.json:None; erpnext/subcontracting/doctype/subcontracting_inward_order/subcontracting_inward_order.json:None; erpnext/subcontracting/doctype/subcontracting_order/subcontracting_order.json:None; erpnext/subcontracting/doctype/subcontracting_receipt/subcontracting_receipt.json:None,buying,1
+Over Transfer Allowance (%),نسبة سماحية النقل الزائد,erpnext/buying/doctype/buying_settings/buying_settings.json:None,buying,1
+Partnership,,erpnext/buying/doctype/supplier/supplier.json:None; erpnext/selling/doctype/customer/customer.json:None,buying,0
+Percentage you are allowed to order beyond the Blanket Order quantity.,,erpnext/buying/doctype/buying_settings/buying_settings.json:None,buying,0
+Please add 'Supplier' role to user {0}.,,erpnext/buying/doctype/supplier/supplier.py:126,buying,0
+Please add Request for Quotation to the sidebar in Portal Settings.,,erpnext/buying/doctype/request_for_quotation/request_for_quotation.py:185,buying,0
+Portal Users,,erpnext/buying/doctype/supplier/supplier.json:None; erpnext/selling/doctype/customer/customer.json:None,buying,0
+Price ({0}),,erpnext/buying/report/supplier_quotation_comparison/supplier_quotation_comparison.py:244,buying,0
+Price Per Unit ({0}),,erpnext/buying/report/supplier_quotation_comparison/supplier_quotation_comparison.py:251,buying,0
+Primary Address and Contact,العنوان وجهة الاتصال الرئيسية,erpnext/buying/doctype/supplier/supplier.json:None; erpnext/selling/doctype/customer/customer.json:None,buying,1
+Production Plan Sub Assembly Item,عنصر تجميع فرعي لخطة الإنتاج,erpnext/buying/doctype/purchase_order_item/purchase_order_item.json:None; erpnext/manufacturing/doctype/production_plan_sub_assembly_item/production_plan_sub_assembly_item.json:None; erpnext/subcontracting/doctype/subcontracting_order_item/subcontracting_order_item.json:None,buying,1
+Purchase Orders Count,عدد أوامر الشراء,erpnext/buying/workspace/buying/buying.json:None,buying,1
+Purchase Receipt (Draft) will be auto-created on submission of Subcontracting Receipt.,,erpnext/buying/doctype/buying_settings/buying_settings.json:None,buying,0
+Purchase Value,قيمة الشراء,erpnext/buying/report/purchase_order_trends/purchase_order_trends.py:57,buying,1
+Qty in Stock UOM,الكمية بوحدة قياس المخزون,erpnext/buying/doctype/purchase_order_item/purchase_order_item.json:None; erpnext/buying/report/requested_items_to_order_and_receive/requested_items_to_order_and_receive.py:231; erpnext/stock/doctype/delivery_note_item/delivery_note_item.json:None,buying,1
+Qty to Be Consumed,الكمية المطلوب استهلاكها,erpnext/buying/doctype/purchase_receipt_item_supplied/purchase_receipt_item_supplied.json:None,buying,1
+Quotation Number,رقم عرض السعر,erpnext/buying/doctype/supplier_quotation/supplier_quotation.json:None,buying,1
+Raw materials consumed qty will be validated based on FG BOM required qty,,erpnext/buying/doctype/buying_settings/buying_settings.json:None,buying,0
+Return of Components,إرجاع المكونات,erpnext/buying/doctype/purchase_order/purchase_order.js:131; erpnext/subcontracting/doctype/subcontracting_order/subcontracting_order.js:480,buying,1
+Row #{0}: BOM is not specified for subcontracting item {0},,erpnext/buying/doctype/purchase_order/purchase_order.py:371,buying,0
+Row #{0}: Default BOM not found for FG Item {1},,erpnext/buying/doctype/purchase_order/purchase_order.py:395,buying,0
+Row #{0}: Finished Good Item Qty can not be zero,,erpnext/buying/doctype/purchase_order/purchase_order.py:400; erpnext/selling/doctype/sales_order/sales_order.py:291,buying,0
+Row #{0}: Finished Good Item is not specified for service item {1},,erpnext/buying/doctype/purchase_order/purchase_order.py:382; erpnext/selling/doctype/sales_order/sales_order.py:271,buying,0
+Row #{0}: Finished Good Item {1} must be a sub-contracted item,,erpnext/buying/doctype/purchase_order/purchase_order.py:389; erpnext/selling/doctype/sales_order/sales_order.py:278,buying,0
+Row #{0}: Item {1} does not exist,,erpnext/buying/utils.py:98,buying,0
+Row #{1}: Warehouse is mandatory for stock Item {0},,erpnext/buying/utils.py:106,buying,0
+Sales Order Packed Item,صنف معبأ لأمر البيع,erpnext/buying/doctype/purchase_order_item/purchase_order_item.json:None,buying,1
+Select Finished Good,تحديد المنتج النهائي,erpnext/buying/doctype/purchase_order/purchase_order.js:240; erpnext/selling/doctype/sales_order/sales_order.js:818,buying,1
+Select a Customer,تحديد عميل,erpnext/buying/doctype/supplier/supplier.js:190,buying,1
+Send Document Print,إرسال نسخة مطبوعة من المستند,erpnext/buying/doctype/request_for_quotation/request_for_quotation.json:None,buying,1
+Set Default Supplier,تعيين المورد الافتراضي,erpnext/buying/report/supplier_quotation_comparison/supplier_quotation_comparison.js:180,buying,1
+Set Landed Cost Based on Purchase Invoice Rate,تعيين التكلفة الإضافية بناء على سعر فاتورة الشراء,erpnext/buying/doctype/buying_settings/buying_settings.json:None,buying,1
+Set Valuation Rate for Rejected Materials,تعيين سعر التقييم للمواد المرفوضة,erpnext/buying/doctype/buying_settings/buying_settings.json:None,buying,1
+Shipping Address Details,تفاصيل عنوان الشحن,erpnext/buying/doctype/purchase_order/purchase_order.json:None; erpnext/buying/doctype/supplier_quotation/supplier_quotation.json:None; erpnext/subcontracting/doctype/subcontracting_order/subcontracting_order.json:None,buying,1
+Show Pay Button in Purchase Order Portal,إظهار زر الدفع في بوابة أمر الشراء,erpnext/buying/doctype/buying_settings/buying_settings.json:None,buying,1
+Subcontract Order,أمر مقاولات باطن,erpnext/buying/report/subcontract_order_summary/subcontract_order_summary.js:36; erpnext/buying/report/subcontract_order_summary/subcontract_order_summary.py:128; erpnext/buying/report/subcontracted_item_to_be_received/subcontracted_item_to_be_received.py:22; erpnext/buying/report/subcontracted_raw_materials_to_be_transferred/subcontracted_raw_materials_to_be_transferred.py:22,buying,1
+Subcontract Order Summary,ملخص أمر مقاولات باطن,erpnext/buying/report/subcontract_order_summary/subcontract_order_summary.json:None; erpnext/manufacturing/workspace/manufacturing/manufacturing.json:None; erpnext/subcontracting/workspace/subcontracting/subcontracting.json:None,buying,1
+Subcontracted Quantity,الكمية المنفذة من الباطن,erpnext/buying/doctype/purchase_order_item/purchase_order_item.json:None; erpnext/selling/doctype/sales_order_item/sales_order_item.json:None,buying,1
+Subcontracting Order,أمر مقاولات باطن,erpnext/buying/doctype/purchase_order/purchase_order.js:441; erpnext/controllers/subcontracting_controller.py:1140; erpnext/manufacturing/workspace/manufacturing/manufacturing.json:None; erpnext/stock/doctype/stock_entry/stock_entry.json:None; erpnext/stock/doctype/stock_reservation_entry/stock_reservation_entry.json:None; erpnext/subcontracting/doctype/subcontracting_order/subcontracting_order.json:None; erpnext/subcontracting/doctype/subcontracting_receipt/subcontracting_receipt.js:140; erpnext/subcontracting/doctype/subcontracting_receipt_item/subcontracting_receipt_item.json:None; erpnext/subcontracting/doctype/subcontracting_receipt_supplied_item/subcontracting_receipt_supplied_item.json:None,buying,1
+Subcontracting Order (Draft) will be auto-created on submission of Purchase Order.,,erpnext/buying/doctype/buying_settings/buying_settings.json:None,buying,0
+Subcontracting Order {0} created.,,erpnext/buying/doctype/purchase_order/purchase_order.py:968,buying,0
+Subcontracting Settings,إعدادات مقاولات الباطن,erpnext/buying/doctype/buying_settings/buying_settings.json:None,buying,1
+Submit Action Failed,فشل إجراء الترحيل,erpnext/buying/doctype/purchase_order/purchase_order.py:964; erpnext/subcontracting/doctype/subcontracting_receipt/subcontracting_receipt.py:1048,buying,1
+Submit your Quotation,ترحيل عرض السعر,erpnext/buying/doctype/request_for_quotation/request_for_quotation.py:281,buying,1
+Successfully linked to Customer,,erpnext/buying/doctype/supplier/supplier.js:212,buying,0
+Supplied Item,,erpnext/buying/report/subcontract_order_summary/subcontract_order_summary.py:145,buying,0
+Supplier Address Details,تفاصيل عنوان المورد,erpnext/buying/doctype/purchase_order/purchase_order.json:None,buying,1
+Supplier Contact,جهة اتصال المورد,erpnext/buying/doctype/purchase_order/purchase_order.json:None,buying,1
+Supplier Portal Users,مستخدمو بوابة الموردين,erpnext/buying/doctype/supplier/supplier.json:None,buying,1
+Supplier Primary Address,العنوان الرئيسي للمورد,erpnext/buying/doctype/supplier/supplier.json:None,buying,1
+Supplier Primary Contact,جهة الاتصال الرئيسية للمورد,erpnext/buying/doctype/supplier/supplier.json:None,buying,1
+Supplier of Goods or Services.,,erpnext/buying/doctype/supplier/supplier.json:None,buying,0
+Terms & Conditions,الشروط والأحكام,erpnext/buying/doctype/purchase_order/purchase_order.json:None; erpnext/selling/doctype/sales_order/sales_order.json:None,buying,1
+Terms Template,قالب الشروط,erpnext/buying/doctype/supplier_quotation/supplier_quotation.json:None,buying,1
+This Purchase Order has been fully subcontracted.,,erpnext/buying/doctype/purchase_order/purchase_order.py:977,buying,0
+This is a preview of the email to be sent. A PDF of the document will automatically be attached with the email.,,erpnext/buying/doctype/request_for_quotation/request_for_quotation.js:305,buying,0
+To Pay,مستحق الدفع,erpnext/buying/doctype/purchase_order/purchase_order_list.js:22; erpnext/selling/doctype/sales_order/sales_order.json:None; erpnext/selling/doctype/sales_order/sales_order_list.js:25,buying,1
+To be Delivered to Customer,,erpnext/buying/doctype/purchase_order_item/purchase_order_item.json:None,buying,0
+Tools,الأدوات,erpnext/buying/doctype/purchase_order/purchase_order.js:641; erpnext/buying/doctype/purchase_order/purchase_order.js:717; erpnext/buying/doctype/request_for_quotation/request_for_quotation.js:70; erpnext/buying/doctype/request_for_quotation/request_for_quotation.js:157; erpnext/buying/doctype/request_for_quotation/request_for_quotation.js:442; erpnext/buying/doctype/request_for_quotation/request_for_quotation.js:451; erpnext/buying/doctype/supplier_quotation/supplier_quotation.js:76; erpnext/buying/report/supplier_quotation_comparison/supplier_quotation_comparison.js:123; erpnext/manufacturing/workspace/manufacturing/manufacturing.json:None; erpnext/setup/doctype/email_digest/email_digest.json:None; erpnext/stock/workspace/stock/stock.json:None,buying,1
+Total Purchase Amount,إجمالي مبلغ الشراء,erpnext/buying/report/item_wise_purchase_history/item_wise_purchase_history.py:272; erpnext/buying/workspace/buying/buying.json:None,buying,1
+Total Supplied Qty,إجمالي الكمية المزودة,erpnext/buying/doctype/purchase_order_item_supplied/purchase_order_item_supplied.json:None; erpnext/subcontracting/doctype/subcontracting_order_supplied_item/subcontracting_order_supplied_item.json:None,buying,1
+Transaction Settings,إعدادات المعاملة,erpnext/buying/doctype/buying_settings/buying_settings.json:None; erpnext/selling/doctype/selling_settings/selling_settings.json:None,buying,1
+Unable to find variable:,,erpnext/buying/doctype/supplier_scorecard_criteria/supplier_scorecard_criteria.py:98,buying,0
+Update Rate as per Last Purchase,تحديث السعر حسب آخر شراء,erpnext/buying/doctype/purchase_order/purchase_order.js:630,buying,1
+Update frequency of Project,تكرار تحديث المشروع,erpnext/buying/doctype/buying_settings/buying_settings.json:None,buying,1
+Validate Consumed Qty (as per BOM),التحقق من الكمية المستهلكة (حسب قائمة المواد),erpnext/buying/doctype/buying_settings/buying_settings.json:None,buying,1
+Warehouse Settings,إعدادات المستودع,erpnext/buying/doctype/purchase_order_item/purchase_order_item.json:None,buying,1
+{}  To Receive,,erpnext/buying/workspace/buying/buying.json:None,buying,0
+{} Pending,,erpnext/buying/workspace/buying/buying.json:None; erpnext/stock/workspace/stock/stock.json:None,buying,0
+ Address,العنوان,erpnext/selling/doctype/quotation/quotation.js:73,selling,1
+%  Delivered,نسبة التسليم,erpnext/selling/doctype/sales_order/sales_order.json:None,selling,1
+% Picked,نسبة المنتقى,erpnext/selling/doctype/sales_order/sales_order.json:None,selling,1
+% of materials billed against this Sales Order,,erpnext/selling/doctype/sales_order/sales_order.json:None,selling,0
+% of materials delivered against this Sales Order,,erpnext/selling/doctype/sales_order/sales_order.json:None,selling,0
+'Allow Multiple Sales Orders Against a Customer's Purchase Order',,erpnext/selling/doctype/sales_order/sales_order.py:348,selling,0
+Action if Same Rate is Not Maintained Throughout Sales Cycle,,erpnext/selling/doctype/selling_settings/selling_settings.json:None,selling,0
+Add Discount,إضافة خصم,erpnext/selling/page/point_of_sale/pos_item_cart.js:92; erpnext/selling/page/point_of_sale/pos_item_cart.js:442,selling,1
+Add Schedule,إضافة جدول,erpnext/selling/doctype/sales_order/sales_order.js:649; erpnext/selling/doctype/sales_order_item/sales_order_item.json:None,selling,1
+Additional,إضافي,erpnext/selling/page/point_of_sale/pos_item_cart.js:450,selling,1
+Additional Information updated successfully.,تم تحديث المعلومات الإضافية بنجاح.,erpnext/selling/page/point_of_sale/pos_payment.js:85,selling,1
+All Items,كل الأصناف,erpnext/selling/page/point_of_sale/pos_item_selector.js:25,selling,1
+All the items have been already returned.,,erpnext/selling/page/point_of_sale/pos_past_order_summary.js:200,selling,0
+Allow Delivery of Overproduced Qty,السماح بتسليم الكمية المنتجة الزائدة,erpnext/selling/doctype/selling_settings/selling_settings.json:None,selling,1
+Allow Item to be Added Multiple Times in a Transaction,,erpnext/selling/doctype/selling_settings/selling_settings.json:None,selling,0
+Allow Negative rates for Items,السماح بأسعار سالبة للأصناف,erpnext/selling/doctype/selling_settings/selling_settings.json:None,selling,1
+Allow Quotation with Zero Quantity,,erpnext/selling/doctype/selling_settings/selling_settings.json:None,selling,0
+Allow Sales Order Creation For Expired Quotation,,erpnext/selling/doctype/selling_settings/selling_settings.json:None,selling,0
+Allow Sales Order with Zero Quantity,,erpnext/selling/doctype/selling_settings/selling_settings.json:None,selling,0
+Alternative Items,الأصناف البديلة,erpnext/selling/doctype/quotation/quotation.js:369,selling,1
+Auto Fetch Serial Numbers,جلب الأرقام التسلسلية تلقائيا,erpnext/selling/page/point_of_sale/pos_item_details.js:225,selling,1
+Based On Value,بناء على القيمة,erpnext/selling/doctype/party_specific_item/party_specific_item.json:None,selling,1
+Bundle Items,أصناف المجموعة,erpnext/selling/doctype/quotation/quotation.json:None,selling,1
+Buyer of Goods and Services.,,erpnext/selling/doctype/customer/customer.json:None,selling,0
+Bypass credit check at Sales Order,,erpnext/selling/report/customer_credit_balance/customer_credit_balance.py:68,selling,0
+Calculate Product Bundle Price based on Child Items' Rates,,erpnext/selling/doctype/selling_settings/selling_settings.json:None,selling,0
+Changed customer name to '{}' as '{}' already exists.,,erpnext/selling/doctype/customer/customer.py:127,selling,0
+Checkout,إتمام البيع,erpnext/selling/page/point_of_sale/pos_item_cart.js:92; erpnext/selling/page/point_of_sale/pos_item_cart.js:148,selling,1
+Click to add email / phone,,erpnext/selling/page/point_of_sale/pos_item_cart.js:485,selling,0
+Commission Rate %,نسبة العمولة,erpnext/selling/report/sales_partner_commission_summary/sales_partner_commission_summary.py:67; erpnext/selling/report/sales_partner_transaction_summary/sales_partner_transaction_summary.py:78; erpnext/selling/report/sales_person_commission_summary/sales_person_commission_summary.py:82,selling,1
+Complete Order,إكمال الطلب,erpnext/selling/page/point_of_sale/pos_payment.js:24,selling,1
+Contact No.,رقم جهة الاتصال,erpnext/selling/doctype/sales_team/sales_team.json:None,selling,1
+Contribution %,نسبة المساهمة,erpnext/selling/report/sales_person_commission_summary/sales_person_commission_summary.py:76; erpnext/selling/report/sales_person_wise_transaction_summary/sales_person_wise_transaction_summary.py:122,selling,1
+Contribution (%),نسبة المساهمة,erpnext/selling/doctype/sales_team/sales_team.json:None,selling,1
+Contribution Qty,كمية المساهمة,erpnext/selling/report/sales_person_wise_transaction_summary/sales_person_wise_transaction_summary.py:124,selling,1
+Creating Delivery Note ...,جار إنشاء إذن التسليم ...,erpnext/selling/doctype/sales_order/sales_order.js:1535,selling,1
+Creating Delivery Schedule...,,erpnext/selling/doctype/sales_order/sales_order.js:677,selling,0
+Creating Subcontracting Inward Order ...,,erpnext/selling/doctype/sales_order/sales_order.js:1805,selling,0
+Credit Limit Crossed,تم تجاوز حد الائتمان,erpnext/selling/doctype/customer/customer.py:593,selling,1
+Curves,,erpnext/selling/report/sales_analytics/sales_analytics.js:90,selling,0
+Customer Defaults,إعدادات العميل الافتراضية,erpnext/selling/doctype/selling_settings/selling_settings.json:None,selling,1
+Customer Portal Users,مستخدمو بوابة العملاء,erpnext/selling/doctype/customer/customer.json:None,selling,1
+Deliver Scrap Items,تسليم أصناف الهالك,erpnext/selling/doctype/selling_settings/selling_settings.json:None,selling,1
+Delivery Schedule,جدول التسليم,erpnext/selling/doctype/sales_order/sales_order.js:619; erpnext/selling/doctype/sales_order/sales_order.js:646,selling,1
+Delivery Schedule Item,عنصر جدول التسليم,erpnext/selling/doctype/delivery_schedule_item/delivery_schedule_item.json:None,selling,1
+Discount (%),الخصم (%),erpnext/selling/page/point_of_sale/pos_item_details.js:175,selling,1
+Discount cannot be greater than 100%,,erpnext/selling/page/point_of_sale/pos_item_cart.js:824,selling,0
+Discount cannot be greater than 100%.,,erpnext/selling/page/point_of_sale/pos_item_cart.js:416,selling,0
+Don't Reserve Sales Order Qty on Sales Return,,erpnext/selling/doctype/selling_settings/selling_settings.json:None,selling,0
+Edit Cart,تعديل السلة,erpnext/selling/page/point_of_sale/pos_item_cart.js:92,selling,1
+Editing {0} is not allowed as per POS Profile settings,,erpnext/selling/page/point_of_sale/pos_item_cart.js:777,selling,0
+Email Receipt,إرسال الإيصال بالبريد,erpnext/selling/page/point_of_sale/pos_past_order_summary.js:50,selling,1
+Enable Cut-Off Date on Bulk Delivery Note Creation,,erpnext/selling/doctype/selling_settings/selling_settings.json:None,selling,0
+Enable Discount Accounting for Selling,تمكين محاسبة الخصم للبيع,erpnext/selling/doctype/selling_settings/selling_settings.json:None,selling,1
+Fetched only {0} available serial numbers.,,erpnext/selling/page/point_of_sale/pos_item_details.js:455,selling,0
+First Delivery Date,تاريخ أول تسليم,erpnext/selling/doctype/sales_order/sales_order.js:577,selling,1
+From Due Date,من تاريخ الاستحقاق,erpnext/selling/report/payment_terms_status_for_sales_order/payment_terms_status_for_sales_order.js:78,selling,1
+From Opportunity,من الفرصة,erpnext/selling/doctype/customer/customer.json:None,selling,1
+From Prospect,من فرصة البيع,erpnext/selling/doctype/customer/customer.json:None,selling,1
+Get Customer Group Details,جلب تفاصيل مجموعة العملاء,erpnext/selling/doctype/customer/customer.js:189,selling,1
+Get Delivery Schedule,جلب جدول التسليم,erpnext/selling/doctype/sales_order/sales_order.js:608,selling,1
+Has Alternative Item,له صنف بديل,erpnext/selling/doctype/quotation_item/quotation_item.json:None,selling,1
+Hide Recent Orders,إخفاء الطلبات الأخيرة,erpnext/selling/page/point_of_sale/pos_controller.js:297,selling,1
+"If enabled, additional ledger entries will be made for discounts in a separate Discount Account",,erpnext/selling/doctype/selling_settings/selling_settings.json:None,selling,0
+Ignore Pricing Rule is enabled. Cannot apply coupon code.,تم تمكين تجاهل قاعدة التسعير. لا يمكن تطبيق كود القسيمة.,erpnext/selling/page/point_of_sale/pos_payment.js:335,selling,1
+Inter Company Purchase Order,أمر شراء بين الشركات,erpnext/selling/doctype/sales_order/sales_order.js:1137,selling,1
+Inter Transfer Reference,مرجع النقل الداخلي,erpnext/selling/doctype/sales_order_item/sales_order_item.json:None,selling,1
+Internal Customer,عميل داخلي,erpnext/selling/doctype/customer/customer.json:None,selling,1
+Internal Customer for company {0} already exists,,erpnext/selling/doctype/customer/customer.py:224,selling,0
+Internal Purchase Order,أمر شراء داخلي,erpnext/selling/doctype/sales_order/sales_order.js:1136,selling,1
+Invalid Delivery Date,تاريخ تسليم غير صالح,erpnext/selling/doctype/sales_order/sales_order.py:405,selling,1
+Invalid Discount,خصم غير صالح,erpnext/selling/page/point_of_sale/pos_item_cart.js:414,selling,1
+Invalid Group By,تجميع حسب غير صالح,erpnext/selling/report/lost_quotations/lost_quotations.py:65,selling,1
+Invalid Return,مرتجع غير صالح,erpnext/selling/page/point_of_sale/pos_past_order_summary.js:198,selling,1
+Is Alternative,بديل,erpnext/selling/doctype/quotation/quotation.js:315; erpnext/selling/doctype/quotation_item/quotation_item.json:None,selling,1
+Item Cart,سلة الأصناف,erpnext/selling/page/point_of_sale/pos_item_cart.js:46,selling,1
+Item is removed since no serial / batch no selected.,,erpnext/selling/page/point_of_sale/pos_item_details.js:110,selling,0
+Item {0} has no Serial No. Only serialized items can have delivery based on Serial No,,erpnext/selling/doctype/sales_order/sales_order.py:778,selling,0
+Last transacted,آخر تعامل,erpnext/selling/page/point_of_sale/pos_item_cart.js:1025,selling,1
+Learn Sales Management,,erpnext/selling/workspace/selling/selling.json:None,selling,0
+Link with Supplier,ربط مع مورد,erpnext/selling/doctype/customer/customer.js:201,selling,1
+Linking to Supplier Failed. Please try again.,,erpnext/selling/doctype/customer/customer.js:278,selling,0
+Lost Quotations,عروض الأسعار المفقودة,erpnext/selling/report/lost_quotations/lost_quotations.json:None; erpnext/selling/report/lost_quotations/lost_quotations.py:31,selling,1
+Lost Quotations %,نسبة عروض الأسعار المفقودة,erpnext/selling/report/lost_quotations/lost_quotations.py:37,selling,1
+Lost Value,القيمة المفقودة,erpnext/selling/report/lost_quotations/lost_quotations.py:43,selling,1
+Lost Value %,نسبة القيمة المفقودة,erpnext/selling/report/lost_quotations/lost_quotations.py:49,selling,1
+Mention if non-standard Receivable account,,erpnext/selling/doctype/customer/customer.json:None,selling,0
+Multiple Loyalty Programs found for Customer {}. Please select manually.,,erpnext/selling/doctype/customer/customer.py:393,selling,0
+New Invoice,فاتورة جديدة,erpnext/selling/page/point_of_sale/pos_controller.js:259,selling,1
+No items in cart,لا توجد أصناف في السلة,erpnext/selling/page/point_of_sale/pos_item_cart.js:76,selling,1
+No of Deliveries,,erpnext/selling/doctype/sales_order/sales_order.js:600,selling,0
+No recent transactions found,لم يتم العثور على معاملات حديثة,erpnext/selling/page/point_of_sale/pos_item_cart.js:1017,selling,1
+Non-Zeros,,erpnext/selling/report/sales_analytics/sales_analytics.js:95,selling,0
+Not Requested,غير مطلوب,erpnext/selling/doctype/sales_order/sales_order.json:None,selling,1
+Only Value available for Payment Entry,,erpnext/selling/report/sales_analytics/sales_analytics.py:57,selling,0
+Opportunities by Campaign,,erpnext/selling/page/sales_funnel/sales_funnel.js:49,selling,0
+Opportunities by Medium,,erpnext/selling/page/sales_funnel/sales_funnel.js:50,selling,0
+Opportunities by Source,,erpnext/selling/page/sales_funnel/sales_funnel.js:48,selling,0
+POS Closed,تم إغلاق نقطة البيع,erpnext/selling/page/point_of_sale/pos_controller.js:183,selling,1
+POS Opening Entry Cancelled,تم إلغاء قيد فتح نقطة البيع,erpnext/selling/page/point_of_sale/pos_controller.js:183,selling,1
+POS Opening Entry has been cancelled. Please refresh the page.,,erpnext/selling/page/point_of_sale/pos_controller.js:189,selling,0
+Party Specific Item,صنف خاص بالجهة,erpnext/selling/doctype/party_specific_item/party_specific_item.json:None,selling,1
+Payment Terms Status for Sales Order,حالة شروط الدفع لأمر البيع,erpnext/selling/report/payment_terms_status_for_sales_order/payment_terms_status_for_sales_order.json:None,selling,1
+Picked Qty (in Stock UOM),الكمية المنتقاة (بوحدة قياس المخزون),erpnext/selling/doctype/sales_order_item/sales_order_item.json:None; erpnext/stock/doctype/pick_list_item/pick_list_item.json:None,selling,1
+Please enter a valid quantity,يرجى إدخال كمية صالحة,erpnext/selling/doctype/sales_order/sales_order.js:658,selling,1
+Price is not set for the item.,لم يتم تعيين سعر للصنف.,erpnext/selling/page/point_of_sale/pos_controller.js:720,selling,1
+Production Plan Qty,كمية خطة الإنتاج,erpnext/selling/doctype/sales_order_item/sales_order_item.json:None,selling,1
+Quoted Amount,المبلغ المعروض,erpnext/selling/report/quotation_trends/quotation_trends.py:57,selling,1
+Recent Orders,الطلبات الحديثة,erpnext/selling/page/point_of_sale/pos_controller.js:260; erpnext/selling/page/point_of_sale/pos_controller.js:297; erpnext/selling/page/point_of_sale/pos_past_order_list.js:17,selling,1
+Recent Transactions,المعاملات الحديثة,erpnext/selling/page/point_of_sale/pos_item_cart.js:891,selling,1
+Remaining Amount,المبلغ المتبقي,erpnext/selling/page/point_of_sale/pos_payment.js:684,selling,1
+Returned,مرتجع,erpnext/selling/page/point_of_sale/pos_past_order_summary.js:138; erpnext/stock/doctype/shipment/shipment.json:None; erpnext/subcontracting/doctype/subcontracting_inward_order/subcontracting_inward_order.json:None,selling,1
+SO Total Qty,إجمالي كمية أمر البيع,erpnext/selling/report/sales_person_wise_transaction_summary/sales_person_wise_transaction_summary.py:107,selling,1
+Sales Order Schedule,جدول أمر البيع,erpnext/selling/doctype/sales_order_item/sales_order_item.json:None,selling,1
+Sales Update Frequency in Company and Project,تكرار تحديث المبيعات في الشركة والمشروع,erpnext/selling/doctype/selling_settings/selling_settings.json:None,selling,1
+Sales Value,قيمة المبيعات,erpnext/selling/report/sales_order_trends/sales_order_trends.py:56,selling,1
+"Search by item code, serial number or barcode",البحث بكود الصنف أو الرقم التسلسلي أو الباركود,erpnext/selling/page/point_of_sale/pos_item_selector.js:181,selling,1
+Select Alternative Items for Sales Order,تحديد أصناف بديلة لأمر البيع,erpnext/selling/doctype/quotation/quotation.js:333,selling,1
+Select Items up to Delivery Date,تحديد الأصناف حتى تاريخ التسليم,erpnext/selling/doctype/sales_order/sales_order_list.js:87,selling,1
+Select a Payment Method.,تحديد طريقة دفع.,erpnext/selling/page/point_of_sale/pos_payment.js:146,selling,1
+Select an invoice to load summary data,حدد فاتورة لتحميل بيانات الملخص,erpnext/selling/page/point_of_sale/pos_past_order_summary.js:19,selling,1
+Set Supplier,تعيين المورد,erpnext/selling/doctype/sales_order/sales_order.js:1594,selling,1
+Set Warehouse,تعيين المستودع,erpnext/selling/doctype/sales_order/sales_order.js:256,selling,1
+Show only the Immediate Upcoming Term,إظهار الشرط القادم مباشرة فقط,erpnext/selling/report/payment_terms_status_for_sales_order/payment_terms_status_for_sales_order.js:107,selling,1
+Stock Reserved Qty (in Stock UOM),كمية المخزون المحجوزة (بوحدة قياس المخزون),erpnext/selling/doctype/sales_order_item/sales_order_item.json:None; erpnext/stock/doctype/pick_list_item/pick_list_item.json:None,selling,1
+Subcontracting Inward,استلام مقاولات الباطن,erpnext/selling/doctype/sales_order/sales_order_dashboard.py:33; erpnext/selling/doctype/selling_settings/selling_settings.json:None,selling,1
+Subcontracting Inward Settings,إعدادات استلام مقاولات باطن,erpnext/selling/doctype/selling_settings/selling_settings.json:None,selling,1
+Supplier Number,رقم المورد,erpnext/selling/doctype/supplier_number_at_customer/supplier_number_at_customer.json:None,selling,1
+Supplier Number At Customer,رقم المورد لدى العميل,erpnext/selling/doctype/supplier_number_at_customer/supplier_number_at_customer.json:None,selling,1
+Supplier Numbers,أرقام الموردين,erpnext/selling/doctype/customer/customer.json:None,selling,1
+Supplier Required,المورد مطلوب,erpnext/selling/doctype/sales_order/sales_order.js:1676,selling,1
+Time Taken to Deliver,الوقت المستغرق للتسليم,erpnext/selling/report/sales_order_analysis/sales_order_analysis.py:324,selling,1
+To Due Date,إلى تاريخ الاستحقاق,erpnext/selling/report/payment_terms_status_for_sales_order/payment_terms_status_for_sales_order.js:83,selling,1
+Total Items,إجمالي الأصناف,erpnext/selling/page/point_of_sale/pos_item_cart.js:92,selling,1
+Total Sales Amount,إجمالي مبلغ المبيعات,erpnext/selling/report/item_wise_sales_history/item_wise_sales_history.py:256,selling,1
+Update Additional Information,تحديث المعلومات الإضافية,erpnext/selling/page/point_of_sale/pos_payment.js:22,selling,1
+Use Prices from Default Price List as Fallback,استخدام أسعار قائمة الأسعار الافتراضية كاحتياط,erpnext/selling/doctype/selling_settings/selling_settings.json:None,selling,1
