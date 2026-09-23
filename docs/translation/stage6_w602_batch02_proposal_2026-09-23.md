@@ -54,19 +54,57 @@ CSV columns: `source_text,suggested_ar,locations,area,has_pre_filled`.
 
 ### Full W6-2 raw accounting (337 unique first-location msgids)
 
+Mutually exclusive buckets (assignment priority: batch01 → batch02 → HTML →
+`len>120` → tech → dedup → prior W6-0b → already-in-catalog). Each raw
+msgid lands in **exactly one** row below:
+
 | Bucket | Rows | In batch 02? |
 |---|---:|---|
-| Batch 01 scope keys (raw) | 268 | no — closed |
+| Batch 01 scope keys present as exact ledger msgids | 268 | no — closed |
 | Batch 02 candidates | **48** | **yes — this proposal** |
-| `len > 120` residual (outside batch-01 short-UI bound) | 15 | **no — excluded** (same bound as batch 01) |
-| HTML/template residual | 5 | **no — excluded** (same rule as batch 01) |
+| HTML/template residual | 5 | **no — excluded** |
+| `len > 120` residual (outside short-UI bound) | 15 | **no — excluded** |
 | Already in released catalog (`Could not find path for` — fixed/released in batch-01 cycle) | 1 | **no — excluded** |
-| **Total** | **337** | |
+| Technical / dedup / prior-W6-0b residual (from this raw set) | 0 | — |
+| **Total raw unique** | **337** | |
+
+**Identity:** `268 + 48 + 21 = 337`, where residual exclusions
+`21 = 5 HTML + 15 len>120 + 1 already-in-catalog`.
+
+Batch-01 **scope CSV** has **270** keys, not 268:
+
+`270 = 268 (in raw 337) + 2 synthetic cycle-fix forms` that are not exact
+ledger msgids and therefore **outside** the 337: `' Address'` (leading
+space) and `'Could not find path for '` (trailing space). Those two are
+never double-counted into the raw total.
+
+**Do not write** `337 = 270 + 48 + 20` (that is 338 and mixes the 270
+scope-file size with the 268 raw membership). Correct forms:
+
+- Raw universe: `337 = 268 + 48 + 21`
+- Scope files: `270 (batch 01) + 48 (batch 02) + 21 residual − 2 synthetic outside raw − …` is **not** a raw identity; use the raw line above.
+
+### Exclusion category overlap (clarified)
+
+Independent flag checks on the raw 337 **before** priority assignment:
+
+| Pair | Overlap rows | How counted in the table |
+|---|---:|---|
+| HTML **and** `len>120` | **3** | Once only — HTML bucket (HTML checked first) |
+| Already-in-catalog **and** batch 01 | 85 | Once only — batch-01 bucket (batch 01 checked first; these are the 85 rows batch-01 released into the current catalog) |
+| batch 01 **and** batch 02 | **0** | — |
+| batch 02 **and** catalog / HTML / `len>120` / tech / dedup | **0** | — |
+| tech / dedup / prior-W6-0b **and** batch 01 or batch 02 | **0** | — |
+
+So the **listed exclusion counts 5 + 15 + 1 = 21 are already
+non-overlapping** (mutually exclusive under the priority order). The raw
+HTML∩`len>120` = 3 does not add a 4th residual row.
 
 Synthetic batch-01 keys not present as exact ledger msgids (kept in batch 01
-only; not double-counted in the 337): `' Address'`, `'Could not find path for '`.
-`Advance Payment` was already-released at batch-01 proposal time (in old
-catalog at `e522739`).
+only; not in the 337): `' Address'`, `'Could not find path for '`.
+`Advance Payment` is in the raw 337 and in batch 01 (was already-released
+in the old catalog at `e522739` at proposal time — still counted once under
+batch 01, not under the “already-in-catalog residual” bucket).
 
 ### Sample rows (not exhaustive)
 
@@ -116,9 +154,9 @@ sha256 `ee24f18fdfd451204e18e26c17c8d9e2fc6a7539efa634087f5f7de4848fe37b`).
 | Scope | Rows | Status |
 |---|---:|---|
 | W6-0b batches 01–07 (short-UI) | 1,894 | **closed** (batch 7 accepted `a0f01cb`) |
-| W6-2 batch 01 | 270 | **closed** (`073458e`) |
+| W6-2 batch 01 (scope file) | 270 | **closed** (`073458e`) — of which **268** sit in the raw 337; **2** synthetic keys outside raw |
 | **W6-2 batch 02 (this proposal)** | **48** | **presented for approval** |
-| W6-2 >120 / HTML residual | 20 | excluded by cut bound — **not proposed** |
+| W6-2 residual exclusions (raw) | **21** | **5 HTML + 15 `len>120` + 1 already-released** — not proposed |
 | W6-3 Stock | 789 raw / bounded TBD | not proposed |
 | W6-4 Projects + BOQ | 61 + 90 | not proposed |
 | W6-5 Setup | 484 | not proposed |
@@ -126,7 +164,13 @@ sha256 `ee24f18fdfd451204e18e26c17c8d9e2fc6a7539efa634087f5f7de4848fe37b`).
 | W6-7 Frappe framework remainder | per frappe ledger | not proposed |
 
 After batch 02, the W6-2 short-UI universe under these cut rules is
-**exhausted** (337 raw = 270 batch 01 + 48 batch 02 + 20 excluded residual).
+**exhausted**. Raw identity:
+
+**`337 = 268 (batch 01 in raw) + 48 (batch 02) + 21 (residual exclusions)`**
+
+with `21 = 5 + 15 + 1` (mutually exclusive buckets; HTML∩`len>120` = 3
+already counted only under HTML). Batch-01 file size 270 = 268 + 2
+synthetic keys outside the raw 337.
 
 ## Boundary
 
@@ -146,8 +190,9 @@ After batch 02, the W6-2 short-UI universe under these cut rules is
       exact next Stage 6 translation scope (Buying + Selling remainder).
 - [ ] Acknowledge shared 21 technical rows remain permanent non-translation
       exclusions (unchanged).
-- [ ] Acknowledge the 15 `len>120` + 5 HTML residuals stay out of scope
-      under the batch-01 short-UI bound.
+- [ ] Acknowledge the **21** raw residual exclusions stay out of scope
+      (**5 HTML + 15 `len>120` + 1 already-released**; mutually exclusive
+      under cut priority — not 20).
 - [ ] Leave W6-3…W6-7 unapproved until a later proposal.
 - [ ] Any direct term overrides for batch strings → terminology sheet before
       a future quorum panel.
