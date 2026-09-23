@@ -1,17 +1,17 @@
 {
- "recorded_utc": "2026-09-23T16:00:00Z",
+ "recorded_utc": "2026-09-23T17:00:00Z",
  "session_type": "hold_state",
  "importance": 0.9,
- "summary": "W6-0b batches 1-7 closed (a0f01cb); W6-2 batch-01 closed (073458e); W6-2 batch-02 PROPOSAL filed only (48-row CSV sha 9a096273…) awaiting owner approval — no quorum/import/re-pin. Production Stage 8 still gated.",
- "supersedes": "session-hold-state-2026-09-21.json + in-place update 2026-09-23 (batch-01 closure; now also records batch-02 proposal)",
+ "summary": "W6-0b batches 1-7 closed (a0f01cb); W6-2 batch-01 closed (073458e); W6-2 batch-02 governed cycle CLOSED (b3b0681) — catalog 2319, browser 21/21, evidence HEAD-bound. Production Stage 8 still gated.",
+ "supersedes": "session-hold-state-2026-09-21.json + in-place update 2026-09-23 (batch-02 proposal; now records batch-02 cycle closure)",
  "hold_directives": [
   "W6-0b batches 1-7 COMPLETE and accepted (a0f01cb); 8bfc23a rejected history only",
   "W6-2 batch-01 COMPLETE and closed on v16.localhost 2026-09-23 (exact scope CSV sha b017df47… only)",
-  "W6-2 batch-02 PROPOSAL ONLY (stage6_w602_batch02_rows_2026-09-23.csv, 48 rows, sha 9a096273…); do not start quorum/import/catalog/re-pin until owner approves that exact scope",
-  "evidence re-pin deferred to the next catalog-changing cycle",
+  "W6-2 batch-02 COMPLETE and closed on v16.localhost 2026-09-23 (exact scope CSV sha 9a096273… only); catalog 2319; commit b3b0681",
+  "next Stage 6 workflow-matrix batch requires explicit owner-approved scope proposal before any run",
   "no production mutation, production catalog/DB rollout, or Stage 8 production work",
-  "new Stage 6 workflow-matrix batch requires explicit owner-approved scope proposal before any run",
   "develop clean; production waits on real master/ledger data + named production site + explicit rollout window together",
-  "always run scripts/uat_preflight.py for Stage 8 validations"
+  "always run scripts/uat_preflight.py for Stage 8 validations",
+  "untracked v16.localhost/ log dir left as-is (owner directive)"
  ]
 }

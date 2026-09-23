@@ -1,0 +1,193 @@
+{
+ "batch": "stage6-w602-batch02",
+ "started_utc": "2026-09-23T13:36:17Z",
+ "site": "v16.localhost",
+ "checks": [
+  {
+   "name": "boot-lang-ar",
+   "ok": true,
+   "detail": "ar"
+  },
+  {
+   "name": "boot-messages-ge-1000",
+   "ok": true,
+   "detail": 12621
+  },
+  {
+   "name": "translate:Address",
+   "ok": true,
+   "detail": {
+    "expected": "العنوان",
+    "got": "العنوان"
+   }
+  },
+  {
+   "name": "translate:Percentage you are allowed to sell beyond the Blanket Order quantity.",
+   "ok": true,
+   "detail": {
+    "expected": "النسبة المسموح لك بيعها زائدًا عن كمية أمر البيع المفتوح.",
+    "got": "النسبة المسموح لك بيعها زائدًا عن كمية أمر البيع المفتوح."
+   }
+  },
+  {
+   "name": "translate:Please enter a valid number of deliveries",
+   "ok": true,
+   "detail": {
+    "expected": "يرجى إدخال عدد تسليمات صالح",
+    "got": "يرجى إدخال عدد تسليمات صالح"
+   }
+  },
+  {
+   "name": "translate:Please enter at least one delivery date and quantity",
+   "ok": true,
+   "detail": {
+    "expected": "يرجى إدخال تاريخ تسليم وكمية على الأقل",
+    "got": "يرجى إدخال تاريخ تسليم وكمية على الأقل"
+   }
+  },
+  {
+   "name": "translate:Please enter the first delivery date",
+   "ok": true,
+   "detail": {
+    "expected": "يرجى إدخال تاريخ التسليم الأول",
+    "got": "يرجى إدخال تاريخ التسليم الأول"
+   }
+  },
+  {
+   "name": "translate:Please save the Sales Order before adding a delivery schedule.",
+   "ok": true,
+   "detail": {
+    "expected": "يرجى حفظ أمر البيع قبل إضافة جدول التسليم.",
+    "got": "يرجى حفظ أمر البيع قبل إضافة جدول التسليم."
+   }
+  },
+  {
+   "name": "translate:Please select a frequency for delivery schedule",
+   "ok": true,
+   "detail": {
+    "expected": "يرجى تحديد تكرار جدول التسليم",
+    "got": "يرجى تحديد تكرار جدول التسليم"
+   }
+  },
+  {
+   "name": "translate:Please select atleast one item to continue",
+   "ok": true,
+   "detail": {
+    "expected": "يرجى تحديد صنف واحد على الأقل للمتابعة",
+    "got": "يرجى تحديد صنف واحد على الأقل للمتابعة"
+   }
+  },
+  {
+   "name": "translate:Reason for hold:",
+   "ok": true,
+   "detail": {
+    "expected": "سبب الإيقاف:",
+    "got": "سبب الإيقاف:"
+   }
+  },
+  {
+   "name": "translate:Restrict Items Based On",
+   "ok": true,
+   "detail": {
+    "expected": "تقييد الأصناف بناءً على",
+    "got": "تقييد الأصناف بناءً على"
+   }
+  },
+  {
+   "name": "translate:Sales Opportunities by Campaign",
+   "ok": true,
+   "detail": {
+    "expected": "فرص البيع حسب الحملة",
+    "got": "فرص البيع حسب الحملة"
+   }
+  },
+  {
+   "name": "translate:Sales Opportunities by Medium",
+   "ok": true,
+   "detail": {
+    "expected": "فرص البيع حسب الوسيط",
+    "got": "فرص البيع حسب الوسيط"
+   }
+  },
+  {
+   "name": "all-probe-translations",
+   "ok": true,
+   "detail": "12/12"
+  },
+  {
+   "name": "translate-placeholder",
+   "ok": true,
+   "detail": {
+    "expected": "أُغلقت نقطة البيع في Shop. يرجى تحديث الصفحة.",
+    "got": "أُغلقت نقطة البيع في Shop. يرجى تحديث الصفحة."
+   }
+  },
+  {
+   "name": "boot-messages-lookup",
+   "ok": true,
+   "detail": {
+    "Address": "العنوان",
+    "Percentage you are allowed to sell beyond the Blanket Order quantity.": "النسبة المسموح لك بيعها زائدًا عن كمية أمر البيع المفتوح.",
+    "Please enter a valid number of deliveries": "يرجى إدخال عدد تسليمات صالح",
+    "Please enter at least one delivery date and quantity": "يرجى إدخال تاريخ تسليم وكمية على الأقل"
+   }
+  },
+  {
+   "name": "rendered-dom-arabic-words",
+   "ok": true,
+   "detail": {
+    "count": 12,
+    "sample": [
+     "الأدوات",
+     "الأصول",
+     "الباطن",
+     "البيع",
+     "التصنيع",
+     "الجودة",
+     "المحاسبة",
+     "المخزون",
+     "المشاريع",
+     "المشتريات",
+     "مقاولات",
+     "منظمة"
+    ]
+   }
+  },
+  {
+   "name": "rendered-workspace-modules",
+   "ok": true,
+   "detail": [
+    "الأدوات",
+    "المحاسبة",
+    "المشتريات",
+    "المشاريع",
+    "المخزون",
+    "البيع"
+   ]
+  },
+  {
+   "name": "sidebar-arabic-items",
+   "ok": true,
+   "detail": [
+    "بحث                                       Ctrl+K",
+    "إشعار",
+    "سجل الطريق",
+    "إعدادات الإشعارات",
+    "قائمة المهام",
+    "التقارير",
+    "قائمة المهام",
+    "تنزيل النسخ الاحتياطية"
+   ]
+  },
+  {
+   "name": "desk-title-captured",
+   "ok": true,
+   "detail": "Desktop"
+  }
+ ],
+ "finished_utc": "2026-09-23T13:36:28Z",
+ "summary": {
+  "pass": 21,
+  "fail": 0
+ }
+}
