@@ -1,13 +1,13 @@
 # Session Memory — Construction ERP
-**LAST UPDATED:** 2026-09-25 (W6-6 CRM, Support & Maintenance cycle closed)
-**UPDATED BY:** Antigravity (W6-6 CRM, Support & Maintenance governed cycle and evidence closure)
+**LAST UPDATED:** 2026-09-25 (W6-6 CRM cycle closed; Stage-6 handoff report published)
+**UPDATED BY:** Antigravity (W6-6 CRM, Support & Maintenance governed cycle, evidence closure, and agent handoff)
 
 ---
 
 ## 1. Project Snapshot
-- **Total commits:** 191
+- **Total commits:** 367 (HEAD `3344546`, local only — `origin/develop` still `ea553f2`, no push)
 - **Current branch:** `develop`
-- **Last session date:** 2026-06-21
+- **Last session date:** 2026-09-25
 - **Python version:** 3.14 (venv: `/home/mohamed/frappe-bench/env`)
 - **AGENTS.md status:** Rewritten from Scope Context dev report → agent context file
 - **New files created:** `SESSION_MEMORY.md`, `docs/ai/CONTEXT_INDEX.md`, `docs/ai/SCHEMA_FACTS.md`, `docs/ai/CODING_PATTERNS.md`, `scripts/ai_context_check.py`
@@ -634,3 +634,26 @@ until the next approved catalog event.
 Production and Stage 8 remain gated. No push was performed. Leave untracked
 `v16.localhost/` untouched. Next action requires a separate owner-approved
 Stage-6 scope proposal or the original Stage-8/production controls.
+
+## 2026-09-25 — Stage-6 agent handoff report published
+
+Added `docs/handover/STAGE6_W606_CRM_HANDOFF_2026-09-25.md` (indexed in
+`docs/handover/INDEX.md`) so another agent can resume Stage 6 without this
+session's context. It records: repo state at HEAD `3344546` (unpushed,
+`origin/develop` = `ea553f2`); the expected post-commit evidence-index HEAD
+mismatch (cleared only by the next approved catalog event — do not re-pin or
+re-run the evidence gate now); the paths that must stay untracked (superseded
+AI reports, payload-only `stage6_w606_crm_support_maintenance_decision_rebind_*.py`,
+W6-01 proposal files, `v16.localhost/`); remaining work (W6-1 Accounts batch 01
+proposal awaiting owner approval, batch 02 cut only; W6-6 EDI remainder; W6-7;
+Stage 7 pilot in principle; Stage 8/production gated); the 17-step governed
+cycle recipe with exact file paths and gate line numbers
+(`EXPECTED_DRYRUN` `scripts/check_localization_gates.py:1511`,
+standalone assertion `construction/tests/test_localization_gates.py:520`,
+`EXPECTED_MODULES` at `:1497`); five cycle gotchas (G1 content-vs-payload
+decision binding, G2 self-asserting one-shot scripts, G3 gate constants,
+G4 CAP/envelope re-assembly, G5 CRLF→LF proposal SHA); a verification
+cheatsheet; and first actions for the next agent.
+
+No site, catalog, evidence, or gate state changed in this session beyond the
+handoff documents. Production and Stage 8 remain gated; no push performed.

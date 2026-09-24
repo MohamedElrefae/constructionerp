@@ -2,8 +2,8 @@
   "recorded_utc": "2026-09-24T21:47:28Z",
   "session_type": "hold_state",
   "importance": 0.9,
-  "summary": "W6-0b batches 1-7 closed; W6-2 batches 01/02 closed; W6-3 batches 01/02/03 governed cycles CLOSED on v16.localhost; W6-4 Projects + Subcontracting batch-01, W6-5 Setup, W6-6 Assets, W6-6 Manufacturing batches 01/02, and W6-6 CRM Support & Maintenance corrected cycle CLOSED. Stage 8 and production remain gated.",
-  "supersedes": "session-hold-state-2026-09-21.json plus in-place updates through W6-6 Manufacturing Batch 02; now records W6-6 CRM, Support & Maintenance closure",
+  "summary": "W6-0b batches 1-7 closed; W6-2 batches 01/02 closed; W6-3 batches 01/02/03 governed cycles CLOSED on v16.localhost; W6-4 Projects + Subcontracting batch-01, W6-5 Setup, W6-6 Assets, W6-6 Manufacturing batches 01/02, and W6-6 CRM Support & Maintenance corrected cycle CLOSED. Stage 8 and production remain gated; Stage-6 agent handoff report published (docs/handover/STAGE6_W606_CRM_HANDOFF_2026-09-25.md).",
+  "supersedes": "session-hold-state-2026-09-21.json plus in-place updates through W6-6 CRM, Support & Maintenance closure; now records the Stage-6 handoff",
   "hold_directives": [
     "W6-0b batches 1-7 COMPLETE and accepted (a0f01cb); 8bfc23a rejected history only",
     "W6-2 batch-01 COMPLETE and closed on v16.localhost 2026-09-23 (exact scope CSV sha b017df47… only)",
@@ -21,6 +21,10 @@
     "no production mutation, production catalog/DB rollout, or Stage 8 production work",
     "develop closure remains local; do not push without explicit request",
     "always run scripts/uat_preflight.py for Stage 8 validations",
-    "untracked v16.localhost/ log dir left as-is (owner directive)"
-  ]
+    "untracked v16.localhost/ log dir left as-is (owner directive)",
+    "Stage-6 handoff published: docs/handover/STAGE6_W606_CRM_HANDOFF_2026-09-25.md (indexed in docs/handover/INDEX.md); read it before resuming any Stage-6 batch. W6-6 CRM closure commit 3344546 is local-only (origin/develop ea553f2)",
+    "stage2 evidence index binds pre-commit HEAD ea553f2: the post-commit HEAD mismatch after 3344546 is expected and clears only at the next approved catalog event - do not re-pin by hand and do not run the evidence-inclusive gate until then",
+    "W6-1 Accounts batch 01 is cut but PROPOSAL ONLY and unapproved (scope sha 4910a9e4a0e5f8dd0105d484171ac1dc68e173220a0bed27520fbfc5e8c090fd); batch 02 cut only (sha dc9b6c022c01a5cfcad5c6934c58a3ba74cc091f17676b607d50a96ab0d60e4e); neither may be imported before explicit owner approval"
+  ],
+  "updated_utc": "2026-09-24T22:48:58Z"
 }

@@ -1,7 +1,7 @@
 # Handover Documents Index
 
-> Last updated: 2026-06-21
-> Sprint: rc-1.1 Follow-up (WP1–WP7)
+> Last updated: 2026-09-25 (Stage-6 W6-6 CRM handoff added)
+> Sprint: rc-1.1 Follow-up (WP1–WP7) + Stage 6 translation batches
 
 ## Purpose
 
@@ -11,6 +11,7 @@ This directory consolidates handover documents, technical briefings, and manager
 
 | Document | Summary | Status |
 |----------|---------|--------|
+| `STAGE6_W606_CRM_HANDOFF_2026-09-25.md` | Handoff for the Stage-6 governed translation loop: W6-6 CRM cycle closed at `3344546`, expected post-commit evidence mismatch, next-scope candidates (W6-1 Accounts / W6-6 EDI remainder), full cycle recipe and gate gotchas. | Active |
 | `BOQ_STRUCTURE_BLOCKER_HANDOFF.md` | Technical briefing on scope context standardization and permission hardening for BOQ Structure tree view (403 Forbidden). Supersedes the root-level `BOQ_STRUCTURE_BLOCKER_HANDOFF.md` (which addresses a separate BOQ Structure UI blocker). | Active |
 | `SCOPE_CONTEXT_STANDARDIZATION_APPROVAL_REPORT.md` | Manager approval report for scope context standardization and 403 elimination. | Active |
 | `SENIOR_ENGINEER_AUDIT_REPORT.md` | Senior engineer audit of scope context implementation and recommendations. | Active |
