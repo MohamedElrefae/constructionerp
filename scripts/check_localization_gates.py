@@ -840,7 +840,8 @@ def check_csv(errors, root=None):
     seen = set()
     n = 0
     for row in rows:
-        src = (row.get("source_text") or "").strip()
+        raw_src = row.get("source_text") or ""
+        src = raw_src.strip()
         val = row.get("translated_text") or ""
         if not src or not val:
             continue
@@ -858,7 +859,7 @@ def check_csv(errors, root=None):
         check_unicode(val, origin, errors)
         if fmt_placeholders(src) != fmt_placeholders(val):
             errors.append(f"csv-placeholder: {origin} mismatch")
-        if affix(val) != affix(src):
+        if affix(val) != affix(raw_src):
             errors.append(f"csv-whitespace: {origin} affix differs")
         if UNSAFE_HTML_RE.search(val):
             errors.append(f"csv-html-unsafe: {origin}")
@@ -897,7 +898,7 @@ def check_csv(errors, root=None):
             v = (row.get(col) or "").strip()
             if v in ("A1", "A2", "A3") or len(v) < 8:
                 errors.append(f"csv-reviewer: {origin} placeholder reviewer in {col}")
-        ident_parts = row_identity_fields(row, src, val)
+        ident_parts = row_identity_fields(row, raw_src, val)
         ref_entries = []
         for ref in (row.get("decision_ref") or "").split(";"):
             ref = ref.strip()
@@ -936,7 +937,7 @@ def check_csv(errors, root=None):
                     f"csv-decision-binding: {origin} not evidenced in {sub} "
                     "(source+translation must appear; edits invalidate)"
                 )
-        proposal_sha = hashlib.sha256(f"{src}|{val}".encode()).hexdigest()
+        proposal_sha = hashlib.sha256(f"{raw_src}|{val}".encode()).hexdigest()
         pinned = load_decisions(root)
         did = row_decision_id(ident_parts, ref_entries)
         stored = (pinned.get("decisions") or {}).get(did)
@@ -957,7 +958,7 @@ def check_csv(errors, root=None):
             ("references", "references"),
         ):
             want = (
-                src
+                raw_src
                 if rkey is None and fkey == "source_text"
                 else val
                 if rkey is None
@@ -1499,7 +1500,7 @@ EXPECTED_MODULES = [
     ("construction.tests.test_bilingual_account_schema", 5),
     ("construction.tests.test_translation_catalog", 3),
     ("construction.tests.test_translation_stabilization_gates", 8),
-    ("construction.tests.test_localization_gates", 91),
+    ("construction.tests.test_localization_gates", 92),
     ("construction.tests.test_bilingual_service", 38),
     ("construction.tests.test_bilingual_account_pilot", 53),
     ("construction.tests.test_stage4_account_language", 6),
@@ -1507,7 +1508,7 @@ EXPECTED_MODULES = [
     ("construction.tests.test_stage4_review_bundle", 36),
 ]
 EXPECTED_GATE = {"catalog": 810, "files": 265, "wrapped": 667, "json_labels": 22, "missing": 0}
-EXPECTED_DRYRUN = {"total": 2651, "created": 0, "updated": 0, "skipped": 2651, "drift": 0}
+EXPECTED_DRYRUN = {"total": 2699, "created": 0, "updated": 0, "skipped": 2699, "drift": 0}
 
 
 ARTIFACT_PATHS = {

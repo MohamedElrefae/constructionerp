@@ -1,6 +1,6 @@
 # Session Memory — Construction ERP
-**LAST UPDATED:** 2026-06-21 (VFC Phase 3 stabilization complete)
-**UPDATED BY:** Cursor (WP1–WP7 rc-1.1 follow-up sprint + VFC Phase 3 stabilization)
+**LAST UPDATED:** 2026-09-24 (W6-4 Projects + Subcontracting cycle closed)
+**UPDATED BY:** Codex (W6-4 governed cycle and evidence closure)
 
 ---
 
@@ -501,3 +501,26 @@ Workflow session capture: external MemoryGraph write was rejected by automatic a
 **Credential audit:** First console invocation exited before running UAT. During recovery the local test Administrator password was briefly set to literal `test`, immediately replaced with a fresh random credential before UAT, then the UAT credential was rotated again in teardown; final Administrator language is `en`. No production site/credential was involved. See the cycle report for the disclosure.
 
 **Boundaries:** batch 04 and all other unapproved scopes untouched; no Stage 8 or production activity. Production remains held until real production data, named production site, rollout window, and explicit authorization are provided together. Existing untracked `v16.localhost/` logs remain excluded and untouched.
+## 2026-09-24 — W6-4 Projects + Subcontracting batch-01 governed cycle CLOSED
+
+Owner approved the exact 147-row CSV (SHA-256
+`93fbf16b14940ce2d477f346c1777865bf008b22df943625e7de84f27e8f4abe`) for
+`v16.localhost` only. Final partition: **48 Released + 96 preserved Site
+Overrides + 3 deferred**. Proposal SHA `a9b9abaf…`; A1/A2/A3 PASS. Final
+live DRY **2699/0/0/2699/0**, drift=0; health has no drift/orphans; catalog
+2,699. UAT preflight PASS, browser 8/8 / 144/144 matches, standalone 92/92,
+module 271/271, evidence-inclusive localization gate errors=0 on pre-commit
+HEAD `eaadb014`; inventory 21,116 / Merkle `c62fb539…`.
+
+The first 50-row draft uncovered two runtime-key normalization issues; the
+exact two rows created by that draft were removed from the test site, then the
+reviewed package was rebuilt at 48 releases. The `% for` formatter case and
+two non-bindable edge/dynamic keys remain blank and deferred. UAT Administrator
+language restored to `en`, temporary password rotated, secret removed.
+Production and Stage 8 remain gated; no other Stage-6 batch was run. The
+evidence index binds pre-commit HEAD; the expected HEAD mismatch follows the
+closure commit until the next approved catalog-change re-pin.
+
+**Next:** wait for a separate owner-approved Stage-6 scope proposal or for all
+original Stage-8/production prerequisites. Do not push this local closure
+without explicit request. Leave untracked `v16.localhost/` untouched.

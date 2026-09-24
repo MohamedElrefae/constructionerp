@@ -1,0 +1,48 @@
+Cannot complete task {0} as its dependant task {1} are not completed / cancelled.
+Cannot convert Task to non-group because the following child Tasks exist: {0}.
+Costing and Billing fields has been updated
+Dependent Task {0} is not a Template Task
+Enabling the check box will fetch timesheet on select of a Project in Sales Invoice
+Expected End Date should be less than or equal to parent task's Expected End Date {0}.
+For project {0}, update your status
+Learn Project Management
+Parent Task {0} is not a Template Task
+Parent Task {0} must be a Group Task
+Please set a default Holiday List for Company {0}
+Row {0}: Project must be same as the one set in the Timesheet: {1}.
+Row {0}: Task {1} does not belong to Project {2}
+Task {0} depends on Task {1}. Please add Task {1} to the Tasks list.
+Total hours: {0}
+Warning - Row {0}: Billing Hours are more than Actual Hours
+You have been invited to collaborate on the project {0}.
+hours
+{0} hours
+{0}'s {1} cannot be after {2}'s Expected End Date.
+Accounting Entry for Landed Cost Voucher for SCR {0}
+Additional {0} {1} of item {2} required as per BOM to complete this transaction
+Atleast one raw material for Finished Good Item {0} should be customer provided.
+Creating Subcontracting Receipt ...
+Customer Warehouse {0} does not belong to Customer {1}.
+Finished Good {0} does not have a default BOM.
+Finished Good {0} is disabled.
+Finished Good {0} must be a stock item.
+Finished Good {0} must be a sub-contracted item.
+Getting Scrap Items
+Please select Finished Good Item for Service Item {0}
+Please select a Subcontracting Purchase Order.
+Please select a valid Purchase Order that has Service Items.
+Please select a valid Purchase Order that is configured for Subcontracting.
+Purchase Order Item reference is missing in Subcontracting Receipt {0}
+Purchase Receipt {0} created.
+Row #{0}: Accepted Warehouse is mandatory for the accepted Item {1}
+Row #{0}: Finished Good reference is mandatory for Scrap Item {1}.
+Row #{0}: Rejected Qty cannot be set for Scrap Item {1}.
+Row #{0}: Scrap Item Qty cannot be zero
+Row {0}: Accepted Qty and Rejected Qty can't be zero at the same time.
+Service Item {0} is disabled.
+Service Item {0} must be a non-stock item.
+Sets 'Accepted Warehouse' in each row of the Items table.
+Sets 'Rejected Warehouse' in each row of the Items table.
+Sets 'Reserve Warehouse' in each row of the Supplied Items table.
+Stock Reservation Entries created
+There is already an active Subcontracting BOM {0} for the Finished Good {1}.

@@ -1,0 +1,148 @@
+source_text,suggested_ar,locations,area,has_pre_filled
+ Summary,,erpnext/projects/doctype/project_update/project_update.py:104,projects,0
+% Amount Billed,نسبة المبلغ المفوتر,erpnext/projects/doctype/timesheet/timesheet.json:None; erpnext/selling/doctype/sales_order/sales_order.json:None; erpnext/stock/doctype/delivery_note/delivery_note.json:None; erpnext/stock/doctype/purchase_receipt/purchase_receipt.json:None,projects,1
+% Complete Method,طريقة نسبة الإنجاز,erpnext/projects/doctype/project/project.json:None,projects,1
+% Completed,نسبة الإنجاز,erpnext/projects/doctype/project/project.json:None,projects,1
+% Progress,نسبة التقدم,erpnext/projects/doctype/task/task.json:None,projects,1
+Average Completion,متوسط الإنجاز,erpnext/projects/report/project_summary/project_summary.py:124,projects,1
+Base Total Billable Amount,إجمالي المبلغ القابل للفوترة الأساسي,erpnext/projects/doctype/timesheet/timesheet.json:None,projects,1
+Base Total Billed Amount,إجمالي المبلغ المفوتر الأساسي,erpnext/projects/doctype/timesheet/timesheet.json:None,projects,1
+Base Total Costing Amount,إجمالي مبلغ التكلفة الأساسي,erpnext/projects/doctype/timesheet/timesheet.json:None,projects,1
+Begin On (Days),يبدأ بعد (أيام),erpnext/projects/doctype/task/task.json:None,projects,1
+Cannot complete task {0} as its dependant task {1} are not completed / cancelled.,,erpnext/projects/doctype/task/task.py:145,projects,0
+Cannot convert Task to non-group because the following child Tasks exist: {0}.,,erpnext/projects/doctype/task/task.js:49,projects,0
+Circular Reference Error,خطأ مرجع دائري,erpnext/projects/doctype/task/task.py:260,projects,1
+Completed On,اكتمل في,erpnext/projects/doctype/task/task.json:None,projects,1
+Completed On cannot be greater than Today,لا يمكن أن يكون تاريخ الإكمال بعد اليوم,erpnext/projects/doctype/task/task.py:185,projects,1
+Completed Projects,المشاريع المكتملة,erpnext/projects/workspace/projects/projects.json:None,projects,1
+Completed Tasks,المهام المكتملة,erpnext/projects/report/project_summary/project_summary.py:136; erpnext/public/js/templates/crm_activities.html:64,projects,1
+Costing and Billing fields has been updated,,erpnext/projects/doctype/project/project.js:140,projects,0
+Daily Time to send,وقت الإرسال اليومي,erpnext/projects/doctype/project/project.json:None,projects,1
+Delay (In Days),التأخير (بالأيام),erpnext/projects/report/delayed_tasks_summary/delayed_tasks_summary.py:130,projects,1
+Delayed Tasks Summary,ملخص المهام المتأخرة,erpnext/projects/report/delayed_tasks_summary/delayed_tasks_summary.json:None; erpnext/projects/workspace/projects/projects.json:None,projects,1
+Dependent Task {0} is not a Template Task,,erpnext/projects/doctype/task/task.py:178,projects,0
+Duration (Days),المدة (بالأيام),erpnext/projects/doctype/task/task.json:None,projects,1
+Enabling the check box will fetch timesheet on select of a Project in Sales Invoice,,erpnext/projects/doctype/projects_settings/projects_settings.json:None,projects,0
+Expected End Date should be less than or equal to parent task's Expected End Date {0}.,,erpnext/projects/doctype/task/task.py:114,projects,0
+Fetch Timesheet in Sales Invoice,جلب جدول الساعات في فاتورة المبيعات,erpnext/projects/doctype/projects_settings/projects_settings.json:None,projects,1
+"For project {0}, update your status",,erpnext/projects/doctype/project/project.js:208,projects,0
+Gross Margin %,نسبة هامش الربح,erpnext/projects/doctype/project/project.json:None,projects,1
+Hide timesheets,إخفاء جداول الساعات,erpnext/projects/doctype/project_user/project_user.json:None,projects,1
+Include Timesheets in Draft Status,تضمين جداول الساعات بحالة المسودة,erpnext/projects/report/timesheet_billing_summary/timesheet_billing_summary.js:52,projects,1
+Is Template,قالب,erpnext/projects/doctype/task/task.json:None,projects,1
+Learn Project Management,,erpnext/projects/workspace/projects/projects.json:None,projects,0
+Non Completed Tasks,المهام غير المكتملة,erpnext/projects/workspace/projects/projects.json:None,projects,1
+On Track,على المسار,erpnext/projects/report/delayed_tasks_summary/delayed_tasks_summary.py:84,projects,1
+Overdue Tasks,مهام متأخرة,erpnext/projects/report/project_summary/project_summary.py:142,projects,1
+Parent Task {0} is not a Template Task,,erpnext/projects/doctype/task/task.py:168,projects,0
+Parent Task {0} must be a Group Task,,erpnext/projects/doctype/task/task.py:191,projects,0
+Please set a default Holiday List for Company {0},,erpnext/projects/doctype/project/project.py:731,projects,0
+Progress % for a task cannot be more than 100.,,erpnext/projects/doctype/task/task.py:154,projects,0
+Progress (%),التقدم (%),erpnext/projects/report/delayed_tasks_summary/delayed_tasks_summary.py:116,projects,1
+Resume Timer,استئناف المؤقت,erpnext/projects/doctype/timesheet/timesheet.js:65,projects,1
+Row {0}: Project must be same as the one set in the Timesheet: {1}.,,erpnext/projects/doctype/timesheet_detail/timesheet_detail.py:114,projects,0
+Row {0}: Task {1} does not belong to Project {2},,erpnext/projects/doctype/timesheet_detail/timesheet_detail.py:125,projects,0
+Set Project Status,تعيين حالة المشروع,erpnext/projects/doctype/project/project.js:149; erpnext/projects/doctype/project/project.js:157; erpnext/projects/doctype/project/project.js:171,projects,1
+Start Timer,بدء المؤقت,erpnext/projects/doctype/timesheet/timesheet.js:62,projects,1
+Task Weight,وزن المهمة,erpnext/projects/doctype/project/project.json:None,projects,1
+Task {0} depends on Task {1}. Please add Task {1} to the Tasks list.,,erpnext/projects/doctype/project_template/project_template.py:41,projects,0
+Template Task,مهمة قالب,erpnext/projects/doctype/task/task.json:None,projects,1
+Timesheet Billing Summary,ملخص فوترة جدول الساعات,erpnext/projects/report/timesheet_billing_summary/timesheet_billing_summary.json:None; erpnext/projects/workspace/projects/projects.json:None,projects,1
+To Time cannot be before from date,لا يمكن أن يكون وقت إلى قبل تاريخ من,erpnext/projects/doctype/timesheet_detail/timesheet_detail.py:108,projects,1
+Total Billed Hours,إجمالي الساعات المفوترة,erpnext/projects/doctype/timesheet/timesheet.json:None,projects,1
+Total hours: {0},,erpnext/projects/doctype/project/project_dashboard.html:2,projects,0
+Update Costing and Billing,تحديث التكلفة والفوترة,erpnext/projects/doctype/project/project.js:91,projects,1
+Updating Costing and Billing fields against this Project...,جار تحديث حقول التكلفة والفوترة لهذا المشروع...,erpnext/projects/doctype/project/project.js:137,projects,1
+Warning - Row {0}: Billing Hours are more than Actual Hours,,erpnext/projects/doctype/timesheet_detail/timesheet_detail.py:134,projects,0
+Weekly Time to send,وقت الإرسال الأسبوعي,erpnext/projects/doctype/project/project.json:None,projects,1
+You have been invited to collaborate on the project {0}.,,erpnext/projects/doctype/project/project.py:363,projects,0
+hours,,erpnext/projects/doctype/project/project_dashboard.html:13,projects,0
+{0} hours,,erpnext/projects/doctype/project/project_dashboard.html:15,projects,0
+{0}'s {1} cannot be after {2}'s Expected End Date.,,erpnext/projects/doctype/task/task.py:130,projects,0
+% Produced,نسبة المنتج,erpnext/subcontracting/doctype/subcontracting_inward_order/subcontracting_inward_order.json:None,subcontracting,1
+% Raw Material Received,نسبة المواد الخام المستلمة,erpnext/subcontracting/doctype/subcontracting_inward_order/subcontracting_inward_order.json:None,subcontracting,1
+% Raw Material Returned,نسبة المواد الخام المرتجعة,erpnext/subcontracting/doctype/subcontracting_inward_order/subcontracting_inward_order.json:None,subcontracting,1
+Accounting Entry for Landed Cost Voucher for SCR {0},,erpnext/subcontracting/doctype/subcontracting_receipt/subcontracting_receipt.py:873,subcontracting,0
+Active Subcontracted Items,الأصناف المنفذة من الباطن النشطة,erpnext/subcontracting/workspace/subcontracting/subcontracting.json:None,subcontracting,1
+Add Serial / Batch Bundle,إضافة مجموعة تسلسل/دفعة,erpnext/subcontracting/doctype/subcontracting_receipt_item/subcontracting_receipt_item.json:None; erpnext/subcontracting/doctype/subcontracting_receipt_supplied_item/subcontracting_receipt_supplied_item.json:None,subcontracting,1
+Additional {0} {1} of item {2} required as per BOM to complete this transaction,,erpnext/subcontracting/doctype/subcontracting_receipt/subcontracting_receipt.py:590,subcontracting,0
+Atleast one raw material for Finished Good Item {0} should be customer provided.,,erpnext/subcontracting/doctype/subcontracting_inward_order/subcontracting_inward_order.py:225,subcontracting,0
+Company Shipping Address,عنوان شحن الشركة,erpnext/subcontracting/doctype/subcontracting_order/subcontracting_order.json:None,subcontracting,1
+Creating Subcontracting Receipt ...,,erpnext/subcontracting/doctype/subcontracting_order/subcontracting_order.js:583,subcontracting,0
+Customer Currency,عملة العميل,erpnext/subcontracting/doctype/subcontracting_inward_order/subcontracting_inward_order.json:None,subcontracting,1
+Customer Warehouse,مستودع العميل,erpnext/subcontracting/doctype/subcontracting_inward_order/subcontracting_inward_order.json:None,subcontracting,1
+Customer Warehouse {0} does not belong to Customer {1}.,,erpnext/subcontracting/doctype/subcontracting_inward_order/subcontracting_inward_order.py:145,subcontracting,0
+Distribute Additional Costs Based On ,,erpnext/subcontracting/doctype/subcontracting_order/subcontracting_order.json:None; erpnext/subcontracting/doctype/subcontracting_receipt/subcontracting_receipt.json:None,subcontracting,0
+Finished Good BOM,قائمة مواد المنتج النهائي,erpnext/subcontracting/doctype/subcontracting_bom/subcontracting_bom.json:None,subcontracting,1
+Finished Good Item Quantity,كمية صنف المنتج النهائي,erpnext/subcontracting/doctype/subcontracting_inward_order_service_item/subcontracting_inward_order_service_item.json:None; erpnext/subcontracting/doctype/subcontracting_order_service_item/subcontracting_order_service_item.json:None,subcontracting,1
+Finished Good UOM,وحدة قياس المنتج النهائي,erpnext/subcontracting/doctype/subcontracting_bom/subcontracting_bom.json:None,subcontracting,1
+Finished Good {0} does not have a default BOM.,,erpnext/subcontracting/doctype/subcontracting_bom/subcontracting_bom.py:51,subcontracting,0
+Finished Good {0} is disabled.,,erpnext/subcontracting/doctype/subcontracting_bom/subcontracting_bom.py:46,subcontracting,0
+Finished Good {0} must be a stock item.,,erpnext/subcontracting/doctype/subcontracting_bom/subcontracting_bom.py:48,subcontracting,0
+Finished Good {0} must be a sub-contracted item.,,erpnext/subcontracting/doctype/subcontracting_bom/subcontracting_bom.py:55,subcontracting,0
+Finished Goods Return,مرتجع المنتجات النهائية,erpnext/subcontracting/doctype/subcontracting_inward_order/subcontracting_inward_order.js:165,subcontracting,1
+Get Scrap Items,جلب أصناف الهالك,erpnext/subcontracting/doctype/subcontracting_receipt/subcontracting_receipt.json:None,subcontracting,1
+Getting Scrap Items,,erpnext/subcontracting/doctype/subcontracting_receipt/subcontracting_receipt.js:194,subcontracting,0
+Job Worker,منفذ العمل,erpnext/subcontracting/doctype/subcontracting_order/subcontracting_order.json:None; erpnext/subcontracting/doctype/subcontracting_receipt/subcontracting_receipt.json:None,subcontracting,1
+Job Worker Address,عنوان منفذ العمل,erpnext/subcontracting/doctype/subcontracting_order/subcontracting_order.json:None,subcontracting,1
+Job Worker Address Details,تفاصيل عنوان منفذ العمل,erpnext/subcontracting/doctype/subcontracting_order/subcontracting_order.json:None,subcontracting,1
+Job Worker Contact,جهة اتصال منفذ العمل,erpnext/subcontracting/doctype/subcontracting_order/subcontracting_order.json:None,subcontracting,1
+Job Worker Currency,عملة منفذ العمل,erpnext/subcontracting/doctype/subcontracting_order/subcontracting_order.json:None,subcontracting,1
+Job Worker Delivery Note,إذن تسليم منفذ العمل,erpnext/subcontracting/doctype/subcontracting_receipt/subcontracting_receipt.json:None,subcontracting,1
+Job Worker Name,اسم منفذ العمل,erpnext/subcontracting/doctype/subcontracting_order/subcontracting_order.json:None; erpnext/subcontracting/doctype/subcontracting_receipt/subcontracting_receipt.json:None,subcontracting,1
+Job Worker Warehouse,مستودع منفذ العمل,erpnext/subcontracting/doctype/subcontracting_order/subcontracting_order.json:None; erpnext/subcontracting/doctype/subcontracting_receipt/subcontracting_receipt.json:None,subcontracting,1
+Mapping Subcontracting Inward Order ...,جارٍ ربط أمر استلام مقاولات باطن ...,erpnext/subcontracting/doctype/subcontracting_inward_order/subcontracting_inward_order.js:106,subcontracting,1
+Mapping Subcontracting Order ...,جارٍ ربط أمر مقاولات باطن ...,erpnext/subcontracting/doctype/subcontracting_order/subcontracting_order.js:153,subcontracting,1
+Material from Customer,مواد من العميل,erpnext/subcontracting/doctype/subcontracting_inward_order/subcontracting_inward_order.js:151,subcontracting,1
+Ongoing,جار,erpnext/subcontracting/doctype/subcontracting_inward_order/subcontracting_inward_order.json:None,subcontracting,1
+Partial Material Transferred,مواد منقولة جزئيا,erpnext/subcontracting/doctype/subcontracting_order/subcontracting_order.json:None,subcontracting,1
+Please select Finished Good Item for Service Item {0},,erpnext/subcontracting/doctype/subcontracting_inward_order/subcontracting_inward_order.py:210; erpnext/subcontracting/doctype/subcontracting_order/subcontracting_order.py:314,subcontracting,0
+Please select a Subcontracting Purchase Order.,,erpnext/subcontracting/doctype/subcontracting_order/subcontracting_order.py:163,subcontracting,0
+Please select a valid Purchase Order that has Service Items.,,erpnext/subcontracting/doctype/subcontracting_order/subcontracting_order.py:152,subcontracting,0
+Please select a valid Purchase Order that is configured for Subcontracting.,,erpnext/subcontracting/doctype/subcontracting_order/subcontracting_order.py:149,subcontracting,0
+Purchase Order Item reference is missing in Subcontracting Receipt {0},,erpnext/subcontracting/doctype/subcontracting_receipt/subcontracting_receipt.py:975,subcontracting,0
+Purchase Receipt {0} created.,,erpnext/subcontracting/doctype/subcontracting_receipt/subcontracting_receipt.py:1052,subcontracting,0
+Raw Material Cost Per Qty,تكلفة المادة الخام لكل كمية,erpnext/subcontracting/doctype/subcontracting_order_item/subcontracting_order_item.json:None; erpnext/subcontracting/doctype/subcontracting_receipt_item/subcontracting_receipt_item.json:None,subcontracting,1
+Raw Materials Actions,إجراءات المواد الخام,erpnext/subcontracting/doctype/subcontracting_receipt/subcontracting_receipt.json:None,subcontracting,1
+Raw Materials Required,المواد الخام المطلوبة,erpnext/subcontracting/doctype/subcontracting_inward_order/subcontracting_inward_order.json:None,subcontracting,1
+Raw Materials to Customer,مواد خام إلى العميل,erpnext/subcontracting/doctype/subcontracting_inward_order/subcontracting_inward_order.js:136,subcontracting,1
+Reset Raw Materials Table,إعادة تعيين جدول المواد الخام,erpnext/subcontracting/doctype/subcontracting_receipt/subcontracting_receipt.json:None,subcontracting,1
+Return Against Subcontracting Receipt,مرتجع مقابل إيصال مقاولات باطن,erpnext/subcontracting/doctype/subcontracting_receipt/subcontracting_receipt.json:None,subcontracting,1
+Row #{0}: Accepted Warehouse is mandatory for the accepted Item {1},,erpnext/subcontracting/doctype/subcontracting_receipt/subcontracting_receipt.py:527,subcontracting,0
+Row #{0}: Finished Good reference is mandatory for Scrap Item {1}.,,erpnext/subcontracting/doctype/subcontracting_receipt/subcontracting_receipt.py:515,subcontracting,0
+Row #{0}: Rejected Qty cannot be set for Scrap Item {1}.,,erpnext/subcontracting/doctype/subcontracting_receipt/subcontracting_receipt.py:508,subcontracting,0
+Row #{0}: Scrap Item Qty cannot be zero,,erpnext/subcontracting/doctype/subcontracting_receipt/subcontracting_receipt.py:503,subcontracting,0
+Row {0}: Accepted Qty and Rejected Qty can't be zero at the same time.,,erpnext/subcontracting/doctype/subcontracting_receipt/subcontracting_receipt.py:273,subcontracting,0
+Scrap Cost Per Qty,تكلفة الهالك لكل كمية,erpnext/subcontracting/doctype/subcontracting_receipt_item/subcontracting_receipt_item.json:None,subcontracting,1
+Scrap Items Generated,أصناف الهالك المنشأة,erpnext/subcontracting/doctype/subcontracting_inward_order/subcontracting_inward_order.json:None,subcontracting,1
+Select Job Worker Address,تحديد عنوان منفذ العمل,erpnext/subcontracting/doctype/subcontracting_receipt/subcontracting_receipt.json:None,subcontracting,1
+Serial and Batch Details,تفاصيل التسلسل والدفعة,erpnext/subcontracting/doctype/subcontracting_receipt_item/subcontracting_receipt_item.json:None,subcontracting,1
+Service Cost Per Qty,تكلفة الخدمة لكل كمية,erpnext/subcontracting/doctype/subcontracting_order_item/subcontracting_order_item.json:None; erpnext/subcontracting/doctype/subcontracting_receipt_item/subcontracting_receipt_item.json:None,subcontracting,1
+Service Item,عنصر الخدمة,erpnext/subcontracting/doctype/subcontracting_bom/subcontracting_bom.json:None,subcontracting,1
+Service Item Qty,كمية عنصر الخدمة,erpnext/subcontracting/doctype/subcontracting_bom/subcontracting_bom.json:None,subcontracting,1
+Service Item Qty / Finished Good Qty,كمية عنصر الخدمة / كمية المنتج النهائي,erpnext/subcontracting/doctype/subcontracting_bom/subcontracting_bom.json:None,subcontracting,1
+Service Item UOM,وحدة قياس عنصر الخدمة,erpnext/subcontracting/doctype/subcontracting_bom/subcontracting_bom.json:None,subcontracting,1
+Service Item {0} is disabled.,,erpnext/subcontracting/doctype/subcontracting_bom/subcontracting_bom.py:64,subcontracting,0
+Service Item {0} must be a non-stock item.,,erpnext/subcontracting/doctype/subcontracting_bom/subcontracting_bom.py:67; erpnext/subcontracting/doctype/subcontracting_order/subcontracting_order.py:175,subcontracting,0
+Service Items,عناصر الخدمة,erpnext/subcontracting/doctype/subcontracting_inward_order/subcontracting_inward_order.json:None; erpnext/subcontracting/doctype/subcontracting_order/subcontracting_order.json:None,subcontracting,1
+Set Delivery Warehouse,تعيين مستودع التسليم,erpnext/subcontracting/doctype/subcontracting_inward_order/subcontracting_inward_order.json:None,subcontracting,1
+Sets 'Accepted Warehouse' in each row of the Items table.,,erpnext/subcontracting/doctype/subcontracting_receipt/subcontracting_receipt.json:None,subcontracting,0
+Sets 'Rejected Warehouse' in each row of the Items table.,,erpnext/subcontracting/doctype/subcontracting_receipt/subcontracting_receipt.json:None,subcontracting,0
+Sets 'Reserve Warehouse' in each row of the Supplied Items table.,,erpnext/subcontracting/doctype/subcontracting_order/subcontracting_order.json:None,subcontracting,0
+Stock Reservation Entries created,,erpnext/subcontracting/doctype/subcontracting_order/subcontracting_order.py:445,subcontracting,0
+Subcontract Return,مرتجع مقاولات باطن,erpnext/subcontracting/doctype/subcontracting_receipt/subcontracting_receipt.js:83,subcontracting,1
+Subcontracting Conversion Factor,معامل تحويل مقاولات الباطن,erpnext/subcontracting/doctype/subcontracting_inward_order_item/subcontracting_inward_order_item.json:None; erpnext/subcontracting/doctype/subcontracting_order_item/subcontracting_order_item.json:None,subcontracting,1
+Subcontracting Inward Order Count,عدد أوامر استلام مقاولات باطن,erpnext/subcontracting/workspace/subcontracting/subcontracting.json:None,subcontracting,1
+Subcontracting Inward Order Received Item,بند مستلم لأمر استلام مقاولات باطن,erpnext/subcontracting/doctype/subcontracting_inward_order_received_item/subcontracting_inward_order_received_item.json:None,subcontracting,1
+Subcontracting Inward Order Scrap Item,بند هالك لأمر استلام مقاولات باطن,erpnext/subcontracting/doctype/subcontracting_inward_order_scrap_item/subcontracting_inward_order_scrap_item.json:None,subcontracting,1
+Subcontracting Inward Order Service Item,بند خدمة لأمر استلام مقاولات باطن,erpnext/subcontracting/doctype/subcontracting_inward_order_service_item/subcontracting_inward_order_service_item.json:None,subcontracting,1
+Subcontracting Order Item,بند أمر مقاولات باطن,erpnext/subcontracting/doctype/subcontracting_order_item/subcontracting_order_item.json:None; erpnext/subcontracting/doctype/subcontracting_receipt_item/subcontracting_receipt_item.json:None,subcontracting,1
+Subcontracting Order Service Item,بند خدمة أمر مقاولات باطن,erpnext/subcontracting/doctype/subcontracting_order_service_item/subcontracting_order_service_item.json:None,subcontracting,1
+Subcontracting Order Supplied Item,بند مورد لأمر مقاولات باطن,erpnext/subcontracting/doctype/subcontracting_order/subcontracting_order.js:235; erpnext/subcontracting/doctype/subcontracting_order_supplied_item/subcontracting_order_supplied_item.json:None,subcontracting,1
+Subcontracting Outward Order,أمر إرسال مقاولات باطن,erpnext/subcontracting/workspace/subcontracting/subcontracting.json:None,subcontracting,1
+Subcontracting Outward Order Count,عدد أوامر إرسال مقاولات باطن,erpnext/subcontracting/workspace/subcontracting/subcontracting.json:None,subcontracting,1
+Subcontracting Purchase Order,أمر شراء مقاول باطن,erpnext/subcontracting/doctype/subcontracting_order/subcontracting_order.json:None,subcontracting,1
+Subcontracting Receipt Supplied Item,بند مورد لإيصال مقاولات باطن,erpnext/subcontracting/doctype/subcontracting_receipt_supplied_item/subcontracting_receipt_supplied_item.json:None,subcontracting,1
+Subcontracting Sales Order,أمر بيع مقاول باطن,erpnext/subcontracting/doctype/subcontracting_inward_order/subcontracting_inward_order.json:None,subcontracting,1
+There is already an active Subcontracting BOM {0} for the Finished Good {1}.,,erpnext/subcontracting/doctype/subcontracting_bom/subcontracting_bom.py:77,subcontracting,0
+Warehouse Details,تفاصيل المستودع,erpnext/subcontracting/doctype/subcontracting_order_item/subcontracting_order_item.json:None,subcontracting,1

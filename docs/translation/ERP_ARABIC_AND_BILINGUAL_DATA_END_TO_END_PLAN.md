@@ -847,6 +847,7 @@ If any criterion fails, the affected module/data wave remains behind its prior s
 | 6 | **W6-3 batch-01 — Stock governed cycle CLOSED on the test site** (owner-approved exact 250-row scope CSV sha `5eb34bc2dbaf3cf201efc5d856085e32375a68fca959082b3afd8111f7b08380` only): final dispositions 115 preserved-site-override + 17 EXCEPTION-technical + 0 already-released + 118 quorum-confirmed payload; catalog **2,437** Released; pre-DRY/IMPORT `2437/0/1/2436/0` after `%` placeholder repair → post-DRY **IDEMPOTENT_OK** `2437/0/0/2437/0` drift=0; sync `0/0`; decisions 2,437; freshness critical_pass/has_drift=false; inventory 20,854 rows; full gate **errors=0** with evidence; module tests **270/270**; standalone 91 OK; Arabic browser evidence **21/21 PASS**; UAT teardown done. Batches 02/03 and production remain gated. | 2026-09-23 | `stage6-w603-batch01-cycle-executed-2026-09-23.md`; evidence `raw-logs/stage2/` + `stage6-w603/browser_evidence_w603_batch01.json`; cycle commit `0bfc062` |
 | 6 | **W6-3 batch-02 — Stock governed cycle CLOSED on the test site** (scope CSV SHA `701ad13e6b4cc530ebd7dbd95705979b70055c46f39da37d4532a26ba60439ef`): 250 rows = 103 quorum-approved payload + 143 preserved Site Overrides + 2 technical exceptions + 2 deferred source defects; catalog **2,540** Released; current live DRY `2540/0/0/2540/0`, drift=0; independent site readback confirms all 103 releases and 143 preserves; freshness critical_pass; inventory 20,957 rows / Merkle `7ff7884d…`; evidence-inclusive gate **errors=0** at base HEAD `e8d4846`; module tests 270/270, standalone 91/91; Arabic browser checks 8/8. Batch-03 subsequently closed under separate approval; production untouched. | 2026-09-24 | `stage6-w603-batch02-cycle-executed-2026-09-24.md`; AI-R closure record; commit recorded in git |
 | 6 | **W6-3 batch-03 — Stock governed cycle CLOSED on the test site** (owner-approved exact 234-row scope SHA `a5f0e9f604ea52d89072d2c744864fdcbc733bc8307fd427a5c2658f4855dbc9`): 111 payload + 121 preserved Site Overrides + 2 technical exceptions (`UPC`, `UPC-A`); catalog **2,651** Released; import created 111, updated 0, skipped 2,540, drift=0; post-DRY `2651/0/0/2651/0`; sync 0/0; freshness critical_pass; inventory 21,068 / Merkle `57951175…`; evidence-inclusive gate **errors=0** at pre-commit HEAD `fb3e056`; module suite 270/270, standalone 91/91; Arabic browser 8/8 (232/232 exact matches); UAT teardown complete. Production/Stage 8 untouched. | 2026-09-24 | `stage6-w603-batch03-cycle-executed-2026-09-24.md`; AI-A1/A2/A3/AI-R records; browser JSON; evidence index |
+| 6 | **W6-4 Projects + Subcontracting batch-01 — governed cycle CLOSED on the test site** (owner-approved exact 147-row scope SHA `93fbf16b14940ce2d477f346c1777865bf008b22df943625e7de84f27e8f4abe`): final partition 48 releases + 96 preserved Site Overrides + 3 deferred; catalog **2,699**; final live DRY `2699/0/0/2699/0`, drift=0; A1/A2/A3/AI-R PASS; UAT preflight PASS; browser 8/8 and 144/144 translations; module suite 271/271, standalone 92/92; evidence-inclusive gate errors=0 at pre-commit HEAD `eaadb014`; inventory 21,116 / Merkle `c62fb539…`. Stage 8, production, and other scopes remain untouched. | 2026-09-24 | `stage6-w604-cycle-executed-2026-09-24.md`; AI-A1/A2/A3/AI-R records; browser JSON; evidence index |
 
 ## 17. Owner status acknowledgments
 
@@ -870,12 +871,14 @@ If any criterion fails, the affected module/data wave remains behind its prior s
 | 2026-09-23 | **W6-3 batch-01 approved and cycle EXECUTED/CLOSED** — exact 250-row scope CSV only (sha `5eb34bc2dbaf3cf201efc5d856085e32375a68fca959082b3afd8111f7b08380`), test site `v16.localhost` only. Seven formula/letter source-equal rows were reclassified technical during the governed gate; final result is 115 preserved + 17 technical + 118 payload, catalog 2,437, idempotent post-DRY, full gate errors=0, browser 21/21, UAT torn down. Batches 02/03 and production remain gated. | `stage6-w603-batch01-cycle-executed-2026-09-23.md`; base evidence HEAD `9a3f44f`; cycle commit `0bfc062` |
 | 2026-09-24 | **W6-3 batch-02 approved and cycle EXECUTED/CLOSED** — exact 250-row scope CSV only (sha `701ad13e…`), test site `v16.localhost` only. Final disposition 103 payload + 143 preserved + 2 technical + 2 deferred source defects; catalog 2,540; fresh live DRY zero drift; independent AI-R PASS and evidence-inclusive gate errors=0; batch-03 and production remain gated | `stage6-w603-batch02-cycle-executed-2026-09-24.md`; exact scope CSV and AI-R evidence record |
 | 2026-09-24 | **W6-3 batch-03 approved and cycle EXECUTED/CLOSED** — exact 234-row scope SHA `a5f0e9f6…`, `v16.localhost` only; 111 payload + 121 preserve + 2 technical; catalog 2,651; post-DRY drift=0; A1/A2/A3 + AI-R PASS; UAT + browser 8/8 with 232 exact translations; evidence-inclusive gate errors=0 at `fb3e056`. Stage 8/production remain gated | `stage6-w603-batch03-cycle-executed-2026-09-24.md`; AI-R record; evidence index |
+| 2026-09-24 | **W6-4 Projects + Subcontracting batch-01 approved and cycle EXECUTED/CLOSED** — exact 147-row scope SHA `93fbf16b…`; 48 releases + 96 preserved Site Overrides + 3 deferred; catalog 2,699; zero-drift live DRY; AI-A1/A2/A3/AI-R PASS; UAT PASS; browser 144/144 matches; standalone 92/92; module suite 271/271; evidence-inclusive gate errors=0 at pre-commit HEAD `eaadb014`. Stage 8/production remain gated; other scope untouched | `stage6-w604-cycle-executed-2026-09-24.md`; A1/A2/A3/AI-R records; browser evidence; Stage-2 index |
 
-## 18. Hold state (owner directive, 2026-09-21; corrected 2026-09-22; W6-0b batch-7 update 2026-09-22; W6-2 batch-01 update 2026-09-23; W6-2 batch-02 cycle 2026-09-23; W6-3 batch-01 cycle 2026-09-23; W6-3 batch-02 and batch-03 cycles 2026-09-24)
+## 18. Hold state (owner directive, 2026-09-21; corrected 2026-09-22; W6-0b batch-7 update 2026-09-22; W6-2 batch-01 update 2026-09-23; W6-2 batch-02 cycle 2026-09-23; W6-3 batch-01 cycle 2026-09-23; W6-3 batch-02 and batch-03 cycles 2026-09-24; W6-4 batch-01 cycle 2026-09-24)
 
 **Stage-8 restore rehearsal: CLOSED.** **Production rollout: NOT approved.**
 **W6-0b batches 1–7: CLOSED on the test site (batch-7 corrected cycle accepted at `a0f01cb`; rejected attempt `8bfc23a` kept in history).**
 **W6-3 Stock batches 01–03: CLOSED on the test site only.** Batch-03 completed the exact owner-approved 234-row CSV; no additional W6-3 scope is implied.
+**W6-4 Projects + Subcontracting batch-01: CLOSED on the test site only** for the exact owner-approved 147-row scope (48 released, 96 preserved, 3 deferred). Other Stage-6 scopes remain proposal/approval-gated; Stage 8 and production remain on hold.
 
 **`http://v16.localhost:8000` is NOT production.** Governed classification:
 **non-production test**, `production_mutation_authorized: false`. It contains
@@ -971,6 +974,18 @@ Completed under prior hold / authorized test-site scope (no production mutation)
   language restored to `en`, credentials rotated. A one-time test-site-only
   password setup mishap and immediate recovery are disclosed in the cycle
   report. Stage 8 / production remain gated; no production mutation.
+
+- 2026-09-24: **W6-4 Projects + Subcontracting batch-01 governed cycle CLOSED**
+  on `v16.localhost` for the exact approved 147-row scope SHA
+  `93fbf16b…`: 48 payload releases, 96 preserved Site Overrides, and 3
+  deferred runtime/format edge cases. Final live DRY `2699/0/0/2699/0`,
+  drift=0; catalog 2,699; inventory 21,116 / Merkle `c62fb539…`; A1/A2/A3
+  PASS; UAT preflight PASS; browser 8/8 and 144/144 exact translations;
+  module tests 271/271, standalone 92/92; evidence-inclusive gate errors=0
+  at pre-commit HEAD `eaadb014`. Temporary credentials rotated, language
+  restored to `en`, secret removed. Stage 8 and production remain gated as
+  above; no other batch or production work occurred. Details:
+  `stage6-w604-cycle-executed-2026-09-24.md`.
 
 Hard requirement before any Phase-8 validation: run the hardened UAT
 preflight (`scripts/uat_preflight.py` — redis 13000/11000 PING, site 200,

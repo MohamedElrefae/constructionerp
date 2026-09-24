@@ -11073,6 +11073,53 @@
         }
       }
     },
+    "13f41cc320137c8253c129e08e54d25bcd2a735617f870eb33ac6f4b7bc3d65c": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w604_payload_applied_rows_2026-09-24.csv",
+          "sha256": "6dc600277f3cab90022dadd42141940567f43194f0070e31dcf3331ddb2204b0"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "projects-subcontracting-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الصف {0}: المهمة {1} لا تتبع المشروع {2}.",
+        "sha256": "aec445098788b6464c375bce746b16576936ce1bad3dc884e4cc87e15c2f747e"
+      },
+      "references": "glossary v2.0; vendor Projects/Subcontracting PO locations; plan D5; W6-4 batch-01",
+      "release_version": "1.7",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Row {0}: Task {1} does not belong to Project {2}",
+      "timestamps": [
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37"
+      ],
+      "translated_text": "الصف {0}: المهمة {1} لا تتبع المشروع {2}.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "141685a9f67933559e92754db55fe215d610f4db8bf37534dcc0cd1cd77ff80f": {
       "artifacts": [
         {
@@ -12862,6 +12909,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "175fc9443e7421c1d139ceb46e562edf9f38e4839612301d27d34400b311ba02": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w604_payload_applied_rows_2026-09-24.csv",
+          "sha256": "6dc600277f3cab90022dadd42141940567f43194f0070e31dcf3331ddb2204b0"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "projects-subcontracting-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الصف {0}: لا يمكن أن تكون الكمية المقبولة والكمية المرفوضة صفرًا في الوقت نفسه.",
+        "sha256": "ae0f75c1a7c66c65a002cfda56f00d6e4ae45134c868f6575dfab254c4ffb496"
+      },
+      "references": "glossary v2.0; vendor Projects/Subcontracting PO locations; plan D5; W6-4 batch-01",
+      "release_version": "1.7",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Row {0}: Accepted Qty and Rejected Qty can't be zero at the same time.",
+      "timestamps": [
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37"
+      ],
+      "translated_text": "الصف {0}: لا يمكن أن تكون الكمية المقبولة والكمية المرفوضة صفرًا في الوقت نفسه.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -24252,6 +24346,53 @@
         }
       }
     },
+    "2f0d10a6541793b95b130322f8f580385d7d8e5dc3aa04c7568389de621de57e": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w604_payload_applied_rows_2026-09-24.csv",
+          "sha256": "6dc600277f3cab90022dadd42141940567f43194f0070e31dcf3331ddb2204b0"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "projects-subcontracting-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يجب أن تكون المهمة الرئيسية {0} مهمة تجميعية.",
+        "sha256": "1c4d10fc35b8ab58b7a1bdacd9a77fb864c09c9a8df2ee5da8a17fb313bbc5a7"
+      },
+      "references": "glossary v2.0; vendor Projects/Subcontracting PO locations; plan D5; W6-4 batch-01",
+      "release_version": "1.7",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Parent Task {0} must be a Group Task",
+      "timestamps": [
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37"
+      ],
+      "translated_text": "يجب أن تكون المهمة الرئيسية {0} مهمة تجميعية.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "2f5b3249869ed4f5cf6de12052beaa3931e479cac6d5a7e2eb941c1323508fc7": {
       "artifacts": [
         {
@@ -26047,6 +26188,53 @@
         }
       }
     },
+    "32d324af5ee66d0ae5485af055c47a0a8b604971f4bf1d9399351b3562fe954d": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w604_payload_applied_rows_2026-09-24.csv",
+          "sha256": "6dc600277f3cab90022dadd42141940567f43194f0070e31dcf3331ddb2204b0"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "projects-subcontracting-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تم إنشاء سند استلام الشراء {0}.",
+        "sha256": "93b7c1c9341e2bff0bb9a8a639406c94414a26dd4bc1b3af90824009eaa5f06f"
+      },
+      "references": "glossary v2.0; vendor Projects/Subcontracting PO locations; plan D5; W6-4 batch-01",
+      "release_version": "1.7",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Purchase Receipt {0} created.",
+      "timestamps": [
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37"
+      ],
+      "translated_text": "تم إنشاء سند استلام الشراء {0}.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "32f9b8dcc78506daeb0f684bb3d3fc947af48394ff85eb650abaed09be665710": {
       "artifacts": [
         {
@@ -27034,6 +27222,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "3491b253f6772051a10ed4ef64b9567dd2218bc7124f3cf8a7a251404cdc0ead": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w604_payload_applied_rows_2026-09-24.csv",
+          "sha256": "6dc600277f3cab90022dadd42141940567f43194f0070e31dcf3331ddb2204b0"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "projects-subcontracting-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الصف {0}: يجب أن يكون المشروع مطابقًا للمشروع المحدد في سجل الدوام: {1}.",
+        "sha256": "31b1ff90108200d68661f7a861ed5ea94f8d344f3e72ed969c18cb07c9a34ecb"
+      },
+      "references": "glossary v2.0; vendor Projects/Subcontracting PO locations; plan D5; W6-4 batch-01",
+      "release_version": "1.7",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Row {0}: Project must be same as the one set in the Timesheet: {1}.",
+      "timestamps": [
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37"
+      ],
+      "translated_text": "الصف {0}: يجب أن يكون المشروع مطابقًا للمشروع المحدد في سجل الدوام: {1}.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -30542,6 +30777,53 @@
         }
       }
     },
+    "3c1831539c907ff41aae6a130720d6f5174f4b5f0e341a5c626bedde2c4f8092": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w604_payload_applied_rows_2026-09-24.csv",
+          "sha256": "6dc600277f3cab90022dadd42141940567f43194f0070e31dcf3331ddb2204b0"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "projects-subcontracting-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لا يمكن إكمال المهمة {0} لأن المهمة التي تعتمد عليها ({1}) لم تكتمل أو تُلغَ.",
+        "sha256": "bdc662d6576c175b14e7bff722b15269431f92c96e3597a2005668558ac0a05b"
+      },
+      "references": "glossary v2.0; vendor Projects/Subcontracting PO locations; plan D5; W6-4 batch-01",
+      "release_version": "1.7",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Cannot complete task {0} as its dependant task {1} are not completed / cancelled.",
+      "timestamps": [
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37"
+      ],
+      "translated_text": "لا يمكن إكمال المهمة {0} لأن المهمة التي تعتمد عليها ({1}) لم تكتمل أو تُلغَ.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "3c273067eaf829e172b6d0dce578d082b357d34f8a4b0798ff9d7ff9f3e7f377": {
       "artifacts": [
         {
@@ -30868,6 +31150,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "3cbd0080523911ba15c4a98e6ce5a13d7c0e154bf0cd790571340e191f87066f": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w604_payload_applied_rows_2026-09-24.csv",
+          "sha256": "6dc600277f3cab90022dadd42141940567f43194f0070e31dcf3331ddb2204b0"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "projects-subcontracting-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تحذير - الصف {0}: ساعات الفوترة أكثر من الساعات الفعلية.",
+        "sha256": "f19cc416ae7acc88e01f1d679ea626c892962f66e66a204e7aeaa4ba9b4e4735"
+      },
+      "references": "glossary v2.0; vendor Projects/Subcontracting PO locations; plan D5; W6-4 batch-01",
+      "release_version": "1.7",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Warning - Row {0}: Billing Hours are more than Actual Hours",
+      "timestamps": [
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37"
+      ],
+      "translated_text": "تحذير - الصف {0}: ساعات الفوترة أكثر من الساعات الفعلية.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -35163,6 +35492,53 @@
         }
       }
     },
+    "45076561822e378ea87f76cd80e29e3e9ae411089721917900b5b1923c1ab85a": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w604_payload_applied_rows_2026-09-24.csv",
+          "sha256": "6dc600277f3cab90022dadd42141940567f43194f0070e31dcf3331ddb2204b0"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "projects-subcontracting-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يجب أن يكون الصنف الخدمي {0} غير مخزني.",
+        "sha256": "58c2fe04e834484f45635d4851cd31b14b4303d97589919a9c0477918249a113"
+      },
+      "references": "glossary v2.0; vendor Projects/Subcontracting PO locations; plan D5; W6-4 batch-01",
+      "release_version": "1.7",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Service Item {0} must be a non-stock item.",
+      "timestamps": [
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37"
+      ],
+      "translated_text": "يجب أن يكون الصنف الخدمي {0} غير مخزني.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "450a99247c8c15f4be1e8c9ebf8e3b57b653e2e92aa7e67f8350a739f21190d5": {
       "artifacts": [
         {
@@ -36438,6 +36814,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "47fe38e950569f8663c60ef79e9b7568d0b4522df9e51a900373bb6cfc04d21e": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w604_payload_applied_rows_2026-09-24.csv",
+          "sha256": "6dc600277f3cab90022dadd42141940567f43194f0070e31dcf3331ddb2204b0"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "projects-subcontracting-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يُرجى تحديد الصنف النهائي للصنف الخدمي {0}.",
+        "sha256": "ebb6015d22f8344050c7ba275121c17a6e252eff1065dc93bc8988422433427e"
+      },
+      "references": "glossary v2.0; vendor Projects/Subcontracting PO locations; plan D5; W6-4 batch-01",
+      "release_version": "1.7",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Please select Finished Good Item for Service Item {0}",
+      "timestamps": [
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37"
+      ],
+      "translated_text": "يُرجى تحديد الصنف النهائي للصنف الخدمي {0}.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -41976,6 +42399,53 @@
         }
       }
     },
+    "52361de0b11d45bdee972cc5125deab8cb45500c3a30afe69ef09e8f39209aa3": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w604_payload_applied_rows_2026-09-24.csv",
+          "sha256": "6dc600277f3cab90022dadd42141940567f43194f0070e31dcf3331ddb2204b0"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "projects-subcontracting-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "المهمة الرئيسية {0} ليست مهمة قالب.",
+        "sha256": "4636bce022a39cd86115711b1d282443de666c079b53a307be66a3e78347e819"
+      },
+      "references": "glossary v2.0; vendor Projects/Subcontracting PO locations; plan D5; W6-4 batch-01",
+      "release_version": "1.7",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Parent Task {0} is not a Template Task",
+      "timestamps": [
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37"
+      ],
+      "translated_text": "المهمة الرئيسية {0} ليست مهمة قالب.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "5260c96493419865382aae4eb52ce632fde5a45a4b66c9f3e3ef3efc5398728f": {
       "artifacts": [
         {
@@ -43292,6 +43762,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "552a92278b72330aa73ef9ec9e76416e9f2ee13772e572fc1f1170d3d2ea4d65": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w604_payload_applied_rows_2026-09-24.csv",
+          "sha256": "6dc600277f3cab90022dadd42141940567f43194f0070e31dcf3331ddb2204b0"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "projects-subcontracting-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "مستودع العميل {0} لا يتبع العميل {1}.",
+        "sha256": "6d3c393e7e4fc8ff7ff0e95f0038a888d0667dec080aef5cfbf798c5dfbc962e"
+      },
+      "references": "glossary v2.0; vendor Projects/Subcontracting PO locations; plan D5; W6-4 batch-01",
+      "release_version": "1.7",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Customer Warehouse {0} does not belong to Customer {1}.",
+      "timestamps": [
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37"
+      ],
+      "translated_text": "مستودع العميل {0} لا يتبع العميل {1}.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -44664,6 +45181,53 @@
         }
       }
     },
+    "586a8961ccff89bae96bcafac8a1d50f4e4372f8bdb0d70b85848b5ed07d4c8c": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w604_payload_applied_rows_2026-09-24.csv",
+          "sha256": "6dc600277f3cab90022dadd42141940567f43194f0070e31dcf3331ddb2204b0"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "projects-subcontracting-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لا يمكن أن يكون {1} الخاص بـ {0} بعد تاريخ الانتهاء المتوقع لـ {2}.",
+        "sha256": "47df622b2eb82c3c327c5a5cb86be3d416230f529ee70637fec89ec2b6d421e5"
+      },
+      "references": "glossary v2.0; vendor Projects/Subcontracting PO locations; plan D5; W6-4 batch-01",
+      "release_version": "1.7",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "{0}'s {1} cannot be after {2}'s Expected End Date.",
+      "timestamps": [
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37"
+      ],
+      "translated_text": "لا يمكن أن يكون {1} الخاص بـ {0} بعد تاريخ الانتهاء المتوقع لـ {2}.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "5884186b8e0bb8bafa27003731f92fbe48576f2f1d07b23d9b7e6d3ce165493c": {
       "artifacts": [
         {
@@ -44710,6 +45274,53 @@
           "confidence": "high",
           "decision": "approve",
           "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
+    "58c2a4903d02734b83314a60a4cf9bbc2a00ac5e17037ca451e3dfcb1af14bed": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w604_payload_applied_rows_2026-09-24.csv",
+          "sha256": "6dc600277f3cab90022dadd42141940567f43194f0070e31dcf3331ddb2204b0"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "projects-subcontracting-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يحدد مستودع الأصناف المقبولة في كل صف من جدول الأصناف.",
+        "sha256": "e961bab983f37f04b43b631c2840aa9c4b6fa8961216182707321a06972dc01c"
+      },
+      "references": "glossary v2.0; vendor Projects/Subcontracting PO locations; plan D5; W6-4 batch-01",
+      "release_version": "1.7",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Sets 'Accepted Warehouse' in each row of the Items table.",
+      "timestamps": [
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37"
+      ],
+      "translated_text": "يحدد مستودع الأصناف المقبولة في كل صف من جدول الأصناف.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
           "session": "/root/w603_a3"
         }
       }
@@ -45698,6 +46309,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "5a8ae22f285eb832a2b437f8ba70a27b816ebc6b592deb9e521d18a8a13ae643": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w604_payload_applied_rows_2026-09-24.csv",
+          "sha256": "6dc600277f3cab90022dadd42141940567f43194f0070e31dcf3331ddb2204b0"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "projects-subcontracting-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يحدد مستودع الحجز في كل صف من جدول الأصناف الموردة.",
+        "sha256": "7e7816649db48ec6b4c8dbee727a7190667c52760406fbce64dc60abc56f1f15"
+      },
+      "references": "glossary v2.0; vendor Projects/Subcontracting PO locations; plan D5; W6-4 batch-01",
+      "release_version": "1.7",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Sets 'Reserve Warehouse' in each row of the Supplied Items table.",
+      "timestamps": [
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37"
+      ],
+      "translated_text": "يحدد مستودع الحجز في كل صف من جدول الأصناف الموردة.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -48156,6 +48814,53 @@
           "confidence": "high",
           "decision": "approve",
           "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
+    "60752ad06602225484a8e4e8ae53aa2667880a4183fbf4f5fc1d07ab64ba7df3": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w604_payload_applied_rows_2026-09-24.csv",
+          "sha256": "6dc600277f3cab90022dadd42141940567f43194f0070e31dcf3331ddb2204b0"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "projects-subcontracting-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يُرجى تعيين قائمة العطلات الافتراضية للشركة {0}.",
+        "sha256": "9091cd81c0849d332e7f1b88869d982845565bb706b1630211ad1918489e5c5f"
+      },
+      "references": "glossary v2.0; vendor Projects/Subcontracting PO locations; plan D5; W6-4 batch-01",
+      "release_version": "1.7",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Please set a default Holiday List for Company {0}",
+      "timestamps": [
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37"
+      ],
+      "translated_text": "يُرجى تعيين قائمة العطلات الافتراضية للشركة {0}.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
           "session": "/root/w603_a3"
         }
       }
@@ -53086,6 +53791,53 @@
         }
       }
     },
+    "6aefcda9092f2412b4f920de55593d4e37ab52589b04625e7880a4c809fec835": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w604_payload_applied_rows_2026-09-24.csv",
+          "sha256": "6dc600277f3cab90022dadd42141940567f43194f0070e31dcf3331ddb2204b0"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "projects-subcontracting-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الصف رقم {0}: لا يمكن أن تكون كمية صنف الخردة صفرًا.",
+        "sha256": "6724d5a590f6c8d8a98df218bc31a727eaee0953817d22a3d3acb12d218d2fb5"
+      },
+      "references": "glossary v2.0; vendor Projects/Subcontracting PO locations; plan D5; W6-4 batch-01",
+      "release_version": "1.7",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Row #{0}: Scrap Item Qty cannot be zero",
+      "timestamps": [
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37"
+      ],
+      "translated_text": "الصف رقم {0}: لا يمكن أن تكون كمية صنف الخردة صفرًا.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "6b33224a392ab1ddf316e85e606dab74e2848d589f5bb1d0acb268eb2c2440ee": {
       "artifacts": [
         {
@@ -53559,6 +54311,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "6caeaecb3fd15ff2e78a9fbeddfa7cb579da7fe42ade88162371530d1d6f56b9": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w604_payload_applied_rows_2026-09-24.csv",
+          "sha256": "6dc600277f3cab90022dadd42141940567f43194f0070e31dcf3331ddb2204b0"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "projects-subcontracting-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "إجمالي الساعات: {0}",
+        "sha256": "9d37c5d547f0233588980e7e7d6504f6739a025a49fc41b0a0b96847a204c21e"
+      },
+      "references": "glossary v2.0; vendor Projects/Subcontracting PO locations; plan D5; W6-4 batch-01",
+      "release_version": "1.7",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Total hours: {0}",
+      "timestamps": [
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37"
+      ],
+      "translated_text": "إجمالي الساعات: {0}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -57525,6 +58324,53 @@
         }
       }
     },
+    "75e8f14c04432ccf5b393bc391c6a6f39d6206062f366ea88a7a4e21b0687b67": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w604_payload_applied_rows_2026-09-24.csv",
+          "sha256": "6dc600277f3cab90022dadd42141940567f43194f0070e31dcf3331ddb2204b0"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "projects-subcontracting-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لقد دُعيت للمشاركة في المشروع {0}.",
+        "sha256": "523cce077dc1724e22db8d041f4f814b98e0f2d649c5dda70756fe8e6ef8a9b3"
+      },
+      "references": "glossary v2.0; vendor Projects/Subcontracting PO locations; plan D5; W6-4 batch-01",
+      "release_version": "1.7",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "You have been invited to collaborate on the project {0}.",
+      "timestamps": [
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37"
+      ],
+      "translated_text": "لقد دُعيت للمشاركة في المشروع {0}.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "75f949dcee1c5f99b51dfe344be17ed644a95c58c1ed761d650e38d57160688e": {
       "artifacts": [
         {
@@ -57710,6 +58556,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "7663c8423ed6aad55a00bc33d0811b30010756e292dccc914e0f37a07effdc11": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w604_payload_applied_rows_2026-09-24.csv",
+          "sha256": "6dc600277f3cab90022dadd42141940567f43194f0070e31dcf3331ddb2204b0"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "projects-subcontracting-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الصنف النهائي {0} معطّل.",
+        "sha256": "5de66c397623c86755cd2f52386b2cf7647fa58409b4b6f407477c060d381197"
+      },
+      "references": "glossary v2.0; vendor Projects/Subcontracting PO locations; plan D5; W6-4 batch-01",
+      "release_version": "1.7",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Finished Good {0} is disabled.",
+      "timestamps": [
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37"
+      ],
+      "translated_text": "الصنف النهائي {0} معطّل.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -61914,6 +62807,53 @@
         }
       }
     },
+    "7f2d38607491f814e1368e7de4141f908e72cbe2f22d751205d8b6394b4b9741": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w604_payload_applied_rows_2026-09-24.csv",
+          "sha256": "6dc600277f3cab90022dadd42141940567f43194f0070e31dcf3331ddb2204b0"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "projects-subcontracting-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يجب أن يكون الصنف النهائي {0} بندًا منفذًا من الباطن.",
+        "sha256": "0f0774b820eaeda999cb0f26cde0f7e8ca68d2041f66e28d2aed0510a392553a"
+      },
+      "references": "glossary v2.0; vendor Projects/Subcontracting PO locations; plan D5; W6-4 batch-01",
+      "release_version": "1.7",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Finished Good {0} must be a sub-contracted item.",
+      "timestamps": [
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37"
+      ],
+      "translated_text": "يجب أن يكون الصنف النهائي {0} بندًا منفذًا من الباطن.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "7f2ed3d1f23505eb34d531abbe0aa6bb22a415c15922007debad0f2925cc3734": {
       "artifacts": [
         {
@@ -65360,6 +66300,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "871934724e6bd07e6f632e5cd079a4325cd26ae868fb1f815236c5aac409d89e": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w604_payload_applied_rows_2026-09-24.csv",
+          "sha256": "6dc600277f3cab90022dadd42141940567f43194f0070e31dcf3331ddb2204b0"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "projects-subcontracting-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "عند تفعيل مربع الاختيار، سيتم جلب سجل الدوام عند تحديد مشروع في فاتورة المبيعات.",
+        "sha256": "3514c179d180452ac536469d15dc702f2103a7eecb1a2064ad76fdb7fe47955d"
+      },
+      "references": "glossary v2.0; vendor Projects/Subcontracting PO locations; plan D5; W6-4 batch-01",
+      "release_version": "1.7",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Enabling the check box will fetch timesheet on select of a Project in Sales Invoice",
+      "timestamps": [
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37"
+      ],
+      "translated_text": "عند تفعيل مربع الاختيار، سيتم جلب سجل الدوام عند تحديد مشروع في فاتورة المبيعات.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -74631,6 +75618,53 @@
         }
       }
     },
+    "98b6408d37f155cb313ad0947c9a585433810fd23c30c529f99ab544d41c600f": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w604_payload_applied_rows_2026-09-24.csv",
+          "sha256": "6dc600277f3cab90022dadd42141940567f43194f0070e31dcf3331ddb2204b0"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "projects-subcontracting-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "{0} ساعات",
+        "sha256": "27ad98f2f3086a2301ef05fd168df735cb8c5afd0025c1997f8b9edba5137fb1"
+      },
+      "references": "glossary v2.0; vendor Projects/Subcontracting PO locations; plan D5; W6-4 batch-01",
+      "release_version": "1.7",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "{0} hours",
+      "timestamps": [
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37"
+      ],
+      "translated_text": "{0} ساعات",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "98c06884c102bde68b9516bc2a486e7b5f94d33c76390f675972028a846d747c": {
       "artifacts": [
         {
@@ -79082,6 +80116,53 @@
         }
       }
     },
+    "a3b73f4098cb7aca7e38780b99797310eea9e95bd345119c7943574d44b17ad9": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w604_payload_applied_rows_2026-09-24.csv",
+          "sha256": "6dc600277f3cab90022dadd42141940567f43194f0070e31dcf3331ddb2204b0"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "projects-subcontracting-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "قيد محاسبي لسند تكاليف الوصول لإيصال استلام مقاولات باطن SCR {0}.",
+        "sha256": "f0f0ddd73dc7097d351870a9a5461a8fc36e096d5342c834ac09ff8e8b256b5d"
+      },
+      "references": "glossary v2.0; vendor Projects/Subcontracting PO locations; plan D5; W6-4 batch-01",
+      "release_version": "1.7",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Accounting Entry for Landed Cost Voucher for SCR {0}",
+      "timestamps": [
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37"
+      ],
+      "translated_text": "قيد محاسبي لسند تكاليف الوصول لإيصال استلام مقاولات باطن SCR {0}.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "a3d1d3d31a298749bd9de84bc01a487ac100ee2f4e4549c59ca3dbdda444e522": {
       "artifacts": [
         {
@@ -81203,6 +82284,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "a8c0410d0a7479f57fb6944d43cbd47ba15cc29b98fd741bad605c7a8f9331eb": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w604_payload_applied_rows_2026-09-24.csv",
+          "sha256": "6dc600277f3cab90022dadd42141940567f43194f0070e31dcf3331ddb2204b0"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "projects-subcontracting-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تم تحديث حقول التكلفة والفوترة.",
+        "sha256": "2d6a9bf0088c4d3351b87c771ece36723df11c44f78196450e9b2e0cf805f5de"
+      },
+      "references": "glossary v2.0; vendor Projects/Subcontracting PO locations; plan D5; W6-4 batch-01",
+      "release_version": "1.7",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Costing and Billing fields has been updated",
+      "timestamps": [
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37"
+      ],
+      "translated_text": "تم تحديث حقول التكلفة والفوترة.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -91705,6 +92833,53 @@
         }
       }
     },
+    "bb8c196f97ff8e7f5fc93367771e414c72796ad3871af9b027a9c98ad4d00168": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w604_payload_applied_rows_2026-09-24.csv",
+          "sha256": "6dc600277f3cab90022dadd42141940567f43194f0070e31dcf3331ddb2204b0"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "projects-subcontracting-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يجب أن تكون مادة خام واحدة على الأقل للصنف النهائي {0} مقدمة من العميل.",
+        "sha256": "92bac1b2ac9c1921b9f58ea1306cfb537fb779b60895fd681eecf093bce4fc43"
+      },
+      "references": "glossary v2.0; vendor Projects/Subcontracting PO locations; plan D5; W6-4 batch-01",
+      "release_version": "1.7",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Atleast one raw material for Finished Good Item {0} should be customer provided.",
+      "timestamps": [
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37"
+      ],
+      "translated_text": "يجب أن تكون مادة خام واحدة على الأقل للصنف النهائي {0} مقدمة من العميل.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "bb8cd12842aa12b0d9fe82c2c38c2d691393345f280c1bc01b0c144111b81dbc": {
       "artifacts": [
         {
@@ -92034,6 +93209,53 @@
         }
       }
     },
+    "bbfc8a207ab9c51f8ebd1f8018558f0595997375da8355eed21821dcd6a24f74": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w604_payload_applied_rows_2026-09-24.csv",
+          "sha256": "6dc600277f3cab90022dadd42141940567f43194f0070e31dcf3331ddb2204b0"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "projects-subcontracting-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "توجد بالفعل قائمة مواد مقاول الباطن {0} للصنف النهائي {1}.",
+        "sha256": "3260430990f5b82b90f4541b4d68ce64acbfdbbc5f2ffb9a72275076f37eb05f"
+      },
+      "references": "glossary v2.0; vendor Projects/Subcontracting PO locations; plan D5; W6-4 batch-01",
+      "release_version": "1.7",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "There is already an active Subcontracting BOM {0} for the Finished Good {1}.",
+      "timestamps": [
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37"
+      ],
+      "translated_text": "توجد بالفعل قائمة مواد مقاول الباطن {0} للصنف النهائي {1}.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "bc23f50c705ac96a179c24d9ae01ca7c9b1c62462f800f8cb8e8b0804ee7f355": {
       "artifacts": [
         {
@@ -92172,6 +93394,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "bc48648c46db2d182246266239c0dd48f9c3896959cd75ea35bceb07a5ff654e": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w604_payload_applied_rows_2026-09-24.csv",
+          "sha256": "6dc600277f3cab90022dadd42141940567f43194f0070e31dcf3331ddb2204b0"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "projects-subcontracting-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يجب ألا يتجاوز تاريخ الانتهاء المتوقع تاريخ الانتهاء المتوقع للمهمة الرئيسية {0}.",
+        "sha256": "c8654d296c407e8e8b550096107bacd3bf1cf227cbffcc10fa161cd0dc3d3a2d"
+      },
+      "references": "glossary v2.0; vendor Projects/Subcontracting PO locations; plan D5; W6-4 batch-01",
+      "release_version": "1.7",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Expected End Date should be less than or equal to parent task's Expected End Date {0}.",
+      "timestamps": [
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37"
+      ],
+      "translated_text": "يجب ألا يتجاوز تاريخ الانتهاء المتوقع تاريخ الانتهاء المتوقع للمهمة الرئيسية {0}.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -93785,6 +95054,53 @@
         }
       }
     },
+    "bfc4c4c9a51ed551d4dcf34372bab160a2b4e34c5f04f595d131df549681dfd9": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w604_payload_applied_rows_2026-09-24.csv",
+          "sha256": "6dc600277f3cab90022dadd42141940567f43194f0070e31dcf3331ddb2204b0"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "projects-subcontracting-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الصف رقم {0}: لا يمكن تحديد كمية مرفوضة لصنف الخردة {1}.",
+        "sha256": "feb7033b2c51d64e9058ec45aa2ab338b943bc6e420b0fa7b30f40aa57ab476a"
+      },
+      "references": "glossary v2.0; vendor Projects/Subcontracting PO locations; plan D5; W6-4 batch-01",
+      "release_version": "1.7",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Row #{0}: Rejected Qty cannot be set for Scrap Item {1}.",
+      "timestamps": [
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37"
+      ],
+      "translated_text": "الصف رقم {0}: لا يمكن تحديد كمية مرفوضة لصنف الخردة {1}.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "bff3dfbd2e3a477fb6f588240e97471ff3016d72adb79a0060fe3923cc1430c2": {
       "artifacts": [
         {
@@ -94211,6 +95527,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "c0ee3d64a50565c44ba24bb590001a1d89c7ce37306cb73aba54f992918e617d": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w604_payload_applied_rows_2026-09-24.csv",
+          "sha256": "6dc600277f3cab90022dadd42141940567f43194f0070e31dcf3331ddb2204b0"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "projects-subcontracting-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يلزم توفير كمية إضافية قدرها {0} {1} من الصنف {2} وفقًا لقائمة المواد لإكمال هذه المعاملة.",
+        "sha256": "86b3f6c3fc0a5456ae47f00586844718373b3615bc9b1d5f9e7ddf8470e05520"
+      },
+      "references": "glossary v2.0; vendor Projects/Subcontracting PO locations; plan D5; W6-4 batch-01",
+      "release_version": "1.7",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Additional {0} {1} of item {2} required as per BOM to complete this transaction",
+      "timestamps": [
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37"
+      ],
+      "translated_text": "يلزم توفير كمية إضافية قدرها {0} {1} من الصنف {2} وفقًا لقائمة المواد لإكمال هذه المعاملة.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -94825,6 +96188,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "c20ef414008d66c0b213207c47bb00a20a27adb189f126f83537fc0f74adf121": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w604_payload_applied_rows_2026-09-24.csv",
+          "sha256": "6dc600277f3cab90022dadd42141940567f43194f0070e31dcf3331ddb2204b0"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "projects-subcontracting-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "حدّث حالة المشروع {0}.",
+        "sha256": "067550ab8348c9a26d1a1fd4740f3e328b086531009471df3ce76cdf7ebe410b"
+      },
+      "references": "glossary v2.0; vendor Projects/Subcontracting PO locations; plan D5; W6-4 batch-01",
+      "release_version": "1.7",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "For project {0}, update your status",
+      "timestamps": [
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37"
+      ],
+      "translated_text": "حدّث حالة المشروع {0}.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -96335,6 +97745,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "c4ce0412b39d35da42ebdd677e5169e9544f664783025be3df71e3d11dca859a": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w604_payload_applied_rows_2026-09-24.csv",
+          "sha256": "6dc600277f3cab90022dadd42141940567f43194f0070e31dcf3331ddb2204b0"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "projects-subcontracting-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لا توجد قائمة مواد افتراضية للصنف النهائي {0}.",
+        "sha256": "c08df91474e41df8c2593239c22f14b702aced0a9ab956e5cfdea45539ef2678"
+      },
+      "references": "glossary v2.0; vendor Projects/Subcontracting PO locations; plan D5; W6-4 batch-01",
+      "release_version": "1.7",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Finished Good {0} does not have a default BOM.",
+      "timestamps": [
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37"
+      ],
+      "translated_text": "لا توجد قائمة مواد افتراضية للصنف النهائي {0}.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -102616,6 +104073,53 @@
         }
       }
     },
+    "d201cca0d69bcf85708aa19b592c601c9d99e56ca0583b2f767990f736208482": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w604_payload_applied_rows_2026-09-24.csv",
+          "sha256": "6dc600277f3cab90022dadd42141940567f43194f0070e31dcf3331ddb2204b0"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "projects-subcontracting-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تم إنشاء قيود حجز المخزون.",
+        "sha256": "006f57734029ba68a2f2b183cd012bae6d739e16b10c90323455a0964be07d61"
+      },
+      "references": "glossary v2.0; vendor Projects/Subcontracting PO locations; plan D5; W6-4 batch-01",
+      "release_version": "1.7",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Stock Reservation Entries created",
+      "timestamps": [
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37"
+      ],
+      "translated_text": "تم إنشاء قيود حجز المخزون.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "d20eff58dfc8f58eee15e071daf17c8d44a1074de79924c70e07447bbf3a4304": {
       "artifacts": [
         {
@@ -103133,6 +104637,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "d2ecf0c31481e3e64007bdde0801ec7bde435cdd4858931c9996200308a4f08c": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w604_payload_applied_rows_2026-09-24.csv",
+          "sha256": "6dc600277f3cab90022dadd42141940567f43194f0070e31dcf3331ddb2204b0"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "projects-subcontracting-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "مرجع بند أمر الشراء غير موجود في إيصال استلام مقاولات باطن {0}.",
+        "sha256": "d07245af9b62cc7618d250ccdd2d311a27776f790b90040f77934d548e7445b5"
+      },
+      "references": "glossary v2.0; vendor Projects/Subcontracting PO locations; plan D5; W6-4 batch-01",
+      "release_version": "1.7",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Purchase Order Item reference is missing in Subcontracting Receipt {0}",
+      "timestamps": [
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37"
+      ],
+      "translated_text": "مرجع بند أمر الشراء غير موجود في إيصال استلام مقاولات باطن {0}.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -104026,6 +105577,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "d4d8b5314fecb39b7aa6d8d930b4ff2d5522be101deb4cfe072e69ba33d04a1e": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w604_payload_applied_rows_2026-09-24.csv",
+          "sha256": "6dc600277f3cab90022dadd42141940567f43194f0070e31dcf3331ddb2204b0"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "projects-subcontracting-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يُرجى تحديد أمر شراء مقاول باطن.",
+        "sha256": "83c9bcb8aece2a57967203930757a5b7646ecceb9f3472c872c64afc2c084810"
+      },
+      "references": "glossary v2.0; vendor Projects/Subcontracting PO locations; plan D5; W6-4 batch-01",
+      "release_version": "1.7",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Please select a Subcontracting Purchase Order.",
+      "timestamps": [
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37"
+      ],
+      "translated_text": "يُرجى تحديد أمر شراء مقاول باطن.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -107187,6 +108785,100 @@
         }
       }
     },
+    "da23f485746bf1f383d0af848e9719dc7d9dfe373d2d50904b1054742ca5e45d": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w604_payload_applied_rows_2026-09-24.csv",
+          "sha256": "6dc600277f3cab90022dadd42141940567f43194f0070e31dcf3331ddb2204b0"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "projects-subcontracting-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "جارٍ إنشاء إيصال استلام مقاولات باطن ...",
+        "sha256": "63775eca4a043904917c57e5c439cc7ac93d70caef00ed4618c211547a7d496f"
+      },
+      "references": "glossary v2.0; vendor Projects/Subcontracting PO locations; plan D5; W6-4 batch-01",
+      "release_version": "1.7",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Creating Subcontracting Receipt ...",
+      "timestamps": [
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37"
+      ],
+      "translated_text": "جارٍ إنشاء إيصال استلام مقاولات باطن ...",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
+    "da29941172f1051cc0754335f2c5e287ad45ecefc48838ba09609d69495e526c": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w604_payload_applied_rows_2026-09-24.csv",
+          "sha256": "6dc600277f3cab90022dadd42141940567f43194f0070e31dcf3331ddb2204b0"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "projects-subcontracting-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يُرجى تحديد أمر شراء صالح مُعدّ لمقاولات الباطن.",
+        "sha256": "91a26b324168de95d19ad6c9304a6922eab3f41d1db8669c45c6ea59e30e97ce"
+      },
+      "references": "glossary v2.0; vendor Projects/Subcontracting PO locations; plan D5; W6-4 batch-01",
+      "release_version": "1.7",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Please select a valid Purchase Order that is configured for Subcontracting.",
+      "timestamps": [
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37"
+      ],
+      "translated_text": "يُرجى تحديد أمر شراء صالح مُعدّ لمقاولات الباطن.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "da47c6728ecd9c094936d89bb22975d13f63ed65846576f057d09a1c335cee32": {
       "artifacts": [
         {
@@ -107328,6 +109020,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "da7823e7ca812a2d3acdd9ac7ae18587519ae1ad8b8846f99c7876e749402fd2": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w604_payload_applied_rows_2026-09-24.csv",
+          "sha256": "6dc600277f3cab90022dadd42141940567f43194f0070e31dcf3331ddb2204b0"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "projects-subcontracting-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تعلّم إدارة المشاريع",
+        "sha256": "549d3e49faa14521d5ec8b67ae7d0275b7fc08a991f8a178fc9c4cc2f6b62bd8"
+      },
+      "references": "glossary v2.0; vendor Projects/Subcontracting PO locations; plan D5; W6-4 batch-01",
+      "release_version": "1.7",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Learn Project Management",
+      "timestamps": [
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37"
+      ],
+      "translated_text": "تعلّم إدارة المشاريع",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -111026,6 +112765,53 @@
         }
       }
     },
+    "e1d7cd3f483dd64ff544d832b5a4974cfc52d55dd7991c969e65de93e73977d0": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w604_payload_applied_rows_2026-09-24.csv",
+          "sha256": "6dc600277f3cab90022dadd42141940567f43194f0070e31dcf3331ddb2204b0"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "projects-subcontracting-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لا يمكن تحويل المهمة إلى مهمة غير تجميعية لوجود المهام الفرعية التالية: {0}.",
+        "sha256": "2ec899c8ff579261b4206c9c643a98d5030f2b34cac49890e4b146a00536a5e4"
+      },
+      "references": "glossary v2.0; vendor Projects/Subcontracting PO locations; plan D5; W6-4 batch-01",
+      "release_version": "1.7",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Cannot convert Task to non-group because the following child Tasks exist: {0}.",
+      "timestamps": [
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37"
+      ],
+      "translated_text": "لا يمكن تحويل المهمة إلى مهمة غير تجميعية لوجود المهام الفرعية التالية: {0}.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "e1ec83040f0465e22b8c628cf4c60f86ce9e390109a89d1cfbee7457b54ed27d": {
       "artifacts": [
         {
@@ -112539,6 +114325,53 @@
         }
       }
     },
+    "e4823396d547fdccb94b40117dac04937586e1e746668bae79e3083978409517": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w604_payload_applied_rows_2026-09-24.csv",
+          "sha256": "6dc600277f3cab90022dadd42141940567f43194f0070e31dcf3331ddb2204b0"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "projects-subcontracting-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الصف رقم {0}: مستودع الأصناف المقبولة إلزامي للصنف {1}.",
+        "sha256": "950b0e77e67e600b63882a73ac67927fb02344a67ba66f2e72c14ca088842b72"
+      },
+      "references": "glossary v2.0; vendor Projects/Subcontracting PO locations; plan D5; W6-4 batch-01",
+      "release_version": "1.7",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Row #{0}: Accepted Warehouse is mandatory for the accepted Item {1}",
+      "timestamps": [
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37"
+      ],
+      "translated_text": "الصف رقم {0}: مستودع الأصناف المقبولة إلزامي للصنف {1}.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "e4b7d631530ecd0ccbb666101acb4db178a5caf49e983642ccb401d396a074b3": {
       "artifacts": [
         {
@@ -113197,6 +115030,53 @@
         }
       }
     },
+    "e664bf55a03ab9a27903443eca5dd246cac9bf678ac1ab668f1326ec6a860c2f": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w604_payload_applied_rows_2026-09-24.csv",
+          "sha256": "6dc600277f3cab90022dadd42141940567f43194f0070e31dcf3331ddb2204b0"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "projects-subcontracting-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يُرجى تحديد أمر شراء صالح يتضمن أصنافًا خدمية.",
+        "sha256": "d50464c8282f4eb977ca41d10b91fdb81efb426f79bc8d8dfd6421f72400c650"
+      },
+      "references": "glossary v2.0; vendor Projects/Subcontracting PO locations; plan D5; W6-4 batch-01",
+      "release_version": "1.7",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Please select a valid Purchase Order that has Service Items.",
+      "timestamps": [
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37"
+      ],
+      "translated_text": "يُرجى تحديد أمر شراء صالح يتضمن أصنافًا خدمية.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "e67f09842a22b2630b24d3d252a4ffbdc1235fbbc53f02a0f4ee98b50b82d0ed": {
       "artifacts": [
         {
@@ -113674,6 +115554,100 @@
           "confidence": "high",
           "decision": "approve",
           "model": "Codex GPT-6",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
+    "e79f7334900922d5ef2c7bcfe22adce8ebdf3e09f9719c0020aaf82af3417339": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w604_payload_applied_rows_2026-09-24.csv",
+          "sha256": "6dc600277f3cab90022dadd42141940567f43194f0070e31dcf3331ddb2204b0"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "projects-subcontracting-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يجب أن يكون الصنف النهائي {0} صنفًا مخزنيًا.",
+        "sha256": "94f5e869e98c28f01693b99a109da0fd97dbd5922d47ed6383402aba2d5606c4"
+      },
+      "references": "glossary v2.0; vendor Projects/Subcontracting PO locations; plan D5; W6-4 batch-01",
+      "release_version": "1.7",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Finished Good {0} must be a stock item.",
+      "timestamps": [
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37"
+      ],
+      "translated_text": "يجب أن يكون الصنف النهائي {0} صنفًا مخزنيًا.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
+    "e7ad899228f8ded7fc92a04ec9f27f3ed1fa6b87fc9c7fe63545a045fd0ff7f5": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w604_payload_applied_rows_2026-09-24.csv",
+          "sha256": "6dc600277f3cab90022dadd42141940567f43194f0070e31dcf3331ddb2204b0"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "projects-subcontracting-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الصف رقم {0}: مرجع الصنف النهائي إلزامي لصنف الخردة {1}.",
+        "sha256": "c474174ed033b9a18da0706ff0bd0ea1dd001201991c577583b7787b2cfa5741"
+      },
+      "references": "glossary v2.0; vendor Projects/Subcontracting PO locations; plan D5; W6-4 batch-01",
+      "release_version": "1.7",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Row #{0}: Finished Good reference is mandatory for Scrap Item {1}.",
+      "timestamps": [
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37"
+      ],
+      "translated_text": "الصف رقم {0}: مرجع الصنف النهائي إلزامي لصنف الخردة {1}.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
           "session": "/root/w603_a3"
         }
       }
@@ -116037,6 +118011,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "ebbb85db3539e86e48ee273c68cc82cb27be762fef7040186f359ebffae9d624": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w604_payload_applied_rows_2026-09-24.csv",
+          "sha256": "6dc600277f3cab90022dadd42141940567f43194f0070e31dcf3331ddb2204b0"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "projects-subcontracting-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "المهمة {0} التي تعتمد عليها المهمة الحالية ليست مهمة قالب.",
+        "sha256": "9c66fd1c4a454659eea6a13734888bfb82733999c44efe9c04e9e10ea03bf12f"
+      },
+      "references": "glossary v2.0; vendor Projects/Subcontracting PO locations; plan D5; W6-4 batch-01",
+      "release_version": "1.7",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Dependent Task {0} is not a Template Task",
+      "timestamps": [
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37"
+      ],
+      "translated_text": "المهمة {0} التي تعتمد عليها المهمة الحالية ليست مهمة قالب.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -118733,6 +120754,53 @@
         }
       }
     },
+    "f20514de8886b633afda94ee4e4371feb01a969e1e045eb83b4dc9439a74d129": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w604_payload_applied_rows_2026-09-24.csv",
+          "sha256": "6dc600277f3cab90022dadd42141940567f43194f0070e31dcf3331ddb2204b0"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "projects-subcontracting-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "جارٍ جلب أصناف الخردة.",
+        "sha256": "a6e422f82ae7e946ec20b41a42a7f1de7c6d8792dab59261ff67612cb39b99e1"
+      },
+      "references": "glossary v2.0; vendor Projects/Subcontracting PO locations; plan D5; W6-4 batch-01",
+      "release_version": "1.7",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Getting Scrap Items",
+      "timestamps": [
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37"
+      ],
+      "translated_text": "جارٍ جلب أصناف الخردة.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "f2066ee02e4ebd17a9a77514093d9f832ed99e88e9e55f21d5cbcf4f95cebde1": {
       "artifacts": [
         {
@@ -119294,6 +121362,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "f321a27960b6034bb20d2c3fc5b9e783f91f6ed5a378abff80d73598b90d1dd7": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w604_payload_applied_rows_2026-09-24.csv",
+          "sha256": "6dc600277f3cab90022dadd42141940567f43194f0070e31dcf3331ddb2204b0"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "projects-subcontracting-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يحدد مستودع الأصناف المرفوضة في كل صف من جدول الأصناف.",
+        "sha256": "99348db148c1baad34437e0171c70f83c6d7df307d50a04c01b731c0e180f6a0"
+      },
+      "references": "glossary v2.0; vendor Projects/Subcontracting PO locations; plan D5; W6-4 batch-01",
+      "release_version": "1.7",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Sets 'Rejected Warehouse' in each row of the Items table.",
+      "timestamps": [
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37"
+      ],
+      "translated_text": "يحدد مستودع الأصناف المرفوضة في كل صف من جدول الأصناف.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -123871,6 +125986,53 @@
         }
       }
     },
+    "fc6a5c8289747fe3191b8e300e02d3586f440b6a48cb48eb7be25530be5b5f76": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w604_payload_applied_rows_2026-09-24.csv",
+          "sha256": "6dc600277f3cab90022dadd42141940567f43194f0070e31dcf3331ddb2204b0"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "projects-subcontracting-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تعتمد المهمة {0} على المهمة {1}. يُرجى إضافة المهمة {1} إلى قائمة المهام.",
+        "sha256": "d2313074641f905dfb10f92248daf02926f2458a87b16408e5df6beaee8a85f7"
+      },
+      "references": "glossary v2.0; vendor Projects/Subcontracting PO locations; plan D5; W6-4 batch-01",
+      "release_version": "1.7",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Task {0} depends on Task {1}. Please add Task {1} to the Tasks list.",
+      "timestamps": [
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37"
+      ],
+      "translated_text": "تعتمد المهمة {0} على المهمة {1}. يُرجى إضافة المهمة {1} إلى قائمة المهام.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "fc6cf75e028aff685bdba0af2c43c81f8e07a0e3ccfc43d62697f62decfe726b": {
       "artifacts": [
         {
@@ -124009,6 +126171,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "fcd4e31a013ad4fa89f8bea795ab91df0c24c86b7b3abd05aaf35a0fce77e989": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w604_payload_applied_rows_2026-09-24.csv",
+          "sha256": "6dc600277f3cab90022dadd42141940567f43194f0070e31dcf3331ddb2204b0"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "projects-subcontracting-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "ساعات",
+        "sha256": "8c173e78c802ddd6466354897906185499fab319e5036f941d30cf6d971fcafa"
+      },
+      "references": "glossary v2.0; vendor Projects/Subcontracting PO locations; plan D5; W6-4 batch-01",
+      "release_version": "1.7",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "hours",
+      "timestamps": [
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37"
+      ],
+      "translated_text": "ساعات",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a3"
         }
       }
     },
@@ -125052,6 +127261,53 @@
         }
       }
     },
+    "ff73cc8cc381d6f3d230d0b24579e49205fc4f735533b657b442a73f5341abc5": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w604_payload_applied_rows_2026-09-24.csv",
+          "sha256": "6dc600277f3cab90022dadd42141940567f43194f0070e31dcf3331ddb2204b0"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "projects-subcontracting-desk",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الصنف الخدمي {0} معطّل.",
+        "sha256": "d57fd3d2a8e2ff36bbd58cf5312971ae52c8887164d718142c3b371c964f45d9"
+      },
+      "references": "glossary v2.0; vendor Projects/Subcontracting PO locations; plan D5; W6-4 batch-01",
+      "release_version": "1.7",
+      "reviewers": [
+        "AI-A1 (/root/w603_a1)",
+        "AI-A2 (/root/w603_a2)",
+        "AI-A3 (/root/w603_a3)"
+      ],
+      "source_text": "Service Item {0} is disabled.",
+      "timestamps": [
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37",
+        "2026-09-24 10:10:37"
+      ],
+      "translated_text": "الصنف الخدمي {0} معطّل.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a1"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a2"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w603_a3"
+        }
+      }
+    },
     "ff8deb92eaa7c0354ce85650d9a5bc6512cc71183162168386238a65d2610a41": {
       "artifacts": [
         {
@@ -125288,7 +127544,7 @@
       }
     }
   },
-  "generated_utc": "2026-09-23T22:09:48Z",
-  "note": "W6-3 batch-03 additions bind quorum PASS to the exact proposal SHA; historical decisions retained.",
+  "generated_utc": "2026-09-24T10:10:37Z",
+  "note": "Historical decisions retained; W6-4 additions bind 48 released rows to the exact proposal SHA and independent A1/A2/A3 PASS.",
   "schema": "release-decision/v2"
 }

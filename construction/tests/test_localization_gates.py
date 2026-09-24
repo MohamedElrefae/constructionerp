@@ -305,7 +305,12 @@ class TestCSVQuorum(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as tmp:
             (Path(tmp) / "docs" / "translation").mkdir(parents=True)
-            (Path(tmp) / "docs" / "translation" / "sign-off-1.0.md").write_text("S T")
+            # Pin both ordinary and edge-whitespace fixture values. Keeping
+            # these values fixed ensures mutation tests cannot silently update
+            # their own evidence artifact while rebuilding the decision pin.
+            (Path(tmp) / "docs" / "translation" / "sign-off-1.0.md").write_text(
+                "S T\n Summary ملخص", encoding="utf-8"
+            )
             p = Path(tmp) / "t.csv"
             with p.open("w", encoding="utf-8", newline="") as fh:
                 w = csvmod.DictWriter(fh, fieldnames=self.HDR.split(","))
@@ -364,6 +369,12 @@ class TestCSVQuorum(unittest.TestCase):
 
     def test_valid_row_passes(self):
         errors, n = self.run_csv([self.row()])
+        self.assertEqual(errors, [])
+        self.assertEqual(n, 1)
+
+    def test_edge_whitespace_source_is_checked_without_trimming(self):
+        row = self.row(source_text=" Summary", translated_text=" ملخص")
+        errors, n = self.run_csv([row])
         self.assertEqual(errors, [])
         self.assertEqual(n, 1)
 
@@ -506,7 +517,7 @@ class TestRound3Gates(unittest.TestCase):
         # real payload: all Released rows must bind; run against repo (fast enough)
         n = g.check_csv(errors)
         self.assertEqual(errors, [])
-        self.assertEqual(n, 2651)
+        self.assertEqual(n, 2699)
 
     def test_manifest_binding_fields(self):
         import json
