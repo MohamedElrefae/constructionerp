@@ -1,0 +1,349 @@
+'{0}' should be in company currency {1}.
+A Transaction Deletion Document: {0} is triggered for {0}
+Abampere
+According to CEFACT/ICG/2010/IC013 or CEFACT/ICG/2010/IC010
+Account {0} is disabled.
+Acre
+Acre (US)
+Aerospace
+Airline
+All Sales Transactions can be tagged against multiple Sales Persons so that you can set and monitor targets.
+Ampere
+An Item Group is a way to classify items based on types.
+Apparel & Accessories
+Are
+Arshin
+Atmosphere
+Automotive
+B+
+B-
+Barleycorn
+Barrel (Oil)
+Barrel(Beer)
+Based on your HR Policy, select your leave allocation period's end date
+Based on your HR Policy, select your leave allocation period's start date
+Biot
+Biotechnology
+Both Payable Account: {0} and Advance Account: {1} must be of same currency for company: {2}
+Both Receivable Account: {0} and Advance Account: {1} must be of same currency for company: {2}
+Broadcasting
+Brokerage
+Btu (It)
+Btu (Mean)
+Btu (Th)
+Btu/Hour
+Btu/Minutes
+Btu/Seconds
+Bushel (UK)
+Bushel (US Dry Level)
+Caballeria
+Cable Length
+Cable Length (UK)
+Cable Length (US)
+Calibre
+Calorie (Food)
+Calorie (It)
+Calorie (Mean)
+Calorie (Th)
+Calorie/Seconds
+Cannot enqueue multi docs for one company. {0} is already queued/running for company: {1}
+Cannot make any transactions until the deletion job is completed
+Carat
+Carriage Paid To
+Carriage and Insurance Paid to
+Celsius
+Cental
+Centiarea
+Centigram/Litre
+Centilitre
+Centimeter
+Chain
+Chemical
+Chief Executive Officer
+Chief Financial Officer
+Chief Operating Officer
+Chief Technology Officer
+Classification of Customers by region
+Company {} does not exist yet. Taxes setup aborted.
+Consulting
+Consumer Products
+Cosmetics
+Cost and Freight
+Cost, Insurance and Freight
+Could Not Delete Demo Data
+Coulomb
+Creating User...
+Cross Listing of Item in multiple groups
+Cubic Centimeter
+Cubic Decimeter
+Cubic Foot
+Cubic Inch
+Cubic Meter
+Cubic Millimeter
+Cubic Yard
+Cup
+Customer / Item / Item Group
+Customer's Vendor
+Cycle/Second
+Dealer
+Decigram/Litre
+Decilitre
+Decimeter
+Default tax templates for sales, purchase and items are created.
+Defense
+Dekagram/Litre
+Delivered At Place
+Delivered At Place Unloaded
+Delivered Duty Paid
+Demo Bank Account
+Demo Company
+Designer
+DocTypes should not be added manually to the 'Excluded DocTypes' table. You are only allowed to remove entries from it.
+Documentation
+Dram
+Dyne
+EMU Of Charge
+EMU of current
+Electronics
+Ells (UK)
+Ems(Pica)
+Enable Provisional Accounting For Non Stock Items
+Encashment Date
+Energy
+Engineer
+Enter a name for this Holiday List.
+Entertainment & Leisure
+Erg
+Executive Search
+Exhibition
+Existing Customer
+Fahrenheit
+Failed to erase demo data, please delete the demo company manually.
+Failed to setup defaults for country {0}. Please contact support.
+Faraday
+Fathom
+Financial Services
+Fluid Ounce (UK)
+Fluid Ounce (US)
+Food, Beverage & Tobacco
+Foot
+Foot Of Water
+Foot/Minute
+Foot/Second
+For service item
+Frappe School
+Free Alongside Ship
+Free Carrier
+Free On Board
+Furlong
+Gallon (UK)
+Gallon Dry (US)
+Gallon Liquid (US)
+Gamma
+Gauss
+Grain
+Grain/Cubic Foot
+Grain/Gallon (UK)
+Grain/Gallon (US)
+Gram
+Gram/Cubic Centimeter
+Gram/Cubic Meter
+Gram/Cubic Millimeter
+Gram/Litre
+Grocery
+Hand
+Hectare
+Hectogram/Litre
+Hectometer
+Hectopascal
+Here, you can select a senior of this Employee. Based on this, Organization Chart will be populated.
+Hertz
+Holiday Date {0} added multiple times
+Horsepower
+Hour
+Hundredweight (UK)
+Hundredweight (US)
+Iches Of Water
+Implementation Partner
+Inch
+Inch Pound-Force
+Inch/Minute
+Inch/Second
+Inches Of Mercury
+Internet Publishing
+Investment Banking
+Joule
+Joule/Meter
+Kelvin
+Kg
+Kiloampere
+Kilocalorie
+Kilocoulomb
+Kilogram/Cubic Centimeter
+Kilogram/Cubic Meter
+Kilogram/Litre
+Kilohertz
+Kilojoule
+Kilometer
+Kilometer/Hour
+Kilopascal
+Kilopond
+Kilowatt
+Kip
+Knot
+Legal Entity / Subsidiary with a separate Chart of Accounts belonging to the Organization.
+Litre
+Managing Director
+Mass Mailing
+Megacoulomb
+Megagram/Litre
+Megahertz
+Megajoule
+Megawatt
+Messaging CRM Campagin
+Meter
+Meter Of Water
+Meter/Second
+Microbar
+Microgram
+Microgram/Litre
+Micrometer
+Microsecond
+Mile
+Mile (Nautical)
+Mile/Hour
+Mile/Minute
+Mile/Second
+Milibar
+Milliampere
+Millicoulomb
+Milligram
+Milligram/Cubic Centimeter
+Milligram/Cubic Meter
+Milligram/Cubic Millimeter
+Milligram/Litre
+Millihertz
+Millilitre
+Millimeter
+Millimeter Of Mercury
+Millimeter Of Water
+Millisecond
+Motion Picture & Video
+Music
+Nanocoulomb
+Nanogram/Litre
+Nanohertz
+Nanometer
+Nanosecond
+Newspaper Publishers
+Newton
+Nos
+Not authorized since {0} exceeds limits
+O+
+O-
+Online Auctions
+Ounce
+Ounce/Cubic Foot
+Ounce/Cubic Inch
+Ounce/Gallon (UK)
+Ounce/Gallon (US)
+Owned
+Pair
+Parts Per Million
+Pascal
+Peck (UK)
+Peck (US)
+Pension Funds
+Pharmaceuticals
+Pint (UK)
+Pint (US)
+Pint, Dry (US)
+Pint, Liquid (US)
+Please select a country
+Pond
+Pood
+Pound
+Pound/Cubic Foot
+Pound/Cubic Inch
+Pound/Cubic Yard
+Pound/Gallon (UK)
+Pound/Gallon (US)
+Poundal
+President
+Private Equity
+Process in Single Transaction
+Psi/1000 Feet
+Publishing
+Quart (UK)
+Quart Dry (US)
+Quart Liquid (US)
+Quintal
+Real Estate
+Report an Issue
+Reseller
+Reset Company Default Values
+Resignation Letter Date
+Retail & Wholesale
+Retailer
+Rod
+Sazhen
+Second
+Secretary
+Securities & Commodity Exchanges
+Select Date of Birth. This will validate Employees age and prevent hiring of under-age staff.
+Select Date of joining. It will have impact on the first salary calculation, Leave allocation on pro-rata bases.
+Select your weekly off day
+Send regular summary reports via Email.
+Set default {0} account for non stock items
+Slug/Cubic Foot
+Soap & Detergent
+Software Developer
+Specify Exchange Rate to convert one currency into another
+Sports
+Square Centimeter
+Square Foot
+Square Inch
+Square Kilometer
+Square Meter
+Square Mile
+Square Yard
+Stone
+Tablespoon (US)
+Teaspoon
+Technical Atmosphere
+Technology
+Telecommunications
+Television
+Tesla
+The Sales Person is linked with {0}
+There are no active Fiscal Years for which Demo Data can be generated.
+Ton (Long)/Cubic Yard
+Ton (Short)/Cubic Yard
+Ton-Force (UK)
+Ton-Force (US)
+Tonne
+Tonne-Force(Metric)
+Torr
+Total Contribution Amount Against Invoices: {0}
+Total Contribution Amount Against Orders: {0}
+Transaction Deletion Document: {0} is running for this Company. {1}
+Transportation
+Upon enabling this, the JV will be submitted for a different exchange rate.
+User Forum
+User {0}: Removed Employee Self Service role as there is no mapped employee.
+User {0}: Removed Employee role as there is no mapped employee.
+Vara
+Venture Capital
+Versta
+Vice President
+Walk In
+Watt
+Wavelength In Gigametres
+Wavelength In Kilometres
+Wavelength In Megametres
+Yard
+{0} currency must be same as company's default currency. Please select another account.
+{0} entered twice {1} in Item Taxes
+{0} is already running for {1}
+{0} is not running. Cannot trigger events for this Document
+{0}: {1} is a group account.

@@ -524,3 +524,26 @@ closure commit until the next approved catalog-change re-pin.
 **Next:** wait for a separate owner-approved Stage-6 scope proposal or for all
 original Stage-8/production prerequisites. Do not push this local closure
 without explicit request. Leave untracked `v16.localhost/` untouched.
+
+## 2026-09-24 — W6-5 Setup batch governed cycle CLOSED
+
+Owner approved the exact 469-row CSV (SHA-256
+`e2d672c4a1b479f9cd52c017f76a3c8a8b1b24dced24ed4b5f5c6d8113900a09`) for
+`v16.localhost` only. Final partition: **349 Released + 107 preserved Site
+Overrides + 13 technical UOM exceptions**. Proposal SHA `7b0a4215…`; A1/A2/A3/AI-R PASS.
+Final live DRY **3048/0/0/3048/0**, drift=0; health has no drift/orphans; catalog
+3,048. UAT preflight PASS, browser 8/8 / 456/456 matches, standalone 92/92,
+module 271/271, evidence-inclusive localization gate errors=0 on pre-commit
+HEAD `51b8b7391704`; inventory 21,465 / Merkle `8d8301d1…`.
+
+13 compound technical UOM/force unit tokens were classified through review as
+`EXCEPTION-technical` (vendor rendering retained; empty translations; zero catalog release).
+All 107 existing Site Overrides on `v16.localhost` (including FIFO and LIFO) were preserved verbatim.
+UAT Administrator language restored to `en`, temporary password rotated, secret removed.
+Production and Stage 8 remain gated; no other Stage-6 batch was run. The
+evidence index binds pre-commit HEAD; the expected HEAD mismatch follows the
+closure commit until the next approved catalog-change re-pin.
+
+**Next:** wait for a separate owner-approved Stage-6 scope proposal or for all
+original Stage-8/production prerequisites. Do not push this local closure
+without explicit request. Leave untracked `v16.localhost/` untouched.
