@@ -1,11 +1,11 @@
 COMMAND: python3 scripts/check_localization_gates.py --skip-evidence
-STARTED_UTC: 2026-09-24T14:14:42Z
-checked={"construction/locale/ar.po": 810, "csv_rows": 3244, "extract": {"files": 265, "json_labels": 22, "missing": 0, "wrapped": 667}, "raw_text": {"files": 7, "missing": 0, "texts": 2}} errors=0
+STARTED_UTC: 2026-09-24T18:28:59Z
+checked={"construction/locale/ar.po": 810, "csv_rows": 3326, "extract": {"files": 265, "json_labels": 22, "missing": 0, "wrapped": 667}, "raw_text": {"files": 7, "missing": 0, "texts": 2}} errors=0
 EXIT_CODE: 0
-FINISHED_UTC: 2026-09-24T14:14:42Z
-CHECKER_SHA256: 80cb0b0bb6ac5a43647658da21876e135490c55a8673cceb16a7c6830c6c51a2
+FINISHED_UTC: 2026-09-24T18:31:53Z
+CHECKER_SHA256: 20b027d3dbaa37eda34d916f053bc35dab597a9cf03c7a3a992e78aa7b21d685
 PO_SHA256: 28362a98f1e1d4e9f5dee0a04945abe88154b29ff12d9e57ba738c98427d3812
-CSV_SHA256: cbe5961bdc3d45c4af03a5fa3b3a55413ae996622187be485295a79564478319
-MANIFEST_SHA256: 088960a07655ce0d8594993e256c2ef4a6d8bb1abd59dd14b1257c39b76e6873
+CSV_SHA256: ab2350759c9bbeda8d637442ef756b3e28229b1bebae8d76e95ec31c655fa749
+MANIFEST_SHA256: c0f61c75463ad0f1a4783cb025be8f460ae8c9f77e6a3a5aa5f38fee4b6f9123
 NOTE: bootstrap run for envelope generation; CI and verification never pass this flag
 ENVELOPE_LINES: 11

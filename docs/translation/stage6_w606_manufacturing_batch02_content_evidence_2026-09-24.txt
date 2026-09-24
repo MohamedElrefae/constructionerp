@@ -1,0 +1,82 @@
+Parent Row No not found for {0}	لم يتم العثور على رقم الصف الأب لـ {0}
+Planned Qty: Quantity, for which, Work Order has been raised, but is pending to be manufactured.	الكمية المخططة: الكمية التي تم إصدار أمر عمل بها، ولكنها قيد الانتظار للتصنيع.
+Please check either with operations or FG Based Operating Cost.	يرجى اختيار العمليات أو تكلفة التشغيل على أساس المنتج التام.
+Please mention the Current and New BOM for replacement.	يرجى تحديد قائمة المواد الحالية والجديدة للاستبدال.
+Please select a Work Order first.	يرجى تحديد أمر عمل أولاً.
+Please select atleast one operation to create Job Card	يرجى تحديد عملية واحدة على الأقل لإنشاء بطاقة العمل
+Please set Parent Row No for item {0}	يرجى تعيين رقم الصف الأب للصنف {0}
+Please set actual demand or sales forecast to generate Material Requirements Planning Report.	يرجى تعيين الطلب الفعلي أو توقعات المبيعات لإنشاء تقرير تخطيط متطلبات المواد.
+Please set the Target Warehouse in the Job Card	يرجى تعيين مستودع الهدف في بطاقة العمل
+Please set the WIP Warehouse in the Job Card	يرجى تعيين مستودع التشغيل قيد التنفيذ (WIP) في بطاقة العمل
+Please set {0} in BOM Creator {1}	يرجى تعيين {0} في منشئ قائمة المواد {1}
+Please uncheck 'Show in Bucket View' to create Orders	يرجى إلغاء تحديد "إظهار العرض حسب الفترات الزمنية" لإنشاء الأوامر
+Process Loss Percentage cannot be greater than 100	لا يمكن أن تكون نسبة الفاقد في العملية أكبر من 100
+Production Plan Already Submitted	تم تقديم خطة الإنتاج بالفعل
+Purchase Order {0} created	تم إنشاء أمر الشراء {0}
+Qty To Manufacture ({0}) cannot be a fraction for the UOM {2}. To allow this, disable '{1}' in the UOM {2}.	لا يمكن أن تكون الكمية المراد تصنيعها ({0}) كسرًا لوحدة القياس {2}. للسماح بذلك، عطل "{1}" في وحدة القياس {2}.
+Quantity to Produce should be greater than zero.	يجب أن تكون الكمية المراد إنتاجها أكبر من الصفر.
+Remove Parent Row No in Items Table	إزالة رقم الصف الأب في جدول الأصناف
+Reqired Qty	الكمية المطلوبة
+Requested Qty: Quantity requested for purchase, but not ordered.	الكمية المطلوبة: الكمية المطلوبة للشراء، ولكن لم يتم طلبها بعد.
+Reservation	الحجز
+Reserved Qty for Production: Raw materials quantity to make manufacturing items.	الكمية المحجوزة للإنتاج: كمية المواد الخام لتصنيع أصناف الإنتاج.
+Reserved Qty for Subcontract: Raw materials quantity to make subcontracted items.	الكمية المحجوزة للتصنيع لدى مقاول باطن: كمية المواد الخام اللازمة لتصنيع الأصناف لدى مقاول الباطن.
+Reserved Qty: Quantity ordered for sale, but not delivered.	الكمية المحجوزة للبيع: الكمية التي طلبها العميل ولم تُسلَّم بعد.
+Row #1: Sequence ID must be 1 for Operation {0}.	الصف رقم 1: يجب أن يكون معرف التسلسل 1 للعملية {0}.
+Row #{0}: Cannot transfer more than Required Qty {1} for Item {2} against Job Card {3}	الصف رقم {0}: لا يمكن تحويل أكثر من الكمية المطلوبة {1} للصنف {2} مقابل بطاقة العمل {3}
+Row #{0}: Customer Provided Item {1} cannot be added multiple times.	الصف رقم {0}: الصنف المقدم من العميل {1} لا يمكن إضافته عدة مرات.
+Row #{0}: From Time and To Time fields are required	الصف رقم {0}: حقلا وقت البدء ووقت الانتهاء مطلوبان
+Row #{0}: Please select Item Code in Assembly Items	الصف رقم {0}: يرجى تحديد كود الصنف في أصناف التجميع
+Row #{0}: Please select the BOM No in Assembly Items	الصف رقم {0}: يرجى تحديد رقم قائمة المواد في أصناف التجميع
+Row #{0}: Please select the Sub Assembly Warehouse	الصف رقم {0}: يرجى تحديد مستودع التجميع الفرعي
+Row #{0}: Sequence ID must be {1} or {2} for Operation {3}.	الصف رقم {0}: يجب أن يكون معرف التسلسل {1} أو {2} للعملية {3}.
+Row #{0}: Since 'Track Semi Finished Goods' is enabled, the BOM {1} cannot be used for Sub Assembly Items	الصف رقم {0}: نظرًا لتفعيل "تتبع البضائع نصف المصنعة"، لا يمكن استخدام قائمة المواد {1} لأصناف التجميع الفرعي
+Row #{0}: Source Warehouse {1} for item {2} cannot be a customer warehouse.	الصف رقم {0}: مستودع المصدر {1} للصنف {2} لا يمكن أن يكون مستودع عميل.
+Row #{0}: Source Warehouse {1} for item {2} must be same as Source Warehouse {3} in the Work Order.	الصف رقم {0}: مستودع المصدر {1} للصنف {2} يجب أن يكون متطابقًا مع مستودع المصدر {3} في أمر العمل.
+Row #{0}: Start Time and End Time are required	الصف رقم {0}: وقت البدء ووقت الانتهاء مطلوبان
+Row #{0}: Start Time must be before End Time	الصف رقم {0}: يجب أن يكون وقت البدء قبل وقت الانتهاء
+Row {0}: Quantity cannot be negative.	الصف {0}: لا يمكن أن تكون الكمية سالبة.
+Row {0}: Workstation or Workstation Type is mandatory for an operation {1}	الصف {0}: محطة العمل أو نوع محطة العمل إلزامي للعملية {1}
+Scan Job Card Qrcode	مسح رمز الاستجابة السريعة لبطاقة العمل
+Select the Default Workstation where the Operation will be performed. This will be fetched in BOMs and Work Orders.	حدد محطة العمل الافتراضية التي سيتم تنفيذ العملية فيها. سيتم جلب هذا في قوائم المواد وأوامر العمل.
+Select the Item to be manufactured.	حدد الصنف المراد تصنيعه.
+Select the Item to be manufactured. The Item name, UoM, Company, and Currency will be fetched automatically.	حدد الصنف المراد تصنيعه. سيتم جلب اسم الصنف ووحدة القياس والشركة والعملة تلقائيًا.
+Select the Warehouse	حدد المستودع
+Select the raw materials (Items) required to manufacture the Item	حدد المواد الخام (الأصناف) المطلوبة لتصنيع الصنف
+Set Operating Cost / Scrap Items From Sub-assemblies	تعيين تكلفة التشغيل / أصناف الخردة من التجميعات الفرعية
+Set quantity of process loss item:	تعيين كمية صنف الفاقد في العملية:
+Set the Planned Start Date (an Estimated Date at which you want the Production to begin)	تعيين تاريخ البدء المخطط (تاريخ تقديري ترغب في بدء الإنتاج فيه)
+Setting {0} is required	الإعداد {0} مطلوب
+Source Warehouse {0} must be same as Customer Warehouse {1} in the Subcontracting Inward Order.	مستودع المصدر {0} يجب أن يكون متطابقًا مع مستودع العميل {1} في أمر المقاولة من الباطن الوارد.
+Stock Entry {0} has created	تم إنشاء قيد المخزون {0}
+Sub assembly item references are missing. Please fetch the sub assemblies and raw materials again.	مراجع صنف التجميع الفرعي مفقودة. يرجى جلب التجميعات الفرعية والمواد الخام مرة أخرى.
+System will automatically create the serial numbers / batch for the Finished Good on submission of work order	سيقوم النظام تلقائيًا بإنشاء الأرقام التسلسلية / رقم الدفعة للمنتج التام عند تقديم أمر العمل
+Target Warehouse Reservation Error	خطأ في حجز مستودع الهدف
+Target Warehouse is required before Submit	مستودع الهدف مطلوب قبل التقديم
+Target Warehouse {0} must be same as Delivery Warehouse {1} in the Subcontracting Inward Order Item.	مستودع الهدف {0} يجب أن يكون متطابقًا مع مستودع التسليم {1} في بند أمر المقاولة من الباطن الوارد.
+The Company {0} of Sales Forecast {1} does not match with the Company {2} of Master Production Schedule {3}.	الشركة {0} لتوقعات المبيعات {1} لا تتطابق مع الشركة {2} لجدول الإنتاج الرئيسي {3}.
+The default BOM for that item will be fetched by the system. You can also change the BOM.	سيتم جلب قائمة المواد الافتراضية لهذا الصنف بواسطة النظام. يمكنك أيضًا تغيير قائمة المواد.
+The job card {0} is in {1} state and you cannot complete.	بطاقة العمل {0} في حالة {1} ولا يمكنك إكمالها.
+The job card {0} is in {1} state and you cannot start it again.	بطاقة العمل {0} في حالة {1} ولا يمكنك بدءها مرة أخرى.
+The operation {0} can not add multiple times	العملية {0} لا يمكن إضافتها عدة مرات
+The operation {0} can not be the sub operation	العملية {0} لا يمكن أن تكون العملية الفرعية
+The user will be able to transfer additional materials from the store to the Work in Progress (WIP) warehouse.	سيتمكن المستخدم من تحويل مواد إضافية من المخزن إلى مستودع التشغيل قيد التنفيذ (WIP).
+The warehouse where you store finished Items before they are shipped.	المستودع الذي تخزن فيه الأصناف التامة قبل شحنها.
+The {0} {1} is used to calculate the valuation cost for the finished good {2}.	{0} {1} يُستخدم لحساب تكلفة التقييم للمنتج التام {2}.
+This is a Template BOM and will be used to make the work order for {0} of the item {1}	هذه قائمة مواد نموذجية وسيتم استخدامها لإنشاء أمر العمل لـ {0} من الصنف {1}
+Time in mins.	الوقت بالدقائق.
+To add Operations tick the 'With Operations' checkbox.	لإضافة عمليات، حدد مربع الاختيار "مع العمليات".
+To add subcontracted Item's raw materials if include exploded items is disabled.	لإضافة المواد الخام لأصناف المقاولة من الباطن عند تعطيل خيار تضمين مكونات قائمة المواد الموسعة.
+To include non-stock items in the material request planning. i.e. Items for which 'Maintain Stock' checkbox is unticked.	لتضمين الأصناف غير المخزنية في تخطيط طلبات المواد. أي الأصناف التي تم إلغاء تحديد خانة "الحفاظ على المخزون" لها.
+Updated via 'Time Log' (In Minutes)	محدث عبر "سجل الوقت" (بالدقائق)
+Warehouse {0} is not allowed for Sales Order {1}, it should be {2}	المستودع {0} غير مسموح به لأمر البيع {1}، يجب أن يكون {2}
+When a parent warehouse is chosen, the system conducts Project Qty checks against the associated child warehouses	عند اختيار مستودع رئيسي، يجري النظام فحوصات الكميات المتوقعة في المستودعات الفرعية المرتبطة.
+Work Order {0} created	تم إنشاء أمر العمل {0}
+You can set it as a machine name or operation type. For example, stiching machine 12	يمكنك تعيينه كاسم آلة أو نوع عملية. على سبيل المثال، ماكينة خياطة 12
+You can't make any changes to Job Card since Work Order is closed.	لا يمكنك إجراء أي تغييرات على بطاقة العمل لأن أمر العمل مغلق.
+You cannot change the rate if BOM is mentioned against any Item.	لا يمكنك تغيير السعر عند تحديد قائمة مواد لأي صنف.
+as a percentage of finished item quantity	كنسبة مئوية من كمية الصنف التام
+temporary name	اسم مؤقت
+via BOM Update Tool	عبر أداة تحديث قائمة المواد
+{0} Operating Cost for operation {1}	{0} تكلفة التشغيل للعملية {1}
+{0} items lost during process.	فقدان {0} من الأصناف أثناء العملية.

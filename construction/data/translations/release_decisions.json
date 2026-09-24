@@ -47,6 +47,53 @@
         }
       }
     },
+    "001133b783f3cbecadb7e9d981185d09882dd8d69e5305d4469943d642c8c32a": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يرجى تعيين الطلب الفعلي أو توقعات المبيعات لإنشاء تقرير تخطيط متطلبات المواد.",
+        "sha256": "59880fd60132f3c9164002ba22419f9e398ff6434584a6470b877aa9b4cf8c5c"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Please set actual demand or sales forecast to generate Material Requirements Planning Report.",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "يرجى تعيين الطلب الفعلي أو توقعات المبيعات لإنشاء تقرير تخطيط متطلبات المواد.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
+        }
+      }
+    },
     "005e0b314e4853c4efba170b07bce29dff66f940f8381aa6c9453649e6ee678a": {
       "artifacts": [
         {
@@ -4927,6 +4974,53 @@
         }
       }
     },
+    "071ba91ae646d4b2c60f3d21910fd32b99466e363b6b033f78b1dd8137d9c56f": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تعيين كمية صنف الفاقد في العملية:",
+        "sha256": "83a1a093039c9ae2e2fa88ab070167051d01a9258e719afb1224cac7cbe01cc5"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Set quantity of process loss item:",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "تعيين كمية صنف الفاقد في العملية:",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
+        }
+      }
+    },
     "0728de701b217f3ad6e6fc396efece93fd1148eed842cc7f4e92ca08e730b2be": {
       "artifacts": [
         {
@@ -6202,6 +6296,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "085952b0fc4772d6fb66a6280a420c01f1f5496026dd3f8604177fc6f04bbb37": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "مستودع المصدر {0} يجب أن يكون متطابقًا مع مستودع العميل {1} في أمر المقاولة من الباطن الوارد.",
+        "sha256": "8302afca487cff2099fe866ac50b090cd8f7914e2c2a8d246819c98c78dc54dd"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Source Warehouse {0} must be same as Customer Warehouse {1} in the Subcontracting Inward Order.",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "مستودع المصدر {0} يجب أن يكون متطابقًا مع مستودع العميل {1} في أمر المقاولة من الباطن الوارد.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
         }
       }
     },
@@ -9172,6 +9313,53 @@
         }
       }
     },
+    "0db4e031cbf1ef433039d3fb04ef0840d4fbc51dc1442bd258384b6cbeb7df90": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الكمية المطلوبة: الكمية المطلوبة للشراء، ولكن لم يتم طلبها بعد.",
+        "sha256": "45dba1568593ecb32d5e0a1e166e26610b3c027355be71786df0e16a3296649b"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Requested Qty: Quantity requested for purchase, but not ordered.",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "الكمية المطلوبة: الكمية المطلوبة للشراء، ولكن لم يتم طلبها بعد.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
+        }
+      }
+    },
     "0dc978026535626792d8bf30995b531fc065670255192f1734838d7988263ce9": {
       "artifacts": [
         {
@@ -10497,6 +10685,53 @@
         }
       }
     },
+    "0f69e0e90948c958a7dca08ffa11a9b39b8848546a47ed541f11515c8526cabc": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الشركة {0} لتوقعات المبيعات {1} لا تتطابق مع الشركة {2} لجدول الإنتاج الرئيسي {3}.",
+        "sha256": "78ec7c7945a43738596cf26a34502acb67c3b9c3965d00ec35cde3085b7b70e5"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "The Company {0} of Sales Forecast {1} does not match with the Company {2} of Master Production Schedule {3}.",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "الشركة {0} لتوقعات المبيعات {1} لا تتطابق مع الشركة {2} لجدول الإنتاج الرئيسي {3}.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
+        }
+      }
+    },
     "0f9f2557111ac605f33dce1b3e3acf04af43859a0010c7189fe3ddcb40f79f97": {
       "artifacts": [
         {
@@ -10541,6 +10776,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "0fce95a5406d7d82d9eab5699f8cc36db9410d42ba6894904690a7426c4115f2": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يرجى تعيين مستودع التشغيل قيد التنفيذ (WIP) في بطاقة العمل",
+        "sha256": "8b11e32d712dae5b71e022fe691eaddbff42182dc81ab652df758458cd779665"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Please set the WIP Warehouse in the Job Card",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "يرجى تعيين مستودع التشغيل قيد التنفيذ (WIP) في بطاقة العمل",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
         }
       }
     },
@@ -13852,6 +14134,53 @@
         }
       }
     },
+    "154cf92f26361ea8309a8bf278bde0aab9d34dc973f79c7f89fa30344e3cc72e": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "إزالة رقم الصف الأب في جدول الأصناف",
+        "sha256": "726491bbdfe2387b1915b5d05f5c3254b1d81bd08deabf10c904ece893374246"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Remove Parent Row No in Items Table",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "إزالة رقم الصف الأب في جدول الأصناف",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
+        }
+      }
+    },
     "15738cac504d42b7159a0759b45aeb0a95938afe190c2a488f042eb6436712e4": {
       "artifacts": [
         {
@@ -14883,6 +15212,53 @@
           "confidence": "high",
           "decision": "approve",
           "session": "cb33610b-7890-4ebc-acf6-c8af772ae829"
+        }
+      }
+    },
+    "170b0b340996fe7c209365a754ca76c4a40bcadb49cc3e42bcf1e3e565468f6b": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يرجى تعيين مستودع الهدف في بطاقة العمل",
+        "sha256": "fe5f3997ace172728bd290399c410234de1264b7471896c3b56bc98774224ce4"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Please set the Target Warehouse in the Job Card",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "يرجى تعيين مستودع الهدف في بطاقة العمل",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
         }
       }
     },
@@ -17671,6 +18047,53 @@
         }
       }
     },
+    "1c57c173c68b38a192df7913b1ba6a9ecb44547033f39969b9eb07d4d74af6bd": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لتضمين الأصناف غير المخزنية في تخطيط طلبات المواد. أي الأصناف التي تم إلغاء تحديد خانة \"الحفاظ على المخزون\" لها.",
+        "sha256": "5fb7ddfd761ebdd5b092a986d4da9b7e89fcb5d08d15b6dfb0520ae89a526ae3"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "To include non-stock items in the material request planning. i.e. Items for which 'Maintain Stock' checkbox is unticked.",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "لتضمين الأصناف غير المخزنية في تخطيط طلبات المواد. أي الأصناف التي تم إلغاء تحديد خانة \"الحفاظ على المخزون\" لها.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
+        }
+      }
+    },
     "1c621969dd9d12edb6347ac20cc9c73434ee8fb5ef08b32bc0f33f9ac96592a9": {
       "artifacts": [
         {
@@ -19037,6 +19460,53 @@
         }
       }
     },
+    "1f392f8c1661898ba26c94acf06f3f538b021009771a795ace99f7539d7ad9aa": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الصف رقم {0}: يرجى تحديد رقم قائمة المواد في أصناف التجميع",
+        "sha256": "00f26a449db325861c89d840299f59fe3243c015a4372b2fa41a1a24d9b3150c"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Row #{0}: Please select the BOM No in Assembly Items",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "الصف رقم {0}: يرجى تحديد رقم قائمة المواد في أصناف التجميع",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
+        }
+      }
+    },
     "1f5680d4ba109ff512b2ff812b0719ee467e7d0a07182b661ef7c757e1b9eea5": {
       "artifacts": [
         {
@@ -20259,6 +20729,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "211fa25effc4d345e70ce46bff32cd1cf5368f73577e839cb4015f4ebc96f036": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الكمية المحجوزة للتصنيع لدى مقاول باطن: كمية المواد الخام اللازمة لتصنيع الأصناف لدى مقاول الباطن.",
+        "sha256": "371ad1d7e498b3fc0b8bd1ce884dc93d1779cc7d9de1c772253b63cdb50d703f"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Reserved Qty for Subcontract: Raw materials quantity to make subcontracted items.",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "الكمية المحجوزة للتصنيع لدى مقاول باطن: كمية المواد الخام اللازمة لتصنيع الأصناف لدى مقاول الباطن.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
         }
       }
     },
@@ -26308,6 +26825,53 @@
         }
       }
     },
+    "2ab2f20601bb0e93a53ebb65708da28ebf3b88ba2f00a6ed0a58e53346d027e6": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لا يمكن أن تكون نسبة الفاقد في العملية أكبر من 100",
+        "sha256": "a068a0581b2680091ae5168f349f51ae0e0b2506293c24e73e559121db285d4a"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Process Loss Percentage cannot be greater than 100",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "لا يمكن أن تكون نسبة الفاقد في العملية أكبر من 100",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
+        }
+      }
+    },
     "2ab54bd74fcadb74a61ddbd181065da3648198f7aa3e23e62afa9aca9b1590f3": {
       "artifacts": [
         {
@@ -27583,6 +28147,53 @@
         }
       }
     },
+    "2d095f921da1272b840e7ff2423c708bb2548bb529ccb29a637b827901aeae10": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الصف {0}: محطة العمل أو نوع محطة العمل إلزامي للعملية {1}",
+        "sha256": "6582bcbdc2bd3d761a156d86bc12c129048320766c09cca3c17928706d69c498"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Row {0}: Workstation or Workstation Type is mandatory for an operation {1}",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "الصف {0}: محطة العمل أو نوع محطة العمل إلزامي للعملية {1}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
+        }
+      }
+    },
     "2d208fc3fa6c1bc0f073385b0eb9a10124006bb77ec1fad4a7fae0ecb87be8a5": {
       "artifacts": [
         {
@@ -28473,6 +29084,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "2e7dc7bf769b0726e71be4a343086b71d2ca06d3faaa53927c18bfa0cde8e13e": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "فقدان {0} من الأصناف أثناء العملية.",
+        "sha256": "e3b4bdbbb61619b1c8fab164122c20e9f0cf1b97a869d9f95688efb9a42769f2"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "{0} items lost during process.",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "فقدان {0} من الأصناف أثناء العملية.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
         }
       }
     },
@@ -30418,6 +31076,53 @@
         }
       }
     },
+    "314d056787ec5d06bbb69df6b390771153c96c17a40b98f8197fbe0a6e293643": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الإعداد {0} مطلوب",
+        "sha256": "9ce39809f7c8c3b506728e71a92788f3ef45c049342e0652ecf5561089e45753"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Setting {0} is required",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "الإعداد {0} مطلوب",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
+        }
+      }
+    },
     "31869c744695da62ee0d2c998ee9c94573706d1e477cee6eb3bcb41dd2a067c4": {
       "artifacts": [
         {
@@ -31925,6 +32630,53 @@
         }
       }
     },
+    "3406ba63bb7616b4834d49ee124ea2f7e3f8e27044ce1fb885ea80b46f37a370": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "المستودع الذي تخزن فيه الأصناف التامة قبل شحنها.",
+        "sha256": "5d2518419ae4743a2e338a61c200885ac2dbe8ad8d1e911fd76492e47f219fd7"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "The warehouse where you store finished Items before they are shipped.",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "المستودع الذي تخزن فيه الأصناف التامة قبل شحنها.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
+        }
+      }
+    },
     "34122c6d71fa6f5b0f9f0244078f3737fdecfc2eb88338a3c40cbe366489e7f7": {
       "artifacts": [
         {
@@ -32533,6 +33285,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "35028e39d2eb4b8397bbb007635ab772d25004d0c29f05e58c95925da48cfcef": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الحجز",
+        "sha256": "366af9b162a51f4b8555d18bedfd4aae5d2126315f5c8e790aed7795693caca1"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Reservation",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "الحجز",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
         }
       }
     },
@@ -35139,6 +35938,53 @@
         }
       }
     },
+    "3949157d584026ec4be8b8b38689b819c44162808bfd6c616adde7c1b5933a0f": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "عند اختيار مستودع رئيسي، يجري النظام فحوصات الكميات المتوقعة في المستودعات الفرعية المرتبطة.",
+        "sha256": "b663f1c640d9c9c97f0a0feb84050fcbfc1ee75a532737c9c4f960e26dfcc324"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "When a parent warehouse is chosen, the system conducts Project Qty checks against the associated child warehouses",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "عند اختيار مستودع رئيسي، يجري النظام فحوصات الكميات المتوقعة في المستودعات الفرعية المرتبطة.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
+        }
+      }
+    },
     "394fc193fc8a1a311ba8f0e395f566f1594ef18bbb5ecc8d3d345e552a151cce": {
       "artifacts": [
         {
@@ -35750,6 +36596,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "3a7eb7b5b4d63f48bc0c23d1f3586d61b01e6c8f395008891fff58b413b1f440": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الصف رقم {0}: الصنف المقدم من العميل {1} لا يمكن إضافته عدة مرات.",
+        "sha256": "0cd2092aa0f78bfb7365b8a4ca9869124f84ea2c5060f603454fd34fd73d52db"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Row #{0}: Customer Provided Item {1} cannot be added multiple times.",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "الصف رقم {0}: الصنف المقدم من العميل {1} لا يمكن إضافته عدة مرات.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
         }
       }
     },
@@ -37730,6 +38623,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "3d7cb964cc4bcd0e4a74f58a95e3dfc2514ccd4fd2a4b8214c4eea87253eba41": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "بطاقة العمل {0} في حالة {1} ولا يمكنك بدءها مرة أخرى.",
+        "sha256": "d713d177db165c2b419d9d0b4af502ee3ebbfda2aa6d358ee6051e714bf12dcc"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "The job card {0} is in {1} state and you cannot start it again.",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "بطاقة العمل {0} في حالة {1} ولا يمكنك بدءها مرة أخرى.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
         }
       }
     },
@@ -39804,6 +40744,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "40822ac5b30b547eeada896227b90191a76fb1fca4f337598d5f54a1d31cb9a9": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لإضافة عمليات، حدد مربع الاختيار \"مع العمليات\".",
+        "sha256": "c3ac6db47754c46b0ff68f6277f36a7a392d356ec45794d6d6ee8576640478f7"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "To add Operations tick the 'With Operations' checkbox.",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "لإضافة عمليات، حدد مربع الاختيار \"مع العمليات\".",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
         }
       }
     },
@@ -42727,6 +43714,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "45c71db58bd36ec27486d207d9359c91f94e9bd0174842f4c38ef9156e86bc83": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الصف رقم {0}: حقلا وقت البدء ووقت الانتهاء مطلوبان",
+        "sha256": "3b461f1b5980b4a0d1409ae2eb495ad5c1d585cbd542f4e5f19821f4fd801edd"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Row #{0}: From Time and To Time fields are required",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "الصف رقم {0}: حقلا وقت البدء ووقت الانتهاء مطلوبان",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
         }
       }
     },
@@ -46414,6 +47448,53 @@
         }
       }
     },
+    "4b7ba3cec0cce7b4d546aab290ee125e704ae5baca36e6d596d97890e10a6e71": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لا يمكنك تغيير السعر عند تحديد قائمة مواد لأي صنف.",
+        "sha256": "0202a42436e393e2f9c4ea5e7494edc00c60f369956f5e5d3ae22bdac41223b5"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "You cannot change the rate if BOM is mentioned against any Item.",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "لا يمكنك تغيير السعر عند تحديد قائمة مواد لأي صنف.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
+        }
+      }
+    },
     "4ba97d31518a3df3d043d9f992c5e0b323168e705e43a7b5a315ca8424b4dd98": {
       "artifacts": [
         {
@@ -47924,6 +49005,53 @@
         }
       }
     },
+    "4e298db51954310be14f6dc9ac11b9582bae85e47c2e5c02450e22fa92b49de0": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يجب أن تكون الكمية المراد إنتاجها أكبر من الصفر.",
+        "sha256": "562e27addee986e640a21f64dd588c1e44d6a691eef3f3cb83193c2cfb68cdb3"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Quantity to Produce should be greater than zero.",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "يجب أن تكون الكمية المراد إنتاجها أكبر من الصفر.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
+        }
+      }
+    },
     "4e2ddc2a5faac0978bd195025acf8ebd513632e44c6d491dd254c2f7be528554": {
       "artifacts": [
         {
@@ -48350,6 +49478,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "4ef7538cc62be07b6e33151bb42f52646d529466c0fdeb0c5752dee830a60213": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لم يتم العثور على رقم الصف الأب لـ {0}",
+        "sha256": "7b46fe511cf62c04a2b27b2ec828ee39cb92e0b242ac2785fa5a8ac22eb64121"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Parent Row No not found for {0}",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "لم يتم العثور على رقم الصف الأب لـ {0}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
         }
       }
     },
@@ -49299,6 +50474,53 @@
         }
       }
     },
+    "505386d69b00b46b70c4c44e8eba9d00efe879843747ee27f2af832e97ba560b": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "المستودع {0} غير مسموح به لأمر البيع {1}، يجب أن يكون {2}",
+        "sha256": "611eee1bf97330915ce0777f9402762914d471f7ad0ff3b150ed904390c01c9e"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Warehouse {0} is not allowed for Sales Order {1}, it should be {2}",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "المستودع {0} غير مسموح به لأمر البيع {1}، يجب أن يكون {2}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
+        }
+      }
+    },
     "5078f29cce8fe4adf7f09381a702b26c558761ad8a07df4b12da077a3a2394b5": {
       "artifacts": [
         {
@@ -50051,6 +51273,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "51c3061119bab9e89fd8a7d21780d897f58bfa98e33f6d1e53dace37dd029c8f": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الصف رقم {0}: يرجى تحديد مستودع التجميع الفرعي",
+        "sha256": "9fd7518bd95e8cd57ed9f71994df5f16d1a68c4dcb83ad6d57bd0f9ad0a05453"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Row #{0}: Please select the Sub Assembly Warehouse",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "الصف رقم {0}: يرجى تحديد مستودع التجميع الفرعي",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
         }
       }
     },
@@ -57839,6 +59108,53 @@
         }
       }
     },
+    "5f6b0e9682996b63e13530406d307fdcb611df14128753afd890b03f156d8e2e": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يرجى تعيين {0} في منشئ قائمة المواد {1}",
+        "sha256": "53de4d2c482b666d052254a89d673ac0c23635a3d301d04c417e34469ffe472f"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Please set {0} in BOM Creator {1}",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "يرجى تعيين {0} في منشئ قائمة المواد {1}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
+        }
+      }
+    },
     "5f979f24278e7b48a4caa4b6f6efc7a8913bd5403b145e414a9a7a11da4cd2a8": {
       "artifacts": [
         {
@@ -58359,6 +59675,53 @@
         }
       }
     },
+    "6076e1c6f133dd7836dbe2994c9c11f01565cb1830f01dfdec94ba4b919660c9": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يرجى تحديد أمر عمل أولاً.",
+        "sha256": "803ef01a48b65cdcadc0feb006c6ea1073c7714be9032129d095f7244f34561e"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Please select a Work Order first.",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "يرجى تحديد أمر عمل أولاً.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
+        }
+      }
+    },
     "6088d24351b5e3fad453195eccb7e6ac855dc7f1e58c5c28aca6602a28e14b9a": {
       "artifacts": [
         {
@@ -58403,6 +59766,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "608de010ad8ba1309f62d1c661e9fe1f1df219bb80262b922c4bb39acafb284a": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تم إنشاء قيد المخزون {0}",
+        "sha256": "51ae1c0f79f05f335fb9fe6575d4d44be35b7381fe9a9cc6a433a0671fe90876"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Stock Entry {0} has created",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "تم إنشاء قيد المخزون {0}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
         }
       }
     },
@@ -59205,6 +60615,53 @@
         }
       }
     },
+    "61b881a4fd927438b6104969be02b25e4e0e4cd10333941cbb8ad35335e14a52": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "العملية {0} لا يمكن إضافتها عدة مرات",
+        "sha256": "d732a592060f787077e5bbae1a9c3a49aa07c9fa559c45820320c37da4aea8cb"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "The operation {0} can not add multiple times",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "العملية {0} لا يمكن إضافتها عدة مرات",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
+        }
+      }
+    },
     "61d2f4619e07ea6d4bbd4ea186b2ca9476e47533aecfbb819d2798f054cdccdb": {
       "artifacts": [
         {
@@ -59484,6 +60941,53 @@
           "confidence": "high",
           "decision": "approve",
           "session": "cb33610b-7890-4ebc-acf6-c8af772ae829"
+        }
+      }
+    },
+    "6244574ca5207f4138a79d31225174cd80185040b4faf8ea17823a2413357bb8": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لا يمكن أن تكون الكمية المراد تصنيعها ({0}) كسرًا لوحدة القياس {2}. للسماح بذلك، عطل \"{1}\" في وحدة القياس {2}.",
+        "sha256": "561af451f94097a40a44a37ff865e5a3e7ad26c5fc276a7659f6aaa15119205e"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Qty To Manufacture ({0}) cannot be a fraction for the UOM {2}. To allow this, disable '{1}' in the UOM {2}.",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "لا يمكن أن تكون الكمية المراد تصنيعها ({0}) كسرًا لوحدة القياس {2}. للسماح بذلك، عطل \"{1}\" في وحدة القياس {2}.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
         }
       }
     },
@@ -61669,6 +63173,53 @@
         }
       }
     },
+    "6677f32c63b8ec24c17700eeac8998519c0fb5bc14f72468a142ac55169f6ca4": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الصف رقم {0}: وقت البدء ووقت الانتهاء مطلوبان",
+        "sha256": "ae73a6b1b8456c27609bed781d4b01b30baffa8b6ab0df6cc7da81c52ecdbc75"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Row #{0}: Start Time and End Time are required",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "الصف رقم {0}: وقت البدء ووقت الانتهاء مطلوبان",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
+        }
+      }
+    },
     "6679ca10c6ec2059233a23b8b98f9bcb11fe1987c31803df904def652f2375f5": {
       "artifacts": [
         {
@@ -63188,6 +64739,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "6901342c9ab83014661207cbe125f7ee226f0aa9b4de8d035d54f1b0632c20b4": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لا يمكنك إجراء أي تغييرات على بطاقة العمل لأن أمر العمل مغلق.",
+        "sha256": "def475e3f0a3210c3173298571ea1b91807ce98f6bf5d1b5b0ef8c4c839de544"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "You can't make any changes to Job Card since Work Order is closed.",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "لا يمكنك إجراء أي تغييرات على بطاقة العمل لأن أمر العمل مغلق.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
         }
       }
     },
@@ -64886,6 +66484,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "6c73dc2d8e93a813be7e7578943f626ec9ce50937614850305f119ab9824b83d": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يرجى تحديد عملية واحدة على الأقل لإنشاء بطاقة العمل",
+        "sha256": "50a81e7cbee646200c651d23bee357e17048917f0b4cb86e159e6d137a613c4c"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Please select atleast one operation to create Job Card",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "يرجى تحديد عملية واحدة على الأقل لإنشاء بطاقة العمل",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
         }
       }
     },
@@ -67339,6 +68984,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "703699d37b575d8af15528a0735d29be13ff87322f03aed3540deda679e7cd9b": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "حدد المستودع",
+        "sha256": "0f73fa32a8b8d41eacf3906ba89a50404cf5cec2e5940c22bf2400ce0918a0df"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Select the Warehouse",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "حدد المستودع",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
         }
       }
     },
@@ -71255,6 +72947,53 @@
         }
       }
     },
+    "77fe43cd38a0ab7a9cb6b80e1851cb67376d2194dd7e9d4cebb7eb1c6ea6bacb": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "حدد محطة العمل الافتراضية التي سيتم تنفيذ العملية فيها. سيتم جلب هذا في قوائم المواد وأوامر العمل.",
+        "sha256": "0a9d676e473850604c3efaa21f77224ad319f6d0ccc6355fd51470d889801096"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Select the Default Workstation where the Operation will be performed. This will be fetched in BOMs and Work Orders.",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "حدد محطة العمل الافتراضية التي سيتم تنفيذ العملية فيها. سيتم جلب هذا في قوائم المواد وأوامر العمل.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
+        }
+      }
+    },
     "7800f8d2ec53d97a126eef34f2ba5d3eca4d530193b01b52b6e21135ad072bdf": {
       "artifacts": [
         {
@@ -71487,6 +73226,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "788d9beab058e230caa2ddc7d5d84c1d45843c7158cbc33ff3cfd934246e4e0d": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "كنسبة مئوية من كمية الصنف التام",
+        "sha256": "822a00e5e16ceade38faa0f4698f9153e5496a585d0ee8c69296b7d766209dc7"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "as a percentage of finished item quantity",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "كنسبة مئوية من كمية الصنف التام",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
         }
       }
     },
@@ -72380,6 +74166,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "7a75401ae91cbcb73c86f9fcfbb44b2e804aadab5ac5724d3bff9297d8f76b79": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الكمية المحجوزة للإنتاج: كمية المواد الخام لتصنيع أصناف الإنتاج.",
+        "sha256": "6bf7608b96732d1d66c80c231d497074f02f994b20bf22067f978cbc297f3a6c"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Reserved Qty for Production: Raw materials quantity to make manufacturing items.",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "الكمية المحجوزة للإنتاج: كمية المواد الخام لتصنيع أصناف الإنتاج.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
         }
       }
     },
@@ -75826,6 +77659,53 @@
         }
       }
     },
+    "7fa3c135f0768eff1608bef3334a17a7fd54c80730c23abd761d6b90b98c750a": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "مستودع الهدف {0} يجب أن يكون متطابقًا مع مستودع التسليم {1} في بند أمر المقاولة من الباطن الوارد.",
+        "sha256": "bd5eb81e32437b6b5214af15d19f021a47c44f83195489c4142bebe192ef1cc9"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Target Warehouse {0} must be same as Delivery Warehouse {1} in the Subcontracting Inward Order Item.",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "مستودع الهدف {0} يجب أن يكون متطابقًا مع مستودع التسليم {1} في بند أمر المقاولة من الباطن الوارد.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
+        }
+      }
+    },
     "7fc8bd6d6cde0509b8c1e8a6668ad845e653666e912a3965ba40005e523c1954": {
       "artifacts": [
         {
@@ -76205,6 +78085,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "8099e280506bef6cba9a47366b40c4a9de178850f3fbecf2c9d574f4e6cac82d": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "محدث عبر \"سجل الوقت\" (بالدقائق)",
+        "sha256": "fe79f5344e45e6dce2fbee9d39fc88a384c3cc883f4807e087798a1174b8f847"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Updated via 'Time Log' (In Minutes)",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "محدث عبر \"سجل الوقت\" (بالدقائق)",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
         }
       }
     },
@@ -79037,6 +80964,53 @@
         }
       }
     },
+    "864cfa5956207c31349ac599503a111cd79d60491260105432b6cd7b3649a7b8": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الصف رقم {0}: مستودع المصدر {1} للصنف {2} لا يمكن أن يكون مستودع عميل.",
+        "sha256": "0a151661cbae8b2f120b1553fe090dc2d5379022d967fb5f06c219653a977fa0"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Row #{0}: Source Warehouse {1} for item {2} cannot be a customer warehouse.",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "الصف رقم {0}: مستودع المصدر {1} للصنف {2} لا يمكن أن يكون مستودع عميل.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
+        }
+      }
+    },
     "865b3cf1e98aba43ec1825b9324a1edbd962f3195b8372fce19f707d742e254a": {
       "artifacts": [
         {
@@ -79883,6 +81857,53 @@
           "confidence": "high",
           "decision": "approve",
           "session": "7b8e0b34-fbae-4e69-a64f-fd1c19ba44e1"
+        }
+      }
+    },
+    "873f9976b3b2e80870ced0258d10bb20bd0b95c01047455deceb2214da923aa3": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تم إنشاء أمر الشراء {0}",
+        "sha256": "2a02f449109e178183d4c908d7a2ed6654872d83ee3a22eb32e7acfcbe557c35"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Purchase Order {0} created",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "تم إنشاء أمر الشراء {0}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
         }
       }
     },
@@ -82671,6 +84692,53 @@
         }
       }
     },
+    "8be21f9dbf8fe65abfc6acf6269845e0d93c7d999e3d9b32a2c77493afd4c864": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لإضافة المواد الخام لأصناف المقاولة من الباطن عند تعطيل خيار تضمين مكونات قائمة المواد الموسعة.",
+        "sha256": "de049963ab3489c1c6f9113caa17641d3ef13726568c659e43c9be97e7963fc9"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "To add subcontracted Item's raw materials if include exploded items is disabled.",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "لإضافة المواد الخام لأصناف المقاولة من الباطن عند تعطيل خيار تضمين مكونات قائمة المواد الموسعة.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
+        }
+      }
+    },
     "8beb684c4c747267c85803147cafc4bf9bb6b5819c2890fad06317111640b10c": {
       "artifacts": [
         {
@@ -83235,6 +85303,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "8cb6ca26af8964907b9828a5ac504e82b9da76a72c966366ecec74fb69d72216": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يرجى إلغاء تحديد \"إظهار العرض حسب الفترات الزمنية\" لإنشاء الأوامر",
+        "sha256": "dfbb68b8fd66c5ef9b82f06d0432495fe241bc1b2773a1781da207b3a63dab0f"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Please uncheck 'Show in Bucket View' to create Orders",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "يرجى إلغاء تحديد \"إظهار العرض حسب الفترات الزمنية\" لإنشاء الأوامر",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
         }
       }
     },
@@ -86166,6 +88281,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "9119e8ee902ab0631956155fe3cd91f4d66d095b522af5ea0ba82ab42ea42592": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الصف رقم {0}: يجب أن يكون وقت البدء قبل وقت الانتهاء",
+        "sha256": "562e7b88650fea41c15e435aa179a3bda62a463594fbacbddacb82c1cef415bf"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Row #{0}: Start Time must be before End Time",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "الصف رقم {0}: يجب أن يكون وقت البدء قبل وقت الانتهاء",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
         }
       }
     },
@@ -91604,6 +93766,53 @@
         }
       }
     },
+    "9a1e03eb271497a5db37f8beca2917b81a1012ce46f4524e50db8beb34e83c14": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الكمية المخططة: الكمية التي تم إصدار أمر عمل بها، ولكنها قيد الانتظار للتصنيع.",
+        "sha256": "784579ceab905976cae0a389b4ad258a0fe08ec0e2563b9112f826aeee312c70"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Planned Qty: Quantity, for which, Work Order has been raised, but is pending to be manufactured.",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "الكمية المخططة: الكمية التي تم إصدار أمر عمل بها، ولكنها قيد الانتظار للتصنيع.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
+        }
+      }
+    },
     "9a7205a8225ae082b0a36f39ca24784a25050e12294d24ccec28d9876f0ee716": {
       "artifacts": [
         {
@@ -91648,6 +93857,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "9a82a30e6d3479f53a7d6b012fb5d67c065918bd28ccce5702309760b250b023": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "خطأ في حجز مستودع الهدف",
+        "sha256": "23aa21242fe7659e1a6b2dffd045005b068b1017b152f756e498cd912ec7e4e1"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Target Warehouse Reservation Error",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "خطأ في حجز مستودع الهدف",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
         }
       }
     },
@@ -95808,6 +98064,53 @@
         }
       }
     },
+    "a28ea440dfaa73952ce0dcf23905c166ae8fe59fa61a060cca5474921caff7fa": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الصف رقم {0}: يرجى تحديد كود الصنف في أصناف التجميع",
+        "sha256": "2b9321e7bcb0141337ad7400ba5e6ec4f8e80bb442066d00933b351e1ea4b2eb"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Row #{0}: Please select Item Code in Assembly Items",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "الصف رقم {0}: يرجى تحديد كود الصنف في أصناف التجميع",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
+        }
+      }
+    },
     "a2962f87bdb2a501e79670ba5cee252fedffee5696dfa5d939f78cf42bba2ced": {
       "artifacts": [
         {
@@ -97459,6 +99762,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "a59009b1222b95975638c1f686d728a003509f1081ec8cf0da29d2a3de99cb8c": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يرجى تحديد قائمة المواد الحالية والجديدة للاستبدال.",
+        "sha256": "ecfe4e4ede9e485b0aaddc921800573b6ff061c64af193a43074771f718f2d8c"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Please mention the Current and New BOM for replacement.",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "يرجى تحديد قائمة المواد الحالية والجديدة للاستبدال.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
         }
       }
     },
@@ -100902,6 +103252,53 @@
         }
       }
     },
+    "aaf72aa72ee9aaef570f1b7d6488d70131a4eb8a9e735d9ae082f1ef31e11d9a": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تعيين تاريخ البدء المخطط (تاريخ تقديري ترغب في بدء الإنتاج فيه)",
+        "sha256": "2b7803f0b41f62b1b73816ffaa97ffc8945a6da8ff4023c522ab4c7aca47919a"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Set the Planned Start Date (an Estimated Date at which you want the Production to begin)",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "تعيين تاريخ البدء المخطط (تاريخ تقديري ترغب في بدء الإنتاج فيه)",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
+        }
+      }
+    },
     "aafcf0cb59f98ace89790e2f967f352850b4c7e411bfe3ebfc334ad4cd4be187": {
       "artifacts": [
         {
@@ -103980,6 +106377,53 @@
         }
       }
     },
+    "b0051deea81ab656683917cf4c679fd060261929df32f84623787888631f7862": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الصف رقم {0}: لا يمكن تحويل أكثر من الكمية المطلوبة {1} للصنف {2} مقابل بطاقة العمل {3}",
+        "sha256": "3b0600e34214181f1411c39de434b662e141a610d95c359ffe19bc952551a5da"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Row #{0}: Cannot transfer more than Required Qty {1} for Item {2} against Job Card {3}",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "الصف رقم {0}: لا يمكن تحويل أكثر من الكمية المطلوبة {1} للصنف {2} مقابل بطاقة العمل {3}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
+        }
+      }
+    },
     "b0054f700d014a52cb1a22b9651ead7a784cfa20daa28f7855d9ecf3d51aeeea": {
       "artifacts": [
         {
@@ -105211,6 +107655,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "b26e75d8879cda3c00a579910c312c02c96515f3fd3099f25fd49a0366f7a82b": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "سيقوم النظام تلقائيًا بإنشاء الأرقام التسلسلية / رقم الدفعة للمنتج التام عند تقديم أمر العمل",
+        "sha256": "abc0e4932edbb7bf61d89b0e46376d8e67290a6ca6dc4e3a113bebe916d1f1a2"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "System will automatically create the serial numbers / batch for the Finished Good on submission of work order",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "سيقوم النظام تلقائيًا بإنشاء الأرقام التسلسلية / رقم الدفعة للمنتج التام عند تقديم أمر العمل",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
         }
       }
     },
@@ -107338,6 +109829,53 @@
         }
       }
     },
+    "b64479b2e4e8bfd7900b63a8fac5a97f1676b7b261c567a409ab568263712325": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "سيتم جلب قائمة المواد الافتراضية لهذا الصنف بواسطة النظام. يمكنك أيضًا تغيير قائمة المواد.",
+        "sha256": "f0589366a50dc209cf28ac0f71dee9e2f870062191a26f905c3faea2c3253798"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "The default BOM for that item will be fetched by the system. You can also change the BOM.",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "سيتم جلب قائمة المواد الافتراضية لهذا الصنف بواسطة النظام. يمكنك أيضًا تغيير قائمة المواد.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
+        }
+      }
+    },
     "b65207f95433f4665ad5c508c48ca32f54cd6847e58c8c8be5a126f4fd8d7f0e": {
       "artifacts": [
         {
@@ -108607,6 +111145,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "b7dd9cb47034ef973bf14fadce05ecb3ca5fb1a1d5a64accb91c47b1d914a9dd": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "اسم مؤقت",
+        "sha256": "cae9b206687f5f461737cc5b9238c7b648b02ad74aebeb306a61128c28998775"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "temporary name",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "اسم مؤقت",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
         }
       }
     },
@@ -112244,6 +114829,53 @@
         }
       }
     },
+    "bcba994f3e2bb80f2fe9923e4dfc3820823e5d04a250e069ad7a02eed9fd1866": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تم إنشاء أمر العمل {0}",
+        "sha256": "0336978c4cea33946cad006a818cccc528a8bab008a0f38ec96d1b14b0042c78"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Work Order {0} created",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "تم إنشاء أمر العمل {0}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
+        }
+      }
+    },
     "bcf2366659317f8108bffbe7c0839c0e7c0d8940d54f7a3b25c135cc2775870f": {
       "artifacts": [
         {
@@ -114230,6 +116862,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "c014cd0e7bbe6fbb6a2c4509ea0c5d9c72369c2696689ae0e8df34d2bb19a619": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "حدد الصنف المراد تصنيعه.",
+        "sha256": "69d61c6e22abd33cf91bda80b2cbf307851c66ebe4993e61f3f50c06d46da013"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Select the Item to be manufactured.",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "حدد الصنف المراد تصنيعه.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
         }
       }
     },
@@ -116451,6 +119130,53 @@
         }
       }
     },
+    "c3009acb0de13d3cf95b83371957f4de9f82ebe5db7c95b48457815a5e6be45c": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "مسح رمز الاستجابة السريعة لبطاقة العمل",
+        "sha256": "c57367b9bb5696369b59c898ea52d2499b58ea957d012b588db9369ad0f6a7bd"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Scan Job Card Qrcode",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "مسح رمز الاستجابة السريعة لبطاقة العمل",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
+        }
+      }
+    },
     "c30c139721dfb7023476fc742608e35e696a0a3d54c436b3ffd2e461d88d5389": {
       "artifacts": [
         {
@@ -117485,6 +120211,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "c4ac60bd011199c01d1030391d2186ac8c04d04ee415e31c1fc421ca25d2fbcb": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "هذه قائمة مواد نموذجية وسيتم استخدامها لإنشاء أمر العمل لـ {0} من الصنف {1}",
+        "sha256": "9a12a046332d06eaefe9f66d8466cad1970b7f1a984f10d69f7ea3c68108c30a"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "This is a Template BOM and will be used to make the work order for {0} of the item {1}",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "هذه قائمة مواد نموذجية وسيتم استخدامها لإنشاء أمر العمل لـ {0} من الصنف {1}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
         }
       }
     },
@@ -118669,6 +121442,53 @@
         }
       }
     },
+    "c70b31ca8b4f19c35170a9c1e8c484f0ce5aafa1f9bd9d6f57cece524d63d67b": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الصف رقم {0}: يجب أن يكون معرف التسلسل {1} أو {2} للعملية {3}.",
+        "sha256": "c0449b14b4b206da1090595af7ac7163f3827c317de332cdf91bca629730ff41"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Row #{0}: Sequence ID must be {1} or {2} for Operation {3}.",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "الصف رقم {0}: يجب أن يكون معرف التسلسل {1} أو {2} للعملية {3}.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
+        }
+      }
+    },
     "c74dd2f6aad0156598d3dd6e538551ef9041d84a4f25fb5e874837139b7b0528": {
       "artifacts": [
         {
@@ -118807,6 +121627,100 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "c76a87a4d1deafe0307cbb380c0f5597375bad93c7f26309b78ac92b293bc860": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الكمية المحجوزة للبيع: الكمية التي طلبها العميل ولم تُسلَّم بعد.",
+        "sha256": "213b547a4a5cff1fe26c03aabb8ff33c3b689f7ecfd365ff31e968c50a076815"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Reserved Qty: Quantity ordered for sale, but not delivered.",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "الكمية المحجوزة للبيع: الكمية التي طلبها العميل ولم تُسلَّم بعد.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
+        }
+      }
+    },
+    "c7723077c555f172445c3c069a4ff79a89ee213a000588fb2cdbb2f0f4aae828": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تعيين تكلفة التشغيل / أصناف الخردة من التجميعات الفرعية",
+        "sha256": "ffbb2d6a747877e2acffd7329ac81d16299f746dbbece16c5aada8e6ae88f47f"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Set Operating Cost / Scrap Items From Sub-assemblies",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "تعيين تكلفة التشغيل / أصناف الخردة من التجميعات الفرعية",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
         }
       }
     },
@@ -119515,6 +122429,53 @@
         }
       }
     },
+    "c8f530a2240810fa7cdcfaaa5a8bba556625cf168869411a07f084b968910daa": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يرجى تعيين رقم الصف الأب للصنف {0}",
+        "sha256": "14516e46073ab05893100055a9eaf130e3e53333c9121c2ecb76b50be88a660b"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Please set Parent Row No for item {0}",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "يرجى تعيين رقم الصف الأب للصنف {0}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
+        }
+      }
+    },
     "c90486f2de424234dfca247392d2b23ee5451a95d2d26ea0c7ec56686ac0c32a": {
       "artifacts": [
         {
@@ -119700,6 +122661,53 @@
           "confidence": "high",
           "decision": "approve",
           "session": "7b8e0b34-fbae-4e69-a64f-fd1c19ba44e1"
+        }
+      }
+    },
+    "c93d2195dfb6accd5739bad562dc822cc88e75421874f27984ac6887247abb1b": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "حدد المواد الخام (الأصناف) المطلوبة لتصنيع الصنف",
+        "sha256": "ac044c9a4242737a89f295e283ec53f9f5dcdab7036405037f0608fd494f518a"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Select the raw materials (Items) required to manufacture the Item",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "حدد المواد الخام (الأصناف) المطلوبة لتصنيع الصنف",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
         }
       }
     },
@@ -121210,6 +124218,53 @@
         }
       }
     },
+    "cb7c9b13b0ce767d0dfebc4cafee286a68dfaa27b994a854f81308b0e6afe81d": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الكمية المطلوبة",
+        "sha256": "8f163bd9ccff36021911fcf270756954402553dce5652019851e57a00a15026d"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Reqired Qty",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "الكمية المطلوبة",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
+        }
+      }
+    },
     "cb95629bf52fb13f1fad267f5fcbad16cdbd5f3f39b103a1a73c3c1836390b8e": {
       "artifacts": [
         {
@@ -121633,6 +124688,53 @@
         }
       }
     },
+    "cc2967a9659752d327c838db0a084d920d6d65ef73c27e448681b530b6e2b7ca": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يرجى اختيار العمليات أو تكلفة التشغيل على أساس المنتج التام.",
+        "sha256": "b59ee2f9294a07bd56ecb30c3779b6cd27428a71e1114e3c4d2f869f760a5dcf"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Please check either with operations or FG Based Operating Cost.",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "يرجى اختيار العمليات أو تكلفة التشغيل على أساس المنتج التام.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
+        }
+      }
+    },
     "cc4ea780e74cfc8c941e2d297f06a22ddca03fa5c4bc5b545861527a93e86533": {
       "artifacts": [
         {
@@ -121771,6 +124873,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "cca5c66dd6c91c9633587f86f40c5a8907405c56cc53bde6c62e9c63c39a79ee": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يمكنك تعيينه كاسم آلة أو نوع عملية. على سبيل المثال، ماكينة خياطة 12",
+        "sha256": "5a51c2c65192fcea4f27ae1bb6614c6b9a67a3bd4ad9893f5d685733bc6622e2"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "You can set it as a machine name or operation type. For example, stiching machine 12",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "يمكنك تعيينه كاسم آلة أو نوع عملية. على سبيل المثال، ماكينة خياطة 12",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
         }
       }
     },
@@ -123575,6 +126724,53 @@
         }
       }
     },
+    "cf9ead032a011685b704a1cf2010b796be5afaa04c301bb7955749704e547294": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الصف {0}: لا يمكن أن تكون الكمية سالبة.",
+        "sha256": "4b0189ce7574ad155bbd09839956a1e555e68bc34c8dbb9ada83014bbffeaf42"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Row {0}: Quantity cannot be negative.",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "الصف {0}: لا يمكن أن تكون الكمية سالبة.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
+        }
+      }
+    },
     "cfa77510d2e099f7dd25d141370278205e2d5beae5a3e192ea275bf512575ed9": {
       "artifacts": [
         {
@@ -123619,6 +126815,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "cfad7d9e6237b3f46b183c5ecfa2c8fab31aeece755a2f1fb03626bf370620ca": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الصف رقم {0}: نظرًا لتفعيل \"تتبع البضائع نصف المصنعة\"، لا يمكن استخدام قائمة المواد {1} لأصناف التجميع الفرعي",
+        "sha256": "0239df522e96be21446dfc1dae45990a8aeb1d90b5df3e717b97a3e31a0ce9a9"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Row #{0}: Since 'Track Semi Finished Goods' is enabled, the BOM {1} cannot be used for Sub Assembly Items",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "الصف رقم {0}: نظرًا لتفعيل \"تتبع البضائع نصف المصنعة\"، لا يمكن استخدام قائمة المواد {1} لأصناف التجميع الفرعي",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
         }
       }
     },
@@ -125649,6 +128892,53 @@
         }
       }
     },
+    "d3057575e53804d7ad89c65a2a2dc0cf1eb1575dcd66aa6acf2f132611232132": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الصف رقم 1: يجب أن يكون معرف التسلسل 1 للعملية {0}.",
+        "sha256": "20a98e237063fb7274978ef2cef472c4cf92947f8b2c3a36c2c8139f88785690"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Row #1: Sequence ID must be 1 for Operation {0}.",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "الصف رقم 1: يجب أن يكون معرف التسلسل 1 للعملية {0}.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
+        }
+      }
+    },
     "d311760b3072926cdbd09f55d7b3f41536ea8a75929dd1504da882c59ecd1705": {
       "artifacts": [
         {
@@ -126304,6 +129594,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "d4691faedcccc7af248a8417041b2bdc12e47e55b312a308f6a2d0e1305b6652": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "حدد الصنف المراد تصنيعه. سيتم جلب اسم الصنف ووحدة القياس والشركة والعملة تلقائيًا.",
+        "sha256": "6cac48f4794a4cdf9ba6e561a0f6eaef32c8155a33fecaa0302875f212924b7c"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Select the Item to be manufactured. The Item name, UoM, Company, and Currency will be fetched automatically.",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "حدد الصنف المراد تصنيعه. سيتم جلب اسم الصنف ووحدة القياس والشركة والعملة تلقائيًا.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
         }
       }
     },
@@ -135090,6 +138427,53 @@
         }
       }
     },
+    "e199bc3fc8c72e55b430b411e982c7add46cbd7211e27d0274bf8bcc2d3bbbf9": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "عبر أداة تحديث قائمة المواد",
+        "sha256": "08efc26b3fcdf5df58280a586a845fbf08847ef477e1c204807145c831f6f663"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "via BOM Update Tool",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "عبر أداة تحديث قائمة المواد",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
+        }
+      }
+    },
     "e1b895ee910618b48b981f8e52cc1d1e84247423b4d90d0c4c4378dac64fef22": {
       "artifacts": [
         {
@@ -140242,6 +143626,53 @@
         }
       }
     },
+    "e965e82a62d0ddc2b33005acb5923590290e86ebbef00ac84ca6678399c6f4d4": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "مستودع الهدف مطلوب قبل التقديم",
+        "sha256": "2dc16fe49fa66d2d63dca368f143394a0e226b3546f8dd38f90379e3c76ca61a"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Target Warehouse is required before Submit",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "مستودع الهدف مطلوب قبل التقديم",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
+        }
+      }
+    },
     "e9750971f6ca8e209ebe677e0d62e7dcd81716a0d8b52d23ba6d01905d656c15": {
       "artifacts": [
         {
@@ -140380,6 +143811,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "e989831de107313cef6a1b7d210f0b9dc21cc76871f71b99778f6cc55cb789ba": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تم تقديم خطة الإنتاج بالفعل",
+        "sha256": "98d3cb66a8ac03f26fc27c5c2036ace61bc8cbc3c15a47c2fe59ffe5b4d072fb"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Production Plan Already Submitted",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "تم تقديم خطة الإنتاج بالفعل",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
         }
       }
     },
@@ -144489,6 +147967,53 @@
         }
       }
     },
+    "f157f5cca4c0a941004f3ddee0166f0763ec9fdb114127e929237b4b4005c39f": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "بطاقة العمل {0} في حالة {1} ولا يمكنك إكمالها.",
+        "sha256": "b73583c4460840809d6c785fd0628467386654f0ba516cc08fac7730faad4416"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "The job card {0} is in {1} state and you cannot complete.",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "بطاقة العمل {0} في حالة {1} ولا يمكنك إكمالها.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
+        }
+      }
+    },
     "f159059f470aad4d58ab025583d35216ddbe75750a99ba8c4fd31108604d08ad": {
       "artifacts": [
         {
@@ -146936,6 +150461,53 @@
         }
       }
     },
+    "f4fb31ff6590ad7c6e13f33373e2dc456f9d7a7c0269ee42cb29d665b6af4b6e": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "سيتمكن المستخدم من تحويل مواد إضافية من المخزن إلى مستودع التشغيل قيد التنفيذ (WIP).",
+        "sha256": "cbb6a8b867b555474800b3b1a0c193d88373e1cea895dca0e114741fbbbcbfd9"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "The user will be able to transfer additional materials from the store to the Work in Progress (WIP) warehouse.",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "سيتمكن المستخدم من تحويل مواد إضافية من المخزن إلى مستودع التشغيل قيد التنفيذ (WIP).",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
+        }
+      }
+    },
     "f50365e74c1fb7b306bc4bb1dee9e54681697fe5178c0ee62f5ed849b19de856": {
       "artifacts": [
         {
@@ -147644,6 +151216,53 @@
         }
       }
     },
+    "f617a69a20d9dc726d9858fd103469a8748534f893b0480b15c28d96378348fe": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الصف رقم {0}: مستودع المصدر {1} للصنف {2} يجب أن يكون متطابقًا مع مستودع المصدر {3} في أمر العمل.",
+        "sha256": "fdb9e1d7e85767dc04048aaa9ed329b7917a0c7fbbb7eebbc9c2e1690b2a8ef1"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Row #{0}: Source Warehouse {1} for item {2} must be same as Source Warehouse {3} in the Work Order.",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "الصف رقم {0}: مستودع المصدر {1} للصنف {2} يجب أن يكون متطابقًا مع مستودع المصدر {3} في أمر العمل.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
+        }
+      }
+    },
     "f630f512578a72c714b4d07c3aaed52c32bdd6eb8f17d506898435b466b9e0cb": {
       "artifacts": [
         {
@@ -147688,6 +151307,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "f63e51e3d47ddb8baf7c29e492e4d7725ea3dacd55777200c46cd96302714134": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "{0} تكلفة التشغيل للعملية {1}",
+        "sha256": "e0a1920d3d48aef169173c07b0b8225feb7debbc3e9896f9c66dbd6107d0629a"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "{0} Operating Cost for operation {1}",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "{0} تكلفة التشغيل للعملية {1}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
         }
       }
     },
@@ -148299,6 +151965,53 @@
           "confidence": "high",
           "decision": "approve",
           "session": "7b8e0b34-fbae-4e69-a64f-fd1c19ba44e1"
+        }
+      }
+    },
+    "f7d6dc5e809465389d8bf56deb89ac045bd8d57d51b94c45da183fc24f27247d": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "العملية {0} لا يمكن أن تكون العملية الفرعية",
+        "sha256": "0774bc8e3fffefd66adf2a533f1329fe53aeb5af40d8823a5106ecfcd38dccda"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "The operation {0} can not be the sub operation",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "العملية {0} لا يمكن أن تكون العملية الفرعية",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
         }
       }
     },
@@ -150235,6 +153948,100 @@
         }
       }
     },
+    "fa67c2fd24c12b615d7ade1c885912e919e5ce90467ac896960b47260e7ea0aa": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "{0} {1} يُستخدم لحساب تكلفة التقييم للمنتج التام {2}.",
+        "sha256": "1166545fcc5ce0f11e6bfd9b5a4270a8f7e2be82a5740292c729a99e36f39659"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "The {0} {1} is used to calculate the valuation cost for the finished good {2}.",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "{0} {1} يُستخدم لحساب تكلفة التقييم للمنتج التام {2}.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
+        }
+      }
+    },
+    "fa6fb3640ece99852456423d17b91a97adea3538c1a509d1ee08380eac04db9c": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الوقت بالدقائق.",
+        "sha256": "aadc1cece888d81facfaa7dbc358b643e98940dfaa41ef2f62cf223b4faa442b"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Time in mins.",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "الوقت بالدقائق.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
+        }
+      }
+    },
     "fa84e1818f6654354e33d7e36a433bc7c5aaebe10c294c5a5d1f56edd732dff7": {
       "artifacts": [
         {
@@ -151930,6 +155737,53 @@
         }
       }
     },
+    "fd9789d68a519d1881834c6d78f8ae79ff574f6fcabc4ba5416dc41be60a4a21": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch02_content_evidence_2026-09-24.txt",
+          "sha256": "5881d944f34f94b6eb1721a029128058659a81fe4f0df01db8039f248a15db64"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "مراجع صنف التجميع الفرعي مفقودة. يرجى جلب التجميعات الفرعية والمواد الخام مرة أخرى.",
+        "sha256": "5b16fb2d24bac5478824fa5af8bf3bb5575a0fab8515f6b64f181c1c693864b8"
+      },
+      "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+      "release_version": "1.9",
+      "reviewers": [
+        "AI-A1 (/root/w606b02_a1_rev)",
+        "AI-A2 (/root/w606b02_a2_rev)",
+        "AI-A3 (/root/w606b02_a3_final)"
+      ],
+      "source_text": "Sub assembly item references are missing. Please fetch the sub assemblies and raw materials again.",
+      "timestamps": [
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34",
+        "2026-09-24 17:10:34"
+      ],
+      "translated_text": "مراجع صنف التجميع الفرعي مفقودة. يرجى جلب التجميعات الفرعية والمواد الخام مرة أخرى.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a1_rev"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a2_rev"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606b02_a3_final"
+        }
+      }
+    },
     "fda4b5cb044a8c71bd6af225c539267027cdf3c17e1e43d0d4c568850c38e1ed": {
       "artifacts": [
         {
@@ -153159,7 +157013,7 @@
       }
     }
   },
-  "generated_utc": "2026-09-24T14:07:26Z",
-  "note": "Historical decisions retained; W6-6 Manufacturing Batch 01 additions bind 83 released rows to the exact proposal SHA and independent A1/A2/A3 PASS.",
+  "generated_utc": "2026-09-24T17:25:34Z",
+  "note": "Historical decisions retained; W6-6 Manufacturing Batch 02 decisions bind to the literal quote-safe text evidence artifact, exact proposal/scope hashes, and A1/A2/A3 PASS.",
   "schema": "release-decision/v2"
 }

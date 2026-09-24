@@ -1,0 +1,203 @@
+source_text,suggested_ar,locations,area,has_pre_filled
+ Is Subcontracted,من الباطن,erpnext/manufacturing/doctype/job_card/job_card.json:None,manufacturing,1
+ Skip Material Transfer,تخطي نقل المواد,erpnext/manufacturing/doctype/bom_operation/bom_operation.json:None,manufacturing,1
+Operations Routing,مسار العمليات,erpnext/manufacturing/doctype/bom_creator/bom_creator.json:None,manufacturing,1
+Order Date,تاريخ الأمر,erpnext/manufacturing/doctype/blanket_order/blanket_order.json:None,manufacturing,1
+Order No,رقم الأمر,erpnext/manufacturing/doctype/blanket_order/blanket_order.json:None,manufacturing,1
+Order Summary,ملخص الأمر,erpnext/manufacturing/notification/material_request_receipt_notification/material_request_receipt_notification.html:4,manufacturing,1
+"Ordered Qty: Quantity ordered for purchase, but not received.",الكمية المطلوبة: كمية تم طلب شرائها ولم تستلم بعد.,erpnext/manufacturing/doctype/production_plan/production_plan.js:179,manufacturing,1
+Other Settings,إعدادات أخرى,erpnext/manufacturing/doctype/manufacturing_settings/manufacturing_settings.json:None,manufacturing,1
+Parent Row No,رقم الصف الأب,erpnext/manufacturing/doctype/bom_creator_item/bom_creator_item.json:None,manufacturing,1
+Parent Row No not found for {0},,erpnext/manufacturing/doctype/bom_creator/bom_creator.py:511,manufacturing,0
+Party Item Code,كود صنف الجهة,erpnext/manufacturing/doctype/blanket_order_item/blanket_order_item.json:None,manufacturing,1
+Pause Job,إيقاف العمل مؤقتا,erpnext/manufacturing/doctype/job_card/job_card.js:255,manufacturing,1
+Phantom Item,صنف وهمي,erpnext/manufacturing/doctype/bom/bom_item_preview.html:16; erpnext/public/js/bom_configurator/bom_configurator.bundle.js:321,manufacturing,1
+Planned Purchase Order,أمر شراء مخطط,erpnext/manufacturing/report/material_requirements_planning_report/material_requirements_planning_report.py:1026,manufacturing,1
+"Planned Qty: Quantity, for which, Work Order has been raised, but is pending to be manufactured.",,erpnext/manufacturing/doctype/production_plan/production_plan.js:179,manufacturing,0
+Planned Work Order,أمر عمل مخطط,erpnext/manufacturing/report/material_requirements_planning_report/material_requirements_planning_report.py:1031,manufacturing,1
+Plant Dashboard,لوحة المصنع,erpnext/manufacturing/doctype/plant_floor/plant_floor.json:None,manufacturing,1
+Plant Floor,أرضية المصنع,erpnext/manufacturing/doctype/plant_floor/plant_floor.json:None; erpnext/manufacturing/doctype/workstation/workstation.json:None; erpnext/manufacturing/workspace/manufacturing/manufacturing.json:None; erpnext/public/js/plant_floor_visual/visual_plant.js:53,manufacturing,1
+Please check either with operations or FG Based Operating Cost.,,erpnext/manufacturing/doctype/bom/bom.js:87,manufacturing,0
+Please mention the Current and New BOM for replacement.,,erpnext/manufacturing/doctype/bom_update_log/bom_update_log.py:70,manufacturing,0
+Please select a Work Order first.,,erpnext/manufacturing/doctype/job_card/job_card.py:1444,manufacturing,0
+Please select a row to create a Reposting Entry,يرجى تحديد صف لإنشاء قيد إعادة ترحيل,erpnext/manufacturing/report/material_requirements_planning_report/material_requirements_planning_report.js:135; erpnext/stock/report/stock_ledger_invariant_check/stock_ledger_invariant_check.js:73,manufacturing,1
+Please select atleast one operation to create Job Card,,erpnext/manufacturing/doctype/work_order/work_order.js:381,manufacturing,0
+Please set Parent Row No for item {0},,erpnext/manufacturing/doctype/bom_creator/bom_creator.py:256,manufacturing,0
+Please set actual demand or sales forecast to generate Material Requirements Planning Report.,,erpnext/manufacturing/doctype/master_production_schedule/master_production_schedule.js:68,manufacturing,0
+Please set the Target Warehouse in the Job Card,,erpnext/manufacturing/doctype/job_card/job_card.py:1507,manufacturing,0
+Please set the WIP Warehouse in the Job Card,,erpnext/manufacturing/doctype/job_card/job_card.py:1511,manufacturing,0
+Please set {0} in BOM Creator {1},,erpnext/manufacturing/doctype/bom_creator/bom_creator.py:209,manufacturing,0
+Please uncheck 'Show in Bucket View' to create Orders,,erpnext/manufacturing/report/material_requirements_planning_report/material_requirements_planning_report.js:139,manufacturing,0
+Preview Required Materials,معاينة المواد المطلوبة,erpnext/manufacturing/doctype/production_plan/production_plan.json:None,manufacturing,1
+Process Loss,خسارة العملية,erpnext/manufacturing/doctype/bom/bom.json:None; erpnext/stock/doctype/stock_entry/stock_entry.json:None,manufacturing,1
+Process Loss Percentage cannot be greater than 100,,erpnext/manufacturing/doctype/bom/bom.py:1165,manufacturing,0
+Process Loss Qty,كمية خسارة العملية,erpnext/manufacturing/doctype/bom/bom.json:None; erpnext/manufacturing/doctype/job_card/job_card.json:None; erpnext/manufacturing/doctype/work_order/work_order.json:None; erpnext/manufacturing/doctype/work_order_operation/work_order_operation.json:None; erpnext/manufacturing/report/process_loss_report/process_loss_report.py:94; erpnext/stock/doctype/stock_entry/stock_entry.json:None; erpnext/subcontracting/doctype/subcontracting_inward_order_item/subcontracting_inward_order_item.json:None,manufacturing,1
+Process Loss Quantity,كمية خسارة العملية,erpnext/manufacturing/doctype/job_card/job_card.js:332,manufacturing,1
+Process Loss Report,تقرير خسارة العملية,erpnext/manufacturing/report/process_loss_report/process_loss_report.json:None,manufacturing,1
+Process Loss Value,قيمة خسارة العملية,erpnext/manufacturing/report/process_loss_report/process_loss_report.py:100,manufacturing,1
+Processed BOMs,قوائم مواد معالجة,erpnext/manufacturing/doctype/bom_update_log/bom_update_log.json:None,manufacturing,1
+Produced / Received Qty,الكمية المنتجة/المستلمة,erpnext/manufacturing/report/production_plan_summary/production_plan_summary.py:177,manufacturing,1
+Production Plan Already Submitted,,erpnext/manufacturing/doctype/production_plan/production_plan.py:152,manufacturing,0
+Production Plan Item Reference,مرجع عنصر خطة الإنتاج,erpnext/manufacturing/doctype/production_plan/production_plan.json:None; erpnext/manufacturing/doctype/production_plan_item_reference/production_plan_item_reference.json:None,manufacturing,1
+Production Plan Sub-assembly Item,عنصر تجميع فرعي لخطة الإنتاج,erpnext/manufacturing/doctype/work_order/work_order.json:None,manufacturing,1
+Production Plan Summary,ملخص خطة الإنتاج,erpnext/manufacturing/doctype/production_plan/production_plan.js:110; erpnext/manufacturing/report/production_plan_summary/production_plan_summary.json:None,manufacturing,1
+Projected Quantity Formula,صيغة الكمية المتوقعة,erpnext/manufacturing/doctype/production_plan/production_plan.js:179,manufacturing,1
+Purchase Order {0} created,,erpnext/manufacturing/report/material_requirements_planning_report/material_requirements_planning_report.py:1343,manufacturing,0
+Qty In Stock,الكمية في المخزون,erpnext/manufacturing/doctype/material_request_plan_item/material_request_plan_item.json:None,manufacturing,1
+Qty Per Unit,الكمية لكل وحدة,erpnext/manufacturing/report/bom_stock_calculated/bom_stock_calculated.py:82,manufacturing,1
+"Qty To Manufacture ({0}) cannot be a fraction for the UOM {2}. To allow this, disable '{1}' in the UOM {2}.",,erpnext/manufacturing/doctype/work_order/work_order.py:1389,manufacturing,0
+Qty Wise Chart,رسم بياني حسب الكمية,erpnext/manufacturing/report/quality_inspection_summary/quality_inspection_summary.py:56,manufacturing,1
+Qty to Build,الكمية المطلوب بناؤها,erpnext/manufacturing/report/work_order_stock_report/work_order_stock_report.py:133,manufacturing,1
+Qty to Produce,الكمية المطلوب إنتاجها,erpnext/manufacturing/doctype/bom_operation/bom_operation.json:None; erpnext/manufacturing/report/work_order_consumed_materials/work_order_consumed_materials.py:129,manufacturing,1
+Quantity is required,الكمية مطلوبة,erpnext/manufacturing/doctype/plant_floor/plant_floor.js:274,manufacturing,1
+Quantity to Produce should be greater than zero.,,erpnext/manufacturing/report/bom_stock_report/bom_stock_report.py:37,manufacturing,0
+Raw Material Item,صنف مادة خام,erpnext/manufacturing/report/work_order_consumed_materials/work_order_consumed_materials.py:132,manufacturing,1
+Raw Material Value,قيمة المادة الخام,erpnext/manufacturing/report/process_loss_report/process_loss_report.py:112,manufacturing,1
+Remove Parent Row No in Items Table,,erpnext/manufacturing/doctype/bom_creator/bom_creator.py:96,manufacturing,0
+Rent,إيجار,erpnext/manufacturing/doctype/workstation/test_workstation.py:80; erpnext/manufacturing/doctype/workstation/test_workstation.py:91; erpnext/manufacturing/doctype/workstation/test_workstation.py:118; erpnext/patches/v16_0/make_workstation_operating_components.py:49; erpnext/setup/setup_wizard/operations/install_fixtures.py:316,manufacturing,1
+Reqd Qty (BOM),الكمية المطلوبة (قائمة المواد),erpnext/manufacturing/doctype/material_request_plan_item/material_request_plan_item.json:None,manufacturing,1
+Reqired Qty,,erpnext/manufacturing/doctype/workstation/workstation.js:489,manufacturing,0
+"Requested Qty: Quantity requested for purchase, but not ordered.",,erpnext/manufacturing/doctype/production_plan/production_plan.js:179,manufacturing,0
+Reservation,,erpnext/manufacturing/doctype/production_plan/production_plan_dashboard.py:13,manufacturing,0
+Reserve,حجز,erpnext/manufacturing/doctype/work_order/work_order.js:894; erpnext/selling/doctype/sales_order/sales_order.js:92; erpnext/stock/doctype/pick_list/pick_list.js:148; erpnext/subcontracting/doctype/subcontracting_order/subcontracting_order.js:180,manufacturing,1
+Reserve Stock,حجز المخزون,erpnext/manufacturing/doctype/production_plan/production_plan.json:None; erpnext/manufacturing/doctype/work_order/work_order.json:None; erpnext/public/js/stock_reservation.js:15; erpnext/selling/doctype/sales_order/sales_order.js:397; erpnext/selling/doctype/sales_order/sales_order.json:None; erpnext/selling/doctype/sales_order_item/sales_order_item.json:None; erpnext/subcontracting/doctype/subcontracting_order/subcontracting_order.js:278; erpnext/subcontracting/doctype/subcontracting_order/subcontracting_order.json:None,manufacturing,1
+Reserve for Raw Materials,حجز للمواد الخام,erpnext/manufacturing/doctype/production_plan/production_plan.js:287,manufacturing,1
+Reserve for Sub-assembly,حجز للتجميع الفرعي,erpnext/manufacturing/doctype/production_plan/production_plan.js:261,manufacturing,1
+Reserved Qty for Production: Raw materials quantity to make manufacturing items.,,erpnext/manufacturing/doctype/production_plan/production_plan.js:179,manufacturing,0
+Reserved Qty for Subcontract: Raw materials quantity to make subcontracted items.,,erpnext/manufacturing/doctype/production_plan/production_plan.js:179,manufacturing,0
+"Reserved Qty: Quantity ordered for sale, but not delivered.",,erpnext/manufacturing/doctype/production_plan/production_plan.js:179,manufacturing,0
+Reserved Stock,المخزون المحجوز,erpnext/manufacturing/doctype/plant_floor/stock_summary_template.html:24; erpnext/manufacturing/doctype/work_order/work_order.js:910; erpnext/public/js/stock_reservation.js:236; erpnext/selling/doctype/sales_order/sales_order.js:120; erpnext/selling/doctype/sales_order/sales_order.js:457; erpnext/stock/dashboard/item_dashboard_list.html:15; erpnext/stock/doctype/bin/bin.json:None; erpnext/stock/doctype/pick_list/pick_list.js:168; erpnext/stock/report/reserved_stock/reserved_stock.json:None; erpnext/stock/report/stock_balance/stock_balance.py:497; erpnext/stock/stock_ledger.py:2301; erpnext/subcontracting/doctype/subcontracting_order/subcontracting_order.js:205; erpnext/subcontracting/doctype/subcontracting_order/subcontracting_order.js:333,manufacturing,1
+Reserved Stock for Raw Materials,مخزون محجوز للمواد الخام,erpnext/manufacturing/doctype/production_plan/production_plan.js:301,manufacturing,1
+Reserved Stock for Sub-assembly,مخزون محجوز للتجميع الفرعي,erpnext/manufacturing/doctype/production_plan/production_plan.js:275,manufacturing,1
+Resume Job,استئناف العمل,erpnext/manufacturing/doctype/job_card/job_card.js:239,manufacturing,1
+Return Components,إرجاع المكونات,erpnext/manufacturing/doctype/work_order/work_order.js:284,manufacturing,1
+Returned Qty ,الكمية المرتجعة,erpnext/manufacturing/doctype/work_order_item/work_order_item.json:None,manufacturing,1
+Row #1: Sequence ID must be 1 for Operation {0}.,,erpnext/manufacturing/doctype/work_order/work_order.py:257,manufacturing,0
+Row #{0}: Cannot transfer more than Required Qty {1} for Item {2} against Job Card {3},,erpnext/manufacturing/doctype/job_card/job_card.py:1007,manufacturing,0
+Row #{0}: Customer Provided Item {1} cannot be added multiple times.,,erpnext/manufacturing/doctype/work_order/work_order.py:334,manufacturing,0
+Row #{0}: From Time and To Time fields are required,,erpnext/manufacturing/doctype/job_card/job_card.py:759,manufacturing,0
+Row #{0}: Please select Item Code in Assembly Items,,erpnext/manufacturing/doctype/production_plan/production_plan.py:1030,manufacturing,0
+Row #{0}: Please select the BOM No in Assembly Items,,erpnext/manufacturing/doctype/production_plan/production_plan.py:1033,manufacturing,0
+Row #{0}: Please select the Sub Assembly Warehouse,,erpnext/manufacturing/doctype/production_plan/production_plan.py:1027,manufacturing,0
+Row #{0}: Sequence ID must be {1} or {2} for Operation {3}.,,erpnext/manufacturing/doctype/work_order/work_order.py:263,manufacturing,0
+"Row #{0}: Since 'Track Semi Finished Goods' is enabled, the BOM {1} cannot be used for Sub Assembly Items",,erpnext/manufacturing/doctype/production_plan/production_plan.py:1037,manufacturing,0
+Row #{0}: Source Warehouse {1} for item {2} cannot be a customer warehouse.,,erpnext/manufacturing/doctype/work_order/work_order.py:368,manufacturing,0
+Row #{0}: Source Warehouse {1} for item {2} must be same as Source Warehouse {3} in the Work Order.,,erpnext/manufacturing/doctype/work_order/work_order.py:323,manufacturing,0
+Row #{0}: Start Time and End Time are required,,erpnext/manufacturing/doctype/workstation/workstation.py:105,manufacturing,0
+Row #{0}: Start Time must be before End Time,,erpnext/manufacturing/doctype/workstation/workstation.py:108,manufacturing,0
+Row {0}: Quantity cannot be negative.,,erpnext/manufacturing/doctype/blanket_order/blanket_order.py:124,manufacturing,0
+Row {0}: Workstation or Workstation Type is mandatory for an operation {1},,erpnext/manufacturing/doctype/bom/bom.py:1148; erpnext/manufacturing/doctype/work_order/work_order.py:397,manufacturing,0
+Run parallel job cards in a workstation,تشغيل بطاقات عمل متوازية في محطة عمل,erpnext/manufacturing/doctype/workstation/workstation.json:None,manufacturing,1
+Sales Forecast,توقع المبيعات,erpnext/manufacturing/doctype/master_production_schedule/master_production_schedule.json:None; erpnext/manufacturing/doctype/sales_forecast/sales_forecast.json:None; erpnext/manufacturing/workspace/manufacturing/manufacturing.json:None,manufacturing,1
+Sales Forecast Item,عنصر توقع المبيعات,erpnext/manufacturing/doctype/sales_forecast_item/sales_forecast_item.json:None,manufacturing,1
+Sales Order Reference,مرجع أمر البيع,erpnext/manufacturing/doctype/production_plan_item_reference/production_plan_item_reference.json:None,manufacturing,1
+Sales Order Status,حالة أمر البيع,erpnext/manufacturing/doctype/production_plan/production_plan.json:None,manufacturing,1
+Scan Job Card Qrcode,,erpnext/manufacturing/doctype/workstation/workstation.js:127; erpnext/manufacturing/doctype/workstation/workstation.js:154,manufacturing,0
+Scheduled Time Logs,سجلات الوقت المجدولة,erpnext/manufacturing/doctype/job_card/job_card.json:None,manufacturing,1
+Scrap & Process Loss,الهالك وخسارة العملية,erpnext/manufacturing/doctype/bom/bom.json:None,manufacturing,1
+Scrap Item Code,كود صنف الهالك,erpnext/manufacturing/doctype/job_card_scrap_item/job_card_scrap_item.json:None,manufacturing,1
+Scrap Item Name,اسم صنف الهالك,erpnext/manufacturing/doctype/job_card_scrap_item/job_card_scrap_item.json:None,manufacturing,1
+Select Corrective Operation,تحديد عملية تصحيحية,erpnext/manufacturing/doctype/job_card/job_card.js:533,manufacturing,1
+Select Warehouses to get Stock for Materials Planning,تحديد المستودعات لجلب المخزون لتخطيط المواد,erpnext/manufacturing/doctype/production_plan/production_plan.js:551,manufacturing,1
+Select the Default Workstation where the Operation will be performed. This will be fetched in BOMs and Work Orders.,,erpnext/manufacturing/doctype/operation/operation.js:25,manufacturing,0
+Select the Item to be manufactured.,,erpnext/manufacturing/doctype/work_order/work_order.js:1121,manufacturing,0
+"Select the Item to be manufactured. The Item name, UoM, Company, and Currency will be fetched automatically.",,erpnext/manufacturing/doctype/bom/bom.js:928,manufacturing,0
+Select the Warehouse,,erpnext/manufacturing/doctype/production_plan/production_plan.js:432; erpnext/manufacturing/doctype/production_plan/production_plan.js:445,manufacturing,0
+Select the raw materials (Items) required to manufacture the Item,,erpnext/manufacturing/doctype/bom/bom.js:947,manufacturing,0
+Semi Finished Good / Finished Good,منتج نصف نهائي/منتج نهائي,erpnext/manufacturing/doctype/job_card/job_card.json:None,manufacturing,1
+Semi Finished Goods / Finished Goods,منتجات نصف نهائية/منتجات نهائية,erpnext/manufacturing/doctype/work_order_operation/work_order_operation.json:None,manufacturing,1
+Set Finished Good Quantity,تعيين كمية المنتج النهائي,erpnext/manufacturing/doctype/job_card/job_card.js:404; erpnext/manufacturing/doctype/job_card/job_card.js:473,manufacturing,1
+Set Operating Cost / Scrap Items From Sub-assemblies,,erpnext/manufacturing/doctype/manufacturing_settings/manufacturing_settings.json:None,manufacturing,0
+Set Operating Cost Based On BOM Quantity,تعيين تكلفة التشغيل بناء على كمية قائمة المواد,erpnext/manufacturing/doctype/bom_operation/bom_operation.json:None,manufacturing,1
+Set Parent Row No in Items Table,تعيين رقم الصف الأب في جدول الأصناف,erpnext/manufacturing/doctype/bom_creator/bom_creator.py:90,manufacturing,1
+Set Process Loss Item Quantity,تعيين كمية صنف خسارة العملية,erpnext/manufacturing/doctype/bom/bom.js:974,manufacturing,1
+Set Valuation Rate Based on Source Warehouse,تعيين سعر التقييم بناء على مستودع المصدر,erpnext/manufacturing/doctype/bom_creator/bom_creator.json:None,manufacturing,1
+Set quantity of process loss item:,,erpnext/manufacturing/doctype/bom/bom.js:964,manufacturing,0
+Set the Planned Start Date (an Estimated Date at which you want the Production to begin),,erpnext/manufacturing/doctype/work_order/work_order.js:1178,manufacturing,0
+Setting {0} is required,,erpnext/manufacturing/doctype/bom/bom.py:1127; erpnext/manufacturing/doctype/work_order/work_order.py:1445,manufacturing,0
+Show in Bucket View,إظهار في عرض الحاويات,erpnext/manufacturing/report/material_requirements_planning_report/material_requirements_planning_report.js:88,manufacturing,1
+Skip Material Transfer to WIP,تخطي نقل المواد إلى تحت التشغيل,erpnext/manufacturing/doctype/job_card/job_card.json:None,manufacturing,1
+Source Warehouse {0} must be same as Customer Warehouse {1} in the Subcontracting Inward Order.,,erpnext/manufacturing/doctype/work_order/work_order.py:282,manufacturing,0
+Standard Description,الوصف القياسي,erpnext/manufacturing/report/bom_explorer/bom_explorer.py:73,manufacturing,1
+Start Job,بدء العمل,erpnext/manufacturing/doctype/job_card/job_card.js:215; erpnext/manufacturing/doctype/workstation/workstation.js:124,manufacturing,1
+Status Illustration,رسم توضيحي للحالة,erpnext/manufacturing/doctype/workstation/workstation.json:None,manufacturing,1
+Stock Entry {0} has created,,erpnext/manufacturing/doctype/job_card/job_card.py:1370,manufacturing,0
+Stock Partially Reserved,مخزون محجوز جزئيا,erpnext/manufacturing/doctype/work_order/work_order.json:None,manufacturing,1
+Stock Reservation,حجز المخزون,erpnext/manufacturing/doctype/production_plan/production_plan.js:263; erpnext/manufacturing/doctype/production_plan/production_plan.js:271; erpnext/manufacturing/doctype/production_plan/production_plan.js:277; erpnext/manufacturing/doctype/production_plan/production_plan.js:289; erpnext/manufacturing/doctype/production_plan/production_plan.js:297; erpnext/manufacturing/doctype/production_plan/production_plan.js:303; erpnext/manufacturing/doctype/work_order/work_order.js:896; erpnext/manufacturing/doctype/work_order/work_order.js:905; erpnext/manufacturing/doctype/work_order/work_order.js:912; erpnext/manufacturing/doctype/work_order/work_order_dashboard.py:14; erpnext/public/js/stock_reservation.js:12; erpnext/selling/doctype/sales_order/sales_order.js:94; erpnext/selling/doctype/sales_order/sales_order.js:109; erpnext/selling/doctype/sales_order/sales_order.js:122; erpnext/selling/doctype/sales_order/sales_order.js:250; erpnext/stock/doctype/pick_list/pick_list.js:150; erpnext/stock/doctype/pick_list/pick_list.js:165; erpnext/stock/doctype/pick_list/pick_list.js:170; erpnext/stock/doctype/stock_entry/stock_entry_dashboard.py:12; erpnext/stock/doctype/stock_reconciliation/stock_reconciliation.py:719; erpnext/stock/doctype/stock_reservation_entry/stock_reservation_entry.py:674; erpnext/stock/doctype/stock_reservation_entry/stock_reservation_entry.py:1236; erpnext/stock/doctype/stock_reservation_entry/stock_reservation_entry.py:1643; erpnext/stock/doctype/stock_reservation_entry/stock_reservation_entry.py:1656; erpnext/stock/doctype/stock_reservation_entry/stock_reservation_entry.py:1670; erpnext/stock/doctype/stock_reservation_entry/stock_reservation_entry.py:1684; erpnext/stock/doctype/stock_reservation_entry/stock_reservation_entry.py:1698; erpnext/stock/doctype/stock_reservation_entry/stock_reservation_entry.py:1715; erpnext/stock/doctype/stock_settings/stock_settings.json:None; erpnext/stock/doctype/stock_settings/stock_settings.py:178; erpnext/stock/doctype/stock_settings/stock_settings.py:190; erpnext/stock/doctype/stock_settings/stock_settings.py:204; erpnext/subcontracting/doctype/subcontracting_order/subcontracting_order.js:182; erpnext/subcontracting/doctype/subcontracting_order/subcontracting_order.js:195; erpnext/subcontracting/doctype/subcontracting_order/subcontracting_order.js:207; erpnext/subcontracting/doctype/subcontracting_order/subcontracting_order.js:220; erpnext/subcontracting/doctype/subcontracting_order/subcontracting_order_dashboard.py:14,manufacturing,1
+Stock Reserved,المخزون محجوز,erpnext/manufacturing/doctype/work_order/work_order.json:None,manufacturing,1
+Stock Reserved Qty,كمية المخزون المحجوزة,erpnext/manufacturing/doctype/material_request_plan_item/material_request_plan_item.json:None; erpnext/manufacturing/doctype/production_plan_sub_assembly_item/production_plan_sub_assembly_item.json:None; erpnext/manufacturing/doctype/work_order_item/work_order_item.json:None,manufacturing,1
+Sub Assemblies & Raw Materials,التجميعات الفرعية والمواد الخام,erpnext/manufacturing/doctype/bom_creator/bom_creator.json:None,manufacturing,1
+Sub Assembly Item Code,كود صنف التجميع الفرعي,erpnext/manufacturing/doctype/production_plan_sub_assembly_item/production_plan_sub_assembly_item.json:None,manufacturing,1
+Sub Assembly Item Reference,مرجع صنف التجميع الفرعي,erpnext/manufacturing/doctype/material_request_plan_item/material_request_plan_item.json:None,manufacturing,1
+Sub Assembly Items,أصناف التجميع الفرعي,erpnext/manufacturing/doctype/production_plan/production_plan.json:None,manufacturing,1
+Sub Assembly Warehouse,مستودع التجميع الفرعي,erpnext/manufacturing/doctype/production_plan/production_plan.json:None,manufacturing,1
+Sub Operation,عملية فرعية,erpnext/manufacturing/doctype/job_card/job_card.js:349; erpnext/manufacturing/doctype/job_card_time_log/job_card_time_log.json:None; erpnext/manufacturing/doctype/sub_operation/sub_operation.json:None,manufacturing,1
+Sub Operations,عمليات فرعية,erpnext/manufacturing/doctype/job_card/job_card.json:None; erpnext/manufacturing/doctype/operation/operation.json:None,manufacturing,1
+Sub assembly item references are missing. Please fetch the sub assemblies and raw materials again.,,erpnext/manufacturing/doctype/production_plan/production_plan.py:600,manufacturing,0
+Subcontracting BOM,قائمة مواد مقاول الباطن,erpnext/manufacturing/workspace/manufacturing/manufacturing.json:None; erpnext/subcontracting/doctype/subcontracting_bom/subcontracting_bom.json:None,manufacturing,1
+Subcontracting Inward Order,أمر استلام مقاولات باطن,erpnext/manufacturing/doctype/work_order/work_order.json:None; erpnext/selling/doctype/sales_order/sales_order.js:1005; erpnext/stock/doctype/stock_entry/stock_entry.json:None; erpnext/stock/doctype/stock_reservation_entry/stock_reservation_entry.json:None; erpnext/subcontracting/doctype/subcontracting_inward_order/subcontracting_inward_order.json:None; erpnext/subcontracting/workspace/subcontracting/subcontracting.json:None,manufacturing,1
+Subcontracting Inward Order Item,بند أمر استلام مقاولات باطن,erpnext/manufacturing/doctype/work_order/work_order.json:None; erpnext/subcontracting/doctype/subcontracting_inward_order_item/subcontracting_inward_order_item.json:None,manufacturing,1
+Subcontracting Receipt,إيصال استلام مقاولات باطن,erpnext/manufacturing/workspace/manufacturing/manufacturing.json:None; erpnext/stock/doctype/landed_cost_item/landed_cost_item.json:None; erpnext/stock/doctype/landed_cost_purchase_receipt/landed_cost_purchase_receipt.json:None; erpnext/stock/doctype/purchase_receipt/purchase_receipt.json:None; erpnext/stock/doctype/quality_inspection/quality_inspection.json:None; erpnext/subcontracting/doctype/subcontracting_order/subcontracting_order.js:530; erpnext/subcontracting/doctype/subcontracting_receipt/subcontracting_receipt.json:None; erpnext/subcontracting/workspace/subcontracting/subcontracting.json:None,manufacturing,1
+Supply,العرض,erpnext/manufacturing/report/material_requirements_planning_report/material_requirements_planning_report.py:315; erpnext/manufacturing/report/material_requirements_planning_report/material_requirements_planning_report.py:380,manufacturing,1
+System will automatically create the serial numbers / batch for the Finished Good on submission of work order,,erpnext/manufacturing/doctype/manufacturing_settings/manufacturing_settings.json:None,manufacturing,0
+Target Warehouse Reservation Error,,erpnext/manufacturing/doctype/work_order/work_order.py:237,manufacturing,0
+Target Warehouse is required before Submit,,erpnext/manufacturing/doctype/work_order/work_order.py:737,manufacturing,0
+Target Warehouse {0} must be same as Delivery Warehouse {1} in the Subcontracting Inward Order Item.,,erpnext/manufacturing/doctype/work_order/work_order.py:298,manufacturing,0
+The Company {0} of Sales Forecast {1} does not match with the Company {2} of Master Production Schedule {3}.,,erpnext/manufacturing/doctype/master_production_schedule/master_production_schedule.py:74,manufacturing,0
+The default BOM for that item will be fetched by the system. You can also change the BOM.,,erpnext/manufacturing/doctype/work_order/work_order.js:1126,manufacturing,0
+The job card {0} is in {1} state and you cannot complete.,,erpnext/manufacturing/doctype/workstation/workstation.py:549,manufacturing,0
+The job card {0} is in {1} state and you cannot start it again.,,erpnext/manufacturing/doctype/workstation/workstation.py:543,manufacturing,0
+The operation {0} can not add multiple times,,erpnext/manufacturing/doctype/operation/operation.py:43,manufacturing,0
+The operation {0} can not be the sub operation,,erpnext/manufacturing/doctype/operation/operation.py:48,manufacturing,0
+The user will be able to transfer additional materials from the store to the Work in Progress (WIP) warehouse.,,erpnext/manufacturing/doctype/manufacturing_settings/manufacturing_settings.json:None,manufacturing,0
+The warehouse where you store finished Items before they are shipped.,,erpnext/manufacturing/doctype/work_order/work_order.js:1154,manufacturing,0
+The {0} {1} is used to calculate the valuation cost for the finished good {2}.,,erpnext/manufacturing/doctype/job_card/job_card.py:875,manufacturing,0
+This is a Template BOM and will be used to make the work order for {0} of the item {1},,erpnext/manufacturing/doctype/bom/bom.js:241,manufacturing,0
+Time in mins.,,erpnext/manufacturing/doctype/operation/operation.json:None,manufacturing,0
+To Delivery Date,إلى تاريخ التسليم,erpnext/manufacturing/doctype/production_plan/production_plan.json:None,manufacturing,1
+To add Operations tick the 'With Operations' checkbox.,,erpnext/manufacturing/doctype/bom/bom.js:942,manufacturing,0
+To add subcontracted Item's raw materials if include exploded items is disabled.,,erpnext/manufacturing/doctype/production_plan/production_plan.js:740,manufacturing,0
+To include non-stock items in the material request planning. i.e. Items for which 'Maintain Stock' checkbox is unticked.,,erpnext/manufacturing/doctype/production_plan/production_plan.js:733,manufacturing,0
+Total Operation Time,إجمالي وقت العملية,erpnext/manufacturing/doctype/operation/operation.json:None,manufacturing,1
+Total Time (in Mins),إجمالي الوقت (بالدقائق),erpnext/manufacturing/report/cost_of_poor_quality_report/cost_of_poor_quality_report.py:130,manufacturing,1
+Total Working Hours,إجمالي ساعات العمل,erpnext/manufacturing/doctype/workstation/workstation.json:None; erpnext/projects/doctype/timesheet/timesheet.json:None,manufacturing,1
+Track Semi Finished Goods,تتبع المنتجات نصف النهائية,erpnext/manufacturing/doctype/bom/bom.json:None; erpnext/manufacturing/doctype/job_card/job_card.json:None; erpnext/manufacturing/doctype/work_order/work_order.json:None,manufacturing,1
+Transfer Extra Raw Materials to WIP (%),نقل مواد خام إضافية إلى تحت التشغيل (%),erpnext/manufacturing/doctype/manufacturing_settings/manufacturing_settings.json:None,manufacturing,1
+Transfer From Warehouses,النقل من المستودعات,erpnext/manufacturing/doctype/production_plan/production_plan.js:458,manufacturing,1
+Transfer Materials,نقل المواد,erpnext/manufacturing/doctype/workstation/workstation_job_card.html:92,manufacturing,1
+Transferred Raw Materials,المواد الخام المنقولة,erpnext/manufacturing/doctype/job_card/job_card.json:None,manufacturing,1
+Type of Material,نوع المادة,erpnext/manufacturing/report/material_requirements_planning_report/material_requirements_planning_report.js:75,manufacturing,1
+Unreserve,إلغاء الحجز,erpnext/manufacturing/doctype/work_order/work_order.js:903; erpnext/selling/doctype/sales_order/sales_order.js:107; erpnext/stock/doctype/pick_list/pick_list.js:156; erpnext/subcontracting/doctype/subcontracting_order/subcontracting_order.js:193,manufacturing,1
+Unreserve for Raw Materials,إلغاء حجز المواد الخام,erpnext/manufacturing/doctype/production_plan/production_plan.js:295,manufacturing,1
+Unreserve for Sub-assembly,إلغاء حجز التجميع الفرعي,erpnext/manufacturing/doctype/production_plan/production_plan.js:269,manufacturing,1
+Updated via 'Time Log' (In Minutes),,erpnext/manufacturing/doctype/work_order_operation/work_order_operation.json:None,manufacturing,0
+Updating Work Order status,جار تحديث حالة أمر العمل,erpnext/manufacturing/doctype/work_order/work_order.js:1102,manufacturing,1
+Use Default Warehouse,استخدام المستودع الافتراضي,erpnext/manufacturing/report/material_requirements_planning_report/material_requirements_planning_report.js:146,manufacturing,1
+Validate Components and Quantities Per BOM,التحقق من المكونات والكميات حسب قائمة المواد,erpnext/manufacturing/doctype/manufacturing_settings/manufacturing_settings.json:None,manufacturing,1
+View BOM Update Log,عرض سجل تحديث قائمة المواد,erpnext/manufacturing/doctype/bom_update_tool/bom_update_tool.js:25,manufacturing,1
+View Data Based on,عرض البيانات بناء على,erpnext/manufacturing/report/material_requirements_planning_report/material_requirements_planning_report.js:93,manufacturing,1
+View MRP,عرض تخطيط متطلبات المواد,erpnext/manufacturing/doctype/master_production_schedule/master_production_schedule.js:65,manufacturing,1
+Voucher Detail Reference,مرجع تفاصيل السند,erpnext/manufacturing/doctype/work_order_item/work_order_item.json:None,manufacturing,1
+WIP WH,مستودع تحت التشغيل,erpnext/manufacturing/doctype/work_order_operation/work_order_operation.json:None,manufacturing,1
+WIP Work Orders,أوامر عمل تحت التشغيل,erpnext/manufacturing/workspace/manufacturing/manufacturing.json:None,manufacturing,1
+"Warehouse {0} is not allowed for Sales Order {1}, it should be {2}",,erpnext/manufacturing/doctype/work_order/work_order.py:234,manufacturing,0
+"When a parent warehouse is chosen, the system conducts Project Qty checks against the associated child warehouses",,erpnext/manufacturing/doctype/production_plan/production_plan.json:None,manufacturing,0
+Work Order / Subcontract PO,أمر عمل / أمر شراء مقاول باطن,erpnext/manufacturing/doctype/production_plan/production_plan.js:144,manufacturing,1
+Work Order Consumed Materials,مواد أمر العمل المستهلكة,erpnext/manufacturing/report/work_order_consumed_materials/work_order_consumed_materials.json:None; erpnext/manufacturing/workspace/manufacturing/manufacturing.json:None,manufacturing,1
+Work Order {0} created,,erpnext/manufacturing/report/material_requirements_planning_report/material_requirements_planning_report.py:1372,manufacturing,0
+Workstation Cost,تكلفة محطة العمل,erpnext/manufacturing/doctype/workstation_cost/workstation_cost.json:None,manufacturing,1
+Workstation Dashboard,لوحة محطة العمل,erpnext/manufacturing/doctype/workstation/workstation.json:None,manufacturing,1
+Workstation Operating Component,مكون تشغيل محطة العمل,erpnext/manufacturing/doctype/workstation_operating_component/workstation_operating_component.json:None,manufacturing,1
+Workstation Operating Component Account,حساب مكون تشغيل محطة العمل,erpnext/manufacturing/doctype/workstation_operating_component_account/workstation_operating_component_account.json:None,manufacturing,1
+Workstation Status,حالة محطة العمل,erpnext/manufacturing/doctype/workstation/workstation.json:None,manufacturing,1
+Workstation Type,نوع محطة العمل,erpnext/manufacturing/doctype/bom_operation/bom_operation.json:None; erpnext/manufacturing/doctype/job_card/job_card.json:None; erpnext/manufacturing/doctype/work_order_operation/work_order_operation.json:None; erpnext/manufacturing/doctype/workstation/workstation.json:None; erpnext/manufacturing/doctype/workstation_type/workstation_type.json:None; erpnext/manufacturing/workspace/manufacturing/manufacturing.json:None,manufacturing,1
+Workstations,محطات العمل,erpnext/manufacturing/doctype/plant_floor/plant_floor.json:None,manufacturing,1
+"You can set it as a machine name or operation type. For example, stiching machine 12",,erpnext/manufacturing/doctype/workstation/workstation.js:59,manufacturing,0
+You can't make any changes to Job Card since Work Order is closed.,,erpnext/manufacturing/doctype/job_card/job_card.py:1211,manufacturing,0
+You cannot change the rate if BOM is mentioned against any Item.,,erpnext/manufacturing/doctype/bom/bom.js:698,manufacturing,0
+as a percentage of finished item quantity,,erpnext/manufacturing/doctype/bom/bom.js:966,manufacturing,0
+material_request_item,,erpnext/manufacturing/doctype/production_plan_item/production_plan_item.json:None,manufacturing,0
+temporary name,,erpnext/manufacturing/doctype/production_plan_item/production_plan_item.json:None,manufacturing,0
+via BOM Update Tool,,erpnext/manufacturing/doctype/bom_update_log/bom_updation_utils.py:41,manufacturing,0
+{0} Operating Cost for operation {1},,erpnext/manufacturing/doctype/bom/bom.py:1560,manufacturing,0
+{0} items lost during process.,,erpnext/manufacturing/doctype/work_order/work_order.js:494,manufacturing,0

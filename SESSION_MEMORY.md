@@ -589,3 +589,23 @@ closure commit until the next approved catalog-change re-pin.
 **Next:** wait for a separate owner-approved Stage-6 scope proposal (e.g. Manufacturing Batch 02 remainder)
 or for all original Stage-8/production prerequisites. Do not push this local closure
 without explicit request. Leave untracked `v16.localhost/` untouched.
+
+## 2026-09-24 — W6-6 Manufacturing Batch 02 governed cycle CLOSED
+
+Owner approved the exact 202-row scope CSV (SHA-256
+`195c789945cf2b069a1620e855b22ad38aa9cb0adf03b9b2342166c47b6e88ff`) for
+`v16.localhost` only. Final proposal SHA `7dd6bdd8…`; independent A1/A2/A3 and
+AI-R PASS. Dispositions: **82 Released + 119 preserved Site Overrides + 1
+technical exception**; catalog 3,326. Final dry-run `3326/0/0/3326/0`, drift=0;
+health flags clear. UAT PASS (13,628 Arabic boot messages, logout and teardown);
+browser RTL/Arabic DOM and 82/82 exact boot-payload matches; documented
+non-blocking Socket.IO polling warning. Standalone 92/92, modules 271/271,
+scoped/lints/vendor PASS, sync 0/0. Inventory 21,743 / Merkle `ed69ebe5…`;
+all ten evidence envelopes and indexed artifact hashes match, candidate HEAD
+`69b999e`; evidence-inclusive gate errors=0.
+
+Manufacturing eligible scope is exhausted. Production and Stage 8 remain
+untouched/gated. No push was performed. Leave untracked `v16.localhost/`
+untouched. Next action: propose a new bounded Stage-6 area for owner approval,
+or resume Stage 8 only after its original production-data, rehearsal, and
+explicit authorization controls are supplied.
