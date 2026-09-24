@@ -1,6 +1,6 @@
 # Session Memory — Construction ERP
-**LAST UPDATED:** 2026-09-24 (W6-6 Assets cycle closed)
-**UPDATED BY:** Antigravity (W6-6 governed cycle and evidence closure)
+**LAST UPDATED:** 2026-09-24 (W6-6 Manufacturing Batch 01 cycle closed)
+**UPDATED BY:** Antigravity (W6-6 Manufacturing Batch 01 governed cycle and evidence closure)
 
 ---
 
@@ -567,4 +567,25 @@ closure commit until the next approved catalog-change re-pin.
 
 **Next:** wait for a separate owner-approved Stage-6 scope proposal or for all
 original Stage-8/production prerequisites. Do not push this local closure
+without explicit request. Leave untracked `v16.localhost/` untouched.
+
+## 2026-09-24 — W6-6 Manufacturing Batch 01 governed cycle CLOSED
+
+Owner approved the exact 250-row CSV (SHA-256
+`0d5098f61e2f97d26fa40e4e8b5d3b90ab1ec22e9dafd543564cb07ec8d39286`) for
+`v16.localhost` only. Final partition: **83 Released + 167 preserved Site
+Overrides + 0 technical exceptions**. Proposal SHA `d64adaa6…`; A1/A2/A3/AI-R PASS.
+Final live DRY **3244/0/0/3244/0**, drift=0; health has no drift/orphans; catalog
+3,244. UAT preflight PASS, browser 8/8 / 250/250 matches, standalone 92/92,
+module 271/271, evidence-inclusive localization gate errors=0 on pre-commit
+HEAD `30c6277a6b12`; inventory 21,661 / Merkle `a8615211…`.
+
+All 167 existing Site Overrides on `v16.localhost` were preserved verbatim.
+UAT Administrator language restored to `en`, temporary password rotated, credentials cleared.
+Production and Stage 8 remain gated; the remaining 200 Manufacturing rows remain untouched.
+The evidence index binds pre-commit HEAD; the expected HEAD mismatch follows the
+closure commit until the next approved catalog-change re-pin.
+
+**Next:** wait for a separate owner-approved Stage-6 scope proposal (e.g. Manufacturing Batch 02 remainder)
+or for all original Stage-8/production prerequisites. Do not push this local closure
 without explicit request. Leave untracked `v16.localhost/` untouched.

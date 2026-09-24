@@ -1513,6 +1513,53 @@
         }
       }
     },
+    "021472f5c56cdb9eef65ecb5babbb03e185a455d6eb841a197d304658ff97c26": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "للعملية",
+        "sha256": "e7952b763625abfec22be37c4c7fc8a6ba96aaf667e97516c326513ed99a85f9"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "For Operation",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "للعملية",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
+        }
+      }
+    },
     "023ff73257348a77e701071384aa7e7b81e45f6ec6febf1a6e73d30aba21d096": {
       "artifacts": [
         {
@@ -2556,6 +2603,53 @@
         }
       }
     },
+    "03a97d08d1301d13b3cc125c8df48ad40ef8e6505a66d25d0cb9610e47c24d58": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "نظرًا لوجود عدد كافٍ من عناصر التجميع الفرعي، فإن أمر العمل غير مطلوب للمستودع {0}.",
+        "sha256": "915f42d31ae041f477a19f6707f9e24ddd0cedee8cf43fe3d498dbecfee3ed96"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "As there are sufficient Sub Assembly Items, Work Order is not required for Warehouse {0}.",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "نظرًا لوجود عدد كافٍ من عناصر التجميع الفرعي، فإن أمر العمل غير مطلوب للمستودع {0}.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
+        }
+      }
+    },
     "03a9bfb7e05307159881079527ca1534faf6440237801c61c3c4cac41e42dcf3": {
       "artifacts": [
         {
@@ -2844,6 +2938,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "03ce9309739f49b9cc9b466a0e308c6cc2179f7f8fa8ae6d9dd165144f3378c9": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تحديث قائمة المواد قيد التنفيذ بالفعل. يرجى الانتظار حتى يكتمل {0}.",
+        "sha256": "e2c64851793541b129f1e80a8eabe7835dca8b74f8bc8c05ebcb4a0e68db884a"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "BOM Updation already in progress. Please wait until {0} is complete.",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "تحديث قائمة المواد قيد التنفيذ بالفعل. يرجى الانتظار حتى يكتمل {0}.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
         }
       }
     },
@@ -5353,6 +5494,53 @@
         }
       }
     },
+    "07a0fe094f1f38b022983b0c6bd6a7c12f74054913036b42ce5f6c18ea37f03c": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تعلم التصنيع",
+        "sha256": "b85858652b0cf55b551d721039e452c123f0e0b19f06db82f8d9177664bda06c"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "Learn Manufacturing",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "تعلم التصنيع",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
+        }
+      }
+    },
     "07a69095ee4ab162cb71049ab9707deaf532ffcea5caff4d3bddc380cc0246af": {
       "artifacts": [
         {
@@ -6014,6 +6202,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "085f7069bbf9feb99fd83305b4a48bfdadec8fd18bf405fc96e83d209b77d510": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لم يتم العثور على بيانات مبيعات للأصناف المحددة.",
+        "sha256": "6935557bee1de550ebeeaf4e1ae647b63ceac3505e37630a2c1f95b28985635b"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "No sales data found for the selected items.",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "لم يتم العثور على بيانات مبيعات للأصناف المحددة.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
         }
       }
     },
@@ -11161,6 +11396,53 @@
         }
       }
     },
+    "11bc6131de26f0589f4d1837b55880a60c1e306ad728975f99bc74c4026bb4ce": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "60-90 يومًا",
+        "sha256": "82d931185d17332367eb0f2aec4f00d7830b42550e23cf3f1f3e8bc102c27310"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "60-90 Days",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "60-90 يومًا",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
+        }
+      }
+    },
     "11c0a32bf236d357b0230051bd9796e9fed55cb5daefc1c982d7f111344e39f7": {
       "artifacts": [
         {
@@ -13000,6 +13282,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "147157c581b03a90077e7dff795af299df48dd8cb0285385d399591b126cae66": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "هل تريد ترحيل قيد المخزون؟",
+        "sha256": "851d20497659e4c8eed14d50e92a4616864c98fbd870d14c8a51984d8e911cbc"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "Do you want to submit the stock entry?",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "هل تريد ترحيل قيد المخزون؟",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
         }
       }
     },
@@ -16258,6 +16587,53 @@
         }
       }
     },
+    "1a0ca53467b8a4aae504784677674772721fa281925e02028e0832af9b266fe3": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "عدد الأصناف المطلوبة",
+        "sha256": "f840dfc689de83d5b639377f715f5b20edf4f9f5a5d807316289c7416b56bc63"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "# Req'd Items",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "عدد الأصناف المطلوبة",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
+        }
+      }
+    },
     "1a0e36851e3d5dc1746b5f9838359edfd643c85aec561687044365a7a3ca45b3": {
       "artifacts": [
         {
@@ -16352,6 +16728,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "1a2ffccf472e741f6b19d57ea61264b77537378465376dd3252230551322381f": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "إذا نتج عن قائمة المواد خردة، فيجب تحديد مستودع الخردة.",
+        "sha256": "bf4d29d91f6039628126d6838ba0a172e813b10436910d921652ffb5a417e679"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "If the BOM results in Scrap material, the Scrap Warehouse needs to be selected.",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "إذا نتج عن قائمة المواد خردة، فيجب تحديد مستودع الخردة.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
         }
       }
     },
@@ -18520,6 +18943,53 @@
         }
       }
     },
+    "1ef1051dcb0acf0108091e3ea5dfa6d1e362e9d9408c3c1cafa8c50a1c490abe": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "قائمة المواد {0} غير موجودة للصنف {1}",
+        "sha256": "cd11ae068551baabbe33c666f50d15a50b7667f9b10c4d90a477399f6dc79cc7"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "BOM {0} not found for the item {1}",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "قائمة المواد {0} غير موجودة للصنف {1}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
+        }
+      }
+    },
     "1f0cabe855b576c186730127da3a01e48c3de042d46613ae176adb361e0da0bf": {
       "artifacts": [
         {
@@ -18752,6 +19222,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "1fdd96037e1d8c109f9ebedab3326b8796d241f3cf0642ed7f05ba96f0a2cccb": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تم العثور على مكوّن تشغيل مكرر {0} في مكونات التشغيل",
+        "sha256": "6d09912f5222bee30f35b97cb972ff3632182d418e69348ad78c12901cd4fd79"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "Duplicate Operating Component {0} found in Operating Components",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "تم العثور على مكوّن تشغيل مكرر {0} في مكونات التشغيل",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
         }
       }
     },
@@ -21020,6 +21537,53 @@
         }
       }
     },
+    "23b257f4b7e210df0a69723c04f5687cf90b504d509583d5f06d01d06f93553b": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لا توجد أصناف متوفرة في أوامر البيع {0} للإنتاج",
+        "sha256": "6a19f2ac3b2e9753e8ed95cfa0285abb9b816fa13674890fbcbcb948bd9f3bdf"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "No items are available in sales orders {0} for production",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "لا توجد أصناف متوفرة في أوامر البيع {0} للإنتاج",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
+        }
+      }
+    },
     "23b90c0d830fed818c753468e5af455e766fa24a7c41c323ea110ca594f5d642": {
       "artifacts": [
         {
@@ -22771,6 +23335,53 @@
         }
       }
     },
+    "264968ad929e9e9fa154edc5ea867d1effab7cd309240465f28b4802ddc73926": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "إذا كانت الأصناف متوفرة في المخزون، تابع بنقل المواد أو الشراء.",
+        "sha256": "0d06b06e1e443e511e35bc4621b1265ea5701ee9fd02bb4ed52f68a713dc90e6"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "If items in stock, proceed with Material Transfer or Purchase.",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "إذا كانت الأصناف متوفرة في المخزون، تابع بنقل المواد أو الشراء.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
+        }
+      }
+    },
     "2658904304e0f93f0daa5ca65b5575f3faa82a0fb8e7aadc32e0044c62cd62d7": {
       "artifacts": [
         {
@@ -23949,6 +24560,53 @@
         }
       }
     },
+    "27dd9a6f540eba154e41a081e148f1ad9951154b0fee2b564c20a613add6fb4a": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لبطاقة العمل",
+        "sha256": "425ea338fcdb72a126668e784d3bf6175b3befd7b86e64a7fcc39e5fad9d0b93"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "For Job Card",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "لبطاقة العمل",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
+        }
+      }
+    },
     "27ee3c9472a5395f27ec0cbbf033ce560c8a5f99924c6792e47e5283110b3ae5": {
       "artifacts": [
         {
@@ -24845,6 +25503,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "2967d70d2cab5a4379aac9caaf7c44f3e3d6e8803e64ccbeec4e16bce9729896": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "أدخل اسمًا للعملية، على سبيل المثال، القص.",
+        "sha256": "cf7a0814fb5948a7374c2acda27405499ae35f3327ce38acfa54855f3790426d"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "Enter a name for the Operation, for example, Cutting.",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "أدخل اسمًا للعملية، على سبيل المثال، القص.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
         }
       }
     },
@@ -26123,6 +26828,53 @@
         }
       }
     },
+    "2b777d7604021f7d124e8d2a37776f067ef6146f4ced719645216771a422192b": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يمكن إضافة قائمة عطلات لاستبعاد حساب هذه الأيام لمحطة العمل.",
+        "sha256": "b21c5953df85e1cc1dae9b8cfbe5eaee73de54c2d990111e8df329dbcce4ef3e"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "A Holiday List can be added to exclude counting these days for the Workstation.",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "يمكن إضافة قائمة عطلات لاستبعاد حساب هذه الأيام لمحطة العمل.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
+        }
+      }
+    },
     "2b82ba06d35809d706858d38d7dc815ff6ad895de86d514260da36e79d227f04": {
       "artifacts": [
         {
@@ -26217,6 +26969,53 @@
         }
       }
     },
+    "2b917fe550a454aa0f94f34be6a9b3b70494fee62b28bda01d89bd74d7f52509": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "إذا تم تقسيم عملية إلى عمليات فرعية، يمكن إضافتها هنا.",
+        "sha256": "d738ab33dddd252685bf57dc978b75e217e75be9c3d0996ac06bf5c534fc33a2"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "If an operation is divided into sub operations, they can be added here.",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "إذا تم تقسيم عملية إلى عمليات فرعية، يمكن إضافتها هنا.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
+        }
+      }
+    },
     "2b9a00ca69bc2adbb5867cae66253ece1721aab9356f07ed66666bd61342ebf6": {
       "artifacts": [
         {
@@ -26308,6 +27107,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "2bd9e53517b64ec5d6b487821d3e3088602eb10dd74f8e89b84fcddfd1aed5ab": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "مكوّن التشغيل",
+        "sha256": "f63fd9943730ad7d0d23e7f25eb58b5f6509ad85b77007503887dbe6e5bb8b28"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "Operating Component",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "مكوّن التشغيل",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
         }
       }
     },
@@ -28482,6 +29328,53 @@
         }
       }
     },
+    "2fd34dfd0fc4d02f1fd18abf502cbd03857578b0d166e1c0d8aedd1a616db2c2": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "إذا كنت لا تزال ترغب في المتابعة، يرجى تفعيل {0}.",
+        "sha256": "a48d7ca63b9081dcb6b97d419a983497cf40ae2ada1190d9912e0af4c9ce627e"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "If you still want to proceed, please enable {0}.",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "إذا كنت لا تزال ترغب في المتابعة، يرجى تفعيل {0}.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
+        }
+      }
+    },
     "2fec05c90829704ee17f4c2936e6703f51f087dfbd3e80215558de507928bc12": {
       "artifacts": [
         {
@@ -28623,6 +29516,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "300b2411420fd7c3189e89962fa0f02099233724aca5d9ef3f37d045742fb431": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تاريخ التسليم إلى",
+        "sha256": "5353edd6c7bfd8ee8cb59a52d321643c44eeef165c82d226cc6c8dd648176099"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "Delivery To Date",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "تاريخ التسليم إلى",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
         }
       }
     },
@@ -31969,6 +32909,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "35c46f6cc0e1fc281efeb78739fd041fe3e37bd696c14e39bf2d4ab831aeebd6": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تهيئة فاقد التصنيع غير صالحة",
+        "sha256": "170eee9d806478ee09cc3c7643175e3a7c6d25ef4a44e6adc71525bb793e1c31"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "Invalid Process Loss Configuration",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "تهيئة فاقد التصنيع غير صالحة",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
         }
       }
     },
@@ -40803,6 +41790,53 @@
         }
       }
     },
+    "43e0e839c778dcfb3c1476f57aef940c62acd2755889033ad1ac2dd7a5440da7": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الصنف {0} ليس صنفاً من الباطن",
+        "sha256": "b7678a7ba060a2b247a7c41746b33bba1d15ba86b0f2eb4f333deb6a0d90598e"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "Item {0} is not a subcontracted item",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "الصنف {0} ليس صنفاً من الباطن",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
+        }
+      }
+    },
     "4466a16bb72ff4a229aa0607c4109a6b46a44242b51e230ed2b1b1cdcb0d83b1": {
       "artifacts": [
         {
@@ -41505,6 +42539,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "45967936c299a3db556f325d18c96b0b37e78bd1b9fe4c8e0e848859d85a5a3a": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "حجم الفئة",
+        "sha256": "87e9631c23dc920e0b659f678b8e0d917c95320bd86dd9048e745ad92cf175cf"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "Bucket Size",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "حجم الفئة",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
         }
       }
     },
@@ -42266,6 +43347,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "4713cd481f35be2362a158a94da0293896af44e030168f649d93e08ca8248c48": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "في الصف {0}: لا يمكن تحديد رقم الصف الأصل للصنف {1}",
+        "sha256": "fe5dc0dc36dabb66913a2a47a10cd6bbce32da123fd89c9ed83f3129a72ae649"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "At row {0}: Parent Row No cannot be set for item {1}",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "في الصف {0}: لا يمكن تحديد رقم الصف الأصل للصنف {1}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
         }
       }
     },
@@ -44014,6 +45142,53 @@
         }
       }
     },
+    "49b4440876c3acfdbbd08e64708ed7315fbffe9acfa0b903f4c8eb4353fca61b": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لا توجد أصناف متوفرة في أمر البيع {0} للإنتاج",
+        "sha256": "2d4bddb6837579474fb79bd48eacf82caf80553ace3998112f7432a4597decce"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "No items are available in the sales order {0} for production",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "لا توجد أصناف متوفرة في أمر البيع {0} للإنتاج",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
+        }
+      }
+    },
     "49b9f9caaf14e9edf284357175671abe9bf04ff9ac1246d0f7425c1b32e983f6": {
       "artifacts": [
         {
@@ -44816,6 +45991,53 @@
         }
       }
     },
+    "4ac313bcc7fff14b94d230cdbb817de5cabf60f1b8a035624755dd5b6c1d4a6d": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "رقم قائمة المواد (للبضائع شبه المصنعة)",
+        "sha256": "7e7e07ae5a1dde5208021689117a10a6a6d94c3b86539a0d003e6f1f1cdffee3"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "BOM No (For Semi-Finished Goods)",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "رقم قائمة المواد (للبضائع شبه المصنعة)",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
+        }
+      }
+    },
     "4ac681f9c2045234064ab6f6ee07185d130eedae68811bd3672d884bf434c277": {
       "artifacts": [
         {
@@ -45001,6 +46223,100 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "4b2844a713cfe8035b73e268b7827a77153366c4bdb0ca1284ada90f8414aff0": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "إضافة تكلفة العملية التصحيحية في تقييم المنتج التام الصنع",
+        "sha256": "eacd396f0380c49b0c9f48a5a0db8a54251401071b218ca26a8d1f53f2a9ee1b"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "Add Corrective Operation Cost in Finished Good Valuation",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "إضافة تكلفة العملية التصحيحية في تقييم المنتج التام الصنع",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
+        }
+      }
+    },
+    "4b4cb132dd2f339b379dec003913d50a3fafc37dae2b28ad10fcfed08e6c37ce": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يرجى إلغاء قيود التصنيع أولاً مقابل أمر العمل {0}.",
+        "sha256": "58ee574a3149b2a0a3ad1d6e4d9ea9e14b40eec883b8efe3d6cefe3e5e02240e"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "Kindly cancel the Manufacturing Entries first against the work order {0}.",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "يرجى إلغاء قيود التصنيع أولاً مقابل أمر العمل {0}.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
         }
       }
     },
@@ -46370,6 +47686,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "4dce05ef15c7dfefa20ee765ca539a1f43e7e1e6763e4b49a3891bf9e075a319": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "أدخل الكمية المراد تصنيعها. سيتم جلب أصناف المواد الخام فقط عند تعيين هذا.",
+        "sha256": "15022419d5542771f4841e2c65e5ebc1e8f37077c60e882651956dd5f5135db4"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "Enter the quantity to manufacture. Raw material Items will be fetched only when this is set.",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "أدخل الكمية المراد تصنيعها. سيتم جلب أصناف المواد الخام فقط عند تعيين هذا.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
         }
       }
     },
@@ -48359,6 +49722,100 @@
           "confidence": "high",
           "decision": "approve",
           "session": "7b8e0b34-fbae-4e69-a64f-fd1c19ba44e1"
+        }
+      }
+    },
+    "510d33100bad9223199f248efbf8f6e162324e3cc91c35954c297ad59fa72b19": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تداخل دائري في قائمة المواد: لا يمكن أن يكون {1} أصلاً أو فرعاً لـ {0}",
+        "sha256": "bb4d7c42f92909f2c7cbfe8b2d3aae4e34669e7309c6b87c4294fafdb26ef004"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "BOM recursion: {1} cannot be parent or child of {0}",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "تداخل دائري في قائمة المواد: لا يمكن أن يكون {1} أصلاً أو فرعاً لـ {0}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
+        }
+      }
+    },
+    "5142048eb314ba11e63d4873113e5455ff2d3434ffb7216c5a47c79aa9d11cf3": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "فتح الصنف {0}",
+        "sha256": "ec3ba623808ceb84ace24e221ec13fae82f54f721c282d1a187ec7dad833fe5d"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "Open Item {0}",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "فتح الصنف {0}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
         }
       }
     },
@@ -50771,6 +52228,53 @@
         }
       }
     },
+    "5586de46073c9280e296425e8f590a67ecb0ff89bb293492bc545504f892119a": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "في الصف {0}: حدد رقم الصف الأصل للصنف {1}",
+        "sha256": "c223d25d48cb77398c892053313cdee40c69f98d1e2e145de2535bf2bd214c5b"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "At row {0}: set Parent Row No for item {1}",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "في الصف {0}: حدد رقم الصف الأصل للصنف {1}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
+        }
+      }
+    },
     "55a626beacc7b85f61ddda2f79830aae1f3557fe4f71ba78fd4d43c89e2dfd69": {
       "artifacts": [
         {
@@ -52043,6 +53547,53 @@
         }
       }
     },
+    "5835ceed177a77097e3dfc5b8de360ad799396fa94540ace6b94e485fa767c40": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تم إنشاء قوائم المواد بنجاح",
+        "sha256": "b25b2da423e9b9af99dd37b164520bf92709ce4a26d43d0371e070b689ebb08a"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "BOMs created successfully",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "تم إنشاء قوائم المواد بنجاح",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
+        }
+      }
+    },
     "584c2abbcaa3eec0add0ee51ae3b044f706ef7dc545c832d13f2ce5aa77db0c3": {
       "artifacts": [
         {
@@ -52231,6 +53782,53 @@
           "decision": "approve",
           "model": "Codex GPT-6",
           "session": "/root/w603_a3"
+        }
+      }
+    },
+    "58c0a56bb65de67dce308eb1fa39ebecce30346b2ed52332d17da4af664a7ecf": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "غير مسموح بإنشاء أوامر شراء",
+        "sha256": "3810f3e99427d957e7165308d5e78df1910ccca65ee570a0f54b321349963679"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "Not permitted to make Purchase Orders",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "غير مسموح بإنشاء أوامر شراء",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
         }
       }
     },
@@ -54828,6 +56426,53 @@
         }
       }
     },
+    "5ccd680d933449c68ae65fdd9ea377a4aee8ff0ec01701a6533ea70a37c6eedd": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يتم إنشاء مستندات سجل تخطيط متطلبات المواد في الخلفية.",
+        "sha256": "fa619b2a30d0304864198076ff5da0f8b2008af0d093b551a46fdf46b740d779"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "MRP Log documents are being created in the background.",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "يتم إنشاء مستندات سجل تخطيط متطلبات المواد في الخلفية.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
+        }
+      }
+    },
     "5cd0a0e5c06dffea34a7e9ac171a5eb0f6467982ae58b8845ca605e804db460a": {
       "artifacts": [
         {
@@ -55862,6 +57507,53 @@
         }
       }
     },
+    "5ef9076ba51cdebc493970f2b7bd6526ac45844f15fa43a33c4bd3b6432746a9": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "السماح بنقل المواد الخام حتى بعد استيفاء الكمية المطلوبة",
+        "sha256": "cfa78ac1b6c169ac3d1be7ccb71c2e848f0ef9435612e30ad821bffb90efa576"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "Allow transferring raw materials even after the Required Quantity is fulfilled",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "السماح بنقل المواد الخام حتى بعد استيفاء الكمية المطلوبة",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
+        }
+      }
+    },
     "5efcd56de73b7b3537cb480dd311c03fabc456027d4e62738897e68ce2744b68": {
       "artifacts": [
         {
@@ -56003,6 +57695,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "5f39d2fce6fbda773ee4dee8de066f0a9990bae4861078803557c746c1519beb": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لم يتم العثور على طلبات مواد مفتوحة للمعايير المحددة.",
+        "sha256": "2192ca870e1d8ff9620b905c104cdf66612534b8d5987fa6c40dc0680cbc4de3"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "No open Material Requests found for the given criteria.",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "لم يتم العثور على طلبات مواد مفتوحة للمعايير المحددة.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
         }
       }
     },
@@ -59601,6 +61340,53 @@
         }
       }
     },
+    "65f02c1aa23812ba781bf153abd94cca7c2c51e2e2176ec3de469cf36900b405": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تم تحديث قوائم المواد",
+        "sha256": "f443a37dda4fc790cae373b5cfb62f1e71f87adca1e296ff5546fbabfeac85c9"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "BOMs Updated",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "تم تحديث قوائم المواد",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
+        }
+      }
+    },
     "65f27a4e2a6bb2a902597b28c0da4ba00c721761e6c6db9427b66821e580b431": {
       "artifacts": [
         {
@@ -60412,6 +62198,53 @@
         }
       }
     },
+    "678f902e68f30f41c72865af92c125c6a8d0babd628bab1a524d8986b1a4e304": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "30-60 يومًا",
+        "sha256": "e18d8d9d1e41f23db420cef8fd72adc2171003fcc9257cba86eeafac33e499ad"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "30-60 Days",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "30-60 يومًا",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
+        }
+      }
+    },
     "6792293ce1389f58d93b7311ecd8592d80f6c795893e0a89991a96a97491a726": {
       "artifacts": [
         {
@@ -60738,6 +62571,53 @@
           "confidence": "high",
           "decision": "approve",
           "session": "7b8e0b34-fbae-4e69-a64f-fd1c19ba44e1"
+        }
+      }
+    },
+    "684fe3d3c5d7d7ef921ad77e4b53ecf3df81c0671dabb6d0fe88108679cc1356": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "خامل",
+        "sha256": "d7896a0ff6a08d07e6a090b3ae2055af129e42dc9f31f70bce39ccfc626c4335"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "Idle",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "خامل",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
         }
       }
     },
@@ -63009,6 +64889,53 @@
         }
       }
     },
+    "6c786b10a9440d68e2ce94a494607d96f8b8d715b51276e131f451ab976f57e5": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "إذا كنت لا تزال ترغب في المتابعة، يرجى إلغاء تفعيل خانة الاختيار 'تخطي عناصر التجميع الفرعي المتوفرة'.",
+        "sha256": "5e1cade4736fba4780dfcc920cd793acaabc674b9afe3125020ab3c7b8313846"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "If you still want to proceed, please disable 'Skip Available Sub Assembly Items' checkbox.",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "إذا كنت لا تزال ترغب في المتابعة، يرجى إلغاء تفعيل خانة الاختيار 'تخطي عناصر التجميع الفرعي المتوفرة'.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
+        }
+      }
+    },
     "6c915a1d88638fb248f9613a2fb5e7cb9d8aa66261f8d4c8afedc26192d6d982": {
       "artifacts": [
         {
@@ -63241,6 +65168,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "6cc93a6c2f8c0b9b463e091987608e97db1a4656375c86f2ff4f40271b4dfd26": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "من بطاقة عمل تصحيحية",
+        "sha256": "a6fafe5f25c100e9a0e3197997d673bb6fbd6b8bfff061cf2b08ea7f82b50547"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "From Corrective Job Card",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "من بطاقة عمل تصحيحية",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
         }
       }
     },
@@ -64895,6 +66869,53 @@
         }
       }
     },
+    "6fa1a237007534bcbe91401636f0fd636b9b4b20f024bb2504459acdc659e4f7": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "بمجرد إغلاق أمر العمل، لا يمكن استئنافه.",
+        "sha256": "de76d9bb0346f3a8ac4965a517d20e7f134f740ccd42ecf302b572f392af5b86"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "Once the Work Order is Closed. It can't be resumed.",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "بمجرد إغلاق أمر العمل، لا يمكن استئنافه.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
+        }
+      }
+    },
     "6fa889ae386d7e95d7d7acd07a0800a97291dd94dacad58c2b57b2f580745314": {
       "artifacts": [
         {
@@ -66358,6 +68379,53 @@
         }
       }
     },
+    "722e1f47237dbe703b9824f7b7a5084538598b5fa00e69c0cd5f98b0c0c731e1": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "فشل إنشاء قوائم المواد",
+        "sha256": "a4d68afaf7f10158e1de290ee3fa0fef304910a13db5deafe12a6fdbdb56f3df"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "BOMs creation failed",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "فشل إنشاء قوائم المواد",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
+        }
+      }
+    },
     "723e2186cc118d26d6d4ca3278fee8486c52ac8b355201a2821277b6efc5896f": {
       "artifacts": [
         {
@@ -67439,6 +69507,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "7466af87db0c0c0756cdf44678286703fb5aba2dc6d6a7f9b7cba2be5ad26856": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الكمية الفعلية {0} / كمية الانتظار {1}",
+        "sha256": "452a288725ed561119d7290064da423aea1ac1f2a856bc26377206c81180567e"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "Actual Qty {0} / Waiting Qty {1}",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "الكمية الفعلية {0} / كمية الانتظار {1}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
         }
       }
     },
@@ -69607,6 +71722,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "794d3e367f7c4b801cf9d615bf6610393aba146d567ece99ad6aa61d211bedc1": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لا يمكن طلب الصنف {0} بأكثر من {1} مقابل الأمر الشامل {2}.",
+        "sha256": "0cdc6300a8a6572e396ebfe5d1a12beb3afbe652a598102076c91a8888943b67"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "Item {0} cannot be ordered more than {1} against Blanket Order {2}.",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "لا يمكن طلب الصنف {0} بأكثر من {1} مقابل الأمر الشامل {2}.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
         }
       }
     },
@@ -73476,6 +75638,53 @@
         }
       }
     },
+    "7f62a3894f6e3dbee2e2dfaf2baa4b515456f67ffa2b4fd559893b45ebad483e": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لا يمكن تفكيك كمية أكبر من الكمية المنتجة.",
+        "sha256": "66a0d57207cefb52a1245c77964d5d578fb18769fada5fbf70af9f067d0e139f"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "Cannot disassemble more than produced quantity.",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "لا يمكن تفكيك كمية أكبر من الكمية المنتجة.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
+        }
+      }
+    },
     "7f7971909ec31fa8e82e86c66477e4ed3631df20328bf7d07c8c97df2617f72c": {
       "artifacts": [
         {
@@ -73711,6 +75920,53 @@
           "decision": "approve",
           "model": "Codex GPT-6",
           "session": "/root/w603_a3"
+        }
+      }
+    },
+    "7ff4649b7b127594302fe721b88af6863cf7c89682c9233ced0cacdb77284dbb": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يجب نقل المواد إلى مستودع الأعمال قيد التنفيذ لبطاقة العمل {0}",
+        "sha256": "0c7e485e9adcb67a8a40c5822b91651422ad86d8c961333310d468d5a3b998d1"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "Materials needs to be transferred to the work in progress warehouse for the job card {0}",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "يجب نقل المواد إلى مستودع الأعمال قيد التنفيذ لبطاقة العمل {0}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
         }
       }
     },
@@ -74757,6 +77013,53 @@
         }
       }
     },
+    "825d9abdd94ec34423a8607ea52450913a6d07d78dd78ca0e9a36b70bf0ce5e9": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "للمواد الخام",
+        "sha256": "3e3aef8b557b8d735d071a9d53ec59583a0d801d92e8efc2ac4bccd0c21da2ec"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "For Raw Materials",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "للمواد الخام",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
+        }
+      }
+    },
     "826949b063284aa1b5d8e06ebb198b7c09c103309b47748abf8d34460bbfda63": {
       "artifacts": [
         {
@@ -75603,6 +77906,53 @@
         }
       }
     },
+    "842e70c557b3ac4da77121e1f8dfdfd8103f0a9f8d685bf0d4b0793a42adc9a9": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "كمية خاصة",
+        "sha256": "ef994d23e882b8bd45ded3e18c9694a0c7f2c2c2f72e4aacd9bd6b4aa49929f2"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "Ad-hoc Qty",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "كمية خاصة",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
+        }
+      }
+    },
     "84301744bee89ad80bef319263337b256dd91be645413e324f7f9695fc6d6ed1": {
       "artifacts": [
         {
@@ -76164,6 +78514,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "85687cc5599afc6f384e262301694a23d1cf03e453763818983867e43a3296a5": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لا يمكن إنتاج أكثر من {0} عناصر لـ {1}",
+        "sha256": "b427b49b50c13bb2515299f5a01094fd9c9f403880f24652adafd5c420641488"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "Cannot produce more than {0} items for {1}",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "لا يمكن إنتاج أكثر من {0} عناصر لـ {1}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
         }
       }
     },
@@ -82160,6 +84557,53 @@
         }
       }
     },
+    "8f0a8b0b6733fddecf63cf4c4eba6467d3fc3f53d215d6a6cffe3e883bdaa7b9": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لم يتم إنشاء أوامر عمل",
+        "sha256": "38aa99d05a85642aded26421ef801afe374f6fe1c1030c214d95dc7bfef587b1"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "No Work Orders were created",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "لم يتم إنشاء أوامر عمل",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
+        }
+      }
+    },
     "8f0d8e2af2f234a15214157b977afa5db176b0e32f52d657ed004ea24656aa20": {
       "artifacts": [
         {
@@ -85232,6 +87676,53 @@
           "confidence": "high",
           "decision": "approve",
           "session": "7b8e0b34-fbae-4e69-a64f-fd1c19ba44e1"
+        }
+      }
+    },
+    "93b2cbfb194969f1cbd5955a5358087ed90456750b93b0cb46f6ab2c46e910ed": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تم طلب جميع الأصناف بالفعل",
+        "sha256": "ca539c0582873b4e4dd077daf01dc9b6089bc52e8f7e76e2aa6b24fd1858933a"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "All items are already requested",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "تم طلب جميع الأصناف بالفعل",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
         }
       }
     },
@@ -88405,6 +90896,53 @@
         }
       }
     },
+    "98f02bd94a58ebba073cfaf6d27ee53ba49d8489e7d5934e34426493f9ffaeb2": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "السماح باستهلاك المواد دون تصنيع المنتجات تامة الصنع فورًا مقابل أمر العمل",
+        "sha256": "92681ff1392c8f17454588816d9c6b69dd26fa74372a6f1c475e3bfec5a43638"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "Allow material consumptions without immediately manufacturing finished goods against a Work Order",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "السماح باستهلاك المواد دون تصنيع المنتجات تامة الصنع فورًا مقابل أمر العمل",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
+        }
+      }
+    },
     "98fab5bdb1e238eb94a414a6661cba572578126681b83a014885ccabedb32890": {
       "artifacts": [
         {
@@ -90488,6 +93026,53 @@
         }
       }
     },
+    "9cbf115faa207f0f24628b13707768dbc660785ea7f40995a6980eaf62171768": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لا يمكن استخدام صنف الأصل الثابت {0} في قوائم المواد.",
+        "sha256": "969042acbe4e23fccb10bfb0f4ed32c160883776ad25b6ed6d312f94d1a15435"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "Fixed Asset item {0} cannot be used in BOMs.",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "لا يمكن استخدام صنف الأصل الثابت {0} في قوائم المواد.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
+        }
+      }
+    },
     "9ce8ee2cf80a730ca629035b5988b3d69ba24dca2596f1549a8548017cf5c9b6": {
       "artifacts": [
         {
@@ -90532,6 +93117,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "9d00cba44ca9da74a74b72959c1bbf4d3e755c64a7e7d47292b7c6c24d67f20e": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تم وضع إنشاء قوائم المواد في قائمة الانتظار، يرجى التحقق من الحالة بعد فترة",
+        "sha256": "5f7b8647e9a30f4732c739a52219422b08560cd11270b311166faff742ab87e4"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "BOMs creation has been enqueued, kindly check the status after some time",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "تم وضع إنشاء قوائم المواد في قائمة الانتظار، يرجى التحقق من الحالة بعد فترة",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
         }
       }
     },
@@ -91478,6 +94110,53 @@
         }
       }
     },
+    "9f4f5ce2645527dd75b4d4b2e9005fdb25aaa77a4e3a0bd484cf376e3cb81cf5": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "انقر فوق جلب أوامر البيع لجلب أوامر البيع بناءً على عوامل التصفية أعلاه.",
+        "sha256": "76feefef839d6e33dc0513a802ff174ce61af488889c739f33a374f2081c56a8"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "Click on Get Sales Orders to fetch sales orders based on the above filters.",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "انقر فوق جلب أوامر البيع لجلب أوامر البيع بناءً على عوامل التصفية أعلاه.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
+        }
+      }
+    },
     "9f619910438445da656f6e07ad4c71f0bde47898a3d7d5ca454575112aeb12eb": {
       "artifacts": [
         {
@@ -91757,6 +94436,53 @@
           "confidence": "high",
           "decision": "approve",
           "session": "7b8e0b34-fbae-4e69-a64f-fd1c19ba44e1"
+        }
+      }
+    },
+    "9fe16622a3226203a4f99cf9777b2c6d112e7b1f146ac9ad953877d45b2451c8": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لم يتم إنشاء أوامر شراء",
+        "sha256": "9be11c9c354b1ef46891dc49209209ba0745fd11f82ac21f73323a9058ba19aa"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "No Purchase Orders were created",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "لم يتم إنشاء أوامر شراء",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
         }
       }
     },
@@ -93605,6 +96331,53 @@
         }
       }
     },
+    "a389130f0596919f1216c4e20ea042d851dbf155d3f703bcdbe86ac656270c5c": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "السماح بتعديل الأصناف والكميات في أمر العمل",
+        "sha256": "1cf825648d84d4d1ea1e5e5c247676c05493a9d3edd59006c5c0928207018d6f"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "Allow Editing of Items and Quantities in Work Order",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "السماح بتعديل الأصناف والكميات في أمر العمل",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
+        }
+      }
+    },
     "a3b73f4098cb7aca7e38780b99797310eea9e95bd345119c7943574d44b17ad9": {
       "artifacts": [
         {
@@ -94501,6 +97274,53 @@
         }
       }
     },
+    "a4ee4f98745a0a230e948de3cb58cecc322291d7b1f8c22a2b9e17f6b5485d84": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "أدخل كمية الصنف التي سيتم تصنيعها من قائمة المواد هذه.",
+        "sha256": "b7ce997cde0b84219555f18462eb0e820e3dc0a138f68cb7f2131c4f69a48cfa"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "Enter the quantity of the Item that will be manufactured from this Bill of Materials.",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "أدخل كمية الصنف التي سيتم تصنيعها من قائمة المواد هذه.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
+        }
+      }
+    },
     "a515b4ace8ef85a846f84368ba183a5a837e0ded45aebf008c18015098b79891": {
       "artifacts": [
         {
@@ -95068,6 +97888,53 @@
         }
       }
     },
+    "a6c638d653d66daabb2618e2df814e1071c38fc3dd9e15da14115bb6eefe52c2": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "أدخل اسمًا لمسار الإنتاج.",
+        "sha256": "e30339f806639e7f64c54949ce709dddd026fb44dff43fdeef7a31a1aa9ce7c5"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "Enter a name for Routing.",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "أدخل اسمًا لمسار الإنتاج.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
+        }
+      }
+    },
     "a6ce401bcca7b9d45fca1d0d529df74aaf64e6ebd7022d17777ba5622993910f": {
       "artifacts": [
         {
@@ -95535,6 +98402,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "a7a60f04bc20a6cbae9146c91b625e00b5bfface661ce88a7b48fed0bc24c0fd": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تم إكمال بطاقة العمل {0}",
+        "sha256": "1e9e24b6902e6f3cc2f347e151bee313045da6a385f3bcd8cf51444462101f72"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "Job Card {0} has been completed",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "تم إكمال بطاقة العمل {0}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
         }
       }
     },
@@ -104565,6 +107479,53 @@
         }
       }
     },
+    "b67abb8d3c398e5a4000bb2eaa60ba39d50443d68c184daee222bc3d1b7e9231": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لم يتم إنشاء تشغيلة للصنف {} لأنه لا يحتوي على سلسلة تشغيلات.",
+        "sha256": "b035d6f53e83c0a845d45c8f38d7fc58fa3d67b88b612dc748759a4479fc1a9b"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "Batch not created for item {} since it does not have a batch series.",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "لم يتم إنشاء تشغيلة للصنف {} لأنه لا يحتوي على سلسلة تشغيلات.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
+        }
+      }
+    },
     "b68088342a54ca7710d0ea8a12dc2ab8a7b6f80f391b510b862877389b40ed5d": {
       "artifacts": [
         {
@@ -109471,6 +112432,53 @@
         }
       }
     },
+    "bda5af7025daf2fd6d9b96004f90e4f15f4cd0385918a2d609313edc0e04f045": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تاريخ التسليم من",
+        "sha256": "f3c8e47a3ef5affb97916941456f13207540402624d24fc393a641402c718218"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "Delivery From Date",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "تاريخ التسليم من",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
+        }
+      }
+    },
     "bdab56cb176a4a1591556dbc93f93d42e31f6fd5aba79b632415d5c5ca2ded08": {
       "artifacts": [
         {
@@ -110270,6 +113278,53 @@
           "confidence": "high",
           "decision": "approve",
           "session": "7b8e0b34-fbae-4e69-a64f-fd1c19ba44e1"
+        }
+      }
+    },
+    "bef11f63fbf3edbf0340d106fde8833eae20f58c184a0591646c73ccc6bd449d": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "سجل أداة تحديث قائمة المواد مع الحفاظ على حالة المهمة",
+        "sha256": "462a3005eafc166e98618e3ef5850b85129e0f3d180a1fef1128d48367913a73"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "BOM Update Tool Log with job status maintained",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "سجل أداة تحديث قائمة المواد مع الحفاظ على حالة المهمة",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
         }
       }
     },
@@ -112218,6 +115273,53 @@
         }
       }
     },
+    "c1825f9c16afc79b7e422440ac76cfc80435426a7ab2e155bfe9b939e6070bdf": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "التكلفة التشغيلية بناءً على البضائع تامة الصنع",
+        "sha256": "362dc381d33084b319a8107e881971139f32c53db84ab3b3890b4b77484805d9"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "Finished Goods based Operating Cost",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "التكلفة التشغيلية بناءً على البضائع تامة الصنع",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
+        }
+      }
+    },
     "c18def3e1c92e4e361d045008288de559967be0f6b60a1c97fc0022911bb5963": {
       "artifacts": [
         {
@@ -114051,6 +117153,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "c43d364d09146bacd46efeeb45283acb6b25d6f37cbe0afe5dca9a804ae32a10": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تم وضع تحديث قائمة المواد في قائمة الانتظار وقد يستغرق بضع دقائق. تحقق من {0} لمتابعة التقدم.",
+        "sha256": "5083cb835c2a818aba195adbd0d186c4e4ba7c38d26b7c5298718f537d650c24"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "BOM Updation is queued and may take a few minutes. Check {0} for progress.",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "تم وضع تحديث قائمة المواد في قائمة الانتظار وقد يستغرق بضع دقائق. تحقق من {0} لمتابعة التقدم.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
         }
       }
     },
@@ -117729,6 +120878,53 @@
         }
       }
     },
+    "cb01716007162ed6f0b8495e105909090093a5581e6b668b21a7ededbd8c979c": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "بالدقائق",
+        "sha256": "512804d955b646b76ee274036ec81ffb46ab86e8deb3758e333c230795f46f0b"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "In mins",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "بالدقائق",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
+        }
+      }
+    },
     "cb16ed5467b7d0a083c819546729b6a886862da3dcb0ddc2c3c5506b050023ae": {
       "artifacts": [
         {
@@ -119430,6 +122626,53 @@
         }
       }
     },
+    "ce013221f69cdce416b582a6c6e6df014a9d88657f93d1d4119926bade57accf": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لا يمكن أن يكون تاريخ الانتهاء الفعلي قبل تاريخ البدء الفعلي",
+        "sha256": "591142034f4c2e6c14e618013701bc19d83cddc5b586993d27b2eec67e716750"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "Actual End Date cannot be before Actual Start Date",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "لا يمكن أن يكون تاريخ الانتهاء الفعلي قبل تاريخ البدء الفعلي",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
+        }
+      }
+    },
     "ce2c93d001a03973e0d49c4049c1f4b03141adc8896196bc6c549b57d7387852": {
       "artifacts": [
         {
@@ -119759,6 +123002,53 @@
           "decision": "approve",
           "model": "Codex GPT-6",
           "session": "/root/w603_a3"
+        }
+      }
+    },
+    "ce6e4d315f1bd84b7d908a97ae229330421203bcdab4b4682ac360b5615d4687": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لا يمكن أن تكون الكمية المستهلكة أكبر من الكمية المحجوزة للصنف {0}",
+        "sha256": "e4cb4a092e6f53942513fb6f5d55d49299d05ec9ce582e6e13185242f55c8556"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "Consumed Qty cannot be greater than Reserved Qty for item {0}",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "لا يمكن أن تكون الكمية المستهلكة أكبر من الكمية المحجوزة للصنف {0}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
         }
       }
     },
@@ -120943,6 +124233,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "d089c52b4f561536fe524478d3a464e4ab9ca1cef872063fc2c7742507ac3546": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لا يمكن إغلاق أمر العمل. نظرًا لأن بطاقات العمل {0} في حالة قيد التنفيذ.",
+        "sha256": "5860342e68eba615742078de72036191751ba8052e115f7a6be53b2f538c77cb"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "Can not close Work Order. Since {0} Job Cards are in Work In Progress state.",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "لا يمكن إغلاق أمر العمل. نظرًا لأن بطاقات العمل {0} في حالة قيد التنفيذ.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
         }
       }
     },
@@ -126548,6 +129885,53 @@
         }
       }
     },
+    "d99364a5f45cc392c4e4bfced4655f2f316fbd499b87eb1b9a22d096ebc511a0": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "وقت العملية لا يعتمد على الكمية المراد إنتاجها",
+        "sha256": "0f3742910b027b5ec2a1dfaa0c76724d12c74628e05f1ccca8db726420911690"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "Operation time does not depend on quantity to produce",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "وقت العملية لا يعتمد على الكمية المراد إنتاجها",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
+        }
+      }
+    },
     "d9abaa72a049e169137ccc3794cc3f55de3db448ef7ede94768aeed204c0680e": {
       "artifacts": [
         {
@@ -128957,6 +132341,53 @@
           "confidence": "high",
           "decision": "approve",
           "session": "7b8e0b34-fbae-4e69-a64f-fd1c19ba44e1"
+        }
+      }
+    },
+    "dcaac8e57f2ab03d976fe5f5ab77364844f480a1a63695881b24c98c772fc830": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "سيؤدي تفعيل خانة الاختيار هذه إلى إلزام كل سجل وقت لبطاقة العمل بأن يتضمن وقت البدء ووقت الانتهاء",
+        "sha256": "bb9533b951b701427c2c68ab47f3a3304e3843b2b5c0d2e007d9a29f07680dea"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "Enabling this checkbox will force each Job Card Time Log to have From Time and To Time",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "سيؤدي تفعيل خانة الاختيار هذه إلى إلزام كل سجل وقت لبطاقة العمل بأن يتضمن وقت البدء ووقت الانتهاء",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
         }
       }
     },
@@ -136009,6 +139440,53 @@
         }
       }
     },
+    "e890eefdc9b361f6aa0a57592970eb70ab4f713f32ab47e45de8adaceba66a7c": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الموظف {0} يعمل حاليًا في محطة عمل أخرى. يرجى تعيين موظف آخر.",
+        "sha256": "09bb836c5335b431c0080230cd04d2611ba3cae64a50f632b1e2736c4833a7f0"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "Employee {0} is currently working on another workstation. Please assign another employee.",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "الموظف {0} يعمل حاليًا في محطة عمل أخرى. يرجى تعيين موظف آخر.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
+        }
+      }
+    },
     "e8b21b100fad644a9e1c1e1ca9bbe8ab11b53419f292e9798e9308e0edf867f8": {
       "artifacts": [
         {
@@ -137090,6 +140568,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "ea128aac1d55113e919464cb3a1c81704013907a1e6bc1621eba56d6a118c480": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لا يمكن إضافة الصنف {0} كتجميع فرعي لنفسه",
+        "sha256": "30e744c6bffdb631f44c81a398e9a20f9f6d36c64d0a4763605d82d008b162bb"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "Item {0} cannot be added as a sub-assembly of itself",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "لا يمكن إضافة الصنف {0} كتجميع فرعي لنفسه",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
         }
       }
     },
@@ -138835,6 +142360,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "ecee07ac6029061fd7b36b5f7e735ee4bde0c6c153f3d2266770346011e6502c": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "فتح أمر العمل {0}",
+        "sha256": "4f3980b77a5331a8068094a98fa34ed5631b28363e7644fed9e5b124c8abb139"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "Open Work Order {0}",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "فتح أمر العمل {0}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
         }
       }
     },
@@ -141105,6 +144677,53 @@
         }
       }
     },
+    "f199d47bc4bee48df6ff236ace73fd0bba70e229b8586afc197778767f7ff33c": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الكمية الفعلية: الكمية المتوفرة في المستودع.",
+        "sha256": "3ab2858a2aa42511f7b2bf447ecf0917d266361579c7bd977250819b46f3e255"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "Actual Qty: Quantity available in the warehouse.",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "الكمية الفعلية: الكمية المتوفرة في المستودع.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
+        }
+      }
+    },
     "f19f595f24c1789ad3dc56ff1fdcd299284587241a7bc2f8fde7919bf3fadbd3": {
       "artifacts": [
         {
@@ -141243,6 +144862,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "f1e714fbd042019f41bf9a9266a893ab512ecaa5203b8346233c4a8b87bbb507": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "للعملية {0}: لا يمكن أن تكون الكمية ({1}) أكبر من الكمية المعلقة ({2})",
+        "sha256": "8abb73b1c9e1c06c771009d647f6bc08136e2e8dfbdd92e480f0a8c9f592a641"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "For operation {0}: Quantity ({1}) can not be greater than pending quantity({2})",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "للعملية {0}: لا يمكن أن تكون الكمية ({1}) أكبر من الكمية المعلقة ({2})",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
         }
       }
     },
@@ -142894,6 +146560,53 @@
         }
       }
     },
+    "f48ca0a878018e332af7c924af9b21bcc759d218471c25f4b39d6bcfda738946": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "قيمة مفقودة",
+        "sha256": "d0cdfcdbb1dd7ff08d3d126894482058f1c78a47c1009d0e3cb2ac096d3b0625"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "Missing value",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "قيمة مفقودة",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
+        }
+      }
+    },
     "f48d89f4b3d880a9f25a06c113eee4d1d08c5c28c4acbe4f4646d69bde2004cf": {
       "artifacts": [
         {
@@ -143267,6 +146980,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "f507c11957c7885f0f452d86e03788b538fc86beba52dacb4ec2617f054700e7": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "العدد في المخزون",
+        "sha256": "32bb2b939beae0adde3a6229bd6b1c0e516168ab698d54ae0891fb90d28104c1"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "# In Stock",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "العدد في المخزون",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
         }
       }
     },
@@ -145814,6 +149574,53 @@
         }
       }
     },
+    "f9a32dff6278313a949afcd38b1ac96b54546eb30d76c8e49d75671a36301b50": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لا يمكن إنتاج المزيد من الصنف لـ {0}",
+        "sha256": "eb90a3fddcb8f40efa84b7fc63ccab853d80528d11602315ac643dc35935dfec"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "Cannot produce more item for {0}",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "لا يمكن إنتاج المزيد من الصنف لـ {0}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
+        }
+      }
+    },
     "f9a6135c1ca4ed81867fd9e192761138cc6b5a445f7cfc6d88f4b474312a8329": {
       "artifacts": [
         {
@@ -146710,6 +150517,53 @@
         }
       }
     },
+    "fb366d853fa214a1747ca9a68ab5dda974344ec2348e00ee3ffe1681105197a4": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "فتح قائمة المواد {0}",
+        "sha256": "ca3240f27a82d8349e6f09eb5fdd3ab9092653627bb5c7dc63a71c8d13f433b9"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "Open BOM {0}",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "فتح قائمة المواد {0}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
+        }
+      }
+    },
     "fb40cc05444c5cbecdf77c6e68f4c2809611363184eb259c7f4701d8940ec422": {
       "artifacts": [
         {
@@ -147224,6 +151078,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "fbfbc4fb84aa9b75a584fa17e809fac3d98d870b4682910225d157636042fe4f": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_manufacturing_batch01_payload_applied_rows_2026-09-24.csv",
+          "sha256": "271ba7619efb9a75bab8f6d1540164c92ee3bb931988177660748bbce9c923d3"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "manufacturing",
+      "language": "ar",
+      "proposal": {
+        "arabic": "0-30 يومًا",
+        "sha256": "5539cc134b1512dd7e107d8fbccb4dcf7c648dc25ff7b15a8e2ed274b9fb4a45"
+      },
+      "references": "glossary v2.0; vendor manufacturing PO locations; plan D5; W6-6 manufacturing batch-01",
+      "release_version": "1.8",
+      "reviewers": [
+        "AI-A1 (51113ce4-c69b-422f-ab6c-9f6da5ab6147)",
+        "AI-A2 (42622638-757d-4ee6-9e38-833fc79d38af)",
+        "AI-A3 (5d95d7bc-8806-4df9-a822-4e1f8081d3fe)"
+      ],
+      "source_text": "0-30 Days",
+      "timestamps": [
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26",
+        "2026-09-24 14:07:26"
+      ],
+      "translated_text": "0-30 يومًا",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "51113ce4-c69b-422f-ab6c-9f6da5ab6147"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "42622638-757d-4ee6-9e38-833fc79d38af"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
         }
       }
     },
@@ -149258,7 +153159,7 @@
       }
     }
   },
-  "generated_utc": "2026-09-24T12:58:59Z",
-  "note": "Historical decisions retained; W6-6 additions bind 113 released rows to the exact proposal SHA and independent A1/A2/A3 PASS.",
+  "generated_utc": "2026-09-24T14:07:26Z",
+  "note": "Historical decisions retained; W6-6 Manufacturing Batch 01 additions bind 83 released rows to the exact proposal SHA and independent A1/A2/A3 PASS.",
   "schema": "release-decision/v2"
 }

@@ -1,0 +1,83 @@
+# In Stock
+# Req'd Items
+0-30 Days
+30-60 Days
+60-90 Days
+A Holiday List can be added to exclude counting these days for the Workstation.
+Actual End Date cannot be before Actual Start Date
+Actual Qty {0} / Waiting Qty {1}
+Actual Qty: Quantity available in the warehouse.
+Ad-hoc Qty
+Add Corrective Operation Cost in Finished Good Valuation
+All items are already requested
+Allow Editing of Items and Quantities in Work Order
+Allow material consumptions without immediately manufacturing finished goods against a Work Order
+Allow transferring raw materials even after the Required Quantity is fulfilled
+As there are sufficient Sub Assembly Items, Work Order is not required for Warehouse {0}.
+At row {0}: Parent Row No cannot be set for item {1}
+At row {0}: set Parent Row No for item {1}
+BOM No (For Semi-Finished Goods)
+BOM Update Tool Log with job status maintained
+BOM Updation already in progress. Please wait until {0} is complete.
+BOM Updation is queued and may take a few minutes. Check {0} for progress.
+BOM recursion: {1} cannot be parent or child of {0}
+BOM {0} not found for the item {1}
+BOMs Updated
+BOMs created successfully
+BOMs creation failed
+BOMs creation has been enqueued, kindly check the status after some time
+Batch not created for item {} since it does not have a batch series.
+Bucket Size
+Can not close Work Order. Since {0} Job Cards are in Work In Progress state.
+Cannot disassemble more than produced quantity.
+Cannot produce more item for {0}
+Cannot produce more than {0} items for {1}
+Click on Get Sales Orders to fetch sales orders based on the above filters.
+Consumed Qty cannot be greater than Reserved Qty for item {0}
+Delivery From Date
+Delivery To Date
+Do you want to submit the stock entry?
+Duplicate Operating Component {0} found in Operating Components
+Employee {0} is currently working on another workstation. Please assign another employee.
+Enabling this checkbox will force each Job Card Time Log to have From Time and To Time
+Enter a name for Routing.
+Enter a name for the Operation, for example, Cutting.
+Enter the quantity of the Item that will be manufactured from this Bill of Materials.
+Enter the quantity to manufacture. Raw material Items will be fetched only when this is set.
+Finished Goods based Operating Cost
+Fixed Asset item {0} cannot be used in BOMs.
+For Job Card
+For Operation
+For Raw Materials
+For operation {0}: Quantity ({1}) can not be greater than pending quantity({2})
+From Corrective Job Card
+Idle
+If an operation is divided into sub operations, they can be added here.
+If items in stock, proceed with Material Transfer or Purchase.
+If the BOM results in Scrap material, the Scrap Warehouse needs to be selected.
+If you still want to proceed, please disable 'Skip Available Sub Assembly Items' checkbox.
+If you still want to proceed, please enable {0}.
+In mins
+Invalid Process Loss Configuration
+Item {0} cannot be added as a sub-assembly of itself
+Item {0} cannot be ordered more than {1} against Blanket Order {2}.
+Item {0} is not a subcontracted item
+Job Card {0} has been completed
+Kindly cancel the Manufacturing Entries first against the work order {0}.
+Learn Manufacturing
+MRP Log documents are being created in the background.
+Materials needs to be transferred to the work in progress warehouse for the job card {0}
+Missing value
+No Purchase Orders were created
+No Work Orders were created
+No items are available in sales orders {0} for production
+No items are available in the sales order {0} for production
+No open Material Requests found for the given criteria.
+No sales data found for the selected items.
+Not permitted to make Purchase Orders
+Once the Work Order is Closed. It can't be resumed.
+Open BOM {0}
+Open Item {0}
+Open Work Order {0}
+Operating Component
+Operation time does not depend on quantity to produce
