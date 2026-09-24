@@ -849,6 +849,7 @@ If any criterion fails, the affected module/data wave remains behind its prior s
 | 6 | **W6-3 batch-03 — Stock governed cycle CLOSED on the test site** (owner-approved exact 234-row scope SHA `a5f0e9f604ea52d89072d2c744864fdcbc733bc8307fd427a5c2658f4855dbc9`): 111 payload + 121 preserved Site Overrides + 2 technical exceptions (`UPC`, `UPC-A`); catalog **2,651** Released; import created 111, updated 0, skipped 2,540, drift=0; post-DRY `2651/0/0/2651/0`; sync 0/0; freshness critical_pass; inventory 21,068 / Merkle `57951175…`; evidence-inclusive gate **errors=0** at pre-commit HEAD `fb3e056`; module suite 270/270, standalone 91/91; Arabic browser 8/8 (232/232 exact matches); UAT teardown complete. Production/Stage 8 untouched. | 2026-09-24 | `stage6-w603-batch03-cycle-executed-2026-09-24.md`; AI-A1/A2/A3/AI-R records; browser JSON; evidence index |
 | 6 | **W6-4 Projects + Subcontracting batch-01 — governed cycle CLOSED on the test site** (owner-approved exact 147-row scope SHA `93fbf16b14940ce2d477f346c1777865bf008b22df943625e7de84f27e8f4abe`): final partition 48 releases + 96 preserved Site Overrides + 3 deferred; catalog **2,699**; final live DRY `2699/0/0/2699/0`, drift=0; A1/A2/A3/AI-R PASS; UAT preflight PASS; browser 8/8 and 144/144 translations; module suite 271/271, standalone 92/92; evidence-inclusive gate errors=0 at pre-commit HEAD `eaadb014`; inventory 21,116 / Merkle `c62fb539…`. Stage 8, production, and other scopes remain untouched. | 2026-09-24 | `stage6-w604-cycle-executed-2026-09-24.md`; AI-A1/A2/A3/AI-R records; browser JSON; evidence index |
 | 6 | **W6-5 Setup batch — governed cycle CLOSED on the test site** (owner-approved exact 469-row scope SHA `e2d672c4a1b479f9cd52c017f76a3c8a8b1b24dced24ed4b5f5c6d8113900a09`): final partition 349 releases + 107 preserved Site Overrides + 13 technical UOM exceptions; catalog **3,048**; final live DRY `3048/0/0/3048/0`, drift=0; A1/A2/A3/AI-R PASS; UAT preflight PASS; browser 8/8 and 456/456 translations; module suite 271/271, standalone 92/92; evidence-inclusive gate errors=0 at pre-commit HEAD `51b8b7391704`; inventory 21,465 / Merkle `8d8301d1…`. Stage 8, production, and other scopes remain untouched. | 2026-09-24 | `stage6-w605-cycle-executed-2026-09-24.md`; AI-A1/A2/A3/AI-R records; browser JSON; evidence index |
+| 6 | **W6-6 Assets batch — governed cycle CLOSED on the test site** (owner-approved exact 211-row scope SHA `6f142646ae55cf147751e8d751f10638c79420dfa184855985ecd6068ee63a40`): final partition 113 releases + 98 preserved Site Overrides + 0 technical exceptions; catalog **3,161**; final live DRY `3161/0/0/3161/0`, drift=0; A1/A2/A3/AI-R PASS; UAT preflight PASS; browser 8/8 and 211/211 translations; module suite 271/271, standalone 92/92; evidence-inclusive gate errors=0 at pre-commit HEAD `64abce7a1b4b`; inventory 21,578 / Merkle `69fc0eb1…`. Stage 8, production, and other scopes remain untouched. | 2026-09-24 | `stage6-w606-cycle-executed-2026-09-24.md`; AI-A1/A2/A3/AI-R records; browser JSON; evidence index |
 
 ## 17. Owner status acknowledgments
 
@@ -999,6 +1000,19 @@ Completed under prior hold / authorized test-site scope (no production mutation)
   credentials rotated, language restored to `en`, secret removed. Stage 8 and
   production remain gated as above; no other batch or production work occurred.
   Details: `stage6-w605-cycle-executed-2026-09-24.md`.
+
+- 2026-09-24: **W6-6 Assets batch governed cycle CLOSED**
+  on `v16.localhost` for the exact approved 211-row scope SHA
+  `6f142646ae55cf147751e8d751f10638c79420dfa184855985ecd6068ee63a40`: 113 payload
+  releases, 98 preserved Site Overrides, and 0 technical exceptions.
+  Final live DRY `3161/0/0/3161/0`, drift=0; catalog 3,161; inventory 21,578 /
+  Merkle `69fc0eb1…`; A1/A2/A3/AI-R PASS; UAT preflight PASS; browser 8/8 and
+  211/211 exact translations; module tests 271/271, standalone 92/92;
+  evidence-inclusive gate errors=0 at pre-commit HEAD `64abce7a1b4b`. Temporary
+  credentials rotated, language restored to `en`, secret removed. Stage 8 and
+  production remain gated as above; no other batch or production work occurred.
+  Details: `stage6-w606-cycle-executed-2026-09-24.md`.
+
 
 
 Hard requirement before any Phase-8 validation: run the hardened UAT

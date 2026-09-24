@@ -1,0 +1,76 @@
+{
+  "batch": "stage6-w606-assets",
+  "site": "v16.localhost",
+  "scope_sha256": "6f142646ae55cf147751e8d751f10638c79420dfa184855985ecd6068ee63a40",
+  "proposal_sha256": "521f1eb620b6c403f3cce91fd4ec280f86ad46f427ae6c1e194199c0242762ab",
+  "started_utc": "2026-09-24T13:05:11Z",
+  "lookup_note": "Runtime import strips only edge whitespace from source keys; translated values retain exact reviewed edge whitespace.",
+  "checks": [
+    {
+      "name": "boot-lang-ar",
+      "ok": true,
+      "detail": "ar"
+    },
+    {
+      "name": "boot-messages-ge-1000",
+      "ok": true,
+      "detail": 13463
+    },
+    {
+      "name": "all-payload-and-preserve-translations",
+      "ok": true,
+      "detail": {
+        "matched": 211,
+        "total": 211,
+        "mismatches": []
+      }
+    },
+    {
+      "name": "boot-message-payload-exact",
+      "ok": true,
+      "detail": {
+        "matched": 211,
+        "total": 211,
+        "mismatches": []
+      }
+    },
+    {
+      "name": "rendered-dom-arabic",
+      "ok": true,
+      "detail": {
+        "count": 13,
+        "sample": [
+          "الأدوات",
+          "الأصول",
+          "الباطن",
+          "البيع",
+          "التصنيع",
+          "الجودة",
+          "المحاسبة",
+          "المخزون",
+          "المشاريع",
+          "المشتريات",
+          "بحث",
+          "مقاولات",
+          "منظمة"
+        ]
+      }
+    },
+    {
+      "name": "no-page-errors",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "desk-title-captured",
+      "ok": true,
+      "detail": "Desktop"
+    },
+    {
+      "name": "logged-out",
+      "ok": true,
+      "detail": "logout endpoint hit"
+    }
+  ],
+  "finished_utc": "2026-09-24T13:05:20Z"
+}

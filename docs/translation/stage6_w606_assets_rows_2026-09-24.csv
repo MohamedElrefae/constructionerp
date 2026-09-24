@@ -1,0 +1,212 @@
+source_text,suggested_ar,locations,area,has_pre_filled
+3 Yearly,كل 3 سنوات,erpnext/assets/doctype/asset_maintenance_task/asset_maintenance_task.json:None,assets,1
+Account not Found,,erpnext/assets/doctype/asset/asset.py:883,assets,0
+Adjust Asset Value,تعديل قيمة الأصل,erpnext/assets/doctype/asset/asset.js:152,assets,1
+Asset Activity,نشاط الأصل,erpnext/assets/doctype/asset_activity/asset_activity.json:None; erpnext/assets/report/asset_activity/asset_activity.json:None; erpnext/assets/workspace/assets/assets.json:None,assets,1
+Asset Capitalization,رسملة الأصل,erpnext/assets/doctype/asset/asset.json:None; erpnext/assets/doctype/asset_capitalization/asset_capitalization.json:None; erpnext/assets/workspace/assets/assets.json:None,assets,1
+Asset Capitalization Asset Item,عنصر أصل رسملة الأصل,erpnext/assets/doctype/asset_capitalization_asset_item/asset_capitalization_asset_item.json:None,assets,1
+Asset Capitalization Service Item,عنصر خدمة رسملة الأصل,erpnext/assets/doctype/asset_capitalization_service_item/asset_capitalization_service_item.json:None,assets,1
+Asset Capitalization Stock Item,عنصر مخزون رسملة الأصل,erpnext/assets/doctype/asset_capitalization_stock_item/asset_capitalization_stock_item.json:None,assets,1
+Asset Depreciation Schedule,جدول إهلاك الأصل,erpnext/assets/doctype/asset_depreciation_schedule/asset_depreciation_schedule.json:None,assets,1
+Asset Depreciation Schedule for Asset {0} and Finance Book {1} is not using shift based depreciation,,erpnext/assets/doctype/asset_shift_allocation/asset_shift_allocation.py:179,assets,0
+Asset Depreciation Schedule not found for Asset {0} and Finance Book {1},,erpnext/assets/doctype/asset_depreciation_schedule/asset_depreciation_schedule.py:247; erpnext/assets/doctype/asset_shift_allocation/asset_shift_allocation.py:185,assets,0
+Asset Depreciation Schedule {0} for Asset {1} already exists.,,erpnext/assets/doctype/asset_depreciation_schedule/asset_depreciation_schedule.py:83,assets,0
+Asset Depreciation Schedule {0} for Asset {1} and Finance Book {2} already exists.,,erpnext/assets/doctype/asset_depreciation_schedule/asset_depreciation_schedule.py:77,assets,0
+Asset ID,معرف الأصل,erpnext/assets/report/fixed_asset_register/fixed_asset_register.py:477,assets,1
+Asset Quantity,كمية الأصل,erpnext/assets/doctype/asset/asset.json:None,assets,1
+Asset Repair Consumed Item,عنصر مستهلك لإصلاح الأصل,erpnext/assets/doctype/asset_repair_consumed_item/asset_repair_consumed_item.json:None,assets,1
+Asset Repair Purchase Invoice,فاتورة شراء إصلاح الأصل,erpnext/assets/doctype/asset_repair_purchase_invoice/asset_repair_purchase_invoice.json:None,assets,1
+Asset Shift Allocation,تخصيص وردية الأصل,erpnext/assets/doctype/asset_shift_allocation/asset_shift_allocation.json:None,assets,1
+Asset Shift Factor,معامل وردية الأصل,erpnext/assets/doctype/asset_shift_factor/asset_shift_factor.json:None,assets,1
+Asset Shift Factor {0} is set as default currently. Please change it first.,,erpnext/assets/doctype/asset_shift_factor/asset_shift_factor.py:32,assets,0
+Asset cancelled,تم إلغاء الأصل,erpnext/assets/doctype/asset/asset.py:272,assets,1
+Asset cannot be scrapped before the last depreciation entry.,,erpnext/assets/doctype/asset/depreciation.py:391,assets,0
+Asset capitalized after Asset Capitalization {0} was submitted,,erpnext/assets/doctype/asset_capitalization/asset_capitalization.py:612,assets,0
+Asset created,تم إنشاء الأصل,erpnext/assets/doctype/asset/asset.py:281,assets,1
+Asset created after being split from Asset {0},,erpnext/assets/doctype/asset/asset.py:1403,assets,0
+Asset deleted,تم حذف الأصل,erpnext/assets/doctype/asset/asset.py:284,assets,1
+Asset issued to Employee {0},,erpnext/assets/doctype/asset_movement/asset_movement.py:168,assets,0
+Asset out of order due to Asset Repair {0},,erpnext/assets/doctype/asset_repair/asset_repair.py:179,assets,0
+Asset received at Location {0} and issued to Employee {1},,erpnext/assets/doctype/asset_movement/asset_movement.py:155,assets,0
+Asset restored,تمت استعادة الأصل,erpnext/assets/doctype/asset/depreciation.py:452,assets,1
+Asset restored after Asset Capitalization {0} was cancelled,,erpnext/assets/doctype/asset_capitalization/asset_capitalization.py:620,assets,0
+Asset scrapped,تم تخريد الأصل,erpnext/assets/doctype/asset/depreciation.py:439,assets,1
+Asset submitted,تم ترحيل الأصل,erpnext/assets/doctype/asset/asset.py:259,assets,1
+Asset transferred to Location {0},,erpnext/assets/doctype/asset_movement/asset_movement.py:163,assets,0
+Asset updated after being split into Asset {0},,erpnext/assets/doctype/asset/asset.py:1412,assets,0
+Asset updated due to Asset Repair {0} {1}.,,erpnext/assets/doctype/asset_repair/asset_repair.py:442,assets,0
+Asset {0} does not belong to Item {1},,erpnext/assets/doctype/asset_capitalization/asset_capitalization.py:213,assets,0
+Asset {0} does not belong to the custodian {1},,erpnext/assets/doctype/asset_movement/asset_movement.py:92,assets,0
+Asset {0} does not belong to the location {1},,erpnext/assets/doctype/asset_movement/asset_movement.py:64,assets,0
+Asset {0} does not exist,,erpnext/assets/doctype/asset_capitalization/asset_capitalization.py:672; erpnext/assets/doctype/asset_capitalization/asset_capitalization.py:765,assets,0
+Asset {0} has been updated. Please set the depreciation details if any and submit it.,,erpnext/assets/doctype/asset_capitalization/asset_capitalization.py:586,assets,0
+Asset {0} is in {1} status and cannot be repaired.,,erpnext/assets/doctype/asset_repair/asset_repair.py:75,assets,0
+Asset {0} is not set to calculate depreciation.,,erpnext/assets/doctype/asset_depreciation_schedule/asset_depreciation_schedule.py:96,assets,0
+Asset {0} is not submitted. Please submit the asset before proceeding.,,erpnext/assets/doctype/asset_depreciation_schedule/asset_depreciation_schedule.py:102,assets,0
+Asset's depreciation schedule updated after Asset Shift Allocation {0},,erpnext/assets/doctype/asset_shift_allocation/asset_shift_allocation.py:223,assets,0
+Asset's value adjusted after cancellation of Asset Value Adjustment {0},,erpnext/assets/doctype/asset_value_adjustment/asset_value_adjustment.py:81,assets,0
+Asset's value adjusted after submission of Asset Value Adjustment {0},,erpnext/assets/doctype/asset_value_adjustment/asset_value_adjustment.py:71,assets,0
+At least one asset has to be selected.,يجب تحديد أصل واحد على الأقل.,erpnext/assets/doctype/asset/asset.py:1269,assets,1
+Batch and Serial No,الدفعة والرقم التسلسلي,erpnext/assets/doctype/asset_capitalization_stock_item/asset_capitalization_stock_item.json:None,assets,1
+Cannot cancel Asset Depreciation Schedule {0} as it has a draft journal entry {1}.,,erpnext/assets/doctype/asset_depreciation_schedule/asset_depreciation_schedule.py:118,assets,0
+Capitalize Asset,رسملة الأصل,erpnext/assets/doctype/asset/asset.js:210,assets,1
+Capitalize Repair Cost,رسملة تكلفة الإصلاح,erpnext/assets/doctype/asset_repair/asset_repair.json:None,assets,1
+Capitalize this asset before submitting.,,erpnext/assets/doctype/asset/asset.js:208,assets,0
+Capitalized,مرسمل,erpnext/assets/doctype/asset/asset.json:None; erpnext/assets/doctype/asset/asset_list.js:14,assets,1
+Completion Date can not be before Failure Date. Please adjust the dates accordingly.,,erpnext/assets/doctype/asset_repair/asset_repair.py:83,assets,0
+Consumed Asset Total Value,إجمالي قيمة الأصول المستهلكة,erpnext/assets/doctype/asset_capitalization/asset_capitalization.json:None,assets,1
+Consumed Assets,الأصول المستهلكة,erpnext/assets/doctype/asset_capitalization/asset_capitalization.json:None,assets,1
+Consumed Items Cost,تكلفة الأصناف المستهلكة,erpnext/assets/doctype/asset_repair/asset_repair.json:None,assets,1
+Consumed Quantity,الكمية المستهلكة,erpnext/assets/doctype/asset_repair_consumed_item/asset_repair_consumed_item.json:None,assets,1
+Consumed Stock Items,أصناف المخزون المستهلكة,erpnext/assets/doctype/asset_capitalization/asset_capitalization.json:None; erpnext/assets/doctype/asset_repair/asset_repair.json:None,assets,1
+"Consumed Stock Items, Consumed Asset Items or Consumed Service Items is mandatory for Capitalization",,erpnext/assets/doctype/asset_capitalization/asset_capitalization.py:303,assets,0
+Consumed Stock Total Value,إجمالي قيمة المخزون المستهلك,erpnext/assets/doctype/asset_capitalization/asset_capitalization.json:None,assets,1
+Cost Center {} doesn't belong to Company {},,erpnext/assets/doctype/asset/asset.py:353,assets,0
+Cost Center {} is a group cost center and group cost centers cannot be used in transactions,,erpnext/assets/doctype/asset/asset.py:360,assets,0
+Could not find a suitable shift to match the difference: {0},,erpnext/assets/doctype/asset_shift_allocation/asset_shift_allocation.py:129,assets,0
+Create Depreciation Entry,إنشاء قيد إهلاك,erpnext/assets/doctype/asset/asset.js:162,assets,1
+Depreciate based on daily pro-rata,الإهلاك حسب التناسب اليومي,erpnext/assets/doctype/asset_depreciation_schedule/asset_depreciation_schedule.json:None; erpnext/assets/doctype/asset_finance_book/asset_finance_book.json:None,assets,1
+Depreciate based on shifts,الإهلاك حسب الورديات,erpnext/assets/doctype/asset_depreciation_schedule/asset_depreciation_schedule.json:None; erpnext/assets/doctype/asset_finance_book/asset_finance_book.json:None,assets,1
+Depreciation Details,تفاصيل الإهلاك,erpnext/assets/doctype/asset_depreciation_schedule/asset_depreciation_schedule.json:None,assets,1
+Depreciation Entry Posting Status,حالة ترحيل قيد الإهلاك,erpnext/assets/doctype/asset/asset.json:None,assets,1
+Depreciation Entry against asset {0},,erpnext/assets/doctype/asset/asset.py:1237,assets,0
+Depreciation Entry against {0} worth {1},,erpnext/assets/doctype/asset/depreciation.py:253,assets,0
+Depreciation Expense Account should be an Income or Expense Account.,,erpnext/assets/doctype/asset/depreciation.py:300,assets,0
+Depreciation Posting Date cannot be before Available-for-use Date,,erpnext/assets/doctype/asset/asset.js:795,assets,0
+Depreciation Row {0}: Depreciation Posting Date cannot be before Available-for-use Date,,erpnext/assets/doctype/asset/asset.py:382,assets,0
+Depreciation Schedule View,عرض جدول الإهلاك,erpnext/assets/doctype/asset/asset.json:None,assets,1
+Depreciation cannot be calculated for fully depreciated assets,,erpnext/assets/doctype/asset/asset.py:477,assets,0
+Disposal date {0} cannot be before {1} date {2} of the asset.,,erpnext/assets/doctype/asset/depreciation.py:826,assets,0
+Duplicate Finance Book,دفتر مالي مكرر,erpnext/assets/doctype/asset/asset.py:409,assets,1
+Employee {0} does not belong to the company {1},,erpnext/assets/doctype/asset_movement/asset_movement.py:79; erpnext/assets/doctype/asset_movement/asset_movement.py:100,assets,0
+Enter date to scrap asset,,erpnext/assets/doctype/asset/asset.js:804,assets,0
+Error while posting depreciation entries,خطأ أثناء ترحيل قيود الإهلاك,erpnext/assets/doctype/asset/depreciation.py:317,assets,1
+Failed to post depreciation entries,فشل ترحيل قيود الإهلاك,erpnext/assets/doctype/asset/asset.js:221,assets,1
+From Employee,من الموظف,erpnext/assets/doctype/asset_movement_item/asset_movement_item.json:None,assets,1
+From Employee is required while issuing Asset {0},,erpnext/assets/doctype/asset_movement/asset_movement.py:85,assets,0
+Future date is not allowed,لا يسمح بتاريخ مستقبلي,erpnext/assets/doctype/asset/depreciation.py:380,assets,1
+Here are the error logs for the aforementioned failed depreciation entries: {0},,erpnext/assets/doctype/asset/depreciation.py:347,assets,0
+Increase In Asset Life (Months),زيادة عمر الأصل (بالأشهر),erpnext/assets/doctype/asset_finance_book/asset_finance_book.json:None,assets,1
+Increase In Asset Life(Months),,erpnext/assets/doctype/asset_repair/asset_repair.json:None,assets,0
+Insurance,التأمين,erpnext/assets/doctype/asset/asset.json:None,assets,1
+Invalid Cost Center,مركز تكلفة غير صالح,erpnext/assets/doctype/asset/asset.py:356; erpnext/assets/doctype/asset/asset.py:363; erpnext/controllers/accounts_controller.py:3224,assets,1
+Invalid Net Purchase Amount,,erpnext/assets/doctype/asset/asset.py:557,assets,0
+Invalid Schedule,,erpnext/assets/doctype/asset/asset.py:643; erpnext/assets/doctype/asset/asset.py:662,assets,0
+Is Composite Asset,أصل مركب,erpnext/assets/doctype/asset/asset.json:None,assets,1
+Is Composite Component,مكون مركب,erpnext/assets/doctype/asset/asset.json:None,assets,1
+Is Fully Depreciated,مهلك بالكامل,erpnext/assets/doctype/asset/asset.json:None,assets,1
+Maintain Asset,صيانة الأصل,erpnext/assets/doctype/asset/asset.js:142,assets,1
+Maintenance Details,تفاصيل الصيانة,erpnext/assets/doctype/asset_maintenance_log/asset_maintenance_log.json:None,assets,1
+Make Asset Movement,إنشاء حركة أصل,erpnext/assets/doctype/asset/asset_list.js:32,assets,1
+Manage,,erpnext/assets/doctype/asset/asset.js:100; erpnext/assets/doctype/asset/asset.js:108; erpnext/assets/doctype/asset/asset.js:116; erpnext/assets/doctype/asset/asset.js:124; erpnext/assets/doctype/asset/asset.js:132; erpnext/assets/doctype/asset/asset.js:146; erpnext/assets/doctype/asset/asset.js:156; erpnext/assets/doctype/asset/asset.js:166; erpnext/assets/doctype/asset/asset.js:182; erpnext/setup/doctype/company/company.js:161; erpnext/setup/doctype/company/company.js:172,assets,0
+Missing Finance Book,دفتر مالي مفقود,erpnext/assets/doctype/asset/asset.py:417,assets,1
+Missing Serial No Bundle,,erpnext/assets/doctype/asset_repair/asset_repair.py:297,assets,0
+Movement,الحركة,erpnext/assets/doctype/asset/asset_dashboard.py:7,assets,1
+Net Purchase Amount,صافي مبلغ الشراء,erpnext/assets/doctype/asset/asset.json:None; erpnext/assets/doctype/asset_depreciation_schedule/asset_depreciation_schedule.json:None; erpnext/assets/report/fixed_asset_register/fixed_asset_register.py:439; erpnext/assets/report/fixed_asset_register/fixed_asset_register.py:500,assets,1
+Net Purchase Amount is mandatory,صافي مبلغ الشراء إلزامي,erpnext/assets/doctype/asset/asset.py:445,assets,1
+Net Purchase Amount {0} cannot be depreciated over {1} cycles.,,erpnext/assets/doctype/asset_depreciation_schedule/deppreciation_schedule_controller.py:388,assets,0
+No.,,erpnext/assets/doctype/asset/asset.js:299,assets,0
+Non Depreciable Category,فئة غير قابلة للإهلاك,erpnext/assets/doctype/asset_category/asset_category.json:None,assets,1
+Only existing assets,,erpnext/assets/report/fixed_asset_register/fixed_asset_register.js:43,assets,0
+Opening Number of Booked Depreciations,عدد الإهلاكات المسجلة افتتاحيا,erpnext/assets/doctype/asset/asset.json:None; erpnext/assets/doctype/asset_depreciation_schedule/asset_depreciation_schedule.json:None,assets,1
+Other Info,معلومات أخرى,erpnext/assets/doctype/asset/asset.json:None; erpnext/stock/doctype/stock_entry/stock_entry.json:None; erpnext/subcontracting/doctype/subcontracting_inward_order/subcontracting_inward_order.json:None; erpnext/subcontracting/doctype/subcontracting_order/subcontracting_order.json:None; erpnext/subcontracting/doctype/subcontracting_receipt/subcontracting_receipt.json:None,assets,1
+Pick Serial / Batch,انتقاء تسلسل/دفعة,erpnext/assets/doctype/asset_repair_consumed_item/asset_repair_consumed_item.json:None,assets,1
+Please capitalize this asset before submitting.,,erpnext/assets/doctype/asset/asset.js:85; erpnext/assets/doctype/asset/asset.py:248,assets,0
+Please disable workflow temporarily for Journal Entry {0},,erpnext/assets/doctype/asset/depreciation.py:554,assets,0
+Please do not book expense of multiple assets against one single Asset.,,erpnext/assets/doctype/asset/asset.py:556,assets,0
+Please select an item code before setting the warehouse.,,erpnext/assets/doctype/asset_repair/asset_repair.js:194,assets,0
+Please set Fixed Asset Account in Asset Category {0},,erpnext/assets/doctype/asset/depreciation.py:729,assets,0
+Please set a Cost Center for the Asset or set an Asset Depreciation Cost Center for the Company {},,erpnext/assets/doctype/asset/asset.py:369,assets,0
+Please set default Expense Account in Company {0},يرجى تعيين حساب المصروف الافتراضي في الشركة {0},erpnext/assets/doctype/asset_repair/asset_repair.py:386,assets,1
+Please set opening number of booked depreciations,,erpnext/assets/doctype/asset/asset.py:634,assets,0
+Please share this email with your support team so that they can find and fix the issue.,,erpnext/assets/doctype/asset/depreciation.py:352,assets,0
+Please update Repair Status.,,erpnext/assets/doctype/asset_repair/asset_repair.py:237,assets,0
+Qty and Rate,الكمية والسعر,erpnext/assets/doctype/asset_capitalization_service_item/asset_capitalization_service_item.json:None,assets,1
+Repair,إصلاح,erpnext/assets/doctype/asset/asset.json:None,assets,1
+Repair Asset,إصلاح الأصل,erpnext/assets/doctype/asset/asset.js:120,assets,1
+Repair Purchase Invoices,فواتير شراء الإصلاح,erpnext/assets/doctype/asset_repair/asset_repair.json:None,assets,1
+Restore Asset,,erpnext/assets/doctype/asset/asset.js:135,assets,0
+Row #{0}: Amount must be a positive number,,erpnext/assets/doctype/asset_capitalization/asset_capitalization.py:293,assets,0
+Row #{0}: Consumed Asset {1} cannot be Draft,,erpnext/assets/doctype/asset_capitalization/asset_capitalization.py:268,assets,0
+Row #{0}: Consumed Asset {1} cannot be cancelled,,erpnext/assets/doctype/asset_capitalization/asset_capitalization.py:271,assets,0
+Row #{0}: Consumed Asset {1} cannot be the same as the Target Asset,,erpnext/assets/doctype/asset_capitalization/asset_capitalization.py:253,assets,0
+Row #{0}: Consumed Asset {1} cannot be {2},,erpnext/assets/doctype/asset_capitalization/asset_capitalization.py:262,assets,0
+Row #{0}: Consumed Asset {1} does not belong to company {2},,erpnext/assets/doctype/asset_capitalization/asset_capitalization.py:276,assets,0
+Row #{0}: Item {1} is not a service item,,erpnext/assets/doctype/asset_capitalization/asset_capitalization.py:287,assets,0
+Row #{0}: Item {1} is not a stock item,,erpnext/assets/doctype/asset_capitalization/asset_capitalization.py:241,assets,0
+Row #{0}: Next Depreciation Date cannot be before Available-for-use Date,,erpnext/assets/doctype/asset/asset.py:655,assets,0
+Row #{0}: Next Depreciation Date cannot be before Purchase Date,,erpnext/assets/doctype/asset/asset.py:650,assets,0
+Row #{0}: Opening Accumulated Depreciation must be less than or equal to {1},,erpnext/assets/doctype/asset/asset.py:627,assets,0
+Row #{0}: Qty must be a positive number,,erpnext/assets/doctype/asset_capitalization/asset_capitalization.py:244; erpnext/assets/doctype/asset_capitalization/asset_capitalization.py:290,assets,0
+Row #{0}: Repair cost {1} exceeds available amount {2} for Purchase Invoice {3} and Account {4},,erpnext/assets/doctype/asset_repair/asset_repair.py:164,assets,0
+Row #{0}: Total Number of Depreciations cannot be less than or equal to Opening Number of Booked Depreciations,,erpnext/assets/doctype/asset/asset.py:640,assets,0
+Row #{0}: {1} of {2} should be {3}. Please update the {1} or select a different account.,,erpnext/assets/doctype/asset_category/asset_category.py:89,assets,0
+Row #{}: Finance Book should not be empty since you're using multiple.,,erpnext/assets/doctype/asset/asset.py:416,assets,0
+Row #{}: Please assign task to a member.,,erpnext/assets/doctype/asset_maintenance/asset_maintenance.py:41,assets,0
+Row #{}: Please use a different Finance Book.,,erpnext/assets/doctype/asset/asset.py:408,assets,0
+Row {0}: Expected Value After Useful Life must be less than Net Purchase Amount,,erpnext/assets/doctype/asset/asset.py:602,assets,0
+Row {0}: Shift cannot be changed since the depreciation has already been processed,,erpnext/assets/doctype/asset_shift_allocation/asset_shift_allocation.py:58,assets,0
+Row {0}: The entire expense amount for account {1} in {2} has already been allocated.,,erpnext/assets/doctype/asset_repair/asset_repair.js:158,assets,0
+Salvage Value,قيمة الخردة,erpnext/assets/doctype/asset_finance_book/asset_finance_book.json:None,assets,1
+Salvage Value Percentage,نسبة قيمة الخردة,erpnext/assets/doctype/asset_finance_book/asset_finance_book.json:None,assets,1
+Scrap Asset,تخريد الأصل,erpnext/assets/doctype/asset/asset.js:104,assets,1
+Scrap date cannot be before purchase date,,erpnext/assets/doctype/asset/depreciation.py:382,assets,0
+Select Batch No,تحديد رقم الدفعة,erpnext/assets/doctype/asset_repair/asset_repair.js:234; erpnext/public/js/utils/sales_common.js:443; erpnext/stock/doctype/pick_list/pick_list.js:385,assets,1
+Select Serial No,تحديد الرقم التسلسلي,erpnext/assets/doctype/asset_repair/asset_repair.js:234; erpnext/public/js/utils/sales_common.js:443; erpnext/stock/doctype/pick_list/pick_list.js:385,assets,1
+Select Serial and Batch,تحديد التسلسل والدفعة,erpnext/assets/doctype/asset_repair/asset_repair.js:237; erpnext/public/js/utils/sales_common.js:446; erpnext/stock/doctype/pick_list/pick_list.js:388,assets,1
+Select the date,,erpnext/assets/doctype/asset/asset.js:807,assets,0
+Sell Asset,,erpnext/assets/doctype/asset/asset.js:112,assets,0
+Service Expense Total Amount,إجمالي مبلغ مصروف الخدمة,erpnext/assets/doctype/asset_capitalization/asset_capitalization.json:None,assets,1
+Service Expenses,مصروفات الخدمة,erpnext/assets/doctype/asset_capitalization/asset_capitalization.json:None,assets,1
+Set {0} in asset category {1} for company {2},,erpnext/assets/doctype/asset/asset.py:878,assets,0
+Shift,الوردية,erpnext/assets/doctype/asset/asset.js:313; erpnext/assets/doctype/depreciation_schedule/depreciation_schedule.json:None,assets,1
+Shift Factor,معامل الوردية,erpnext/assets/doctype/asset_shift_factor/asset_shift_factor.json:None,assets,1
+Shift Name,اسم الوردية,erpnext/assets/doctype/asset_shift_factor/asset_shift_factor.json:None,assets,1
+Split Asset,تقسيم الأصل,erpnext/assets/doctype/asset/asset.js:128; erpnext/assets/doctype/asset/asset.js:552,assets,1
+Split From,تقسيم من,erpnext/assets/doctype/asset/asset.json:None,assets,1
+Split Qty,كمية التقسيم,erpnext/assets/doctype/asset/asset.js:558,assets,1
+Split Quantity must be less than Asset Quantity,,erpnext/assets/doctype/asset/asset.py:1350,assets,0
+Target Asset,الأصل الهدف,erpnext/assets/doctype/asset_capitalization/asset_capitalization.json:None,assets,1
+Target Asset {0} cannot be cancelled,,erpnext/assets/doctype/asset_capitalization/asset_capitalization.py:226,assets,0
+Target Asset {0} cannot be submitted,,erpnext/assets/doctype/asset_capitalization/asset_capitalization.py:224,assets,0
+Target Asset {0} cannot be {1},,erpnext/assets/doctype/asset_capitalization/asset_capitalization.py:220,assets,0
+Target Asset {0} does not belong to company {1},,erpnext/assets/doctype/asset_capitalization/asset_capitalization.py:230,assets,0
+Target Asset {0} needs to be composite asset,,erpnext/assets/doctype/asset_capitalization/asset_capitalization.py:209,assets,0
+Target Batch No,رقم الدفعة الهدف,erpnext/assets/doctype/asset_capitalization/asset_capitalization.json:None,assets,1
+Target Fixed Asset Account,حساب الأصل الثابت الهدف,erpnext/assets/doctype/asset_capitalization/asset_capitalization.json:None,assets,1
+Target Has Batch No,الهدف له رقم دفعة,erpnext/assets/doctype/asset_capitalization/asset_capitalization.json:None,assets,1
+Target Has Serial No,الهدف له رقم تسلسلي,erpnext/assets/doctype/asset_capitalization/asset_capitalization.json:None,assets,1
+Target Incoming Rate,السعر الوارد الهدف,erpnext/assets/doctype/asset_capitalization/asset_capitalization.json:None,assets,1
+Target Is Fixed Asset,الهدف أصل ثابت,erpnext/assets/doctype/asset_capitalization/asset_capitalization.json:None,assets,1
+Target Item Code,كود الصنف الهدف,erpnext/assets/doctype/asset_capitalization/asset_capitalization.json:None,assets,1
+Target Item {0} must be a Fixed Asset item,,erpnext/assets/doctype/asset_capitalization/asset_capitalization.py:191,assets,0
+Target Location is required for transferring Asset {0},,erpnext/assets/doctype/asset_movement/asset_movement.py:70,assets,0
+Target Location is required while receiving Asset {0},,erpnext/assets/doctype/asset_movement/asset_movement.py:76,assets,0
+Target Qty must be a positive number,يجب أن تكون الكمية الهدف رقما موجبا,erpnext/assets/doctype/asset_capitalization/asset_capitalization.py:196,assets,1
+Target Serial No,الرقم التسلسلي الهدف,erpnext/assets/doctype/asset_capitalization/asset_capitalization.json:None,assets,1
+Task Assignee Email,بريد المكلف بالمهمة,erpnext/assets/doctype/asset_maintenance_log/asset_maintenance_log.json:None,assets,1
+Team,الفريق,erpnext/assets/doctype/asset_maintenance_team/asset_maintenance_team.json:None,assets,1
+The following Purchase Invoices are not submitted:,,erpnext/assets/doctype/asset_repair/asset_repair.py:138,assets,0
+The following assets have failed to automatically post depreciation entries: {0},,erpnext/assets/doctype/asset/depreciation.py:342,assets,0
+The following rows are duplicates:,,erpnext/assets/doctype/asset_repair/asset_repair.py:112,assets,0
+This schedule was created when Asset {0} was adjusted through Asset Value Adjustment {1}.,,erpnext/assets/doctype/asset_value_adjustment/asset_value_adjustment.py:201,assets,0
+This schedule was created when Asset {0} was consumed through Asset Capitalization {1}.,,erpnext/assets/doctype/asset_capitalization/asset_capitalization.py:494,assets,0
+This schedule was created when Asset {0} was repaired through Asset Repair {1}.,,erpnext/assets/doctype/asset_repair/asset_repair.py:435,assets,0
+This schedule was created when Asset {0} was restored on Asset Capitalization {1}'s cancellation.,,erpnext/assets/doctype/asset_capitalization/asset_capitalization.py:598,assets,0
+This schedule was created when Asset {0} was restored.,,erpnext/assets/doctype/asset/depreciation.py:456,assets,0
+This schedule was created when Asset {0} was scrapped.,,erpnext/assets/doctype/asset/depreciation.py:415,assets,0
+This schedule was created when Asset {0} was {1} into new Asset {2}.,,erpnext/assets/doctype/asset/asset.py:1484,assets,0
+This schedule was created when Asset {0}'s Asset Value Adjustment {1} was cancelled.,,erpnext/assets/doctype/asset_value_adjustment/asset_value_adjustment.py:208,assets,0
+This schedule was created when Asset {0}'s shifts were adjusted through Asset Shift Allocation {1}.,,erpnext/assets/doctype/asset_shift_allocation/asset_shift_allocation.py:207,assets,0
+"To enable Capital Work in Progress Accounting,",,erpnext/assets/doctype/asset_category/asset_category.py:110,assets,0
+Total Asset Cost,إجمالي تكلفة الأصل,erpnext/assets/doctype/asset/asset.json:None,assets,1
+Total Number of Booked Depreciations ,إجمالي عدد الإهلاكات المسجلة,erpnext/assets/doctype/asset_finance_book/asset_finance_book.json:None,assets,1
+Total Repair Cost,إجمالي تكلفة الإصلاح,erpnext/assets/doctype/asset_repair/asset_repair.json:None,assets,1
+Total Value,إجمالي القيمة,erpnext/assets/doctype/asset_capitalization/asset_capitalization.json:None; erpnext/assets/doctype/asset_repair_consumed_item/asset_repair_consumed_item.json:None,assets,1
+Transfer Asset,نقل الأصل,erpnext/assets/doctype/asset/asset.js:96,assets,1
+Transfer and Issue,نقل وإصدار,erpnext/assets/doctype/asset_movement/asset_movement.json:None,assets,1
+Update stock must be enabled for the purchase invoice {0},,erpnext/assets/doctype/asset/asset.py:466,assets,0
+Value Details,تفاصيل القيمة,erpnext/assets/doctype/asset_value_adjustment/asset_value_adjustment.json:None,assets,1
+View General Ledger,عرض دفتر الأستاذ العام,erpnext/assets/doctype/asset/asset.js:172,assets,1
+via Asset Repair,,erpnext/assets/doctype/asset_finance_book/asset_finance_book.json:None,assets,0
+{0} is in Draft. Submit it before creating the Asset.,,erpnext/assets/doctype/asset/asset.py:497,assets,0

@@ -1,6 +1,6 @@
 # Session Memory — Construction ERP
-**LAST UPDATED:** 2026-09-24 (W6-4 Projects + Subcontracting cycle closed)
-**UPDATED BY:** Codex (W6-4 governed cycle and evidence closure)
+**LAST UPDATED:** 2026-09-24 (W6-6 Assets cycle closed)
+**UPDATED BY:** Antigravity (W6-6 governed cycle and evidence closure)
 
 ---
 
@@ -539,6 +539,27 @@ HEAD `51b8b7391704`; inventory 21,465 / Merkle `8d8301d1…`.
 13 compound technical UOM/force unit tokens were classified through review as
 `EXCEPTION-technical` (vendor rendering retained; empty translations; zero catalog release).
 All 107 existing Site Overrides on `v16.localhost` (including FIFO and LIFO) were preserved verbatim.
+UAT Administrator language restored to `en`, temporary password rotated, secret removed.
+Production and Stage 8 remain gated; no other Stage-6 batch was run. The
+evidence index binds pre-commit HEAD; the expected HEAD mismatch follows the
+closure commit until the next approved catalog-change re-pin.
+
+**Next:** wait for a separate owner-approved Stage-6 scope proposal or for all
+original Stage-8/production prerequisites. Do not push this local closure
+without explicit request. Leave untracked `v16.localhost/` untouched.
+
+## 2026-09-24 — W6-6 Assets batch governed cycle CLOSED
+
+Owner approved the exact 211-row CSV (SHA-256
+`6f142646ae55cf147751e8d751f10638c79420dfa184855985ecd6068ee63a40`) for
+`v16.localhost` only. Final partition: **113 Released + 98 preserved Site
+Overrides + 0 technical exceptions**. Proposal SHA `521f1eb6…`; A1/A2/A3/AI-R PASS.
+Final live DRY **3161/0/0/3161/0**, drift=0; health has no drift/orphans; catalog
+3,161. UAT preflight PASS, browser 8/8 / 211/211 matches, standalone 92/92,
+module 271/271, evidence-inclusive localization gate errors=0 on pre-commit
+HEAD `64abce7a1b4b`; inventory 21,578 / Merkle `69fc0eb1…`.
+
+All 98 existing Site Overrides on `v16.localhost` were preserved verbatim.
 UAT Administrator language restored to `en`, temporary password rotated, secret removed.
 Production and Stage 8 remain gated; no other Stage-6 batch was run. The
 evidence index binds pre-commit HEAD; the expected HEAD mismatch follows the
