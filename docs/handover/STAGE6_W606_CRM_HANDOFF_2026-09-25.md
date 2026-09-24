@@ -15,8 +15,9 @@ Read this before touching `SESSION_MEMORY.md`, the localization gate, or any
 
 | Item | Value |
 |---|---|
-| HEAD (local `develop`) | `3344546` — `feat(localization): close W6-6 CRM support maintenance` |
-| `origin/develop` | `ea553f2` — **NOT pushed, intentionally** |
+| Cycle closure commit | `3344546` — `feat(localization): close W6-6 CRM support maintenance` |
+| This handoff commit | `f5420a4` — `docs: publish Stage 6 W6-6 CRM handoff report` |
+| `origin/develop` | `ea553f2` — **NOT pushed, intentionally**; `git rev-list --count HEAD` shows how far local `develop` has run ahead |
 | Last cycle | W6-6 CRM, Support & Maintenance — **CLOSED**, no in-flight work |
 | Site | `v16.localhost` only; production and Stage 8 untouched/gated |
 | Catalog / decisions | 3,364 / 3,364 rows |
@@ -43,7 +44,8 @@ Closed-cycle facts you can rely on (also in `SESSION_MEMORY.md` §2026-09-25 and
 
 1. **Evidence index HEAD mismatch is expected.**
    `docs/ai/work-items/erp-arabic-bilingual-data/evidence/raw-logs/stage2/index.txt`
-   still records `CANDIDATE_HEAD: ea553f2…` while HEAD is `3344546…`. Every
+   still records `CANDIDATE_HEAD: ea553f2…` while local `develop` has moved to
+   `f5420a4` and beyond. Every
    cycle ends this way: envelopes bind the *pre-commit* HEAD and the mismatch is
    cleared by the **next approved catalog event**, not by re-running the gate now.
    Re-running `scripts/check_localization_gates.py` at today's HEAD will fail on

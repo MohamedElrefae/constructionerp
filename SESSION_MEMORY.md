@@ -5,7 +5,7 @@
 ---
 
 ## 1. Project Snapshot
-- **Total commits:** 367 (HEAD `3344546`, local only — `origin/develop` still `ea553f2`, no push)
+- **Total commits:** 367 at W6-6 closure + handoff docs commit (all local; `origin/develop` still `ea553f2`, no push — count with `git rev-list --count HEAD`)
 - **Current branch:** `develop`
 - **Last session date:** 2026-09-25
 - **Python version:** 3.14 (venv: `/home/mohamed/frappe-bench/env`)
