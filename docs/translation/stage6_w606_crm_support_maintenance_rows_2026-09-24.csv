@@ -1,0 +1,120 @@
+source_text,suggested_ar,locations,area,has_pre_filled
+Activities,الأنشطة,erpnext/crm/doctype/lead/lead.json:None; erpnext/crm/doctype/opportunity/opportunity.json:None; erpnext/crm/doctype/prospect/prospect.json:None,crm,1
+Add Items in the Purpose Table,,erpnext/maintenance/doctype/maintenance_visit/maintenance_visit.py:56,maintenance,0
+Add Lead to Prospect,إضافة العميل المحتمل إلى فرصة البيع,erpnext/crm/doctype/lead/lead.js:84,crm,1
+Add to Prospect,إضافة إلى فرصة البيع,erpnext/crm/doctype/lead/lead.js:38,crm,1
+Added On,أضيف في,erpnext/crm/doctype/crm_note/crm_note.json:None,crm,1
+Adding Lead to Prospect...,جار إضافة العميل المحتمل إلى فرصة البيع...,erpnext/crm/doctype/lead/lead.js:81,crm,1
+All Activities,كل الأنشطة,erpnext/crm/doctype/lead/lead.json:None; erpnext/crm/doctype/opportunity/opportunity.json:None; erpnext/crm/doctype/prospect/prospect.json:None,crm,1
+All Activities HTML,HTML لكل الأنشطة,erpnext/crm/doctype/lead/lead.json:None; erpnext/crm/doctype/opportunity/opportunity.json:None; erpnext/crm/doctype/prospect/prospect.json:None,crm,1
+Allow Lead Duplication based on Emails,,erpnext/crm/doctype/crm_settings/crm_settings.json:None,crm,0
+Annual Revenue,الإيراد السنوي,erpnext/crm/doctype/lead/lead.json:None; erpnext/crm/doctype/opportunity/opportunity.json:None; erpnext/crm/doctype/prospect/prospect.json:None,crm,1
+Apply SLA for Resolution Time,تطبيق اتفاقية مستوى الخدمة على وقت الحل,erpnext/support/doctype/service_level_agreement/service_level_agreement.json:None,support,1
+Appointment was created. But no lead was found. Please check the email to confirm,,erpnext/crm/doctype/appointment/appointment.py:101,crm,0
+Assignment Conditions,شروط الإسناد,erpnext/support/doctype/service_level_agreement/service_level_agreement.json:None,support,1
+Auto Creation of Contact,إنشاء جهة الاتصال تلقائيا,erpnext/crm/doctype/crm_settings/crm_settings.json:None,crm,1
+Auto close Opportunity Replied after the no. of days mentioned above,,erpnext/crm/doctype/crm_settings/crm_settings.json:None,crm,0
+CRM Note,ملاحظة إدارة العلاقات,erpnext/crm/doctype/crm_note/crm_note.json:None,crm,1
+CRM Settings,إعدادات إدارة علاقات العملاء,erpnext/crm/doctype/crm_settings/crm_settings.json:None; erpnext/crm/workspace/crm/crm.json:None,crm,1
+Carry Forward Communication and Comments,ترحيل الاتصالات والتعليقات,erpnext/crm/doctype/crm_settings/crm_settings.json:None,crm,1
+Close Replied Opportunity After Days,إغلاق الفرصة المجاب عنها بعد أيام,erpnext/crm/doctype/crm_settings/crm_settings.json:None,crm,1
+Closing,الإغلاق,erpnext/crm/doctype/prospect_opportunity/prospect_opportunity.json:None,crm,1
+Competitor,منافس,erpnext/crm/doctype/competitor/competitor.json:None; erpnext/crm/doctype/competitor_detail/competitor_detail.json:None; erpnext/selling/report/lost_quotations/lost_quotations.py:24,crm,1
+Competitor Detail,تفاصيل المنافس,erpnext/crm/doctype/competitor_detail/competitor_detail.json:None,crm,1
+Competitor Name,اسم المنافس,erpnext/crm/doctype/competitor/competitor.json:None,crm,1
+Competitors,المنافسون,erpnext/crm/doctype/opportunity/opportunity.json:None; erpnext/public/js/utils/sales_common.js:583; erpnext/selling/doctype/quotation/quotation.json:None,crm,1
+Contact Mobile,جوال جهة الاتصال,erpnext/crm/doctype/opportunity/opportunity.json:None,crm,1
+Contract Template Help,مساعدة قالب العقد,erpnext/crm/doctype/contract_template/contract_template.json:None,crm,1
+Create Opportunity,إنشاء فرصة,erpnext/crm/doctype/lead/lead.js:161,crm,1
+Create Prospect,إنشاء فرصة بيع,erpnext/crm/doctype/lead/lead_list.js:8,crm,1
+Data Based On,البيانات بناء على,erpnext/crm/report/opportunity_summary_by_sales_stage/opportunity_summary_by_sales_stage.js:15,crm,1
+Date must be between {0} and {1},,erpnext/maintenance/doctype/maintenance_visit/maintenance_visit.py:72; erpnext/maintenance/doctype/maintenance_visit/maintenance_visit.py:92,maintenance,0
+Deal Owner,مالك الصفقة,erpnext/crm/doctype/prospect_opportunity/prospect_opportunity.json:None,crm,1
+Default Service Level Agreement for {0} already exists.,,erpnext/support/doctype/service_level_agreement/service_level_agreement.py:161,support,0
+"Email Address must be unique, it is already used in {0}",,erpnext/crm/doctype/lead/lead.py:164,crm,0
+Email verification failed.,,erpnext/crm/doctype/appointment/appointment.py:114,crm,0
+Enable to apply SLA on every {0},,erpnext/support/doctype/service_level_agreement/service_level_agreement.js:34,support,0
+Enter Visit Details,إدخال تفاصيل الزيارة,erpnext/maintenance/doctype/maintenance_schedule/maintenance_schedule.js:96,maintenance,1
+Fetch Latest Exchange Rate,جلب أحدث سعر صرف,erpnext/crm/doctype/opportunity/opportunity.js:117,crm,1
+First Response Due,استحقاق أول رد,erpnext/support/doctype/issue/issue.json:None,support,1
+First Response SLA Failed by {},,erpnext/support/doctype/issue/test_issue.py:239; erpnext/support/doctype/service_level_agreement/service_level_agreement.py:906,support,0
+From Date is mandatory,تاريخ من إلزامي,erpnext/crm/report/sales_pipeline_analytics/sales_pipeline_analytics.py:27,crm,1
+In Process,قيد المعالجة,erpnext/crm/doctype/lead/lead.json:None; erpnext/manufacturing/doctype/production_plan/production_plan.json:None; erpnext/manufacturing/doctype/work_order/work_order.json:None; erpnext/stock/doctype/quality_inspection/quality_inspection.json:None,crm,1
+"In row {0} of Appointment Booking Slots: ""To Time"" must be later than ""From Time"".",,erpnext/crm/doctype/appointment_booking_settings/appointment_booking_settings.js:8,crm,0
+Invalid Document Type,نوع مستند غير صالح,erpnext/support/doctype/service_level_agreement/service_level_agreement.py:200,support,1
+Issue Analytics,تحليلات البلاغات,erpnext/support/report/issue_analytics/issue_analytics.json:None,support,1
+Issue Summary,ملخص البلاغات,erpnext/support/report/issue_summary/issue_summary.json:None,support,1
+Item Reference,مرجع الصنف,erpnext/maintenance/doctype/maintenance_schedule_detail/maintenance_schedule_detail.json:None; erpnext/manufacturing/doctype/production_plan_item/production_plan_item.json:None; erpnext/manufacturing/doctype/production_plan_item_reference/production_plan_item_reference.json:None,maintenance,1
+Job Title,المسمى الوظيفي,erpnext/crm/doctype/lead/lead.json:None; erpnext/crm/doctype/opportunity/opportunity.json:None,crm,1
+Lead -> Prospect,,erpnext/crm/doctype/lead/lead.py:549,crm,0
+Lead Conversion Time,وقت تحويل العميل المحتمل,erpnext/crm/report/lead_conversion_time/lead_conversion_time.json:None,crm,1
+Lead Owner cannot be same as the Lead Email Address,,erpnext/crm/doctype/lead/lead.py:176,crm,0
+Lead {0} has been added to prospect {1}.,,erpnext/crm/doctype/lead/lead.py:548,crm,0
+Leads,العملاء المحتملون,erpnext/crm/doctype/prospect/prospect.json:None,crm,1
+Lost Reasons are required in case opportunity is Lost.,,erpnext/crm/doctype/opportunity/opportunity.js:28,crm,0
+No of Employees,,erpnext/crm/doctype/lead/lead.json:None; erpnext/crm/doctype/opportunity/opportunity.json:None,crm,0
+No. of Employees,عدد الموظفين,erpnext/crm/doctype/prospect/prospect.json:None,crm,1
+Notes HTML,HTML للملاحظات,erpnext/crm/doctype/lead/lead.json:None; erpnext/crm/doctype/opportunity/opportunity.json:None; erpnext/crm/doctype/prospect/prospect.json:None,crm,1
+Open Activities HTML,HTML للأنشطة المفتوحة,erpnext/crm/doctype/lead/lead.json:None; erpnext/crm/doctype/opportunity/opportunity.json:None; erpnext/crm/doctype/prospect/prospect.json:None,crm,1
+Opp/Lead %,,erpnext/crm/report/campaign_efficiency/campaign_efficiency.py:25; erpnext/crm/report/lead_owner_efficiency/lead_owner_efficiency.py:31,crm,0
+Opportunity Amount (Company Currency),مبلغ الفرصة (عملة الشركة),erpnext/crm/doctype/opportunity/opportunity.json:None,crm,1
+Opportunity Owner,مالك الفرصة,erpnext/crm/doctype/opportunity/opportunity.json:None; erpnext/crm/report/opportunity_summary_by_sales_stage/opportunity_summary_by_sales_stage.py:32; erpnext/crm/report/sales_pipeline_analytics/sales_pipeline_analytics.py:66,crm,1
+Opportunity Source,مصدر الفرصة,erpnext/crm/report/opportunity_summary_by_sales_stage/opportunity_summary_by_sales_stage.js:46; erpnext/crm/report/sales_pipeline_analytics/sales_pipeline_analytics.js:58,crm,1
+Opportunity Summary by Sales Stage,ملخص الفرص حسب مرحلة البيع,erpnext/crm/workspace/crm/crm.json:None,crm,1
+Opportunity Value,قيمة الفرصة,erpnext/crm/doctype/opportunity/opportunity.json:None,crm,1
+Order/Quot %,,erpnext/crm/report/campaign_efficiency/campaign_efficiency.py:27; erpnext/crm/report/lead_owner_efficiency/lead_owner_efficiency.py:33,crm,0
+Party Full Name,الاسم الكامل للجهة,erpnext/crm/doctype/contract/contract.json:None,crm,1
+Phone Ext.,تحويلة الهاتف,erpnext/crm/doctype/lead/lead.json:None; erpnext/crm/doctype/opportunity/opportunity.json:None,crm,1
+Pipeline By,خط المبيعات حسب,erpnext/crm/report/sales_pipeline_analytics/sales_pipeline_analytics.js:8,crm,1
+Please check your email to confirm the appointment,,erpnext/crm/doctype/appointment/appointment.py:98; erpnext/www/book_appointment/index.js:235,crm,0
+Please enter Maintenance Details first,,erpnext/maintenance/doctype/maintenance_schedule/maintenance_schedule.py:224,maintenance,0
+Please select valid document type.,,erpnext/support/doctype/service_level_agreement/service_level_agreement.py:200,support,0
+Post Route Key List,,erpnext/support/doctype/support_search_source/support_search_source.json:None,support,0
+Potential Sales Deal,صفقة مبيعات محتملة,erpnext/crm/doctype/opportunity/opportunity.json:None,crm,1
+Probability,الاحتمال,erpnext/crm/doctype/prospect_opportunity/prospect_opportunity.json:None,crm,1
+Probability (%),الاحتمال (%),erpnext/crm/doctype/opportunity/opportunity.json:None,crm,1
+Prospect,فرصة بيع,erpnext/crm/doctype/lead/lead.js:36; erpnext/crm/doctype/lead/lead.js:62; erpnext/crm/doctype/prospect/prospect.json:None; erpnext/crm/workspace/crm/crm.json:None,crm,1
+Prospect Lead,عميل محتمل لفرصة بيع,erpnext/crm/doctype/prospect_lead/prospect_lead.json:None,crm,1
+Prospect Opportunity,فرصة لفرصة بيع,erpnext/crm/doctype/prospect_opportunity/prospect_opportunity.json:None,crm,1
+Prospect Owner,مالك فرصة البيع,erpnext/crm/doctype/prospect/prospect.json:None,crm,1
+Prospect {0} already exists,,erpnext/crm/doctype/lead/lead.py:313,crm,0
+Purposes Required,,erpnext/maintenance/doctype/maintenance_visit/maintenance_visit.py:56,maintenance,0
+Qualification Status,حالة التأهيل,erpnext/crm/doctype/lead/lead.json:None,crm,1
+Qualified,مؤهل,erpnext/crm/doctype/lead/lead.json:None,crm,1
+Qualified By,تم التأهيل بواسطة,erpnext/crm/doctype/lead/lead.json:None,crm,1
+Qualified on,تم التأهيل في,erpnext/crm/doctype/lead/lead.json:None,crm,1
+Quot/Lead %,,erpnext/crm/report/campaign_efficiency/campaign_efficiency.py:26; erpnext/crm/report/lead_owner_efficiency/lead_owner_efficiency.py:32,crm,0
+Raised By,مرفوع بواسطة,erpnext/support/doctype/warranty_claim/warranty_claim.json:None,support,1
+Resolution Date,,erpnext/support/doctype/issue/issue.json:None; erpnext/support/doctype/warranty_claim/warranty_claim.json:None,support,0
+Resolution Details,,erpnext/support/doctype/issue/issue.json:None; erpnext/support/doctype/warranty_claim/warranty_claim.json:None,support,0
+Resolution Due,استحقاق الحل,erpnext/support/doctype/issue/issue.json:None,support,1
+Resolved By,,erpnext/support/doctype/warranty_claim/warranty_claim.json:None,support,0
+Response and Resolution,,erpnext/support/doctype/service_level_agreement/service_level_agreement.json:None,support,0
+"Row {0}: To set {1} periodicity, difference between from and to date must be greater than or equal to {2}",,erpnext/maintenance/doctype/maintenance_schedule/maintenance_schedule.py:217,maintenance,0
+SLA Fulfilled On,تم استيفاء اتفاقية مستوى الخدمة عند,erpnext/support/doctype/service_level_agreement/service_level_agreement.json:None,support,1
+SLA Fulfilled On Status,حالة استيفاء اتفاقية مستوى الخدمة,erpnext/support/doctype/sla_fulfilled_on_status/sla_fulfilled_on_status.json:None,support,1
+SLA Paused On,تم إيقاف اتفاقية مستوى الخدمة عند,erpnext/support/doctype/service_level_agreement/service_level_agreement.json:None,support,1
+SLA will be applied if {1} is set as {2}{3},,erpnext/support/doctype/service_level_agreement/service_level_agreement.js:52,support,0
+SLA will be applied on every {0},,erpnext/support/doctype/service_level_agreement/service_level_agreement.js:32,support,0
+Sales Pipeline Analytics,تحليلات مسار المبيعات,erpnext/crm/report/sales_pipeline_analytics/sales_pipeline_analytics.json:None; erpnext/crm/workspace/crm/crm.json:None,crm,1
+Service Level Agreement for {0} {1} already exists.,,erpnext/support/doctype/service_level_agreement/service_level_agreement.py:176,support,0
+Service Level Name,اسم مستوى الخدمة,erpnext/support/doctype/service_level_agreement/service_level_agreement.json:None,support,1
+Set Response Time for Priority {0} in row {1}.,,erpnext/support/doctype/service_level_agreement/service_level_agreement.py:82; erpnext/support/doctype/service_level_agreement/service_level_agreement.py:90,support,0
+Settings for Selling Module,إعدادات وحدة البيع,erpnext/crm/doctype/crm_settings/crm_settings.json:None; erpnext/selling/doctype/selling_settings/selling_settings.json:None,crm,1
+Signee,الموقع,erpnext/crm/doctype/contract/contract.json:None,crm,1
+"Simple Python Expression, Example: doc.status == 'Open' and doc.issue_type == 'Bug'",,erpnext/support/doctype/service_level_agreement/service_level_agreement.json:None,support,0
+Stage,,erpnext/crm/doctype/prospect_opportunity/prospect_opportunity.json:None,crm,0
+Start Time can't be greater than or equal to End Time for {0}.,,erpnext/support/doctype/service_level_agreement/service_level_agreement.py:129,support,0
+Status Details,تفاصيل الحالة,erpnext/support/doctype/service_level_agreement/service_level_agreement.json:None,support,1
+Territory Wise Sales,المبيعات حسب المنطقة,erpnext/crm/workspace/crm/crm.json:None,crm,1
+The Document Type {0} must have a Status field to configure Service Level Agreement,,erpnext/support/doctype/service_level_agreement/service_level_agreement.py:206,support,0
+Time slot is not available,الفترة الزمنية غير متاحة,erpnext/crm/doctype/appointment/appointment.py:60,crm,1
+To Date is mandatory,تاريخ إلى إلزامي,erpnext/crm/report/sales_pipeline_analytics/sales_pipeline_analytics.py:30,crm,1
+Total Issues,إجمالي البلاغات,erpnext/support/report/issue_summary/issue_summary.py:82,support,1
+Unqualified,غير مؤهل,erpnext/crm/doctype/lead/lead.json:None,crm,1
+Update the modified timestamp on new communications received in Lead & Opportunity.,,erpnext/crm/doctype/crm_settings/crm_settings.json:None,crm,0
+Update timestamp on new communication,تحديث الطابع الزمني عند اتصال جديد,erpnext/crm/doctype/crm_settings/crm_settings.json:None,crm,1
+Visits,,erpnext/maintenance/doctype/maintenance_schedule/maintenance_schedule.json:None,maintenance,0
+fieldname,,erpnext/crm/report/sales_pipeline_analytics/sales_pipeline_analytics.py:184,crm,0
+or its descendants,,erpnext/support/doctype/service_level_agreement/service_level_agreement.js:50,support,0
+{} Open,,erpnext/crm/workspace/crm/crm.json:None; erpnext/projects/workspace/projects/projects.json:None; erpnext/quality_management/workspace/quality/quality.json:None; erpnext/selling/workspace/selling/selling.json:None,crm,0

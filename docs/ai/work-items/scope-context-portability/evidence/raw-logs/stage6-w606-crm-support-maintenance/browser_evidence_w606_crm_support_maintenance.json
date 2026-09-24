@@ -1,0 +1,88 @@
+{
+  "batch": "stage6-w606-crm-support-maintenance",
+  "site": "v16.localhost",
+  "scope_sha256": "a77b43a908859c0aea3e2c58525ec3765772c09af8617f1f17fb8c8bf12833f9",
+  "proposal_sha256": "d8a2a8df2c040434b82d4d813f96e510e454b0f11114a31cf709db62bf60f266",
+  "reviewed_proposal_sha256": "3d80277b516663b00f2240ed2d9476eef7eeb62803df867dbd029d74f0dcd354",
+  "started_utc": "2026-09-24T21:26:50Z",
+  "checks": [
+    {
+      "name": "boot-lang-ar",
+      "ok": true,
+      "detail": "ar"
+    },
+    {
+      "name": "boot-messages-ge-1000",
+      "ok": true,
+      "detail": 13666
+    },
+    {
+      "name": "all-payload-and-preserve-translations",
+      "ok": true,
+      "detail": {
+        "matched": 114,
+        "total": 114,
+        "mismatches": []
+      }
+    },
+    {
+      "name": "boot-message-payload-exact",
+      "ok": true,
+      "detail": {
+        "matched": 114,
+        "total": 114,
+        "mismatches": []
+      }
+    },
+    {
+      "name": "deferred-and-technical-absent",
+      "ok": true,
+      "detail": {
+        "excluded": 5,
+        "unexpected": []
+      }
+    },
+    {
+      "name": "rendered-dom-arabic",
+      "ok": true,
+      "detail": {
+        "count": 13,
+        "sample": [
+          "الأدوات",
+          "الأصول",
+          "الباطن",
+          "البيع",
+          "التصنيع",
+          "الجودة",
+          "المحاسبة",
+          "المخزون",
+          "المشاريع",
+          "المشتريات",
+          "بحث",
+          "مقاولات",
+          "منظمة"
+        ]
+      }
+    },
+    {
+      "name": "no-page-errors",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "desk-title-captured",
+      "ok": true,
+      "detail": "Desktop"
+    },
+    {
+      "name": "logged-out",
+      "ok": true,
+      "detail": "logout endpoint hit"
+    }
+  ],
+  "finished_utc": "2026-09-24T21:26:59Z",
+  "summary": {
+    "pass": 9,
+    "fail": 0
+  }
+}

@@ -12245,6 +12245,53 @@
         }
       }
     },
+    "12a70bbc80d1a5124969657cd1b1402da462b3e7916a5ef1182f0be88ea104b2": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_crm_support_maintenance_content_evidence_2026-09-24.txt",
+          "sha256": "0dac6864f3e67bd774cab92930046148cc3befae9926ea7db9e8e128e13dab9e"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "crm-support-maintenance",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يرجى مراجعة بريدك الإلكتروني لتأكيد الموعد",
+        "sha256": "8f268cac0e9ba3a08688d15ac33a7eca63f48a623e03222b23c99fc432aeca2a"
+      },
+      "references": "Glossary v2.0; vendor ERPNext CRM/Support/Maintenance PO locations; W6-6 CRM Support Maintenance",
+      "release_version": "1.10",
+      "reviewers": [
+        "AI-A1 (/root/w606_crm_a1_corrected)",
+        "AI-A2 (/root/w606_crm_a2_corrected)",
+        "AI-A3 (/root/w606_crm_a3_corrected)"
+      ],
+      "source_text": "Please check your email to confirm the appointment",
+      "timestamps": [
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17"
+      ],
+      "translated_text": "يرجى مراجعة بريدك الإلكتروني لتأكيد الموعد",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a1_corrected"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a2_corrected"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a3_corrected"
+        }
+      }
+    },
     "12bcb1fc54a9cc5c2d6f7ebdee330c8596107193fdb43197bfee547db934eaa9": {
       "artifacts": [
         {
@@ -17953,6 +18000,53 @@
         }
       }
     },
+    "1c14965e0f449e12cd875804c5f35f00fb896f74fb955f20d0c79489a6cd351e": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_crm_support_maintenance_content_evidence_2026-09-24.txt",
+          "sha256": "0dac6864f3e67bd774cab92930046148cc3befae9926ea7db9e8e128e13dab9e"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "crm-support-maintenance",
+      "language": "ar",
+      "proposal": {
+        "arabic": "أسباب الخسارة مطلوبة في حال كانت الفرصة خاسرة.",
+        "sha256": "136f5c1c4d7e39408df44778185cb559cbc514e3dd476b9d18c3127275892933"
+      },
+      "references": "Glossary v2.0; vendor ERPNext CRM/Support/Maintenance PO locations; W6-6 CRM Support Maintenance",
+      "release_version": "1.10",
+      "reviewers": [
+        "AI-A1 (/root/w606_crm_a1_corrected)",
+        "AI-A2 (/root/w606_crm_a2_corrected)",
+        "AI-A3 (/root/w606_crm_a3_corrected)"
+      ],
+      "source_text": "Lost Reasons are required in case opportunity is Lost.",
+      "timestamps": [
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17"
+      ],
+      "translated_text": "أسباب الخسارة مطلوبة في حال كانت الفرصة خاسرة.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a1_corrected"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a2_corrected"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a3_corrected"
+        }
+      }
+    },
     "1c1bea528b6d15998ed7b096f537b088eb11182b00b5f20b93bfd25607deef0e": {
       "artifacts": [
         {
@@ -20403,6 +20497,53 @@
         }
       }
     },
+    "20a4fba5072f5c3be71885b0831e9c0770c70e0ff05f42b8e768a6c9a9fe341c": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_crm_support_maintenance_content_evidence_2026-09-24.txt",
+          "sha256": "0dac6864f3e67bd774cab92930046148cc3befae9926ea7db9e8e128e13dab9e"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "crm-support-maintenance",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يجب أن يكون التاريخ بين {0} و {1}",
+        "sha256": "a461ce4a331da853ec239ed2f732518d7c2d6a13c06c7edd6d41fdeb2ac66d4f"
+      },
+      "references": "Glossary v2.0; vendor ERPNext CRM/Support/Maintenance PO locations; W6-6 CRM Support Maintenance",
+      "release_version": "1.10",
+      "reviewers": [
+        "AI-A1 (/root/w606_crm_a1_corrected)",
+        "AI-A2 (/root/w606_crm_a2_corrected)",
+        "AI-A3 (/root/w606_crm_a3_corrected)"
+      ],
+      "source_text": "Date must be between {0} and {1}",
+      "timestamps": [
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17"
+      ],
+      "translated_text": "يجب أن يكون التاريخ بين {0} و {1}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a1_corrected"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a2_corrected"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a3_corrected"
+        }
+      }
+    },
     "20ad0e4adae56002cad8dad6993734da22fdb8c9b051ec91c35953ceb76b2691": {
       "artifacts": [
         {
@@ -20964,6 +21105,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "21861e50aa366fe332b55fdea38a7994d47b7d9c0871b241aecee1113c9e52c4": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_crm_support_maintenance_content_evidence_2026-09-24.txt",
+          "sha256": "0dac6864f3e67bd774cab92930046148cc3befae9926ea7db9e8e128e13dab9e"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "crm-support-maintenance",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تعبير بايثون بسيط، مثال: doc.status == 'Open' and doc.issue_type == 'Bug'",
+        "sha256": "4f29e0700a4fd2d5d8ce38392f085e2e9a623d0128393c38e1b3d4b4e613a562"
+      },
+      "references": "Glossary v2.0; vendor ERPNext CRM/Support/Maintenance PO locations; W6-6 CRM Support Maintenance",
+      "release_version": "1.10",
+      "reviewers": [
+        "AI-A1 (/root/w606_crm_a1_corrected)",
+        "AI-A2 (/root/w606_crm_a2_corrected)",
+        "AI-A3 (/root/w606_crm_a3_corrected)"
+      ],
+      "source_text": "Simple Python Expression, Example: doc.status == 'Open' and doc.issue_type == 'Bug'",
+      "timestamps": [
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17"
+      ],
+      "translated_text": "تعبير بايثون بسيط، مثال: doc.status == 'Open' and doc.issue_type == 'Bug'",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a1_corrected"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a2_corrected"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a3_corrected"
         }
       }
     },
@@ -21957,6 +22145,53 @@
           "confidence": "high",
           "decision": "approve",
           "session": "cb33610b-7890-4ebc-acf6-c8af772ae829"
+        }
+      }
+    },
+    "23787e51dab6698c21fa2626cf22e86af187b898680f144ab852d4ea6e0128f9": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_crm_support_maintenance_content_evidence_2026-09-24.txt",
+          "sha256": "0dac6864f3e67bd774cab92930046148cc3befae9926ea7db9e8e128e13dab9e"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "crm-support-maintenance",
+      "language": "ar",
+      "proposal": {
+        "arabic": "{} مفتوح",
+        "sha256": "7df7451dd14eca58c0614a0ae09b396803fbd68cd2da4694c4974e00d769a798"
+      },
+      "references": "Glossary v2.0; vendor ERPNext CRM/Support/Maintenance PO locations; W6-6 CRM Support Maintenance",
+      "release_version": "1.10",
+      "reviewers": [
+        "AI-A1 (/root/w606_crm_a1_corrected)",
+        "AI-A2 (/root/w606_crm_a2_corrected)",
+        "AI-A3 (/root/w606_crm_a3_corrected)"
+      ],
+      "source_text": "{} Open",
+      "timestamps": [
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17"
+      ],
+      "translated_text": "{} مفتوح",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a1_corrected"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a2_corrected"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a3_corrected"
         }
       }
     },
@@ -30365,6 +30600,53 @@
         }
       }
     },
+    "302b0204df260f25388a582ea44d89c9a2f4bce708c9c7f9dce47bbbbe42ea82": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_crm_support_maintenance_content_evidence_2026-09-24.txt",
+          "sha256": "0dac6864f3e67bd774cab92930046148cc3befae9926ea7db9e8e128e13dab9e"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "crm-support-maintenance",
+      "language": "ar",
+      "proposal": {
+        "arabic": "نسبة عروض الأسعار/العملاء المحتملين %",
+        "sha256": "6250f35fdee6698f46d0f4b992178b58dcafdc9f95426a0aa4ade27b20a94c2b"
+      },
+      "references": "Glossary v2.0; vendor ERPNext CRM/Support/Maintenance PO locations; W6-6 CRM Support Maintenance",
+      "release_version": "1.10",
+      "reviewers": [
+        "AI-A1 (/root/w606_crm_a1_corrected)",
+        "AI-A2 (/root/w606_crm_a2_corrected)",
+        "AI-A3 (/root/w606_crm_a3_corrected)"
+      ],
+      "source_text": "Quot/Lead %",
+      "timestamps": [
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17"
+      ],
+      "translated_text": "نسبة عروض الأسعار/العملاء المحتملين %",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a1_corrected"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a2_corrected"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a3_corrected"
+        }
+      }
+    },
     "302b08b10493bfbad94540e649f24081d2b65d4fd6d50ff4e8dea8394278f08f": {
       "artifacts": [
         {
@@ -33332,6 +33614,53 @@
           "confidence": "high",
           "decision": "approve",
           "session": "/root/w606b02_a3_final"
+        }
+      }
+    },
+    "3520990bcfcc4628e2c0408630d2c373d12f985f67d9bbe63d236035b3e07b4b": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_crm_support_maintenance_content_evidence_2026-09-24.txt",
+          "sha256": "0dac6864f3e67bd774cab92930046148cc3befae9926ea7db9e8e128e13dab9e"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "crm-support-maintenance",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الأغراض مطلوبة",
+        "sha256": "1d2b8f815c3fdcfd309d47e8b092da8074a375ac7e46bd5dc6ee08545aa2fbce"
+      },
+      "references": "Glossary v2.0; vendor ERPNext CRM/Support/Maintenance PO locations; W6-6 CRM Support Maintenance",
+      "release_version": "1.10",
+      "reviewers": [
+        "AI-A1 (/root/w606_crm_a1_corrected)",
+        "AI-A2 (/root/w606_crm_a2_corrected)",
+        "AI-A3 (/root/w606_crm_a3_corrected)"
+      ],
+      "source_text": "Purposes Required",
+      "timestamps": [
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17"
+      ],
+      "translated_text": "الأغراض مطلوبة",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a1_corrected"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a2_corrected"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a3_corrected"
         }
       }
     },
@@ -51799,6 +52128,53 @@
         }
       }
     },
+    "526df91559cd3905489157c3a1b01d8ca5fb2e4b08c3fdba19630ee41f23c031": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_crm_support_maintenance_content_evidence_2026-09-24.txt",
+          "sha256": "0dac6864f3e67bd774cab92930046148cc3befae9926ea7db9e8e128e13dab9e"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "crm-support-maintenance",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تاريخ الحل",
+        "sha256": "d376adf832e465fac3de616eb6ee0f22ad99e78dced12eb7d3fffb1a91ea4b7e"
+      },
+      "references": "Glossary v2.0; vendor ERPNext CRM/Support/Maintenance PO locations; W6-6 CRM Support Maintenance",
+      "release_version": "1.10",
+      "reviewers": [
+        "AI-A1 (/root/w606_crm_a1_corrected)",
+        "AI-A2 (/root/w606_crm_a2_corrected)",
+        "AI-A3 (/root/w606_crm_a3_corrected)"
+      ],
+      "source_text": "Resolution Date",
+      "timestamps": [
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17"
+      ],
+      "translated_text": "تاريخ الحل",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a1_corrected"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a2_corrected"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a3_corrected"
+        }
+      }
+    },
     "527d124e8d88dee89adf41434c1f376170a7b6240e93407e4804feb4ca41de28": {
       "artifacts": [
         {
@@ -53826,6 +54202,53 @@
         }
       }
     },
+    "5607b28790035f03d83d8930b7c4fbd02b7c0d067c562f9ecdf204cc50f2df70": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_crm_support_maintenance_content_evidence_2026-09-24.txt",
+          "sha256": "0dac6864f3e67bd774cab92930046148cc3befae9926ea7db9e8e128e13dab9e"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "crm-support-maintenance",
+      "language": "ar",
+      "proposal": {
+        "arabic": "في الصف {0} من فترات حجز المواعيد: يجب أن يكون \"إلى وقت\" بعد \"من وقت\".",
+        "sha256": "9313bc1762e0f7e14cac3590b1c7bfc178349af4cbe8f753ed430c91ebc3ff7f"
+      },
+      "references": "Glossary v2.0; vendor ERPNext CRM/Support/Maintenance PO locations; W6-6 CRM Support Maintenance",
+      "release_version": "1.10",
+      "reviewers": [
+        "AI-A1 (/root/w606_crm_a1_corrected)",
+        "AI-A2 (/root/w606_crm_a2_corrected)",
+        "AI-A3 (/root/w606_crm_a3_corrected)"
+      ],
+      "source_text": "In row {0} of Appointment Booking Slots: \"To Time\" must be later than \"From Time\".",
+      "timestamps": [
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17"
+      ],
+      "translated_text": "في الصف {0} من فترات حجز المواعيد: يجب أن يكون \"إلى وقت\" بعد \"من وقت\".",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a1_corrected"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a2_corrected"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a3_corrected"
+        }
+      }
+    },
     "560f5932d4ff840048535820f3fb5b12fd91e03b842d290c7882cb16dd96e559": {
       "artifacts": [
         {
@@ -53870,6 +54293,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "5642b3b44904c58e1fc7009807b4a35a317c368a5ee324421c1b9695ebc06fb1": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_crm_support_maintenance_content_evidence_2026-09-24.txt",
+          "sha256": "0dac6864f3e67bd774cab92930046148cc3befae9926ea7db9e8e128e13dab9e"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "crm-support-maintenance",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تم الحل بواسطة",
+        "sha256": "09939ae25363cb439a97bafdab238d83dc24823643a183212e5b8c5d97a68b71"
+      },
+      "references": "Glossary v2.0; vendor ERPNext CRM/Support/Maintenance PO locations; W6-6 CRM Support Maintenance",
+      "release_version": "1.10",
+      "reviewers": [
+        "AI-A1 (/root/w606_crm_a1_corrected)",
+        "AI-A2 (/root/w606_crm_a2_corrected)",
+        "AI-A3 (/root/w606_crm_a3_corrected)"
+      ],
+      "source_text": "Resolved By",
+      "timestamps": [
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17"
+      ],
+      "translated_text": "تم الحل بواسطة",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a1_corrected"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a2_corrected"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a3_corrected"
         }
       }
     },
@@ -56749,6 +57219,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "5b77c24d978e2119084f9306666b46ca6680f6c7fabc00281f5c28f93201cc93": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_crm_support_maintenance_content_evidence_2026-09-24.txt",
+          "sha256": "0dac6864f3e67bd774cab92930046148cc3befae9926ea7db9e8e128e13dab9e"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "crm-support-maintenance",
+      "language": "ar",
+      "proposal": {
+        "arabic": "اتفاقية مستوى الخدمة لـ {0} {1} موجودة بالفعل.",
+        "sha256": "b934c180dbc8da4b61b5e74f8391572eeaa4704e4ee7c30f9b8f053a76b09e57"
+      },
+      "references": "Glossary v2.0; vendor ERPNext CRM/Support/Maintenance PO locations; W6-6 CRM Support Maintenance",
+      "release_version": "1.10",
+      "reviewers": [
+        "AI-A1 (/root/w606_crm_a1_corrected)",
+        "AI-A2 (/root/w606_crm_a2_corrected)",
+        "AI-A3 (/root/w606_crm_a3_corrected)"
+      ],
+      "source_text": "Service Level Agreement for {0} {1} already exists.",
+      "timestamps": [
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17"
+      ],
+      "translated_text": "اتفاقية مستوى الخدمة لـ {0} {1} موجودة بالفعل.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a1_corrected"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a2_corrected"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a3_corrected"
         }
       }
     },
@@ -62081,6 +62598,53 @@
         }
       }
     },
+    "643abeb21ddf72b5070db82e5136b819bf8e0484206fe854e2e921731b37a2cd": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_crm_support_maintenance_content_evidence_2026-09-24.txt",
+          "sha256": "0dac6864f3e67bd774cab92930046148cc3befae9926ea7db9e8e128e13dab9e"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "crm-support-maintenance",
+      "language": "ar",
+      "proposal": {
+        "arabic": "فشل التحقق من البريد الإلكتروني.",
+        "sha256": "5e34d633145f68148ece16cc7d2024081a6aa5163bb5fb1a481b1332cb970d1e"
+      },
+      "references": "Glossary v2.0; vendor ERPNext CRM/Support/Maintenance PO locations; W6-6 CRM Support Maintenance",
+      "release_version": "1.10",
+      "reviewers": [
+        "AI-A1 (/root/w606_crm_a1_corrected)",
+        "AI-A2 (/root/w606_crm_a2_corrected)",
+        "AI-A3 (/root/w606_crm_a3_corrected)"
+      ],
+      "source_text": "Email verification failed.",
+      "timestamps": [
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17"
+      ],
+      "translated_text": "فشل التحقق من البريد الإلكتروني.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a1_corrected"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a2_corrected"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a3_corrected"
+        }
+      }
+    },
     "644efaa8a7b151bd6eaeab6e17eb0a677f77c136acfe695ba21dea983d33652b": {
       "artifacts": [
         {
@@ -62125,6 +62689,53 @@
           "confidence": "high",
           "decision": "approve",
           "session": "7b8e0b34-fbae-4e69-a64f-fd1c19ba44e1"
+        }
+      }
+    },
+    "645d26ae3bd1f6517d4ea637a5c28ba5c147f1458e83e2f4739ce72ceed09542": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_crm_support_maintenance_content_evidence_2026-09-24.txt",
+          "sha256": "0dac6864f3e67bd774cab92930046148cc3befae9926ea7db9e8e128e13dab9e"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "crm-support-maintenance",
+      "language": "ar",
+      "proposal": {
+        "arabic": "إضافة أصناف إلى جدول الأغراض",
+        "sha256": "8e73a0c0e6969bed21fecc50c4493d3e82ce83c5e465202568f3e6b10aae7680"
+      },
+      "references": "Glossary v2.0; vendor ERPNext CRM/Support/Maintenance PO locations; W6-6 CRM Support Maintenance",
+      "release_version": "1.10",
+      "reviewers": [
+        "AI-A1 (/root/w606_crm_a1_corrected)",
+        "AI-A2 (/root/w606_crm_a2_corrected)",
+        "AI-A3 (/root/w606_crm_a3_corrected)"
+      ],
+      "source_text": "Add Items in the Purpose Table",
+      "timestamps": [
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17"
+      ],
+      "translated_text": "إضافة أصناف إلى جدول الأغراض",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a1_corrected"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a2_corrected"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a3_corrected"
         }
       }
     },
@@ -64880,6 +65491,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "693ddb4d854bfc44be2f7ac3a82bc3a7c89cca4b00b2b6ab4c0d8c4d91bb5d46": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_crm_support_maintenance_content_evidence_2026-09-24.txt",
+          "sha256": "0dac6864f3e67bd774cab92930046148cc3befae9926ea7db9e8e128e13dab9e"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "crm-support-maintenance",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يرجى تحديد نوع مستند صالح.",
+        "sha256": "a797652b8e81a44cb4abb7859e4d1454e8f462eadd228d105a12aa20bc6a45f7"
+      },
+      "references": "Glossary v2.0; vendor ERPNext CRM/Support/Maintenance PO locations; W6-6 CRM Support Maintenance",
+      "release_version": "1.10",
+      "reviewers": [
+        "AI-A1 (/root/w606_crm_a1_corrected)",
+        "AI-A2 (/root/w606_crm_a2_corrected)",
+        "AI-A3 (/root/w606_crm_a3_corrected)"
+      ],
+      "source_text": "Please select valid document type.",
+      "timestamps": [
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17"
+      ],
+      "translated_text": "يرجى تحديد نوع مستند صالح.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a1_corrected"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a2_corrected"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a3_corrected"
         }
       }
     },
@@ -71155,6 +71813,53 @@
         }
       }
     },
+    "7446656eb4a638a3f17c244cdde4ed9d12a0dae57575cf3e0525e8e065cd8d4e": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_crm_support_maintenance_content_evidence_2026-09-24.txt",
+          "sha256": "0dac6864f3e67bd774cab92930046148cc3befae9926ea7db9e8e128e13dab9e"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "crm-support-maintenance",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تم إنشاء الموعد. ولكن لم يتم العثور على عميل محتمل. يرجى التحقق من البريد الإلكتروني للتأكيد",
+        "sha256": "d8729a8ef4e29fb1a8ae3f174a5710c8b74bb5e0bd90ced34f6b5b215a26c5cd"
+      },
+      "references": "Glossary v2.0; vendor ERPNext CRM/Support/Maintenance PO locations; W6-6 CRM Support Maintenance",
+      "release_version": "1.10",
+      "reviewers": [
+        "AI-A1 (/root/w606_crm_a1_corrected)",
+        "AI-A2 (/root/w606_crm_a2_corrected)",
+        "AI-A3 (/root/w606_crm_a3_corrected)"
+      ],
+      "source_text": "Appointment was created. But no lead was found. Please check the email to confirm",
+      "timestamps": [
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17"
+      ],
+      "translated_text": "تم إنشاء الموعد. ولكن لم يتم العثور على عميل محتمل. يرجى التحقق من البريد الإلكتروني للتأكيد",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a1_corrected"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a2_corrected"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a3_corrected"
+        }
+      }
+    },
     "74616dcd71e8cfbb574a7c9aea1771d5c8025f95460ee808348f103631fe8dc3": {
       "artifacts": [
         {
@@ -73323,6 +74028,53 @@
         }
       }
     },
+    "78f9e153c6d7e11a175f433bd1a2a7b827693db275ab298c986b867a01b21260": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_crm_support_maintenance_content_evidence_2026-09-24.txt",
+          "sha256": "0dac6864f3e67bd774cab92930046148cc3befae9926ea7db9e8e128e13dab9e"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "crm-support-maintenance",
+      "language": "ar",
+      "proposal": {
+        "arabic": "عدد الموظفين",
+        "sha256": "a74a91407154e7a97d52db71dc613c1b46e4da5bc5f50cbfafb88fb3994a3952"
+      },
+      "references": "Glossary v2.0; vendor ERPNext CRM/Support/Maintenance PO locations; W6-6 CRM Support Maintenance",
+      "release_version": "1.10",
+      "reviewers": [
+        "AI-A1 (/root/w606_crm_a1_corrected)",
+        "AI-A2 (/root/w606_crm_a2_corrected)",
+        "AI-A3 (/root/w606_crm_a3_corrected)"
+      ],
+      "source_text": "No of Employees",
+      "timestamps": [
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17"
+      ],
+      "translated_text": "عدد الموظفين",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a1_corrected"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a2_corrected"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a3_corrected"
+        }
+      }
+    },
     "79136c9e829268c2cbd0227731166e5f19b197f9df8220f407a583cfcfed0712": {
       "artifacts": [
         {
@@ -73602,6 +74354,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "79b2576ca8227c20dc0ea9a0e71ae18852394a2ee36ac3b7d44590bfd9b905dd": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_crm_support_maintenance_content_evidence_2026-09-24.txt",
+          "sha256": "0dac6864f3e67bd774cab92930046148cc3befae9926ea7db9e8e128e13dab9e"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "crm-support-maintenance",
+      "language": "ar",
+      "proposal": {
+        "arabic": "قائمة مفاتيح مسار المنشور",
+        "sha256": "defd8d7aa9b194394a2efa91330690241992c50cb83d62ee6a655042dcd09558"
+      },
+      "references": "Glossary v2.0; vendor ERPNext CRM/Support/Maintenance PO locations; W6-6 CRM Support Maintenance",
+      "release_version": "1.10",
+      "reviewers": [
+        "AI-A1 (/root/w606_crm_a1_corrected)",
+        "AI-A2 (/root/w606_crm_a2_corrected)",
+        "AI-A3 (/root/w606_crm_a3_corrected)"
+      ],
+      "source_text": "Post Route Key List",
+      "timestamps": [
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17"
+      ],
+      "translated_text": "قائمة مفاتيح مسار المنشور",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a1_corrected"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a2_corrected"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a3_corrected"
         }
       }
     },
@@ -74260,6 +75059,53 @@
           "confidence": "high",
           "decision": "approve",
           "session": "7b8e0b34-fbae-4e69-a64f-fd1c19ba44e1"
+        }
+      }
+    },
+    "7a93afaae2ed4be4b47c0f6e103a5b3cc4a7bb74dd79ae122d326ea579b432d6": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_crm_support_maintenance_content_evidence_2026-09-24.txt",
+          "sha256": "0dac6864f3e67bd774cab92930046148cc3befae9926ea7db9e8e128e13dab9e"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "crm-support-maintenance",
+      "language": "ar",
+      "proposal": {
+        "arabic": "السماح بتكرار العملاء المحتملين استنادًا إلى البريد الإلكتروني",
+        "sha256": "eaddae156a4d7c0194d61f03b29ed758f8fe1cf5361db4f6029151f8ad3aae11"
+      },
+      "references": "Glossary v2.0; vendor ERPNext CRM/Support/Maintenance PO locations; W6-6 CRM Support Maintenance",
+      "release_version": "1.10",
+      "reviewers": [
+        "AI-A1 (/root/w606_crm_a1_corrected)",
+        "AI-A2 (/root/w606_crm_a2_corrected)",
+        "AI-A3 (/root/w606_crm_a3_corrected)"
+      ],
+      "source_text": "Allow Lead Duplication based on Emails",
+      "timestamps": [
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17"
+      ],
+      "translated_text": "السماح بتكرار العملاء المحتملين استنادًا إلى البريد الإلكتروني",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a1_corrected"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a2_corrected"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a3_corrected"
         }
       }
     },
@@ -75015,6 +75861,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "7b972b5ec248ab57b3c8ffb8ec871faebd4ed7e18261033ba03bccfdc407f95d": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_crm_support_maintenance_content_evidence_2026-09-24.txt",
+          "sha256": "0dac6864f3e67bd774cab92930046148cc3befae9926ea7db9e8e128e13dab9e"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "crm-support-maintenance",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لا يمكن أن يكون وقت البدء أكبر من أو مساويًا لوقت الانتهاء لـ {0}.",
+        "sha256": "1bf959a60205a90d458f142cd2b4d9e855d2b288f65e2d2dc53fb95f09c11d8b"
+      },
+      "references": "Glossary v2.0; vendor ERPNext CRM/Support/Maintenance PO locations; W6-6 CRM Support Maintenance",
+      "release_version": "1.10",
+      "reviewers": [
+        "AI-A1 (/root/w606_crm_a1_corrected)",
+        "AI-A2 (/root/w606_crm_a2_corrected)",
+        "AI-A3 (/root/w606_crm_a3_corrected)"
+      ],
+      "source_text": "Start Time can't be greater than or equal to End Time for {0}.",
+      "timestamps": [
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17"
+      ],
+      "translated_text": "لا يمكن أن يكون وقت البدء أكبر من أو مساويًا لوقت الانتهاء لـ {0}.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a1_corrected"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a2_corrected"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a3_corrected"
         }
       }
     },
@@ -77897,6 +78790,53 @@
         }
       }
     },
+    "800d46a0bef8cf4e6d5b191a02bc7ca00be1bf91dc37d33e103ade8b9ed7477c": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_crm_support_maintenance_content_evidence_2026-09-24.txt",
+          "sha256": "0dac6864f3e67bd774cab92930046148cc3befae9926ea7db9e8e128e13dab9e"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "crm-support-maintenance",
+      "language": "ar",
+      "proposal": {
+        "arabic": "سيتم تطبيق اتفاقية مستوى الخدمة إذا تم تعيين {1} كـ {2}{3}",
+        "sha256": "53a94a5d9f4f81486de5c94114bbbf94cd3e3191a8622b2c7ab9097228d47c0c"
+      },
+      "references": "Glossary v2.0; vendor ERPNext CRM/Support/Maintenance PO locations; W6-6 CRM Support Maintenance",
+      "release_version": "1.10",
+      "reviewers": [
+        "AI-A1 (/root/w606_crm_a1_corrected)",
+        "AI-A2 (/root/w606_crm_a2_corrected)",
+        "AI-A3 (/root/w606_crm_a3_corrected)"
+      ],
+      "source_text": "SLA will be applied if {1} is set as {2}{3}",
+      "timestamps": [
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17"
+      ],
+      "translated_text": "سيتم تطبيق اتفاقية مستوى الخدمة إذا تم تعيين {1} كـ {2}{3}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a1_corrected"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a2_corrected"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a3_corrected"
+        }
+      }
+    },
     "80236e9b2e17908ccef6cacfe83d03b1e6a9ce792c8fc76732a5dfae79ffdc94": {
       "artifacts": [
         {
@@ -78605,6 +79545,53 @@
           "confidence": "high",
           "decision": "approve",
           "session": "7b8e0b34-fbae-4e69-a64f-fd1c19ba44e1"
+        }
+      }
+    },
+    "817437be1fa9b02816e48830aa549343d4ad0e4bfbc390b4ed50d98523b631c9": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_crm_support_maintenance_content_evidence_2026-09-24.txt",
+          "sha256": "0dac6864f3e67bd774cab92930046148cc3befae9926ea7db9e8e128e13dab9e"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "crm-support-maintenance",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تفاصيل الحل",
+        "sha256": "4d3db58348f788b655b5adb2f3e2170596e8eb3515060def66afef5c29ebcb39"
+      },
+      "references": "Glossary v2.0; vendor ERPNext CRM/Support/Maintenance PO locations; W6-6 CRM Support Maintenance",
+      "release_version": "1.10",
+      "reviewers": [
+        "AI-A1 (/root/w606_crm_a1_corrected)",
+        "AI-A2 (/root/w606_crm_a2_corrected)",
+        "AI-A3 (/root/w606_crm_a3_corrected)"
+      ],
+      "source_text": "Resolution Details",
+      "timestamps": [
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17"
+      ],
+      "translated_text": "تفاصيل الحل",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a1_corrected"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a2_corrected"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a3_corrected"
         }
       }
     },
@@ -84551,6 +85538,53 @@
         }
       }
     },
+    "8bb3bffa1f9c556a51387d31d893ea7f922cd093da32a87ce8ea13efefa70386": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_crm_support_maintenance_content_evidence_2026-09-24.txt",
+          "sha256": "0dac6864f3e67bd774cab92930046148cc3befae9926ea7db9e8e128e13dab9e"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "crm-support-maintenance",
+      "language": "ar",
+      "proposal": {
+        "arabic": "اتفاقية مستوى الخدمة الافتراضية لـ {0} موجودة بالفعل.",
+        "sha256": "795dfe4318e61a0fa92b99f0c517d5f1ee3c9e874efea599550b14538f62a5e2"
+      },
+      "references": "Glossary v2.0; vendor ERPNext CRM/Support/Maintenance PO locations; W6-6 CRM Support Maintenance",
+      "release_version": "1.10",
+      "reviewers": [
+        "AI-A1 (/root/w606_crm_a1_corrected)",
+        "AI-A2 (/root/w606_crm_a2_corrected)",
+        "AI-A3 (/root/w606_crm_a3_corrected)"
+      ],
+      "source_text": "Default Service Level Agreement for {0} already exists.",
+      "timestamps": [
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17"
+      ],
+      "translated_text": "اتفاقية مستوى الخدمة الافتراضية لـ {0} موجودة بالفعل.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a1_corrected"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a2_corrected"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a3_corrected"
+        }
+      }
+    },
     "8bcf3d35b56c195d829b5e246bdf4461fd1a8699ee8140f6ee0d6878e6de0502": {
       "artifacts": [
         {
@@ -89700,6 +90734,53 @@
         }
       }
     },
+    "93563796ef2c538f5579ebb34a71facaf4e2e3af48d1eb378a8b100f0da2229f": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_crm_support_maintenance_content_evidence_2026-09-24.txt",
+          "sha256": "0dac6864f3e67bd774cab92930046148cc3befae9926ea7db9e8e128e13dab9e"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "crm-support-maintenance",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الزيارات",
+        "sha256": "6078d4af49a71238ce82d197a3bbb83b852990e8ed2fc676f56dcf2f7156c68e"
+      },
+      "references": "Glossary v2.0; vendor ERPNext CRM/Support/Maintenance PO locations; W6-6 CRM Support Maintenance",
+      "release_version": "1.10",
+      "reviewers": [
+        "AI-A1 (/root/w606_crm_a1_corrected)",
+        "AI-A2 (/root/w606_crm_a2_corrected)",
+        "AI-A3 (/root/w606_crm_a3_corrected)"
+      ],
+      "source_text": "Visits",
+      "timestamps": [
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17"
+      ],
+      "translated_text": "الزيارات",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a1_corrected"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a2_corrected"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a3_corrected"
+        }
+      }
+    },
     "93588fda7b58bcdbc09b2caa76a84746ca9f7e9d51fd5847d9acc53d83d494ad": {
       "artifacts": [
         {
@@ -91019,6 +92100,53 @@
           "confidence": "high",
           "decision": "approve",
           "session": "7b8e0b34-fbae-4e69-a64f-fd1c19ba44e1"
+        }
+      }
+    },
+    "950cc01f6f6d672b71e3e5dbd760e2c3526973f51122d981bbcd35856bf10346": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_crm_support_maintenance_content_evidence_2026-09-24.txt",
+          "sha256": "0dac6864f3e67bd774cab92930046148cc3befae9926ea7db9e8e128e13dab9e"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "crm-support-maintenance",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لا يمكن أن يكون مالك العميل المحتمل هو نفسه عنوان البريد الإلكتروني للعميل المحتمل",
+        "sha256": "4e4c2bf3ef191bc230ab3b230c0d53f7e5ea77ce780e66a029466253638a3141"
+      },
+      "references": "Glossary v2.0; vendor ERPNext CRM/Support/Maintenance PO locations; W6-6 CRM Support Maintenance",
+      "release_version": "1.10",
+      "reviewers": [
+        "AI-A1 (/root/w606_crm_a1_corrected)",
+        "AI-A2 (/root/w606_crm_a2_corrected)",
+        "AI-A3 (/root/w606_crm_a3_corrected)"
+      ],
+      "source_text": "Lead Owner cannot be same as the Lead Email Address",
+      "timestamps": [
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17"
+      ],
+      "translated_text": "لا يمكن أن يكون مالك العميل المحتمل هو نفسه عنوان البريد الإلكتروني للعميل المحتمل",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a1_corrected"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a2_corrected"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a3_corrected"
         }
       }
     },
@@ -92491,6 +93619,53 @@
         }
       }
     },
+    "979ef389310177c3b03201d902dd5ff4e5630adcdba87870adfa514e3c0ffecf": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_crm_support_maintenance_content_evidence_2026-09-24.txt",
+          "sha256": "0dac6864f3e67bd774cab92930046148cc3befae9926ea7db9e8e128e13dab9e"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "crm-support-maintenance",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يرجى إدخال تفاصيل الصيانة أولاً",
+        "sha256": "d90c675abc27d0b5961a69003cdcd1787ec5114e4b9be63353f681037b98620a"
+      },
+      "references": "Glossary v2.0; vendor ERPNext CRM/Support/Maintenance PO locations; W6-6 CRM Support Maintenance",
+      "release_version": "1.10",
+      "reviewers": [
+        "AI-A1 (/root/w606_crm_a1_corrected)",
+        "AI-A2 (/root/w606_crm_a2_corrected)",
+        "AI-A3 (/root/w606_crm_a3_corrected)"
+      ],
+      "source_text": "Please enter Maintenance Details first",
+      "timestamps": [
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17"
+      ],
+      "translated_text": "يرجى إدخال تفاصيل الصيانة أولاً",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a1_corrected"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a2_corrected"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a3_corrected"
+        }
+      }
+    },
     "97f60bad07a484813b0faefbc3c5241f8a0ec07fa107a560256e087c4373e7c3": {
       "artifacts": [
         {
@@ -93810,6 +94985,53 @@
           "confidence": "high",
           "decision": "approve",
           "session": "/root/w606b02_a3_final"
+        }
+      }
+    },
+    "9a55c593292e6bd91a92dbe099c483850ff92718c90a9d062dcf6b8f1bc741b4": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_crm_support_maintenance_content_evidence_2026-09-24.txt",
+          "sha256": "0dac6864f3e67bd774cab92930046148cc3befae9926ea7db9e8e128e13dab9e"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "crm-support-maintenance",
+      "language": "ar",
+      "proposal": {
+        "arabic": "فشلت اتفاقية مستوى الخدمة للاستجابة الأولى من قِبل {}",
+        "sha256": "1500ae7f28032e0ea709bf949823fbdef42af8bd0c81ebbc5e7871cf43bb3e23"
+      },
+      "references": "Glossary v2.0; vendor ERPNext CRM/Support/Maintenance PO locations; W6-6 CRM Support Maintenance",
+      "release_version": "1.10",
+      "reviewers": [
+        "AI-A1 (/root/w606_crm_a1_corrected)",
+        "AI-A2 (/root/w606_crm_a2_corrected)",
+        "AI-A3 (/root/w606_crm_a3_corrected)"
+      ],
+      "source_text": "First Response SLA Failed by {}",
+      "timestamps": [
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17"
+      ],
+      "translated_text": "فشلت اتفاقية مستوى الخدمة للاستجابة الأولى من قِبل {}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a1_corrected"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a2_corrected"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a3_corrected"
         }
       }
     },
@@ -97923,6 +99145,53 @@
         }
       }
     },
+    "a1fce1a7c932188694943e4090af9270c70fa277d57ab54894f1599c98bfe2b2": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_crm_support_maintenance_content_evidence_2026-09-24.txt",
+          "sha256": "0dac6864f3e67bd774cab92930046148cc3befae9926ea7db9e8e128e13dab9e"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "crm-support-maintenance",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يجب أن يحتوي نوع المستند {0} على حقل الحالة لتهيئة اتفاقية مستوى الخدمة",
+        "sha256": "331b53e90702f6f3b920a43d64e11e3bcb0e1fab8ed3e7f0ded8f50cf39116f0"
+      },
+      "references": "Glossary v2.0; vendor ERPNext CRM/Support/Maintenance PO locations; W6-6 CRM Support Maintenance",
+      "release_version": "1.10",
+      "reviewers": [
+        "AI-A1 (/root/w606_crm_a1_corrected)",
+        "AI-A2 (/root/w606_crm_a2_corrected)",
+        "AI-A3 (/root/w606_crm_a3_corrected)"
+      ],
+      "source_text": "The Document Type {0} must have a Status field to configure Service Level Agreement",
+      "timestamps": [
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17"
+      ],
+      "translated_text": "يجب أن يحتوي نوع المستند {0} على حقل الحالة لتهيئة اتفاقية مستوى الخدمة",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a1_corrected"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a2_corrected"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a3_corrected"
+        }
+      }
+    },
     "a206f826d8a2b4095639326f554b7e7b547ab073712adaee210e05873c7695e9": {
       "artifacts": [
         {
@@ -99809,6 +101078,53 @@
           "confidence": "high",
           "decision": "approve",
           "session": "/root/w606b02_a3_final"
+        }
+      }
+    },
+    "a5c6fafc89896281efab6e0289642bf307ac0c0d0c0c9644da23c32189067936": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_crm_support_maintenance_content_evidence_2026-09-24.txt",
+          "sha256": "0dac6864f3e67bd774cab92930046148cc3befae9926ea7db9e8e128e13dab9e"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "crm-support-maintenance",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تفعيل تطبيق اتفاقية مستوى الخدمة على كل {0}",
+        "sha256": "cb67e205a3142f1a1589995c73f26bae939a15a3b5835493918439ce74369e54"
+      },
+      "references": "Glossary v2.0; vendor ERPNext CRM/Support/Maintenance PO locations; W6-6 CRM Support Maintenance",
+      "release_version": "1.10",
+      "reviewers": [
+        "AI-A1 (/root/w606_crm_a1_corrected)",
+        "AI-A2 (/root/w606_crm_a2_corrected)",
+        "AI-A3 (/root/w606_crm_a3_corrected)"
+      ],
+      "source_text": "Enable to apply SLA on every {0}",
+      "timestamps": [
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17"
+      ],
+      "translated_text": "تفعيل تطبيق اتفاقية مستوى الخدمة على كل {0}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a1_corrected"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a2_corrected"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a3_corrected"
         }
       }
     },
@@ -106659,6 +107975,53 @@
         }
       }
     },
+    "b05b1b47fdf2855b9b0bec92b0c1feeeee84cce017f633ca4dcc9d8483d36620": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_crm_support_maintenance_content_evidence_2026-09-24.txt",
+          "sha256": "0dac6864f3e67bd774cab92930046148cc3befae9926ea7db9e8e128e13dab9e"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "crm-support-maintenance",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تحديث الطابع الزمني للتعديل عند تلقي اتصالات جديدة في العميل المحتمل والفرصة.",
+        "sha256": "9bd3967e5dae83f3ee3d6e42a4ef222512d6753264eac173a4a846463819235a"
+      },
+      "references": "Glossary v2.0; vendor ERPNext CRM/Support/Maintenance PO locations; W6-6 CRM Support Maintenance",
+      "release_version": "1.10",
+      "reviewers": [
+        "AI-A1 (/root/w606_crm_a1_corrected)",
+        "AI-A2 (/root/w606_crm_a2_corrected)",
+        "AI-A3 (/root/w606_crm_a3_corrected)"
+      ],
+      "source_text": "Update the modified timestamp on new communications received in Lead & Opportunity.",
+      "timestamps": [
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17"
+      ],
+      "translated_text": "تحديث الطابع الزمني للتعديل عند تلقي اتصالات جديدة في العميل المحتمل والفرصة.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a1_corrected"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a2_corrected"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a3_corrected"
+        }
+      }
+    },
     "b0601094cfcea5976923eeb9709bf47a25ee90d073eba16fd75f29ae2c8369e1": {
       "artifacts": [
         {
@@ -113372,6 +114735,53 @@
         }
       }
     },
+    "bb09013bf4ce6041b5c8d5c864ca680ea00442ae1fa35e027ee2da43f8fa6193": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_crm_support_maintenance_content_evidence_2026-09-24.txt",
+          "sha256": "0dac6864f3e67bd774cab92930046148cc3befae9926ea7db9e8e128e13dab9e"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "crm-support-maintenance",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الاستجابة والحل",
+        "sha256": "a9dc2c4688e5eb14bea53b5acf992ff8feb8f667fab827dd9bfde2630a28eef2"
+      },
+      "references": "Glossary v2.0; vendor ERPNext CRM/Support/Maintenance PO locations; W6-6 CRM Support Maintenance",
+      "release_version": "1.10",
+      "reviewers": [
+        "AI-A1 (/root/w606_crm_a1_corrected)",
+        "AI-A2 (/root/w606_crm_a2_corrected)",
+        "AI-A3 (/root/w606_crm_a3_corrected)"
+      ],
+      "source_text": "Response and Resolution",
+      "timestamps": [
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17"
+      ],
+      "translated_text": "الاستجابة والحل",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a1_corrected"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a2_corrected"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a3_corrected"
+        }
+      }
+    },
     "bb12139d99b3cd51dc8c9d4d7972e88b6255871b397418363f3bfd02df5b0d07": {
       "artifacts": [
         {
@@ -116718,6 +118128,53 @@
           "confidence": "high",
           "decision": "approve",
           "session": "/root/w603_a3"
+        }
+      }
+    },
+    "bff37dc3d17e8405cdbd4f15f032b5a682f49ba5981ee42d65f2f8f8a65ad436": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_crm_support_maintenance_content_evidence_2026-09-24.txt",
+          "sha256": "0dac6864f3e67bd774cab92930046148cc3befae9926ea7db9e8e128e13dab9e"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "crm-support-maintenance",
+      "language": "ar",
+      "proposal": {
+        "arabic": "إغلاق تلقائي للفرصة التي تم الرد عليها بعد عدد الأيام المذكور أعلاه",
+        "sha256": "027e997417406e64303655eb00e5b7578de753d948548fe38b712f5c053d4084"
+      },
+      "references": "Glossary v2.0; vendor ERPNext CRM/Support/Maintenance PO locations; W6-6 CRM Support Maintenance",
+      "release_version": "1.10",
+      "reviewers": [
+        "AI-A1 (/root/w606_crm_a1_corrected)",
+        "AI-A2 (/root/w606_crm_a2_corrected)",
+        "AI-A3 (/root/w606_crm_a3_corrected)"
+      ],
+      "source_text": "Auto close Opportunity Replied after the no. of days mentioned above",
+      "timestamps": [
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17"
+      ],
+      "translated_text": "إغلاق تلقائي للفرصة التي تم الرد عليها بعد عدد الأيام المذكور أعلاه",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a1_corrected"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a2_corrected"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a3_corrected"
         }
       }
     },
@@ -126577,6 +128034,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "cf377365090283c4fb5a2a9e14d8ef306624725280c20a57278ffb9cabaf2f67": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_crm_support_maintenance_content_evidence_2026-09-24.txt",
+          "sha256": "0dac6864f3e67bd774cab92930046148cc3befae9926ea7db9e8e128e13dab9e"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "crm-support-maintenance",
+      "language": "ar",
+      "proposal": {
+        "arabic": "سيتم تطبيق اتفاقية مستوى الخدمة على كل {0}",
+        "sha256": "841ec8eed32d637f48ddc79df5576c8e969ebd641b37f72622fbac715df4cd42"
+      },
+      "references": "Glossary v2.0; vendor ERPNext CRM/Support/Maintenance PO locations; W6-6 CRM Support Maintenance",
+      "release_version": "1.10",
+      "reviewers": [
+        "AI-A1 (/root/w606_crm_a1_corrected)",
+        "AI-A2 (/root/w606_crm_a2_corrected)",
+        "AI-A3 (/root/w606_crm_a3_corrected)"
+      ],
+      "source_text": "SLA will be applied on every {0}",
+      "timestamps": [
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17"
+      ],
+      "translated_text": "سيتم تطبيق اتفاقية مستوى الخدمة على كل {0}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a1_corrected"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a2_corrected"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a3_corrected"
         }
       }
     },
@@ -140128,6 +141632,53 @@
         }
       }
     },
+    "e4214cdcf88ee40858f318768424a557060ecc7c05fb2408bc4c91b3e6593730": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_crm_support_maintenance_content_evidence_2026-09-24.txt",
+          "sha256": "0dac6864f3e67bd774cab92930046148cc3befae9926ea7db9e8e128e13dab9e"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "crm-support-maintenance",
+      "language": "ar",
+      "proposal": {
+        "arabic": "نسبة الفرص/العملاء المحتملين %",
+        "sha256": "2f44381df34751104d5b1ae7ffa26d20700b0c974dda76d4946273fd9349210d"
+      },
+      "references": "Glossary v2.0; vendor ERPNext CRM/Support/Maintenance PO locations; W6-6 CRM Support Maintenance",
+      "release_version": "1.10",
+      "reviewers": [
+        "AI-A1 (/root/w606_crm_a1_corrected)",
+        "AI-A2 (/root/w606_crm_a2_corrected)",
+        "AI-A3 (/root/w606_crm_a3_corrected)"
+      ],
+      "source_text": "Opp/Lead %",
+      "timestamps": [
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17"
+      ],
+      "translated_text": "نسبة الفرص/العملاء المحتملين %",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a1_corrected"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a2_corrected"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a3_corrected"
+        }
+      }
+    },
     "e42b81a422ec22efc6ec562ce2604d024896f2ec6d4caafb2320f54dfb903fe3": {
       "artifacts": [
         {
@@ -144992,6 +146543,53 @@
         }
       }
     },
+    "ebc8643843b559fe2fdcec151bd4b05c4fb8ad9a84cd8037c8633a9b0fb00456": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_crm_support_maintenance_content_evidence_2026-09-24.txt",
+          "sha256": "0dac6864f3e67bd774cab92930046148cc3befae9926ea7db9e8e128e13dab9e"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "crm-support-maintenance",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الصف {0}: لتعيين دورية {1}، يجب أن يكون الفرق بين تاريخ البدء وتاريخ الانتهاء أكبر من أو يساوي {2}",
+        "sha256": "5386c07a14d66c7d60e1291edc87e50b6764d17cfdc3325ca4c570d90a4f4c00"
+      },
+      "references": "Glossary v2.0; vendor ERPNext CRM/Support/Maintenance PO locations; W6-6 CRM Support Maintenance",
+      "release_version": "1.10",
+      "reviewers": [
+        "AI-A1 (/root/w606_crm_a1_corrected)",
+        "AI-A2 (/root/w606_crm_a2_corrected)",
+        "AI-A3 (/root/w606_crm_a3_corrected)"
+      ],
+      "source_text": "Row {0}: To set {1} periodicity, difference between from and to date must be greater than or equal to {2}",
+      "timestamps": [
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17"
+      ],
+      "translated_text": "الصف {0}: لتعيين دورية {1}، يجب أن يكون الفرق بين تاريخ البدء وتاريخ الانتهاء أكبر من أو يساوي {2}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a1_corrected"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a2_corrected"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a3_corrected"
+        }
+      }
+    },
     "ebd48bcd613fe1daf9ec1a7a5a7abefba94b3475c6919c109161cd1d448aba5e": {
       "artifacts": [
         {
@@ -146930,6 +148528,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "ef52d560afdd41deb635520ae083f0a9273e73bae751dfcc6ae3708ceecaad5e": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_crm_support_maintenance_content_evidence_2026-09-24.txt",
+          "sha256": "0dac6864f3e67bd774cab92930046148cc3befae9926ea7db9e8e128e13dab9e"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "crm-support-maintenance",
+      "language": "ar",
+      "proposal": {
+        "arabic": "نسبة الطلبات/عروض الأسعار %",
+        "sha256": "0900e4f5cf62acd465b0d11720f7b7fab31eec4b8cef770e2c351b8927ae238d"
+      },
+      "references": "Glossary v2.0; vendor ERPNext CRM/Support/Maintenance PO locations; W6-6 CRM Support Maintenance",
+      "release_version": "1.10",
+      "reviewers": [
+        "AI-A1 (/root/w606_crm_a1_corrected)",
+        "AI-A2 (/root/w606_crm_a2_corrected)",
+        "AI-A3 (/root/w606_crm_a3_corrected)"
+      ],
+      "source_text": "Order/Quot %",
+      "timestamps": [
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17"
+      ],
+      "translated_text": "نسبة الطلبات/عروض الأسعار %",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a1_corrected"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a2_corrected"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a3_corrected"
         }
       }
     },
@@ -152156,6 +153801,53 @@
         }
       }
     },
+    "f8144e339221387892eb1ee6f5be5960208fff3b83f6a99312d736e4a5c0b6ce": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_crm_support_maintenance_content_evidence_2026-09-24.txt",
+          "sha256": "0dac6864f3e67bd774cab92930046148cc3befae9926ea7db9e8e128e13dab9e"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "crm-support-maintenance",
+      "language": "ar",
+      "proposal": {
+        "arabic": "أو توابعه",
+        "sha256": "50126ec42734f0c9f137f0bdd949f5cb3af0dbf95346f538827e7ae2f5a10250"
+      },
+      "references": "Glossary v2.0; vendor ERPNext CRM/Support/Maintenance PO locations; W6-6 CRM Support Maintenance",
+      "release_version": "1.10",
+      "reviewers": [
+        "AI-A1 (/root/w606_crm_a1_corrected)",
+        "AI-A2 (/root/w606_crm_a2_corrected)",
+        "AI-A3 (/root/w606_crm_a3_corrected)"
+      ],
+      "source_text": "or its descendants",
+      "timestamps": [
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17"
+      ],
+      "translated_text": "أو توابعه",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a1_corrected"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a2_corrected"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a3_corrected"
+        }
+      }
+    },
     "f82378d54a719a9c584b1048689a966b80326dde50f9e4793260c130808095d9": {
       "artifacts": [
         {
@@ -156116,6 +157808,53 @@
         }
       }
     },
+    "fe39076be33e894a093fbb9089367ca9e1f999eeccf759271536e0eab2fb034f": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_crm_support_maintenance_content_evidence_2026-09-24.txt",
+          "sha256": "0dac6864f3e67bd774cab92930046148cc3befae9926ea7db9e8e128e13dab9e"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "crm-support-maintenance",
+      "language": "ar",
+      "proposal": {
+        "arabic": "المرحلة",
+        "sha256": "af230f8a6c4702ca3254208d941f7a0fc8cc91e411cf76bf1791d33ea803011e"
+      },
+      "references": "Glossary v2.0; vendor ERPNext CRM/Support/Maintenance PO locations; W6-6 CRM Support Maintenance",
+      "release_version": "1.10",
+      "reviewers": [
+        "AI-A1 (/root/w606_crm_a1_corrected)",
+        "AI-A2 (/root/w606_crm_a2_corrected)",
+        "AI-A3 (/root/w606_crm_a3_corrected)"
+      ],
+      "source_text": "Stage",
+      "timestamps": [
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17"
+      ],
+      "translated_text": "المرحلة",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a1_corrected"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a2_corrected"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a3_corrected"
+        }
+      }
+    },
     "fe3a7a2e60bf89c6746e227ac5c814dd6e15a1c639f7b6e1f3c683e7d9d99c3c": {
       "artifacts": [
         {
@@ -156492,6 +158231,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "ff28e504197f80b063997c2ac29b7b9e0a6068b0995658ab2c7c3958479e4c6e": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_crm_support_maintenance_content_evidence_2026-09-24.txt",
+          "sha256": "0dac6864f3e67bd774cab92930046148cc3befae9926ea7db9e8e128e13dab9e"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "crm-support-maintenance",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يجب أن يكون عنوان البريد الإلكتروني فريدًا، فهو مستخدم بالفعل في {0}",
+        "sha256": "b6f012e9c9fe54c803c0282cedf4b4151a3bc0b061414203a3637f30576d71cc"
+      },
+      "references": "Glossary v2.0; vendor ERPNext CRM/Support/Maintenance PO locations; W6-6 CRM Support Maintenance",
+      "release_version": "1.10",
+      "reviewers": [
+        "AI-A1 (/root/w606_crm_a1_corrected)",
+        "AI-A2 (/root/w606_crm_a2_corrected)",
+        "AI-A3 (/root/w606_crm_a3_corrected)"
+      ],
+      "source_text": "Email Address must be unique, it is already used in {0}",
+      "timestamps": [
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17",
+        "2026-09-24 20:31:17"
+      ],
+      "translated_text": "يجب أن يكون عنوان البريد الإلكتروني فريدًا، فهو مستخدم بالفعل في {0}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a1_corrected"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a2_corrected"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "/root/w606_crm_a3_corrected"
         }
       }
     },
@@ -157013,7 +158799,7 @@
       }
     }
   },
-  "generated_utc": "2026-09-24T17:25:34Z",
-  "note": "Historical decisions retained; W6-6 Manufacturing Batch 02 decisions bind to the literal quote-safe text evidence artifact, exact proposal/scope hashes, and A1/A2/A3 PASS.",
+  "generated_utc": "2026-09-24T21:59:52Z",
+  "note": "W6-6 CRM Support Maintenance decisions rebound to literal quote-safe content evidence; historical decisions retained.",
   "schema": "release-decision/v2"
 }

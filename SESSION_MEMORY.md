@@ -1,6 +1,6 @@
 # Session Memory — Construction ERP
-**LAST UPDATED:** 2026-09-24 (W6-6 Manufacturing Batch 01 cycle closed)
-**UPDATED BY:** Antigravity (W6-6 Manufacturing Batch 01 governed cycle and evidence closure)
+**LAST UPDATED:** 2026-09-25 (W6-6 CRM, Support & Maintenance cycle closed)
+**UPDATED BY:** Antigravity (W6-6 CRM, Support & Maintenance governed cycle and evidence closure)
 
 ---
 
@@ -609,3 +609,28 @@ untouched/gated. No push was performed. Leave untracked `v16.localhost/`
 untouched. Next action: propose a new bounded Stage-6 area for owner approval,
 or resume Stage 8 only after its original production-data, rehearsal, and
 explicit authorization controls are supplied.
+
+## 2026-09-25 — W6-6 CRM, Support & Maintenance governed cycle CLOSED
+
+Owner-authorized corrected continuation applied only to the exact 119-row
+`stage6_w606_crm_support_maintenance_rows_2026-09-24.csv` (SHA
+`a77b43a908859c0aea3e2c58525ec3765772c09af8617f1f17fb8c8bf12833f9`) on
+`v16.localhost`. Corrected proposal SHA:
+`d8a2a8df2c040434b82d4d813f96e510e454b0f11114a31cf709db62bf60f266` (reviewed CRLF bytes: `3d80277b516663b00f2240ed2d9476eef7eeb62803df867dbd029d74f0dcd354`).
+Final disposition: **38 Released + 76 preserved Site Overrides + 4 deferred
+source defects + 1 technical exception (`fieldname`)**. The original
+42-payload proposal and expected 3,368 total are superseded.
+
+Import created 38 rows; post-DRY `3364/0/0/3364/0`, drift 0; sync 0/0;
+catalog and decisions 3,364/3,364. UAT preflight PASS; browser evidence
+9/9 with 114/114 translated keys matched and five excluded rows absent;
+standalone 92/92; module 271/271; evidence-inclusive gate errors=0.
+Freshness critical/pass, no drift; inventory 21,781 rows with Merkle
+`f1d00e38…c2e4e1`. Final independent AI-R PASS. UAT language restored to
+`en`, credential rotated, no browser after teardown. Evidence is bound to
+pre-commit HEAD `ea553f2`; the expected post-commit HEAD mismatch follows
+until the next approved catalog event.
+
+Production and Stage 8 remain gated. No push was performed. Leave untracked
+`v16.localhost/` untouched. Next action requires a separate owner-approved
+Stage-6 scope proposal or the original Stage-8/production controls.

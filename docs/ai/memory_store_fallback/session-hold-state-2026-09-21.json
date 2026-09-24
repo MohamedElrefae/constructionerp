@@ -1,9 +1,9 @@
 {
-  "recorded_utc": "2026-09-23T22:46:19Z",
+  "recorded_utc": "2026-09-24T21:47:28Z",
   "session_type": "hold_state",
   "importance": 0.9,
-  "summary": "W6-0b batches 1-7 closed; W6-2 batches 01/02 closed; W6-3 batches 01/02/03 governed cycles CLOSED on v16.localhost (batch-03 catalog 2651, 111 releases, browser 8/8, AI-R PASS). Stage 8 and production remain gated.",
-  "supersedes": "session-hold-state-2026-09-21.json + in-place updates through W6-3 batch-02; now records W6-3 batch-03 cycle closure",
+  "summary": "W6-0b batches 1-7 closed; W6-2 batches 01/02 closed; W6-3 batches 01/02/03 governed cycles CLOSED on v16.localhost; W6-4 Projects + Subcontracting batch-01, W6-5 Setup, W6-6 Assets, W6-6 Manufacturing batches 01/02, and W6-6 CRM Support & Maintenance corrected cycle CLOSED. Stage 8 and production remain gated.",
+  "supersedes": "session-hold-state-2026-09-21.json plus in-place updates through W6-6 Manufacturing Batch 02; now records W6-6 CRM, Support & Maintenance closure",
   "hold_directives": [
     "W6-0b batches 1-7 COMPLETE and accepted (a0f01cb); 8bfc23a rejected history only",
     "W6-2 batch-01 COMPLETE and closed on v16.localhost 2026-09-23 (exact scope CSV sha b017df47… only)",
@@ -11,9 +11,15 @@
     "W6-3 batch-01 COMPLETE and closed on v16.localhost 2026-09-23 (exact scope CSV sha 5eb34bc2… only); final disposition 115 preserved + 17 technical + 118 payload; catalog 2437; browser 21/21; evidence HEAD-bound to 9a3f44f; cycle commit 0bfc062",
     "W6-3 batch-02 COMPLETE and closed on v16.localhost 2026-09-24 (exact scope CSV sha 701ad13e6b4cc530ebd7dbd95705979b70055c46f39da37d4532a26ba60439ef only); final disposition 103 releases + 143 preserved + 2 technical + 2 deferred source defects; catalog 2540; live DRY 2540/0/0/2540/0; AI-R PASS; browser 8/8; evidence-inclusive gate errors=0 at base HEAD e8d4846",
     "W6-3 batch-03 COMPLETE and closed on v16.localhost 2026-09-24 (exact scope CSV sha a5f0e9f604ea52d89072d2c744864fdcbc733bc8307fd427a5c2658f4855dbc9 only); 111 releases + 121 preserved + 2 technical; catalog 2651; final DRY 2651/0/0/2651/0; AI-A1/A2/A3 + AI-R PASS; browser 8/8; evidence-inclusive gate errors=0 at base HEAD fb3e056",
+    "W6-4 Projects + Subcontracting batch-01 COMPLETE and closed on v16.localhost 2026-09-24 (exact scope CSV sha 93fbf16b14940ce2d477f346c1777865bf008b22df943625e7de84f27e8f4abe only); 48 releases + 96 preserved + 3 deferred; catalog 2699; browser 144/144; AI-R PASS",
+    "W6-5 Setup batch COMPLETE and closed on v16.localhost 2026-09-24 (exact scope CSV sha e2d672c4a1b479f9cd52c017f76a3c8a8b1b24dced24ed4b5f5c6d8113900a09 only); 349 releases + 107 preserved + 13 technical; catalog 3048; browser 456/456; AI-R PASS",
+    "W6-6 Assets batch COMPLETE and closed on v16.localhost 2026-09-24 (exact scope CSV sha 6f142646ae55cf147751e8d751f10638c79420dfa184855985ecd6068ee63a40 only); 113 releases + 98 preserved; catalog 3161; browser 211/211; AI-R PASS",
+    "W6-6 Manufacturing Batch 01 COMPLETE and closed on v16.localhost 2026-09-24 (exact scope CSV sha 0d5098f61e2f97d26fa40e4e8b5d3b90ab1ec22e9dafd543564cb07ec8d39286 only); 83 releases + 167 preserved; catalog 3244; browser 250/250; AI-R PASS",
+    "W6-6 Manufacturing Batch 02 COMPLETE and closed on v16.localhost 2026-09-24 (exact scope CSV sha 195c789945cf2b069a1620e855b22ad38aa9cb0adf03b9b2342166c47b6e88ff only); 82 releases + 119 preserved + 1 technical; catalog 3326; browser 82/82; AI-R PASS",
+    "W6-6 CRM Support & Maintenance corrected cycle COMPLETE and closed on v16.localhost 2026-09-25 (exact scope CSV sha a77b43a908859c0aea3e2c58525ec3765772c09af8617f1f17fb8c8bf12833f9 only; corrected proposal sha d8a2a8df2c040434b82d4d813f96e510e454b0f11114a31cf709db62bf60f266; reviewed CRLF 3d80277b516663b00f2240ed2d9476eef7eeb62803df867dbd029d74f0dcd354); 38 releases + 76 preserved + 4 deferred + 1 technical; catalog 3364; live DRY 3364/0/0/3364/0; UAT PASS; browser 114/114 plus 5 excluded absent; AI-R PASS; evidence-inclusive gate errors=0 at pre-commit HEAD ea553f2",
     "any next Stage 6 workflow-matrix batch requires a new explicit owner-approved scope proposal before any run",
     "no production mutation, production catalog/DB rollout, or Stage 8 production work",
-    "develop clean; production waits on real master/ledger data + named production site + explicit rollout window together",
+    "develop closure remains local; do not push without explicit request",
     "always run scripts/uat_preflight.py for Stage 8 validations",
     "untracked v16.localhost/ log dir left as-is (owner directive)"
   ]
