@@ -1,13 +1,13 @@
 # Session Memory — Construction ERP
-**LAST UPDATED:** 2026-09-25 (W6-6 CRM cycle closed; Stage-6 handoff + plan reconciled against the repo)
-**UPDATED BY:** Antigravity (W6-6 CRM governed cycle, evidence closure, agent handoff, and read-only reconciliation)
+**LAST UPDATED:** 2026-09-26 (W6-1 Accounts Batch 01 cycle closed on test site)
+**UPDATED BY:** Antigravity (W6-1 Accounts Batch 01 governed cycle, evidence closure, and reconciliation)
 
 ---
 
 ## 1. Project Snapshot
-- **Total commits:** 369 at the reconciliation session (`git rev-list --count HEAD` is authoritative; `develop` is in sync with `origin/develop`)
-- **Current branch:** `develop` (0 ahead / 0 behind as of 2026-09-25 — the three session commits were published to `origin` by an external action, not by the agent)
-- **Last session date:** 2026-09-25
+- **Total commits:** 371 after this closure (`git rev-list --count HEAD` is authoritative; 1 unpushed closure commit on local `develop`)
+- **Current branch:** `develop` (local closure commit; strictly unpushed)
+- **Last session date:** 2026-09-26
 - **Python version:** 3.14 (venv: `/home/mohamed/frappe-bench/env`)
 - **AGENTS.md status:** Rewritten from Scope Context dev report → agent context file
 - **New files created:** `SESSION_MEMORY.md`, `docs/ai/CONTEXT_INDEX.md`, `docs/ai/SCHEMA_FACTS.md`, `docs/ai/CODING_PATTERNS.md`, `scripts/ai_context_check.py`
@@ -721,3 +721,37 @@ pin, and both cut scripts now fail their own asserts when re-run because the
 250-row scope (SHA above) on `v16.localhost`; approval request raised 2026-09-25.
 Production and Stage 8 remain gated; the W6-6 EDI remainder and W6-7 remain
 uncut and unapproved.
+
+## 2026-09-26 — W6-1 Accounts Batch 01 governed cycle closed on test site
+
+Owner authorization recorded for exact 250-row W6-1 Accounts Batch 01 scope (`docs/translation/stage6_w601_accounts_batch01_rows_2026-09-24.csv`, SHA-256 `4910a9e4a0e5f8dd0105d484171ac1dc68e173220a0bed27520fbfc5e8c090fd`) and proposal (`stage6_w601_accounts_batch01_proposal_2026-09-24.csv`, SHA-256 `226ff8b158a4a17bca77209d2e452fff9eff75fd6479324f3e020e6b24ab2b4e`) on `v16.localhost` only.
+
+**Governed Cycle Execution Summary:**
+- **Partition & Dispositions (250 total rows):**
+  - **96 newly Released payload rows** (appended to catalog at release_version 1.11, catalog lines 3365–3460).
+  - **147 exact-key preserved Site Overrides** (byte-for-byte reconciliation against live `v16.localhost` `tabTranslation`).
+  - **6 strip-collision preserved Site Overrides** (`" Amount"`, `" Name"`, `" Rate"`, `"All Parties "`, `"Apply Tax Withholding Amount "`, `"Customer "`) protected under Plan §12 from catalog overwrite due to runtime lookup strip-collisions with pre-existing live site overrides (`Amount`, `Name`, `Rate`, `All Parties`, `Apply Tax Withholding Amount`, `Customer`).
+  - **1 already-released catalog duplicate** (`"Closing [Opening + Total] "`) matching catalog line 52 (`Closing [Opening + Total]`, version 1.2), classified as `already-released` to maintain unique source keys and avoid csv-duplicate gate failure.
+  - **0 technical exceptions**, 0 deferred source defects.
+- **Reviews & Quorum:**
+  - AI-A1 (Linguistic), AI-A2 (Domain), AI-A3 (Structural) subagents all returned formal verdicts: **PASS**.
+  - AI-R final independent bundle verification completed with formal verdict: **PASS** (`stage6-w601-ai-r-accounts-batch01-final-2026-09-26.md`).
+- **Live Database Import & Verification:**
+  - `uat_preflight.py` PASSED with 13,762 Arabic boot messages.
+  - `import_released_overrides(dry_run=False)`: created 96 rows, updated 3 (whitespace-normalized edge strings), 0 drift.
+  - Post-import dry-run: `total=3460 created=0 updated=0 skipped=3460 drift=0` (clean, zero drift).
+  - Sync: `sync_translation_catalog(dry_run=False)` returned `{'created': 0, 'updated': 0}`.
+- **Catalog, Manifests & Gate:**
+  - Catalog rows: **3,460 Released rows**; `release_decisions.json`: **3,460 decisions**.
+  - Freshness evidence: `packaged_rows: 3460`, `critical_pass: true`, `has_drift: false`.
+  - Inventory Manifest: 21,877 rows, Merkle root `38e7217d69f2913e1bbaf25964f40f269a84594c9bb98b82fe7f79a0ebf356eb` (`LIVE_MATCH: True`).
+  - Gate constants updated: `EXPECTED_DRYRUN = 3460` in `scripts/check_localization_gates.py`, standalone test assertion updated to 3460 in `construction/tests/test_localization_gates.py`.
+  - Full evidence-inclusive gate: `python3 scripts/check_localization_gates.py` exited 0 with `errors=0`, `csv_rows=3460`.
+  - Tests: All 11 modules (271/271 tests) and 92 standalone tests passed.
+  - Ten Stage-2 evidence envelopes re-assembled, pinning pre-commit candidate HEAD `1a494eb71cdb2b7cafe81ca98e9c33bccf7059e4`.
+- **Browser Evidence:**
+  - Headless Playwright suite captured 8/8 checks, 96/96 released translations verified, 250/250 batch keys matched.
+  - Teardown: Administrator language restored to `en`, session cleared.
+- **Boundaries:**
+  - `v16.localhost` test site only. Stage 8 and production remain gated and completely untouched.
+  - Strictly no push (local closure commit only).

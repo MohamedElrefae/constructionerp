@@ -1,0 +1,96 @@
+'{0}' account is already used by {1}. Use another account.
+'{0}' has been already added.
+(Purchase Order + Material Request + Actual Expense)
+90 Above
+A Reconciliation Job {0} is running for the same filters. Cannot reconcile now
+A condition for a Shipping Rule
+A customer must have primary contact email.
+A template with tax category {0} already exists. Only one template is allowed with each tax category
+API Details
+Accepted Qty in Stock UOM
+Access Key
+Access Key is required for Service Provider: {0}
+Account is mandatory
+Account {0} added multiple times
+Account {0} cannot be converted to Group as it is already set as {1} for {2}.
+Account {0} cannot be disabled as it is already set as {1} for {2}.
+Account {0} does not belong to company {1}
+Account {0} doesn't belong to Company {1}
+Accrued Expenses
+Action if Accumulative Monthly Budget Exceeded on Cumulative Expense
+Action if Anual Budget Exceeded on Cumulative Expense
+Action if Same Rate is Not Maintained Throughout  Internal Transaction
+Advance payments allocated against orders will only be fetched
+Against Customer Order {0}
+Against Supplier Invoice {0}
+All allocations have been successfully reconciled
+All items must be linked to a Sales Order or Subcontracting Inward Order for this Sales Invoice.
+All linked Sales Orders must be subcontracted.
+Allow Implicit Pegged Currency Conversion
+Allow multi-currency invoices against single party account
+Allowed primary roles are 'Customer' and 'Supplier'. Please select one of these roles only.
+Alternatively, you can download the template and fill your data in.
+Amount in party's bank account currency
+Amount in transaction currency
+Another Budget record '{0}' already exists against {1} '{2}' and account '{3}' with overlapping fiscal years.
+Another Cost Center Allocation record {0} applicable from {1}, hence this allocation will be applicable upto {2}
+Another Payment Request is already processed
+Apply Recursion Over (As Per Transaction UOM)
+Approximately match the description/party name against parties
+Are you sure you want to restart this subscription?
+Are you sure you want to revise this budget? The current budget will be cancelled and a new draft will be created.
+At least one account with exchange gain or loss is required
+At least one of the Selling or Buying must be selected
+At least one row is required for a financial report template
+Auto Reconciliation has started in the background
+Auto Reconciliation of Payments has been disabled. Enable it through {0}
+Auto match and set the Party in Bank Transactions
+Auto write off precision loss while consolidation
+Bank Account {} in Bank Transaction {} is not matching with Bank Account {}
+Bank Transaction {0} is already fully reconciled
+Bank/Cash Account {0} doesn't belong to company {1}
+Below Subscription Plans are of different currency to the party default billing currency/Company currency: {0}
+Billing Interval in Subscription Plan must be Month to follow calendar months
+Bold text for emphasis (totals, major headings)
+Calculate but don't show on final report
+Calculate daily depreciation using total days in depreciation period
+Cannot Resubmit Ledger entries for vouchers in Closed fiscal year.
+Cannot cancel POS Closing Entry
+Cannot change Reference Document Type.
+Cannot convert to Group because Account Type is selected.
+Cannot retrieve link token for update. Check Error Log for more information
+Capital Equipment
+Chart Of Accounts
+Checking this will round off the tax amount to the nearest integer
+Code to reference this line in formulas (e.g., REV100, EXP200, ASSET100)
+Color to highlight values (e.g., red for exceptions)
+Columns are not according to template. Please compare the uploaded file with standard template
+Combined invoice portion must equal 100%
+Company and Posting Date is mandatory
+Company is mandatory
+Company is mandatory for company account
+Company is mandatory for generating an invoice. Please set a default company in Global Defaults.
+Company which internal customer represents
+Company which internal supplier represents
+Company {0} added multiple times
+Company {0} is added more than once
+Company {} does not match with POS Profile Company {}
+Cost Center is a part of Cost Center Allocation, hence cannot be converted to a group
+Cost Center with Allocation records can not be converted to a group
+Cost Center {0} cannot be used for allocation as it is used as main cost center in other allocation record.
+Cr
+Create Payment Entry for Consolidated POS Invoices.
+Create in Draft Status
+Creating Purchase Invoices ...
+Creating Sales Invoices ...
+Credit Note will update it's own outstanding amount, even if 'Return Against' is specified.
+Cron Interval should be between 1 and 59 Min
+Currency Exchange Settings Details
+Currency Exchange Settings Result
+Currency filters are currently unsupported in Custom Financial Report.
+Custom API
+Custom delimiters
+Customer > Customer Group > Territory
+Customer Name:
+Customer:
+Date: {0} to {1}

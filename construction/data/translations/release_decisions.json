@@ -1892,6 +1892,53 @@
         }
       }
     },
+    "0276f1e38ac3cef0063731cb7713e8ebaa8c069f727816883b6fda44b5910eb5": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "اسم العميل:",
+        "sha256": "fbd4e243d443f977a598f072126857cf2d9f154e6cd8fb518d12b080f6901070"
+      },
+      "references": "erpnext/accounts/doctype/process_statement_of_accounts/process_statement_of_accounts.html:22",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Customer Name:",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "اسم العميل:",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+        }
+      }
+    },
     "027ddda651f1b91d052f0692af3b96c7bcf791ed80d38ddf6a66ea751ca1e9f3": {
       "artifacts": [
         {
@@ -3502,6 +3549,100 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "0497d3705416dbfd387badac37a73fd79ba87fb8e4082952794ba0a0e2643d12": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "التاريخ: {0} إلى {1}",
+        "sha256": "90504a2ee9ee54bfe032d2c88e0b2912e84c9147819a23ac47dcd6948aa6ba4f"
+      },
+      "references": "erpnext/accounts/doctype/process_statement_of_accounts/process_statement_of_accounts.html:25",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Date: {0} to {1}",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "التاريخ: {0} إلى {1}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+        }
+      }
+    },
+    "04bf4f5f6b4644749a8ca7b7e6499ab2b9146825371d19a71b0de0d435513222": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "خطط الاشتراك التالية بعملة مختلفة عن عملة الفوترة الافتراضية للجهة/عملة الشركة: {0}",
+        "sha256": "1090c3ab2257008afbef7346ae0075c0edffa209816765198da26c1bfa68694b"
+      },
+      "references": "erpnext/accounts/doctype/subscription/subscription.py:320",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Below Subscription Plans are of different currency to the party default billing currency/Company currency: {0}",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "خطط الاشتراك التالية بعملة مختلفة عن عملة الفوترة الافتراضية للجهة/عملة الشركة: {0}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
         }
       }
     },
@@ -8796,6 +8937,53 @@
         }
       }
     },
+    "0caa7d2a0321a96b57ccdccac2d3509c05e5eacc33ae798d7642076a8e50df73": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "مركز التكلفة جزء من تخصيص مركز التكلفة، وبالتالي لا يمكن تحويله إلى مجموعة",
+        "sha256": "59eb761eb5811d5fdd218856e6c27ea93982e6cb2137b49eefc691cef2721cb7"
+      },
+      "references": "erpnext/accounts/doctype/cost_center/cost_center.py:75",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Cost Center is a part of Cost Center Allocation, hence cannot be converted to a group",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "مركز التكلفة جزء من تخصيص مركز التكلفة، وبالتالي لا يمكن تحويله إلى مجموعة",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+        }
+      }
+    },
     "0cc80a165b4be9834c25cbbb8e5aa314937a83798fb80c9c7f96883ef4a64e43": {
       "artifacts": [
         {
@@ -10732,6 +10920,53 @@
         }
       }
     },
+    "0f8f1e539da3feaf7b1a45e054e17cef6bdf10d0c2db0abb4f0ceda25810ee63": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تطبيق التكرار على (وفقا لوحدة قياس المعاملة)",
+        "sha256": "c612c1bf696861fdb3e7d5009d9e64361212bf4f74d4565aa0d67151a4294ba3"
+      },
+      "references": "erpnext/accounts/doctype/pricing_rule/pricing_rule.json:None; erpnext/accounts/doctype/promotional_scheme_product_discount/promotional_scheme_product_discount.json:None",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Apply Recursion Over (As Per Transaction UOM)",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "تطبيق التكرار على (وفقا لوحدة قياس المعاملة)",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+        }
+      }
+    },
     "0f9f2557111ac605f33dce1b3e3acf04af43859a0010c7189fe3ddcb40f79f97": {
       "artifacts": [
         {
@@ -10823,6 +11058,53 @@
           "confidence": "high",
           "decision": "approve",
           "session": "/root/w606b02_a3_final"
+        }
+      }
+    },
+    "0fdf2feb9cf1e30ab3f23f256868ae69b7ac762cf14ca9835a2a633e1b4ce92f": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "جار إنشاء فواتير المبيعات ...",
+        "sha256": "da0a36fd859a0323aec43903c15bbfe7bce840b5e32c412e4e58558b81e5a391"
+      },
+      "references": "erpnext/accounts/doctype/opening_invoice_creation_tool/opening_invoice_creation_tool.js:58",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Creating Sales Invoices ...",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "جار إنشاء فواتير المبيعات ...",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
         }
       }
     },
@@ -10920,6 +11202,53 @@
           "decision": "approve",
           "model": "Codex GPT-6",
           "session": "/root/w603_a3"
+        }
+      }
+    },
+    "1056ff45260022feae45fc63af04a72eb2be20c3c52b29cd09715c6cc8b91381": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تمت إضافة الحساب {0} عدة مرات",
+        "sha256": "da8e7b9e3d8e0eef076045a42191ad16af20e3482566ed391412206c5c463a8d"
+      },
+      "references": "erpnext/accounts/doctype/tax_withholding_category/tax_withholding_category.py:67",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Account {0} added multiple times",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "تمت إضافة الحساب {0} عدة مرات",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
         }
       }
     },
@@ -13708,6 +14037,53 @@
         }
       }
     },
+    "148fa515806119dd4e2ddbc701b9104aae5c8140338a537fcfa612c119f77757": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "مطابقة وتعيين الجهة تلقائيا في المعاملات البنكية",
+        "sha256": "537af277bbb323eefb731a93de24135da897bf02b90f8f5e1afd87c3bd789092"
+      },
+      "references": "erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Auto match and set the Party in Bank Transactions",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "مطابقة وتعيين الجهة تلقائيا في المعاملات البنكية",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+        }
+      }
+    },
     "14942ef83779f3d4a0ba266117a1d484063811fbf80bce0dfa19235430cf652d": {
       "artifacts": [
         {
@@ -15635,6 +16011,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "179e23662519c2989db49da02b6811d864d7b0171061925b6cd07387413d120c": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تفاصيل واجهة برمجة التطبيقات",
+        "sha256": "f149bc78cff7d964f57ef7a7cdb47b65d88baa9aef96d0b3527e3e69ba5d0065"
+      },
+      "references": "erpnext/accounts/doctype/currency_exchange_settings/currency_exchange_settings.json:None",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "API Details",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "تفاصيل واجهة برمجة التطبيقات",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
         }
       }
     },
@@ -19225,6 +19648,100 @@
         }
       }
     },
+    "1df721ff15794483582095f88087bdb776b560730276217a5d174cc6cd534ec4": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "مقابل فاتورة المورد {0}",
+        "sha256": "4487b575807f290718fd501abecaef26cad6fdb106e6e05daaaa9ed41f2ba717"
+      },
+      "references": "erpnext/accounts/doctype/purchase_invoice/purchase_invoice.py:332",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Against Supplier Invoice {0}",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "مقابل فاتورة المورد {0}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+        }
+      }
+    },
+    "1e07e4ba52ddf77f475d58f86df6bd1d6a10b94f84fe846dd17679a9e512b530": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يجب أن تكون فترة الفوترة في خطة الاشتراك شهرا لاتباع الأشهر التقويمية",
+        "sha256": "61c284ed3a23a3e66c273e4c88e42a6ab9c1d4ce3b952a76e8258a9a34ef49f7"
+      },
+      "references": "erpnext/accounts/doctype/subscription/subscription.py:363",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Billing Interval in Subscription Plan must be Month to follow calendar months",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "يجب أن تكون فترة الفوترة في خطة الاشتراك شهرا لاتباع الأشهر التقويمية",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+        }
+      }
+    },
     "1e868d94d5dffd747eb7241b927388df38517d8b6e16061e21d3f6e67d359ab5": {
       "artifacts": [
         {
@@ -19551,6 +20068,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "1f0ddb9bb93cb20ed8c27cc3090c7a37fc9952ec2334dd564e3b18ebe8b7ac41": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "دائن",
+        "sha256": "ab116584fae189600bde89e49db464e7de883790fa3c571481b65cba36e58ab2"
+      },
+      "references": "erpnext/accounts/doctype/account/account_tree.js:85; erpnext/accounts/doctype/bank_clearance/bank_clearance.py:82; erpnext/templates/form_grid/bank_reconciliation_grid.html:16",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Cr",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "دائن",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
         }
       }
     },
@@ -21719,6 +22283,53 @@
         }
       }
     },
+    "2247213aa9f6dc54619c5a72c3453ae17c378d9f149ec759beb42aaa27d95e07": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "مفتاح الوصول مطلوب لمزود الخدمة: {0}",
+        "sha256": "f6ae9205f381d3bcbe424091efb34e670ed890c6c8e3ff9e099c47a92003f3f3"
+      },
+      "references": "erpnext/accounts/doctype/currency_exchange_settings/currency_exchange_settings.py:48",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Access Key is required for Service Provider: {0}",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "مفتاح الوصول مطلوب لمزود الخدمة: {0}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+        }
+      }
+    },
     "22511203390990dd5cd42fe52d54172b6b51893c86a67e26a6b2b137a0bb2c9c": {
       "artifacts": [
         {
@@ -21951,6 +22562,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "22d182cf7b9327aec2de32bd5ec319c978632d9f5d922d9496d92cf9bec1094a": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "عوامل تصفية العملة غير مدعومة حاليا في التقرير المالي المخصص.",
+        "sha256": "38da37702e2344da91b9eac35dd22e28b5dbf75e3045e2f55ef1053843dd7424"
+      },
+      "references": "erpnext/accounts/doctype/financial_report_template/financial_report_engine.py:226",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Currency filters are currently unsupported in Custom Financial Report.",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "عوامل تصفية العملة غير مدعومة حاليا في التقرير المالي المخصص.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
         }
       }
     },
@@ -22621,6 +23279,53 @@
           "decision": "approve",
           "model": "Codex GPT-6",
           "session": "/root/w603_a3"
+        }
+      }
+    },
+    "2419db070a2554572b099f367b4f1b5cdb16c1d2eec35dacb575f584f02cd4c3": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "محددات مخصصة",
+        "sha256": "6748ed944050d975d7741aacc9f7d39ec72b756e74772f26fb3149624de9e2c5"
+      },
+      "references": "erpnext/accounts/doctype/bank_statement_import/bank_statement_import.json:None",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Custom delimiters",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "محددات مخصصة",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
         }
       }
     },
@@ -24604,6 +25309,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "269eb4b42edd7f8953bd289ab219d3b1daf8f38a7d96b13162ca05200be8dab2": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "جار إنشاء فواتير الشراء ...",
+        "sha256": "f21b78391db62c3ac6737b56620d4128e5d4164063fd1bf3eb36ea951fc1b641"
+      },
+      "references": "erpnext/accounts/doctype/opening_invoice_creation_tool/opening_invoice_creation_tool.js:60",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Creating Purchase Invoices ...",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "جار إنشاء فواتير الشراء ...",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
         }
       }
     },
@@ -28570,6 +29322,53 @@
         }
       }
     },
+    "2d689c5f9c781d659948442322f62470be2a500a7eec45049c72cca281d05dc9": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لا يمكن تغيير نوع المستند المرجعي.",
+        "sha256": "c84fa79d72659c5bdfc7fe70aaa65e6fca2b93b7df9682b73f98bb68a05d1637"
+      },
+      "references": "erpnext/accounts/doctype/accounting_dimension/accounting_dimension.py:73",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Cannot change Reference Document Type.",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "لا يمكن تغيير نوع المستند المرجعي.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+        }
+      }
+    },
     "2d6cb1fcf32dc7f4b3385bc1da8e084ef27f5359ce58ab4a8900a11011e9472a": {
       "artifacts": [
         {
@@ -28708,6 +29507,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "2d90efdee017b85dbdbb8e8b08b44e0b1e90b248530872bf4b0ebc5af90f4f70": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يجب تحديد البيع أو الشراء على الأقل",
+        "sha256": "2ae32a443ba032ac64dfb1a4ad7a65d26542292d651b98baf8f142780a530dd6"
+      },
+      "references": "erpnext/accounts/doctype/pricing_rule/pricing_rule.py:204",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "At least one of the Selling or Buying must be selected",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "يجب تحديد البيع أو الشراء على الأقل",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
         }
       }
     },
@@ -29701,6 +30547,53 @@
           "confidence": "high",
           "decision": "approve",
           "session": "7b8e0b34-fbae-4e69-a64f-fd1c19ba44e1"
+        }
+      }
+    },
+    "2eff143faa3766d8b9a2e19ba4788851c51478b631390f88cef0048e85f54493": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الشركة التي يمثلها العميل الداخلي",
+        "sha256": "7f85eea0600a6858cefb9c0fd69eb428f0ce2cc67f81fc7db8f8c0122363a50a"
+      },
+      "references": "erpnext/accounts/doctype/sales_invoice/sales_invoice.json:None",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Company which internal customer represents",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "الشركة التي يمثلها العميل الداخلي",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
         }
       }
     },
@@ -31073,6 +31966,53 @@
         }
       }
     },
+    "30d40b277c9766cca6d7df8988a354190d6b67f0966a95878773bcb716a21522": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "إنشاء قيد دفع لفواتير نقاط البيع المجمعة.",
+        "sha256": "bc90d913b93ce5429b71027a1bf97a9c787d63ffcf8ddf0956d5df5c4045821e"
+      },
+      "references": "erpnext/accounts/doctype/pos_invoice/pos_invoice.py:859",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Create Payment Entry for Consolidated POS Invoices.",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "إنشاء قيد دفع لفواتير نقاط البيع المجمعة.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+        }
+      }
+    },
     "30d9111ca41475d6d5ae5afbbdd6a62fdc1921febe53c42a742e7155106625cb": {
       "artifacts": [
         {
@@ -32107,6 +33047,53 @@
           "confidence": "high",
           "decision": "approve",
           "session": "/root/w603_a3"
+        }
+      }
+    },
+    "32dbf44e9ff7a7feafc44c00b12f1535a13df04b53540fb76eed30389b2c13c3": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "هل أنت متأكد من رغبتك في إعادة بدء هذا الاشتراك؟",
+        "sha256": "140725f1dd513c6136008a269cb548cf2465b6310abb9543ac410b942f6446a6"
+      },
+      "references": "erpnext/accounts/doctype/subscription/subscription.js:75",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Are you sure you want to restart this subscription?",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "هل أنت متأكد من رغبتك في إعادة بدء هذا الاشتراك؟",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
         }
       }
     },
@@ -33285,6 +34272,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "348b2f9b878256776aaee29383a76475af888d2919cf32da07b2a005393ef137": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "بدأت التسوية التلقائية في الخلفية",
+        "sha256": "d683dc4ead34d5cb9584cce7c97bbc19179bcea7983c00a7c5b077c0dbe74215"
+      },
+      "references": "erpnext/accounts/doctype/bank_reconciliation_tool/bank_reconciliation_tool.py:391",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Auto Reconciliation has started in the background",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "بدأت التسوية التلقائية في الخلفية",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
         }
       }
     },
@@ -35694,6 +36728,53 @@
         }
       }
     },
+    "389e73c25efe0b8034e789accb46413c0e405e5b1b87eedf89bdfb4b10a5a6d7": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يجب ربط جميع الأصناف بأمر بيع أو أمر توريد من الباطن لفاتورة المبيعات هذه.",
+        "sha256": "5578c538bfbc19da6a7b803dc7b2dcd48d928b290bb29ef932aa8e85734742b9"
+      },
+      "references": "erpnext/accounts/doctype/sales_invoice/sales_invoice.py:1215",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "All items must be linked to a Sales Order or Subcontracting Inward Order for this Sales Invoice.",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "يجب ربط جميع الأصناف بأمر بيع أو أمر توريد من الباطن لفاتورة المبيعات هذه.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+        }
+      }
+    },
     "38b7acd0d88e2058fae824b71aa2cef0020f5e9dd5c39638678a6363dd13c313": {
       "artifacts": [
         {
@@ -36834,6 +37915,53 @@
         }
       }
     },
+    "3a6f57a311efed54d26cab6b87bb6f9d67ddf50d9cb471aa5211e25eb480f0c7": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تمت تسوية جميع التخصيصات بنجاح",
+        "sha256": "ffd5470189baad821e40c23e5fc7f77fc3b2168f51437be141adf7c864108fde"
+      },
+      "references": "erpnext/accounts/doctype/process_payment_reconciliation_log/process_payment_reconciliation_log.json:None",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "All allocations have been successfully reconciled",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "تمت تسوية جميع التخصيصات بنجاح",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+        }
+      }
+    },
     "3a6fac49a7c44bc26e76d5704897a29779e91e4d31be4c1aaf9721e453c1c230": {
       "artifacts": [
         {
@@ -37965,6 +39093,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "3c28ac66323fb7e0a90a9eaee9634dd5d67780b99a254f4af4345a56a1761558": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يوجد بالفعل قالب بالفئة الضريبية {0}. يُسمح بقالب واحد فقط لكل فئة ضريبية",
+        "sha256": "e5ed5d14bbf9d90db95753aadf6b9e53c493741415a17e403e29e999ed52be63"
+      },
+      "references": "erpnext/accounts/doctype/sales_taxes_and_charges_template/sales_taxes_and_charges_template.py:96",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "A template with tax category {0} already exists. Only one template is allowed with each tax category",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "يوجد بالفعل قالب بالفئة الضريبية {0}. يُسمح بقالب واحد فقط لكل فئة ضريبية",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
         }
       }
     },
@@ -41925,6 +43100,53 @@
         }
       }
     },
+    "4220a6f8a49554880157286f425e8b492879c5a455787eedd37c326cfe57f6b1": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لا يمكن تحويل الحساب {0} إلى مجموعة لأنه معين بالفعل كـ {1} لـ {2}.",
+        "sha256": "03ffd97f7e0c05b77d6c681c0bb70a88cdf9c82eb1d7f81bd339f341cb57783e"
+      },
+      "references": "erpnext/accounts/doctype/account/account.py:291",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Account {0} cannot be converted to Group as it is already set as {1} for {2}.",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "لا يمكن تحويل الحساب {0} إلى مجموعة لأنه معين بالفعل كـ {1} لـ {2}.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+        }
+      }
+    },
     "4250826e01be45890dcdd150999248c9a455a8f0bf9c6c56064aa5c88149d3ba": {
       "artifacts": [
         {
@@ -43200,6 +44422,53 @@
         }
       }
     },
+    "4475acda4f3a72ae1102341cafbb07a6182d94a124cca7596f38b2b73e2021ae": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "المعاملة البنكية {0} تمت تسويتها بالكامل بالفعل",
+        "sha256": "c4345292acaafb398ce8712d2c947527702493e1168a8d2f0fc502eeb12d95f6"
+      },
+      "references": "erpnext/accounts/doctype/bank_transaction/bank_transaction.py:147",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Bank Transaction {0} is already fully reconciled",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "المعاملة البنكية {0} تمت تسويتها بالكامل بالفعل",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+        }
+      }
+    },
     "447772fcab8e433be0f7d1ae0de2e00805aee40676c122af7f2f4c4fe4250c60": {
       "artifacts": [
         {
@@ -43855,6 +45124,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "45956b736b36ee8b3bd73f1270891ba702151391748abf7a4cb88430951d8358": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لون لتمييز القيم (مثل الأحمر للاستثناءات)",
+        "sha256": "0306298d7ac3d4f4d7b4b125179369fb6a9cf726f190ecc8b0750c8ce175abea"
+      },
+      "references": "erpnext/accounts/doctype/financial_report_row/financial_report_row.json:None",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Color to highlight values (e.g., red for exceptions)",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "لون لتمييز القيم (مثل الأحمر للاستثناءات)",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
         }
       }
     },
@@ -45697,6 +47013,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "487fe09250a85a4202e029d6a78a4d76bcc639c7a48c78e1d18cebca7d435003": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الحساب البنكي {} في المعاملة البنكية {} لا يتطابق مع الحساب البنكي {}",
+        "sha256": "ffaa00f55c2253de1c5dfa7c861d85c7a4c639307adb83c2bda76da19710b7e1"
+      },
+      "references": "erpnext/accounts/doctype/bank_transaction/bank_transaction.py:376",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Bank Account {} in Bank Transaction {} is not matching with Bank Account {}",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "الحساب البنكي {} في المعاملة البنكية {} لا يتطابق مع الحساب البنكي {}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
         }
       }
     },
@@ -49428,6 +50791,53 @@
         }
       }
     },
+    "4e334fe554b197f66bfbd096e549e4f404498729492829596ece6842fad5163f": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "سيتم فقط جلب الدفعات المقدمة المخصصة مقابل الأوامر",
+        "sha256": "490c74bfd212a4bc245be51f0c88bbd43401b606333114299451130b359e39d2"
+      },
+      "references": "erpnext/accounts/doctype/purchase_invoice/purchase_invoice.json:None; erpnext/accounts/doctype/sales_invoice/sales_invoice.json:None",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Advance payments allocated against orders will only be fetched",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "سيتم فقط جلب الدفعات المقدمة المخصصة مقابل الأوامر",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+        }
+      }
+    },
     "4e34c3e82f6b0394f6a78e4a0993c01026bf1816a4d7b574e04ef29c6c458627": {
       "artifacts": [
         {
@@ -50709,6 +52119,53 @@
         }
       }
     },
+    "50147e3cba21e7a457c56cd530d011b14b68d9812fafcfba5dc497eff0777b13": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "رمز للإشارة إلى هذا السطر في الصيغ (مثل REV100، EXP200، ASSET100)",
+        "sha256": "be0c0aee8bc023f065f9c3603d772a5392b754230ca6224672a8aa515ecf1190"
+      },
+      "references": "erpnext/accounts/doctype/financial_report_row/financial_report_row.json:None",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Code to reference this line in formulas (e.g., REV100, EXP200, ASSET100)",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "رمز للإشارة إلى هذا السطر في الصيغ (مثل REV100، EXP200، ASSET100)",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+        }
+      }
+    },
     "501d86b174e6fcc9c968bf2f3265a2b9597cea03ec3ffce25ea7b491cce7599f": {
       "artifacts": [
         {
@@ -50988,6 +52445,53 @@
           "confidence": "high",
           "decision": "approve",
           "session": "7b8e0b34-fbae-4e69-a64f-fd1c19ba44e1"
+        }
+      }
+    },
+    "50a65e8c4b254a0cc25fd236529b4b43033b1f39d6c9c6b65d276fa125c224fd": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تمت إضافة الشركة {0} أكثر من مرة",
+        "sha256": "bd80d5f06d04278de00f02bfbd6033729fd58aec851d68254ab3f518eab46f60"
+      },
+      "references": "erpnext/accounts/doctype/accounting_dimension/accounting_dimension.py:83",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Company {0} is added more than once",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "تمت إضافة الشركة {0} أكثر من مرة",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
         }
       }
     },
@@ -52601,6 +54105,53 @@
         }
       }
     },
+    "53e6eef8ea80f475a31a11555aca230c827cb0bf7857b9bf738e9a3895ab2f2b": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الحساب {0} لا يتبع الشركة {1}",
+        "sha256": "25eb875f4a37c0ec7001cc46f0e65f9dc35df47e145a787bb7b940381ea901c8"
+      },
+      "references": "erpnext/accounts/doctype/budget/budget.py:159",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Account {0} does not belong to company {1}",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "الحساب {0} لا يتبع الشركة {1}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+        }
+      }
+    },
     "53f0a730f0a6b7dddd2121275bb90ce421d7c80d44046f2822791f8014a5d66f": {
       "artifacts": [
         {
@@ -52692,6 +54243,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "5406deeaac8330b8428400ef16e69092c7056f60ebe0e942e6388dbe8af36949": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "مطلوب حساب واحد على الأقل مع أرباح أو خسائر أسعار الصرف",
+        "sha256": "0a5e25c645cad89348c615ed2accce246a72b127014773b1d12d79c4c08abcd9"
+      },
+      "references": "erpnext/accounts/doctype/exchange_rate_revaluation/exchange_rate_revaluation.py:84",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "At least one account with exchange gain or loss is required",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "مطلوب حساب واحد على الأقل مع أرباح أو خسائر أسعار الصرف",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
         }
       }
     },
@@ -57413,6 +59011,53 @@
         }
       }
     },
+    "5bde23afa3d5a24a071af95a2041e4648d51449da4104ab9edcfd512563fe34c": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "هناك مهمة تسوية {0} قيد التشغيل لنفس عوامل التصفية. لا يمكن التسوية الآن",
+        "sha256": "cdbbbfcf1ab463c563fee86e2b2b4df8f62bae851eb80549e7280b388a45bf3f"
+      },
+      "references": "erpnext/accounts/doctype/payment_reconciliation/payment_reconciliation.py:560",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "A Reconciliation Job {0} is running for the same filters. Cannot reconcile now",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "هناك مهمة تسوية {0} قيد التشغيل لنفس عوامل التصفية. لا يمكن التسوية الآن",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+        }
+      }
+    },
     "5bde2f2c64227a2bdd3e457e66e5104ed28d9bbf4e0bb83cb3941f45a7ab94ea": {
       "artifacts": [
         {
@@ -58870,6 +60515,53 @@
         }
       }
     },
+    "5e586de8a03416b16def8e5a3840ea455d9c87adcd1179846b511298e87e6594": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "نص عريض للتأكيد (الإجماليات، العناوين الرئيسية)",
+        "sha256": "9f6466edd3c06af16b47eec31e12efc7a5205abcfc5f275ebfad2dfb468c5c64"
+      },
+      "references": "erpnext/accounts/doctype/financial_report_row/financial_report_row.json:None",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Bold text for emphasis (totals, major headings)",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "نص عريض للتأكيد (الإجماليات، العناوين الرئيسية)",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+        }
+      }
+    },
     "5e73b887b526bd1c188efba22f862d41e47b2d04400f6080e76aa019e05682a8": {
       "artifacts": [
         {
@@ -60095,6 +61787,100 @@
         }
       }
     },
+    "6064cfc8d22d4cdf189067c4531875d687b6a610ee9bab22dd80cdb63b351a62": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تم تعطيل التسوية التلقائية للمدفوعات. قم بتمكينها من خلال {0}",
+        "sha256": "c8ae29374f6538909bc75cefe1f537457f22bb58a44c9ecdfdf3df365047be88"
+      },
+      "references": "erpnext/accounts/doctype/process_payment_reconciliation/process_payment_reconciliation.py:147; erpnext/accounts/doctype/process_payment_reconciliation/process_payment_reconciliation.py:195",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Auto Reconciliation of Payments has been disabled. Enable it through {0}",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "تم تعطيل التسوية التلقائية للمدفوعات. قم بتمكينها من خلال {0}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+        }
+      }
+    },
+    "606c83919833e41bd8ddaa64cada3e30cf87a9d039e646bea6869a1e1ea8ad95": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لا يمكن تعطيل الحساب {0} لأنه معين بالفعل كـ {1} لـ {2}.",
+        "sha256": "b89a9096aa7f46b8bb4978442e1768abd62a454f65471d805b86fe991540c25b"
+      },
+      "references": "erpnext/accounts/doctype/account/account.py:288",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Account {0} cannot be disabled as it is already set as {1} for {2}.",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "لا يمكن تعطيل الحساب {0} لأنه معين بالفعل كـ {1} لـ {2}.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+        }
+      }
+    },
     "606d8e5ab37f5723d0ba38c4c24270473df61b9fa4b9c64550a2f921fc1b540f": {
       "artifacts": [
         {
@@ -61129,6 +62915,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "61abce6c2f0d86480e9768580ba9d169c029c4b483ecf54b21a2b2ed0043ef9b": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "سيؤدي تحديد هذا إلى تقريب مبلغ الضريبة إلى أقرب عدد صحيح",
+        "sha256": "2aa3a500a93ea41c4dbfe66199d7e4bc46842d98b0c0107feba83455e4a64781"
+      },
+      "references": "erpnext/accounts/doctype/tax_withholding_category/tax_withholding_category.json:None",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Checking this will round off the tax amount to the nearest integer",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "سيؤدي تحديد هذا إلى تقريب مبلغ الضريبة إلى أقرب عدد صحيح",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
         }
       }
     },
@@ -62645,6 +64478,53 @@
         }
       }
     },
+    "6443d709559bb9942b395b11e3424d38afd2783992d02af876e944b75ca7f290": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "حساب البنك/النقدية {0} لا يتبع الشركة {1}",
+        "sha256": "b03eb2f5c5631f93fa98b24f715499fb0fa23ea66adc39245c214c156730346d"
+      },
+      "references": "erpnext/accounts/doctype/process_payment_reconciliation/process_payment_reconciliation.py:57",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Bank/Cash Account {0} doesn't belong to company {1}",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "حساب البنك/النقدية {0} لا يتبع الشركة {1}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+        }
+      }
+    },
     "644efaa8a7b151bd6eaeab6e17eb0a677f77c136acfe695ba21dea983d33652b": {
       "artifacts": [
         {
@@ -63353,6 +65233,53 @@
         }
       }
     },
+    "65be6eeb3421c35c6fce3c36b1a530e8fd1f9c7a66e1385dada488ff32465413": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "بدلا من ذلك، يمكنك تنزيل القالب وتعبئة بياناتك فيه.",
+        "sha256": "c7ead5dd0f85fc58afdbb7d5d80d10ecae945e65d0ad81bbeace4290d599a692"
+      },
+      "references": "erpnext/accounts/doctype/chart_of_accounts_importer/chart_of_accounts_importer.py:378",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Alternatively, you can download the template and fill your data in.",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "بدلا من ذلك، يمكنك تنزيل القالب وتعبئة بياناتك فيه.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+        }
+      }
+    },
     "65bfbb9c7594064b5f02af0cbea7a3b1a428f0107ea269a7b71c9d3e580218bd": {
       "artifacts": [
         {
@@ -63452,6 +65379,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "65e2a1668f0eeef75db353abd5d8c511f09048082c08c0c501d829ec3593f678": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "المبلغ بعملة المعاملة",
+        "sha256": "349b4cf1ddd3aad8d0fc06b835d8c8b75ad381faa0f9c2b6b3c87dec1b470123"
+      },
+      "references": "erpnext/accounts/doctype/payment_request/payment_request.json:None",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Amount in transaction currency",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "المبلغ بعملة المعاملة",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
         }
       }
     },
@@ -63643,6 +65617,53 @@
         }
       }
     },
+    "661d0b78eb598ebc8374bc8cb0d4c29cb54093cd4a85706371e33f3bfe0ac59b": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يجب أن يكون للعميل بريد إلكتروني لجهة الاتصال الأساسية.",
+        "sha256": "5bcec30d46bcf962eb0ce97105e84b6f52bd15631c797144e86ab2dcbc503dfc"
+      },
+      "references": "erpnext/accounts/doctype/process_statement_of_accounts/process_statement_of_accounts.json:None",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "A customer must have primary contact email.",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "يجب أن يكون للعميل بريد إلكتروني لجهة الاتصال الأساسية.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+        }
+      }
+    },
     "661d6bcc53779fc9f3543eaa27afae9b8f6ab9efe98796a34a490d31e2a08156": {
       "artifacts": [
         {
@@ -63734,6 +65755,53 @@
           "confidence": "high",
           "decision": "approve",
           "session": "7b8e0b34-fbae-4e69-a64f-fd1c19ba44e1"
+        }
+      }
+    },
+    "665c4b34967cfafb812eb54cbaacbaa6c00743ed2140b289583d6cc2a094f9ca": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "أكثر من 90",
+        "sha256": "35775fe7bbf492961634f5bd5c1c5d1f7a042123218bcb4d1bcb6a5226879f35"
+      },
+      "references": "erpnext/accounts/report/payment_period_based_on_invoice_date/payment_period_based_on_invoice_date.py:117; erpnext/manufacturing/report/work_order_summary/work_order_summary.py:110",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "90 Above",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "أكثر من 90",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
         }
       }
     },
@@ -65018,6 +67086,53 @@
         }
       }
     },
+    "68ad401f2369b56ece267bb331c8069d972fa87637f4d83ba00c557bd846e00b": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "مصروفات مستحقة",
+        "sha256": "222399dca0257bc4c8a4a3a519dee1faba54316d180562f427f68345e70cde17"
+      },
+      "references": "erpnext/accounts/doctype/account/chart_of_accounts/verified/standard_chart_of_accounts.py:158; erpnext/accounts/doctype/account/chart_of_accounts/verified/standard_chart_of_accounts_with_account_number.py:265",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Accrued Expenses",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "مصروفات مستحقة",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+        }
+      }
+    },
     "68af8188ec0241fcdc9d8edd46952787e0b906873a2834b3d72bad61c1730161": {
       "artifacts": [
         {
@@ -66293,6 +68408,53 @@
         }
       }
     },
+    "6aa8195dce6422181165d88075ad8de9028c83ae3a40354a1e6a348e45e7abd6": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تمت إضافة '{0}' بالفعل.",
+        "sha256": "f21727fc1a01320369298583fe4e62560b83281ba7fc793659dc80fec9afe2b9"
+      },
+      "references": "erpnext/accounts/doctype/pos_settings/pos_settings.py:43",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "'{0}' has been already added.",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "تمت إضافة '{0}' بالفعل.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+        }
+      }
+    },
     "6aae19fb0a4427abce8316af8c1f53662ece9b70532263e789679088d8b3c7a3": {
       "artifacts": [
         {
@@ -66478,6 +68640,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "6aebdfcaf4dd175c146a324d521e07e37578eb975a4c1169463bd8caadbb8037": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "مطابقة تقريبية للوصف/اسم الجهة مقابل الجهات",
+        "sha256": "47d71b7077c05e77c77946748e990ec91754ef03c58419d6b5ef9c1eb021856f"
+      },
+      "references": "erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Approximately match the description/party name against parties",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "مطابقة تقريبية للوصف/اسم الجهة مقابل الجهات",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
         }
       }
     },
@@ -69692,6 +71901,53 @@
         }
       }
     },
+    "704ae2e94a06def133599670cd9afdf31fdc594590bff6ad867c81b03301e2ea": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لا يمكن التحويل إلى مجموعة لأن نوع الحساب محدد.",
+        "sha256": "7fbacb5d614bf0fee634a1ef2f661327945d30dfeecfba404c379af868a928a5"
+      },
+      "references": "erpnext/accounts/doctype/account/account.py:440",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Cannot convert to Group because Account Type is selected.",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "لا يمكن التحويل إلى مجموعة لأن نوع الحساب محدد.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+        }
+      }
+    },
     "705c5726aaac43cf21be6351630cb550e737a94cf6159dd00e8f970d73f1c72d": {
       "artifacts": [
         {
@@ -71337,6 +73593,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "73790edd5a2b5ee3ee8b113d147adb34e2b8b2c001f92ef54c91dddaff62dee1": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الإجراء إذا لم يتم الحفاظ على نفس السعر طوال المعاملة الداخلية",
+        "sha256": "cbe5322fc6ac05bda45c7a1f8c4236c11bd0423387dd1957f81a98e77fd65ba8"
+      },
+      "references": "erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Action if Same Rate is Not Maintained Throughout  Internal Transaction",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "الإجراء إذا لم يتم الحفاظ على نفس السعر طوال المعاملة الداخلية",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
         }
       }
     },
@@ -73226,6 +75529,53 @@
         }
       }
     },
+    "772ca952f24481b1954a51ec3f2ae1ce0dfbd5926ec005310e738abff7f9da35": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "مفتاح الوصول",
+        "sha256": "5d824b7900ebadf1c953afded00f059c2852eb5c032b26f703d76e3286186d57"
+      },
+      "references": "erpnext/accounts/doctype/currency_exchange_settings/currency_exchange_settings.json:None",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Access Key",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "مفتاح الوصول",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+        }
+      }
+    },
     "7733a9cbc04605299ba42ef9b937705300271ab85a4e7fff97cb4c229f18b73a": {
       "artifacts": [
         {
@@ -74166,6 +76516,53 @@
           "confidence": "high",
           "decision": "approve",
           "session": "7b8e0b34-fbae-4e69-a64f-fd1c19ba44e1"
+        }
+      }
+    },
+    "7934ad8a200f775dd0e97d062dface8e031c6fc30fedbdc7ac0f9e66041467fa": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "إنشاء في حالة مسودة",
+        "sha256": "13e92f3ae3049ccda4a2e51fb995f62272c5a5d754430705671d88b88f92ac60"
+      },
+      "references": "erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Create in Draft Status",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "إنشاء في حالة مسودة",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
         }
       }
     },
@@ -75767,6 +78164,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "7b8789623aa0c84117168d574f45468abaadd2c45f1d83739e067cc136d64549": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "معدات رأسمالية",
+        "sha256": "eed46e36d60a0c95f339f617aceee4bd7d1f9dc0b105320cdde5f8822c133538"
+      },
+      "references": "erpnext/accounts/doctype/account/chart_of_accounts/verified/standard_chart_of_accounts.py:44; erpnext/accounts/doctype/account/chart_of_accounts/verified/standard_chart_of_accounts_with_account_number.py:77",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Capital Equipment",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "معدات رأسمالية",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
         }
       }
     },
@@ -80491,6 +82935,53 @@
         }
       }
     },
+    "8337bab96d17fa2548cd4bbb9293bbe88ce602bf1f20fdd561ae30aae04caa0e": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الشركة وتاريخ الترحيل إلزاميان",
+        "sha256": "7c15c80fcdef70925f1672e5e6e14d74815f30fb246fa3624ab0bb0da38ef526"
+      },
+      "references": "erpnext/accounts/doctype/exchange_rate_revaluation/exchange_rate_revaluation.py:620",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Company and Posting Date is mandatory",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "الشركة وتاريخ الترحيل إلزاميان",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+        }
+      }
+    },
     "8348fff34a160d6bfc52d2d6b97ba71635c3d344583fe5d38b68315eaf135d3e": {
       "artifacts": [
         {
@@ -82518,6 +85009,53 @@
         }
       }
     },
+    "86d7bca8b82980035d10c51f1dd04bc0b2094a8dee2a4d8a9d7f22a11cc69143": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "السماح بالتحويل الضمني للعملة المربوطة",
+        "sha256": "baa31526461d1b3ba0882766baca4ee0abd92614747e6ee82e051f6f34615863"
+      },
+      "references": "erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Allow Implicit Pegged Currency Conversion",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "السماح بالتحويل الضمني للعملة المربوطة",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+        }
+      }
+    },
     "86dada9ae54ce295c77efbc9c17674b2f99d10b11a2988019dfb4097a9fac36a": {
       "artifacts": [
         {
@@ -83414,6 +85952,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "881213113afdd6ba9a63561534d7a70fa788f84a2c68484faf008f57225d478e": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الشركة إلزامية",
+        "sha256": "b1d7b3580554a5d6c136faf5c0127ac75a0c6321dfe40406f3d2de92bd4a10f1"
+      },
+      "references": "erpnext/accounts/report/invalid_ledger_entries/invalid_ledger_entries.py:77",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Company is mandatory",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "الشركة إلزامية",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
         }
       }
     },
@@ -87518,6 +90103,53 @@
         }
       }
     },
+    "8edb939664e2e463d490694cd221b80c5762b68af4231d040a0676d7aa77a594": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الحساب مع عدم الإظهار في التقرير النهائي",
+        "sha256": "0d954873e6cf9c716eb8d16968e64e6ff6e9ad77807bec6824e564cd339e70da"
+      },
+      "references": "erpnext/accounts/doctype/financial_report_row/financial_report_row.json:None",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Calculate but don't show on final report",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "الحساب مع عدم الإظهار في التقرير النهائي",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+        }
+      }
+    },
     "8ee6f9777567f0f5a014db6cf6d1b4387ce3c6b1bc07308964fdf33b5736192b": {
       "artifacts": [
         {
@@ -87891,6 +90523,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "8f23a3cdb795cd0c0e423091870f164ba6ec650ec3a9551f573f91d8c5b35fb0": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تمت إضافة الشركة {0} عدة مرات",
+        "sha256": "db218219517d39f7e4cfbbfb4eaa167c37a0e145895dce55f44c9780fcda2d01"
+      },
+      "references": "erpnext/accounts/doctype/tax_withholding_category/tax_withholding_category.py:62",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Company {0} added multiple times",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "تمت إضافة الشركة {0} عدة مرات",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
         }
       }
     },
@@ -88505,6 +91184,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "8fdf397f6395677fed5162063ed3e0170b6a64dea5d9279e23100bf5d839ade3": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الإجراء عند تجاوز الميزانية السنوية للمصروف التراكمي",
+        "sha256": "7161802a734f94621fddb30daf0d1a9235ae0be81f780c308146ede497fad713"
+      },
+      "references": "erpnext/accounts/doctype/budget/budget.json:None",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Action if Anual Budget Exceeded on Cumulative Expense",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "الإجراء عند تجاوز الميزانية السنوية للمصروف التراكمي",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
         }
       }
     },
@@ -92673,6 +95399,53 @@
         }
       }
     },
+    "961e3cb2e88de5b966e8c11c956571b6cce0f021a7f2f7268569666e0941114e": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "العميل:",
+        "sha256": "6629a4dbfc78f67b82028a220d54da47ff698b376c476fb4048ac4bbb16fc55d"
+      },
+      "references": "erpnext/accounts/doctype/process_statement_of_accounts/process_statement_of_accounts.html:19; erpnext/accounts/doctype/process_statement_of_accounts/process_statement_of_accounts.html:21",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Customer:",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "العميل:",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+        }
+      }
+    },
     "96329394bc2c11555cba0546201c5c96c7bf9f1fdc1b47d92945667fe5c7cd50": {
       "artifacts": [
         {
@@ -92764,6 +95537,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "96514ebaf6e88b4e3e9697d8473d34c07de77ffdba983e52f3a1542b7ed81e23": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الكمية المقبولة بوحدة قياس المخزون",
+        "sha256": "17d931e187b5a23c2883d043b573fb33d788d8810a750e5828c85e6c6804b166"
+      },
+      "references": "erpnext/accounts/doctype/purchase_invoice_item/purchase_invoice_item.json:None; erpnext/stock/doctype/purchase_receipt_item/purchase_receipt_item.json:None",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Accepted Qty in Stock UOM",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "الكمية المقبولة بوحدة قياس المخزون",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
         }
       }
     },
@@ -92905,6 +95725,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "967be748cdfd1914ef226d0b5388d31075b311412f4a4ab96cf712fa8058ebef": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لا يمكن إلغاء قيد إغلاق نقطة البيع",
+        "sha256": "6fccd976efde8de279ce15e0cf97061b1fcb59ab307103007c459a7dffb0957a"
+      },
+      "references": "erpnext/accounts/doctype/pos_closing_entry/pos_closing_entry.py:246",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Cannot cancel POS Closing Entry",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "لا يمكن إلغاء قيد إغلاق نقطة البيع",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
         }
       }
     },
@@ -93284,6 +96151,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "96e70c4a712e7c252688ec43f030e7624c5c6390784117ca5148e2593da2f9c1": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "المبلغ بعملة الحساب البنكي للجهة",
+        "sha256": "2a4dd638082417372748e210b5d8edb6d195df3c1c7b41e3c68f3016a19e286e"
+      },
+      "references": "erpnext/accounts/doctype/payment_request/payment_request.json:None",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Amount in party's bank account currency",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "المبلغ بعملة الحساب البنكي للجهة",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
         }
       }
     },
@@ -96028,6 +98942,53 @@
         }
       }
     },
+    "9c312586a19090d66d30604be73c3576d61cce3d00168264bd5bd91ba39b552a": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "سجل تخصيص مركز تكلفة آخر {0} ينطبق من {1}، وبالتالي سيكون هذا التخصيص ساريا حتى {2}",
+        "sha256": "a55d37dd97871aa817ecfb095fe35b68bfe1fa4f3ff5768f90356ae6c71c5d67"
+      },
+      "references": "erpnext/accounts/doctype/cost_center_allocation/cost_center_allocation.py:107",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Another Cost Center Allocation record {0} applicable from {1}, hence this allocation will be applicable upto {2}",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "سجل تخصيص مركز تكلفة آخر {0} ينطبق من {1}، وبالتالي سيكون هذا التخصيص ساريا حتى {2}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+        }
+      }
+    },
     "9c3913a883909e504931579dbfbec2c20aefd52440bcf7aa8c2265c9ae820629": {
       "artifacts": [
         {
@@ -97112,6 +100073,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "9dc04c504a7bb40a6ba5edde5ce46f7365f15642856d73b1f6e446bd96c254f3": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "مقابل أمر العميل {0}",
+        "sha256": "a10e84365b590a15ef6b425a06e8c4c81f882e960198b0e86adbe31ce7f49a97"
+      },
+      "references": "erpnext/accounts/doctype/sales_invoice/sales_invoice.py:1076",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Against Customer Order {0}",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "مقابل أمر العميل {0}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
         }
       }
     },
@@ -100846,6 +103854,53 @@
         }
       }
     },
+    "a4e8db17762e3c9c24fab7543b7d0853a002dd0c07ba85a5964d78404647e1b6": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "حساب الإهلاك اليومي باستخدام إجمالي الأيام في فترة الإهلاك",
+        "sha256": "f949bd502365ff7bdc3b2e25d8243264956af08e7ca3cf2f382aee2380f29b5f"
+      },
+      "references": "erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Calculate daily depreciation using total days in depreciation period",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "حساب الإهلاك اليومي باستخدام إجمالي الأيام في فترة الإهلاك",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+        }
+      }
+    },
     "a4ee4f98745a0a230e948de3cb58cecc322291d7b1f8c22a2b9e17f6b5485d84": {
       "artifacts": [
         {
@@ -101031,6 +104086,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "a545792fae52b8fb9973970433a12426ba5d40546f9fb868af1867734f427136": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "العميل > مجموعة العملاء > المنطقة",
+        "sha256": "dae49df8a7d5e0f2009fd3f6f46d78b69d4eacffc30180d856287c6c83450c1e"
+      },
+      "references": "erpnext/accounts/doctype/pricing_rule/pricing_rule.js:50",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Customer > Customer Group > Territory",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "العميل > مجموعة العملاء > المنطقة",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
         }
       }
     },
@@ -101363,6 +104465,53 @@
           "confidence": "high",
           "decision": "approve",
           "session": "7b8e0b34-fbae-4e69-a64f-fd1c19ba44e1"
+        }
+      }
+    },
+    "a6480164bd57020a128a1911454d697550c73f7920c76fadc321ac76ee39c2b5": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الشركة إلزامية لإنشاء فاتورة. يرجى تعيين شركة افتراضية في الإعدادات العامة الافتراضية.",
+        "sha256": "37d426bb5754b36f32c4d10ba75d4441991c95ee84533933be89fc8cfcdc2438"
+      },
+      "references": "erpnext/accounts/doctype/subscription/subscription.py:392",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Company is mandatory for generating an invoice. Please set a default company in Global Defaults.",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "الشركة إلزامية لإنشاء فاتورة. يرجى تعيين شركة افتراضية في الإعدادات العامة الافتراضية.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
         }
       }
     },
@@ -105613,6 +108762,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "acbd5452d61a8b69fce4924c4d13e37f26e81cef5ff9a7f0e5163374e4f7b3fe": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "شرط لقاعدة الشحن",
+        "sha256": "165c137e1b712309605a0e785d4e0c8798815a7234120e3d0533721ee764d5c8"
+      },
+      "references": "erpnext/accounts/doctype/shipping_rule_condition/shipping_rule_condition.json:None",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "A condition for a Shipping Rule",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "شرط لقاعدة الشحن",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
         }
       }
     },
@@ -110487,6 +113683,53 @@
         }
       }
     },
+    "b51c9a754f46e5e2c17eb66b12bf60cdf3d2f85e6311a496ab1f784fc3ac02fe": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الحساب '{0}' مستخدم بالفعل بواسطة {1}. استخدم حسابا آخر.",
+        "sha256": "9b3cb44413ee0f8202132dbde254d16ddbd056715b713d8a72afac7b96eae820"
+      },
+      "references": "erpnext/accounts/doctype/bank_account/bank_account.py:64",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "'{0}' account is already used by {1}. Use another account.",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "الحساب '{0}' مستخدم بالفعل بواسطة {1}. استخدم حسابا آخر.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+        }
+      }
+    },
     "b523940f0fdd6e9e81724ffcfb5afd44eaeedb565c646f0d47fd3e2f3a2ef80e": {
       "artifacts": [
         {
@@ -111424,6 +114667,53 @@
           "confidence": "high",
           "decision": "approve",
           "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
+        }
+      }
+    },
+    "b67ccf3c8196713218a23a463620fb6ca737a5ed381b2b1a112704450f0c12b7": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الشركة التي يمثلها المورد الداخلي",
+        "sha256": "f4b6f0cd02e8effbad61f3bcdb9d1f936336995c0ae94f982c254408052602b4"
+      },
+      "references": "erpnext/accounts/doctype/purchase_invoice/purchase_invoice.json:None",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Company which internal supplier represents",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "الشركة التي يمثلها المورد الداخلي",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
         }
       }
     },
@@ -117746,6 +121036,53 @@
         }
       }
     },
+    "bf546e873f6e5e0be2dab15b65ffc3b112de2734e9057bae5bcce17f22e5b860": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "واجهة برمجة تطبيقات مخصصة",
+        "sha256": "77e94f7ab353facbf50404bee252103f4429d9ec94736d0a6a028b4da21f5dfe"
+      },
+      "references": "erpnext/accounts/doctype/financial_report_row/financial_report_row.json:None",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Custom API",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "واجهة برمجة تطبيقات مخصصة",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+        }
+      }
+    },
     "bf55e3dd2bbe214567974862a995ee4097e71e491a62e71457f1727c12f22ed4": {
       "artifacts": [
         {
@@ -118081,6 +121418,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "bfae20707273398f743ab309a90deb1084bd69be3aa0fb8f8f72508729262844": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "مطلوب صف واحد على الأقل لقالب التقرير المالي",
+        "sha256": "33b96de261339eb4519750a0bf044cbc5db721a002b9e9a93baed7c8e216c9e8"
+      },
+      "references": "erpnext/accounts/doctype/financial_report_template/financial_report_template.js:25",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "At least one row is required for a financial report template",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "مطلوب صف واحد على الأقل لقالب التقرير المالي",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
         }
       }
     },
@@ -119030,6 +122414,53 @@
         }
       }
     },
+    "c12732df0e314d58e96434f434edd8fa1f06c399583c82c017a9eae5778089eb": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الحساب إلزامي",
+        "sha256": "354440857396ac86d8b936beb3e129d056dfa12bf509aa1d0c4907f5ed91a4d6"
+      },
+      "references": "erpnext/accounts/doctype/budget/budget.py:150",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Account is mandatory",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "الحساب إلزامي",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+        }
+      }
+    },
     "c12c5677a35e5053a28952bec1580ca4a063c272dd21a248ca9f4e7cb6fe628f": {
       "artifacts": [
         {
@@ -119168,6 +122599,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "c156d30f11e7c87fad46d7a40a1a30af7a74609ed8ef7fcca58649bb52e80dd2": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الأدوار الأساسية المسموح بها هي 'عميل' و'مورد'. يرجى اختيار أحد هذين الدورين فقط.",
+        "sha256": "2df10f5a4189fdf8665035dbed0bb853c63a431ed6b3e7685ca1fffcc28e5d53"
+      },
+      "references": "erpnext/accounts/doctype/party_link/party_link.py:27",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Allowed primary roles are 'Customer' and 'Supplier'. Please select one of these roles only.",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "الأدوار الأساسية المسموح بها هي 'عميل' و'مورد'. يرجى اختيار أحد هذين الدورين فقط.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
         }
       }
     },
@@ -121718,6 +125196,53 @@
         }
       }
     },
+    "c4c7623aaa21ee67843555fc7b891921807a994a0fda3ff8248248ce537af172": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "(أمر الشراء + طلب المواد + المصروف الفعلي)",
+        "sha256": "005f5437b410e6a68c82690da1db132c5a0d9868c4d5d4aac5ae7f803cde82f5"
+      },
+      "references": "erpnext/accounts/doctype/budget/budget.json:None",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "(Purchase Order + Material Request + Actual Expense)",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "(أمر الشراء + طلب المواد + المصروف الفعلي)",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+        }
+      }
+    },
     "c4ce0412b39d35da42ebdd677e5169e9544f664783025be3df71e3d11dca859a": {
       "artifacts": [
         {
@@ -122476,6 +126001,53 @@
         }
       }
     },
+    "c635fd0dde39f210a5b4645fdc4b259b75ab3ba3abcf589bc5ae220c1d4a2b28": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تفاصيل إعدادات أسعار صرف العملات",
+        "sha256": "089114007c7fac0108228984b46e90115ecfb32d81dd36454ff015fc55a49d58"
+      },
+      "references": "erpnext/accounts/doctype/currency_exchange_settings_details/currency_exchange_settings_details.json:None",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Currency Exchange Settings Details",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "تفاصيل إعدادات أسعار صرف العملات",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+        }
+      }
+    },
     "c66806ae2e0073d33b5644143cd7ed9dfb8c4fef37e42d7c48eed07608ddd3a5": {
       "artifacts": [
         {
@@ -122943,6 +126515,53 @@
           "confidence": "high",
           "decision": "approve",
           "session": "/root/w606b02_a3_final"
+        }
+      }
+    },
+    "c720d6478c8b60644669e892f3f1940f64f33c77eed3002e06d2c05a5ed178a8": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لا يمكن إعادة إرسال قيود دفتر الأستاذ للسندات في سنة مالية مغلقة.",
+        "sha256": "1cb1da42b5ca146f2efcb33f4124fb54c77b2e3e0873cf59d9241ee12cdfb1c7"
+      },
+      "references": "erpnext/accounts/doctype/repost_accounting_ledger/repost_accounting_ledger.py:73",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Cannot Resubmit Ledger entries for vouchers in Closed fiscal year.",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "لا يمكن إعادة إرسال قيود دفتر الأستاذ للسندات في سنة مالية مغلقة.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
         }
       }
     },
@@ -130490,6 +134109,53 @@
         }
       }
     },
+    "d3310f43a59025b4d52b0503ed09024e0e829d77c9d6a8721ae36c081285ccdb": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الأعمدة ليست وفقا للقالب. يرجى مقارنة الملف المرفوع بالقالب القياسي",
+        "sha256": "1bc2db5d9f02d0cdf054ce0193d5d905e2618dcbbb6388f6f7959695aaa8df39"
+      },
+      "references": "erpnext/accounts/doctype/chart_of_accounts_importer/chart_of_accounts_importer.py:52",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Columns are not according to template. Please compare the uploaded file with standard template",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "الأعمدة ليست وفقا للقالب. يرجى مقارنة الملف المرفوع بالقالب القياسي",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+        }
+      }
+    },
     "d3474ded3d6150e3fb11846e711e7318797d3bd1fc8bf8a9fcbb26ce9fad6838": {
       "artifacts": [
         {
@@ -134115,6 +137781,53 @@
         }
       }
     },
+    "d880a7113a79558857fa71481bda2b82a1ed60aebaf7525199a008a6b8268aa2": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الشركة {} لا تتطابق مع شركة ملف تعريف نقطة البيع {}",
+        "sha256": "2cffee19d2ac56d37386ec11c27e23fc634d2ae5550a8e56d60e2dac69e1323b"
+      },
+      "references": "erpnext/accounts/doctype/pos_invoice/pos_invoice.py:574",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Company {} does not match with POS Profile Company {}",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "الشركة {} لا تتطابق مع شركة ملف تعريف نقطة البيع {}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+        }
+      }
+    },
     "d888a5522dc686a22b3c91175b171db0f6214a9bcb33ac9f12144db240edf1cc": {
       "artifacts": [
         {
@@ -136339,6 +140052,53 @@
         }
       }
     },
+    "dba5e9622935b067ac93af71ee234ba42d7f83b84b6067762e0ee0933be66f5d": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "مركز التكلفة الذي يحتوي على سجلات تخصيص لا يمكن تحويله إلى مجموعة",
+        "sha256": "76b15778e915e3dd3aac7a5d7f574dcda148534cca86ea7d389ba76851888486"
+      },
+      "references": "erpnext/accounts/doctype/cost_center/cost_center.py:72",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Cost Center with Allocation records can not be converted to a group",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "مركز التكلفة الذي يحتوي على سجلات تخصيص لا يمكن تحويله إلى مجموعة",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+        }
+      }
+    },
     "dba8ef7c23fe44c9c4e57107cc451d06ba7d7343f2a69ae7761301e5f7347e0e": {
       "artifacts": [
         {
@@ -137749,6 +141509,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "dda5984de19f3a344f1535ba8c8df58aea80494e9fc43e4c950e7c38be681815": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الشطب التلقائي لفارق دقة التقريب أثناء الدمج",
+        "sha256": "e1e3bbaf3044994b74ab873427e14260a6dca2b4d4af8f44f309c910e9db3b9c"
+      },
+      "references": "erpnext/accounts/doctype/pos_profile/pos_profile.json:None",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Auto write off precision loss while consolidation",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "الشطب التلقائي لفارق دقة التقريب أثناء الدمج",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
         }
       }
     },
@@ -139931,6 +143738,100 @@
         }
       }
     },
+    "e180eed6086f5b7d99342e0590ab3c957c61fb18e5003cb53c143c4b7c7d0d0c": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يوجد بالفعل سجل ميزانية آخر '{0}' مقابل {1} '{2}' والحساب '{3}' مع سنوات مالية متداخلة.",
+        "sha256": "62e3ef9ae3b735eda97d7256c23903baefe416be2fe778c1abc2b897456b6709"
+      },
+      "references": "erpnext/accounts/doctype/budget/budget.py:142",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Another Budget record '{0}' already exists against {1} '{2}' and account '{3}' with overlapping fiscal years.",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "يوجد بالفعل سجل ميزانية آخر '{0}' مقابل {1} '{2}' والحساب '{3}' مع سنوات مالية متداخلة.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+        }
+      }
+    },
+    "e197380c3221ce505b5ae007791f3655ed74202c4ec4bf43663bb193425b05d1": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يجب أن تكون جميع أوامر البيع المرتبطة من الباطن.",
+        "sha256": "5a482448c66a06da9a231917f14231ba5f35df0672858f459bfaf1b117548c5c"
+      },
+      "references": "erpnext/accounts/doctype/sales_invoice/sales_invoice.py:1226",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "All linked Sales Orders must be subcontracted.",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "يجب أن تكون جميع أوامر البيع المرتبطة من الباطن.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+        }
+      }
+    },
     "e199bc3fc8c72e55b430b411e982c7add46cbd7211e27d0274bf8bcc2d3bbbf9": {
       "artifacts": [
         {
@@ -140683,6 +144584,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "e2a34921a36758db491115b340d214a80a42d339c50fb742a2a2bd8dc7cbe48b": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الحساب {0} لا يتبع الشركة {1}",
+        "sha256": "0ec35e69800cd6b41fd02236955f155df8ab262f427976a09d5057254626d37d"
+      },
+      "references": "erpnext/accounts/doctype/process_statement_of_accounts/process_statement_of_accounts.py:138",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Account {0} doesn't belong to Company {1}",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "الحساب {0} لا يتبع الشركة {1}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
         }
       }
     },
@@ -142099,6 +146047,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "e4dac0211a071a2b743b67f8e192a8727f1f92462199d0375fda4584a0c55688": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الشركة إلزامية لحساب الشركة",
+        "sha256": "2a0668b7b8b1a18716185c0845b04b482ea25a339991bfdcf38cbfbee55ba843"
+      },
+      "references": "erpnext/accounts/doctype/bank_account/bank_account.py:72",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Company is mandatory for company account",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "الشركة إلزامية لحساب الشركة",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
         }
       }
     },
@@ -143993,6 +147988,53 @@
           "confidence": "high",
           "decision": "approve",
           "session": "cb33610b-7890-4ebc-acf6-c8af772ae829"
+        }
+      }
+    },
+    "e80c7184be47cf98d9b1fc13631d0cb7ba3f4530d943c4185134268922d91706": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تمت بالفعل معالجة طلب دفع آخر",
+        "sha256": "db4c8e19c34b3b44509da236b0076658d520893dc88dc61feb1dddbcc487ff09"
+      },
+      "references": "erpnext/accounts/doctype/payment_request/payment_request.py:752",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Another Payment Request is already processed",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "تمت بالفعل معالجة طلب دفع آخر",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
         }
       }
     },
@@ -147674,6 +151716,53 @@
         }
       }
     },
+    "ed6f3ca409cf29a6e592b2b0329b0f5eb6d2c05b75f5bdd06b438213610fda1a": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "لا يمكن استخدام مركز التكلفة {0} للتخصيص لأنه مستخدم كمركز تكلفة رئيسي في سجل تخصيص آخر.",
+        "sha256": "40d5999c39aa356ca709c7bc8bcb0997b4113750efbb175262abf005cee4dceb"
+      },
+      "references": "erpnext/accounts/doctype/cost_center_allocation/cost_center_allocation.py:152",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Cost Center {0} cannot be used for allocation as it is used as main cost center in other allocation record.",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "لا يمكن استخدام مركز التكلفة {0} للتخصيص لأنه مستخدم كمركز تكلفة رئيسي في سجل تخصيص آخر.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+        }
+      }
+    },
     "ed8257c6809485e32a57bb6a9e31b51b151e4268f66ec3f9b8b7fcc8ac3f4473": {
       "artifacts": [
         {
@@ -148246,6 +152335,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "eeabdb3ec5e3e202091af4c4f84105b41cc4ce36483ecc808fedd7127bf111ef": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "السماح بفواتير متعددة العملات مقابل حساب جهة واحد",
+        "sha256": "878bc8a261d0713622e13d96d78a7a24e6c160958391f72a06284e5dca2b92c5"
+      },
+      "references": "erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Allow multi-currency invoices against single party account",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "السماح بفواتير متعددة العملات مقابل حساب جهة واحد",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
         }
       }
     },
@@ -148857,6 +152993,53 @@
           "confidence": "high",
           "decision": "approve",
           "session": "cb33610b-7890-4ebc-acf6-c8af772ae829"
+        }
+      }
+    },
+    "efab2fe0935ea31f347f6c4a44263cf28136e2fd158afa90e70612c4dd1c3b2f": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "تعذر استرداد رمز الرابط للتحديث. تحقق من سجل الأخطاء لمزيد من المعلومات",
+        "sha256": "e93c33cd2d3f43bbd70cd78f835d8bb6225cd30da6d40dcfade8776dce0fa635"
+      },
+      "references": "erpnext/accounts/doctype/bank/bank.js:66",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Cannot retrieve link token for update. Check Error Log for more information",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "تعذر استرداد رمز الرابط للتحديث. تحقق من سجل الأخطاء لمزيد من المعلومات",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
         }
       }
     },
@@ -150458,6 +154641,53 @@
         }
       }
     },
+    "f252ac0f9d55382246f2fa5fa8ce21ef2985308183d2a3eed2bb1419c82454c3": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "نتيجة إعدادات أسعار صرف العملات",
+        "sha256": "ec85c2621f0d3e48bd5aa7c151fa13dc64a78cda5f6bcbefcda75a9f9fa12b4f"
+      },
+      "references": "erpnext/accounts/doctype/currency_exchange_settings_result/currency_exchange_settings_result.json:None",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Currency Exchange Settings Result",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "نتيجة إعدادات أسعار صرف العملات",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+        }
+      }
+    },
     "f2537619b0cc4903705875d8234ab1ed3a6c39264a6714f1bd209c7d442f93f4": {
       "artifacts": [
         {
@@ -151066,6 +155296,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "f35d256bd853e06071f6187b61c4d5f9a86aabdbb5e6911962f6f574fc17de12": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يجب أن تكون فترة Cron بين 1 و 59 دقيقة",
+        "sha256": "339eb3d02edcc63afe7d515d7f71cba3930f07700852f4114bfd905a60a167b1"
+      },
+      "references": "erpnext/accounts/doctype/accounts_settings/accounts_settings.py:135",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Cron Interval should be between 1 and 59 Min",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "يجب أن تكون فترة Cron بين 1 و 59 دقيقة",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
         }
       }
     },
@@ -153519,6 +157796,53 @@
         }
       }
     },
+    "f72bd3f2a90c7e9394cf8578cbd4b9df07bfbd76f8eec64aa410d6fd87a14b1d": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الإجراء عند تجاوز الميزانية الشهرية التراكمية للمصروف التراكمي",
+        "sha256": "e587997fb5ae0c3618bd586d15e532d58e1f936870ba1bb911786e3ddaf1840b"
+      },
+      "references": "erpnext/accounts/doctype/budget/budget.json:None",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Action if Accumulative Monthly Budget Exceeded on Cumulative Expense",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "الإجراء عند تجاوز الميزانية الشهرية التراكمية للمصروف التراكمي",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+        }
+      }
+    },
     "f7beff3f474080862f78e5e129fd9d266998152d8f36aa2780893d585ef1d40d": {
       "artifacts": [
         {
@@ -154415,6 +158739,53 @@
         }
       }
     },
+    "f8af2821fa48470509ead00b240178d10036ee87fe2dbe0edf1c5c500f474aaf": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "هل أنت متأكد من رغبتك في تعديل هذه الميزانية؟ سيتم إلغاء الميزانية الحالية وإنشاء مسودة جديدة.",
+        "sha256": "8c18e499060c09c3b11407c83d2fd2123ac78a4f3abd6c3ffcc1e791cc2419a1"
+      },
+      "references": "erpnext/accounts/doctype/budget/budget.js:82",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Are you sure you want to revise this budget? The current budget will be cancelled and a new draft will be created.",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "هل أنت متأكد من رغبتك في تعديل هذه الميزانية؟ سيتم إلغاء الميزانية الحالية وإنشاء مسودة جديدة.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+        }
+      }
+    },
     "f8d3268681f899ed86342db7e5de875aba24a586b0659bb8c8b1a26960b47028": {
       "artifacts": [
         {
@@ -155211,6 +159582,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "f9ccbbdc659fd65ac181462c9c5eaa9072c93b4ad4c1750800908eef9e69f0b7": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "سيقوم إشعار الدائن بتحديث مبلغه المستحق، حتى لو تم تحديد 'مرتجع مقابل'.",
+        "sha256": "d80bbb4dd72431a757922cbdc761b9eaa022c5e847e8946872e4930a963293a1"
+      },
+      "references": "erpnext/accounts/doctype/sales_invoice/sales_invoice.json:None",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Credit Note will update it's own outstanding amount, even if 'Return Against' is specified.",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "سيقوم إشعار الدائن بتحديث مبلغه المستحق، حتى لو تم تحديد 'مرتجع مقابل'.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
         }
       }
     },
@@ -156060,6 +160478,53 @@
           "confidence": "high",
           "decision": "approve",
           "session": "5d95d7bc-8806-4df9-a822-4e1f8081d3fe"
+        }
+      }
+    },
+    "fb39b25fb5dfab88ecf81b70b763b7cf819b76a22bbbe8905a18aaa64d28fa6f": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "دليل الحسابات",
+        "sha256": "eb27e36be06f19ff6ea7ade699da9afe718554f26f4474744f95026b5c23ef86"
+      },
+      "references": "erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Chart Of Accounts",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "دليل الحسابات",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
         }
       }
     },
@@ -158093,6 +162558,53 @@
         }
       }
     },
+    "fe70303076debd917ee9695d004c5ae6a3789d041aee1de393bdf2c2ecc618ef": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w601_accounts_batch01_content_evidence_2026-09-26.txt",
+          "sha256": "8d0815aabd16ac46d9ab5598cb417fd2da281975507390f7866ccf2b7dfbf617"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "accounts",
+      "language": "ar",
+      "proposal": {
+        "arabic": "يجب أن تساوي حصة الفاتورة المجمعة 100%",
+        "sha256": "6a5ef2905f5370a6c4fe8ac3a01c1e1cc141e263152cd4278dbce302d1bc9f92"
+      },
+      "references": "erpnext/accounts/doctype/payment_terms_template/payment_terms_template.py:39",
+      "release_version": "1.11",
+      "reviewers": [
+        "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)",
+        "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)",
+        "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+      ],
+      "source_text": "Combined invoice portion must equal 100%",
+      "timestamps": [
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42",
+        "2026-09-26 19:00:42"
+      ],
+      "translated_text": "يجب أن تساوي حصة الفاتورة المجمعة 100%",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5eac7390-733b-4cf4-b51d-e867da36d63e)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (c4ff7ac5-46af-4d7d-8307-ef715483a5dd)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (fee9d8fe-f9f2-4838-9652-3c2d2b7b474e)"
+        }
+      }
+    },
     "fe726642906f90b1ca0cf82137a0c09b374470b50e75837a277a3941dbc83e6b": {
       "artifacts": [
         {
@@ -158799,7 +163311,7 @@
       }
     }
   },
-  "generated_utc": "2026-09-24T21:59:52Z",
-  "note": "W6-6 CRM Support Maintenance decisions rebound to literal quote-safe content evidence; historical decisions retained.",
+  "generated_utc": "2026-09-26T19:00:42Z",
+  "note": "W6-1 Accounts Batch 01 decisions added; content-evidence bound.",
   "schema": "release-decision/v2"
 }

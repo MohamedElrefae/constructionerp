@@ -1,0 +1,251 @@
+source_text,suggested_ar,locations,area,has_pre_filled
+ Amount,المبلغ,erpnext/accounts/report/item_wise_sales_register/item_wise_sales_register.py:605,accounts,1
+ Name,الاسم,erpnext/accounts/report/customer_ledger_summary/customer_ledger_summary.py:153; erpnext/accounts/report/tax_withholding_details/tax_withholding_details.py:206; erpnext/accounts/report/tds_computation_summary/tds_computation_summary.py:107; erpnext/selling/report/sales_analytics/sales_analytics.py:128,accounts,1
+ Rate,السعر,erpnext/accounts/report/item_wise_sales_register/item_wise_sales_register.py:596,accounts,1
+% Of Grand Total,نسبة من الإجمالي النهائي,erpnext/accounts/report/item_wise_purchase_register/item_wise_purchase_register.py:277; erpnext/accounts/report/item_wise_sales_register/item_wise_sales_register.py:329,accounts,1
+'{0}' account is already used by {1}. Use another account.,,erpnext/accounts/doctype/bank_account/bank_account.py:64,accounts,0
+'{0}' has been already added.,,erpnext/accounts/doctype/pos_settings/pos_settings.py:43,accounts,0
+(Purchase Order + Material Request + Actual Expense),,erpnext/accounts/doctype/budget/budget.json:None,accounts,0
+90 Above,,erpnext/accounts/report/payment_period_based_on_invoice_date/payment_period_based_on_invoice_date.py:117; erpnext/manufacturing/report/work_order_summary/work_order_summary.py:110,accounts,0
+A Reconciliation Job {0} is running for the same filters. Cannot reconcile now,,erpnext/accounts/doctype/payment_reconciliation/payment_reconciliation.py:560,accounts,0
+A condition for a Shipping Rule,,erpnext/accounts/doctype/shipping_rule_condition/shipping_rule_condition.json:None,accounts,0
+A customer must have primary contact email.,,erpnext/accounts/doctype/process_statement_of_accounts/process_statement_of_accounts.json:None,accounts,0
+A template with tax category {0} already exists. Only one template is allowed with each tax category,,erpnext/accounts/doctype/sales_taxes_and_charges_template/sales_taxes_and_charges_template.py:96,accounts,0
+API Details,,erpnext/accounts/doctype/currency_exchange_settings/currency_exchange_settings.json:None,accounts,0
+Accepted Qty in Stock UOM,,erpnext/accounts/doctype/purchase_invoice_item/purchase_invoice_item.json:None; erpnext/stock/doctype/purchase_receipt_item/purchase_receipt_item.json:None,accounts,0
+Access Key,,erpnext/accounts/doctype/currency_exchange_settings/currency_exchange_settings.json:None,accounts,0
+Access Key is required for Service Provider: {0},,erpnext/accounts/doctype/currency_exchange_settings/currency_exchange_settings.py:48,accounts,0
+Account Category,فئة الحساب,erpnext/accounts/doctype/account/account.json:None; erpnext/accounts/doctype/account/account_tree.js:166; erpnext/accounts/doctype/account_category/account_category.json:None,accounts,1
+Account Category Name,اسم فئة الحساب,erpnext/accounts/doctype/account_category/account_category.json:None,accounts,1
+Account Closing Balance,رصيد إغلاق الحساب,erpnext/accounts/doctype/account_closing_balance/account_closing_balance.json:None,accounts,1
+Account Data,بيانات الحساب,erpnext/accounts/doctype/financial_report_row/financial_report_row.json:None,accounts,1
+Account Detail Level,مستوى تفاصيل الحساب,erpnext/accounts/report/balance_sheet/balance_sheet.js:20; erpnext/accounts/report/cash_flow/cash_flow.js:29; erpnext/accounts/report/custom_financial_statement/custom_financial_statement.js:21; erpnext/accounts/report/profit_and_loss_statement/profit_and_loss_statement.js:20,accounts,1
+Account Head,رأس الحساب,erpnext/accounts/doctype/advance_tax/advance_tax.json:None; erpnext/accounts/doctype/advance_taxes_and_charges/advance_taxes_and_charges.json:None; erpnext/accounts/doctype/pos_closing_entry_taxes/pos_closing_entry_taxes.json:None; erpnext/accounts/doctype/purchase_taxes_and_charges/purchase_taxes_and_charges.json:None; erpnext/accounts/doctype/sales_taxes_and_charges/sales_taxes_and_charges.json:None,accounts,1
+Account Opening Balance,رصيد افتتاح الحساب,erpnext/accounts/doctype/bank_reconciliation_tool/bank_reconciliation_tool.json:None,accounts,1
+Account is mandatory,,erpnext/accounts/doctype/budget/budget.py:150,accounts,0
+Account {0} added multiple times,,erpnext/accounts/doctype/tax_withholding_category/tax_withholding_category.py:67,accounts,0
+Account {0} cannot be converted to Group as it is already set as {1} for {2}.,,erpnext/accounts/doctype/account/account.py:291,accounts,0
+Account {0} cannot be disabled as it is already set as {1} for {2}.,,erpnext/accounts/doctype/account/account.py:288,accounts,0
+Account {0} does not belong to company {1},,erpnext/accounts/doctype/budget/budget.py:159,accounts,0
+Account {0} doesn't belong to Company {1},,erpnext/accounts/doctype/process_statement_of_accounts/process_statement_of_accounts.py:138,accounts,0
+Accounting Details,تفاصيل المحاسبة,erpnext/accounts/doctype/dunning/dunning.json:None; erpnext/accounts/doctype/dunning_type/dunning_type.json:None; erpnext/accounts/doctype/pos_invoice/pos_invoice.json:None; erpnext/accounts/doctype/pos_invoice_item/pos_invoice_item.json:None; erpnext/accounts/doctype/purchase_invoice/purchase_invoice.json:None; erpnext/accounts/doctype/sales_invoice/sales_invoice.json:None; erpnext/accounts/doctype/sales_invoice_item/sales_invoice_item.json:None; erpnext/buying/doctype/purchase_order_item/purchase_order_item.json:None; erpnext/stock/doctype/delivery_note_item/delivery_note_item.json:None; erpnext/stock/doctype/material_request_item/material_request_item.json:None; erpnext/stock/doctype/purchase_receipt_item/purchase_receipt_item.json:None; erpnext/subcontracting/doctype/subcontracting_order_item/subcontracting_order_item.json:None; erpnext/subcontracting/doctype/subcontracting_receipt_item/subcontracting_receipt_item.json:None; erpnext/subcontracting/doctype/subcontracting_receipt_supplied_item/subcontracting_receipt_supplied_item.json:None,accounts,1
+Accounting Dimension Filter,عامل تصفية بُعد المحاسبة,erpnext/accounts/doctype/accounting_dimension_filter/accounting_dimension_filter.json:None,accounts,1
+Accounting Dimensions Filter,عامل تصفية أبعاد المحاسبة,erpnext/accounts/doctype/payment_reconciliation/payment_reconciliation.json:None,accounts,1
+Accounts Closing,إغلاق الحسابات,erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None; erpnext/setup/doctype/company/company.json:None,accounts,1
+Accounts Included in Report,الحسابات المضمنة في التقرير,erpnext/accounts/doctype/financial_report_template/financial_report_template.js:192,accounts,1
+Accounts Missing Error,خطأ الحسابات المفقودة,erpnext/accounts/report/tax_withholding_details/tax_withholding_details.py:362,accounts,1
+Accounts Missing from Report,حسابات مفقودة من التقرير,erpnext/accounts/doctype/financial_report_template/financial_report_template.js:166; erpnext/accounts/doctype/financial_report_template/financial_report_template.js:191,accounts,1
+Accounts Receivable / Payable Tuning,ضبط الحسابات المدينة والدائنة,erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None,accounts,1
+Accounts Receivable/Payable,الحسابات المدينة/الدائنة,erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None,accounts,1
+Accounts to Merge,الحسابات المطلوب دمجها,erpnext/accounts/doctype/ledger_merge/ledger_merge.json:None,accounts,1
+Accrued Expenses,,erpnext/accounts/doctype/account/chart_of_accounts/verified/standard_chart_of_accounts.py:158; erpnext/accounts/doctype/account/chart_of_accounts/verified/standard_chart_of_accounts_with_account_number.py:265,accounts,0
+Action if Accumulative Monthly Budget Exceeded on Cumulative Expense,,erpnext/accounts/doctype/budget/budget.json:None,accounts,0
+Action if Anual Budget Exceeded on Cumulative Expense,,erpnext/accounts/doctype/budget/budget.json:None,accounts,0
+Action if Same Rate is Not Maintained Throughout  Internal Transaction,,erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None,accounts,0
+Action on New Invoice,الإجراء عند فاتورة جديدة,erpnext/accounts/doctype/pos_profile/pos_profile.json:None,accounts,1
+Actual Expense,المصروف الفعلي,erpnext/accounts/report/budget_variance_report/budget_variance_report.py:381,accounts,1
+Actual Expenses,المصروفات الفعلية,erpnext/accounts/doctype/budget/budget.py:601,accounts,1
+Actual Posting,الترحيل الفعلي,erpnext/accounts/report/deferred_revenue_and_expense/deferred_revenue_and_expense.py:430,accounts,1
+Add Manually,إضافة يدويا,erpnext/accounts/doctype/repost_payment_ledger/repost_payment_ledger.json:None,accounts,1
+Add Or Deduct,إضافة أو خصم,erpnext/accounts/doctype/advance_taxes_and_charges/advance_taxes_and_charges.json:None,accounts,1
+Add Serial / Batch No,إضافة رقم تسلسلي/دفعة,erpnext/accounts/doctype/purchase_invoice_item/purchase_invoice_item.json:None; erpnext/stock/doctype/purchase_receipt_item/purchase_receipt_item.json:None; erpnext/stock/doctype/stock_entry_detail/stock_entry_detail.json:None; erpnext/stock/doctype/stock_reconciliation_item/stock_reconciliation_item.json:None,accounts,1
+Additional Info,معلومات إضافية,erpnext/accounts/doctype/purchase_invoice/purchase_invoice.json:None; erpnext/accounts/doctype/sales_invoice/sales_invoice.json:None; erpnext/assets/doctype/asset/asset.json:None; erpnext/buying/doctype/purchase_order/purchase_order.json:None; erpnext/buying/doctype/supplier_quotation/supplier_quotation.json:None; erpnext/selling/doctype/quotation/quotation.json:None; erpnext/selling/doctype/sales_order/sales_order.json:None; erpnext/stock/doctype/delivery_note/delivery_note.json:None; erpnext/stock/doctype/purchase_receipt/purchase_receipt.json:None,accounts,1
+Address And Contacts,العناوين وجهات الاتصال,erpnext/accounts/workspace/financial_reports/financial_reports.json:None; erpnext/selling/report/address_and_contacts/address_and_contacts.json:None,accounts,1
+Adjustment Against,تسوية مقابل,erpnext/accounts/doctype/sales_invoice/sales_invoice.js:1108,accounts,1
+Advance Account,حساب الدفعة المقدمة,erpnext/accounts/doctype/party_account/party_account.json:None,accounts,1
+Advance Payment Ledger Entry,قيد دفتر الأستاذ للدفع المسبق,erpnext/accounts/doctype/advance_payment_ledger_entry/advance_payment_ledger_entry.json:None,accounts,1
+Advance Tax,ضريبة مسبقة,erpnext/accounts/doctype/advance_tax/advance_tax.json:None; erpnext/accounts/doctype/purchase_invoice/purchase_invoice.json:None,accounts,1
+Advance payments allocated against orders will only be fetched,,erpnext/accounts/doctype/purchase_invoice/purchase_invoice.json:None; erpnext/accounts/doctype/sales_invoice/sales_invoice.json:None,accounts,0
+Advanced Filtering,تصفية متقدمة,erpnext/accounts/doctype/financial_report_row/financial_report_row.json:None,accounts,1
+Advances,دفعات مقدمة,erpnext/accounts/doctype/pos_invoice/pos_invoice.json:None; erpnext/accounts/doctype/purchase_invoice/purchase_invoice.json:None; erpnext/accounts/doctype/sales_invoice/sales_invoice.json:None,accounts,1
+Against Customer Order {0},,erpnext/accounts/doctype/sales_invoice/sales_invoice.py:1076,accounts,0
+Against Supplier Invoice {0},,erpnext/accounts/doctype/purchase_invoice/purchase_invoice.py:332,accounts,0
+Algorithm,الخوارزمية,erpnext/accounts/doctype/bisect_accounting_statements/bisect_accounting_statements.json:None,accounts,1
+All Parties ,كل الجهات,erpnext/accounts/report/general_ledger/general_ledger.html:68,accounts,1
+All allocations have been successfully reconciled,,erpnext/accounts/doctype/process_payment_reconciliation_log/process_payment_reconciliation_log.json:None,accounts,0
+All items must be linked to a Sales Order or Subcontracting Inward Order for this Sales Invoice.,,erpnext/accounts/doctype/sales_invoice/sales_invoice.py:1215,accounts,0
+All linked Sales Orders must be subcontracted.,,erpnext/accounts/doctype/sales_invoice/sales_invoice.py:1226,accounts,0
+Allocated Entries,القيود المخصصة,erpnext/accounts/doctype/payment_reconciliation/payment_reconciliation.json:None,accounts,1
+Allocations,التخصيصات,erpnext/accounts/doctype/process_payment_reconciliation_log/process_payment_reconciliation_log.json:None; erpnext/accounts/doctype/unreconcile_payment/unreconcile_payment.json:None; erpnext/public/js/utils/unreconcile.js:104,accounts,1
+Allow Implicit Pegged Currency Conversion,,erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None,accounts,0
+Allow Or Restrict Dimension,السماح بالبُعد أو تقييده,erpnext/accounts/doctype/accounting_dimension_filter/accounting_dimension_filter.json:None,accounts,1
+Allow Partial Payment,السماح بالدفع الجزئي,erpnext/accounts/doctype/pos_profile/pos_profile.json:None,accounts,1
+Allow User to Edit Discount,السماح للمستخدم بتعديل الخصم,erpnext/accounts/doctype/pos_profile/pos_profile.json:None,accounts,1
+Allow User to Edit Rate,السماح للمستخدم بتعديل السعر,erpnext/accounts/doctype/pos_profile/pos_profile.json:None,accounts,1
+Allow multi-currency invoices against single party account ,,erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None,accounts,0
+Allowed Dimension,البُعد المسموح,erpnext/accounts/doctype/allowed_dimension/allowed_dimension.json:None,accounts,1
+Allowed Doctypes,أنواع المستندات المسموحة,erpnext/accounts/doctype/repost_accounting_ledger_settings/repost_accounting_ledger_settings.json:None,accounts,1
+Allowed primary roles are 'Customer' and 'Supplier'. Please select one of these roles only.,,erpnext/accounts/doctype/party_link/party_link.py:27,accounts,0
+"Alternatively, you can download the template and fill your data in.",,erpnext/accounts/doctype/chart_of_accounts_importer/chart_of_accounts_importer.py:378,accounts,0
+Always Ask,اسأل دائما,erpnext/accounts/doctype/pos_profile/pos_profile.json:None,accounts,1
+Amount Eligible for Commission,المبلغ المؤهل للعمولة,erpnext/accounts/doctype/pos_invoice/pos_invoice.json:None; erpnext/accounts/doctype/sales_invoice/sales_invoice.json:None; erpnext/selling/doctype/sales_order/sales_order.json:None; erpnext/stock/doctype/delivery_note/delivery_note.json:None,accounts,1
+Amount in Account Currency,المبلغ بعملة الحساب,erpnext/accounts/doctype/payment_ledger_entry/payment_ledger_entry.json:None; erpnext/accounts/report/payment_ledger/payment_ledger.py:212,accounts,1
+Amount in Words,المبلغ كتابة,erpnext/accounts/print_format/sales_invoice_print/sales_invoice_print.html:119,accounts,1
+Amount in party's bank account currency,,erpnext/accounts/doctype/payment_request/payment_request.json:None,accounts,0
+Amount in transaction currency,,erpnext/accounts/doctype/payment_request/payment_request.json:None,accounts,0
+Amounts,المبالغ,erpnext/accounts/doctype/gl_entry/gl_entry.json:None,accounts,1
+Another Budget record '{0}' already exists against {1} '{2}' and account '{3}' with overlapping fiscal years.,,erpnext/accounts/doctype/budget/budget.py:142,accounts,0
+"Another Cost Center Allocation record {0} applicable from {1}, hence this allocation will be applicable upto {2}",,erpnext/accounts/doctype/cost_center_allocation/cost_center_allocation.py:107,accounts,0
+Another Payment Request is already processed,,erpnext/accounts/doctype/payment_request/payment_request.py:752,accounts,0
+Applicable Dimension,البُعد المطبق,erpnext/accounts/doctype/accounting_dimension_filter/accounting_dimension_filter.json:None,accounts,1
+Applicable On Account,المطبق على الحساب,erpnext/accounts/doctype/accounting_dimension_filter/accounting_dimension_filter.json:None; erpnext/accounts/doctype/applicable_on_account/applicable_on_account.json:None,accounts,1
+Applicable on Cumulative Expense,ينطبق على المصروف التراكمي,erpnext/accounts/doctype/budget/budget.json:None,accounts,1
+Apply Recursion Over (As Per Transaction UOM),,erpnext/accounts/doctype/pricing_rule/pricing_rule.json:None; erpnext/accounts/doctype/promotional_scheme_product_discount/promotional_scheme_product_discount.json:None,accounts,0
+Apply TDS,تطبيق ضريبة الخصم,erpnext/accounts/doctype/purchase_invoice_item/purchase_invoice_item.json:None; erpnext/buying/doctype/purchase_order_item/purchase_order_item.json:None; erpnext/stock/doctype/purchase_receipt_item/purchase_receipt_item.json:None,accounts,1
+Apply Tax Withholding Amount ,تطبيق مبلغ ضريبة الخصم,erpnext/accounts/doctype/journal_entry/journal_entry.json:None,accounts,1
+Apply restriction on dimension values,تطبيق قيد على قيم البُعد,erpnext/accounts/doctype/accounting_dimension_filter/accounting_dimension_filter.json:None,accounts,1
+Approximately match the description/party name against parties,,erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None,accounts,0
+Are you sure you want to restart this subscription?,,erpnext/accounts/doctype/subscription/subscription.js:75,accounts,0
+Are you sure you want to revise this budget? The current budget will be cancelled and a new draft will be created.,,erpnext/accounts/doctype/budget/budget.js:82,accounts,0
+As on Date,كما في تاريخ,erpnext/accounts/report/billed_items_to_be_received/billed_items_to_be_received.js:15; erpnext/accounts/report/delivered_items_to_be_billed/delivered_items_to_be_billed.js:15; erpnext/accounts/report/received_items_to_be_billed/received_items_to_be_billed.js:15,accounts,1
+Asset Settings,إعدادات الأصول,erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None,accounts,1
+Asset returned,تم إرجاع الأصل,erpnext/accounts/doctype/sales_invoice/sales_invoice.py:1445,accounts,1
+Asset sold,تم بيع الأصل,erpnext/accounts/doctype/sales_invoice/sales_invoice.py:1445; erpnext/accounts/doctype/sales_invoice/sales_invoice.py:1448,accounts,1
+At least one account with exchange gain or loss is required,,erpnext/accounts/doctype/exchange_rate_revaluation/exchange_rate_revaluation.py:84,accounts,0
+At least one invoice has to be selected.,يجب تحديد فاتورة واحدة على الأقل.,erpnext/accounts/doctype/pos_invoice/pos_invoice.py:1037,accounts,1
+At least one of the Selling or Buying must be selected,,erpnext/accounts/doctype/pricing_rule/pricing_rule.py:204,accounts,0
+At least one row is required for a financial report template,,erpnext/accounts/doctype/financial_report_template/financial_report_template.js:25,accounts,0
+Auto Reconcile,تسوية تلقائية,erpnext/accounts/doctype/bank_reconciliation_tool/bank_reconciliation_tool.js:66,accounts,1
+Auto Reconcile Payments,تسوية المدفوعات تلقائيا,erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None,accounts,1
+Auto Reconciliation,التسوية التلقائية,erpnext/accounts/doctype/bank_reconciliation_tool/bank_reconciliation_tool.py:443,accounts,1
+Auto Reconciliation Job Trigger,مشغل مهمة التسوية التلقائية,erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None,accounts,1
+Auto Reconciliation has started in the background,,erpnext/accounts/doctype/bank_reconciliation_tool/bank_reconciliation_tool.py:391,accounts,0
+Auto Reconciliation of Payments has been disabled. Enable it through {0},,erpnext/accounts/doctype/process_payment_reconciliation/process_payment_reconciliation.py:147; erpnext/accounts/doctype/process_payment_reconciliation/process_payment_reconciliation.py:195,accounts,0
+Auto Tax Settings Error,خطأ إعدادات الضريبة التلقائية,erpnext/accounts/doctype/accounts_settings/accounts_settings.py:148,accounts,1
+Auto match and set the Party in Bank Transactions,,erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None,accounts,0
+Auto write off precision loss while consolidation,,erpnext/accounts/doctype/pos_profile/pos_profile.json:None,accounts,0
+Automatically Add Filtered Item To Cart,إضافة الصنف المصفى إلى السلة تلقائيا,erpnext/accounts/doctype/pos_profile/pos_profile.json:None,accounts,1
+Automatically Add Taxes from Taxes and Charges Template,إضافة الضرائب تلقائيا من قالب الضرائب والرسوم,erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None,accounts,1
+Automatically Fetch Payment Terms from Order,جلب شروط الدفع تلقائيا من الأمر,erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None,accounts,1
+Automatically post balancing accounting entry,ترحيل قيد محاسبي موازن تلقائيا,erpnext/accounts/doctype/accounting_dimension_detail/accounting_dimension_detail.json:None,accounts,1
+BFS,بحث أفضل أولا,erpnext/accounts/doctype/bisect_accounting_statements/bisect_accounting_statements.json:None,accounts,1
+Balance Sheet Closing Balance,رصيد إغلاق الميزانية العمومية,erpnext/accounts/doctype/process_period_closing_voucher/process_period_closing_voucher.json:None,accounts,1
+Balance Sheet Summary,ملخص الميزانية العمومية,erpnext/accounts/doctype/bisect_accounting_statements/bisect_accounting_statements.json:None; erpnext/accounts/doctype/bisect_nodes/bisect_nodes.json:None,accounts,1
+Balance Type,نوع الرصيد,erpnext/accounts/doctype/financial_report_row/financial_report_row.json:None,accounts,1
+Bank Account {} in Bank Transaction {} is not matching with Bank Account {},,erpnext/accounts/doctype/bank_transaction/bank_transaction.py:376,accounts,0
+Bank Name,اسم البنك,erpnext/accounts/doctype/bank/bank.json:None; erpnext/accounts/doctype/cheque_print_template/cheque_print_template.json:None; erpnext/setup/doctype/employee/employee.json:None,accounts,1
+Bank Reconciliation Tool,أداة التسوية البنكية,erpnext/accounts/doctype/bank_reconciliation_tool/bank_reconciliation_tool.json:None; erpnext/accounts/workspace/accounting/accounting.json:None,accounts,1
+Bank Statement Import,استيراد كشف البنك,erpnext/accounts/doctype/bank_statement_import/bank_statement_import.json:None,accounts,1
+Bank Transaction {0} is already fully reconciled,,erpnext/accounts/doctype/bank_transaction/bank_transaction.py:147,accounts,0
+Bank/Cash Account,حساب البنك/النقدية,erpnext/accounts/doctype/process_payment_reconciliation/process_payment_reconciliation.json:None,accounts,1
+Bank/Cash Account {0} doesn't belong to company {1},,erpnext/accounts/doctype/process_payment_reconciliation/process_payment_reconciliation.py:57,accounts,0
+Base Tax Withholding Net Total,صافي إجمالي ضريبة الخصم الأساسي,erpnext/accounts/doctype/purchase_invoice/purchase_invoice.json:None; erpnext/buying/doctype/purchase_order/purchase_order.json:None; erpnext/stock/doctype/purchase_receipt/purchase_receipt.json:None,accounts,1
+Base Total,الإجمالي الأساسي,erpnext/accounts/report/tax_withholding_details/tax_withholding_details.py:261,accounts,1
+Beginning of the current subscription period,بداية فترة الاشتراك الحالية,erpnext/accounts/doctype/subscription/subscription.json:None,accounts,1
+Below Subscription Plans are of different currency to the party default billing currency/Company currency: {0},,erpnext/accounts/doctype/subscription/subscription.py:320,accounts,0
+Billed Items To Be Received,أصناف مفوترة بانتظار الاستلام,erpnext/accounts/report/billed_items_to_be_received/billed_items_to_be_received.json:None,accounts,1
+Billing Interval in Subscription Plan must be Month to follow calendar months,,erpnext/accounts/doctype/subscription/subscription.py:363,accounts,0
+Bisect Accounting Statements,تقسيم بيانات المحاسبة,erpnext/accounts/doctype/bisect_accounting_statements/bisect_accounting_statements.json:None,accounts,1
+Bisect Left,تقسيم يسارا,erpnext/accounts/doctype/bisect_accounting_statements/bisect_accounting_statements.js:9,accounts,1
+Bisect Nodes,عقد التقسيم,erpnext/accounts/doctype/bisect_nodes/bisect_nodes.json:None,accounts,1
+Bisect Right,تقسيم يمينا,erpnext/accounts/doctype/bisect_accounting_statements/bisect_accounting_statements.js:13,accounts,1
+Bisecting From,التقسيم من,erpnext/accounts/doctype/bisect_accounting_statements/bisect_accounting_statements.json:None,accounts,1
+Bisecting Left ...,جار التقسيم يسارا ...,erpnext/accounts/doctype/bisect_accounting_statements/bisect_accounting_statements.js:61,accounts,1
+Bisecting Right ...,جار التقسيم يمينا ...,erpnext/accounts/doctype/bisect_accounting_statements/bisect_accounting_statements.js:71,accounts,1
+Bisecting To,التقسيم إلى,erpnext/accounts/doctype/bisect_accounting_statements/bisect_accounting_statements.json:None,accounts,1
+Biweekly,كل أسبوعين,erpnext/accounts/doctype/process_statement_of_accounts/process_statement_of_accounts.json:None,accounts,1
+Blank Line,سطر فارغ,erpnext/accounts/doctype/financial_report_row/financial_report_row.json:None,accounts,1
+Body,المتن,erpnext/accounts/doctype/process_statement_of_accounts/process_statement_of_accounts.json:None,accounts,1
+Bold Text,نص عريض,erpnext/accounts/doctype/financial_report_row/financial_report_row.json:None,accounts,1
+"Bold text for emphasis (totals, major headings)",,erpnext/accounts/doctype/financial_report_row/financial_report_row.json:None,accounts,0
+Book Tax Loss on Early Payment Discount,تسجيل خسارة الضريبة على خصم الدفع المبكر,erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None,accounts,1
+Budget Amount can not be {0}.,لا يمكن أن يكون مبلغ الميزانية {0}.,erpnext/accounts/doctype/budget/budget.py:84,accounts,1
+Budget Distribution,توزيع الميزانية,erpnext/accounts/doctype/budget/budget.json:None; erpnext/accounts/doctype/budget_distribution/budget_distribution.json:None,accounts,1
+Budget Distribution Total,إجمالي توزيع الميزانية,erpnext/accounts/doctype/budget/budget.json:None,accounts,1
+Budget End Date,تاريخ نهاية الميزانية,erpnext/accounts/doctype/budget/budget.json:None,accounts,1
+Budget Exceeded,تم تجاوز الميزانية,erpnext/accounts/doctype/budget/budget.py:570; erpnext/accounts/doctype/budget/budget.py:572; erpnext/controllers/budget_controller.py:289; erpnext/controllers/budget_controller.py:292,accounts,1
+Budget Limit Exceeded,تم تجاوز حد الميزانية,erpnext/accounts/doctype/budget/budget.py:229,accounts,1
+Budget Start Date,تاريخ بداية الميزانية,erpnext/accounts/doctype/budget/budget.json:None,accounts,1
+Buffered Cursor,مؤشر مخزن,erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None,accounts,1
+Build Tree,إنشاء الشجرة,erpnext/accounts/doctype/bisect_accounting_statements/bisect_accounting_statements.js:20,accounts,1
+Calculate but don't show on final report,,erpnext/accounts/doctype/financial_report_row/financial_report_row.json:None,accounts,0
+Calculate daily depreciation using total days in depreciation period,,erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None,accounts,0
+Calculated Amount,المبلغ المحسوب,erpnext/accounts/doctype/financial_report_row/financial_report_row.json:None,accounts,1
+Calculated Discount Mismatch,عدم تطابق الخصم المحسوب,erpnext/accounts/report/calculated_discount_mismatch/calculated_discount_mismatch.json:None,accounts,1
+Campaign Item,عنصر الحملة,erpnext/accounts/doctype/campaign_item/campaign_item.json:None,accounts,1
+Cannot Assign Cashier,لا يمكن إسناد أمين الصندوق,erpnext/accounts/doctype/pos_opening_entry/pos_opening_entry.py:76,accounts,1
+Cannot Resubmit Ledger entries for vouchers in Closed fiscal year.,,erpnext/accounts/doctype/repost_accounting_ledger/repost_accounting_ledger.py:73,accounts,0
+Cannot cancel POS Closing Entry,,erpnext/accounts/doctype/pos_closing_entry/pos_closing_entry.py:246,accounts,0
+Cannot change Reference Document Type.,,erpnext/accounts/doctype/accounting_dimension/accounting_dimension.py:73,accounts,0
+Cannot convert to Group because Account Type is selected.,,erpnext/accounts/doctype/account/account.py:440,accounts,0
+Cannot retrieve link token for update. Check Error Log for more information,,erpnext/accounts/doctype/bank/bank.js:66,accounts,0
+Capital Equipment,,erpnext/accounts/doctype/account/chart_of_accounts/verified/standard_chart_of_accounts.py:44; erpnext/accounts/doctype/account/chart_of_accounts/verified/standard_chart_of_accounts_with_account_number.py:77,accounts,0
+Cashier is currently assigned to another POS.,أمين الصندوق مسند حاليا إلى نقطة بيع أخرى.,erpnext/accounts/doctype/pos_opening_entry/pos_opening_entry.py:77,accounts,1
+Categorize By,تصنيف حسب,erpnext/accounts/doctype/process_statement_of_accounts/process_statement_of_accounts.json:None,accounts,1
+Chart Of Accounts,دليل الحسابات,erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None,accounts,1
+Checked On,تم الفحص في,erpnext/accounts/doctype/ledger_health/ledger_health.json:None,accounts,1
+Checking this will round off the tax amount to the nearest integer,,erpnext/accounts/doctype/tax_withholding_category/tax_withholding_category.json:None,accounts,0
+Cheques and Deposits Incorrectly cleared,شيكات وإيداعات تمت تصفيتها بشكل غير صحيح,erpnext/accounts/report/cheques_and_deposits_incorrectly_cleared/cheques_and_deposits_incorrectly_cleared.json:None,accounts,1
+Claimed Landed Cost Amount (Company Currency),مبلغ التكلفة الإضافية المطالب به (عملة الشركة),erpnext/accounts/doctype/purchase_invoice/purchase_invoice.json:None,accounts,1
+Closing [Opening + Total] ,,erpnext/accounts/report/general_ledger/general_ledger.html:141,accounts,0
+"Code to reference this line in formulas (e.g., REV100, EXP200, ASSET100)",,erpnext/accounts/doctype/financial_report_row/financial_report_row.json:None,accounts,0
+Collect Outstanding Amount,تحصيل المبلغ المستحق,erpnext/accounts/doctype/pos_invoice/pos_invoice.js:281,accounts,1
+"Color to highlight values (e.g., red for exceptions)",,erpnext/accounts/doctype/financial_report_row/financial_report_row.json:None,accounts,0
+Columns are not according to template. Please compare the uploaded file with standard template,,erpnext/accounts/doctype/chart_of_accounts_importer/chart_of_accounts_importer.py:52,accounts,0
+Combined invoice portion must equal 100%,,erpnext/accounts/doctype/payment_terms_template/payment_terms_template.py:39,accounts,0
+Commission Rate (%),نسبة العمولة,erpnext/accounts/doctype/pos_invoice/pos_invoice.json:None; erpnext/accounts/doctype/sales_invoice/sales_invoice.json:None; erpnext/stock/doctype/delivery_note/delivery_note.json:None,accounts,1
+Company Address Display,عرض عنوان الشركة,erpnext/accounts/doctype/dunning/dunning.json:None,accounts,1
+Company Billing Address,عنوان فوترة الشركة,erpnext/accounts/doctype/purchase_invoice/purchase_invoice.json:None; erpnext/buying/doctype/purchase_order/purchase_order.json:None; erpnext/buying/doctype/request_for_quotation/request_for_quotation.json:None; erpnext/buying/doctype/supplier_quotation/supplier_quotation.json:None; erpnext/stock/doctype/purchase_receipt/purchase_receipt.json:None; erpnext/subcontracting/doctype/subcontracting_order/subcontracting_order.json:None,accounts,1
+Company Contact Person,شخص الاتصال بالشركة,erpnext/accounts/doctype/pos_invoice/pos_invoice.json:None; erpnext/accounts/doctype/sales_invoice/sales_invoice.json:None; erpnext/selling/doctype/quotation/quotation.json:None; erpnext/selling/doctype/sales_order/sales_order.json:None; erpnext/stock/doctype/delivery_note/delivery_note.json:None,accounts,1
+Company Tax ID,الرقم الضريبي للشركة,erpnext/accounts/doctype/sales_invoice/sales_invoice.json:None,accounts,1
+Company and Posting Date is mandatory,,erpnext/accounts/doctype/exchange_rate_revaluation/exchange_rate_revaluation.py:620,accounts,0
+Company is mandatory,,erpnext/accounts/report/invalid_ledger_entries/invalid_ledger_entries.py:77,accounts,0
+Company is mandatory for company account,,erpnext/accounts/doctype/bank_account/bank_account.py:72,accounts,0
+Company is mandatory for generating an invoice. Please set a default company in Global Defaults.,,erpnext/accounts/doctype/subscription/subscription.py:392,accounts,0
+Company which internal customer represents,,erpnext/accounts/doctype/sales_invoice/sales_invoice.json:None,accounts,0
+Company which internal supplier represents,,erpnext/accounts/doctype/purchase_invoice/purchase_invoice.json:None,accounts,0
+Company {0} added multiple times,,erpnext/accounts/doctype/tax_withholding_category/tax_withholding_category.py:62,accounts,0
+Company {0} is added more than once,,erpnext/accounts/doctype/accounting_dimension/accounting_dimension.py:83,accounts,0
+Company {} does not match with POS Profile Company {},,erpnext/accounts/doctype/pos_invoice/pos_invoice.py:574,accounts,0
+Confirm before resetting posting date,التأكيد قبل إعادة تعيين تاريخ الترحيل,erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None,accounts,1
+Consider Entire Party Ledger Amount,احتساب كامل مبلغ دفتر أستاذ الجهة,erpnext/accounts/doctype/tax_withholding_category/tax_withholding_category.json:None,accounts,1
+Considered In Paid Amount,محتسب ضمن المبلغ المدفوع,erpnext/accounts/doctype/advance_taxes_and_charges/advance_taxes_and_charges.json:None; erpnext/accounts/doctype/purchase_taxes_and_charges/purchase_taxes_and_charges.json:None; erpnext/accounts/doctype/sales_taxes_and_charges/sales_taxes_and_charges.json:None,accounts,1
+Control Action for Cumulative Expense,إجراء التحكم للمصروف التراكمي,erpnext/accounts/doctype/budget/budget.json:None,accounts,1
+Cost,التكلفة,erpnext/accounts/doctype/subscription_plan/subscription_plan.json:None,accounts,1
+Cost Center Allocation,تخصيص مركز التكلفة,erpnext/accounts/doctype/cost_center_allocation/cost_center_allocation.json:None; erpnext/accounts/workspace/accounting/accounting.json:None,accounts,1
+Cost Center Allocation Percentage,نسبة تخصيص مركز التكلفة,erpnext/accounts/doctype/cost_center_allocation_percentage/cost_center_allocation_percentage.json:None,accounts,1
+Cost Center Allocation Percentages,نسب تخصيص مركز التكلفة,erpnext/accounts/doctype/cost_center_allocation/cost_center_allocation.json:None,accounts,1
+"Cost Center is a part of Cost Center Allocation, hence cannot be converted to a group",,erpnext/accounts/doctype/cost_center/cost_center.py:75,accounts,0
+Cost Center with Allocation records can not be converted to a group,,erpnext/accounts/doctype/cost_center/cost_center.py:72,accounts,0
+Cost Center {0} cannot be used for allocation as it is used as main cost center in other allocation record.,,erpnext/accounts/doctype/cost_center_allocation/cost_center_allocation.py:152,accounts,0
+Cr,,erpnext/accounts/doctype/account/account_tree.js:85; erpnext/accounts/doctype/bank_clearance/bank_clearance.py:82; erpnext/templates/form_grid/bank_reconciliation_grid.html:16,accounts,0
+Create Journal Entries,إنشاء قيود يومية,erpnext/accounts/doctype/payment_order/payment_order.js:39,accounts,1
+Create Ledger Entries for Change Amount,إنشاء قيود دفتر الأستاذ لمبلغ الباقي,erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None,accounts,1
+Create Payment Entry for Consolidated POS Invoices.,,erpnext/accounts/doctype/pos_invoice/pos_invoice.py:859,accounts,0
+Create in Draft Status,,erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None,accounts,0
+Creating Journal Entries...,جار إنشاء قيود اليومية...,erpnext/accounts/doctype/exchange_rate_revaluation/exchange_rate_revaluation.js:92,accounts,1
+Creating Purchase Invoices ...,,erpnext/accounts/doctype/opening_invoice_creation_tool/opening_invoice_creation_tool.js:60,accounts,0
+Creating Purchase Receipt ...,جار إنشاء إيصال شراء ...,erpnext/accounts/doctype/purchase_invoice/purchase_invoice.js:728; erpnext/buying/doctype/purchase_order/purchase_order.js:560; erpnext/subcontracting/doctype/subcontracting_receipt/subcontracting_receipt.js:73,accounts,1
+Creating Sales Invoices ...,,erpnext/accounts/doctype/opening_invoice_creation_tool/opening_invoice_creation_tool.js:58,accounts,0
+Credit Amount in Reporting Currency,مبلغ الدائن بعملة التقارير,erpnext/accounts/doctype/account_closing_balance/account_closing_balance.json:None; erpnext/accounts/doctype/gl_entry/gl_entry.json:None,accounts,1
+Credit Amount in Transaction Currency,مبلغ الدائن بعملة المعاملة,erpnext/accounts/doctype/gl_entry/gl_entry.json:None,accounts,1
+Credit Limit Settings,إعدادات حد الائتمان,erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None,accounts,1
+"Credit Note will update it's own outstanding amount, even if 'Return Against' is specified.",,erpnext/accounts/doctype/sales_invoice/sales_invoice.json:None,accounts,0
+Creditor Turnover Ratio,معدل دوران الدائنين,erpnext/accounts/report/financial_ratios/financial_ratios.py:213,accounts,1
+Cron Interval should be between 1 and 59 Min,,erpnext/accounts/doctype/accounts_settings/accounts_settings.py:135,accounts,0
+Currency Exchange Settings Details,,erpnext/accounts/doctype/currency_exchange_settings_details/currency_exchange_settings_details.json:None,accounts,0
+Currency Exchange Settings Result,,erpnext/accounts/doctype/currency_exchange_settings_result/currency_exchange_settings_result.json:None,accounts,0
+Currency filters are currently unsupported in Custom Financial Report.,,erpnext/accounts/doctype/financial_report_template/financial_report_engine.py:226,accounts,0
+Current Asset,أصل متداول,erpnext/accounts/doctype/account/account.json:None,accounts,1
+Current Liability,التزام متداول,erpnext/accounts/doctype/account/account.json:None,accounts,1
+Current Node,العقدة الحالية,erpnext/accounts/doctype/bisect_accounting_statements/bisect_accounting_statements.json:None,accounts,1
+Current Ratio,نسبة التداول,erpnext/accounts/report/financial_ratios/financial_ratios.py:152,accounts,1
+Custom API,,erpnext/accounts/doctype/financial_report_row/financial_report_row.json:None,accounts,0
+Custom Financial Statement,قائمة مالية مخصصة,erpnext/accounts/doctype/financial_report_template/financial_report_template.json:None; erpnext/accounts/report/custom_financial_statement/custom_financial_statement.json:None,accounts,1
+Custom delimiters,,erpnext/accounts/doctype/bank_statement_import/bank_statement_import.json:None,accounts,0
+Customer ,العميل,erpnext/accounts/doctype/customer_item/customer_item.json:None,accounts,1
+Customer > Customer Group > Territory,,erpnext/accounts/doctype/pricing_rule/pricing_rule.js:50,accounts,0
+Customer Advances,دفعات العملاء المقدمة,erpnext/accounts/doctype/account/chart_of_accounts/verified/standard_chart_of_accounts.py:159; erpnext/accounts/doctype/account/chart_of_accounts/verified/standard_chart_of_accounts_with_account_number.py:269,accounts,1
+Customer Group Item,عنصر مجموعة العملاء,erpnext/accounts/doctype/customer_group_item/customer_group_item.json:None,accounts,1
+Customer Item,عنصر العميل,erpnext/accounts/doctype/customer_item/customer_item.json:None,accounts,1
+Customer Name: ,,erpnext/accounts/doctype/process_statement_of_accounts/process_statement_of_accounts.html:22,accounts,0
+Customer: ,,erpnext/accounts/doctype/process_statement_of_accounts/process_statement_of_accounts.html:19; erpnext/accounts/doctype/process_statement_of_accounts/process_statement_of_accounts.html:21,accounts,0
+DFS,بحث أولا بالعمق,erpnext/accounts/doctype/bisect_accounting_statements/bisect_accounting_statements.json:None,accounts,1
+Data Fetch Method,طريقة جلب البيانات,erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None,accounts,1
+Data Source,مصدر البيانات,erpnext/accounts/doctype/financial_report_row/financial_report_row.json:None,accounts,1
+Date: {0} to {1},,erpnext/accounts/doctype/process_statement_of_accounts/process_statement_of_accounts.html:25,accounts,0
+Dates,التواريخ,erpnext/accounts/doctype/gl_entry/gl_entry.json:None,accounts,1
+Dates to Process,التواريخ المطلوب معالجتها,erpnext/accounts/doctype/process_period_closing_voucher/process_period_closing_voucher.json:None,accounts,1
+Days before the current subscription period,أيام قبل فترة الاشتراك الحالية,erpnext/accounts/doctype/subscription/subscription.json:None,accounts,1
+DeLinked,مفصول الربط,erpnext/accounts/doctype/advance_payment_ledger_entry/advance_payment_ledger_entry.json:None; erpnext/accounts/doctype/payment_ledger_entry/payment_ledger_entry.json:None,accounts,1
+Debit / Credit Note Posting Date,تاريخ ترحيل إشعار المدين/الدائن,erpnext/accounts/doctype/payment_reconciliation_allocation/payment_reconciliation_allocation.json:None,accounts,1
