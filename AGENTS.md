@@ -8,8 +8,9 @@
 - **Author:** Mohamed Elrefae (solo civil engineer developer)
 - **License:** MIT
 - **Current branch:** `develop`
-- **Total commits:** 191+
-- **Latest commit:** `88493fc` — release: sign off construction ERP deployment
+- **Total commits:** 369+ (run `git rev-list --count HEAD`; not maintained here)
+- **Latest commit:** see `git log -1` (as of 2026-09-25 the tip is the W6-6 CRM closure `3344546` plus handoff/reconciliation docs commits)
+- **Branch state:** `develop` tracks `origin/develop`; verify with `git rev-list --left-right --count origin/develop...HEAD` before assuming anything is unpushed
 
 ## 2. Tech Stack
 - **Backend:** Python 3.14 (venv), Frappe Framework (v15/v16 dual-compat); code must remain Python 3.10 quote-nesting compatible

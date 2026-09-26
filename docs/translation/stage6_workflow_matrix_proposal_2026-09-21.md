@@ -1,6 +1,16 @@
 # Stage 6 — Production workflow matrix proposal (2026-09-21)
 
-**Status: PROPOSAL ONLY — owner mark-up pending. No translations committed, no runtime import.**
+**Status: SUPERSEDED AS A STATUS DOCUMENT (2026-09-25).** This file is the
+original scope proposal. Its line 3 previously read "PROPOSAL ONLY — owner
+mark-up pending. No translations committed, no runtime import", which is no
+longer true: 20 governed Stage-6 cycles have since been owner-approved per
+batch and executed on the `v16.localhost` test site (catalog 3,364 Released).
+The owner-decision column below is deliberately left as originally marked —
+owner approval was granted per batch and recorded in the end-to-end plan §16/§17
+and the hold state, not in this table. The "Executed batches" column is
+agent-maintained bookkeeping added 2026-09-25; see
+`docs/handover/STAGE6_W606_CRM_HANDOFF_2026-09-25.md` §3 and plan §16/§17 for the
+authoritative per-batch scope SHA-256 values.
 
 Basis: vendor gap ledgers (`docs/erpnext_ar_missing_review_filled.csv` — 4,342
 rows with 2,064 pre-filled reviewed msgstr; frappe side in
@@ -12,16 +22,16 @@ forbidden.
 
 ## Proposed batches (owner mark-up column)
 
-| Batch | Area (from vendor locations) | Rows (erpnext pre-filled/file) | Screens touched (user workflow) | Proposed priority | Owner decision (approve/defer) |
-|---|---|---|---|---|---|
-| W6-0 | Desk shell + navigation (incl. remaining global UI beyond the 6 Stage-1C labels) | frappe views/desk subset (see frappe_ar_missing_review) | Everyday desk lookups, navbar, sidebar | P1 | ☐ |
-| W6-1 | Accounting — books screens (journal entry, payment entry, GL detail, invoices' print-status tiles) | 1,265 (subset: ~250 user-visible flow strings) | Accounting documents the bilingual reports pilot depends on | P1 | ☐ |
-| W6-2 | Buying + Selling masters & documents (PO, PR, SO, DN, Sales Invoice create/print) | 143 + 194 | Purchase/sales desk lifecycle | P2 | ☐ |
-| W6-3 | Stock — Warehouse, Receipts, Stock Entry, valuation reports (`stock`) | 789 | Warehouse/stock desk | P2 | ☐ |
-| W6-4 | Projects + BOQ adjacency (`projects`, subcontracting) | 61 + 90 | Project/BOQ desk (construction primary flow) | P2 | ☐ |
-| W6-5 | Setup/admin (`setup`, Settings) | 484 | System setup only | P3 | ☐ |
-| W6-6 | Manufacturing, assets, CRM, support, EDI remaining | 481 + 220 + 91 + 31 + 26 | Deferred flows | P3 | ☐ |
-| W6-7 | Frappe framework UI remainder (frappe_ar_missing_review) | per frappe file | Framework interfaces | P2 | ☐ |
+| Batch | Area (from vendor locations) | Rows (erpnext pre-filled/file) | Screens touched (user workflow) | Proposed priority | Owner decision (approve/defer) | Executed batches (2026-09-25) |
+|---|---|---|---|---|---|---|
+| W6-0 | Desk shell + navigation (incl. remaining global UI beyond the 6 Stage-1C labels) | frappe views/desk subset (see frappe_ar_missing_review) | Everyday desk lookups, navbar, sidebar | P1 | ☐ | W6-0a desk shell; W6-0b short-UI batches 01–07 — **exhausted** |
+| W6-1 | Accounting — books screens (journal entry, payment entry, GL detail, invoices' print-status tiles) | 1,265 (subset: ~250 user-visible flow strings) | Accounting documents the bilingual reports pilot depends on | P1 | ☐ | 147-row report-supporting subset only. **Accounts Batch 01 (250 rows) cut + proposed, UNAPPROVED; Batch 02 (250 rows) cut only** |
+| W6-2 | Buying + Selling masters & documents (PO, PR, SO, DN, Sales Invoice create/print) | 143 + 194 | Purchase/sales desk lifecycle | P2 | ☐ | batch-01 (270) + batch-02 (48) — **complete** |
+| W6-3 | Stock — Warehouse, Receipts, Stock Entry, valuation reports (`stock`) | 789 | Warehouse/stock desk | P2 | ☐ | batch-01/02/03 — complete; **batch-04 withheld-scope proposal only** (`eaadb01`) |
+| W6-4 | Projects + BOQ adjacency (`projects`, subcontracting) | 61 + 90 | Project/BOQ desk (construction primary flow) | P2 | ☐ | batch-01 (147) — complete |
+| W6-5 | Setup/admin (`setup`, Settings) | 484 | System setup only | P3 | ☐ | Setup batch (469) — complete |
+| W6-6 | Manufacturing, assets, CRM, support, EDI remaining | 481 + 220 + 91 + 31 + 26 | Deferred flows | P3 | ☐ | Assets 211; Manufacturing 250 + 202 (**exhausted**); CRM/Support/Maintenance 119 — **EDI remainder (~26 estimate) never cut, no cut script** |
+| W6-7 | Frappe framework UI remainder (frappe_ar_missing_review) | per frappe file | Framework interfaces | P2 | ☐ | **not started; not cuttable** — `docs/frappe_ar_missing_review.csv` is a 62-byte header-only ledger; source must be re-derived first |
 
 Notes:
 1. Rows above are *candidate strings within area*, not commitments; the

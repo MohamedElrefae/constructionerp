@@ -1,12 +1,12 @@
 # Session Memory — Construction ERP
-**LAST UPDATED:** 2026-09-25 (W6-6 CRM cycle closed; Stage-6 handoff report published)
-**UPDATED BY:** Antigravity (W6-6 CRM, Support & Maintenance governed cycle, evidence closure, and agent handoff)
+**LAST UPDATED:** 2026-09-25 (W6-6 CRM cycle closed; Stage-6 handoff + plan reconciled against the repo)
+**UPDATED BY:** Antigravity (W6-6 CRM governed cycle, evidence closure, agent handoff, and read-only reconciliation)
 
 ---
 
 ## 1. Project Snapshot
-- **Total commits:** 367 at W6-6 closure + handoff docs commit (all local; `origin/develop` still `ea553f2`, no push — count with `git rev-list --count HEAD`)
-- **Current branch:** `develop`
+- **Total commits:** 369 at the reconciliation session (`git rev-list --count HEAD` is authoritative; `develop` is in sync with `origin/develop`)
+- **Current branch:** `develop` (0 ahead / 0 behind as of 2026-09-25 — the three session commits were published to `origin` by an external action, not by the agent)
 - **Last session date:** 2026-09-25
 - **Python version:** 3.14 (venv: `/home/mohamed/frappe-bench/env`)
 - **AGENTS.md status:** Rewritten from Scope Context dev report → agent context file
@@ -639,15 +639,18 @@ Stage-6 scope proposal or the original Stage-8/production controls.
 
 Added `docs/handover/STAGE6_W606_CRM_HANDOFF_2026-09-25.md` (indexed in
 `docs/handover/INDEX.md`) so another agent can resume Stage 6 without this
-session's context. It records: repo state at HEAD `3344546` (unpushed,
-`origin/develop` = `ea553f2`); the expected post-commit evidence-index HEAD
+session's context. It records: repo state at the W6-6 CRM closure commit
+`3344546` (originally written as "unpushed"; see the 2026-09-25 reconciliation
+section below — the branch was subsequently published to `origin` by an external
+action); the expected post-commit evidence-index HEAD
 mismatch (cleared only by the next approved catalog event — do not re-pin or
 re-run the evidence gate now); the paths that must stay untracked (superseded
 AI reports, payload-only `stage6_w606_crm_support_maintenance_decision_rebind_*.py`,
 W6-01 proposal files, `v16.localhost/`); remaining work (W6-1 Accounts batch 01
 proposal awaiting owner approval, batch 02 cut only; W6-6 EDI remainder; W6-7;
-Stage 7 pilot in principle; Stage 8/production gated); the 17-step governed
-cycle recipe with exact file paths and gate line numbers
+Stage 7 viewer/BOQ pilot built with the aging/GL leg still data-gated; Stage-8
+rehearsal drill closed with production rollout still gated); the governed cycle
+recipe with exact file paths and gate line numbers
 (`EXPECTED_DRYRUN` `scripts/check_localization_gates.py:1511`,
 standalone assertion `construction/tests/test_localization_gates.py:520`,
 `EXPECTED_MODULES` at `:1497`); five cycle gotchas (G1 content-vs-payload
@@ -657,3 +660,64 @@ cheatsheet; and first actions for the next agent.
 
 No site, catalog, evidence, or gate state changed in this session beyond the
 handoff documents. Production and Stage 8 remain gated; no push performed.
+
+## 2026-09-25 — Stage-6 read-only reconciliation session (no cycle executed)
+
+Continued under the standing holds: verify the handoff/plan against the repo,
+confirm the reports describe the closed cycles, run read-only checks, use
+independent subagents, and stop at owner-decision boundaries. **No catalog,
+decision, evidence, test, or site artifact was modified. No push was issued.**
+
+**Push state corrected.** `origin/develop` now equals local `develop`; the
+remote-tracking reflog shows `797771e … update by push` at 2026-09-25 01:55:09
++0300, ~5 minutes after the last local commit (01:49:50). The agent issued no
+push, `.git/hooks/post-commit` only writes MCP memory, and no repo script
+pushes; earlier closures show the same owner-push pattern. Therefore the earlier
+"no push performed" wording in this file, the handoff, and the hold-state JSON
+was true when written and is now stale. Cycle-executed reports were left
+untouched (point-in-time evidence). No history rewrite was attempted.
+
+**Read-only verification.** Skip-evidence gate exit 0, `errors=0`,
+`csv_rows=3364`; evidence-inclusive gate exit 1 with exactly one error,
+`evidence-index-head` (the documented convention). Catalog 3,364 / decisions
+3,364, `release_version 1.10` = 38 rows, freshness `packaged_rows=3364` /
+`critical_pass=true`, inventory Merkle `f1d00e38…c2e4e1`, `EXPECTED_DRYRUN`
+3364, 11 modules = 271, 92 standalone tests. Four independent read-only audits
+(evidence bindings, handoff claim fact-check, plan reconciliation, W6-01
+pre-approval) confirmed the bundle: 10/10 envelopes, 14/14 artifact bindings,
+every recorded SHA reproduces byte-for-byte, and browser 9/9 with 114/114 exact
+matches. Two claims stay unevidenced because they are site-side only: the
+Administrator language restoration to `en` (plus credential rotation / no
+browser after teardown) and the `38 created` import count.
+
+**Plan reconciled with the closed cycles** (it had lagged two cycles):
+§16 gained the W6-6 Manufacturing batch-02 and W6-6 CRM rows (catalog now
+recorded as 3,364, previously 3,244); §17 gained W6-5 Setup, W6-6 Assets,
+W6-6 Manufacturing batch-01 and W6-6 CRM acknowledgments, and a stray blank
+line breaking the table was removed; §18 gained the updated heading date list,
+the CRM hold-state summary, and dated bullets for Manufacturing batch-02 and
+the CRM cycle; §14 gained an explicit evidence-lag caveat (Go/No-Go criteria 1–2
+are not green while the index pins a pre-commit HEAD); two stale "current HEAD"
+claims about `a0f01cb` were corrected. The workflow matrix's false
+"PROPOSAL ONLY — no translations committed, no runtime import" banner was
+replaced and an agent-maintained "Executed batches" column added; the owner
+`☐` decision column was deliberately untouched. `AGENTS.md`'s stale identity
+block and the handoff's push/path/provenance/Stage-7-8 claims were corrected.
+
+**W6-01 Accounts verified, still unapproved.** Batch-01 scope SHA
+`4910a9e4a0e5f8dd0105d484171ac1dc68e173220a0bed27520fbfc5e8c090fd` (250 rows),
+proposal SHA `226ff8b1…` (250 rows), Batch-02 scope SHA `dc9b6c02…` (250 rows,
+cut only) all reproduce; partition 147 preserved + 103 proposed + 0 technical is
+correct; the 147 preserved values are byte-identical to live site overrides;
+batch sets are disjoint; 0 blank translations, 0 whitespace-affix violations,
+0 placeholder mismatches; and **0** W6-01 rows exist in the catalog or release
+decisions, so nothing was imported. Known documentation defects: "~4 batches"
+should be 5, the 1,056 figure is unsourced, 7 trailing-whitespace rows exist but
+5 are listed, Batch-02 is not mentioned, the recon JSON lacks a `generated_utc`
+pin, and both cut scripts now fail their own asserts when re-run because the
+"prior rows" glob has grown.
+
+**Recommended next step:** owner approval for the W6-1 Accounts Batch-01 exact
+250-row scope (SHA above) on `v16.localhost`; approval request raised 2026-09-25.
+Production and Stage 8 remain gated; the W6-6 EDI remainder and W6-7 remain
+uncut and unapproved.
