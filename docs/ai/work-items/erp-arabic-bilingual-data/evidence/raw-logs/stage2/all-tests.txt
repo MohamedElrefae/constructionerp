@@ -1,18 +1,18 @@
 COMMAND: bench --site v16.localhost run-tests x6 modules (aggregate)
-STARTED_UTC: 2026-09-26T19:15:49Z
-construction.searchable_dropdown.tests.test_search_api :: Ran 13 tests in 0.103s OK
-construction.searchable_dropdown.tests.test_integration :: Ran 6 tests in 0.230s OK
-construction.tests.test_bilingual_account_schema :: Ran 5 tests in 0.435s OK
-construction.tests.test_translation_catalog :: Ran 3 tests in 1.501s OK
-construction.tests.test_translation_stabilization_gates :: Ran 8 tests in 2.728s OK
-construction.tests.test_localization_gates :: Ran 92 tests in 382.177s OK
+STARTED_UTC: 2026-09-26T21:12:12Z
+construction.searchable_dropdown.tests.test_search_api :: Ran 13 tests in 0.109s OK
+construction.searchable_dropdown.tests.test_integration :: Ran 6 tests in 0.208s OK
+construction.tests.test_bilingual_account_schema :: Ran 5 tests in 0.480s OK
+construction.tests.test_translation_catalog :: Ran 3 tests in 1.483s OK
+construction.tests.test_translation_stabilization_gates :: Ran 8 tests in 2.560s OK
+construction.tests.test_localization_gates :: Ran 92 tests in 402.481s OK
 construction.tests.test_bilingual_service :: Ran 38 tests in 0.004s OK
-construction.tests.test_bilingual_account_pilot :: Ran 53 tests in 12.303s OK
-construction.tests.test_stage4_account_language :: Ran 6 tests in 0.133s OK
-construction.tests.test_stage4_report_extension :: Ran 11 tests in 0.282s OK
-construction.tests.test_stage4_review_bundle :: Ran 36 tests in 0.013s OK
+construction.tests.test_bilingual_account_pilot :: Ran 53 tests in 13.176s OK
+construction.tests.test_stage4_account_language :: Ran 6 tests in 0.135s OK
+construction.tests.test_stage4_report_extension :: Ran 11 tests in 0.310s OK
+construction.tests.test_stage4_review_bundle :: Ran 36 tests in 0.007s OK
 AGGREGATE total=271 failed=0
 EXIT_CODE: 0
-FINISHED_UTC: 2026-09-26T19:15:49Z
-TESTS_SHA256: d09c9557a1f406408d965dd04cac9fd34b241c07f0fe2523a01dcee5ba8cd448
+FINISHED_UTC: 2026-09-26T21:12:12Z
+TESTS_SHA256: c0b34290d1286a8356152d501fb7b97dfac64d0ef090a7fe51dd166eef431fd7
 ENVELOPE_LINES: 18

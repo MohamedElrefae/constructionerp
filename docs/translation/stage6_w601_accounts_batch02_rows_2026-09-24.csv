@@ -1,0 +1,251 @@
+source_text,suggested_ar,locations,area,has_pre_filled
+Debit Amount in Reporting Currency,مبلغ المدين بعملة التقارير,erpnext/accounts/doctype/account_closing_balance/account_closing_balance.json:None; erpnext/accounts/doctype/gl_entry/gl_entry.json:None,accounts,1
+Debit Amount in Transaction Currency,مبلغ المدين بعملة المعاملة,erpnext/accounts/doctype/gl_entry/gl_entry.json:None,accounts,1
+"Debit Note will update it's own outstanding amount, even if 'Return Against' is specified.",,erpnext/accounts/doctype/purchase_invoice/purchase_invoice.json:None,accounts,0
+Debit-Credit Mismatch,,erpnext/accounts/doctype/ledger_health_monitor/ledger_health_monitor.json:None,accounts,0
+Debit-Credit mismatch,,erpnext/accounts/doctype/ledger_health/ledger_health.json:None,accounts,0
+Debt Equity Ratio,نسبة الدين إلى حقوق الملكية,erpnext/accounts/report/financial_ratios/financial_ratios.py:170,accounts,1
+Debtor Turnover Ratio,معدل دوران المدينين,erpnext/accounts/report/financial_ratios/financial_ratios.py:212,accounts,1
+Debtor/Creditor,,erpnext/accounts/party.py:617,accounts,0
+Debtor/Creditor Advance,,erpnext/accounts/party.py:620,accounts,0
+Default Account,الحساب الافتراضي,erpnext/accounts/doctype/mode_of_payment_account/mode_of_payment_account.json:None; erpnext/accounts/doctype/party_account/party_account.json:None,accounts,1
+Default Advance Account,حساب الدفعة المقدمة الافتراضي,erpnext/accounts/doctype/payment_reconciliation/payment_reconciliation.json:None; erpnext/accounts/doctype/process_payment_reconciliation/process_payment_reconciliation.json:None,accounts,1
+Deferred Expense Account,حساب المصروف المؤجل,erpnext/accounts/doctype/purchase_invoice_item/purchase_invoice_item.json:None; erpnext/stock/doctype/item_default/item_default.json:None,accounts,1
+Deferred Revenue and Expense,الإيرادات والمصروفات المؤجلة,erpnext/accounts/report/deferred_revenue_and_expense/deferred_revenue_and_expense.json:None,accounts,1
+Deferred accounting failed for some invoices:,,erpnext/accounts/deferred_revenue.py:543,accounts,0
+Delete Accounting and Stock Ledger Entries on deletion of Transaction,حذف قيود المحاسبة والمخزون عند حذف المعاملة,erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None,accounts,1
+Delete Cancelled Ledger Entries,حذف قيود دفتر الأستاذ الملغاة,erpnext/accounts/doctype/repost_accounting_ledger/repost_accounting_ledger.json:None,accounts,1
+Delimiter options,خيارات الفاصل,erpnext/accounts/doctype/bank_statement_import/bank_statement_import.json:None,accounts,1
+Deposit,إيداع,erpnext/accounts/doctype/bank_transaction/bank_transaction.json:None; erpnext/public/js/bank_reconciliation_tool/data_table_manager.js:60,accounts,1
+Depreciation eliminated via reversal,,erpnext/accounts/report/asset_depreciations_and_balances/asset_depreciations_and_balances.py:659,accounts,0
+"Descriptive name for your template (e.g., 'Standard P&L', 'Detailed Balance Sheet')",,erpnext/accounts/doctype/financial_report_template/financial_report_template.json:None,accounts,0
+Difference Posting Date,تاريخ ترحيل الفرق,erpnext/accounts/doctype/payment_reconciliation_allocation/payment_reconciliation_allocation.json:None; erpnext/accounts/doctype/process_payment_reconciliation_log_allocations/process_payment_reconciliation_log_allocations.json:None; erpnext/accounts/doctype/purchase_invoice_advance/purchase_invoice_advance.json:None; erpnext/accounts/doctype/sales_invoice_advance/sales_invoice_advance.json:None,accounts,1
+Dimension Filter Help,مساعدة تصفية البُعد,erpnext/accounts/doctype/accounting_dimension_filter/accounting_dimension_filter.json:None,accounts,1
+Dimension-wise Accounts Balance Report,تقرير رصيد الحسابات حسب البُعد,erpnext/accounts/report/dimension_wise_accounts_balance_report/dimension_wise_accounts_balance_report.json:None,accounts,1
+Dimensions,الأبعاد,erpnext/accounts/doctype/gl_entry/gl_entry.json:None,accounts,1
+Direct Expense,مصروف مباشر,erpnext/accounts/doctype/account/account.json:None,accounts,1
+Disable,تعطيل,erpnext/accounts/doctype/account/account.json:None; erpnext/accounts/doctype/accounting_dimension/accounting_dimension.json:None; erpnext/accounts/doctype/pricing_rule/pricing_rule.json:None; erpnext/accounts/doctype/promotional_scheme/promotional_scheme.json:None; erpnext/accounts/doctype/promotional_scheme_price_discount/promotional_scheme_price_discount.json:None; erpnext/accounts/doctype/promotional_scheme_product_discount/promotional_scheme_product_discount.json:None; erpnext/stock/doctype/putaway_rule/putaway_rule.json:None,accounts,1
+Disable Rounded Total,تعطيل الإجمالي المقرب,erpnext/accounts/doctype/pos_profile/pos_profile.json:None; erpnext/accounts/doctype/purchase_invoice/purchase_invoice.json:None; erpnext/accounts/doctype/sales_invoice/sales_invoice.json:None; erpnext/buying/doctype/purchase_order/purchase_order.json:None; erpnext/buying/doctype/supplier_quotation/supplier_quotation.json:None; erpnext/selling/doctype/quotation/quotation.json:None; erpnext/selling/doctype/sales_order/sales_order.json:None; erpnext/setup/doctype/global_defaults/global_defaults.json:None; erpnext/stock/doctype/delivery_note/delivery_note.json:None; erpnext/stock/doctype/purchase_receipt/purchase_receipt.json:None,accounts,1
+Disable template to prevent use in reports,,erpnext/accounts/doctype/financial_report_template/financial_report_template.json:None,accounts,0
+Discard Changes and Load New Invoice,تجاهل التغييرات وتحميل فاتورة جديدة,erpnext/accounts/doctype/pos_profile/pos_profile.json:None,accounts,1
+Discount (%) on Price List Rate with Margin,,erpnext/accounts/doctype/pos_invoice_item/pos_invoice_item.json:None; erpnext/accounts/doctype/sales_invoice_item/sales_invoice_item.json:None; erpnext/selling/doctype/quotation_item/quotation_item.json:None; erpnext/selling/doctype/sales_order_item/sales_order_item.json:None; erpnext/stock/doctype/delivery_note_item/delivery_note_item.json:None,accounts,0
+Discount Account,حساب الخصم,erpnext/accounts/doctype/sales_invoice/sales_invoice.json:None; erpnext/accounts/doctype/sales_invoice_item/sales_invoice_item.json:None,accounts,1
+Discount Amount in Transaction,مبلغ الخصم في المعاملة,erpnext/accounts/report/calculated_discount_mismatch/calculated_discount_mismatch.py:58,accounts,1
+Discount Date,تاريخ الخصم,erpnext/accounts/doctype/payment_schedule/payment_schedule.json:None,accounts,1
+Discount Percentage can be applied either against a Price List or for all Price List.,,erpnext/accounts/doctype/pricing_rule/pricing_rule.js:42,accounts,0
+Discount Percentage in Transaction,نسبة الخصم في المعاملة,erpnext/accounts/report/calculated_discount_mismatch/calculated_discount_mismatch.py:52,accounts,1
+Discount Settings,إعدادات الخصم,erpnext/accounts/doctype/payment_term/payment_term.json:None; erpnext/accounts/doctype/payment_terms_template_detail/payment_terms_template_detail.json:None,accounts,1
+Discount Validity,صلاحية الخصم,erpnext/accounts/doctype/payment_schedule/payment_schedule.json:None; erpnext/accounts/doctype/payment_term/payment_term.json:None; erpnext/accounts/doctype/payment_terms_template_detail/payment_terms_template_detail.json:None,accounts,1
+Discount Validity Based On,صلاحية الخصم بناء على,erpnext/accounts/doctype/payment_schedule/payment_schedule.json:None; erpnext/accounts/doctype/payment_term/payment_term.json:None; erpnext/accounts/doctype/payment_terms_template_detail/payment_terms_template_detail.json:None,accounts,1
+Discount on Price List Rate (%),,erpnext/accounts/doctype/purchase_invoice_item/purchase_invoice_item.json:None; erpnext/buying/doctype/purchase_order_item/purchase_order_item.json:None; erpnext/buying/doctype/supplier_quotation_item/supplier_quotation_item.json:None; erpnext/stock/doctype/purchase_receipt_item/purchase_receipt_item.json:None,accounts,0
+Discounted Amount,المبلغ المخصوم,erpnext/accounts/doctype/overdue_payment/overdue_payment.json:None; erpnext/accounts/doctype/payment_schedule/payment_schedule.json:None,accounts,1
+"Discounts to be applied in sequential ranges like buy 1 get 1, buy 2 get 2, buy 3 get 3 and so on",,erpnext/accounts/doctype/pricing_rule/pricing_rule.json:None; erpnext/accounts/doctype/promotional_scheme_product_discount/promotional_scheme_product_discount.json:None,accounts,0
+Discrepancy between General and Payment Ledger,,erpnext/accounts/doctype/ledger_health_monitor/ledger_health_monitor.json:None,accounts,0
+Discretionary Reason,سبب تقديري,erpnext/accounts/doctype/loyalty_point_entry/loyalty_point_entry.json:None,accounts,1
+Dispatch Address,عنوان الإرسال,erpnext/accounts/doctype/purchase_invoice/purchase_invoice.json:None; erpnext/accounts/doctype/sales_invoice/sales_invoice.json:None; erpnext/buying/doctype/purchase_order/purchase_order.json:None; erpnext/selling/doctype/sales_order/sales_order.json:None; erpnext/stock/doctype/delivery_note/delivery_note.json:None; erpnext/stock/doctype/purchase_receipt/purchase_receipt.json:None,accounts,1
+Dispatch Address Name,اسم عنوان الإرسال,erpnext/accounts/doctype/sales_invoice/sales_invoice.json:None; erpnext/selling/doctype/sales_order/sales_order.json:None; erpnext/stock/doctype/delivery_note/delivery_note.json:None,accounts,1
+Display Name,اسم العرض,erpnext/accounts/doctype/financial_report_row/financial_report_row.json:None,accounts,1
+Distribute Equally,,erpnext/accounts/doctype/budget/budget.json:None,accounts,0
+Distributed Discount Amount,مبلغ الخصم الموزع,erpnext/accounts/doctype/pos_invoice_item/pos_invoice_item.json:None; erpnext/accounts/doctype/purchase_invoice_item/purchase_invoice_item.json:None; erpnext/accounts/doctype/sales_invoice_item/sales_invoice_item.json:None; erpnext/buying/doctype/purchase_order_item/purchase_order_item.json:None; erpnext/buying/doctype/supplier_quotation_item/supplier_quotation_item.json:None; erpnext/selling/doctype/quotation_item/quotation_item.json:None; erpnext/selling/doctype/sales_order_item/sales_order_item.json:None; erpnext/stock/doctype/delivery_note_item/delivery_note_item.json:None; erpnext/stock/doctype/purchase_receipt_item/purchase_receipt_item.json:None,accounts,1
+Distribution Frequency,تكرار التوزيع,erpnext/accounts/doctype/budget/budget.json:None,accounts,1
+Do you still want to enable immutable ledger?,,erpnext/accounts/doctype/accounts_settings/accounts_settings.js:15,accounts,0
+Document Type already used as a dimension,,erpnext/accounts/doctype/accounting_dimension/accounting_dimension.py:65,accounts,0
+Documents Processed on each trigger. Queue Size should be between 5 and 100,,erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None,accounts,0
+Documents: {0} have deferred revenue/expense enabled for them. Cannot repost.,,erpnext/accounts/doctype/repost_accounting_ledger/repost_accounting_ledger.py:257,accounts,0
+Don't Create Loyalty Points,,erpnext/accounts/doctype/sales_invoice/sales_invoice.json:None,accounts,0
+Don't Enforce Free Item Qty,,erpnext/accounts/doctype/pricing_rule/pricing_rule.json:None,accounts,0
+Dont Recompute tax,,erpnext/accounts/doctype/sales_taxes_and_charges/sales_taxes_and_charges.json:None,accounts,0
+Dr/Cr,مدين/دائن,erpnext/accounts/report/customer_ledger_summary/customer_ledger_summary.py:248,accounts,1
+Drop Procedures,إسقاط الإجراءات,erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None,accounts,1
+Drops existing SQL Procedures and Function setup by Accounts Receivable report,,erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None,accounts,0
+Due Date cannot be after {0},لا يمكن أن يكون تاريخ الاستحقاق بعد {0},erpnext/accounts/party.py:703,accounts,1
+Due Date cannot be before {0},لا يمكن أن يكون تاريخ الاستحقاق قبل {0},erpnext/accounts/party.py:679,accounts,1
+Dunning Amount (Company Currency),مبلغ المطالبة (عملة الشركة),erpnext/accounts/doctype/dunning/dunning.json:None,accounts,1
+Dunning Level,مستوى المطالبة,erpnext/accounts/doctype/overdue_payment/overdue_payment.json:None,accounts,1
+Duplicate Customer Group,مجموعة عملاء مكررة,erpnext/accounts/doctype/pos_profile/pos_profile.py:170,accounts,1
+Duplicate Item Group,مجموعة أصناف مكررة,erpnext/accounts/doctype/pos_profile/pos_profile.py:164,accounts,1
+Duplicate POS Fields,حقول نقطة بيع مكررة,erpnext/accounts/doctype/pos_settings/pos_settings.py:43,accounts,1
+Duplicate POS Invoices found,تم العثور على فواتير نقطة بيع مكررة,erpnext/accounts/doctype/pos_closing_entry/pos_closing_entry.py:104; erpnext/accounts/doctype/pos_invoice_merge_log/pos_invoice_merge_log.py:64,accounts,1
+Duplicate Sales Invoices found,تم العثور على فواتير مبيعات مكررة,erpnext/accounts/doctype/pos_closing_entry/pos_closing_entry.py:157,accounts,1
+Duplicate customer group found in the customer group table,,erpnext/accounts/doctype/pos_profile/pos_profile.py:169,accounts,0
+Dynamic Condition,شرط ديناميكي,erpnext/accounts/doctype/pricing_rule/pricing_rule.json:None,accounts,1
+Either 'Selling' or 'Buying' must be selected,,erpnext/accounts/doctype/promotional_scheme/promotional_scheme.py:147,accounts,0
+Electronic Equipment,معدات إلكترونية,erpnext/accounts/doctype/account/chart_of_accounts/verified/standard_chart_of_accounts.py:48; erpnext/accounts/doctype/account/chart_of_accounts/verified/standard_chart_of_accounts_with_account_number.py:82,accounts,1
+Employee Benefits Obligation,التزام مزايا الموظفين,erpnext/accounts/doctype/account/chart_of_accounts/verified/standard_chart_of_accounts.py:184; erpnext/accounts/doctype/account/chart_of_accounts/verified/standard_chart_of_accounts_with_account_number.py:322,accounts,1
+Enable Automatic Party Matching,تمكين مطابقة الجهات تلقائيا,erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None,accounts,1
+Enable Common Party Accounting,تمكين محاسبة الجهة المشتركة,erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None,accounts,1
+Enable Fuzzy Matching,تمكين المطابقة التقريبية,erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None,accounts,1
+Enable Health Monitor,تمكين مراقب الصحة,erpnext/accounts/doctype/ledger_health_monitor/ledger_health_monitor.json:None,accounts,1
+Enable Immutable Ledger,تمكين دفتر الأستاذ غير القابل للتغيير,erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None,accounts,1
+Enable this checkbox even if you want to set the zero priority,,erpnext/accounts/doctype/pricing_rule/pricing_rule.json:None,accounts,0
+Enabling this will allow creation of multi-currency invoices against single party account in company currency,,erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None,accounts,0
+Enabling this will change the way how cancelled transactions are handled.,,erpnext/accounts/doctype/accounts_settings/accounts_settings.js:11,accounts,0
+End of the current subscription period,نهاية فترة الاشتراك الحالية,erpnext/accounts/doctype/subscription/subscription.json:None,accounts,1
+Enter the Bank Guarantee Number before submitting.,,erpnext/accounts/doctype/bank_guarantee/bank_guarantee.py:51,accounts,0
+Enter the name of the Beneficiary before submitting.,,erpnext/accounts/doctype/bank_guarantee/bank_guarantee.py:53,accounts,0
+Enter the name of the bank or lending institution before submitting.,,erpnext/accounts/doctype/bank_guarantee/bank_guarantee.py:55,accounts,0
+Error Occurred,حدث خطأ,erpnext/accounts/doctype/opening_invoice_creation_tool/opening_invoice_creation_tool.py:277,accounts,1
+Error in party matching for Bank Transaction {0},,erpnext/accounts/doctype/bank_transaction/bank_transaction.py:307,accounts,0
+Error while processing deferred accounting for {0},,erpnext/accounts/deferred_revenue.py:541,accounts,0
+"Even if there are multiple Pricing Rules with highest priority, then following internal priorities are applied:",,erpnext/accounts/doctype/pricing_rule/pricing_rule.js:48,accounts,0
+Example URL,مثال رابط,erpnext/accounts/doctype/currency_exchange_settings/currency_exchange_settings.json:None,accounts,1
+Excluded Fee,رسوم مستثناة,erpnext/accounts/doctype/bank_transaction/bank_transaction.json:None,accounts,1
+Exempted Role,,erpnext/accounts/doctype/accounting_period/accounting_period.json:None,accounts,0
+Expected,المتوقع,erpnext/accounts/report/deferred_revenue_and_expense/deferred_revenue_and_expense.py:444,accounts,1
+Extended Bank Statement,كشف بنك موسع,erpnext/accounts/doctype/bank_transaction/bank_transaction.json:None,accounts,1
+Failed to parse MT940 format. Error: {0},,erpnext/accounts/doctype/bank_statement_import/bank_statement_import.py:164,accounts,0
+Failure Description,وصف الفشل,erpnext/accounts/doctype/pos_closing_entry/pos_closing_entry.json:None,accounts,1
+Failure: {0},فشل: {0},erpnext/accounts/doctype/payment_request/payment_request.js:37,accounts,1
+Fetch Overdue Payments,جلب المدفوعات المتأخرة,erpnext/accounts/doctype/dunning/dunning.js:61,accounts,1
+Fetch Timesheet,جلب جدول الساعات,erpnext/accounts/doctype/sales_invoice/sales_invoice.js:1047,accounts,1
+Fetch Valuation Rate for Internal Transaction,جلب سعر التقييم للمعاملة الداخلية,erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None,accounts,1
+Fetching exchange rates ...,جار جلب أسعار الصرف ...,erpnext/accounts/doctype/dunning/dunning.js:135; erpnext/public/js/controllers/transaction.js:1476,accounts,1
+Filter by Reference Date,تصفية حسب تاريخ المرجع,erpnext/accounts/doctype/bank_reconciliation_tool/bank_reconciliation_tool.json:None,accounts,1
+Filter on Invoice,تصفية حسب الفاتورة,erpnext/accounts/doctype/payment_reconciliation/payment_reconciliation.json:None,accounts,1
+Filter on Payment,تصفية حسب الدفع,erpnext/accounts/doctype/payment_reconciliation/payment_reconciliation.json:None,accounts,1
+Filters missing,عوامل التصفية مفقودة,erpnext/accounts/report/invalid_ledger_entries/invalid_ledger_entries.py:74,accounts,1
+Financial Ratios,النسب المالية,erpnext/accounts/report/financial_ratios/financial_ratios.json:None,accounts,1
+Financial Report Row,صف التقرير المالي,erpnext/accounts/doctype/financial_report_row/financial_report_row.json:None,accounts,1
+Financial Report Template,قالب التقرير المالي,erpnext/accounts/doctype/financial_report_template/financial_report_template.json:None,accounts,1
+Financial Report Template {0} is disabled,,erpnext/accounts/doctype/financial_report_template/financial_report_engine.py:242,accounts,0
+Financial Report Template {0} not found,,erpnext/accounts/doctype/financial_report_template/financial_report_engine.py:239,accounts,0
+Financial Reports,التقارير المالية,erpnext/accounts/workspace/financial_reports/financial_reports.json:None,accounts,1
+Fiscal Year {0} is not available for Company {1}.,السنة المالية {0} غير متاحة للشركة {1}.,erpnext/accounts/doctype/budget/budget.py:97,accounts,1
+Fixed Asset Turnover Ratio,معدل دوران الأصول الثابتة,erpnext/accounts/report/financial_ratios/financial_ratios.py:211,accounts,1
+For dunning fee and interest,,erpnext/accounts/doctype/dunning/dunning.json:None,accounts,0
+Force-Fetch Subscription Updates,,erpnext/accounts/doctype/subscription/subscription.js:42,accounts,0
+Formula or Account Filter,صيغة أو عامل تصفية الحساب,erpnext/accounts/doctype/financial_report_row/financial_report_row.json:None,accounts,1
+Free Item Rate,,erpnext/accounts/doctype/pricing_rule/pricing_rule.json:None,accounts,0
+From Date and To Date are mandatory,تاريخ من وتاريخ إلى إلزاميان,erpnext/accounts/report/financial_statements.py:138,accounts,1
+From Date: {0} cannot be greater than To date: {1},,erpnext/accounts/doctype/bisect_accounting_statements/bisect_accounting_statements.py:43,accounts,0
+From External Ecomm Platform,,erpnext/accounts/doctype/coupon_code/coupon_code.json:None,accounts,0
+From Fiscal Year cannot be greater than To Fiscal Year,,erpnext/accounts/doctype/budget/budget.py:110,accounts,0
+From Payment Date,من تاريخ الدفع,erpnext/accounts/doctype/payment_reconciliation/payment_reconciliation.json:None; erpnext/accounts/doctype/process_payment_reconciliation/process_payment_reconciliation.json:None,accounts,1
+From Reference Date,من تاريخ المرجع,erpnext/accounts/doctype/bank_reconciliation_tool/bank_reconciliation_tool.json:None,accounts,1
+Furniture and Fixtures,الأثاث والتجهيزات,erpnext/accounts/doctype/account/chart_of_accounts/verified/standard_chart_of_accounts.py:52; erpnext/accounts/doctype/account/chart_of_accounts/verified/standard_chart_of_accounts_with_account_number.py:87,accounts,1
+Further cost centers can be made under Groups but entries can be made against non-Groups,,erpnext/accounts/doctype/cost_center/cost_center_tree.js:31,accounts,0
+GENERAL LEDGER,دفتر الأستاذ العام,erpnext/accounts/doctype/process_statement_of_accounts/process_statement_of_accounts.html:16,accounts,1
+GL Entry Processing Status,حالة معالجة قيد دفتر الأستاذ العام,erpnext/accounts/doctype/period_closing_voucher/period_closing_voucher.json:None,accounts,1
+Gain/Loss accumulated in foreign currency account. Accounts with '0' balance in either Base or Account currency,,erpnext/accounts/doctype/exchange_rate_revaluation/exchange_rate_revaluation.json:None,accounts,0
+Gain/Loss already booked,ربح/خسارة مسجلة مسبقا,erpnext/accounts/doctype/exchange_rate_revaluation/exchange_rate_revaluation.json:None,accounts,1
+Gain/Loss from Revaluation,ربح/خسارة من إعادة التقييم,erpnext/accounts/doctype/exchange_rate_revaluation/exchange_rate_revaluation.json:None,accounts,1
+General and Payment Ledger Comparison,مقارنة دفتر الأستاذ العام ودفتر أستاذ الدفع,erpnext/accounts/report/general_and_payment_ledger_comparison/general_and_payment_ledger_comparison.json:None,accounts,1
+General and Payment Ledger mismatch,عدم تطابق دفتر الأستاذ العام ودفتر أستاذ الدفع,erpnext/accounts/doctype/ledger_health/ledger_health.json:None,accounts,1
+Generate E-Invoice,,erpnext/accounts/doctype/sales_invoice/regional/italy.js:4,accounts,0
+Generate Invoice At,إنشاء الفاتورة عند,erpnext/accounts/doctype/subscription/subscription.json:None,accounts,1
+Generated,تم إنشاؤه,erpnext/accounts/doctype/bisect_nodes/bisect_nodes.json:None,accounts,1
+Generating Preview,جار إنشاء المعاينة,erpnext/accounts/doctype/repost_accounting_ledger/repost_accounting_ledger.js:30,accounts,1
+Get Allocations,جلب التخصيصات,erpnext/accounts/doctype/unreconcile_payment/unreconcile_payment.json:None,accounts,1
+Get Timesheets,جلب جداول الساعات,erpnext/accounts/doctype/sales_invoice/sales_invoice.js:1099,accounts,1
+Give free item for every N quantity,منح صنف مجاني لكل كمية N,erpnext/accounts/doctype/pricing_rule/pricing_rule.json:None; erpnext/accounts/doctype/promotional_scheme_product_discount/promotional_scheme_product_discount.json:None,accounts,1
+Grant Commission,منح عمولة,erpnext/accounts/doctype/pos_invoice_item/pos_invoice_item.json:None; erpnext/accounts/doctype/sales_invoice_item/sales_invoice_item.json:None; erpnext/selling/doctype/sales_order_item/sales_order_item.json:None; erpnext/stock/doctype/delivery_note_item/delivery_note_item.json:None; erpnext/stock/doctype/item/item.json:None,accounts,1
+Gross Profit Percent,نسبة إجمالي الربح,erpnext/accounts/report/gross_profit/gross_profit.py:371,accounts,1
+Gross Profit Ratio,نسبة إجمالي الربح,erpnext/accounts/report/financial_ratios/financial_ratios.py:171,accounts,1
+Growth View,عرض النمو,erpnext/accounts/report/balance_sheet/balance_sheet.js:32; erpnext/accounts/report/profit_and_loss_statement/profit_and_loss_statement.js:32,accounts,1
+Handle Employee Advances,معالجة سلف الموظفين,erpnext/accounts/report/accounts_payable/accounts_payable.js:150,accounts,1
+Has Item Scanned,تم مسح الصنف,erpnext/accounts/doctype/pos_invoice_item/pos_invoice_item.json:None; erpnext/accounts/doctype/sales_invoice_item/sales_invoice_item.json:None; erpnext/stock/doctype/delivery_note_item/delivery_note_item.json:None; erpnext/stock/doctype/purchase_receipt_item/purchase_receipt_item.json:None; erpnext/stock/doctype/stock_entry_detail/stock_entry_detail.json:None; erpnext/stock/doctype/stock_reconciliation_item/stock_reconciliation_item.json:None,accounts,1
+Has Priority,له أولوية,erpnext/accounts/doctype/pricing_rule/pricing_rule.json:None,accounts,1
+Has Subcontracted,يوجد مقاولات باطن,erpnext/accounts/doctype/sales_invoice/sales_invoice.json:None,accounts,1
+Heads (or groups) against which Accounting Entries are made and balances are maintained.,,erpnext/accounts/doctype/account/account.json:None,accounts,0
+Helps you distribute the Budget/Target across months if you have seasonality in your business.,,erpnext/accounts/doctype/monthly_distribution/monthly_distribution.json:None,accounts,0
+Hidden Line (Internal Use Only),سطر مخفي (للاستخدام الداخلي فقط),erpnext/accounts/doctype/financial_report_row/financial_report_row.json:None,accounts,1
+Hide If Zero,إخفاء إذا كان صفرا,erpnext/accounts/doctype/financial_report_row/financial_report_row.json:None,accounts,1
+Hide Images,إخفاء الصور,erpnext/accounts/doctype/pos_profile/pos_profile.json:None,accounts,1
+Hide this line if amount is zero,,erpnext/accounts/doctype/financial_report_row/financial_report_row.json:None,accounts,0
+How Pricing Rule is applied?,,erpnext/accounts/doctype/pricing_rule/pricing_rule.js:44,accounts,0
+How this line gets its data,,erpnext/accounts/doctype/financial_report_row/financial_report_row.json:None,accounts,0
+How to format and present values in the financial report (only if different from column fieldtype),,erpnext/accounts/doctype/financial_report_row/financial_report_row.json:None,accounts,0
+"If Auto Opt In is checked, then the customers will be automatically linked with the concerned Loyalty Program (on save)",,erpnext/accounts/doctype/loyalty_program/loyalty_program.js:14,accounts,0
+"If checked, the tax amount will be considered as already included in the Paid Amount in Payment Entry",,erpnext/accounts/doctype/purchase_taxes_and_charges/purchase_taxes_and_charges.json:None; erpnext/accounts/doctype/sales_taxes_and_charges/sales_taxes_and_charges.json:None,accounts,0
+"If enabled, ledger entries will be posted for change amount in POS transactions",,erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None,accounts,0
+"If enabled, the consolidated invoices will have rounded total disabled",,erpnext/accounts/doctype/pos_profile/pos_profile.json:None,accounts,0
+"If enabled, this row's values will be displayed on financial charts",,erpnext/accounts/doctype/financial_report_row/financial_report_row.json:None,accounts,0
+"If enabled, user will be alerted before resetting posting date to current date in relevant transactions",,erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None,accounts,0
+"If multiple Pricing Rules continue to prevail, users are asked to set Priority manually to resolve conflict.",,erpnext/accounts/doctype/pricing_rule/pricing_rule.js:50,accounts,0
+"If rate is zero then item will be treated as ""Free Item""",,erpnext/accounts/doctype/pricing_rule/pricing_rule.json:None,accounts,0
+"If unlimited expiry for the Loyalty Points, keep the Expiry Duration empty or 0.",,erpnext/accounts/doctype/loyalty_program/loyalty_program.js:14,accounts,0
+Ignore Account Closing Balance,تجاهل رصيد إغلاق الحساب,erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None,accounts,1
+Ignore Default Payment Terms Template,تجاهل قالب شروط الدفع الافتراضي,erpnext/accounts/doctype/purchase_invoice/purchase_invoice.json:None; erpnext/accounts/doctype/sales_invoice/sales_invoice.json:None,accounts,1
+Ignore Is Opening check for reporting,,erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None,accounts,0
+Ignore Voucher Type filter and Select Vouchers Manually,,erpnext/accounts/doctype/repost_payment_ledger/repost_payment_ledger.json:None,accounts,0
+Impairment,,erpnext/accounts/doctype/account/chart_of_accounts/verified/standard_chart_of_accounts.py:135; erpnext/accounts/doctype/account/chart_of_accounts/verified/standard_chart_of_accounts_with_account_number.py:229,accounts,0
+Import Chart of Accounts from a csv file,,erpnext/accounts/doctype/chart_of_accounts_importer/chart_of_accounts_importer.json:None,accounts,0
+Import MT940 Fromat,,erpnext/accounts/doctype/bank_statement_import/bank_statement_import.json:None,accounts,0
+"In the case of multi-tier program, Customers will be auto assigned to the concerned tier as per their spent",,erpnext/accounts/doctype/loyalty_program/loyalty_program.js:12,accounts,0
+Include Account Currency,تضمين عملة الحساب,erpnext/accounts/report/payment_ledger/payment_ledger.js:77,accounts,1
+Include Default FB Assets,,erpnext/accounts/report/asset_depreciation_ledger/asset_depreciation_ledger.js:54; erpnext/assets/report/fixed_asset_register/fixed_asset_register.js:54,accounts,0
+Include Payment,تضمين الدفع,erpnext/accounts/doctype/pos_invoice/pos_invoice.py:204,accounts,1
+Include Returned Invoices (Stand-alone),,erpnext/accounts/report/gross_profit/gross_profit.js:90,accounts,0
+Include in Charts,تضمين في الرسوم البيانية,erpnext/accounts/doctype/financial_report_row/financial_report_row.json:None,accounts,1
+Included Fee,رسوم مضمنة,erpnext/accounts/doctype/bank_transaction/bank_transaction.json:None,accounts,1
+Included fee is bigger than the withdrawal itself.,,erpnext/accounts/doctype/bank_transaction/bank_transaction.py:322,accounts,0
+Incoming Rate (Costing),السعر الوارد (التكلفة),erpnext/accounts/doctype/sales_invoice_item/sales_invoice_item.json:None,accounts,1
+Incoterm,مصطلح تجاري دولي,erpnext/accounts/doctype/purchase_invoice/purchase_invoice.json:None; erpnext/accounts/doctype/sales_invoice/sales_invoice.json:None; erpnext/buying/doctype/purchase_order/purchase_order.json:None; erpnext/buying/doctype/request_for_quotation/request_for_quotation.json:None; erpnext/buying/doctype/supplier_quotation/supplier_quotation.json:None; erpnext/selling/doctype/quotation/quotation.json:None; erpnext/selling/doctype/sales_order/sales_order.json:None; erpnext/setup/doctype/incoterm/incoterm.json:None; erpnext/stock/doctype/delivery_note/delivery_note.json:None; erpnext/stock/doctype/purchase_receipt/purchase_receipt.json:None; erpnext/stock/doctype/shipment/shipment.json:None,accounts,1
+Indent Level,مستوى الإزاحة,erpnext/accounts/doctype/financial_report_row/financial_report_row.json:None,accounts,1
+"Indentation level: 0 = Main heading, 1 = Sub-category, 2 = Individual accounts, etc.",,erpnext/accounts/doctype/financial_report_row/financial_report_row.json:None,accounts,0
+Indirect Expense,مصروف غير مباشر,erpnext/accounts/doctype/account/account.json:None,accounts,1
+Individual GL Entry cannot be cancelled.,,erpnext/accounts/doctype/gl_entry/gl_entry.py:327,accounts,0
+Insufficient Stock for Product Bundle Items,مخزون غير كاف لأصناف مجموعة المنتج,erpnext/accounts/doctype/pos_invoice/pos_invoice.py:440,accounts,1
+Interest,الفائدة,erpnext/accounts/doctype/overdue_payment/overdue_payment.json:None,accounts,1
+Interest Expense,مصروف الفائدة,erpnext/accounts/doctype/account/chart_of_accounts/verified/standard_chart_of_accounts.py:132; erpnext/accounts/doctype/account/chart_of_accounts/verified/standard_chart_of_accounts_with_account_number.py:218,accounts,1
+Interest Income,إيراد الفائدة,erpnext/accounts/doctype/account/chart_of_accounts/verified/standard_chart_of_accounts.py:146; erpnext/accounts/doctype/account/chart_of_accounts/verified/standard_chart_of_accounts_with_account_number.py:243,accounts,1
+Interest on Fixed Deposits,,erpnext/accounts/doctype/account/chart_of_accounts/verified/standard_chart_of_accounts.py:147; erpnext/accounts/doctype/account/chart_of_accounts/verified/standard_chart_of_accounts_with_account_number.py:244,accounts,0
+Internal Transfers,تحويلات داخلية,erpnext/accounts/doctype/sales_invoice/sales_invoice_dashboard.py:37,accounts,1
+Interval should be between 1 to 59 MInutes,,erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None,accounts,0
+Invalid Amount,مبلغ غير صالح,erpnext/accounts/doctype/payment_request/payment_request.py:121,accounts,1
+Invalid Ledger Entries,قيود دفتر الأستاذ غير صالحة,erpnext/accounts/report/invalid_ledger_entries/invalid_ledger_entries.json:None,accounts,1
+Invalid Primary Role,,erpnext/accounts/doctype/party_link/party_link.py:30,accounts,0
+Invalid Print Format,تنسيق طباعة غير صالح,erpnext/accounts/doctype/process_statement_of_accounts/process_statement_of_accounts.py:121; erpnext/accounts/doctype/process_statement_of_accounts/process_statement_of_accounts.py:123; erpnext/accounts/doctype/process_statement_of_accounts/process_statement_of_accounts.py:126,accounts,1
+Invalid Sales Invoices,,erpnext/accounts/doctype/pos_closing_entry/pos_closing_entry.py:207,accounts,0
+Invalid amount in accounting entries of {} {} for Account {}: {},,erpnext/accounts/doctype/bank_transaction/bank_transaction.py:393,accounts,0
+Invalid filter formula. Please check the syntax.,,erpnext/accounts/doctype/financial_report_template/financial_report_template.js:93,accounts,0
+Invalid parameter. 'dn' should be of type str,,erpnext/accounts/doctype/payment_request/payment_request.py:544,accounts,0
+Invalid result key. Response:,,erpnext/accounts/doctype/currency_exchange_settings/currency_exchange_settings.py:99,accounts,0
+Inventory Turnover Ratio,معدل دوران المخزون,erpnext/accounts/report/financial_ratios/financial_ratios.py:214,accounts,1
+Invoice Cancellation,إلغاء الفاتورة,erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None,accounts,1
+Invoice Document Type Selection Error,,erpnext/accounts/doctype/pos_settings/pos_settings.py:55,accounts,0
+Invoice ID,معرف الفاتورة,erpnext/accounts/print_format/sales_invoice_print/sales_invoice_print.html:64,accounts,1
+Invoice Limit,حد الفاتورة,erpnext/accounts/doctype/payment_reconciliation/payment_reconciliation.json:None,accounts,1
+Invoice Paid,الفاتورة مدفوعة,erpnext/accounts/doctype/pos_invoice/pos_invoice.py:865,accounts,1
+Invoice Portion (%),جزء الفاتورة (%),erpnext/accounts/doctype/payment_term/payment_term.json:None; erpnext/accounts/doctype/payment_terms_template_detail/payment_terms_template_detail.json:None,accounts,1
+Invoice Type Created via POS Screen,نوع الفاتورة المنشأة عبر شاشة نقطة البيع,erpnext/accounts/doctype/pos_settings/pos_settings.json:None,accounts,1
+Invoice and Billing,الفواتير والفوترة,erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None,accounts,1
+Invoiced Qty,الكمية المفوترة,erpnext/accounts/report/billed_items_to_be_received/billed_items_to_be_received.py:76,accounts,1
+Invoices and Payments have been Fetched and Allocated,,erpnext/accounts/doctype/process_payment_reconciliation_log/process_payment_reconciliation_log.json:None,accounts,0
+Invoicing,الفوترة,erpnext/accounts/workspace/payables/payables.json:None; erpnext/accounts/workspace/receivables/receivables.json:None,accounts,1
+Invoicing Features,ميزات الفوترة,erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None,accounts,1
+Is Cash or Non Trade Discount,خصم نقدي أو غير تجاري,erpnext/accounts/doctype/sales_invoice/sales_invoice.json:None,accounts,1
+Is Mandatory,إلزامي,erpnext/accounts/doctype/applicable_on_account/applicable_on_account.json:None,accounts,1
+Is Old Subcontracting Flow,التدفق القديم لمقاولات الباطن,erpnext/accounts/doctype/purchase_invoice/purchase_invoice.json:None; erpnext/buying/doctype/purchase_order/purchase_order.json:None; erpnext/stock/doctype/purchase_receipt/purchase_receipt.json:None,accounts,1
+Is Paid,مدفوع,erpnext/accounts/doctype/purchase_invoice/purchase_invoice.json:None,accounts,1
+Is Period Closing Voucher Entry,قيد سند إغلاق فترة,erpnext/accounts/doctype/account_closing_balance/account_closing_balance.json:None,accounts,1
+Is Rate Adjustment Entry (Debit Note),قيد تعديل سعر (إشعار مدين),erpnext/accounts/doctype/sales_invoice/sales_invoice.json:None,accounts,1
+Is Recursive,تكراري,erpnext/accounts/doctype/pricing_rule/pricing_rule.json:None; erpnext/accounts/doctype/promotional_scheme_product_discount/promotional_scheme_product_discount.json:None,accounts,1
+Is Short/Long Year,سنة قصيرة/طويلة,erpnext/accounts/doctype/fiscal_year/fiscal_year.json:None,accounts,1
+Is Your Company Address,عنوان شركتك,erpnext/accounts/custom/address.json:None,accounts,1
+Is created using POS,,erpnext/accounts/doctype/sales_invoice/sales_invoice.json:None,accounts,0
+Issue a debit note with 0 qty against an existing Sales Invoice,,erpnext/accounts/doctype/sales_invoice/sales_invoice.json:None,accounts,0
+Italic Text,,erpnext/accounts/doctype/financial_report_row/financial_report_row.json:None,accounts,0
+Italic text for subtotals or notes,,erpnext/accounts/doctype/financial_report_row/financial_report_row.json:None,accounts,0
+Item Code > Item Group > Brand,,erpnext/accounts/doctype/pricing_rule/pricing_rule.js:50,accounts,0
+Item Out of Stock,الصنف غير متوفر في المخزون,erpnext/accounts/doctype/pos_invoice/pos_invoice.py:451,accounts,1
+Item Price Settings,إعدادات سعر الصنف,erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None; erpnext/selling/doctype/selling_settings/selling_settings.json:None,accounts,1
+Item Row,صف الصنف,erpnext/accounts/doctype/item_wise_tax_detail/item_wise_tax_detail.json:None,accounts,1
+Item Tax Row {0}: Account must belong to Company - {1},,erpnext/accounts/doctype/item_tax_template/item_tax_template.py:48,accounts,0
+Item Wise Tax Details,تفاصيل الضريبة حسب الصنف,erpnext/accounts/doctype/pos_invoice/pos_invoice.json:None; erpnext/accounts/doctype/purchase_invoice/purchase_invoice.json:None; erpnext/accounts/doctype/sales_invoice/sales_invoice.json:None; erpnext/buying/doctype/purchase_order/purchase_order.json:None; erpnext/buying/doctype/supplier_quotation/supplier_quotation.json:None; erpnext/selling/doctype/quotation/quotation.json:None; erpnext/selling/doctype/sales_order/sales_order.json:None; erpnext/stock/doctype/delivery_note/delivery_note.json:None; erpnext/stock/doctype/purchase_receipt/purchase_receipt.json:None,accounts,1
+Job Paused,تم إيقاف العمل مؤقتا,erpnext/accounts/doctype/process_payment_reconciliation/process_payment_reconciliation.js:106,accounts,1
+Journal Entries,قيود اليومية,erpnext/accounts/doctype/exchange_rate_revaluation/exchange_rate_revaluation.js:30,accounts,1
+Journal entries have been created,تم إنشاء قيود اليومية,erpnext/accounts/doctype/exchange_rate_revaluation/exchange_rate_revaluation.js:97,accounts,1
+Journals,اليوميات,erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None,accounts,1
+Last Scanned Warehouse,آخر مستودع ممسوح,erpnext/accounts/doctype/pos_invoice/pos_invoice.json:None; erpnext/accounts/doctype/purchase_invoice/purchase_invoice.json:None; erpnext/accounts/doctype/sales_invoice/sales_invoice.json:None; erpnext/buying/doctype/purchase_order/purchase_order.json:None; erpnext/selling/doctype/quotation/quotation.json:None; erpnext/selling/doctype/sales_order/sales_order.json:None; erpnext/stock/doctype/delivery_note/delivery_note.json:None; erpnext/stock/doctype/material_request/material_request.json:None; erpnext/stock/doctype/purchase_receipt/purchase_receipt.json:None; erpnext/stock/doctype/stock_entry/stock_entry.json:None; erpnext/stock/doctype/stock_reconciliation/stock_reconciliation.json:None,accounts,1
+Ledger Health,صحة دفتر الأستاذ,erpnext/accounts/doctype/ledger_health/ledger_health.json:None,accounts,1
+Ledger Health Monitor,مراقب صحة دفتر الأستاذ,erpnext/accounts/doctype/ledger_health_monitor/ledger_health_monitor.json:None,accounts,1
+Ledger Health Monitor Company,شركة مراقب صحة دفتر الأستاذ,erpnext/accounts/doctype/ledger_health_monitor_company/ledger_health_monitor_company.json:None,accounts,1
+Ledger Merge,دمج دفتر الأستاذ,erpnext/accounts/doctype/ledger_merge/ledger_merge.json:None,accounts,1
+Ledger Merge Accounts,حسابات دمج دفتر الأستاذ,erpnext/accounts/doctype/ledger_merge_accounts/ledger_merge_accounts.json:None,accounts,1
+Ledgers,دفاتر الأستاذ,erpnext/accounts/workspace/financial_reports/financial_reports.json:None,accounts,1
+Left Child,فرع أيسر,erpnext/accounts/doctype/bisect_nodes/bisect_nodes.json:None,accounts,1
+Legacy Fields,حقول قديمة,erpnext/accounts/doctype/accounts_settings/accounts_settings.json:None,accounts,1
+Lft,,erpnext/accounts/doctype/account/account.json:None; erpnext/setup/doctype/company/company.json:None,accounts,0
+Line Reference,مرجع السطر,erpnext/accounts/doctype/financial_report_row/financial_report_row.json:None,accounts,1
+Liquidity Ratios,نسب السيولة,erpnext/accounts/report/financial_ratios/financial_ratios.js:55; erpnext/accounts/report/financial_ratios/financial_ratios.py:150,accounts,1

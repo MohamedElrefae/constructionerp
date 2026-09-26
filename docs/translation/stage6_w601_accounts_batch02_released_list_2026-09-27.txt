@@ -1,0 +1,89 @@
+Debit Note will update it's own outstanding amount, even if 'Return Against' is specified.
+Debit-Credit Mismatch
+Debit-Credit mismatch
+Debtor/Creditor
+Debtor/Creditor Advance
+Deferred accounting failed for some invoices:
+Depreciation eliminated via reversal
+Descriptive name for your template (e.g., 'Standard P&L', 'Detailed Balance Sheet')
+Disable template to prevent use in reports
+Discount (%) on Price List Rate with Margin
+Discount Percentage can be applied either against a Price List or for all Price List.
+Discount on Price List Rate (%)
+Discounts to be applied in sequential ranges like buy 1 get 1, buy 2 get 2, buy 3 get 3 and so on
+Discrepancy between General and Payment Ledger
+Distribute Equally
+Do you still want to enable immutable ledger?
+Document Type already used as a dimension
+Documents Processed on each trigger. Queue Size should be between 5 and 100
+Documents: {0} have deferred revenue/expense enabled for them. Cannot repost.
+Don't Create Loyalty Points
+Don't Enforce Free Item Qty
+Dont Recompute tax
+Drops existing SQL Procedures and Function setup by Accounts Receivable report
+Duplicate customer group found in the customer group table
+Either 'Selling' or 'Buying' must be selected
+Enable this checkbox even if you want to set the zero priority
+Enabling this will allow creation of multi-currency invoices against single party account in company currency
+Enabling this will change the way how cancelled transactions are handled.
+Enter the Bank Guarantee Number before submitting.
+Enter the name of the Beneficiary before submitting.
+Enter the name of the bank or lending institution before submitting.
+Error in party matching for Bank Transaction {0}
+Error while processing deferred accounting for {0}
+Even if there are multiple Pricing Rules with highest priority, then following internal priorities are applied:
+Exempted Role
+Failed to parse MT940 format. Error: {0}
+Financial Report Template {0} is disabled
+Financial Report Template {0} not found
+For dunning fee and interest
+Force-Fetch Subscription Updates
+Free Item Rate
+From Date: {0} cannot be greater than To date: {1}
+From External Ecomm Platform
+From Fiscal Year cannot be greater than To Fiscal Year
+Further cost centers can be made under Groups but entries can be made against non-Groups
+Gain/Loss accumulated in foreign currency account. Accounts with '0' balance in either Base or Account currency
+Generate E-Invoice
+Heads (or groups) against which Accounting Entries are made and balances are maintained.
+Helps you distribute the Budget/Target across months if you have seasonality in your business.
+Hide this line if amount is zero
+How Pricing Rule is applied?
+How this line gets its data
+How to format and present values in the financial report (only if different from column fieldtype)
+If Auto Opt In is checked, then the customers will be automatically linked with the concerned Loyalty Program (on save)
+If checked, the tax amount will be considered as already included in the Paid Amount in Payment Entry
+If enabled, ledger entries will be posted for change amount in POS transactions
+If enabled, the consolidated invoices will have rounded total disabled
+If enabled, this row's values will be displayed on financial charts
+If enabled, user will be alerted before resetting posting date to current date in relevant transactions
+If multiple Pricing Rules continue to prevail, users are asked to set Priority manually to resolve conflict.
+If rate is zero then item will be treated as "Free Item"
+If unlimited expiry for the Loyalty Points, keep the Expiry Duration empty or 0.
+Ignore Is Opening check for reporting
+Ignore Voucher Type filter and Select Vouchers Manually
+Impairment
+Import Chart of Accounts from a csv file
+Import MT940 Fromat
+In the case of multi-tier program, Customers will be auto assigned to the concerned tier as per their spent
+Include Default FB Assets
+Include Returned Invoices (Stand-alone)
+Included fee is bigger than the withdrawal itself.
+Indentation level: 0 = Main heading, 1 = Sub-category, 2 = Individual accounts, etc.
+Individual GL Entry cannot be cancelled.
+Interest on Fixed Deposits
+Interval should be between 1 to 59 MInutes
+Invalid Primary Role
+Invalid Sales Invoices
+Invalid amount in accounting entries of {} {} for Account {}: {}
+Invalid filter formula. Please check the syntax.
+Invalid parameter. 'dn' should be of type str
+Invalid result key. Response:
+Invoice Document Type Selection Error
+Invoices and Payments have been Fetched and Allocated
+Is created using POS
+Issue a debit note with 0 qty against an existing Sales Invoice
+Italic Text
+Italic text for subtotals or notes
+Item Code > Item Group > Brand
+Item Tax Row {0}: Account must belong to Company - {1}
