@@ -1,0 +1,245 @@
+source_text,context,locations
+Please attach an image file to set HTML for Footer.,,frappe/printing/doctype/letter_head/letter_head.py:82
+Please attach an image file to set HTML for Letter Head.,,frappe/printing/doctype/letter_head/letter_head.py:70
+Please check your email login credentials.,,frappe/email/smtp.py:134
+Please click on the following link and follow the instructions on the page. {0},,frappe/twofactor.py:286
+Please contact your system manager to install correct version.,,frappe/printing/page/print/print.js:677
+Please delete the field from {0} or add the required doctype.,,frappe/desk/form/meta.py:193
+Please enter both your email and message so that we can get back to you. Thanks!,,frappe/templates/includes/contact.js:15
+Please remove the printer mapping in Printer Settings and try again.,,frappe/printing/page/print/print.js:594
+Please save the form before previewing the message,,frappe/automation/doctype/auto_repeat/auto_repeat.js:89
+Please select a DocType in options before setting filters,,frappe/public/js/form_builder/components/Field.vue:158
+Please select a country code for field {1}.,,frappe/utils/__init__.py:131
+Please select the LDAP Directory being used,,frappe/integrations/doctype/ldap_settings/ldap_settings.json:None
+Please setup default outgoing Email Account from Settings > Email Account,,frappe/core/doctype/user/user.py:462
+Please setup default outgoing Email Account from Tools > Email Account,,frappe/email/doctype/email_account/email_account.py:432
+Please specify a valid parent DocType for {0},,frappe/permissions.py:809
+Please specify at least 10 minutes due to the trigger cadence of the scheduler,,frappe/email/doctype/notification/notification.py:165
+Please specify the field from which to attach files,,frappe/email/doctype/notification/notification.py:172
+Please specify which datetime field must be checked,,frappe/email/doctype/notification/notification.py:160
+Please use following links to download file backup.,,frappe/templates/emails/file_backup_notification.html:4
+Please visit https://frappecloud.com/docs/sites/migrate-an-existing-site#encryption-key for more information.,,frappe/utils/password.py:217
+"Post it here, our mentors will help you out.",,frappe/templates/discussions/reply_section.html:40
+Precision ({0}) for {1} cannot be greater than its length ({2}).,,frappe/core/doctype/doctype/doctype.py:1691
+Prepend the template to the email message,,frappe/public/js/frappe/views/communication.js:425
+Primary key of doctype {0} can not be changed as there are existing values.,,frappe/database/mariadb/schema.py:156; frappe/database/postgres/schema.py:202; frappe/database/sqlite/schema.py:141
+Property Setter overrides a standard DocType or Field property,,frappe/custom/doctype/property_setter/property_setter.json:None
+Query analysis complete. Check suggested indexes.,,frappe/core/doctype/recorder/recorder.py:188
+Query must be of SELECT or read-only WITH type.,,frappe/utils/safe_exec.py:497
+Queued for Submission. You can track the progress over {0}.,,frappe/core/doctype/submission_queue/submission_queue.py:186
+Rebuilding of tree is not supported for {},,frappe/utils/nestedset.py:177
+Records for following doctypes will be filtered,,frappe/core/doctype/user_permission/user_permission_help.html:2
+Redirect to this URL after successful confirmation.,,frappe/email/doctype/email_group/email_group.json:None
+Render labels to the left and values to the right in this section,,frappe/public/js/print_format_builder/PrintFormatSection.vue:17
+Represents the states allowed in one document and role assigned to change the state.,,frappe/workflow/doctype/workflow_document_state/workflow_document_state.json:None
+"Requires any valid fdn path. i.e. ou=groups,dc=example,dc=com",,frappe/integrations/doctype/ldap_settings/ldap_settings.json:None
+"Requires any valid fdn path. i.e. ou=users,dc=example,dc=com",,frappe/integrations/doctype/ldap_settings/ldap_settings.json:None
+Role 'All' will be given to all system + website users.,,frappe/core/doctype/role/role.js:8
+Role 'Desk User' will be given to all system users.,,frappe/core/doctype/role/role.js:13
+Role has been set as per the user type {0},,frappe/core/doctype/user/user.py:403
+Roles can be set for users from their User page.,,frappe/core/page/permission_manager/permission_manager_help.html:7
+"Route: Example ""/app""",,frappe/core/doctype/role/role.json:None
+Row # {0}: Non administrator user can not set the role {1} to the custom doctype,,frappe/core/doctype/doctype/doctype.py:1866; frappe/core/doctype/doctype/doctype.py:1876
+"Rule for this doctype, role, permlevel and if-owner combination already exists.",,frappe/permissions.py:681
+SMS was not sent. Please contact Administrator.,,frappe/templates/includes/login/login.js:369
+SQL functions are not allowed as strings in SELECT: {0}. Use dict syntax like {{'COUNT': '*'}} instead.,,frappe/database/query.py:1876
+Saving this will export this document as well as the steps linked here as json.,,frappe/desk/doctype/module_onboarding/module_onboarding.js:8
+Scheduler can not be re-enabled when maintenance mode is active.,,frappe/utils/scheduler.py:247
+Scheduler is inactive. Cannot import data.,,frappe/core/doctype/data_import/data_import.py:124
+Select Document Types to set which User Permissions are used to limit access.,,frappe/core/page/permission_manager/permission_manager_help.html:34
+Select an existing format to edit or start a new format.,,frappe/printing/page/print_format_builder/print_format_builder_start.html:2
+Send alert if datetime matches this field's value,,frappe/email/doctype/notification/notification.json:None
+Send email when document transitions to the state.,,frappe/workflow/doctype/workflow_document_state/workflow_document_state.json:None
+Series counter for {} updated to {} successfully,,frappe/core/doctype/document_naming_settings/document_naming_settings.py:223
+Server Scripts are disabled. Please enable server scripts from bench configuration.,,frappe/utils/safe_exec.py:98
+Server Scripts feature is not available on this site.,,frappe/core/doctype/server_script/server_script.js:39
+Server failed to process this request because of a concurrent conflicting request. Please try again.,,frappe/public/js/frappe/request.js:254
+Server was too busy to process this request. Please try again.,,frappe/public/js/frappe/request.js:246
+Set Naming Series options on your transactions.,,frappe/core/doctype/document_naming_settings/document_naming_settings.json:None
+Set dynamic filter values in JavaScript for the required fields here.,,frappe/public/js/frappe/utils/dashboard_utils.js:162
+"Set non-standard precision for a Float, Currency or Percent field",,frappe/core/doctype/docfield/docfield.json:None
+Show Fieldname (click to copy on clipboard),,frappe/public/js/frappe/form/layout.js:603
+Show Social Login Key as Authorization Server,,frappe/integrations/doctype/oauth_settings/oauth_settings.json:None
+Show account deletion link in My Account page,,frappe/website/doctype/website_settings/website_settings.json:None
+Size exceeds the maximum allowed file size.,,frappe/public/js/frappe/file_uploader/FileUploader.vue:629
+Skipping fixture syncing for doctype {0} from file {1},,frappe/modules/utils.py:179
+Some columns might get cut off when printing to PDF. Try to keep number of columns under 10.,,frappe/printing/page/print_format_builder/print_format_builder_column_selector.html:4
+"Some mailboxes require a different Sent Folder Name e.g. ""INBOX.Sent""",,frappe/email/doctype/email_domain/email_domain.json:None
+"Specify a custom timeout, default timeout is 1500 seconds",,frappe/core/doctype/report/report.json:None
+"Standard Web Forms can not be modified, duplicate the Web Form instead.",,frappe/website/doctype/web_form/web_form.js:40
+Standard user type {0} can not be deleted.,,frappe/core/doctype/user_type/user_type.py:61
+Status Updated. The email will be picked up in the next scheduled run.,,frappe/email/doctype/email_queue/email_queue.js:37
+Store the API secret securely. It won't be displayed again.,,frappe/core/doctype/user/user.js:504
+Stores the datetime when the last reset password key was generated.,,frappe/core/doctype/user/user.json:None
+Successfully imported {0} out of {1} records.,,frappe/core/doctype/data_import/data_import.js:150
+Successfully reset onboarding status for all users.,,frappe/desk/doctype/form_tour/form_tour.py:87
+Successfully updated {0} out of {1} records.,,frappe/core/doctype/data_import/data_import.js:155
+"Sync token was invalid and has been reset, Retry syncing.",,frappe/integrations/doctype/google_calendar/google_calendar.py:312
+System Generated Fields can not be renamed,,frappe/custom/doctype/custom_field/custom_field.py:409
+Thank you for spending your valuable time to fill this form,,frappe/website/doctype/web_form/templates/web_form.html:147
+The Next Scheduled Date cannot be later than the End Date.,,frappe/automation/doctype/auto_repeat/auto_repeat.py:112
+The Push Relay Server URL key (`push_relay_server_url`) is missing in your site config,,frappe/integrations/doctype/push_notification_settings/push_notification_settings.py:29
+The User record for this request has been auto-deleted due to inactivity by system admins.,,frappe/website/doctype/personal_data_deletion_request/personal_data_deletion_request.py:367
+The application name will be used in the Login page.,,frappe/core/doctype/system_settings/system_settings.json:None
+The contents of this email are strictly confidential. Please do not forward this email to anyone.,,frappe/templates/emails/workflow_action.html:9
+The count shown is an estimated count. Click here to see the accurate count.,,frappe/public/js/frappe/list/list_view.js:688
+"The document type selected is a child table, so the parent document type is required.",,frappe/desk/doctype/dashboard_chart/dashboard_chart.json:None; frappe/desk/doctype/number_card/number_card.json:None
+The field {0} in {1} does not allow ignoring user permissions,,frappe/desk/search.py:284
+The field {0} in {1} links to {2} and not {3},,frappe/desk/search.py:294
+The fieldname you've specified in Attached To Field is invalid,,frappe/core/doctype/file/file.py:158
+The following Assignment Days have been repeated: {0},,frappe/automation/doctype/assignment_rule/assignment_rule.py:62
+The following Header Script will add the current date to an element in 'Header HTML' with class 'header-content',,frappe/printing/doctype/letter_head/letter_head.js:30
+The following values are invalid: {0}. Values must be one of {1},,frappe/core/doctype/data_import/importer.py:1088
+The following values do not exist for {0}: {1},,frappe/core/doctype/data_import/importer.py:1045
+The limit has not set for the user type {0} in the site config file.,,frappe/core/doctype/user_type/user_type.py:89
+The link you trying to login is invalid or expired.,,frappe/www/login.py:194
+The next tour will start from where the user left off.,,frappe/desk/doctype/form_tour/form_tour.json:None
+The number of seconds until the request expires,,frappe/integrations/doctype/webhook/webhook.json:None
+The reset password link has either been used before or is invalid,,frappe/core/doctype/user/user.py:1049
+The system is being updated. Please refresh again after a few moments.,,frappe/utils/response.py:338
+The system provides many pre-defined roles. You can add new roles to set finer permissions.,,frappe/core/page/permission_manager/permission_manager_help.html:9
+The total number of user document types limit has been crossed.,,frappe/core/doctype/user_type/user_type.py:97
+The value you pasted was {0} characters long. Max allowed characters is {1}.,,frappe/public/js/frappe/form/controls/data.js:25
+"There are no {0} for this {1}, why don't you start one!",,frappe/website/web_template/discussions/discussions.html:3
+There are {0} with the same filters already in the queue:,,frappe/public/js/frappe/views/reports/query_report.js:976
+There can be only 9 Page Break fields in a Web Form,,frappe/website/doctype/web_form/web_form.js:81; frappe/website/doctype/web_form/web_form.js:334
+"There is no task called ""{}""",,frappe/model/workflow.py:170
+There is nothing new to show you right now.,,frappe/public/js/frappe/ui/notifications/notifications.js:523
+There is {0} with the same filters already in the queue:,,frappe/public/js/frappe/views/reports/query_report.js:973
+There were errors while sending email. Please try again.,,frappe/public/js/frappe/views/communication.js:834
+These announcements will appear inside a dismissible alert below the Navbar.,,frappe/core/doctype/navbar_settings/navbar_settings.json:None
+These settings are required if 'Custom' LDAP Directory is used,,frappe/integrations/doctype/ldap_settings/ldap_settings.json:None
+This PDF cannot be uploaded as it contains unsafe content.,,frappe/core/doctype/file/file.py:406
+This action is irreversible. Do you wish to continue?,,frappe/custom/doctype/customize_form/customize_form.js:220
+This doctype has no orphan fields to trim,,frappe/custom/doctype/customize_form/customize_form.js:212
+"This doctype has pending migrations, run 'bench migrate' before modifying the doctype to avoid losing changes.",,frappe/core/doctype/doctype/doctype.py:1069
+This document can not be deleted right now as it's being modified by another user. Please try again after some time.,,frappe/model/delete_doc.py:155
+This document has already been queued for submission. You can track the progress over {0}.,,frappe/core/doctype/submission_queue/submission_queue.py:171
+This document is currently locked and queued for execution. Please try again after some time.,,frappe/model/document.py:509
+This feature is brand new and still experimental,,frappe/public/js/frappe/form/templates/form_sidebar.html:41
+This file is attached to a protected document and cannot be deleted.,,frappe/core/doctype/file/file.py:532
+"This file is public and can be accessed by anyone, even without logging in. Mark it private to limit access.",,frappe/public/js/frappe/file_uploader/FilePreview.vue:83
+This file is public. It can be accessed without authentication.,,frappe/core/doctype/file/file.js:20
+This form is not editable due to a Workflow.,,frappe/public/js/frappe/form/form.js:2275
+This geolocation provider is not supported yet.,,frappe/integrations/doctype/geolocation_settings/geolocation_settings.py:52
+This is a virtual doctype and data is cleared periodically.,,frappe/core/doctype/rq_job/rq_job.js:9
+"This report contains {0} rows and is too big to display in browser, you can {1} this report instead.",,frappe/public/js/frappe/views/reports/query_report.js:1052
+"This site is in read only mode, full functionality will be restored soon.",,frappe/templates/includes/navbar/navbar_items.html:95
+This site is running in developer mode. Any change made here will be updated in code.,,frappe/core/doctype/doctype/doctype.js:73
+This software is built on top of many open source packages.,,frappe/www/attribution.html:11
+This value is fetched from {0}'s {1} field,,frappe/public/js/frappe/form/controls/base_input.js:129
+This value specifies the max number of rows that can be rendered in report view.,,frappe/core/doctype/system_settings/system_settings.json:None
+This will reset this tour and show it to all users. Are you sure?,,frappe/desk/doctype/form_tour/form_tour.js:103
+"This will terminate the job immediately and might be dangerous, are you sure?",,frappe/core/doctype/data_import/data_import.js:182; frappe/core/doctype/prepared_report/prepared_report.js:68; frappe/core/doctype/rq_job/rq_job.js:15
+To allow more reports update limit in System Settings.,,frappe/email/doctype/auto_email_report/auto_email_report.py:109
+"To export this step as JSON, link it in a Onboarding document and save the document.",,frappe/desk/doctype/onboarding_step/onboarding_step.js:18
+"To set the role {0} in the user {1}, kindly set the {2} field as {3} in one of the {4} record.",,frappe/core/doctype/user_type/user_type.py:291
+Too many changes to database in single action.,,frappe/database/database.py:474
+Too many queued background jobs ({0}). Please retry after some time.,,frappe/utils/background_jobs.py:737
+Total number of emails to sync in initial sync process,,frappe/email/doctype/email_account/email_account.json:None
+Tracking URL generated and copied to clipboard,,frappe/public/js/frappe/utils/utils.js:1936
+URL of a human-readable page with info that developers might need.,,frappe/integrations/doctype/oauth_settings/oauth_settings.json:None
+URL of a web page providing information about the client.,,frappe/integrations/doctype/oauth_client/oauth_client.json:None
+URL of human-readable page with info about the protected resource's terms of service.,,frappe/integrations/doctype/oauth_settings/oauth_settings.json:None
+URL of human-readable page with info on requirements about how the client can use the data.,,frappe/integrations/doctype/oauth_settings/oauth_settings.json:None
+URL that points to a human-readable policy document for the client. Should be shown to end-user before authorizing.,,frappe/integrations/doctype/oauth_client/oauth_client.json:None
+URL that references a logo for the client.,,frappe/integrations/doctype/oauth_client/oauth_client.json:None
+Unable to send mail because of a missing email account. Please setup default Email Account from Settings > Email Account,,frappe/core/doctype/communication/email.py:180
+Updating Email Queue Statuses. The emails will be picked up in the next scheduled run.,,frappe/email/doctype/email_queue/email_queue_list.js:49
+Updating counter may lead to document name conflicts if not done properly,,frappe/core/doctype/document_naming_rule/document_naming_rule.js:17
+Use if the default settings don't seem to detect your data correctly,,frappe/core/doctype/data_import/data_import.json:None
+"Use this, for example, if all sent emails should also be send to an archive.",,frappe/email/doctype/email_account/email_account.json:None
+User Id Field is mandatory in the user type {0},,frappe/core/doctype/user_type/user_type.py:283
+User Permissions are used to limit users to specific records.,,frappe/core/page/permission_manager/permission_manager_help.html:32
+User does not have permission to create the new {0},,frappe/core/doctype/user_type/user_type.py:83
+User with email address {0} does not exist,,frappe/www/login.py:171
+User with email: {0} does not exist in the system. Please ask 'System Administrator' to create the user for you.,,frappe/integrations/doctype/ldap_settings/ldap_settings.py:225
+User {0} does not have the permission to create a Workspace.,,frappe/desk/doctype/workspace/workspace.py:306
+User {0} is disabled. Please contact your System Manager.,,frappe/sessions.py:243
+User {0} is not permitted to access this document.,,frappe/desk/form/assign_to.py:104
+Uses system's theme to switch between light and dark mode,,frappe/public/js/frappe/ui/theme_switcher.js:70
+Verification code email not sent. Please contact Administrator.,,frappe/templates/includes/login/login.js:383
+Virtual DocType {} requires a static method called {} found {},,frappe/model/virtual_doctype.py:76
+Virtual DocType {} requires overriding an instance method called {} found {},,frappe/model/virtual_doctype.py:89
+Warning: DATA LOSS IMMINENT! Proceeding will permanently delete following database columns from doctype {0}:,,frappe/custom/doctype/customize_form/customize_form.js:217
+Warning: Updating counter may lead to document name conflicts if not done properly,,frappe/core/doctype/document_naming_rule/document_naming_rule.json:None
+Warning: Usage of 'format:' is discouraged.,,frappe/core/doctype/doctype/doctype.py:458
+We would like to thank the authors of these packages for their contribution.,,frappe/www/attribution.html:12
+"Will add ""%"" before and after the query",,frappe/core/doctype/report_filter/report_filter.json:None
+Will run scheduled jobs only once a day for inactive sites. Set it to 0 to avoid automatically disabling the scheduler.,,frappe/core/doctype/system_settings/system_settings.json:None
+Workflow state represents the current state of a document.,,frappe/workflow/doctype/workflow_state/workflow_state.json:None
+Would you like to publish this comment? This means it will become visible to website/portal users.,,frappe/public/js/frappe/form/footer/form_timeline.js:757
+Would you like to unpublish this comment? This means it will no longer be visible to website/portal users.,,frappe/public/js/frappe/form/footer/form_timeline.js:761
+"You are about to open an external link. To confirm, click the link again.",,frappe/public/js/frappe/router.js:642
+You are not allowed to access this resource,,frappe/integrations/frappe_providers/frappecloud_billing.py:28
+"You are not allowed to access this {0} record because it is linked to {1} '{2}' in row {3}, field {4}",,frappe/permissions.py:426
+You are not permitted to access this page without login.,,frappe/public/js/frappe/web_form/webform_script.js:22
+You are not permitted to access this resource. Login to access,,frappe/__init__.py:464
+"You are only allowed to update order, do not remove or add apps.",,frappe/core/doctype/installed_applications/installed_applications.py:125
+You can also access wkhtmltopdf variables (valid only in PDF print):,,frappe/printing/doctype/letter_head/letter_head.js:32
+You can also copy-paste following link in your browser,,frappe/templates/emails/new_user.html:22
+You can ask your team to resend the invitation if you'd still like to join.,,frappe/templates/emails/user_invitation_expired.html:8
+"You can change Submitted documents by cancelling them and then, amending them.",,frappe/core/page/permission_manager/permission_manager_help.html:17
+You can change the retention policy from {0}.,,frappe/public/js/frappe/logtypes.js:21
+You can continue with the onboarding after exploring this page,,frappe/public/js/frappe/widgets/onboarding_widget.js:194
+You can disable this {0} instead of deleting it.,,frappe/model/delete_doc.py:179
+You can increase the limit from System Settings.,,frappe/core/doctype/file/file.py:768
+You can manually remove the lock if you think it's safe: {},,frappe/utils/synchronization.py:48
+You can only insert images in Markdown fields,,frappe/public/js/frappe/form/controls/markdown_editor.js:75
+You can only print upto {0} documents at a time,,frappe/public/js/frappe/list/bulk_operations.js:42
+You can only set the 3 custom doctypes in the Document Types table.,,frappe/core/doctype/user_type/user_type.py:104
+"You can only upload JPG, PNG, GIF, PDF, TXT, CSV or Microsoft documents.",,frappe/handler.py:184
+You can set a high value here if multiple users will be logging in from the same network.,,frappe/core/doctype/system_settings/system_settings.json:None
+You can use Customize Form to set levels on fields.,,frappe/core/page/permission_manager/permission_manager_help.html:27
+You do not have Read or Select Permissions for {},,frappe/client.py:420
+You do not have import permission for {0},,frappe/core/doctype/data_import/data_import.py:83
+You do not have permission to access field: {0},,frappe/database/query.py:910
+You do not have permission to access {0}: {1}.,,frappe/desk/query_report.py:969
+You don't have permission to access the {0} DocType.,,frappe/website/doctype/web_form/web_form.py:840
+You have hit the row size limit on database table: {0},,frappe/custom/doctype/customize_form/customize_form.py:247
+You have not entered a value. The field will be set to empty.,,frappe/public/js/frappe/list/bulk_operations.js:412
+You have to enable Two Factor Auth from System Settings.,,frappe/twofactor.py:446
+You hit the rate limit because of too many requests. Please try after sometime.,,frappe/rate_limiter.py:166
+You need the '{0}' permission on {1} {2} to perform this action.,,frappe/model/document.py:391
+You need to be Workspace Manager to delete a public workspace.,,frappe/desk/doctype/workspace/workspace.py:129; frappe/desk/doctype/workspace_sidebar/workspace_sidebar.py:75
+You need to be Workspace Manager to edit this document,,frappe/desk/doctype/workspace/workspace.py:78
+You need to be a system user to access this page.,,frappe/www/attribution.py:16
+You need to select indexes you want to add first.,,frappe/core/doctype/recorder/recorder.js:38
+You need write permission on {0} {1} to merge,,frappe/model/rename_doc.py:391
+You need write permission on {0} {1} to rename,,frappe/model/rename_doc.py:386
+You need {0} permission to fetch values from {1} {2},,frappe/client.py:452
+You seem to have written your name instead of your email. Please enter a valid email address so that we can get back.,,frappe/templates/includes/contact.js:20
+Your browser does not support the audio element.,,frappe/core/doctype/file/file.js:78
+Your browser does not support the video element.,,frappe/core/doctype/file/file.js:60
+Your invitation to join {0} has been cancelled by the site administrator.,,frappe/templates/emails/user_invitation_cancelled.html:5
+Your new password has been set successfully.,,frappe/www/update-password.html:192
+Your site is undergoing maintenance or being updated.,,frappe/public/js/frappe/ui/toolbar/navbar.html:17
+`as_iterator` only works with `as_list=True` or `as_dict=True`,,frappe/database/database.py:361
+`job_id` paramater is required for deduplication.,,frappe/utils/background_jobs.py:121
+gzip not found in PATH! This is required to take a backup.,,frappe/utils/backups.py:399
+"string value, i.e. {0} or uid={0},ou=users,dc=example,dc=com",,frappe/integrations/doctype/ldap_settings/ldap_settings.json:None
+wants to access the following details from your account,,frappe/templates/includes/oauth_confirmation.html:5
+when clicked on element it will focus popover if present.,,frappe/desk/doctype/form_tour_step/form_tour_step.json:None
+"{0} ${skip_list ? """" : type}",,frappe/public/js/frappe/ui/toolbar/search_utils.js:217
+{0} Not allowed to change {1} after submission from {2} to {3},,frappe/model/base_document.py:1259
+{0} cannot be amended because it is not cancelled. Please cancel the document before creating an amendment.,,frappe/model/document.py:583
+{0} cannot be hidden and mandatory without any default value,,frappe/public/js/form_builder/store.js:190
+"{0} contains an invalid Fetch From expression, Fetch From can't be self-referential.",,frappe/core/doctype/doctype/doctype.py:1620
+{0} format could not be determined from the values in this column. Defaulting to {1}.,,frappe/core/doctype/data_import/importer.py:1070
+{0} if you are not redirected within {1} seconds,,frappe/website/doctype/web_form/templates/web_form.html:155
+{0} is not a valid Calendar. Redirecting to default Calendar.,,frappe/public/js/frappe/views/calendar/calendar.js:82
+{0} is not a valid ISO 3166 ALPHA-2 code.,,frappe/geo/doctype/country/country.py:30
+{0} is not a valid parent DocType for {1},,frappe/permissions.py:824
+{0} just impersonated as you. They gave this reason: {1},,frappe/core/doctype/user/user.py:1458
+"{0} must begin and end with a letter and can only contain letters, hyphen or underscore.",,frappe/core/doctype/language/language.py:79
+{0} records are not automatically deleted.,,frappe/public/js/frappe/logtypes.js:22
+{0} role does not have permission on any doctype,,frappe/public/js/frappe/roles_editor.js:64
+{0} should be indexed because it's referred in dashboard connections,,frappe/core/doctype/doctype/doctype.py:318
+{0}: Other permission rules may also apply,,frappe/public/js/frappe/form/workflow.js:45
+{0}: You can increase the limit for the field if required via {1},,frappe/public/js/frappe/form/controls/data.js:51
+{0}: fieldname cannot be set to reserved keyword {1},,frappe/core/doctype/doctype/doctype.py:1283
+{} does not support automated log clearing.,,frappe/core/doctype/log_settings/log_settings.py:54
+{} has been disabled. It can only be enabled if {} is checked.,,frappe/email/doctype/email_account/email_account.py:223; frappe/email/doctype/email_account/email_account.py:231
+{} not found in PATH! This is required to access the console.,,frappe/commands/utils.py:564
+{} not found in PATH! This is required to restore the database.,,frappe/database/db_manager.py:99
+{} not found in PATH! This is required to take a backup.,,frappe/utils/backups.py:466
