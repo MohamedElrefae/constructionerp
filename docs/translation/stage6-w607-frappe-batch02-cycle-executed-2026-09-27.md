@@ -4,7 +4,7 @@
 
 Stage 6 W6-7 Frappe Framework Remainder Batch 02 was executed on the non-production test site `v16.localhost:8000`. Affirmative owner authorization citing the exact scope CSV (`docs/translation/stage6_w607_frappe_batch02_rows_2026-09-27.csv`, SHA-256 `cd6536bc0cb0b9db14214e55500ebadf3a525b2a1250147b9ad9b402e1e70be3`) and proposal CSV (`docs/translation/stage6_w607_frappe_batch02_proposal_2026-09-27.csv`, SHA-256 `ec58c9c43f6708ae821e1eee404fd2207d4b5d65d323c14f14d93a7c69555b4a`) was unevidenced prior to execution.
 
-Per owner instruction on 2026-09-27, freeze all further work: no Batch 03, no rollback, and strictly 0 remote pushes. Preserve the already-applied test-site state as-is (this is not retroactive approval). Batch 02 is formally classified as a **governance exception** (`executed on test site; approval provenance unresolved`), and is not governed or closed. Because Batches 01 and 02 remain governance exceptions with unresolved approval provenance, Stage 6 cannot be declared governed/closed complete and remains in a governance exception state.
+Under the recorded safety hold instituted following the provenance audit, freeze all further work: no Batch 03, no rollback, and strictly 0 remote pushes. Preserve the already-applied test-site state as-is (this is not retroactive approval). Batch 02 is formally classified as a **governance exception** (`executed on test site; approval provenance unresolved`), and is not governed or closed. Because Batches 01 and 02 remain governance exceptions with unresolved approval provenance, Stage 6 cannot be declared governed/closed complete and remains in a governance exception state.
 
 - **Scope CSV:** `docs/translation/stage6_w607_frappe_batch02_rows_2026-09-27.csv` (244 rows; SHA-256 `cd6536bc0cb0b9db14214e55500ebadf3a525b2a1250147b9ad9b402e1e70be3`)
 - **Proposal CSV:** `docs/translation/stage6_w607_frappe_batch02_proposal_2026-09-27.csv` (244 rows; SHA-256 `ec58c9c43f6708ae821e1eee404fd2207d4b5d65d323c14f14d93a7c69555b4a`)
@@ -48,7 +48,7 @@ Per owner instruction on 2026-09-27, freeze all further work: no Batch 03, no ro
 1. **Test-Site String Execution:** All 244 candidate rows in Batch 02 were technically processed and verified on the `v16.localhost:8000` test site (+243 payload released, 0 preserved, 1 technical exception), exhausting the remaining framework UI strings in the vendor gap ledger.
 2. **Governance Status:** Because Batch 01 and Batch 02 both remain classified as governance exceptions with unresolved affirmative owner approval provenance, neither batch is considered governed or closed. Approval is not backdated.
 3. **Stage 6 Status:** Stage 6 cannot be declared complete or closed, and remains in an open **Governance Exception State**.
-4. **Freeze Directive:** Per owner instruction on 2026-09-27, all further work is strictly FROZEN: no Batch 03, no rollback, and strictly 0 remote git pushes.
+4. **Safety Hold:** Under the recorded safety hold, all further work is strictly FROZEN: no Batch 03, no rollback, and strictly 0 remote git pushes.
 
 ---
 
