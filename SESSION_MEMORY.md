@@ -935,8 +935,9 @@ W6-7 Frappe Framework Remainder Batch 01 proposal was prepared for the exact 250
 - In accordance with owner directives:
   1. Batch 01 is recorded strictly as: **executed on the test site; approval provenance unresolved**.
   2. Approval is **not backdated**, and the batch is **not classified as governed or closed**.
-  3. **All further Stage 6 / W6-7 execution is strictly PAUSED** pending an explicit owner decision on how to handle this exception.
-  4. Stage 6 remains open with **~425 framework strings** remaining in the vendor gap ledger. Stage 8 and production remain strictly gated.
+  3. Per the owner's delegation on 2026-09-27, preserve the already-applied `v16.localhost` test-site state as-is; **no rollback is authorized**, and this disposition is **not retroactive approval** of the import or cycle.
+  4. Record Batch 01 as a governance exception, not as a governed/closed batch. **All further Stage 6 / W6-7 execution remains strictly PAUSED** pending separate explicit scope approval.
+  5. Stage 6 remains open with **~425 framework strings** remaining in the vendor gap ledger. Stage 8 and production remain strictly gated.
 
 **Execution Summary (Local Test Site `v16.localhost`):**
 - **Partition & Dispositions (250 total rows):**
