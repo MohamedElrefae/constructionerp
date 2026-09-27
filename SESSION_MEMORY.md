@@ -1,11 +1,11 @@
 # Session Memory — Construction ERP
-**LAST UPDATED:** 2026-09-27 (W6-1 Accounts Batch 04 cycle closed on test site)
-**UPDATED BY:** Antigravity (W6-1 Accounts Batch 04 governed cycle, evidence closure, and reconciliation)
+**LAST UPDATED:** 2026-09-27 (W6-1 Accounts Batch 05 cycle closed on test site; W6-1 Accounts complete)
+**UPDATED BY:** Antigravity (W6-1 Accounts Batch 05 governed cycle, evidence closure, and reconciliation)
 
 ---
 
 ## 1. Project Snapshot
-- **Total commits:** 374 after this closure (`git rev-list --count HEAD` is authoritative; 4 unpushed closure commits on local `develop` from origin)
+- **Total commits:** 375 after this closure (`git rev-list --count HEAD` is authoritative; 5 unpushed closure commits on local `develop` from origin)
 - **Current branch:** `develop` (local closure commit; strictly unpushed)
 - **Last session date:** 2026-09-27
 - **Python version:** 3.14 (venv: `/home/mohamed/frappe-bench/env`)
@@ -853,6 +853,42 @@ Owner authorization recorded for exact 250-row W6-1 Accounts Batch 04 scope (`do
 - **Browser Evidence:**
   - Headless Playwright suite captured 8/8 checks, 121/121 released translations verified, 249/249 batch keys matched (250 minus 1 technical exception `Rgt`).
   - Teardown: Administrator language restored to `en`, session cleared.
+- **Boundaries:**
+  - `v16.localhost` test site only. Stage 8 and production remain gated and completely untouched.
+  - Strictly no push (local closure commit only).
+
+## 2026-09-27 — W6-1 Accounts Batch 05 governed cycle closed on test site (W6-1 Accounts Complete)
+
+Owner authorization recorded for exact 56-row W6-1 Accounts Batch 05 scope (`docs/translation/stage6_w601_accounts_batch05_rows_2026-09-27.csv`, SHA-256 `10c2f94face1a476350e386dd0d176045a13fc8b800f3fb90cd5806cf41353c7`) and proposal (`docs/translation/stage6_w601_accounts_batch05_proposal_2026-09-27.csv`, SHA-256 `74fedcf4313d4dff102755cc054cd1cfc3d28ce45705a6e686a9380f47c51c70`) on `v16.localhost` only.
+
+**Governed Cycle Execution Summary:**
+- **Partition & Dispositions (56 total rows):**
+  - **40 newly Released payload rows** (appended to catalog at release_version 1.15, catalog lines 3791–3830).
+  - **14 exact-key preserved Site Overrides** (byte-for-byte reconciliation against live `v16.localhost` `tabTranslation`).
+  - **2 technical exceptions** (`exchangerate.host`, `frankfurter.dev` — external exchange rate API domain hostnames; untranslated).
+  - **0 deferred source defects**, 0 catalog duplicates.
+- **Reviews & Quorum:**
+  - AI-A1 (Linguistic), AI-A2 (Domain), AI-A3 (Structural) subagents all returned formal verdicts: **PASS**.
+  - AI-R final independent bundle verification completed with formal verdict: **PASS** (`stage6-w601-ai-r-accounts-batch05-final-2026-09-27.md`).
+- **Live Database Import & Verification:**
+  - `uat_preflight.py` PASSED with 14,132 Arabic boot messages.
+  - `import_released_overrides(dry_run=False)`: created 40 rows, updated 0, 3,790 skipped, 0 drift.
+  - Post-import dry-run: `total=3830 created=0 updated=0 skipped=3830 drift=0` (clean, zero drift).
+  - Sync: `sync_translation_catalog(dry_run=False)` returned `{'created': 0, 'updated': 0}`.
+- **Catalog, Manifests & Gate:**
+  - Catalog rows: **3,830 Released rows**; `release_decisions.json`: **3,830 decisions**.
+  - Freshness evidence: `packaged_rows: 3830`, `critical_pass: true`, `has_drift: false`.
+  - Inventory Manifest: 22,247 rows, Merkle root `47920b40abbc6a4384d01d2b25ac7b8882a9a5cd1c294fcf5d84f8cfda278a74` (`LIVE_MATCH: True`).
+  - Localization Gate fix: Space flag removed from `PRINTF_RE` in `scripts/check_localization_gates.py` (`[#0\-+']`), correcting false-positive placeholder matches on format strings with literal percent signs (e.g., `"{0}% of total invoice value..."`).
+  - Gate constants updated: `EXPECTED_DRYRUN = 3830` in `scripts/check_localization_gates.py`, standalone test assertion updated to 3830 in `construction/tests/test_localization_gates.py`.
+  - Full evidence-inclusive gate: `python3 scripts/check_localization_gates.py` exited 0 with `errors=0`, `csv_rows=3830`.
+  - Tests: All standalone tests passed (`Ran 92 tests in 474.559s OK`).
+  - Ten Stage-2 evidence envelopes re-assembled, pinning pre-commit candidate HEAD `359a1addd2929d62529ff10d8eb57254bcac11dc`.
+- **Browser Evidence:**
+  - Headless Playwright suite captured 8/8 checks, 40/40 released translations verified, 54/54 batch keys matched (56 minus 2 technical exceptions `exchangerate.host` and `frankfurter.dev`).
+  - Teardown: Administrator language restored to `en`, session cleared.
+- **W6-1 Accounts Domain Closure Complete:**
+  - All 1,056 rows across Batches 01 to 05 are fully resolved: 466 newly released into catalog (catalog +466, expanding from 3,364 to 3,830), 584 preserved site overrides (574 exact keys + 10 strip-collisions), 1 already-released row ("Cost Center"), 5 technical exceptions.
 - **Boundaries:**
   - `v16.localhost` test site only. Stage 8 and production remain gated and completely untouched.
   - Strictly no push (local closure commit only).

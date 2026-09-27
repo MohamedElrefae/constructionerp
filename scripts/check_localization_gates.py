@@ -71,7 +71,7 @@ CSV_HEADER = [
 TS_RE = re.compile(r"^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$")
 VER_RE = re.compile(r"^\d+\.\d+$")
 BIDI_RE = re.compile("[\u202a-\u202e\u2066-\u2069\u200e\u200f\u061c]")
-PRINTF_RE = re.compile(r"%(?:\d+\$)?[#0\- +']?(?:\d+)?(?:\.\d+)?[sdfieEouxXc%]")
+PRINTF_RE = re.compile(r"%(?:\d+\$)?[#0\-+']?(?:\d+)?(?:\.\d+)?[sdfieEouxXc%]")
 BRACE_RE = re.compile(r"\{\{|\}\}|\{[A-Za-z_][A-Za-z0-9_]*\}|\{\d+\}")
 TAG_RE = re.compile(r"<(/?)([A-Za-z][A-Za-z0-9]*)[^>]*>")
 ENTITY_RE = re.compile(r"&(?:amp|lt|gt|quot|apos|nbsp|#\d+);")
@@ -1508,7 +1508,7 @@ EXPECTED_MODULES = [
     ("construction.tests.test_stage4_review_bundle", 36),
 ]
 EXPECTED_GATE = {"catalog": 810, "files": 265, "wrapped": 667, "json_labels": 22, "missing": 0}
-EXPECTED_DRYRUN = {"total": 3790, "created": 0, "updated": 0, "skipped": 3790, "drift": 0}
+EXPECTED_DRYRUN = {"total": 3830, "created": 0, "updated": 0, "skipped": 3830, "drift": 0}
 
 
 ARTIFACT_PATHS = {
