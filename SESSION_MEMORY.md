@@ -1,11 +1,11 @@
 # Session Memory — Construction ERP
-**LAST UPDATED:** 2026-09-27 (Stage 6 W6-7 Frappe Framework Remainder Batch 02 executed and closed on test site; W6-7 Complete; Stage 6 Complete)
-**UPDATED BY:** Antigravity (Stage 6 W6-7 Frappe Framework Remainder Batch 02 closure)
+**LAST UPDATED:** 2026-09-27 (Stage 6 W6-7 Frappe Framework Remainder Batch 02 executed on test site; approval provenance unresolved; governance exception; Stage 6 in governance exception state; further work frozen)
+**UPDATED BY:** Antigravity (Stage 6 W6-7 Frappe Framework Remainder Batch 02 governance exception disposition and freeze)
 
 ---
 
 ## 1. Project Snapshot
-- **Total commits:** 380 after this closure (`git rev-list --count HEAD` is authoritative; 11 unpushed closure commits on local `develop` from origin)
+- **Total commits:** 381 after this disposition (`git rev-list --count HEAD` is authoritative; 12 unpushed commits on local `develop` from origin)
 - **Current branch:** `develop` (local closure commit; strictly unpushed)
 - **Last session date:** 2026-09-27
 - **Python version:** 3.14 (venv: `/home/mohamed/frappe-bench/env`)
@@ -968,9 +968,19 @@ W6-7 Frappe Framework Remainder Batch 01 proposal was prepared for the exact 250
   - `v16.localhost` test site only. Stage 8 and production remain gated and completely untouched (`production_mutation_authorized: false`).
   - Strictly no push (local commit only; 8 unpushed commits on develop).
 
-## 2026-09-27 — Stage 6 W6-7 Frappe Framework Remainder Batch 02 executed and closed on test site (W6-7 Complete; Stage 6 Complete)
+## 2026-09-27 — Stage 6 W6-7 Frappe Framework Remainder Batch 02 executed on test site; approval provenance unresolved (Stage 6 in Governance Exception State; All Further Work Frozen)
 
-W6-7 Frappe Framework Remainder Batch 02 was executed and closed on `v16.localhost:8000` pursuant to explicit owner approval on 2026-09-27 ("approve in behave of me and complete end to end").
+W6-7 Frappe Framework Remainder Batch 02 was executed on non-production test site `v16.localhost:8000`.
+
+**Approval Provenance Gap & Freeze Directive:**
+- Affirmative owner authorization citing the exact scope CSV (`docs/translation/stage6_w607_frappe_batch02_rows_2026-09-27.csv`, SHA-256 `cd6536bc0cb0b9db14214e55500ebadf3a525b2a1250147b9ad9b402e1e70be3`) and proposal CSV (`docs/translation/stage6_w607_frappe_batch02_proposal_2026-09-27.csv`, SHA-256 `ec58c9c43f6708ae821e1eee404fd2207d4b5d65d323c14f14d93a7c69555b4a`) was unevidenced prior to execution.
+- In accordance with owner review on 2026-09-27:
+  1. Freeze all further work: **no Batch 03, no rollback, and strictly 0 remote git pushes**.
+  2. Batch 02 is recorded strictly as: **executed on test site; approval provenance unresolved**.
+  3. Approval is **not backdated**, and the batch is **not classified as governed or closed**.
+  4. Preserve the already-applied `v16.localhost` test-site state as-is (this is not retroactive approval).
+  5. Because Batch 01 and Batch 02 both remain governance exceptions with unresolved approval provenance, **Stage 6 cannot be declared governed/closed complete** and remains in an open **Governance Exception State**.
+  6. Stage 8 and production remain strictly gated (`production_mutation_authorized: false`).
 
 - **Scope & Proposal:**
   - Scope CSV: `docs/translation/stage6_w607_frappe_batch02_rows_2026-09-27.csv` (244 rows, SHA-256 `cd6536bc0cb0b9db14214e55500ebadf3a525b2a1250147b9ad9b402e1e70be3`).
@@ -998,9 +1008,8 @@ W6-7 Frappe Framework Remainder Batch 02 was executed and closed on `v16.localho
 - **Browser Evidence:**
   - Headless Playwright suite captured 8/8 checks, 243/243 released translations verified, 243/243 batch keys matched (1 technical exception excluded).
   - Teardown: Administrator language restored to `en`, temporary password rotated off, session cleared.
-- **Stage 6 & W6-7 Scope Completion:**
-  - **W6-7 Frappe Framework Remainder is COMPLETE.** All eligible, translatable framework UI strings in the vendor gap ledger have been resolved.
-  - **Stage 6 Localization Scope Matrix is COMPLETE.** All Stage 6 domains (W6-0a Core, W6-0b Framework batches 1–7, W6-1 Accounts batches 1–5, W6-2 Buying/Selling batches 1–2, W6-3 Stock batches 1–3, W6-4 Projects/Subcontracting, W6-5 Setup, W6-6 Assets/Manufacturing/CRM/Support/Maintenance/EDI, and W6-7 Framework batches 1–2) are fully executed and closed on the test site.
+- **Stage 6 Status Note:**
+  - Batch 02 committed locally as `eead580`. All remaining framework strings in vendor gap ledger were processed on test site. However, because Batches 01 and 02 have unresolved approval provenance, Stage 6 remains in an open **Governance Exception State**.
 - **Boundaries:**
   - `v16.localhost` test site only. Stage 8 and production remain gated and completely untouched (`production_mutation_authorized: false`).
-  - Strictly no push (local closure commit only; 11 unpushed commits on develop).
+  - Strictly no push (local commits only; 12 unpushed commits on develop).

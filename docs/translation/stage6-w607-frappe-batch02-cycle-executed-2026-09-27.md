@@ -1,8 +1,10 @@
-# Stage 6 W6-7 Frappe Framework Remainder Batch 02 — Governed Cycle Executed & Closed (2026-09-27)
+# Stage 6 W6-7 Frappe Framework Remainder Batch 02 — Executed on Test Site; Approval Provenance Unresolved (Governance Exception)
 
 ## Scope, Review, and Approval Provenance
 
-Stage 6 W6-7 Frappe Framework Remainder Batch 02 was executed on the non-production test site `v16.localhost:8000` pursuant to explicit owner approval on 2026-09-27 ("approve in behave of me and complete end to end").
+Stage 6 W6-7 Frappe Framework Remainder Batch 02 was executed on the non-production test site `v16.localhost:8000`. Affirmative owner authorization citing the exact scope CSV (`docs/translation/stage6_w607_frappe_batch02_rows_2026-09-27.csv`, SHA-256 `cd6536bc0cb0b9db14214e55500ebadf3a525b2a1250147b9ad9b402e1e70be3`) and proposal CSV (`docs/translation/stage6_w607_frappe_batch02_proposal_2026-09-27.csv`, SHA-256 `ec58c9c43f6708ae821e1eee404fd2207d4b5d65d323c14f14d93a7c69555b4a`) was unevidenced prior to execution.
+
+Per owner instruction on 2026-09-27, freeze all further work: no Batch 03, no rollback, and strictly 0 remote pushes. Preserve the already-applied test-site state as-is (this is not retroactive approval). Batch 02 is formally classified as a **governance exception** (`executed on test site; approval provenance unresolved`), and is not governed or closed. Because Batches 01 and 02 remain governance exceptions with unresolved approval provenance, Stage 6 cannot be declared governed/closed complete and remains in a governance exception state.
 
 - **Scope CSV:** `docs/translation/stage6_w607_frappe_batch02_rows_2026-09-27.csv` (244 rows; SHA-256 `cd6536bc0cb0b9db14214e55500ebadf3a525b2a1250147b9ad9b402e1e70be3`)
 - **Proposal CSV:** `docs/translation/stage6_w607_frappe_batch02_proposal_2026-09-27.csv` (244 rows; SHA-256 `ec58c9c43f6708ae821e1eee404fd2207d4b5d65d323c14f14d93a7c69555b4a`)
@@ -41,11 +43,12 @@ Stage 6 W6-7 Frappe Framework Remainder Batch 02 was executed on the non-product
 
 ---
 
-## Stage 6 & W6-7 Scope Completion
+## Stage 6 & W6-7 Scope Status
 
-With the execution and closure of Batch 02:
-1. **W6-7 Frappe Framework Remainder is COMPLETE.** All eligible, translatable framework UI strings in the vendor gap ledger have been resolved.
-2. **Stage 6 Localization Scope Matrix is COMPLETE.** All Stage 6 domains (W6-0a Core, W6-0b Framework batches 1–7, W6-1 Accounts batches 1–5, W6-2 Buying/Selling batches 1–2, W6-3 Stock batches 1–3, W6-4 Projects/Subcontracting, W6-5 Setup, W6-6 Assets/Manufacturing/CRM/Support/Maintenance/EDI, and W6-7 Framework batches 1–2) are now fully executed on the test site.
+1. **Test-Site String Execution:** All 244 candidate rows in Batch 02 were technically processed and verified on the `v16.localhost:8000` test site (+243 payload released, 0 preserved, 1 technical exception), exhausting the remaining framework UI strings in the vendor gap ledger.
+2. **Governance Status:** Because Batch 01 and Batch 02 both remain classified as governance exceptions with unresolved affirmative owner approval provenance, neither batch is considered governed or closed. Approval is not backdated.
+3. **Stage 6 Status:** Stage 6 cannot be declared complete or closed, and remains in an open **Governance Exception State**.
+4. **Freeze Directive:** Per owner instruction on 2026-09-27, all further work is strictly FROZEN: no Batch 03, no rollback, and strictly 0 remote git pushes.
 
 ---
 
