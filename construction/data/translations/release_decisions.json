@@ -2647,6 +2647,53 @@
         }
       }
     },
+    "033a0cbc15444bffcf55a681996fe8fedf218f902b2c90e4b859070ff76f14f2": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_edi_content_evidence_2026-09-27.txt",
+          "sha256": "bb611c3328d2f9d37dcf871b30ce893f7f72123b473d014646e1dba31eaf075f"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "edi",
+      "language": "ar",
+      "proposal": {
+        "arabic": "ككود",
+        "sha256": "4994d776b434c6d27b908ce6ecfda457ba80ed21303eb40f1682593ca058f392"
+      },
+      "references": "erpnext/edi/doctype/code_list/code_list_import.js:57",
+      "release_version": "1.16",
+      "reviewers": [
+        "AI-A1 (5a0de693-30d2-4e43-b9db-e83f33c99629)",
+        "AI-A2 (a16d4be2-b4f6-4649-949a-d5b77bd6267c)",
+        "AI-A3 (79f75948-125f-423e-996a-e1891d85b9d3)"
+      ],
+      "source_text": "as Code",
+      "timestamps": [
+        "2026-09-27 11:05:35",
+        "2026-09-27 11:05:35",
+        "2026-09-27 11:05:35"
+      ],
+      "translated_text": "ككود",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5a0de693-30d2-4e43-b9db-e83f33c99629)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (a16d4be2-b4f6-4649-949a-d5b77bd6267c)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (79f75948-125f-423e-996a-e1891d85b9d3)"
+        }
+      }
+    },
     "033b345b5216324d7534200417703a5119b407fa8bee3cf3bda38ba36acf0a5e": {
       "artifacts": [
         {
@@ -6957,6 +7004,53 @@
         }
       }
     },
+    "081c3e373e0e01a4f818da10b7ff80b64cd2a2cf53bc5243257817338847f5f9": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_edi_content_evidence_2026-09-27.txt",
+          "sha256": "bb611c3328d2f9d37dcf871b30ce893f7f72123b473d014646e1dba31eaf075f"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "edi",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الوصف",
+        "sha256": "df49b100f24c38a349027da25edacefb4f8731434e949eec83a0dba88f0913af"
+      },
+      "references": "erpnext/edi/doctype/code_list/code_list_import.js:80; erpnext/manufacturing/doctype/production_plan_sub_assembly_item/production_plan_sub_assembly_item.json:None",
+      "release_version": "1.16",
+      "reviewers": [
+        "AI-A1 (5a0de693-30d2-4e43-b9db-e83f33c99629)",
+        "AI-A2 (a16d4be2-b4f6-4649-949a-d5b77bd6267c)",
+        "AI-A3 (79f75948-125f-423e-996a-e1891d85b9d3)"
+      ],
+      "source_text": "description",
+      "timestamps": [
+        "2026-09-27 11:05:35",
+        "2026-09-27 11:05:35",
+        "2026-09-27 11:05:35"
+      ],
+      "translated_text": "الوصف",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5a0de693-30d2-4e43-b9db-e83f33c99629)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (a16d4be2-b4f6-4649-949a-d5b77bd6267c)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (79f75948-125f-423e-996a-e1891d85b9d3)"
+        }
+      }
+    },
     "0830b34717cff94dc0c37a382e9b1c306907a9fce38f2f2949aa008d6dffd98b": {
       "artifacts": [
         {
@@ -8273,6 +8367,53 @@
           "confidence": "high",
           "decision": "approve",
           "session": "AI-A3 (28bd74db-d987-47f4-8e3e-d6c528a039d7)"
+        }
+      }
+    },
+    "098f633fe18ca7afaad8b224a23f1dab45e506f3ea26095578a9ed9591c9a0b3": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_edi_content_evidence_2026-09-27.txt",
+          "sha256": "bb611c3328d2f9d37dcf871b30ce893f7f72123b473d014646e1dba31eaf075f"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "edi",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الناشر",
+        "sha256": "898d78b378caf570fbae40f0c084097ca4d271e624536f94a400cf43765de302"
+      },
+      "references": "erpnext/edi/doctype/code_list/code_list.json:None",
+      "release_version": "1.16",
+      "reviewers": [
+        "AI-A1 (5a0de693-30d2-4e43-b9db-e83f33c99629)",
+        "AI-A2 (a16d4be2-b4f6-4649-949a-d5b77bd6267c)",
+        "AI-A3 (79f75948-125f-423e-996a-e1891d85b9d3)"
+      ],
+      "source_text": "Publisher",
+      "timestamps": [
+        "2026-09-27 11:05:35",
+        "2026-09-27 11:05:35",
+        "2026-09-27 11:05:35"
+      ],
+      "translated_text": "الناشر",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5a0de693-30d2-4e43-b9db-e83f33c99629)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (a16d4be2-b4f6-4649-949a-d5b77bd6267c)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (79f75948-125f-423e-996a-e1891d85b9d3)"
         }
       }
     },
@@ -14263,6 +14404,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "127fde695286a715efa36e606ccc6e6c7bad12329213050b5ddd7198d9883f2e": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_edi_content_evidence_2026-09-27.txt",
+          "sha256": "bb611c3328d2f9d37dcf871b30ce893f7f72123b473d014646e1dba31eaf075f"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "edi",
+      "language": "ar",
+      "proposal": {
+        "arabic": "أنت تستورد بيانات لقائمة الأكواد:",
+        "sha256": "a9c3abfaf4d670df2b4656b6fd9de89aec7851fbf9fa313ff86a04ea20114e65"
+      },
+      "references": "erpnext/edi/doctype/code_list/code_list_import.js:29",
+      "release_version": "1.16",
+      "reviewers": [
+        "AI-A1 (5a0de693-30d2-4e43-b9db-e83f33c99629)",
+        "AI-A2 (a16d4be2-b4f6-4649-949a-d5b77bd6267c)",
+        "AI-A3 (79f75948-125f-423e-996a-e1891d85b9d3)"
+      ],
+      "source_text": "You are importing data for the code list:",
+      "timestamps": [
+        "2026-09-27 11:05:35",
+        "2026-09-27 11:05:35",
+        "2026-09-27 11:05:35"
+      ],
+      "translated_text": "أنت تستورد بيانات لقائمة الأكواد:",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5a0de693-30d2-4e43-b9db-e83f33c99629)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (a16d4be2-b4f6-4649-949a-d5b77bd6267c)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (79f75948-125f-423e-996a-e1891d85b9d3)"
         }
       }
     },
@@ -44642,6 +44830,53 @@
         }
       }
     },
+    "3d51e424e70e96c171b45b9aa761ba0e2804fd9b629a0ac1654b0ae25582ddc8": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_edi_content_evidence_2026-09-27.txt",
+          "sha256": "bb611c3328d2f9d37dcf871b30ce893f7f72123b473d014646e1dba31eaf075f"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "edi",
+      "language": "ar",
+      "proposal": {
+        "arabic": "كعنوان",
+        "sha256": "c9784461d9bbcd6e9e44e925066d7f4067cb65df3e8eaa92e4a48651ae4f8f6b"
+      },
+      "references": "erpnext/edi/doctype/code_list/code_list_import.js:48",
+      "release_version": "1.16",
+      "reviewers": [
+        "AI-A1 (5a0de693-30d2-4e43-b9db-e83f33c99629)",
+        "AI-A2 (a16d4be2-b4f6-4649-949a-d5b77bd6267c)",
+        "AI-A3 (79f75948-125f-423e-996a-e1891d85b9d3)"
+      ],
+      "source_text": "as Title",
+      "timestamps": [
+        "2026-09-27 11:05:35",
+        "2026-09-27 11:05:35",
+        "2026-09-27 11:05:35"
+      ],
+      "translated_text": "كعنوان",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5a0de693-30d2-4e43-b9db-e83f33c99629)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (a16d4be2-b4f6-4649-949a-d5b77bd6267c)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (79f75948-125f-423e-996a-e1891d85b9d3)"
+        }
+      }
+    },
     "3d755c6dd1db7b219f0006dc4152c17dbcac0f9a2841f357e82ea42f22fb404d": {
       "artifacts": [
         {
@@ -49448,6 +49683,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "43b0fecb6f830e524b74dddd35f8649237bf5f738b65df7153b5cc7c44388315": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_edi_content_evidence_2026-09-27.txt",
+          "sha256": "bb611c3328d2f9d37dcf871b30ce893f7f72123b473d014646e1dba31eaf075f"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "edi",
+      "language": "ar",
+      "proposal": {
+        "arabic": "إذا لم يكن هناك عمود للعنوان، فاستخدم عمود الكود كعنوان.",
+        "sha256": "077e4ec257cae3d0d5f01b2ed00b72f8183259395acee5cc8f7e626843e37452"
+      },
+      "references": "erpnext/edi/doctype/code_list/code_list_import.js:23",
+      "release_version": "1.16",
+      "reviewers": [
+        "AI-A1 (5a0de693-30d2-4e43-b9db-e83f33c99629)",
+        "AI-A2 (a16d4be2-b4f6-4649-949a-d5b77bd6267c)",
+        "AI-A3 (79f75948-125f-423e-996a-e1891d85b9d3)"
+      ],
+      "source_text": "If there is no title column, use the code column for the title.",
+      "timestamps": [
+        "2026-09-27 11:05:35",
+        "2026-09-27 11:05:35",
+        "2026-09-27 11:05:35"
+      ],
+      "translated_text": "إذا لم يكن هناك عمود للعنوان، فاستخدم عمود الكود كعنوان.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5a0de693-30d2-4e43-b9db-e83f33c99629)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (a16d4be2-b4f6-4649-949a-d5b77bd6267c)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (79f75948-125f-423e-996a-e1891d85b9d3)"
         }
       }
     },
@@ -60779,6 +61061,53 @@
         }
       }
     },
+    "5433ca455ab621574c6de04c7b3484fa72ea32a563a76d7d178b97fc4652bf1f": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_edi_content_evidence_2026-09-27.txt",
+          "sha256": "bb611c3328d2f9d37dcf871b30ce893f7f72123b473d014646e1dba31eaf075f"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "edi",
+      "language": "ar",
+      "proposal": {
+        "arabic": "اكتمل الاستيراد. تم إنشاء {0} من الأكواد المشتركة.",
+        "sha256": "7dd6f83da1b8792fec045aeeeca6591604680e39d2162be8a700ac2cbcdb86cd"
+      },
+      "references": "erpnext/edi/doctype/code_list/code_list_import.js:130",
+      "release_version": "1.16",
+      "reviewers": [
+        "AI-A1 (5a0de693-30d2-4e43-b9db-e83f33c99629)",
+        "AI-A2 (a16d4be2-b4f6-4649-949a-d5b77bd6267c)",
+        "AI-A3 (79f75948-125f-423e-996a-e1891d85b9d3)"
+      ],
+      "source_text": "Import completed. {0} common codes created.",
+      "timestamps": [
+        "2026-09-27 11:05:35",
+        "2026-09-27 11:05:35",
+        "2026-09-27 11:05:35"
+      ],
+      "translated_text": "اكتمل الاستيراد. تم إنشاء {0} من الأكواد المشتركة.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5a0de693-30d2-4e43-b9db-e83f33c99629)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (a16d4be2-b4f6-4649-949a-d5b77bd6267c)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (79f75948-125f-423e-996a-e1891d85b9d3)"
+        }
+      }
+    },
     "544c400a51799e23296036a2adc7d2ce87037646328669c9457d4dbc2d197dbc": {
       "artifacts": [
         {
@@ -71052,6 +71381,53 @@
         }
       }
     },
+    "62b72639e8c7c454a0f2044a569ca658bd94b2fd73214905ecaa37be0f96fcba": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_edi_content_evidence_2026-09-27.txt",
+          "sha256": "bb611c3328d2f9d37dcf871b30ce893f7f72123b473d014646e1dba31eaf075f"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "edi",
+      "language": "ar",
+      "proposal": {
+        "arabic": "بواسطة {}",
+        "sha256": "26b09da634151e20bc64e87dc6478dd37d6272969fd803329e93036ea6b83651"
+      },
+      "references": "erpnext/edi/doctype/code_list/code_list_import.js:90",
+      "release_version": "1.16",
+      "reviewers": [
+        "AI-A1 (5a0de693-30d2-4e43-b9db-e83f33c99629)",
+        "AI-A2 (a16d4be2-b4f6-4649-949a-d5b77bd6267c)",
+        "AI-A3 (79f75948-125f-423e-996a-e1891d85b9d3)"
+      ],
+      "source_text": "by {}",
+      "timestamps": [
+        "2026-09-27 11:05:35",
+        "2026-09-27 11:05:35",
+        "2026-09-27 11:05:35"
+      ],
+      "translated_text": "بواسطة {}",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5a0de693-30d2-4e43-b9db-e83f33c99629)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (a16d4be2-b4f6-4649-949a-d5b77bd6267c)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (79f75948-125f-423e-996a-e1891d85b9d3)"
+        }
+      }
+    },
     "62d527152a397b940c96227d9266519a62759d88459d56d8d25fddbf599d575c": {
       "artifacts": [
         {
@@ -75455,6 +75831,53 @@
           "confidence": "batch",
           "decision": "batch-accepted",
           "session": "historical pre-v4 workflow"
+        }
+      }
+    },
+    "6965b7305c1575fac2cd79a0ddbdbf17159b6a9eb8dca9d05a96110924b79c26": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_edi_content_evidence_2026-09-27.txt",
+          "sha256": "bb611c3328d2f9d37dcf871b30ce893f7f72123b473d014646e1dba31eaf075f"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "edi",
+      "language": "ar",
+      "proposal": {
+        "arabic": "ستُستخدم هذه القيمة عند عدم العثور على كود مشترك مطابق للسجل.",
+        "sha256": "c7d8e7ed91c805ccf551cbf236bae848343380a73d98e5f543342a9d3fd63055"
+      },
+      "references": "erpnext/edi/doctype/code_list/code_list.json:None",
+      "release_version": "1.16",
+      "reviewers": [
+        "AI-A1 (5a0de693-30d2-4e43-b9db-e83f33c99629)",
+        "AI-A2 (a16d4be2-b4f6-4649-949a-d5b77bd6267c)",
+        "AI-A3 (79f75948-125f-423e-996a-e1891d85b9d3)"
+      ],
+      "source_text": "This value shall be used when no matching Common Code for a record is found.",
+      "timestamps": [
+        "2026-09-27 11:05:35",
+        "2026-09-27 11:05:35",
+        "2026-09-27 11:05:35"
+      ],
+      "translated_text": "ستُستخدم هذه القيمة عند عدم العثور على كود مشترك مطابق للسجل.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5a0de693-30d2-4e43-b9db-e83f33c99629)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (a16d4be2-b4f6-4649-949a-d5b77bd6267c)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (79f75948-125f-423e-996a-e1891d85b9d3)"
         }
       }
     },
@@ -85496,6 +85919,53 @@
         }
       }
     },
+    "79a590055a19bc04d2e8ee2fb95c8cfc2035ae064fdfb8a18a496c209e608465": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_edi_content_evidence_2026-09-27.txt",
+          "sha256": "bb611c3328d2f9d37dcf871b30ce893f7f72123b473d014646e1dba31eaf075f"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "edi",
+      "language": "ar",
+      "proposal": {
+        "arabic": "خطأ في التحليل",
+        "sha256": "719f43da38c4b9270a65fa915b78d9e4f709ac6e1cdfdf9dc097b79699f4a167"
+      },
+      "references": "erpnext/edi/doctype/code_list/code_list_import.py:39",
+      "release_version": "1.16",
+      "reviewers": [
+        "AI-A1 (5a0de693-30d2-4e43-b9db-e83f33c99629)",
+        "AI-A2 (a16d4be2-b4f6-4649-949a-d5b77bd6267c)",
+        "AI-A3 (79f75948-125f-423e-996a-e1891d85b9d3)"
+      ],
+      "source_text": "Parsing Error",
+      "timestamps": [
+        "2026-09-27 11:05:35",
+        "2026-09-27 11:05:35",
+        "2026-09-27 11:05:35"
+      ],
+      "translated_text": "خطأ في التحليل",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5a0de693-30d2-4e43-b9db-e83f33c99629)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (a16d4be2-b4f6-4649-949a-d5b77bd6267c)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (79f75948-125f-423e-996a-e1891d85b9d3)"
+        }
+      }
+    },
     "79b2576ca8227c20dc0ea9a0e71ae18852394a2ee36ac3b7d44590bfd9b905dd": {
       "artifacts": [
         {
@@ -88980,6 +89450,53 @@
           "confidence": "high",
           "decision": "approve",
           "session": "7b8e0b34-fbae-4e69-a64f-fd1c19ba44e1"
+        }
+      }
+    },
+    "7dc48c1f179f66b08507f2f472487123f51297308a003c8024cd4cdf86c79244": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_edi_content_evidence_2026-09-27.txt",
+          "sha256": "bb611c3328d2f9d37dcf871b30ce893f7f72123b473d014646e1dba31eaf075f"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "edi",
+      "language": "ar",
+      "proposal": {
+        "arabic": "الملف المرفوع لا يتطابق مع قائمة الأكواد المحددة.",
+        "sha256": "04a99172dd73bc6663946e2afa7927cfe0b934f183172f1a7008d8270a27103d"
+      },
+      "references": "erpnext/edi/doctype/code_list/code_list_import.py:48",
+      "release_version": "1.16",
+      "reviewers": [
+        "AI-A1 (5a0de693-30d2-4e43-b9db-e83f33c99629)",
+        "AI-A2 (a16d4be2-b4f6-4649-949a-d5b77bd6267c)",
+        "AI-A3 (79f75948-125f-423e-996a-e1891d85b9d3)"
+      ],
+      "source_text": "The uploaded file does not match the selected Code List.",
+      "timestamps": [
+        "2026-09-27 11:05:35",
+        "2026-09-27 11:05:35",
+        "2026-09-27 11:05:35"
+      ],
+      "translated_text": "الملف المرفوع لا يتطابق مع قائمة الأكواد المحددة.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5a0de693-30d2-4e43-b9db-e83f33c99629)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (a16d4be2-b4f6-4649-949a-d5b77bd6267c)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (79f75948-125f-423e-996a-e1891d85b9d3)"
         }
       }
     },
@@ -103656,6 +104173,53 @@
         }
       }
     },
+    "9286e5d1c1916d2706c4a5ccf3bf1c03ad69906e221b3822455c5b301fd216bd": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_edi_content_evidence_2026-09-27.txt",
+          "sha256": "bb611c3328d2f9d37dcf871b30ce893f7f72123b473d014646e1dba31eaf075f"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "edi",
+      "language": "ar",
+      "proposal": {
+        "arabic": "معرف الناشر",
+        "sha256": "7b3ab5e85dce457e1051ab8ff9b07e13f46576e3c93b449ca00828b82e3877d1"
+      },
+      "references": "erpnext/edi/doctype/code_list/code_list.json:None",
+      "release_version": "1.16",
+      "reviewers": [
+        "AI-A1 (5a0de693-30d2-4e43-b9db-e83f33c99629)",
+        "AI-A2 (a16d4be2-b4f6-4649-949a-d5b77bd6267c)",
+        "AI-A3 (79f75948-125f-423e-996a-e1891d85b9d3)"
+      ],
+      "source_text": "Publisher ID",
+      "timestamps": [
+        "2026-09-27 11:05:35",
+        "2026-09-27 11:05:35",
+        "2026-09-27 11:05:35"
+      ],
+      "translated_text": "معرف الناشر",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5a0de693-30d2-4e43-b9db-e83f33c99629)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (a16d4be2-b4f6-4649-949a-d5b77bd6267c)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (79f75948-125f-423e-996a-e1891d85b9d3)"
+        }
+      }
+    },
     "928869d387b017da01d550c7e15c2eb36078e08a290fecec0ecae6873140cfdb": {
       "artifacts": [
         {
@@ -115742,6 +116306,53 @@
           "confidence": "high",
           "decision": "approve",
           "session": "7b8e0b34-fbae-4e69-a64f-fd1c19ba44e1"
+        }
+      }
+    },
+    "a4e4550bf64939eb840a90fcd6036c84ad8860579121ecc17fc4d22c4199bda0": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_edi_content_evidence_2026-09-27.txt",
+          "sha256": "bb611c3328d2f9d37dcf871b30ce893f7f72123b473d014646e1dba31eaf075f"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "edi",
+      "language": "ar",
+      "proposal": {
+        "arabic": "هل أنت متأكد من رغبتك في حذف {0}؟<p>سيؤدي هذا الإجراء أيضًا إلى حذف جميع مستندات الكود المشترك المرتبطة.</p>",
+        "sha256": "bddac3ea7ec712eb99366462ccc259a15c558e3635f5f1da32e0b10420a6443d"
+      },
+      "references": "erpnext/edi/doctype/code_list/code_list.js:18",
+      "release_version": "1.16",
+      "reviewers": [
+        "AI-A1 (5a0de693-30d2-4e43-b9db-e83f33c99629)",
+        "AI-A2 (a16d4be2-b4f6-4649-949a-d5b77bd6267c)",
+        "AI-A3 (79f75948-125f-423e-996a-e1891d85b9d3)"
+      ],
+      "source_text": "Are you sure you want to delete {0}?<p>This action will also delete all associated Common Code documents.</p>",
+      "timestamps": [
+        "2026-09-27 11:05:35",
+        "2026-09-27 11:05:35",
+        "2026-09-27 11:05:35"
+      ],
+      "translated_text": "هل أنت متأكد من رغبتك في حذف {0}؟<p>سيؤدي هذا الإجراء أيضًا إلى حذف جميع مستندات الكود المشترك المرتبطة.</p>",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5a0de693-30d2-4e43-b9db-e83f33c99629)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (a16d4be2-b4f6-4649-949a-d5b77bd6267c)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (79f75948-125f-423e-996a-e1891d85b9d3)"
         }
       }
     },
@@ -151693,6 +152304,53 @@
         }
       }
     },
+    "d6fbf83317816c72643b6ed22ec145acef3f24f82fc0c5e9f7b4f35c387840f7": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_edi_content_evidence_2026-09-27.txt",
+          "sha256": "bb611c3328d2f9d37dcf871b30ce893f7f72123b473d014646e1dba31eaf075f"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "edi",
+      "language": "ar",
+      "proposal": {
+        "arabic": "{0} {1} مرتبط بالفعل بالكود المشترك {2}.",
+        "sha256": "15fa4a17f81fc466265046f3535bf16fb062893595ed7a8c653ab77989222ab5"
+      },
+      "references": "erpnext/edi/doctype/common_code/common_code.py:52",
+      "release_version": "1.16",
+      "reviewers": [
+        "AI-A1 (5a0de693-30d2-4e43-b9db-e83f33c99629)",
+        "AI-A2 (a16d4be2-b4f6-4649-949a-d5b77bd6267c)",
+        "AI-A3 (79f75948-125f-423e-996a-e1891d85b9d3)"
+      ],
+      "source_text": "{0} {1} is already linked to Common Code {2}.",
+      "timestamps": [
+        "2026-09-27 11:05:35",
+        "2026-09-27 11:05:35",
+        "2026-09-27 11:05:35"
+      ],
+      "translated_text": "{0} {1} مرتبط بالفعل بالكود المشترك {2}.",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5a0de693-30d2-4e43-b9db-e83f33c99629)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (a16d4be2-b4f6-4649-949a-d5b77bd6267c)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (79f75948-125f-423e-996a-e1891d85b9d3)"
+        }
+      }
+    },
     "d71d6ee97dc779716082cbb40d4ffbc6e974a27ef32cc827379b73bc20ddfc4b": {
       "artifacts": [
         {
@@ -157970,6 +158628,53 @@
           "confidence": "high",
           "decision": "approve",
           "session": "AI-A3 (6e817715-dbf8-4c84-a9cf-1b4d2f5a3079)"
+        }
+      }
+    },
+    "e0044cefee511ed65eeb8a6809b0ee11fe66f972b20d73e61b56e786b9bd1f03": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_edi_content_evidence_2026-09-27.txt",
+          "sha256": "bb611c3328d2f9d37dcf871b30ce893f7f72123b473d014646e1dba31eaf075f"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "edi",
+      "language": "ar",
+      "proposal": {
+        "arabic": "جارٍ حذف {0} وجميع مستندات الكود المشترك المرتبطة...",
+        "sha256": "2d26d5dc3f404602b5079d48437211ffe5dbcb7c520746a6c804c7fff89d44f2"
+      },
+      "references": "erpnext/edi/doctype/code_list/code_list.js:28",
+      "release_version": "1.16",
+      "reviewers": [
+        "AI-A1 (5a0de693-30d2-4e43-b9db-e83f33c99629)",
+        "AI-A2 (a16d4be2-b4f6-4649-949a-d5b77bd6267c)",
+        "AI-A3 (79f75948-125f-423e-996a-e1891d85b9d3)"
+      ],
+      "source_text": "Deleting {0} and all associated Common Code documents...",
+      "timestamps": [
+        "2026-09-27 11:05:35",
+        "2026-09-27 11:05:35",
+        "2026-09-27 11:05:35"
+      ],
+      "translated_text": "جارٍ حذف {0} وجميع مستندات الكود المشترك المرتبطة...",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5a0de693-30d2-4e43-b9db-e83f33c99629)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (a16d4be2-b4f6-4649-949a-d5b77bd6267c)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (79f75948-125f-423e-996a-e1891d85b9d3)"
         }
       }
     },
@@ -175330,6 +176035,53 @@
         }
       }
     },
+    "f86839b0e9375fdca23625ab2ac7ca0007083ec5eaeffea5de6c8b89de8cccf2": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_edi_content_evidence_2026-09-27.txt",
+          "sha256": "bb611c3328d2f9d37dcf871b30ce893f7f72123b473d014646e1dba31eaf075f"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "edi",
+      "language": "ar",
+      "proposal": {
+        "arabic": "المعرف الموحد القياسي (Canonical URI)",
+        "sha256": "2b17a060b83a695298698cb72b30f4382f19c2bd11119eaba4f9012e2b2ed695"
+      },
+      "references": "erpnext/edi/doctype/code_list/code_list.json:None; erpnext/edi/doctype/common_code/common_code.json:None",
+      "release_version": "1.16",
+      "reviewers": [
+        "AI-A1 (5a0de693-30d2-4e43-b9db-e83f33c99629)",
+        "AI-A2 (a16d4be2-b4f6-4649-949a-d5b77bd6267c)",
+        "AI-A3 (79f75948-125f-423e-996a-e1891d85b9d3)"
+      ],
+      "source_text": "Canonical URI",
+      "timestamps": [
+        "2026-09-27 11:05:35",
+        "2026-09-27 11:05:35",
+        "2026-09-27 11:05:35"
+      ],
+      "translated_text": "المعرف الموحد القياسي (Canonical URI)",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5a0de693-30d2-4e43-b9db-e83f33c99629)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (a16d4be2-b4f6-4649-949a-d5b77bd6267c)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (79f75948-125f-423e-996a-e1891d85b9d3)"
+        }
+      }
+    },
     "f8696f5412b8cb873b0540c0305c94d71129d86d33c27b3ea32eaa35212c67d7": {
       "artifacts": [
         {
@@ -180559,6 +181311,53 @@
         }
       }
     },
+    "ffbe61d6438f0f6d0b5c16698dcc4da0723adb444d808aa9bf58049cf7c90550": {
+      "artifacts": [
+        {
+          "ref": "content:docs/translation/stage6_w606_edi_content_evidence_2026-09-27.txt",
+          "sha256": "bb611c3328d2f9d37dcf871b30ce893f7f72123b473d014646e1dba31eaf075f"
+        }
+      ],
+      "context": "",
+      "ct_app": "erpnext",
+      "domain": "edi",
+      "language": "ar",
+      "proposal": {
+        "arabic": "كوصف",
+        "sha256": "f04d2d1bb8b48e471134c9c16b28e03a5ccf0e35d5c9d893fd06e4414def8779"
+      },
+      "references": "erpnext/edi/doctype/code_list/code_list_import.js:73",
+      "release_version": "1.16",
+      "reviewers": [
+        "AI-A1 (5a0de693-30d2-4e43-b9db-e83f33c99629)",
+        "AI-A2 (a16d4be2-b4f6-4649-949a-d5b77bd6267c)",
+        "AI-A3 (79f75948-125f-423e-996a-e1891d85b9d3)"
+      ],
+      "source_text": "as Description",
+      "timestamps": [
+        "2026-09-27 11:05:35",
+        "2026-09-27 11:05:35",
+        "2026-09-27 11:05:35"
+      ],
+      "translated_text": "كوصف",
+      "verdicts": {
+        "AI-A1": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A1 (5a0de693-30d2-4e43-b9db-e83f33c99629)"
+        },
+        "AI-A2": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A2 (a16d4be2-b4f6-4649-949a-d5b77bd6267c)"
+        },
+        "AI-A3": {
+          "confidence": "high",
+          "decision": "approve",
+          "session": "AI-A3 (79f75948-125f-423e-996a-e1891d85b9d3)"
+        }
+      }
+    },
     "ffc22b13960db27d1f2db81df88673c88d380e2588297c371f739c656b459f1e": {
       "artifacts": [
         {
@@ -180701,7 +181500,7 @@
       }
     }
   },
-  "generated_utc": "2026-09-27T09:48:54Z",
-  "note": "W6-1 Accounts Batch 05 decisions added; content-evidence bound.",
+  "generated_utc": "2026-09-27T11:05:35Z",
+  "note": "W6-6 EDI remainder decisions added; content-evidence bound.",
   "schema": "release-decision/v2"
 }

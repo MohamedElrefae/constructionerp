@@ -1,11 +1,11 @@
 # Session Memory — Construction ERP
-**LAST UPDATED:** 2026-09-27 (W6-1 Accounts Batch 05 cycle closed on test site; W6-1 Accounts complete)
-**UPDATED BY:** Antigravity (W6-1 Accounts Batch 05 governed cycle, evidence closure, and reconciliation)
+**LAST UPDATED:** 2026-09-27 (Stage 6 W6-6 EDI Remainder cycle closed on test site; W6-6 complete, Stage 6 remains open pending W6-7)
+**UPDATED BY:** Antigravity (Stage 6 W6-6 EDI Remainder governed cycle, evidence closure, and reconciliation)
 
 ---
 
 ## 1. Project Snapshot
-- **Total commits:** 375 after this closure (`git rev-list --count HEAD` is authoritative; 5 unpushed closure commits on local `develop` from origin)
+- **Total commits:** 376 after this closure (`git rev-list --count HEAD` is authoritative; 6 unpushed closure commits on local `develop` from origin)
 - **Current branch:** `develop` (local closure commit; strictly unpushed)
 - **Last session date:** 2026-09-27
 - **Python version:** 3.14 (venv: `/home/mohamed/frappe-bench/env`)
@@ -893,3 +893,35 @@ Owner authorization recorded for exact 56-row W6-1 Accounts Batch 05 scope (`doc
   - `v16.localhost` test site only. Stage 8 and production remain gated and completely untouched.
   - Strictly no push (local closure commit only).
 
+## 2026-09-27 — Stage 6 W6-6 EDI Remainder governed cycle closed on test site (W6-6 Complete; Stage 6 Remains Open Pending W6-7)
+
+Owner authorization recorded for exact 26-row W6-6 EDI Remainder scope (`docs/translation/stage6_w606_edi_rows_2026-09-27.csv`, SHA-256 `2b0cc9b46546aa36310f81738c72ff0d2b50ca35666110033976c424c149cef1`) and proposal (`docs/translation/stage6_w606_edi_proposal_2026-09-27.csv`, SHA-256 `ea74475780980e95f13346db8aaf8beb7b56c3202336950ae9432f2d2eebb6b7`) on `v16.localhost` only.
+
+**Governed Cycle Execution Summary:**
+- **Partition & Dispositions (26 total rows):**
+  - **17 newly Released payload rows** (appended to catalog at release_version 1.16, domain `edi`, catalog lines 3831–3847).
+  - **9 exact-key preserved Site Overrides** (byte-for-byte reconciliation against live `v16.localhost` `tabTranslation`).
+  - **0 technical exceptions**, 0 deferred source defects, 0 catalog duplicates.
+- **Reviews & Quorum:**
+  - AI-A1 (Linguistic), AI-A2 (Domain), AI-A3 (Structural) subagents all returned formal verdicts: **PASS**.
+  - AI-R final independent bundle verification completed with formal verdict: **PASS** (`stage6-w606-ai-r-edi-final-2026-09-27.md`).
+- **Live Database Import & Verification:**
+  - `uat_preflight.py` PASSED with 14,149 Arabic boot messages.
+  - `import_released_overrides(dry_run=False)`: created 17 rows, updated 0, 3,830 skipped, 0 drift.
+  - Post-import dry-run: `total=3847 created=0 updated=0 skipped=3847 drift=0` (clean, zero drift).
+  - Sync: `sync_translation_catalog(dry_run=False)` returned `{'created': 0, 'updated': 0}`.
+- **Catalog, Manifests & Gate:**
+  - Catalog rows: **3,847 Released rows**; `release_decisions.json`: **3,847 decisions**.
+  - Freshness evidence: `packaged_rows: 3847`, `critical_pass: true`, `has_drift: false`.
+  - Inventory Manifest: 22,264 rows, Merkle root `fdc2edd0672d11f75d780fd22bdbcea2bca82abe2eeb3a906c96c978b2928bd1` (`LIVE_MATCH: True`).
+  - Gate constants updated: `EXPECTED_DRYRUN = 3847` in `scripts/check_localization_gates.py`, standalone test assertion updated to 3847 in `construction/tests/test_localization_gates.py`.
+  - Full evidence-inclusive gate: `python3 scripts/check_localization_gates.py` exited 0 with `errors=0`, `csv_rows=3847`.
+  - Ten Stage-2 evidence envelopes re-assembled, pinning pre-commit candidate HEAD `2ab9e86716bcadf94b245eb958f101ce56af221a`.
+- **Browser Evidence:**
+  - Headless Playwright suite captured 8/8 checks, 17/17 released translations verified, 26/26 batch keys matched.
+  - Teardown: Administrator language restored to `en`, session cleared.
+- **W6-6 Domain Closure Complete (Stage 6 Remains Open Pending W6-7):**
+  - With the 26 EDI rows resolved (17 released + 9 preserved), the entire W6-6 domain is fully closed on the test site. Stage 6 overall remains open pending future reconciliation and approval of remaining scopes (such as W6-7).
+- **Boundaries:**
+  - `v16.localhost` test site only. Stage 8 and production remain gated and completely untouched.
+  - Strictly no push (local closure commit only).

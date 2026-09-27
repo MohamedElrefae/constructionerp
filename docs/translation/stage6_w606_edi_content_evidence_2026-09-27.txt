@@ -1,0 +1,17 @@
+Are you sure you want to delete {0}?<p>This action will also delete all associated Common Code documents.</p>	هل أنت متأكد من رغبتك في حذف {0}؟<p>سيؤدي هذا الإجراء أيضًا إلى حذف جميع مستندات الكود المشترك المرتبطة.</p>
+Canonical URI	المعرف الموحد القياسي (Canonical URI)
+Deleting {0} and all associated Common Code documents...	جارٍ حذف {0} وجميع مستندات الكود المشترك المرتبطة...
+If there is no title column, use the code column for the title.	إذا لم يكن هناك عمود للعنوان، فاستخدم عمود الكود كعنوان.
+Import completed. {0} common codes created.	اكتمل الاستيراد. تم إنشاء {0} من الأكواد المشتركة.
+Parsing Error	خطأ في التحليل
+Publisher	الناشر
+Publisher ID	معرف الناشر
+The uploaded file does not match the selected Code List.	الملف المرفوع لا يتطابق مع قائمة الأكواد المحددة.
+This value shall be used when no matching Common Code for a record is found.	ستُستخدم هذه القيمة عند عدم العثور على كود مشترك مطابق للسجل.
+You are importing data for the code list:	أنت تستورد بيانات لقائمة الأكواد:
+as Code	ككود
+as Description	كوصف
+as Title	كعنوان
+by {}	بواسطة {}
+description	الوصف
+{0} {1} is already linked to Common Code {2}.	{0} {1} مرتبط بالفعل بالكود المشترك {2}.

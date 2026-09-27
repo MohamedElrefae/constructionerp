@@ -1,5 +1,5 @@
 {
-  "base_commit": "359a1addd2929d62529ff10d8eb57254bcac11dc",
+  "base_commit": "2ab9e86716bcadf94b245eb958f101ce56af221a",
   "categories": [
     {
       "app": "<untagged>",
@@ -29,13 +29,13 @@
       "app": "erpnext",
       "approved_legacy": 4654.0,
       "deprecated": 0.0,
-      "empty": 2614.0,
+      "empty": 2597.0,
       "no_status": 5.0,
-      "pending": 2614.0,
-      "populated_nontrivial": 8098.0,
-      "released": 3450.0,
+      "pending": 2597.0,
+      "populated_nontrivial": 8132.0,
+      "released": 3484.0,
       "source_equal": 12.0,
-      "total": 10723
+      "total": 10740
     },
     {
       "app": "frappe",
@@ -50,11 +50,11 @@
       "total": 8014
     }
   ],
-  "generated_utc": "2026-09-27T09:50:25Z",
+  "generated_utc": "2026-09-27T11:10:08Z",
   "generator": "construction.localization_inventory.merkle_root over stage2_inventory.sql",
   "merkle": {
-    "root": "47920b40abbc6a4384d01d2b25ac7b8882a9a5cd1c294fcf5d84f8cfda278a74",
-    "rows": 22247,
+    "root": "fdc2edd0672d11f75d780fd22bdbcea2bca82abe2eeb3a906c96c978b2928bd1",
+    "rows": 22264,
     "scheme": "json(sorted(str-normalized (source,context,app,translated,review))) sha256"
   },
   "po_hashes": {
