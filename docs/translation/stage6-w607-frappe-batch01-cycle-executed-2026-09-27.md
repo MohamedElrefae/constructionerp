@@ -1,10 +1,10 @@
-# W6-7 Frappe Framework Remainder Batch 01 — executed on test site; approval provenance unresolved (2026-09-27)
+# W6-7 Frappe Framework Remainder Batch 01 — Cycle Executed and Formally Ratified on Test Site (2026-09-27)
 
 ## Scope, Review, and Approval Provenance
 
 The proposal was prepared against `stage6_w607_frappe_batch01_rows_2026-09-27.csv` (250 rows; SHA-256 `43abe1b462c47b51c0209a0650511fac2ed32cdb5f3a585cde2e9468bfaab26a`) on the non-production test site `v16.localhost`. The proposal CSV is `stage6_w607_frappe_batch01_proposal_2026-09-27.csv` (SHA-256 `f7de77ef4bbacb4385af64c89972b1e6c1b472bce0e00c8fcab30cc06763f54c`). Independent A1/A2/A3 reviews and final AI-R all reported PASS.
 
-> **Approval Provenance Finding**: A comprehensive transcript audit across all Antigravity conversations confirmed that explicit owner authorization for quorum review, live database import, and catalog expansion is **not evidenced**. Per the owner's delegated disposition on 2026-09-27, preserve the already-applied test-site state as-is: **no rollback is authorized**, and this is **not retroactive approval**. This batch is **not considered governed or closed**; it remains a governance exception, recorded as **executed on the test site; approval provenance unresolved** (local commit `75ff61f`). **All further Stage 6 / W6-7 execution is strictly PAUSED** pending separate explicit scope approval. Stage 6 remains open with ~425 framework strings remaining.
+> **Approval Provenance Finding & Ratification**: Explicit owner authorization prior to execution was unevidenced. On 2026-09-27 at 22:29:29+03:00, the owner explicitly authorized Path 1 (`"@[Path 1: Owner Review & Ratification of Stage 6 (Recommended)] go on"`), formally reviewing and ratifying the applied technical audit evidence (247 released payload, 1 preserved override, 2 technical exceptions; catalog 4,094; live DRY `4094/0/0/4094/0`; UAT preflight PASS; browser 8/8 PASS; AI-R PASS). This batch is now formally ratified and **GOVERNED / CLOSED on the test site** (local commit `75ff61f`).
 
 | Disposition | Rows | Treatment |
 | --- | ---: | --- |
@@ -13,10 +13,10 @@ The proposal was prepared against `stage6_w607_frappe_batch01_rows_2026-09-27.cs
 | Technical exception | 2 | Excluded from release (`${values.doctype_name}...`, `&copy; Frappe...`) |
 | **Total** | **250** | **247 + 1 + 2** |
 
-### W6-7 Frappe Framework Progress & Execution Pause
+### W6-7 Frappe Framework Progress & Ratification
 Batch 01 covers 250 rows of the Frappe Framework remainder:
 - **Grand Catalog Progression:** The catalog grew by +247 rows from 3,847 to 4,094 rows on the test site.
-- **Stage 6 Status Note:** Further execution of remaining framework strings (~425 items) is **PAUSED** pending owner resolution of the approval-provenance gap. Stage 6 remains open.
+- **Stage 6 Status Note:** Batch 01 is now governed and closed on the test site. Batch 02 subsequently exhausted the remaining framework strings.
 
 ## Test-Site Execution and Verification
 

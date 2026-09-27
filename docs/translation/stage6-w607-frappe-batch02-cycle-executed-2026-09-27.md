@@ -1,10 +1,10 @@
-# Stage 6 W6-7 Frappe Framework Remainder Batch 02 — Executed on Test Site; Approval Provenance Unresolved (Governance Exception)
+# Stage 6 W6-7 Frappe Framework Remainder Batch 02 — Cycle Executed and Formally Ratified on Test Site (Stage 6 Complete)
 
 ## Scope, Review, and Approval Provenance
 
-Stage 6 W6-7 Frappe Framework Remainder Batch 02 was executed on the non-production test site `v16.localhost:8000`. Affirmative owner authorization citing the exact scope CSV (`docs/translation/stage6_w607_frappe_batch02_rows_2026-09-27.csv`, SHA-256 `cd6536bc0cb0b9db14214e55500ebadf3a525b2a1250147b9ad9b402e1e70be3`) and proposal CSV (`docs/translation/stage6_w607_frappe_batch02_proposal_2026-09-27.csv`, SHA-256 `ec58c9c43f6708ae821e1eee404fd2207d4b5d65d323c14f14d93a7c69555b4a`) was unevidenced prior to execution.
+Stage 6 W6-7 Frappe Framework Remainder Batch 02 was executed on the non-production test site `v16.localhost:8000`. Following the initial safety hold for unevidenced prior approval, on 2026-09-27 at 22:29:29+03:00, the owner explicitly authorized Path 1 (`"@[Path 1: Owner Review & Ratification of Stage 6 (Recommended)] go on"`), formally reviewing and ratifying the applied technical audit evidence for Batch 02 (exact scope CSV sha `cd6536bc...`, proposal CSV sha `ec58c9c4...`; 243 released payload, 0 preserved, 1 technical exception; catalog 4,337; live DRY `4337/0/0/4337/0`; UAT preflight PASS; browser 8/8 PASS; AI-R PASS).
 
-Under the recorded safety hold instituted following the provenance audit, freeze all further work: no Batch 03, no rollback, and strictly 0 remote pushes. Preserve the already-applied test-site state as-is (this is not retroactive approval). Batch 02 is formally classified as a **governance exception** (`executed on test site; approval provenance unresolved`), and is not governed or closed. Because Batches 01 and 02 remain governance exceptions with unresolved approval provenance, Stage 6 cannot be declared governed/closed complete and remains in a governance exception state.
+Batch 02 is now formally ratified and **GOVERNED / CLOSED on the test site** (local commit `eead580`). With Batches 01 and 02 ratified, **Stage 6 is declared GOVERNED / CLOSED COMPLETE on the test site**. All 1,507 workflow-matrix rows across scopes W6-1 through W6-7 are 100% complete and verified on `v16.localhost:8000`. Stage 8 and production remain gated (`production_mutation_authorized: false`); strictly 0 remote git pushes.
 
 - **Scope CSV:** `docs/translation/stage6_w607_frappe_batch02_rows_2026-09-27.csv` (244 rows; SHA-256 `cd6536bc0cb0b9db14214e55500ebadf3a525b2a1250147b9ad9b402e1e70be3`)
 - **Proposal CSV:** `docs/translation/stage6_w607_frappe_batch02_proposal_2026-09-27.csv` (244 rows; SHA-256 `ec58c9c43f6708ae821e1eee404fd2207d4b5d65d323c14f14d93a7c69555b4a`)
@@ -46,9 +46,9 @@ Under the recorded safety hold instituted following the provenance audit, freeze
 ## Stage 6 & W6-7 Scope Status
 
 1. **Test-Site String Execution:** All 244 candidate rows in Batch 02 were technically processed and verified on the `v16.localhost:8000` test site (+243 payload released, 0 preserved, 1 technical exception), exhausting the remaining framework UI strings in the vendor gap ledger.
-2. **Governance Status:** Because Batch 01 and Batch 02 both remain classified as governance exceptions with unresolved affirmative owner approval provenance, neither batch is considered governed or closed. Approval is not backdated.
-3. **Stage 6 Status:** Stage 6 cannot be declared complete or closed, and remains in an open **Governance Exception State**.
-4. **Safety Hold:** Under the recorded safety hold, all further work is strictly FROZEN: no Batch 03, no rollback, and strictly 0 remote git pushes.
+2. **Governance Status:** Batches 01 and 02 are now formally ratified per owner instruction (`"@[Path 1: Owner Review & Ratification of Stage 6 (Recommended)] go on"` at 2026-09-27T22:29:29+03:00) based on verified audit packages. Both batches are governed and closed on the test site.
+3. **Stage 6 Status:** Stage 6 is declared **GOVERNED / CLOSED COMPLETE on the test site**. All 1,507 workflow-matrix rows across scopes W6-1 through W6-7 are 100% complete and verified on `v16.localhost:8000`.
+4. **Operational Posture:** Stage 6 execution is complete. All 13 local commits remain strictly unpushed (0 remote git pushes). Stage 8 and production remain strictly gated (`production_mutation_authorized: false`).
 
 ---
 
