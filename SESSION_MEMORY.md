@@ -1,11 +1,11 @@
 # Session Memory — Construction ERP
-**LAST UPDATED:** 2026-09-27 (W6-1 Accounts Batch 03 cycle closed on test site)
-**UPDATED BY:** Antigravity (W6-1 Accounts Batch 03 governed cycle, evidence closure, and reconciliation)
+**LAST UPDATED:** 2026-09-27 (W6-1 Accounts Batch 04 cycle closed on test site)
+**UPDATED BY:** Antigravity (W6-1 Accounts Batch 04 governed cycle, evidence closure, and reconciliation)
 
 ---
 
 ## 1. Project Snapshot
-- **Total commits:** 373 after this closure (`git rev-list --count HEAD` is authoritative; 3 unpushed closure commits on local `develop`)
+- **Total commits:** 374 after this closure (`git rev-list --count HEAD` is authoritative; 4 unpushed closure commits on local `develop` from origin)
 - **Current branch:** `develop` (local closure commit; strictly unpushed)
 - **Last session date:** 2026-09-27
 - **Python version:** 3.14 (venv: `/home/mohamed/frappe-bench/env`)
@@ -822,3 +822,38 @@ Owner authorization recorded for exact 250-row W6-1 Accounts Batch 03 scope (`do
 - **Boundaries:**
   - `v16.localhost` test site only. Stage 8 and production remain gated and completely untouched.
   - Strictly no push (local closure commit only).
+
+## 2026-09-27 — W6-1 Accounts Batch 04 governed cycle closed on test site
+
+Owner authorization recorded for exact 250-row W6-1 Accounts Batch 04 scope (`docs/translation/stage6_w601_accounts_batch04_rows_2026-09-27.csv`, SHA-256 `0286741911fbe377c0a723131611d8a91cbe7c943c59d307756d7e1f18cfae30`) and proposal (`docs/translation/stage6_w601_accounts_batch04_proposal_2026-09-27.csv`, SHA-256 `4c72e83b3d41476914dcf884a8798c51ec5f6e662500105509fc2b8aad6bc47a`) on `v16.localhost` only.
+
+**Governed Cycle Execution Summary:**
+- **Partition & Dispositions (250 total rows):**
+  - **121 newly Released payload rows** (appended to catalog at release_version 1.14, catalog lines 3670–3790).
+  - **125 exact-key preserved Site Overrides** (byte-for-byte reconciliation against live `v16.localhost` `tabTranslation`).
+  - **3 preserved Site Overrides (strip-collision)** (`Role Allowed to Over Bill `, `Sales Partner `, `Select Dispatch Address ` — preserved live site overrides `Role Allowed to Over Bill`, `Sales Partner`, `Select Dispatch Address`, plan §12).
+  - **1 technical exception** (`Rgt` — Frappe NestedSet right bound integer coordinate; untranslated).
+  - **0 deferred source defects**, 0 catalog duplicates.
+- **Reviews & Quorum:**
+  - AI-A1 (Linguistic), AI-A2 (Domain), AI-A3 (Structural) subagents all returned formal verdicts: **PASS**.
+  - AI-R final independent bundle verification completed with formal verdict: **PASS** (`stage6-w601-ai-r-accounts-batch04-final-2026-09-27.md`).
+- **Live Database Import & Verification:**
+  - `uat_preflight.py` PASSED with 14,091 Arabic boot messages.
+  - `import_released_overrides(dry_run=False)`: created 121 rows, updated 0, 3,669 skipped, 0 drift.
+  - Post-import dry-run: `total=3790 created=0 updated=0 skipped=3790 drift=0` (clean, zero drift).
+  - Sync: `sync_translation_catalog(dry_run=False)` returned `{'created': 0, 'updated': 0}`.
+- **Catalog, Manifests & Gate:**
+  - Catalog rows: **3,790 Released rows**; `release_decisions.json`: **3,790 decisions**.
+  - Freshness evidence: `packaged_rows: 3790`, `critical_pass: true`, `has_drift: false`.
+  - Inventory Manifest: 22,207 rows, Merkle root `a6432de6a030b2bf4883b721a9a515d9a12bf526764461307c53de235db332cb` (`LIVE_MATCH: True`).
+  - Gate constants updated: `EXPECTED_DRYRUN = 3790` in `scripts/check_localization_gates.py`, standalone test assertion updated to 3790 in `construction/tests/test_localization_gates.py`.
+  - Full evidence-inclusive gate: `python3 scripts/check_localization_gates.py` exited 0 with `errors=0`, `csv_rows=3790`.
+  - Tests: All 11 modules (271/271 tests) and 92 standalone tests passed.
+  - Ten Stage-2 evidence envelopes re-assembled, pinning pre-commit candidate HEAD `84919dd4ff11ed31b604ba43d1770d51405b4841`.
+- **Browser Evidence:**
+  - Headless Playwright suite captured 8/8 checks, 121/121 released translations verified, 249/249 batch keys matched (250 minus 1 technical exception `Rgt`).
+  - Teardown: Administrator language restored to `en`, session cleared.
+- **Boundaries:**
+  - `v16.localhost` test site only. Stage 8 and production remain gated and completely untouched.
+  - Strictly no push (local closure commit only).
+

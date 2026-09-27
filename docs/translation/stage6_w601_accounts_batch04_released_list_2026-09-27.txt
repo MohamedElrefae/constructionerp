@@ -1,0 +1,121 @@
+Reporting Currency Exchange Not Found
+Repost has started in the background
+Repost in background
+Repost started in the background
+Reposting in the background.
+Represents a Financial Year. All accounting entries and other major transactions are tracked against the Fiscal Year.
+Restrict
+Result Key
+Return invoice of asset cancelled
+Return on Asset Ratio
+Return on Equity Ratio
+Returned exchange rate is neither integer not float.
+Revaluation Surplus
+Revision cancelled
+Role allowed to bypass period restrictions.
+Root Type for {0} must be one of the Asset, Liability, Income, Expense and Equity
+Rounding Loss Allowance should be between 0 and 1
+Row #{0}: Asset {1} cannot be sold, it is already {2}
+Row #{0}: Asset {1} is already sold
+Row #{0}: Cumulative threshold cannot be less than Single Transaction threshold
+Row #{0}: Dates overlapping with other row
+Row #{0}: From Date cannot be before To Date
+Row #{0}: Item {1} has no stock in warehouse {2}.
+Row #{0}: Item {1} in warehouse {2}: Available {3}, Needed {4}.
+Row #{0}: Return Against is required for returning asset
+Row #{0}: Stock quantity {1} ({2}) for item {3} cannot exceed {4}
+Row #{0}: You must select an Asset for Item {1}.
+Row #{}: The original Invoice {} of return invoice {} is not consolidated.
+Row #{}: You cannot add positive quantities in a return invoice. Please remove item {} to complete the return.
+Row No {0}: Warehouse is required. Please set a Default Warehouse for Item {1} and Company {2}
+Row {0}: Allocated amount {1} must be less than or equal to invoice outstanding amount {2}
+Row {0}: Allocated amount {1} must be less than or equal to remaining payment amount {2}
+Row {0}: Expense Head changed to {1} as no Purchase Receipt is created against Item {2}.
+Row {0}: Expense Head changed to {1} because expense is booked against this account in Purchase Receipt {2}
+Row {0}: Payment Term is mandatory
+Row {0}: {1} account already applied for Accounting Dimension {2}
+Row({0}): Outstanding Amount cannot be greater than actual Outstanding Amount {1} in {2}
+Rows with Same Account heads will be merged on Ledger
+SCIO Detail
+Sales Invoice does not have Payments
+Sales Invoice is already consolidated
+Sales Invoice is not created using POS
+Sales Invoice is not submitted
+Sales Invoice isn't created by user {}
+Sales Invoice mode is activated in POS. Please create Sales Invoice instead.
+Scheduler is Inactive. Can't trigger job now.
+Scheduler is Inactive. Can't trigger jobs now.
+Scheduler is inactive. Cannot enqueue job.
+Scheduler is inactive. Cannot merge accounts.
+Setting the account as a Company Account is necessary for Bank Reconciliation
+Short-term Investments
+Short-term Provisions
+Show negative values as positive (for expenses in P&L)
+Skipping Tax Withholding Category {0} as there is no associated account set for Company {1} in it.
+Software
+Solvency Ratios
+Specify conditions to calculate shipping amount
+Split Early Payment Discount Loss into Income and Tax Loss
+Stale Days should start from 1.
+Start Date should be lower than End Date
+Stock cannot be updated against the following Delivery Notes: {0}
+Subscription for Future dates cannot be processed.
+Successfully imported {0} record out of {1}. Click on Export Errored Rows, fix the errors and import again.
+Successfully imported {0} record.
+Successfully imported {0} records out of {1}. Click on Export Errored Rows, fix the errors and import again.
+Successfully imported {0} records.
+Successfully merged {0} out of {1}.
+Successfully updated {0} record out of {1}. Click on Export Errored Rows, fix the errors and import again.
+Successfully updated {0} record.
+Successfully updated {0} records out of {1}. Click on Export Errored Rows, fix the errors and import again.
+Successfully updated {0} records.
+Supplier > Supplier Type
+Tax Amount will be rounded on a row(items) level
+Tax Withholding Category {} against Company {} for Customer {} should have Cumulative Threshold value.
+Tax will be withheld only for amount exceeding the cumulative threshold
+Text displayed on the financial statement (e.g., 'Total Revenue', 'Cash and Cash Equivalents')
+The Excluded Fee is bigger than the Deposit it is deducted from.
+The GL Entries and closing balances will be processed in the background, it can take a few minutes.
+The GL Entries will be cancelled in the background, it can take a few minutes.
+The Payment Request {0} is already paid, cannot process payment twice
+The allocated amount is greater than the outstanding amount of Payment Request {0}
+The currency of invoice {} ({}) is different from the currency of this dunning ({}).
+The following invalid Pricing Rules are deleted:
+The original invoice should be consolidated before or along with the return invoice.
+The uploaded file does not appear to be in valid MT940 format.
+There was an issue connecting to Plaid's authentication server. Check browser console for more information
+There were issues unlinking payment entry {0}.
+This Account has '0' balance in either Base Currency or Account Currency
+This filter will be applied to Journal Entry.
+This invoice has already been paid.
+This schedule was created when Asset {0} was restored due to Sales Invoice {1} cancellation.
+This schedule was created when Asset {0} was returned through Sales Invoice {1}.
+This schedule was created when Asset {0} was {1} through Sales Invoice {2}.
+Threshold for Suggestion (In Percentage)
+To cancel a {} you need to cancel the POS Closing Entry {}.
+To cancel this Sales Invoice you need to cancel the POS Closing Entry {}.
+To not apply Pricing Rule in a particular transaction, all applicable Pricing Rules should be disabled.
+To submit the invoice without purchase order please set {0} as {1} in {2}
+To submit the invoice without purchase receipt please set {0} as {1} in {2}
+To use a different finance book, please uncheck 'Include Default FB Assets'
+Too many columns. Export the report and print it using a spreadsheet application.
+Total Expenses booked through
+Total distributed amount {0} must be equal to Budget Amount {1}
+Total distribution percent must equal 100 (currently {0})
+Total percentage against cost centers should be 100
+Track separate Income and Expense for product verticals or divisions.
+Transaction currency: {0} cannot be different from Bank Account({1}) currency: {2}
+Transactions using Sales Invoice in POS are disabled.
+Truncates 'Remarks' column to set character length
+Type of financial statement this template generates
+UnBuffered Cursor
+Unrealized Profit / Loss account for intra-company transfers
+Unrealized Profit/Loss account for intra-company transfers
+Up
+Updated {0} Financial Report Row(s) with new category name
+Use Legacy Controller For Period Closing Voucher
+Used with Financial Report Template
+Users with this role are allowed to over bill above the allowance percentage
+Users with this role will be notified if the asset depreciation gets failed
+Valid From must be after {0} as last GL Entry against the cost center {1} posted on this date
+Valuation rate for the item as per Sales Invoice (Only for Internal Transfers)
