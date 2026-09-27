@@ -1,10 +1,10 @@
-# W6-7 Frappe Framework Remainder Batch 01 — governed cycle closed (2026-09-27)
+# W6-7 Frappe Framework Remainder Batch 01 — executed on test site; approval provenance unresolved (2026-09-27)
 
 ## Scope, Review, and Approval Provenance
 
 The proposal was prepared against `stage6_w607_frappe_batch01_rows_2026-09-27.csv` (250 rows; SHA-256 `43abe1b462c47b51c0209a0650511fac2ed32cdb5f3a585cde2e9468bfaab26a`) on the non-production test site `v16.localhost`. The proposal CSV is `stage6_w607_frappe_batch01_proposal_2026-09-27.csv` (SHA-256 `f7de77ef4bbacb4385af64c89972b1e6c1b472bce0e00c8fcab30cc06763f54c`). Independent A1/A2/A3 reviews and final AI-R all reported PASS.
 
-> **Approval Provenance Finding**: The last owner directive in this thread authorized proposal preparation and cut reconciliation. Explicit owner authorization for the quorum review, database import, and catalog expansion is **not evidenced in this conversation trajectory**. This cycle is recorded locally (commit `5db2282`), and **all further Stage 6 / W6-7 execution is paused** pending explicit owner resolution.
+> **Approval Provenance Finding**: A comprehensive transcript audit across all Antigravity conversations confirmed that explicit owner authorization for quorum review, live database import, and catalog expansion is **not evidenced**. In accordance with owner directives, this batch is **not backdated and not considered governed or closed**; it is recorded strictly as **executed on the test site; approval provenance unresolved** (local commit `75ff61f`). **All further Stage 6 / W6-7 execution is strictly PAUSED** pending an explicit owner decision on how to handle the exception. Stage 6 remains open with ~425 framework strings remaining.
 
 | Disposition | Rows | Treatment |
 | --- | ---: | --- |
@@ -15,7 +15,7 @@ The proposal was prepared against `stage6_w607_frappe_batch01_rows_2026-09-27.cs
 
 ### W6-7 Frappe Framework Progress & Execution Pause
 Batch 01 covers 250 rows of the Frappe Framework remainder:
-- **Grand Catalog Progression:** The catalog grew by +247 rows from 3,847 to 4,094 rows.
+- **Grand Catalog Progression:** The catalog grew by +247 rows from 3,847 to 4,094 rows on the test site.
 - **Stage 6 Status Note:** Further execution of remaining framework strings (~425 items) is **PAUSED** pending owner resolution of the approval-provenance gap. Stage 6 remains open.
 
 ## Test-Site Execution and Verification
