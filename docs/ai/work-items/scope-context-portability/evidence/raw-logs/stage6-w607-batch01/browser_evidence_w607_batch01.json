@@ -1,0 +1,69 @@
+{
+  "batch": "stage6-w607-frappe-batch01",
+  "site": "v16.localhost",
+  "scope_sha256": "43abe1b462c47b51c0209a0650511fac2ed32cdb5f3a585cde2e9468bfaab26a",
+  "proposal_sha256": "f7de77ef4bbacb4385af64c89972b1e6c1b472bce0e00c8fcab30cc06763f54c",
+  "started_utc": "2026-09-27T14:51:00Z",
+  "checks": [
+    {
+      "name": "boot-lang-ar",
+      "ok": true,
+      "detail": "ar"
+    },
+    {
+      "name": "boot-messages-ge-1000",
+      "ok": true,
+      "detail": 14396
+    },
+    {
+      "name": "all-released-payload-translations",
+      "ok": true,
+      "detail": {
+        "matched": 247,
+        "total": 247,
+        "mismatches": []
+      }
+    },
+    {
+      "name": "all-batch-keys-resolved",
+      "ok": true,
+      "detail": {
+        "matched": 248,
+        "total": 248,
+        "mismatches": []
+      }
+    },
+    {
+      "name": "technical-exceptions-excluded-from-released",
+      "ok": true,
+      "detail": {
+        "tech_keys": [
+          "${values.doctype_name} has been added to queue for optimization",
+          "&copy; Frappe Technologies Pvt. Ltd. and contributors"
+        ]
+      }
+    },
+    {
+      "name": "preserved-site-override-matched",
+      "ok": true,
+      "detail": {
+        "expected": "لا يُسمح بالتجميع من السجل الرئيسي إلى سجل فرعي أو من سجل فرعي إلى سجل فرعي آخر.",
+        "got": "لا يُسمح بالتجميع من السجل الرئيسي إلى سجل فرعي أو من سجل فرعي إلى سجل فرعي آخر."
+      }
+    },
+    {
+      "name": "no-page-errors",
+      "ok": true,
+      "detail": {
+        "errors": []
+      }
+    },
+    {
+      "name": "screenshot-captured",
+      "ok": true,
+      "detail": "/home/mohamed/frappe-bench/apps/construction/docs/ai/work-items/scope-context-portability/evidence/raw-logs/stage6-w607-batch01/browser-ar-desk-w607-frappe-batch01.png"
+    }
+  ],
+  "ended_utc": "2026-09-27T14:51:08Z",
+  "all_passed": true
+}

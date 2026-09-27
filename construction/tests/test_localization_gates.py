@@ -517,7 +517,7 @@ class TestRound3Gates(unittest.TestCase):
         # real payload: all Released rows must bind; run against repo (fast enough)
         n = g.check_csv(errors)
         self.assertEqual(errors, [])
-        self.assertEqual(n, 3847)
+        self.assertEqual(n, 4094)
 
     def test_manifest_binding_fields(self):
         import json
