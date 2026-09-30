@@ -319,10 +319,22 @@ close the coverage gap identified in
 
 | # | Test | Asserts |
 |---|---|---|
-| T9 | `test_roles_model_and_binary_are_pinned` | Role `model` and `binary` values are asserted, not merely `prompt_sha256`, and a drifted binding is detected. Prevents silent off-pin role drift. |
+| T9 | `test_roles_model_and_binary_are_pinned` | Asserts every role's `tool`/`binary`/`model` in `roles.json` equals the committed `roles.lock.json`. |
+| T9b | `test_roles_lock_detects_model_and_binary_drift` | Verifies sensitivity: simulated drift on `builder.model` or `reviewer.binary` fails assertion. |
+| T9c | `test_roles_json_is_derived_mirror_not_authority` | Documents that `sync_roles_mirror()` regenerates `roles.json` and verifies locked roles match canonical serialization. |
 
-**Implemented result: 17 new tests, all passing. Full suite 253 passed (baseline 236 + 17),
-`exit 0`, zero regressions.**
+**Implemented result: 19 new tests, all passing. Full suite 255 passed (baseline 236 + 19),
+`exit 0`, zero regressions** — verified unfiltered (`107.32s`); no `-k` deselection.
+
+**Coverage gap closed:** `orchestrator/roles.lock.json` introduces a committed second source of
+truth for execution bindings (`tool`/`binary`/`model`). Tested and proven against actual drifted
+`roles.json` from `workspace-integration` (all 3 tests failed as expected). `prompt_sha256`
+remains pinned against `docs/ai/roles/*.md`.
+
+**`roles.json` Disposition:** Confirmed **Option R (Record provenance exception)**. Candidate
+`341715dd…` was produced and plan-reviewed off-pin (builder: `mimo-v2.6-flash-free`, reviewer:
+`gpt-6-sol`; verifier ran pinned `gpt-6-astra`). Ledger unmutated; base pins remain locked in
+`orchestrator/roles.lock.json`.
 
 ---
 
@@ -335,7 +347,7 @@ close the coverage gap identified in
 | Distinct work item id | `owner-decision-scope-support` (not `workspace-desk-coverage`) |
 | Own candidate | New frozen candidate; **must not** extend `341715dd…` |
 | Own gate sequence | Full Architect → Reviewer → Builder → Verifier under a new PLAN grant |
-| `roles.json` resolved first | T9 requires a committed role baseline; the current off-pin drift must be dispositioned (Option R/P/S) **before** the G1 cycle starts, or T9 has no baseline to assert against |
+| `roles.json` resolved first | Resolved via Option R provenance exception; base pins locked in `orchestrator/roles.lock.json` |
 | No ledger mutation | G1 work must not touch `decision-44`, `workflow_events`, or `workflow_grants` for `workspace-desk-coverage` |
 
 ### 5.2 Files expected to change

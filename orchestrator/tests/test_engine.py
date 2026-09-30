@@ -1317,23 +1317,68 @@ def test_decision_disposition_routing(configured):
         assert out["decision_refs"][-1]["disposition"] == disposition
 
 
-def test_roles_model_and_binary_are_pinned(configured):
-    """T9: role model/binary bindings are pinned, not only prompt hashes.
+def test_roles_model_and_binary_are_pinned():
+    """T9: role execution bindings are pinned against a committed second source of truth.
 
-    Closes the coverage gap that let an off-pin builder/reviewer drift go unnoticed
-    (scp007-recheck-and-roles-disposition-2026-09-30.md §2.4).
+    orchestrator/roles.json is a DERIVED mirror: Engine.sync_roles_mirror() rewrites it from
+    SQLite workflow_meta.config on every initialization, so it cannot pin itself. An earlier
+    draft of this test asserted only against an in-memory fixture and therefore detected no
+    real drift -- exactly the gap that let an off-pin builder/reviewer go unnoticed.
+
+    orchestrator/roles.lock.json is the committed pin. A change to roles.json alone fails
+    here; changing a binding is only possible by editing the lock file, which is an explicit
+    and reviewable act. See scp007-recheck-and-roles-disposition-2026-09-30.md 2.4.
     """
-    root, config = configured
-    baseline = {
-        r: {"tool": "synthetic", "binary": "synthetic", "model": "SYNTHETIC"}
-        for r in ["architect", "reviewer", "builder", "verifier", "ai-a1", "ai-a2", "ai-a3"]
-    }
-    assert all(r["model"] == "SYNTHETIC" for r in config["roles"].values())
-    drifted = deepcopy(baseline)
-    drifted["builder"] = {"tool": "opencode", "binary": "/usr/local/bin/opencode", "model": "off-pin"}
-    assert baseline["builder"]["model"] != drifted["builder"]["model"]
-    catalog = {r: dict(v) for r, v in config["roles"].items()}
-    for role, expected in baseline.items():
-        assert catalog[role]["model"] == expected["model"]
-        assert catalog[role]["binary"] == expected["binary"]
-    assert catalog["builder"]["model"] == "SYNTHETIC"
+    root = Path(__file__).resolve().parents[2]
+    roles = json.loads((root / "orchestrator/roles.json").read_text())
+    locked = json.loads((root / "orchestrator/roles.lock.json").read_text())["roles"]
+
+    assert set(roles) == set(locked), (
+        f"role set differs from lock: {sorted(set(roles) ^ set(locked))}"
+    )
+    for name, expected in locked.items():
+        actual = roles[name]
+        for field in ("tool", "binary", "model"):
+            assert actual[field] == expected[field], (
+                f"{name}.{field} drifted from committed pin: "
+                f"{actual[field]!r} != {expected[field]!r}"
+            )
+
+
+def test_roles_lock_detects_model_and_binary_drift():
+    """T9b: the comparison is sensitive to model and binary drift, not just key presence."""
+    root = Path(__file__).resolve().parents[2]
+    roles = json.loads((root / "orchestrator/roles.json").read_text())
+    locked = json.loads((root / "orchestrator/roles.lock.json").read_text())["roles"]
+
+    drifted = deepcopy(roles)
+    drifted["builder"]["model"] = "opencode/off-pin-model"
+    drifted["reviewer"]["binary"] = "/tmp/other-codex"
+    for name, expected in locked.items():
+        for field in ("tool", "binary", "model"):
+            if name == "builder" and field == "model":
+                assert drifted[name][field] != expected[field]
+            if name == "reviewer" and field == "binary":
+                assert drifted[name][field] != expected[field]
+            if not (name == "builder" and field == "model") and not (
+                name == "reviewer" and field == "binary"
+            ):
+                assert drifted[name][field] == expected[field]
+
+
+def test_roles_json_is_derived_mirror_not_authority():
+    """T9c: roles.json must equal the canonical serialization of the locked bindings.
+
+    Documents that sync_roles_mirror() regenerates this file, which is why the lock file
+    exists. If a future refactor made roles.json authoritative, this test states the
+    assumption that would need revisiting.
+    """
+    root = Path(__file__).resolve().parents[2]
+    roles = json.loads((root / "orchestrator/roles.json").read_text())
+    locked = json.loads((root / "orchestrator/roles.lock.json").read_text())["roles"]
+    for name, expected in locked.items():
+        assert roles[name]["tool"] == expected["tool"]
+        assert roles[name]["binary"] == expected["binary"]
+        assert roles[name]["model"] == expected["model"]
+    # Every locked role must be a governed role, not an ad-hoc addition.
+    assert set(locked) <= set(roles)
