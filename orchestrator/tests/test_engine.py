@@ -1435,3 +1435,59 @@ def test_generated_scratch_paths_still_reject_read_only_context(configured):
                 e.initialize(cfg)
         finally:
             e.close()
+
+
+def test_read_only_context_is_snapshotted_and_hash_bound(configured):
+    """Context artefacts are delivered as content-addressed snapshots, not floating paths."""
+    root, config = configured
+    stub = Stub()
+    e = Engine(root, launcher=stub)
+    try:
+        e.initialize(config)
+        work = root / "docs/ai/work-items" / config["work_item"]
+        context = work / "evidence"
+        context.mkdir(parents=True, exist_ok=True)
+        doc = context / "disposition.md"
+        doc.write_text("ratified deltas D1-D3\n")
+        config["read_only_context_paths"] = [str(doc.relative_to(root))]
+        e.config["read_only_context_paths"] = config["read_only_context_paths"]
+        v = e.view()
+        state = e._prepare({"view": v})
+        job = e.store.job(state["view"]["active_jobs"][0])
+        refs = job["spec"]["read_artifact_refs"]
+        assert len(refs) == 1
+        ref = refs[0]
+        assert ref["source_path"] == str(root / doc)
+        assert ref["snapshot_path"].endswith("context/context-" + ref["sha256"] + ".md")
+        assert Path(ref["snapshot_path"]).is_file()
+        assert Path(ref["snapshot_path"]).read_text() == "ratified deltas D1-D3\n"
+        assert str(ref["snapshot_path"]) in job["spec"]["read_artifacts"]
+        assert str(root / doc) not in job["spec"]["read_artifacts"]
+    finally:
+        e.close()
+
+
+def test_context_mutation_after_preparation_is_refused(configured):
+    """A context file edited after preparation cannot be re-materialised silently."""
+    root, config = configured
+    e = Engine(root, launcher=Stub())
+    try:
+        e.initialize(config)
+        work = root / "docs/ai/work-items" / config["work_item"]
+        context = work / "evidence"
+        context.mkdir(parents=True, exist_ok=True)
+        doc = context / "disposition.md"
+        doc.write_text("original\n")
+        config["read_only_context_paths"] = [str(doc.relative_to(root))]
+        e.config["read_only_context_paths"] = config["read_only_context_paths"]
+        state = e._prepare({"view": e.view()})
+        job = e.store.job(state["view"]["active_jobs"][0])
+        snapshot = Path(job["spec"]["read_artifact_refs"][0]["snapshot_path"])
+        assert snapshot.read_text() == "original\n"
+
+        doc.write_text("mutated after preparation\n")
+        with pytest.raises(WorkflowError, match="changed after preparation"):
+            e._materialize_job(job, work)
+        assert snapshot.read_text() == "original\n"
+    finally:
+        e.close()

@@ -961,10 +961,23 @@ class Engine:
                 ][-1:]
             contract = within(self.root, self.config["plan_path"])
             read_artifacts = list(dict.fromkeys([str(contract), str(plan)]))
+            read_artifact_refs = []
             for cp in self.config.get("read_only_context_paths", []):
                 resolved_cp = self.root / cp
-                if resolved_cp.is_file():
-                    read_artifacts.append(str(resolved_cp))
+                if not resolved_cp.is_file():
+                    continue
+                data = resolved_cp.read_bytes()
+                sha = bytes_hash(data)
+                name = "context/context-" + sha + (resolved_cp.suffix or ".txt")
+                snapshot = destination / name
+                read_artifacts.append(str(snapshot))
+                read_artifact_refs.append(
+                    dict(
+                        source_path=str(resolved_cp),
+                        sha256=sha,
+                        snapshot_path=str(snapshot),
+                    )
+                )
             for dependency in dependencies:
                 prior_job = self.store.job(dependency["job_id"])
                 read_artifacts.append(str(Path(prior_job["runtime"]) / "stdout.jsonl"))
@@ -1054,6 +1067,7 @@ class Engine:
                 result_schema=str(within(self.root, "orchestrator/schemas/v1/result-envelope.json")),
                 finding_schema=str(within(self.root, "orchestrator/schemas/v1/finding.json")),
                 read_artifacts=read_artifacts,
+                read_artifact_refs=read_artifact_refs,
                 result_transport="stdout",
                 explanation_transport="stdout",
                 evidence_transport="runner-captured native events",
@@ -1211,6 +1225,7 @@ class Engine:
                 runtime=str(destination),
                 control_root=str(self.runtime),
                 read_artifacts=read_artifacts,
+                read_artifact_refs=read_artifact_refs,
                 neutral_mounts=neutral_mounts,
                 private_root=str(private_root) if private_root else None,
                 expected_artifact_id=expected_artifact_id,
@@ -1254,6 +1269,14 @@ class Engine:
         destination = Path(job["runtime"])
         for name, text in job.get("validation_reports", {}).items():
             atomic_write(destination / name, text.encode(), immutable=True)
+        for ref in job["spec"].get("read_artifact_refs", []):
+            source = Path(ref["source_path"])
+            data = source.read_bytes()
+            if bytes_hash(data) != ref["sha256"]:
+                raise WorkflowError(
+                    f"Read-only context artifact changed after preparation: {ref['source_path']}"
+                )
+            atomic_write(Path(ref["snapshot_path"]), data, immutable=True)
         prompt = job["spec"]["prompt"].encode()
         atomic_write(work / "runs" / job["job_id"] / "inputs" / "packet.md", prompt, immutable=True)
         atomic_write(work / "inbox" / (job["role"] + ".md"), prompt)
