@@ -2631,7 +2631,7 @@ class Engine:
 
         if tool == "codex":
             binary = "/opt/codex-desktop/resources/codex"
-            expected_ver = "0.153.0-alpha.5"
+            expected_ver = "0.159.2"
             valid_efforts = ("high", "medium", "low", None)
             if effort not in valid_efforts:
                 raise WorkflowError(f"Invalid effort for codex: {effort}")
@@ -2722,7 +2722,7 @@ class Engine:
     def role_catalog(self):
         tools = {}
         for tool_name, bin_path, exp_ver in (
-            ("codex", "/opt/codex-desktop/resources/codex", "0.153.0-alpha.5"),
+            ("codex", "/opt/codex-desktop/resources/codex", "0.159.2"),
             ("opencode", resolve_opencode_binary(), None),
         ):
             p = Path(bin_path)

@@ -1318,13 +1318,13 @@ def test_reconfigure_role_preserves_effort_and_reason_defaults(configured):
         bin_dir = root / "bin"
         bin_dir.mkdir(parents=True, exist_ok=True)
         fake_codex = bin_dir / "codex"
-        fake_codex.write_text("#!/bin/sh\necho 'codex 0.153.0-alpha.5'\n")
+        fake_codex.write_text("#!/bin/sh\necho 'codex 0.159.2'\n")
         fake_codex.chmod(0o755)
 
         with patch("engine.bytes_hash", return_value="f" * 64):
             with patch("subprocess.run") as mock_run:
                 mock_run.return_value = subprocess.CompletedProcess(
-                    args=[], returncode=0, stdout="codex 0.153.0-alpha.5\n", stderr=""
+                    args=[], returncode=0, stdout="codex 0.159.2\n", stderr=""
                 )
                 with patch("pathlib.Path.exists", return_value=True):
                     with patch("os.access", return_value=True):
