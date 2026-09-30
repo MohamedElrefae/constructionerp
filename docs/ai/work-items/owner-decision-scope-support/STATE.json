@@ -78,7 +78,7 @@
     "orchestrator/routing.py",
     "orchestrator/tests/test_engine.py"
   ],
-  "commit": "ac7705359c4b1c6c76445e9f95451c6a9255d419",
+  "commit": "1a1148f7088f32233e6f585623a86e48deacfc97",
   "corrections_to_reported_status": {
     "recorded_utc": "2026-09-30T20:33:07.048134+00:00",
     "test_result": {
@@ -93,5 +93,14 @@
       "gap_status": "CLOSED for detection. T9 now genuinely detects off-pin drift (proven). The policy question of what the pin SHOULD be remains the owner's: Option R (provenance exception only), P (ratify drifted values into the lock), or S (restore gpt-6-astra pins). The lock file currently records the BASE pins (gpt-6-astra), which is correct for this worktree because roles.json here is identical to base."
     },
     "open_questions": "Q4 implementation scope (prospective finding_id enforcement) not implemented; not required for this commit."
+  },
+  "commits": [
+    "ac7705359c4b1c6c76445e9f95451c6a9255d419 (mechanism)",
+    "1a1148f7088f32233e6f585623a86e48deacfc97 (roles.lock.json + T9 rewrite)"
+  ],
+  "known_open_items_not_questions": {
+    "Q4_implementation": "Prospective finding_id enforcement is APPROVED but UNIMPLEMENTED; deferred to a follow-up work item. Tracked as a known gap, not an open design question.",
+    "governed_cycle": "Architect -> Reviewer -> Builder -> Verifier has NOT run. Both commits are unverified work product pending owner PLAN approval.",
+    "t9_vs_option_r_conflict": "T9 FAILS on any roles.json drift. Option R deliberately LEAVES the workspace-integration drift in place. Consequence: once G1 merges to develop, the workspace-integration worktree will fail T9 until that drift is dispositioned (Option S restore, or Option P ratify into roles.lock.json). Verified: drifted roles.json + roles.lock.json => test_roles_model_and_binary_are_pinned FAILS. Option R alone is therefore not a stable end state; it defers the drift into a test failure."
   }
 }
