@@ -636,6 +636,42 @@ class Engine:
             raise WorkflowError("No recorded owner decision to resume")
         return state
 
+    def add_context_paths(self, paths, reason, *, action_id=None, request_hash=None):
+        """Register additional read-only context artefacts for subsequent dispatches.
+
+        Context paths are fixed at initialize(). This records an auditable, foldable
+        event so evidence produced mid-cycle (an owner authorisation, a re-bound
+        validation report) can reach later agents without re-initializing the workflow
+        and without an un-foldable manual ledger edit. Paths are delivered as
+        content-addressed snapshots at dispatch, so registration order is not authority:
+        each job binds the bytes it actually received.
+        """
+        view = self._synchronize_checkpoint()
+        if not isinstance(paths, list) or not paths:
+            raise WorkflowError("add_context_paths requires a nonempty list")
+        if view["status"] == "PAUSED" or view["gate"]:
+            raise WorkflowError("Context registration requires an unpaused workflow")
+        resolved = []
+        for cp in paths:
+            target = self.root / cp
+            if not target.is_file():
+                raise CoreValidationError(f"Context path does not exist: {cp}")
+            resolved.append(str(target.relative_to(self.root)))
+        payload = dict(reason=reason, paths=resolved)
+        if action_id is not None:
+            payload["action_id"] = action_id
+        if request_hash is not None:
+            payload["request_hash"] = request_hash
+        apply_event(view, {"seq": view["cursor"] + 1, "kind": "context_added", "payload": payload}, self.config)
+        self.store.event("context-" + uuid.uuid4().hex, "context_added", payload)
+        config = deepcopy(self.config)
+        config["read_only_context_paths"] = list(
+            dict.fromkeys(config.get("read_only_context_paths", []) + resolved)
+        )
+        self.store.set_meta("config", config)
+        self.config = config
+        return self.run()
+
     def _prepare(self, state):
         v = self._synchronize(state)["view"]
         if v["status"] == "PAUSED" or v["gate"]:
@@ -1270,6 +1306,8 @@ class Engine:
         for name, text in job.get("validation_reports", {}).items():
             atomic_write(destination / name, text.encode(), immutable=True)
         for ref in job["spec"].get("read_artifact_refs", []):
+            if job.get("status") == "TERMINAL":
+                break
             source = Path(ref["source_path"])
             data = source.read_bytes()
             if bytes_hash(data) != ref["sha256"]:

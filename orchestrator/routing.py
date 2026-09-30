@@ -344,6 +344,8 @@ def apply_event(current, event, config):
                     ]
                     state["backlog"] += [f for f in incoming if not f["blocking"]]
                     if any(f["classification"] == "owner_decision" for f in incoming):
+                        state["next_roles"] = [role]
+                        state["attempt"] += 1
                         pause(state, "OWNER_DECISION")
                     elif any(f["classification"] == "design_defect" for f in incoming):
                         state.update(status="NEEDS_REVISION", next_roles=["architect"], gate=None)
@@ -694,6 +696,13 @@ def apply_event(current, event, config):
             state.update(unsuccessful_cycles=0, unchanged_rounds=0, previous_snapshots=[])
         prior = state["prior"]
         state.update(prior)
+        explicit = body.get("next_roles")
+        if explicit is not None:
+            governed = set(config.get("roles", {}))
+            if not isinstance(explicit, list) or not explicit or not set(explicit) <= governed:
+                raise WorkflowError("Resume next_roles must be a nonempty list of governed roles")
+            state["next_roles"] = list(explicit)
+            state["attempt"] = state["attempt"] + 1
         state.update(pause_reason=None, resume_to=None, prior=None)
         if not state["next_roles"] and not state["gate"] and not state["active_jobs"]:
             if state.get("sub_status") == "BUNDLE_VALIDATED":
@@ -852,6 +861,15 @@ def apply_event(current, event, config):
             state["resume_to"] = "PLAN_SUBMITTED" if state["stage"] != "4" else "DRAFT"
         if state.get("gate") and state["gate"].get("scope") == "PLAN":
             state["gate"] = new_gate
+    elif kind == "context_added":
+        added = body.get("paths") or []
+        if not isinstance(added, list) or not added:
+            raise WorkflowError("context_added requires a nonempty paths list")
+        current = state.get("read_only_context_paths", [])
+        for cp in added:
+            if cp not in current:
+                current.append(cp)
+        state["read_only_context_paths"] = current
     elif kind == "scope_adopted":
         impl_stages = body["implementation_stages"]
         state["stage"] = impl_stages[0]

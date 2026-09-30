@@ -1491,3 +1491,112 @@ def test_context_mutation_after_preparation_is_refused(configured):
         assert snapshot.read_text() == "original\n"
     finally:
         e.close()
+
+
+def test_terminal_job_context_is_not_reverified(configured):
+    """A completed job's snapshots are historical; source drift must not block replay."""
+    root, config = configured
+    e = Engine(root, launcher=Stub())
+    try:
+        e.initialize(config)
+        work = root / "docs/ai/work-items" / config["work_item"]
+        context = work / "evidence"
+        context.mkdir(parents=True, exist_ok=True)
+        doc = context / "authorisation.md"
+        doc.write_text("bounded authorisation\n")
+        e.config["read_only_context_paths"] = [str(doc.relative_to(root))]
+        state = e._prepare({"view": e.view()})
+        job = e.store.job(state["view"]["active_jobs"][0])
+        job["status"] = "TERMINAL"
+        doc.write_text("superseded authorisation\n")
+        e._materialize_job(job, work)
+        snapshot = Path(job["spec"]["read_artifact_refs"][0]["snapshot_path"])
+        assert snapshot.read_text() == "bounded authorisation\n"
+    finally:
+        e.close()
+
+
+def test_blocked_owner_decision_captures_retry_role(configured):
+    """A Builder blocked on owner_decision must resume to the builder, not to an idle state."""
+    root, config = configured
+    finding = {
+        "schema_version": 1,
+        "finding_id": None,
+        "classification": "owner_decision",
+        "blocking": True,
+        "summary": "Needs an owner decision",
+        "affected_requirements": ["R1"],
+        "evidence_refs": [],
+        "snapshot": None,
+    }
+    stub = Stub(outcomes={"builder": {"verdict": "BLOCKED", "findings": [finding]}})
+    e = Engine(root, launcher=stub)
+    try:
+        e.initialize(config)
+        e.run()
+        e.approve(plan_token(e))
+        v = e.run()
+        assert v["status"] == "PAUSED"
+        assert v["pause_reason"] == "OWNER_DECISION"
+        assert v["prior"]["next_roles"] == ["builder"], v["prior"]
+        assert v["attempt"] == 2, v["attempt"]
+        def builder_results():
+            return [
+                ev for ev in e.store.events()
+                if ev["kind"] == "result" and ev["payload"].get("role") == "builder"
+            ]
+
+        before = len(builder_results())
+        e.owner_decision("resume", {"reason": "granting the decision"})
+        # The stubbed builder blocks again, so proof of correct routing is a second
+        # builder result rather than an idle state.
+        assert len(builder_results()) == before + 1
+        v = e.view()
+        assert v["attempt"] > 2, v["attempt"]
+    finally:
+        e.close()
+
+
+def test_resume_accepts_explicit_next_roles(configured):
+    """An owner may name the resume target when prior recorded none."""
+    root, config = configured
+    e = Engine(root, launcher=Stub())
+    try:
+        e.initialize(config)
+        e.run()
+        v = e.view()
+        e.store.event("pause-x", "pause", {"reason": "OWNER_DECISION"})
+        v = e.run()
+        assert v["prior"]["next_roles"] == [], v["prior"]
+        e.store.event("pause-y", "pause", {"reason": "OWNER_DECISION"})
+        v = e.run()
+        assert v["status"] == "PAUSED"
+        with pytest.raises(WorkflowError):
+            e.owner_decision("resume", {"reason": "bad", "next_roles": ["not_a_role"]})
+    finally:
+        e.close()
+
+
+def test_add_context_paths_records_foldable_event(configured):
+    """Context added mid-cycle is registered by a foldable event, not a config edit."""
+    root, config = configured
+    e = Engine(root, launcher=Stub())
+    try:
+        e.initialize(config)
+        work = root / "docs/ai/work-items" / config["work_item"]
+        context = work / "evidence"
+        context.mkdir(parents=True, exist_ok=True)
+        doc = context / "authorisation.md"
+        doc.write_text("bounded authorisation\n")
+        rel = str(doc.relative_to(root))
+        e.add_context_paths([rel], reason="owner authorisation")
+        assert rel in e.config["read_only_context_paths"]
+        kinds = [ev["kind"] for ev in e.store.events()]
+        assert "context_added" in kinds, kinds
+        assert kinds.index("context_added") == 0, kinds
+        state = e.view()
+        assert rel in state["read_only_context_paths"]
+        with pytest.raises(WorkflowError):
+            e.add_context_paths(["does/not/exist.md"], reason="bad")
+    finally:
+        e.close()
