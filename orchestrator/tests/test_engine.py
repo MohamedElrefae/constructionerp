@@ -1061,3 +1061,279 @@ def test_resume_rejected_against_parked_draft_plan_state(configured, tmp_path):
         assert len(e.store.events()) == 0
     finally:
         e.close()
+
+
+# ---------------------------------------------------------------------------
+# DECISION approval scope (work item: owner-decision-scope-support)
+# ---------------------------------------------------------------------------
+
+OPERATOR_PAUSE = "OPERATOR-PAUSE"
+DIGEST_A = "a" * 64
+DIGEST_B = "b" * 64
+
+
+def decision_gate(configured):
+    """Park a real workflow on a DECISION gate via the sanctioned owner_decision API."""
+    root, config = configured
+    e = Engine(root, launcher=Stub())
+    try:
+        e.initialize(config)
+        e.run()
+        e.approve(plan_token(e))
+        v = e.owner_decision("pause", {"reason": "OWNER_DECISION"})
+        assert v["status"] == "PAUSED", v["status"]
+        assert v["gate"]["scope"] == "DECISION", v["gate"]
+        return e
+    except Exception:
+        e.close()
+        raise
+
+
+def decision_token(engine, token_id="owner-decision", digests=(OPERATOR_PAUSE,), **overrides):
+    v = engine.view()
+    token = dict(
+        schema_version=1,
+        token_id=token_id,
+        work_item=v["work_item"],
+        gate_id=v["gate"]["gate_id"],
+        issuer="owner",
+        issued_utc=utc(),
+        status="ISSUED",
+        scope="DECISION",
+        disposition="RATIFIED",
+        decision_hash="d" * 64,
+        candidate_id=v["candidate"]["candidate_id"],
+        plan_revision_hash=v["plan_revision_hash"],
+        scope_hash=v["scope_hash"],
+        resolved_finding_digests=list(digests),
+        repository_id=str(engine.root),
+        branch=engine.config["branch"],
+        expected_parent_sha=engine.config["base_commit"],
+    )
+    token.update(overrides)
+    return token
+
+
+def test_decision_scope_acceptance_clears_gate(configured):
+    """T1: a fully-bound DECISION token clears the gate and records the grant."""
+    e = decision_gate(configured)
+    try:
+        token = decision_token(e)
+        v = e.approve(token)
+        assert v["gate"] is None, v["gate"]
+        assert v["status"] != "PAUSED", v["status"]
+        assert v["pause_reason"] is None, v["pause_reason"]
+        grants = [g["payload"] for g in e.store.events() if g["kind"] == "grant"]
+        assert any(g["scope"] == "DECISION" for g in grants)
+        assert v["decision_refs"][0]["token_id"] == token["token_id"]
+        assert v["decision_refs"][0]["resolved_finding_digests"] == [OPERATOR_PAUSE]
+    finally:
+        e.close()
+
+
+@pytest.mark.parametrize("field", ["gate_id", "work_item"])
+def test_decision_scope_rejected_when_gate_mismatch(configured, field):
+    """T2: gate/work-item mismatch is refused before any scope-specific check."""
+    e = decision_gate(configured)
+    try:
+        with pytest.raises(WorkflowError):
+            e.approve(decision_token(e, **{field: "not-the-pending-gate"}))
+        assert e.view()["gate"]["scope"] == "DECISION"
+    finally:
+        e.close()
+
+
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("candidate_id", "0" * 64),
+        ("plan_revision_hash", "0" * 64),
+        ("scope_hash", "0" * 64),
+        ("repository_id", "/elsewhere"),
+        ("branch", "other-branch"),
+        ("expected_parent_sha", "0" * 40),
+    ],
+)
+def test_decision_scope_rejected_on_content_hash_mismatch(configured, field, value):
+    """T3: any content-binding drift is refused and writes no grant."""
+    e = decision_gate(configured)
+    try:
+        token = decision_token(e, **{field: value})
+        with pytest.raises(WorkflowError, match="DECISION binding mismatch"):
+            e.approve(token)
+        assert not e.store.grant_for(token["gate_id"])
+        assert e.view()["gate"]["scope"] == "DECISION"
+    finally:
+        e.close()
+
+
+def test_decision_scope_rejected_on_finding_not_open(configured):
+    """T4: a digest that is not open on this gate is refused."""
+    e = decision_gate(configured)
+    try:
+        with pytest.raises(WorkflowError, match="not open on this gate"):
+            e.approve(decision_token(e, digests=[DIGEST_A]))
+        assert e.view()["gate"]["scope"] == "DECISION"
+    finally:
+        e.close()
+
+
+def test_open_finding_digests_uses_reproduction_digest():
+    """T4b: open-finding identity is the content-addressed reproduction_digest.
+
+    Raw result events record finding_id as null; routing.finding_identity() uses
+    reproduction_digest, so the decision binding must use the same identity.
+    """
+    e = Engine.__new__(Engine)
+    empty = {"findings": []}
+    assert e._open_finding_digests(empty) == {OPERATOR_PAUSE}
+    view = {
+        "findings": [
+            {
+                "finding_id": "SCP-006",
+                "blocking": True,
+                "snapshot": {"reproduction_digest": DIGEST_A},
+            },
+            {
+                "finding_id": "SCP-009",
+                "blocking": False,
+                "snapshot": {"reproduction_digest": DIGEST_B},
+            },
+            {"finding_id": "SCP-010", "blocking": True, "snapshot": None},
+        ]
+    }
+    assert e._open_finding_digests(view) == {DIGEST_A}
+
+
+def test_decision_scope_token_schema_rejects_bad_payloads(configured):
+    """T5: the schema itself refuses malformed DECISION tokens."""
+    from jsonschema import ValidationError
+
+    from validate import validate_document
+
+    e = decision_gate(configured)
+    try:
+        base = decision_token(e)
+        validate_document("approval-token", base)
+        validate_document("approval-token", decision_token(e, digests=[DIGEST_A]))
+        bad = {
+            "missing decision_hash": {k: v for k, v in base.items() if k != "decision_hash"},
+            "non-hex decision_hash": {**base, "decision_hash": "zz"},
+            "empty resolved_finding_digests": {**base, "resolved_finding_digests": []},
+            "malformed digest entry": {**base, "resolved_finding_digests": ["SCP-006!"]},
+            "duplicate digests": {**base, "resolved_finding_digests": [OPERATOR_PAUSE] * 2},
+            "bad disposition": {**base, "disposition": "APPROVED"},
+            "unknown extra property": {**base, "rogue": "x"},
+            "bad expected_parent_sha": {**base, "expected_parent_sha": "nothex"},
+        }
+        for name, payload in bad.items():
+            with pytest.raises(ValidationError):
+                validate_document("approval-token", payload)
+    finally:
+        e.close()
+
+
+def test_decision_token_cannot_authorize_commit(configured):
+    """T6: a DECISION grant confers no commit authority (SPEC principle 2)."""
+    e = decision_gate(configured)
+    try:
+        e.approve(decision_token(e))
+        assert e.view()["gate"] is None
+        grants = [g["payload"] for g in e.store.events() if g["kind"] == "grant"]
+        assert not any(g["scope"] == "COMMIT" for g in grants)
+        with pytest.raises(WorkflowError):
+            e.record_owner_commit()
+    finally:
+        e.close()
+
+
+def test_decision_grant_is_not_an_operation_intent(configured):
+    """T7: a DECISION approval writes no operation intent document."""
+    e = decision_gate(configured)
+    try:
+        e.approve(decision_token(e))
+        assert list((e.runtime / "operations").rglob("intent.json")) == []
+    finally:
+        e.close()
+
+
+def test_decision_token_single_use(configured):
+    """T8: a consumed DECISION token cannot be replayed."""
+    e = decision_gate(configured)
+    try:
+        token = decision_token(e)
+        e.approve(token)
+        assert e.store.grant_for(token["gate_id"])
+        replay = dict(token, issued_utc=utc())
+        with pytest.raises(WorkflowError):
+            e.approve(replay)
+    finally:
+        e.close()
+
+
+def test_decision_disposition_routing(configured):
+    """Disposition determines the resume target, asserted on the pure state transition.
+
+    Exercised through routing.apply_event rather than a full run so the result does not
+    race the graph's subsequent dispatch.
+    """
+    from routing import apply_event
+
+    for disposition, status, next_roles in (
+        ("RATIFIED", "CHANGES_REQUESTED", ["builder"]),
+        ("WAIVED", "CHANGES_REQUESTED", ["builder"]),
+        ("REJECTED", "NEEDS_REVISION", ["architect"]),
+    ):
+        state = {
+            "status": "PAUSED",
+            "gate": {"scope": "DECISION", "gate_id": "decision-99"},
+            "pause_reason": "OWNER_DECISION",
+            "prior": {"status": "CHANGES_REQUESTED", "next_roles": ["builder"], "gate": None},
+            "resume_to": "CHANGES_REQUESTED",
+            "cursor": 0,
+            "roles_hash": "0" * 64,
+            "candidate": {"candidate_id": "0" * 64},
+            "approval_refs": [],
+            "decision_refs": [],
+            "revision": 0,
+            "attempt": 1,
+        }
+        event = {
+            "seq": 1,
+            "kind": "grant",
+            "payload": {
+                "token_id": "t-" + disposition,
+                "gate_id": "decision-99",
+                "scope": "DECISION",
+                "disposition": disposition,
+                "decision_hash": "d" * 64,
+                "resolved_finding_digests": [OPERATOR_PAUSE],
+            },
+        }
+        out = apply_event(state, event, {})
+        assert out["gate"] is None, disposition
+        assert out["status"] == status, (disposition, out["status"])
+        assert out["next_roles"] == next_roles, (disposition, out["next_roles"])
+        assert out["decision_refs"][-1]["disposition"] == disposition
+
+
+def test_roles_model_and_binary_are_pinned(configured):
+    """T9: role model/binary bindings are pinned, not only prompt hashes.
+
+    Closes the coverage gap that let an off-pin builder/reviewer drift go unnoticed
+    (scp007-recheck-and-roles-disposition-2026-09-30.md §2.4).
+    """
+    root, config = configured
+    baseline = {
+        r: {"tool": "synthetic", "binary": "synthetic", "model": "SYNTHETIC"}
+        for r in ["architect", "reviewer", "builder", "verifier", "ai-a1", "ai-a2", "ai-a3"]
+    }
+    assert all(r["model"] == "SYNTHETIC" for r in config["roles"].values())
+    drifted = deepcopy(baseline)
+    drifted["builder"] = {"tool": "opencode", "binary": "/usr/local/bin/opencode", "model": "off-pin"}
+    assert baseline["builder"]["model"] != drifted["builder"]["model"]
+    catalog = {r: dict(v) for r, v in config["roles"].items()}
+    for role, expected in baseline.items():
+        assert catalog[role]["model"] == expected["model"]
+        assert catalog[role]["binary"] == expected["binary"]
+    assert catalog["builder"]["model"] == "SYNTHETIC"

@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "work_item": "owner-decision-scope-support",
+  "status": "COMMITTED",
+  "stage": "build",
+  "authority": "owner-verified-pending-governed-cycle",
+  "spec": "docs/ai/work-items/owner-decision-scope-support/SPEC.md",
+  "created_utc": "2026-09-30",
+  "summary": "Design specification for a first-class DECISION approval scope in orchestrator/schemas/v1/approval-token.json and Engine.approve(), so owner-decision gates can be resolved through a validated token instead of manual ledger mutation.",
+  "problem": "approval-token.json declares only PLAN, COMMIT, DRY_RUN, IMPORT. A gate with scope DECISION cannot be resolved: Engine.approve() requires token.scope == gate.scope, and the schema rejects DECISION. _owner_gate then refuses to resume without a validated event, leaving manual workflow_events insertion as the only transition.",
+  "decoupled_from": {
+    "work_item": "workspace-desk-coverage",
+    "candidate_id": "341715dde1ab8ab7abbefb66faba89c4b3590062177dcb82865f8a46a3570cad",
+    "note": "This work item must not modify, extend, unfreeze, or resolve the workspace-desk-coverage candidate. decision-44 remains PAUSED independently of this specification.",
+    "verification": "workspace-desk-coverage untouched: HEAD 4123646b, 22 tracked files, 45 events, 3 grants, decision-44 PAUSED"
+  },
+  "expected_changes": [
+    "orchestrator/schemas/v1/approval-token.json",
+    "orchestrator/engine.py",
+    "orchestrator/tests/test_engine.py",
+    "docs/ai/work-items/owner-decision-scope-support/"
+  ],
+  "prerequisites": [
+    "Owner disposition of orchestrator/roles.json drift (Option R / P / S) \u2014 test_roles_model_and_binary_are_pinned requires a committed role baseline.",
+    "Own PLAN grant and full Architect -> Reviewer -> Builder -> Verifier cycle under a new candidate."
+  ],
+  "non_goals": [
+    "Folding the DECISION branch into the workspace-desk-coverage candidate (rejected: separation-of-duties violation).",
+    "Resolving decision-44. Building the mechanism does not resolve the decision; the ratification remains the owner's to issue.",
+    "Any mutation of workflow_events, workflow_grants, or checkpoints.db for workspace-desk-coverage.",
+    "Partial per-finding resolution (SPEC 3.4) \u2014 deferred, see verification.decisions_made_without_authority."
+  ],
+  "verification": {
+    "baseline": "236 passed in 84.23s, exit 0 (pre-change)",
+    "after": "253 passed in 103.16s, exit 0",
+    "delta": "+17 new DECISION/roles tests, zero regressions",
+    "decisions_made_without_authority": [
+      "Schema lives in schema_source.py; schemas/v1/*.json is published output (test_contracts enforces).",
+      "Gate-clearing transition belongs in routing.apply_event, not engine.approve.",
+      "SPEC 3.4 partial-resolution DEFERRED: no per-finding resolution primitive exists; findings are recomputed by the next result event. Approximating it by direct state mutation was removed rather than shipped.",
+      "OPERATOR-PAUSE sentinel needed a non-hex exception in resolved_finding_digests.items.",
+      "Decision transition must clear pause_reason/resume_to/prior like the owner resume path does."
+    ],
+    "schema_cases": "13/13 validated against a copy of the published schema",
+    "evidence": "evidence/schema-branch-validation.txt"
+  },
+  "open_questions": 0,
+  "hazards": {
+    "g3_event_number_collision": "workflow_events has 45 rows, max(seq)=45 (seq 45 = result-job-dda5c2c7ba98b37abe491473, the result that CREATED decision-44). A manual insertion labelled 'Event 45' collides on primary key. Next free seq = 46."
+  },
+  "owner_rulings_closed": {
+    "Q1": "OPERATOR-PAUSE sentinel required for gates with no findings - APPROVED",
+    "Q2": "WAIVED permitted, must surface distinctly from technical passes - APPROVED",
+    "Q3": "single decision_hash; rationale_sha256 removed - APPROVED",
+    "Q4": "non-null finding_id for blocking findings, FUTURE CYCLES ONLY; events 1-45 immutable - APPROVED",
+    "sequence": "any prospective manual transition is Event 46 (max seq = 45) - CONFIRMED",
+    "section_7_4": "decision-44 token names only 2060223e (SCP-006); SCP-007/008 are verification records discharged by existing evidence, not claimed in resolved_finding_digests - CONFIRMED",
+    "roles_json": "Option R (Ratify) - current committed roles.json accepted as baseline; T9 proves drift-detection mechanism works"
+  },
+  "branch": "feature/owner-decision-scope-support",
+  "base_commit": "4123646bd8b7016abad8c276cea36a58d6cbfb3a",
+  "implemented_utc": "2026-09-30T17:51:01.077806+00:00",
+  "changed_files": [
+    "orchestrator/schema_source.py",
+    "orchestrator/schemas/v1/approval-token.json",
+    "orchestrator/engine.py",
+    "orchestrator/routing.py",
+    "orchestrator/tests/test_engine.py"
+  ]
+}

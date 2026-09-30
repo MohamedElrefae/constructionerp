@@ -286,7 +286,38 @@ IMPORT_TOKEN = obj(
     {**COMMON_TOKEN, **ERP_BINDINGS, "scope": {"const": "IMPORT"}, "dry_run_evidence_digest": HASH},
     optional=("proposal_sha256",),
 )
-TOKEN = {"oneOf": [PLAN_TOKEN_V1, PLAN_TOKEN_V2, COMMIT_TOKEN, DRY_TOKEN, IMPORT_TOKEN]}
+# A decision authorizes progression only and confers no commit authority: a COMMIT token
+# is still required for any commit gate. Findings are bound by their content-addressed
+# reproduction digest, because raw result events record finding_id as null.
+# OPERATOR-PAUSE is the sentinel a gate carrying no findings must name explicitly, so an
+# ungrounded claim is still impossible (owner ruling Q1).
+OPERATOR_PAUSE = {"const": "OPERATOR-PAUSE"}
+DECISION_TOKEN = obj(
+    {
+        **COMMON_TOKEN,
+        "scope": {"const": "DECISION"},
+        "disposition": enum(["RATIFIED", "WAIVED", "REJECTED", "SUPERSEDED"]),
+        "decision_hash": HASH,
+        "candidate_id": HASH,
+        "plan_revision_hash": HASH,
+        "scope_hash": HASH,
+        "resolved_finding_digests": array({"anyOf": [HASH, OPERATOR_PAUSE]}, 1, True),
+        "repository_id": TEXT,
+        "branch": TEXT,
+        "expected_parent_sha": GIT_SHA,
+    },
+    optional=("supersedes_decision_hash",)
+)
+TOKEN = {
+    "oneOf": [
+        PLAN_TOKEN_V1,
+        PLAN_TOKEN_V2,
+        COMMIT_TOKEN,
+        DRY_TOKEN,
+        IMPORT_TOKEN,
+        DECISION_TOKEN,
+    ]
+}
 
 STATE = obj(
     {

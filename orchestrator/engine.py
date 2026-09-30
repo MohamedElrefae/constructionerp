@@ -2076,6 +2076,25 @@ class Engine:
         self.export()
         return self.view()
 
+    OPERATOR_PAUSE_DIGEST = "OPERATOR-PAUSE"
+
+    def _open_finding_digests(self, view):
+        """Content-addressed identities of findings still open on the pending gate.
+
+        A DECISION token may only claim findings this returns. Raw result events record
+        finding_id as null, so reproduction_digest is the stable identity and matches
+        routing.finding_identity(). Returns the OPERATOR-PAUSE sentinel when a gate
+        carries no findings, so an ungrounded claim is still impossible.
+        """
+        digests = set()
+        for finding in view.get("findings", []):
+            if not finding.get("blocking", True):
+                continue
+            reproduction = (finding.get("snapshot") or {}).get("reproduction_digest")
+            if reproduction:
+                digests.add(reproduction)
+        return digests or {self.OPERATOR_PAUSE_DIGEST}
+
     def approve(self, token):
         if self.store.meta("recovery_required", False):
             raise WorkflowError("Recovery review required before approval creation")
@@ -2227,6 +2246,34 @@ class Engine:
                 raise WorkflowError("IMPORT requires recorded active dry_run_evidence_digest in state")
             if token["dry_run_evidence_digest"] != exp_dry:
                 raise WorkflowError("IMPORT dry_run_evidence_digest mismatch against recorded evidence")
+        elif token["scope"] == "DECISION":
+            # A decision is content-bound and confers no commit authority (SPEC §1.2).
+            self._recheck_candidate(view["candidate"])
+            required = dict(
+                candidate_id=view["candidate"]["candidate_id"],
+                plan_revision_hash=view["plan_revision_hash"],
+                scope_hash=view["scope_hash"],
+                repository_id=str(self.root),
+                branch=self.config["branch"],
+                expected_parent_sha=self.config["base_commit"],
+            )
+            if any(token.get(k) != value for k, value in required.items()):
+                raise WorkflowError("DECISION binding mismatch")
+
+            if token["disposition"] not in ("RATIFIED", "WAIVED", "REJECTED", "SUPERSEDED"):
+                raise WorkflowError("DECISION disposition is not permitted")
+
+            open_digests = self._open_finding_digests(view)
+            ungrounded = sorted(set(token["resolved_finding_digests"]) - open_digests)
+            if ungrounded:
+                raise WorkflowError(f"DECISION references findings not open on this gate: {ungrounded}")
+
+            if token["disposition"] == "SUPERSEDED":
+                prior = token.get("supersedes_decision_hash")
+                if not prior or not is_hex64(prior):
+                    raise WorkflowError("SUPERSEDED disposition requires supersedes_decision_hash")
+                if prior == token["decision_hash"]:
+                    raise WorkflowError("SUPERSEDED decision must differ from the decision it supersedes")
         else:
             raise WorkflowError("Unknown or unsupported approval scope")
         self.store.grant(token)

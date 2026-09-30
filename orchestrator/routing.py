@@ -48,6 +48,7 @@ def initial(config):
         prior=None,
         completed_dependencies=[],
         approval_refs=[],
+        decision_refs=[],
         review_results={},
         stages=deepcopy(config.get("historical_stages", {})),
         plan_granted=plan_granted,
@@ -540,6 +541,31 @@ def apply_event(current, event, config):
             if token["candidate_id"] != state["candidate"]["candidate_id"]:
                 raise WorkflowError("Stale commit grant")
             state["gate"] = {"scope": "OWNER_COMMIT", "gate_id": token["gate_id"]}
+        elif token["scope"] == "DECISION":
+            # An owner decision authorizes progression only. It confers no commit
+            # authority: a COMMIT token is still required for any commit gate.
+            # Findings are recomputed by the next authoritative result event
+            # (routing.findings), so no finding is discarded here.
+            prior = state.get("prior") or {}
+            if token["disposition"] == "REJECTED":
+                state.update(status="NEEDS_REVISION", next_roles=["architect"], gate=None)
+            else:
+                state.update(
+                    status=prior.get("status") or "CHANGES_REQUESTED",
+                    next_roles=prior.get("next_roles") or ["builder"],
+                    gate=None,
+                )
+            # The pause is resolved by this decision; drop the resume bookkeeping so the
+            # view cannot present a stale pause (matches the owner resume path).
+            state.update(pause_reason=None, resume_to=None, prior=None)
+            state["decision_refs"] = state.get("decision_refs", []) + [
+                {
+                    "token_id": token["token_id"],
+                    "disposition": token["disposition"],
+                    "decision_hash": token["decision_hash"],
+                    "resolved_finding_digests": token["resolved_finding_digests"],
+                }
+            ]
         elif token["scope"] == "DRY_RUN":
             if token["candidate_id"] != state["candidate"]["candidate_id"]:
                 raise WorkflowError("Stale dry-run grant candidate")
