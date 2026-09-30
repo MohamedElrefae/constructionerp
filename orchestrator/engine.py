@@ -314,14 +314,19 @@ class Engine:
         work = within(self.root, "docs/ai/work-items/" + config["work_item"])
         for d in ("inbox", "outbox", "runs"):
             (work / d).mkdir(parents=True, exist_ok=True)
+        work_rel = str(work.relative_to(self.root))
         generated = [
-            str(work.relative_to(self.root)) + "/runs/",
-            str(work.relative_to(self.root)) + "/inbox/",
-            str(work.relative_to(self.root)) + "/outbox/",
-            str(work.relative_to(self.root)) + "/STATE.json",
+            work_rel + "/runs/",
+            work_rel + "/inbox/",
+            work_rel + "/outbox/",
+            work_rel + "/evidence/",
+            work_rel + "/STATE.json",
             "orchestrator/roles.json",
             "orchestrator/var/",
         ]
+        for extra in config.get("generated", []):
+            if extra not in generated:
+                generated.append(extra)
         config["generated"] = generated
         context_paths = config.get("read_only_context_paths", [])
         if context_paths:
