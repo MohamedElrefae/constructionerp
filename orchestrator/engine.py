@@ -328,6 +328,7 @@ class Engine:
             if extra not in generated:
                 generated.append(extra)
         config["generated"] = generated
+        evidence_rel = work_rel + "/evidence/"
         context_paths = config.get("read_only_context_paths", [])
         if context_paths:
             mandatory_files = ("AGENTS.md", "SESSION_MEMORY.md")
@@ -349,6 +350,8 @@ class Engine:
                             f"Read-only context path {cp} intersects with scope.allowed_paths {ap}"
                         )
                 for gen in generated:
+                    if gen == evidence_rel:
+                        continue
                     gen_clean = gen.rstrip("/")
                     if cp == gen or cp.startswith(gen_clean + "/"):
                         raise CoreValidationError(

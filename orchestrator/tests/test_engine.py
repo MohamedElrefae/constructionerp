@@ -5,6 +5,7 @@ from pathlib import Path
 
 import pytest
 from candidates import git
+from core import ValidationError as CoreValidationError
 from core import WorkflowError, bytes_hash, canonical, digest, utc, write_json
 from engine import Engine
 
@@ -1382,3 +1383,55 @@ def test_roles_json_is_derived_mirror_not_authority():
         assert roles[name]["model"] == expected["model"]
     # Every locked role must be a governed role, not an ad-hoc addition.
     assert set(locked) <= set(roles)
+
+
+def test_evidence_directory_may_be_read_only_context(configured):
+    """A work item's own evidence/ may be registered as read-only context.
+
+    evidence/ is excluded from candidate tracking, and _prepare gates *validation.json
+    discovery to reviewer/verifier, so read_only_context_paths is the only channel that
+    reaches a builder dispatch. Evidence is immutable reference material rather than
+    scratchpad output, so the generated-path intersection guard must not reject it.
+    """
+    root, config = configured
+    (root / "AGENTS.md").write_text("# agent context\n")
+    (root / "SESSION_MEMORY.md").write_text("# session memory\n")
+    git(root, "add", "AGENTS.md", "SESSION_MEMORY.md")
+    git(root, "-c", "core.hooksPath=/dev/null", "commit", "-m", "mandatory context files")
+    config["base_commit"] = git(root, "rev-parse", "HEAD").decode().strip()
+    work = root / "docs/ai/work-items" / config["work_item"]
+    evidence = work / "evidence"
+    evidence.mkdir(parents=True, exist_ok=True)
+    disposition = evidence / "scp006-delta-ratification-disposition.md"
+    disposition.write_text("Ratified deltas D1-D3.\n")
+    report = evidence / "scp008-base-suite-validation.json"
+    report.write_text('{"schema":"v1","commands":[]}\n')
+
+    rels = [str(disposition.relative_to(root)), str(report.relative_to(root))]
+    config["read_only_context_paths"] = ["AGENTS.md", "SESSION_MEMORY.md", *rels]
+
+    e = Engine(root, launcher=Stub())
+    try:
+        e.initialize(config)
+        assert e.config["read_only_context_paths"] == config["read_only_context_paths"]
+        assert "AGENTS.md" not in e.config["generated"]
+        assert e.config["generated"][3] == "docs/ai/work-items/%s/evidence/" % config["work_item"]
+    finally:
+        e.close()
+
+
+def test_generated_scratch_paths_still_reject_read_only_context(configured):
+    """The intersection guard still rejects scratchpad output, not just evidence/."""
+    root, config = configured
+    (root / "AGENTS.md").write_text("# agent context\n")
+    (root / "SESSION_MEMORY.md").write_text("# session memory\n")
+    work_rel = "docs/ai/work-items/%s" % config["work_item"]
+    for forbidden in (work_rel + "/runs/job-1", work_rel + "/inbox/x", work_rel + "/STATE.json"):
+        cfg = dict(config)
+        cfg["read_only_context_paths"] = ["AGENTS.md", "SESSION_MEMORY.md", forbidden]
+        e = Engine(root, launcher=Stub())
+        try:
+            with pytest.raises(CoreValidationError):
+                e.initialize(cfg)
+        finally:
+            e.close()
