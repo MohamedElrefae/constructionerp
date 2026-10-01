@@ -1,10 +1,12 @@
 {
   "artefacts": {
     "CANARY-DISPOSITION-in-phase-dir": "8be7d7bdf971e829114becbf770b6f74904cba247af405fc5a515cd6f257271d",
-    "CANARY-DISPOSITION.md": "8be7d7bdf971e829114becbf770b6f74904cba247af405fc5a515cd6f257271d",
+    "CANARY-DISPOSITION.md": "667bd63dd201691ffd358edac6b5c5a9206b380795f1cb6decad7601d50c0415",
     "account-pilot-canary.log": "6af3b4915d3fc0015c1bc3827aaea9de9ec27ed9be28d27ce99eeb7741da9537",
     "phase1_SCOPE.md": "1c6bc7bf45546be91c776f9681c80521cb1c5668d0bc1876a1c53ae668c74603",
     "phase2_SCOPE.md": "3b846e14217c825340c7c6fd27930bee7a992936af964657c879f13fd71fd01c",
+    "scripts/measure_wave1_p95.py": "c8e3b20fad5b88714e5940ae9ab0f02aad2c7ce9a6c470f7fad3d2a70c26dc87",
+    "wave1-p95-measurement.json": "abba76d5590f96e247f857ffdba342b1c09bbf40229482ffe84326b06d2623e1",
     "wave1-phase1-tests.log": "af867aa74f2dbc52e5ed56896037b6bd02b3a34648c764f4f59ed36d34f8bbba",
     "wave1-phase2-tests.log": "d748fcce621d9de4bfd00ec0dab3f797da5385da0f54e3c1ce43e7d219794f39"
   },
@@ -14,13 +16,45 @@
     "artifact_modified_by_this_work_item": false,
     "artifact_owner": "erp-arabic-bilingual-data",
     "document": "docs/ai/work-items/bilingual-wave1-masters/evidence/CANARY-DISPOSITION.md",
-    "document_sha256": "8be7d7bdf971e829114becbf770b6f74904cba247af405fc5a515cd6f257271d",
-    "latency_gate": "UNEVALUATED for this candidate",
+    "document_sha256": "667bd63dd201691ffd358edac6b5c5a9206b380795f1cb6decad7601d50c0415",
+    "latency_gate": "Wave 1 masters MEASURED (1.31-1.45x, sub-1.2ms P95) and accepted as a documented trade-off; Account latency UNEVALUATED pending Stage-3 re-pin",
     "rationale": "test_comparative_p95_live_measurement_is_balanced_and_bound asserts structural properties only (match-set equivalence, alternating order balance, per-call query counts, environment binding) and performs no P95 comparison. The canonical 1.10x comparison exists only in the hash-bound artifact test, which fails on this branch. No assertion currently in the suite bounds Wave 1 search latency.",
     "repin_requires": "owner-authorized governance maintenance run under erp-arabic-bilingual-data",
     "status": "ACCEPTED_KNOWN_MISMATCH"
   },
   "head_commit": "21fb37d7031f8b12c13993a58171303917bec1e2",
+  "latency_measurement": {
+    "absolute_p95_ms": {
+      "Cost Center": 0.811,
+      "Customer": 0.686,
+      "Item": 1.114,
+      "Project": 0.73,
+      "Supplier": 0.675,
+      "Warehouse": 0.779
+    },
+    "artefact": "docs/ai/work-items/bilingual-wave1-masters/evidence/wave1-p95-measurement.json",
+    "caveat": "No doctype meets the canonical 1.10x rule owned by erp-arabic-bilingual-data. This artifact applies no gate rule and claims no conformance. Account latency remains unevaluated pending the Stage-3 re-pin.",
+    "disposition": "MEASURED and accepted as a documented architectural trade-off",
+    "fixture_prefix": "CT-W1-",
+    "fixtures_per_doctype": 12,
+    "harness": "docs/ai/work-items/bilingual-wave1-masters/evidence/scripts/measure_wave1_p95.py",
+    "harness_sha256": "c8e3b20fad5b88714e5940ae9ab0f02aad2c7ce9a6c470f7fad3d2a70c26dc87",
+    "leftover_fixtures": 0,
+    "match_sets_equal_all": true,
+    "ratios": {
+      "Cost Center": 1.4534,
+      "Customer": 1.4086,
+      "Item": 1.4524,
+      "Project": 1.3419,
+      "Supplier": 1.4063,
+      "Warehouse": 1.3092
+    },
+    "samples": 50,
+    "scope": "work-item-local; no canonical gate rule applied or claimed",
+    "sha256": "abba76d5590f96e247f857ffdba342b1c09bbf40229482ffe84326b06d2623e1",
+    "warmup": 5,
+    "why_local_harness": "measure_search_p95 hardcodes the Account doctype in five call sites; parameterising it would modify governed service code and break test_zero_service_edits_guard"
+  },
   "out_of_scope_respected": [
     "no orchestrator/ modification",
     "no apps/frappe or apps/erpnext modification",
@@ -57,9 +91,9 @@
     }
   ],
   "residual_obligations": [
-    "Comparative search latency for Wave 1 masters is unevaluated; no performance claim is made.",
-    "All six masters remain schema_installed pending that evaluation.",
-    "Stage-3 P95 artifact re-pin is deferred to an owner-authorized run under erp-arabic-bilingual-data."
+    "Account comparative search latency remains unevaluated; Stage-3 re-pin under erp-arabic-bilingual-data is required to restore the account pilot to 53/53.",
+    "No Wave 1 master meets the canonical 1.10x ratio; accepted as a documented trade-off by owner decision, applying no gate rule.",
+    "All six masters remain schema_installed; promotion to active is an owner decision not made by this work item."
   ],
   "scope": {
     "masters": [

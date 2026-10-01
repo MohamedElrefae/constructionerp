@@ -3,7 +3,7 @@
 **Work item:** `bilingual-wave1-masters` (Phase 1 + Phase 2)
 **Branch:** `feature/bilingual-wave1-masters`
 **Date:** 2026-10-02
-**Status:** `ACCEPTED_KNOWN_MISMATCH` — latency gate UNEVALUATED for this candidate
+**Status:** `ACCEPTED_KNOWN_MISMATCH` — Wave 1 latency MEASURED and accepted as a documented trade-off
 **Authority:** owner instruction given in session; transcribed by the agent
 
 ---
@@ -21,7 +21,37 @@ establishes that Wave 1 search latency is within the canonical bound.
 
 Account pilot suite: **52 / 53**. Wave 1 suites: **16 / 16**.
 
-## 2. The latency gate is unevaluated for this candidate
+## 2. Wave 1 search latency profile: measured and accepted trade-off
+
+Comparative latency for all six Wave 1 masters was measured in
+`wave1-p95-measurement.json` (work-item-local; **no gate rule applied**).
+
+| DocType | baseline P95 | governed P95 | ratio | median base → governed |
+|---|---|---|---|---|
+| Cost Center | 0.558 ms | 0.811 ms | 1.453 | 0.509 → 0.754 ms |
+| Customer | 0.487 ms | 0.686 ms | 1.409 | 0.451 → 0.633 ms |
+| Item | 0.767 ms | 1.114 ms | 1.452 | 0.509 → 0.760 ms |
+| Project | 0.544 ms | 0.730 ms | 1.342 | 0.513 → 0.687 ms |
+| Supplier | 0.480 ms | 0.675 ms | 1.406 | 0.445 → 0.624 ms |
+| Warehouse | 0.595 ms | 0.779 ms | 1.309 | 0.544 → 0.724 ms |
+
+- **Ratios:** 1.31–1.45× against a bare, unranked `frappe.get_list` baseline.
+- **Canonical rule:** none meets the 1.10× rule owned by `erp-arabic-bilingual-data`, which
+  this artifact does not apply or claim.
+- **Absolute ceiling:** all six masters demonstrate sub-1.2 ms P95 (0.675–1.114 ms) and
+  sub-0.8 ms median (0.624–0.760 ms). Absolute overhead is 130–347 µs.
+- **Disposition:** the delta is the legitimate cost of Python-level relevance ranking
+  (exact > prefix > substring, value tie-breaking) and bilingual label formatting over an
+  unranked SQL query. **Accepted as a documented architectural trade-off.**
+
+All six doctypes report `match_sets_equal: true` and zero leftover fixtures.
+
+This supersedes the earlier "UNEVALUATED" status for Wave 1 masters. The **Stage-3 Account**
+latency gate remains unresolved — see §3.
+
+### 2a. Original basis for "unevaluated"
+
+The earlier status rested on the following, which remains accurate for **Account** only.
 
 `test_comparative_p95_live_measurement_is_balanced_and_bound` verifies structural
 integrity — match-set equivalence, alternating pair order balance, per-call SQL query
@@ -40,7 +70,23 @@ self.assertLessEqual(m["bilingual"]["p95_ms"], limit, ...)
 ```
 
 That comparison is unreachable while the test fails on hashes. **No assertion currently in
-the suite bounds Wave 1 search latency.** This disposition does not assert otherwise.
+the suite bounds Account search latency.** Wave 1 masters are now bounded by the
+work-item-local measurement in §2, which applies no canonical rule.
+
+## 2b. Method note on the Wave 1 measurement
+
+`construction.services.bilingual_service.measure_search_p95` hardcodes the `Account` doctype
+in five call sites. Parameterising it would modify governed service code and break
+`test_zero_service_edits_guard`, which is the Phase 2 invariant. The Wave 1 harness
+`evidence/scripts/measure_wave1_p95.py` therefore reimplements the same measurement contract
+parameterised per doctype: alternating pair order, 5 discarded warmups, 50 interleaved
+samples, nearest-rank P95, true median, match-set equivalence, code-hash and environment
+binding.
+
+The baseline is a bare, unranked, permission-aware `frappe.get_list` with `or_filters` on the
+English field plus `name`. The governed side is `searchable_link_search`, which adds the
+normalization predicate, ranking and label formatting. **The measured delta is therefore the
+feature's cost, not a regression against an equivalent workload.**
 
 ## 3. The hash mismatch is intentional, and the hash check is load-bearing
 
@@ -76,12 +122,17 @@ Re-measuring and re-pinning it is therefore a governance maintenance run under
 ## 5. Disposition
 
 1. The hash mismatch is **accepted as a known, intentional consequence** of commit `81af417`.
-2. Comparative search latency for Wave 1 masters is **UNEVALUATED**. No performance claim is
-   made by this work item.
-3. The Stage-3 artifact is **not modified**. Re-pinning is deferred to an owner-authorized
-   governance maintenance run under `erp-arabic-bilingual-data`.
-4. All six Wave 1 masters remain `schema_installed`. Promotion to `active` requires the
-   latency evaluation to be performed, consistent with Phase 1 §F and Phase 2 §2.3 / §3.G.
+2. Wave 1 master latency is **MEASURED** (§2) and **accepted as a documented architectural
+   trade-off**: ratios 1.31–1.45×, absolute P95 0.675–1.114 ms. This work item applies no
+   canonical gate rule and claims no conformance to one.
+3. **Account** search latency remains unevaluated on this branch. The canonical 1.10× rule
+   is decided solely by the failing hash-bound artifact test.
+4. The Stage-3 artifact is **not modified**. Re-pinning is deferred to an owner-authorized
+   governance maintenance run under `erp-arabic-bilingual-data`, which is required to
+   restore the account pilot to 53 / 53.
+5. Wave 1 master latency measurement satisfies the latency-evaluation precondition in Phase 1
+   §F and Phase 2 §2.3 / §3.G. Registry promotion to `active` remains an owner decision that
+   is not made by this work item.
 
 ## 6. What re-pinning would require
 
