@@ -1,0 +1,104 @@
+{
+  "artefacts": {
+    "CANARY-DISPOSITION-in-phase-dir": "8be7d7bdf971e829114becbf770b6f74904cba247af405fc5a515cd6f257271d",
+    "CANARY-DISPOSITION.md": "8be7d7bdf971e829114becbf770b6f74904cba247af405fc5a515cd6f257271d",
+    "account-pilot-canary.log": "6af3b4915d3fc0015c1bc3827aaea9de9ec27ed9be28d27ce99eeb7741da9537",
+    "phase1_SCOPE.md": "1c6bc7bf45546be91c776f9681c80521cb1c5668d0bc1876a1c53ae668c74603",
+    "phase2_SCOPE.md": "3b846e14217c825340c7c6fd27930bee7a992936af964657c879f13fd71fd01c",
+    "wave1-phase1-tests.log": "af867aa74f2dbc52e5ed56896037b6bd02b3a34648c764f4f59ed36d34f8bbba",
+    "wave1-phase2-tests.log": "d748fcce621d9de4bfd00ec0dab3f797da5385da0f54e3c1ce43e7d219794f39"
+  },
+  "base_commit": "10887841bf887b5dac769f98633f7a1926b07bda",
+  "branch": "feature/bilingual-wave1-masters",
+  "canary_disposition": {
+    "artifact_modified_by_this_work_item": false,
+    "artifact_owner": "erp-arabic-bilingual-data",
+    "document": "docs/ai/work-items/bilingual-wave1-masters/evidence/CANARY-DISPOSITION.md",
+    "document_sha256": "8be7d7bdf971e829114becbf770b6f74904cba247af405fc5a515cd6f257271d",
+    "latency_gate": "UNEVALUATED for this candidate",
+    "rationale": "test_comparative_p95_live_measurement_is_balanced_and_bound asserts structural properties only (match-set equivalence, alternating order balance, per-call query counts, environment binding) and performs no P95 comparison. The canonical 1.10x comparison exists only in the hash-bound artifact test, which fails on this branch. No assertion currently in the suite bounds Wave 1 search latency.",
+    "repin_requires": "owner-authorized governance maintenance run under erp-arabic-bilingual-data",
+    "status": "ACCEPTED_KNOWN_MISMATCH"
+  },
+  "head_commit": "21fb37d7031f8b12c13993a58171303917bec1e2",
+  "out_of_scope_respected": [
+    "no orchestrator/ modification",
+    "no apps/frappe or apps/erpnext modification",
+    "erp-arabic-bilingual-data evidence untouched",
+    "no registry promotion to active"
+  ],
+  "primary_invariant": {
+    "bilingual_service_py_diff_lines": 0,
+    "claim": "Phase 2 required zero modifications to the Phase 1 generalization",
+    "enforced_by_test": "construction.tests.test_bilingual_wave1_phase2_pilot.test_zero_service_edits_guard",
+    "reference_commit": "81af417deda3566956ed3f25bc1463f55088d1ea",
+    "search_py_diff_lines": 0
+  },
+  "programme_commits": [
+    {
+      "role": "Phase 1 scope descriptor",
+      "sha": "4f2bea4"
+    },
+    {
+      "role": "Phase 1 implementation",
+      "sha": "81af417"
+    },
+    {
+      "role": "Phase 2 scope descriptor",
+      "sha": "5791a11"
+    },
+    {
+      "role": "Phase 2 implementation",
+      "sha": "f270488"
+    },
+    {
+      "role": "Canary disposition",
+      "sha": "21fb37d"
+    }
+  ],
+  "residual_obligations": [
+    "Comparative search latency for Wave 1 masters is unevaluated; no performance claim is made.",
+    "All six masters remain schema_installed pending that evaluation.",
+    "Stage-3 P95 artifact re-pin is deferred to an owner-authorized run under erp-arabic-bilingual-data."
+  ],
+  "scope": {
+    "masters": [
+      "Item",
+      "Customer",
+      "Supplier",
+      "Cost Center",
+      "Warehouse",
+      "Project"
+    ],
+    "patches": [
+      "construction.patches.v9_2.add_wave1_arabic_norm_fields",
+      "construction.patches.v9_3.add_wave1_phase2_arabic_fields"
+    ],
+    "registry_states": "all six remain schema_installed"
+  },
+  "test_results": {
+    "account_pilot": {
+      "artifact_recorded_sha256": "753e3e655ca6c4426d37ebaf8a88b0d3124d2dcd9224a2dccd102833d1cf4207",
+      "exit_code": 1,
+      "failure_reason": "preserved Stage-3 P95 artifact is stale for bilingual_service.py",
+      "live_sha256": "cbb37e1577ce280b39936b01bcb341278ed81c03b524b15330003a7446c19012",
+      "module": "construction.tests.test_bilingual_account_pilot",
+      "ran": 53,
+      "result": "FAILED (failures=1)",
+      "sole_failure": "test_comparative_p95_artifact_bound_and_gate"
+    },
+    "wave1_phase1": {
+      "exit_code": 0,
+      "module": "construction.tests.test_bilingual_wave1_pilot",
+      "ran": 8,
+      "result": "OK"
+    },
+    "wave1_phase2": {
+      "exit_code": 0,
+      "module": "construction.tests.test_bilingual_wave1_phase2_pilot",
+      "ran": 8,
+      "result": "OK"
+    }
+  },
+  "work_item": "bilingual-wave1-masters"
+}
