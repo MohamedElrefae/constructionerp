@@ -1,0 +1,140 @@
+{
+  "base_commit": "fd9aecc372aec6a1341dd0cac4f779c1ec539756",
+  "candidate_id": "d8be079d388472a42494d35a8e9ccc0b058d8163c55f21337ce3e3c5401554df",
+  "delivered_commit": "98d3dd627f7e2400d71ea88c9c100ee728e9d2a1",
+  "event_count": 36,
+  "final_status": "VERIFIED_FOR_RELEASE",
+  "ledger_path": "ledger/events.jsonl",
+  "ledger_sha256": "8cce09b9e0d012949b7487fb5963c44936c7ba4005522fd5a850469037d9eb8b",
+  "notes": [
+    "36-event governed ledger exported from orchestrator/var/checkpoints.db via Engine.store.export_ledger.",
+    "The Builder returned BLOCKED seven times across attempts 2-11; every block was contractually correct.",
+    "Event 20 context_added registered three live runtime captures, after which the Reviewer and all subsequent agents could verify evidence claims against raw bytes rather than prose.",
+    "Event 22 reviewer BLOCKED caught a label-partition double-count in owner-authored evidence (User Scope Context counted as both core and deferred); corrected in scp007-live-runtime-validation.json without editing the raw capture.",
+    "Residual non-blocking obligations carried at closure: six deferred catalog entries, WDC-R2 P0 provenance chain, browser/LTR presentation, session-level permission exercise, v15 disposition, WDC-R3 strict gate waived with success not achieved."
+  ],
+  "result_timeline": [
+    {
+      "findings": 0,
+      "role": "architect",
+      "seq": 1,
+      "verdict": "PROPOSED"
+    },
+    {
+      "findings": 0,
+      "role": "reviewer",
+      "seq": 2,
+      "verdict": "PASS"
+    },
+    {
+      "findings": 3,
+      "role": "builder",
+      "seq": 4,
+      "verdict": "BLOCKED"
+    },
+    {
+      "findings": 3,
+      "role": "builder",
+      "seq": 6,
+      "verdict": "BLOCKED"
+    },
+    {
+      "findings": 3,
+      "role": "architect",
+      "seq": 8,
+      "verdict": "PROPOSED"
+    },
+    {
+      "findings": 0,
+      "role": "reviewer",
+      "seq": 9,
+      "verdict": "PASS"
+    },
+    {
+      "findings": 2,
+      "role": "builder",
+      "seq": 11,
+      "verdict": "BLOCKED"
+    },
+    {
+      "findings": 2,
+      "role": "architect",
+      "seq": 13,
+      "verdict": "PROPOSED"
+    },
+    {
+      "findings": 1,
+      "role": "reviewer",
+      "seq": 14,
+      "verdict": "PASS"
+    },
+    {
+      "findings": 3,
+      "role": "builder",
+      "seq": 16,
+      "verdict": "BLOCKED"
+    },
+    {
+      "findings": 3,
+      "role": "builder",
+      "seq": 18,
+      "verdict": "BLOCKED"
+    },
+    {
+      "findings": 3,
+      "role": "architect",
+      "seq": 21,
+      "verdict": "PROPOSED"
+    },
+    {
+      "findings": 2,
+      "role": "reviewer",
+      "seq": 22,
+      "verdict": "BLOCKED"
+    },
+    {
+      "findings": 4,
+      "role": "architect",
+      "seq": 24,
+      "verdict": "PROPOSED"
+    },
+    {
+      "findings": 1,
+      "role": "reviewer",
+      "seq": 25,
+      "verdict": "PASS"
+    },
+    {
+      "findings": 2,
+      "role": "builder",
+      "seq": 27,
+      "verdict": "BLOCKED"
+    },
+    {
+      "findings": 2,
+      "role": "builder",
+      "seq": 29,
+      "verdict": "BLOCKED"
+    },
+    {
+      "findings": 2,
+      "role": "builder",
+      "seq": 31,
+      "verdict": "BLOCKED"
+    },
+    {
+      "findings": 2,
+      "role": "builder",
+      "seq": 33,
+      "verdict": "PASS"
+    },
+    {
+      "findings": 2,
+      "role": "verifier",
+      "seq": 34,
+      "verdict": "PASS"
+    }
+  ],
+  "tree_oid": "d354aac073c0b1dc1241b4f56e9689e0bff7ea9f",
+  "work_item": "workspace-desk-coverage-v2"
+}

@@ -1,0 +1,4 @@
+SKIP construction/print_format/boq_print_format/boq_print_format.json: markup/code blob excluded from string gate (print/CSS/seed-data; covered by bilingual-output waves + leak detection)
+SKIP construction/workspace/construction/construction.json: markup/code blob excluded from string gate (print/CSS/seed-data; covered by bilingual-output waves + leak detection)
+FAIL evidence-index-root: 'CANDIDATE_ROOT: /home/mohamed/frappe-bench/apps/construction' != invocation root '/tmp/opencode/replica/apps/construction'
+checked={"construction/locale/ar.po": 817, "csv_rows": 4337, "extract": {"files": 265, "json_labels": 29, "missing": 0, "wrapped": 667}, "raw_text": {"files": 7, "missing": 0, "texts": 2}} errors=1

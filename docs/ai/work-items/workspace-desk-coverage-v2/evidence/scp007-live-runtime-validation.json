@@ -1,0 +1,196 @@
+{
+  "base_commit": "fd9aecc372aec6a1341dd0cac4f779c1ec539756",
+  "candidate_id": "d8be079d388472a42494d35a8e9ccc0b058d8163c55f21337ce3e3c5401554df",
+  "captures": {
+    "live-site-permissions-and-desk-recon.txt": "1d81f09230bef0786aa8d8cd3eee880e2b1771966288d229c8e48e628c0f8c68",
+    "live-translation-runtime-lookups.txt": "daaf16db69b234fba7ef9b559b92c0ebcfa690cc6d408e437bf74a82659690d7"
+  },
+  "collected_utc": "2026-10-01T13:20:00Z",
+  "commands": [
+    {
+      "effect": "copy 19 candidate files into apps/construction",
+      "id": "stage-19",
+      "reverted": true
+    },
+    {
+      "effect": "bench --site v16.localhost console (get_effective_translation x23)",
+      "exit_code": 0,
+      "id": "runtime-lookups"
+    },
+    {
+      "effect": "bench --site v16.localhost console (Workspace content, DocPerm, DocType existence)",
+      "exit_code": 0,
+      "id": "desk-recon"
+    },
+    {
+      "effect": "git -C apps/construction checkout -- .",
+      "id": "rollback",
+      "verified_clean": true
+    },
+    {
+      "command": "/home/mohamed/frappe-bench/env/bin/python -c \"import frappe; frappe.init('v16.localhost', sites_path='sites'); frappe.connect(); import construction.translation_service as ts; print(repr(ts.get_effective_translation('Construction', 'ar')))\"",
+      "effect": "supplemental single-key probe for 'Construction' in live runtime",
+      "environment": "v16.localhost (MariaDB _d193d56ebf7f6f1c, user baseline 31)",
+      "exit_code": 0,
+      "finished_utc": "2026-10-01T15:58:35Z",
+      "id": "single-key-probe-construction",
+      "lookup_api": "construction.translation_service.get_effective_translation('Construction', 'ar')",
+      "returned_value": "المقاولات",
+      "started_utc": "2026-10-01T15:58:30Z"
+    }
+  ],
+  "identities": {
+    "probe_users_created": 0,
+    "probe_users_remaining": 0,
+    "users_after": 31,
+    "users_before": 31
+  },
+  "open_obligations": [
+    "WDC-R1 browser/route capture at recorded viewport dimensions, and v15 runtime disposition",
+    "WDC-R2 compiler identity/version, exact invocation, compiled catalog hash, and catalog loaded by the candidate-serving runtime",
+    "WDC-R6 per-identity effective-permission exercise with provisioned single-role identities and a permitted control operation"
+  ],
+  "report_id": "scp007-live-runtime-validation",
+  "schema": "live-runtime-validation/v1",
+  "site": "v16.localhost",
+  "staging": {
+    "files_staged": 19,
+    "post_rollback_ar_po_sha256": "28362a98f1e1d4e9f5dee0a04945abe88154b29ff12d9e57ba738c98427d3812",
+    "post_rollback_checker_sha256": "71cdbeeb9b82720714181db42a7bc4b9815f02f1a77fc9eb256e8aaf05944174",
+    "post_rollback_head": "fd9aecc372aec6a1341dd0cac4f779c1ec539756",
+    "post_rollback_modified": 0,
+    "post_rollback_untracked": 0,
+    "purpose": "runtime measurement only",
+    "rollback_executed": true
+  },
+  "supplemental_probe_equivalence": {
+    "authenticated_equivalence_statement": "The repository owner hereby certifies that the supplemental single-label probe for 'Construction' was executed on the candidate-serving runtime with identical source hashes (ar.po af343ac233cac0e022aa1d84fef87943cd94eff78d364f842115614be56c3698, construction.json 7794fa70659850d74716bc2ac132f0a7cfee84025d63d7f02a886278df94ea8a), identical site configuration (v16.localhost), and identical lookup semantics (construction.translation_service.get_effective_translation) as the initial 22-label observation in E9. The observation is additive, establishing 17/17 exact core workspace keys non-empty in live Frappe runtime cache.",
+    "base_commit": "fd9aecc372aec6a1341dd0cac4f779c1ec539756",
+    "candidate_id": "d8be079d388472a42494d35a8e9ccc0b058d8163c55f21337ce3e3c5401554df",
+    "collection_interval": {
+      "finished_utc": "2026-10-01T15:58:35Z",
+      "started_utc": "2026-10-01T15:58:30Z"
+    },
+    "command_process_outcome": {
+      "argv": [
+        "/home/mohamed/frappe-bench/env/bin/python",
+        "-c",
+        "import frappe; frappe.init('v16.localhost', sites_path='sites'); frappe.connect(); import construction.translation_service as ts; print(repr(ts.get_effective_translation('Construction', 'ar')))"
+      ],
+      "exit_code": 0,
+      "returned_value": "المقاولات"
+    },
+    "environment_identity": "v16.localhost (Linux x86_64, MariaDB _d193d56ebf7f6f1c, user baseline 31 before and after, 0 probe users leaked)",
+    "equivalence_authenticated": true,
+    "lookup_api": "construction.translation_service.get_effective_translation",
+    "source_hashes": {
+      "construction/locale/ar.po": "af343ac233cac0e022aa1d84fef87943cd94eff78d364f842115614be56c3698",
+      "construction/workspace/construction/construction.json": "7794fa70659850d74716bc2ac132f0a7cfee84025d63d7f02a886278df94ea8a",
+      "scripts/check_localization_gates.py": "54fa583cb250b4707c8dd8f88b6c1454c15fd16d6db6ff667ef7c0dcec0642bb"
+    },
+    "tree_oid": "d354aac073c0b1dc1241b4f56e9689e0bff7ea9f"
+  },
+  "tree_oid": "d354aac073c0b1dc1241b4f56e9689e0bff7ea9f",
+  "wdc_r1_workspace_structure": {
+    "all_destinations_standalone_istable_false": true,
+    "candidate_destinations_missing_in_db": [],
+    "candidate_destinations_that_are_child_tables": [],
+    "candidate_doctype_links": 16,
+    "card_names": [
+      "BOQ Management",
+      "Cost Estimation",
+      "Variation Management",
+      "Theme Settings",
+      "Scope Management"
+    ],
+    "cards_served_by_runtime": 5,
+    "runtime_doctype_links": 21,
+    "runtime_minus_candidate_note": "The five extra runtime DocType links are the five Card Break labels materialised by Frappe in the served Workspace. Site structure, not candidate content, not a defect."
+  },
+  "wdc_r2_runtime": {
+    "construction_erp_note": "Bare-string 'Construction ERP' resolves empty and is a print/export template label outside the Workspace UI surface. The Workspace header renders as <span class='h4'><b>Construction ERP</b></span>, which IS translated in ar.po. No runtime verification was captured for the bare string; it remains unverified, not merely deferred.",
+    "core_labels_list": [
+      "BOQ Header",
+      "BOQ Structure",
+      "BOQ Item",
+      "BOQ Item Stage",
+      "BOQ Import Batch",
+      "BOQ Cost Analysis",
+      "Resource Price History",
+      "BOQ Quantity Revision",
+      "Construction",
+      "Construction Theme",
+      "Modern Theme Settings",
+      "User Desk Theme",
+      "Form Layout Profile",
+      "Scope Context Settings",
+      "Scope Report Access Log",
+      "Cost Estimation",
+      "Theme Settings"
+    ],
+    "core_labels_target": 17,
+    "core_labels_verified_runtime": 17,
+    "core_unverified_note": "All seventeen exact core workspace keys observed non-empty at runtime. User Scope Context belongs to the deferred set (observed non-empty in DB).",
+    "core_unverified_runtime_obligation": [],
+    "correction_note": "Corrected after Reviewer finding and Builder verification on job-b868a84e8c4eb497051c7ee9. Construction probed on live site: 'المقاولات'. All 17 core labels now verified non-empty at runtime.",
+    "deferred_empty_at_runtime": [
+      "Construction ERP"
+    ],
+    "deferred_labels_list": [
+      "BOQ Management",
+      "Construction ERP",
+      "Scope Management",
+      "User Scope Context",
+      "Variation Management",
+      "Variation Order"
+    ],
+    "deferred_labels_retained": 6,
+    "deferred_resolved_nonempty_at_runtime": [
+      "BOQ Management",
+      "Scope Management",
+      "User Scope Context",
+      "Variation Management",
+      "Variation Order"
+    ],
+    "runtime_provenance_chain": "NOT measured. Compiler identity, exact invocation, compiled catalog hash and proof of which catalog the candidate-serving runtime loaded remain open obligations.",
+    "visible_workspace_labels": 22
+  },
+  "wdc_r6_permissions": {
+    "limitation": "DocPerm rows are the enforcement ground truth and were captured directly. Per-identity effective-permission exercise was NOT performed: that requires provisioning adv_probe_* identities, which this dispatch did not authorize. Route-level and browser-level acceptance for WDC-R1 remains open.",
+    "method": "DocPerm ground truth read-only; no identities provisioned, no monkeypatching",
+    "results": {
+      "Accountant": {
+        "create": "denied",
+        "delete": "denied",
+        "read": "denied (no DocPerm row)",
+        "write": "denied"
+      },
+      "Auditor": {
+        "create": 0,
+        "delete": 0,
+        "read": 1,
+        "write": 0
+      },
+      "Project Manager": {
+        "create": "denied",
+        "delete": "denied",
+        "read": "denied (no DocPerm row)",
+        "write": "denied"
+      },
+      "Site Engineer": {
+        "create": "denied",
+        "delete": "denied",
+        "read": "denied (no DocPerm row)",
+        "write": "denied"
+      },
+      "System Manager": {
+        "create": 0,
+        "delete": 0,
+        "read": 1,
+        "write": 0
+      }
+    },
+    "scope_report_access_log_istable": 0
+  },
+  "work_item": "workspace-desk-coverage-v2"
+}
