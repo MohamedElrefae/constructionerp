@@ -125,8 +125,15 @@ Re-measuring and re-pinning it is therefore a governance maintenance run under
 2. Wave 1 master latency is **MEASURED** (§2) and **accepted as a documented architectural
    trade-off**: ratios 1.31–1.45×, absolute P95 0.675–1.114 ms. This work item applies no
    canonical gate rule and claims no conformance to one.
-3. **Account** search latency remains unevaluated on this branch. The canonical 1.10× rule
-   is decided solely by the failing hash-bound artifact test.
+3. **Account** search latency remains unevaluated by the artifact test on this branch.
+   However, a read-only dry run under Account's own canonical multi-round protocol
+   (five rounds, min-of-rounds selection) produced ratios of **1.062–1.087, clearing the
+   1.10× ceiling** and establishing that Wave 1 code introduced **no regression on
+   Account**. The historical artifact shows why single-run comparison is invalid at this
+   baseline: 4 of its 5 rounds individually fail 1.10 (0.986, 1.184, 1.190, 1.190,
+   1.190) and the recorded pass derives entirely from min-of-rounds selection. The
+   preserved ratio is 1.071. The dry run wrote no artefact and mutated no evidence;
+   re-pinning remains deferred to the owner-authorized governance run.
 4. The Stage-3 artifact is **not modified**. Re-pinning is deferred to an owner-authorized
    governance maintenance run under `erp-arabic-bilingual-data`, which is required to
    restore the account pilot to 53 / 53.

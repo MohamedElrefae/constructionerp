@@ -1,7 +1,7 @@
 {
   "artefacts": {
     "CANARY-DISPOSITION-in-phase-dir": "8be7d7bdf971e829114becbf770b6f74904cba247af405fc5a515cd6f257271d",
-    "CANARY-DISPOSITION.md": "667bd63dd201691ffd358edac6b5c5a9206b380795f1cb6decad7601d50c0415",
+    "CANARY-DISPOSITION.md": "875af38e146bb2bfe37f2437ff2ca34e5055f54065917084f10527105ccbb919",
     "account-pilot-canary.log": "6af3b4915d3fc0015c1bc3827aaea9de9ec27ed9be28d27ce99eeb7741da9537",
     "phase1_SCOPE.md": "1c6bc7bf45546be91c776f9681c80521cb1c5668d0bc1876a1c53ae668c74603",
     "phase2_SCOPE.md": "3b846e14217c825340c7c6fd27930bee7a992936af964657c879f13fd71fd01c",
@@ -13,10 +13,32 @@
   "base_commit": "10887841bf887b5dac769f98633f7a1926b07bda",
   "branch": "feature/bilingual-wave1-masters",
   "canary_disposition": {
+    "account_dry_run": {
+      "canonical_limit": 1.1,
+      "historical_context": {
+        "note": "4 of 5 historical rounds individually fail 1.10; the recorded pass derives entirely from min-of-rounds selection, so single-run comparison at this ~1.4 ms baseline is invalid",
+        "per_round_ratios": [
+          0.986,
+          1.184,
+          1.19,
+          1.19,
+          1.19
+        ],
+        "preserved_ratio": 1.071
+      },
+      "kind": "read-only dry run; wrote no artefact, mutated no evidence",
+      "observed_ratios": [
+        1.062,
+        1.087
+      ],
+      "protocol": "Account's canonical five-round min-of-rounds statistic",
+      "repin_status": "still deferred to the owner-authorized governance run under erp-arabic-bilingual-data",
+      "verdict": "PASS \u2014 Wave 1 code introduced no Account regression"
+    },
     "artifact_modified_by_this_work_item": false,
     "artifact_owner": "erp-arabic-bilingual-data",
     "document": "docs/ai/work-items/bilingual-wave1-masters/evidence/CANARY-DISPOSITION.md",
-    "document_sha256": "667bd63dd201691ffd358edac6b5c5a9206b380795f1cb6decad7601d50c0415",
+    "document_sha256": "875af38e146bb2bfe37f2437ff2ca34e5055f54065917084f10527105ccbb919",
     "latency_gate": "Wave 1 masters MEASURED (1.31-1.45x, sub-1.2ms P95) and accepted as a documented trade-off; Account latency UNEVALUATED pending Stage-3 re-pin",
     "rationale": "test_comparative_p95_live_measurement_is_balanced_and_bound asserts structural properties only (match-set equivalence, alternating order balance, per-call query counts, environment binding) and performs no P95 comparison. The canonical 1.10x comparison exists only in the hash-bound artifact test, which fails on this branch. No assertion currently in the suite bounds Wave 1 search latency.",
     "repin_requires": "owner-authorized governance maintenance run under erp-arabic-bilingual-data",
@@ -91,7 +113,7 @@
     }
   ],
   "residual_obligations": [
-    "Account comparative search latency remains unevaluated; Stage-3 re-pin under erp-arabic-bilingual-data is required to restore the account pilot to 53/53.",
+    "Account latency passes a read-only dry run under its canonical protocol (1.062-1.087 vs 1.10 limit; no regression from Wave 1), but the Stage-3 artifact re-pin under erp-arabic-bilingual-data remains required to restore the account pilot to 53/53.",
     "No Wave 1 master meets the canonical 1.10x ratio; accepted as a documented trade-off by owner decision, applying no gate rule.",
     "All six masters remain schema_installed; promotion to active is an owner decision not made by this work item."
   ],
