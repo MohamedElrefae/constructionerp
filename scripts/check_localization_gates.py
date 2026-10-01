@@ -1483,7 +1483,7 @@ def scoped_scan(errors, counts, owned, sources, json_sources, root=None):
 
 
 EXPECTED_COMMANDS = {
-    "all-tests.txt": "COMMAND: bench --site v16.localhost run-tests x6 modules (aggregate)",
+    "all-tests.txt": "COMMAND: bench --site v16.localhost run-tests x11 modules (aggregate)",
     "final-dryrun.txt": "COMMAND: bench --site v16.localhost console import_released_overrides(dry_run=True)",
     "freshness-envelope.txt": "COMMAND: bench --site v16.localhost console construction.localization_freshness.collect()",
     "full-gate.txt": "COMMAND: python3 scripts/check_localization_gates.py --skip-evidence",
@@ -1507,7 +1507,7 @@ EXPECTED_MODULES = [
     ("construction.tests.test_stage4_report_extension", 11),
     ("construction.tests.test_stage4_review_bundle", 36),
 ]
-EXPECTED_GATE = {"catalog": 810, "files": 265, "wrapped": 667, "json_labels": 22, "missing": 0}
+EXPECTED_GATE = {"catalog": 817, "files": 265, "wrapped": 667, "json_labels": 29, "missing": 0}
 EXPECTED_DRYRUN = {"total": 4337, "created": 0, "updated": 0, "skipped": 4337, "drift": 0}
 
 

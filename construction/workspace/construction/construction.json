@@ -1,6 +1,6 @@
 {
   "charts": [],
-  "content": "[{\"id\":\"ct-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class='h4'><b>Construction ERP</b></span>\",\"col\":12}},{\"id\":\"ct-boq-management\",\"type\":\"card\",\"data\":{\"card_name\":\"BOQ Management\",\"col\":4}},{\"id\":\"ct-variation-management\",\"type\":\"card\",\"data\":{\"card_name\":\"Variation Management\",\"col\":4}},{\"id\":\"ct-theme-settings\",\"type\":\"card\",\"data\":{\"card_name\":\"Theme Settings\",\"col\":4}},{\"id\":\"ct-scope-management\",\"type\":\"card\",\"data\":{\"card_name\":\"Scope Management\",\"col\":4}}]",
+  "content": "[{\"id\":\"ct-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class='h4'><b>Construction ERP</b></span>\",\"col\":12}},{\"id\":\"ct-boq-management\",\"type\":\"card\",\"data\":{\"card_name\":\"BOQ Management\",\"col\":4}},{\"id\":\"ct-cost-estimation\",\"type\":\"card\",\"data\":{\"card_name\":\"Cost Estimation\",\"col\":4}},{\"id\":\"ct-variation-management\",\"type\":\"card\",\"data\":{\"card_name\":\"Variation Management\",\"col\":4}},{\"id\":\"ct-theme-settings\",\"type\":\"card\",\"data\":{\"card_name\":\"Theme Settings\",\"col\":4}},{\"id\":\"ct-scope-management\",\"type\":\"card\",\"data\":{\"card_name\":\"Scope Management\",\"col\":4}}]",
   "custom_blocks": [],
   "docstatus": 0,
   "doctype": "Workspace",
@@ -61,6 +61,44 @@
     {
       "hidden": 0,
       "is_query_report": 0,
+      "label": "BOQ Import Batch",
+      "link_count": 0,
+      "link_to": "BOQ Import Batch",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Cost Estimation",
+      "link_count": 0,
+      "onboard": 0,
+      "type": "Card Break"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "BOQ Cost Analysis",
+      "link_count": 0,
+      "link_to": "BOQ Cost Analysis",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Resource Price History",
+      "link_count": 0,
+      "link_to": "Resource Price History",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
       "label": "Variation Management",
       "link_count": 0,
       "onboard": 0,
@@ -72,6 +110,16 @@
       "label": "Variation Order",
       "link_count": 0,
       "link_to": "Variation Order",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "BOQ Quantity Revision",
+      "link_count": 0,
+      "link_to": "BOQ Quantity Revision",
       "link_type": "DocType",
       "onboard": 0,
       "type": "Link"
@@ -117,6 +165,16 @@
     {
       "hidden": 0,
       "is_query_report": 0,
+      "label": "Form Layout Profile",
+      "link_count": 0,
+      "link_to": "Form Layout Profile",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
       "label": "Scope Management",
       "link_count": 0,
       "onboard": 0,
@@ -138,6 +196,16 @@
       "label": "Scope Context Settings",
       "link_count": 0,
       "link_to": "Construction Settings",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Scope Report Access Log",
+      "link_count": 0,
+      "link_to": "Scope Report Access Log",
       "link_type": "DocType",
       "onboard": 0,
       "type": "Link"

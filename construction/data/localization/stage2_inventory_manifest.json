@@ -1,5 +1,5 @@
 {
-  "base_commit": "42c6f27378916553746e0c7224e60b686f47754d",
+  "base_commit": "4123646bd8b7016abad8c276cea36a58d6cbfb3a",
   "categories": [
     {
       "app": "<untagged>",
@@ -15,15 +15,15 @@
     },
     {
       "app": "construction",
-      "approved_legacy": 212.0,
+      "approved_legacy": 219.0,
       "deprecated": 0.0,
       "empty": 596.0,
       "no_status": 11.0,
       "pending": 596.0,
-      "populated_nontrivial": 236.0,
+      "populated_nontrivial": 243.0,
       "released": 13.0,
       "source_equal": 0.0,
-      "total": 832
+      "total": 839
     },
     {
       "app": "erpnext",
@@ -50,15 +50,15 @@
       "total": 8504
     }
   ],
-  "generated_utc": "2026-09-27T17:00:52Z",
+  "generated_utc": "2026-09-29T20:02:55Z",
   "generator": "construction.localization_inventory.merkle_root over stage2_inventory.sql",
   "merkle": {
-    "root": "290cf2eeb8cab38dc1df28f4981993351afa774720e8ecbd47fc6a3d91f6bbac",
-    "rows": 22754,
+    "root": "b61d1d6d995287a0b98b40c5780ef0ca096f22c009e50527147859f3c2d9205e",
+    "rows": 22761,
     "scheme": "json(sorted(str-normalized (source,context,app,translated,review))) sha256"
   },
   "po_hashes": {
-    "construction": "28362a98f1e1d4e9f5dee0a04945abe88154b29ff12d9e57ba738c98427d3812",
+    "construction": "af343ac233cac0e022aa1d84fef87943cd94eff78d364f842115614be56c3698",
     "erpnext": "2dfe0a5d07b091d1d34563fa53aac9f4665519aa9672303b4cd6fe3b2d705275",
     "frappe": "cc353e76ebd37c0ef0d72f79cf0c081a460cfa5fe6846dcf36d122384c225502"
   },

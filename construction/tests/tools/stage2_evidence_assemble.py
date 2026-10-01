@@ -46,7 +46,7 @@ EVIDENCE_FILES = (
     "vendor-audit.txt",
 )
 EXPECTED_COMMANDS = {
-    "all-tests.txt": "COMMAND: bench --site v16.localhost run-tests x6 modules (aggregate)",
+    "all-tests.txt": "COMMAND: bench --site v16.localhost run-tests x11 modules (aggregate)",
     "final-dryrun.txt": "COMMAND: bench --site v16.localhost console import_released_overrides(dry_run=True)",
     "freshness-envelope.txt": "COMMAND: bench --site v16.localhost console construction.localization_freshness.collect()",
     "full-gate.txt": "COMMAND: python3 scripts/check_localization_gates.py --skip-evidence",

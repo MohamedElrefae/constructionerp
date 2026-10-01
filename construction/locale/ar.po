@@ -30,6 +30,28 @@ msgstr "رقم جدول الكميات"
 msgid "BOQ Type"
 msgstr "نوع جدول الكميات"
 
+#. Construction Workspace labels
+msgid "BOQ Cost Analysis"
+msgstr "تحليل تكلفة جدول الكميات"
+
+msgid "BOQ Import Batch"
+msgstr "دفعة استيراد جدول الكميات"
+
+msgid "BOQ Quantity Revision"
+msgstr "مراجعة كميات جدول الكميات"
+
+msgid "Cost Estimation"
+msgstr "تقدير التكلفة"
+
+msgid "Form Layout Profile"
+msgstr "ملف تخطيط النموذج"
+
+msgid "Resource Price History"
+msgstr "سجل أسعار الموارد"
+
+msgid "Scope Report Access Log"
+msgstr "سجل الوصول إلى تقارير النطاق"
+
 msgid "Created On"
 msgstr "تاريخ الإنشاء"
 
