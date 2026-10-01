@@ -23,3 +23,4 @@ construction.patches.v9_0.enable_account_track_changes
 construction.patches.v9_1.add_account_arabic_norm_field
 construction.patches.v9_2.add_wave1_arabic_norm_fields
 construction.patches.v9_3.add_wave1_phase2_arabic_fields
+construction.patches.v9_4.add_wave2a_classification_arabic_fields

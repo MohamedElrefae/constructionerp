@@ -277,6 +277,11 @@ doc_events = {
     "Cost Center": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
     "Warehouse": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
     "Project": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
+    "Item Group": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
+    "Customer Group": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
+    "Supplier Group": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
+    "Territory": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
+    "UOM": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
 }
 
 # Server-side query injection: applies scope filters to ALL database queries
