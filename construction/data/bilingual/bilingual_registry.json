@@ -201,7 +201,7 @@
    "norm_field": "project_name_ar_norm"
   },
   "Item Group": {
-   "state": "schema_installed",
+   "state": "active",
    "english_field": "item_group_name",
    "arabic_field": "item_group_name_ar",
    "code_field": null,
@@ -222,7 +222,7 @@
    "norm_field": "item_group_name_ar_norm"
   },
   "Customer Group": {
-   "state": "schema_installed",
+   "state": "active",
    "english_field": "customer_group_name",
    "arabic_field": "customer_group_name_ar",
    "code_field": null,
@@ -243,7 +243,7 @@
    "norm_field": "customer_group_name_ar_norm"
   },
   "Supplier Group": {
-   "state": "schema_installed",
+   "state": "active",
    "english_field": "supplier_group_name",
    "arabic_field": "supplier_group_name_ar",
    "code_field": null,
@@ -264,7 +264,7 @@
    "norm_field": "supplier_group_name_ar_norm"
   },
   "Territory": {
-   "state": "schema_installed",
+   "state": "active",
    "english_field": "territory_name",
    "arabic_field": "territory_name_ar",
    "code_field": null,
@@ -285,7 +285,7 @@
    "norm_field": "territory_name_ar_norm"
   },
   "UOM": {
-   "state": "schema_installed",
+   "state": "active",
    "english_field": "uom_name",
    "arabic_field": "uom_name_ar",
    "code_field": "common_code",
