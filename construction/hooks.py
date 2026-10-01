@@ -274,6 +274,9 @@ doc_events = {
     "Item": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
     "Customer": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
     "Supplier": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
+    "Cost Center": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
+    "Warehouse": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
+    "Project": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
 }
 
 # Server-side query injection: applies scope filters to ALL database queries

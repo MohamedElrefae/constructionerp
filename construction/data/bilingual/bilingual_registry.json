@@ -137,14 +137,15 @@
    "norm_field": "supplier_name_in_arabic_norm"
   },
   "Cost Center": {
-   "state": "planned",
+   "state": "schema_installed",
    "english_field": "cost_center_name",
    "arabic_field": "cost_center_name_ar",
-   "code_field": "cost_center_name",
+   "code_field": "cost_center_number",
    "identity_field": "name",
    "search": {
     "enabled": true,
     "fields": [
+     "cost_center_number",
      "cost_center_name",
      "cost_center_name_ar"
     ]
@@ -153,19 +154,19 @@
     "identity_section": false
    },
    "tree": {
-    "enabled": false
-   }
+    "enabled": true
+   },
+   "norm_field": "cost_center_name_ar_norm"
   },
   "Warehouse": {
-   "state": "planned",
+   "state": "schema_installed",
    "english_field": "warehouse_name",
    "arabic_field": "warehouse_name_ar",
-   "code_field": "warehouse_code",
+   "code_field": null,
    "identity_field": "name",
    "search": {
     "enabled": true,
     "fields": [
-     "warehouse_code",
      "warehouse_name",
      "warehouse_name_ar"
     ]
@@ -174,11 +175,12 @@
     "identity_section": false
    },
    "tree": {
-    "enabled": false
-   }
+    "enabled": true
+   },
+   "norm_field": "warehouse_name_ar_norm"
   },
   "Project": {
-   "state": "planned",
+   "state": "schema_installed",
    "english_field": "project_name",
    "arabic_field": "project_name_ar",
    "code_field": null,
@@ -195,7 +197,8 @@
    },
    "tree": {
     "enabled": false
-   }
+   },
+   "norm_field": "project_name_ar_norm"
   }
  }
 }
