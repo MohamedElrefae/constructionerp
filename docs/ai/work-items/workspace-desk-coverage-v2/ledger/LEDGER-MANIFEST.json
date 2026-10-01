@@ -1,6 +1,16 @@
 {
   "base_commit": "fd9aecc372aec6a1341dd0cac4f779c1ec539756",
   "candidate_id": "d8be079d388472a42494d35a8e9ccc0b058d8163c55f21337ce3e3c5401554df",
+  "commit_binding": {
+    "audit_anchor_commit": "3911f5e1f7e3a2977391f58fbb017f752d9831c2",
+    "audit_anchor_commit_note": "Descendant of the signed commit that adds only this work item's evidence, ledger and run packets. It introduces no change to any delivered candidate file. Candidate recheck will report file-set and HEAD drift against the pre-commit base once this descendant exists; that is expected and is not evidence of candidate mutation.",
+    "governance_signed_commit": "98d3dd627f7e2400d71ea88c9c100ee728e9d2a1",
+    "governance_signed_commit_note": "This is the release artefact authorised by the COMMIT approval token. Its tree and parent match the token bindings exactly and verify via candidates.verify_owner_commit. Compliance audits MUST verify this specific commit, not a branch tip.",
+    "governance_signed_commit_parent": "fd9aecc372aec6a1341dd0cac4f779c1ec539756",
+    "governance_signed_commit_token_id": "owner-commit-workspace-desk-coverage-v2",
+    "governance_signed_commit_tree": "d354aac073c0b1dc1241b4f56e9689e0bff7ea9f",
+    "relationship": "audit_anchor_commit is a direct child of governance_signed_commit; the signed payload tree is unchanged by the audit anchor"
+  },
   "delivered_commit": "98d3dd627f7e2400d71ea88c9c100ee728e9d2a1",
   "event_count": 36,
   "final_status": "VERIFIED_FOR_RELEASE",
