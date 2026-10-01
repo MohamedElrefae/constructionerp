@@ -21,3 +21,4 @@ construction.patches.v8_7.trim_runtime_translation_keys
 construction.patches.v8_8.add_account_arabic_name_field
 construction.patches.v9_0.enable_account_track_changes
 construction.patches.v9_1.add_account_arabic_norm_field
+construction.patches.v9_2.add_wave1_arabic_norm_fields

@@ -63,7 +63,6 @@ from construction.services.bilingual_registry import (
 )
 
 REGISTRY_PATH = "data/bilingual/bilingual_registry.json"
-AR_NORM_FIELD = "account_name_ar_norm"
 GOVERNED_EDIT_FLAG = "ct_governed_arabic_edit"
 # Bounded ranking window (explicit truncation contract, never silent):
 # text queries fetch at most this many candidate rows (values included),
@@ -149,7 +148,7 @@ def get_mapping(doctype):
         meta = frappe.get_meta(doctype)
         resolved = {}
         missing = []
-        for key in ("english_field", "arabic_field", "code_field", "identity_field"):
+        for key in ("english_field", "arabic_field", "code_field", "identity_field", "norm_field"):
             field = cfg.get(key)
             if field and (field == "name" or meta.has_field(field)):
                 resolved[key] = field
@@ -269,11 +268,14 @@ def enforce_account_arabic_policy(doc, method=None):
       governed-operation token binds THIS exact operation (doctype, name,
       expected stored old value, intended new value) — a request-wide flag
       or a token aimed at another document is refused.
-    - Invariant: `account_name_ar_norm` is always derived server-side on
+    - Invariant: normalized search key is always derived server-side on
       every save (submitted/forged/stale keys are overwritten).
     """
     if doc.doctype != "Account":
         return
+    mapping = get_mapping("Account")
+    resolved = (mapping.get("resolved") or {}) if mapping else {}
+    norm_field = resolved.get("norm_field")
     current = doc.get("account_name_ar") or None
     if current is not None and not _is_safe_identity_text(current):
         frappe.throw(
@@ -289,7 +291,8 @@ def enforce_account_arabic_policy(doc, method=None):
                 _("A new Account cannot carry an Arabic name (create the account, then use Edit Arabic)"),
                 frappe.PermissionError,
             )
-        doc.set(AR_NORM_FIELD, None)
+        if norm_field:
+            doc.set(norm_field, None)
         return
     stored = frappe.db.get_value("Account", doc.name, "account_name_ar") or None
     if current != stored:
@@ -307,7 +310,46 @@ def enforce_account_arabic_policy(doc, method=None):
                 frappe.PermissionError,
             )
     # Server-authoritative invariant on EVERY save path.
-    doc.set(AR_NORM_FIELD, _normalize_arabic(current) if current else None)
+    if norm_field:
+        doc.set(norm_field, _normalize_arabic(current) if current else None)
+
+
+def enforce_bilingual_arabic_policy(doc, method=None):
+    """Server-side policy enforcement for Wave 1 business masters (Item, Customer, Supplier).
+
+    Architectural policy rationale (asymmetry vs Account):
+    - Account is a financial chart-of-accounts master with structural autoname
+      dependencies (get_account_autoname) and GL link integrity, requiring
+      insertion confinement (no Arabic on new) and governed-operation tokens
+      (set_account_name_ar).
+    - In contrast, Wave 1 operational masters (Item, Customer, Supplier) are
+      standard business records where Arabic names are first-class document
+      attributes. Requiring an external token or blocking Arabic on insert would
+      break standard Desk form creation, standard ERPNext CSV/Excel data imports,
+      and external REST integrations.
+    - Therefore, Wave 1 policy enforces:
+      1. Bidi and control-character rejection on every save (C0, C1, DEL, overrides,
+         isolates, and direction marks in identity fields).
+      2. Server-authoritative derivation of norm_field on every save: client-passed
+         keys are overwritten, never trusted (preventing search poisoning).
+    """
+    mapping = get_mapping(doc.doctype)
+    if not mapping:
+        return
+    resolved = mapping.get("resolved") or {}
+    ar_field = resolved.get("arabic_field")
+    norm_field = resolved.get("norm_field")
+    if not ar_field:
+        return
+    current = doc.get(ar_field) or None
+    if current is not None and not _is_safe_identity_text(current):
+        frappe.throw(
+            _(
+                "The Arabic name contains rejected control characters (NUL/C0/C1/DEL or bidi controls) (refused)"
+            )
+        )
+    if norm_field:
+        doc.set(norm_field, _normalize_arabic(current) if current else None)
 
 
 @frappe.whitelist()
@@ -380,11 +422,13 @@ def set_account_name_ar(name, arabic_name):
     if before != after:
         # Belt-and-braces: the controlled edit must never mutate identity.
         frappe.throw(_("Identity changed during Arabic-only edit — refusing (identity preserved)"))
+    mapping = get_mapping("Account")
+    norm_field = (mapping.get("resolved") or {}).get("norm_field") if mapping else None
     return {
         "ok": True,
         "name": doc.name,
         "arabic_name_ar": doc.account_name_ar,
-        "arabic_name_ar_norm": doc.get(AR_NORM_FIELD),
+        "arabic_name_ar_norm": doc.get(norm_field) if norm_field else None,
         "audit": "Version",
     }
 
@@ -762,10 +806,12 @@ def bilingual_or_filters(mapping, txt):
                 continue
             or_filters.append([field, "like", "%" + search_txt + "%"])
         or_filters.append(["name", "like", "%" + search_txt + "%"])
-        if resolved.get("arabic_field") and not ascii_only:
+        ar_field = resolved.get("arabic_field")
+        norm_field = resolved.get("norm_field")
+        if ar_field and norm_field and not ascii_only:
             meta = frappe.get_meta(mapping.get("__doctype") or "Account")
-            if meta.has_field(AR_NORM_FIELD):
-                or_filters.append([AR_NORM_FIELD, "like", "%" + _normalize_arabic(search_txt) + "%"])
+            if meta.has_field(norm_field):
+                or_filters.append([norm_field, "like", "%" + _normalize_arabic(search_txt) + "%"])
     return or_filters
 
 

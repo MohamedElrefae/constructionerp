@@ -69,7 +69,8 @@
    },
    "tree": {
     "enabled": true
-   }
+   },
+   "norm_field": "account_name_ar_norm"
   },
   "Item": {
    "state": "schema_installed",
@@ -90,7 +91,8 @@
    },
    "tree": {
     "enabled": false
-   }
+   },
+   "norm_field": "item_name_ar_norm"
   },
   "Customer": {
    "state": "schema_installed",
@@ -110,7 +112,8 @@
    },
    "tree": {
     "enabled": false
-   }
+   },
+   "norm_field": "customer_name_in_arabic_norm"
   },
   "Supplier": {
    "state": "schema_installed",
@@ -130,7 +133,8 @@
    },
    "tree": {
     "enabled": false
-   }
+   },
+   "norm_field": "supplier_name_in_arabic_norm"
   },
   "Cost Center": {
    "state": "planned",

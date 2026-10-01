@@ -271,6 +271,9 @@ doc_events = {
     # bilingual API; any direct form/REST save that changes the field is
     # refused. The hook also maintains the normalized Arabic search key.
     "Account": {"validate": "construction.services.bilingual_service.enforce_account_arabic_policy"},
+    "Item": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
+    "Customer": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
+    "Supplier": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
 }
 
 # Server-side query injection: applies scope filters to ALL database queries

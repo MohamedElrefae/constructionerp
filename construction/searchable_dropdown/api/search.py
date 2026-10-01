@@ -102,7 +102,7 @@ def searchable_link_search(
     ar_field = None
     norm_field = None
     try:
-        from construction.services.bilingual_service import AR_NORM_FIELD, get_mapping
+        from construction.services.bilingual_service import get_mapping
 
         mapping = get_mapping(doctype)
     except ImportError:
@@ -113,8 +113,9 @@ def searchable_link_search(
             if field and field != "name" and field not in effective_fields and meta.has_field(field):
                 effective_fields.append(field)
         ar_field = resolved.get("arabic_field")
-        if ar_field and meta.has_field(AR_NORM_FIELD):
-            norm_field = AR_NORM_FIELD
+        candidate_norm = resolved.get("norm_field")
+        if candidate_norm and meta.has_field(candidate_norm):
+            norm_field = candidate_norm
 
     # --- Build OR search filters ---
     or_filters = []
