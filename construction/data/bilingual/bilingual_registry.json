@@ -73,7 +73,7 @@
    "norm_field": "account_name_ar_norm"
   },
   "Item": {
-   "state": "schema_installed",
+   "state": "active",
    "english_field": "item_name",
    "arabic_field": "item_name_ar",
    "code_field": "item_code",
@@ -95,7 +95,7 @@
    "norm_field": "item_name_ar_norm"
   },
   "Customer": {
-   "state": "schema_installed",
+   "state": "active",
    "english_field": "customer_name",
    "arabic_field": "customer_name_in_arabic",
    "code_field": null,
@@ -116,7 +116,7 @@
    "norm_field": "customer_name_in_arabic_norm"
   },
   "Supplier": {
-   "state": "schema_installed",
+   "state": "active",
    "english_field": "supplier_name",
    "arabic_field": "supplier_name_in_arabic",
    "code_field": null,
@@ -137,7 +137,7 @@
    "norm_field": "supplier_name_in_arabic_norm"
   },
   "Cost Center": {
-   "state": "schema_installed",
+   "state": "active",
    "english_field": "cost_center_name",
    "arabic_field": "cost_center_name_ar",
    "code_field": "cost_center_number",
@@ -159,7 +159,7 @@
    "norm_field": "cost_center_name_ar_norm"
   },
   "Warehouse": {
-   "state": "schema_installed",
+   "state": "active",
    "english_field": "warehouse_name",
    "arabic_field": "warehouse_name_ar",
    "code_field": null,
@@ -180,7 +180,7 @@
    "norm_field": "warehouse_name_ar_norm"
   },
   "Project": {
-   "state": "schema_installed",
+   "state": "active",
    "english_field": "project_name",
    "arabic_field": "project_name_ar",
    "code_field": null,
