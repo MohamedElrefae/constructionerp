@@ -338,6 +338,27 @@
     "enabled": true
    },
    "norm_field": "employee_name_ar_norm"
+  },
+  "Department": {
+   "state": "schema_installed",
+   "english_field": "department_name",
+   "arabic_field": "department_name_ar",
+   "code_field": null,
+   "identity_field": "name",
+   "search": {
+    "enabled": true,
+    "fields": [
+     "department_name",
+     "department_name_ar"
+    ]
+   },
+   "form": {
+    "identity_section": false
+   },
+   "tree": {
+    "enabled": true
+   },
+   "norm_field": "department_name_ar_norm"
   }
  }
 }
