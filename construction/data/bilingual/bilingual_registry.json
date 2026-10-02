@@ -305,6 +305,27 @@
     "enabled": false
    },
    "norm_field": "uom_name_ar_norm"
+  },
+  "Employee": {
+   "state": "schema_installed",
+   "english_field": "employee_name",
+   "arabic_field": "employee_name_ar",
+   "code_field": null,
+   "identity_field": "name",
+   "search": {
+    "enabled": true,
+    "fields": [
+     "employee_name",
+     "employee_name_ar"
+    ]
+   },
+   "form": {
+    "identity_section": false
+   },
+   "tree": {
+    "enabled": true
+   },
+   "norm_field": "employee_name_ar_norm"
   }
  }
 }
