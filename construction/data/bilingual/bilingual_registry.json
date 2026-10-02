@@ -340,7 +340,7 @@
    "norm_field": "employee_name_ar_norm"
   },
   "Department": {
-   "state": "schema_installed",
+   "state": "active",
    "english_field": "department_name",
    "arabic_field": "department_name_ar",
    "code_field": null,
