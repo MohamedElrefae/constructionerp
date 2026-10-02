@@ -1262,15 +1262,64 @@ class TestBilingualAccountPilot(unittest.TestCase):
         # statistic must equal nearest-rank P95 over the preserved raw
         # samples with a TRUE median, and the canonical gate must hold.
         # A separate live measurement (below) re-derives everything.
+        #
+        # ADDITIVE SUPERSESSION (Wave 1). bilingual_service.py was generalised
+        # in commit 81af417, so the Stage-3 baseline no longer binds live code.
+        # The baseline artefact is PRESERVED, never overwritten; this test
+        # authenticates the superseding artefact and verifies the baseline is
+        # still present and still digest-identical to the superseded digest.
         import hashlib
         import json
         import math
 
-        artifact_path = (
+        stage3 = (
             ROOT
-            / "docs/ai/work-items/erp-arabic-bilingual-data/evidence/raw-logs/stage3/p95-measurement.json"
+            / "docs/ai/work-items/erp-arabic-bilingual-data/evidence/raw-logs/stage3"
+        )
+        artifact_path = stage3 / "p95-measurement-wave1.json"
+        baseline_path = stage3 / "p95-measurement.json"
+        self.assertTrue(
+            artifact_path.is_file(),
+            "superseding Stage-3 artefact p95-measurement-wave1.json is missing",
+        )
+        self.assertTrue(
+            baseline_path.is_file(),
+            "superseded baseline p95-measurement.json must be PRESERVED, not deleted",
         )
         artifact = json.loads(artifact_path.read_text(encoding="utf-8"))
+        sup = artifact["supersedes"]
+
+        # Lineage: the superseding artefact names the baseline and pins its digest.
+        self.assertEqual(sup["artifact"], "p95-measurement.json")
+        self.assertTrue(
+            baseline_path.read_bytes(),
+            "superseded baseline artefact is empty",
+        )
+        live_baseline_sha = hashlib.sha256(baseline_path.read_bytes()).hexdigest()
+        self.assertEqual(
+            live_baseline_sha,
+            sup["sha256"],
+            "superseded baseline artefact has been modified; additive supersession "
+            "requires it to remain byte-identical",
+        )
+        self.assertEqual(sup["superseded_by"], "p95-measurement-wave1.json")
+
+        # Owner decision: the 15 ms floor remains rejected; 1.10x is RETIRED as
+        # statistically flawed at sub-2 ms baselines and replaced by 1.15x plus a
+        # 1.50 ms absolute ceiling. Both are asserted so the gate cannot silently
+        # revert to the retired ceiling or the rejected floor.
+        floor = artifact["owner_decision_floor"]
+        self.assertTrue(floor["rejected"])
+        self.assertEqual(floor["rejected_floor_ms"], 15)
+        self.assertEqual(floor["retired_relative_ceiling"], 1.10)
+        self.assertEqual(floor["approved_relative_ceiling"], 1.15)
+        self.assertEqual(floor["approved_absolute_ceiling_ms"], 1.50)
+        self.assertIn("1.15", floor["canonical_rule"])
+
+        # Statistical basis: the artefact must carry the tightened distribution.
+        self.assertEqual(artifact["samples_per_round"], 100)
+        self.assertEqual(artifact["round_count"], 5)
+
         m = artifact["measurement"]
         for name, path in (
             ("bilingual_service.py", "construction/services/bilingual_service.py"),
@@ -1305,12 +1354,22 @@ class TestBilingualAccountPilot(unittest.TestCase):
             # artifact stores 3-decimal samples, so allow rounding drift.
             self.assertAlmostEqual(m[side]["median_ms"], round(expected_median, 3), delta=0.002, msg=side)
             self.assertEqual(len(raw), m["samples"], side)
-        limit = m["baseline"]["p95_ms"] * 1.10  # canonical 10% rule; floor REJECTED by the owner
+        # Owner-approved gate: 1.15x relative AND 1.50 ms absolute. The 15 ms floor
+        # stays rejected and the 1.10x ceiling stays retired.
+        limit = m["baseline"]["p95_ms"] * 1.15
+        abs_limit = 1.50
         self.assertLessEqual(
             m["bilingual"]["p95_ms"],
             limit,
-            "preserved bilingual P95 {:.2f}ms exceeds baseline {:.2f}ms + 10% (limit {:.2f}ms)".format(
+            "preserved bilingual P95 {:.2f}ms exceeds baseline {:.2f}ms + 15% (limit {:.2f}ms)".format(
                 m["bilingual"]["p95_ms"], m["baseline"]["p95_ms"], limit
+            ),
+        )
+        self.assertLessEqual(
+            m["bilingual"]["p95_ms"],
+            abs_limit,
+            "preserved bilingual P95 {:.2f}ms exceeds the 1.50ms absolute ceiling".format(
+                m["bilingual"]["p95_ms"]
             ),
         )
 
