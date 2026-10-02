@@ -199,6 +199,112 @@
     "enabled": false
    },
    "norm_field": "project_name_ar_norm"
+  },
+  "Item Group": {
+   "state": "active",
+   "english_field": "item_group_name",
+   "arabic_field": "item_group_name_ar",
+   "code_field": null,
+   "identity_field": "name",
+   "search": {
+    "enabled": true,
+    "fields": [
+     "item_group_name",
+     "item_group_name_ar"
+    ]
+   },
+   "form": {
+    "identity_section": false
+   },
+   "tree": {
+    "enabled": true
+   },
+   "norm_field": "item_group_name_ar_norm"
+  },
+  "Customer Group": {
+   "state": "active",
+   "english_field": "customer_group_name",
+   "arabic_field": "customer_group_name_ar",
+   "code_field": null,
+   "identity_field": "name",
+   "search": {
+    "enabled": true,
+    "fields": [
+     "customer_group_name",
+     "customer_group_name_ar"
+    ]
+   },
+   "form": {
+    "identity_section": false
+   },
+   "tree": {
+    "enabled": true
+   },
+   "norm_field": "customer_group_name_ar_norm"
+  },
+  "Supplier Group": {
+   "state": "active",
+   "english_field": "supplier_group_name",
+   "arabic_field": "supplier_group_name_ar",
+   "code_field": null,
+   "identity_field": "name",
+   "search": {
+    "enabled": true,
+    "fields": [
+     "supplier_group_name",
+     "supplier_group_name_ar"
+    ]
+   },
+   "form": {
+    "identity_section": false
+   },
+   "tree": {
+    "enabled": true
+   },
+   "norm_field": "supplier_group_name_ar_norm"
+  },
+  "Territory": {
+   "state": "active",
+   "english_field": "territory_name",
+   "arabic_field": "territory_name_ar",
+   "code_field": null,
+   "identity_field": "name",
+   "search": {
+    "enabled": true,
+    "fields": [
+     "territory_name",
+     "territory_name_ar"
+    ]
+   },
+   "form": {
+    "identity_section": false
+   },
+   "tree": {
+    "enabled": true
+   },
+   "norm_field": "territory_name_ar_norm"
+  },
+  "UOM": {
+   "state": "active",
+   "english_field": "uom_name",
+   "arabic_field": "uom_name_ar",
+   "code_field": "common_code",
+   "identity_field": "name",
+   "search": {
+    "enabled": true,
+    "fields": [
+     "common_code",
+     "uom_name",
+     "uom_name_ar"
+    ]
+   },
+   "form": {
+    "identity_section": false
+   },
+   "tree": {
+    "enabled": false
+   },
+   "norm_field": "uom_name_ar_norm"
   }
  }
 }
