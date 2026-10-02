@@ -1,0 +1,48 @@
+{
+  "artefacts": {
+    "CANARY-DISPOSITION.md": "2894ae490c2e67d09233d48a6d993b7847b8e0e16ec800eabc705d6acdab63d7",
+    "SCOPE.md": "ebde60011485dbff3f4a3f03dfc810114d679c6832037498e1772d38ab198b97",
+    "employee-p95-measurement.json": "8f821eb3fcb96c3a533dccbedfa2879ff3844e910893920cf4ba03680701993f",
+    "employee-pilot-tests.log": "662f2b32bb73661b112ec0b829cc3c5fb45a42a0b9ffcc528c586db085d35044",
+    "scripts/measure_employee_p95.py": "8e68e03c20a806b73b4da65d0d434b57ef24f7e4aa7cd3ac55ee7ef548f7f98c"
+  },
+  "base_commit": "b3113779c32e7a8f95343d5352ad9a639d3c23a3",
+  "branch": "feature/bilingual-employee-master",
+  "canary_disposition": {
+    "artifact_modified_by_this_work_item": false,
+    "document": "docs/ai/work-items/bilingual-employee-master/evidence/CANARY-DISPOSITION.md",
+    "document_sha256": "2894ae490c2e67d09233d48a6d993b7847b8e0e16ec800eabc705d6acdab63d7",
+    "latency_gate": "Employee master MEASURED (1.42x, 0.808ms P95) and compliant with Two-Tier Bilingual Search SLA (<= 1.50ms universal ceiling; <= 1.50x Tier 2B sub-millisecond trade-off band)",
+    "status": "COMPLIANT_WITH_TWO_TIER_SLA"
+  },
+  "latency_measurement": {
+    "absolute_p95_ms": {
+      "Employee": 0.808
+    },
+    "artefact": "docs/ai/work-items/bilingual-employee-master/evidence/employee-p95-measurement.json",
+    "disposition": "MEASURED and compliant with Two-Tier Bilingual Search SLA",
+    "fixture_prefix": "CT-EMP-",
+    "fixtures_count": 12,
+    "harness": "docs/ai/work-items/bilingual-employee-master/evidence/scripts/measure_employee_p95.py",
+    "harness_sha256": "8e68e03c20a806b73b4da65d0d434b57ef24f7e4aa7cd3ac55ee7ef548f7f98c",
+    "leftover_fixtures": 0,
+    "match_sets_equal": true,
+    "ratio": 1.42,
+    "samples": 50,
+    "sha256": "8f821eb3fcb96c3a533dccbedfa2879ff3844e910893920cf4ba03680701993f",
+    "warmup": 5
+  },
+  "out_of_scope_respected": [
+    "no orchestrator/ modification",
+    "no apps/frappe or apps/erpnext modification",
+    "all foreign work item evidence untouched",
+    "registry initially declared at schema_installed"
+  ],
+  "primary_invariant": {
+    "bilingual_service_py_diff_lines": 0,
+    "claim": "Employee master required zero modifications to bilingual_service.py and search.py",
+    "enforced_by_test": "construction.tests.test_bilingual_employee_pilot.test_zero_service_edits_guard",
+    "reference_commit": "b3113779c32e7a8f95343d5352ad9a639d3c23a3",
+    "search_py_diff_lines": 0
+  }
+}
