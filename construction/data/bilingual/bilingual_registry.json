@@ -49,6 +49,18 @@
   "canonical_reference": "C1: bidi controls (U+202A-U+202E, U+2066-U+2069, U+200E, U+200F, U+061C) are forbidden in stored Arabic values. Section 8.6 of the handoff permits legitimate direction marks only in unrestricted narrative fields (documented here); embeddings/overrides/isolates are forbidden everywhere.",
   "rationale": "Identity/name fields (stored Arabic values) reject every bidi control. Narrative fields (rename reasons) reject NUL/C0/DEL/C1 and the embedding/override/isolate controls, while allowing the documented direction marks."
  },
+ "governance": {
+  "reference": "Plan §3.2 (ERP_ARABIC_AND_BILINGUAL_DATA_END_TO_END_PLAN.md)",
+  "adr": "docs/translation/BILINGUAL_GOVERNANCE_PRINT_IMPORT_PERMISSION.md",
+  "status_summary": {
+   "display": "verified",
+   "search": "verified_bounded_sla",
+   "permission": "verified_confined",
+   "rename": "verified_tested",
+   "import": "verified_tested",
+   "print": "unverified_out_of_band"
+  }
+ },
  "doctypes": {
   "Account": {
    "state": "active",
