@@ -307,7 +307,7 @@
    "norm_field": "uom_name_ar_norm"
   },
   "Employee": {
-   "state": "schema_installed",
+   "state": "active",
    "english_field": "employee_name",
    "arabic_field": "employee_name_ar",
    "code_field": null,
