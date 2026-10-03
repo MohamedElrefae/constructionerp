@@ -402,6 +402,27 @@
     "enabled": false
    },
    "norm_field": "title_ar_norm"
+  },
+  "Task": {
+   "state": "active",
+   "english_field": "subject",
+   "arabic_field": "subject_ar",
+   "code_field": null,
+   "identity_field": "name",
+   "search": {
+    "enabled": true,
+    "fields": [
+     "subject",
+     "subject_ar"
+    ]
+   },
+   "form": {
+    "identity_section": false
+   },
+   "tree": {
+    "enabled": true
+   },
+   "norm_field": "subject_ar_norm"
   }
  }
 }

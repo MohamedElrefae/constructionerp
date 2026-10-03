@@ -118,6 +118,7 @@ To avoid asserting unverified capabilities, this ADR establishes the definitive 
 | **UOM** | ✅ Verified | ✅ Tier 2B Bound | ✅ Generic RPM | ✅ Tested | ✅ Verified | ⚠️ Out-of-band |
 | **Employee** | ✅ Verified | ✅ Tier 2B Bound | ✅ Generic RPM | ✅ Tested | ✅ Verified | ⚠️ Out-of-band |
 | **Department** | ✅ Verified | ✅ Tier 2B Bound | ✅ Generic RPM | ✅ Tested | ✅ Verified | ⚠️ Out-of-band |
+| **Task** | ✅ Verified | ✅ Tier 2B Bound | ✅ Generic RPM | ✅ Tested | ✅ Verified | ⚠️ Out-of-band |
 | **BOQ Structure** | ✅ Verified | ✅ Tier 2B Bound | ✅ Generic RPM | ✅ Tested | ✅ Verified | ✅ Verified (`enable_bilingual_boq_print`) |
 | **BOQ Header** | ✅ Verified | ✅ Tier 2B Bound | ✅ Generic RPM | ✅ Tested | ✅ Verified | ✅ Verified (`enable_bilingual_boq_print`) |
 
