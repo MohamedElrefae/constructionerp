@@ -1,6 +1,15 @@
 # Construction ERP — AI Agent Context File
 > READ THIS FIRST at the start of every session.
 
+## 0. Required Engineering Standard
+
+- **Read [Professional Engineering Standard](docs/ai/PROFESSIONAL_ENGINEERING_STANDARD.md) at the start of every session.** It contains the owner's instructions for professional Frappe development, proportional verification, financial integrity, permissions, migrations, and maintenance.
+- Follow its section 3 startup checklist: read the context index, relevant schema facts and workflow/plan references; capture actual checkout/branch/HEAD/status; run `python3 scripts/schema_drift_checker.py` and `python3 scripts/ai_context_check.py` before relying on context for planning or edits. Record actual files read and results. These checks establish local facts, not remote freshness or deployed-site correctness.
+- New orchestrator tasks enforce `engineering-startup/v1` automatically. Read the supplied immutable snapshots and candidate-bound coordinator evidence as described in standard section 3; identify coordinator-executed checks accurately. Existing initialized tasks remain legacy until separately reconciled. See [startup implementation and operating instructions](docs/ai/work-items/engineering-startup-gates/IMPLEMENTATION.md).
+- For commercial correctness or customer release work, also read the relevant gaps in [Customer Release Gap Report](docs/ai/CUSTOMER_RELEASE_GAPS_2026-10-04.md). Recheck findings against current source; the report is a dated assessment, not a release approval.
+- The standard refines the broad templates below and in `CODING_PATTERNS.md`. Follow current owner instructions and applicable scoped governance; preserve unrelated work and report actual evidence.
+- Keep private findings local unless an external destination and scope are authorized. If external memory is unavailable or rejected, use `SESSION_MEMORY.md`; do not bypass that decision through another tool or automatic hook.
+
 ## 1. Project Identity
 - **Name:** Construction ERP (Frappe/ERPNext custom app)
 - **App name:** `construction` (used in imports: `from construction.xxx import yyy`)
@@ -73,11 +82,11 @@
 1. **All SQL:** parameterized queries ONLY — never f-string SQL injection
    - ✅ `frappe.db.sql("SELECT * FROM \`tabBOQ Item\` WHERE name = %(name)s", {"name": name})`
    - ❌ `frappe.db.sql(f"SELECT * FROM \`tabBOQ Item\` WHERE name = '{name}'")`
-2. **All API endpoints:** `@frappe.whitelist()` decorator required
-3. **CSS:** always `!important` for Frappe cascade override
+2. **RPC endpoints:** whitelist deliberately, validate input, enforce document permissions and scope, and restrict mutation methods. Whitelisting alone is not authorization.
+3. **CSS:** use scoped selectors and tokens; retain `!important` where required by an intentional Frappe cascade override, not for every new declaration.
 4. **New CSS file?** Register in `hooks.py` `app_include_css` AND bump `?v=` param to bust cache
-5. **DOM selectors:** must work on both v15 AND v16 (dual-compat)
-6. **Theme writes:** use `frappe.db.set_value(..., update_modified=False)` not `doc.save()` (avoids TimestampMismatchError)
+5. **DOM selectors:** verify behavior on every advertised supported version. v15/v16 dual-compatibility needs evidence on both, not only a v16 build.
+6. **Theme writes:** the narrow high-frequency preference path can use `frappe.db.set_value(..., update_modified=False)` after authorization and field validation. Business documents normally require their document lifecycle; bypasses need a specific reason and invariant coverage.
 7. **Scope tests:** always test as non-admin user (admin bypasses all scope filters)
 8. **Python compatibility:** venv is Python 3.14, but code must remain Python 3.10 quote-nesting safe
 9. **New transactional DocType with scope dimensions?** Follow the Scope Context checklist:
@@ -127,9 +136,10 @@
 
 ### For All Agents (Static Files)
 1. Read this file (`AGENTS.md`) first.
-2. Read `SESSION_MEMORY.md` for current sprint state.
-3. If you need schema details, read `docs/ai/SCHEMA_FACTS.md`.
-4. If you need code patterns, read `docs/ai/CODING_PATTERNS.md`.
+2. Read `docs/ai/PROFESSIONAL_ENGINEERING_STANDARD.md` for the owner's engineering requirements.
+3. Read `SESSION_MEMORY.md` for current sprint state.
+4. If you need schema details, read `docs/ai/SCHEMA_FACTS.md` and verify the live schema.
+5. If you need code patterns, read `docs/ai/CODING_PATTERNS.md`; examples require the standard's authorization and invariant checks.
 
 ### For MCP-Enabled Agents (Auto-Capture)
 
@@ -141,7 +151,7 @@
 3. Verify critical facts against the live repo before acting
 
 #### During Work (Automatic — No Prompting Needed)
-Store memory on ANY of these events:
+Only use external capture when its destination and scope are authorized. Otherwise record locally in `SESSION_MEMORY.md`. Within that authorized boundary, store memory on these events:
 - **Git commit**: what changed and why
 - **Bug fix**: problem description + solution applied
 - **Architecture decision**: decision + rationale
@@ -158,7 +168,7 @@ python3 scripts/mcp_recall.py "BOQ Item schema" --limit 3
 ```
 
 #### Session End (MANDATORY)
-1. Store summary of what was accomplished
+1. Store summary of what was accomplished locally, or externally only within an authorized destination and scope
 2. Update `SESSION_MEMORY.md` §3 and §6 as fallback
 
 ```bash
@@ -167,7 +177,7 @@ python3 scripts/session_end.py
 ```
 
 ### External Auto-Capture (Git Hooks)
-A `post-commit` git hook is installed. Every commit automatically stores a memory to MCP with:
+A `post-commit` git hook is documented as installed. Inspect current hooks before any authorized commit and verify that external capture is within the authorized destination and scope. The documented hook stores a memory to MCP with:
 - Commit hash, author, message
 - List of changed files
 - Type: `code_pattern` | Importance: 0.6
@@ -181,5 +191,6 @@ bash scripts/install_git_hooks.sh
 If MCP memory conflicts with any live repo file (`AGENTS.md`, `SESSION_MEMORY.md`, DocType JSON), **the repo file wins.** Always re-run `scripts/ai_context_check.py` when schemas change.
 
 ---
-*Last updated: 2026-06-21 (VFC Phase 3 stabilization complete)*  
-*Update this file only when project identity, tech stack, or core architecture changes.*
+*Engineering instructions updated: 2026-10-04. Historical architecture summaries above must be verified against live source.*
+
+*Update this file when project identity, tech stack, core architecture, or standing engineering instructions change.*

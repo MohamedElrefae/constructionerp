@@ -84,6 +84,27 @@ async def test_secure_cookie_policy_enforced():
 
 
 @pytest.mark.anyio
+async def test_context_summary_includes_required_engineering_instructions(auth_headers_and_cookies):
+    from dashboard.bootstrap import ENGINEERING_CONTEXT_PATHS
+
+    headers, cookies = auth_headers_and_cookies
+    transport = httpx.ASGITransport(app=app)
+    async with httpx.AsyncClient(
+        transport=transport,
+        base_url="https://127.0.0.1:8080",
+        cookies=cookies,
+    ) as client:
+        response = await client.get("/api/context/summary", headers=headers)
+    assert response.status_code == 200
+    files = {entry["path"]: entry for entry in response.json()["context_files"]}
+    for name in ENGINEERING_CONTEXT_PATHS:
+        assert files[name]["is_mandatory"]
+        assert files[name]["exists"]
+        assert len(files[name]["sha256"]) == 64
+    assert not files["docs/ai/CODING_PATTERNS.md"]["is_mandatory"]
+
+
+@pytest.mark.anyio
 async def test_absence_of_mutating_workflow_endpoints(auth_headers_and_cookies):
     """Verify strictly read-only scope: pause, resume, reset_budget routes DO NOT exist."""
     headers, cookies = auth_headers_and_cookies

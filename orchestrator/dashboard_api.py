@@ -36,6 +36,7 @@ _orchestrator_dir = Path(__file__).resolve().parent
 if str(_orchestrator_dir) not in sys.path:
     sys.path.insert(0, str(_orchestrator_dir))
 
+import engineering_startup
 from core import (
     DuplicateKeyConflict,
     GrantReconciliationRequired,
@@ -527,7 +528,12 @@ def get_review_context_projection(root: Path | str) -> dict:
             {
                 "path": rel_p,
                 "exists": exists,
-                "is_mandatory": rel_p in ("AGENTS.md", "SESSION_MEMORY.md"),
+                "is_mandatory": rel_p
+                in (
+                    engineering_startup.CONTEXT_PATHS
+                    if cfg.get("engineering_startup_policy")
+                    else ("AGENTS.md", "SESSION_MEMORY.md")
+                ),
                 "sha256": sha,
             }
         )
@@ -620,7 +626,12 @@ def get_ai_context_projection(root: Path | str) -> dict:
             {
                 "path": rel_p,
                 "exists": exists,
-                "is_mandatory": rel_p in ("AGENTS.md", "SESSION_MEMORY.md"),
+                "is_mandatory": rel_p
+                in (
+                    engineering_startup.CONTEXT_PATHS
+                    if cfg.get("engineering_startup_policy")
+                    else ("AGENTS.md", "SESSION_MEMORY.md")
+                ),
                 "sha256": sha,
             }
         )
@@ -632,6 +643,7 @@ def get_ai_context_projection(root: Path | str) -> dict:
         "coding_patterns_md": coding_patterns_content,
         "schema_facts_md": schema_facts_content,
         "provenance": provenance,
+        "engineering_startup_policy": cfg.get("engineering_startup_policy", "legacy"),
     }
 
 

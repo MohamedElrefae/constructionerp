@@ -7,6 +7,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+import engineering_startup
 from candidates import git
 from core import bytes_hash, canonical
 from packaging.requirements import Requirement
@@ -235,6 +236,7 @@ def run_dispatch_preflight(
         check_branch(config, worktree),
         check_sandbox_probe(worktree),
         check_approved_capabilities(config, runtime_path, worktree),
+        check_engineering_context(config, worktree),
     ]
     results.extend(check_dependencies(worktree))
 
@@ -258,3 +260,18 @@ def run_dispatch_preflight(
         results.append(check_binary(tool, pin))
 
     return results
+
+
+def check_engineering_context(config, worktree):
+    """Static context check; actual sandboxed commands execute in engine preparation."""
+    try:
+        if not engineering_startup.enabled(config or {}):
+            return CheckResult(
+                "engineering_startup",
+                True,
+                "Legacy checkpoint: mandatory engineering startup policy not recorded",
+            )
+        engineering_startup.verify_required_context(worktree, config)
+        return CheckResult("engineering_startup", True, engineering_startup.POLICY)
+    except Exception as exc:
+        return CheckResult("engineering_startup", False, str(exc))

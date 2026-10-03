@@ -38,6 +38,7 @@ from dashboard.auth import (
     session_manager,
 )
 from dashboard.bootstrap import (
+    ENGINEERING_CONTEXT_PATHS,
     BootstrapConflictError,
     BootstrapForbiddenError,
     bootstrap_task,
@@ -999,13 +1000,7 @@ async def get_context_summary(request: Request) -> Response:
     if auth_err:
         return auth_err
 
-    context_files = [
-        "AGENTS.md",
-        "SESSION_MEMORY.md",
-        "docs/ai/SCHEMA_FACTS.md",
-        "docs/ai/CODING_PATTERNS.md",
-        "docs/ai/CONTEXT_INDEX.md",
-    ]
+    context_files = [*ENGINEERING_CONTEXT_PATHS, "docs/ai/CODING_PATTERNS.md"]
     summary = []
     for rel_p in context_files:
         f = REPO_ROOT / rel_p
@@ -1015,7 +1010,7 @@ async def get_context_summary(request: Request) -> Response:
             {
                 "path": rel_p,
                 "exists": exists,
-                "is_mandatory": rel_p in ("AGENTS.md", "SESSION_MEMORY.md"),
+                "is_mandatory": rel_p in ENGINEERING_CONTEXT_PATHS,
                 "sha256": sha,
             }
         )

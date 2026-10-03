@@ -4,6 +4,7 @@ import asyncio
 import hashlib
 import json
 import os
+import shutil
 import sqlite3
 import subprocess
 import sys
@@ -445,8 +446,73 @@ def test_bootstrap_mutation_halted_when_fence_token_incremented(tmp_path):
 
 
 @pytest.mark.anyio
+async def test_old_manifest_without_checkpoint_requires_policy_reconciliation(tmp_path):
+    from dashboard.bootstrap import _execute_bootstrap_recovery
+
+    root = tmp_path / "old-attempt"
+    root.mkdir()
+    subprocess.run(["git", "init", "-b", "develop", str(root)], check=True, capture_output=True)
+    for key, value in (
+        ("user.name", "Fixture"),
+        ("user.email", "fixture@example.invalid"),
+        ("core.hooksPath", "/dev/null"),
+    ):
+        subprocess.run(["git", "-C", str(root), "config", key, value], check=True)
+    brief = root / "docs/ai/work-items/old-task/owner-brief.md"
+    brief.parent.mkdir(parents=True)
+    brief.write_text("Old recorded brief")
+    subprocess.run(["git", "-C", str(root), "add", "."], check=True)
+    subprocess.run(["git", "-C", str(root), "commit", "-m", "Old bootstrap"], check=True, capture_output=True)
+    head = subprocess.check_output(["git", "-C", str(root), "rev-parse", "HEAD"], text=True).strip()
+    manifest = {
+        "work_item": "old-task",
+        "task_id": "old-task-id",
+        "target_path": str(root),
+        "git_common_dir": str(root / ".git"),
+        "branch_name": "develop",
+        "resolved_base_sha": head,
+        "brief_commit_sha": head,
+        "brief_content_sha256": hashlib.sha256(brief.read_bytes()).hexdigest(),
+        "base_config_digest": "old-recorded-digest",
+    }
+    registry = TaskRegistry(db_path=tmp_path / "registry.db", allowed_roots=[tmp_path])
+    with pytest.raises(BootstrapConflictError, match=r"Legacy bootstrap.*policy reconciliation"):
+        await _execute_bootstrap_recovery("old-action", 1, "fixture-instance", manifest, -1, registry, True)
+    assert not (root / "orchestrator/var/checkpoints.db").exists()
+    assert brief.read_text() == "Old recorded brief"
+
+
+@pytest.mark.anyio
 async def test_bootstrap_with_distinct_dashboard_and_target_worktree_roots(tmp_path, monkeypatch):
     """End-to-end bootstrap verifying controlling dashboard registry root and target worktree root are distinct."""
+    # Real worktree/brief commits must operate on a disposable Git source, never the
+    # developer repository or its hooks. Controller code/interpreter remain read-only.
+    from dashboard import bootstrap as bootstrap_module
+
+    source_repo = tmp_path / "source_repo"
+    source_repo.mkdir()
+    subprocess.run(["git", "init", "-b", "develop", str(source_repo)], check=True, capture_output=True)
+    for name, value in (
+        ("user.name", "Fixture"),
+        ("user.email", "fixture@example.invalid"),
+        ("core.hooksPath", "/dev/null"),
+    ):
+        subprocess.run(["git", "-C", str(source_repo), "config", name, value], check=True)
+    for name in (*bootstrap_module.ENGINEERING_CONTEXT_PATHS, "docs/ai/CODING_PATTERNS.md"):
+        path = source_repo / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("Fixture context: " + name)
+    for name in ("scripts/schema_drift_checker.py", "scripts/ai_context_check.py"):
+        path = source_repo / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("print('synthetic checker fixture')\n")
+    shutil.copytree(REPO_ROOT / "docs/ai/roles", source_repo / "docs/ai/roles")
+    (source_repo / ".gitignore").write_text("orchestrator/var/\n")
+    subprocess.run(["git", "-C", str(source_repo), "add", "."], check=True)
+    subprocess.run(
+        ["git", "-C", str(source_repo), "commit", "-m", "Disposable source"], check=True, capture_output=True
+    )
+    monkeypatch.setattr(bootstrap_module, "REPO_ROOT", source_repo)
     # 1. Setup distinct controlling dashboard service root
     dashboard_service_root = tmp_path / "dashboard_service"
     dashboard_service_root.mkdir(parents=True)
@@ -533,14 +599,23 @@ async def test_bootstrap_with_distinct_dashboard_and_target_worktree_roots(tmp_p
             assert action_row[1] == 1
             manifest = json.loads(action_row[3])
             assert Path(manifest["target_path"]).resolve() == target_worktree.resolve()
+            assert manifest["engineering_startup_policy"] == bootstrap_module.ENGINEERING_STARTUP_POLICY
+            config_row = (
+                sqlite3.connect(target_ckpt_db)
+                .execute("SELECT value FROM workflow_meta WHERE key='config'")
+                .fetchone()
+            )
+            config = json.loads(config_row[0])
+            assert config["engineering_startup_policy"] == bootstrap_module.ENGINEERING_STARTUP_POLICY
+            assert set(bootstrap_module.ENGINEERING_CONTEXT_PATHS) <= set(config["read_only_context_paths"])
         finally:
             conn_reg.close()
     finally:
         if target_worktree.exists():
             subprocess.run(
-                ["git", "-C", str(REPO_ROOT), "worktree", "remove", "--force", str(target_worktree)],
+                ["git", "-C", str(source_repo), "worktree", "remove", "--force", str(target_worktree)],
                 capture_output=True,
             )
-            subprocess.run(["git", "-C", str(REPO_ROOT), "worktree", "prune"], capture_output=True)
+            subprocess.run(["git", "-C", str(source_repo), "worktree", "prune"], capture_output=True)
         if branch_name:
-            subprocess.run(["git", "-C", str(REPO_ROOT), "branch", "-D", branch_name], capture_output=True)
+            subprocess.run(["git", "-C", str(source_repo), "branch", "-D", branch_name], capture_output=True)

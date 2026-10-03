@@ -30,6 +30,17 @@ from dashboard.process import (
 from dashboard.registry import TaskRegistry, validate_and_bind_canonical_registry
 from dashboard.subprocess_client import run_action
 
+# Versioned coordinator contract; keep aligned with orchestrator/engineering_startup.py.
+ENGINEERING_STARTUP_POLICY = "engineering-startup/v1"
+ENGINEERING_CONTEXT_PATHS = [
+    "AGENTS.md",
+    "SESSION_MEMORY.md",
+    "docs/ai/PROFESSIONAL_ENGINEERING_STANDARD.md",
+    "docs/ai/CONTEXT_INDEX.md",
+    "docs/ai/SCHEMA_FACTS.md",
+    "AGENT_WORKFLOW.md",
+]
+
 
 class BootstrapConflictError(Exception):
     """Raised when bootstrap encounters conflict, active lock, or divergence."""
@@ -53,6 +64,7 @@ def _normalize_config(config: dict[str, Any]) -> dict[str, Any]:
         "plan_revision_hash",
         "roles",
         "budget",
+        "engineering_startup_policy",
     )
     return {k: config[k] for k in sorted(keys) if k in config}
 
@@ -281,13 +293,8 @@ async def bootstrap_task(
             "scope": {
                 "allowed_paths": [f"docs/ai/work-items/{work_item}/**"],
             },
-            "read_only_context_paths": [
-                "AGENTS.md",
-                "SESSION_MEMORY.md",
-                "docs/ai/SCHEMA_FACTS.md",
-                "docs/ai/CODING_PATTERNS.md",
-                "docs/ai/CONTEXT_INDEX.md",
-            ],
+            "read_only_context_paths": [*ENGINEERING_CONTEXT_PATHS, "docs/ai/CODING_PATTERNS.md"],
+            "engineering_startup_policy": ENGINEERING_STARTUP_POLICY,
             "plan_path": f"docs/ai/work-items/{work_item}/owner-brief.md",
             "plan_revision_hash": brief_content_sha256,
             "roles": {},
@@ -305,6 +312,7 @@ async def bootstrap_task(
             "brief_commit_sha": None,
             "brief_content_sha256": brief_content_sha256,
             "base_config_digest": base_config_digest,
+            "engineering_startup_policy": ENGINEERING_STARTUP_POLICY,
         }
 
         # Persist Pre-Mutation Manifest in action_log
@@ -582,8 +590,25 @@ async def _execute_bootstrap_recovery(
         "roles": {},
         "budget": 200,
     }
+    # Old recorded bootstrap manifests retain their original context/digest contract.
+    # Only new manifests request the engineering policy; existing state is not migrated.
+    if "engineering_startup_policy" in manifest:
+        if manifest["engineering_startup_policy"] != ENGINEERING_STARTUP_POLICY:
+            raise BootstrapConflictError("Unsupported recorded engineering startup policy")
+        base_config["engineering_startup_policy"] = ENGINEERING_STARTUP_POLICY
+        base_config["read_only_context_paths"] = [
+            *ENGINEERING_CONTEXT_PATHS,
+            "docs/ai/CODING_PATTERNS.md",
+        ]
 
     if not db_path.exists():
+        if "engineering_startup_policy" not in manifest:
+            message = (
+                "Legacy bootstrap has no initialized checkpoint; reviewed engineering startup "
+                "policy reconciliation is required before initialization"
+            )
+            _mark_reconciliation(registry, action_id, fencing_token, executor_instance_id, message)
+            raise BootstrapConflictError(message)
         # Crash happened before initialize ran -> run initialize now under lock (fenced)
         _check_bootstrap_fence(registry, action_id, fencing_token, executor_instance_id)
         init_res = await run_action(
@@ -740,7 +765,12 @@ def _record_task_provenance(
             {
                 "path": rel_p,
                 "exists": exists,
-                "is_mandatory": rel_p in ("AGENTS.md", "SESSION_MEMORY.md"),
+                "is_mandatory": rel_p
+                in (
+                    ENGINEERING_CONTEXT_PATHS
+                    if config.get("engineering_startup_policy")
+                    else ("AGENTS.md", "SESSION_MEMORY.md")
+                ),
                 "sha256": sha,
                 "commit_sha": config.get("base_commit"),
             }

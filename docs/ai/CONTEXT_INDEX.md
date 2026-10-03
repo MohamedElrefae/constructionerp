@@ -3,13 +3,17 @@
 This file maps all persistent memory files for the Construction ERP project.
 Use this to navigate the memory architecture quickly.
 
-## Source of Truth (Repo-Local — Always Authoritative)
+## Repository Context and Instructions
+
+Use the current source/schema, explicit owner instructions, and applicable governed state to resolve dated or conflicting narrative claims. This index locates context; it does not grant operations or declare workflow state.
 
 | File | Purpose | Update Frequency |
 |------|---------|------------------|
 | `AGENTS.md` | Project identity, tech stack, core systems, conventions | Rarely (architecture changes only) |
 | `SESSION_MEMORY.md` | Current sprint, active tasks, blockers, session log | Every session |
-| `ADR.md` | Architecture decision records (7 accepted ADRs) | When new ADRs are accepted |
+| `docs/ai/PROFESSIONAL_ENGINEERING_STANDARD.md` | Required startup checklist and professional Frappe development instructions | When engineering instructions change |
+| `AGENT_WORKFLOW.md` | Root-level governed workflow entry point; consult applicable contracts/state | When approved workflow instructions change |
+| `ADR.md` | Accepted architecture decision records; verify the current decisions in the file | When new ADRs are accepted |
 
 ## Deep Reference (Repo-Local — Curated)
 
@@ -27,6 +31,13 @@ Use this to navigate the memory architecture quickly.
 | File | Purpose |
 |------|---------|
 | `scripts/ai_context_check.py` | Validates critical facts against live repo files before memory seeding |
+| `scripts/schema_drift_checker.py` | Compares schema facts with current repository DocType JSON; no database validation |
+| `docs/ai/work-items/engineering-startup-gates/IMPLEMENTATION.md` | Automatic coordinator startup policy, required context, exact factual write scope, and legacy-task behavior |
+| `docs/ai/work-items/engineering-startup-gates/REVIEW.md` | Independent review and verification of startup integration; qualification limits |
+
+For every session, follow [the standard's startup checklist](PROFESSIONAL_ENGINEERING_STANDARD.md): read actual context files, capture checkout/branch/HEAD/status, and run both checkers before planning or editing. Record results and a truthful Files Read list. Recheck affected facts after concurrent changes. These are local checks, not proof of latest remote code or deployed schema.
+
+Legacy references to `docs/ai/AGENT_WORKFLOW.md` should resolve to the existing root [workflow](../../AGENT_WORKFLOW.md). `docs/ai/templates/PLAN.md` is absent; use the applicable approved work-item/role artifacts rather than claiming that file was read. The existing [architect inbox template](templates/inbox-architect.md) serves governed role packets, not a general PLAN template.
 
 ## Adapter Layers (Derived from Source of Truth)
 

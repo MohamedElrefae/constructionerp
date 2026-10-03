@@ -6,6 +6,8 @@ Phase 0 is complete under the owner-supplied [consultant directive](../docs/ai/w
 
 ## Setup and checks
 
+New Construction/native code tasks enforce `engineering-startup/v1`: the coordinator supplies six mandatory instruction/context snapshots, records checkout/branch/HEAD/status, and runs both repository context checkers in its offline read-only sandbox before dispatch. Context, candidate and evidence bindings are checked again before launch and acceptance; builder results require fresh startup proof. Read the [implementation and operating instructions](../docs/ai/work-items/engineering-startup-gates/IMPLEMENTATION.md) and [independent review](../docs/ai/work-items/engineering-startup-gates/REVIEW.md). Existing initialized checkpoints retain their original legacy contract; this is not an upgrade of active historical state or a claim that native/Frappe release qualification is complete.
+
 Use the isolated environment from the worktree root:
 
 ```sh

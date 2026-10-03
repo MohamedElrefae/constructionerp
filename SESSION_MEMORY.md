@@ -81,6 +81,45 @@
 
 ## 3. In Progress (Active Work — Updated After Every Session)
 
+### Automatic engineering startup integration (2026-10-04)
+- Implemented `engineering-startup/v1` for new Construction/native code tasks: six mandatory immutable context snapshots; actual Git baseline; both local checkers executed in the coordinator's offline read-only sandbox; dispatch/acceptance drift guards and fresh builder-candidate proof.
+- Factual SESSION_MEMORY/SCHEMA_FACTS/CONTEXT_INDEX updates need exact approved write paths; normative instructions remain fixed. Existing initialized legacy workflows and the older `scope-context-portability` controller were not migrated.
+- Owner authorized sub-agent planning/building and parent review/commit. This was a direct bounded maintenance task, not a manufactured native role cycle or grant. Parent independently reviewed code and reproduced full offline engine results: 268 passed / 18 unchanged historical service-hash failures. All 71 non-browser dashboard tests passed outside the outer tool sandbox; its synchronous thread portal stalled inside that sandbox. The 23 new startup tests are included in the engine total.
+- Read `docs/ai/work-items/engineering-startup-gates/IMPLEMENTATION.md` for operation and `REVIEW.md` for evidence/limits. The code, guide and prior review reports are included in the authorized local commit. No provider execution, ERP/site mutation, production deployment, push, or external-memory persistence was authorized or performed.
+
+### Future development workflow review (2026-10-04)
+- Added `docs/ai/FUTURE_DEVELOPMENT_WORKFLOW_REVIEW_2026-10-04.md`: deep reconciliation of the August proposal, all eight legacy active documents, canonical r5/history, main implementation, and `worktrees/scope-context-portability`; 12 findings and seven recommended work packages. The professional standard links to it for workflow integration.
+- Comparison baseline: main `0f3bd24`, older clean worktree `eb30de0`, 199 commits behind; 21 of 51 compared tracked orchestrator/role files differ. Concurrent Brand/Terms and Conditions work was preserved. Counts and findings are dated, not maintained state.
+- Final checks observed concurrent Terms and Conditions commit `cc3a105`; it does not change inspected orchestrator sources. Verified all six source fingerprint pairs and local report links; repository context checker passed all 11 checks.
+- Fresh offline orchestrator suites: main 245 passed / 18 failed; worktree 216 passed / 20 failed. Shared failures are frozen historical-service hash mismatches; two additional worktree failures concern old CLI pins. Do not silence integrity checks or replay historical ERP stages to get green totals. Dashboard suite not run in that review: its dependencies were not provisioned. Correction from integration work: the dashboard uses Starlette; the earlier FastAPI import probe was not a valid readiness check.
+- Source/isolated synthetic probes identified import recovery gaps: durable rollback export follows ERP commit; live changes since dry-run can be overwritten; unexpected current values are nonblocking and parent/invariant checks do not establish their broader claims. No ERP write or live crash test was performed. Existing operation intents do exist; they do not replace durable preimages.
+- Recommendations require new bounded tasks under applicable governance. No engine, dashboard, frozen role prompt, control-store state, site configuration/data, grant, commit, or deployment was changed. Required guides are not yet committed/distributed to fresh Git worktrees; do not assume all native roles receive them.
+
+### Customer release reports and standing engineering instructions (2026-10-04)
+- Added `docs/ai/CUSTOMER_RELEASE_GAPS_2026-10-04.md`: 16 open gaps, source evidence, business decisions, acceptance criteria, and phased release verification. Review baseline HEAD `48f370f`; working tree already contains unfinished Brand bilingual work.
+- Added `docs/ai/PROFESSIONAL_ENGINEERING_STANDARD.md`: required future-session guide for professional Frappe feature work, financial integrity, permissions, transactions, migration, UI wiring, testing, release, and support.
+- `AGENTS.md` now requires startup reading of the standard and narrows misleading whitelist, CSS, direct-write, compatibility, and external-memory guidance. Existing scoped governed workflows remain in force.
+- Documentation only; no app fixes, live database tests, migration, deployment, commit, or external memory persistence. No release gap closes merely because these reports exist.
+
+### Commercial-readiness consultant review (2026-10-03)
+- Expanded source review at `db5d23e`; concurrent HEAD advance to `48f370f` changed only review/work-item documentation and evidence scripts, not inspected runtime code. No application code, site data, configuration, commit, or deployment changed by this review.
+- Actual full `BOQQuantityRevision.validate()` accepts substantive edits while status remains Approved; JSON grants writer roles access to editable quantity/rate fields. Approval-history immutability needs server enforcement and real HTTP regression coverage.
+- `BOQCostAnalysis.on_cancel()` does not refresh/reset the BOQ Item cost when no prior Superseded analysis exists. Define and test the fallback when cancelling the sole approved analysis.
+- Zero factor is allowed but controllers treat it as 1 (`flt(factor) or 1.0`), while aggregate SQL multiplies by literal 0. Isolated controller probe reproduced line_total 100 for quantity 10, price 10, factor 0.
+- Cost-policy clarification: analysis total_unit_cost includes overhead/profit and becomes BOQ Item est_unit_cost; item-level overhead/profit can then compound it. Example direct cost 100 -> analysis 121 -> suggested selling price 146.41 at 10% overhead/10% profit at both levels. This is observed behavior needing an explicit policy, not a proven unintended markup.
+- Repricing false alarm WITHDRAWN: an initial helper probe used an unrealistic universal rate lookup. The actual `_BulkRateLookup` built from filtered item codes preserves unrelated resource rates; no item-code/resource-type repricing defect was established.
+- Maintenance concerns: global JS prototype replacements, report monkeypatches, large mixed modules, duplicated total formulas, v16-only CI despite dual-version aspirations, empty app dependency declaration with package-only dependency audit, and cost-database Excel parsing lacking the BOQ parser's explicit archive/row limits.
+- Verification: 72 offline tests passed; 11 context checks passed; scope metadata lint passed for 19 DocTypes; targeted Ruff undefined-name checks passed; all 259 Python files parsed. These do not establish full business-suite, browser, customer HTTP security, migration, or workload capacity success.
+- Owner has not chosen delivery model. Consultant recommendation: begin with one Frappe site/database per customer, with controlled versioned releases and a named technical verification/support owner.
+
+### Article-based reliability review (2026-10-03)
+- Reviewed the supplied vibe-coding article against local HEAD `28287e5`; no application-code fix or ERP/database operation performed.
+- BOQ Item direct deletion recalculates totals in `on_trash`, before Frappe removes the row. An isolated probe using actual controller methods reproduced stored total 300 versus remaining-item total 200. Leaf-structure deletion has an additional rollup and is a different path.
+- Shared BOQ total aggregation reads before acquiring the header write lock; an isolated interleaving model reproduced an older aggregate overwriting a newer one. Real two-connection MariaDB validation is still required.
+- `require_boq_access` checks ordinary document permissions but not active User Scope Context; project-selection consistency needs non-admin HTTP verification. This is not evidence of access beyond ERPNext User Permissions.
+- CI installs/builds and runs a JS property suite, but has no Python business-test step. Offline suite: 72 passed; local JS suite could not start because `fast-check` is unavailable.
+- Existing indexes, VO locks/savepoints/idempotency, bounded imports, concurrent regression tests, and documented 2026-09-22 isolated restore rehearsal are positive safeguards. No current end-to-end large-BOQ capacity evidence was established in this review.
+
 ### Bilingual integration release validation (2026-09-20)
 - `feature/bilingual-integration` was validated as a combined checkout rather than relying on the two feature branches' isolated results.
 - Fixed historical Stage 4 adoption to bind the immutable initial-export manifest; the live governed manifest may advance after an authorized import without invalidating provenance.
@@ -169,6 +208,40 @@
 ---
 
 ## 6. Session Log (Append-Only — Most Recent First)
+
+### Session 2026-10-04 — Engineering startup made an automatic workflow step
+- Sub-agent planned and implemented the bounded engine/dashboard startup policy; parent requested corrections, independently reviewed, ran regression suites and authorized the local commit under the owner's direct request.
+- Independent engine results: 268 passed / 18 unchanged historical source-hash guard failures; non-browser dashboard: 71 passed. No fully green historical qualification, native-provider execution or Frappe release approval claimed.
+- Review fixes included replay-safe completion evidence, closed-pipe process timeout, private bounded diagnostics, exact scoped factual updates, conservative context scope rejection, interpreter-cache filtering, and replacing a shared-repository bootstrap fixture with disposable Git source.
+- Hooks that would transmit private commit information to external memory are disabled for this local commit only; relevant source/context checks were run explicitly. No global hook configuration or historical checkpoint changed.
+
+### Session 2026-10-04 — Explicit startup freshness checklist
+- Made professional standard section 3 explicit: read AGENTS, standard, relevant SESSION_MEMORY, CONTEXT_INDEX, relevant SCHEMA_FACTS, root AGENT_WORKFLOW, and applicable planning artifacts; record truthful Files Read and command results.
+- Required actual-checkout Git root/status/branch/short and full HEAD plus both schema/context checkers before dependent planning or edits; recheck affected facts after concurrent changes. Clarified local consistency does not establish remote freshness, deployed DB schema, or business correctness.
+- Corrected navigation in CONTEXT_INDEX and linked the checklist from AGENTS. Legacy `docs/ai/AGENT_WORKFLOW.md` and `docs/ai/templates/PLAN.md` are absent; root workflow exists, and the architect inbox template is a role packet rather than a generic PLAN replacement.
+- Checks on main `develop` at `98c46a5`: schema checker exit 0 (21 schema-owning DocTypes, one override-only folder); context checker exit 0 (11 passed). Documentation only; no engine enforcement, worktree synchronization, site operations, or commit. These instructions still need versioned distribution to older/fresh governed agent worktrees.
+
+### Session 2026-10-04 — Future development workflow reconciliation
+- Saved the consultant workflow review and linked it from the standing professional guide. Preserved the original plans and protected historical evidence.
+- Ran both offline controller suites, read-only SQLite integrity checks, and isolated synthetic dry-run/import ordering probes. No native provider jobs, ERP commands, imports, migrations, approvals, or historical stage replay.
+- Proposed: reconcile authority/context distribution; harden data-operation recovery and drift guards; make qualification fixtures portable; connect disposable Frappe/CI verification; correct app release gaps; run a representative feature pilot; qualify customer release/operations. None is claimed implemented by this review.
+
+### Session 2026-10-04 — Release gap report and future AI engineering standard
+- Produced two owner-requested Markdown reports under `docs/ai/` and linked the standard from `AGENTS.md` for every future session.
+- Rechecked core financial findings against current source; retained distinctions among confirmed defects, policy decisions, maintenance risks, and unverified behavior. Preserved unrelated Brand work and historical notes.
+- No application runtime/data changes or new business test pass claims; findings and instructions remain local.
+- Report preparation checks: all 31 report-local links resolved, fenced blocks balanced, tracked whitespace check passed, and the read-only AI context checker passed 11/11. These are documentation/context checks, not release approval.
+
+### Session 2026-10-03 — Expanded commercial-readiness review
+- Reviewed architecture, costing/revision controllers, role metadata, import/export paths, global UI overrides, installation/migration code, CI/dependencies, onboarding/runbook, and existing recovery evidence.
+- Isolated actual-function probes confirmed permissive approved-revision validation, no cost fallback on sole-analysis cancellation, and inconsistent zero-factor arithmetic. Withdrew a repricing-filter allegation after repeating it with the actual filtered lookup class.
+- Re-ran offline/context/scope checks and targeted undefined-name lint successfully. Full live-site, load, migration, browser, and customer-role suites remain unverified in this review.
+- App is a credible foundation requiring commercial reliability work before production sign-off; prioritize existing financial correctness findings, automatic business tests, release/version boundaries, ordinary-user HTTP tests, realistic load evidence, and customer support/recovery procedures. No application source/site data changed; this local memory note is the only reviewer edit.
+
+### Session 2026-10-03 — Article-based reliability review
+- Read the attached article and inspected business controllers/services, permissions, framework deletion/transaction behavior, CI, tests, and historical release/restore evidence.
+- Reported the deletion-total defect, aggregate concurrency risk, Python CI gap, conditional active-scope inconsistency, and unverified large-BOQ capacity. No application source or site data changed; only this session record was updated.
+- Verification: 72 offline tests passed; AST-isolated probes exercised actual controller/totals/access-helper functions without importing the app or accessing a database. JS property test blocked by missing local `fast-check`; full database and load suites were not run.
 
 ### Session 2026-09-20 — Integration PR release validation
 - Reproduced and repaired a cross-branch Stage 4 provenance mismatch caused by the mutable governed manifest advancing after the historical export.

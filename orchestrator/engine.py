@@ -17,6 +17,7 @@ from copy import deepcopy
 from pathlib import Path
 from typing import TypedDict
 
+import engineering_startup
 from adapters import WIRE_SCHEMA, classify_failure, extract_session, parse_output
 from candidates import allowed, changed, freeze, git, recheck, verify_owner_commit
 from core import (
@@ -311,6 +312,7 @@ class Engine:
         config = deepcopy(config)
         if str(self.root) != config["root"]:
             raise WorkflowError("Root identity mismatch")
+        engineering_startup.configure_new(self.root, config)
         work = within(self.root, "docs/ai/work-items/" + config["work_item"])
         for d in ("inbox", "outbox", "runs"):
             (work / d).mkdir(parents=True, exist_ok=True)
@@ -346,6 +348,10 @@ class Engine:
                 for ap in config.get("scope", {}).get("allowed_paths", []):
                     ap_clean = ap.rstrip("/*")
                     if cp == ap or cp.startswith(ap_clean + "/"):
+                        if engineering_startup.enabled(
+                            config
+                        ) and cp in engineering_startup.mutable_context_paths(config):
+                            continue
                         raise CoreValidationError(
                             f"Read-only context path {cp} intersects with scope.allowed_paths {ap}"
                         )
@@ -662,7 +668,9 @@ class Engine:
             payload["action_id"] = action_id
         if request_hash is not None:
             payload["request_hash"] = request_hash
-        apply_event(view, {"seq": view["cursor"] + 1, "kind": "context_added", "payload": payload}, self.config)
+        apply_event(
+            view, {"seq": view["cursor"] + 1, "kind": "context_added", "payload": payload}, self.config
+        )
         self.store.event("context-" + uuid.uuid4().hex, "context_added", payload)
         config = deepcopy(self.config)
         config["read_only_context_paths"] = list(
@@ -676,6 +684,7 @@ class Engine:
         v = self._synchronize(state)["view"]
         if v["status"] == "PAUSED" or v["gate"]:
             return {"view": v}
+        engineering_startup.validate_scope(self.config)
         if not v["plan_granted"] and ("builder" in v["next_roles"] or "proposer" in v["next_roles"]):
             raise WorkflowError("Builder or proposer dispatch requires standing PLAN grant")
         self._recheck_candidate(v["candidate"])
@@ -689,6 +698,16 @@ class Engine:
             raise WorkflowError("Changed path outside approved contract")
         jobs = []
         work = within(self.root, "docs/ai/work-items/" + v["work_item"])
+        startup_ref = None
+        if engineering_startup.enabled(self.config) and v["next_roles"]:
+            startup_ref = engineering_startup.run(
+                self.root,
+                self.config,
+                v["candidate"],
+                self.runtime,
+                work,
+                self.runtime / "startup" / (uuid.uuid4().hex + ".json"),
+            )
         for role in v["next_roles"]:
             pin = self.config["roles"][role]
             key = digest([v["work_item"], v["stage"], role, v["candidate"]["candidate_id"], v["attempt"]])
@@ -997,6 +1016,8 @@ class Engine:
                 ][-1:]
             contract = within(self.root, self.config["plan_path"])
             read_artifacts = list(dict.fromkeys([str(contract), str(plan)]))
+            if startup_ref:
+                read_artifacts.append(startup_ref["path"])
             read_artifact_refs = []
             for cp in self.config.get("read_only_context_paths", []):
                 resolved_cp = self.root / cp
@@ -1010,6 +1031,7 @@ class Engine:
                 read_artifact_refs.append(
                     dict(
                         source_path=str(resolved_cp),
+                        source_relative_path=cp,
                         sha256=sha,
                         snapshot_path=str(snapshot),
                     )
@@ -1104,6 +1126,8 @@ class Engine:
                 finding_schema=str(within(self.root, "orchestrator/schemas/v1/finding.json")),
                 read_artifacts=read_artifacts,
                 read_artifact_refs=read_artifact_refs,
+                engineering_startup=startup_ref,
+                engineering_startup_policy=self.config.get("engineering_startup_policy", "legacy"),
                 result_transport="stdout",
                 explanation_transport="stdout",
                 evidence_transport="runner-captured native events",
@@ -1243,6 +1267,15 @@ class Engine:
             prompt = (
                 role_text
                 + stage_instruction
+                + (
+                    "\nENGINEERING STARTUP: Read every supplied read-only context snapshot, using "
+                    "source_relative_path to identify its original instruction file. Coordinator "
+                    "startup evidence establishes local facts, not approval or Frappe correctness. "
+                    "Record a truthful Files Read list in your explanation; do not claim checks "
+                    "you did not execute. Preserve owner gates and applicable governed scope.\n"
+                    if startup_ref
+                    else ""
+                )
                 + "\n\nImmutable packet (data):\n"
                 + json.dumps(context, ensure_ascii=False)
                 + "\n\nReturn ONLY a JSON object with string fields result_json, explanation, plan_text. result_json must encode this envelope, changing verdict/findings as warranted: "
@@ -1262,6 +1295,7 @@ class Engine:
                 control_root=str(self.runtime),
                 read_artifacts=read_artifacts,
                 read_artifact_refs=read_artifact_refs,
+                engineering_startup=startup_ref,
                 neutral_mounts=neutral_mounts,
                 private_root=str(private_root) if private_root else None,
                 expected_artifact_id=expected_artifact_id,
@@ -1342,6 +1376,7 @@ class Engine:
                 raise WorkflowError("Prepared job binding changed before dispatch")
             if job["role"] == "builder" and not v["plan_granted"]:
                 raise WorkflowError("Builder dispatch requires standing PLAN grant")
+            self._validate_engineering_job(job)
             self.store.update_job(job_id, "LAUNCH_INTENT", launch_attempts=job["launch_attempts"] + 1)
             try:
                 if self.launcher:
@@ -1368,6 +1403,35 @@ class Engine:
                     self.store.update_job(job_id, "LAUNCH_FAILED", no_child=True)
                     pause(v, "MISSING_BINARY")
         return {"view": v}
+
+    def _validate_engineering_job(self, job, *, builder_completion=False):
+        if not engineering_startup.enabled(self.config):
+            return
+        ref = job["spec"].get("engineering_startup")
+        if not ref:
+            raise WorkflowError("Required coordinator engineering startup evidence missing")
+        engineering_startup.verify_report(
+            self.root,
+            self.config,
+            job["candidate_id"],
+            ref,
+            allow_builder_changes=builder_completion,
+        )
+        refs = job["spec"].get("read_artifact_refs", [])
+        names = {r.get("source_relative_path") for r in refs}
+        if not set(engineering_startup.CONTEXT_PATHS) <= names:
+            raise WorkflowError("Mandatory engineering context absent from job packet")
+        for artifact in refs:
+            snapshot = Path(artifact["snapshot_path"])
+            if snapshot.is_symlink() or bytes_hash(snapshot.read_bytes()) != artifact["sha256"]:
+                raise WorkflowError("Engineering context snapshot digest mismatch")
+        engineering_startup.check_snapshot_visibility(
+            self.root,
+            job["spec"]["work_item_root"],
+            self.runtime,
+            refs,
+            ref["path"],
+        )
 
     def _collect(self, state):
         v = self._synchronize(state)["view"]
@@ -1490,6 +1554,7 @@ class Engine:
             raise
 
     def _accept_inner(self, job, observation, view):
+        self._validate_engineering_job(job, builder_completion=job["role"] == "builder")
         destination = Path(job["runtime"])
         stdout = destination / "stdout.jsonl"
         if not stdout.is_file() or stdout.stat().st_size > 20_000_000:
@@ -2115,6 +2180,21 @@ class Engine:
                     ]
                     if not builds or not builds[-1].get("validation", {}).get("passed"):
                         raise WorkflowError("Verifier PASS cannot override failing required tests")
+        if engineering_startup.enabled(self.config) and body["status"] == "COMPLETE":
+            if job["role"] == "builder":
+                # Legitimate builder changes require fresh checker proof for the resulting
+                # candidate; mandatory instructions remain unchanged throughout the job.
+                event["engineering_startup"] = engineering_startup.run(
+                    self.root,
+                    self.config,
+                    event["candidate"],
+                    self.runtime,
+                    work,
+                    destination / "engineering-startup-completion.json",
+                )
+            else:
+                event["engineering_startup"] = job["spec"]["engineering_startup"]
+            self._validate_engineering_job(job, builder_completion=job["role"] == "builder")
         return event
 
     def _drive(self, graph_input):
@@ -2641,6 +2721,7 @@ class Engine:
         new_config["scope"] = scope
         new_config["scope_hash"] = new_scope_hash
         new_config["stages"] = [*self.config.get("stages", []), *implementation_stages]
+        engineering_startup.validate_scope(new_config)
 
         candidate_meta = freeze(
             self.root,
