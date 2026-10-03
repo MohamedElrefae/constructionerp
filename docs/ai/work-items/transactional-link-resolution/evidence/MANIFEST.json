@@ -1,6 +1,6 @@
 {
   "artefacts": {
-    "docs/ai/work-items/transactional-link-resolution/SCOPE.md": "02e1f78d80e7e0db69feba8d290147f4ad854d7030a4a674f55dacbad1936919",
+    "docs/ai/work-items/transactional-link-resolution/SCOPE.md": "d1d3c438cbf729ea13772ae8aba5b8b2b099277a1cf3e67e1e07077944647dcb",
     "docs/ai/work-items/transactional-link-resolution/RFC.md": "eecf3dc404681f481c917cc6e613ecb9209bf3ef1753b9ed8b5d07fc68f43ef8",
     "docs/ai/work-items/transactional-link-resolution/evidence/test_transaction_link_search.log": "794a700593d033f24183bbd1a8659dc101dde110d19fb5c282b04d0cde19c061",
     "docs/ai/work-items/transactional-link-resolution/evidence/regression-matrix.log": "caf6b207e0cf4754440cef0c8f484876bd8174090a3b2e56107c842663f957a2",

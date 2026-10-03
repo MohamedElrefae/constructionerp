@@ -1,0 +1,97 @@
+
+========================================================================
+A. Signatures and the positional mapping search_widget applies
+========================================================================
+search_widget custom-query call site (frappe/desk/search.py):
+    validate_ignore_user_permissions(reference_doctype, link_fieldname, doctype)
+    if isinstance(filters, str):
+    return frappe.call(
+    query,
+    doctype,
+    txt,
+    searchfield,
+    start,
+    page_length,
+    filters,
+    as_dict=as_dict,
+    reference_doctype=reference_doctype,
+
+callee parameter order: ['doctype', 'txt', 'filters', 'page_length', 'search_fields', 'display_format', 'searchfield', 'start', 'link_fieldname', 'reference_doctype', 'query', 'ignore_user_permissions']
+
+  # | search_widget sends | -> | callee parameter
+  ---+---------------------+----+------------------
+   1 | doctype             | -> | doctype
+   2 | txt                 | -> | txt
+   3 | searchfield         | -> | filters  <-- SHIFTED
+   4 | start               | -> | page_length  <-- SHIFTED
+   5 | page_length         | -> | search_fields  <-- SHIFTED
+   6 | filters             | -> | display_format  <-- SHIFTED
+
+========================================================================
+B. frappe.call filters kwargs only — positional args pass through
+========================================================================
+def call(fn: str | Callable, *args, **kwargs):
+	"""Call a function and match arguments."""
+	if isinstance(fn, str):
+		fn = get_attr(fn)
+
+	newargs = get_newargs(fn, kwargs)
+
+	return fn(*args, **newargs)
+kwargs sent : ['as_dict', 'ignore_user_permissions', 'link_fieldname', 'reference_doctype']
+kwargs kept : ['ignore_user_permissions', 'link_fieldname', 'reference_doctype']  <- 'as_dict' has nowhere to go
+=> the six positional slots are never re-bound by name; the shift is permanent.
+
+========================================================================
+C. Live reproduction through the genuine entry point (search_link)
+========================================================================
+RAISED: KeyError
+        doctype="Account",
+    ...<2 lines>...
+        page_length=5,
+    )
+  File "/home/mohamed/frappe-bench/apps/frappe/frappe/utils/typing_validations.py", line 36, in wrapper
+    return func(*args, **kwargs)
+  File "/home/mohamed/frappe-bench/apps/frappe/frappe/utils/caching.py", line 248, in inner
+    ret = func(*args, **kwargs)
+  File "/home/mohamed/frappe-bench/apps/frappe/frappe/desk/search.py", line 62, in search_link
+    return build_for_autosuggest(results, doctype=doctype)
+  File "/home/mohamed/frappe-bench/apps/frappe/frappe/desk/search.py", line 366, in build_for_autosuggest
+    label = _(item[0]) if meta.translated_doctype else item[0]
+                                                       ~~~~^^^
+KeyError: 0
+
+build_for_autosuggest iterates item[0] on rows the custom query returned as dicts -> KeyError. Row shape is defect D4b.
+
+========================================================================
+D. Wiring audit — who instantiates the enhancer that sets get_query
+========================================================================
+loaded JS files scanned            : 26
+enhancer constructor / enhance() call sites:
+    searchable_dropdown.js:6: * new SearchableDropdownEnhancer({
+    searchable_dropdown.js:184: return new SearchableDropdownEnhancer({
+    -> call sites OUTSIDE the enhancer module: NONE
+
+'get_query' + 'searchable_link_search' occurrences in loaded JS:
+    searchable_dropdown.js:78 [code]: : "construction.searchable_dropdown.api.search.searchable_link_search";
+    ct_link_control.js:9 [comment]: * Note: Does not call searchable_link_search directly; builds dropdown over native search_link
+    -> code references outside the enhancer module: NONE
+
+config files that WOULD wire it     : ['customer_supplier.js', 'journal_entry.js', 'sales_invoice.js']
+    registered in hooks.py? customer_supplier.js: False
+    registered in hooks.py? journal_entry.js: False
+    registered in hooks.py? sales_invoice.js: False
+nested searchable_dropdown/hooks.py loaded by root hooks.py?: False (Frappe only reads the app-root hooks.py)
+=> the class is exported, never instantiated; the defective path has no browser caller.
+
+========================================================================
+E. Contrast — a canonical, tuple-shaped custom query (BOQ)
+========================================================================
+get_boq_headers parameters : ['doctype', 'txt', 'searchfield', 'start', 'page_len', 'filters']
+search_widget positional   : ['doctype', 'txt', 'searchfield', 'start', 'page_len', 'filters']
+canonical match            : True
+return statements          :
+     return frappe.db.sql(query, values)
+    -> frappe.db.sql(...) without as_dict yields list-of-tuples,
+       which is exactly the shape build_for_autosuggest indexes with item[0].
+=> BOQ works through search_link; the master query matches neither convention.

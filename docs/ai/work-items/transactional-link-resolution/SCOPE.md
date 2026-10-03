@@ -99,7 +99,7 @@ All three required design decisions ratified on 2026-10-03:
 | `RFC.md` | `APPROVED` (owner decision, 2026-10-03) |
 | `SCOPE.md` | this file — `COMPLETE` |
 | Decisions D1–D3 | ratified 2026-10-03 (SCOPE §3) |
-| Implementation | complete (`transaction_link_search.py`, `searchable_dropdown.js`) |
+| Implementation | server complete (`transaction_link_search.py`); client route delivered but **NOT WIRED** (§8) |
 | Tests & Matrix | 18/18 unit tests, 171/171 matrix tests across 13 modules, 19/19 reconciliation |
 | Evidence / manifests | captured in `evidence/` with SHA-256 in `MANIFEST.json` |
 
@@ -128,3 +128,25 @@ Also added, beyond the original §4 deliverables:
 Living artefacts (`hooks.py`, `scripts/run_bilingual_regression_matrix.sh`) are
 pinned by three closed manifests. Every future change to either requires a re-pin;
 that is recorded here rather than left to be discovered as a stale digest.
+
+---
+
+## 8. Client route status: NOT WIRED (2026-10-03)
+
+The server endpoint `search_transactions` is live, whitelisted, and covered by 18/18 unit
+tests. The **browser path is inert**:
+
+- The routing branch lives in `searchable_dropdown.js` `setCustomQuery()`, on
+  `SearchableDropdownEnhancer`.
+- Nothing that `hooks.py` loads instantiates that class — see
+  `docs/ai/work-items/search-query-convention/SCOPE.md` §2 and its wiring audit.
+- Consequently no Link field in the UI currently reaches `search_transactions`.
+
+The same work item records **D4** (positional-argument shift + tuple-shape mismatch) on the
+`search_widget` custom-query path. The sidecar's *signature* already matches the canonical
+order (it would not suffer D4a), but it returns dict rows and would suffer **D4b** if wired
+through `search_link`. Wiring therefore requires the dispatcher preconditions in
+`search-query-convention/SCOPE.md` §4.
+
+`Implementation` in §6 above means **server complete**; the client route is delivered but
+unwired, and §4 deliverable 2 is satisfied as code only.
