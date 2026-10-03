@@ -423,6 +423,27 @@
     "enabled": true
    },
    "norm_field": "subject_ar_norm"
+  },
+  "Asset Category": {
+   "state": "active",
+   "english_field": "asset_category_name",
+   "arabic_field": "asset_category_name_ar",
+   "code_field": null,
+   "identity_field": "name",
+   "search": {
+    "enabled": true,
+    "fields": [
+     "asset_category_name",
+     "asset_category_name_ar"
+    ]
+   },
+   "form": {
+    "identity_section": false
+   },
+   "tree": {
+    "enabled": false
+   },
+   "norm_field": "asset_category_name_ar_norm"
   }
  }
 }
