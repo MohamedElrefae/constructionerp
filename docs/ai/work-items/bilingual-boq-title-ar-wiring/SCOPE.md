@@ -2,10 +2,10 @@
 
 **Work item:** `bilingual-boq-title-ar-wiring`
 **Branch:** `feature/bilingual-boq-title-ar-wiring`
-**Base commit:** `87e88cd` (ADR corrected, 19/19 rows reconcile)
-**Scope:** `boq_link_queries.get_boq_headers` / `get_boq_structures`, `ct_link_control.js`
+**Base commit:** `0f5be0d` (develop clean, ADR corrected, 19/19 rows reconcile)
+**Scope:** `boq_link_queries.get_boq_headers` / `get_boq_structures`, `ct_link_control.js`, `hooks.py`
 **Date:** 2026-10-03
-**Status:** OPEN — two design decisions required before implementation (§3)
+**Status:** APPROVED — Decision §3.1 Option A (Search-only) approved, Decision §3.2 (search_fields untouched) approved
 **Authority:** owner instruction given in session; transcribed by the agent
 
 Follow-up recorded by `bilingual-boq-p95-measurement` §1.2 and re-opened by the owner in
@@ -119,7 +119,7 @@ dropdown label to Arabic for every session, including English. The JS consumers 
 
 ## 2. Proposed design
 
-### A. Search-only wiring (recommended default)
+### A. Search-only wiring (Approved)
 
 1. `get_boq_headers` — extend the `WHERE` disjunction and `SELECT`:
 
@@ -128,25 +128,32 @@ SELECT h.name, h.title, h.project, h.title_ar
 ...
 AND (h.name LIKE %(txt)s OR h.title LIKE %(txt)s
      OR h.project LIKE %(txt)s
-     OR h.title_ar LIKE %(txt)s OR h.title_ar_norm LIKE %(txt)s)
+     OR h.title_ar LIKE %(txt)s OR h.title_ar_norm LIKE %(norm_txt)s)
 ```
 
 2. `get_boq_structures` — likewise, with `s.title_ar` / `s.title_ar_norm` alongside
    `s.wbs_code`.
 
-3. `ct_link_control.js` header comment — correct the claim that it *"Auto-applies
+3. Normalized bind parameter — add `values["norm_txt"] = f"%{normalize_arabic(txt or '')}%"`
+   via read-only import of `normalize_arabic` from `construction.services.bilingual_service`.
+   This ensures Alef-variants, tatweel, and diacritics match correctly against the normalized
+   column (matching `search.py:136`).
+
+4. `ct_link_control.js` header comment — correct the claim that it *"Auto-applies
    SearchableDropdownEnhancer to all Link fields on every page"*. It does not call
    `searchable_link_search`; it builds its own dropdown over native `search_link`, with
    the BOQ cascade override above.
 
-Reuses the existing `%(txt)s` parameter, so no new bind values and no injection surface.
+5. Cache-buster bump — bump `hooks.py:158` from `ct_link_control.js?v=16` to `?v=17`
+   per AGENTS.md §4.4.
+
 All SQL stays parameterized per AGENTS.md §4.1.
 
 **What this delivers:** Arabic-named BOQ rows become findable from the BOQ dropdown.
 **What it does not deliver:** the dropdown *label* stays the English `title`; Arabic only
 appears in `description`.
 
-### B. Bilingual label (deferred to the decision in §3.1)
+### B. Bilingual label (Deferred per Decision §3.1)
 
 To prefer the Arabic label for Arabic sessions — matching
 `searchable_link_search._format_label` behaviour — the endpoint would have to return the
@@ -157,7 +164,7 @@ show Arabic.
 
 ---
 
-## 3. Decisions required
+## 3. Decisions settled
 
 ### 3.1 Search-only, or bilingual label too?
 
@@ -169,7 +176,7 @@ show Arabic.
 | Risk | low | must reproduce `_format_label`'s fallback chain |
 | Duplicates governed logic | no | partially |
 
-**Recommendation: A now, B only if product wants Arabic labels in the BOQ cascade.**
+**Decision: Option A approved by owner.** Search-only wiring preserves dropdown label stability and column contracts.
 
 ### 3.2 Should `title_ar` also be added to doctype `search_fields`?
 
@@ -180,8 +187,7 @@ Header (`0.851 ms`) and BOQ Structure (`0.985 ms`) rows were measured against na
 `search_link` with today's `search_fields`, and the predicate set is part of what makes
 that baseline what it is. Changing it invalidates both rows and forces re-measurement.
 
-**Recommendation: separate work item, explicitly paired with a §4 re-measurement.** Not
-bundled here.
+**Decision: Untouched (approved by owner).** Doctype `search_fields` remains untouched; baselines for BOQ Header and BOQ Structure remain valid without re-measurement. Any future doctype search_fields change is deferred to a separate work item paired with a §4 re-measurement.
 
 ### 3.3 Is backfilling `title_ar` in scope?
 
