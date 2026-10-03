@@ -1,0 +1,90 @@
+{
+  "artefacts": {
+    "docs/ai/work-items/bilingual-adr-evidence-correction/SCOPE.md": "bddb18544dd3f40ad132965bb000fda26846008ef8799b7911498992609182be",
+    "docs/ai/work-items/bilingual-adr-evidence-correction/evidence/scripts/reconcile_adr_vs_evidence.py": "28ba6d2565d64d5783a8aedc9248a7c8d13da2f068412eae20f7f79bc4a77115",
+    "docs/ai/work-items/bilingual-adr-evidence-correction/evidence/reconciliation.log": "9fb1cacccb62d32126d6f731bea24ea515fb0f79c5ced881c7a6464ae3e1fa50",
+    "docs/ai/work-items/bilingual-adr-evidence-correction/evidence/regression-matrix.log": "03603b32de66636873d0cc289b8265cfa862f2e8d6d9279ba44e986340bf62b0",
+    "docs/ai/work-items/bilingual-adr-evidence-correction/evidence/guard-module-observation.log": "8aa206ce33971d054eea668d6058cc72068c6c999c8cf72319a6899333f8a889",
+    "docs/ai/work-items/bilingual-performance-sla.md": "97f853646e956cc651216f444d2a8f4c65f940d49eaf5fc121c0ba210e9859c9"
+  },
+  "base_commit": "a7086ef79b0bf73b30b5320b62a52f8f281da406",
+  "branch": "feature/bilingual-adr-evidence-correction",
+  "corrected_document": {
+    "path": "docs/ai/work-items/bilingual-performance-sla.md",
+    "sha256": "97f853646e956cc651216f444d2a8f4c65f940d49eaf5fc121c0ba210e9859c9"
+  },
+  "corrected_rows": {
+    "Department (\u00a74 line 79)": {
+      "before": {
+        "baseline_ms": 0.623,
+        "governed_ms": 0.83,
+        "ratio": 1.3327
+      },
+      "after": {
+        "baseline_ms": 0.654,
+        "governed_ms": 0.816,
+        "ratio": 1.2477
+      },
+      "source": "docs/ai/work-items/bilingual-department-master/evidence/department-p95-measurement.json",
+      "gate_impact": "none \u2014 both ratios pass Tier 2B 1.50x and the 1.50 ms absolute ceiling"
+    },
+    "Department evidence binding (\u00a77)": {
+      "before": "n=100 convergent mean",
+      "after": "n=50 interleaved nearest-rank P95"
+    }
+  },
+  "reconciliation": {
+    "harness": "docs/ai/work-items/bilingual-adr-evidence-correction/evidence/scripts/reconcile_adr_vs_evidence.py",
+    "harness_sha256": "28ba6d2565d64d5783a8aedc9248a7c8d13da2f068412eae20f7f79bc4a77115",
+    "rows_parsed": 19,
+    "sources_located": 19,
+    "mismatched": 0,
+    "unsourced": 0,
+    "result": "PASS",
+    "before_correction": {
+      "rows_parsed": 19,
+      "mismatched": 1,
+      "unsourced": 0,
+      "result": "FAIL",
+      "mismatch": "Department"
+    }
+  },
+  "test_results": {
+    "canonical_matrix": {
+      "modules": 11,
+      "tests": 133,
+      "passed": 133,
+      "failed": 0,
+      "log": "docs/ai/work-items/bilingual-adr-evidence-correction/evidence/regression-matrix.log"
+    },
+    "guard_module_observation": {
+      "module": "construction.tests.test_bilingual_service",
+      "tests": 38,
+      "passed": 37,
+      "failed": 1,
+      "failing_test": "TestRegistryLoadAndValidate.test_real_registry_loads_clean",
+      "verdict": "PRE-EXISTING stale assertion at base commit; out of scope, recorded in SCOPE \u00a73 item 7",
+      "log": "docs/ai/work-items/bilingual-adr-evidence-correction/evidence/guard-module-observation.log"
+    }
+  },
+  "primary_invariant": {
+    "claim": "Documentation-only work item: zero modifications to the bilingual services, registry, hooks, or vendor sources",
+    "reference_commit": "a7086ef79b0bf73b30b5320b62a52f8f281da406",
+    "bilingual_service_py_diff_lines": 0,
+    "search_py_diff_lines": 0,
+    "bilingual_registry_json_diff_lines": 0,
+    "boq_link_queries_py_diff_lines": 0,
+    "hooks_py_diff_lines": 0,
+    "frappe_vendor_diff_lines": 0,
+    "erpnext_vendor_diff_lines": 0
+  },
+  "out_of_scope_respected": [
+    "no schema, registry, hook, patch, or print change",
+    "no harness, measurement, or re-measurement of any master",
+    "bilingual_service.py / search.py untouched",
+    "all foreign work item evidence untouched",
+    "the seven findings in SCOPE \u00a73 recorded, not fixed",
+    "bilingual-boq-title-ar-wiring opened as a separate work item"
+  ],
+  "causal_order": "final test run -> capture log -> compute blob digests -> write manifest -> commit (SCOPE \u00a76)"
+}
