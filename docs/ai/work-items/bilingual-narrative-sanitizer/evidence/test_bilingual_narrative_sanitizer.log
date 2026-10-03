@@ -1,0 +1,38 @@
+Starting test run with parameters: site=v16.localhost, module=construction.tests.test_bilingual_narrative_sanitizer, verbose=False, tests=(), force=False, profile=False, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+View detailed logs (using --verbose): /home/mohamed/frappe-bench/logs/frappe.testing.log
+
+Running 18 unspecified-category tests for construction
+
+construction.tests.test_bilingual_narrative_sanitizer.TestBdiJoin
+   [32m ✔ [0m test_bdi_join_custom_separator
+   [32m ✔ [0m test_bdi_join_empty_and_none
+   [32m ✔ [0m test_bdi_join_single_escape_no_double_escape
+   [32m ✔ [0m test_bdi_join_wrapping_and_escaping
+
+construction.tests.test_bilingual_narrative_sanitizer.TestDocEventsValidation
+   [32m ✔ [0m test_child_table_validation_fails_dirty
+   [32m ✔ [0m test_parent_doc_validation_fails_dirty
+   [32m ✔ [0m test_parent_doc_validation_passes_clean
+
+construction.tests.test_bilingual_narrative_sanitizer.TestHtmlSanitizerAndValidator
+   [32m ✔ [0m test_attribute_override_caught
+   [32m ✔ [0m test_c0_c1_control_characters_rejected
+   [32m ✔ [0m test_entity_decoded_override_rejected
+   [32m ✔ [0m test_literal_overrides_and_isolates_rejected
+   [32m ✔ [0m test_lrm_rlm_alm_accepted
+   [32m ✔ [0m test_markup_preserved
+   [32m ✔ [0m test_text_inside_failed_node_caught
+
+construction.tests.test_bilingual_narrative_sanitizer.TestPlainTextValidator
+   [32m ✔ [0m test_plain_text_entity_decoded_override_rejected
+   [32m ✔ [0m test_plain_text_lrm_rlm_alm_accepted
+   [32m ✔ [0m test_plain_text_multiline_support
+
+construction.tests.test_bilingual_narrative_sanitizer.TestRegistryImmutability
+   [32m ✔ [0m test_registry_remains_unchanged
+
+
+----------------------------------------------------------------------
+Ran 18 tests in 0.085s
+
+OK

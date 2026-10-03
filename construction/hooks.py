@@ -221,6 +221,12 @@ print_css = "/assets/construction/css/print_theme.css"
 pdf_header_html = "construction.api.theme_api.get_pdf_header"
 pdf_footer_html = "construction.api.theme_api.get_pdf_footer"
 
+jinja = {
+    "filters": [
+        "construction.services.narrative_sanitizer.bdi_join",
+    ],
+}
+
 
 # Override Frappe's theme switcher for custom integration
 # Using simplified SQL-based version to avoid Python controller import issues
@@ -271,24 +277,72 @@ doc_events = {
     # bilingual API; any direct form/REST save that changes the field is
     # refused. The hook also maintains the normalized Arabic search key.
     "Account": {"validate": "construction.services.bilingual_service.enforce_account_arabic_policy"},
-    "Item": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
-    "Customer": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
-    "Supplier": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
+    "Item": {
+        "validate": [
+            "construction.services.bilingual_service.enforce_bilingual_arabic_policy",
+            "construction.services.narrative_sanitizer.validate_narrative_fields",
+        ]
+    },
+    "Customer": {
+        "validate": [
+            "construction.services.bilingual_service.enforce_bilingual_arabic_policy",
+            "construction.services.narrative_sanitizer.validate_narrative_fields",
+        ]
+    },
+    "Supplier": {
+        "validate": [
+            "construction.services.bilingual_service.enforce_bilingual_arabic_policy",
+            "construction.services.narrative_sanitizer.validate_narrative_fields",
+        ]
+    },
     "Cost Center": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
     "Warehouse": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
-    "Project": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
+    "Project": {
+        "validate": [
+            "construction.services.bilingual_service.enforce_bilingual_arabic_policy",
+            "construction.services.narrative_sanitizer.validate_narrative_fields",
+        ]
+    },
     "Item Group": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
     "Customer Group": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
     "Supplier Group": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
     "Territory": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
-    "UOM": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
-    "Employee": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
+    "UOM": {
+        "validate": [
+            "construction.services.bilingual_service.enforce_bilingual_arabic_policy",
+            "construction.services.narrative_sanitizer.validate_narrative_fields",
+        ]
+    },
+    "Employee": {
+        "validate": [
+            "construction.services.bilingual_service.enforce_bilingual_arabic_policy",
+            "construction.services.narrative_sanitizer.validate_narrative_fields",
+        ]
+    },
     "Department": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
-    "BOQ Structure": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
+    "BOQ Structure": {
+        "validate": [
+            "construction.services.bilingual_service.enforce_bilingual_arabic_policy",
+            "construction.services.narrative_sanitizer.validate_narrative_fields",
+        ]
+    },
     "BOQ Header": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
-    "Task": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
+    "Task": {
+        "validate": [
+            "construction.services.bilingual_service.enforce_bilingual_arabic_policy",
+            "construction.services.narrative_sanitizer.validate_narrative_fields",
+        ]
+    },
     "Asset Category": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
-    "Payment Terms Template": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
+    "Payment Terms Template": {
+        "validate": [
+            "construction.services.bilingual_service.enforce_bilingual_arabic_policy",
+            "construction.services.narrative_sanitizer.validate_narrative_fields",
+        ]
+    },
+    "Payment Term": {
+        "validate": "construction.services.narrative_sanitizer.validate_narrative_fields",
+    },
 }
 
 # Server-side query injection: applies scope filters to ALL database queries

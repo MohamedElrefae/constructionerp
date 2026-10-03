@@ -1,8 +1,9 @@
 # Scope Descriptor — bilingual-narrative-sanitizer
 
 **Work item:** `bilingual-narrative-sanitizer`
-**Status:** `OPEN` — implementation scope, not yet started
-**Base commit:** `6e7bb43` (develop clean; `narrative-unicode-policy` design `APPROVED`)
+**Branch:** `feature/bilingual-narrative-sanitizer`
+**Status:** `COMPLETE` — implemented service, hooks, templates, tests; 18/18 unit tests, 133/133 regression matrix, 19/19 reconciliation verified
+**Base commit:** `38beb35d31026e0afc70dd43e0ccf8de7dc1a222` (develop clean; `narrative-unicode-policy` design `APPROVED`)
 **Date:** 2026-10-03
 **Authority:** approved design at `docs/ai/work-items/narrative-unicode-policy/SCOPE.md`,
 owner instruction in session
