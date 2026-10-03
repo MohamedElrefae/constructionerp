@@ -288,6 +288,7 @@ doc_events = {
     "BOQ Header": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
     "Task": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
     "Asset Category": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
+    "Payment Terms Template": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
 }
 
 # Server-side query injection: applies scope filters to ALL database queries
