@@ -24,7 +24,7 @@ construction.tests.test_bilingual_account_pilot.TestBilingualAccountPilot
    [32m ✔ [0m test_fallback_chain_by_session_language
    [32m ✔ [0m test_get_account_identity_payload
    [32m ✔ [0m test_governed_edit_maintains_normalized_search_key
-   [32m ✔ [0m test_governed_rename_end_to_end [31m (2.63s)[0m
+   [32m ✔ [0m test_governed_rename_end_to_end [31m (2.61s)[0m
    [32m ✔ [0m test_governed_rename_requires_permission
    [32m ✔ [0m test_governed_rename_requires_reason
    [32m ✔ [0m test_governed_rename_rolls_back_when_audit_fails
@@ -69,7 +69,7 @@ construction.tests.test_bilingual_account_pilot.TestBilingualAccountPilot
 
 
 ----------------------------------------------------------------------
-Ran 53 tests in 11.242s
+Ran 53 tests in 11.342s
 
 OK
 === MODULE construction.tests.test_bilingual_boq_print ===
@@ -96,7 +96,7 @@ construction.tests.test_bilingual_boq_print.TestBilingualBOQPrint
 
 
 ----------------------------------------------------------------------
-Ran 10 tests in 2.726s
+Ran 10 tests in 2.971s
 
 OK
 === MODULE construction.tests.test_bilingual_data_import ===
@@ -115,7 +115,7 @@ construction.tests.test_bilingual_data_import.TestBilingualDataImport
 
 
 ----------------------------------------------------------------------
-Ran 6 tests in 1.307s
+Ran 6 tests in 1.273s
 
 OK
 === MODULE construction.tests.test_bilingual_wave1_pilot ===
@@ -129,7 +129,7 @@ construction.tests.test_bilingual_wave1_pilot.TestBilingualWave1Pilot
    [32m ✔ [0m test_arabic_edit_rejects_bidi_controls
    [32m ✔ [0m test_norm_field_patch_idempotent_and_reversible
    [32m ✔ [0m test_registry_loads_and_maps_resolved_norm_fields
-   [32m ✔ [0m test_rename_doc_preserves_arabic_and_norm_keys [31m (3.82s)[0m
+   [32m ✔ [0m test_rename_doc_preserves_arabic_and_norm_keys [31m (4.07s)[0m
    [32m ✔ [0m test_search_matches_despite_alef_tatweel_diacritics
        ▸  /home/mohamed/frappe-bench/apps/frappe/frappe/model/qb_query.py:153: V17FrappeDeprecationWarning: This codepath was marked (DATE: 2024-01-01) deprecated for removal (from v17 onwards); note:
        ▸   The 'limit_page_length' parameter is deprecated. Use 'limit' instead.
@@ -140,7 +140,7 @@ construction.tests.test_bilingual_wave1_pilot.TestBilingualWave1Pilot
 
 
 ----------------------------------------------------------------------
-Ran 8 tests in 5.118s
+Ran 8 tests in 5.588s
 
 OK
 === MODULE construction.tests.test_bilingual_wave1_phase2_pilot ===
@@ -160,12 +160,12 @@ construction.tests.test_bilingual_wave1_phase2_pilot.TestBilingualWave1Phase2Pil
        ▸  
        ▸    deprecation_warning(
    [32m ✔ [0m test_server_authoritative_norm_derivation_and_poison_overwritten
-   [32m ✔ [0m test_tree_identity_invariant_and_rename_preservation [31m (4.65s)[0m
+   [32m ✔ [0m test_tree_identity_invariant_and_rename_preservation [31m (4.57s)[0m
    [32m ✔ [0m test_zero_service_edits_guard
 
 
 ----------------------------------------------------------------------
-Ran 8 tests in 5.780s
+Ran 8 tests in 5.727s
 
 OK
 === MODULE construction.tests.test_bilingual_wave2a_pilot ===
@@ -185,12 +185,12 @@ construction.tests.test_bilingual_wave2a_pilot.TestBilingualWave2aPilot
        ▸  
        ▸    deprecation_warning(
    [32m ✔ [0m test_server_authoritative_norm_derivation_and_poison_overwritten
-   [32m ✔ [0m test_tree_identity_invariant_and_rename_preservation [31m (5.22s)[0m
+   [32m ✔ [0m test_tree_identity_invariant_and_rename_preservation [31m (5.25s)[0m
    [32m ✔ [0m test_zero_service_edits_guard
 
 
 ----------------------------------------------------------------------
-Ran 8 tests in 7.182s
+Ran 8 tests in 7.230s
 
 OK
 === MODULE construction.tests.test_bilingual_employee_pilot ===
@@ -215,7 +215,7 @@ construction.tests.test_bilingual_employee_pilot.TestBilingualEmployeePilot
 
 
 ----------------------------------------------------------------------
-Ran 8 tests in 4.041s
+Ran 8 tests in 3.993s
 
 OK
 === MODULE construction.tests.test_bilingual_department_pilot ===
@@ -240,7 +240,7 @@ construction.tests.test_bilingual_department_pilot.TestBilingualDepartmentPilot
 
 
 ----------------------------------------------------------------------
-Ran 8 tests in 1.880s
+Ran 8 tests in 1.917s
 
 OK
 === MODULE construction.tests.test_bilingual_task_pilot ===
@@ -265,7 +265,7 @@ construction.tests.test_bilingual_task_pilot.TestBilingualTaskPilot
 
 
 ----------------------------------------------------------------------
-Ran 8 tests in 1.450s
+Ran 8 tests in 1.663s
 
 OK
 === MODULE construction.tests.test_bilingual_asset_category_pilot ===
@@ -290,7 +290,7 @@ construction.tests.test_bilingual_asset_category_pilot.TestBilingualAssetCategor
 
 
 ----------------------------------------------------------------------
-Ran 8 tests in 1.582s
+Ran 8 tests in 1.737s
 
 OK
 === MODULE construction.tests.test_bilingual_payment_terms_template_pilot ===
@@ -315,6 +315,45 @@ construction.tests.test_bilingual_payment_terms_template_pilot.TestBilingualPaym
 
 
 ----------------------------------------------------------------------
-Ran 8 tests in 1.673s
+Ran 8 tests in 1.688s
+
+OK
+=== MODULE construction.tests.test_bilingual_narrative_sanitizer ===
+Starting test run with parameters: site=v16.localhost, module=construction.tests.test_bilingual_narrative_sanitizer, verbose=False, tests=(), force=False, profile=False, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+View detailed logs (using --verbose): /home/mohamed/frappe-bench/logs/frappe.testing.log
+
+Running 18 unspecified-category tests for construction
+
+construction.tests.test_bilingual_narrative_sanitizer.TestBdiJoin
+   [32m ✔ [0m test_bdi_join_custom_separator
+   [32m ✔ [0m test_bdi_join_empty_and_none
+   [32m ✔ [0m test_bdi_join_single_escape_no_double_escape
+   [32m ✔ [0m test_bdi_join_wrapping_and_escaping
+
+construction.tests.test_bilingual_narrative_sanitizer.TestDocEventsValidation
+   [32m ✔ [0m test_child_table_validation_fails_dirty
+   [32m ✔ [0m test_parent_doc_validation_fails_dirty
+   [32m ✔ [0m test_parent_doc_validation_passes_clean
+
+construction.tests.test_bilingual_narrative_sanitizer.TestHtmlSanitizerAndValidator
+   [32m ✔ [0m test_attribute_override_caught
+   [32m ✔ [0m test_c0_c1_control_characters_rejected
+   [32m ✔ [0m test_entity_decoded_override_rejected
+   [32m ✔ [0m test_literal_overrides_and_isolates_rejected
+   [32m ✔ [0m test_lrm_rlm_alm_accepted
+   [32m ✔ [0m test_markup_preserved
+   [32m ✔ [0m test_text_inside_failed_node_caught
+
+construction.tests.test_bilingual_narrative_sanitizer.TestPlainTextValidator
+   [32m ✔ [0m test_plain_text_entity_decoded_override_rejected
+   [32m ✔ [0m test_plain_text_lrm_rlm_alm_accepted
+   [32m ✔ [0m test_plain_text_multiline_support
+
+construction.tests.test_bilingual_narrative_sanitizer.TestRegistryImmutability
+   [32m ✔ [0m test_registry_remains_unchanged
+
+
+----------------------------------------------------------------------
+Ran 18 tests in 0.098s
 
 OK

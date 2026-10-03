@@ -461,9 +461,10 @@ class TestBilingualBOQPrint(unittest.TestCase):
 
             # 1. Render boq_print_format.html
             html_full = BOQExportService._render_template("boq_print_format.html", context)
-            expected_header_title = f"{header.title} / {header.title_ar}"
+            expected_header_title = f"<bdi>{header.title}</bdi> / <bdi>{header.title_ar}</bdi>"
             self.assertIn(expected_header_title, html_full)
-            expected_proj = f"{test_project.project_name} / {test_project.project_name_ar}"
+            expected_proj = f"<bdi>{test_project.project_name}</bdi> / <bdi>{test_project.project_name_ar}</bdi>"
+            self.assertIn(expected_proj, html_full)
             self.assertIn("<bdi>Civil and Structural Package</bdi> / <bdi>حزمة الأعمال المدنية والإنشائية</bdi>", html_full)
             self.assertIn("<bdi>Substructure Reinforced Concrete</bdi> / <bdi>خرسانة الأساسات المسلحة</bdi>", html_full)
             self.assertIn("01.001", html_full)

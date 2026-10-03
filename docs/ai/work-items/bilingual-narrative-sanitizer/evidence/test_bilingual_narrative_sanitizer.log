@@ -33,6 +33,6 @@ construction.tests.test_bilingual_narrative_sanitizer.TestRegistryImmutability
 
 
 ----------------------------------------------------------------------
-Ran 18 tests in 0.085s
+Ran 18 tests in 0.086s
 
 OK

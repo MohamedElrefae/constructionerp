@@ -22,9 +22,22 @@ from frappe import _
 
 from construction.services.bilingual_registry import is_safe_narrative_text
 
-# Settled coverage: 10 doctypes carrying 27 narrative fields (parents + children).
-# Tiers: 1 = Plain Text (Text / Small Text / Data), 2 = Rich Text (Text Editor / HTML).
-NARRATIVE_FIELDS_CONFIG = {
+# Fieldtypes that define Tier 1 (Plain Text) and Tier 2 (Rich Text / HTML)
+FIELDTYPE_TIER_MAP = {
+    "Text Editor": 2,
+    "HTML Editor": 2,
+    "Small Text": 1,
+    "Text": 1,
+    "Long Text": 1,
+}
+
+# Explicit non-standard narrative fields (e.g. Data fieldtypes carrying narrative codes)
+EXTRA_NARRATIVE_FIELDS = {
+    ("Item", "customer_code"): 1,
+}
+
+# Static baseline fallback for offline / standalone test suites (27 fields across 10 doctypes)
+STATIC_NARRATIVE_FIELDS_BASELINE = {
     "Item": {
         "description": 2,
         "customer_code": 1,
@@ -63,10 +76,6 @@ NARRATIVE_FIELDS_CONFIG = {
     "Payment Term": {
         "description": 1,
     },
-    "Payment Terms Template": {},
-}
-
-CHILD_NARRATIVE_FIELDS_CONFIG = {
     "Task Depends On": {
         "subject": 1,
         "project": 1,
@@ -85,6 +94,49 @@ CHILD_NARRATIVE_FIELDS_CONFIG = {
         "description": 1,
     },
 }
+
+NARRATIVE_FIELDS_CONFIG = STATIC_NARRATIVE_FIELDS_BASELINE
+CHILD_NARRATIVE_FIELDS_CONFIG = STATIC_NARRATIVE_FIELDS_BASELINE
+
+
+def get_narrative_fields_for_doctype(doctype):
+    """Derive narrative fields and tiers dynamically from DocType metadata.
+
+    Tiers are determined directly by fieldtype:
+    - Tier 2 (Rich Text / HTML): Text Editor, HTML Editor
+    - Tier 1 (Plain Text): Small Text, Text, Long Text, plus designated Data fields.
+
+    Prevents drift / failing open when new narrative fields are added to DocTypes.
+    Caches results per session/site for fast save-time hook execution.
+    """
+    if not doctype:
+        return {}
+
+    cache = getattr(frappe.local, "_ct_narrative_fields_cache", None)
+    if cache is None:
+        cache = {}
+        if getattr(frappe, "local", None):
+            frappe.local._ct_narrative_fields_cache = cache
+    if doctype in cache:
+        return cache[doctype]
+
+    fields = {}
+    if getattr(frappe, "local", None) and getattr(frappe.local, "site", None):
+        try:
+            meta = frappe.get_meta(doctype)
+            for df in meta.fields:
+                if df.fieldtype in FIELDTYPE_TIER_MAP:
+                    fields[df.fieldname] = FIELDTYPE_TIER_MAP[df.fieldtype]
+                elif (doctype, df.fieldname) in EXTRA_NARRATIVE_FIELDS:
+                    fields[df.fieldname] = EXTRA_NARRATIVE_FIELDS[(doctype, df.fieldname)]
+        except Exception:
+            pass
+
+    if not fields:
+        fields = dict(STATIC_NARRATIVE_FIELDS_BASELINE.get(doctype, {}))
+
+    cache[doctype] = fields
+    return fields
 
 
 def find_offending_codepoint(text):
@@ -222,14 +274,14 @@ def validate_narrative_fields(doc, method=None):
     if not doc:
         return
 
-    # Validate parent narrative fields
-    parent_fields = NARRATIVE_FIELDS_CONFIG.get(doc.doctype)
+    # Validate parent narrative fields (derived dynamically from meta)
+    parent_fields = get_narrative_fields_for_doctype(doc.doctype)
     if parent_fields:
         _validate_fields(doc, parent_fields)
 
-    # Validate child table narrative fields
+    # Validate child table narrative fields (walked unconditionally)
     if hasattr(doc, "get_all_children"):
         for child in doc.get_all_children():
-            child_fields = CHILD_NARRATIVE_FIELDS_CONFIG.get(child.doctype)
+            child_fields = get_narrative_fields_for_doctype(child.doctype)
             if child_fields:
                 _validate_fields(child, child_fields)

@@ -134,7 +134,7 @@
     <div class="header">
         <h1>{{ labels["Bill of Quantities"] | e }}</h1>
         {% if is_bilingual_print and header.title_ar %}
-        <h2>{{ header.title | e }} / {{ header.title_ar | e }}</h2>
+        <h2>{{ [header.title, header.title_ar] | bdi_join(" / ") }}</h2>
         {% elif is_arabic and header.title_ar %}
         <h2>{{ header.title_ar | e }}</h2>
         {% else %}
@@ -146,7 +146,7 @@
                     <td>
                         <span class="label">{{ labels["Project"] | e }}:</span>
                         {% if is_bilingual_print and header.project_name_ar %}
-                        {{ header.project_name | e }} / {{ header.project_name_ar | e }}
+                        {{ [header.project_name, header.project_name_ar] | bdi_join(" / ") }}
                         {% elif is_arabic and header.project_name_ar %}
                         {{ header.project_name_ar | e }}
                         {% else %}
