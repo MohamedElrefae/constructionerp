@@ -259,5 +259,31 @@ class TestDocEventsValidation(unittest.TestCase):
         self.assertIn("Payment Terms Template Detail.description", str(ctx.exception))
 
 
+class TestDynamicMetadataDerivation(unittest.TestCase):
+    def test_meta_derivation_item_fields(self):
+        """Metadata derivation discovers description (tier 2) and customer_code (tier 1) on Item."""
+        from construction.services.narrative_sanitizer import get_narrative_fields_for_doctype
+
+        fields = get_narrative_fields_for_doctype("Item")
+        self.assertEqual(fields.get("description"), 2)
+        self.assertEqual(fields.get("customer_code"), 1)
+
+    def test_meta_failure_falls_back_without_caching(self):
+        """When get_meta fails, fallback to baseline is returned but NOT cached."""
+        from unittest.mock import patch
+        from construction.services.narrative_sanitizer import get_narrative_fields_for_doctype
+
+        synthetic_dt = "SyntheticTestDocType"
+        if getattr(frappe, "local", None) and hasattr(frappe.local, "_ct_narrative_fields_cache"):
+            frappe.local._ct_narrative_fields_cache.pop(synthetic_dt, None)
+
+        with patch("frappe.get_meta", side_effect=RuntimeError("DB hiccup")):
+            res = get_narrative_fields_for_doctype(synthetic_dt)
+            self.assertEqual(res, {})
+
+            cache = getattr(frappe.local, "_ct_narrative_fields_cache", {}) if getattr(frappe, "local", None) else {}
+            self.assertNotIn(synthetic_dt, cache)
+
+
 if __name__ == "__main__":
     unittest.main()

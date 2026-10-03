@@ -1,11 +1,11 @@
 {
   "artefacts": {
     "docs/ai/work-items/bilingual-narrative-sanitizer/SCOPE.md": "fa0d7ef0062af82cfc41cb0c27072a56c19cdad5af9c3fbaae46666bc27b3b0f",
-    "docs/ai/work-items/bilingual-narrative-sanitizer/evidence/test_bilingual_narrative_sanitizer.log": "848a84c3eb0534b9d4b59965146cc5d7c082f5199f3a8733d41bc661b2c3b931",
-    "docs/ai/work-items/bilingual-narrative-sanitizer/evidence/regression-matrix.log": "b22e843bddf30095e3b4b29beecabcacaaf476ebe8deffb91d3ecd35ef76fc5f",
+    "docs/ai/work-items/bilingual-narrative-sanitizer/evidence/test_bilingual_narrative_sanitizer.log": "33c1fd19e28885d3b6bc99d9c8978c1a89ff16ad6e4db81572f27fe7b035de78",
+    "docs/ai/work-items/bilingual-narrative-sanitizer/evidence/regression-matrix.log": "de0e8af9da63b2c3273085b45b36ff65189000439b0e57ee9cd91191ebff58c5",
     "docs/ai/work-items/bilingual-narrative-sanitizer/evidence/reconciliation.log": "9fb1cacccb62d32126d6f731bea24ea515fb0f79c5ced881c7a6464ae3e1fa50",
-    "construction/services/narrative_sanitizer.py": "c1bf562398f36ad342b9d8eed8036674cce08bbb43570ebdd2c44b0e08ea73da",
-    "construction/tests/test_bilingual_narrative_sanitizer.py": "66b3308122ffb94d0e3727ed64ea63bdf578ba0aebe202b88f4d4839126b2c81",
+    "construction/services/narrative_sanitizer.py": "38fab6da12de1e932a6151ae233cdb3fe0bc2ea89aec00c25154e7a889a39a06",
+    "construction/tests/test_bilingual_narrative_sanitizer.py": "d1295bfaf5297d1e60abdf4b760f9507f6f9884280d0921d81cde58c76316674",
     "construction/tests/test_bilingual_boq_print.py": "42e05b627e97887a8bbf78844d2fa427e4629ba81930fd5dc15ee9ed527abf2e",
     "construction/templates/boq_print_format.html": "73c5a0a3eafaa9d373b1dccf406320662304ca8d8ccc3edf02b2015e99173eaa",
     "construction/templates/boq_header_print.html": "bf8affc93d6ec53fb473894fb1303b39a0b2e5bc5287b821dc01334b8bf4ec9b",
@@ -17,20 +17,20 @@
   "decisions_settled": {
     "save_render_split": "Authoritative validation on save (doc_events:validate hook) fail-closed; render isolation via <bdi> and bdi_join Jinja filter across all 5 print sites",
     "dynamic_metadata_derivation": "Tiers derived dynamically from DocType metadata (Text Editor/HTML Editor -> Tier 2; Small Text/Text/Long Text -> Tier 1) ensuring fail-closed protection against drift",
-    "persisted_regression_matrix": "Matrix expanded to 12 modules (151 tests) and scripted at scripts/run_bilingual_regression_matrix.sh"
+    "persisted_regression_matrix": "Matrix expanded to 12 modules (153 tests) and scripted at scripts/run_bilingual_regression_matrix.sh"
   },
   "test_results": {
     "unit_suite": {
       "module": "construction.tests.test_bilingual_narrative_sanitizer",
-      "tests": 18,
-      "passed": 18,
+      "tests": 20,
+      "passed": 20,
       "failed": 0,
       "log": "docs/ai/work-items/bilingual-narrative-sanitizer/evidence/test_bilingual_narrative_sanitizer.log"
     },
     "canonical_matrix": {
       "modules": 12,
-      "tests": 151,
-      "passed": 151,
+      "tests": 153,
+      "passed": 153,
       "failed": 0,
       "log": "docs/ai/work-items/bilingual-narrative-sanitizer/evidence/regression-matrix.log"
     },

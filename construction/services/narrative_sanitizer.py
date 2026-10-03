@@ -121,6 +121,7 @@ def get_narrative_fields_for_doctype(doctype):
         return cache[doctype]
 
     fields = {}
+    meta_succeeded = False
     if getattr(frappe, "local", None) and getattr(frappe.local, "site", None):
         try:
             meta = frappe.get_meta(doctype)
@@ -129,11 +130,18 @@ def get_narrative_fields_for_doctype(doctype):
                     fields[df.fieldname] = FIELDTYPE_TIER_MAP[df.fieldtype]
                 elif (doctype, df.fieldname) in EXTRA_NARRATIVE_FIELDS:
                     fields[df.fieldname] = EXTRA_NARRATIVE_FIELDS[(doctype, df.fieldname)]
-        except Exception:
-            pass
+            meta_succeeded = True
+        except Exception as exc:
+            try:
+                frappe.logger("construction").warning(
+                    f"Failed to derive narrative fields from metadata for {doctype}: {exc}"
+                )
+            except Exception:
+                pass
 
-    if not fields:
-        fields = dict(STATIC_NARRATIVE_FIELDS_BASELINE.get(doctype, {}))
+    if not meta_succeeded:
+        # Fallback to static baseline (e.g. offline tests or metadata error), but do NOT cache failure
+        return dict(STATIC_NARRATIVE_FIELDS_BASELINE.get(doctype, {}))
 
     cache[doctype] = fields
     return fields
