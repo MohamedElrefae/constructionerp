@@ -90,26 +90,89 @@ Complete reference of all Frappe hooks used by Construction Theming System.
 
 ---
 
-## Event Hooks
+## Application Lifecycle & Session Hooks
 
-| Hook | Value | Trigger |
-|------|-------|---------|
-| `boot_session` | construction.api.theme_api.add_theme_to_boot | Every page load |
-| `after_install` | construction.install.create_system_themes | App installation |
-| `after_migrate[0]` | construction.api.theme_api.whitelabel_patch | After bench migrate |
-| `after_migrate[1]` | construction.install.create_system_themes | After bench migrate |
-| `after_migrate[2]` | construction.install.setup_workspace_sidebar | After bench migrate |
-| `after_migrate[3]` | construction.install.setup_construction_workspace_page | After bench migrate |
-| `after_migrate[4]` | construction.install.verify_workspace_visibility | After bench migrate |
+| Hook | Value | Trigger | Purpose |
+|------|-------|---------|---------|
+| `boot_session` | construction.api.theme_api.add_theme_to_boot | Every page load | Injects theme config into boot session |
+| `extend_bootinfo` | construction.boot.extend_bootinfo | Every page load | Extends bootinfo with user scope context |
+| `after_install` | construction.install.create_system_themes | App installation | Initializes system themes |
+| `after_migrate[0]` | construction.api.theme_api.whitelabel_patch | After bench migrate | Cleans Frappe branding |
+| `after_migrate[1]` | construction.install.create_system_themes | After bench migrate | Ensures 4 system themes exist |
+| `after_migrate[2]` | construction.install.setup_workspace_sidebar | After bench migrate | Reconciles sidebar items |
+| `after_migrate[3]` | construction.install.setup_construction_workspace_page | After bench migrate | Configures workspace page |
+| `after_migrate[4]` | construction.install.verify_workspace_visibility | After bench migrate | Verifies workspace access |
+
+---
+
+## Document Event Hooks (`doc_events`)
+
+Complete mapping of server-side document lifecycle events declared in `hooks.py`:
+
+| DocType | Event | Handler | Purpose |
+|---------|-------|---------|---------|
+| `*` | `validate` | `construction.overrides.scope_enforcement.validate` | Server-side branch-company integrity and scope context enforcement |
+| `Purchase Order` | `validate` | `construction.services.boq_transaction_validation.validate_document` | Validates line items against active BOQ structure |
+| `Purchase Order` | `on_submit` | `construction.services.resource_price_service.capture_price_from_purchase_document` | Records resource price history snapshot |
+| `Purchase Order` | `on_cancel` | `construction.services.resource_price_service.cancel_price_history_for_document` | Cancels recorded resource price history |
+| `Purchase Receipt` | `validate` | `construction.services.boq_transaction_validation.validate_document` | BOQ budget and transaction validation |
+| `Purchase Invoice` | `validate` | `construction.services.boq_transaction_validation.validate_document` | BOQ transaction validation |
+| `Purchase Invoice` | `on_submit` | `construction.services.resource_price_service.capture_price_from_purchase_document` | Records resource price history snapshot |
+| `Purchase Invoice` | `on_cancel` | `construction.services.resource_price_service.cancel_price_history_for_document` | Cancels recorded resource price history |
+| `Stock Entry` | `validate` | `construction.services.boq_transaction_validation.validate_document` | Material issue/transfer validation against BOQ |
+| `Timesheet` | `validate` | `construction.services.boq_transaction_validation.validate_document` | Labor log validation against BOQ activity |
+| `Journal Entry` | `validate` | `construction.services.boq_transaction_validation.validate_document` | Direct cost validation against BOQ accounts |
+| `Sales Invoice` | `validate` | `construction.services.boq_transaction_validation.validate_document` | Billing validation against BOQ milestones |
+| `Material Request` | `validate` | `construction.services.boq_transaction_validation.validate_document` | Procurement requisition validation against BOQ |
+| `BOQ Item Stage` | `before_delete` | `construction.services.boq_lifecycle.before_delete_boq_item_stage` | Blocks deletion of committed stage records |
+| `Account` | `validate` | `construction.services.bilingual_service.enforce_account_arabic_policy` | Enforces Arabic write gating and normalized key maintenance |
+| `Item` | `validate` | `construction.services.bilingual_service.enforce_bilingual_arabic_policy`<br>`construction.services.narrative_sanitizer.validate_narrative_fields` | Arabic name policy + Tier 2 HTML / Tier 1 narrative sanitization |
+| `Customer` | `validate` | `construction.services.bilingual_service.enforce_bilingual_arabic_policy`<br>`construction.services.narrative_sanitizer.validate_narrative_fields` | Arabic name policy + Tier 2 address narrative sanitization |
+| `Supplier` | `validate` | `construction.services.bilingual_service.enforce_bilingual_arabic_policy`<br>`construction.services.narrative_sanitizer.validate_narrative_fields` | Arabic name policy + Tier 2 address narrative sanitization |
+| `Cost Center` | `validate` | `construction.services.bilingual_service.enforce_bilingual_arabic_policy` | Bilingual name normalization and policy enforcement |
+| `Warehouse` | `validate` | `construction.services.bilingual_service.enforce_bilingual_arabic_policy` | Bilingual name normalization and policy enforcement |
+| `Project` | `validate` | `construction.services.bilingual_service.enforce_bilingual_arabic_policy`<br>`construction.services.narrative_sanitizer.validate_narrative_fields` | Arabic name policy + Tier 1/2 project narrative sanitization |
+| `Item Group` | `validate` | `construction.services.bilingual_service.enforce_bilingual_arabic_policy` | Bilingual classification master policy |
+| `Customer Group` | `validate` | `construction.services.bilingual_service.enforce_bilingual_arabic_policy` | Bilingual classification master policy |
+| `Supplier Group` | `validate` | `construction.services.bilingual_service.enforce_bilingual_arabic_policy` | Bilingual classification master policy |
+| `Territory` | `validate` | `construction.services.bilingual_service.enforce_bilingual_arabic_policy` | Bilingual classification master policy |
+| `UOM` | `validate` | `construction.services.bilingual_service.enforce_bilingual_arabic_policy`<br>`construction.services.narrative_sanitizer.validate_narrative_fields` | Bilingual policy + Tier 1 UOM description sanitization |
+| `Employee` | `validate` | `construction.services.bilingual_service.enforce_bilingual_arabic_policy`<br>`construction.services.narrative_sanitizer.validate_narrative_fields` | Bilingual policy + Tier 1 employee narrative sanitization |
+| `Department` | `validate` | `construction.services.bilingual_service.enforce_bilingual_arabic_policy` | Bilingual department policy and normalization |
+| `BOQ Structure` | `validate` | `construction.services.bilingual_service.enforce_bilingual_arabic_policy`<br>`construction.services.narrative_sanitizer.validate_narrative_fields` | Bilingual policy + Tier 1 structure narrative sanitization |
+| `BOQ Header` | `validate` | `construction.services.bilingual_service.enforce_bilingual_arabic_policy` | Bilingual BOQ header policy and normalization |
+| `Task` | `validate` | `construction.services.bilingual_service.enforce_bilingual_arabic_policy`<br>`construction.services.narrative_sanitizer.validate_narrative_fields` | Bilingual policy + Tier 1 task narrative sanitization |
+| `Asset Category` | `validate` | `construction.services.bilingual_service.enforce_bilingual_arabic_policy` | Bilingual asset category policy |
+| `Payment Terms Template` | `validate` | `construction.services.bilingual_service.enforce_bilingual_arabic_policy`<br>`construction.services.narrative_sanitizer.validate_narrative_fields` | Bilingual policy + Tier 1 detail description sanitization |
+| `Payment Term` | `validate` | `construction.services.narrative_sanitizer.validate_narrative_fields` | Tier 1 payment term description sanitization |
 
 ---
 
 ## Override Hooks
 
-| Hook | Original | Override | Purpose |
-|------|----------|----------|---------|
-| `override_whitelisted_methods` | frappe.core.doctype.user.user.switch_theme | construction.overrides.switch_theme_simple.switch_theme | Theme switching |
-| `override_whitelisted_methods` | frappe.utils.change_log.show_update_popup | construction.api.theme_api.ignore_update_popup | Suppress updates |
+### Method Overrides (`override_whitelisted_methods`)
+
+| Target Whitelisted Method | Override Handler | Purpose |
+|--------------------------|------------------|---------|
+| `frappe.core.doctype.user.user.switch_theme` | `construction.overrides.switch_theme_simple.switch_theme` | Simplified SQL-based theme switching bypassing controller imports |
+| `frappe.utils.change_log.show_update_popup` | `construction.api.theme_api.ignore_update_popup` | Suppresses update popup dialogs |
+| `frappe.translate.update_translations_for_source` | `construction.api.translation_tools.update_translations_for_source_safe` | Safe translation catalog updates preserving system translations |
+| `erpnext.accounts.doctype.account.account.update_account_number` | `construction.services.bilingual_service.governed_rename_account` | Governed atomic Account rename enforcing bilingual audit reason |
+
+### DocType Class Overrides (`override_doctype_class`)
+
+| DocType | Override Class | Purpose |
+|---------|----------------|---------|
+| `Translation` | `construction.overrides.translation.CustomTranslation` | Injects database catalog translations directly into runtime translation cache |
+
+---
+
+## Query & Template Hooks
+
+| Hook | Value | Purpose |
+|------|-------|---------|
+| `permission_query_conditions` | `{"*": "construction.overrides.scope_query.add_scope_conditions"}` | Automatic company/cost center/project scope isolation across all database queries |
+| `jinja` | `{"filters": ["construction.services.narrative_sanitizer.bdi_join"]}` | Directional isolation filter (`bdi_join`) for mixed Arabic/English print templates |
 
 ---
 
@@ -163,11 +226,14 @@ Migration
 
 ---
 
-## Known Gaps (Scope B Follow-Up)
+## Synchronization Status
 
-The following sections reflect early-stage documentation and require complete regeneration against `hooks.py`:
-- `override_whitelisted_methods`: `hooks.py` defines 4 entries (including `get_all_tags` and `get_tags`), whereas Section "Override Hooks" currently documents only 2.
-- `doc_events`: `hooks.py` defines 29 document lifecycle hooks (validations, custom status transitions, and bilingual policies), which are currently unlisted in Section "Event Hooks".
+All hook sections are synchronized against `construction/hooks.py`:
+- `override_whitelisted_methods`: 4 active entries documented.
+- `override_doctype_class`: 1 active entry documented.
+- `doc_events`: 30 active DocType registrations (wildcard `*`, 8 transactional doctypes, 1 BOQ lifecycle, 19 bilingual masters, 1 payment term) documented.
+- `permission_query_conditions` and `jinja.filters` documented.
+- Asset Inclusion tables synchronized (26 JS, 6 CSS, web includes).
 
 ---
 
@@ -182,6 +248,7 @@ The following sections reflect early-stage documentation and require complete re
 | 2026-05-03 | Bumped version strings v=120 for theme fixes |
 | 2026-05-05 | Added print_css, pdf_header/footer_html |
 | 2026-10-03 | Synchronized Asset Inclusion tables with hooks.py (26 JS, 6 CSS, web includes) |
+| 2026-10-03 | Synchronized Scope B: documented all 4 override_whitelisted_methods, override_doctype_class, query/Jinja filters, and 30 doc_events registrations |
 
 ---
 
