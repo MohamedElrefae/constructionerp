@@ -3,7 +3,7 @@
     "docs/ai/work-items/bilingual-adr-structural-findings/SCOPE.md": "36d017a066e33be4870c17149f46795458f82e7d140fa96323bb36761892ce03",
     "docs/ai/work-items/bilingual-adr-structural-findings/evidence/reconciliation.log": "9fb1cacccb62d32126d6f731bea24ea515fb0f79c5ced881c7a6464ae3e1fa50",
     "docs/ai/work-items/bilingual-adr-structural-findings/evidence/regression-matrix.log": "7b641eaf5a5a9f491f867086c2c802a8d034f02768f38fa858fa6ebc5f65e2bf",
-    "docs/ai/work-items/bilingual-performance-sla.md": "4f2b309d1846f8c8c05b01a74af5d62b71a5009547aa11088d9eca51aa23e4ca"
+    "docs/ai/work-items/bilingual-performance-sla.md": "85a2a368edb30c32fc0bcfbb8b667e7cc0a0ddf3abaa21aafa6d2701024abff3"
   },
   "base_commit": "3e71dec74efdf1950d44e5db8d9bf19d67bceae0",
   "branch": "develop",

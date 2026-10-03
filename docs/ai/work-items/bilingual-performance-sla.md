@@ -25,7 +25,7 @@ came from min-of-rounds selection landing favourably. A 10% ceiling on a ~1.3 ms
 only ~130 µs for the entire Python localisation stack, which is the same order as the
 measurement noise. **The 1.10x ceiling was statistically undecidable at this baseline.**
 
-**The other masters sit outside 1.10x.** Wave 1 and Wave 2a recorded ratios of
+**The other eleven masters sit far outside 1.10x.** Wave 1 and Wave 2a recorded ratios of
 1.3092–1.4750 — every one exceeding the old ceiling.
 
 **Measurement scope and production query shape.** The empirical parity asserted across
