@@ -1,6 +1,6 @@
 {
   "artefacts": {
-    "docs/ai/work-items/bilingual-asset-master/SCOPE.md": "0de3c62533bff296758c03f8255c2fda711a67dc1c3a3a123e192f8964a81b37",
+    "docs/ai/work-items/bilingual-asset-master/SCOPE.md": "545d828892e436594a1699f948dee2005b71019e1c0e622e81751504b14e4ccc",
     "docs/ai/work-items/bilingual-asset-master/evidence/test_bilingual_asset_pilot.log": "97a7d7e7c566b33866d7fd7acb9e13f1e9f9f4013fe1ac66401f1fc332925d84",
     "docs/ai/work-items/bilingual-asset-master/evidence/regression-matrix.log": "9ba05b9b38db94ee0fef05260141c04de8d6a4a2841c27ea6b953c24c81ecbee",
     "docs/ai/work-items/bilingual-asset-master/evidence/reconciliation.log": "785a058337578e599ab430bbf5d4e5e90adaa3121f97f0bf553e0de2b8c1227c",
@@ -13,7 +13,7 @@
     "construction/tests/test_bilingual_asset_pilot.py": "176cdd312d51b983b1a36fc4f723bf83213537303781c19c6ed9d2c491382260",
     "construction/data/bilingual/bilingual_registry.json": "0f05a58c7587217a0fa637d37abda9e71c94b48d8d3869409de7574ac30c3334",
     "construction/hooks.py": "e4beab7a48e95588da0ba9dd8054b610bfc20974999930d0b592d90ee7d36a8b",
-    "scripts/run_bilingual_regression_matrix.sh": "48b61171a55437a0689d7ac2827bffff546a3e32c338af5c8bebc4c5261fc28b"
+    "scripts/run_bilingual_regression_matrix.sh": "187e052bfd0c35b6b4eac749da15ee8ff6f1da4ece94fe7eff6e4b3999c4bc76"
   },
   "base_commit": "cc3a105",
   "branch": "develop",
@@ -49,5 +49,21 @@
     "artefact": "docs/ai/work-items/bilingual-asset-master/evidence/asset-p95-measurement.json"
   },
   "site_migration": "construction.patches.v9_13.add_asset_arabic_fields executed and recorded in Patch Log; all 22 registry masters resolve their arabic_field on v16.localhost.",
-  "causal_order": "final test run -> capture log (2>&1) -> git add -f the .log -> compute SHA-256 digests -> MANIFEST.json -> commit"
+  "causal_order": "final test run -> capture log (2>&1) -> git add -f the .log -> compute SHA-256 digests -> MANIFEST.json -> commit",
+  "amendments": [
+    {
+      "date": "2026-10-04",
+      "artefact": "scripts/run_bilingual_regression_matrix.sh",
+      "from": "48b61171a55437a0689d7ac2827bffff546a3e32c338af5c8bebc4c5261fc28b",
+      "to": "187e052bfd0c35b6b4eac749da15ee8ff6f1da4ece94fe7eff6e4b3999c4bc76",
+      "reason": "shared runner expanded to 17 modules / 209 tests by the canonical matrix integration"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "docs/ai/work-items/bilingual-asset-master/SCOPE.md",
+      "from": "0de3c62533bff296758c03f8255c2fda711a67dc1c3a3a123e192f8964a81b37",
+      "to": "545d828892e436594a1699f948dee2005b71019e1c0e622e81751504b14e4ccc",
+      "reason": "amendment note documenting the canonical matrix integration (17 modules / 209 tests)"
+    }
+  ]
 }

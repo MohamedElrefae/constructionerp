@@ -279,3 +279,21 @@ this work item's own evidence logs are unchanged.
 | Artefact | Why it moved |
 |---|---|
 | `construction/hooks.py` | living file; `Asset` `doc_events` single-hook registration added (F1, `bilingual-asset-master/SCOPE.md` §2.3) |
+
+### 8.3 Canonical matrix integration (2026-10-04)
+
+`construction.tests.test_boq_link_queries` was promoted from work-item-only evidence into
+the canonical runner: `scripts/run_bilingual_regression_matrix.sh` now executes
+**17 modules / 209 tests**. This closes the coverage gap where the `title_ar` search-only
+wiring (`dfeace3`) was never exercised by CI — a regression in the norm predicate, the
+scope chain, or the dropdown column shape would have gone unnoticed.
+
+| Artefact | Change |
+|---|---|
+| `scripts/run_bilingual_regression_matrix.sh` | module inserted; header 16 → **17** modules, 197 → **209** tests |
+| `evidence/regression-matrix-17m-209t.log` | **new** — full runner capture, 17/17 modules OK, 209/209 tests |
+| standalone pre-check | 12/12 OK in 1.26 s immediately before integration |
+
+The historical `evidence/regression-matrix.log` is retained unchanged as the record of the
+run performed at this work item's own completion; the new log carries a date-explicit name
+so neither record overwrites the other.

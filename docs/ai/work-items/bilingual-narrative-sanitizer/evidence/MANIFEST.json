@@ -1,6 +1,6 @@
 {
   "artefacts": {
-    "docs/ai/work-items/bilingual-narrative-sanitizer/SCOPE.md": "2e93a662a80f9de05d2157ee2d4baeca5ec8b9869e17e3979f300569850d521d",
+    "docs/ai/work-items/bilingual-narrative-sanitizer/SCOPE.md": "2708e4f8dec9d7469f47114e975ea7aa1bc795d2f75157948a4a78546512ad03",
     "docs/ai/work-items/bilingual-narrative-sanitizer/evidence/test_bilingual_narrative_sanitizer.log": "33c1fd19e28885d3b6bc99d9c8978c1a89ff16ad6e4db81572f27fe7b035de78",
     "docs/ai/work-items/bilingual-narrative-sanitizer/evidence/regression-matrix.log": "de0e8af9da63b2c3273085b45b36ff65189000439b0e57ee9cd91191ebff58c5",
     "docs/ai/work-items/bilingual-narrative-sanitizer/evidence/reconciliation.log": "9fb1cacccb62d32126d6f731bea24ea515fb0f79c5ced881c7a6464ae3e1fa50",
@@ -10,7 +10,7 @@
     "construction/templates/boq_print_format.html": "73c5a0a3eafaa9d373b1dccf406320662304ca8d8ccc3edf02b2015e99173eaa",
     "construction/templates/boq_header_print.html": "bf8affc93d6ec53fb473894fb1303b39a0b2e5bc5287b821dc01334b8bf4ec9b",
     "construction/hooks.py": "e4beab7a48e95588da0ba9dd8054b610bfc20974999930d0b592d90ee7d36a8b",
-    "scripts/run_bilingual_regression_matrix.sh": "48b61171a55437a0689d7ac2827bffff546a3e32c338af5c8bebc4c5261fc28b"
+    "scripts/run_bilingual_regression_matrix.sh": "187e052bfd0c35b6b4eac749da15ee8ff6f1da4ece94fe7eff6e4b3999c4bc76"
   },
   "base_commit": "38beb35d31026e0afc70dd43e0ccf8de7dc1a222",
   "branch": "develop",
@@ -128,6 +128,20 @@
       "from": "3445b845318caf50179b3cbb78eaf71bbfca350b7abb752ac39d48b1bf1c4fe0",
       "to": "48b61171a55437a0689d7ac2827bffff546a3e32c338af5c8bebc4c5261fc28b",
       "reason": "shared runner expanded to 16 modules / 197 tests by bilingual-asset-master"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "docs/ai/work-items/bilingual-narrative-sanitizer/SCOPE.md",
+      "from": "2e93a662a80f9de05d2157ee2d4baeca5ec8b9869e17e3979f300569850d521d",
+      "to": "2708e4f8dec9d7469f47114e975ea7aa1bc795d2f75157948a4a78546512ad03",
+      "reason": "amendment note documenting the canonical matrix integration (17 modules / 209 tests)"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "scripts/run_bilingual_regression_matrix.sh",
+      "from": "48b61171a55437a0689d7ac2827bffff546a3e32c338af5c8bebc4c5261fc28b",
+      "to": "187e052bfd0c35b6b4eac749da15ee8ff6f1da4ece94fe7eff6e4b3999c4bc76",
+      "reason": "shared runner expanded to 17 modules / 209 tests by the canonical matrix integration"
     }
   ]
 }

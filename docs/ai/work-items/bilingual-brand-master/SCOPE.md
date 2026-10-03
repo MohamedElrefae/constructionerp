@@ -170,3 +170,9 @@ this work item's own evidence logs are unchanged.
 | `construction/patches.txt` | living file; `v9_13` entry appended by `bilingual-asset-master` |
 | `construction/hooks.py` | living file; `Asset` `doc_events` single-hook registration added |
 | `scripts/run_bilingual_regression_matrix.sh` | shared runner expanded to **16 modules / 197 tests** |
+
+### 8.1 Re-pin by canonical matrix integration (2026-10-04)
+
+| Artefact | Why it moved |
+|---|---|
+| `scripts/run_bilingual_regression_matrix.sh` | shared runner expanded to **17 modules / 209 tests** (`test_boq_link_queries` promoted into the runner) |

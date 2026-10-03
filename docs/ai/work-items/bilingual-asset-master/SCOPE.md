@@ -154,3 +154,11 @@ per-round P95 values for each side.
 
 **Cleanup:** no `CT-ASSET-` or `ACC-ASS-*` fixtures remain and `Asset Activity` is back to 0
 rows (both verified after the final run).
+
+---
+
+## 8. Amendments (post-completion)
+
+| Artefact | Why it moved |
+|---|---|
+| `scripts/run_bilingual_regression_matrix.sh` | shared runner expanded to **17 modules / 209 tests** after this work item completed (`test_boq_link_queries` promoted into the runner by `bilingual-boq-title-ar-wiring` §8.3). §7's **197/197 across 16 modules** remains the correct historical result for this work item's own completion run. |

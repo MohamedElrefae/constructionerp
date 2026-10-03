@@ -172,3 +172,9 @@ this work item's own evidence logs are unchanged.
 | Artefact | Why it moved |
 |---|---|
 | `scripts/run_bilingual_regression_matrix.sh` | shared runner expanded to **16 modules / 197 tests** |
+
+## 11. Amendments (2026-10-04, canonical matrix integration)
+
+| Artefact | Why it moved |
+|---|---|
+| `scripts/run_bilingual_regression_matrix.sh` | shared runner expanded to **17 modules / 209 tests** (`test_boq_link_queries` promoted into the runner) |
