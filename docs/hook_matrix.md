@@ -96,12 +96,49 @@ Complete reference of all Frappe hooks used by Construction Theming System.
 |------|-------|---------|---------|
 | `boot_session` | construction.api.theme_api.add_theme_to_boot | Every page load | Injects theme config into boot session |
 | `extend_bootinfo` | construction.boot.extend_bootinfo | Every page load | Extends bootinfo with user scope context |
-| `after_install` | construction.install.create_system_themes | App installation | Initializes system themes |
-| `after_migrate[0]` | construction.api.theme_api.whitelabel_patch | After bench migrate | Cleans Frappe branding |
-| `after_migrate[1]` | construction.install.create_system_themes | After bench migrate | Ensures 4 system themes exist |
-| `after_migrate[2]` | construction.install.setup_workspace_sidebar | After bench migrate | Reconciles sidebar items |
-| `after_migrate[3]` | construction.install.setup_construction_workspace_page | After bench migrate | Configures workspace page |
-| `after_migrate[4]` | construction.install.verify_workspace_visibility | After bench migrate | Verifies workspace access |
+
+Both lifecycle hooks are declared as **ordered lists** in `hooks.py`; the index shown is the
+authoritative execution order. Every entry below is enumerated directly from `hooks.py`.
+
+### `after_install` (13 handlers)
+
+| Index | Handler | Purpose |
+|-------|---------|---------|
+| `[0]` | construction.install.setup_website_branding | Applies website branding defaults |
+| `[1]` | construction.install.create_system_themes | Ensures system themes exist |
+| `[2]` | construction.install.setup_boq_integration | Registers BOQ integration configuration |
+| `[3]` | construction.install.setup_branch_company_field | Adds the branch/company custom field |
+| `[4]` | construction.install.setup_variation_order_custom_field | Adds the variation order custom field |
+| `[5]` | construction.install.setup_erpnext_standard_filters | Seeds ERPNext standard filters |
+| `[6]` | construction.install.fix_select_permissions | Repairs select permission records |
+| `[7]` | construction.install.fix_system_manager_permissions | Repairs System Manager permissions |
+| `[8]` | construction.install.seed_construction_roles | Seeds construction roles |
+| `[9]` | construction.install.seed_form_layout_profiles | Seeds form layout profiles |
+| `[10]` | construction.install.setup_item_construction_fields | Adds Item construction fields |
+| `[11]` | construction.setup.translation_catalog_fields.ensure_translation_identity | Ensures translation identity fields |
+| `[12]` | construction.translation_service.import_released_overrides_hook | Imports released translation overrides |
+
+### `after_migrate` (17 handlers)
+
+| Index | Handler | Purpose |
+|-------|---------|---------|
+| `[0]` | construction.api.theme_api.whitelabel_patch | Cleans Frappe branding |
+| `[1]` | construction.install.setup_website_branding | Applies website branding defaults |
+| `[2]` | construction.install.create_system_themes | Ensures 4 system themes exist |
+| `[3]` | construction.install.setup_workspace_sidebar | Reconciles sidebar items |
+| `[4]` | construction.install.setup_construction_workspace_page | Configures the workspace page |
+| `[5]` | construction.install.verify_workspace_visibility | Verifies workspace access |
+| `[6]` | construction.install.setup_boq_integration | Registers BOQ integration configuration |
+| `[7]` | construction.install.setup_branch_company_field | Adds the branch/company custom field |
+| `[8]` | construction.install.setup_variation_order_custom_field | Adds the variation order custom field |
+| `[9]` | construction.install.setup_erpnext_standard_filters | Seeds ERPNext standard filters |
+| `[10]` | construction.install.fix_select_permissions | Repairs select permission records |
+| `[11]` | construction.install.fix_system_manager_permissions | Repairs System Manager permissions |
+| `[12]` | construction.install.seed_construction_roles | Seeds construction roles |
+| `[13]` | construction.install.seed_form_layout_profiles | Seeds form layout profiles |
+| `[14]` | construction.install.setup_item_construction_fields | Adds Item construction fields |
+| `[15]` | construction.setup.translation_catalog_fields.ensure_translation_identity | Ensures translation identity fields |
+| `[16]` | construction.translation_service.import_released_overrides_hook | Imports released translation overrides |
 
 ---
 
@@ -216,24 +253,32 @@ Theme Switch
             └── set_user_theme() [API]
 
 Migration
-    └── after_migrate[]
-        ├── whitelabel_patch (cleans Frappe branding)
-        ├── create_system_themes (ensures 4 system themes exist)
-        ├── setup_workspace_sidebar (reconciles sidebar items)
-        ├── setup_construction_workspace_page (placeholder)
-        └── verify_workspace_visibility (health check)
+    └── after_migrate[]  (17 handlers — enumerated in "Application Lifecycle & Session Hooks")
+        ├── [0] whitelabel_patch
+        ├── [1] setup_website_branding
+        └── ... see after_migrate table for the full ordered list
 ```
 
 ---
 
 ## Synchronization Status
 
-All hook sections are synchronized against `construction/hooks.py`:
-- `override_whitelisted_methods`: 4 active entries documented.
-- `override_doctype_class`: 1 active entry documented.
-- `doc_events`: 30 active DocType registrations (wildcard `*`, 8 transactional doctypes, 1 BOQ lifecycle, 19 bilingual masters, 1 payment term) documented.
-- `permission_query_conditions` and `jinja.filters` documented.
-- Asset Inclusion tables synchronized (26 JS, 6 CSS, web includes).
+Sections below were checked against `construction/hooks.py`. The counts reflect hooks
+**present in `hooks.py` and listed in this document** — not an assertion that every
+hook in the app is covered:
+
+- `override_whitelisted_methods`: 4 of 4 entries (source and target both matched).
+- `override_doctype_class`: 1 of 1 entry.
+- `doc_events`: 30 of 30 DocType keys (wildcard `*`, 8 transactional doctypes, 1 BOQ
+  lifecycle, 19 bilingual masters, 1 payment term) with every handler string matched.
+- `permission_query_conditions`: 1 of 1. `jinja.filters`: 1 of 1. `extend_bootinfo`: present.
+- `after_install`: all 13 handlers enumerated. `after_migrate`: all 17 handlers enumerated,
+  with execution order taken from the list order in `hooks.py`.
+- Asset Inclusion tables (26 JS, 6 CSS, web includes) synchronized as of `46aa201`.
+
+**Verification basis:** handler names and indices are machine-compared against `hooks.py`.
+The **Purpose** column is a human paraphrase of the handler name and is *not* derived from
+`hooks.py` — treat it as descriptive, not authoritative.
 
 ---
 
@@ -249,6 +294,7 @@ All hook sections are synchronized against `construction/hooks.py`:
 | 2026-05-05 | Added print_css, pdf_header/footer_html |
 | 2026-10-03 | Synchronized Asset Inclusion tables with hooks.py (26 JS, 6 CSS, web includes) |
 | 2026-10-03 | Synchronized Scope B: documented all 4 override_whitelisted_methods, override_doctype_class, query/Jinja filters, and 30 doc_events registrations |
+| 2026-10-03 | Corrected lifecycle tables: `after_install` 1 → 13 handlers, `after_migrate` 5 → 17 handlers with right indices; softened Synchronization Status to machine-verified scope |
 
 ---
 
