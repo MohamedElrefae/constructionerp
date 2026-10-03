@@ -1,7 +1,8 @@
 # Scope & Architectural Blueprint — Narrative Unicode Policy
 
 **Work item:** `narrative-unicode-policy`
-**Status:** `OPEN` — design cycle active; design-only (implementation opens as a successor work item)
+**Status:** `APPROVED` — design complete; approved by owner in session. Implementation
+opens as a successor work item with its own causal evidence pipeline.
 **Base commit:** `46aa201` (develop clean; record defects resolved; 61/61 git-blob digests)
 **Date:** 2026-10-03
 **Authority:** Programme architectural governance under Plan §3.2; owner instruction in session
@@ -107,9 +108,24 @@ cycle must specify but not implement. Requirements:
 - Entities must be decoded before the control-character check, otherwise
   `&#x202E;` (RLO) bypasses it while the literal character is caught.
 
-**Open question for the design:** whether Tier 2 validation runs on save (hook),
-on render (template), or both. Save-time alone leaves legacy rows unvalidated;
-render-time alone trusts the database.
+**Decision (§2.1, approved): both — defense in depth, split by responsibility.**
+
+1. **Save-time (`validate` hook)** is the authoritative security gate. It strips
+   executable surfaces, decodes entities, then validates the extracted text nodes with
+   `is_safe_narrative_text` and fails closed on Trojan Source overrides.
+2. **Render-time (Jinja filters / print helpers)** is the layout isolation layer. It
+   wraps mixed LTR/RTL runs in `<bdi>` so trailing punctuation and digits cannot bleed
+   across a boundary. It performs **no security validation** — that is already settled
+   at save time.
+
+Save-time alone would leave legacy rows unvalidated; render-time alone would trust the
+database. The split assigns exactly one responsibility to each layer.
+
+**Audit basis:** all **29 populated narrative rows** across 11 fields were scanned for
+bidi overrides/isolates (`[\u202a-\u202e\u2066-\u2069]`), direction marks
+(`U+200E`/`U+200F`/`U+061C`), C0/C1 controls, and numeric entity encodings
+(`&#x202E;`): **0 findings**. There is no legacy contamination to migrate, so
+save-time validation can be added without a backfill or a data-repair pass.
 
 ### 2.2 Schema invariant (ratified, currently satisfied)
 
@@ -175,4 +191,5 @@ Until a successor work item is approved and merged:
 | `boq_print_format.html:194` | mixed join without `<bdi>` |
 | `boq_item.json`, `boq_structure.json:132`, `boq_cost_analysis.json:157` | schema census |
 | live population probe | §1.3 counts |
+| narrative contamination audit | 29 populated rows / 11 fields, 0 bidi, 0 marks, 0 controls, 0 entities |
 | source bidi sweep | 0 literals, 54 escapes / 13 files, 0 `<bdi>` |
