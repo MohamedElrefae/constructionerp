@@ -1,0 +1,49 @@
+{
+  "artefacts": {
+    "CANARY-DISPOSITION.md": "85307cd58f8d6ffa117de1433fc19e2346fb84ebe3770ded596321aa4df767de",
+    "SCOPE.md": "0129a409be3723817693f159e2b0250187033c97f15b1d230f66cfa178509442",
+    "asset-category-p95-measurement.json": "35196056dec745e4117093e5bc1b0267bdb53e9a3cb6a6248c8ea00eb91667ab",
+    "asset-category-pilot-tests.log": "1c8b3e857287c63c2a3b189d47db34ecca1d29360cbeaf469db467a7fc4e175f",
+    "scripts/measure_asset_category_p95.py": "4969ea9ee4351097cb7dbfc74165e396269f88d1083b75845a3b9845e11743fb"
+  },
+  "base_commit": "04dfe35f1849efbca7773bd52a13aa5bd3689c63",
+  "branch": "feature/bilingual-asset-category-master",
+  "canary_disposition": {
+    "artifact_modified_by_this_work_item": false,
+    "document": "docs/ai/work-items/bilingual-asset-category-master/evidence/CANARY-DISPOSITION.md",
+    "document_sha256": "85307cd58f8d6ffa117de1433fc19e2346fb84ebe3770ded596321aa4df767de",
+    "latency_gate": "Asset Category master MEASURED (1.39x, 0.626ms P95) and compliant with Two-Tier Bilingual Search SLA (<= 1.50ms universal ceiling; <= 1.50x Tier 2B sub-millisecond trade-off band)",
+    "status": "COMPLIANT_WITH_TWO_TIER_SLA"
+  },
+  "latency_measurement": {
+    "absolute_p95_ms": {
+      "Asset Category": 0.626
+    },
+    "artefact": "docs/ai/work-items/bilingual-asset-category-master/evidence/asset-category-p95-measurement.json",
+    "disposition": "MEASURED and compliant with Two-Tier Bilingual Search SLA",
+    "fixture_prefix": "CT-AC-",
+    "fixtures_count": 12,
+    "harness": "docs/ai/work-items/bilingual-asset-category-master/evidence/scripts/measure_asset_category_p95.py",
+    "harness_sha256": "4969ea9ee4351097cb7dbfc74165e396269f88d1083b75845a3b9845e11743fb",
+    "leftover_fixtures": 0,
+    "match_sets_equal": true,
+    "ratio": 1.388,
+    "samples": 50,
+    "sha256": "35196056dec745e4117093e5bc1b0267bdb53e9a3cb6a6248c8ea00eb91667ab",
+    "warmup": 5
+  },
+  "out_of_scope_respected": [
+    "no orchestrator/ modification",
+    "no apps/frappe or apps/erpnext modification",
+    "all foreign work item evidence untouched",
+    "Asset entity deferred to protect Wave 2b transactional boundary",
+    "Asset Category Account and Asset Finance Book child tables remain unmapped"
+  ],
+  "primary_invariant": {
+    "bilingual_service_py_diff_lines": 0,
+    "claim": "Asset Category master required zero modifications to bilingual_service.py and search.py",
+    "enforced_by_test": "construction.tests.test_bilingual_asset_category_pilot.test_zero_service_edits_guard",
+    "reference_commit": "04dfe35f1849efbca7773bd52a13aa5bd3689c63",
+    "search_py_diff_lines": 0
+  }
+}
