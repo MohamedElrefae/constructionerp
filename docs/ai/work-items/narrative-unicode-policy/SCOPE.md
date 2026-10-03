@@ -49,23 +49,65 @@ whitelist) is complete and tested. The open work is deliverables 2–4.
 Census across the 19 active masters and their children (`Small Text`, `Text`,
 `Text Editor`, `Long Text`, `HTML Editor`), with live population:
 
+Complete census of the **10 doctypes** carrying narrative fields — 9 of the 19
+registry masters plus the non-registry `Payment Term` — parents **and** child
+tables (this section was previously an 11-field sample; corrected below):
+
 | DocType | Field | Type | Populated |
 |---|---|---|---|
-| `Item` | `description` | Text Editor (HTML) | **20 / 43** |
-| `Payment Terms Template Detail` | `description` | Small Text | **4 / 4** |
+| `Item` | `description` | Text Editor | **20 / 43** |
+| `Item` | `customer_code` | Small Text | 0 |
+| `Task` | `description` | Text Editor | 0 / 4 |
+| `Task` | `Task Depends On.subject` | Text | 2 |
+| `Task` | `Task Depends On.project` | Text | 0 |
 | `Project` | `notes` | Text Editor | 1 / 11 |
 | `Project` | `message` | Text | 0 / 11 |
+| `Project` | `Project User.project_status` | Text | 0 |
+| `Employee` | `bio` | Text Editor | 0 / 3 |
+| `Employee` | `current_address` | Small Text | 0 |
+| `Employee` | `permanent_address` | Small Text | 0 |
+| `Employee` | `family_background` | Small Text | 0 |
+| `Employee` | `health_details` | Small Text | 0 |
+| `Employee` | `reason_for_leaving` | Small Text | 0 |
+| `Employee` | `feedback` | Small Text | 0 |
+| `Employee` | `Employee Education.school_univ` | Small Text | 0 |
+| `Employee` | `Employee Education.maj_opt_subj` | Text | 0 |
+| `Employee` | `Employee External Work History.address` | Small Text | 0 |
+| `Customer` | `primary_address` | Text Editor | 0 |
+| `Customer` | `customer_details` | Text | 0 / 12 |
+| `Supplier` | `primary_address` | Text Editor | 0 |
+| `Supplier` | `supplier_details` | Text | 0 / 10 |
 | `BOQ Structure` | `description` | Small Text | 0 / 59 |
 | `BOQ Structure` | `description_ar` | Small Text | **0 / 59** |
-| `Task` | `description` | Text Editor (HTML) | 0 / 4 |
-| `Customer` | `customer_details` | Text | 0 / 12 |
-| `Supplier` | `supplier_details` | Text | 0 / 10 |
-| `Employee` | `bio` | Text Editor | 0 / 3 |
-| `Payment Term` | `description` | Small Text | 4 / 4 |
+| `UOM` | `description` | Small Text | 0 |
+| `Payment Term` | `description` | Small Text | **4 / 4** |
+| `Payment Terms Template` | `Payment Terms Template Detail.description` | Small Text | **4 / 4** |
 
-Two census corrections: `Employee.notes` was listed previously — **the column does not
-exist**; and `BOQ Structure.description_ar` was reported as "59 live rows" — it is
-**0/59 populated** (59 is the table row count).
+*(Child-table rows show a populated count only; denominators are child row counts.)*
+
+**Totals: 27 narrative fields, 31 populated values, 0 contaminated.** The
+contamination sweep tested every populated value across all 27 fields for bidi
+overrides/isolates (`[\u202a-\u202e\u2066-\u2069]`), direction marks
+(`U+200E`/`U+200F`/`U+061C`), C0/C1 controls, and numeric entity encodings
+(`&#x202E;`-style) — **zero findings**. There is no legacy data to migrate.
+
+Four earlier census errors, now corrected:
+1. `Employee.notes` was listed — **the column does not exist**.
+2. `BOQ Structure.description_ar` was reported as "59 live rows" — it is **0/59
+   populated** (59 is the row count).
+3. This section originally listed **11 fields** and reported a 29-row audit; the
+   exhaustive sweep finds **27 fields and 31 populated values**. The missing 16
+   fields are `Item.customer_code`, `Customer`/`Supplier.primary_address`
+   (both Text Editor), 6 more `Employee` plain fields across `Employee Education`
+   and `Employee External Work History`, `Task Depends On.subject`/`project`,
+   `Project.message`, `Project User.project_status`, and `UOM.description`.
+   The conclusion is unchanged — still 0 contaminated.
+4. `UOM` was omitted entirely from the doctype list despite carrying
+   `description` (Small Text). It must be wired like the others.
+
+Note also that **tiers are a property of the field, not the doctype**: `Item`,
+`Task`, `Project`, `Customer`, `Supplier` and `Employee` each carry both Tier 1
+and Tier 2 fields.
 
 Out-of-band surface: `BOQ Cost Analysis` carries a `description_ar` column
 (`boq_cost_analysis.json:157`) but has **0 rows**, and it is outside the 19 masters.
@@ -121,7 +163,8 @@ cycle must specify but not implement. Requirements:
 Save-time alone would leave legacy rows unvalidated; render-time alone would trust the
 database. The split assigns exactly one responsibility to each layer.
 
-**Audit basis:** all **29 populated narrative rows** across 11 fields were scanned for
+**Audit basis:** all **31 populated narrative rows** across 27 fields (10 doctypes,
+parents + children) were scanned for
 bidi overrides/isolates (`[\u202a-\u202e\u2066-\u2069]`), direction marks
 (`U+200E`/`U+200F`/`U+061C`), C0/C1 controls, and numeric entity encodings
 (`&#x202E;`): **0 findings**. There is no legacy contamination to migrate, so
@@ -174,10 +217,13 @@ Until a successor work item is approved and merged:
 1. **No narrative column** may be registered in `bilingual_registry.json`.
 2. **No `_ar_norm` column** may be added to a narrative field.
 3. **No narrative column** may enter any `search.fields` list.
-4. Certified deferred under this document: `Payment Terms Template Detail.description`,
-   `Payment Term.description`, `Task.description`, `BOQ Structure.description`,
-   `BOQ Structure.description_ar`, `Item.description`, `Customer.customer_details`,
-   `Supplier.supplier_details`, `Project.message`, `Project.notes`, `Employee.bio`.
+4. Certified deferred under this document: **all 27 narrative fields enumerated in
+   §1.3**, across `Item`, `Task`, `Project`, `Employee`, `Customer`, `Supplier`,
+   `UOM`, `BOQ Structure`, `Payment Term`, and `Payment Terms Template` (including
+   child tables `Payment Terms Template Detail`, `Employee Education`,
+   `Employee External Work History`, `Task Depends On`, `Project User`).
+   This list is referenced rather than enumerated so it cannot drift from §1.3
+   again.
 
 ---
 
@@ -191,5 +237,5 @@ Until a successor work item is approved and merged:
 | `boq_print_format.html:194` | mixed join without `<bdi>` |
 | `boq_item.json`, `boq_structure.json:132`, `boq_cost_analysis.json:157` | schema census |
 | live population probe | §1.3 counts |
-| narrative contamination audit | 29 populated rows / 11 fields, 0 bidi, 0 marks, 0 controls, 0 entities |
+| narrative contamination audit | 31 populated rows / 27 fields / 10 doctypes, 0 bidi, 0 marks, 0 controls, 0 entities |
 | source bidi sweep | 0 literals, 54 escapes / 13 files, 0 `<bdi>` |

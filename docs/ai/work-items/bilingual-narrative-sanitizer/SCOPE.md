@@ -65,7 +65,7 @@ not depend on `bleach` or `html5lib` directly.
 
 `nh3.clean` removes executables; it has no concept of `U+202E`. A document containing
 a right-to-left override passes Frappe's XSS filter unchanged. The contamination
-audit in the approved design (29 populated rows, 0 findings) confirms nothing is
+audit in the approved design (31 populated rows across 27 fields, 0 findings) confirms nothing is
 currently stored — which is precisely why the gate must be added **now**, before the
 first contaminated value is written.
 
@@ -99,7 +99,7 @@ call is its only gate.
 ### 3.2 Wiring — save-time gate
 
 - Registered through `doc_events` in `construction/hooks.py` under the `validate` hook.
-- **Settled coverage: 9 doctypes carrying 26 narrative fields** (parents + children).
+- **Settled coverage: 10 doctypes carrying 27 narrative fields** (parents + children).
 
 **Tiers are assigned per field, not per doctype — every one of these doctypes is
 mixed-tier**, so a doctype-level tier label would be wrong:
@@ -113,6 +113,7 @@ mixed-tier**, so a doctype-level tier label would be wrong:
 | `Customer` | `primary_address`:2 · `customer_details`:1 |
 | `Supplier` | `primary_address`:2 · `supplier_details`:1 |
 | `BOQ Structure` | `description`:1 · `description_ar`:1 |
+| `UOM` | `description`:1 |
 | `Payment Term` | `description`:1 |
 | `Payment Terms Template` | *(none of its own)* · `Payment Terms Template Detail.description`:1 |
 
@@ -130,11 +131,15 @@ iterates `doc.get_all_children()`, mirroring Frappe's own traversal at
 `Payment Terms Template Detail`, `Employee Education`, `Employee External Work History`,
 `Task Depends On`, `Project User`.
 
-**Measured basis (full sweep of all 26 fields):** 31 populated values, **0**
-contaminated — no bidi overrides/isolates, no direction marks, no C0/C1 controls, no
-numeric entity encodings. The gate can be added with no backfill or data repair.
-(These supersede the 11-field / 29-row figures in `narrative-unicode-policy` §1.3,
-which were an incomplete census.)
+**Measured basis (full sweep of all 27 fields across all 19 registry masters plus
+`Payment Term`):** 31 populated values, **0** contaminated — no bidi
+overrides/isolates, no direction marks, no C0/C1 controls, no numeric entity
+encodings. The gate can be added with no backfill or data repair.
+
+(These figures, and the addition of `UOM` as a tenth doctype, supersede both the
+11-field / 29-row figures in `narrative-unicode-policy` §1.3 and the 9-doctype /
+26-field draft of this section — each corrected against a complete sweep rather
+than a sample.)
 
 ### 3.3 Print isolation — `bdi_join`
 
