@@ -1,6 +1,6 @@
 {
   "artefacts": {
-    "docs/ai/work-items/bilingual-boq-title-ar-wiring/SCOPE.md": "602fa07075daa236bc5b684a11e41216d945a17aff146dcf3a54306721a15a77",
+    "docs/ai/work-items/bilingual-boq-title-ar-wiring/SCOPE.md": "084bce871eda3eec1a9807002c991bc97939132db364cfb62a526f1a78d7130d",
     "docs/ai/work-items/bilingual-boq-title-ar-wiring/evidence/test_boq_link_queries.log": "18a9da5137ae8f3baabb4a9a4b70995c0aaa79d8674db276fa4579fed0361393",
     "docs/ai/work-items/bilingual-boq-title-ar-wiring/evidence/regression-matrix.log": "3ce01c1c6e48e5b4cd3590093666cd3d54b8c37aeb63ad34a399823fd7682b83",
     "docs/ai/work-items/bilingual-boq-title-ar-wiring/evidence/reconciliation.log": "9fb1cacccb62d32126d6f731bea24ea515fb0f79c5ced881c7a6464ae3e1fa50",
@@ -113,6 +113,13 @@
       "from": "37be189a45f5484e79a0f37ea68e711815aa00972f08f39d1503078770b681ed",
       "to": "e4beab7a48e95588da0ba9dd8054b610bfc20974999930d0b592d90ee7d36a8b",
       "reason": "living file; Asset doc_events single-hook registration added by bilingual-asset-master (F1)"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "docs/ai/work-items/bilingual-boq-title-ar-wiring/SCOPE.md",
+      "from": "602fa07075daa236bc5b684a11e41216d945a17aff146dcf3a54306721a15a77",
+      "to": "084bce871eda3eec1a9807002c991bc97939132db364cfb62a526f1a78d7130d",
+      "reason": "SCOPE status line flipped APPROVED -> COMPLETE (implementation merged at dfeace3; evidence pipeline already complete)"
     }
   ]
 }

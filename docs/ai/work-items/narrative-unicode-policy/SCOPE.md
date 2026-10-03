@@ -1,8 +1,9 @@
 # Scope & Architectural Blueprint — Narrative Unicode Policy
 
 **Work item:** `narrative-unicode-policy`
-**Status:** `APPROVED` — design complete; approved by owner in session. Implementation
-opens as a successor work item with its own causal evidence pipeline.
+**Status:** `COMPLETE` — design approved by owner in session (2026-10-03) and **shipped by
+the successor work item `bilingual-narrative-sanitizer`**; this descriptor wrote no code in
+its own cycle and remains the design authority for Tier 1 / Tier 2 / `<bdi>` (see §6).
 **Base commit:** `46aa201` (develop clean; record defects resolved; 61/61 git-blob digests)
 **Date:** 2026-10-03
 **Authority:** Programme architectural governance under Plan §3.2; owner instruction in session
@@ -212,7 +213,9 @@ a successor work item that will carry its own causal evidence pipeline
 
 ## 4. Standing invariant
 
-Until a successor work item is approved and merged:
+The successor work item (`bilingual-narrative-sanitizer`) has merged; it shipped save-time
+validation and render-time isolation, **not** registry access, so the rules below are
+unconditional and remain in force:
 
 1. **No narrative column** may be registered in `bilingual_registry.json`.
 2. **No `_ar_norm` column** may be added to a narrative field.
@@ -239,3 +242,34 @@ Until a successor work item is approved and merged:
 | live population probe | §1.3 counts |
 | narrative contamination audit | 31 populated rows / 27 fields / 10 doctypes, 0 bidi, 0 marks, 0 controls, 0 entities |
 | source bidi sweep | 0 literals, 54 escapes / 13 files, 0 `<bdi>` |
+
+---
+
+## 6. Post-completion amendment (2026-10-04)
+
+The successor this descriptor announced opened as `bilingual-narrative-sanitizer`
+(`COMPLETE`: 20/20 unit tests, 153/153 regression across 12 modules, 19/19 reconciliation)
+and delivered §2.1 and §2.3 in full:
+
+| Design requirement | Delivered at |
+|---|---|
+| Tier 1 plain text, entity decode **before** the control-character check | `narrative_sanitizer.validate_plain_text_narrative` — `html.unescape` (`narrative_sanitizer.py:186`) |
+| Tier 2 HTML, text nodes isolated from tags, entities decoded by the parser | `sanitize_and_validate_html` via `_NarrativeHTMLParser` (`convert_charrefs=True`, `narrative_sanitizer.py:199`) |
+| Render-time `<bdi>` isolation, no security validation | `bdi_join`, registered at `hooks.py:224-226` (`jinja.filters`) |
+| Templates stop hand-assembling direction-sensitive strings | 5 template sites — `boq_print_format.html:137/149/194`, `boq_header_print.html:105`, and siblings (6 `bdi_join` call sites) |
+| Save-time authoritative gate | `validate_narrative_fields`, wired through `hooks.py` `doc_events` for narrative doctypes |
+
+Evidence: `docs/ai/work-items/bilingual-narrative-sanitizer/evidence/MANIFEST.json`.
+
+§4's opening was re-worded from "Until a successor work item is approved and merged" to
+"unconditional", because the successor shipped validation only — the three registry rules
+are unaffected. All three were re-verified on 2026-10-04 against `bilingual_registry.json`
+and the live `v16.localhost` schema:
+
+1. no narrative field appears in any `search.fields` or `arabic_field` (**NONE** across all
+   22 registered masters);
+2. `BOQ Structure.description_ar` exists as a physical column with **no**
+   `description_ar_norm` companion; `Task` carries neither column;
+3. therefore no narrative column entered `search.fields`.
+
+This SCOPE is not pinned by any `MANIFEST.json`, so this amendment required no re-pin.

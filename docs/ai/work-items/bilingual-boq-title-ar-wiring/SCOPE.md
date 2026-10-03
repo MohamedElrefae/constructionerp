@@ -5,7 +5,7 @@
 **Base commit:** `0f5be0d` (develop clean, ADR corrected, 19/19 rows reconcile)
 **Scope:** `boq_link_queries.get_boq_headers` / `get_boq_structures`, `ct_link_control.js`, `hooks.py`
 **Date:** 2026-10-03
-**Status:** APPROVED — Decision §3.1 Option A (Search-only) approved, Decision §3.2 (search_fields untouched) approved
+**Status:** `COMPLETE` — implemented and merged at `dfeace3`; the approved decisions §3.1 Option A (Search-only) and §3.2 (`search_fields` untouched) are as-built
 **Authority:** owner instruction given in session; transcribed by the agent
 
 Follow-up recorded by `bilingual-boq-p95-measurement` §1.2 and re-opened by the owner in
