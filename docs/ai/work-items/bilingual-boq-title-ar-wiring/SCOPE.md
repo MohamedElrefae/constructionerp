@@ -9,9 +9,10 @@
 **Authority:** owner instruction given in session; transcribed by the agent
 
 Follow-up recorded by `bilingual-boq-p95-measurement` §1.2 and re-opened by the owner in
-the session that corrected the ADR. **No file under this work item has been written
-yet** — this descriptor exists so the finding has an owner and a home before it is
-forgotten.
+the session that corrected the ADR. **Implemented and merged at `dfeace3`**: the two
+cascade endpoints now search `title_ar` (raw `txt`) and `title_ar_norm` (normalized
+`txt`), `hooks.py` cache buster advanced to `?v=17`, and the `ct_link_control.js`
+header comment corrected to match the code.
 
 ---
 

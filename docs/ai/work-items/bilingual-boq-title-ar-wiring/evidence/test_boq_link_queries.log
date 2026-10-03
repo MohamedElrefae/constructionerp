@@ -1,0 +1,28 @@
+Starting test run with parameters: site=v16.localhost, app=construction, module=construction.tests.test_boq_link_queries, verbose=False, tests=(), force=False, profile=False, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+View detailed logs (using --verbose): /home/mohamed/frappe-bench/logs/frappe.testing.log
+
+Running 12 old-frappe-test-class-category tests for construction
+
+construction.tests.test_boq_link_queries.TestBOQLinkQueries
+   [32m ✔ [0m test_boq_header_arabic_exact_and_normalized_search
+   [32m ✔ [0m test_boq_header_query_applies_explicit_allowed_status_filter
+   [32m ✔ [0m test_boq_header_query_enforces_project_scope_without_implicit_status_filter
+   [32m ✔ [0m test_boq_header_scope_default_respects_explicit_project
+       ▸  /home/mohamed/frappe-bench/apps/frappe/frappe/model/qb_query.py:153: V17FrappeDeprecationWarning: This codepath was marked (DATE: 2024-01-01) deprecated for removal (from v17 onwards); note:
+       ▸   The 'limit_page_length' parameter is deprecated. Use 'limit' instead.
+       ▸  
+       ▸    deprecation_warning(
+   [32m ✔ [0m test_boq_structure_and_item_queries_follow_scope_chain
+   [32m ✔ [0m test_boq_structure_arabic_exact_and_normalized_search
+   [32m ✔ [0m test_boq_structure_query_requires_header_when_requested
+   [32m ✔ [0m test_boq_structure_query_returns_all_leaf_nodes_for_selected_header
+   [32m ✔ [0m test_closed_row_gate_returns_no_boq_dropdown_options
+   [32m ✔ [0m test_english_search_invariance_and_column_shape
+   [32m ✔ [0m test_scope_project_query_returns_current_scope_project
+   [32m ✔ [0m test_scope_token_endpoint_matches_service_token
+
+
+----------------------------------------------------------------------
+Ran 12 tests in 1.232s
+
+OK

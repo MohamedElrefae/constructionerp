@@ -1,7 +1,7 @@
 {
   "artefacts": {
-    "docs/ai/work-items/bilingual-boq-title-ar-wiring/SCOPE.md": "6ea0f56a7273e4759da053c579ea337b55b7a40845b4e261c089927b5b4514b1",
-    "docs/ai/work-items/bilingual-boq-title-ar-wiring/evidence/test_boq_link_queries.log": "d18beff50d45edfea5b6c52dde71c4deed0d7fe22e691d0164ad7f2e04fecbe4",
+    "docs/ai/work-items/bilingual-boq-title-ar-wiring/SCOPE.md": "d5dfacdd143906970f385f37b5c2e009e45994685cdf5a873a351061fcccf0d9",
+    "docs/ai/work-items/bilingual-boq-title-ar-wiring/evidence/test_boq_link_queries.log": "18a9da5137ae8f3baabb4a9a4b70995c0aaa79d8674db276fa4579fed0361393",
     "docs/ai/work-items/bilingual-boq-title-ar-wiring/evidence/regression-matrix.log": "3ce01c1c6e48e5b4cd3590093666cd3d54b8c37aeb63ad34a399823fd7682b83",
     "docs/ai/work-items/bilingual-boq-title-ar-wiring/evidence/reconciliation.log": "9fb1cacccb62d32126d6f731bea24ea515fb0f79c5ced881c7a6464ae3e1fa50",
     "construction/api/boq_link_queries.py": "cdb3b66370139c814c068ae63ba8baa2aab37c15eb8e6e7a5ac1ae717f8ae3ba",
