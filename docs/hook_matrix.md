@@ -23,40 +23,56 @@ Complete reference of all Frappe hooks used by Construction Theming System.
 
 | Hook | Path | Version | Size |
 |------|------|---------|------|
-| app_include_js[0] | /assets/construction/js/print_settings_dialog.js | - | 22KB |
-| app_include_js[1] | /assets/construction/js/construction_export_menu.js | - | 5.7KB |
-| app_include_js[2] | /assets/construction/js/theme_patch.js | ?v=9 | 7KB |
-| app_include_js[3] | /assets/construction/js/theme_loader.js | ?v=11 | 16KB |
-| app_include_js[4] | /assets/construction/js/searchable_dropdown/utils.js | - | - |
-| app_include_js[5] | /assets/construction/js/searchable_dropdown/searchable_dropdown.js | - | - |
-| app_include_js[6] | /assets/construction/js/searchable_dropdown/config/journal_entry.js | - | - |
-| app_include_js[7] | /assets/construction/js/searchable_dropdown/config/sales_invoice.js | - | - |
-| app_include_js[8] | /assets/construction/js/searchable_dropdown/config/customer_supplier.js | - | - |
+| app_include_js[0] | /assets/construction/js/boq_export_columns.js | ?v=1 | 4.2KB |
+| app_include_js[1] | /assets/construction/js/print_settings_dialog.js | - | 23.0KB |
+| app_include_js[2] | /assets/construction/js/construction_export_menu.js | - | 5.9KB |
+| app_include_js[3] | /assets/construction/js/generic_export_menu.js | ?v=1 | 14.2KB |
+| app_include_js[4] | /assets/construction/js/theme_loader_v24.js | ?v=2.6.1 | 33.7KB |
+| app_include_js[5] | /assets/construction/js/typography_settings.js | ?v=21 | 29.7KB |
+| app_include_js[6] | /assets/construction/js/searchable_dropdown/utils.js | - | 2.6KB |
+| app_include_js[7] | /assets/construction/js/searchable_dropdown/searchable_dropdown.js | - | 4.2KB |
+| app_include_js[8] | /assets/construction/js/overrides/ct_select_control.js | ?v=2 | 13.0KB |
+| app_include_js[9] | /assets/construction/js/overrides/ct_link_control.js | ?v=17 | 23.2KB |
+| app_include_js[10] | /assets/construction/js/theme_loader_v16.js | ?v=2 | 834B |
+| app_include_js[11] | /assets/construction/js/scope_context.js | ?v=3 | 11.0KB |
+| app_include_js[12] | /assets/construction/js/frappe_compat_patches.js | ?v=2 | 6.8KB |
+| app_include_js[13] | /assets/construction/js/scope_context_ui.js | ?v=5 | 9.0KB |
+| app_include_js[14] | /assets/construction/js/scope_context_list_filter.js | ?v=3 | 4.1KB |
+| app_include_js[15] | /assets/construction/js/scope_context_form_defaults.js | ?v=3 | 2.3KB |
+| app_include_js[16] | /assets/construction/js/vfc_config.js | ?v=1 | 749B |
+| app_include_js[17] | /assets/construction/js/scope_context_report_filters.js | ?v=4 | 13.8KB |
+| app_include_js[18] | /assets/construction/js/ct_list_view_config.js | ?v=1 | 3.5KB |
+| app_include_js[19] | /assets/construction/js/sidebar_accordion.js | ?v=1 | 1.0KB |
+| app_include_js[20] | /assets/construction/js/translation_list_tools.js | ?v=6 | 8.4KB |
+| app_include_js[21] | /assets/construction/js/boq_filters.js | ?v=8 | 21.2KB |
+| app_include_js[22] | /assets/construction/js/filter_fix.js | ?v=11 | 21.6KB |
+| app_include_js[23] | /assets/construction/js/native_frappe_controls_compat.js | ?v=9 | 20.5KB |
+| app_include_js[24] | /assets/construction/js/vite_layout_controls.js | ?v=1.21 | 68.5KB |
+| app_include_js[25] | /assets/construction/js/vfc_layout_engine.js | ?v=1.44 | 48.5KB |
 
 ### CSS (Backend - Logged In Users)
 
-| Hook | Path | Version | Purpose |
-|------|------|---------|---------|
-| app_include_css[0] | /assets/construction/css/modern_theme_dark.css | ?v=3 | Dark theme styles |
-| app_include_css[1] | /assets/construction/css/modern_theme_light.css | ?v=3 | Light theme styles |
-| app_include_css[2] | /assets/construction/css/modern_theme_tokens.css | ?v=4 | CSS variables |
-| app_include_css[3] | /assets/construction/css/modern_theme_base.css | ?v=6 | Layout fixes |
-| app_include_css[4] | /assets/construction/css/modern_theme_components_extra.css | ?v=1 | Extra components |
-| app_include_css[5] | /assets/construction/css/searchable_dropdown.css | - | Dropdown styling |
+| Hook | Path | Version | Size |
+|------|------|---------|------|
+| app_include_css[0] | /assets/construction/css/modern_theme.css | ?v=2.5.8 | 142.2KB |
+| app_include_css[1] | /assets/construction/css/scope_context.css | ?v=2 | 1.0KB |
+| app_include_css[2] | /assets/construction/css/vite_extensions.css | ?v=1.3 | 2.5KB |
+| app_include_css[3] | /assets/construction/css/vite_form_override.css | ?v=1.5 | 26.3KB |
+| app_include_css[4] | /assets/construction/css/vite_list_override.css | ?v=1.3 | 10.6KB |
+| app_include_css[5] | /assets/construction/css/vfc_sections.css | ?v=1.6 | 10.6KB |
 
 ### JavaScript (Frontend - Login Page)
 
-| Hook | Path | Purpose |
-|------|------|---------|
-| web_include_js | /assets/construction/js/login_theme_toggle.js | Login page theme toggle |
+| Hook | Path | Version | Size |
+|------|------|---------|------|
+| web_include_js | /assets/construction/js/theme_loader_v24.js | ?v=2.6.1 | 33.7KB |
 
 ### CSS (Frontend - Login Page)
 
-| Hook | Path | Purpose |
-|------|------|---------|
-| web_include_css[0] | /assets/construction/css/login_theme.css | Login base styles |
-| web_include_css[1] | /assets/construction/css/login_theme_light.css | Login light theme |
-| web_include_css[2] | /assets/construction/css/email_theme.css | Email template styles |
+| Hook | Path | Version | Size |
+|------|------|---------|------|
+| web_include_css[0] | /assets/construction/css/modern_theme.css | ?v=2.5.8 | 142.2KB |
+| web_include_css[1] | /assets/construction/css/email_theme.css | - | 1.7KB |
 
 ---
 
@@ -147,6 +163,14 @@ Migration
 
 ---
 
+## Known Gaps (Scope B Follow-Up)
+
+The following sections reflect early-stage documentation and require complete regeneration against `hooks.py`:
+- `override_whitelisted_methods`: `hooks.py` defines 4 entries (including `get_all_tags` and `get_tags`), whereas Section "Override Hooks" currently documents only 2.
+- `doc_events`: `hooks.py` defines 29 document lifecycle hooks (validations, custom status transitions, and bilingual policies), which are currently unlisted in Section "Event Hooks".
+
+---
+
 ## Version History
 
 | Date | Hook Changes |
@@ -157,7 +181,8 @@ Migration
 | 2026-05-01 | Added brand_html, website_context |
 | 2026-05-03 | Bumped version strings v=120 for theme fixes |
 | 2026-05-05 | Added print_css, pdf_header/footer_html |
+| 2026-10-03 | Synchronized Asset Inclusion tables with hooks.py (26 JS, 6 CSS, web includes) |
 
 ---
 
-*Last Updated: 2026-05-05*
+*Last Updated: 2026-10-03*
