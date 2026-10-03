@@ -1,7 +1,7 @@
 # Architectural Decision Record — Two-Tier Bilingual Search SLA
 
 **Status:** APPROVED (owner decision, 2026-10-02)
-**Applies to:** all twelve active bilingual masters
+**Applies to:** all active bilingual masters
 **Authority:** owner directive, transcribed into repository governance
 **Supersedes:** the single relative ceiling in
 `erp-arabic-bilingual-data/evidence/raw-logs/stage3/p95-measurement.json` (`<= baseline * 1.10`)
@@ -63,21 +63,25 @@ latency.
 Tier 2 never relaxes Tier 1. A master may satisfy its relative band and still breach the
 absolute ceiling, which fails the programme.
 
-## 4. Measured state — all twelve masters
+## 4. Measured state — active masters
 
 Derived from the committed evidence artefacts and re-verified at this commit.
 
 | DocType | baseline P95 | governed P95 | ratio | tier | relative gate | absolute |
 |---|---|---|---|---|---|---|
 | Account | 1.322 ms | 1.482 ms | 1.1210 | 2A | 1.15x OK | OK |
-| Customer Group | 0.444 ms | 0.617 ms | 1.3896 | 2B | 1.50x OK | OK |
-| Customer | 0.487 ms | 0.686 ms | 1.4086 | 2B | 1.50x OK | OK |
+| Asset Category | 0.451 ms | 0.626 ms | 1.3880 | 2B | 1.50x OK | OK |
 | Cost Center | 0.558 ms | 0.811 ms | 1.4534 | 2B | 1.50x OK | OK |
+| Customer | 0.487 ms | 0.686 ms | 1.4086 | 2B | 1.50x OK | OK |
+| Customer Group | 0.444 ms | 0.617 ms | 1.3896 | 2B | 1.50x OK | OK |
+| Department | 0.623 ms | 0.830 ms | 1.3327 | 2B | 1.50x OK | OK |
+| Employee | 0.569 ms | 0.808 ms | 1.4200 | 2B | 1.50x OK | OK |
 | Item | 0.767 ms | 1.114 ms | 1.4524 | 2B | 1.50x OK | OK |
 | Item Group | 0.440 ms | 0.645 ms | 1.4659 | 2B | 1.50x OK | OK |
 | Project | 0.544 ms | 0.730 ms | 1.3419 | 2B | 1.50x OK | OK |
 | Supplier | 0.480 ms | 0.675 ms | 1.4063 | 2B | 1.50x OK | OK |
 | Supplier Group | 0.438 ms | 0.620 ms | 1.4155 | 2B | 1.50x OK | OK |
+| Task | 0.466 ms | 0.654 ms | 1.4034 | 2B | 1.50x OK | OK |
 | Territory | 0.445 ms | 0.622 ms | 1.3978 | 2B | 1.50x OK | OK |
 | UOM (253 rows) | 0.960 ms | 1.416 ms | 1.4750 | 2B | 1.50x OK | OK |
 | Warehouse | 0.595 ms | 0.779 ms | 1.3092 | 2B | 1.50x OK | OK |
@@ -98,7 +102,7 @@ Derived from the committed evidence artefacts and re-verified at this commit.
 ## 6. Known gap
 
 Tier 2B is **documented, not test-enforced**. Only Tier 2A has a test
-(`test_comparative_p95_artifact_bound_and_gate`); the eleven Tier 2B masters are governed by
+(`test_comparative_p95_artifact_bound_and_gate`); the Tier 2B masters are governed by
 their committed evidence manifests. A future wave that regresses `Item Group` beyond 1.50x
 would not fail any suite — it would require re-reading the artefacts.
 
@@ -113,3 +117,7 @@ That is follow-up work and is not blocked by this ADR.
 | `erp-arabic-bilingual-data/.../stage3/p95-measurement.json` | preserved Stage-3 baseline, `n=50`, superseded not overwritten |
 | `bilingual-wave1-masters/evidence/wave1-p95-measurement.json` | six Wave 1 masters |
 | `bilingual-wave2a-classification-masters/evidence/wave2a-p95-measurement.json` | five Wave 2a masters |
+| `bilingual-employee-master/evidence/employee-p95-measurement.json` | Employee master |
+| `bilingual-department-master/evidence/department-p95-measurement.json` | Department master (`n=100` convergent mean) |
+| `bilingual-task-master/evidence/task-p95-measurement.json` | Task master |
+| `bilingual-asset-category-master/evidence/asset-category-p95-measurement.json` | Asset Category master |
