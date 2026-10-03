@@ -133,12 +133,25 @@
 <body>
     <div class="header">
         <h1>{{ labels["Bill of Quantities"] | e }}</h1>
+        {% if is_bilingual_print and header.title_ar %}
+        <h2>{{ header.title | e }} / {{ header.title_ar | e }}</h2>
+        {% elif is_arabic and header.title_ar %}
+        <h2>{{ header.title_ar | e }}</h2>
+        {% else %}
         <h2>{{ header.title | e }}</h2>
+        {% endif %}
         <div class="header-info">
             <table>
                 <tr>
                     <td>
-                        <span class="label">{{ labels["Project"] | e }}:</span> {{ (header.project_name or header.project) | e }}<br>
+                        <span class="label">{{ labels["Project"] | e }}:</span>
+                        {% if is_bilingual_print and header.project_name_ar %}
+                        {{ header.project_name | e }} / {{ header.project_name_ar | e }}
+                        {% elif is_arabic and header.project_name_ar %}
+                        {{ header.project_name_ar | e }}
+                        {% else %}
+                        {{ (header.project_name or header.project) | e }}
+                        {% endif %}<br>
                         <span class="label">{{ labels["BOQ Type"] | e }}:</span> {{ header.boq_type | e }}
                     </td>
                     <td>
@@ -177,7 +190,13 @@
                 <td{% if cell_classes %} class="{{ cell_classes | join(' ') }}"{% endif %}>
                     {# Map column key to node value with appropriate formatting #}
                     {% if key == "title" %}
-                        {{ node.indent }}{{ node.title | e }}
+                        {% if is_bilingual_print and node.title_ar %}
+                            {{ node.indent }}{{ node.title | e }} / {{ node.title_ar | e }}
+                        {% elif is_arabic and node.title_ar %}
+                            {{ node.indent }}{{ node.title_ar | e }}
+                        {% else %}
+                            {{ node.indent }}{{ node.title | e }}
+                        {% endif %}
                     {% elif key == "type" %}
                         {% if node.is_group %}{{ labels["Section"] | e }}{% else %}{{ labels["Item"] | e }}{% endif %}
                     {% elif key in numeric_keys %}

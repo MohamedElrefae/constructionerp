@@ -26,3 +26,4 @@ construction.patches.v9_3.add_wave1_phase2_arabic_fields
 construction.patches.v9_4.add_wave2a_classification_arabic_fields
 construction.patches.v9_5.add_employee_arabic_fields
 construction.patches.v9_6.add_department_arabic_fields
+construction.patches.v9_7.add_boq_arabic_fields
