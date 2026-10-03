@@ -1,0 +1,59 @@
+{
+  "artefacts": {
+    "docs/ai/work-items/bilingual-narrative-sanitizer/SCOPE.md": "56419f956ca14f7bd1319f247f5ff421e88d12401f90a035587f9c0741e1f248",
+    "docs/ai/work-items/bilingual-narrative-sanitizer/evidence/test_bilingual_narrative_sanitizer.log": "ffadc92c9e8a6ae76fc6353c89fd79ef29f48996942b25997ef67d0a92f47596",
+    "docs/ai/work-items/bilingual-narrative-sanitizer/evidence/regression-matrix.log": "adf02e6fa72563242c17cc2628dcb3af02b7560b83ada05a7cd14b7c04bae6f7",
+    "docs/ai/work-items/bilingual-narrative-sanitizer/evidence/reconciliation.log": "9fb1cacccb62d32126d6f731bea24ea515fb0f79c5ced881c7a6464ae3e1fa50",
+    "construction/services/narrative_sanitizer.py": "20f5eff92e2ccf48f706a106048a0309fff8595cfa88aa871bc59493ce71ab4f",
+    "construction/tests/test_bilingual_narrative_sanitizer.py": "66b3308122ffb94d0e3727ed64ea63bdf578ba0aebe202b88f4d4839126b2c81",
+    "construction/tests/test_bilingual_boq_print.py": "c055ecd2cf0307793c60c694606fa3f4d253401c79c12bc31d07efcd021e7a02",
+    "construction/templates/boq_print_format.html": "6729076b9ac48aa85e6d533d6bdb58223a8b4f3180bd9094c99bbf1984051e72",
+    "construction/hooks.py": "6b30efaea1e9f00ae7a677b71b278c03e32b2a1bf0beedbca0be2364147e7d97"
+  },
+  "base_commit": "38beb35d31026e0afc70dd43e0ccf8de7dc1a222",
+  "branch": "feature/bilingual-narrative-sanitizer",
+  "decisions_settled": {
+    "save_render_split": "Authoritative validation on save (doc_events:validate hook) fail-closed; render isolation via <bdi> and bdi_join Jinja filter",
+    "census_scope": "27 narrative fields across 10 parent doctypes + 5 child tables, 31 populated rows audited with 0 legacy contamination",
+    "sanitization_engine": "stdlib html.parser with convert_charrefs=True, zero external dependencies, entity-decoded validation via read-only is_safe_narrative_text"
+  },
+  "test_results": {
+    "unit_suite": {
+      "module": "construction.tests.test_bilingual_narrative_sanitizer",
+      "tests": 18,
+      "passed": 18,
+      "failed": 0,
+      "log": "docs/ai/work-items/bilingual-narrative-sanitizer/evidence/test_bilingual_narrative_sanitizer.log"
+    },
+    "canonical_matrix": {
+      "modules": 11,
+      "tests": 133,
+      "passed": 133,
+      "failed": 0,
+      "log": "docs/ai/work-items/bilingual-narrative-sanitizer/evidence/regression-matrix.log"
+    },
+    "reconciliation": {
+      "rows_parsed": 19,
+      "sources_located": 19,
+      "mismatched": 0,
+      "unsourced": 0,
+      "result": "PASS",
+      "log": "docs/ai/work-items/bilingual-narrative-sanitizer/evidence/reconciliation.log"
+    }
+  },
+  "primary_invariant": {
+    "claim": "Zero modifications to bilingual_service.py and search.py; zero doctype schema modifications",
+    "reference_commits": [
+      "38beb35d31026e0afc70dd43e0ccf8de7dc1a222",
+      "cbc8d5b",
+      "46aa201",
+      "0f5be0d",
+      "87e88cd",
+      "a7086ef",
+      "2f74193"
+    ],
+    "bilingual_service_py_diff_lines": 0,
+    "search_py_diff_lines": 0,
+    "bilingual_registry_json_diff_lines": 0
+  }
+}

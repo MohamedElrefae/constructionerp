@@ -191,7 +191,7 @@
                     {# Map column key to node value with appropriate formatting #}
                     {% if key == "title" %}
                         {% if is_bilingual_print and node.title_ar %}
-                            {{ node.indent }}{{ node.title | e }} / {{ node.title_ar | e }}
+                            {{ node.indent }}{{ [node.title, node.title_ar] | bdi_join(" / ") }}
                         {% elif is_arabic and node.title_ar %}
                             {{ node.indent }}{{ node.title_ar | e }}
                         {% else %}
