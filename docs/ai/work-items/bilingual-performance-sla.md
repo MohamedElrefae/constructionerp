@@ -63,7 +63,7 @@ latency.
 Tier 2 never relaxes Tier 1. A master may satisfy its relative band and still breach the
 absolute ceiling, which fails the programme.
 
-## 4. Measured state — active masters
+## 4. Measured state — 16 of 18 active masters
 
 Derived from the committed evidence artefacts and re-verified at this commit.
 
@@ -71,6 +71,8 @@ Derived from the committed evidence artefacts and re-verified at this commit.
 |---|---|---|---|---|---|---|
 | Account | 1.322 ms | 1.482 ms | 1.1210 | 2A | 1.15x OK | OK |
 | Asset Category | 0.451 ms | 0.626 ms | 1.3880 | 2B | 1.50x OK | OK |
+| BOQ Header | *unmeasured* | *unmeasured* | — | 2B (prov.) | *unmeasured* | *unmeasured (print focus)* |
+| BOQ Structure | *unmeasured* | *unmeasured* | — | 2B (prov.) | *unmeasured* | *unmeasured (print focus)* |
 | Cost Center | 0.558 ms | 0.811 ms | 1.4534 | 2B | 1.50x OK | OK |
 | Customer | 0.487 ms | 0.686 ms | 1.4086 | 2B | 1.50x OK | OK |
 | Customer Group | 0.444 ms | 0.617 ms | 1.3896 | 2B | 1.50x OK | OK |
@@ -86,7 +88,7 @@ Derived from the committed evidence artefacts and re-verified at this commit.
 | UOM (253 rows) | 0.960 ms | 1.416 ms | 1.4750 | 2B | 1.50x OK | OK |
 | Warehouse | 0.595 ms | 0.779 ms | 1.3092 | 2B | 1.50x OK | OK |
 
-**Zero masters breach their relative gate. Zero breach the absolute ceiling.**
+**16 of 18 active masters measured. Zero measured masters breach their relative gate. Zero breach the absolute ceiling. BOQ Header and BOQ Structure were integrated under print governance verification (`enable_bilingual_boq_print`) and have no comparative P95 harness on record.**
 
 ## 5. Standing decisions
 
