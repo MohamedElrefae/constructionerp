@@ -63,7 +63,7 @@ latency.
 Tier 2 never relaxes Tier 1. A master may satisfy its relative band and still breach the
 absolute ceiling, which fails the programme.
 
-## 4. Measured state — 16 of 18 active masters
+## 4. Measured state — 17 of 19 active masters
 
 Derived from the committed evidence artefacts and re-verified at this commit.
 
@@ -80,6 +80,7 @@ Derived from the committed evidence artefacts and re-verified at this commit.
 | Employee | 0.569 ms | 0.808 ms | 1.4200 | 2B | 1.50x OK | OK |
 | Item | 0.767 ms | 1.114 ms | 1.4524 | 2B | 1.50x OK | OK |
 | Item Group | 0.440 ms | 0.645 ms | 1.4659 | 2B | 1.50x OK | OK |
+| Payment Terms Template | 0.472 ms | 0.655 ms | 1.3877 | 2B | 1.50x OK | OK |
 | Project | 0.544 ms | 0.730 ms | 1.3419 | 2B | 1.50x OK | OK |
 | Supplier | 0.480 ms | 0.675 ms | 1.4063 | 2B | 1.50x OK | OK |
 | Supplier Group | 0.438 ms | 0.620 ms | 1.4155 | 2B | 1.50x OK | OK |
@@ -88,7 +89,7 @@ Derived from the committed evidence artefacts and re-verified at this commit.
 | UOM (253 rows) | 0.960 ms | 1.416 ms | 1.4750 | 2B | 1.50x OK | OK |
 | Warehouse | 0.595 ms | 0.779 ms | 1.3092 | 2B | 1.50x OK | OK |
 
-**16 of 18 active masters measured. Zero measured masters breach their relative gate. Zero breach the absolute ceiling. BOQ Header and BOQ Structure were integrated under print governance verification (`enable_bilingual_boq_print`) and have no comparative P95 harness on record.**
+**17 of 19 active masters measured. Zero measured masters breach their relative gate. Zero breach the absolute ceiling. BOQ Header and BOQ Structure were integrated under print governance verification (`enable_bilingual_boq_print`) and have no comparative P95 harness on record.**
 
 ## 5. Standing decisions
 
@@ -123,3 +124,4 @@ That is follow-up work and is not blocked by this ADR.
 | `bilingual-department-master/evidence/department-p95-measurement.json` | Department master (`n=100` convergent mean) |
 | `bilingual-task-master/evidence/task-p95-measurement.json` | Task master |
 | `bilingual-asset-category-master/evidence/asset-category-p95-measurement.json` | Asset Category master |
+| `bilingual-payment-terms-template-master/evidence/payment-terms-template-p95-measurement.json` | Payment Terms Template master |
