@@ -1,0 +1,55 @@
+{
+  "artefacts": {
+    "CANARY-DISPOSITION.md": "73140c56477a8b7abb7e8ad8c2bce93715d722f307e708ad5437886b11cf1523",
+    "SCOPE.md": "f442b4fafb8c9b2128171ccb056f7e8ab4317f59bdfd18fc6bdb981fc42b3e8c",
+    "boq-header-p95-measurement.json": "0422854c06f577bfe2c2ef658281f786913c1eef33e6e3c0d1e5b519cab440cb",
+    "boq-p95-measurement.log": "83612dbcf8031d1416e38e3d8e88b7b605a959efde37c5c71409a11ce271b1fa",
+    "boq-structure-p95-measurement.json": "a58d9bfb5a246e143b013176be491b229ef80ad358aca307657ee144261bf254",
+    "scripts/measure_boq_p95.py": "bb0f9e1f959158a10a4d772e38824db1ca32d040f0b313a4fbebc02403333050"
+  },
+  "base_commit": "2f74193630f5c1dbe08bb6f2284c85116740c4a4",
+  "branch": "feature/bilingual-boq-p95-measurement",
+  "canary_disposition": {
+    "artifact_modified_by_this_work_item": false,
+    "document": "docs/ai/work-items/bilingual-boq-p95-measurement/evidence/CANARY-DISPOSITION.md",
+    "document_sha256": "73140c56477a8b7abb7e8ad8c2bce93715d722f307e708ad5437886b11cf1523",
+    "latency_gate": "BOQ Header (0.76x, 0.644ms P95) and BOQ Structure (0.77x, 0.757ms P95) MEASURED under n=100 5-round protocol and compliant with Two-Tier Bilingual Search SLA (<= 1.50ms universal ceiling; Tier 2B)",
+    "status": "COMPLIANT_WITH_TWO_TIER_SLA"
+  },
+  "latency_measurement": {
+    "absolute_p95_ms": {
+      "BOQ Header": 0.644,
+      "BOQ Structure": 0.757
+    },
+    "baseline_p95_ms": {
+      "BOQ Header": 0.851,
+      "BOQ Structure": 0.985
+    },
+    "disposition": "MEASURED and compliant with Two-Tier Bilingual Search SLA",
+    "harness": "docs/ai/work-items/bilingual-boq-p95-measurement/evidence/scripts/measure_boq_p95.py",
+    "harness_sha256": "bb0f9e1f959158a10a4d772e38824db1ca32d040f0b313a4fbebc02403333050",
+    "leftover_fixtures": 0,
+    "match_sets_equal": true,
+    "ratios": {
+      "BOQ Header": 0.7568,
+      "BOQ Structure": 0.7685
+    },
+    "rounds": 5,
+    "samples_per_round": 100,
+    "tier": "2B"
+  },
+  "out_of_scope_respected": [
+    "no orchestrator/ modification",
+    "no apps/frappe or apps/erpnext modification",
+    "all foreign work item evidence untouched",
+    "no modification to boq_link_queries.py",
+    "bilingual_registry.json unchanged",
+    "hooks.py unchanged"
+  ],
+  "primary_invariant": {
+    "bilingual_service_py_diff_lines": 0,
+    "claim": "BOQ measurement work item required zero modifications to bilingual_service.py and search.py",
+    "reference_commit": "2f74193630f5c1dbe08bb6f2284c85116740c4a4",
+    "search_py_diff_lines": 0
+  }
+}

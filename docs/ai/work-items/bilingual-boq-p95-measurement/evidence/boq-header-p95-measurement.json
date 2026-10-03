@@ -1,0 +1,69 @@
+{
+ "cleanup": {
+  "created": 12,
+  "leftover": []
+ },
+ "code_hashes": {
+  "bilingual_registry.py": "32a71f658117af16d28b0722939ca45a10cce7b663a5635e748ba538d9bf8b9a",
+  "bilingual_service.py": "cbb37e1577ce280b39936b01bcb341278ed81c03b524b15330003a7446c19012",
+  "boq_link_queries.py": "9a38b12f99a3c467231c3a33cde1c98cf002f26c299d982396fb6d8372ff6917",
+  "search.py": "2f7aa1281228b8576c2d0da4d6a47f6b1dbeaead6d904135da2f9d2a6c8672e5"
+ },
+ "environment": {
+  "db_version": "10.11.14-MariaDB-0ubuntu0.24.04.1",
+  "frappe_version": "16.18.1",
+  "site": "v16.localhost",
+  "user": "Administrator"
+ },
+ "fixture_prefix": "CT-BOQH-",
+ "fixtures_count": 12,
+ "page_length": 20,
+ "recorded_utc": "2026-10-03T18:29:32.101029Z",
+ "result": {
+  "absolute_gate": "OK",
+  "baseline": {
+   "all_rounds_p95_ms": [
+    0.858,
+    0.873,
+    1.176,
+    0.851,
+    0.902
+   ],
+   "match_set_count": 12,
+   "mean_p95_ms": 0.932,
+   "median_ms": 0.815,
+   "p95_ms": 0.851
+  },
+  "baseline_p95_over_bilingual_p95": 1.3214,
+  "bilingual": {
+   "all_rounds_p95_ms": [
+    0.652,
+    0.648,
+    0.874,
+    0.644,
+    0.674
+   ],
+   "match_set_count": 12,
+   "mean_p95_ms": 0.698,
+   "median_ms": 0.616,
+   "p95_ms": 0.644
+  },
+  "bilingual_p95_ratio_of_baseline": 0.7568,
+  "doctype": "BOQ Header",
+  "match_sets_equal": true,
+  "order_balance": "alternating (even pair baseline-first, odd pair bilingual-first); GC paused during timed region",
+  "relative_gate": "1.50x OK",
+  "round_count": 5,
+  "samples_per_round": 100,
+  "tier": "2B",
+  "total_samples_per_side": 500
+ },
+ "rounds": 5,
+ "samples_per_round": 100,
+ "schema": "boq-header-p95-local/v1",
+ "scope": "WORK-ITEM-LOCAL comparative measurement for BOQ Header master bilingual enablement.",
+ "sla_framework": "Two-Tier Bilingual Search SLA (b311377): Universal <= 1.50 ms P95 absolute ceiling; n=100 min-of-rounds",
+ "statistic": "nearest-rank P95 over the best round (min-of-rounds across 5 rounds at n=100); median = mean of middle two",
+ "txt": "CT-BOQH",
+ "warmup": 5
+}
