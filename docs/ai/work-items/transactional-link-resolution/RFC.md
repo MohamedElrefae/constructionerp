@@ -164,8 +164,11 @@ Resolving "Arabic account name → journal entries" therefore requires a **child
 `tabJournal Entry Account` (matches `account`) → `parent` → `tabJournal Entry`.
 
 The parent-level sidecar cannot serve this. Either a child-table variant is scoped, or
-`Journal Entry` is explicitly excluded in v1 with the exclusion recorded. **Decision required
-before implementation.**
+`Journal Entry` is explicitly excluded in v1 with the exclusion recorded.
+
+**Resolved by D2 (ratified 2026-10-03): `Journal Entry` is excluded in v1.** Scope is strictly
+parent-level party links; the child-table leg is recorded as deferred work, not silently
+dropped.
 
 ---
 
@@ -259,7 +262,8 @@ to reproduce a result both paths are defined to disagree on.
 > 4. **Determinism:** repeated evaluation of `G(q)` on an unchanged dataset is identical
 
 Properties 1–2 are provable by construction; 3–4 require measurement. This is a **renegotiation
-of prerequisite 3**, and it is offered as such — the owner must accept or amend it.
+of prerequisite 3** — accepted as ratified under **D3 (2026-10-03)**, which adopts these four
+properties in place of literal set equality.
 
 ### 7.2 Fixture scale (replacing the 253-row UOM class)
 

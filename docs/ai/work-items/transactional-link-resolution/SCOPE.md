@@ -96,7 +96,8 @@ All three required design decisions ratified on 2026-10-03:
 
 | Artefact | State |
 |---|---|
-| `RFC.md` | drafted, `DRAFT — awaiting owner approval` |
-| `SCOPE.md` | this file |
-| Implementation | **not started, not authorised** |
+| `RFC.md` | `APPROVED` (owner decision, 2026-10-03) |
+| `SCOPE.md` | this file — `DESIGN_APPROVED` |
+| Decisions D1–D3 | ratified 2026-10-03 (SCOPE §3) |
+| Implementation | not started; **authorised** to begin per ratified design |
 | Evidence / manifests | none yet — created only after implementation |
