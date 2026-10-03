@@ -1,6 +1,6 @@
 {
   "artefacts": {
-    "docs/ai/work-items/bilingual-narrative-sanitizer/SCOPE.md": "568bdfcaf7c6a22e653baf32634f4e60f2a7f1991814f9e8f515efffda01a30e",
+    "docs/ai/work-items/bilingual-narrative-sanitizer/SCOPE.md": "763da84a2356eff6ae612d5eb4a8d14f21c2c3cf4433055675423ab28af30342",
     "docs/ai/work-items/bilingual-narrative-sanitizer/evidence/test_bilingual_narrative_sanitizer.log": "33c1fd19e28885d3b6bc99d9c8978c1a89ff16ad6e4db81572f27fe7b035de78",
     "docs/ai/work-items/bilingual-narrative-sanitizer/evidence/regression-matrix.log": "de0e8af9da63b2c3273085b45b36ff65189000439b0e57ee9cd91191ebff58c5",
     "docs/ai/work-items/bilingual-narrative-sanitizer/evidence/reconciliation.log": "9fb1cacccb62d32126d6f731bea24ea515fb0f79c5ced881c7a6464ae3e1fa50",
@@ -9,8 +9,8 @@
     "construction/tests/test_bilingual_boq_print.py": "42e05b627e97887a8bbf78844d2fa427e4629ba81930fd5dc15ee9ed527abf2e",
     "construction/templates/boq_print_format.html": "73c5a0a3eafaa9d373b1dccf406320662304ca8d8ccc3edf02b2015e99173eaa",
     "construction/templates/boq_header_print.html": "bf8affc93d6ec53fb473894fb1303b39a0b2e5bc5287b821dc01334b8bf4ec9b",
-    "construction/hooks.py": "6b30efaea1e9f00ae7a677b71b278c03e32b2a1bf0beedbca0be2364147e7d97",
-    "scripts/run_bilingual_regression_matrix.sh": "e93ca1434ac5fcef0c5fa7caef1dbb0109c0184deef671da44462ad410d560b4"
+    "construction/hooks.py": "71e3b32963525a46f7e2e83d42871eb158415e53d51ba4ec523ca760235a5c72",
+    "scripts/run_bilingual_regression_matrix.sh": "0252438c3342d0093cfbd8c8be6e2c7270203d9569ac936e3b04d1449ca224e4"
   },
   "base_commit": "38beb35d31026e0afc70dd43e0ccf8de7dc1a222",
   "branch": "develop",
@@ -57,5 +57,28 @@
     "bilingual_service_py_diff_lines": 0,
     "search_py_diff_lines": 0,
     "bilingual_registry_json_diff_lines": 0
-  }
+  },
+  "amendments": [
+    {
+      "date": "2026-10-03",
+      "artefact": "scripts/run_bilingual_regression_matrix.sh",
+      "from": "e93ca1434ac5fcef0c5fa7caef1dbb0109c0184deef671da44462ad410d560b4",
+      "to": "0252438c3342d0093cfbd8c8be6e2c7270203d9569ac936e3b04d1449ca224e4",
+      "reason": "shared runner expanded to 13 modules / 171 tests by transactional-link-resolution; evidence logs of this work item unchanged (12 modules / 153 tests)"
+    },
+    {
+      "date": "2026-10-03",
+      "artefact": "construction/hooks.py",
+      "from": "6b30efaea1e9f00ae7a677b71b278c03e32b2a1bf0beedbca0be2364147e7d97",
+      "to": "71e3b32963525a46f7e2e83d42871eb158415e53d51ba4ec523ca760235a5c72",
+      "reason": "living file modified by later work items (?v=1 cache buster for searchable_dropdown.js, narrative hooks); evidence logs of this work item unchanged"
+    },
+    {
+      "date": "2026-10-03",
+      "artefact": "docs/ai/work-items/bilingual-narrative-sanitizer/SCOPE.md",
+      "from": "568bdfcaf7c6a22e653baf32634f4e60f2a7f1991814f9e8f515efffda01a30e",
+      "to": "763da84a2356eff6ae612d5eb4a8d14f21c2c3cf4433055675423ab28af30342",
+      "reason": "section 8 amendment note documenting the two re-pins above"
+    }
+  ]
 }

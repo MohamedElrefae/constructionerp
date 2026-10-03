@@ -14,6 +14,7 @@ Covers:
 - Invariant preservation across the triad
 """
 
+import re
 import subprocess
 import unittest
 from pathlib import Path
@@ -27,6 +28,7 @@ from construction.services.transaction_link_search import (
     TRANSACTION_LINK_CONFIG,
     _contains_arabic,
     _native_search_fields,
+    _resolve_master_ids,
     _sanitize_client_filters,
     search_transactions,
     seed_required_targets,
@@ -236,6 +238,41 @@ class TestTriadInvariantGuard(unittest.TestCase):
                     ["git", "diff", c, "--", f], cwd=repo_dir
                 ).decode()
                 self.assertFalse(diff.strip(), f"Invariant diff found vs {c} on {f}")
+
+
+class TestTopKBoundary(unittest.TestCase):
+    def test_preresolution_requests_and_caps_at_top_k(self):
+        """RFC §7.2: pre-resolution requests exactly TOP_K and never returns more."""
+        import construction.services.transaction_link_search as mod
+
+        seen = {}
+
+        def fake_search(*, doctype, txt, page_length=None, **kwargs):
+            seen[doctype] = page_length
+            return [{"value": f"CUST-{i:04d}"} for i in range(TOP_K_MASTER_MATCHES + 5)]
+
+        with patch.object(mod, "searchable_link_search", side_effect=fake_search):
+            ids = mod._resolve_master_ids("Customer", "عميل")
+
+        self.assertEqual(seen.get("Customer"), TOP_K_MASTER_MATCHES)
+        self.assertEqual(len(ids), TOP_K_MASTER_MATCHES, "Over-returning callee not capped")
+
+
+class TestClientServerAllowListDrift(unittest.TestCase):
+    def test_js_transactional_targets_match_server_config(self):
+        """The client routing list must equal the server-authoritative allow-list."""
+        repo_dir = Path(__file__).resolve().parents[2]
+        src = (
+            repo_dir / "construction/public/js/searchable_dropdown/searchable_dropdown.js"
+        ).read_text(encoding="utf-8")
+        match = re.search(r"const transactionalTargets\s*=\s*\[(.*?)\]", src, re.S)
+        self.assertIsNotNone(match, "transactionalTargets array not found in JS")
+        js_targets = set(re.findall(r'"([^"]+)"', match.group(1)))
+        self.assertEqual(
+            js_targets,
+            set(TRANSACTION_LINK_CONFIG),
+            "JS routing list drifted from TRANSACTION_LINK_CONFIG",
+        )
 
 
 if __name__ == "__main__":

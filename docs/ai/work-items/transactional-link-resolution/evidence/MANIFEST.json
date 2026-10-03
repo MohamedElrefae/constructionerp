@@ -1,14 +1,14 @@
 {
   "artefacts": {
-    "docs/ai/work-items/transactional-link-resolution/SCOPE.md": "71253e1dded904cc9a604219d63d1dc59e5fd9e067422243df3fe19895d889b2",
+    "docs/ai/work-items/transactional-link-resolution/SCOPE.md": "02e1f78d80e7e0db69feba8d290147f4ad854d7030a4a674f55dacbad1936919",
     "docs/ai/work-items/transactional-link-resolution/RFC.md": "eecf3dc404681f481c917cc6e613ecb9209bf3ef1753b9ed8b5d07fc68f43ef8",
-    "docs/ai/work-items/transactional-link-resolution/evidence/test_transaction_link_search.log": "93ce775173759a76136ada9a51e954508297994e88364a684c964ad16b7c6257",
-    "docs/ai/work-items/transactional-link-resolution/evidence/regression-matrix.log": "aa494d753be4ab1d203bf9930c5132cef2dfc0be24dbd401a9bb2e43573e9ab1",
+    "docs/ai/work-items/transactional-link-resolution/evidence/test_transaction_link_search.log": "794a700593d033f24183bbd1a8659dc101dde110d19fb5c282b04d0cde19c061",
+    "docs/ai/work-items/transactional-link-resolution/evidence/regression-matrix.log": "caf6b207e0cf4754440cef0c8f484876bd8174090a3b2e56107c842663f957a2",
     "docs/ai/work-items/transactional-link-resolution/evidence/reconciliation.log": "9fb1cacccb62d32126d6f731bea24ea515fb0f79c5ced881c7a6464ae3e1fa50",
-    "construction/services/transaction_link_search.py": "d403b555fe449ad9c63ba55f7f89a125da371293f48a6386eac9661f888cc7ce",
-    "construction/tests/test_transaction_link_search.py": "a46ee85b2bb636e83e87aa8f4aeff3a74134aba95e6f77c7a2e9bff8855a7c87",
+    "construction/services/transaction_link_search.py": "ae483b280a09cba0104d26075cc2ea2513497e51db6690aaa89f274b7bc4491e",
+    "construction/tests/test_transaction_link_search.py": "67c38024be722e41aba7f3bb44f2c746952b3692acb662728b342abc597fe054",
     "construction/public/js/searchable_dropdown/searchable_dropdown.js": "cfca754ee98f35392313271f16848ccc9499d7a98668b7d61c2d3d6863b62fee",
-    "scripts/run_bilingual_regression_matrix.sh": "34044cd0522a3293d96f06fc5104277de5a7c63c752b72462f8506f23d41baa8"
+    "scripts/run_bilingual_regression_matrix.sh": "0252438c3342d0093cfbd8c8be6e2c7270203d9569ac936e3b04d1449ca224e4"
   },
   "base_commit": "28287e5bb23e4c47753ed82de3fa528c8c00fab9",
   "branch": "develop",

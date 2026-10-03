@@ -69,7 +69,7 @@ construction.tests.test_bilingual_account_pilot.TestBilingualAccountPilot
 
 
 ----------------------------------------------------------------------
-Ran 53 tests in 11.354s
+Ran 53 tests in 11.264s
 
 OK
 === MODULE construction.tests.test_bilingual_boq_print ===
@@ -96,7 +96,7 @@ construction.tests.test_bilingual_boq_print.TestBilingualBOQPrint
 
 
 ----------------------------------------------------------------------
-Ran 10 tests in 2.861s
+Ran 10 tests in 2.979s
 
 OK
 === MODULE construction.tests.test_bilingual_data_import ===
@@ -115,7 +115,7 @@ construction.tests.test_bilingual_data_import.TestBilingualDataImport
 
 
 ----------------------------------------------------------------------
-Ran 6 tests in 1.246s
+Ran 6 tests in 1.403s
 
 OK
 === MODULE construction.tests.test_bilingual_wave1_pilot ===
@@ -129,7 +129,7 @@ construction.tests.test_bilingual_wave1_pilot.TestBilingualWave1Pilot
    [32m ✔ [0m test_arabic_edit_rejects_bidi_controls
    [32m ✔ [0m test_norm_field_patch_idempotent_and_reversible
    [32m ✔ [0m test_registry_loads_and_maps_resolved_norm_fields
-   [32m ✔ [0m test_rename_doc_preserves_arabic_and_norm_keys [31m (4.04s)[0m
+   [32m ✔ [0m test_rename_doc_preserves_arabic_and_norm_keys [31m (4.0s)[0m
    [32m ✔ [0m test_search_matches_despite_alef_tatweel_diacritics
        ▸  /home/mohamed/frappe-bench/apps/frappe/frappe/model/qb_query.py:153: V17FrappeDeprecationWarning: This codepath was marked (DATE: 2024-01-01) deprecated for removal (from v17 onwards); note:
        ▸   The 'limit_page_length' parameter is deprecated. Use 'limit' instead.
@@ -140,7 +140,7 @@ construction.tests.test_bilingual_wave1_pilot.TestBilingualWave1Pilot
 
 
 ----------------------------------------------------------------------
-Ran 8 tests in 5.461s
+Ran 8 tests in 5.630s
 
 OK
 === MODULE construction.tests.test_bilingual_wave1_phase2_pilot ===
@@ -160,12 +160,12 @@ construction.tests.test_bilingual_wave1_phase2_pilot.TestBilingualWave1Phase2Pil
        ▸  
        ▸    deprecation_warning(
    [32m ✔ [0m test_server_authoritative_norm_derivation_and_poison_overwritten
-   [32m ✔ [0m test_tree_identity_invariant_and_rename_preservation [31m (4.82s)[0m
+   [32m ✔ [0m test_tree_identity_invariant_and_rename_preservation [31m (4.7s)[0m
    [32m ✔ [0m test_zero_service_edits_guard
 
 
 ----------------------------------------------------------------------
-Ran 8 tests in 6.344s
+Ran 8 tests in 6.095s
 
 OK
 === MODULE construction.tests.test_bilingual_wave2a_pilot ===
@@ -185,12 +185,12 @@ construction.tests.test_bilingual_wave2a_pilot.TestBilingualWave2aPilot
        ▸  
        ▸    deprecation_warning(
    [32m ✔ [0m test_server_authoritative_norm_derivation_and_poison_overwritten
-   [32m ✔ [0m test_tree_identity_invariant_and_rename_preservation [31m (5.35s)[0m
+   [32m ✔ [0m test_tree_identity_invariant_and_rename_preservation [31m (5.22s)[0m
    [32m ✔ [0m test_zero_service_edits_guard
 
 
 ----------------------------------------------------------------------
-Ran 8 tests in 7.220s
+Ran 8 tests in 7.349s
 
 OK
 === MODULE construction.tests.test_bilingual_employee_pilot ===
@@ -215,7 +215,7 @@ construction.tests.test_bilingual_employee_pilot.TestBilingualEmployeePilot
 
 
 ----------------------------------------------------------------------
-Ran 8 tests in 4.083s
+Ran 8 tests in 4.140s
 
 OK
 === MODULE construction.tests.test_bilingual_department_pilot ===
@@ -240,7 +240,7 @@ construction.tests.test_bilingual_department_pilot.TestBilingualDepartmentPilot
 
 
 ----------------------------------------------------------------------
-Ran 8 tests in 2.152s
+Ran 8 tests in 2.259s
 
 OK
 === MODULE construction.tests.test_bilingual_task_pilot ===
@@ -265,7 +265,7 @@ construction.tests.test_bilingual_task_pilot.TestBilingualTaskPilot
 
 
 ----------------------------------------------------------------------
-Ran 8 tests in 1.404s
+Ran 8 tests in 1.549s
 
 OK
 === MODULE construction.tests.test_bilingual_asset_category_pilot ===
@@ -290,7 +290,7 @@ construction.tests.test_bilingual_asset_category_pilot.TestBilingualAssetCategor
 
 
 ----------------------------------------------------------------------
-Ran 8 tests in 1.619s
+Ran 8 tests in 1.596s
 
 OK
 === MODULE construction.tests.test_bilingual_payment_terms_template_pilot ===
@@ -315,7 +315,7 @@ construction.tests.test_bilingual_payment_terms_template_pilot.TestBilingualPaym
 
 
 ----------------------------------------------------------------------
-Ran 8 tests in 1.684s
+Ran 8 tests in 1.560s
 
 OK
 === MODULE construction.tests.test_bilingual_narrative_sanitizer ===
@@ -358,14 +358,14 @@ construction.tests.test_bilingual_narrative_sanitizer.TestRegistryImmutability
 
 
 ----------------------------------------------------------------------
-Ran 20 tests in 0.103s
+Ran 20 tests in 0.087s
 
 OK
 === MODULE construction.tests.test_transaction_link_search ===
 Starting test run with parameters: site=v16.localhost, module=construction.tests.test_transaction_link_search, verbose=False, tests=(), force=False, profile=False, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
 View detailed logs (using --verbose): /home/mohamed/frappe-bench/logs/frappe.testing.log
 
-Running 16 unspecified-category tests for construction
+Running 18 unspecified-category tests for construction
 
 construction.tests.test_transaction_link_search.TestAllowListValidation
    [32m ✔ [0m test_registered_doctypes_accepted
@@ -375,6 +375,9 @@ construction.tests.test_transaction_link_search.TestAllowListValidation
 construction.tests.test_transaction_link_search.TestClientFilterSanitization
    [32m ✔ [0m test_json_string_filters_parsed_and_sanitized
    [32m ✔ [0m test_meta_and_link_field_stripped
+
+construction.tests.test_transaction_link_search.TestClientServerAllowListDrift
+   [32m ✔ [0m test_js_transactional_targets_match_server_config
 
 construction.tests.test_transaction_link_search.TestDirectionalProperties
    [32m ✔ [0m test_property_2_bounded_recall
@@ -399,6 +402,9 @@ construction.tests.test_transaction_link_search.TestSeededArabicEndToEnd
        ▸    deprecation_warning(
    [32m ✔ [0m test_unmatched_arabic_returns_no_phantoms
 
+construction.tests.test_transaction_link_search.TestTopKBoundary
+   [32m ✔ [0m test_preresolution_requests_and_caps_at_top_k
+
 construction.tests.test_transaction_link_search.TestTriadInvariantGuard
    [32m ✔ [0m test_triad_remains_unmodified
 
@@ -411,6 +417,6 @@ construction.tests.test_transaction_link_search.TestTxtCorrectnessTrap
 
 
 ----------------------------------------------------------------------
-Ran 16 tests in 0.355s
+Ran 18 tests in 0.363s
 
 OK

@@ -142,7 +142,11 @@ def _resolve_master_ids(master_doctype: str, txt: str) -> list[str]:
         page_length=TOP_K_MASTER_MATCHES,
         display_format="{name}",
     )
-    return [row.get("value") for row in (matches or []) if row.get("value")]
+    return [
+        row.get("value")
+        for row in (matches or [])[:TOP_K_MASTER_MATCHES]
+        if row.get("value")
+    ]
 
 
 def _arabic_label_map(doctype: str, names: list[str]) -> dict[str, str]:

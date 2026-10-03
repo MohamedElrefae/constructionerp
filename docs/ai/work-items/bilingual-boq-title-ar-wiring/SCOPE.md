@@ -243,3 +243,20 @@ final test run -> capture log -> compute blob digests -> write manifest -> commi
 Same ordering constraint as prior descriptors. Because §1.2 leaves no Arabic data, the
 test log is the only proof the wiring works; it must be captured after the final
 implementation edit and before the manifest is written.
+
+---
+
+## 8. Amendments (post-completion)
+
+`evidence/MANIFEST.json` pins `construction/hooks.py`, a **living** artefact. The
+pin was correct at completion and last matched at `46aa201`; it went stale when
+later work items legitimately modified `hooks.py`. Re-pinned on 2026-10-03 so that
+repository-wide `HEAD` verification passes. The work item's own evidence
+(`test_boq_link_queries.log`, `regression-matrix.log`, `reconciliation.log`) is
+unchanged.
+
+| Artefact | Last matching pin | Why it moved |
+|---|---|---|
+| `construction/hooks.py` | `5d1376f64dd0ec365e809d308140087e80c43cce1645681e6cabfa6e817f1fc3` (at `46aa201`) | narrative-sanitizer hooks, `?v=1` cache buster for `searchable_dropdown.js`, and other legitimate `hooks.py` changes |
+
+Use `git show 46aa201:construction/hooks.py` to recover the completion-time bytes.

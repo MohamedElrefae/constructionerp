@@ -2,8 +2,8 @@
   "artefacts": {
     "CANARY-DISPOSITION.md": "875af38e146bb2bfe37f2437ff2ca34e5055f54065917084f10527105ccbb919",
     "account-pilot-canary.log": "6af3b4915d3fc0015c1bc3827aaea9de9ec27ed9be28d27ce99eeb7741da9537",
-    "phase1_SCOPE.md": "1c6bc7bf45546be91c776f9681c80521cb1c5668d0bc1876a1c53ae668c74603",
-    "phase2_SCOPE.md": "3b846e14217c825340c7c6fd27930bee7a992936af964657c879f13fd71fd01c",
+    "docs/ai/work-items/bilingual-wave1-masters-phase1/SCOPE.md": "1c6bc7bf45546be91c776f9681c80521cb1c5668d0bc1876a1c53ae668c74603",
+    "docs/ai/work-items/bilingual-wave1-masters-phase2/SCOPE.md": "3b846e14217c825340c7c6fd27930bee7a992936af964657c879f13fd71fd01c",
     "scripts/measure_wave1_p95.py": "c8e3b20fad5b88714e5940ae9ab0f02aad2c7ce9a6c470f7fad3d2a70c26dc87",
     "wave1-p95-measurement.json": "abba76d5590f96e247f857ffdba342b1c09bbf40229482ffe84326b06d2623e1",
     "wave1-phase1-tests.log": "af867aa74f2dbc52e5ed56896037b6bd02b3a34648c764f4f59ed36d34f8bbba",
@@ -32,7 +32,7 @@
       ],
       "protocol": "Account's canonical five-round min-of-rounds statistic",
       "repin_status": "still deferred to the owner-authorized governance run under erp-arabic-bilingual-data",
-      "verdict": "PASS \u2014 Wave 1 code introduced no Account regression"
+      "verdict": "PASS — Wave 1 code introduced no Account regression"
     },
     "artifact_modified_by_this_work_item": false,
     "artifact_owner": "erp-arabic-bilingual-data",
@@ -155,5 +155,20 @@
       "result": "OK"
     }
   },
-  "work_item": "bilingual-wave1-masters"
+  "work_item": "bilingual-wave1-masters",
+  "amendments": [
+    {
+      "date": "2026-10-03",
+      "artefact": "phase1_SCOPE.md / phase2_SCOPE.md",
+      "from": [
+        "phase1_SCOPE.md",
+        "phase2_SCOPE.md"
+      ],
+      "to": [
+        "docs/ai/work-items/bilingual-wave1-masters-phase1/SCOPE.md",
+        "docs/ai/work-items/bilingual-wave1-masters-phase2/SCOPE.md"
+      ],
+      "reason": "paths resolved nowhere; digests unchanged because they already matched the sibling work items' SCOPE.md exactly (content untouched)"
+    }
+  ]
 }

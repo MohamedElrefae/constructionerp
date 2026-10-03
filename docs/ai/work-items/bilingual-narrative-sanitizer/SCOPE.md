@@ -209,3 +209,23 @@ MANIFEST.json → commit → merge`
 - Any change to identity-field policy (`is_safe_identity_text`).
 - Full-text search over narrative prose (belongs to FTS, not link dropdowns).
 - The `search.fields` / SLA thresholds.
+
+---
+
+## 8. Amendments (post-completion)
+
+Two entries in `evidence/MANIFEST.json` pin **living** artefacts rather than
+evidence of this work item. Both were correct at completion (`38beb35`) and were
+re-pinned on 2026-10-03 so that repository-wide `HEAD` verification passes again.
+The immutable evidence of this work item — `test_bilingual_narrative_sanitizer.log`
+(20/20), `regression-matrix.log` (12 modules / 153 tests), `reconciliation.log`
+(19/19) — is unchanged.
+
+| Artefact | Pin at completion | Re-pinned to | Why it moved |
+|---|---|---|---|
+| `scripts/run_bilingual_regression_matrix.sh` | `e93ca1434ac5fcef0c5fa7caef1dbb0109c0184deef671da44462ad410d560b4` | current | shared runner expanded to 13 modules / 171 tests by `transactional-link-resolution` (`2e17df5` and successors) |
+| `construction/hooks.py` | `6b30efaea1e9f00ae7a677b71b278c03e32b2a1bf0beedbca0be2364147e7d97` | current | living file; modified by `bilingual-boq-title-ar-wiring`, `?v=1` cache buster for `searchable_dropdown.js`, and later work items |
+
+Consequence: this manifest asserts **content that still exists in the repository**,
+not the byte state at `38beb35`. Use `git show 38beb35:<path>` to recover the
+completion-time bytes.

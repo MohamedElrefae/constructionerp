@@ -149,7 +149,7 @@ app_include_js = [
     "/assets/construction/js/typography_settings.js?v=21",
     # Searchable Dropdown Module — base class (must load before overrides)
     "/assets/construction/js/searchable_dropdown/utils.js",
-    "/assets/construction/js/searchable_dropdown/searchable_dropdown.js",
+    "/assets/construction/js/searchable_dropdown/searchable_dropdown.js?v=1",
     # Phase 2: Global ControlSelect override — searchable themed dropdown for all <select> fields
     # Replaces native HTML <select> app-wide (forms + report filters confirmed by diagnostic)
     "/assets/construction/js/overrides/ct_select_control.js?v=2",

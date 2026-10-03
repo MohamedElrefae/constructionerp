@@ -2,7 +2,7 @@
 
 **Work item:** `transactional-link-resolution`
 **Branch:** `develop`
-**Status:** `COMPLETE` — Sidecar implemented, verified against live site (16/16 unit, 169/169 matrix, 19/19 reconciliation), triad at 0 diff
+**Status:** `COMPLETE` — Sidecar implemented, verified against live site (18/18 unit, 171/171 matrix, 19/19 reconciliation), triad at 0 diff
 **Base commit:** `28287e5` (RFC approved, decisions D1-D3 ratified)
 **Date:** 2026-10-03
 **Authority:** owner directive in session; prerequisites stipulated by `docs/ai/work-items/bilingual-wave2b-transactions/SCOPE.md` §7
@@ -100,5 +100,31 @@ All three required design decisions ratified on 2026-10-03:
 | `SCOPE.md` | this file — `COMPLETE` |
 | Decisions D1–D3 | ratified 2026-10-03 (SCOPE §3) |
 | Implementation | complete (`transaction_link_search.py`, `searchable_dropdown.js`) |
-| Tests & Matrix | 16/16 unit tests, 169/169 matrix tests across 13 modules, 19/19 reconciliation |
+| Tests & Matrix | 18/18 unit tests, 171/171 matrix tests across 13 modules, 19/19 reconciliation |
 | Evidence / manifests | captured in `evidence/` with SHA-256 in `MANIFEST.json` |
+
+---
+
+## 7. Amendments (2026-10-03, post-`2e17df5` verification)
+
+Independent verification of `2e17df5` passed every check but surfaced four defects,
+each ratified by the owner before remediation:
+
+| # | Defect | Remediation |
+|---|---|---|
+| 1 | `bilingual-narrative-sanitizer` manifest pinned `scripts/run_bilingual_regression_matrix.sh` at the 12-module byte state; this work item's matrix expansion broke a previously-passing pin (10/11) | re-pinned, with a §8 amendment note in that work item's `SCOPE.md` recording the completion-time digest |
+| 2 | `bilingual-boq-title-ar-wiring` pinned `construction/hooks.py`, stale since `46aa201` (pre-existing) | re-pinned, with the same amendment pattern |
+| 3 | `bilingual-wave1-masters` recorded `phase1_SCOPE.md` / `phase2_SCOPE.md`, which resolve nowhere; content digests match `bilingual-wave1-masters-phase1\|2/SCOPE.md` exactly | paths corrected to the real locations (content unchanged) |
+| 4 | modified `searchable_dropdown.js` shipped without a cache buster (AGENTS.md §4.4) | `hooks.py:152` → `searchable_dropdown.js?v=1` |
+
+Also added, beyond the original §4 deliverables:
+
+- `_resolve_master_ids` now truncates with `[:TOP_K_MASTER_MATCHES]` so the
+  bounded-recall property holds even if the callee over-returns.
+- Two guard tests — `TestTopKBoundary` (RFC §7.2 K-boundary) and
+  `TestClientServerAllowListDrift` (JS routing list must equal
+  `TRANSACTION_LINK_CONFIG`) — giving 18/18 unit and 171/171 matrix.
+
+Living artefacts (`hooks.py`, `scripts/run_bilingual_regression_matrix.sh`) are
+pinned by three closed manifests. Every future change to either requires a re-pin;
+that is recorded here rather than left to be discovered as a stale digest.
