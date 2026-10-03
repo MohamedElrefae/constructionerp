@@ -1,6 +1,6 @@
 # RFC — Transactional Link Resolution
 
-**Status:** `DRAFT — awaiting owner approval`
+**Status:** `APPROVED` (owner decision, 2026-10-03)
 **Date:** 2026-10-03
 **Prerequisite:** `bilingual-wave2b-transactions/SCOPE.md` §7
 **Unblocks:** deferred ledgers `Asset`, `Brand`, `Terms and Conditions`

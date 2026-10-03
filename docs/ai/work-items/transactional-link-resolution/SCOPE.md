@@ -2,11 +2,11 @@
 
 **Work item:** `transactional-link-resolution`
 **Branch:** `feature/transactional-link-resolution`
-**Status:** `OPEN` — RFC drafted at `docs/ai/work-items/transactional-link-resolution/RFC.md`; awaiting owner approval of three decisions before any implementation begins
+**Status:** `DESIGN_APPROVED` — RFC approved by owner (2026-10-03); decisions D1 (Option C), D2 (Journal Entry excluded in v1), D3 (four replacement directional properties) ratified
 **Base commit:** `ab5dcdf` (develop clean; hook-matrix Scope B closed)
 **Date:** 2026-10-03
 **Authority:** owner directive in session; prerequisites stipulated by `docs/ai/work-items/bilingual-wave2b-transactions/SCOPE.md` §7
-**Scope:** documentation only at this stage — RFC + scope descriptor. **No implementation code is authorised until the decisions in §3 are recorded.**
+**Scope:** documentation only at this stage — RFC + scope descriptor. Design ratified; ready for implementation planning.
 
 ---
 
@@ -52,15 +52,15 @@ Established by direct inspection, not assertion:
 
 ---
 
-## 3. Decisions Required From the Owner
+## 3. Decisions Ratified by the Owner
 
-Nothing below is implemented until all three are recorded.
+All three required design decisions ratified on 2026-10-03:
 
-| # | Decision | Recommendation |
+| # | Decision | Ratified Resolution |
 |---|---|---|
-| **D1** | **Invariant outcome.** Wave 2b §7.1 presumes the invariant ends. RFC §2.3 concludes Option C delivers the feature with the triad at **0 diff**. Accept "the invariant does not end", or direct Option A/B and accept the triad breach. | **Option C — invariant preserved** |
-| **D2** | **`Journal Entry`.** Its resolution requires a child-table leg the parent-level sidecar cannot serve (RFC §3.4). Child-table variant, or explicit v1 exclusion? | **Exclude in v1, record the exclusion** |
-| **D3** | **Matched-set equivalence (§7.3).** Native `search_link` returns 0 rows for an Arabic transactional query by design, so `match_sets_equal: true` is unachievable. RFC §7.1 proposes four replacement properties (subset, bounded recall, native agreement on shared vocabulary, determinism). | **Accept the four properties** |
+| **D1** | **Invariant outcome.** | **Option C APPROVED.** The zero-service-edit invariant does not end; triad `{bilingual_service.py, search.py, bilingual_registry.json}` remains at **0 diff** via the sidecar architecture. |
+| **D2** | **`Journal Entry`.** | **Exclude in v1 APPROVED.** Scope is strictly parent-level party links. `Journal Entry` account references live in child table `tabJournal Entry Account` and are recorded as deferred. |
+| **D3** | **Matched-set equivalence (§7.3).** | **Replacement properties APPROVED.** The four directional properties (no phantom rows, bounded recall, native agreement on Latin/ASCII, determinism) adopted in place of literal set equality. |
 
 ---
 
