@@ -359,6 +359,49 @@
     "enabled": true
    },
    "norm_field": "department_name_ar_norm"
+  },
+  "BOQ Structure": {
+   "state": "active",
+   "english_field": "title",
+   "arabic_field": "title_ar",
+   "code_field": "wbs_code",
+   "identity_field": "name",
+   "search": {
+    "enabled": true,
+    "fields": [
+     "wbs_code",
+     "title",
+     "title_ar"
+    ]
+   },
+   "form": {
+    "identity_section": false
+   },
+   "tree": {
+    "enabled": true
+   },
+   "norm_field": "title_ar_norm"
+  },
+  "BOQ Header": {
+   "state": "active",
+   "english_field": "title",
+   "arabic_field": "title_ar",
+   "code_field": null,
+   "identity_field": "name",
+   "search": {
+    "enabled": true,
+    "fields": [
+     "title",
+     "title_ar"
+    ]
+   },
+   "form": {
+    "identity_section": false
+   },
+   "tree": {
+    "enabled": false
+   },
+   "norm_field": "title_ar_norm"
   }
  }
 }

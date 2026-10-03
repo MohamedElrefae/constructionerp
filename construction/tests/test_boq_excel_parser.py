@@ -701,9 +701,13 @@ def run_boq_arabic_label_catalog_smoke() -> dict:
 
 
 def run_boq_print_format_registration_smoke() -> dict:
+    from construction.services.feature_flags import is_enabled, set_flag
+
     header = None
     old_lang = getattr(frappe.local, "lang", None)
+    old_flag = is_enabled("enable_bilingual_boq_print")
     try:
+        set_flag("enable_bilingual_boq_print", 1, commit=True)
         print_format = frappe.db.get_value(
             "Print Format",
             {"name": "BOQ Print Format", "doc_type": "BOQ Header", "disabled": 0},
@@ -725,9 +729,11 @@ def run_boq_print_format_registration_smoke() -> dict:
 
         frappe.local.lang = "ar"
         header = _make_header("WP5.6 Print Registration Smoke")
-        root = _insert_manual_structure(header.name, "أعمال الموقع العام", "01", is_group=1)
+        root = _insert_manual_structure(
+            header.name, "General Site Works", "01", is_group=1, title_ar="أعمال الموقع العام"
+        )
         _insert_manual_structure(
-            header.name, "تجهيز الموقع", "01.001", is_group=0, parent_structure=root.name
+            header.name, "Site Preparation", "01.001", is_group=0, parent_structure=root.name, title_ar="تجهيز الموقع"
         )
         context = {
             "header": BOQExportService.get_boq_header_data(header.name),
@@ -745,6 +751,8 @@ def run_boq_print_format_registration_smoke() -> dict:
         html = BOQExportService._render_template("boq_print_format.html", context)
         if 'dir="rtl"' not in html or "جدول الكميات" not in html or "كود البند" not in html:
             frappe.throw("Arabic BOQ print template did not render RTL Arabic labels.")
+        if "General Site Works" not in html or "أعمال الموقع العام" not in html:
+            frappe.throw("Bilingual BOQ print template did not render both English and Arabic titles.")
 
         return {
             "success": True,
@@ -754,6 +762,7 @@ def run_boq_print_format_registration_smoke() -> dict:
         }
     finally:
         frappe.local.lang = old_lang
+        set_flag("enable_bilingual_boq_print", old_flag, commit=True)
         if header:
             _cleanup_header(header.name)
 
@@ -925,9 +934,12 @@ def _insert_manual_structure(
     wbs_code: str,
     is_group: int = 1,
     parent_structure: str | None = None,
+    title_ar: str | None = None,
 ):
     structure = frappe.new_doc("BOQ Structure")
     structure.title = title
+    if title_ar:
+        structure.title_ar = title_ar
     structure.boq_header = header_name
     structure.parent_structure = parent_structure
     structure.is_group = is_group

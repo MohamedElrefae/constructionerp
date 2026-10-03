@@ -1,0 +1,42 @@
+{
+  "artefacts": {
+    "CANARY-DISPOSITION.md": "9f523c670487e013c748aa110bb062d82c11d11cd76dba72a16355b35cc8fe99",
+    "SCOPE.md": "00c3dba1e0c169d480b119a39a56829b48718c1e7ca4c0120e3828c04b9711e0",
+    "boq-pilot-tests.log": "fd06f2fdd1a8534219a7f8d6ae2ee6e30f8328d751e4c65399fb6ccce9a9fc47"
+  },
+  "base_commit": "ef36c95fa2daafe0197029629315294ddeab41f4",
+  "branch": "feature/bilingual-boq-masters",
+  "canary_disposition": {
+    "artifact_modified_by_this_work_item": false,
+    "document": "docs/ai/work-items/bilingual-boq-masters/evidence/CANARY-DISPOSITION.md",
+    "document_sha256": "9f523c670487e013c748aa110bb062d82c11d11cd76dba72a16355b35cc8fe99",
+    "status": "COMPLIANT_WITH_GOVERNANCE_AND_PRINT_SPECIFICATION"
+  },
+  "out_of_scope_respected": [
+    "no orchestrator/ modification",
+    "no apps/frappe or apps/erpnext modification",
+    "all foreign work item evidence untouched",
+    "bilingual_service.py and search.py byte-identical to base commit ef36c95"
+  ],
+  "primary_invariant": {
+    "bilingual_service_py_diff_lines": 0,
+    "claim": "BOQ masters required zero modifications to bilingual_service.py and search.py",
+    "enforced_by_test": "construction.tests.test_bilingual_boq_print.TestBilingualBOQPrint.test_zero_service_edits_guard",
+    "reference_commit": "ef36c95fa2daafe0197029629315294ddeab41f4",
+    "search_py_diff_lines": 0
+  },
+  "print_governance": {
+    "adr": "docs/translation/BILINGUAL_GOVERNANCE_PRINT_IMPORT_PERMISSION.md",
+    "enforced_by_tests": [
+      "construction.tests.test_bilingual_boq_print.TestBilingualBOQPrint.test_print_rendering_flag_off_monolingual_baseline",
+      "construction.tests.test_bilingual_boq_print.TestBilingualBOQPrint.test_print_rendering_flag_on_dual_language",
+      "construction.tests.test_boq_excel_parser.run_boq_print_format_registration_smoke"
+    ],
+    "flag": "enable_bilingual_boq_print",
+    "status": "VERIFIED_GATED_BY_FLAG"
+  },
+  "wbs_invariants": {
+    "claim": "wbs_code is strictly ASCII alphanumeric, has no _ar or _norm fields, and is untouched by bilingual normalization",
+    "enforced_by_test": "construction.tests.test_bilingual_boq_print.TestBilingualBOQPrint.test_wbs_code_exclusivity_and_ascii_invariant"
+  }
+}

@@ -157,9 +157,13 @@ class BOQExportService:
 
     @staticmethod
     def _print_context() -> Dict[str, Any]:
+        from construction.services.feature_flags import is_enabled
+
+        is_bilingual_print = is_enabled("enable_bilingual_boq_print")
         is_arabic = BOQExportService._is_arabic_mode()
         return {
             "is_arabic": is_arabic,
+            "is_bilingual_print": is_bilingual_print,
             "direction": "rtl" if is_arabic else "ltr",
             "text_align": "right" if is_arabic else "left",
             "opposite_align": "left" if is_arabic else "right",
@@ -206,8 +210,10 @@ class BOQExportService:
         return {
             "name": boq.name,
             "title": boq.title or boq.name,
+            "title_ar": boq.get("title_ar") or "",
             "project": boq.project,
             "project_name": project.project_name if project else boq.project,
+            "project_name_ar": (project.get("project_name_ar") or "") if project else "",
             "boq_type": boq.boq_type,
             "status": boq.status,
             "version": boq.version,
@@ -228,6 +234,7 @@ class BOQExportService:
                 "name",
                 "wbs_code",
                 "title",
+                "title_ar",
                 "is_group",
                 "parent_structure",
                 "lft",
@@ -282,6 +289,7 @@ class BOQExportService:
                 "name": structure["name"],
                 "wbs_code": structure.get("wbs_code", ""),
                 "title": structure.get("title", ""),
+                "title_ar": structure.get("title_ar", ""),
                 "is_group": structure.get("is_group", 0),
                 "description": structure.get("description", ""),
                 "depth": depth,

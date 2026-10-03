@@ -87,14 +87,16 @@ To avoid asserting unverified capabilities, this ADR establishes the definitive 
   - Verified empirically and mechanically in `construction/tests/test_bilingual_data_import.py` (6/6 passing tests covering new inserts, poisoned norm overwrite, bidi rejection, updates, and Account insertion asymmetry).
 
 ### 2.6 Capability 6: Print
-- **Status:** **DOCUMENTED AS UNVERIFIED & OUT-OF-BAND**
+- **Status:**
+  - **Standard ERPNext Masters:** **DOCUMENTED AS UNVERIFIED & OUT-OF-BAND**
+  - **Construction Masters (`BOQ Structure`, `BOQ Header`):** **VERIFIED (GATED BY `enable_bilingual_boq_print`)**
 - **Specification:**
   - Physical columns (`*_ar`, `*_in_arabic`) reside directly on the respective DocType database tables and are accessible within custom Jinja print templates (e.g. `{{ doc.item_name_ar or doc.item_name }}`).
-  - Standard ERPNext print formats (e.g. Standard Item / Customer / Account print layouts) do not out-of-the-box render dual-column bilingual headers or localized Arabic typography.
-  - While the Construction module provides an experimental toggle `enable_bilingual_boq_print` for BOQ documents, there is **no automated test suite asserting PDF/HTML bilingual rendering** for standard ERPNext masters.
+  - Standard ERPNext print formats (e.g. Standard Item / Customer / Account print layouts) do not out-of-the-box render dual-column bilingual headers or localized Arabic typography, and remain out-of-band.
+  - For Construction masters (`BOQ Structure` and `BOQ Header`), the system provides flag-gated bilingual print formats (`boq_print_format.html` and `boq_header_print.html`). When `enable_bilingual_boq_print = 0`, rendering is 100% byte-identical to monolingual output. When `enable_bilingual_boq_print = 1`, templates render dual-language headers (`title / title_ar`, `project_name / project_name_ar`) and line item titles (`node.title / node.title_ar`).
 - **Governance Rule:**
-  - Print capability for bilingual masters is formally certified as **UNVERIFIED / OUT-OF-BAND**.
-  - Maintainers, users, and deployment workflows must not assume out-of-the-box bilingual printing for standard masters. Bilingual print requirements must be implemented via explicitly authored, client-specific custom print formats.
+  - Print capability for standard ERPNext masters is formally certified as **UNVERIFIED / OUT-OF-BAND**. Maintainers and deployment workflows must not assume out-of-the-box bilingual printing for standard masters without custom print formats.
+  - Print capability for Construction masters (`BOQ Structure`, `BOQ Header`) is formally certified as **VERIFIED** under `enable_bilingual_boq_print`, tested by `test_bilingual_boq_print.py` and `test_boq_excel_parser.py`.
 
 ---
 
@@ -115,11 +117,14 @@ To avoid asserting unverified capabilities, this ADR establishes the definitive 
 | **Territory** | ✅ Verified | ✅ Tier 2B Bound | ✅ Generic RPM | ✅ Tested | ✅ Verified | ⚠️ Out-of-band |
 | **UOM** | ✅ Verified | ✅ Tier 2B Bound | ✅ Generic RPM | ✅ Tested | ✅ Verified | ⚠️ Out-of-band |
 | **Employee** | ✅ Verified | ✅ Tier 2B Bound | ✅ Generic RPM | ✅ Tested | ✅ Verified | ⚠️ Out-of-band |
+| **Department** | ✅ Verified | ✅ Tier 2B Bound | ✅ Generic RPM | ✅ Tested | ✅ Verified | ⚠️ Out-of-band |
+| **BOQ Structure** | ✅ Verified | ✅ Tier 2B Bound | ✅ Generic RPM | ✅ Tested | ✅ Verified | ✅ Verified (`enable_bilingual_boq_print`) |
+| **BOQ Header** | ✅ Verified | ✅ Tier 2B Bound | ✅ Generic RPM | ✅ Tested | ✅ Verified | ✅ Verified (`enable_bilingual_boq_print`) |
 
 ---
 
 ## 4. Consequences and Invariants
 
-1. **Zero Unverified Assertions:** No wave summary or certification may claim that bilingual Print is verified. Print remains marked as out-of-band until dedicated test fixtures render and assert bilingual layout geometry.
+1. **Zero Unverified Assertions:** No wave summary or certification may claim that bilingual Print is verified for standard ERPNext masters. Standard masters remain marked as out-of-band. Construction masters are verified specifically under the `enable_bilingual_boq_print` feature flag.
 2. **Import Security:** Bulk imports via ERPNext Data Import are fully protected against search-poisoning attacks and bidi-spoofing attacks without requiring external validation tools or pre-import sanitizers.
 3. **Zero Service Edit Invariant Preserved:** This governance specification and the accompanying test suite `test_bilingual_data_import.py` require zero edits to `bilingual_service.py` and `search.py`, strictly maintaining the zero-diff invariant against baseline commits.
