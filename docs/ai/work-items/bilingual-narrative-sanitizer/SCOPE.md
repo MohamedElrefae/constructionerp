@@ -239,3 +239,14 @@ completion-time bytes.
 
 New digests are recorded as `amendments[]` entries in `evidence/MANIFEST.json`; this
 work item's own evidence logs remain unchanged.
+
+
+### 8.2 Re-pin by `bilingual-asset-master` (2026-10-04)
+
+Digests are recorded as `amendments[]` entries in `evidence/MANIFEST.json`;
+this work item's own evidence logs are unchanged.
+
+| Artefact | Why it moved |
+|---|---|
+| `scripts/run_bilingual_regression_matrix.sh` | shared runner expanded to **16 modules / 197 tests** |
+| `construction/hooks.py` | living file; `Asset` `doc_events` single-hook registration added |

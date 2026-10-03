@@ -1,12 +1,12 @@
 {
   "artefacts": {
-    "docs/ai/work-items/bilingual-boq-title-ar-wiring/SCOPE.md": "d7dc510778c22107c7312fde9981e65e4dbade4daeca5e8e4bc01a1cb35e37b8",
+    "docs/ai/work-items/bilingual-boq-title-ar-wiring/SCOPE.md": "602fa07075daa236bc5b684a11e41216d945a17aff146dcf3a54306721a15a77",
     "docs/ai/work-items/bilingual-boq-title-ar-wiring/evidence/test_boq_link_queries.log": "18a9da5137ae8f3baabb4a9a4b70995c0aaa79d8674db276fa4579fed0361393",
     "docs/ai/work-items/bilingual-boq-title-ar-wiring/evidence/regression-matrix.log": "3ce01c1c6e48e5b4cd3590093666cd3d54b8c37aeb63ad34a399823fd7682b83",
     "docs/ai/work-items/bilingual-boq-title-ar-wiring/evidence/reconciliation.log": "9fb1cacccb62d32126d6f731bea24ea515fb0f79c5ced881c7a6464ae3e1fa50",
     "construction/api/boq_link_queries.py": "cdb3b66370139c814c068ae63ba8baa2aab37c15eb8e6e7a5ac1ae717f8ae3ba",
     "construction/tests/test_boq_link_queries.py": "ff3da3238cc96f17ae171877604812225e829c70b250e1c1c5ab1a201d18ee05",
-    "construction/hooks.py": "37be189a45f5484e79a0f37ea68e711815aa00972f08f39d1503078770b681ed",
+    "construction/hooks.py": "e4beab7a48e95588da0ba9dd8054b610bfc20974999930d0b592d90ee7d36a8b",
     "construction/public/js/overrides/ct_link_control.js": "69fd49c59240e322b43eb23b0001bb9a316467336d28482bce5cb8155651705a"
   },
   "base_commit": "0f5be0d4c89fc775080e7dd92fcfb20c9e6da98c",
@@ -99,6 +99,20 @@
       "from": "453f08e39747bc2a2e05a289367380e7243567d67c2fb9cd3ab52bb569be377a",
       "to": "37be189a45f5484e79a0f37ea68e711815aa00972f08f39d1503078770b681ed",
       "reason": "living file; Terms and Conditions doc_events registration added by bilingual-terms-conditions-master (finding F1)"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "docs/ai/work-items/bilingual-boq-title-ar-wiring/SCOPE.md",
+      "from": "d7dc510778c22107c7312fde9981e65e4dbade4daeca5e8e4bc01a1cb35e37b8",
+      "to": "602fa07075daa236bc5b684a11e41216d945a17aff146dcf3a54306721a15a77",
+      "reason": "amendment note documenting the re-pin performed by bilingual-asset-master"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "construction/hooks.py",
+      "from": "37be189a45f5484e79a0f37ea68e711815aa00972f08f39d1503078770b681ed",
+      "to": "e4beab7a48e95588da0ba9dd8054b610bfc20974999930d0b592d90ee7d36a8b",
+      "reason": "living file; Asset doc_events single-hook registration added by bilingual-asset-master (F1)"
     }
   ]
 }

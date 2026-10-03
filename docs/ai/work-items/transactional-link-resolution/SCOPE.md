@@ -162,3 +162,13 @@ as `amendments[]` entries in `evidence/MANIFEST.json`.
 | `scripts/run_bilingual_regression_matrix.sh` | `0252438c3342d0093cfbd8c8be6e2c7270203d9569ac936e3b04d1449ca224e4` | shared runner expanded to **14 modules / 181 tests** by `bilingual-brand-master` |
 
 This work item's RFC/SCOPE/evidence logs and `transaction_link_search.py` are untouched.
+
+
+## 10. Amendments (2026-10-04, post-`bilingual-asset-master`)
+
+Digests are recorded as `amendments[]` entries in `evidence/MANIFEST.json`;
+this work item's own evidence logs are unchanged.
+
+| Artefact | Why it moved |
+|---|---|
+| `scripts/run_bilingual_regression_matrix.sh` | shared runner expanded to **16 modules / 197 tests** |

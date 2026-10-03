@@ -1,6 +1,6 @@
 {
   "artefacts": {
-    "docs/ai/work-items/transactional-link-resolution/SCOPE.md": "50c35593c5e60dd3a30cdbed64b5339fc4fc62fca22690e340598038ba9c5c65",
+    "docs/ai/work-items/transactional-link-resolution/SCOPE.md": "727849751128391c7c91b449a2d7836c9df1217c72a7efd332fa89c4cca1bcae",
     "docs/ai/work-items/transactional-link-resolution/RFC.md": "eecf3dc404681f481c917cc6e613ecb9209bf3ef1753b9ed8b5d07fc68f43ef8",
     "docs/ai/work-items/transactional-link-resolution/evidence/test_transaction_link_search.log": "794a700593d033f24183bbd1a8659dc101dde110d19fb5c282b04d0cde19c061",
     "docs/ai/work-items/transactional-link-resolution/evidence/regression-matrix.log": "caf6b207e0cf4754440cef0c8f484876bd8174090a3b2e56107c842663f957a2",
@@ -8,7 +8,7 @@
     "construction/services/transaction_link_search.py": "ae483b280a09cba0104d26075cc2ea2513497e51db6690aaa89f274b7bc4491e",
     "construction/tests/test_transaction_link_search.py": "498a823e1d735792e54570e1f0c14bd631c550d3c3d89de0a098ed6c44844356",
     "construction/public/js/searchable_dropdown/searchable_dropdown.js": "cfca754ee98f35392313271f16848ccc9499d7a98668b7d61c2d3d6863b62fee",
-    "scripts/run_bilingual_regression_matrix.sh": "3445b845318caf50179b3cbb78eaf71bbfca350b7abb752ac39d48b1bf1c4fe0"
+    "scripts/run_bilingual_regression_matrix.sh": "48b61171a55437a0689d7ac2827bffff546a3e32c338af5c8bebc4c5261fc28b"
   },
   "base_commit": "28287e5bb23e4c47753ed82de3fa528c8c00fab9",
   "branch": "develop",
@@ -77,6 +77,20 @@
       "from": "168237d82fbbaede0a598d56c4c3749a03889eb620da0ff0dd25a096645c830e",
       "to": "3445b845318caf50179b3cbb78eaf71bbfca350b7abb752ac39d48b1bf1c4fe0",
       "reason": "shared runner expanded to 15 modules / 189 tests by bilingual-terms-conditions-master"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "docs/ai/work-items/transactional-link-resolution/SCOPE.md",
+      "from": "50c35593c5e60dd3a30cdbed64b5339fc4fc62fca22690e340598038ba9c5c65",
+      "to": "727849751128391c7c91b449a2d7836c9df1217c72a7efd332fa89c4cca1bcae",
+      "reason": "amendment note documenting the re-pin performed by bilingual-asset-master"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "scripts/run_bilingual_regression_matrix.sh",
+      "from": "3445b845318caf50179b3cbb78eaf71bbfca350b7abb752ac39d48b1bf1c4fe0",
+      "to": "48b61171a55437a0689d7ac2827bffff546a3e32c338af5c8bebc4c5261fc28b",
+      "reason": "shared runner expanded to 16 modules / 197 tests by bilingual-asset-master"
     }
   ]
 }

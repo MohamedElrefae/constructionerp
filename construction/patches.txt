@@ -32,3 +32,4 @@ construction.patches.v9_9.add_asset_category_arabic_fields
 construction.patches.v9_10.add_payment_terms_template_arabic_fields
 construction.patches.v9_11.add_brand_arabic_fields
 construction.patches.v9_12.add_terms_and_conditions_arabic_fields
+construction.patches.v9_13.add_asset_arabic_fields

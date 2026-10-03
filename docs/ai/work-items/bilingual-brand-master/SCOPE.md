@@ -157,3 +157,16 @@ fixtures held on every successful run.
 
 **Cleanup:** `_Test Brand.brand_ar` / `brand_ar_norm` restored to NULL and no `CT-BRAND-`
 or `Brand <hex>` fixtures remain (both verified after the final run).
+
+
+## 8. Amendments (post-completion)
+
+Digests are recorded as `amendments[]` entries in `evidence/MANIFEST.json`;
+this work item's own evidence logs are unchanged.
+
+| Artefact | Why it moved |
+|---|---|
+| `construction/data/bilingual/bilingual_registry.json` | living data; additive `Asset` entry (**22 masters**) by `bilingual-asset-master` |
+| `construction/patches.txt` | living file; `v9_13` entry appended by `bilingual-asset-master` |
+| `construction/hooks.py` | living file; `Asset` `doc_events` single-hook registration added |
+| `scripts/run_bilingual_regression_matrix.sh` | shared runner expanded to **16 modules / 197 tests** |

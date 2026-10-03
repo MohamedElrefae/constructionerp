@@ -1,0 +1,53 @@
+{
+  "artefacts": {
+    "docs/ai/work-items/bilingual-asset-master/SCOPE.md": "0de3c62533bff296758c03f8255c2fda711a67dc1c3a3a123e192f8964a81b37",
+    "docs/ai/work-items/bilingual-asset-master/evidence/test_bilingual_asset_pilot.log": "97a7d7e7c566b33866d7fd7acb9e13f1e9f9f4013fe1ac66401f1fc332925d84",
+    "docs/ai/work-items/bilingual-asset-master/evidence/regression-matrix.log": "9ba05b9b38db94ee0fef05260141c04de8d6a4a2841c27ea6b953c24c81ecbee",
+    "docs/ai/work-items/bilingual-asset-master/evidence/reconciliation.log": "785a058337578e599ab430bbf5d4e5e90adaa3121f97f0bf553e0de2b8c1227c",
+    "docs/ai/work-items/bilingual-asset-master/evidence/asset-p95-run.log": "e4bfd6725674277a57ad30dfed25c11432fa86f54c4657ad32a52a597d70572c",
+    "docs/ai/work-items/bilingual-asset-master/evidence/asset-p95-confirm.log": "8dc2eeb8bcc7f8cb4f69db7d39094fba3bb1e0b2f90488fdf39aeda00f368e3d",
+    "docs/ai/work-items/bilingual-asset-master/evidence/asset-p95-measurement.json": "0e36c77f15683ef0c1e534781f55d6617a780b04f705256f294158441ebca251",
+    "docs/ai/work-items/bilingual-asset-master/evidence/scripts/measure_asset_p95.py": "046e45a2e5d76c8611e6ad6e3a106eff2db426139eec0013d89eb8344db191f9",
+    "construction/patches/v9_13/add_asset_arabic_fields.py": "121e04ea2fdd49a2297f9e8179065422a6e59a93f5759f7d5e56e7652b1af247",
+    "construction/patches.txt": "f2ba9cdd6c023876836231d93e90b5f477915af3186386bb41d26d53d2f1707a",
+    "construction/tests/test_bilingual_asset_pilot.py": "176cdd312d51b983b1a36fc4f723bf83213537303781c19c6ed9d2c491382260",
+    "construction/data/bilingual/bilingual_registry.json": "0f05a58c7587217a0fa637d37abda9e71c94b48d8d3869409de7574ac30c3334",
+    "construction/hooks.py": "e4beab7a48e95588da0ba9dd8054b610bfc20974999930d0b592d90ee7d36a8b",
+    "scripts/run_bilingual_regression_matrix.sh": "48b61171a55437a0689d7ac2827bffff546a3e32c338af5c8bebc4c5261fc28b"
+  },
+  "base_commit": "cc3a105",
+  "branch": "develop",
+  "work_item": "bilingual-asset-master",
+  "primary_invariant": "Zero service edits: construction/services/bilingual_service.py and construction/searchable_dropdown/api/search.py remain byte-identical to seven reference commits; the bilingual registry grows monotonically (D5).",
+  "decisions_settled": {
+    "A1": "Harness-local DRAFT fixtures (docstatus=0, asset_type='Existing Asset'), never submitted or cancelled; dependencies (Company/Item/Location) asserted to exist with SkipTest on a bare site; cleanup removes the Asset plus its Asset Activity audit rows. Committed seed fixtures rejected; shipping schema_installed without P95 rejected.",
+    "A2": "naming_series identity pattern (Employee precedent): name = ACC-ASS-2026-#####, identity_field name, english_field asset_name, arabic_field asset_name_ar, norm_field asset_name_ar_norm; 'name never equals asset_name' asserted including the server-side auto-derived asset_name case; rename preserves Arabic and norm keys.",
+    "A3": "F1 single-hook: doc_events['Asset'] registers enforce_bilingual_arabic_policy only - the narrative sanitizer reports {} for Asset, so no narrative hook is attached (mirrors Asset Category, Department, Warehouse, Cost Center).",
+    "narrative_exclusion": "Asset has no narrative field; search.fields is exactly ['asset_name','asset_name_ar']."
+  },
+  "test_results": {
+    "pilot_module": "construction.tests.test_bilingual_asset_pilot: 8/8 OK",
+    "regression_matrix": "16 modules / 197 tests, all OK",
+    "transaction_link_search": "20/20 (D5 split guard)",
+    "adr_reconciler": "19/19 PASS"
+  },
+  "latency_measurement": {
+    "status": "COMPLIANT_WITH_TWO_TIER_SLA",
+    "methodology": "5 rounds x n=100 interleaved, min-of-rounds nearest-rank P95, 5 warmups per round",
+    "tier": "2B (baseline P95 < 1.0 ms => ratio ceiling 1.50x)",
+    "baseline_p95_ms": 0.499,
+    "bilingual_p95_ms": 0.688,
+    "ratio": 1.3788,
+    "universal_ceiling_ms": 1.5,
+    "preliminary_run_ratio": 1.4172,
+    "confirmation_series_ratios": [
+      1.4859,
+      1.3571,
+      1.3788
+    ],
+    "disclosure": "All four runs (preliminary + 3 confirmation) compliant with match-set equality and zero leftovers; authoritative artefact is the final confirmation run (1.3788), which also records all five per-round P95 values per side. No run was discarded.",
+    "artefact": "docs/ai/work-items/bilingual-asset-master/evidence/asset-p95-measurement.json"
+  },
+  "site_migration": "construction.patches.v9_13.add_asset_arabic_fields executed and recorded in Patch Log; all 22 registry masters resolve their arabic_field on v16.localhost.",
+  "causal_order": "final test run -> capture log (2>&1) -> git add -f the .log -> compute SHA-256 digests -> MANIFEST.json -> commit"
+}

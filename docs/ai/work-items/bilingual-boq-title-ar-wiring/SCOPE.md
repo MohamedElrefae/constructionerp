@@ -269,3 +269,13 @@ Use `git show 46aa201:construction/hooks.py` to recover the completion-time byte
 
 New digest recorded as an `amendments[]` entry in `evidence/MANIFEST.json`; this work
 item's evidence logs are unchanged.
+
+
+### 8.2 Re-pin by `bilingual-asset-master` (2026-10-04)
+
+Digests are recorded as `amendments[]` entries in `evidence/MANIFEST.json`;
+this work item's own evidence logs are unchanged.
+
+| Artefact | Why it moved |
+|---|---|
+| `construction/hooks.py` | living file; `Asset` `doc_events` single-hook registration added (F1, `bilingual-asset-master/SCOPE.md` §2.3) |

@@ -1,6 +1,6 @@
 {
   "artefacts": {
-    "docs/ai/work-items/bilingual-terms-conditions-master/SCOPE.md": "9019b43dfb70595ce9f6182fc8ffcbf0a81ce02d403b5414a79655666a99d9b1",
+    "docs/ai/work-items/bilingual-terms-conditions-master/SCOPE.md": "17e8391e676eaa619e7c21eca0e4f194edc09200325bea2db407c53d765f85f2",
     "docs/ai/work-items/bilingual-terms-conditions-master/evidence/test_bilingual_terms_conditions_pilot.log": "6e418fdffc0df32c7b62625e195535aa6a69d9dfd344036b075b232ada2c07ea",
     "docs/ai/work-items/bilingual-terms-conditions-master/evidence/regression-matrix.log": "fafab3abd08f75705fad945def3c39cf1167669e46d713e71de4f56a3c8ecd4c",
     "docs/ai/work-items/bilingual-terms-conditions-master/evidence/reconciliation.log": "a8ad35d130978eb9e6c239b4783815ab849afa8b41077902ce54fdc40d3077a1",
@@ -8,11 +8,11 @@
     "docs/ai/work-items/bilingual-terms-conditions-master/evidence/terms-conditions-p95-measurement.json": "9a594d1d93363fa82225a7c0399874c78c4b5bc440791ba65443cc418463df19",
     "docs/ai/work-items/bilingual-terms-conditions-master/evidence/scripts/measure_terms_conditions_p95.py": "2eae5564093b2a72050713f0edb56086f345b09041608a7c5529fda77be23e32",
     "construction/patches/v9_12/add_terms_and_conditions_arabic_fields.py": "d35871d78e58493e1d70a6be056abda1189a425e90374d524b5c29fdf509d6dc",
-    "construction/patches.txt": "febbda018f91a6ad46ba7fb4e3afbc9e527e2c025a06744c0a3c13f162d490e1",
+    "construction/patches.txt": "f2ba9cdd6c023876836231d93e90b5f477915af3186386bb41d26d53d2f1707a",
     "construction/tests/test_bilingual_terms_conditions_pilot.py": "e99b681f0d0f21c9300efede6afcf0a501cd59bcf6d9fd20f5486d3b045c71d8",
-    "construction/data/bilingual/bilingual_registry.json": "f419d454e25bad7ae040264c3a40e5bfd56cb6922d914fda42b4f71a2995e57a",
-    "construction/hooks.py": "37be189a45f5484e79a0f37ea68e711815aa00972f08f39d1503078770b681ed",
-    "scripts/run_bilingual_regression_matrix.sh": "3445b845318caf50179b3cbb78eaf71bbfca350b7abb752ac39d48b1bf1c4fe0"
+    "construction/data/bilingual/bilingual_registry.json": "0f05a58c7587217a0fa637d37abda9e71c94b48d8d3869409de7574ac30c3334",
+    "construction/hooks.py": "e4beab7a48e95588da0ba9dd8054b610bfc20974999930d0b592d90ee7d36a8b",
+    "scripts/run_bilingual_regression_matrix.sh": "48b61171a55437a0689d7ac2827bffff546a3e32c338af5c8bebc4c5261fc28b"
   },
   "base_commit": "0f3bd24ba4c096104ff826c490462c47c6aaf696",
   "branch": "develop",
@@ -40,5 +40,42 @@
     "artefact": "docs/ai/work-items/bilingual-terms-conditions-master/evidence/terms-conditions-p95-measurement.json"
   },
   "site_migration": "construction.patches.v9_12.add_terms_and_conditions_arabic_fields executed and recorded in Patch Log; all 21 registry masters resolve their arabic_field on v16.localhost.",
-  "causal_order": "final test run -> capture log (2>&1) -> git add -f the .log -> compute SHA-256 digests -> MANIFEST.json -> commit"
+  "causal_order": "final test run -> capture log (2>&1) -> git add -f the .log -> compute SHA-256 digests -> MANIFEST.json -> commit",
+  "amendments": [
+    {
+      "date": "2026-10-04",
+      "artefact": "docs/ai/work-items/bilingual-terms-conditions-master/SCOPE.md",
+      "from": "9019b43dfb70595ce9f6182fc8ffcbf0a81ce02d403b5414a79655666a99d9b1",
+      "to": "17e8391e676eaa619e7c21eca0e4f194edc09200325bea2db407c53d765f85f2",
+      "reason": "amendment note documenting the re-pin performed by bilingual-asset-master"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "construction/patches.txt",
+      "from": "febbda018f91a6ad46ba7fb4e3afbc9e527e2c025a06744c0a3c13f162d490e1",
+      "to": "f2ba9cdd6c023876836231d93e90b5f477915af3186386bb41d26d53d2f1707a",
+      "reason": "living file; v9_13 entry appended by bilingual-asset-master"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "construction/data/bilingual/bilingual_registry.json",
+      "from": "f419d454e25bad7ae040264c3a40e5bfd56cb6922d914fda42b4f71a2995e57a",
+      "to": "0f05a58c7587217a0fa637d37abda9e71c94b48d8d3869409de7574ac30c3334",
+      "reason": "living data; additive Asset entry (22 masters) by bilingual-asset-master"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "construction/hooks.py",
+      "from": "37be189a45f5484e79a0f37ea68e711815aa00972f08f39d1503078770b681ed",
+      "to": "e4beab7a48e95588da0ba9dd8054b610bfc20974999930d0b592d90ee7d36a8b",
+      "reason": "living file; Asset doc_events single-hook registration added by bilingual-asset-master (F1)"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "scripts/run_bilingual_regression_matrix.sh",
+      "from": "3445b845318caf50179b3cbb78eaf71bbfca350b7abb752ac39d48b1bf1c4fe0",
+      "to": "48b61171a55437a0689d7ac2827bffff546a3e32c338af5c8bebc4c5261fc28b",
+      "reason": "shared runner expanded to 16 modules / 197 tests by bilingual-asset-master"
+    }
+  ]
 }

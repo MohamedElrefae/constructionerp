@@ -102,3 +102,16 @@ Per finding F1 in `bilingual-brand-master/SCOPE.md` §3.1, onboarding a master r
 | P95 / two-tier SLA | baseline 0.441 ms, bilingual 0.627 ms, ratio **1.4218×** → Tier 2B (≤1.50×) and universal ceiling (≤1.50 ms) → `COMPLIANT_WITH_TWO_TIER_SLA` |
 
 **Cleanup:** `_Test Terms and Conditions.title_ar` / `title_ar_norm` restored and no `CT-TERMS-` fixtures remain.
+
+
+## 7. Amendments (post-completion)
+
+Digests are recorded as `amendments[]` entries in `evidence/MANIFEST.json`;
+this work item's own evidence logs are unchanged.
+
+| Artefact | Why it moved |
+|---|---|
+| `construction/data/bilingual/bilingual_registry.json` | living data; additive `Asset` entry (**22 masters**) by `bilingual-asset-master` |
+| `construction/patches.txt` | living file; `v9_13` entry appended by `bilingual-asset-master` |
+| `construction/hooks.py` | living file; `Asset` `doc_events` single-hook registration added |
+| `scripts/run_bilingual_regression_matrix.sh` | shared runner expanded to **16 modules / 197 tests** |
