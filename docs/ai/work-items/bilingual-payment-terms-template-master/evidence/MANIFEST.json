@@ -1,0 +1,49 @@
+{
+  "artefacts": {
+    "CANARY-DISPOSITION.md": "51e802c82db561a7f1192754dedd7bc484a85016dab551a7b89c430dce6fb19e",
+    "SCOPE.md": "0a9ed6d1538309520494cfb534346a9bbb1a7afca6f7e417ffad1f1108ecb41a",
+    "payment-terms-template-p95-measurement.json": "28d0fe9429af9a3c2f4c66598a15c8df4ddeca2d67e80b003351f480d934ca0f",
+    "payment-terms-template-pilot-tests.log": "021324583f902c2f27c04878a2576e62bf43eac5141a3e4fabedb4e32feb38fe",
+    "scripts/measure_payment_terms_template_p95.py": "cf8ad0cae2b0b3d1a9d37becad7757751b7157ccc10232123b97366fa534b12e"
+  },
+  "base_commit": "2cbe71a2fc38cf4cf8c4379435b54b2fcb359f1c",
+  "branch": "feature/bilingual-payment-terms-template-master",
+  "canary_disposition": {
+    "artifact_modified_by_this_work_item": false,
+    "document": "docs/ai/work-items/bilingual-payment-terms-template-master/evidence/CANARY-DISPOSITION.md",
+    "document_sha256": "51e802c82db561a7f1192754dedd7bc484a85016dab551a7b89c430dce6fb19e",
+    "latency_gate": "Payment Terms Template master MEASURED (1.39x, 0.655ms P95) and compliant with Two-Tier Bilingual Search SLA (<= 1.50ms universal ceiling; <= 1.50x Tier 2B sub-millisecond trade-off band)",
+    "status": "COMPLIANT_WITH_TWO_TIER_SLA"
+  },
+  "latency_measurement": {
+    "absolute_p95_ms": {
+      "Payment Terms Template": 0.655
+    },
+    "artefact": "docs/ai/work-items/bilingual-payment-terms-template-master/evidence/payment-terms-template-p95-measurement.json",
+    "disposition": "MEASURED and compliant with Two-Tier Bilingual Search SLA",
+    "fixture_prefix": "CT-PTT-",
+    "fixtures_count": 12,
+    "harness": "docs/ai/work-items/bilingual-payment-terms-template-master/evidence/scripts/measure_payment_terms_template_p95.py",
+    "harness_sha256": "cf8ad0cae2b0b3d1a9d37becad7757751b7157ccc10232123b97366fa534b12e",
+    "leftover_fixtures": 0,
+    "match_sets_equal": true,
+    "ratio": 1.3877,
+    "samples": 50,
+    "sha256": "28d0fe9429af9a3c2f4c66598a15c8df4ddeca2d67e80b003351f480d934ca0f",
+    "warmup": 5
+  },
+  "out_of_scope_respected": [
+    "no orchestrator/ modification",
+    "no apps/frappe or apps/erpnext modification",
+    "all foreign work item evidence untouched",
+    "Payment Terms Template Detail child table unmapped; narrative description deferred to narrative-unicode-policy",
+    "Payment Term standalone doctype unmapped in this cycle"
+  ],
+  "primary_invariant": {
+    "bilingual_service_py_diff_lines": 0,
+    "claim": "Payment Terms Template master required zero modifications to bilingual_service.py and search.py",
+    "enforced_by_test": "construction.tests.test_bilingual_payment_terms_template_pilot.test_zero_service_edits_guard",
+    "reference_commit": "2cbe71a2fc38cf4cf8c4379435b54b2fcb359f1c",
+    "search_py_diff_lines": 0
+  }
+}
