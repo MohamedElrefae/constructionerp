@@ -2,7 +2,7 @@
 
 **Work item:** `bilingual-narrative-sanitizer`
 **Branch:** `feature/bilingual-narrative-sanitizer`
-**Status:** `COMPLETE` — implemented service, hooks, templates (5 sites), tests; 18/18 unit tests, 151/151 regression matrix (12 modules), 19/19 reconciliation verified
+**Status:** `COMPLETE` — implemented service, hooks, templates (5 sites), tests; 20/20 unit tests, 153/153 regression matrix (12 modules), 19/19 reconciliation verified
 **Base commit:** `38beb35d31026e0afc70dd43e0ccf8de7dc1a222` (develop clean; `narrative-unicode-policy` design `APPROVED`)
 **Date:** 2026-10-03
 **Authority:** approved design at `docs/ai/work-items/narrative-unicode-policy/SCOPE.md`,

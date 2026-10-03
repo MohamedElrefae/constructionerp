@@ -1,6 +1,6 @@
 {
   "artefacts": {
-    "docs/ai/work-items/bilingual-narrative-sanitizer/SCOPE.md": "fa0d7ef0062af82cfc41cb0c27072a56c19cdad5af9c3fbaae46666bc27b3b0f",
+    "docs/ai/work-items/bilingual-narrative-sanitizer/SCOPE.md": "568bdfcaf7c6a22e653baf32634f4e60f2a7f1991814f9e8f515efffda01a30e",
     "docs/ai/work-items/bilingual-narrative-sanitizer/evidence/test_bilingual_narrative_sanitizer.log": "33c1fd19e28885d3b6bc99d9c8978c1a89ff16ad6e4db81572f27fe7b035de78",
     "docs/ai/work-items/bilingual-narrative-sanitizer/evidence/regression-matrix.log": "de0e8af9da63b2c3273085b45b36ff65189000439b0e57ee9cd91191ebff58c5",
     "docs/ai/work-items/bilingual-narrative-sanitizer/evidence/reconciliation.log": "9fb1cacccb62d32126d6f731bea24ea515fb0f79c5ced881c7a6464ae3e1fa50",
