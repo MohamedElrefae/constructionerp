@@ -1,0 +1,48 @@
+{
+  "artefacts": {
+    "CANARY-DISPOSITION.md": "5b302639619bd39e3190e117c229d3b455df5d3c70b52776d708f0a1bdae02e1",
+    "SCOPE.md": "7de6d2eb3e71d2bfa8a2a754150fcd64b566328435c506bbbe2705a3be723433",
+    "scripts/measure_task_p95.py": "03b21a3d8bb5abb875fd29bb92f6158ea21a3e01a8a25a3354f02f8f822b4ca5",
+    "task-p95-measurement.json": "341d84121ac4a23943b7e99569b921d2ef9249757bcba69ef0365fc2da3be603",
+    "task-pilot-tests.log": "31a9d8c1c121459be08ba9343bb4449bb16f3914fd5d53d6a277cd789b2b5dd3"
+  },
+  "base_commit": "abffaaa248959b77ca03fcb16922542344c79de1",
+  "branch": "feature/bilingual-task-master",
+  "canary_disposition": {
+    "artifact_modified_by_this_work_item": false,
+    "document": "docs/ai/work-items/bilingual-task-master/evidence/CANARY-DISPOSITION.md",
+    "document_sha256": "5b302639619bd39e3190e117c229d3b455df5d3c70b52776d708f0a1bdae02e1",
+    "latency_gate": "Task master MEASURED (1.40x, 0.654ms P95) and compliant with Two-Tier Bilingual Search SLA (<= 1.50ms universal ceiling; <= 1.50x Tier 2B sub-millisecond trade-off band)",
+    "status": "COMPLIANT_WITH_TWO_TIER_SLA"
+  },
+  "latency_measurement": {
+    "absolute_p95_ms": {
+      "Task": 0.654
+    },
+    "artefact": "docs/ai/work-items/bilingual-task-master/evidence/task-p95-measurement.json",
+    "disposition": "MEASURED and compliant with Two-Tier Bilingual Search SLA",
+    "fixture_prefix": "CT-TASK-",
+    "fixtures_count": 12,
+    "harness": "docs/ai/work-items/bilingual-task-master/evidence/scripts/measure_task_p95.py",
+    "harness_sha256": "03b21a3d8bb5abb875fd29bb92f6158ea21a3e01a8a25a3354f02f8f822b4ca5",
+    "leftover_fixtures": 0,
+    "match_sets_equal": true,
+    "ratio": 1.4034,
+    "samples": 50,
+    "sha256": "341d84121ac4a23943b7e99569b921d2ef9249757bcba69ef0365fc2da3be603",
+    "warmup": 5
+  },
+  "out_of_scope_respected": [
+    "no orchestrator/ modification",
+    "no apps/frappe or apps/erpnext modification",
+    "all foreign work item evidence untouched",
+    "status, description, and project join strictly excluded from bilingual registry"
+  ],
+  "primary_invariant": {
+    "bilingual_service_py_diff_lines": 0,
+    "claim": "Task master required zero modifications to bilingual_service.py and search.py",
+    "enforced_by_test": "construction.tests.test_bilingual_task_pilot.test_zero_service_edits_guard",
+    "reference_commit": "abffaaa248959b77ca03fcb16922542344c79de1",
+    "search_py_diff_lines": 0
+  }
+}
