@@ -1,0 +1,59 @@
+{
+  "artefacts": {
+    "docs/ai/work-items/transactional-link-resolution/SCOPE.md": "71253e1dded904cc9a604219d63d1dc59e5fd9e067422243df3fe19895d889b2",
+    "docs/ai/work-items/transactional-link-resolution/RFC.md": "eecf3dc404681f481c917cc6e613ecb9209bf3ef1753b9ed8b5d07fc68f43ef8",
+    "docs/ai/work-items/transactional-link-resolution/evidence/test_transaction_link_search.log": "93ce775173759a76136ada9a51e954508297994e88364a684c964ad16b7c6257",
+    "docs/ai/work-items/transactional-link-resolution/evidence/regression-matrix.log": "aa494d753be4ab1d203bf9930c5132cef2dfc0be24dbd401a9bb2e43573e9ab1",
+    "docs/ai/work-items/transactional-link-resolution/evidence/reconciliation.log": "9fb1cacccb62d32126d6f731bea24ea515fb0f79c5ced881c7a6464ae3e1fa50",
+    "construction/services/transaction_link_search.py": "d403b555fe449ad9c63ba55f7f89a125da371293f48a6386eac9661f888cc7ce",
+    "construction/tests/test_transaction_link_search.py": "a46ee85b2bb636e83e87aa8f4aeff3a74134aba95e6f77c7a2e9bff8855a7c87",
+    "construction/public/js/searchable_dropdown/searchable_dropdown.js": "cfca754ee98f35392313271f16848ccc9499d7a98668b7d61c2d3d6863b62fee",
+    "scripts/run_bilingual_regression_matrix.sh": "34044cd0522a3293d96f06fc5104277de5a7c63c752b72462f8506f23d41baa8"
+  },
+  "base_commit": "28287e5bb23e4c47753ed82de3fa528c8c00fab9",
+  "branch": "develop",
+  "decisions_settled": {
+    "D1_invariant_outcome": "Option C (Sidecar pattern) approved: triad {bilingual_service.py, search.py, bilingual_registry.json} preserved at 0 diff lines",
+    "D2_journal_entry": "Journal Entry excluded from v1 transactional link resolution (parties reside in tabJournal Entry Account child table; recorded as deferred)",
+    "D3_directional_properties": "Four replacement directional properties (no phantom rows, bounded recall, native agreement on Latin/ASCII, determinism) ratified in place of set equality"
+  },
+  "test_results": {
+    "unit_suite": {
+      "module": "construction.tests.test_transaction_link_search",
+      "tests": 16,
+      "passed": 16,
+      "failed": 0,
+      "log": "docs/ai/work-items/transactional-link-resolution/evidence/test_transaction_link_search.log"
+    },
+    "canonical_matrix": {
+      "modules": 13,
+      "tests": 169,
+      "passed": 169,
+      "failed": 0,
+      "log": "docs/ai/work-items/transactional-link-resolution/evidence/regression-matrix.log"
+    },
+    "reconciliation": {
+      "rows_parsed": 19,
+      "sources_located": 19,
+      "mismatched": 0,
+      "unsourced": 0,
+      "result": "PASS",
+      "log": "docs/ai/work-items/transactional-link-resolution/evidence/reconciliation.log"
+    }
+  },
+  "primary_invariant": {
+    "claim": "Zero modifications to bilingual_service.py, search.py, and bilingual_registry.json; zero doctype schema modifications",
+    "reference_commits": [
+      "38beb35d31026e0afc70dd43e0ccf8de7dc1a222",
+      "cbc8d5b",
+      "46aa201",
+      "0f5be0d",
+      "87e88cd",
+      "a7086ef",
+      "2f74193"
+    ],
+    "bilingual_service_py_diff_lines": 0,
+    "search_py_diff_lines": 0,
+    "bilingual_registry_json_diff_lines": 0
+  }
+}

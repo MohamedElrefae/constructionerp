@@ -64,10 +64,22 @@ class SearchableDropdownEnhancer {
 
 	setCustomQuery() {
 		const self = this;
+		const transactionalTargets = [
+			"Sales Order",
+			"Sales Invoice",
+			"Material Request",
+			"Purchase Order",
+			"Purchase Invoice",
+			"Purchase Receipt",
+			"Stock Entry",
+		];
+		const query = transactionalTargets.includes(self.doctype)
+			? "construction.services.transaction_link_search.search_transactions"
+			: "construction.searchable_dropdown.api.search.searchable_link_search";
 
 		this.field.get_query = function () {
 			return {
-				query: "construction.searchable_dropdown.api.search.searchable_link_search",
+				query: query,
 				filters: {
 					doctype: self.doctype,
 					search_fields: self.search_fields,

@@ -1,0 +1,52 @@
+Starting test run with parameters: site=v16.localhost, module=construction.tests.test_transaction_link_search, verbose=False, tests=(), force=False, profile=False, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+View detailed logs (using --verbose): /home/mohamed/frappe-bench/logs/frappe.testing.log
+
+Running 16 unspecified-category tests for construction
+
+construction.tests.test_transaction_link_search.TestAllowListValidation
+   [32m ✔ [0m test_registered_doctypes_accepted
+   [32m ✔ [0m test_seed_required_targets
+   [32m ✔ [0m test_unregistered_doctype_returns_empty
+
+construction.tests.test_transaction_link_search.TestClientFilterSanitization
+   [32m ✔ [0m test_json_string_filters_parsed_and_sanitized
+   [32m ✔ [0m test_meta_and_link_field_stripped
+
+construction.tests.test_transaction_link_search.TestDirectionalProperties
+   [32m ✔ [0m test_property_2_bounded_recall
+       ▸  /home/mohamed/frappe-bench/apps/frappe/frappe/model/qb_query.py:153: V17FrappeDeprecationWarning: This codepath was marked (DATE: 2024-01-01) deprecated for removal (from v17 onwards); note:
+       ▸   The 'limit_page_length' parameter is deprecated. Use 'limit' instead.
+       ▸  
+       ▸    deprecation_warning(
+   [32m ✔ [0m test_property_3_native_agreement_on_latin_vocabulary
+   [32m ✔ [0m test_property_4_determinism
+
+construction.tests.test_transaction_link_search.TestEmptyAndLatinQueries
+   [32m ✔ [0m test_empty_txt_bypasses_preresolution
+   [32m ✔ [0m test_latin_query_passthrough
+   [32m ✔ [0m test_native_search_fields_derivation
+   [32m ✔ [0m test_whitespace_txt_bypasses_preresolution
+
+construction.tests.test_transaction_link_search.TestSeededArabicEndToEnd
+   [32m ✔ [0m test_arabic_search_matches_and_enriches_labels
+       ▸  /home/mohamed/frappe-bench/apps/frappe/frappe/model/qb_query.py:153: V17FrappeDeprecationWarning: This codepath was marked (DATE: 2024-01-01) deprecated for removal (from v17 onwards); note:
+       ▸   The 'limit_page_length' parameter is deprecated. Use 'limit' instead.
+       ▸  
+       ▸    deprecation_warning(
+   [32m ✔ [0m test_unmatched_arabic_returns_no_phantoms
+
+construction.tests.test_transaction_link_search.TestTriadInvariantGuard
+   [32m ✔ [0m test_triad_remains_unmodified
+
+construction.tests.test_transaction_link_search.TestTxtCorrectnessTrap
+   [32m ✔ [0m test_txt_trap_asserted_downstream_receives_empty_txt
+       ▸  /home/mohamed/frappe-bench/apps/frappe/frappe/model/qb_query.py:153: V17FrappeDeprecationWarning: This codepath was marked (DATE: 2024-01-01) deprecated for removal (from v17 onwards); note:
+       ▸   The 'limit_page_length' parameter is deprecated. Use 'limit' instead.
+       ▸  
+       ▸    deprecation_warning(
+
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.357s
+
+OK

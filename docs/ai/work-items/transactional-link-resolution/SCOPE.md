@@ -1,12 +1,12 @@
 # Scope Descriptor — transactional-link-resolution
 
 **Work item:** `transactional-link-resolution`
-**Branch:** `feature/transactional-link-resolution`
-**Status:** `DESIGN_APPROVED` — RFC approved by owner (2026-10-03); decisions D1 (Option C), D2 (Journal Entry excluded in v1), D3 (four replacement directional properties) ratified
-**Base commit:** `ab5dcdf` (develop clean; hook-matrix Scope B closed)
+**Branch:** `develop`
+**Status:** `COMPLETE` — Sidecar implemented, verified against live site (16/16 unit, 169/169 matrix, 19/19 reconciliation), triad at 0 diff
+**Base commit:** `28287e5` (RFC approved, decisions D1-D3 ratified)
 **Date:** 2026-10-03
 **Authority:** owner directive in session; prerequisites stipulated by `docs/ai/work-items/bilingual-wave2b-transactions/SCOPE.md` §7
-**Scope:** documentation only at this stage — RFC + scope descriptor. Design ratified; ready for implementation planning.
+**Scope:** Sidecar endpoint `transaction_link_search.py`, client hook in `searchable_dropdown.js`, regression suite `test_transaction_link_search.py`, and regression matrix expansion.
 
 ---
 
@@ -97,7 +97,8 @@ All three required design decisions ratified on 2026-10-03:
 | Artefact | State |
 |---|---|
 | `RFC.md` | `APPROVED` (owner decision, 2026-10-03) |
-| `SCOPE.md` | this file — `DESIGN_APPROVED` |
+| `SCOPE.md` | this file — `COMPLETE` |
 | Decisions D1–D3 | ratified 2026-10-03 (SCOPE §3) |
-| Implementation | not started; **authorised** to begin per ratified design |
-| Evidence / manifests | none yet — created only after implementation |
+| Implementation | complete (`transaction_link_search.py`, `searchable_dropdown.js`) |
+| Tests & Matrix | 16/16 unit tests, 169/169 matrix tests across 13 modules, 19/19 reconciliation |
+| Evidence / manifests | captured in `evidence/` with SHA-256 in `MANIFEST.json` |
