@@ -5,13 +5,13 @@
     "docs/ai/work-items/bilingual-adr-evidence-correction/evidence/reconciliation.log": "9fb1cacccb62d32126d6f731bea24ea515fb0f79c5ced881c7a6464ae3e1fa50",
     "docs/ai/work-items/bilingual-adr-evidence-correction/evidence/regression-matrix.log": "03603b32de66636873d0cc289b8265cfa862f2e8d6d9279ba44e986340bf62b0",
     "docs/ai/work-items/bilingual-adr-evidence-correction/evidence/guard-module-observation.log": "8aa206ce33971d054eea668d6058cc72068c6c999c8cf72319a6899333f8a889",
-    "docs/ai/work-items/bilingual-performance-sla.md": "97f853646e956cc651216f444d2a8f4c65f940d49eaf5fc121c0ba210e9859c9"
+    "docs/ai/work-items/bilingual-performance-sla.md": "4f2b309d1846f8c8c05b01a74af5d62b71a5009547aa11088d9eca51aa23e4ca"
   },
   "base_commit": "a7086ef79b0bf73b30b5320b62a52f8f281da406",
   "branch": "feature/bilingual-adr-evidence-correction",
   "corrected_document": {
     "path": "docs/ai/work-items/bilingual-performance-sla.md",
-    "sha256": "97f853646e956cc651216f444d2a8f4c65f940d49eaf5fc121c0ba210e9859c9"
+    "sha256": "4f2b309d1846f8c8c05b01a74af5d62b71a5009547aa11088d9eca51aa23e4ca"
   },
   "corrected_rows": {
     "Department (\u00a74 line 79)": {

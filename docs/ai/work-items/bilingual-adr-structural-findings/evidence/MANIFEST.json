@@ -1,0 +1,50 @@
+{
+  "artefacts": {
+    "docs/ai/work-items/bilingual-adr-structural-findings/SCOPE.md": "36d017a066e33be4870c17149f46795458f82e7d140fa96323bb36761892ce03",
+    "docs/ai/work-items/bilingual-adr-structural-findings/evidence/reconciliation.log": "9fb1cacccb62d32126d6f731bea24ea515fb0f79c5ced881c7a6464ae3e1fa50",
+    "docs/ai/work-items/bilingual-adr-structural-findings/evidence/regression-matrix.log": "7b641eaf5a5a9f491f867086c2c802a8d034f02768f38fa858fa6ebc5f65e2bf",
+    "docs/ai/work-items/bilingual-performance-sla.md": "4f2b309d1846f8c8c05b01a74af5d62b71a5009547aa11088d9eca51aa23e4ca"
+  },
+  "base_commit": "3e71dec74efdf1950d44e5db8d9bf19d67bceae0",
+  "branch": "develop",
+  "decisions_settled": {
+    "mixed_measurement_protocols": "Documented in §5.3 that Tier 2A strictly requires n=100 min-of-rounds to arbitrate the tight 1.15x bound, while Tier 2B n=50 nearest-rank P95 is statistically adequate for the 1.50x architectural trade-off band",
+    "differing_sql_and_additive_model": "Reconciled in §2 that the additive model applies to standard single-table scans; for composite structures (BOQ Header/Structure), simpler governed LIKE queries result in negative relative overhead (<1.0x) while meeting Tier 1 (<=1.50 ms) and Tier 2B (<=1.50x)",
+    "production_query_shape": "Clarified in §1/§2 that fixture equality (match_sets_equal: true) applies to canonical synthetic fixtures (CT-*), while unanchored production queries intentionally prioritize localized relevance over raw SQL sorting",
+    "account_calibration_pin": "Clarified in §1/§4 that recorded values are frozen calibration benchmarks bound to immutable Stage-3 evidence artefacts in §7, governing against hardware/state jitter",
+    "uom_tier_boundary": "Recorded in §5.5 as unpinned local observation (n=100 baseline 1.254 ms, ratio 0.668x passing both 2B and 2A); §4 retains committed 0.960 ms evidence binding",
+    "finding_7_item_assertion": "Pre-existing assertion resolved in 46aa201 (38/38 tests green)"
+  },
+  "test_results": {
+    "canonical_matrix": {
+      "modules": 12,
+      "tests": 153,
+      "passed": 153,
+      "failed": 0,
+      "log": "docs/ai/work-items/bilingual-adr-structural-findings/evidence/regression-matrix.log"
+    },
+    "reconciliation": {
+      "rows_parsed": 19,
+      "sources_located": 19,
+      "mismatched": 0,
+      "unsourced": 0,
+      "result": "PASS",
+      "log": "docs/ai/work-items/bilingual-adr-structural-findings/evidence/reconciliation.log"
+    }
+  },
+  "primary_invariant": {
+    "claim": "Zero modifications to bilingual services, registry, or vendor code; exactly 19 parsed rows in §4 matching evidence",
+    "reference_commits": [
+      "38beb35d31026e0afc70dd43e0ccf8de7dc1a222",
+      "cbc8d5b",
+      "46aa201",
+      "0f5be0d",
+      "87e88cd",
+      "a7086ef",
+      "2f74193"
+    ],
+    "bilingual_service_py_diff_lines": 0,
+    "search_py_diff_lines": 0,
+    "bilingual_registry_json_diff_lines": 0
+  }
+}

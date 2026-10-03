@@ -25,25 +25,52 @@ came from min-of-rounds selection landing favourably. A 10% ceiling on a ~1.3 ms
 only ~130 µs for the entire Python localisation stack, which is the same order as the
 measurement noise. **The 1.10x ceiling was statistically undecidable at this baseline.**
 
-**The other eleven masters sit far outside 1.10x.** Wave 1 and Wave 2a recorded ratios of
+**The other masters sit outside 1.10x.** Wave 1 and Wave 2a recorded ratios of
 1.3092–1.4750 — every one exceeding the old ceiling.
 
-## 2. Why the ratios diverge: Amdahl's Law at microsecond scale
+**Measurement scope and production query shape.** The empirical parity asserted across
+evidence manifests (`match_sets_equal: true`) is measured against canonical synthetic fixture
+prefixes (`CT-*`) where baseline and governed queries scan identical records. For unanchored
+production queries, the governed pipeline applies multi-lingual ranking (`exact > prefix > substring`)
+and limits results to `page_length`, intentionally providing localized relevance rather than
+reproducing Frappe's raw SQL ordering.
 
-The bilingual stack costs an almost **constant ~150–200 µs** regardless of doctype:
+**Frozen calibration pins.** The figures recorded in §4 represent frozen baseline calibration
+pins bound to the immutable evidence artefacts enumerated in §7 (e.g. Account at 1.322 ms / 1.482 ms).
+While subsequent execution in different environments or under database state variations may fluctuate
+absolute latencies, the committed artefacts serve as the authoritative baseline for governance.
+
+## 2. Why the ratios diverge: Amdahl's Law and SQL divergence
+
+On standard single-table master scans, the bilingual stack costs an almost **constant ~150–200 µs**:
 dynamic registry resolution, server-authoritative normalisation, bidi validation,
 Python-level relevance ranking (`exact > prefix > substring`), and bilingual label synthesis.
 
-A constant additive cost divided by a smaller denominator is a larger ratio:
+A constant additive cost divided by a smaller denominator produces a larger ratio:
 
 ```
 Account            (1.322 + 0.160) / 1.322 = 1.121x   sub-1.5 ms absolute
 Classification     (0.420 + 0.180) / 0.420 = 1.428x   sub-0.65 ms absolute
 ```
 
-A percentage-only ceiling therefore **penalises the faster queries**. Holding a 0.42 ms
+A percentage-only ceiling therefore **penalises faster queries**. Holding a 0.42 ms
 baseline to 1.10x demands the entire Python stack fit in 42 µs, which is not achievable in
 interpreted Python. In absolute terms those masters are more than twice as fast as `Account`.
+
+**Unified root cause: the two legs issue materially different SQL.** The comparison between
+native Frappe `search_link` and the governed `searchable_dropdown` cascade is not an isolated diff
+on identical SQL statements:
+- Native Frappe `search_link` computes `IFNULL(1/NULLIF(LOCATE(...)))` as SQL `_relevance`, orders
+  by `_relevance DESC, idx DESC, lft/creation/modified DESC`, and filters across auxiliary doctype
+  `search_fields` (e.g. `parent_structure`, `project_name`).
+- The governed bilingual search issues simpler `LIKE` queries with `ORDER BY modified DESC` and
+  delegates multi-lingual ranking and candidate pruning to Python over `RANK_WINDOW`.
+
+Because of this architectural divergence, the additive cost model applies primarily to simple
+single-table lookups. For composite or deeply-indexed doctypes (such as `BOQ Header` and `BOQ Structure`),
+the baseline SQL overhead is heavier than the governed SQL query, leading to *negative* relative
+overhead (-0.207 ms, -0.228 ms; ratios 0.7568x and 0.7685x). Both easily satisfy Tier 1 (<= 1.50 ms)
+and Tier 2B (<= 1.50x).
 
 ## 3. The two-tier structure
 
@@ -62,6 +89,9 @@ latency.
 
 Tier 2 never relaxes Tier 1. A master may satisfy its relative band and still breach the
 absolute ceiling, which fails the programme.
+
+Tier 2 measures an end-to-end framework execution comparison between native Frappe `search_link`
+and the governed `searchable_dropdown` cascade, rather than an isolated micro-benchmark on identical SQL.
 
 ## 4. Measured state — all 19 active masters
 
@@ -98,9 +128,16 @@ Derived from the committed evidence artefacts and re-verified at this commit.
 2. The **1.10x ceiling is RETIRED**, not weakened — it was statistically undecidable at
    sub-2 ms baselines.
 3. **1.15x with `n=100`** is canonical for Tier 2A. Sample width is part of the gate: an `n=50`
-   measurement cannot decide a 1.15x bound at this latency.
+   measurement cannot decide a 1.15x bound at this latency. Tier 2B's 1.50x band uses `n=50`
+   interleaved nearest-rank P95 across standard masters, which is statistically adequate to
+   detect regressions beyond 1.50x on sub-millisecond queries (BOQ Header and Structure were
+   evaluated under `n=100` 5-round min-of-rounds).
 4. Tier 2B's 1.50x band is a **documented architectural trade-off**, not a performance target.
    It records the measured cost of Python-level ranking on sub-millisecond baselines.
+5. **UOM tier boundary**: UOM's baseline (0.960 ms) sits near the 1.0 ms Tier 2A threshold.
+   An ad-hoc local observation under the canonical `n=100` protocol measured a 1.254 ms baseline
+   with ratio 0.668x, passing both Tier 2B (<= 1.50x) and Tier 2A (<= 1.15x). This observation
+   is noted as unpinned context; §4 retains its committed 0.960 ms evidence binding.
 
 ## 6. Known gap
 
