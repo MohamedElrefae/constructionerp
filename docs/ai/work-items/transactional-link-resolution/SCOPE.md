@@ -1,0 +1,102 @@
+# Scope Descriptor — transactional-link-resolution
+
+**Work item:** `transactional-link-resolution`
+**Branch:** `feature/transactional-link-resolution`
+**Status:** `OPEN` — RFC drafted at `docs/ai/work-items/transactional-link-resolution/RFC.md`; awaiting owner approval of three decisions before any implementation begins
+**Base commit:** `ab5dcdf` (develop clean; hook-matrix Scope B closed)
+**Date:** 2026-10-03
+**Authority:** owner directive in session; prerequisites stipulated by `docs/ai/work-items/bilingual-wave2b-transactions/SCOPE.md` §7
+**Scope:** documentation only at this stage — RFC + scope descriptor. **No implementation code is authorised until the decisions in §3 are recorded.**
+
+---
+
+## 1. Background & Context
+
+Wave 2b deferred transactional bilingual search and preserved three prerequisites
+(`bilingual-wave2b-transactions/SCOPE.md` §7): an RFC renegotiating the zero-service-edit
+invariant, a deliberate `RANK_WINDOW` design with an overflow contract, and a matched-set
+equivalence proof. `Asset`, `Brand`, and `Terms and Conditions` were deferred contingent on
+this work.
+
+This item discharges prerequisite 1 (and redesigns prerequisite 3, which is unachievable as
+literally written — see RFC §7.1). Prerequisite 2 is discharged in RFC §4 against the verified
+contract: `RANK_WINDOW = 5000` (`bilingual_service.py:75`) with a `+1` overflow probe and
+loud, never-silent, truncation (`search.py:171`).
+
+---
+
+## 2. Verified Facts the RFC Rests On
+
+Established by direct inspection, not assertion:
+
+1. `searchable_link_search` declares `link_fieldname` and `reference_doctype`
+   (`search.py:21–22`) and **never reads them** — Frappe already delivers the cross-table
+   context and discards it.
+2. `get_mapping` returns `None` **silently** for doctypes absent from the registry
+   (`bilingual_service.py:144–146`); it raises only for `active`/`schema_installed` mappings
+   with missing fields (`:159–160`). The unmodified function therefore serves an unregistered
+   transactional doctype today.
+3. A blank-query path already exists: `if search_txt:` (`search.py:124`) guards all
+   `or_filters`; the empty branch (`:148–154`) is bounded pagination with `filters` applied
+   and `page_length` clamped to `≤ 200` (`:145`).
+4. `filters` is applied on both branches (`search.py:153`, `:168`), so a server-side
+   `{"customer": ("in", ids)}` tuple works with no JSON round-trip.
+5. The client route is `setCustomQuery()` in
+   `construction/public/js/searchable_dropdown/searchable_dropdown.js`, loaded via
+   `hooks.py:152` — **outside** the invariant triad.
+6. `Journal Entry` has **no parent-level party Link**; its account references live in
+   `tabJournal Entry Account` (live metadata).
+7. Live row counts: Sales Invoice 3,977 · Stock Entry 1,991 · Journal Entry 1,493 ·
+   Purchase Invoice 994 · Material Request 670 · Sales Order 497 · Purchase Receipt 497 ·
+   Purchase Order / Timesheet / Payment Entry 0.
+
+---
+
+## 3. Decisions Required From the Owner
+
+Nothing below is implemented until all three are recorded.
+
+| # | Decision | Recommendation |
+|---|---|---|
+| **D1** | **Invariant outcome.** Wave 2b §7.1 presumes the invariant ends. RFC §2.3 concludes Option C delivers the feature with the triad at **0 diff**. Accept "the invariant does not end", or direct Option A/B and accept the triad breach. | **Option C — invariant preserved** |
+| **D2** | **`Journal Entry`.** Its resolution requires a child-table leg the parent-level sidecar cannot serve (RFC §3.4). Child-table variant, or explicit v1 exclusion? | **Exclude in v1, record the exclusion** |
+| **D3** | **Matched-set equivalence (§7.3).** Native `search_link` returns 0 rows for an Arabic transactional query by design, so `match_sets_equal: true` is unachievable. RFC §7.1 proposes four replacement properties (subset, bounded recall, native agreement on shared vocabulary, determinism). | **Accept the four properties** |
+
+---
+
+## 4. Deliverables (post-approval)
+
+1. Sidecar endpoint `construction/services/transaction_link_search.py` — allow-list
+   validation, Option B pre-resolution, delegation to the unmodified `searchable_link_search`
+   with `txt=""`, Arabic label enrichment.
+2. Client route in `searchable_dropdown.js` `setCustomQuery()` branching on the allow-list.
+3. Pre-resolution top-K cap by master-side relevance (RFC §4.3) as a declared constant.
+4. Tests: **the `txt` trap** (must be asserted, not documented), boundary tests for K and for
+   `page_length`, allow-list rejection, and the §7.1 directional properties.
+5. New module added to `scripts/run_bilingual_regression_matrix.sh` (canonical matrix grows
+   from 12 modules / 153 tests).
+6. Measurement run → evidence logs → `MANIFEST.json`, per the causal order.
+
+---
+
+## 5. Invariants Preserved
+
+- `construction/services/bilingual_service.py` — 0 modified lines
+- `construction/searchable_dropdown/api/search.py` — 0 modified lines
+- `construction/data/bilingual/bilingual_registry.json` — 0 modified lines (**no
+  `link_resolution_fields`; RFC §5 explicitly declines the registry extension**)
+- `apps/frappe`, `apps/erpnext` — 0 modified lines
+- Canonical regression matrix — 153/153 green at entry (12 modules)
+- ADR reconciliation — 19/19 OK at entry
+- Transactional resolution fields are **never** added to any registry `search.fields`
+
+---
+
+## 6. Current State
+
+| Artefact | State |
+|---|---|
+| `RFC.md` | drafted, `DRAFT — awaiting owner approval` |
+| `SCOPE.md` | this file |
+| Implementation | **not started, not authorised** |
+| Evidence / manifests | none yet — created only after implementation |
