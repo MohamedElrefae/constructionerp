@@ -1,0 +1,44 @@
+{
+  "artefacts": {
+    "docs/ai/work-items/bilingual-terms-conditions-master/SCOPE.md": "9019b43dfb70595ce9f6182fc8ffcbf0a81ce02d403b5414a79655666a99d9b1",
+    "docs/ai/work-items/bilingual-terms-conditions-master/evidence/test_bilingual_terms_conditions_pilot.log": "6e418fdffc0df32c7b62625e195535aa6a69d9dfd344036b075b232ada2c07ea",
+    "docs/ai/work-items/bilingual-terms-conditions-master/evidence/regression-matrix.log": "fafab3abd08f75705fad945def3c39cf1167669e46d713e71de4f56a3c8ecd4c",
+    "docs/ai/work-items/bilingual-terms-conditions-master/evidence/reconciliation.log": "a8ad35d130978eb9e6c239b4783815ab849afa8b41077902ce54fdc40d3077a1",
+    "docs/ai/work-items/bilingual-terms-conditions-master/evidence/terms-conditions-p95-run.log": "473bf6d03607f754266f6387b7be18a673ba42478347d89a4ccdc80158461e50",
+    "docs/ai/work-items/bilingual-terms-conditions-master/evidence/terms-conditions-p95-measurement.json": "9a594d1d93363fa82225a7c0399874c78c4b5bc440791ba65443cc418463df19",
+    "docs/ai/work-items/bilingual-terms-conditions-master/evidence/scripts/measure_terms_conditions_p95.py": "2eae5564093b2a72050713f0edb56086f345b09041608a7c5529fda77be23e32",
+    "construction/patches/v9_12/add_terms_and_conditions_arabic_fields.py": "d35871d78e58493e1d70a6be056abda1189a425e90374d524b5c29fdf509d6dc",
+    "construction/patches.txt": "febbda018f91a6ad46ba7fb4e3afbc9e527e2c025a06744c0a3c13f162d490e1",
+    "construction/tests/test_bilingual_terms_conditions_pilot.py": "e99b681f0d0f21c9300efede6afcf0a501cd59bcf6d9fd20f5486d3b045c71d8",
+    "construction/data/bilingual/bilingual_registry.json": "f419d454e25bad7ae040264c3a40e5bfd56cb6922d914fda42b4f71a2995e57a",
+    "construction/hooks.py": "37be189a45f5484e79a0f37ea68e711815aa00972f08f39d1503078770b681ed",
+    "scripts/run_bilingual_regression_matrix.sh": "3445b845318caf50179b3cbb78eaf71bbfca350b7abb752ac39d48b1bf1c4fe0"
+  },
+  "base_commit": "0f3bd24ba4c096104ff826c490462c47c6aaf696",
+  "branch": "develop",
+  "work_item": "bilingual-terms-conditions-master",
+  "primary_invariant": "Zero service edits: construction/services/bilingual_service.py and construction/searchable_dropdown/api/search.py remain byte-identical to seven reference commits; the bilingual registry grows monotonically (D5).",
+  "decisions_settled": {
+    "F1": "Triple registration applied: (1) Arabic/norm fields via patch v9_12, (2) bilingual registry entry active, (3) hooks.py doc_events hooks (enforce_bilingual_arabic_policy + narrative_sanitizer for narrative terms field).",
+    "narrative_exclusion": "Terms and Conditions 'terms' (Text Editor, Tier 2) excluded from registry search.fields (['title', 'title_ar'] only)."
+  },
+  "test_results": {
+    "pilot_module": "construction.tests.test_bilingual_terms_conditions_pilot: 8/8 OK",
+    "regression_matrix": "15 modules / 189 tests, all OK",
+    "transaction_link_search": "20/20 OK",
+    "adr_reconciler": "19/19 PASS"
+  },
+  "latency_measurement": {
+    "status": "COMPLIANT_WITH_TWO_TIER_SLA",
+    "methodology": "5 rounds x n=100 interleaved, min-of-rounds nearest-rank P95, 5 warmups per round",
+    "tier": "2B (baseline P95 < 1.0 ms => ratio ceiling 1.50x)",
+    "baseline_p95_ms": 0.441,
+    "bilingual_p95_ms": 0.627,
+    "ratio": 1.4218,
+    "universal_ceiling_ms": 1.5,
+    "verdict": "COMPLIANT_WITH_TWO_TIER_SLA",
+    "artefact": "docs/ai/work-items/bilingual-terms-conditions-master/evidence/terms-conditions-p95-measurement.json"
+  },
+  "site_migration": "construction.patches.v9_12.add_terms_and_conditions_arabic_fields executed and recorded in Patch Log; all 21 registry masters resolve their arabic_field on v16.localhost.",
+  "causal_order": "final test run -> capture log (2>&1) -> git add -f the .log -> compute SHA-256 digests -> MANIFEST.json -> commit"
+}

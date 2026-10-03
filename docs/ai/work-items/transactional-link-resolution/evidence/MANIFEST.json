@@ -8,7 +8,7 @@
     "construction/services/transaction_link_search.py": "ae483b280a09cba0104d26075cc2ea2513497e51db6690aaa89f274b7bc4491e",
     "construction/tests/test_transaction_link_search.py": "498a823e1d735792e54570e1f0c14bd631c550d3c3d89de0a098ed6c44844356",
     "construction/public/js/searchable_dropdown/searchable_dropdown.js": "cfca754ee98f35392313271f16848ccc9499d7a98668b7d61c2d3d6863b62fee",
-    "scripts/run_bilingual_regression_matrix.sh": "168237d82fbbaede0a598d56c4c3749a03889eb620da0ff0dd25a096645c830e"
+    "scripts/run_bilingual_regression_matrix.sh": "3445b845318caf50179b3cbb78eaf71bbfca350b7abb752ac39d48b1bf1c4fe0"
   },
   "base_commit": "28287e5bb23e4c47753ed82de3fa528c8c00fab9",
   "branch": "develop",
@@ -70,6 +70,13 @@
       "from": "0252438c3342d0093cfbd8c8be6e2c7270203d9569ac936e3b04d1449ca224e4",
       "to": "168237d82fbbaede0a598d56c4c3749a03889eb620da0ff0dd25a096645c830e",
       "reason": "shared runner expanded to 14 modules / 181 tests by bilingual-brand-master"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "scripts/run_bilingual_regression_matrix.sh",
+      "from": "168237d82fbbaede0a598d56c4c3749a03889eb620da0ff0dd25a096645c830e",
+      "to": "3445b845318caf50179b3cbb78eaf71bbfca350b7abb752ac39d48b1bf1c4fe0",
+      "reason": "shared runner expanded to 15 modules / 189 tests by bilingual-terms-conditions-master"
     }
   ]
 }

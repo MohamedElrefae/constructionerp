@@ -486,6 +486,27 @@
     "enabled": false
    },
    "norm_field": "brand_ar_norm"
+  },
+  "Terms and Conditions": {
+   "state": "active",
+   "english_field": "title",
+   "arabic_field": "title_ar",
+   "code_field": null,
+   "identity_field": "name",
+   "search": {
+    "enabled": true,
+    "fields": [
+     "title",
+     "title_ar"
+    ]
+   },
+   "form": {
+    "identity_section": false
+   },
+   "tree": {
+    "enabled": false
+   },
+   "norm_field": "title_ar_norm"
   }
  }
 }
