@@ -150,3 +150,15 @@ through `search_link`. Wiring therefore requires the dispatcher preconditions in
 
 `Implementation` in §6 above means **server complete**; the client route is delivered but
 unwired, and §4 deliverable 2 is satisfied as code only.
+
+## 9. Amendments (2026-10-03, post-`bilingual-brand-master`)
+
+Two pinned artefacts moved because of D5 and the matrix expansion; digests are recorded
+as `amendments[]` entries in `evidence/MANIFEST.json`.
+
+| Artefact | Re-pinned from | Why it moved |
+|---|---|---|
+| `construction/tests/test_transaction_link_search.py` | `67c38024be722e41aba7f3bb44f2c746952b3692acb662728b342abc597fe054` | **D5 invariant split**: `TestTriadInvariantGuard` (1 test, registry byte-freeze) replaced by `TestInvariantGuard` (3 tests: code diad byte-identity, registry monotonic growth, doctype-set growth) → module 18 → **20 tests**; §1 docstring updated |
+| `scripts/run_bilingual_regression_matrix.sh` | `0252438c3342d0093cfbd8c8be6e2c7270203d9569ac936e3b04d1449ca224e4` | shared runner expanded to **14 modules / 181 tests** by `bilingual-brand-master` |
+
+This work item's RFC/SCOPE/evidence logs and `transaction_link_search.py` are untouched.

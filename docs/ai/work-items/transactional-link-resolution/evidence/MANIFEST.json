@@ -1,14 +1,14 @@
 {
   "artefacts": {
-    "docs/ai/work-items/transactional-link-resolution/SCOPE.md": "d1d3c438cbf729ea13772ae8aba5b8b2b099277a1cf3e67e1e07077944647dcb",
+    "docs/ai/work-items/transactional-link-resolution/SCOPE.md": "50c35593c5e60dd3a30cdbed64b5339fc4fc62fca22690e340598038ba9c5c65",
     "docs/ai/work-items/transactional-link-resolution/RFC.md": "eecf3dc404681f481c917cc6e613ecb9209bf3ef1753b9ed8b5d07fc68f43ef8",
     "docs/ai/work-items/transactional-link-resolution/evidence/test_transaction_link_search.log": "794a700593d033f24183bbd1a8659dc101dde110d19fb5c282b04d0cde19c061",
     "docs/ai/work-items/transactional-link-resolution/evidence/regression-matrix.log": "caf6b207e0cf4754440cef0c8f484876bd8174090a3b2e56107c842663f957a2",
     "docs/ai/work-items/transactional-link-resolution/evidence/reconciliation.log": "9fb1cacccb62d32126d6f731bea24ea515fb0f79c5ced881c7a6464ae3e1fa50",
     "construction/services/transaction_link_search.py": "ae483b280a09cba0104d26075cc2ea2513497e51db6690aaa89f274b7bc4491e",
-    "construction/tests/test_transaction_link_search.py": "67c38024be722e41aba7f3bb44f2c746952b3692acb662728b342abc597fe054",
+    "construction/tests/test_transaction_link_search.py": "498a823e1d735792e54570e1f0c14bd631c550d3c3d89de0a098ed6c44844356",
     "construction/public/js/searchable_dropdown/searchable_dropdown.js": "cfca754ee98f35392313271f16848ccc9499d7a98668b7d61c2d3d6863b62fee",
-    "scripts/run_bilingual_regression_matrix.sh": "0252438c3342d0093cfbd8c8be6e2c7270203d9569ac936e3b04d1449ca224e4"
+    "scripts/run_bilingual_regression_matrix.sh": "168237d82fbbaede0a598d56c4c3749a03889eb620da0ff0dd25a096645c830e"
   },
   "base_commit": "28287e5bb23e4c47753ed82de3fa528c8c00fab9",
   "branch": "develop",
@@ -55,5 +55,21 @@
     "bilingual_service_py_diff_lines": 0,
     "search_py_diff_lines": 0,
     "bilingual_registry_json_diff_lines": 0
-  }
+  },
+  "amendments": [
+    {
+      "date": "2026-10-03",
+      "artefact": "construction/tests/test_transaction_link_search.py",
+      "from": "67c38024be722e41aba7f3bb44f2c746952b3692acb662728b342abc597fe054",
+      "to": "498a823e1d735792e54570e1f0c14bd631c550d3c3d89de0a098ed6c44844356",
+      "reason": "D5 invariant split in bilingual-brand-master: TestTriadInvariantGuard -> TestInvariantGuard (1 -> 3 tests; code diad frozen, registry monotonic growth)"
+    },
+    {
+      "date": "2026-10-03",
+      "artefact": "scripts/run_bilingual_regression_matrix.sh",
+      "from": "0252438c3342d0093cfbd8c8be6e2c7270203d9569ac936e3b04d1449ca224e4",
+      "to": "168237d82fbbaede0a598d56c4c3749a03889eb620da0ff0dd25a096645c830e",
+      "reason": "shared runner expanded to 14 modules / 181 tests by bilingual-brand-master"
+    }
+  ]
 }

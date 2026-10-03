@@ -465,6 +465,27 @@
     "enabled": false
    },
    "norm_field": "template_name_ar_norm"
+  },
+  "Brand": {
+   "state": "active",
+   "english_field": "brand",
+   "arabic_field": "brand_ar",
+   "code_field": null,
+   "identity_field": "name",
+   "search": {
+    "enabled": true,
+    "fields": [
+     "brand",
+     "brand_ar"
+    ]
+   },
+   "form": {
+    "identity_section": false
+   },
+   "tree": {
+    "enabled": false
+   },
+   "norm_field": "brand_ar_norm"
   }
  }
 }

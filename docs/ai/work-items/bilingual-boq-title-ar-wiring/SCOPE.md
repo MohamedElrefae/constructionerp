@@ -260,3 +260,12 @@ unchanged.
 | `construction/hooks.py` | `5d1376f64dd0ec365e809d308140087e80c43cce1645681e6cabfa6e817f1fc3` (at `46aa201`) | narrative-sanitizer hooks, `?v=1` cache buster for `searchable_dropdown.js`, and other legitimate `hooks.py` changes |
 
 Use `git show 46aa201:construction/hooks.py` to recover the completion-time bytes.
+
+### 8.1 Re-pin by `bilingual-brand-master` (2026-10-03)
+
+| Artefact | Re-pinned from | Why it moved |
+|---|---|---|
+| `construction/hooks.py` | `71e3b32963525a46f7e2e83d42871eb158415e53d51ba4ec523ca760235a5c72` | living file; `Brand` `doc_events` registration added (finding F1 in `bilingual-brand-master/SCOPE.md` §3.1) |
+
+New digest recorded as an `amendments[]` entry in `evidence/MANIFEST.json`; this work
+item's evidence logs are unchanged.

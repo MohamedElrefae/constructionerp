@@ -11,9 +11,10 @@ Covers:
 - Latin/ASCII query passthrough and native search fields derivation
 - End-to-end Arabic query resolution and bilingual label enrichment
 - The four directional properties (no phantoms, bounded recall, native agreement, determinism)
-- Invariant preservation across the triad
+- D5 invariant split: code diad byte-frozen, registry monotonic growth
 """
 
+import json
 import re
 import subprocess
 import unittest
@@ -213,31 +214,110 @@ class TestDirectionalProperties(unittest.TestCase):
         self.assertEqual(res1, res2)
 
 
-class TestTriadInvariantGuard(unittest.TestCase):
-    def test_triad_remains_unmodified(self):
-        """Assert zero diff lines on the invariant triad across reference commits."""
-        commits = [
-            "38beb35d31026e0afc70dd43e0ccf8de7dc1a222",
-            "cbc8d5b",
-            "46aa201",
-            "0f5be0d",
-            "87e88cd",
-            "a7086ef",
-            "2f74193",
-        ]
-        files = [
-            "construction/services/bilingual_service.py",
-            "construction/searchable_dropdown/api/search.py",
-            "construction/data/bilingual/bilingual_registry.json",
-        ]
-        import os
-        repo_dir = Path(__file__).resolve().parents[2]
-        for c in commits:
-            for f in files:
+class TestInvariantGuard(unittest.TestCase):
+    """D5 invariant split (ratified in `bilingual-brand-master/SCOPE.md` §2).
+
+    The two service files stay byte-identical to seven reference commits — D1's
+    intent, unchanged. The registry is *data that must gain a master with every
+    onboarding*, so it is checked for monotonic growth against its frozen
+    baseline instead: no doctype or key removed, `search.fields` only ever a
+    superset, `state` never regressing, and no top-level block mutated.
+    """
+
+    COMMITS = [
+        "38beb35d31026e0afc70dd43e0ccf8de7dc1a222",
+        "cbc8d5b",
+        "46aa201",
+        "0f5be0d",
+        "87e88cd",
+        "a7086ef",
+        "2f74193",
+    ]
+    CODE_FILES = [
+        "construction/services/bilingual_service.py",
+        "construction/searchable_dropdown/api/search.py",
+    ]
+    REGISTRY_PATH = "construction/data/bilingual/bilingual_registry.json"
+    REGISTRY_BASELINE = "38beb35d31026e0afc70dd43e0ccf8de7dc1a222"
+    STATE_ORDER = ("planned", "schema_installed", "active")
+
+    @classmethod
+    def repo_dir(cls):
+        return Path(__file__).resolve().parents[2]
+
+    @classmethod
+    def baseline_registry(cls):
+        raw = subprocess.check_output(
+            ["git", "show", f"{cls.REGISTRY_BASELINE}:{cls.REGISTRY_PATH}"],
+            cwd=cls.repo_dir(),
+        )
+        return json.loads(raw.decode())
+
+    @classmethod
+    def current_registry(cls):
+        return json.loads(
+            (cls.repo_dir() / cls.REGISTRY_PATH).read_text(encoding="utf-8")
+        )
+
+    @classmethod
+    def state_rank(cls, state):
+        return cls.STATE_ORDER.index(state) if state in cls.STATE_ORDER else -1
+
+    def test_code_diad_byte_identical_across_reference_commits(self):
+        for c in self.COMMITS:
+            for f in self.CODE_FILES:
                 diff = subprocess.check_output(
-                    ["git", "diff", c, "--", f], cwd=repo_dir
+                    ["git", "diff", c, "--", f], cwd=self.repo_dir()
                 ).decode()
                 self.assertFalse(diff.strip(), f"Invariant diff found vs {c} on {f}")
+
+    def test_registry_growth_is_monotonic(self):
+        baseline = self.baseline_registry()
+        current = self.current_registry()
+
+        for key, value in baseline.items():
+            if key == "doctypes":
+                continue
+            self.assertIn(key, current, f"registry top-level block removed: {key}")
+            self.assertEqual(
+                current[key], value, f"registry top-level block mutated: {key}"
+            )
+
+        old_doctypes = baseline["doctypes"]
+        new_doctypes = current["doctypes"]
+        for dt, entry in old_doctypes.items():
+            self.assertIn(dt, new_doctypes, f"registry doctype removed: {dt}")
+            cur = new_doctypes[dt]
+            for field, value in entry.items():
+                self.assertIn(field, cur, f"{dt}: entry key '{field}' removed")
+                if field == "state":
+                    self.assertGreaterEqual(
+                        self.state_rank(cur[field]),
+                        self.state_rank(value),
+                        f"{dt}: state regressed {value!r} -> {cur[field]!r}",
+                    )
+                elif field == "search":
+                    self.assertTrue(
+                        cur[field].get("enabled") or not value.get("enabled"),
+                        f"{dt}: search disabled after being enabled",
+                    )
+                    lost = set(value.get("fields") or []) - set(
+                        cur[field].get("fields") or []
+                    )
+                    self.assertFalse(lost, f"{dt}: search.fields lost {sorted(lost)}")
+                else:
+                    self.assertEqual(
+                        cur[field], value, f"{dt}: entry key '{field}' mutated"
+                    )
+
+    def test_registry_growth_is_purely_additive_at_doctype_level(self):
+        """Every doctype present at the baseline still exists (no silent drops)."""
+        baseline_doctypes = set(self.baseline_registry()["doctypes"])
+        current_doctypes = set(self.current_registry()["doctypes"])
+        self.assertTrue(
+            baseline_doctypes <= current_doctypes,
+            f"missing doctypes: {sorted(baseline_doctypes - current_doctypes)}",
+        )
 
 
 class TestTopKBoundary(unittest.TestCase):

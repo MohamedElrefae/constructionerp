@@ -229,3 +229,13 @@ The immutable evidence of this work item — `test_bilingual_narrative_sanitizer
 Consequence: this manifest asserts **content that still exists in the repository**,
 not the byte state at `38beb35`. Use `git show 38beb35:<path>` to recover the
 completion-time bytes.
+
+### 8.1 Re-pin by `bilingual-brand-master` (2026-10-03)
+
+| Artefact | Re-pinned from | Why it moved |
+|---|---|---|
+| `scripts/run_bilingual_regression_matrix.sh` | `0252438c3342d0093cfbd8c8be6e2c7270203d9569ac936e3b04d1449ca224e4` | shared runner expanded to **14 modules / 181 tests** by `bilingual-brand-master` |
+| `construction/hooks.py` | `71e3b32963525a46f7e2e83d42871eb158415e53d51ba4ec523ca760235a5c72` | living file; `Brand` `doc_events` registration added (finding F1) |
+
+New digests are recorded as `amendments[]` entries in `evidence/MANIFEST.json`; this
+work item's own evidence logs remain unchanged.

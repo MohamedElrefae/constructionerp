@@ -1,0 +1,55 @@
+{
+  "artefacts": {
+    "docs/ai/work-items/bilingual-brand-master/SCOPE.md": "41467dd9876aafb79d82b3ac13003014dccc833e88fb7cd6a4659e996bd8dc83",
+    "docs/ai/work-items/bilingual-brand-master/evidence/test_bilingual_brand_pilot.log": "0ad4a3c1c4a80a9c019c1430067467d0cc421eb0ad405eb72ee230e6f7993599",
+    "docs/ai/work-items/bilingual-brand-master/evidence/regression-matrix.log": "fe1f0a99cd049538acb25349fd57bd478a19f3d7840a814ee4ad879410af7a49",
+    "docs/ai/work-items/bilingual-brand-master/evidence/reconciliation.log": "012312f8cb94cfbe40bf4bab80b076bcc87ba22d2ea65cd23ec70d658ad063e2",
+    "docs/ai/work-items/bilingual-brand-master/evidence/brand-p95-run.log": "b9dcc160fa9770aab92576c72b359426d5dff60cffd2ef174cfbb52fa3f12aa0",
+    "docs/ai/work-items/bilingual-brand-master/evidence/brand-p95-confirm.log": "e909b943530da5bf9ba40d846d09ed7562f9a1ceef06a0182fb7a790d043cd47",
+    "docs/ai/work-items/bilingual-brand-master/evidence/brand-p95-measurement.json": "79503fd1c0a193624d0a1803a5b833647e112e1a1fe313de4be1c439f87f0f54",
+    "docs/ai/work-items/bilingual-brand-master/evidence/scripts/measure_brand_p95.py": "442acb58d74f55cb18df7ec74def055e816c941f3fbd21310808f296337290b9",
+    "construction/patches/v9_11/add_brand_arabic_fields.py": "f19c80a8f8ca86cdbfade10c83d1a26cb70ffe5a0d754a585a12946c0d81feb7",
+    "construction/patches.txt": "f8309aa8ddbfaa191aad6659639240afb1317cfc20711865ee7d19336a181abb",
+    "construction/tests/test_bilingual_brand_pilot.py": "36ec8aff3ed467f072a73764b214d2bd9e86de26e52a57fc95c0a16bbccafa44",
+    "construction/tests/test_transaction_link_search.py": "498a823e1d735792e54570e1f0c14bd631c550d3c3d89de0a098ed6c44844356",
+    "construction/data/bilingual/bilingual_registry.json": "0caf035c11688c8ec7476234d2b7a8ce126b111682417b882db28fcfda752ae1",
+    "construction/hooks.py": "453f08e39747bc2a2e05a289367380e7243567d67c2fb9cd3ab52bb569be377a",
+    "scripts/run_bilingual_regression_matrix.sh": "168237d82fbbaede0a598d56c4c3749a03889eb620da0ff0dd25a096645c830e"
+  },
+  "base_commit": "48f370f",
+  "branch": "develop",
+  "work_item": "bilingual-brand-master",
+  "primary_invariant": "Zero service edits: construction/services/bilingual_service.py and construction/searchable_dropdown/api/search.py remain byte-identical to seven reference commits; the bilingual registry grows monotonically (D5).",
+  "decisions_settled": {
+    "D5": "Invariant guard split (ratified): code diad byte-frozen against 7 reference commits; bilingual_registry.json guarded by monotonic growth vs 38beb35 (no doctype/key removal, search.fields only a superset, state never regressing, top-level blocks unchanged). Implemented as TestInvariantGuard in construction/tests/test_transaction_link_search.py.",
+    "F1": "A new master needs three registrations: (1) Arabic/norm custom fields via patch v9_11, (2) bilingual registry entry, (3) hooks.py doc_events validate hook (enforce_bilingual_arabic_policy + narrative_sanitizer where a narrative field exists). Without (3) norm derivation and BIDI rejection do not fire - pilot run 1 failed 4/8 for this reason.",
+    "narrative_exclusion": "Brand.description is narrative Tier 1 and is excluded from registry search.fields (['brand','brand_ar'] only)."
+  },
+  "test_results": {
+    "pilot_module": "construction.tests.test_bilingual_brand_pilot: 8/8 OK",
+    "regression_matrix": "14 modules / 181 tests, all OK",
+    "transaction_link_search": "20/20 (D5 split: 1 triad test -> 3 guard tests, net +2)",
+    "adr_reconciler": "19/19 PASS"
+  },
+  "latency_measurement": {
+    "status": "COMPLIANT_WITH_TWO_TIER_SLA",
+    "methodology": "5 rounds x n=100 interleaved, min-of-rounds nearest-rank P95, 5 warmups per round",
+    "tier": "2B (baseline P95 < 1.0 ms => ratio ceiling 1.50x)",
+    "baseline_p95_ms": 0.458,
+    "bilingual_p95_ms": 0.665,
+    "ratio": 1.452,
+    "universal_ceiling_ms": 1.5,
+    "confirmation_series_ratios": [
+      1.4354,
+      1.3297,
+      1.4528,
+      1.4758,
+      1.452
+    ],
+    "preliminary_run_ratio": 1.5066,
+    "disclosure": "Preliminary run (evidence/brand-p95-run.log) returned 1.5066, 0.44% above the Tier 2B band while still under the 1.50 ms universal ceiling; retained rather than discarded. Confirmation run 5 first attempt aborted with QueueOverloaded (600 queued jobs from harness insert/delete cycles); queue flushed and retry succeeded - both are in evidence/brand-p95-confirm.log. Match-set equivalence and zero leftover fixtures held on every successful run.",
+    "artefact": "docs/ai/work-items/bilingual-brand-master/evidence/brand-p95-measurement.json"
+  },
+  "site_migration": "construction.patches.v9_11.add_brand_arabic_fields executed and recorded in Patch Log; all 20 registry masters resolve their arabic_field on v16.localhost.",
+  "causal_order": "final test run -> capture log (2>&1) -> git add -f the .log -> compute SHA-256 digests -> MANIFEST.json -> commit"
+}

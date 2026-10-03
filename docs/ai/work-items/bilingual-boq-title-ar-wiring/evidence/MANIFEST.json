@@ -1,12 +1,12 @@
 {
   "artefacts": {
-    "docs/ai/work-items/bilingual-boq-title-ar-wiring/SCOPE.md": "fbbc8510d098a745a629ff870de1e48f947e7245f692940c581f937899123b38",
+    "docs/ai/work-items/bilingual-boq-title-ar-wiring/SCOPE.md": "d7dc510778c22107c7312fde9981e65e4dbade4daeca5e8e4bc01a1cb35e37b8",
     "docs/ai/work-items/bilingual-boq-title-ar-wiring/evidence/test_boq_link_queries.log": "18a9da5137ae8f3baabb4a9a4b70995c0aaa79d8674db276fa4579fed0361393",
     "docs/ai/work-items/bilingual-boq-title-ar-wiring/evidence/regression-matrix.log": "3ce01c1c6e48e5b4cd3590093666cd3d54b8c37aeb63ad34a399823fd7682b83",
     "docs/ai/work-items/bilingual-boq-title-ar-wiring/evidence/reconciliation.log": "9fb1cacccb62d32126d6f731bea24ea515fb0f79c5ced881c7a6464ae3e1fa50",
     "construction/api/boq_link_queries.py": "cdb3b66370139c814c068ae63ba8baa2aab37c15eb8e6e7a5ac1ae717f8ae3ba",
     "construction/tests/test_boq_link_queries.py": "ff3da3238cc96f17ae171877604812225e829c70b250e1c1c5ab1a201d18ee05",
-    "construction/hooks.py": "71e3b32963525a46f7e2e83d42871eb158415e53d51ba4ec523ca760235a5c72",
+    "construction/hooks.py": "453f08e39747bc2a2e05a289367380e7243567d67c2fb9cd3ab52bb569be377a",
     "construction/public/js/overrides/ct_link_control.js": "69fd49c59240e322b43eb23b0001bb9a316467336d28482bce5cb8155651705a"
   },
   "base_commit": "0f5be0d4c89fc775080e7dd92fcfb20c9e6da98c",
@@ -85,6 +85,13 @@
       "from": "see git show 46aa201",
       "to": "fbbc8510d098a745a629ff870de1e48f947e7245f692940c581f937899123b38",
       "reason": "section 8 amendment note documenting the re-pin above"
+    },
+    {
+      "date": "2026-10-03",
+      "artefact": "construction/hooks.py",
+      "from": "71e3b32963525a46f7e2e83d42871eb158415e53d51ba4ec523ca760235a5c72",
+      "to": "453f08e39747bc2a2e05a289367380e7243567d67c2fb9cd3ab52bb569be377a",
+      "reason": "living file; Brand doc_events registration added by bilingual-brand-master (finding F1)"
     }
   ]
 }

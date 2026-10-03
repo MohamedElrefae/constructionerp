@@ -343,6 +343,12 @@ doc_events = {
     "Payment Term": {
         "validate": "construction.services.narrative_sanitizer.validate_narrative_fields",
     },
+    "Brand": {
+        "validate": [
+            "construction.services.bilingual_service.enforce_bilingual_arabic_policy",
+            "construction.services.narrative_sanitizer.validate_narrative_fields",
+        ]
+    },
 }
 
 # Server-side query injection: applies scope filters to ALL database queries
