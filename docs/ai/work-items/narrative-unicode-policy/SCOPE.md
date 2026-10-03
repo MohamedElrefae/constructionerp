@@ -1,78 +1,178 @@
 # Scope & Architectural Blueprint — Narrative Unicode Policy
 
 **Work item:** `narrative-unicode-policy`
-**Status:** `DEFERRED_PENDING_DESIGN`
-**Base commit:** `9010731` (from `develop`)
+**Status:** `OPEN` — design cycle active; design-only (implementation opens as a successor work item)
+**Base commit:** `46aa201` (develop clean; record defects resolved; 61/61 git-blob digests)
 **Date:** 2026-10-03
-**Authority:** Programme architectural governance under Plan §3.2
-**Outcome:** Formally recorded deferral and technical requirements boundary for rich-text, multi-line prose, and child-table narrative fields across ERPNext / Construction doctypes.
+**Authority:** Programme architectural governance under Plan §3.2; owner instruction in session
+**Supersedes:** the `DEFERRED_PENDING_DESIGN` descriptor at `9010731`, which contained three factual errors corrected in §1.
+
+**Outcome:** an empirically measured design for Unicode/HTML/direction handling of narrative
+prose fields, with a written schema invariant. **No code is written in this cycle.**
 
 ---
 
-## 1. Context: The Cumulative Narrative Deferrals
+## 1. Findings — corrections to the deferred blueprint
 
-Throughout Waves 1, 2, and 3, the bilingual enablement programme strictly scoped each master to single-line identity fields (`Item.item_name`, `Account.account_name`, `Customer.customer_name`, `Task.subject`, `Asset Category.asset_category_name`, etc.). Whenever free-text, rich-text, or multi-line tabular descriptions were encountered, they were deferred to protect the sub-millisecond Two-Tier Search SLA and server-authoritative token normalization.
+The prior descriptor asserted things about the codebase that are not true. Each is
+corrected here with measured evidence.
 
-These deferrals have now accumulated across five distinct entities:
+### 1.1 Errors corrected
 
-| Master / Area | DocType | Field(s) | Field Type | Live Rows / Usage |
+| Prior claim | Measured reality |
+|---|---|
+| §2.1 — `_normalize_arabic()` "collapses yaa/alef-maqsura (`ى` → `ي`)" | **False.** `_ALEF_RE = [\u0623\u0625\u0622\u0671]` (`bilingual_registry.py:34`) covers أ إ آ ٱ only. `normalize_arabic("مصطفى") == "مصطفى"` (verified). Diacritic/tatweel stripping is real (`_DIACRITICS_RE` `[\u064b-\u0655\u0670\u0640]`). |
+| §2.2 — token policy rejects bidi controls "via `RE_FORBIDDEN_CHARS`" | **Symbol does not exist** anywhere in the repo. The real mechanism is `_BIDI_CONTROL_RE` at `bilingual_registry.py:27`. |
+| §1 table — `BOQ Item` defers `description` / `specification` | **Neither field exists.** `boq_item.json` has no narrative field of any kind; `BOQ Item` is purely quantity/cost. |
+| §1 table — `Asset Category Account`, `Asset Finance Book` deferrals | Both are pure accounting child tables (Link → `Account`, percentages). **Zero narrative fields.** They were never deferred; they were never in scope. |
+| §3.1 deliverable — "Directional Sanitizer Specification" | **Already implemented** (§2 below). |
+
+### 1.2 What already exists — the identity/narrative split is built
+
+The architecture the deferred document asked to design was delivered before the
+deferral was written. Exact references:
+
+| Policy | Symbol | Rejects | Allows | Tests |
 |---|---|---|---|---|
-| **BOQ** | `BOQ Item` | `description`, `specification` | Small Text / Text | Project bill-of-quantities line specifications |
-| **Projects** | `Task` | `description` | Text Editor (HTML) | Operational task breakdowns, progress logs |
-| **Assets** | `Asset Category Account`, `Asset Finance Book` | sub-ledger configurations | Child Table | Per-company capitalisation and book accounting |
-| **Selling/Buying** | `Payment Terms Template Detail` | `description` | Small Text | 4 live rows (`_Test Net 30 Days`, `_Test Cash on Delivery`) |
-| **Selling/Buying** | `Payment Term` | `description` | Small Text | 4 live rows (standalone operational terms clauses) |
+| **Identity** (names, codes, titles) | `is_safe_identity_text` — `bilingual_registry.py:106` | all bidi controls via `_BIDI_CONTROL_RE` `[\u202a-\u202e\u2066-\u2069\u200e\u200f\u061c]` + `_CONTROL_RE` `[\x00-\x1f\x7f\x80-\x9f]` | — | `test_bilingual_service.py:149-169` |
+| **Narrative** (rename reasons, prose) | `is_safe_narrative_text` — `bilingual_registry.py:121` | overrides/isolates `[\u202a-\u202e\u2066-\u2069]` + `_NARRATIVE_CONTROL_RE` `[\x00-\x1f\x7f\x80-\x9f]` | **LRM `U+200E`, RLM `U+200F`, ALM `U+061C`** | same file |
 
-Rather than continuing to record piecemeal exclusions in individual master descriptors, this document establishes a single, named architectural work item capturing the technical problem statement, security boundaries, and required design deliverables.
+Both are re-exported through `bilingual_service.py:184-191` as
+`validate_identity_text` / `validate_narrative_text`.
+
+**Consequence for this cycle:** deliverable 1 of the prior blueprint (the directional
+whitelist) is complete and tested. The open work is deliverables 2–4.
+
+### 1.3 Measured narrative surface
+
+Census across the 19 active masters and their children (`Small Text`, `Text`,
+`Text Editor`, `Long Text`, `HTML Editor`), with live population:
+
+| DocType | Field | Type | Populated |
+|---|---|---|---|
+| `Item` | `description` | Text Editor (HTML) | **20 / 43** |
+| `Payment Terms Template Detail` | `description` | Small Text | **4 / 4** |
+| `Project` | `notes` | Text Editor | 1 / 11 |
+| `Project` | `message` | Text | 0 / 11 |
+| `BOQ Structure` | `description` | Small Text | 0 / 59 |
+| `BOQ Structure` | `description_ar` | Small Text | **0 / 59** |
+| `Task` | `description` | Text Editor (HTML) | 0 / 4 |
+| `Customer` | `customer_details` | Text | 0 / 12 |
+| `Supplier` | `supplier_details` | Text | 0 / 10 |
+| `Employee` | `bio` | Text Editor | 0 / 3 |
+| `Payment Term` | `description` | Small Text | 4 / 4 |
+
+Two census corrections: `Employee.notes` was listed previously — **the column does not
+exist**; and `BOQ Structure.description_ar` was reported as "59 live rows" — it is
+**0/59 populated** (59 is the table row count).
+
+Out-of-band surface: `BOQ Cost Analysis` carries a `description_ar` column
+(`boq_cost_analysis.json:157`) but has **0 rows**, and it is outside the 19 masters.
+
+Direction-mark survey of `construction/**`: **0 literal bidi characters** in source;
+**54 escape occurrences across 13 test files**, all asserting identity rejection.
+
+### 1.4 The print defect
+
+`construction/templates/boq_print_format.html:194`:
+
+```jinja2
+{{ node.indent }}{{ node.title | e }} / {{ node.title_ar | e }}
+```
+
+English and Arabic are joined by ` / ` with no `<bdi>` isolate and no direction mark.
+The repository contains **zero** `<bdi>` occurrences (`.html`/`.js`/`.py`). In web and
+PDF layout, trailing digits/parentheses/codes in the English half cross the slash and
+invert punctuation.
 
 ---
 
-## 2. Why Token-Level Bilingual Policy Fails on Narrative Prose
+## 2. Design decisions
 
-The existing bilingual infrastructure in `construction/services/bilingual_service.py` is purpose-built for **short identity tokens** (names, codes, titles). Applying that engine to narrative prose introduces three fatal architectural conflicts:
+### 2.1 Content tiering
 
-### 2.1 Lexical Normalization vs. Typography & Legibility
-`_normalize_arabic()` strips diacritics (tashkeel), strips tatweel (kashida), unifies alef variants (`إ`, `أ`, `آ` $\to$ `ا`), and collapses yaa/alef-maqsura (`ى` $\to$ `ي`).
-- In a search key (`*_ar_norm`), this enables resilient search matching.
-- In long-form Arabic prose, contracts, or specifications, stripping or normalizing these characters corrupts legibility, grammar, and contractual precision. Narrative Arabic must preserve original orthography in storage and display.
+**Tier 1 — Plain Text** (`Small Text`, `Text`): validate with the existing
+`is_safe_narrative_text`. No new predicate. The whitelist question is already settled
+by §1.2 and must not be re-litigated.
 
-### 2.2 Bidi Control Security vs. Mixed-Direction Contractual Formatting
-The token policy strictly rejects all Unicode bidirectional controls via `RE_FORBIDDEN_CHARS`:
-`[\u202A-\u202E\u2066-\u2069\u200E\u200F\u061C\x00-\x1F\x7F]`
-- In single-line identity tokens, banning all bidi controls is essential to prevent CVE-class spoofing (e.g. Trojan Source, visual confusion in ledger codes).
-- In narrative paragraphs, legitimate mixed-direction text (e.g. English technical codes, model numbers, DIN standards, or currency amounts embedded inside Arabic contractual sentences) **requires** directional marks (`U+200E` LRM, `U+200F` RLM) or isolates (`U+2066`–`U+2069` LRI/RLI/FSI/PDI) to prevent browser and PDF layout engines from inverting clause numbers or punctuation.
-- A blanket ban on `U+200E`/`U+200F` makes correct bidirectional paragraph typesetting mathematically impossible, while unconstrained admission reintroduces Trojan Source spoofing.
+**Tier 2 — Rich Text** (`Text Editor`): requires an HTML-aware sanitizer that this
+cycle must specify but not implement. Requirements:
 
-### 2.3 HTML & Rich-Text Entity Corruption
-`Task.description` and related narrative fields use Frappe's `Text Editor` (Quill.js / HTML).
-- Token normalization cannot distinguish between HTML tags (`<p dir="rtl">`, `<span class="mention">`, `<strong>`) and user payload text.
-- Running token validation or normalization against HTML either strips tags or generates corrupted search keys containing HTML entity fragments.
+- Preserve structural markup (`<p>`, `<strong>`, `<em>`, `<ul>/<li>`, `<br>`, `<a>`)
+  and the `dir` attribute (`<p dir="rtl">`).
+- Strip executable surfaces (script/style/iframe, `on*` handlers, `javascript:` URIs).
+- Isolate **text nodes** for the Unicode check — tags are not prose and must not be
+  passed to `is_safe_narrative_text` as-is, which would reject any document containing
+  a literal `<` payload or entity.
+- Entities must be decoded before the control-character check, otherwise
+  `&#x202E;` (RLO) bypasses it while the literal character is caught.
 
-### 2.4 SLA Destruction in Dropdown Link Search
-Frappe link fields (`searchable_link_search`) are bounded by the Two-Tier SLA ($\le 1.50\text{ ms}$ universal absolute P95, $\le 1.50\times$ relative trade-off band).
-- Indexing and substring-matching 500-word contractual paragraphs in link autocompletion destroys database memory buffers, blows through the 1.50 ms ceiling, and delivers an unusable dropdown UX.
-- Narrative search belongs to Full-Text Search (FTS / MariaDB `MATCH ... AGAINST`), completely decoupled from link dropdown navigation.
+**Open question for the design:** whether Tier 2 validation runs on save (hook),
+on render (template), or both. Save-time alone leaves legacy rows unvalidated;
+render-time alone trusts the database.
+
+### 2.2 Schema invariant (ratified, currently satisfied)
+
+1. Narrative columns receive physical localized columns (`description_ar`) with **no**
+   companion `_ar_norm` column.
+2. Narrative columns are permanently excluded from
+   `bilingual_registry.json:search.fields`, preserving the Two-Tier SLA
+   (universal P95 ≤ 1.50 ms).
+3. Narrative columns are **not** registry `arabic_field` values. Confirmed:
+   `BOQ Structure.arabic_field == "title_ar"`, not `description_ar` — so the existing
+   narrative columns are already outside the identity layer and derive no norm key.
+
+This is a written ratification of current behaviour, not a migration. **Population is
+0/59 for `BOQ Structure.description_ar` and 0/4 for `Task.description`, so no data
+backfill, no schema patch, and no norm derivation is required.**
+
+### 2.3 Print & layout standard
+
+- Wrap mixed-direction concatenations in `<bdi>` at minimum; specify where a bare
+  `&lrm;` is insufficient.
+- Specify Jinja helpers (e.g. a `bdi_join` filter) so `boq_print_format.html:194` and
+  its siblings stop hand-assembling direction-sensitive strings.
+- CSS contract: `dir="rtl"` + `unicode-bidi: isolate; text-align: right;` on the
+  Arabic cell.
 
 ---
 
-## 3. Required Deliverables for the Narrative Design Cycle
+## 3. Cycle boundary
 
-When `narrative-unicode-policy` is activated for implementation, it must deliver:
+**In scope (this cycle):** this document. Measured facts, corrected claims, ratified
+invariants, and a specified-but-unimplemented Tier 2 + print design.
 
-1. **Directional Sanitizer Specification**:
-   - Explicit whitelist distinguishing permitted typographic directional marks (`U+200E` LRM, `U+200F` RLM, and isolating formatting pairs `U+2066`–`U+2069` if balanced) from strictly banned visual spoofing overrides (`U+202A`–`U+202E` LRE/RLE/PDF/LRO/RLO).
-2. **HTML / Rich-Text Parser & Tag Protection**:
-   - An AST-based or `bleach`-based tag/attribute sanitizer that isolates inner text nodes for language validation while preserving HTML markup, `dir="rtl"` attributes, and structured lists.
-3. **Decoupled Schema Strategy**:
-   - Narrative fields receive physical localized columns (e.g. `description_ar` Small Text / Text Editor) **without** companion `_ar_norm` columns.
-   - Exclusion of narrative columns from `bilingual_registry.json:search.fields` to safeguard the link-search SLA.
-4. **Print & PDF Layout Conventions**:
-   - Standard Jinja template helpers for rendering localized narrative with correct CSS directionality (`dir="rtl"`, `unicode-bidi: isolate; text-align: right;`).
+**Out of scope:** any code, schema patch, hook, template edit, or test. Those belong to
+a successor work item that will carry its own causal evidence pipeline
+(test run → log → digests → manifest → commit).
+
+**Explicitly not re-opened:** the identity/narrative whitelist (§1.2), the
+`search.fields` exclusion (§2.2), and the two-tier SLA thresholds.
 
 ---
 
-## 4. Standing Invariant & Programme Rule
+## 4. Standing invariant
 
-Until the design cycle above is formally approved and implemented:
-1. **Zero Narrative Fields in Link Registry**: No child-table description, rich-text editor field, or multi-line narrative column may be registered in `bilingual_registry.json`.
-2. **Exclusion Precedent**: `Payment Terms Template Detail.description`, `Task.description`, `BOQ Item.description`, and `Payment Term.description` are certified as deferred under the authority of this document.
+Until a successor work item is approved and merged:
+
+1. **No narrative column** may be registered in `bilingual_registry.json`.
+2. **No `_ar_norm` column** may be added to a narrative field.
+3. **No narrative column** may enter any `search.fields` list.
+4. Certified deferred under this document: `Payment Terms Template Detail.description`,
+   `Payment Term.description`, `Task.description`, `BOQ Structure.description`,
+   `BOQ Structure.description_ar`, `Item.description`, `Customer.customer_details`,
+   `Supplier.supplier_details`, `Project.message`, `Project.notes`, `Employee.bio`.
+
+---
+
+## 5. Evidence
+
+| Artefact | Finding |
+|---|---|
+| `bilingual_registry.py:27,29,34,106,121` | real symbol names and character classes |
+| `bilingual_service.py:184-191` | identity/narrative re-exports |
+| `test_bilingual_service.py:149-169` | narrative whitelist asserted |
+| `boq_print_format.html:194` | mixed join without `<bdi>` |
+| `boq_item.json`, `boq_structure.json:132`, `boq_cost_analysis.json:157` | schema census |
+| live population probe | §1.3 counts |
+| source bidi sweep | 0 literals, 54 escapes / 13 files, 0 `<bdi>` |
