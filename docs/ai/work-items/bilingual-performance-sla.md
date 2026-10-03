@@ -76,7 +76,7 @@ Derived from the committed evidence artefacts and re-verified at this commit.
 | Cost Center | 0.558 ms | 0.811 ms | 1.4534 | 2B | 1.50x OK | OK |
 | Customer | 0.487 ms | 0.686 ms | 1.4086 | 2B | 1.50x OK | OK |
 | Customer Group | 0.444 ms | 0.617 ms | 1.3896 | 2B | 1.50x OK | OK |
-| Department | 0.623 ms | 0.830 ms | 1.3327 | 2B | 1.50x OK | OK |
+| Department | 0.654 ms | 0.816 ms | 1.2477 | 2B | 1.50x OK | OK |
 | Employee | 0.569 ms | 0.808 ms | 1.4200 | 2B | 1.50x OK | OK |
 | Item | 0.767 ms | 1.114 ms | 1.4524 | 2B | 1.50x OK | OK |
 | Item Group | 0.440 ms | 0.645 ms | 1.4659 | 2B | 1.50x OK | OK |
@@ -121,7 +121,7 @@ That is follow-up work and is not blocked by this ADR.
 | `bilingual-wave1-masters/evidence/wave1-p95-measurement.json` | six Wave 1 masters |
 | `bilingual-wave2a-classification-masters/evidence/wave2a-p95-measurement.json` | five Wave 2a masters |
 | `bilingual-employee-master/evidence/employee-p95-measurement.json` | Employee master |
-| `bilingual-department-master/evidence/department-p95-measurement.json` | Department master (`n=100` convergent mean) |
+| `bilingual-department-master/evidence/department-p95-measurement.json` | Department master (`n=50` interleaved nearest-rank P95) |
 | `bilingual-task-master/evidence/task-p95-measurement.json` | Task master |
 | `bilingual-asset-category-master/evidence/asset-category-p95-measurement.json` | Asset Category master |
 | `bilingual-payment-terms-template-master/evidence/payment-terms-template-p95-measurement.json` | Payment Terms Template master |
