@@ -155,7 +155,7 @@ app_include_js = [
     "/assets/construction/js/overrides/ct_select_control.js?v=2",
     # Phase 3: Global ControlLink auto-enhancer — replaces 3 manual config files
     # Auto-applies SearchableDropdownEnhancer to all Link fields on every page
-    "/assets/construction/js/overrides/ct_link_control.js?v=16",
+    "/assets/construction/js/overrides/ct_link_control.js?v=17",
     # v16 runtime safety net — no-op (CSS handles all styling)
     "/assets/construction/js/theme_loader_v16.js?v=2",
     # Scope Context — core class for managing user company/cost_center/project/dept scope

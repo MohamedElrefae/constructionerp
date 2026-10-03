@@ -2,6 +2,7 @@ from typing import Any
 
 import frappe
 
+from construction.services.bilingual_service import normalize_arabic
 from construction.services.boq_scope_filters import (
     ALLOWED_TRANSACTION_BOQ_STATUSES,
     append_allowed_status_filter,
@@ -31,6 +32,7 @@ def _extract_enforce_scope(filters: dict[str, Any], enforce_scope: Any = None) -
 def _limit_values(txt: str, start: int, page_len: int) -> dict[str, Any]:
     return {
         "txt": f"%{txt or ''}%",
+        "norm_txt": f"%{normalize_arabic(txt or '')}%",
         "start": int(start or 0),
         "page_len": int(page_len or 20),
     }
@@ -157,12 +159,13 @@ def get_boq_headers(
 
     where_clause = " AND ".join(conditions)
     query = (
-        "\n\t\tSELECT h.name, h.title, h.project\n"
+        "\n\t\tSELECT h.name, h.title, h.project, h.title_ar\n"
         "\t\tFROM `tabBOQ Header` h\n"
         + _join_project_sql(join_project)
         + "\n\t\tWHERE "
         + where_clause
-        + "\n\t\t\tAND (h.name LIKE %(txt)s OR h.title LIKE %(txt)s OR h.project LIKE %(txt)s)\n"
+        + "\n\t\t\tAND (h.name LIKE %(txt)s OR h.title LIKE %(txt)s OR h.project LIKE %(txt)s"
+        + " OR h.title_ar LIKE %(txt)s OR h.title_ar_norm LIKE %(norm_txt)s)\n"
         + "\t\tORDER BY h.modified DESC\n"
         + "\t\tLIMIT %(start)s, %(page_len)s\n"
     )
@@ -227,12 +230,13 @@ def get_boq_structures(
     where_clause = " AND ".join(conditions)
     join_clause = " ".join(joins)
     query = (
-        "\n\t\tSELECT s.name, s.title, s.wbs_code\n"
+        "\n\t\tSELECT s.name, s.title, s.wbs_code, s.title_ar\n"
         "\t\tFROM `tabBOQ Structure` s\n"
         + join_clause
         + "\n\t\tWHERE "
         + where_clause
-        + "\n\t\t\tAND (s.name LIKE %(txt)s OR s.title LIKE %(txt)s OR s.wbs_code LIKE %(txt)s)\n"
+        + "\n\t\t\tAND (s.name LIKE %(txt)s OR s.title LIKE %(txt)s OR s.wbs_code LIKE %(txt)s"
+        + " OR s.title_ar LIKE %(txt)s OR s.title_ar_norm LIKE %(norm_txt)s)\n"
         + "\t\tORDER BY s.modified DESC\n"
         + "\t\tLIMIT %(start)s, %(page_len)s\n"
     )

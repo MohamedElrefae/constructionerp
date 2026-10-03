@@ -10,6 +10,7 @@ from construction.api.boq_link_queries import (
     get_scope_projects,
 )
 from construction.services.scope_resolution import get_scope_token
+from frappe.desk.search import build_for_autosuggest
 
 
 class TestBOQLinkQueries(FrappeTestCase):
@@ -296,3 +297,136 @@ class TestBOQLinkQueries(FrappeTestCase):
             frappe.db.set_single_value(
                 "Construction Settings", "enable_scope_context", previous_scope_context_enabled or 0
             )
+
+    def test_boq_header_arabic_exact_and_normalized_search(self):
+        arabic_header = frappe.get_doc(
+            {
+                "doctype": "BOQ Header",
+                "project": self.project_a,
+                "title": "_Test Arabic Header Earthworks",
+                "title_ar": "أعمال الحفر والردم",
+                "status": "Draft",
+                "boq_type": "Tender",
+            }
+        ).insert(ignore_permissions=True)
+        self.assertEqual(arabic_header.title_ar_norm, "اعمال الحفر والردم")
+
+        # 1. Exact match on raw title_ar
+        rows = get_boq_headers("BOQ Header", "الحفر", "name", 0, 20, {}, enforce_scope=True)
+        names = {row[0] for row in rows}
+        self.assertIn(arabic_header.name, names)
+
+        # 2. Normalized match on Alef variant without hamza (proves norm_txt bind path)
+        rows_norm = get_boq_headers("BOQ Header", "اعمال", "name", 0, 20, {}, enforce_scope=True)
+        names_norm = {row[0] for row in rows_norm}
+        self.assertIn(arabic_header.name, names_norm)
+
+        # 3. Normalized match with tatweel
+        rows_tatweel = get_boq_headers("BOQ Header", "أعــــمال", "name", 0, 20, {}, enforce_scope=True)
+        names_tatweel = {row[0] for row in rows_tatweel}
+        self.assertIn(arabic_header.name, names_tatweel)
+
+        # 4. Fail-closed: non-matching Arabic returns nothing
+        rows_mismatch = get_boq_headers("BOQ Header", "سباكة", "name", 0, 20, {}, enforce_scope=True)
+        names_mismatch = {row[0] for row in rows_mismatch}
+        self.assertNotIn(arabic_header.name, names_mismatch)
+
+        # 5. Row tuple shape and autosuggest compatibility
+        target_row = next(r for r in rows if r[0] == arabic_header.name)
+        self.assertEqual(len(target_row), 4)
+        self.assertEqual(target_row[0], arabic_header.name)
+        self.assertEqual(target_row[1], arabic_header.title)
+        self.assertEqual(target_row[2], self.project_a)
+        self.assertEqual(target_row[3], "أعمال الحفر والردم")
+
+        # 6. build_for_autosuggest preserves English label and projects Arabic into description
+        autosuggest = build_for_autosuggest([target_row], "BOQ Header")
+        self.assertEqual(len(autosuggest), 1)
+        self.assertEqual(autosuggest[0]["value"], arabic_header.name)
+        self.assertEqual(autosuggest[0]["label"], arabic_header.title)
+        self.assertIn("أعمال الحفر والردم", autosuggest[0]["description"])
+
+    def test_boq_structure_arabic_exact_and_normalized_search(self):
+        arabic_structure = frappe.get_doc(
+            {
+                "doctype": "BOQ Structure",
+                "boq_header": self.draft_header.name,
+                "title": "_Test Arabic Structure Concrete",
+                "title_ar": "أعمال الخرسانة المسلحة",
+                "wbs_code": "9.9.01",
+                "is_group": 0,
+            }
+        ).insert(ignore_permissions=True)
+        self.assertEqual(arabic_structure.title_ar_norm, "اعمال الخرسانة المسلحة")
+
+        # 1. Exact match on raw title_ar
+        rows = get_boq_structures(
+            "BOQ Structure", "الخرسانة", "name", 0, 20, {"boq_header": self.draft_header.name}, enforce_scope=True
+        )
+        names = {row[0] for row in rows}
+        self.assertIn(arabic_structure.name, names)
+
+        # 2. Normalized match with Alef variant (اعمال instead of أعمال)
+        rows_norm = get_boq_structures(
+            "BOQ Structure", "اعمال الخرسانة", "name", 0, 20, {"boq_header": self.draft_header.name}, enforce_scope=True
+        )
+        names_norm = {row[0] for row in rows_norm}
+        self.assertIn(arabic_structure.name, names_norm)
+
+        # 3. Normalized match with tatweel
+        rows_tatweel = get_boq_structures(
+            "BOQ Structure", "الخرســــانة", "name", 0, 20, {"boq_header": self.draft_header.name}, enforce_scope=True
+        )
+        names_tatweel = {row[0] for row in rows_tatweel}
+        self.assertIn(arabic_structure.name, names_tatweel)
+
+        # 4. Fail-closed: non-matching Arabic returns nothing
+        rows_mismatch = get_boq_structures(
+            "BOQ Structure", "دهانات", "name", 0, 20, {"boq_header": self.draft_header.name}, enforce_scope=True
+        )
+        names_mismatch = {row[0] for row in rows_mismatch}
+        self.assertNotIn(arabic_structure.name, names_mismatch)
+
+        # 5. Row tuple shape and autosuggest compatibility
+        target_row = next(r for r in rows if r[0] == arabic_structure.name)
+        self.assertEqual(len(target_row), 4)
+        self.assertEqual(target_row[0], arabic_structure.name)
+        self.assertEqual(target_row[1], arabic_structure.title)
+        self.assertEqual(target_row[2], arabic_structure.wbs_code)
+        self.assertEqual(target_row[3], "أعمال الخرسانة المسلحة")
+
+        autosuggest = build_for_autosuggest([target_row], "BOQ Structure")
+        self.assertEqual(len(autosuggest), 1)
+        self.assertEqual(autosuggest[0]["value"], arabic_structure.name)
+        self.assertEqual(autosuggest[0]["label"], arabic_structure.title)
+        self.assertIn("أعمال الخرسانة المسلحة", autosuggest[0]["description"])
+
+    def test_english_search_invariance_and_column_shape(self):
+        # Header query returns 4 columns with None for title_ar on standard English fixture
+        header_rows = get_boq_headers(
+            "BOQ Header", "_Test Scoped BOQ A", "name", 0, 20, {}, enforce_scope=True
+        )
+        self.assertTrue(len(header_rows) >= 1)
+        row = header_rows[0]
+        self.assertEqual(len(row), 4)
+        self.assertEqual(row[0], self.header_a.name)
+        self.assertEqual(row[1], self.header_a.title)
+        self.assertEqual(row[2], self.project_a)
+        self.assertIsNone(row[3])
+
+        # Structure query returns 4 columns with None for title_ar
+        struct_rows = get_boq_structures(
+            "BOQ Structure",
+            "_Test Leaf A",
+            "name",
+            0,
+            20,
+            {"boq_header": self.header_a.name, "require_boq_header": 1},
+            enforce_scope=True,
+        )
+        self.assertTrue(len(struct_rows) >= 1)
+        target_s_row = next(r for r in struct_rows if r[0] == self.structure_a.name)
+        self.assertEqual(len(target_s_row), 4)
+        self.assertEqual(target_s_row[0], self.structure_a.name)
+        self.assertEqual(target_s_row[1], self.structure_a.title)
+        self.assertIsNone(target_s_row[3])

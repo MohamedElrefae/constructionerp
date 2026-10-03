@@ -1,0 +1,74 @@
+{
+  "artefacts": {
+    "docs/ai/work-items/bilingual-boq-title-ar-wiring/SCOPE.md": "6ea0f56a7273e4759da053c579ea337b55b7a40845b4e261c089927b5b4514b1",
+    "docs/ai/work-items/bilingual-boq-title-ar-wiring/evidence/test_boq_link_queries.log": "d18beff50d45edfea5b6c52dde71c4deed0d7fe22e691d0164ad7f2e04fecbe4",
+    "docs/ai/work-items/bilingual-boq-title-ar-wiring/evidence/regression-matrix.log": "3ce01c1c6e48e5b4cd3590093666cd3d54b8c37aeb63ad34a399823fd7682b83",
+    "docs/ai/work-items/bilingual-boq-title-ar-wiring/evidence/reconciliation.log": "9fb1cacccb62d32126d6f731bea24ea515fb0f79c5ced881c7a6464ae3e1fa50",
+    "construction/api/boq_link_queries.py": "cdb3b66370139c814c068ae63ba8baa2aab37c15eb8e6e7a5ac1ae717f8ae3ba",
+    "construction/tests/test_boq_link_queries.py": "ff3da3238cc96f17ae171877604812225e829c70b250e1c1c5ab1a201d18ee05",
+    "construction/hooks.py": "5d1376f64dd0ec365e809d308140087e80c43cce1645681e6cabfa6e817f1fc3",
+    "construction/public/js/overrides/ct_link_control.js": "69fd49c59240e322b43eb23b0001bb9a316467336d28482bce5cb8155651705a"
+  },
+  "base_commit": "0f5be0d4c89fc775080e7dd92fcfb20c9e6da98c",
+  "branch": "feature/bilingual-boq-title-ar-wiring",
+  "decisions_settled": {
+    "section_3_1": "Option A (Search-only wiring): title_ar appended to SELECT and WHERE, label preserved as title at column 1",
+    "section_3_2": "Untouched: doctype search_fields left unmodified; ADR section 4 baselines preserved without re-measurement"
+  },
+  "test_results": {
+    "unit_suite": {
+      "module": "construction.tests.test_boq_link_queries",
+      "tests": 12,
+      "passed": 12,
+      "failed": 0,
+      "log": "docs/ai/work-items/bilingual-boq-title-ar-wiring/evidence/test_boq_link_queries.log"
+    },
+    "canonical_matrix": {
+      "modules": 11,
+      "tests": 133,
+      "passed": 133,
+      "failed": 0,
+      "log": "docs/ai/work-items/bilingual-boq-title-ar-wiring/evidence/regression-matrix.log"
+    },
+    "reconciliation": {
+      "rows_parsed": 19,
+      "sources_located": 19,
+      "mismatched": 0,
+      "unsourced": 0,
+      "result": "PASS",
+      "log": "docs/ai/work-items/bilingual-boq-title-ar-wiring/evidence/reconciliation.log"
+    }
+  },
+  "primary_invariant": {
+    "claim": "Zero modifications to bilingual_service.py and search.py; zero doctype schema modifications",
+    "reference_commits": [
+      "0f5be0d4c89fc775080e7dd92fcfb20c9e6da98c",
+      "87e88cd",
+      "a7086ef",
+      "2f74193",
+      "2cbe71a",
+      "04dfe35",
+      "abffaaa",
+      "ef36c95",
+      "c1d278b",
+      "c5ee0bb",
+      "b311377",
+      "dc71b56"
+    ],
+    "bilingual_service_py_diff_lines": 0,
+    "search_py_diff_lines": 0,
+    "bilingual_registry_json_diff_lines": 0,
+    "doctype_json_diff_lines": 0,
+    "frappe_vendor_diff_lines": 0,
+    "erpnext_vendor_diff_lines": 0
+  },
+  "out_of_scope_respected": [
+    "doctype search_fields unmodified (Decision 3.2)",
+    "no re-measurement required for BOQ Header / BOQ Structure baselines",
+    "bilingual_service.py / search.py untouched",
+    "bilingual_registry.json untouched",
+    "Arabic data backfill out of scope (fixtures used)",
+    "all foreign work item evidence untouched"
+  ],
+  "causal_order": "final test run -> capture log -> compute blob digests -> write manifest -> commit (SCOPE §7)"
+}

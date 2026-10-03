@@ -6,6 +6,8 @@
  * and glassmorphic fixed menu that behaves identically to the theme switcher.
  *
  * Data layer is completely untouched — native input validation and event loops remain intact.
+ * Note: Does not call searchable_link_search directly; builds dropdown over native search_link
+ * with custom query overrides (e.g. BOQ cascade endpoints in boq_link_queries.py).
  */
 
 (function () {
