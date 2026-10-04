@@ -18,6 +18,32 @@ class TestCostDatabaseAPI(FrappeTestCase):
 
         return openpyxl.load_workbook(io.BytesIO(content), data_only=True)
 
+    def test_preview_and_commit_reject_malformed_resource_rate_and_tax(self):
+        from construction.services.cost_database_service import import_cost_database_from_excel
+
+        for sheet_name, field, value in (
+            ("Resources", "unit_price_egp", "not a number"),
+            ("Resources", "exchange_rate", 0),
+            ("RateAnalysis", "cost_rate", -1),
+            ("BOQItemTemplates", "tender_tax_pct", "invalid"),
+        ):
+            workbook = self._load_workbook(self._build_test_excel(tender_tax_pct=0))
+            sheet = workbook[sheet_name]
+            column = [c.value for c in sheet[1]].index(field) + 1
+            sheet.cell(row=2, column=column, value=value)
+            output = io.BytesIO()
+            workbook.save(output)
+            workbook.close()
+            for dry_run in (True, False):
+                with self.subTest(sheet=sheet_name, field=field, dry_run=dry_run):
+                    before = frappe.db.count("Resource Price History")
+                    result = import_cost_database_from_excel(
+                        output.getvalue(), "invalid-numbers.xlsx", self.company, dry_run=dry_run
+                    )
+                    self.assertFalse(result["success"])
+                    self.assertTrue(result["errors"])
+                    self.assertEqual(frappe.db.count("Resource Price History"), before)
+
     def test_generate_blank_template_has_required_sheets(self):
         """Blank template contains Resources, BOQItemTemplates, RateAnalysis, PriceHistory, and _Metadata sheets."""
         from construction.services.cost_database_service import generate_cost_database_template

@@ -375,6 +375,29 @@ doc_events = {
 # Uses the wildcard '*' to fire for every doctype
 permission_query_conditions = {
     "*": "construction.overrides.scope_query.add_scope_conditions",
+    **{
+        doctype: "construction.overrides.boq_permissions.boq_parent_query_conditions"
+        for doctype in (
+            "BOQ Item",
+            "BOQ Structure",
+            "BOQ Item Stage",
+            "BOQ Quantity Revision",
+            "BOQ Cost Analysis",
+            "Variation Order",
+        )
+    },
+}
+
+has_permission = {
+    doctype: "construction.overrides.boq_permissions.has_boq_parent_permission"
+    for doctype in (
+        "BOQ Item",
+        "BOQ Structure",
+        "BOQ Item Stage",
+        "BOQ Quantity Revision",
+        "BOQ Cost Analysis",
+        "Variation Order",
+    )
 }
 
 # Fixtures - Phase 2: Construction Theme records

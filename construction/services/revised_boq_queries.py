@@ -1,12 +1,21 @@
 import frappe
 from frappe.utils import flt
 
+from construction.services.boq_pricing import positive_factor
+
+
+def validate_report_factors(boq_header):
+    """Read-only reports must refuse invalid legacy factors as writers do."""
+    for row in frappe.get_all("BOQ Item", filters={"boq_header": boq_header}, fields=["name", "factor"]):
+        positive_factor(row.factor)
+
 
 def get_original_boq(boq_header):
     """Return the original BOQ view using original_qty.
 
     Shows only non-variation items with original contract values.
     """
+    validate_report_factors(boq_header)
     rows = frappe.db.sql(
         """
         SELECT
@@ -37,6 +46,7 @@ def get_revised_boq(boq_header):
     Uses current_revised_qty and current_revised_unit_price for value computation.
     Includes both contract and variation items.
     """
+    validate_report_factors(boq_header)
     rows = frappe.db.sql(
         """
         SELECT
@@ -141,6 +151,7 @@ def get_omitted_items(boq_header):
 
     current_revised_qty = 0 and is_variation_item = 0.
     """
+    validate_report_factors(boq_header)
     rows = frappe.db.sql(
         """
         SELECT
@@ -169,6 +180,7 @@ def get_omitted_items(boq_header):
 
 def get_variation_items(boq_header):
     """Return all variation items for a BOQ Header."""
+    validate_report_factors(boq_header)
     rows = frappe.db.sql(
         """
         SELECT

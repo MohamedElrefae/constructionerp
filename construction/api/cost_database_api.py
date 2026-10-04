@@ -9,7 +9,7 @@ from construction.services.cost_database_service import (
 )
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def import_cost_database():
     """Whitelisted endpoint to import a cost database from an uploaded Excel file.
 
@@ -113,7 +113,7 @@ def _read_request_payload():
     return frappe.form_dict
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def reprice_cost_analyses():
     """Whitelisted endpoint to bulk reprice BOQ Cost Analysis detail rows.
 

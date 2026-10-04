@@ -1,3 +1,5 @@
+from decimal import Decimal, InvalidOperation
+
 import frappe
 from frappe import _
 from frappe.model.document import Document
@@ -33,13 +35,58 @@ class VariationOrder(Document):
         self.name = f"{self.boq_header}-{self.vo_number}"
 
     def validate(self):
+        previous = self.get_doc_before_save()
+        if previous and previous.status == CLIENT_APPROVED_STATUS:
+            self.validate_client_approved_snapshot(previous)
         self.enforce_scope_context_project()
         self.validate_boq_header()
         self.fetch_header_context()
         self.validate_status_transition()
         self.validate_client_approval_gate()
-        self.validate_lines()
-        self.calculate_total_contract_delta()
+        if not previous or previous.status != CLIENT_APPROVED_STATUS:
+            self.validate_lines()
+            self.calculate_total_contract_delta()
+
+    def validate_client_approved_snapshot(self, previous):
+        """Preserve commercial evidence rather than recalculate from today's BOQ."""
+        for field in (
+            "boq_header",
+            "project",
+            "vo_number",
+            "vo_date",
+            "total_contract_delta",
+            "client_approval_document",
+        ):
+            if self._snapshot_value(self.meta.get_field(field), self.get(field)) != self._snapshot_value(
+                self.meta.get_field(field), previous.get(field)
+            ):
+                frappe.throw(_("Client-approved Variation Order evidence cannot be changed."))
+        if len(self.lines) != len(previous.lines):
+            frappe.throw(_("Client-approved Variation Order lines cannot be changed."))
+        for old, new in zip(previous.lines, self.lines, strict=True):
+            if old.name != new.name:
+                frappe.throw(_("Client-approved Variation Order lines cannot be reordered or replaced."))
+            for field in new.meta.fields:
+                if field.fieldtype in ("Section Break", "Column Break", "Tab Break", "HTML", "Button"):
+                    continue
+                before = self._snapshot_value(field, old.get(field.fieldname))
+                after = self._snapshot_value(field, new.get(field.fieldname))
+                if before != after:
+                    frappe.throw(
+                        _("Client-approved Variation Order line {0} cannot be changed.").format(field.label)
+                    )
+
+    @staticmethod
+    def _snapshot_value(field, value):
+        if field.fieldtype in ("Currency", "Float", "Percent", "Int", "Check"):
+            try:
+                result = Decimal(str(value or 0)).quantize(Decimal("0.000000001"))
+                if not result.is_finite():
+                    raise InvalidOperation
+                return result
+            except InvalidOperation:
+                frappe.throw(_("Client-approved Variation Order values must remain valid."))
+        return str(value or "")
 
     def enforce_scope_context_project(self):
         if not self.is_new():
@@ -70,7 +117,10 @@ class VariationOrder(Document):
             )
 
     def on_update(self):
-        if self.status == CLIENT_APPROVED_STATUS:
+        previous = self.get_doc_before_save()
+        if self.status == CLIENT_APPROVED_STATUS and (
+            not previous or previous.status != CLIENT_APPROVED_STATUS
+        ):
             self.process_approved_vo_lines()
 
     def validate_boq_header(self):

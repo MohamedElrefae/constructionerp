@@ -147,6 +147,56 @@ class TestCostAnalysisEngine(FrappeTestCase):
         self.assertAlmostEqual(analysis.total_direct_cost, 200.0, places=2)
         self.assertAlmostEqual(analysis.total_unit_cost, 200.0, places=2)
 
+    def test_resource_plan_normalizes_batch_factor_and_wastage(self):
+        from construction.services.boq_report_service import get_resource_requirement_summary
+
+        self.item.factor = 0.5
+        self.item.save(ignore_permissions=True)
+        code = self._make_item_doctype("Batch planning material")
+        analysis = self._make_cost_analysis(
+            self.item.name,
+            details=[
+                {
+                    "cost_stream": "M",
+                    "item_code": code,
+                    "resource_uom": "Nos",
+                    "qty_per_boq_unit": 2,
+                    "cost_rate": 100,
+                    "wastage_pct": 0,
+                }
+            ],
+        )
+        analysis.analysis_qty = 2
+        analysis.save(ignore_permissions=True)
+        analysis.submit()
+        plan = get_resource_requirement_summary(self.header.name)
+        self.assertEqual(len(plan), 1)
+        self.assertEqual(plan[0].total_resource_qty, 5)
+        self.assertEqual(plan[0].total_resource_cost, 500)
+        self.assertEqual(plan[0].avg_cost_rate, 100)
+        self.assertEqual(self.header.reload().total_budgeted_cost, 500)
+        replacement = self._make_cost_analysis(
+            self.item.name,
+            details=[
+                {
+                    "cost_stream": "M",
+                    "item_code": code,
+                    "resource_uom": "Nos",
+                    "qty_per_boq_unit": 2,
+                    "cost_rate": 100,
+                    "wastage_pct": 10,
+                }
+            ],
+        )
+        replacement.analysis_qty = 2
+        replacement.save(ignore_permissions=True)
+        replacement.submit()
+        plan = get_resource_requirement_summary(self.header.name)
+        self.assertAlmostEqual(plan[0].total_resource_qty, 5.5)
+        self.assertEqual(plan[0].total_resource_cost, 550)
+        self.assertEqual(plan[0].avg_cost_rate, 100)
+        self.assertEqual(self.header.reload().total_budgeted_cost, 550)
+
     def test_composite_analysis_rolls_up(self):
         """Composite analysis rolls up to BOQ Item."""
         item_code_1 = self._make_item_doctype("Mat-001", "Material 1")

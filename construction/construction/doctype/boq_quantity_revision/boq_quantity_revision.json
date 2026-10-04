@@ -23,6 +23,8 @@
     "change_pct_from_contract",
     "rate_change_triggered",
     "sb_pricing",
+    "pricing_factor",
+    "financial_rule_version",
     "contract_unit_price",
     "revised_unit_price",
     "cb_pricing",
@@ -236,6 +238,18 @@
       "fieldname": "approved_on",
       "fieldtype": "Datetime",
       "label": "Approved On",
+      "read_only": 1
+    },
+    {
+      "fieldname": "pricing_factor",
+      "fieldtype": "Float",
+      "label": "Approval Pricing Factor",
+      "read_only": 1
+    },
+    {
+      "fieldname": "financial_rule_version",
+      "fieldtype": "Data",
+      "label": "Financial Rule Version",
       "read_only": 1
     }
   ],

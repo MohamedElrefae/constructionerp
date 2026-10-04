@@ -9,6 +9,7 @@ from frappe import _
 from frappe.utils import cint, flt, getdate, today
 
 from construction.services.boq_import_service import BOQImportService
+from construction.services.boq_pricing import number
 from construction.services.resource_price_service import get_suggested_rate
 
 # ---------------------------------------------------------------------------
@@ -74,11 +75,12 @@ def bulk_reprice_analyses(
     if company:
         filters["company"] = company
 
-    analysis_names = frappe.db.get_all(
+    analysis_names = frappe.get_list(
         "BOQ Cost Analysis",
         filters=filters,
         pluck="name",
         order_by="modified desc",
+        limit_page_length=0,
     )
 
     detail_filters = {}
@@ -99,10 +101,11 @@ def bulk_reprice_analyses(
         # BOQ Cost Analysis Detail rows carry no resource_type field; resolve it
         # from the linked Item's construction_resource_type custom field instead.
         resource_type_items = set(
-            frappe.get_all(
+            frappe.get_list(
                 "Item",
                 filters={"construction_resource_type": resource_type},
                 pluck="name",
+                limit_page_length=0,
             )
         )
         if not resource_type_items:
@@ -206,16 +209,12 @@ def _apply_bulk_reprice_to_analysis(
     # (item_code, supplier): two rows can legitimately share the same item and
     # supplier while belonging to different cost streams. Keying eligibility on
     # the tuple would let one stream's filter update a row of another stream.
-    eligible_by_name = None
-    if cost_stream:
-        eligible_by_name = {r.get("name") for r in rows_for_doc if r.get("name")}
+    eligible_by_name = {r.get("name") for r in rows_for_doc if r.get("name")}
 
     for row in doc.get("details") or []:
-        if cost_stream:
-            # Only repricing rows whose exact child row was pre-filtered as
-            # belonging to the requested stream.
-            if row.get("name") not in eligible_by_name:
-                continue
+        # Every filter (resource code/type/stream) applies to exact rows.
+        if row.get("name") not in eligible_by_name:
+            continue
 
         # Match the preloaded detail row so row.item_code/supplier are canonical.
         suggested = bulk_rate_lookup.resolve(
@@ -317,7 +316,7 @@ def _build_bulk_rate_lookup(item_codes, as_of_date=None):
         rph_filters = [["item_code", "in", item_list], ["status", "Active"]]
         if as_of_date:
             rph_filters.append(["price_date", "<=", as_of_date])
-        history_rows = frappe.get_all(
+        history_rows = frappe.get_list(
             "Resource Price History",
             filters=rph_filters,
             fields=[
@@ -335,7 +334,7 @@ def _build_bulk_rate_lookup(item_codes, as_of_date=None):
             limit_page_length=0,
         )
         # Item Price fallback (Standard Buying, buying).
-        price_rows = frappe.get_all(
+        price_rows = frappe.get_list(
             "Item Price",
             filters=[["item_code", "in", item_list], ["buying", 1], ["price_list", "Standard Buying"]],
             fields=["item_code", "price_list_rate"],
@@ -497,6 +496,13 @@ def import_cost_database_from_excel(
         errors.append("company is required")
         return _build_result(False, dry_run, records_created, errors, warnings)
 
+    if frappe.session.user != "Administrator":
+        # Preview and commit have the same authorization contract. Validate
+        # before parsing or returning company defaults/existing record names.
+        frappe.has_permission("Company", "read", doc=company, throw=True)
+        for doctype in ("Resource Price History", "Item", "BOQ Cost Analysis"):
+            frappe.has_permission(doctype, "create", throw=True)
+
     if not frappe.db.exists("Company", company):
         errors.append(f"Company {company} does not exist")
         return _build_result(False, dry_run, records_created, errors, warnings)
@@ -585,6 +591,28 @@ def import_cost_database_from_excel(
         return _build_result(False, dry_run, records_created, errors, warnings)
 
     # --- Build lookup maps ---
+    for sheet_name, rows, fields in (
+        ("Resources", resources_data, ("unit_price_egp", "exchange_rate")),
+        ("BOQItemTemplates", templates_data, ("overhead_pct", "profit_pct", "tender_tax_pct")),
+        ("RateAnalysis", rate_data, ("qty_per_boq_unit", "wastage_pct", "cost_rate")),
+    ):
+        for index, row in enumerate(rows, start=2):
+            for field in fields:
+                value = row.get(field)
+                if field == "exchange_rate" and value in (None, ""):
+                    value = 1
+                try:
+                    row[field] = number(
+                        value,
+                        field,
+                        maximum=100 if field.endswith("_pct") else None,
+                        positive=field == "exchange_rate",
+                    )
+                except frappe.ValidationError as exc:
+                    errors.append(f"{sheet_name} row {index}: {exc}")
+    if errors:
+        return _build_result(False, dry_run, records_created, errors, warnings)
+
     resource_code_to_name = {}
     template_name_to_doc = {}
 
@@ -645,6 +673,34 @@ def import_cost_database_from_excel(
     if errors:
         return _build_result(False, dry_run, records_created, errors, warnings)
 
+    if frappe.session.user != "Administrator":
+        for row in resources_data:
+            code = _clean_string(row.get("resource_code"))
+            if code and frappe.db.exists("Item", code):
+                frappe.has_permission("Item", "write", doc=code, throw=True)
+            uom = _clean_string(row.get("uom"))
+            if uom and not frappe.db.exists("UOM", uom):
+                frappe.has_permission("UOM", "create", throw=True)
+        for row in templates_data:
+            existing = frappe.db.get_value(
+                "BOQ Cost Analysis",
+                {
+                    "template_name": _clean_string(row.get("template_name")),
+                    "company": company,
+                    "is_template": 1,
+                },
+                "name",
+            )
+            if existing:
+                doc = frappe.get_doc("BOQ Cost Analysis", existing)
+                frappe.has_permission(
+                    "BOQ Cost Analysis", "read" if doc.docstatus else "write", doc=doc, throw=True
+                )
+                if auto_submit and doc.docstatus == 0:
+                    frappe.has_permission("BOQ Cost Analysis", "submit", doc=doc, throw=True)
+        if auto_submit:
+            frappe.has_permission("BOQ Cost Analysis", "submit", throw=True)
+
     if dry_run:
         return _build_result(True, dry_run, records_created, errors, warnings)
 
@@ -679,7 +735,7 @@ def import_cost_database_from_excel(
         # Ensure UOM exists
         if uom and not frappe.db.exists("UOM", uom):
             try:
-                frappe.get_doc({"doctype": "UOM", "uom_name": uom}).insert(ignore_permissions=True)
+                frappe.get_doc({"doctype": "UOM", "uom_name": uom}).insert()
             except Exception as e:
                 warnings.append(f"Could not create UOM {uom}: {str(e)}")
 
@@ -700,7 +756,7 @@ def import_cost_database_from_excel(
                         "default_cost_stream": cost_stream,
                     }
                 )
-                item_doc.insert(ignore_permissions=True)
+                item_doc.insert()
                 records_created["items"].append(resource_code)
             except Exception as e:
                 errors.append(f"Resources row {idx}: failed to create Item {resource_code}: {str(e)}")
@@ -725,7 +781,7 @@ def import_cost_database_from_excel(
                     item_doc.default_cost_stream = cost_stream
                     changed = True
                 if changed:
-                    item_doc.save(ignore_permissions=True)
+                    item_doc.save()
                     records_updated["items"].append(resource_code)
             except Exception as e:
                 warnings.append(f"Resources row {idx}: failed to update Item {resource_code}: {str(e)}")
@@ -767,7 +823,7 @@ def import_cost_database_from_excel(
                         "remarks": remarks,
                     }
                 )
-                history.insert(ignore_permissions=True)
+                history.insert()
                 records_created["resource_price_history"].append(history.name)
         except Exception as e:
             errors.append(f"Resources row {idx}: failed to create Resource Price History: {str(e)}")
@@ -839,7 +895,7 @@ def import_cost_database_from_excel(
                 if auto_submit:
                     existing_doc.submit()
                 else:
-                    existing_doc.save(ignore_permissions=True)
+                    existing_doc.save()
                 records_updated["boq_cost_analysis_templates"].append(existing_template)
                 continue
 
@@ -862,7 +918,7 @@ def import_cost_database_from_excel(
                     "details": details,
                 }
             )
-            analysis.insert(ignore_permissions=True)
+            analysis.insert()
 
             if auto_submit:
                 analysis.submit()

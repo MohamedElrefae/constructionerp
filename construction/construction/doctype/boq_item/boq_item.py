@@ -223,6 +223,14 @@ class BOQItem(Document):
         price = flt(self.contract_unit_price)
         factor = positive_factor(self.factor)
         self.line_total = quantity * price * factor
+        if (
+            not self.last_quantity_revision
+            and frappe.db.get_value("BOQ Header", self.boq_header, "status") != "Locked"
+        ):
+            # Before the first baseline there is no separate approved quantity.
+            # Keep the current projection aligned with normal estimate edits.
+            self.current_revised_qty = quantity
+            self.current_revised_unit_price = price
 
     # --- Step 7: Output guards ---
     def validate_output_guards(self):

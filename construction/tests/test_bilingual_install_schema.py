@@ -5,12 +5,24 @@ from unittest.mock import patch
 import frappe
 from frappe.tests.utils import FrappeTestCase
 
-from construction.install import fix_system_manager_permissions
+from construction.install import fix_select_permissions, fix_system_manager_permissions
 from construction.services.bilingual_service import get_mapping, get_registry
 from construction.setup.bilingual_schema import ensure_bilingual_schema
 
 
 class TestBilingualInstallSchema(FrappeTestCase):
+    def test_permission_setup_does_not_grant_vendor_roles_or_commit(self):
+        frappe.db.savepoint("release_vendor_permissions")
+        frappe.db.delete("DocPerm", {"parent": "Company", "role": "System Manager"})
+        vendor = frappe.db.get_value("DocPerm", {"parent": "Project", "read": 1}, "name")
+        self.assertTrue(vendor)
+        frappe.db.set_value("DocPerm", vendor, "select", 0)
+        fix_system_manager_permissions()
+        fix_select_permissions()
+        self.assertFalse(frappe.db.exists("DocPerm", {"parent": "Company", "role": "System Manager"}))
+        self.assertEqual(frappe.db.get_value("DocPerm", vendor, "select"), 0)
+        frappe.db.rollback(save_point="release_vendor_permissions")
+
     def test_permission_setup_repairs_invalid_import_without_committing(self):
         invalid = frappe.db.sql("""
             SELECT p.name FROM `tabDocPerm` p
@@ -22,7 +34,22 @@ class TestBilingualInstallSchema(FrappeTestCase):
         permission = frappe.db.get_value(
             "DocPerm", {"parent": "UAE VAT Settings", "role": "System Manager"}, "name"
         )
-        self.assertTrue(permission)
+        if not permission:
+            # Clean vendor metadata has no such grant. Simulate only the old
+            # app-created row needed to verify its impossible import flag.
+            legacy = frappe.get_doc(
+                {
+                    "doctype": "DocPerm",
+                    "parent": "UAE VAT Settings",
+                    "parenttype": "DocType",
+                    "parentfield": "permissions",
+                    "role": "System Manager",
+                    "permlevel": 0,
+                    "read": 1,
+                }
+            )
+            legacy.db_insert()
+            permission = legacy.name
         frappe.db.savepoint("release_permission_setup")
         frappe.db.set_value("DocPerm", permission, "import", 1)
         fix_system_manager_permissions()

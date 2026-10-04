@@ -272,7 +272,9 @@ class BOQExportService:
         for item in items:
             item["factor"] = positive_factor(item.get("factor"))
 
-        revised_map = {row["boq_item"]: row for row in get_revised_boq_rows(boq_header)}
+        revised_map = {
+            row["boq_item"]: row for row in get_revised_boq_rows(boq_header, include_variation=True)
+        }
 
         # Create a map of structure to items
         item_map = {}

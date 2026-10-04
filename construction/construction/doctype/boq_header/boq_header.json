@@ -21,12 +21,14 @@
   "fields": [
     {
       "fieldname": "project",
-      "fieldtype": "Data",
+      "fieldtype": "Link",
       "hidden": 1,
       "in_list_view": 1,
       "label": "Project",
       "read_only": 1,
-      "reqd": 1
+      "reqd": 1,
+      "options": "Project",
+      "in_standard_filter": 0
     },
     {
       "fieldname": "project_name",

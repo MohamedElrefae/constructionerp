@@ -5,7 +5,7 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import flt
 
-from construction.services.boq_pricing import number
+from construction.services.boq_pricing import number, positive_factor
 from construction.services.boq_transactions import current_boq_sql, lock_boq_header
 
 
@@ -27,6 +27,8 @@ class BOQQuantityRevision(Document):
         "change_pct_from_contract",
         "rate_change_triggered",
         "contract_unit_price",
+        "pricing_factor",
+        "financial_rule_version",
         "revised_unit_price",
         "previous_value",
         "revised_value",
@@ -70,6 +72,13 @@ class BOQQuantityRevision(Document):
             frappe.throw(_("Revision header and structure must match the BOQ Item."))
         for field in ("previous_qty", "revised_qty", "contract_unit_price", "revised_unit_price"):
             self.set(field, number(self.get(field), self.meta.get_label(field)))
+        self.pricing_factor = positive_factor(item.factor)
+        self.financial_rule_version = "quantity-value-factor/v1"
+        self.contract_unit_price = (
+            item.current_revised_unit_price
+            if item.current_revised_unit_price is not None
+            else item.contract_unit_price
+        )
         if self.status != "Approved":
             if self.approved_by or self.approved_on:
                 frappe.throw(_("Approval attribution is managed by the approval service."))
@@ -137,8 +146,14 @@ class BOQQuantityRevision(Document):
         self.rate_change_triggered = 1 if self.change_pct_from_contract > 25 else 0
 
         # Values
-        self.previous_value = flt(self.previous_qty) * flt(self.contract_unit_price)
-        self.revised_value = flt(self.revised_qty) * flt(self.revised_unit_price)
+        # before_insert runs before validate; capture the authoritative factor
+        # there too. Approved legacy records never enter this recalculation.
+        if not self.financial_rule_version:
+            self.pricing_factor = positive_factor(frappe.db.get_value("BOQ Item", self.boq_item, "factor"))
+            self.financial_rule_version = "quantity-value-factor/v1"
+        factor = positive_factor(self.pricing_factor)
+        self.previous_value = flt(self.previous_qty) * flt(self.contract_unit_price) * factor
+        self.revised_value = flt(self.revised_qty) * flt(self.revised_unit_price) * factor
         self.delta_value = self.revised_value - self.previous_value
 
     def compute_revision_type(self):

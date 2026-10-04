@@ -121,6 +121,8 @@ jobs:
             construction.tests.test_boq_excel_parser
             construction.tests.test_boq_rollup_audit
             construction.tests.test_bilingual_install_schema
+            construction.tests.test_boq_legacy_cost_conversion
+            construction.tests.test_boq_parent_permissions
           )
           for module in "${modules[@]}"; do
             bench --site test_site run-tests --app construction --module "$module"

@@ -2,6 +2,8 @@ import frappe
 from frappe import _
 from frappe.utils import flt
 
+from construction.services.revised_boq_queries import validate_report_factors
+
 
 def get_boq_cost_analysis_summary(boq_header):
     """Report 1: BOQ Cost Analysis Summary.
@@ -86,8 +88,20 @@ def get_boq_item_cost_vs_contract(boq_header):
 def get_resource_requirement_summary(boq_header):
     """Report 3: Resource Requirement Summary by resource stream.
 
-    Aggregates resource quantities across all approved cost analyses.
+    Contract-quantity resource plan, including factor and wastage. Batch
+    analyses are normalized by analysis_qty for both quantities and costs.
     """
+    validate_report_factors(boq_header)
+    invalid = frappe.db.sql(
+        """SELECT analysis.name FROM `tabBOQ Cost Analysis` analysis
+        JOIN `tabBOQ Item` item ON item.name = analysis.boq_item
+        WHERE item.boq_header = %s AND analysis.docstatus = 1
+          AND analysis.analysis_status = 'Approved'
+          AND (analysis.analysis_qty IS NULL OR analysis.analysis_qty <= 0) LIMIT 1""",
+        boq_header,
+    )
+    if invalid:
+        frappe.throw(_("Legacy analysis quantity requires review before resource planning."))
     rows = frappe.db.sql(
         """
         SELECT
@@ -95,9 +109,10 @@ def get_resource_requirement_summary(boq_header):
             bcd.item_code,
             bcd.item_name,
             bcd.resource_uom,
-            SUM(bcd.qty_per_boq_unit * bi.quantity) as total_resource_qty,
-            AVG(bcd.cost_rate) as avg_cost_rate,
-            SUM(bcd.amount * bi.quantity / NULLIF(bca.analysis_qty, 0)) as total_resource_cost
+            SUM(bcd.qty_per_boq_unit * (1 + COALESCE(bcd.wastage_pct, 0) / 100) * bi.quantity * COALESCE(bi.factor, 1) / bca.analysis_qty) as total_resource_qty,
+            SUM(bcd.amount * bi.quantity * COALESCE(bi.factor, 1) / bca.analysis_qty) /
+                NULLIF(SUM(bcd.qty_per_boq_unit * (1 + COALESCE(bcd.wastage_pct, 0) / 100) * bi.quantity * COALESCE(bi.factor, 1) / bca.analysis_qty), 0) as avg_cost_rate,
+            SUM(bcd.amount * bi.quantity * COALESCE(bi.factor, 1) / bca.analysis_qty) as total_resource_cost
         FROM `tabBOQ Cost Analysis Detail` bcd
         INNER JOIN `tabBOQ Cost Analysis` bca
             ON bca.name = bcd.parent
@@ -107,7 +122,7 @@ def get_resource_requirement_summary(boq_header):
             ON bi.name = bca.boq_item
         WHERE bi.boq_header = %(boq_header)s
         GROUP BY bcd.cost_stream, bcd.item_code, bcd.item_name, bcd.resource_uom
-        ORDER BY bcd.cost_stream, SUM(bcd.amount * bi.quantity / NULLIF(bca.analysis_qty, 0)) DESC
+        ORDER BY bcd.cost_stream, total_resource_cost DESC
     """,
         {"boq_header": boq_header},
         as_dict=True,

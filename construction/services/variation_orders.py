@@ -1,36 +1,44 @@
 import frappe
 from frappe.utils import flt
 
+from construction.services.boq_pricing import positive_factor
+
 APPROVED_STATUS = "Approved by Client"
 
 
 def get_revised_qty(boq_item_name):
-    contract_qty = flt(frappe.db.get_value("BOQ Item", boq_item_name, "quantity"))
-    approved_delta = frappe.db.sql(
-        """
-        select coalesce(sum(line.delta_qty), 0)
-        from `tabVO Line` line
-        inner join `tabVariation Order` vo on vo.name = line.parent
-        where line.boq_item = %s
-          and line.line_type in ('Quantity Change', 'Omission')
-          and vo.status = %s
-          and vo.docstatus < 2
-        """,
-        (boq_item_name, APPROVED_STATUS),
-    )[0][0]
-    return contract_qty + flt(approved_delta)
+    item = frappe.db.get_value(
+        "BOQ Item",
+        boq_item_name,
+        ["quantity", "current_revised_qty", "last_quantity_revision", "boq_header"],
+        as_dict=True,
+    )
+    if not item:
+        frappe.throw("BOQ Item does not exist", frappe.DoesNotExistError)
+    if (
+        not item.last_quantity_revision
+        and frappe.db.get_value("BOQ Header", item.boq_header, "status") != "Locked"
+    ):
+        return flt(item.quantity)
+    return flt(item.current_revised_qty if item.current_revised_qty is not None else item.quantity)
 
 
-def get_revised_boq_rows(boq_header):
-    """Return a revised BOQ view for contract and approved VO quantities."""
+def get_revised_boq_rows(boq_header, include_variation=False):
+    """Return the current projection, including approved standalone corrections.
+
+    The legacy vo_* keys remain VO attribution, not the current total's basis.
+    """
     items = frappe.db.sql(
         """
         select
             item.name as boq_item,
             item.structure,
-            item.quantity as contract_qty,
+            CASE WHEN item.is_variation_item = 1 THEN 0 ELSE item.quantity END as contract_qty,
             item.contract_unit_price,
             item.line_total as contract_line_value,
+            item.factor,
+            item.current_revised_qty,
+            item.current_revised_unit_price,
             structure.wbs_code,
             structure.title,
             structure.is_group,
@@ -38,10 +46,11 @@ def get_revised_boq_rows(boq_header):
             item.unit
         from `tabBOQ Item` item
         inner join `tabBOQ Structure` structure on structure.name = item.structure
-        where item.boq_header = %s and item.is_variation_item = 0
+        where item.boq_header = %(boq_header)s
+          and (%(include_variation)s = 1 or item.is_variation_item = 0)
         order by structure.lft
         """,
-        boq_header,
+        {"boq_header": boq_header, "include_variation": int(bool(include_variation))},
         as_dict=True,
     )
     if not items:
@@ -57,6 +66,15 @@ def get_revised_boq_rows(boq_header):
         stage = stages.get(row.boq_item, {})
         vo_qty_delta = flt(delta.get("qty_delta"))
         vo_value_delta = flt(delta.get("value_delta"))
+        factor = positive_factor(row.factor)
+        revised_qty = flt(
+            row.current_revised_qty if row.current_revised_qty is not None else row.contract_qty
+        )
+        revised_rate = flt(
+            row.current_revised_unit_price
+            if row.current_revised_unit_price is not None
+            else row.contract_unit_price
+        )
         rows.append(
             {
                 "boq_item": row.boq_item,
@@ -68,11 +86,11 @@ def get_revised_boq_rows(boq_header):
                 "is_variation_item": row.is_variation_item,
                 "contract_qty": flt(row.contract_qty),
                 "vo_qty_delta": vo_qty_delta,
-                "revised_qty": flt(row.contract_qty) + vo_qty_delta,
+                "revised_qty": revised_qty,
                 "contract_unit_price": flt(row.contract_unit_price),
-                "contract_line_value": flt(row.contract_line_value),
+                "contract_line_value": flt(row.contract_qty) * flt(row.contract_unit_price) * factor,
                 "vo_value_delta": vo_value_delta,
-                "revised_value": flt(row.contract_line_value) + vo_value_delta,
+                "revised_value": revised_qty * revised_rate * factor,
                 "measured_qty": flt(stage.get("measured_qty")),
                 "certified_qty": flt(stage.get("certified_qty")),
             }
@@ -108,9 +126,9 @@ def get_revised_variation_rows(boq_header):
         select
             item.name as boq_item,
             item.structure,
-            item.quantity as delta_qty,
-            item.contract_unit_price as revised_unit_price,
-            item.line_total as revised_line_value,
+            COALESCE(item.current_revised_qty, item.quantity) as delta_qty,
+            COALESCE(item.current_revised_unit_price, item.contract_unit_price) as revised_unit_price,
+            item.factor,
             structure.wbs_code,
             structure.title,
             structure.variation_order,
@@ -124,6 +142,10 @@ def get_revised_variation_rows(boq_header):
         {"boq_header": boq_header},
         as_dict=True,
     )
+    for row in rows:
+        row.revised_line_value = (
+            flt(row.delta_qty) * flt(row.revised_unit_price) * positive_factor(row.factor)
+        )
     return rows
 
 

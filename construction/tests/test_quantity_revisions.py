@@ -224,6 +224,45 @@ class TestQuantityRevisions(FrappeTestCase):
             ),
         )
 
+    def test_factor_scaled_standalone_correction_updates_all_current_readers(self):
+        from construction.services.boq_export_service import BOQExportService
+        from construction.services.variation_orders import get_revised_qty
+
+        header, item = self._make_boq_item("Factor Scaled Revision", quantity=100, rate=50)
+        item.factor = 0.5
+        item.save(ignore_permissions=True)
+        self._move_header_to_locked(header.name)
+
+        revision = create_quantity_revision(
+            boq_item=item.name,
+            previous_qty=100,
+            revised_qty=110,
+            contract_unit_price=50,
+            revised_unit_price=50,
+            reason="Correct approved quantity",
+        )
+        approve_quantity_revision(revision.name)
+        revision.reload()
+        self.assertEqual(revision.pricing_factor, 0.5)
+        self.assertEqual(revision.delta_value, 250)
+
+        item.reload()
+        self.assertEqual(item.current_revised_qty, 110)
+        self.assertEqual(get_revised_qty(item.name), 110)
+
+        report = get_revised_boq(header.name)
+        row = next(row for row in report if row.boq_item == item.name)
+        self.assertEqual(row.current_revised_qty, 110)
+        self.assertEqual(row.delta_value, 250)
+        self.assertEqual(row.revised_value, 2750)
+
+        export_row = next(
+            row for row in BOQExportService.get_tree_data(header.name) if row.get("name") == item.structure
+        )
+        self.assertEqual(export_row["revised_qty"], 110)
+        self.assertEqual(export_row["revised_value"], 2750)
+        self.assertEqual(header.reload().total_revised_value, 2750)
+
     def test_draft_revision_does_not_update_current_revised_qty(self):
         header, item = self._make_boq_item("Draft No Update", quantity=100, rate=50)
         self._move_header_to_locked(header.name)

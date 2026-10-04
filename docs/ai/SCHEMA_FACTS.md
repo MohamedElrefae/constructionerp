@@ -18,7 +18,7 @@
 | `boq_import_batch` | BOQ Import Batch | `boq_import_batch.json` | 18 |  |
 | `boq_item` | BOQ Item | `boq_item.json` | 53 |  |
 | `boq_item_stage` | BOQ Item Stage | `boq_item_stage.json` | 16 |  |
-| `boq_quantity_revision` | BOQ Quantity Revision | `boq_quantity_revision.json` | 35 |  |
+| `boq_quantity_revision` | BOQ Quantity Revision | `boq_quantity_revision.json` | 37 |  |
 | `boq_structure` | BOQ Structure | `boq_structure.json` | 31 |  |
 | `construction_settings` | Construction Settings | `construction_settings.json` | 28 |  |
 | `construction_theme` | Construction Theme | `construction_theme.json` | 94 |  |
@@ -32,7 +32,7 @@
 | `user_desk_theme` | User Desk Theme | `user_desk_theme.json` | 25 |  |
 | `user_scope_context` | User Scope Context | `user_scope_context.json` | 10 |  |
 | `variation_order` | Variation Order | `variation_order.json` | 22 |  |
-| `vo_line` | VO Line | `vo_line.json` | 27 | Child table |
+| `vo_line` | VO Line | `vo_line.json` | 31 | Child table |
 | `journal_entry` | Journal Entry | - | - | Override only; no local schema JSON |
 
 ## Critical Invariants
@@ -103,7 +103,7 @@
 
 | Field | Type | Options | Flags |
 |---|---|---|---|
-| `project` | Data |  | reqd, hidden, read_only |
+| `project` | Link | Project | reqd, hidden, read_only |
 | `project_name` | Data |  | read_only |
 | `boq_type` | Select | Tender / Contract / Variation |  |
 | `status` | Select | Draft / Pricing / Frozen / Locked |  |
@@ -218,7 +218,7 @@
 | `sb_notes` | Section Break |  |  |
 | `description` | Small Text |  |  |
 
-### BOQ Quantity Revision (`boq_quantity_revision/boq_quantity_revision.json`) - 35 fields
+### BOQ Quantity Revision (`boq_quantity_revision/boq_quantity_revision.json`) - 37 fields
 
 | Field | Type | Options | Flags |
 |---|---|---|---|
@@ -257,6 +257,8 @@
 | `sb_approval` | Section Break |  |  |
 | `approved_by` | Link | User | read_only |
 | `approved_on` | Datetime |  | read_only |
+| `pricing_factor` | Float |  | read_only |
+| `financial_rule_version` | Data |  | read_only |
 
 ### BOQ Structure (`boq_structure/boq_structure.json`) - 31 fields
 
@@ -606,7 +608,7 @@
 | `total_contract_delta` | Currency |  | read_only |
 | `notes` | Text Editor |  |  |
 
-### VO Line (`vo_line/vo_line.json`) - 27 fields
+### VO Line (`vo_line/vo_line.json`) - 31 fields
 
 | Field | Type | Options | Flags |
 |---|---|---|---|
@@ -637,6 +639,10 @@
 | `created_boq_item` | Link | BOQ Item | read_only |
 | `created_quantity_revision` | Link | BOQ Quantity Revision | read_only |
 | `notes` | Small Text |  |  |
+| `pricing_factor` | Float |  | read_only |
+| `financial_rule_version` | Data |  | read_only |
+| `previous_unit_price` | Currency |  | read_only |
+| `previous_line_value` | Currency |  | read_only |
 
 ## Validation Checklist
 
