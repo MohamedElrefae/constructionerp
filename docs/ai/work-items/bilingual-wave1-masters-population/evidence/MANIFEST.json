@@ -1,0 +1,49 @@
+{
+  "artefacts": {
+    "docs/ai/work-items/bilingual-wave1-masters-population/SCOPE.md": "7fe4f826274cf8a53df7c037ab9e7eea950352a315d6b547f0e03a661a440ad7",
+    "docs/ai/work-items/bilingual-wave1-masters-population/evidence/inventory-export.log": "fc575c953522e364ff8884e321267ffc20e7b7fb4dd801609cff85f4870a4e55",
+    "docs/ai/work-items/bilingual-wave1-masters-population/evidence/dry-run.log": "6e79cfddb4a623ea29db8562f56f7d88012dc09dd23d3e8ce8d461ac078fc189",
+    "docs/ai/work-items/bilingual-wave1-masters-population/evidence/apply.log": "4ced8d9ab91ea490a5e2a144cfa8cd2106d265963751a8903aeb2682cda5576a",
+    "docs/ai/work-items/bilingual-wave1-masters-population/evidence/post-import-verification.log": "ef6daa222247197379fe4fdeb612aaba824dcaa2f69c04cd240bdfbcf94fd6fe",
+    "docs/ai/work-items/bilingual-wave1-masters-population/evidence/regression-matrix.log": "ce53ccaca86a084be8fc35a31fddb2b97d35ef4924e3b52d8a854f9b2ef6b223",
+    "docs/ai/work-items/bilingual-wave1-masters-population/evidence/reconciliation.log": "c275c7ef647847a29183ba4ef2b0d67de786be14e9c9d2976017a962f653c16d",
+    "docs/ai/work-items/bilingual-wave1-masters-population/evidence/review-ai-a2.md": "30e0cf356a15526893ec36e06ee3a19a1bdce7c31a80c9484178c8bcbd916679",
+    "docs/ai/work-items/bilingual-wave1-masters-population/evidence/owner-approval.md": "af4d27d106f36e3b0ade711607c981f6810b4f4d1528aa63d4ebab4720a8df93",
+    "docs/ai/work-items/bilingual-wave1-masters-population/evidence/scripts/export_wave1_inventory.py": "1f530157bf7896f65af66eface2dd33f341b37588a66d03c3917634ae6453625",
+    "docs/ai/work-items/bilingual-wave1-masters-population/evidence/scripts/dry_run_wave1_population.py": "a813ba4a7f2d61fc5eff72fdb61d7fc82752c121ba528ef7af9407f4d6f30972",
+    "docs/ai/work-items/bilingual-wave1-masters-population/evidence/scripts/apply_wave1_population.py": "5bc893aa6aceac359ba83542e55c8c735afbae829efc0c8f288d5cb8bd914d24",
+    "docs/ai/work-items/bilingual-wave1-masters-population/evidence/scripts/verify_wave1_population.py": "284c0694220fcc307e8012b7bd7b77ccfc89f4c7c277f0bede2922853ca26606"
+  },
+  "amendments": [],
+  "base_commit": "7839e67",
+  "branch": "develop",
+  "work_item": "bilingual-wave1-masters-population",
+  "primary_invariant": "D5 triad (bilingual_service.py, searchable_dropdown/api/search.py) and bilingual_registry.json byte-identical to base 7839e67 (call-only, never edited); no file under apps/frappe or apps/erpnext modified; no app code, hook, patch, test, JS or registry change; no ?v= bump and no matrix-header change (zero re-pins); exactly the 9 approved in-scope rows' Arabic fields written on site v16.localhost via doc.save() as Administrator with server-derived _norm; fixture and scaffolding rows and the Account Arabic surface (81) untouched; full values and rollback export stay in sites/v16.localhost/private/wave1-population/ (privacy R4); production mutation never authorized",
+  "decisions_settled": {
+    "R1": "in-scope = Stage-5 readiness candidates (8 Items + 1 Customer, Supplier = 0); everything else an enumerated exception; name-based allowlist, never a broad write",
+    "R2": "D4/D5 cycle with owner approval as the hard gate: export -> independent proposal -> independent AI-A2 review (3 sessions, every final value approved by a non-author) -> owner approval of proposal sha a00cfb43...1c77 -> dry-run -> apply -> verification",
+    "R3": "standard doc.save() write path through the existing enforce_bilingual_arabic_policy validate hook (bidi gate + server-derived _norm); documented Account-vs-wave1 policy asymmetry preserved; no setter, no token, no hook change",
+    "R4": "privacy: values + rollback export private under sites/v16.localhost/private/wave1-population/; committed evidence carries counts and sha256 digests only",
+    "R5": "completeness = 100% of the 9 approved rows populated, exceptions enumerated (7 scaffold + _Test* fixtures + Supplier zero-population)",
+    "R6": "new files under this work-item directory only -> zero shared-file edits -> zero manifest re-pins (verified: 185/185 digests across the 21 pre-existing manifests)",
+    "R7": "no display/config changes: identity_section stays false, no doctype_js, no ?v= bump, no phase-2 doctypes, no Account rows, no translation catalogs"
+  },
+  "test_results": {
+    "regression_matrix": "21 modules / 258 tests, all OK",
+    "adr_reconciler": "19/19 PASS",
+    "lints": "lint_scope_metadata PASS, ai_context_check 11/11, lint_translation_writes PASS, schema_drift_checker PASS, py_compile PASS, bash -n PASS",
+    "dry_run": "PASS (9/9 validated, approved sha matched, 0 writes)",
+    "apply": "PASS (9/9 written, 0 failed, transaction committed)",
+    "post_import_verification": "PASS (in_scope=9 populated=9 norm_consistent=9 identity_unchanged=9 exceptions=0; norm-key search 9/9; totals unchanged; accounts_arabic=81)",
+    "digest_verification": "185/185 across the 21 pre-existing manifests, plus this manifest"
+  },
+  "private_artefacts": {
+    "note": "site master data - privacy R4; digests only, values never committed",
+    "proposal.json": "a00cfb432ed6680eefb20f22cc852923f059ff9320533569cdb57791e1cd1c77 (owner-approved)",
+    "review-ai-a2.json": "c613ff8e8c8260450491c436fa00d4f5f76838e422afce926ff2f669146f76f4",
+    "dry-run.json": "1d016b0fe0df4584f125867bede9043f374a3ad1d6b4fe575213ee86d77e1882 (rollback: before-values all empty)",
+    "apply.json": "181f9764d70e84ee1f609ce51e9f60422278323ac5d690e321198c16add372af"
+  },
+  "site_migration": "none - no patch, no schema change; site data only: 9 bilingual name fields (and their server-derived _norm values) populated on v16.localhost, a non-production test site",
+  "causal_order": "export/inventory -> proposal -> independent review -> owner approval -> dry-run -> apply -> post-import verification -> matrix + reconciler + lints -> capture logs (2>&1) -> git add -f the .log -> SHA-256 digests -> MANIFEST.json -> commit"
+}
