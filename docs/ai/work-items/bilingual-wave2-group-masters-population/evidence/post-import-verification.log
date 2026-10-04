@@ -1,0 +1,37 @@
+ROW_OK Item Group 'All Item Groups' value=4588e87ddf74173a norm=cfdf6777fab00d58 identity=unchanged
+ROW_OK Item Group 'Consumable' value=9adc0eb733507686 norm=9adc0eb733507686 identity=unchanged
+ROW_OK Item Group 'Products' value=1fbee78d42a20db8 norm=1fbee78d42a20db8 identity=unchanged
+ROW_OK Item Group 'Raw Material' value=e4de5f494223b62d norm=e4de5f494223b62d identity=unchanged
+ROW_OK Item Group 'Services' value=f53b399897602018 norm=f53b399897602018 identity=unchanged
+ROW_OK Item Group 'Sub Assemblies' value=c79bb07519b1676e norm=c79bb07519b1676e identity=unchanged
+ROW_OK Customer Group 'All Customer Groups' value=697ff4ec928393cd norm=697ff4ec928393cd identity=unchanged
+ROW_OK Customer Group 'Commercial' value=82991b5a2f90f583 norm=82991b5a2f90f583 identity=unchanged
+ROW_OK Customer Group 'Government' value=1e0af71e49953886 norm=1e0af71e49953886 identity=unchanged
+ROW_OK Customer Group 'Individual' value=39accd55043e8f49 norm=af8c514abee0ea4a identity=unchanged
+ROW_OK Customer Group 'Non Profit' value=f110a340d0d48d66 norm=f110a340d0d48d66 identity=unchanged
+ROW_OK Supplier Group 'All Supplier Groups' value=7bf7073646e75ca3 norm=7bf7073646e75ca3 identity=unchanged
+ROW_OK Supplier Group 'Distributor' value=06fa20b9858deb9e norm=06fa20b9858deb9e identity=unchanged
+ROW_OK Supplier Group 'Electrical' value=8ea3d17c34859754 norm=8ea3d17c34859754 identity=unchanged
+ROW_OK Supplier Group 'Hardware' value=d7b72a35314a555b norm=1c64bfbc0839d08f identity=unchanged
+ROW_OK Supplier Group 'Local' value=df15d2116e1dcff1 norm=df15d2116e1dcff1 identity=unchanged
+ROW_OK Supplier Group 'Pharmaceutical' value=d36063195eb96302 norm=d36063195eb96302 identity=unchanged
+ROW_OK Supplier Group 'Raw Material' value=e4de5f494223b62d norm=e4de5f494223b62d identity=unchanged
+ROW_OK Supplier Group 'Services' value=f53b399897602018 norm=f53b399897602018 identity=unchanged
+ROW_OK Territory 'All Territories' value=e6be5e288f13ab19 norm=e6be5e288f13ab19 identity=unchanged
+ROW_OK Territory 'Egypt' value=60469db23613e986 norm=60469db23613e986 identity=unchanged
+ROW_OK Territory 'India' value=7be9f71bfb117804 norm=7be9f71bfb117804 identity=unchanged
+ROW_OK Territory 'Rest Of The World' value=8058e47190020721 norm=8058e47190020721 identity=unchanged
+COMPLETENESS Item Group in_scope_populated=6/6 site_arabic_total=6
+COMPLETENESS Customer Group in_scope_populated=5/5 site_arabic_total=5
+COMPLETENESS Supplier Group in_scope_populated=8/8 site_arabic_total=8
+COMPLETENESS Territory in_scope_populated=4/4 site_arabic_total=4
+NORM_KEY_SEARCH resolved=23/23
+EXCEPTIONS_OK Item Group: all 13 non-in-scope rows empty
+EXCEPTIONS_OK Customer Group: all 2 non-in-scope rows empty
+EXCEPTIONS_OK Supplier Group: all 1 non-in-scope rows empty
+EXCEPTIONS_OK Territory: all 5 non-in-scope rows empty
+FROZEN_SURFACES accounts_ar=81 cost_centers_ar=3 customers_ar=1 items_ar=8 projects_ar=5 suppliers_ar=0 warehouses_ar=6 company_ar=empty
+COUNTS_OK item_groups=19 customer_groups=7 supplier_groups=9 territories=9
+SUMMARY in_scope=23 populated=23 norm_consistent=23 identity_unchanged=23 exceptions=0 fixtures_untouched=21
+ROLLBACK_REF dry-run.json (before-values: all empty) sha256=2e5e3c7a8284cde50751d17fcbf1bc1fc68bacb691a736ac40362f84c504cb01
+VERIFICATION RESULT: PASS

@@ -1,0 +1,58 @@
+{
+  "artefacts": {
+    "docs/ai/work-items/bilingual-wave2-group-masters-population/SCOPE.md": "1e3ddf91e81cb9bc4e9b2f80605ac9ff26465f00e5b613148773d66bef1edcc9",
+    "docs/ai/work-items/bilingual-wave2-group-masters-population/evidence/inventory-export.log": "405f7a6a7583acc7fe9807e873e90f9e7a138406561162e8a3b310206ac30be6",
+    "docs/ai/work-items/bilingual-wave2-group-masters-population/evidence/dry-run.log": "1b8cb54da4a4e20edbd6d0084219b7708635e17d974f755fab2d501b9fb0a8bc",
+    "docs/ai/work-items/bilingual-wave2-group-masters-population/evidence/apply.log": "49153f0d53e9f5a7d4169ddb598a59d0e316c2f85ec2c561f8fcdda5a0a36283",
+    "docs/ai/work-items/bilingual-wave2-group-masters-population/evidence/post-import-verification.log": "ff95c2ee08cf7b13bc89bb4d88901a43ad0cb868dcf082aaa12b83d206d78776",
+    "docs/ai/work-items/bilingual-wave2-group-masters-population/evidence/regression-matrix.log": "64aa7bbb16cd3337f1390b8f9999a3a95bea54e6c536ca7947b47f133cf255b9",
+    "docs/ai/work-items/bilingual-wave2-group-masters-population/evidence/reconciliation.log": "c275c7ef647847a29183ba4ef2b0d67de786be14e9c9d2976017a962f653c16d",
+    "docs/ai/work-items/bilingual-wave2-group-masters-population/evidence/review-ai-a2.md": "a227fd5d389e1c570a07ee2b01ecb8f31dc73a9372506a47dcbf6249bc5c002d",
+    "docs/ai/work-items/bilingual-wave2-group-masters-population/evidence/owner-approval.md": "64c6f8c2974dd77794b57a2b837dc094e0eb2017c1f1ae19c5e42f37cf2e57b2",
+    "docs/ai/work-items/bilingual-wave2-group-masters-population/evidence/scripts/export_wave2_inventory.py": "f01eb02fa572f61ee316af484752005ac0061d679d8f2138729ca8ef6f1d2691",
+    "docs/ai/work-items/bilingual-wave2-group-masters-population/evidence/scripts/dry_run_wave2_population.py": "4f97521b094f7baa6128bf01658e8eb825685f29c32031bc42dbc48e8eab7352",
+    "docs/ai/work-items/bilingual-wave2-group-masters-population/evidence/scripts/apply_wave2_population.py": "9b1f2cbd29dceee194a09254e4fdb2bd7c7298e0c89c7994fc839c0cb1fa4641",
+    "docs/ai/work-items/bilingual-wave2-group-masters-population/evidence/scripts/verify_wave2_population.py": "2aa5326807bc93dd9c5a73c4b12471e61cae3247e9aa2d8ab8257f3056200a1b"
+  },
+  "amendments": [
+    {
+      "id": "R3b",
+      "when": "apply attempt 1",
+      "cause": "ERPNext forces empty-parent roots to reparent under themselves (Item Group validate: hardcoded root name guarded only by frappe.in_test; Customer/Supplier Group + Territory validate: get_root_of returns the root's own name), then NestedSet validate_loop throws NestedSetRecursionError; first attempt rolled back fail-closed with zero writes",
+      "fix": "4 root rows saved under a narrow disclosed workaround: frappe.in_test guard (Item Group) / scoped module get_root_of patch returning None (other three), restored in finally; the 19 non-root rows stay strict plain doc.save(); enforce_bilingual_arabic_policy and all other validations still run on every row; parents stay exactly as shipped",
+      "disclosure": "SCOPE.md R3b + apply.log R3B_ROOT_SAVE x4 + empirical pre-apply proof in a rolled-back transaction"
+    }
+  ],
+  "base_commit": "3fa285a",
+  "branch": "develop",
+  "work_item": "bilingual-wave2-group-masters-population",
+  "primary_invariant": "D5 triad (bilingual_service.py, searchable_dropdown/api/search.py) and bilingual_registry.json byte-identical to base 3fa285a (call-only, never edited); no file under apps/frappe or apps/erpnext modified; no app code, hook, patch, test, JS or registry change; no ?v= bump and no matrix-header change (zero re-pins); exactly the 23 approved in-scope wave-2 group master rows (Item Group 6, Customer Group 5, Supplier Group 8, Territory 4 - fixture rule: _Test prefix; global trees, no company axis) written on site v16.localhost via the standard document save with server-derived _norm (root rows under disclosed R3b); all 21 fixture rows, wave-1 trio (3/6/5), items 8, customers 1, suppliers 0, Account (81 Arabic) and Company untouched; full values and rollback export stay in sites/v16.localhost/private/wave2-group-masters-population/ (privacy R4); production mutation never authorized",
+  "decisions_settled": {
+    "R1": "in-scope = non-fixture rows of the four global trees (name/label _Test prefix is the only fixture family; no company field applies - disclosed vs 5C); frozen allowlist 6/5/8/4 = 23; roots (All *) included per 5C All Warehouses precedent; 21 fixtures documented exceptions",
+    "R2": "D4/D5 cycle with owner approval as hard gate: export -> proposal v1 -> review round 1 fresh non-author session (23/23 approve, overall approve; 7 rows byte-match site catalog; glossary 47/47 terms 0 hits; cross-tree anchors verified) -> owner approval of sha 08dba90a...f6ea47e (8 catalog parity options declined) -> dry-run -> apply -> verification",
+    "R3": "standard doc.save() through the registered enforce_bilingual_arabic_policy hook; R3a carried as dormant safety net (parents proved optional); R3b disclosed mid-cycle amendment for the 4 root rows after fail-closed attempt 1",
+    "R4": "privacy: values + rollback export private under sites/v16.localhost/private/wave2-group-masters-population/; committed evidence carries counts, verdicts and sha256 digests only",
+    "R5": "completeness = 100% of the 23 approved rows populated (6/5/8/4), 21 fixtures enumerated and untouched, norm consistency + norm-key search 23/23",
+    "R6": "new files under this work-item directory only -> zero shared-file edits -> zero manifest re-pins (verified: all pre-existing manifests unchanged)",
+    "R7": "no display/config changes: identity_section stays false for the four, no doctype_js, no ?v= bump, no registry edit, no Account/Company writes, no hierarchy moves (parents byte-unchanged)"
+  },
+  "test_results": {
+    "regression_matrix": "21 modules / 258 tests, all OK",
+    "adr_reconciler": "19/19 PASS",
+    "lints": "lint_scope_metadata PASS, ai_context_check 11/11, lint_translation_writes PASS, schema_drift_checker PASS, py_compile PASS, bash -n PASS",
+    "inventory_export": "PASS (allowlist matches live site 6/5/8/4, pre-state empty, all 44 rows classified, parent fields optional)",
+    "dry_run": "PASS (23/23 validated, approved sha matched, 0 writes)",
+    "apply_attempt_1": "FAIL-CLOSED rollback, zero writes (NestedSetRecursionError on first root row; led to disclosed R3b)",
+    "apply": "PASS (23/23 written, 0 failed, 19 plain + 4 R3B root saves, transaction committed)",
+    "post_import_verification": "PASS (in_scope=23 populated=23 norm_consistent=23 identity_unchanged=23 exceptions=0 fixtures_untouched=21; norm-key search 23/23; totals 19/7/9/9 unchanged; frozen prior surfaces intact; company_ar empty)"
+  },
+  "private_artefacts": {
+    "note": "site master data - privacy R4; digests only, values never committed",
+    "proposal.json": "08dba90a8134c238d2e2e74b69081c0ec0c879ddecb82b2b7bb3a0ed2f6ea47e (owner-approved, version 1)",
+    "review-ai-a2.json": "105c60d83e9d591359f6181a8c96d875d87dabb2313b2555989fe70d4f46a950",
+    "dry-run.json": "2e5e3c7a8284cde50751d17fcbf1bc1fc68bacb691a736ac40362f84c504cb01 (rollback: before-values all empty)",
+    "apply.json": "dac857518fb8cfddb5be6d9e8284fb24c5c5d98d2212db2eac81ba21c26d1cfc"
+  },
+  "site_migration": "none - no patch, no schema change; site data only: 23 bilingual name fields (and their server-derived _norm values) populated on v16.localhost, a non-production test site",
+  "causal_order": "export/inventory -> proposal -> independent review -> owner approval -> dry-run -> apply (attempt 1 fail-closed, R3b disclosed, rerun) -> post-import verification -> matrix + reconciler + lints -> capture logs (2>&1) -> git add -f the .log -> SHA-256 digests -> MANIFEST.json -> commit"
+}
