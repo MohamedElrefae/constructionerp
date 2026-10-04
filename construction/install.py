@@ -189,7 +189,7 @@ def fix_system_manager_permissions():
                         "print": 1,
                         "email": 1,
                         "report": 1,
-                        "import": 1,
+                        "import": 1 if meta.allow_import and not meta.issingle else 0,
                         "export": 1,
                         "share": 1,
                         "select": 1,
@@ -199,9 +199,18 @@ def fix_system_manager_permissions():
             except Exception:
                 pass
 
-        if inserted:
-            frappe.db.commit()
-            frappe.clear_cache()
+        # Older releases granted import=1 without consulting allow_import.
+        # Frappe rejects those rows when regional setup validates permissions.
+        # Correct only impossible flags, preserving the existing role policy.
+        frappe.db.sql("""
+            UPDATE `tabDocPerm` permission
+            JOIN `tabDocType` doctype ON doctype.name = permission.parent
+            SET permission.`import` = 0
+            WHERE permission.role = 'System Manager'
+              AND permission.`import` = 1
+              AND (COALESCE(doctype.allow_import, 0) = 0 OR doctype.issingle = 1)
+        """)
+        frappe.clear_cache()
     except Exception:
         pass
 

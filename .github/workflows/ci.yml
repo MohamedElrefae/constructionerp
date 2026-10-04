@@ -13,7 +13,7 @@ concurrency:
 
 jobs:
   tests:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
     name: Server
@@ -63,7 +63,9 @@ jobs:
 
       - name: Install MariaDB build dependencies
         # Frappe v16's mysqlclient dependency builds from source on Linux/Python 3.14.
-        run: sudo apt-get update && sudo apt-get install -y mariadb-client default-libmysqlclient-dev build-essential pkg-config
+        # The VO business suite renders an actual PDF; provide its native
+        # renderer and Arabic fonts rather than silently skipping that test.
+        run: sudo apt-get update && sudo apt-get install -y mariadb-client default-libmysqlclient-dev build-essential pkg-config wkhtmltopdf fonts-noto-core
 
       - name: Install uv
         run: pip install uv
@@ -100,8 +102,32 @@ jobs:
           bench --site test_site list-apps | grep construction
           echo "Construction app installed successfully"
 
+      - name: Run Python Business Regression Tests
+        working-directory: /home/runner/frappe-bench
+        run: |
+          set -euo pipefail
+          bench --site test_site set-config allow_tests true
+          modules=(
+            construction.tests.test_boq_properties
+            construction.tests.test_quantity_revisions
+            construction.tests.test_variation_orders
+            construction.tests.test_cost_analysis_engine
+            construction.tests.test_cost_database_api
+            construction.tests.test_customer_release_financial_guards
+            construction.tests.test_boq_transactions
+            construction.tests.test_boq_wbs_generation
+            construction.tests.test_boq_structure_conversion
+            construction.tests.test_boq_structure_delete_safety
+            construction.tests.test_boq_excel_parser
+            construction.tests.test_boq_rollup_audit
+            construction.tests.test_bilingual_install_schema
+          )
+          for module in "${modules[@]}"; do
+            bench --site test_site run-tests --app construction --module "$module"
+          done
+
       - name: Run JS Property Tests
         working-directory: /home/runner/frappe-bench/apps/construction/construction/tests
         run: |
-          npm install --no-audit --no-fund
+          npm ci --no-audit --no-fund
           node --test test_print_settings_properties.js

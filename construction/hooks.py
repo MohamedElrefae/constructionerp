@@ -392,6 +392,7 @@ after_install = [
     "construction.install.seed_construction_roles",
     "construction.install.seed_form_layout_profiles",
     "construction.install.setup_item_construction_fields",
+    "construction.setup.bilingual_schema.ensure_bilingual_schema",
     "construction.setup.translation_catalog_fields.ensure_translation_identity",
     "construction.translation_service.import_released_overrides_hook",
 ]
@@ -414,6 +415,7 @@ after_migrate = [
     "construction.install.seed_construction_roles",
     "construction.install.seed_form_layout_profiles",
     "construction.install.setup_item_construction_fields",
+    "construction.setup.bilingual_schema.ensure_bilingual_schema",
     "construction.setup.translation_catalog_fields.ensure_translation_identity",
     "construction.translation_service.import_released_overrides_hook",
 ]
