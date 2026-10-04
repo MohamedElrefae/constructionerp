@@ -76,3 +76,22 @@ class TestBilingualInstallSchema(FrappeTestCase):
             with self.assertRaises(frappe.ValidationError):
                 ensure_bilingual_schema()
         self.assertFalse(frappe.get_meta("Item Group").has_field("missing_release_test_field"))
+
+    def test_workspace_reconciliation_inserts_missing_page_before_sidebar(self):
+        from construction.install import setup_construction_workspace_page
+
+        self.assertTrue(frappe.conf.allow_tests)
+        for field in frappe.get_meta("Workspace").get_table_fields():
+            frappe.db.delete(field.options, {"parent": "Construction", "parenttype": "Workspace"})
+        frappe.db.delete("Workspace", {"name": "Construction"})
+        with patch.dict(frappe.conf, {"developer_mode": 0}):
+            setup_construction_workspace_page()
+            self.assertTrue(frappe.db.exists("Workspace", "Construction"))
+            page = frappe.get_doc("Workspace", "Construction")
+            self.assertTrue(page.public)
+            sidebar = frappe.get_doc("Workspace Sidebar", "Construction")
+            links = [(row.link_type, row.link_to) for row in sidebar.items if row.link_to]
+            self.assertIn(("Workspace", "Construction"), links)
+            setup_construction_workspace_page()
+            repeated = frappe.get_doc("Workspace Sidebar", "Construction")
+            self.assertEqual([(row.link_type, row.link_to) for row in repeated.items if row.link_to], links)

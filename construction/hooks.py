@@ -398,12 +398,11 @@ after_install = [
 ]
 
 # After migrate - ensure system themes and workspace sidebar exist
-# Order matters: themes first, then sidebar, then health check
+# Order matters: themes, workspace page (which creates its sidebar), health check.
 after_migrate = [
     "construction.api.theme_api.whitelabel_patch",
     "construction.install.setup_website_branding",
     "construction.install.create_system_themes",
-    "construction.install.setup_workspace_sidebar",
     "construction.install.setup_construction_workspace_page",
     "construction.install.verify_workspace_visibility",
     "construction.install.setup_boq_integration",

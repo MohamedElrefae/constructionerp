@@ -1592,7 +1592,8 @@ def setup_construction_workspace_page():
         with open(workspace_path) as f:
             workspace_data = json.load(f)
 
-        if frappe.db.exists("Workspace", "Construction"):
+        exists = frappe.db.exists("Workspace", "Construction")
+        if exists:
             workspace = frappe.get_doc("Workspace", "Construction")
             for fieldname in (
                 "label",
@@ -1621,7 +1622,10 @@ def setup_construction_workspace_page():
         else:
             workspace = frappe.get_doc(workspace_data)
 
-        workspace.save(ignore_permissions=True)
+        if exists:
+            workspace.save(ignore_permissions=True)
+        else:
+            workspace.insert(ignore_permissions=True)
 
     if frappe.db.table_exists("Workspace Sidebar"):
         setup_workspace_sidebar()
