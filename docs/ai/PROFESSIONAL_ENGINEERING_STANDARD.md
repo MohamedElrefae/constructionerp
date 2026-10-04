@@ -37,6 +37,12 @@ For workflow changes or integration of these standards into agent execution, rea
 
 If a task requires a new business decision, ask a concise question while completing independent authorized work. Routine engineering choices and already authorized actions do not need repeated owner confirmation. If a rule blocks an action, identify the exact rule and concrete action; prepare the reviewable result before seeking approval for its final gated step.
 
+### Owner's consultant delegation (2026-10-04)
+
+The owner is a civil engineer and delegates routine programming and engineering decisions to the consultant within the requested task. Choose implementation details, testing, refactoring boundaries, and technical corrections autonomously; explain consequential tradeoffs in plain language. Ask the owner about construction workflows, commercial calculation rules, consequential architecture or delivery choices, and any verification or action requiring authority the session does not supply. Never invent business approval or release evidence.
+
+The owner's preferred allocation is GPT-6.1 Sol for the consultant and GPT-6 Luna for bounded light sub-agent work, to conserve quota. When delegation is authorized, give the light agent a narrow file scope and acceptance criteria, review its plan and diff, and verify the integrated result yourself. Keep financial policy, security boundaries, architecture, and release decisions with the consultant. Use available supported model settings; do not claim a model switch that did not happen. An unavailable preferred model should be reported before a costlier substitute is chosen.
+
 ## 3. Required startup in every session
 
 Before editing:

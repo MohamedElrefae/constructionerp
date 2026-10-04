@@ -81,6 +81,15 @@
 
 ## 3. In Progress (Active Work — Updated After Every Session)
 
+### Customer release gap corrections — isolated milestone (2026-10-04)
+- Owner delegates routine software decisions to the consultant; ask about construction/commercial workflows and consequential architecture. Preferred model allocation is GPT-6.1 Sol consultant / GPT-6 Luna bounded light sub-agents. Recorded in the professional standard; no unperformed model switch is claimed.
+- Worktree `/home/mohamed/frappe-bench/worktrees/customer-release-gap-fixes`, branch `codex/customer-release-gap-fixes`, base `4341542`. Main checkout advanced independently to `dd4ea6d` and has ongoing bilingual financial-report work; preserve it and reconcile the two added install/migrate hook entries during integration.
+- Implemented/verified G01 post-delete rollups and a read-only discrepancy audit, partial G02 approved commercial snapshot protection (including sub-cent edits), G05 guarded current aggregates, G09 bounded streaming XLSX imports, G07 business CI, and two fresh-install G12 defects (missing active bilingual schema and invalid non-importable permission flags).
+- Verification: 144 Python tests across thirteen modules and 35 JS properties pass; authenticated REST/Desk edits rejected for Project Manager/System Manager; second fresh site automatically installs and schema setup repeats without changes. Independent human review, GitHub CI, representative upgrade, browser matrix and production deployment are not claimed.
+- G05 race corrected: the same two-thread old-snapshot sequence now gives stored/actual 120/120, with current reads and guarded transaction writes. Twelve two-connection regressions cover approvals, costs, delete/batch/header changes, contention, commit refusal and rollback; native concurrent WBS insertion passes with bounded header-first waiting. Legacy migration/patch bypasses and promised workload/matrix still need review. G03/G04/G06 and the approved-revision reversal policy await owner construction/pricing answers. Shared Python runtime also has two dependency conflicts (filelock/requests); unchanged.
+- Local code commits: `e8b9a43` financial/transaction guards, `403f01f` bounded imports, `d4f071e` fresh-install/CI correction. Source/test fingerprints retained; private fixture servers stopped after verification. Commits not merged/pushed/deployed.
+- See `docs/ai/work-items/customer-release-gap-fixes/PLAN.md`, `STATUS.md` (all sixteen gaps) and `VERIFICATION.md`. Continue stabilization; do not call this a completed customer release or a native orchestrator execution.
+
 ### Engineering startup hardening follow-up (2026-10-04)
 - Reviewed the owner's three-file hardening diff and committed the resulting code/tests separately as `89bb3b9` on develop, preserving the preceding Company bilingual commit `165c238`.
 - Unexpected startup exceptions receive frozen failure evidence; malformed/unreadable report references, context/baseline shapes and internally inconsistent input digests fail with WorkflowError. Dashboard constants alignment is covered by an AST guard.
@@ -214,6 +223,14 @@
 ---
 
 ## 6. Session Log (Append-Only — Most Recent First)
+
+### Session 2026-10-04 — Customer release gap implementation and live verification
+- Read actual startup context and report from the isolated checkout; schema checker passed 21 owners plus one override, context 11/11. Files read and bounded delegation scopes are in the work-item plan.
+- Explicitly authorized GPT-6 Luna sub-agents implemented import guards, CI and read-only audit; parent reviewed plans/diffs, returned fixture/preflight defects and independently tested integrated changes. Financial policy and release conclusions remain with the consultant/owner, not the light agents.
+- Created two disposable sites with separate test databases/cache. Existing sites and main checkout work were not mutated. Live Frappe tests exposed missing fresh-site bilingual custom fields and invalid System Manager import permissions; fixed both installation paths rather than suppressing validation/tests.
+- Successful selected Python tests: 126; JS properties: 35 in nine suites; real WSGI REST/Desk approval edit rejection; automatic second fresh install and schema idempotence. Runtime constraints, exact modules and counter-evidence are in VERIFICATION.md.
+- Confirmed G05 stale aggregate on actual REPEATABLE READ connections (stored contract 110, computed 120; cost 44 vs 48). No blanket gap closure or release approval. Owner questions about margins/factor, cancellation fallback and revision reversal remain unanswered.
+- Bounded local commits use disabled external-memory hooks for those commands only; no push, provider job, invented native grants or external repository-memory persistence. Integration with concurrent main changes remains separate.
 
 ### Session 2026-10-04 — Independent review of startup hardening
 - Files read: root AGENTS/workflow, professional standard sections 1–4, current SESSION_MEMORY, context index, schema-facts summary, startup source/core path helpers, startup fixture/tests, the three-file diff, and previous independent verification records.
