@@ -1,0 +1,20 @@
+DRY Cost Center 'Elrefae - E' before=<empty> after=42c4b22c1c2c69fc norm=42c4b22c1c2c69fc WOULD_WRITE
+DRY Cost Center 'Main - E' before=<empty> after=9fa5525c694ee6b4 norm=9fa5525c694ee6b4 WOULD_WRITE
+DRY Cost Center 'Stage 8 Pilot - E' before=<empty> after=308a78079f92c0cc norm=308a78079f92c0cc WOULD_WRITE
+DRY Warehouse 'All Warehouses - E' before=<empty> after=1af75b65142758e0 norm=1af75b65142758e0 WOULD_WRITE
+DRY Warehouse 'Finished Goods - E' before=<empty> after=3bd7d5a030663e5d norm=3bd7d5a030663e5d WOULD_WRITE
+DRY Warehouse 'Goods In Transit - E' before=<empty> after=b62dc2c85cdbe809 norm=b62dc2c85cdbe809 WOULD_WRITE
+DRY Warehouse 'Stores - E' before=<empty> after=548ab48f91b14460 norm=548ab48f91b14460 WOULD_WRITE
+DRY Warehouse 'Work In Progress - E' before=<empty> after=ce850ccc808200a5 norm=55be6e70ad2a919d WOULD_WRITE
+DRY Project 'PROJ-0001' before=<empty> after=d48ee82f6ac92a63 norm=d48ee82f6ac92a63 WOULD_WRITE
+DRY Project 'PROJ-0002' before=<empty> after=edb543270c95b0d9 norm=edb543270c95b0d9 WOULD_WRITE
+DRY Project 'PROJ-0003' before=<empty> after=2ec1737c10f31c5c norm=2ec1737c10f31c5c WOULD_WRITE
+DRY Project 'PROJ-0008' before=<empty> after=4db331e498dddeeb norm=94d28c9fa6fcbe77 WOULD_WRITE
+DRY Project 'PROJ-0009' before=<empty> after=fbc6d67c9f26b681 norm=fbc6d67c9f26b681 WOULD_WRITE
+POPULATED_NOW Cost Center=0
+POPULATED_NOW Warehouse=1
+POPULATED_NOW Project=0
+SUMMARY rows=13 would_write=13 already_applied=0
+PRIVATE dry-run.json sha256=b158ca44e01ca44e6ad77a9b611765ba4e82538aa9333498a1608f23196e7e29
+WRITES_PERFORMED: 0
+DRY-RUN RESULT: PASS (13/13 rows validated; approved sha matched; zero writes)
