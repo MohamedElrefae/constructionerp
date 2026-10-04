@@ -11,6 +11,11 @@ Pilot scope (owner decision 2026-09-21):
   General Ledger, Trial Balance, Accounts Receivable (Aging), plus one BOQ
   print/export surface (tracked separately; see the pilot doc).
 
+Statement expansion (owner decision 2026-10-05, Tier 5E):
+  Balance Sheet, Profit and Loss Statement — same fail-closed boundary, the
+  service layer's existing label-field entries, and read-only period defaults
+  for the vendor `get_period_list` contract.
+
 Fail-closed: unknown report names are rejected rather than executed.
 """
 
@@ -26,7 +31,11 @@ PILOT_REPORTS = {
     "General Ledger": "erpnext.accounts.report.general_ledger.general_ledger",
     "Trial Balance": "erpnext.accounts.report.trial_balance.trial_balance",
     "Accounts Receivable": "erpnext.accounts.report.accounts_receivable.accounts_receivable",
+    "Balance Sheet": "erpnext.accounts.report.balance_sheet.balance_sheet",
+    "Profit and Loss Statement": "erpnext.accounts.report.profit_and_loss_statement.profit_and_loss_statement",
 }
+
+STATEMENT_REPORTS = ("Balance Sheet", "Profit and Loss Statement")
 
 
 def _parse_filters(filters):
@@ -103,6 +112,24 @@ def _ensure_required(filters, report_name):
     if report_name == "Trial Balance":
         if not filters.get("fiscal_year"):
             filters["fiscal_year"] = _resolve_fy(company)
+        return filters
+
+    if report_name in STATEMENT_REPORTS:
+        # R4 (Tier 5E): read-only defaults for the vendor get_period_list
+        # contract — caller-supplied values always win (setdefault only).
+        filters.setdefault("periodicity", "Yearly")
+        filters.setdefault("accumulated_values", 0)
+        filters.setdefault("filter_based_on", "Date Range")
+        if filters.get("filter_based_on") == "Fiscal Year":
+            fy = _resolve_fy(company)
+            filters.setdefault("from_fiscal_year", filters.get("fiscal_year") or fy)
+            filters.setdefault("to_fiscal_year", filters.get("fiscal_year") or fy)
+        else:
+            bounds = _fy_bounds(company)
+            filters.setdefault("period_start_date", filters.get("from_date") or bounds["start"])
+            filters.setdefault("period_end_date", filters.get("to_date") or bounds["end"])
+        return filters
+
     return filters
 
 

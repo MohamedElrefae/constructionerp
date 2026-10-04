@@ -5,7 +5,13 @@ frappe.pages["bilingual-report-viewer"].on_page_load = function (wrapper) {
 		single_column: true,
 	});
 
-	const reports = ["Trial Balance", "General Ledger", "Accounts Receivable"];
+	const reports = [
+		"Trial Balance",
+		"General Ledger",
+		"Accounts Receivable",
+		"Balance Sheet",
+		"Profit and Loss Statement",
+	];
 	const modes = ["ar", "en", "both"];
 
 	page.add_field({
