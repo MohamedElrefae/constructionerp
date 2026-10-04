@@ -1,0 +1,16 @@
+ROW_OK Item 'OH-SITE-ADMIN-001' value=13666ed4f66bfa57 norm=8e0037588c017640 identity=unchanged
+ROW_OK Item 'SUBCONCRETE-001' value=1b80f074c87c8080 norm=e40051d23d7ed8c1 identity=unchanged
+ROW_OK Item 'PLANT-MIXER-001' value=50d1e344fe50ca76 norm=50d1e344fe50ca76 identity=unchanged
+ROW_OK Item 'LAB-MASON-001`' value=0d02acd46129f85f norm=0d02acd46129f85f identity=unchanged
+ROW_OK Item 'Consulting' value=fa885dabcf8c2fad norm=fa885dabcf8c2fad identity=unchanged
+ROW_OK Item 'Macbook Pro' value=adc27f0950fdd164 norm=adc27f0950fdd164 identity=unchanged
+ROW_OK Item 'Photocopier' value=b2473ec598a4a1ad norm=b2473ec598a4a1ad identity=unchanged
+ROW_OK Item '138-CMS Shoe' value=5bcd54e8ded93cd3 norm=5bcd54e8ded93cd3 identity=unchanged
+ROW_OK Customer 'Prestiga-Biz' value=3f5981c0b6a5cf03 norm=3f5981c0b6a5cf03 identity=unchanged
+COMPLETENESS items=8/8 customers=1/1 suppliers=0/0 (zero-population exception)
+EXCEPTIONS_OK scaffold=7 fixture_items_written=0
+COUNTS_OK items=43 customers=12 suppliers=10 accounts_arabic=81
+NORM_KEY_SEARCH resolved=9/9 mapping_states=active
+SUMMARY in_scope=9 populated=9 norm_consistent=9 identity_unchanged=9 exceptions=0
+ROLLBACK_REF dry-run.json (before-values: all empty) sha256=1d016b0fe0df4584f125867bede9043f374a3ad1d6b4fe575213ee86d77e1882
+VERIFICATION RESULT: PASS
