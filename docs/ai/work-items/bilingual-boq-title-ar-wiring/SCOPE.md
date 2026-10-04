@@ -297,3 +297,13 @@ scope chain, or the dropdown column shape would have gone unnoticed.
 The historical `evidence/regression-matrix.log` is retained unchanged as the record of the
 run performed at this work item's own completion; the new log carries a date-explicit name
 so neither record overwrites the other.
+
+### 8.4 Re-pin by bilingual-company-master (2026-10-04)
+
+Digests are recorded as `amendments[]` entries in `evidence/MANIFEST.json`;
+this work item's own evidence logs are unchanged.
+
+| Artefact | Why it moved |
+|---|---|
+| `construction/hooks.py` | living file; `Company` `doc_events` dual-hook registration added (F1) |
+

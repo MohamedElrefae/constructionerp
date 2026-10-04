@@ -1,6 +1,6 @@
 {
   "artefacts": {
-    "docs/ai/work-items/bilingual-narrative-sanitizer/SCOPE.md": "2708e4f8dec9d7469f47114e975ea7aa1bc795d2f75157948a4a78546512ad03",
+    "docs/ai/work-items/bilingual-narrative-sanitizer/SCOPE.md": "a8b3a26aa42a63b1d6048679fc428dc327589f2d80961317f36d571177253c02",
     "docs/ai/work-items/bilingual-narrative-sanitizer/evidence/test_bilingual_narrative_sanitizer.log": "33c1fd19e28885d3b6bc99d9c8978c1a89ff16ad6e4db81572f27fe7b035de78",
     "docs/ai/work-items/bilingual-narrative-sanitizer/evidence/regression-matrix.log": "de0e8af9da63b2c3273085b45b36ff65189000439b0e57ee9cd91191ebff58c5",
     "docs/ai/work-items/bilingual-narrative-sanitizer/evidence/reconciliation.log": "9fb1cacccb62d32126d6f731bea24ea515fb0f79c5ced881c7a6464ae3e1fa50",
@@ -9,8 +9,8 @@
     "construction/tests/test_bilingual_boq_print.py": "42e05b627e97887a8bbf78844d2fa427e4629ba81930fd5dc15ee9ed527abf2e",
     "construction/templates/boq_print_format.html": "73c5a0a3eafaa9d373b1dccf406320662304ca8d8ccc3edf02b2015e99173eaa",
     "construction/templates/boq_header_print.html": "bf8affc93d6ec53fb473894fb1303b39a0b2e5bc5287b821dc01334b8bf4ec9b",
-    "construction/hooks.py": "e4beab7a48e95588da0ba9dd8054b610bfc20974999930d0b592d90ee7d36a8b",
-    "scripts/run_bilingual_regression_matrix.sh": "187e052bfd0c35b6b4eac749da15ee8ff6f1da4ece94fe7eff6e4b3999c4bc76"
+    "construction/hooks.py": "694da4f4fa06bd5e57dd52a7ada52e0f1f91e5ce27c0661a0dd666ca79bb254b",
+    "scripts/run_bilingual_regression_matrix.sh": "803d004ba32d2862b0bf6d17041e3566858e0aa5436a5b7fde3a00af08ff16d5"
   },
   "base_commit": "38beb35d31026e0afc70dd43e0ccf8de7dc1a222",
   "branch": "develop",
@@ -142,6 +142,27 @@
       "from": "48b61171a55437a0689d7ac2827bffff546a3e32c338af5c8bebc4c5261fc28b",
       "to": "187e052bfd0c35b6b4eac749da15ee8ff6f1da4ece94fe7eff6e4b3999c4bc76",
       "reason": "shared runner expanded to 17 modules / 209 tests by the canonical matrix integration"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "docs/ai/work-items/bilingual-narrative-sanitizer/SCOPE.md",
+      "from": "2708e4f8dec9d7469f47114e975ea7aa1bc795d2f75157948a4a78546512ad03",
+      "to": "a8b3a26aa42a63b1d6048679fc428dc327589f2d80961317f36d571177253c02",
+      "reason": "amendment note documenting the re-pin performed by bilingual-company-master"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "scripts/run_bilingual_regression_matrix.sh",
+      "from": "187e052bfd0c35b6b4eac749da15ee8ff6f1da4ece94fe7eff6e4b3999c4bc76",
+      "to": "803d004ba32d2862b0bf6d17041e3566858e0aa5436a5b7fde3a00af08ff16d5",
+      "reason": "shared runner expanded to 18 modules / 217 tests by bilingual-company-master"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "construction/hooks.py",
+      "from": "e4beab7a48e95588da0ba9dd8054b610bfc20974999930d0b592d90ee7d36a8b",
+      "to": "694da4f4fa06bd5e57dd52a7ada52e0f1f91e5ce27c0661a0dd666ca79bb254b",
+      "reason": "living file; Company doc_events dual-hook registration added by bilingual-company-master (F1)"
     }
   ]
 }

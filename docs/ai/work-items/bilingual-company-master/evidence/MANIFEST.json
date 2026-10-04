@@ -1,0 +1,45 @@
+{
+  "artefacts": {
+    "docs/ai/work-items/bilingual-company-master/SCOPE.md": "3cfa4634cf0f9fe462f8a2a61e0a4b6c254c0f7838a8d4a3a4064b613988aca7",
+    "docs/ai/work-items/bilingual-company-master/evidence/test_bilingual_company_pilot.log": "556d016e3600e508da23bc1078f8c4e842d39a7c49dea88cb882c42d6b3cc907",
+    "docs/ai/work-items/bilingual-company-master/evidence/regression-matrix.log": "ac2758b310106e0c058cccf67c719b944ff4ccb6993dd6e4151be6ef7b37439c",
+    "docs/ai/work-items/bilingual-company-master/evidence/reconciliation.log": "ccd97911d439fe9bd3f599447b5fcbaf3ff8c380c9af95b642267198e793ece6",
+    "docs/ai/work-items/bilingual-company-master/evidence/company-p95-run.log": "4c3b0f28ab9c14d324b223422b1c28ed8cc0367e5724d029c2ff838c17db7e2a",
+    "docs/ai/work-items/bilingual-company-master/evidence/company-p95-measurement.json": "106f17e99788dc232904864e17b480fed2ee60994e34f049af40f2a0342a8df4",
+    "docs/ai/work-items/bilingual-company-master/evidence/scripts/measure_company_p95.py": "741c5ebc9f9e1585f9296f62c57285415d4094f9dec9464536c896448bc7321b",
+    "construction/patches/v9_14/add_company_arabic_fields.py": "7feb96668d9a88fc221998dd409fd7c72b144023db1978eac8e517126c28ea29",
+    "construction/patches.txt": "ca7f3feb133a27ae44f7c89b07226e413ffaedd2cbdc194f357f92e4a61d0a1c",
+    "construction/tests/test_bilingual_company_pilot.py": "2400e70d4d801b80ae55023d25dd65db55de499cacf1f9e9cd944c310f544be0",
+    "construction/data/bilingual/bilingual_registry.json": "eceff821f017f7eb7613ebc122ef7b35cdb32170db685e9a32cdbf45435f0243",
+    "construction/hooks.py": "694da4f4fa06bd5e57dd52a7ada52e0f1f91e5ce27c0661a0dd666ca79bb254b",
+    "scripts/run_bilingual_regression_matrix.sh": "803d004ba32d2862b0bf6d17041e3566858e0aa5436a5b7fde3a00af08ff16d5"
+  },
+  "base_commit": "e513f16",
+  "branch": "develop",
+  "work_item": "bilingual-company-master",
+  "primary_invariant": "Zero service edits: construction/services/bilingual_service.py and construction/searchable_dropdown/api/search.py remain byte-identical to seven reference commits; the bilingual registry grows monotonically (D5).",
+  "decisions_settled": {
+    "C1": "Harness-local ephemeral fixtures with CT-COMP- prefix, deleted on cleanup. Bare site safe; zero leftover fixtures.",
+    "C2": "autoname: field:company_name identity pattern: name == company_name; empty company_name rejected by autoname; rename preserves Arabic and norm keys.",
+    "C3": "F1 dual-hook: doc_events['Company'] registers both enforce_bilingual_arabic_policy and narrative_sanitizer.validate_narrative_fields due to company_description (Tier 2) and sales_monthly_history (Tier 1).",
+    "narrative_exclusion": "company_description and sales_monthly_history strictly excluded from search.fields; search.fields is exactly ['company_name', 'company_name_ar']."
+  },
+  "test_results": {
+    "pilot_module": "construction.tests.test_bilingual_company_pilot: 8/8 OK",
+    "regression_matrix": "18 modules / 217 tests, all OK",
+    "transaction_link_search": "20/20 (D5 split guard)",
+    "adr_reconciler": "19/19 PASS"
+  },
+  "latency_measurement": {
+    "status": "COMPLIANT_WITH_TWO_TIER_SLA",
+    "methodology": "5 rounds x n=100 interleaved, min-of-rounds nearest-rank P95, 5 warmups per round",
+    "tier": "2B (baseline P95 < 1.0 ms => ratio ceiling 1.50x)",
+    "baseline_p95_ms": 0.531,
+    "bilingual_p95_ms": 0.781,
+    "ratio": 1.4708,
+    "universal_ceiling_ms": 1.5,
+    "artefact": "docs/ai/work-items/bilingual-company-master/evidence/company-p95-measurement.json"
+  },
+  "site_migration": "construction.patches.v9_14.add_company_arabic_fields executed and recorded in Patch Log; all 23 registry masters resolve their arabic_field on v16.localhost.",
+  "causal_order": "final test run -> capture log (2>&1) -> git add -f the .log -> compute SHA-256 digests -> MANIFEST.json -> commit"
+}

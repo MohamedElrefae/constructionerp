@@ -162,3 +162,16 @@ rows (both verified after the final run).
 | Artefact | Why it moved |
 |---|---|
 | `scripts/run_bilingual_regression_matrix.sh` | shared runner expanded to **17 modules / 209 tests** after this work item completed (`test_boq_link_queries` promoted into the runner by `bilingual-boq-title-ar-wiring` §8.3). §7's **197/197 across 16 modules** remains the correct historical result for this work item's own completion run. |
+
+### 8.1 Re-pin by bilingual-company-master (2026-10-04)
+
+Digests are recorded as `amendments[]` entries in `evidence/MANIFEST.json`;
+this work item's own evidence logs are unchanged.
+
+| Artefact | Why it moved |
+|---|---|
+| `construction/data/bilingual/bilingual_registry.json` | living data; additive `Company` entry (**23 masters**) by `bilingual-company-master` |
+| `construction/patches.txt` | living file; `v9_14` entry appended by `bilingual-company-master` |
+| `construction/hooks.py` | living file; `Company` `doc_events` dual-hook registration added (F1) |
+| `scripts/run_bilingual_regression_matrix.sh` | shared runner expanded to **18 modules / 217 tests** |
+

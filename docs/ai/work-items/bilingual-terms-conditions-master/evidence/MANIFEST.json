@@ -1,6 +1,6 @@
 {
   "artefacts": {
-    "docs/ai/work-items/bilingual-terms-conditions-master/SCOPE.md": "2a64b80cf174898c857c2f5b64ae7bbf2d0e552f3625af34be1684630c90a8d3",
+    "docs/ai/work-items/bilingual-terms-conditions-master/SCOPE.md": "2def63506379db0d52ebb49410e274f6c69428a570b1bb9b9a4ff34d09461466",
     "docs/ai/work-items/bilingual-terms-conditions-master/evidence/test_bilingual_terms_conditions_pilot.log": "6e418fdffc0df32c7b62625e195535aa6a69d9dfd344036b075b232ada2c07ea",
     "docs/ai/work-items/bilingual-terms-conditions-master/evidence/regression-matrix.log": "fafab3abd08f75705fad945def3c39cf1167669e46d713e71de4f56a3c8ecd4c",
     "docs/ai/work-items/bilingual-terms-conditions-master/evidence/reconciliation.log": "a8ad35d130978eb9e6c239b4783815ab849afa8b41077902ce54fdc40d3077a1",
@@ -8,11 +8,11 @@
     "docs/ai/work-items/bilingual-terms-conditions-master/evidence/terms-conditions-p95-measurement.json": "9a594d1d93363fa82225a7c0399874c78c4b5bc440791ba65443cc418463df19",
     "docs/ai/work-items/bilingual-terms-conditions-master/evidence/scripts/measure_terms_conditions_p95.py": "2eae5564093b2a72050713f0edb56086f345b09041608a7c5529fda77be23e32",
     "construction/patches/v9_12/add_terms_and_conditions_arabic_fields.py": "d35871d78e58493e1d70a6be056abda1189a425e90374d524b5c29fdf509d6dc",
-    "construction/patches.txt": "f2ba9cdd6c023876836231d93e90b5f477915af3186386bb41d26d53d2f1707a",
+    "construction/patches.txt": "ca7f3feb133a27ae44f7c89b07226e413ffaedd2cbdc194f357f92e4a61d0a1c",
     "construction/tests/test_bilingual_terms_conditions_pilot.py": "e99b681f0d0f21c9300efede6afcf0a501cd59bcf6d9fd20f5486d3b045c71d8",
-    "construction/data/bilingual/bilingual_registry.json": "0f05a58c7587217a0fa637d37abda9e71c94b48d8d3869409de7574ac30c3334",
-    "construction/hooks.py": "e4beab7a48e95588da0ba9dd8054b610bfc20974999930d0b592d90ee7d36a8b",
-    "scripts/run_bilingual_regression_matrix.sh": "187e052bfd0c35b6b4eac749da15ee8ff6f1da4ece94fe7eff6e4b3999c4bc76"
+    "construction/data/bilingual/bilingual_registry.json": "eceff821f017f7eb7613ebc122ef7b35cdb32170db685e9a32cdbf45435f0243",
+    "construction/hooks.py": "694da4f4fa06bd5e57dd52a7ada52e0f1f91e5ce27c0661a0dd666ca79bb254b",
+    "scripts/run_bilingual_regression_matrix.sh": "803d004ba32d2862b0bf6d17041e3566858e0aa5436a5b7fde3a00af08ff16d5"
   },
   "base_commit": "0f3bd24ba4c096104ff826c490462c47c6aaf696",
   "branch": "develop",
@@ -90,6 +90,41 @@
       "from": "48b61171a55437a0689d7ac2827bffff546a3e32c338af5c8bebc4c5261fc28b",
       "to": "187e052bfd0c35b6b4eac749da15ee8ff6f1da4ece94fe7eff6e4b3999c4bc76",
       "reason": "shared runner expanded to 17 modules / 209 tests by the canonical matrix integration"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "docs/ai/work-items/bilingual-terms-conditions-master/SCOPE.md",
+      "from": "2a64b80cf174898c857c2f5b64ae7bbf2d0e552f3625af34be1684630c90a8d3",
+      "to": "2def63506379db0d52ebb49410e274f6c69428a570b1bb9b9a4ff34d09461466",
+      "reason": "amendment note documenting the re-pin performed by bilingual-company-master"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "construction/patches.txt",
+      "from": "f2ba9cdd6c023876836231d93e90b5f477915af3186386bb41d26d53d2f1707a",
+      "to": "ca7f3feb133a27ae44f7c89b07226e413ffaedd2cbdc194f357f92e4a61d0a1c",
+      "reason": "living file; v9_14 entry appended by bilingual-company-master"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "construction/data/bilingual/bilingual_registry.json",
+      "from": "0f05a58c7587217a0fa637d37abda9e71c94b48d8d3869409de7574ac30c3334",
+      "to": "eceff821f017f7eb7613ebc122ef7b35cdb32170db685e9a32cdbf45435f0243",
+      "reason": "living data; additive Company entry (23 masters) by bilingual-company-master"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "construction/hooks.py",
+      "from": "e4beab7a48e95588da0ba9dd8054b610bfc20974999930d0b592d90ee7d36a8b",
+      "to": "694da4f4fa06bd5e57dd52a7ada52e0f1f91e5ce27c0661a0dd666ca79bb254b",
+      "reason": "living file; Company doc_events dual-hook registration added by bilingual-company-master (F1)"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "scripts/run_bilingual_regression_matrix.sh",
+      "from": "187e052bfd0c35b6b4eac749da15ee8ff6f1da4ece94fe7eff6e4b3999c4bc76",
+      "to": "803d004ba32d2862b0bf6d17041e3566858e0aa5436a5b7fde3a00af08ff16d5",
+      "reason": "shared runner expanded to 18 modules / 217 tests by bilingual-company-master"
     }
   ]
 }

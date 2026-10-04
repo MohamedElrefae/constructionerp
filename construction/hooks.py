@@ -357,6 +357,12 @@ doc_events = {
     },
     # Asset has no narrative field (sanitizer reports {}), so F1 applies in single-hook form.
     "Asset": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
+    "Company": {
+        "validate": [
+            "construction.services.bilingual_service.enforce_bilingual_arabic_policy",
+            "construction.services.narrative_sanitizer.validate_narrative_fields",
+        ]
+    },
 }
 
 # Server-side query injection: applies scope filters to ALL database queries

@@ -1,12 +1,12 @@
 {
   "artefacts": {
-    "docs/ai/work-items/bilingual-boq-title-ar-wiring/SCOPE.md": "bff577bc1ad2ace9ecf6176305376c1b985cecb043113e9a8f6b63033179a038",
+    "docs/ai/work-items/bilingual-boq-title-ar-wiring/SCOPE.md": "a08377f84acba0224027a9cca4ea9cb51fd413abac9ae290556d7de5579a3077",
     "docs/ai/work-items/bilingual-boq-title-ar-wiring/evidence/test_boq_link_queries.log": "18a9da5137ae8f3baabb4a9a4b70995c0aaa79d8674db276fa4579fed0361393",
     "docs/ai/work-items/bilingual-boq-title-ar-wiring/evidence/regression-matrix.log": "3ce01c1c6e48e5b4cd3590093666cd3d54b8c37aeb63ad34a399823fd7682b83",
     "docs/ai/work-items/bilingual-boq-title-ar-wiring/evidence/reconciliation.log": "9fb1cacccb62d32126d6f731bea24ea515fb0f79c5ced881c7a6464ae3e1fa50",
     "construction/api/boq_link_queries.py": "cdb3b66370139c814c068ae63ba8baa2aab37c15eb8e6e7a5ac1ae717f8ae3ba",
     "construction/tests/test_boq_link_queries.py": "ff3da3238cc96f17ae171877604812225e829c70b250e1c1c5ab1a201d18ee05",
-    "construction/hooks.py": "e4beab7a48e95588da0ba9dd8054b610bfc20974999930d0b592d90ee7d36a8b",
+    "construction/hooks.py": "694da4f4fa06bd5e57dd52a7ada52e0f1f91e5ce27c0661a0dd666ca79bb254b",
     "construction/public/js/overrides/ct_link_control.js": "69fd49c59240e322b43eb23b0001bb9a316467336d28482bce5cb8155651705a",
     "docs/ai/work-items/bilingual-boq-title-ar-wiring/evidence/regression-matrix-17m-209t.log": "72a4ffdfd4755348ff85b77d0001f199bf2973a5aa37d879938a9aad18ba4ccb"
   },
@@ -71,7 +71,7 @@
     "Arabic data backfill out of scope (fixtures used)",
     "all foreign work item evidence untouched"
   ],
-  "causal_order": "final test run -> capture log -> compute blob digests -> write manifest -> commit (SCOPE §7)",
+  "causal_order": "final test run -> capture log -> compute blob digests -> write manifest -> commit (SCOPE \u00a77)",
   "amendments": [
     {
       "date": "2026-10-03",
@@ -128,6 +128,20 @@
       "from": "084bce871eda3eec1a9807002c991bc97939132db364cfb62a526f1a78d7130d",
       "to": "bff577bc1ad2ace9ecf6176305376c1b985cecb043113e9a8f6b63033179a038",
       "reason": "amendment note documenting the canonical matrix integration (17 modules / 209 tests)"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "docs/ai/work-items/bilingual-boq-title-ar-wiring/SCOPE.md",
+      "from": "bff577bc1ad2ace9ecf6176305376c1b985cecb043113e9a8f6b63033179a038",
+      "to": "a08377f84acba0224027a9cca4ea9cb51fd413abac9ae290556d7de5579a3077",
+      "reason": "amendment note documenting the re-pin performed by bilingual-company-master"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "construction/hooks.py",
+      "from": "e4beab7a48e95588da0ba9dd8054b610bfc20974999930d0b592d90ee7d36a8b",
+      "to": "694da4f4fa06bd5e57dd52a7ada52e0f1f91e5ce27c0661a0dd666ca79bb254b",
+      "reason": "living file; Company doc_events dual-hook registration added by bilingual-company-master (F1)"
     }
   ]
 }
