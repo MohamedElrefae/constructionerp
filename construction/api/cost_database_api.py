@@ -2,6 +2,7 @@ import frappe
 from frappe import _
 
 from construction.services.cost_database_service import (
+    COST_DATABASE_MAX_FILE_SIZE_BYTES,
     bulk_reprice_analyses,
     generate_cost_database_template,
     import_cost_database_from_excel,
@@ -38,7 +39,16 @@ def import_cost_database():
     region = frappe.form_dict.get("region")
     price_date = frappe.form_dict.get("price_date")
 
-    file_content = uploaded_file.stream.read()
+    # Read one byte beyond the configured limit so oversized uploads are
+    # rejected before the request is fully materialized in memory.
+    file_content = uploaded_file.stream.read(COST_DATABASE_MAX_FILE_SIZE_BYTES + 1)
+    if len(file_content) > COST_DATABASE_MAX_FILE_SIZE_BYTES:
+        frappe.throw(
+            _("Uploaded file exceeds the maximum allowed size of {0} MiB.").format(
+                COST_DATABASE_MAX_FILE_SIZE_BYTES // (1024 * 1024)
+            ),
+            frappe.ValidationError,
+        )
     if not file_content:
         frappe.throw(_("Uploaded file is empty"), frappe.ValidationError)
 

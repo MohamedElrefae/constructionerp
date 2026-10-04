@@ -222,6 +222,388 @@ class TestCostDatabaseAPI(FrappeTestCase):
         self.assertTrue(result["dry_run"])
         self.assertEqual(len(result["records_created"]["items"]), 0)
 
+    def test_import_rejects_file_over_byte_limit_before_service_call(self):
+        from construction.api import cost_database_api
+
+        class _BoundedStream:
+            def __init__(self):
+                self.requested = None
+
+            def read(self, size=-1):
+                self.requested = size
+                return b"x" * size
+
+        stream = _BoundedStream()
+
+        class _FakeFile:
+            filename = "too_large.xlsx"
+
+            def __init__(self, upload_stream):
+                self.stream = upload_stream
+
+        old_limit = cost_database_api.COST_DATABASE_MAX_FILE_SIZE_BYTES
+        try:
+            cost_database_api.COST_DATABASE_MAX_FILE_SIZE_BYTES = 4
+            frappe.request = frappe._dict(files={"file": _FakeFile(stream)})
+            frappe.form_dict = frappe._dict(company=self.company)
+            with self.assertRaises(frappe.ValidationError):
+                cost_database_api.import_cost_database()
+            self.assertEqual(stream.requested, 5)
+        finally:
+            cost_database_api.COST_DATABASE_MAX_FILE_SIZE_BYTES = old_limit
+
+    def test_import_rejects_xlsx_resource_bounds_before_mutation(self):
+        from construction.services import cost_database_service
+        from construction.services.boq_import_service import BOQImportService
+
+        content = self._build_test_excel()
+        old_file_limit = cost_database_service.COST_DATABASE_MAX_FILE_SIZE_BYTES
+        old_zip_limit = BOQImportService.MAX_ZIP_MEMBERS
+        old_expanded_limit = BOQImportService.MAX_UNCOMPRESSED_SIZE
+        old_worksheet_xml_limit = BOQImportService.MAX_WORKSHEET_XML_BYTES
+        old_row_limit = BOQImportService.MAX_ROWS
+        old_col_limit = BOQImportService.MAX_COLS
+        old_import_rows = cost_database_service.COST_DATABASE_MAX_IMPORTED_ROWS
+        try:
+            cases = (
+                ("COST_DATABASE_MAX_FILE_SIZE_BYTES", cost_database_service, 1),
+                ("MAX_ZIP_MEMBERS", BOQImportService, 1),
+                ("MAX_UNCOMPRESSED_SIZE", BOQImportService, 1),
+                ("MAX_WORKSHEET_XML_BYTES", BOQImportService, 1),
+                ("MAX_ROWS", BOQImportService, 1),
+                ("MAX_COLS", BOQImportService, 1),
+                ("COST_DATABASE_MAX_IMPORTED_ROWS", cost_database_service, 1),
+            )
+            for attr, owner, limit in cases:
+                with self.subTest(bound=attr):
+                    setattr(owner, attr, limit)
+                    result = cost_database_service.import_cost_database_from_excel(
+                        file_content=content,
+                        file_name="bounded.xlsx",
+                        company=self.company,
+                    )
+                    self.assertFalse(result["success"])
+                    self.assertTrue(result["errors"])
+                    self.assertEqual(result["records_created"]["items"], [])
+                    if attr == "COST_DATABASE_MAX_FILE_SIZE_BYTES":
+                        cost_database_service.COST_DATABASE_MAX_FILE_SIZE_BYTES = old_file_limit
+                    elif attr == "MAX_ZIP_MEMBERS":
+                        BOQImportService.MAX_ZIP_MEMBERS = old_zip_limit
+                    elif attr == "MAX_UNCOMPRESSED_SIZE":
+                        BOQImportService.MAX_UNCOMPRESSED_SIZE = old_expanded_limit
+                    elif attr == "MAX_WORKSHEET_XML_BYTES":
+                        BOQImportService.MAX_WORKSHEET_XML_BYTES = old_worksheet_xml_limit
+                    elif attr == "MAX_ROWS":
+                        BOQImportService.MAX_ROWS = old_row_limit
+                    elif attr == "MAX_COLS":
+                        BOQImportService.MAX_COLS = old_col_limit
+                    elif attr == "COST_DATABASE_MAX_IMPORTED_ROWS":
+                        cost_database_service.COST_DATABASE_MAX_IMPORTED_ROWS = old_import_rows
+        finally:
+            cost_database_service.COST_DATABASE_MAX_FILE_SIZE_BYTES = old_file_limit
+            BOQImportService.MAX_ZIP_MEMBERS = old_zip_limit
+            BOQImportService.MAX_UNCOMPRESSED_SIZE = old_expanded_limit
+            BOQImportService.MAX_WORKSHEET_XML_BYTES = old_worksheet_xml_limit
+            BOQImportService.MAX_ROWS = old_row_limit
+            BOQImportService.MAX_COLS = old_col_limit
+            cost_database_service.COST_DATABASE_MAX_IMPORTED_ROWS = old_import_rows
+
+    def test_import_rejects_too_many_worksheets(self):
+        import openpyxl
+
+        from construction.services import cost_database_service
+
+        wb = openpyxl.load_workbook(io.BytesIO(self._build_test_excel()))
+        for index in range(8):
+            wb.create_sheet(f"Extra{index}")
+        buf = io.BytesIO()
+        wb.save(buf)
+        wb.close()
+
+        result = cost_database_service.import_cost_database_from_excel(
+            file_content=buf.getvalue(),
+            file_name="many_sheets.xlsx",
+            company=self.company,
+            dry_run=True,
+        )
+        self.assertFalse(result["success"])
+        self.assertIn("worksheets", result["errors"][0])
+
+    def _rewrite_first_worksheet_part(self, content, declared_dimension):
+        import zipfile
+
+        output = io.BytesIO()
+        dimension_rewritten = False
+        relationship_rewritten = False
+        content_type_rewritten = False
+        with (
+            zipfile.ZipFile(io.BytesIO(content), "r") as source,
+            zipfile.ZipFile(output, "w", zipfile.ZIP_DEFLATED) as target,
+        ):
+            for info in source.infolist():
+                name = info.filename
+                data = source.read(name)
+                if name == "xl/worksheets/sheet1.xml":
+                    name = "xl/worksheets/custom-resource-data.xml"
+                    self.assertEqual(data.count(b'ref="A1:M2"'), 1)
+                    data = data.replace(b'ref="A1:M2"', f'ref="{declared_dimension}"'.encode())
+                    dimension_rewritten = True
+                elif name == "xl/_rels/workbook.xml.rels":
+                    for old_target in (
+                        b'Target="worksheets/sheet1.xml"',
+                        b'Target="/xl/worksheets/sheet1.xml"',
+                    ):
+                        if old_target in data:
+                            data = data.replace(
+                                old_target,
+                                old_target.replace(b"sheet1.xml", b"custom-resource-data.xml"),
+                            )
+                            relationship_rewritten = True
+                elif name == "[Content_Types].xml":
+                    old_part_name = b"/xl/worksheets/sheet1.xml"
+                    content_type_rewritten = old_part_name in data
+                    data = data.replace(old_part_name, b"/xl/worksheets/custom-resource-data.xml")
+                target.writestr(name, data)
+        self.assertTrue(dimension_rewritten, "fixture did not rewrite the worksheet dimension")
+        self.assertTrue(relationship_rewritten, "fixture did not rewrite the worksheet relationship")
+        self.assertTrue(content_type_rewritten, "fixture did not update the worksheet content type")
+        return output.getvalue()
+
+    def test_import_caps_actual_nonempty_rows_across_required_sheets(self):
+        from construction.services import cost_database_service
+
+        content = self._build_test_excel()
+        wb = self._load_workbook(content)
+        imported_nonempty_rows = sum(
+            sum(
+                any(value not in (None, "") for value in row)
+                for row in wb[name].iter_rows(min_row=2, values_only=True)
+            )
+            for name in ("Resources", "BOQItemTemplates", "RateAnalysis")
+        )
+        wb.close()
+        self.assertEqual(imported_nonempty_rows, 3)
+
+        old_limit = cost_database_service.COST_DATABASE_MAX_IMPORTED_ROWS
+        try:
+            cost_database_service.COST_DATABASE_MAX_IMPORTED_ROWS = imported_nonempty_rows - 1
+            rejected = cost_database_service.import_cost_database_from_excel(
+                file_content=content,
+                file_name="row_cap.xlsx",
+                company=self.company,
+                dry_run=True,
+            )
+            self.assertFalse(rejected["success"])
+            self.assertIn("imported-row limit", " ".join(rejected["errors"]))
+
+            cost_database_service.COST_DATABASE_MAX_IMPORTED_ROWS = imported_nonempty_rows
+            accepted = cost_database_service.import_cost_database_from_excel(
+                file_content=content,
+                file_name="row_cap.xlsx",
+                company=self.company,
+                dry_run=True,
+            )
+            self.assertTrue(accepted["success"], msg=str(accepted["errors"]))
+        finally:
+            cost_database_service.COST_DATABASE_MAX_IMPORTED_ROWS = old_limit
+
+    def test_import_resolves_custom_worksheet_part_and_checks_actual_coordinates(self):
+        from construction.services import cost_database_service
+        from construction.services.boq_import_service import BOQImportService
+
+        content = self._rewrite_first_worksheet_part(self._build_test_excel(), "A1:L1")
+        old_column_limit = BOQImportService.MAX_COLS
+        try:
+            BOQImportService.MAX_COLS = 12
+            result = cost_database_service.import_cost_database_from_excel(
+                file_content=content,
+                file_name="custom_part.xlsx",
+                company=self.company,
+                dry_run=True,
+            )
+            self.assertFalse(result["success"])
+            self.assertIn("cell coordinate", " ".join(result["errors"]).lower())
+        finally:
+            BOQImportService.MAX_COLS = old_column_limit
+
+    def test_import_reads_rows_beyond_a_lying_small_dimension(self):
+        from construction.services.cost_database_service import import_cost_database_from_excel
+
+        content = self._rewrite_first_worksheet_part(self._build_test_excel(), "A1:M1")
+        result = import_cost_database_from_excel(
+            file_content=content,
+            file_name="understated_dimension.xlsx",
+            company=self.company,
+            dry_run=True,
+        )
+        self.assertTrue(result["success"], msg=str(result["errors"]))
+
+    def test_import_rejects_malformed_archive_without_records(self):
+        from construction.services.cost_database_service import import_cost_database_from_excel
+
+        result = import_cost_database_from_excel(
+            file_content=b"PK\x03\x04small malformed fixture",
+            file_name="malformed.xlsx",
+            company=self.company,
+        )
+        self.assertFalse(result["success"])
+        self.assertTrue(result["errors"])
+        self.assertEqual(result["records_created"]["items"], [])
+
+    def test_import_bounds_validation_error_response(self):
+        import openpyxl
+
+        from construction.services import cost_database_service
+
+        wb = self._load_workbook(self._build_test_excel())
+        resources = wb["Resources"]
+        for index in range(105):
+            resources.append(
+                [
+                    f"BAD-RESOURCE-{index}",
+                    "Invalid Type",
+                    "M",
+                    "Invalid resource",
+                    "",
+                    "Ton",
+                    10,
+                    "EGP",
+                    1,
+                    self.company,
+                    "Cairo",
+                    "2026-06-01",
+                    "Test",
+                ]
+            )
+        buf = io.BytesIO()
+        wb.save(buf)
+        wb.close()
+
+        content = buf.getvalue()
+        old_limit = cost_database_service.COST_DATABASE_MAX_RESULT_MESSAGES
+        try:
+            cost_database_service.COST_DATABASE_MAX_RESULT_MESSAGES = 1000
+            full = cost_database_service.import_cost_database_from_excel(
+                file_content=content,
+                file_name="many_validation_errors.xlsx",
+                company=self.company,
+                dry_run=True,
+            )
+            full_error_count = len(full["errors"])
+            self.assertGreater(full_error_count, 100)
+
+            cost_database_service.COST_DATABASE_MAX_RESULT_MESSAGES = 100
+            bounded = cost_database_service.import_cost_database_from_excel(
+                file_content=content,
+                file_name="many_validation_errors.xlsx",
+                company=self.company,
+                dry_run=True,
+            )
+            omitted_count = full_error_count - 99
+            self.assertFalse(bounded["success"])
+            self.assertEqual(len(bounded["errors"]), 100)
+            self.assertEqual(bounded["errors"][-1], f"{omitted_count} additional messages omitted")
+            self.assertEqual(bounded["records_created"]["items"], [])
+        finally:
+            cost_database_service.COST_DATABASE_MAX_RESULT_MESSAGES = old_limit
+
+    def _rewrite_archive_part(self, content, part_name, transform):
+        import zipfile
+
+        output = io.BytesIO()
+        changed = False
+        with (
+            zipfile.ZipFile(io.BytesIO(content), "r") as source,
+            zipfile.ZipFile(output, "w", zipfile.ZIP_DEFLATED) as target,
+        ):
+            for info in source.infolist():
+                data = source.read(info.filename)
+                if info.filename == part_name:
+                    data = transform(data)
+                    changed = True
+                target.writestr(info.filename, data)
+        self.assertTrue(changed, f"fixture part {part_name!r} was not found")
+        return output.getvalue()
+
+    def test_import_enforces_compression_ratio_on_service_route(self):
+        from construction.services import cost_database_service
+        from construction.services.boq_import_service import BOQImportService
+
+        old_limit = BOQImportService.MAX_MEMBER_COMPRESSION_RATIO
+        try:
+            BOQImportService.MAX_MEMBER_COMPRESSION_RATIO = 1
+            result = cost_database_service.import_cost_database_from_excel(
+                file_content=self._build_test_excel(),
+                file_name="compression_ratio.xlsx",
+                company=self.company,
+                dry_run=True,
+            )
+            self.assertFalse(result["success"])
+            self.assertIn("compression ratio", " ".join(result["errors"]).lower())
+            self.assertEqual(result["records_created"]["items"], [])
+        finally:
+            BOQImportService.MAX_MEMBER_COMPRESSION_RATIO = old_limit
+
+    def test_import_enforces_shared_strings_size_on_service_route(self):
+        import zipfile
+
+        from construction.services import cost_database_service
+        from construction.services.boq_import_service import BOQImportService
+
+        content = io.BytesIO()
+        with (
+            zipfile.ZipFile(io.BytesIO(self._build_test_excel()), "r") as source,
+            zipfile.ZipFile(content, "w", zipfile.ZIP_DEFLATED) as target,
+        ):
+            for info in source.infolist():
+                target.writestr(info.filename, source.read(info.filename))
+            target.writestr("xl/sharedStrings.xml", b"<sst />")
+
+        old_limit = BOQImportService.MAX_SHARED_STRINGS_BYTES
+        try:
+            BOQImportService.MAX_SHARED_STRINGS_BYTES = 1
+            result = cost_database_service.import_cost_database_from_excel(
+                file_content=content.getvalue(),
+                file_name="shared_strings_size.xlsx",
+                company=self.company,
+                dry_run=True,
+            )
+            self.assertFalse(result["success"])
+            self.assertIn("shared-string", " ".join(result["errors"]).lower())
+            self.assertEqual(result["records_created"]["items"], [])
+        finally:
+            BOQImportService.MAX_SHARED_STRINGS_BYTES = old_limit
+
+    def test_import_enforces_merged_area_on_service_route(self):
+        from construction.services import cost_database_service
+        from construction.services.boq_import_service import BOQImportService
+
+        def add_small_merge(data):
+            self.assertIn(b"</worksheet>", data)
+            return data.replace(
+                b"</worksheet>",
+                b'<mergeCells count="1"><mergeCell ref="A1:B2"/></mergeCells></worksheet>',
+                1,
+            )
+
+        content = self._rewrite_archive_part(
+            self._build_test_excel(), "xl/worksheets/sheet1.xml", add_small_merge
+        )
+        old_limit = BOQImportService.MAX_TOTAL_MERGED_CELLS
+        try:
+            BOQImportService.MAX_TOTAL_MERGED_CELLS = 1
+            result = cost_database_service.import_cost_database_from_excel(
+                file_content=content,
+                file_name="merged_area.xlsx",
+                company=self.company,
+                dry_run=True,
+            )
+            self.assertFalse(result["success"])
+            self.assertIn("merged cell area", " ".join(result["errors"]).lower())
+            self.assertEqual(result["records_created"]["items"], [])
+        finally:
+            BOQImportService.MAX_TOTAL_MERGED_CELLS = old_limit
+
     def test_import_cost_database_creates_records(self):
         """Real import creates Items, Resource Price History, and templates with schema fields persisted."""
         from construction.services.cost_database_service import import_cost_database_from_excel
