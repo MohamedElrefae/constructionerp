@@ -88,37 +88,75 @@ def transform_report(columns, data, lang, mapping, label_fields):
     return new_columns, new_data
 
 
-def load_account_arabic_mapping(company=None):
-    def _raw_map():
-        import frappe
+ACCOUNT_MAPPING_CACHE_TTL = 300
 
-        filters = {}
-        if company:
-            filters["company"] = company
-        rows = frappe.get_all(
-            "Account",
-            filters=filters,
-            fields=["name", "account_name", "account_name_ar"],
-            limit_page_length=0,
-        )
-        return rows
 
+def account_mapping_cache_key(company=None):
+    return f"construction:account_ar_mapping:{company or '*'}"
+
+
+def bust_account_mapping_cache(doc=None, method=None, *args, **kwargs):
+    """R7: doc_events entry for Account (on_update / on_trash / after_rename).
+
+    Busts the global mapping key plus the account's company key (and the old
+    company key when a save moved the account), so a normal save or delete is
+    reflected immediately; the 300 s TTL covers writes that bypass doc_events.
+    """
     import frappe
 
-    rows = frappe.get_all(
-        "Account",
-        filters=("company", "=", company) if company else None,
-        fields=["name", "account_name", "account_name_ar"],
-        limit_page_length=0,
-    )
+    companies = {None}
+    if doc is not None and getattr(doc, "company", None):
+        companies.add(doc.company)
+        try:
+            before = doc.get_doc_before_save()
+        except Exception:
+            before = None
+        if before is not None and getattr(before, "company", None) and before.company != doc.company:
+            companies.add(before.company)
+    for c in companies:
+        frappe.cache.delete_value(account_mapping_cache_key(c))
+
+
+def load_account_arabic_mapping(company=None):
+    """Read-only {english identity: account_name_ar} mapping.
+
+    R7: served from a redis cache (per company, TTL 300 s, busted by the
+    Account doc_events above) so the render path does not pay a DB query per
+    report; on a cache miss the mapping is built from a parameterized query
+    over Arabic-bearing rows only. Redis errors fail open to the SQL path.
+    """
+    import frappe
+
+    cache_key = account_mapping_cache_key(company)
+    try:
+        cached = frappe.cache.get_value(cache_key)
+    except Exception:
+        cached = None
+    if isinstance(cached, dict):
+        return cached
+
+    if company:
+        rows = frappe.db.sql(
+            "SELECT name, account_name, account_name_ar FROM `tabAccount` "
+            "WHERE company = %s AND account_name_ar IS NOT NULL AND account_name_ar != ''",
+            (company,),
+        )
+    else:
+        rows = frappe.db.sql(
+            "SELECT name, account_name, account_name_ar FROM `tabAccount` "
+            "WHERE account_name_ar IS NOT NULL AND account_name_ar != ''"
+        )
     mapping = {}
-    for r in rows:
-        ar = r.get("account_name_ar")
+    for name, account_name, ar in rows:
         if not ar:
             continue
-        if r.get("account_name"):
-            mapping[r["account_name"]] = ar
-        mapping[r["name"]] = ar
+        if account_name:
+            mapping[account_name] = ar
+        mapping[name] = ar
+    try:
+        frappe.cache.set_value(cache_key, mapping, expires_in_sec=ACCOUNT_MAPPING_CACHE_TTL)
+    except Exception:
+        pass
     return mapping
 
 

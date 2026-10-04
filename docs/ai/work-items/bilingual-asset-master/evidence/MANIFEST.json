@@ -1,6 +1,6 @@
 {
   "artefacts": {
-    "docs/ai/work-items/bilingual-asset-master/SCOPE.md": "7f482a3886629f2b7e70e5f01eb4d7464483212487bc6c6de28fd506ff747b79",
+    "docs/ai/work-items/bilingual-asset-master/SCOPE.md": "3846edd590e8ac1a9a0848ad6f63639d149a21f1152ae9a8cbd29a6acac2dc28",
     "docs/ai/work-items/bilingual-asset-master/evidence/test_bilingual_asset_pilot.log": "97a7d7e7c566b33866d7fd7acb9e13f1e9f9f4013fe1ac66401f1fc332925d84",
     "docs/ai/work-items/bilingual-asset-master/evidence/regression-matrix.log": "9ba05b9b38db94ee0fef05260141c04de8d6a4a2841c27ea6b953c24c81ecbee",
     "docs/ai/work-items/bilingual-asset-master/evidence/reconciliation.log": "785a058337578e599ab430bbf5d4e5e90adaa3121f97f0bf553e0de2b8c1227c",
@@ -12,8 +12,8 @@
     "construction/patches.txt": "ca7f3feb133a27ae44f7c89b07226e413ffaedd2cbdc194f357f92e4a61d0a1c",
     "construction/tests/test_bilingual_asset_pilot.py": "176cdd312d51b983b1a36fc4f723bf83213537303781c19c6ed9d2c491382260",
     "construction/data/bilingual/bilingual_registry.json": "eceff821f017f7eb7613ebc122ef7b35cdb32170db685e9a32cdbf45435f0243",
-    "construction/hooks.py": "694da4f4fa06bd5e57dd52a7ada52e0f1f91e5ce27c0661a0dd666ca79bb254b",
-    "scripts/run_bilingual_regression_matrix.sh": "803d004ba32d2862b0bf6d17041e3566858e0aa5436a5b7fde3a00af08ff16d5"
+    "construction/hooks.py": "3a0abaa00a0e5f8bce851cc84226551c9e8f4093372ecfa4561d01879ccd0233",
+    "scripts/run_bilingual_regression_matrix.sh": "100d5cc11c913a5584a0b6c7e6d5fce0bb607761690a23a658eaeb5e84350659"
   },
   "base_commit": "cc3a105",
   "branch": "develop",
@@ -99,6 +99,48 @@
       "from": "187e052bfd0c35b6b4eac749da15ee8ff6f1da4ece94fe7eff6e4b3999c4bc76",
       "to": "803d004ba32d2862b0bf6d17041e3566858e0aa5436a5b7fde3a00af08ff16d5",
       "reason": "shared runner expanded to 18 modules / 217 tests by bilingual-company-master"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "construction/hooks.py",
+      "from": "694da4f4fa06bd5e57dd52a7ada52e0f1f91e5ce27c0661a0dd666ca79bb254b",
+      "to": "b668f76ddf186ab45682956c2adaa487bcce66a69abc4bf9e93bc9b984f8c247",
+      "reason": "living file; Tier-4 override_whitelisted_methods binding added (frappe.desk.search.search_link -> construction.api.desk_link_search.search_link, A1) by bilingual-desk-link-dispatch"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "scripts/run_bilingual_regression_matrix.sh",
+      "from": "803d004ba32d2862b0bf6d17041e3566858e0aa5436a5b7fde3a00af08ff16d5",
+      "to": "428501e860b12cabc385f86899bda0f10666aa8923d8174b6d1c76d7c7d3feaa",
+      "reason": "shared runner expanded to 19 modules / 234 tests (test_bilingual_desk_link_dispatch added) by bilingual-desk-link-dispatch"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "docs/ai/work-items/bilingual-asset-master/SCOPE.md",
+      "from": "7f482a3886629f2b7e70e5f01eb4d7464483212487bc6c6de28fd506ff747b79",
+      "to": "4d015dfa58d64a607f256b393877e92c5d3199d87808110e42c8cca7beac05cf",
+      "reason": "amendment note documenting the re-pin performed by bilingual-desk-link-dispatch"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "construction/hooks.py",
+      "from": "b668f76ddf186ab45682956c2adaa487bcce66a69abc4bf9e93bc9b984f8c247",
+      "to": "3a0abaa00a0e5f8bce851cc84226551c9e8f4093372ecfa4561d01879ccd0233",
+      "reason": "living file; Account doc_events mapping-cache bust hooks added (R7: on_update/on_trash/after_rename -> construction.services.report_bilingual_extension.bust_account_mapping_cache) by bilingual-financial-reports"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "scripts/run_bilingual_regression_matrix.sh",
+      "from": "428501e860b12cabc385f86899bda0f10666aa8923d8174b6d1c76d7c7d3feaa",
+      "to": "100d5cc11c913a5584a0b6c7e6d5fce0bb607761690a23a658eaeb5e84350659",
+      "reason": "shared runner expanded to 21 modules / 258 tests (test_stage4_report_extension, test_stage7_bilingual_reports added) by bilingual-financial-reports"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "docs/ai/work-items/bilingual-asset-master/SCOPE.md",
+      "from": "4d015dfa58d64a607f256b393877e92c5d3199d87808110e42c8cca7beac05cf",
+      "to": "3846edd590e8ac1a9a0848ad6f63639d149a21f1152ae9a8cbd29a6acac2dc28",
+      "reason": "amendment note documenting the re-pin performed by bilingual-financial-reports"
     }
   ]
 }

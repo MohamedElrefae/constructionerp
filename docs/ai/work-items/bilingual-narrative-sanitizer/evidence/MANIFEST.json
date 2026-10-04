@@ -1,6 +1,6 @@
 {
   "artefacts": {
-    "docs/ai/work-items/bilingual-narrative-sanitizer/SCOPE.md": "a8b3a26aa42a63b1d6048679fc428dc327589f2d80961317f36d571177253c02",
+    "docs/ai/work-items/bilingual-narrative-sanitizer/SCOPE.md": "0b531811e0875fe78b0b28e731d3bdc840339174aa13a1450279729c2e12be7a",
     "docs/ai/work-items/bilingual-narrative-sanitizer/evidence/test_bilingual_narrative_sanitizer.log": "33c1fd19e28885d3b6bc99d9c8978c1a89ff16ad6e4db81572f27fe7b035de78",
     "docs/ai/work-items/bilingual-narrative-sanitizer/evidence/regression-matrix.log": "de0e8af9da63b2c3273085b45b36ff65189000439b0e57ee9cd91191ebff58c5",
     "docs/ai/work-items/bilingual-narrative-sanitizer/evidence/reconciliation.log": "9fb1cacccb62d32126d6f731bea24ea515fb0f79c5ced881c7a6464ae3e1fa50",
@@ -9,8 +9,8 @@
     "construction/tests/test_bilingual_boq_print.py": "42e05b627e97887a8bbf78844d2fa427e4629ba81930fd5dc15ee9ed527abf2e",
     "construction/templates/boq_print_format.html": "73c5a0a3eafaa9d373b1dccf406320662304ca8d8ccc3edf02b2015e99173eaa",
     "construction/templates/boq_header_print.html": "bf8affc93d6ec53fb473894fb1303b39a0b2e5bc5287b821dc01334b8bf4ec9b",
-    "construction/hooks.py": "694da4f4fa06bd5e57dd52a7ada52e0f1f91e5ce27c0661a0dd666ca79bb254b",
-    "scripts/run_bilingual_regression_matrix.sh": "803d004ba32d2862b0bf6d17041e3566858e0aa5436a5b7fde3a00af08ff16d5"
+    "construction/hooks.py": "3a0abaa00a0e5f8bce851cc84226551c9e8f4093372ecfa4561d01879ccd0233",
+    "scripts/run_bilingual_regression_matrix.sh": "100d5cc11c913a5584a0b6c7e6d5fce0bb607761690a23a658eaeb5e84350659"
   },
   "base_commit": "38beb35d31026e0afc70dd43e0ccf8de7dc1a222",
   "branch": "develop",
@@ -163,6 +163,48 @@
       "from": "e4beab7a48e95588da0ba9dd8054b610bfc20974999930d0b592d90ee7d36a8b",
       "to": "694da4f4fa06bd5e57dd52a7ada52e0f1f91e5ce27c0661a0dd666ca79bb254b",
       "reason": "living file; Company doc_events dual-hook registration added by bilingual-company-master (F1)"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "construction/hooks.py",
+      "from": "694da4f4fa06bd5e57dd52a7ada52e0f1f91e5ce27c0661a0dd666ca79bb254b",
+      "to": "b668f76ddf186ab45682956c2adaa487bcce66a69abc4bf9e93bc9b984f8c247",
+      "reason": "living file; Tier-4 override_whitelisted_methods binding added (frappe.desk.search.search_link -> construction.api.desk_link_search.search_link, A1) by bilingual-desk-link-dispatch"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "scripts/run_bilingual_regression_matrix.sh",
+      "from": "803d004ba32d2862b0bf6d17041e3566858e0aa5436a5b7fde3a00af08ff16d5",
+      "to": "428501e860b12cabc385f86899bda0f10666aa8923d8174b6d1c76d7c7d3feaa",
+      "reason": "shared runner expanded to 19 modules / 234 tests (test_bilingual_desk_link_dispatch added) by bilingual-desk-link-dispatch"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "docs/ai/work-items/bilingual-narrative-sanitizer/SCOPE.md",
+      "from": "a8b3a26aa42a63b1d6048679fc428dc327589f2d80961317f36d571177253c02",
+      "to": "fb832a914ae5a0cf5d5c9c81d1e849676e34bf2f22754d1408769a66e64faa86",
+      "reason": "amendment note documenting the re-pin performed by bilingual-desk-link-dispatch"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "construction/hooks.py",
+      "from": "b668f76ddf186ab45682956c2adaa487bcce66a69abc4bf9e93bc9b984f8c247",
+      "to": "3a0abaa00a0e5f8bce851cc84226551c9e8f4093372ecfa4561d01879ccd0233",
+      "reason": "living file; Account doc_events mapping-cache bust hooks added (R7: on_update/on_trash/after_rename -> construction.services.report_bilingual_extension.bust_account_mapping_cache) by bilingual-financial-reports"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "scripts/run_bilingual_regression_matrix.sh",
+      "from": "428501e860b12cabc385f86899bda0f10666aa8923d8174b6d1c76d7c7d3feaa",
+      "to": "100d5cc11c913a5584a0b6c7e6d5fce0bb607761690a23a658eaeb5e84350659",
+      "reason": "shared runner expanded to 21 modules / 258 tests (test_stage4_report_extension, test_stage7_bilingual_reports added) by bilingual-financial-reports"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "docs/ai/work-items/bilingual-narrative-sanitizer/SCOPE.md",
+      "from": "fb832a914ae5a0cf5d5c9c81d1e849676e34bf2f22754d1408769a66e64faa86",
+      "to": "0b531811e0875fe78b0b28e731d3bdc840339174aa13a1450279729c2e12be7a",
+      "reason": "amendment note documenting the re-pin performed by bilingual-financial-reports"
     }
   ]
 }

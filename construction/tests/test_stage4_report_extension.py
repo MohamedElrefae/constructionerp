@@ -1,12 +1,14 @@
-"""Stage 4 report extension-point spike tests (read-only, no mutation).
+"""Stage 4 report extension-point spike tests (read-only vendors).
 
 Run with: bench --site [site] run-tests --module construction.tests.test_stage4_report_extension
 
 Proves Arabic / English / Both account-name rendering for the General
 Ledger, Trial Balance, Balance Sheet, and Profit & Loss reports via the
 Construction-side bilingualizer — no vendor file edit, no Report DocType,
-no Account/translation mutation. Integration runs are read-only calls to the
-vendor report `execute`.
+no translation mutation. Integration runs are read-only calls to the
+vendor report `execute`. R7 cache coverage includes one governed Arabic
+edit round-trip that restores `account_name_ar` to its original value
+(net-zero data change).
 """
 
 import unittest
@@ -62,6 +64,76 @@ class TestReportExtensionPure(unittest.TestCase):
     def test_report_label_field_configurations(self):
         for name in ("General Ledger", "Trial Balance", "Balance Sheet", "Profit and Loss Statement"):
             self.assertTrue(rbe.REPORT_LABEL_FIELDS[name])
+
+    def test_mapping_load_matches_reference_build(self):
+        company = "Elrefae"
+        # R7: bust first so the SQL path (not a cached dict) is exercised.
+        frappe.cache.delete_value(rbe.account_mapping_cache_key(company))
+        fast = rbe.load_account_arabic_mapping(company)
+        reference = {}
+        for r in frappe.get_all(
+            "Account",
+            filters={"company": company},
+            fields=["name", "account_name", "account_name_ar"],
+            limit_page_length=0,
+        ):
+            ar = r.get("account_name_ar")
+            if not ar:
+                continue
+            if r.get("account_name"):
+                reference[r["account_name"]] = ar
+            reference[r["name"]] = ar
+        self.assertTrue(fast, "site must carry Arabic account names for this guard")
+        self.assertEqual(fast, reference)
+
+    def test_mapping_cache_hit_serves_identical_mapping(self):
+        company = "Elrefae"
+        key = rbe.account_mapping_cache_key(company)
+        frappe.cache.delete_value(key)
+        cold = rbe.load_account_arabic_mapping(company)
+        self.assertTrue(cold)
+        self.assertIsNotNone(frappe.cache.get_value(key), "mapping must be cached")
+        warm = rbe.load_account_arabic_mapping(company)
+        self.assertEqual(cold, warm)
+
+    def test_account_save_busts_mapping_cache(self):
+        events = (frappe.get_hooks("doc_events") or {}).get("Account") or {}
+        registered = str(events)
+        self.assertIn("on_update", registered)
+        self.assertIn("on_trash", registered)
+        self.assertIn("after_rename", registered)
+        self.assertIn("bust_account_mapping_cache", registered)
+
+        company = "Elrefae"
+        key = rbe.account_mapping_cache_key(company)
+        rows = frappe.get_all(
+            "Account",
+            filters={"company": company, "account_name_ar": ("!=", ""), "parent_account": ("is", "set")},
+            fields=["name", "account_name_ar"],
+            limit=1,
+        )
+        self.assertTrue(rows, "an Arabic account must exist for the round-trip")
+        acc = frappe.get_doc("Account", rows[0].name)
+        original = acc.account_name_ar
+        # R7 chain: governed edit (triad) -> doc.save -> on_update -> bust.
+        from construction.services.bilingual_service import set_account_name_ar
+
+        marker = original + " ن"
+        try:
+            frappe.cache.delete_value(key)
+            rbe.load_account_arabic_mapping(company)  # warm the key
+            self.assertIsNotNone(frappe.cache.get_value(key))
+
+            set_account_name_ar(acc.name, marker)
+            self.assertIsNone(
+                frappe.cache.get_value(key), "Account save must bust the company key"
+            )
+            fresh = rbe.load_account_arabic_mapping(company)
+            self.assertEqual(fresh.get(acc.name), marker)
+        finally:
+            set_account_name_ar(acc.name, original)
+        restored = rbe.load_account_arabic_mapping(company)
+        self.assertEqual(restored.get(acc.name), original)
 
 
 class TestReportExtensionIntegration(unittest.TestCase):

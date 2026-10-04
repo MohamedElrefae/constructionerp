@@ -1,6 +1,6 @@
 {
   "artefacts": {
-    "docs/ai/work-items/bilingual-terms-conditions-master/SCOPE.md": "2def63506379db0d52ebb49410e274f6c69428a570b1bb9b9a4ff34d09461466",
+    "docs/ai/work-items/bilingual-terms-conditions-master/SCOPE.md": "9ae88ad0950b4186ed374dc8e870e7d3352580476cffd22e965524a80bb2b3ab",
     "docs/ai/work-items/bilingual-terms-conditions-master/evidence/test_bilingual_terms_conditions_pilot.log": "6e418fdffc0df32c7b62625e195535aa6a69d9dfd344036b075b232ada2c07ea",
     "docs/ai/work-items/bilingual-terms-conditions-master/evidence/regression-matrix.log": "fafab3abd08f75705fad945def3c39cf1167669e46d713e71de4f56a3c8ecd4c",
     "docs/ai/work-items/bilingual-terms-conditions-master/evidence/reconciliation.log": "a8ad35d130978eb9e6c239b4783815ab849afa8b41077902ce54fdc40d3077a1",
@@ -11,8 +11,8 @@
     "construction/patches.txt": "ca7f3feb133a27ae44f7c89b07226e413ffaedd2cbdc194f357f92e4a61d0a1c",
     "construction/tests/test_bilingual_terms_conditions_pilot.py": "e99b681f0d0f21c9300efede6afcf0a501cd59bcf6d9fd20f5486d3b045c71d8",
     "construction/data/bilingual/bilingual_registry.json": "eceff821f017f7eb7613ebc122ef7b35cdb32170db685e9a32cdbf45435f0243",
-    "construction/hooks.py": "694da4f4fa06bd5e57dd52a7ada52e0f1f91e5ce27c0661a0dd666ca79bb254b",
-    "scripts/run_bilingual_regression_matrix.sh": "803d004ba32d2862b0bf6d17041e3566858e0aa5436a5b7fde3a00af08ff16d5"
+    "construction/hooks.py": "3a0abaa00a0e5f8bce851cc84226551c9e8f4093372ecfa4561d01879ccd0233",
+    "scripts/run_bilingual_regression_matrix.sh": "100d5cc11c913a5584a0b6c7e6d5fce0bb607761690a23a658eaeb5e84350659"
   },
   "base_commit": "0f3bd24ba4c096104ff826c490462c47c6aaf696",
   "branch": "develop",
@@ -125,6 +125,48 @@
       "from": "187e052bfd0c35b6b4eac749da15ee8ff6f1da4ece94fe7eff6e4b3999c4bc76",
       "to": "803d004ba32d2862b0bf6d17041e3566858e0aa5436a5b7fde3a00af08ff16d5",
       "reason": "shared runner expanded to 18 modules / 217 tests by bilingual-company-master"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "construction/hooks.py",
+      "from": "694da4f4fa06bd5e57dd52a7ada52e0f1f91e5ce27c0661a0dd666ca79bb254b",
+      "to": "b668f76ddf186ab45682956c2adaa487bcce66a69abc4bf9e93bc9b984f8c247",
+      "reason": "living file; Tier-4 override_whitelisted_methods binding added (frappe.desk.search.search_link -> construction.api.desk_link_search.search_link, A1) by bilingual-desk-link-dispatch"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "scripts/run_bilingual_regression_matrix.sh",
+      "from": "803d004ba32d2862b0bf6d17041e3566858e0aa5436a5b7fde3a00af08ff16d5",
+      "to": "428501e860b12cabc385f86899bda0f10666aa8923d8174b6d1c76d7c7d3feaa",
+      "reason": "shared runner expanded to 19 modules / 234 tests (test_bilingual_desk_link_dispatch added) by bilingual-desk-link-dispatch"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "docs/ai/work-items/bilingual-terms-conditions-master/SCOPE.md",
+      "from": "2def63506379db0d52ebb49410e274f6c69428a570b1bb9b9a4ff34d09461466",
+      "to": "e19a3774b54883c5c8fd97106019adc567cee7d6661fc94a1231431efd6b2565",
+      "reason": "amendment note documenting the re-pin performed by bilingual-desk-link-dispatch"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "construction/hooks.py",
+      "from": "b668f76ddf186ab45682956c2adaa487bcce66a69abc4bf9e93bc9b984f8c247",
+      "to": "3a0abaa00a0e5f8bce851cc84226551c9e8f4093372ecfa4561d01879ccd0233",
+      "reason": "living file; Account doc_events mapping-cache bust hooks added (R7: on_update/on_trash/after_rename -> construction.services.report_bilingual_extension.bust_account_mapping_cache) by bilingual-financial-reports"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "scripts/run_bilingual_regression_matrix.sh",
+      "from": "428501e860b12cabc385f86899bda0f10666aa8923d8174b6d1c76d7c7d3feaa",
+      "to": "100d5cc11c913a5584a0b6c7e6d5fce0bb607761690a23a658eaeb5e84350659",
+      "reason": "shared runner expanded to 21 modules / 258 tests (test_stage4_report_extension, test_stage7_bilingual_reports added) by bilingual-financial-reports"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "docs/ai/work-items/bilingual-terms-conditions-master/SCOPE.md",
+      "from": "e19a3774b54883c5c8fd97106019adc567cee7d6661fc94a1231431efd6b2565",
+      "to": "9ae88ad0950b4186ed374dc8e870e7d3352580476cffd22e965524a80bb2b3ab",
+      "reason": "amendment note documenting the re-pin performed by bilingual-financial-reports"
     }
   ]
 }

@@ -238,6 +238,7 @@ override_whitelisted_methods = {
     # callable without the required reason — all callers (including the
     # vendor form flow) are routed through the governed, atomic wrapper.
     "erpnext.accounts.doctype.account.account.update_account_number": "construction.services.bilingual_service.governed_rename_account",
+    "frappe.desk.search.search_link": "construction.api.desk_link_search.search_link",
 }
 
 # Override core Translation controller so edited catalog rows become runtime translations.
@@ -276,7 +277,12 @@ doc_events = {
     # Stage 3 P0: Arabic account-name writes are confined to the governed
     # bilingual API; any direct form/REST save that changes the field is
     # refused. The hook also maintains the normalized Arabic search key.
-    "Account": {"validate": "construction.services.bilingual_service.enforce_account_arabic_policy"},
+    "Account": {
+        "validate": "construction.services.bilingual_service.enforce_account_arabic_policy",
+        "on_update": "construction.services.report_bilingual_extension.bust_account_mapping_cache",
+        "on_trash": "construction.services.report_bilingual_extension.bust_account_mapping_cache",
+        "after_rename": "construction.services.report_bilingual_extension.bust_account_mapping_cache",
+    },
     "Item": {
         "validate": [
             "construction.services.bilingual_service.enforce_bilingual_arabic_policy",

@@ -1,0 +1,143 @@
+{
+  "artefacts": {
+    "docs/ai/work-items/bilingual-desk-link-dispatch/SCOPE.md": "8a5d95a6627ae82ba81b0a42ace62da15b47913d6bba3fe958eee1bce3a4d6c8",
+    "docs/ai/work-items/bilingual-desk-link-dispatch/evidence/test_bilingual_desk_link_dispatch.log": "575c48df2e9dae5635e8788801b7124bebcbbdb725e7e0e797d201b9e3955357",
+    "docs/ai/work-items/bilingual-desk-link-dispatch/evidence/regression-matrix.log": "5d756efbb0b15e0ed279acf56dae75cf180362923217be01e1fbac396e5f9061",
+    "docs/ai/work-items/bilingual-desk-link-dispatch/evidence/reconciliation.log": "fe7599afda02fef12c02cc8371370a4175260680ae1b7515bb656ada2d2fef71",
+    "docs/ai/work-items/bilingual-desk-link-dispatch/evidence/desk-link-p95-pre-a6-run.log": "283964299e921ceac1cf5edab7d4edca060ab05b710466e7013d23b4507df135",
+    "docs/ai/work-items/bilingual-desk-link-dispatch/evidence/desk-link-p95-pre-a6-confirm.log": "d0f6e80c86c674073040a8e370b518cd07314e4148766940018ec8bc2d974a04",
+    "docs/ai/work-items/bilingual-desk-link-dispatch/evidence/desk-link-p95-post-a6-pre-memo-run.log": "cb58801efccb2f1e062aacf657afcc4ff2154db272536f91edc5f463a897b474",
+    "docs/ai/work-items/bilingual-desk-link-dispatch/evidence/desk-link-p95-run.log": "0313f0d37a50545f17b4d0b6aa0702895512ff9674a5981d9a5852b7fe79e879",
+    "docs/ai/work-items/bilingual-desk-link-dispatch/evidence/desk-link-p95-confirm.log": "7ab9bb6fcf7045f010dcf8cf89c2cc69403a0e3800ce3464e3be01b5a4711870",
+    "docs/ai/work-items/bilingual-desk-link-dispatch/evidence/desk-link-p95-measurement.json": "3fd024abcba9e7acec15687d392cb48c5d12c8c361665a73bae8627c403d0998",
+    "docs/ai/work-items/bilingual-desk-link-dispatch/evidence/registry-only-candidate.log": "0bb870c443e5dc9b5213953733b6c79d209850fe15e5ef482cf440750adb5aeb",
+    "docs/ai/work-items/bilingual-desk-link-dispatch/evidence/registry-only-candidate.json": "b9102103d49240e0d5bf29102ce6d30c9cf67ae4f8241d7524db4d6d250b0f67",
+    "docs/ai/work-items/bilingual-desk-link-dispatch/evidence/registry-field-coverage-probe.log": "fecec6bb1aa123d5f55cc0408497aa496b8acbe0128e551a82ede911714deb4d",
+    "docs/ai/work-items/bilingual-desk-link-dispatch/evidence/registry-field-coverage.json": "6622d0571a214a5126749dd1c1e813594761d09bc9ed52742dfe991d2bd852f3",
+    "docs/ai/work-items/bilingual-desk-link-dispatch/evidence/scripts/measure_desk_link_p95.py": "36a412f52ee24c0dace1a1f182fd429d27ec7938082ef6f9e5d253817e0dddbf",
+    "docs/ai/work-items/bilingual-desk-link-dispatch/evidence/scripts/measure_registry_only_candidate.py": "754d6aca5320452fd32bc11526fed1f63f19e767b2f84d0874c9617a4bcabf43",
+    "docs/ai/work-items/bilingual-desk-link-dispatch/evidence/scripts/field_coverage_probe.py": "39c9a66b1884c2ea6401143631a74761e0528135da1573366127b540d669a11d",
+    "construction/api/desk_link_search.py": "d53ec43fc65d6867410d670babce94a6f7943d712e3ec0c7c49b9c25c01c8cc2",
+    "construction/tests/test_bilingual_desk_link_dispatch.py": "e15b2b2d95f111dbf23ed782a41897c41f5dc66a2549ef39d085bc6ee8c28bc4",
+    "construction/hooks.py": "3a0abaa00a0e5f8bce851cc84226551c9e8f4093372ecfa4561d01879ccd0233",
+    "scripts/run_bilingual_regression_matrix.sh": "100d5cc11c913a5584a0b6c7e6d5fce0bb607761690a23a658eaeb5e84350659"
+  },
+  "amendments": [
+    {
+      "date": "2026-10-04",
+      "artefact": "construction/hooks.py",
+      "from": "b668f76ddf186ab45682956c2adaa487bcce66a69abc4bf9e93bc9b984f8c247",
+      "to": "3a0abaa00a0e5f8bce851cc84226551c9e8f4093372ecfa4561d01879ccd0233",
+      "reason": "living file; Account doc_events mapping-cache bust hooks added (R7: on_update/on_trash/after_rename -> construction.services.report_bilingual_extension.bust_account_mapping_cache) by bilingual-financial-reports"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "scripts/run_bilingual_regression_matrix.sh",
+      "from": "428501e860b12cabc385f86899bda0f10666aa8923d8174b6d1c76d7c7d3feaa",
+      "to": "100d5cc11c913a5584a0b6c7e6d5fce0bb607761690a23a658eaeb5e84350659",
+      "reason": "shared runner expanded to 21 modules / 258 tests (test_stage4_report_extension, test_stage7_bilingual_reports added) by bilingual-financial-reports"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "docs/ai/work-items/bilingual-desk-link-dispatch/SCOPE.md",
+      "from": "cff9922af0427975c81408a931be46b7e3dc5e6c0cf62db5035ddc5357bbfbc4",
+      "to": "8a5d95a6627ae82ba81b0a42ace62da15b47913d6bba3fe958eee1bce3a4d6c8",
+      "reason": "amendment note documenting the re-pin performed by bilingual-financial-reports"
+    }
+  ],
+  "base_commit": "4341542",
+  "branch": "develop",
+  "work_item": "bilingual-desk-link-dispatch",
+  "primary_invariant": "D5 code triad byte-identical to seven reference commits and bilingual_registry.json untouched (23 masters); no file under apps/frappe or apps/erpnext modified; no client JavaScript added or changed (A2, so no ?v= bump); Latin queries are a literal passthrough of vendor output (A3.3); Arabic results never return rows the requesting user cannot read (A4, fail-closed); the stock endpoint is the only entry point (genuine handler.execute_cmd proof).",
+  "decisions_settled": {
+    "A1": "override_whitelisted_methods binding frappe.desk.search.search_link -> construction.api.desk_link_search.search_link; standard_queries rejected because it bypasses vendor permission/filter/title-field logic entirely.",
+    "A2": "no client changes and therefore no cache-buster churn; the stock Link control already posts to the overridden method.",
+    "A3": "dispatcher mirrors the vendor signature, fail-closes on registry miss/unreadable state, passes Latin queries through byte-identical; the A3 Arabic merge branch was measured non-compliant and superseded by A6 (it survives as the documented vendor-owned fallback).",
+    "A4": "bilingual rows come from frappe.get_list (role/user permissions enforced); ignore_user_permissions is validated by the vendor path, never re-implemented; non-admin Arabic queries fail closed to [].",
+    "A5": "as_autosuggest_rows is the single dict->tuple conversion boundary used by both the dispatcher and the transactional sidecar rows.",
+    "A6": "Arabic queries on an active registry entry skip the vendor baseline: vendor search fields are folded into the single registry query, enabled/disabled constraints are mirrored, and searchfield/list-shaped-filters/unusable-filter queries fall back to the vendor result unchanged (owner-approved after A3 measured 2.5412x/1.9374x)."
+  },
+  "test_results": {
+    "pilot_module": "construction.tests.test_bilingual-desk-link-dispatch: 17/17 OK",
+    "regression_matrix": "19 modules / 234 tests, all OK",
+    "transaction_link_search": "20/20 (D5 split guard)",
+    "adr_reconciler": "19/19 PASS"
+  },
+  "latency_measurement": {
+    "status": "COMPLIANT_WITH_TWO_TIER_SLA",
+    "authoritative_run": "docs/ai/work-items/bilingual-desk-link-dispatch/evidence/desk-link-p95-confirm.log (A6 + registry memo, confirmation run)",
+    "methodology": "5 rounds x n=100 interleaved, alternating pair order, 5 warmups per round, GC paused, min-of-rounds nearest-rank P95",
+    "tier_rule": "Tier 2A (baseline >= 1.0 ms) <= 1.15x; Tier 2B (baseline < 1.0 ms) <= 1.50x; universal ceiling <= 1.50 ms",
+    "cases": {
+      "arabic_path_company": {
+        "baseline_p95_ms": 0.732,
+        "bilingual_p95_ms": 0.927,
+        "ratio_of_baseline": 1.2664,
+        "tier": "2B",
+        "verdict": "COMPLIANT_WITH_TWO_TIER_SLA"
+      },
+      "arabic_path_uom": {
+        "baseline_p95_ms": 1.306,
+        "bilingual_p95_ms": 1.207,
+        "ratio_of_baseline": 0.9242,
+        "tier": "2A",
+        "verdict": "COMPLIANT_WITH_TWO_TIER_SLA"
+      },
+      "latin_passthrough_company": {
+        "baseline_p95_ms": 0.828,
+        "bilingual_p95_ms": 0.809,
+        "ratio_of_baseline": 0.9771,
+        "tier": "2B",
+        "verdict": "COMPLIANT_WITH_TWO_TIER_SLA"
+      },
+      "latin_passthrough_uom": {
+        "baseline_p95_ms": 1.407,
+        "bilingual_p95_ms": 1.382,
+        "ratio_of_baseline": 0.9822,
+        "tier": "2A",
+        "verdict": "COMPLIANT_WITH_TWO_TIER_SLA"
+      }
+    },
+    "disclosed_runs": [
+      {
+        "artefact": "desk-link-p95-pre-a6-run.log",
+        "shape": "A3 merge, 2 cases",
+        "headline": "Arabic UOM 1.9441x / 2.537 ms NON-COMPLIANT; Latin compliant",
+        "disposition": "motivated A6"
+      },
+      {
+        "artefact": "desk-link-p95-pre-a6-confirm.log",
+        "shape": "A3 merge, 4 cases",
+        "headline": "Arabic Company 2.5412x / 1.789 ms; Arabic UOM 1.9374x / 2.505 ms NON-COMPLIANT",
+        "disposition": "owner approved A6"
+      },
+      {
+        "artefact": "registry-only-candidate.log",
+        "shape": "decision input: A6 cost if adopted",
+        "headline": "0.722x / 0.878 ms, subset contract held",
+        "disposition": "COMPLIANT if adopted"
+      },
+      {
+        "artefact": "desk-link-p95-post-a6-pre-memo-run.log",
+        "shape": "A6 without registry memo",
+        "headline": "Arabic Company 1.5561x / 1.192 ms (ratio over, absolute OK); others compliant",
+        "disposition": "motivated _registry_data() memo"
+      },
+      {
+        "artefact": "desk-link-p95-run.log",
+        "shape": "A6 + memo, first run",
+        "headline": "1.2554x / 0.9031x / 1.0458x / 1.0319x, all compliant",
+        "disposition": "superseded by confirmation run, retained"
+      },
+      {
+        "artefact": "desk-link-p95-confirm.log",
+        "shape": "A6 + memo, confirmation run",
+        "headline": "1.2664x / 0.9242x / 0.9771x / 0.9822x, all compliant",
+        "disposition": "AUTHORITATIVE; measurement JSON is this run"
+      }
+    ],
+    "artefact": "docs/ai/work-items/bilingual-desk-link-dispatch/evidence/desk-link-p95-measurement.json"
+  },
+  "site_migration": "none - no patch, no schema change; bilingual_registry.json not modified (23 masters remain active)",
+  "causal_order": "final test run -> capture log (2>&1) -> git add -f the .log -> compute SHA-256 digests -> MANIFEST.json -> commit"
+}

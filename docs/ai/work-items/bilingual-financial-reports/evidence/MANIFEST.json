@@ -1,0 +1,60 @@
+{
+  "artefacts": {
+    "docs/ai/work-items/bilingual-financial-reports/SCOPE.md": "7d3b98483d975189ee34baf9d92c660c7937ca72637e29d671a7d6748d505aa9",
+    "docs/ai/work-items/bilingual-financial-reports/evidence/stage4-report-extension.log": "223079502b37c2b1e5a9850a8f6214cd5460761ebc01a05a1c36b926ff788f26",
+    "docs/ai/work-items/bilingual-financial-reports/evidence/stage7-bilingual-reports.log": "c31c04b09a69a6a5f72e23fe29d098c87d6604b84869ade3edbd885640b91b4f",
+    "docs/ai/work-items/bilingual-financial-reports/evidence/probe-report-execution.log": "a72928f0ffdf22c6cbb4e7c778cea12e835e379dea8ed64b0c4acccf65b5d69b",
+    "docs/ai/work-items/bilingual-financial-reports/evidence/regression-matrix.log": "4fc5abb08a7276b5835c908cc2e153d6139a3832064bd6fcc60532f28a1072e3",
+    "docs/ai/work-items/bilingual-financial-reports/evidence/reconciliation.log": "c275c7ef647847a29183ba4ef2b0d67de786be14e9c9d2976017a962f653c16d",
+    "docs/ai/work-items/bilingual-financial-reports/evidence/report-p95-run.log": "aafde94a133b0575aaa9c191afce039faaab553be0640f157d88b06a43a218c1",
+    "docs/ai/work-items/bilingual-financial-reports/evidence/report-p95-run2.log": "460e5585c211d39f76684281c9dc3775b95d9d5abf065270712241fef30e0dd9",
+    "docs/ai/work-items/bilingual-financial-reports/evidence/report-p95-run3.log": "4e86cb15cccf032c8c95e989067711f7e3de0605db10ac41a298cdf057af6291",
+    "docs/ai/work-items/bilingual-financial-reports/evidence/report-p95-run4.log": "241e872fa1dc68e45e5b3daaeafffab2f9917459d6bb52c2b86564703e657e4d",
+    "docs/ai/work-items/bilingual-financial-reports/evidence/report-p95-run5.log": "391b16adc7e87b01926028703a97e511b08571904c589c432063dbbc06353427",
+    "docs/ai/work-items/bilingual-financial-reports/evidence/report-p95-measurement.json": "7b7404831cfbf35c29e1a092eb4374e3eb0fa94193df0ddf001955c6231be8e4",
+    "docs/ai/work-items/bilingual-financial-reports/evidence/scripts/probe_report_execution.py": "a8c5053382a06968f17d5b2e85aade6b43cf28ad5781adb6de97dbbd099e0fb0",
+    "docs/ai/work-items/bilingual-financial-reports/evidence/scripts/measure_report_p95.py": "c859dd8cc9caba02052feea1298d73e22b8ff73fba2b77a84e2461be59e57ca5",
+    "construction/api/bilingual_reports.py": "ebfe58a9b451d59859092ee93103a3e83f822d341680debd8282cd8139dd98b1",
+    "construction/services/report_bilingual_extension.py": "fe841d5db4787f681ea2ab882f31494438b25b9742b45ec102dc0211e9190269",
+    "construction/tests/test_stage4_report_extension.py": "0d640f3882a476a92ef8d7c6eeb1e579469df81e18449747b8a657ba01c1b191",
+    "construction/tests/test_stage7_bilingual_reports.py": "f152f88f83888e4aae7940bdc9208d6c06fa378db50ab9a0259eb1ab28d42c9f",
+    "construction/hooks.py": "3a0abaa00a0e5f8bce851cc84226551c9e8f4093372ecfa4561d01879ccd0233",
+    "scripts/run_bilingual_regression_matrix.sh": "100d5cc11c913a5584a0b6c7e6d5fce0bb607761690a23a658eaeb5e84350659"
+  },
+  "amendments": [],
+  "base_commit": "dd4ea6d",
+  "branch": "develop",
+  "work_item": "bilingual-financial-reports",
+  "primary_invariant": "D5 code triad (bilingual_service.py, searchable_dropdown/api/search.py) byte-identical to seven reference commits and bilingual_registry.json untouched; no file under apps/frappe or apps/erpnext modified; no client JavaScript changed (no ?v= bump); vendor report execute() treated read-only and transform_report pure; fail-closed allowlist PILOT_REPORTS stays General Ledger / Trial Balance / Accounts Receivable; role gate genuine for a real non-admin user (R2); no Report DocType, no translation write, no schema change",
+  "decisions_settled": {
+    "R1": "vendor execute runs exactly once per request; guard assertEqual(execute.call_count, 1)",
+    "R2": "genuine non-admin PermissionError test (real user, roles: [], vendor execute never reached) + admin control",
+    "R2b": "stage7 mode-test mocks patch construction.api.bilingual_reports (API-namespace binding), closing D5A-3 import-order luck",
+    "R3": "canonical matrix integration: 21 modules / 258 tests",
+    "R4": "causal-order evidence pipeline (logs -> git add -f -> digests -> MANIFEST -> commit)",
+    "R5": "Two-Tier ratio limbs only (Tier 2A <= 1.15x); absolute 1.50 ms search ceiling disclosed but not enforced for reports; all five runs disclosed",
+    "R6": "read-only vendor boundary; pure transform; no Report DocType, no vendor file edit, no Account or translation write outside the disclosed stage4 governed-edit round-trip (net-zero)",
+    "R7": "owner-approved mapping cache: frappe.cache per-company keys, TTL 300 s, busted by new Account doc_events (on_update/on_trash/after_rename), fail-open to SQL; triad validate hook untouched"
+  },
+  "test_results": {
+    "stage4_report_extension": "14/14 OK",
+    "stage7_bilingual_reports": "10/10 OK",
+    "regression_matrix": "21 modules / 258 tests, all OK",
+    "adr_reconciler": "19/19 PASS",
+    "live_probe": "PASS (GL 15 cols/16 rows, TB 10/3, AR Aging 25/5, TB ar-mode swap True, mutation guard PASS)"
+  },
+  "latency_measurement": {
+    "status": "COMPLIANT_WITH_TWO_TIER_SLA",
+    "authoritative_run": "docs/ai/work-items/bilingual-financial-reports/evidence/report-p95-run5.log (R7 cache, confirmation run): GL 1.0585x, TB 1.0103x",
+    "run4": "docs/ai/work-items/bilingual-financial-reports/evidence/report-p95-run4.log (R7 cache): GL 1.0296x, TB 1.0143x",
+    "disclosed_non_compliant_runs": [
+      "docs/ai/work-items/bilingual-financial-reports/evidence/report-p95-run.log (pre R5 lever a): GL 1.4402x, TB 1.0199x",
+      "docs/ai/work-items/bilingual-financial-reports/evidence/report-p95-run2.log (post lever a): GL 1.2805x, TB 1.0469x",
+      "docs/ai/work-items/bilingual-financial-reports/evidence/report-p95-run3.log (post lever b): GL 1.2864x, TB 1.0614x"
+    ],
+    "methodology": "5 rounds x n=100 interleaved, alternating pair order, 5 warmups per round, GC paused, min-of-rounds nearest-rank P95; acceptance = ratio limbs only (Tier 2A <= 1.15x); no run discarded",
+    "steady_state_disclosure": "ratios measure warm-cache steady state (R7: TTL 300 s, immediate bust on Account doc_events); a cold first render per worker pays the SQL mapping load; writes bypassing doc_events may serve stale labels for at most 300 s; cached values are derived Arabic labels only (no financial amounts)"
+  },
+  "site_migration": "none - no patch, no schema change; new redis keys are derived data (per-company Arabic label mappings, TTL 300 s, recreated by one read-only query); hooks.py doc_events additions are code-level only",
+  "causal_order": "final test run -> capture log (2>&1) -> git add -f the .log -> compute SHA-256 digests -> MANIFEST.json -> commit"
+}

@@ -1,0 +1,6 @@
+MEASUREMENT: {"general_ledger": 1.0585, "trial_balance": 1.0103}
+P95_MS: {"general_ledger": {"baseline": 4.203, "bilingual": 4.449}, "trial_balance": {"baseline": 31.119, "bilingual": 31.441}}
+TIER: {"general_ledger": "COMPLIANT_WITH_TWO_TIER_SLA", "trial_balance": "COMPLIANT_WITH_TWO_TIER_SLA"}
+CONTRACT: {"general_ledger": {"baseline_rows": 16, "bilingual_rows": 16, "columns_equal": true, "rows_equal": true}, "trial_balance": {"baseline_rows": 3, "bilingual_rows": 3, "columns_equal": true, "rows_equal": true}}
+ALL_CASES_COMPLIANT: True
+MUTATION_GUARD: PASS
