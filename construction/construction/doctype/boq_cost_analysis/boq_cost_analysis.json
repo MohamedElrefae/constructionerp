@@ -29,13 +29,16 @@
     "total_direct_cost",
     "overhead_pct",
     "profit_pct",
+    "tender_tax_pct",
     "total_unit_cost",
     "cb_totals",
     "suggested_sell_rate",
     "sb_approval",
     "approved_by",
     "approved_on",
-    "remarks"
+    "remarks",
+    "pricing_rule_version",
+    "supersedes_analysis"
   ],
   "fields": [
     {
@@ -54,14 +57,14 @@
       "reqd": 1
     },
     {
-    "fieldname": "boq_item",
-    "fieldtype": "Link",
-    "in_list_view": 1,
-    "in_standard_filter": 1,
-    "label": "BOQ Item",
-    "options": "BOQ Item",
-    "search_index": 1
-   },
+      "fieldname": "boq_item",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "BOQ Item",
+      "options": "BOQ Item",
+      "search_index": 1
+    },
     {
       "fetch_from": "boq_item.boq_header",
       "fieldname": "boq_header",
@@ -101,7 +104,7 @@
       "in_list_view": 1,
       "in_standard_filter": 1,
       "label": "Analysis Status",
-      "options": "Draft\nApproved\nSuperseded",
+      "options": "Draft\nApproved\nSuperseded\nCancelled",
       "reqd": 1
     },
     {
@@ -196,8 +199,9 @@
     {
       "fieldname": "total_unit_cost",
       "fieldtype": "Currency",
-      "label": "Total Unit Cost",
-      "read_only": 1
+      "label": "Unit Cost Basis",
+      "read_only": 1,
+      "description": "Direct unit cost under additive-direct-cost/v1. Legacy records preserve their earlier margin-inclusive basis and require review before conversion."
     },
     {
       "fieldname": "cb_totals",
@@ -207,7 +211,8 @@
       "fieldname": "suggested_sell_rate",
       "fieldtype": "Currency",
       "label": "Suggested Sell Rate",
-      "read_only": 1
+      "read_only": 1,
+      "description": "Direct unit cost plus overhead, profit and tender tax allowance, each applied once to direct cost."
     },
     {
       "fieldname": "sb_approval",
@@ -231,6 +236,28 @@
       "fieldname": "remarks",
       "fieldtype": "Small Text",
       "label": "Remarks"
+    },
+    {
+      "fieldname": "tender_tax_pct",
+      "fieldtype": "Percent",
+      "label": "Tender Tax Allowance %",
+      "default": "0",
+      "description": "Pricing allowance on direct cost; invoice taxes remain governed by their tax templates."
+    },
+    {
+      "fieldname": "pricing_rule_version",
+      "fieldtype": "Data",
+      "label": "Pricing Rule",
+      "read_only": 1,
+      "no_copy": 1
+    },
+    {
+      "fieldname": "supersedes_analysis",
+      "fieldtype": "Link",
+      "options": "BOQ Cost Analysis",
+      "label": "Previous Approved Analysis",
+      "read_only": 1,
+      "no_copy": 1
     }
   ],
   "index_web_pages_for_search": 1,

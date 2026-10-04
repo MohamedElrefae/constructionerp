@@ -6,7 +6,11 @@ import frappe
 from frappe.tests.utils import FrappeTestCase
 
 from construction.construction.utils.rollup import defer_boq_rollups
-from construction.services.quantity_revisions import create_lock_baseline
+from construction.services.quantity_revisions import (
+    approve_quantity_revision,
+    create_lock_baseline,
+    create_quantity_revision,
+)
 from construction.tests.test_boq_helpers import get_or_create_test_project
 
 
@@ -124,6 +128,8 @@ class TestCustomerReleaseFinancialGuards(FrappeTestCase):
             ("owner_ref_no", "Rewrite reference"),
             ("approved_on", "2020-01-01 00:00:00"),
             ("delta_value", 900),
+            ("status", "Rejected"),
+            ("status", "Draft"),
         ):
             with self.subTest(field=field):
                 candidate = frappe.get_doc("BOQ Quantity Revision", revision.name)
@@ -132,6 +138,70 @@ class TestCustomerReleaseFinancialGuards(FrappeTestCase):
                 with self.assertRaises(frappe.ValidationError):
                     candidate.save(ignore_permissions=True)
                 self.assertEqual(frappe.get_doc("BOQ Quantity Revision", revision.name).get(field), before)
+
+    def test_approved_revision_cannot_be_deleted(self):
+        revision = self._approved_revision()
+
+        with self.assertRaises(frappe.ValidationError):
+            frappe.delete_doc("BOQ Quantity Revision", revision.name, ignore_permissions=True)
+
+        self.assertTrue(frappe.db.exists("BOQ Quantity Revision", revision.name))
+
+    def test_legacy_rejected_revision_with_approval_attribution_stays_frozen(self):
+        revision = self._approved_revision()
+        frappe.db.set_value("BOQ Quantity Revision", revision.name, "status", "Rejected")
+        legacy = frappe.get_doc("BOQ Quantity Revision", revision.name)
+        self.assertTrue(legacy.approved_by)
+        self.assertTrue(legacy.approved_on)
+
+        for field, value in (
+            ("reason", "Rewrite legacy evidence"),
+            ("approved_by", "Guest"),
+            ("approved_on", "2020-01-01 00:00:00"),
+            ("status", "Approved"),
+        ):
+            with self.subTest(field=field):
+                candidate = frappe.get_doc("BOQ Quantity Revision", revision.name)
+                candidate.set(field, value)
+                with self.assertRaises(frappe.ValidationError):
+                    candidate.save(ignore_permissions=True)
+
+        with self.assertRaises(frappe.ValidationError):
+            frappe.delete_doc("BOQ Quantity Revision", revision.name, ignore_permissions=True)
+
+        persisted = frappe.get_doc("BOQ Quantity Revision", revision.name)
+        self.assertEqual(persisted.status, "Rejected")
+        self.assertEqual(persisted.reason, revision.reason)
+        self.assertEqual(persisted.approved_by, revision.approved_by)
+        self.assertEqual(persisted.approved_on, revision.approved_on)
+
+    def test_correction_is_recorded_as_a_new_approved_revision(self):
+        approved = self._approved_revision()
+        prior_evidence = {field: approved.get(field) for field in approved.APPROVAL_FROZEN_FIELDS}
+        correction = create_quantity_revision(
+            boq_item=approved.boq_item,
+            previous_qty=approved.revised_qty,
+            revised_qty=approved.revised_qty + 1,
+            contract_unit_price=approved.contract_unit_price,
+            revised_unit_price=approved.revised_unit_price,
+            reason="Correct quantity through a new revision",
+            rate_change_justification="Quantity change is reviewed against the original contract quantity.",
+        )
+
+        approve_quantity_revision(correction.name)
+
+        approved.reload()
+        correction.reload()
+        self.assertEqual(approved.status, "Approved")
+        self.assertEqual({field: approved.get(field) for field in prior_evidence}, prior_evidence)
+        self.assertNotEqual(correction.name, approved.name)
+        self.assertEqual(correction.status, "Approved")
+        self.assertEqual(
+            frappe.db.get_value("BOQ Item", approved.boq_item, "last_quantity_revision"), correction.name
+        )
+        self.assertEqual(
+            frappe.db.get_value("BOQ Item", approved.boq_item, "current_revised_qty"), correction.revised_qty
+        )
 
     def test_unchanged_approved_save_preserves_snapshot(self):
         revision = self._approved_revision()
@@ -142,3 +212,75 @@ class TestCustomerReleaseFinancialGuards(FrappeTestCase):
         revision.save(ignore_permissions=True)
         revision.reload()
         self.assertEqual({field: revision.get(field) for field in before}, before)
+
+    def test_direct_document_approval_projects_once_and_stamps_current_actor(self):
+        original = self._approved_revision()
+        correction = create_quantity_revision(
+            boq_item=original.boq_item,
+            previous_qty=original.revised_qty,
+            revised_qty=original.revised_qty + 1,
+            contract_unit_price=10,
+            revised_unit_price=12,
+            rate_change_justification="Reviewed correction",
+        )
+        correction.status = "Approved"
+        correction.approved_by = "Guest"
+        correction.approved_on = "2000-01-01 00:00:00"
+        correction.save(ignore_permissions=True)
+        self.assertEqual(correction.approved_by, "Administrator")
+        self.assertNotEqual(str(correction.approved_on), "2000-01-01 00:00:00")
+        self.assertEqual(self.items[0].reload().current_revised_qty, 4)
+        self.assertEqual(self.header.reload().total_revised_value, 118)
+        correction.save(ignore_permissions=True)
+        self.assertEqual(self.header.reload().total_revised_value, 118)
+
+    def test_old_approval_and_draft_cannot_replace_current_projection(self):
+        from construction.services.quantity_revisions import apply_approved_revision
+
+        original = self._approved_revision()
+        correction = create_quantity_revision(
+            boq_item=original.boq_item,
+            previous_qty=3,
+            revised_qty=4,
+            contract_unit_price=10,
+            revised_unit_price=12,
+            rate_change_justification="Reviewed correction",
+        )
+        with self.assertRaises(frappe.ValidationError):
+            apply_approved_revision(correction)
+        approve_quantity_revision(correction.name)
+        with self.assertRaises(frappe.ValidationError):
+            apply_approved_revision(original)
+        self.assertEqual(self.items[0].reload().last_quantity_revision, correction.name)
+        self.assertEqual(self.header.reload().total_revised_value, 118)
+
+    def test_stale_correction_and_forged_baseline_are_rejected(self):
+        original = self._approved_revision()
+        correction = create_quantity_revision(
+            boq_item=original.boq_item,
+            previous_qty=1,
+            revised_qty=4,
+            contract_unit_price=10,
+            revised_unit_price=12,
+            rate_change_justification="Stale correction",
+        )
+        with self.assertRaises(frappe.ValidationError):
+            approve_quantity_revision(correction.name)
+        self.assertEqual(correction.reload().status, "Draft")
+        forged = frappe.get_doc(
+            {
+                "doctype": "BOQ Quantity Revision",
+                "boq_item": original.boq_item,
+                "boq_header": original.boq_header,
+                "boq_structure": original.boq_structure,
+                "revision_type": "Original Lock",
+                "status": "Approved",
+                "previous_qty": 0,
+                "revised_qty": 3,
+                "contract_unit_price": 10,
+                "revised_unit_price": 10,
+                "revision_date": frappe.utils.nowdate(),
+            }
+        )
+        with self.assertRaises(frappe.ValidationError):
+            forged.insert(ignore_permissions=True)

@@ -4,7 +4,14 @@ from frappe.model.document import Document
 from frappe.utils import cint, flt
 
 from construction.services.boq_operational import validate_boq_item_stage_distribution
-from construction.services.boq_transactions import lock_boq_header
+from construction.services.boq_pricing import (
+    PERCENT_FIELDS,
+    PRICING_RULE,
+    number,
+    positive_factor,
+    tender_amounts,
+)
+from construction.services.boq_transactions import current_boq_sql, lock_boq_header
 
 
 class BOQItem(Document):
@@ -17,6 +24,8 @@ class BOQItem(Document):
             "item_type",
             "overhead_pct",
             "profit_pct",
+            "tender_tax_pct",
+            "est_unit_cost",
             "owner_page",
             "owner_ref_no",
             "owner_file_ref",
@@ -42,6 +51,7 @@ class BOQItem(Document):
             headers.add(previous.boq_header)
         for header in sorted(filter(None, headers)):
             lock_boq_header(header)
+        self.validate_cost_provenance()
         for step in self.PHASE1_STEPS:
             getattr(self, step)()
 
@@ -137,23 +147,24 @@ class BOQItem(Document):
 
     # --- Step 3: Input guards ---
     def validate_input_guards(self):
-        """Enforce non-negative guards on user-editable inputs and range guards on percentages."""
-        non_negative_fields = [
-            "quantity",
-            "factor",
-            "est_unit_cost",
-            "est_unit_price",
-            "contract_unit_price",
-        ]
-        for field in non_negative_fields:
-            val = flt(self.get(field))
-            if val < 0:
-                frappe.throw(_("Field '{0}' must be non-negative. Got: {1}").format(field, val))
-        pct_fields = ["overhead_pct", "profit_pct"]
-        for field in pct_fields:
-            val = flt(self.get(field))
-            if val < 0 or val > 100:
-                frappe.throw(_("Field '{0}' must be between 0 and 100. Got: {1}").format(field, val))
+        self.factor = positive_factor(self.factor)
+        for field in ("quantity", "est_unit_cost", "est_unit_price", "contract_unit_price"):
+            self.set(field, number(self.get(field), self.meta.get_label(field)))
+        for field in PERCENT_FIELDS:
+            self.set(field, number(self.get(field), self.meta.get_label(field), maximum=100))
+
+    def validate_cost_provenance(self):
+        previous = self.get_doc_before_save()
+        if previous and previous.cost_basis == "Legacy Review":
+            frappe.throw(_("Legacy cost basis requires a reviewed conversion before this item can be saved."))
+        for field in ("cost_basis", "active_cost_analysis", "manual_cost_snapshot"):
+            expected = previous.get(field) if previous else ("Manual" if field == "cost_basis" else None)
+            if (self.get(field) or "") != (expected or ""):
+                frappe.throw(_("Cost provenance is managed by cost approval and cancellation."))
+        if previous and previous.active_cost_analysis:
+            for field in ("est_unit_cost", *PERCENT_FIELDS):
+                if self._field_value_changed(field, previous.get(field), self.get(field)):
+                    frappe.throw(_("Approved cost and pricing percentages require a new cost analysis."))
 
     def validate_stage_distribution(self):
         validate_boq_item_stage_distribution(self)
@@ -177,51 +188,40 @@ class BOQItem(Document):
         """Query approved BOQ Cost Analysis for total_unit_cost."""
         if not self.name or not frappe.db.exists("DocType", "BOQ Cost Analysis"):
             return None
-        try:
-            name = frappe.db.get_value(
-                "BOQ Cost Analysis",
-                {
-                    "boq_item": self.name,
-                    "analysis_status": "Approved",
-                    "docstatus": 1,
-                },
-                "name",
-                for_update=True,
-                wait=False,
-            )
-            if name:
-                return flt(
-                    frappe.db.get_value(
-                        "BOQ Cost Analysis", name, "total_unit_cost", for_update=True, wait=False
-                    )
-                )
-        except (frappe.DoesNotExistError, frappe.EmptyQueryValuesError):
-            return None
-        except Exception as e:
-            frappe.logger("boq_item").error(f"Error fetching approved cost analysis for {self.name}: {e}")
-            raise e
+        approved = current_boq_sql(
+            """SELECT name FROM `tabBOQ Cost Analysis`
+            WHERE boq_item = %s AND analysis_status = 'Approved' AND docstatus = 1
+            ORDER BY name LIMIT 2 FOR UPDATE NOWAIT""",
+            self.name,
+        )
+        if len(approved) > 1:
+            frappe.throw(_("Multiple approved analyses require reconciliation before repricing this item."))
+        if approved:
+            analysis = frappe.get_doc("BOQ Cost Analysis", approved[0][0], for_update=True)
+            if analysis.pricing_rule_version != PRICING_RULE:
+                frappe.throw(_("Legacy approved pricing requires review before repricing this item."))
+            for field in PERCENT_FIELDS:
+                self.set(field, analysis.get(field))
+            return number(analysis.total_unit_cost, _("Approved direct unit cost"))
         return None
 
     # --- Step 5: Cost buildup ---
     def calculate_cost_buildup(self):
         """Compute overhead, profit, calculated sell price, and estimated line total."""
-        est_unit_cost = flt(self.est_unit_cost)
-        overhead_pct = flt(self.overhead_pct)
-        profit_pct = flt(self.profit_pct)
-        quantity = flt(self.quantity)
-        factor = flt(self.factor) or 1.0
-
-        self.overhead_amount = est_unit_cost * overhead_pct / 100
-        self.profit_amount = (est_unit_cost + self.overhead_amount) * profit_pct / 100
-        self.calculated_sell_price = est_unit_cost + self.overhead_amount + self.profit_amount
-        self.est_line_total = quantity * est_unit_cost * factor
+        factor = positive_factor(self.factor)
+        (self.overhead_amount, self.profit_amount, self.tender_tax_amount, self.calculated_sell_price) = (
+            tender_amounts(self.est_unit_cost, self.overhead_pct, self.profit_pct, self.tender_tax_pct)
+        )
+        self.est_line_total = (
+            number(self.quantity, _("Quantity")) * number(self.est_unit_cost, _("Direct unit cost")) * factor
+        )
 
     # --- Step 6: Line total ---
     def calculate_line_total(self):
         """Compute line_total = quantity × contract_unit_price × factor."""
         quantity = flt(self.quantity)
         price = flt(self.contract_unit_price)
-        factor = flt(self.factor) or 1.0
+        factor = positive_factor(self.factor)
         self.line_total = quantity * price * factor
 
     # --- Step 7: Output guards ---
@@ -230,14 +230,13 @@ class BOQItem(Document):
         output_fields = [
             "overhead_amount",
             "profit_amount",
+            "tender_tax_amount",
             "calculated_sell_price",
             "est_line_total",
             "line_total",
         ]
         for field in output_fields:
-            val = self.get(field) or 0
-            if val < 0:
-                frappe.throw(_("Computed field '{0}' must be non-negative. Got: {1}").format(field, val))
+            number(self.get(field), self.meta.get_label(field))
 
 
 def on_doctype_update():

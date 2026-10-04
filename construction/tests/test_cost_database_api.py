@@ -52,6 +52,7 @@ class TestCostDatabaseAPI(FrappeTestCase):
         self.assertIn("description_en", template_headers)
         self.assertIn("overhead_pct", template_headers)
         self.assertIn("profit_pct", template_headers)
+        self.assertIn("tender_tax_pct", template_headers)
 
         rate_headers = [c.value for c in wb["RateAnalysis"][1]]
         self.assertIn("template_name", rate_headers)
@@ -113,7 +114,7 @@ class TestCostDatabaseAPI(FrappeTestCase):
         with self.assertRaises(frappe.ValidationError):
             download_cost_database_template(mode="invalid")
 
-    def _build_test_excel(self, rate=3600):
+    def _build_test_excel(self, rate=3600, tender_tax_pct=None, tender_tax_header="tender_tax_pct"):
         import openpyxl
 
         wb = openpyxl.Workbook()
@@ -155,30 +156,31 @@ class TestCostDatabaseAPI(FrappeTestCase):
         )
 
         templates = wb.create_sheet("BOQItemTemplates")
-        templates.append(
-            [
-                "template_name",
-                "description_en",
-                "description_ar",
-                "category",
-                "uom",
-                "overhead_pct",
-                "profit_pct",
-                "currency",
-            ]
-        )
-        templates.append(
-            [
-                "API-CONC-PLN",
-                "API Plain Concrete",
-                "خرسانة عادية API",
-                "Concrete Works",
-                "m³",
-                12,
-                8,
-                "EGP",
-            ]
-        )
+        template_headers = [
+            "template_name",
+            "description_en",
+            "description_ar",
+            "category",
+            "uom",
+            "overhead_pct",
+            "profit_pct",
+        ]
+        template_row = [
+            "API-CONC-PLN",
+            "API Plain Concrete",
+            "خرسانة عادية API",
+            "Concrete Works",
+            "m³",
+            12,
+            8,
+        ]
+        if tender_tax_pct is not None:
+            template_headers.append(tender_tax_header)
+            template_row.append(tender_tax_pct)
+        template_headers.append("currency")
+        template_row.append("EGP")
+        templates.append(template_headers)
+        templates.append(template_row)
 
         rate_sheet = wb.create_sheet("RateAnalysis")
         rate_sheet.append(
@@ -640,10 +642,25 @@ class TestCostDatabaseAPI(FrappeTestCase):
         self.assertEqual(tpl.template_name, "API-CONC-PLN")
         self.assertEqual(tpl.description_ar, "خرسانة عادية API")
         self.assertEqual(tpl.category, "Concrete Works")
+        self.assertEqual(tpl.tender_tax_pct, 0)
         self.assertEqual(tpl.company, self.company)
         self.assertEqual(len(tpl.details), 1)
         self.assertEqual(tpl.details[0].item_code, "API-CEM-001")
         self.assertEqual(tpl.details[0].rate_source, "Import")
+
+    def test_import_cost_database_roundtrips_tender_tax_percentage(self):
+        """The optional tender tax column maps to the template field and Arabic aliases work."""
+        from construction.services.cost_database_service import import_cost_database_from_excel
+
+        content = self._build_test_excel(tender_tax_pct=5.5, tender_tax_header="نسبة ضريبة المناقصة")
+        result = import_cost_database_from_excel(
+            file_content=content,
+            file_name="test_import.xlsx",
+            company=self.company,
+        )
+        self.assertTrue(result["success"], msg=str(result["errors"]))
+        tpl = frappe.get_doc("BOQ Cost Analysis", result["records_created"]["boq_cost_analysis_templates"][0])
+        self.assertEqual(tpl.tender_tax_pct, 5.5)
 
     def test_import_cost_database_idempotent(self):
         """Re-importing the same file creates no duplicate price history or templates."""
@@ -693,7 +710,7 @@ class TestCostDatabaseAPI(FrappeTestCase):
         tpl_name = first["records_created"]["boq_cost_analysis_templates"][0]
 
         # New price for the same resource — history appends, template upserts
-        content = self._build_test_excel(rate=4200)
+        content = self._build_test_excel(rate=4200, tender_tax_pct=7.25)
         second = import_cost_database_from_excel(
             file_content=content,
             file_name="test_import.xlsx",
@@ -708,6 +725,7 @@ class TestCostDatabaseAPI(FrappeTestCase):
         # Template updated in place, not duplicated
         tpl = frappe.get_doc("BOQ Cost Analysis", tpl_name)
         self.assertEqual(tpl.details[0].cost_rate, 4200)
+        self.assertEqual(tpl.tender_tax_pct, 7.25)
         self.assertEqual(
             frappe.db.count("BOQ Cost Analysis", {"template_name": "API-CONC-PLN", "is_template": 1}),
             1,

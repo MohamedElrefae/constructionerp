@@ -1,3 +1,6 @@
+from contextlib import contextmanager
+from contextvars import ContextVar
+
 import frappe
 from frappe import _
 from frappe.utils import flt
@@ -10,6 +13,30 @@ from construction.services.boq_transactions import (
 )
 
 APPROVED_STATUS = "Approved"
+_baseline_header = ContextVar("boq_baseline_header", default=None)
+_new_projection = ContextVar("boq_new_approval_projection", default=None)
+
+
+@contextmanager
+def _baseline_creation(boq_header):
+    token = _baseline_header.set(boq_header)
+    try:
+        yield
+    finally:
+        _baseline_header.reset(token)
+
+
+def _is_baseline_creation(boq_header):
+    return _baseline_header.get() == boq_header
+
+
+def _project_new_approval(revision):
+    """Called only by the document's first approval lifecycle, never an RPC."""
+    token = _new_projection.set(revision.name)
+    try:
+        apply_approved_revision(revision)
+    finally:
+        _new_projection.reset(token)
 
 
 def create_lock_baseline(boq_header):
@@ -73,7 +100,8 @@ def create_lock_baseline(boq_header):
                 "approved_on": frappe.utils.now(),
             }
         )
-        revision.insert(ignore_permissions=True)
+        with _baseline_creation(boq_header):
+            revision.insert(ignore_permissions=True)
 
         # Link to BOQ Item
         current_boq_sql(
@@ -173,13 +201,33 @@ def apply_approved_revision(revision):
     if actual_header != revision.boq_header:
         frappe.throw(_("Revision BOQ Header does not match its item."))
 
+    stored = current_boq_sql(
+        """SELECT status, boq_item, boq_header, revised_qty, revised_unit_price
+        FROM `tabBOQ Quantity Revision` WHERE name = %s FOR UPDATE NOWAIT""",
+        revision.name,
+        as_dict=True,
+    )
+    if not stored or stored[0].status != APPROVED_STATUS:
+        frappe.throw(_("Only an approved revision can change current BOQ quantities."))
+    evidence = stored[0]
+    if evidence.boq_item != revision.boq_item or evidence.boq_header != actual_header:
+        frappe.throw(_("Revision identity does not match its stored approval."))
+    pointer = current_boq_sql(
+        "SELECT last_quantity_revision FROM `tabBOQ Item` WHERE name = %s FOR UPDATE NOWAIT",
+        revision.boq_item,
+    )[0][0]
+    if _new_projection.get() != revision.name:
+        if pointer != revision.name:
+            frappe.throw(_("Historical approval cannot be reapplied. Create a new correction revision."))
+        return  # repeating the current approval is an idempotent no-op
+
     # Update current quantities
     frappe.db.set_value(
         "BOQ Item",
         revision.boq_item,
         {
-            "current_revised_qty": revision.revised_qty,
-            "current_revised_unit_price": revision.revised_unit_price,
+            "current_revised_qty": evidence.revised_qty,
+            "current_revised_unit_price": evidence.revised_unit_price,
             "last_quantity_revision": revision.name,
         },
         update_modified=False,

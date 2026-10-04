@@ -397,6 +397,14 @@ COLUMN_ALIASES = {
     "description_ar": ["description_ar", "الوصف عربي"],
     "overhead_pct": ["overhead_pct", "overhead", "نسبة العمارة"],
     "profit_pct": ["profit_pct", "profit", "نسبة الربح"],
+    "tender_tax_pct": [
+        "tender_tax_pct",
+        "tax_allowance_pct",
+        "tender_tax",
+        "tax_allowance",
+        "نسبة ضريبة المناقصة",
+        "نسبة الضريبة",
+    ],
     "qty_per_boq_unit": ["qty_per_boq_unit", "quantity", "الكمية", "coef", "qty"],
     "wastage_pct": ["wastage_pct", "wastage", "الهالك", "loss", "wastage_percent"],
     "cost_rate": ["cost_rate", "cost_rate", "سعر الوحدة", "unit_cost"],
@@ -775,6 +783,9 @@ def import_cost_database_from_excel(
         uom = _clean_string(row.get("uom"))
         overhead_pct = flt(row.get("overhead_pct"))
         profit_pct = flt(row.get("profit_pct"))
+        # Preserve malformed inputs for the controller's numeric validation;
+        # flt("invalid") would silently turn a tax allowance into zero.
+        tender_tax_pct = row.get("tender_tax_pct")
         currency = _clean_string(row.get("currency")) or default_currency
 
         # Build details from rate analysis
@@ -820,6 +831,7 @@ def import_cost_database_from_excel(
                 existing_doc.analysis_uom = uom
                 existing_doc.overhead_pct = overhead_pct
                 existing_doc.profit_pct = profit_pct
+                existing_doc.tender_tax_pct = tender_tax_pct
                 existing_doc.currency = currency
                 existing_doc.details = []
                 for detail in details:
@@ -845,6 +857,7 @@ def import_cost_database_from_excel(
                     "company": company,
                     "overhead_pct": overhead_pct,
                     "profit_pct": profit_pct,
+                    "tender_tax_pct": tender_tax_pct,
                     "analysis_status": "Draft",
                     "details": details,
                 }
@@ -936,6 +949,7 @@ def generate_cost_database_template(mode="blank"):
         "uom",
         "overhead_pct",
         "profit_pct",
+        "tender_tax_pct",
         "currency",
     ]
     ws_tpl = wb.create_sheet("BOQItemTemplates")
@@ -1221,6 +1235,7 @@ def _add_sample_templates(ws):
             "m³",
             12,
             8,
+            0,
             "EGP",
         ],
         [
@@ -1231,9 +1246,10 @@ def _add_sample_templates(ws):
             "m³",
             12,
             8,
+            0,
             "EGP",
         ],
-        ["02-WALL-BRK-10", "10 cm Red Brick Wall", "حائط طوب أحمر 10 سم", "Blockwork", "m²", 10, 8, "EGP"],
+        ["02-WALL-BRK-10", "10 cm Red Brick Wall", "حائط طوب أحمر 10 سم", "Blockwork", "m²", 10, 8, 0, "EGP"],
     ]
     for row in sample:
         ws.append(row)

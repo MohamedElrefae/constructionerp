@@ -43,11 +43,16 @@
     "sb_cost_estimation",
     "overhead_pct",
     "profit_pct",
+    "tender_tax_pct",
     "cb_cost_estimation",
     "overhead_amount",
     "profit_amount",
     "calculated_sell_price",
-    "est_line_total"
+    "est_line_total",
+    "tender_tax_amount",
+    "cost_basis",
+    "active_cost_analysis",
+    "manual_cost_snapshot"
   ],
   "fields": [
     {
@@ -191,7 +196,9 @@
       "fieldname": "factor",
       "fieldtype": "Float",
       "label": "Factor",
-      "non_negative": 1
+      "non_negative": 1,
+      "reqd": 1,
+      "description": "Must be greater than zero. Missing factors default to 1."
     },
     {
       "default": "0",
@@ -207,7 +214,7 @@
       "fieldname": "est_unit_cost",
       "fieldtype": "Currency",
       "label": "Estimated Unit Cost",
-      "read_only": 1
+      "read_only_depends_on": "eval:!!doc.active_cost_analysis"
     },
     {
       "fieldname": "est_unit_price",
@@ -275,13 +282,15 @@
       "default": "0",
       "fieldname": "overhead_pct",
       "fieldtype": "Percent",
-      "label": "Overhead %"
+      "label": "Overhead %",
+      "read_only_depends_on": "eval:!!doc.active_cost_analysis"
     },
     {
       "default": "0",
       "fieldname": "profit_pct",
       "fieldtype": "Percent",
-      "label": "Profit %"
+      "label": "Profit %",
+      "read_only_depends_on": "eval:!!doc.active_cost_analysis"
     },
     {
       "fieldname": "cb_cost_estimation",
@@ -349,6 +358,45 @@
       "fieldname": "sb_future_payment",
       "fieldtype": "Section Break",
       "label": "[Future] Payment Certification",
+      "hidden": 1
+    },
+    {
+      "fieldname": "tender_tax_pct",
+      "fieldtype": "Percent",
+      "label": "Tender Tax Allowance %",
+      "default": "0",
+      "description": "Pricing allowance on direct cost; invoice taxes remain governed by their tax templates.",
+      "read_only_depends_on": "eval:!!doc.active_cost_analysis"
+    },
+    {
+      "fieldname": "tender_tax_amount",
+      "fieldtype": "Currency",
+      "label": "Tender Tax Allowance Amount",
+      "read_only": 1
+    },
+    {
+      "fieldname": "cost_basis",
+      "fieldtype": "Select",
+      "label": "Cost Basis",
+      "options": "Manual\nApproved Analysis\nLegacy Review",
+      "default": "Manual",
+      "read_only": 1,
+      "no_copy": 1
+    },
+    {
+      "fieldname": "active_cost_analysis",
+      "fieldtype": "Link",
+      "options": "BOQ Cost Analysis",
+      "label": "Active Cost Analysis",
+      "read_only": 1,
+      "no_copy": 1
+    },
+    {
+      "fieldname": "manual_cost_snapshot",
+      "fieldtype": "Long Text",
+      "label": "Prior Manual Estimate Evidence",
+      "read_only": 1,
+      "no_copy": 1,
       "hidden": 1
     }
   ],

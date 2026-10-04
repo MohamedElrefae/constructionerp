@@ -734,7 +734,9 @@ class BOQImportService:
         item = frappe.get_doc("BOQ Item", item_name)
         item.quantity = normalized.get("quantity") or 0
         item.unit = normalized.get("unit")
-        item.factor = normalized.get("factor") or 1
+        from construction.services.boq_pricing import positive_factor
+
+        item.factor = positive_factor(normalized.get("factor"))
         item.contract_unit_price = normalized.get("unit_price") or 0
         item.owner_page = normalized.get("owner_page")
         item.owner_ref_no = normalized.get("owner_ref_no")
@@ -1239,7 +1241,9 @@ class BOQImportService:
             "unit": BOQImportService._to_text(raw.get("unit")),
             "quantity": BOQImportService._to_number(raw.get("quantity")),
             "unit_price": BOQImportService._to_number(raw.get("unit_price")),
-            "factor": BOQImportService._to_number(raw.get("factor")) or Decimal("1"),
+            "factor": Decimal("1")
+            if raw.get("factor") in (None, "")
+            else BOQImportService._to_number(raw.get("factor")),
             "notes": BOQImportService._to_text(raw.get("notes")),
             "owner_page": BOQImportService._to_text(raw.get("owner_page")),
             "owner_ref_no": BOQImportService._to_text(raw.get("owner_ref_no")),
@@ -1286,7 +1290,9 @@ class BOQImportService:
                     reason_codes.append("user_resolved")
                     confidence = "High"
 
-            row_errors = BOQImportService._validate_row(normalized, detected_type, row["row_no"], import_mode)
+            row_errors = BOQImportService._validate_row(
+                normalized, row_no=row["row_no"], row_type=detected_type, import_mode=import_mode
+            )
             errors.extend(row_errors)
 
             wbs = normalized.get("wbs_code")
@@ -1426,7 +1432,7 @@ class BOQImportService:
                         "message": _("Unit price cannot be negative."),
                     }
                 )
-            if n.get("factor") is not None and n["factor"] <= 0:
+            if n.get("factor") is None or not n["factor"].is_finite() or n["factor"] <= 0:
                 errors.append(
                     {
                         "row_no": row_no,
@@ -1717,15 +1723,14 @@ class BOQImportService:
     def _to_number(value: Any) -> Decimal | None:
         if value in (None, ""):
             return None
-        if isinstance(value, int | float | Decimal):
-            return Decimal(str(value))
         text = str(value).strip()
         if not text:
             return None
         text = text.replace("٬", "").replace(",", "")
         text = text.replace("\u066b", ".")
         try:
-            return Decimal(text)
+            result = Decimal(text)
+            return result if result.is_finite() else None
         except InvalidOperation:
             return None
 

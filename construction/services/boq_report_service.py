@@ -17,6 +17,8 @@ def get_boq_cost_analysis_summary(boq_header):
             bca.total_direct_cost,
             bca.overhead_pct,
             bca.profit_pct,
+            bca.tender_tax_pct,
+            bca.pricing_rule_version,
             bca.total_unit_cost,
             bca.suggested_sell_rate,
             bi.structure,
@@ -55,6 +57,10 @@ def get_boq_item_cost_vs_contract(boq_header):
             bi.calculated_sell_price,
             bi.overhead_pct,
             bi.profit_pct,
+            bi.tender_tax_pct,
+            bi.tender_tax_amount,
+            bi.cost_basis,
+            bi.active_cost_analysis,
             (bi.contract_unit_price - bi.est_unit_cost) as margin_amount,
             CASE
                 WHEN bi.est_unit_cost > 0

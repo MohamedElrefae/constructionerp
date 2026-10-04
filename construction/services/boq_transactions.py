@@ -77,6 +77,14 @@ def read_boq_totals(boq_header):
     the existing variation/docstatus policy are preserved; G04/G06 need owner rules.
     """
     lock_boq_header(boq_header)
+    invalid = current_boq_sql(
+        "SELECT name FROM `tabBOQ Item` WHERE boq_header = %s AND factor <= 0 LIMIT 1 FOR UPDATE NOWAIT",
+        boq_header,
+    )
+    if invalid:
+        frappe.throw(
+            _("Legacy BOQ factors must be reviewed and corrected to positive values before recalculation.")
+        )
     return current_boq_sql(
         """
         SELECT

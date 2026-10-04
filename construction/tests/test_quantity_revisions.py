@@ -860,8 +860,11 @@ class TestQuantityRevisionService(FrappeTestCase):
         self.assertEqual(price, 50)
 
     def test_variation_item_revision_creates_approved_revision(self):
-        header, item = self._make_boq_item("Var Revision", quantity=100, rate=50)
-        self._move_header_to_locked(header.name)
+        _header, item = self._make_boq_item("Var Revision", quantity=20, rate=80)
+        # A new variation starts with no original contract quantity. A normal
+        # contract item with a baseline is not a New Variation Item.
+        item.is_variation_item = 1
+        item.save(ignore_permissions=True)
 
         revision = create_variation_item_revision(
             boq_item=item.name,
@@ -895,7 +898,11 @@ class TestQuantityRevisionService(FrappeTestCase):
             revised_unit_price=60,
             status="Draft",
         )
-        apply_approved_revision(revision)
+        with self.assertRaises(frappe.ValidationError):
+            apply_approved_revision(revision)
+        header.reload()
+        self.assertEqual(header.total_revised_value, 100 * 50)
+        approve_quantity_revision(revision.name)
 
         header.reload()
         self.assertEqual(header.total_revised_value, 110 * 60)
