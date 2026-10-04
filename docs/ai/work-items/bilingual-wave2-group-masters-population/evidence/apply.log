@@ -1,0 +1,31 @@
+PREVALIDATE_OK rows=23
+R3B_ROOT_SAVE Item Group 'All Item Groups' via frappe.in_test guard (vendor forces empty-parent root to self-parent otherwise)
+WRITE Item Group 'All Item Groups' value=4588e87ddf74173a norm=cfdf6777fab00d58 identity=unchanged
+WRITE Item Group 'Consumable' value=9adc0eb733507686 norm=9adc0eb733507686 identity=unchanged
+WRITE Item Group 'Products' value=1fbee78d42a20db8 norm=1fbee78d42a20db8 identity=unchanged
+WRITE Item Group 'Raw Material' value=e4de5f494223b62d norm=e4de5f494223b62d identity=unchanged
+WRITE Item Group 'Services' value=f53b399897602018 norm=f53b399897602018 identity=unchanged
+WRITE Item Group 'Sub Assemblies' value=c79bb07519b1676e norm=c79bb07519b1676e identity=unchanged
+R3B_ROOT_SAVE Customer Group 'All Customer Groups' via scoped get_root_of patch -> None (vendor forces empty-parent root to self-parent otherwise)
+WRITE Customer Group 'All Customer Groups' value=697ff4ec928393cd norm=697ff4ec928393cd identity=unchanged
+WRITE Customer Group 'Commercial' value=82991b5a2f90f583 norm=82991b5a2f90f583 identity=unchanged
+WRITE Customer Group 'Government' value=1e0af71e49953886 norm=1e0af71e49953886 identity=unchanged
+WRITE Customer Group 'Individual' value=39accd55043e8f49 norm=af8c514abee0ea4a identity=unchanged
+WRITE Customer Group 'Non Profit' value=f110a340d0d48d66 norm=f110a340d0d48d66 identity=unchanged
+R3B_ROOT_SAVE Supplier Group 'All Supplier Groups' via scoped get_root_of patch -> None (vendor forces empty-parent root to self-parent otherwise)
+WRITE Supplier Group 'All Supplier Groups' value=7bf7073646e75ca3 norm=7bf7073646e75ca3 identity=unchanged
+WRITE Supplier Group 'Distributor' value=06fa20b9858deb9e norm=06fa20b9858deb9e identity=unchanged
+WRITE Supplier Group 'Electrical' value=8ea3d17c34859754 norm=8ea3d17c34859754 identity=unchanged
+WRITE Supplier Group 'Hardware' value=d7b72a35314a555b norm=1c64bfbc0839d08f identity=unchanged
+WRITE Supplier Group 'Local' value=df15d2116e1dcff1 norm=df15d2116e1dcff1 identity=unchanged
+WRITE Supplier Group 'Pharmaceutical' value=d36063195eb96302 norm=d36063195eb96302 identity=unchanged
+WRITE Supplier Group 'Raw Material' value=e4de5f494223b62d norm=e4de5f494223b62d identity=unchanged
+WRITE Supplier Group 'Services' value=f53b399897602018 norm=f53b399897602018 identity=unchanged
+R3B_ROOT_SAVE Territory 'All Territories' via scoped get_root_of patch -> None (vendor forces empty-parent root to self-parent otherwise)
+WRITE Territory 'All Territories' value=e6be5e288f13ab19 norm=e6be5e288f13ab19 identity=unchanged
+WRITE Territory 'Egypt' value=60469db23613e986 norm=60469db23613e986 identity=unchanged
+WRITE Territory 'India' value=7be9f71bfb117804 norm=7be9f71bfb117804 identity=unchanged
+WRITE Territory 'Rest Of The World' value=8058e47190020721 norm=8058e47190020721 identity=unchanged
+SUMMARY written=23 skipped=0 failed=0
+PRIVATE apply.json sha256=dac857518fb8cfddb5be6d9e8284fb24c5c5d98d2212db2eac81ba21c26d1cfc
+APPLY RESULT: PASS

@@ -1,0 +1,31 @@
+DRY Item Group 'All Item Groups' before=<empty> after=4588e87ddf74173a norm=cfdf6777fab00d58 WOULD_WRITE
+DRY Item Group 'Consumable' before=<empty> after=9adc0eb733507686 norm=9adc0eb733507686 WOULD_WRITE
+DRY Item Group 'Products' before=<empty> after=1fbee78d42a20db8 norm=1fbee78d42a20db8 WOULD_WRITE
+DRY Item Group 'Raw Material' before=<empty> after=e4de5f494223b62d norm=e4de5f494223b62d WOULD_WRITE
+DRY Item Group 'Services' before=<empty> after=f53b399897602018 norm=f53b399897602018 WOULD_WRITE
+DRY Item Group 'Sub Assemblies' before=<empty> after=c79bb07519b1676e norm=c79bb07519b1676e WOULD_WRITE
+DRY Customer Group 'All Customer Groups' before=<empty> after=697ff4ec928393cd norm=697ff4ec928393cd WOULD_WRITE
+DRY Customer Group 'Commercial' before=<empty> after=82991b5a2f90f583 norm=82991b5a2f90f583 WOULD_WRITE
+DRY Customer Group 'Government' before=<empty> after=1e0af71e49953886 norm=1e0af71e49953886 WOULD_WRITE
+DRY Customer Group 'Individual' before=<empty> after=39accd55043e8f49 norm=af8c514abee0ea4a WOULD_WRITE
+DRY Customer Group 'Non Profit' before=<empty> after=f110a340d0d48d66 norm=f110a340d0d48d66 WOULD_WRITE
+DRY Supplier Group 'All Supplier Groups' before=<empty> after=7bf7073646e75ca3 norm=7bf7073646e75ca3 WOULD_WRITE
+DRY Supplier Group 'Distributor' before=<empty> after=06fa20b9858deb9e norm=06fa20b9858deb9e WOULD_WRITE
+DRY Supplier Group 'Electrical' before=<empty> after=8ea3d17c34859754 norm=8ea3d17c34859754 WOULD_WRITE
+DRY Supplier Group 'Hardware' before=<empty> after=d7b72a35314a555b norm=1c64bfbc0839d08f WOULD_WRITE
+DRY Supplier Group 'Local' before=<empty> after=df15d2116e1dcff1 norm=df15d2116e1dcff1 WOULD_WRITE
+DRY Supplier Group 'Pharmaceutical' before=<empty> after=d36063195eb96302 norm=d36063195eb96302 WOULD_WRITE
+DRY Supplier Group 'Raw Material' before=<empty> after=e4de5f494223b62d norm=e4de5f494223b62d WOULD_WRITE
+DRY Supplier Group 'Services' before=<empty> after=f53b399897602018 norm=f53b399897602018 WOULD_WRITE
+DRY Territory 'All Territories' before=<empty> after=e6be5e288f13ab19 norm=e6be5e288f13ab19 WOULD_WRITE
+DRY Territory 'Egypt' before=<empty> after=60469db23613e986 norm=60469db23613e986 WOULD_WRITE
+DRY Territory 'India' before=<empty> after=7be9f71bfb117804 norm=7be9f71bfb117804 WOULD_WRITE
+DRY Territory 'Rest Of The World' before=<empty> after=8058e47190020721 norm=8058e47190020721 WOULD_WRITE
+POPULATED_NOW Item Group=0
+POPULATED_NOW Customer Group=0
+POPULATED_NOW Supplier Group=0
+POPULATED_NOW Territory=0
+SUMMARY rows=23 would_write=23 already_applied=0
+PRIVATE dry-run.json sha256=2e5e3c7a8284cde50751d17fcbf1bc1fc68bacb691a736ac40362f84c504cb01
+WRITES_PERFORMED: 0
+DRY-RUN RESULT: PASS (23/23 rows validated; approved sha matched; zero writes)

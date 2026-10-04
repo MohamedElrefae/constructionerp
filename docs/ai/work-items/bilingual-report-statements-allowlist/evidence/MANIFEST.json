@@ -1,0 +1,54 @@
+{
+  "work_item": "bilingual-report-statements-allowlist",
+  "branch": "develop",
+  "base_commit": "890ae14",
+  "amendments": [
+    {
+      "id": "A1",
+      "when": "evidence capture",
+      "cause": "run_bilingual_regression_matrix.sh line 3 carries the stale total '258 total tests' after 6 statement tests joined stage7",
+      "fix": "NOT fixed in this tier: discovery showed the script is pinned by 8 manifests (the 5A re-pin set), so a comment-only correction would blast 8 re-pins far outside disclosed R6 scope; reverted to HEAD byte-identical and deferred to the next authorized matrix-script change. The authoritative count lives in the matrix log and manifests (264).",
+      "disclosure": "SCOPE.md A1 + this amendments entry"
+    },
+    {
+      "id": "A2",
+      "when": "statement test implementation",
+      "cause": "the blanket mock.patch('frappe.get_module') interception breaks frappe internals once _ensure_required touches DB/meta paths (hook frappe.get_attr resolves through the patched importer), and it broke the 5A auth test's User controller import whenever a leftover test user skipped the insert path",
+      "fix": "_patched_report_modules(mapping) intercepts only PILOT_REPORTS module paths and delegates every other resolution to the real importer; the auth test asserts resolved == [] (vendor never resolved for the rejected user) and additionally rejects 'Balance Sheet' before execute",
+      "disclosure": "SCOPE.md section 5 + this amendments entry"
+    }
+  ],
+  "primary_invariant": "D5 triad (bilingual_service.py, searchable_dropdown/api/search.py) and bilingual_registry.json byte-identical to base 890ae14 (call-only); no file under apps/frappe or apps/erpnext modified; the fail-closed allowlist PILOT_REPORTS expands by exactly two names (Balance Sheet, Profit and Loss Statement) and rejects every other name before import; vendor execute runs exactly once per request (R2) under the unchanged genuine role gate (R3: Accounts User/Manager/System Manager, non-admin rejected before any vendor resolution); R4 statement period defaults are read-only setdefault filling of the vendor get_period_list contract with caller values winning; viewer page Select gains the same two options (page bundle, not hook-registered, no ?v= bump); zero data mutation (probe mutation guard PASS, Account 2102 / GL Entry 4 unchanged); exactly one manifest re-pinned (bilingual-financial-reports, 2 digests, disclosed); matrix script byte-identical to base (module list 21, comment 258 left stale under disclosed A1) while the suite itself grows to 264 tests",
+  "decisions_settled": {
+    "R1": "allowlist expands by exactly two names; unknown names still fail closed before import",
+    "R2": "vendor execute exactly once per statement request; tail kept for the 6-tuple statements; per-report call_count assertion",
+    "R3": "role gate unchanged and genuinely proven; statement names rejected for a real non-admin before vendor resolution (resolved == [])",
+    "R4": "read-only period defaults (Date Range from viewer from_date/to_date with FY-bounds fallback, Fiscal Year branch, periodicity Yearly, accumulated_values 0); caller values win via setdefault",
+    "R5": "viewer Select gains the two statements; page JS not registered in hooks app_include_js so no ?v= bump (checked, recorded)",
+    "R6": "exactly one manifest re-pinned: bilingual-financial-reports (bilingual_reports.py + stage7 test) = 2 digests; matrix-script comment correction discovered to touch 8 manifests and was reverted (A1)",
+    "R7": "no report_guard/scope_report/report_bilingual_extension/hooks.py/registry/matrix-script edits"
+  },
+  "test_results": {
+    "stage7_bilingual_reports": "16/16 OK (10 existing + 6 statement tests, auth test extended to Balance Sheet)",
+    "stage4_report_extension": "14/14 OK (unchanged)",
+    "regression_matrix": "21 modules / 264 tests, all OK",
+    "adr_reconciler": "19/19 PASS",
+    "lints": "lint_scope_metadata PASS, ai_context_check 11/11, lint_translation_writes PASS, schema_drift_checker PASS, py_compile PASS, bash -n PASS, node --check PASS",
+    "live_probe": "PASS (BS ar/en 5 cols/10 rows, P&L ar/en 5 cols/6 rows, 6-tuple tail present, R4 defaults applied, BS account ar-swap True, account_name mapped-swap + unmapped passthrough correct, mutation guard PASS)"
+  },
+  "site_migration": "none - no patch, no schema change, no data write; construction app code, tests and evidence only; v16.localhost touched read-only (probe counts identical before/after)",
+  "causal_order": "implement -> tests -> live probe -> standalone stage4/stage7 runs -> matrix + reconciler + lints -> capture logs (2>&1) -> git add -f the .log -> SHA-256 digests -> disclosed re-pin of bilingual-financial-reports (2 digests) -> MANIFEST.json -> commit",
+  "artefacts": {
+    "docs/ai/work-items/bilingual-report-statements-allowlist/SCOPE.md": "1ffd35f644170de150ea3fe606cd7dda81a13f0cb6f90347b1d5a60f8c8d21b9",
+    "docs/ai/work-items/bilingual-report-statements-allowlist/evidence/probe-statements-execution.log": "a6b24ce5407886049f5bf9f1d0caae59cd187541c7949d5aa9011d7d51031498",
+    "docs/ai/work-items/bilingual-report-statements-allowlist/evidence/stage7-bilingual-reports.log": "07eb2c7fc7fa2acbf1fdc4847acb6c6c9be0d89ee191a03a7aa8448ac6affde0",
+    "docs/ai/work-items/bilingual-report-statements-allowlist/evidence/stage4-report-extension.log": "f68decba803bec069f0dee2d485d29b9745616dccf2bc91790e3604ea23de65b",
+    "docs/ai/work-items/bilingual-report-statements-allowlist/evidence/regression-matrix.log": "0bf718253fd0f7e5eab655adcf7b84d29dc88b1323d2ef1abd587b95532b230f",
+    "docs/ai/work-items/bilingual-report-statements-allowlist/evidence/reconciliation.log": "c275c7ef647847a29183ba4ef2b0d67de786be14e9c9d2976017a962f653c16d",
+    "docs/ai/work-items/bilingual-report-statements-allowlist/evidence/lints.log": "6ed2c3048c826c2eae6ae937d361258fce8c67453ba1bbbc941ddfaac07d79d6",
+    "docs/ai/work-items/bilingual-report-statements-allowlist/evidence/scripts/probe_statements_execution.py": "dcdc4f75e56916c59b0e8df7b1dd5b2c77bb7b0af8004bd03231b7231df6679f",
+    "construction/api/bilingual_reports.py": "c3ff53361b60346d3c61c7199da807fca0d68390ff6a45599673f8cb6c84ba22",
+    "construction/construction/page/bilingual_report_viewer/bilingual_report_viewer.js": "db8a20e7d831ef14c57f13c41620bf525fa32fa743e4013e1375469a4400a6e7",
+    "construction/tests/test_stage7_bilingual_reports.py": "c7a7bf9b61ff8459c07fac27925ec673316122afbbc66710432566e5b0c75154"
+  }
+}

@@ -1,0 +1,16 @@
+COUNTS_BEFORE: {"Account": 2102, "GL Entry": 4}
+REPORT Balance Sheet mode=ar: OK columns=5 rows=10 tail=yes ms=142.71
+REPORT Balance Sheet mode=en: OK columns=5 rows=10 tail=yes ms=95.06
+REPORT Profit and Loss Statement mode=ar: OK columns=5 rows=6 tail=yes ms=49.75
+REPORT Profit and Loss Statement mode=en: OK columns=5 rows=6 tail=yes ms=49.47
+BS_AR_MODE_SWAPPED[account]: True
+BS_EN_ACCOUNT: ["1000 - Application of Funds (Assets) - E", "1100-1600 - Current Assets - E", "1100 - Cash In Hand - E", "1110 - Cash - E", "1300 - Accounts Receivable - E", "1310 - Debtors - E"]
+BS_AR_ACCOUNT: ["استخدامات الأموال (الأصول)", "الأصول المتداولة", "النقدية في الصندوق", "النقدية", "حسابات القبض", "المدينون"]
+BS_ACCOUNT_NAME_MAPPED_COUNT[account_name]: 0
+BS_ACCOUNT_NAME[account_name]_MAPPED_SWAP: True
+BS_ACCOUNT_NAME[account_name]_UNMAPPED_PASSTHROUGH: True
+BS_EN_ACCOUNT_NAME: ["1000 - Application of Funds (Assets)", "1100-1600 - Current Assets", "1100 - Cash In Hand", "1110 - Cash", "1300 - Accounts Receivable", "1310 - Debtors"]
+BS_AR_ACCOUNT_NAME: ["1000 - Application of Funds (Assets)", "1100-1600 - Current Assets", "1100 - Cash In Hand", "1110 - Cash", "1300 - Accounts Receivable", "1310 - Debtors"]
+COUNTS_AFTER: {"Account": 2102, "GL Entry": 4}
+MUTATION_GUARD: PASS
+PROBE RESULT: PASS
