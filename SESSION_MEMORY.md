@@ -81,14 +81,13 @@
 
 ## 3. In Progress (Active Work — Updated After Every Session)
 
-### Customer release gap corrections — isolated milestone (2026-10-04)
-- Owner delegates routine software decisions to the consultant; ask about construction/commercial workflows and consequential architecture. Preferred model allocation is GPT-6.1 Sol consultant / GPT-6 Luna bounded light sub-agents. Recorded in the professional standard; no unperformed model switch is claimed.
-- Worktree `/home/mohamed/frappe-bench/worktrees/customer-release-gap-fixes`, branch `codex/customer-release-gap-fixes`, base `4341542`. Main checkout advanced independently to `dd4ea6d` and has ongoing bilingual financial-report work; preserve it and reconcile the two added install/migrate hook entries during integration.
-- Implemented/verified G01 post-delete rollups and a read-only discrepancy audit, partial G02 approved commercial snapshot protection (including sub-cent edits), G05 guarded current aggregates, G09 bounded streaming XLSX imports, G07 business CI, and two fresh-install G12 defects (missing active bilingual schema and invalid non-importable permission flags).
-- Verification: 144 Python tests across thirteen modules and 35 JS properties pass; authenticated REST/Desk edits rejected for Project Manager/System Manager; second fresh site automatically installs and schema setup repeats without changes. Independent human review, GitHub CI, representative upgrade, browser matrix and production deployment are not claimed.
-- G05 race corrected: the same two-thread old-snapshot sequence now gives stored/actual 120/120, with current reads and guarded transaction writes. Twelve two-connection regressions cover approvals, costs, delete/batch/header changes, contention, commit refusal and rollback; native concurrent WBS insertion passes with bounded header-first waiting. Legacy migration/patch bypasses and promised workload/matrix still need review. G03/G04/G06 and the approved-revision reversal policy await owner construction/pricing answers. Shared Python runtime also has two dependency conflicts (filelock/requests); unchanged.
-- Local code commits: `e8b9a43` financial/transaction guards, `403f01f` bounded imports, `d4f071e` fresh-install/CI correction. Source/test fingerprints retained; private fixture servers stopped after verification. Commits not merged/pushed/deployed.
-- See `docs/ai/work-items/customer-release-gap-fixes/PLAN.md`, `STATUS.md` (all sixteen gaps) and `VERIFICATION.md`. Continue stabilization; do not call this a completed customer release or a native orchestrator execution.
+### Customer release gap corrections — owner-rule follow-up (2026-10-05)
+- Branch `codex/customer-release-gap-fixes`, worktree `/home/mohamed/frappe-bench/worktrees/customer-release-gap-fixes`, remains isolated. Main observed at `7839e67` with an unrelated untracked bilingual-wave1-masters-population work item; no main edits/merge/push/deployment.
+- Owner confirms positive factor (reject zero, missing→1), additive direct-cost percentages (100 +10% overhead +10% profit =120), cancellation restores prior approved/captured manual costs, and approved quantity history is permanent with new corrections. See `docs/ai/work-items/customer-release-gap-fixes/FINANCIAL_RULES.md`; professional standard now records these for future sessions.
+- Implemented versioned direct-cost pricing, optional tender tax allowance, provenance/manual snapshots, approval chain restoration, explicit factor validation including real workbook previews, permanent approval/deletion guards and first-approval actor/projection enforcement. Draft/old-history replay and forged baselines are refused. Unresolved legacy items/approvals require reviewed conversion rather than guessed restoration/repricing.
+- Final selected Python suite: 170 passes across thirteen modules; actual authenticated REST/Desk allowed/denied checks; synthetic legacy preservation/replay; two real migrations on the separate fresh-site fixture; workspace creation/reconciliation regression. Earlier JS 35 passes remain earlier evidence; assets unchanged. Both private fixture servers were stopped after verification, data retained. Exact counts/limitations in VERIFICATION.md.
+- Real migration exposed sidebar-before-page ordering and save-versus-insert defects. Corrected in this branch; hook integration needs reconciliation with concurrent work. Existing shared filelock/requests conflicts were preserved; no v15, full access/UI/load/restore matrix, representative customer conversion or GitHub run is claimed.
+- GPT-6 Luna handled bounded workbook/permanence tasks and read-only review; parent implemented financial policy, reviewed changes, corrected legacy findings and ran integrated verification. New local source commits: `a01ac75` financial rules and `efda04d` migration setup; external-memory hooks disabled for those commands. Customer release remains blocked by the ledger's remaining gates.
 
 ### Engineering startup hardening follow-up (2026-10-04)
 - Reviewed the owner's three-file hardening diff and committed the resulting code/tests separately as `89bb3b9` on develop, preserving the preceding Company bilingual commit `165c238`.
@@ -223,6 +222,13 @@
 ---
 
 ## 6. Session Log (Append-Only — Most Recent First)
+
+### Session 2026-10-05 — Confirmed owner financial rules implemented and verified
+- Owner decisions are explicit: positive factors; additive shared direct-cost percentages (120 example); recoverable manual/prior cost restoration; permanent quantity approvals corrected through new records. The rule contract and standard were updated locally.
+- Parent reviewed scoped GPT-6 Luna changes, implemented pricing/provenance/projection safeguards, and corrected review-discovered unsafe legacy editing/approval. Real workbook regressions found the old swapped row-number/type validator call; corrected it rather than only validating the helper. Obsolete Frappe exception handling that masked cost-validation errors was removed.
+- Final integrated candidate: 170 Python passes in thirteen real-site modules; authenticated REST/Desk protection/new corrections; synthetic legacy patch preservation/replay; two actual migrations on a second isolated fresh-site fixture. Migration revealed two workspace setup defects; fixed insertion and hook ordering with a native lifecycle/idempotence test.
+- Financial amounts on older records are not silently converted. Legacy reviewed conversion, revised-reader reconciliation, representative upgrade/restore, full customer permissions/UI/workload/version gates and final release authority remain open. Main checkout was untouched. Evidence and current/earlier source bindings are retained in the work-item directory; no production mutation or external capture.
+
 
 ### Session 2026-10-04 — Customer release gap implementation and live verification
 - Read actual startup context and report from the isolated checkout; schema checker passed 21 owners plus one override, context 11/11. Files read and bounded delegation scopes are in the work-item plan.

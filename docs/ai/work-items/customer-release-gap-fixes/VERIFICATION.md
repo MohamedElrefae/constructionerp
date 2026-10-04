@@ -70,3 +70,44 @@ PYTHONPATH=/home/mohamed/frappe-bench/worktrees/customer-release-gap-fixes \
 Repeat only needed module checks after new changes; never substitute an existing Bench site for this disposable fixture. The HTTP and concurrency probes are `/tmp/probe_customer_release_http.py`, `/tmp/probe_customer_release_concurrency.py` (expects the pre-fix failure) and `/tmp/probe_customer_release_concurrency_fixed.py` (expects correct totals); they create synthetic records and are guarded to this exact fixture bench. They must not be adapted to customer data casually.
 
 The native orchestrator, GitHub CI, a provider job, representative prior-version upgrade, timed restore, load qualification, full browser/access matrix and production deployment were not executed. Parent review of delegated diffs is recorded; no independent human release review or native approval packet is claimed.
+
+## Owner financial rules — final candidate verification (2026-10-05)
+
+The following counts replace the earlier source candidate's counts for this follow-up. All thirteen modules were run sequentially against the final integrated source in the private `release-gaps.localhost` fixture; no customer or existing working site was used. Formatting-only normalization followed the successful functional checks. The JavaScript/source assets are unchanged; the earlier 35 JS passes are earlier evidence, not a new run.
+
+| Module | Passed |
+| --- | ---: |
+| `construction.tests.test_cost_analysis_engine` | 36 |
+| `construction.tests.test_customer_release_financial_guards` | 12 |
+| `construction.tests.test_quantity_revisions` | 30 |
+| `construction.tests.test_variation_orders` | 23 |
+| `construction.tests.test_cost_database_api` | 22 |
+| `construction.tests.test_boq_transactions` | 12 |
+| `construction.tests.test_boq_properties` | 17 |
+| `construction.tests.test_boq_excel_parser` | 4 |
+| `construction.tests.test_boq_rollup_audit` | 5 |
+| `construction.tests.test_boq_wbs_generation` | 2 |
+| `construction.tests.test_boq_structure_conversion` | 1 |
+| `construction.tests.test_boq_structure_delete_safety` | 1 |
+| `construction.tests.test_bilingual_install_schema` | 5 |
+| **Python total** | **170** |
+
+The suite covers additive 120 pricing and a configured 125 tax allowance, analysis quantity normalization, item/header/report/export persistence, manual restoration (including zero and edited manual costs), multiple cancellations, cancellation of superseded history, absent evidence, duplicate approvals, derived parent identity/company mismatch, blocked unresolved legacy pricing/approval, explicit zero/negative/nonfinite factors, actual workbook previews, optional English/Arabic tax headers and old-workbook defaults, immutable status/deletion/attribution, direct-document correction projection, stale corrections, forged baselines, Draft/old-history replay, and the existing real transaction/import/VO regressions. Existing property placeholders remain; 170 passes are not complete-app certification.
+
+Authenticated actual Frappe WSGI requests on the final source: Project Manager and System Manager REST Approved→Rejected/Draft and Desk reversal returned 417; protected deletion returned native 403 for Project Manager and controller 417 for System Manager. Factor zero returned 417. New correction approval returned 200, recorded the authenticated actor instead of supplied Guest attribution, and updated current quantities while original history stayed Approved. Site Engineer approval returned 403 and remained Draft. This is request/lifecycle evidence, not a browser or complete customer-access matrix.
+
+The synthetic legacy preservation probe ran the version/provenance patch repeatedly: recorded commercial amounts, status and attribution were preserved; unresolved new approval was refused. A deliberately constructed current-version fixture alongside older history retained its active basis on replay. This is bounded synthetic upgrade evidence, not a general conversion tool or representative customer migration.
+
+The second isolated site (`release-install.localhost`, originally created empty for this task) successfully completed two actual migrations with the new fields. This fresh-site fixture had zero BOQ Header/Item/Cost Analysis/Quantity Revision records and two File records. The record comparisons and schema-column checks passed; the separate populated synthetic legacy probe supplies the bounded commercial-preservation evidence. Migration initially failed twice: sidebar reconciliation ran before its linked page existed, then page reconciliation tried to save a new named Workspace rather than insert it. Both setup defects were corrected; the final migrations passed, and a real lifecycle regression covers missing-page insertion, sidebar links and repeated reconciliation. Fresh-site preservation is not proof of a populated prior-customer upgrade or timed restore.
+
+Parent review accepted the bounded GPT-6 Luna workbook/permanence edits and corrected two read-only-review findings: Legacy Review items could otherwise be repriced, and new analyses could be approved without a recoverable legacy source. Both now fail safely and have actual regressions. No independent human review is claimed.
+
+Final Ruff lint passes for all touched Python files. Changed/new files pass formatting checks; the unrelated existing adjacent-f-string format difference in `construction/install.py` is preserved. Schema facts were regenerated after review of the additive JSON fields; schema and context checkers pass. Whitespace checks pass. Existing framework/runtime versions and two shared Python dependency conflicts remain as described above.
+
+Local evidence: `/tmp/customer-release-owner-candidate-suite.log`, `/tmp/customer-release-owner-http.log`, `/tmp/customer-release-owner-upgrade.log`, `/tmp/customer-release-owner-double-migrate.log`, and `/tmp/customer-release-owner-test-counts.json`. Probe scripts are deliberately guarded to the private bench. The first batch's source fingerprint is preserved in `FIRST_BATCH_TESTED_FILES.json`; `TESTED_FILES.json` binds the current candidate. No fixture credentials or private configuration are committed.
+
+All sixteen release gaps remain tracked in STATUS.md. The owner's decisions close the missing-policy questions, not representative legacy conversion, reader consistency, browser/security/capacity/version/support/recovery gates, integration, observed GitHub CI or customer release authorization. Main checkout advanced separately to `7839e67` during this follow-up and was not edited.
+
+Source commits: `a01ac75` (financial rules) and `efda04d` (migration setup). Both were committed with external-memory hooks disabled for those commands; documentation follows separately.
+
+After verification, only the two private fixture servers restarted for this follow-up were gracefully stopped. Their data/configuration remain local for deliberate replay; existing site services were not stopped.

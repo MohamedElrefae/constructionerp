@@ -1,13 +1,15 @@
 # Customer release corrections — status and next work
 
-**2026-10-04. Partial stabilization milestone; customer release remains blocked.**
+**2026-10-05. Owner financial rules implemented; customer release remains blocked.**
 
 The dated sixteen-gap report remains the reference assessment. This ledger records corrections and fresh evidence against branch `codex/customer-release-gap-fixes`, based on `4341542`. It does not erase unfinished acceptance criteria or certify the whole app.
 
 ## Verified corrections
 
 - BOQ item rollups run after successful SQL deletion, within the transaction. Direct deletion, deletion of the final item, leaf deletion, explicit deferred-batch flush, and refused linked deletion are covered by real Frappe tests.
-- Approved revision commercial inputs, derived values, references and approval attribution cannot change through ordinary document saves. Unchanged history is no longer recalculated from today's BOQ item. Authenticated REST and Desk saves were exercised as Project Manager and System Manager. The existing Approved→Rejected status policy is retained pending the owner's workflow answer; that policy and deletion/reapproval/import paths still need closure.
+- Approved quantity history is now permanent: status reversal, deletion and edits are blocked, including legacy Rejected records with approval attribution. Direct document approval projects quantities once, stamps the actual actor, validates item identity/current previous quantity, and refuses Draft/old-history replay. Original Lock creation is confined to the baseline service. New correction records and authenticated requests are verified; reader/import/legacy reconciliation remains open.
+- Cost approval uses additive direct-cost pricing (100 + 10% overhead + 10% profit = 120), with an optional configurable tender tax allowance. Cancellation restores prior approved costs/percentages or the captured manual estimate, including zero and edits between approval cycles. Positive factors are enforced in controllers and real workbook previews; legacy invalid factors are not normalized. See [the complete financial contract](FINANCIAL_RULES.md).
+- An additive version/provenance patch preserves legacy commercial amounts. Unresolved Legacy Review items cannot be repriced or newly approved without reviewed restoration evidence. Synthetic preservation/replay checks passed; a representative customer conversion remains open.
 - BOQ aggregate writers use guarded current reads under MariaDB REPEATABLE READ. Header saves, direct item changes/deletion, deferred flushes, revision/VO projections and cost updates share the transaction guard. Existing-document contention fails with an explicit whole-operation retry; new structure insertion waits at most five seconds before naming and child locks. Guard lock/deadlock failures prevent `frappe.db.commit()` until a full rollback. No automatic retry loop or inner commit was added.
 - A non-whitelisted, Administrator-only read-only audit compares stored BOQ header/structure rollups with actual item aggregates. It reports discrepancies and the existing variation/docstatus policy differences. It never repairs customer data.
 - Cost-database imports bound uploaded bytes, ZIP expansion/parts/ratios, worksheet and shared-string XML, actual worksheet relationships/coordinates/dimensions/merges, worksheet count, imported rows, traversal and response messages. Worksheets stream and close. The synchronous path accepts at most 2,000 nonempty data rows across the three required sheets, with a separate 50,000 traversed-row safety ceiling; these are safety ceilings, not measured product capacity. Oversize imports require smaller files until an authorized background-import design exists.
@@ -20,46 +22,47 @@ The dated sixteen-gap report remains the reference assessment. This ledger recor
 | ID | Current status | What must happen before closure |
 | --- | --- | --- |
 | G01 | Deletion fix and read-only discrepancy audit verified | Assess affected existing data on a named authorized site; review and authorize any reconciliation. Confirm supported framework versions. |
-| G02 | Commercial edit protection verified; partially open | Owner confirms approved-history reversal policy; test deletion, direct approval creation, rejection/reapproval, new corrections and import paths; reconcile approvals and BOQ projections. |
-| G03 | Pending construction decision; unchanged | Confirm cancellation fallback when no prior approved analysis exists, then implement/test linked cost and provenance restoration. |
-| G04 | Pending pricing decision; unchanged | Confirm whether zero factor is valid; make controller, SQL, report and export arithmetic agree, with actual controller regressions. |
+| G02 | Permanent history and new corrections verified; partial | Reconcile historical approvals/projections, unify revised-report readers and complete import/permission route coverage on the integrated candidate. |
+| G03 | Owner manual-restoration policy implemented and verified | Review/convert representative legacy records with missing provenance; verify sold UI and final candidate. |
+| G04 | Positive factor policy and regression paths verified | Assess/correct old invalid factors on an authorized data copy; complete all report readers and final candidate verification. |
 | G05 | Reproduced race corrected; current-read and contention regressions verified | Recheck the integrated candidate under the promised workload and supported framework/database matrix. Existing legacy migration/patch bypasses belong to the upgrade review; approval policy/history closure remains G02/G03. No automatic retry or throughput guarantee is claimed. |
-| G06 | Pending pricing decision; unchanged | Define direct cost versus selling price and where overhead/profit apply; test the resource-analysis→item→header→export path with one margin application. |
+| G06 | Owner additive direct-cost rule implemented and verified | Review/convert legacy margin-inclusive bases and audit all pricing/resource/report consumers before release. Configured allowance is not statutory invoice-tax certification. |
 | G07 | Business suite passes locally; CI configured | Observe the committed candidate's actual GitHub CI run. Current property suite contains legacy placeholders; passing test count alone is not comprehensive coverage. |
 | G08 | Invalid native import flags corrected; wider review open | Decide selected scope versus authorization and customer isolation. Verify non-admin read/write/import/export/attachment access matrix and replace unjustified broad permission grants. |
 | G09 | Import guards and service regressions verified | Bind to the final integrated candidate and operating request/proxy limits. Measure admitted worst-case workbooks for the promised workload; this batch makes no throughput/RAM guarantee. |
 | G10 | Local inventory and conflicts recorded; open | Resolve candidate environment constraints in an isolated reproducible runtime, review installed Python/JS/framework/OS dependencies and security advisories, and produce a repeatable approved deployment inventory. Do not upgrade the shared working environment blindly. |
 | G11 | Open | Define the sold workload (projects, BOQ lines, users, imports), measure response time/memory and concurrent correctness, then publish only evidenced capacity. |
-| G12 | Automatic fresh install and schema idempotence verified; partial | Upgrade a representative prior-version copy, migrate twice, compare financial/history/file data and constraints, and demonstrate recovery. A new empty site is not upgrade or restore evidence. |
+| G12 | Automatic fresh install and schema idempotence verified; partial | The final additive schema and workspace correction migrate twice on an isolated fresh-site fixture. Still upgrade a representative prior-version copy, compare customer financial/history/file data and constraints, and demonstrate recovery. Fresh-site and synthetic records are not representative upgrade/restore evidence. |
 | G13 | Evidence for installed v16 stack only; open | Declare and pin the supported matrix, review global overrides, verify advertised versions. No v15 qualification is claimed. |
 | G14 | Backend/REST/Desk-save paths and one native PDF test verified; partial | Test actual UI wiring and sold workflows with normal users. Reconcile the concurrent bilingual report task; browser behavior and Arabic visual correctness are not established by this batch. |
 | G15 | Owner's delivery decision remains open | Decide hosting/customer isolation and support; define monitoring, support responsibilities, backup retention/RPO/RTO; execute a timed restore drill. |
 | G16 | Local branch evidence only; release blocked | Integrate with concurrent changes, choose one immutable candidate, run its applicable release gates, document known limitations and independent qualified review, then obtain actual release authority. |
 
-## Pending owner choices
+## Confirmed owner decisions
 
-The consultant owns routine software implementation and test choices. Only these construction/commercial questions were submitted for this batch, and no answers have been received:
+- Factor must be positive; reject explicit zero. Missing factor defaults to 1.
+- Sum overhead, profit and applicable configured tender tax percentages on direct cost, once. The owner's 100 + 10% + 10% example is 120.
+- Cancel the current cost analysis by restoring eligible prior approval or captured manual estimate, with provenance.
+- Preserve approved quantity revisions; record corrections as new revisions.
 
-1. Is factor zero legitimate? For direct cost 100, overhead 10%, profit 10%, confirm the proposed selling price 121, with margins applied once.
-2. When the only approved cost analysis is cancelled, restore the prior manual estimate with provenance, require a replacement approved cost basis, or retain an explicitly unapproved estimate?
-3. Preserve an approved quantity revision permanently and correct through a new revision, or provide a separate audited reversal workflow? Merely setting Rejected currently does not undo its financial projection.
-
-A preselected answer is not approval. Existing behavior for these decisions has not been silently changed.
+These are explicit conversation answers, not UI defaults. The consultant owns routine implementation/test decisions. Delivery/customer isolation, promised workload and operational recovery targets still need the owner's separate decisions.
 
 ## Consultant recommendation for the next implementation batch
 
 The earlier G05 probe found stored contract 110 versus actual 120. The correction now produces 120/120 on the same two-thread sequence; twelve real transaction regressions also cover old snapshots, different-item approvals, repeated approval, header saves/freezing, cost approval/cancellation restoration, deletion, deferred batches, contention, an explicit complete-operation retry, savepoint/commit refusal and rollback. The concurrent WBS insertion test also passes. Read [the transaction protocol](TRANSACTION_PROTOCOL.md) before adding a new BOQ writer.
 
-The next financial implementation depends on the three owner answers: implement G03/G04/G06 and complete G02 policy enforcement. Independent technical next work is the G08 access matrix and G12 representative upgrade/restore checks. The writer inventory found legacy migration parent rewiring outside the NestedSet lifecycle and intermediate commits; treat that as an upgrade risk requiring its own fixtures and reviewed correction. Security/capacity/delivery evidence must match what is actually sold. This is continued development, not a blanket production-readiness claim.
+The financial answers are implemented in this branch. Next work is the G08 access matrix, revised-report reader reconciliation and G12 representative legacy conversion/upgrade/restore checks. The writer inventory found legacy migration parent rewiring outside the NestedSet lifecycle and intermediate commits; treat that as an upgrade risk requiring its own fixtures and reviewed correction. Security/capacity/delivery evidence must match what is actually sold. This is continued development, not a blanket production-readiness claim.
 
 ## Parallel work and integration
 
-The main checkout advanced separately to `dd4ea6d00860a2778382ddd9078dc02baa2c4463` during this review and contains an active bilingual financial-report task. Its files, including `construction/hooks.py`, are untouched in the main checkout. This branch adds only two hook entries in installation/migration lists; reconcile those with the other task when integrating. Do not overwrite, stash, commit or discard its work. This branch is not installed on the existing customer/development sites.
+The main checkout was observed at `7839e67` at final inspection, with an untracked bilingual-wave1-masters-population work item. It advanced independently during this review. Its files, including `construction/hooks.py`, were untouched. This branch adds the earlier bilingual-schema hook entries and removes the redundant pre-page sidebar migration hook; reconcile these with concurrent changes during integration. Do not overwrite, stash, commit or discard its work. This branch is not installed on the existing customer/development sites.
 
 ## Local commits
 
 - `e8b9a43`: financial snapshot protection, post-delete/current aggregate guards, read-only audit and transaction regressions.
 - `403f01f`: bounded cost-database workbook handling and tests.
 - `d4f071e`: required fresh-install schema/permission correction and business CI.
+- `a01ac75`: confirmed additive pricing, positive factors, recoverable cost provenance and permanent quantity approvals.
+- `efda04d`: correct native workspace insertion and sidebar migration ordering.
 
-The code candidate is `d4f071e`; `TESTED_FILES.json` binds thirty source/test/CI files. Documentation is committed separately. These local commits are on the isolated branch, not merged, pushed or released. Private external-memory commit hooks were disabled for these commits so repository findings remain local.
+The final code candidate is `efda04d12c7105d010e63a4365a6eeceb0f42989`; `TESTED_FILES.json` binds the current source/test/schema/setup/CI files and local successful log hashes. `FIRST_BATCH_TESTED_FILES.json` preserves the earlier thirty-file candidate evidence. Documentation is committed separately. These local commits are on the isolated branch, not merged, pushed or released. Private external-memory commit hooks were disabled for these commits so repository findings remain local.
