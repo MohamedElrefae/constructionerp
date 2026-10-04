@@ -5,10 +5,12 @@ on:
     branches:
       - develop
       - main
+      - codex/customer-release-ci-*
   pull_request:
+  workflow_dispatch:
 
 concurrency:
-  group: develop-construction-${{ github.event.number }}
+  group: construction-ci-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -28,7 +30,7 @@ jobs:
         ports:
           - 11000:6379
       mariadb:
-        image: mariadb:10.6
+        image: mariadb:10.11
         env:
           MYSQL_ROOT_PASSWORD: root
         ports:
@@ -74,6 +76,11 @@ jobs:
         run: |
           pip install frappe-bench
           bench init --skip-redis-config-generation --skip-assets --frappe-branch version-16 --python "$(which python)" ~/frappe-bench
+          git -C ~/frappe-bench/apps/frappe fetch --depth=1 upstream 81aadb9ba1bc07abccd8f720af80f4f2fb4a68a0
+          git -C ~/frappe-bench/apps/frappe checkout --detach FETCH_HEAD
+          test "$(git -C ~/frappe-bench/apps/frappe rev-parse HEAD)" = 81aadb9ba1bc07abccd8f720af80f4f2fb4a68a0
+          cd ~/frappe-bench
+          bench setup requirements frappe
           mariadb --host 127.0.0.1 --port 3306 -u root -proot -e "SET GLOBAL character_set_server = 'utf8mb4'"
           mariadb --host 127.0.0.1 --port 3306 -u root -proot -e "SET GLOBAL collation_server = 'utf8mb4_unicode_ci'"
         # Bench attempts to reload Supervisor after each app install.  CI has
@@ -85,7 +92,11 @@ jobs:
       - name: Install
         working-directory: /home/runner/frappe-bench
         run: |
-          bench get-app erpnext https://github.com/frappe/erpnext --branch version-16 --resolve-deps
+          bench get-app erpnext https://github.com/frappe/erpnext --branch version-16
+          git -C apps/erpnext fetch --depth=1 upstream 2807c9f08fff3f161c0a2e10745a26aa6331ffd5
+          git -C apps/erpnext checkout --detach FETCH_HEAD
+          test "$(git -C apps/erpnext rev-parse HEAD)" = 2807c9f08fff3f161c0a2e10745a26aa6331ffd5
+          bench setup requirements frappe erpnext
           bench get-app construction $GITHUB_WORKSPACE
           bench setup requirements --dev
           bench new-site --db-root-password root --admin-password admin test_site
@@ -123,6 +134,8 @@ jobs:
             construction.tests.test_bilingual_install_schema
             construction.tests.test_boq_legacy_cost_conversion
             construction.tests.test_boq_parent_permissions
+            construction.tests.test_bilingual_desk_link_dispatch
+            construction.tests.test_stage7_bilingual_reports
           )
           for module in "${modules[@]}"; do
             bench --site test_site run-tests --app construction --module "$module"
