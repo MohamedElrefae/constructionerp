@@ -51,3 +51,25 @@ Existing initialized checkpoints intentionally remain legacy and do not gain thi
 Stage only the reviewed startup source/tests, operating notes and the six prior engineering/report documentation files. Preserve other main work and integrate onto the current `develop` parent. The owner directly authorized this maintenance commit; no synthetic native approval token or historical grant is created. Source and relevant checks were reviewed explicitly; use `git -c core.hooksPath=/dev/null` only for these local commits because the installed post-commit hook transmits private commit data to external memory without an authorized destination. Do not change global hook settings.
 
 No Git push, production deployment, provider execution, ERP import, live migration or site mutation is part of this task. Customer business correctness, permissions, installation/upgrade recovery and release proof remain governed by the professional standard and open gap report.
+
+## Follow-up hardening review — 2026-10-04
+
+The owner supplied four uncommitted enhancements across three files: capture unexpected startup failures, validate unreadable/internally inconsistent reports, enumerate symlinks without directory traversal, and add an AST guard for engine/dashboard constants alignment. Parent reviewed and committed the resulting source/tests as **`89bb3b9`** on develop. Its sole parent is the separately completed Company bilingual commit `165c238`; exactly the three hardening files are in this code commit. These verification/session notes are a separate documentation commit.
+
+Two review corrections were required before acceptance:
+
+- **Symlinks must not weaken input binding.** The repository checkers can follow links; hashing the link's target path does not bind target contents. Keep explicit symlink evidence and avoid traversal during fingerprinting, but fail startup before checker execution/agent dispatch whenever such an input is present. Three real sandbox fixtures cover patch-file, schema-file and schema-directory links, frozen failure evidence and zero launches. Non-symlink bindings were independently compared against the previous function on the actual checkout and match exactly.
+- **Malformed evidence must fail consistently.** The initial enhancement still read bytes outside its exception guard and assumed valid context entries/baseline objects. Read and parse the same bytes inside the guard, validate references/context/baseline shapes, and normalize unreadable or internally inconsistent inputs to WorkflowError. Regression coverage includes nonexistent files, non-object JSON, malformed references/context entries, malformed baseline and inconsistent input digest.
+
+Parent observed final results against the frozen source:
+
+| Check | Result |
+| --- | --- |
+| Startup suite, real isolated Bubblewrap | **30 passed in 19.96 seconds** |
+| Full offline engine suite | **275 passed / 18 failed in 121.67 seconds** |
+| Historical failure comparison | **All 18 failed test IDs identical to the previous independent baseline; no new or removed failures** |
+| Full non-browser dashboard suite | **72 passed in 53.18 seconds** |
+| Ruff check/format on the three files; whitespace check | **PASS** |
+| Repository startup checkers | **Schema facts match (21 schema-owning + 1 override); context 11/11 passed** |
+
+The dashboard's existing ignored environment at `worktrees/engineering-startup-gates/dashboard/.venv` was used as the interpreter while running pytest from the current main checkout. The alignment guard parses engine constants rather than importing controller modules into the dashboard environment. No provider jobs, browser/UI qualification, Frappe/site operations or migration of historical state were performed. Temporary detailed logs remain local under `/tmp/engineering-hardening-*`. The full engine historical qualification limitation remains open.

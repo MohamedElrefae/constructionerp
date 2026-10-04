@@ -81,6 +81,12 @@
 
 ## 3. In Progress (Active Work — Updated After Every Session)
 
+### Engineering startup hardening follow-up (2026-10-04)
+- Reviewed the owner's three-file hardening diff and committed the resulting code/tests separately as `89bb3b9` on develop, preserving the preceding Company bilingual commit `165c238`.
+- Unexpected startup exceptions receive frozen failure evidence; malformed/unreadable report references, context/baseline shapes and internally inconsistent input digests fail with WorkflowError. Dashboard constants alignment is covered by an AST guard.
+- Symlink inputs are represented without traversing their target directories, but startup rejects them with frozen evidence: hashing a target path alone does not bind contents that the repository checkers may follow. Non-symlink bindings match the previous implementation exactly on the actual checkout.
+- Independent checks: startup 30 passed; full offline engine 275 passed / 18 identical historical failures; all 72 non-browser dashboard tests passed using the existing isolated dashboard interpreter against this checkout. No provider/ERP execution or historical controller migration. See the follow-up section in `docs/ai/work-items/engineering-startup-gates/REVIEW.md`.
+
 ### Automatic engineering startup integration (2026-10-04)
 - Implemented `engineering-startup/v1` for new Construction/native code tasks: six mandatory immutable context snapshots; actual Git baseline; both local checkers executed in the coordinator's offline read-only sandbox; dispatch/acceptance drift guards and fresh builder-candidate proof.
 - Factual SESSION_MEMORY/SCHEMA_FACTS/CONTEXT_INDEX updates need exact approved write paths; normative instructions remain fixed. Existing initialized legacy workflows and the older `scope-context-portability` controller were not migrated.
@@ -208,6 +214,12 @@
 ---
 
 ## 6. Session Log (Append-Only — Most Recent First)
+
+### Session 2026-10-04 — Independent review of startup hardening
+- Files read: root AGENTS/workflow, professional standard sections 1–4, current SESSION_MEMORY, context index, schema-facts summary, startup source/core path helpers, startup fixture/tests, the three-file diff, and previous independent verification records.
+- Startup checkout: main app, develop at `165c23865484d6fe1e5546cf829962e35d28c8cb`; only the three hardening files were dirty. Both local checkers passed (schema 21 + 1 override; context 11/11). The separately completed bilingual work was not staged in this follow-up.
+- Parent corrected the symlink acceptance risk and remaining malformed-evidence errors, then verified 30 startup tests (19.96s), full offline engine 275 passed / 18 unchanged failures (121.67s), and non-browser dashboard 72 passed (53.18s). Ruff check/format and whitespace checks passed. Real network-isolated Bubblewrap remained enabled; fixture suites required reviewed execution outside the outer tool sandbox.
+- Three-file code commit: `89bb3b9`. Verification notes are committed separately. Installed external-memory hooks are disabled for these local commits only; no external persistence, push, production/site mutation, provider job or historical-state migration.
 
 ### Session 2026-10-04 — Engineering startup made an automatic workflow step
 - Sub-agent planned and implemented the bounded engine/dashboard startup policy; parent requested corrections, independently reviewed, ran regression suites and authorized the local commit under the owner's direct request.
