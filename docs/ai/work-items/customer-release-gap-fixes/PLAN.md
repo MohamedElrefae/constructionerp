@@ -56,3 +56,8 @@ The parent implemented current report projections, factor-bound immutable revisi
 Final selected suite: 219 Python tests in 17 modules, 35 JavaScript tests, eleven authenticated HTTP access checks, repeated synthetic restore/migrations and both context checkers pass. The isolated candidate runtime passes `pip check`; advisory qualification remains open. The owner confirms physical resource factor behavior (10 × 0.5 × 1 = 5). See STATUS.md and VERIFICATION.md for precise evidence and limits.
 
 Existing shared sites remain outside mutation scope. Main points at live Bench sites, so advancing it requires the named site/backup and reviewed upgrade sequence. Delivery architecture, promised workload, representative customer data, framework/security qualification, actual UI checks, observed GitHub CI and release authority remain open. Prepare and review all available results before asking for the final gated action; never treat an unanswered question as approval.
+
+
+## Owner-authorized named-site rehearsal (2026-10-05)
+
+The owner selected v16.localhost after the request for a source backup/isolated upgrade. Native backup, restoration to a new private site, two candidate migrations, read-only audits, existing-column/file/auth preservation comparisons and rolled-back acceptance probes are complete. No original-site migration or shared-code advance occurred. The owner classified 184 orphaned approvals and 25 invalid-evidence VOs as test records; preserve them in private test-only archive/exclusion inputs, not customer seeds. Read V16_UPGRADE_REHEARSAL.md for exact evidence and limits. Source authorization is established; do not ask again for the same rehearsal scope.

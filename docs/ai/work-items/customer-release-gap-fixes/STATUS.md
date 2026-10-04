@@ -2,7 +2,7 @@
 
 **2026-10-05. Engineering corrections committed and locally integrated; customer release remains blocked.**
 
-The original [sixteen-gap report](../../CUSTOMER_RELEASE_GAPS_2026-10-04.md) is a dated assessment. This ledger records what was corrected and what still needs evidence. Code is `4be0712db90897f8947199f91665275909b7652d`; integrated candidate is `46e50cef334a4f51c9faea04c99bf9b5f7401a7f`. [Verification](VERIFICATION.md) and [file/log bindings](TESTED_FILES.json) identify the tested result. Existing shared sites were not migrated or changed by this work.
+The original [sixteen-gap report](../../CUSTOMER_RELEASE_GAPS_2026-10-04.md) is a dated assessment. This ledger records what was corrected and what still needs evidence. Code is `4be0712db90897f8947199f91665275909b7652d`; integrated candidate is `46e50cef334a4f51c9faea04c99bf9b5f7401a7f`. [Verification](VERIFICATION.md) and [file/log bindings](TESTED_FILES.json) identify the tested result. The owner subsequently named v16.localhost for backup/isolated-upgrade work; its original schema/commercial data remain unchanged. See [the completed named-site rehearsal](V16_UPGRADE_REHEARSAL.md).
 
 ## Implemented and verified
 
@@ -23,8 +23,8 @@ The original [sixteen-gap report](../../CUSTOMER_RELEASE_GAPS_2026-10-04.md) is 
 
 | ID | Current evidence | Remaining acceptance requirement |
 | --- | --- | --- |
-| G01 | Deletion and current aggregates tested; discrepancy audit available | Assess actual affected data on an authorized copy; review any correction. |
-| G02 | Permanent history, factor-bound new snapshots, incremental VOs and revised readers/export tested | Reconcile old approvals/projections and unversioned financial snapshots without rewriting history; complete sold routes. |
+| G01 | Deletion/current aggregates tested; named v16 copy has zero header/structure discrepancies | Review any actual customer discrepancies separately; no repair needed on this copy. |
+| G02 | Permanent history/new projections tested; all 219 old revisions preserved and 35 linked approvals native-resave successfully | Preserve/exclude owner-classified orphan/test history from customer inputs; qualify actual operational legacy records and sold routes. |
 | G03 | Manual/prior restoration and reviewed conversion helper tested | Convert reviewed representative legacy records on an authorized copy; verify sold UI and cancellation. |
 | G04 | Positive factors and revised/resource reader checks tested | Inventory and resolve old invalid factors using commercial evidence; no silent normalization. |
 | G05 | Reproduced race fixed; real connection/contention regressions pass | Qualify promised workload and declared framework/database versions; review upgrade bypasses. |
@@ -34,7 +34,7 @@ The original [sixteen-gap report](../../CUSTOMER_RELEASE_GAPS_2026-10-04.md) is 
 | G09 | Workbook bounds, malformed numbers, native permissions and filters tested | Measure admitted worst-case workbooks and confirm worker/proxy limits. Synchronous safety ceilings are not capacity promises. |
 | G10 | Isolated constraints repaired, public inventory and repeated scanner results retained | Resolve/apply vendor-compatible advisory fixes or justified mitigations; review framework/OS/production JS assets and prove clean reproducible build. |
 | G11 | No capacity promise invented | Owner selects sold workload; measure response time, memory and concurrent correctness at that workload. |
-| G12 | Fresh install, populated synthetic restore and two repeated migrations verified | Upgrade/conversion on a representative prior-version customer copy; compare history, financial data, files and permissions. |
+| G12 | Fresh install, synthetic restore and actual old-schema v16 backup/restore/two migrations preserve compared data/files; 35 linked legacy approvals tested | Named source is owner-confirmed test data with no cost analyses. Qualify operational/customer legacy cost data and coordinated original-site rollout before wider closure. |
 | G13 | Evidence bound to installed Frappe 16.18.1/ERPNext SHAs | Declare and pin sold support matrix; review global overrides and verify advertised versions. No v15 qualification. |
 | G14 | Relevant backend/HTTP and merged bilingual suites pass; earlier native PDF evidence retained | Test actual English/Arabic UI workflows, printing and visual output with customer roles and built candidate assets. |
 | G15 | Timed synthetic recovery demonstrated | Decide hosting/isolation, monitoring, support, retention and production RPO/RTO; qualify recovery at customer scale. |
@@ -48,6 +48,11 @@ Positive factor (missing → 1, explicit zero rejected); additive percentages on
 
 Main is at `3fa285a`; its two later population evidence commits were merged into this task branch. Final inspection also found the other task's untracked `docs/ai/work-items/bilingual-wave2-group-masters-population/`; it was preserved and is outside this candidate. Main's app path remains linked to existing sites, so its checkout has not been advanced to new controller/schema code. This avoids serving new code against an unmigrated site. No push, deploy, existing-site migration, actual customer conversion or customer release occurred.
 
-The next gated action needs a **named existing site and backup**, then representative upgrade and conversion on an isolated copy. The owner was separately asked about v16/separate-customer-site delivery and workload; unanswered choices remain open. The professional standard section 12 requires: “Commands with a production or ambiguous site must follow the actual authorization boundary; use a known disposable site for authorized tests.” [Exact instruction](../../PROFESSIONAL_ENGINEERING_STANDARD.md).
+The owner authorized **v16.localhost**, and its backup/isolated upgrade is complete. The owner classified the discovered orphan/invalid approval histories as test records; a private archive and exact-ID customer-input exclusion registry preserve them. No in-app archive flag or original-row removal is claimed. Remaining steps include actual operational/customer cost data and coordinated shared-code/site rollout. The owner was separately asked about v16/separate-customer-site delivery and workload; unanswered choices remain open. The professional standard section 12 requires: “Commands with a production or ambiguous site must follow the actual authorization boundary; use a known disposable site for authorized tests.” [Exact instruction](../../PROFESSIONAL_ENGINEERING_STANDARD.md).
 
 All local commits/merges disabled the external-memory Git hook for those commands. Private fixture credentials/configuration/backups stay outside Git. Remaining private fixture servers are stopped at handover, with local data retained for deliberate replay. Local integration is complete; installation and release qualification are pending the requirements above.
+
+
+### Named-site follow-up integration observation
+
+The v16 rehearsal is complete against the retained backup snapshot; no original-site migration occurred. Final main inspection advanced to 890ae14 with another task's uncommitted bilingual report API/viewer/test edits, untracked work-item files and dump.rdb. All remain untouched and outside the tested source candidate. The earlier site-name requirement is satisfied. Before any shared-code/site rollout, reconcile this later source and current site changes; do not claim that the rehearsal qualifies uncommitted report changes or the live site after concurrent population.

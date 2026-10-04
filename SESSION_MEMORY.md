@@ -82,6 +82,15 @@
 ## 3. In Progress (Active Work — Updated After Every Session)
 
 
+### Named v16 upgrade rehearsal and owner-classified test history (2026-10-05)
+- Owner authorized v16.localhost for the requested backup/isolated upgrade; source authority is established, do not ask again for that scope. Original schema/commercial data unchanged; private release-v16-copy.localhost migrated twice.
+- Native backup 27.965s, restore 117.892s; twenty old-column tables (including 219 revisions/23 headers/34 items and invoice/master data), 48 physical files and restored encrypted auth rows preserved through migrations/probes. No app source changed; code remains 4be0712/46e50ce.
+- All 35 revisions with existing parents native-resave with frozen evidence intact; edit/reversal refused, new correction/report probe passed and rolled back. Zero header/structure discrepancy or invalid factor/project link. No legacy cost analyses exist in the source.
+- Found 184 approved revisions with deleted parents; 25 client-approved VOs fail existing checks (one missing BOQ links, nine missing signed references, fifteen unregistered PDFs). Owner explicitly says these are test records, preserve/separate. Private test-only archive and exact-ID customer-input exclusion registry retained; source rows intact, no in-app archived flag/filter or cleanup claimed. Do not seed these backups/rows into customer databases.
+- Final main inspection advanced to 890ae14 with unrelated bilingual report API/viewer/test edits and untracked work-item/RDB files; preserved, outside candidate. Rehearsal qualifies the backup snapshot, not these later changes.
+- Report/evidence: work-item V16_UPGRADE_REHEARSAL.md / V16_REHEARSAL_EVIDENCE.json. Original-site shared-code/schema rollout, actual operational legacy cost data and other release gates remain open. Concurrent wave-2 work untouched; private rehearsal services stopped after completion. No push, original migration, customer deploy or invented native/human approval.
+
+
 ### Customer release gaps — integrated consultant candidate (2026-10-05)
 - Final main inspection: `3fa285a` with unrelated untracked `docs/ai/work-items/bilingual-wave2-group-masters-population/`; preserved, outside candidate.
 - Code `4be0712`; integrated branch candidate `46e50cef334a4f51c9faea04c99bf9b5f7401a7f` in customer-release-gap-fixes worktree. Main source through 7839e67 and later documentation-only population commits through 3fa285a were merged locally; site population scripts were not run. Main checkout remains on its existing linked-site code.
@@ -233,6 +242,10 @@
 ---
 
 ## 6. Session Log (Append-Only — Most Recent First)
+
+
+### 2026-10-05 — owner-authorized v16 source backup/upgrade rehearsal
+Backed up v16.localhost and upgraded a separate private restored copy twice. Preserved commercial/history/master/file/auth comparisons; 35 linked legacy approvals and rolled-back correction/tamper probes pass. Owner identifies orphan/invalid-approval histories as test records: retained private archive/exclusion registry, no original deletion or fabricated evidence. Source site unchanged; code unchanged. Source-site permission is now recorded, while coordinated original rollout and operational/customer release qualification remain separate.
 
 
 ### 2026-10-05 — integrated customer-release correction candidate
