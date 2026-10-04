@@ -238,6 +238,7 @@ override_whitelisted_methods = {
     # callable without the required reason — all callers (including the
     # vendor form flow) are routed through the governed, atomic wrapper.
     "erpnext.accounts.doctype.account.account.update_account_number": "construction.services.bilingual_service.governed_rename_account",
+    "frappe.desk.search.search_link": "construction.api.desk_link_search.search_link",
 }
 
 # Override core Translation controller so edited catalog rows become runtime translations.

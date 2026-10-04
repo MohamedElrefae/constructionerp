@@ -264,3 +264,13 @@ this work item's own evidence logs are unchanged.
 | `scripts/run_bilingual_regression_matrix.sh` | shared runner expanded to **18 modules / 217 tests** |
 | `construction/hooks.py` | living file; `Company` `doc_events` dual-hook registration added (F1) |
 
+### 8.5 Re-pin by bilingual-desk-link-dispatch (2026-10-04)
+
+Digests are recorded as `amendments[]` entries in `evidence/MANIFEST.json`;
+this work item's own evidence logs are unchanged.
+
+| Artefact | Why it moved |
+|---|---|
+| `construction/hooks.py` | living file; Tier-4 `override_whitelisted_methods` binding added — `frappe.desk.search.search_link` → `construction.api.desk_link_search.search_link` (A1, `bilingual-desk-link-dispatch`) |
+| `scripts/run_bilingual_regression_matrix.sh` | shared runner expanded to **19 modules / 234 tests** |
+

@@ -122,3 +122,17 @@ Verify digests against `git show HEAD:<path>` (or `:path` for the index), never 
 | Decision C3 (F1 dual-hook) | verified — `doc_events["Company"]` registers both `enforce_bilingual_arabic_policy` and `narrative_sanitizer.validate_narrative_fields` |
 
 **Cleanup:** zero `CT-COMP-*` fixtures remain (verified after run).
+
+---
+
+## 8. Amendments (post-completion)
+
+### 8.1 Re-pin by bilingual-desk-link-dispatch (2026-10-04)
+
+Digests are recorded as `amendments[]` entries in `evidence/MANIFEST.json`;
+this work item's own evidence logs are unchanged.
+
+| Artefact | Why it moved |
+|---|---|
+| `construction/hooks.py` | living file; Tier-4 `override_whitelisted_methods` binding added — `frappe.desk.search.search_link` → `construction.api.desk_link_search.search_link` (A1, `bilingual-desk-link-dispatch`) |
+| `scripts/run_bilingual_regression_matrix.sh` | shared runner expanded to **19 modules / 234 tests** |

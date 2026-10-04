@@ -1,0 +1,34 @@
+Starting test run with parameters: site=v16.localhost, app=construction, module=construction.tests.test_bilingual_desk_link_dispatch, verbose=False, tests=(), force=False, profile=False, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+View detailed logs (using --verbose): /home/mohamed/frappe-bench/logs/frappe.testing.log
+
+Running 17 unspecified-category tests for construction
+
+construction.tests.test_bilingual_desk_link_dispatch.TestDeskLinkDispatch
+   [32m ✔ [0m test_arabic_path_denies_records_for_non_admin
+       ▸  /home/mohamed/frappe-bench/apps/frappe/frappe/model/qb_query.py:153: V17FrappeDeprecationWarning: This codepath was marked (DATE: 2024-01-01) deprecated for removal (from v17 onwards); note:
+       ▸   The 'limit_page_length' parameter is deprecated. Use 'limit' instead.
+       ▸  
+       ▸    deprecation_warning(
+   [32m ✔ [0m test_arabic_path_enforces_permissions_via_get_list
+   [32m ✔ [0m test_arabic_path_returns_row_matched_only_on_vendor_field
+   [32m ✔ [0m test_arabic_query_skips_vendor_baseline
+   [32m ✔ [0m test_dict_rows_satisfy_build_for_autosuggest
+   [32m ✔ [0m test_dispatcher_canonical_positional_order_keeps_filters
+   [32m ✔ [0m test_enabled_disabled_constraints_mirrored
+   [32m ✔ [0m test_explicit_searchfield_keeps_vendor_ownership
+   [32m ✔ [0m test_genuine_entry_point_arabic_and_latin
+   [32m ✔ [0m test_latin_query_is_vendor_passthrough
+   [32m ✔ [0m test_non_active_registry_entry_fails_closed
+   [32m ✔ [0m test_override_hook_binding_resolves_to_dispatcher
+   [32m ✔ [0m test_registry_unreadable_fails_closed
+   [32m ✔ [0m test_sidecar_rows_satisfy_build_for_autosuggest
+   [32m ✔ [0m test_unregistered_doctype_is_vendor_passthrough
+   [32m ✔ [0m test_unusable_filters_return_vendor_result_unchanged
+   [32m ✔ [0m test_vendor_search_fields_folded_into_registry_query
+
+
+----------------------------------------------------------------------
+Ran 17 tests in 1.556s
+
+OK
+exit=0
