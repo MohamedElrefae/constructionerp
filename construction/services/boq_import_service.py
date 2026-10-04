@@ -321,7 +321,9 @@ class BOQImportService:
         if not frappe.db.exists("BOQ Header", boq_header):
             frappe.throw(_("BOQ Header {0} was not found.").format(boq_header))
 
-        header_status = frappe.db.get_value("BOQ Header", boq_header, "status")
+        from construction.services.boq_transactions import lock_boq_header
+
+        header_status = lock_boq_header(boq_header).status
         if header_status != "Draft":
             frappe.throw(_("BOQ Excel import can only be committed into a Draft BOQ Header."))
 

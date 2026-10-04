@@ -1,3 +1,5 @@
+from decimal import Decimal, InvalidOperation
+
 import frappe
 from frappe import _
 from frappe.model.document import Document
@@ -5,10 +7,44 @@ from frappe.utils import flt
 
 
 class BOQQuantityRevision(Document):
+    # Approval freezes the commercial evidence, including derived amounts and
+    # approval attribution. Form read_only properties do not enforce this.
+    APPROVAL_FROZEN_FIELDS = (
+        "boq_header",
+        "boq_structure",
+        "boq_item",
+        "variation_order",
+        "revision_date",
+        "revision_type",
+        "previous_qty",
+        "revised_qty",
+        "delta_qty",
+        "delta_from_contract_qty",
+        "change_pct",
+        "change_pct_from_contract",
+        "rate_change_triggered",
+        "contract_unit_price",
+        "revised_unit_price",
+        "previous_value",
+        "revised_value",
+        "delta_value",
+        "rate_change_justification",
+        "reason",
+        "owner_page",
+        "owner_ref_no",
+        "owner_file_ref",
+        "approved_by",
+        "approved_on",
+    )
+
     def validate(self):
+        self.validate_approval_integrity()
+        if self._previously_approved():
+            # Re-saving unchanged history must not recompute it from a BOQ
+            # Item whose baseline or current quantities may since have changed.
+            return
         self.validate_computed_fields()
         self.validate_revision_rules()
-        self.validate_approval_integrity()
         self.compute_values()
 
     def before_insert(self):
@@ -16,6 +52,8 @@ class BOQQuantityRevision(Document):
         self.compute_revision_type()
 
     def before_save(self):
+        if self._previously_approved():
+            return
         self.compute_values()
         self.compute_revision_type()
 
@@ -107,16 +145,40 @@ class BOQQuantityRevision(Document):
                 )
 
     def validate_approval_integrity(self):
-        # Check if document is being edited after approval
-        if self.name and frappe.db.exists("BOQ Quantity Revision", self.name):
-            old_status = frappe.db.get_value("BOQ Quantity Revision", self.name, "status")
-            if old_status == "Approved" and self.status != "Approved":
-                # Allow changing from Approved to Rejected only
-                if self.status != "Rejected":
-                    frappe.throw(_("Approved revisions cannot be casually edited."))
-            if old_status == "Approved" and self.status == "Approved":
-                # Re-saving approved record - allow but warn
-                pass
+        previous = self._previously_approved()
+        if not previous:
+            return
+        for fieldname in self.APPROVAL_FROZEN_FIELDS:
+            field = self.meta.get_field(fieldname)
+            before, after = previous.get(fieldname), self.get(fieldname)
+            if field.fieldtype in ("Float", "Currency", "Percent", "Check"):
+                # Display precision is not storage precision: rounding a
+                # currency to two digits would permit persisted sub-cent
+                # edits which become material at large quantities.
+                try:
+                    original_number = Decimal(str(before or 0))
+                    candidate_number = Decimal(str(after or 0))
+                    if not original_number.is_finite() or not candidate_number.is_finite():
+                        raise InvalidOperation
+                    changed = original_number != candidate_number
+                except (InvalidOperation, ValueError):
+                    frappe.throw(_("Approved revision values must remain valid numbers."))
+            else:
+                changed = str(before or "") != str(after or "")
+            if changed:
+                frappe.throw(
+                    _(
+                        "Approved revision field {0} cannot be changed. Create a new revision for a correction."
+                    ).format(field.label)
+                )
+        # Preserve the existing status policy until the owner confirms the
+        # reversal workflow; commercial evidence stays frozen on either path.
+        if self.status not in ("Approved", "Rejected"):
+            frappe.throw(_("Approved revisions cannot be casually edited."))
+
+    def _previously_approved(self):
+        previous = self.get_doc_before_save()
+        return previous if previous and previous.status == "Approved" else None
 
     def on_update(self):
         if self.status == "Approved" and not self.approved_by:

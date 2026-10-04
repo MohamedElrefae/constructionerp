@@ -2,6 +2,13 @@ import frappe
 from frappe import _
 from frappe.utils import flt
 
+from construction.services.boq_transactions import (
+    current_boq_sql,
+    lock_boq_header,
+    lock_boq_item_header,
+    read_boq_totals,
+)
+
 APPROVED_STATUS = "Approved"
 
 
@@ -10,10 +17,10 @@ def create_lock_baseline(boq_header):
 
     Idempotent: skips if Original Lock revisions already exist.
     """
+    lock_boq_header(boq_header)
     # Check if baseline already exists by checking if any BOQ Item has last_quantity_revision
-    # Check if baseline already exists by checking if any BOQ Item has last_quantity_revision
-    existing = frappe.db.sql(
-        "SELECT name FROM `tabBOQ Item` WHERE boq_header = %s AND last_quantity_revision IS NOT NULL AND last_quantity_revision != '' LIMIT 1",
+    existing = current_boq_sql(
+        "SELECT name FROM `tabBOQ Item` WHERE boq_header = %s AND last_quantity_revision IS NOT NULL AND last_quantity_revision != '' LIMIT 1 FOR UPDATE NOWAIT",
         boq_header,
         as_dict=True,
     )
@@ -21,8 +28,8 @@ def create_lock_baseline(boq_header):
     if existing:
         return {"success": True, "message": "Baseline already exists.", "created": 0}
 
-    items = frappe.db.sql(
-        "SELECT name, structure, quantity, contract_unit_price FROM `tabBOQ Item` WHERE boq_header = %s",
+    items = current_boq_sql(
+        "SELECT name, structure, quantity, contract_unit_price FROM `tabBOQ Item` WHERE boq_header = %s ORDER BY name FOR UPDATE NOWAIT",
         boq_header,
         as_dict=True,
     )
@@ -34,8 +41,8 @@ def create_lock_baseline(boq_header):
     created = 0
     for item in items:
         # Check if this item already has a baseline revision
-        existing = frappe.db.sql(
-            "SELECT name FROM `tabBOQ Quantity Revision` WHERE boq_item = %s AND revision_type = 'Original Lock' LIMIT 1",
+        existing = current_boq_sql(
+            "SELECT name FROM `tabBOQ Quantity Revision` WHERE boq_item = %s AND revision_type = 'Original Lock' LIMIT 1 FOR UPDATE NOWAIT",
             item.name,
             as_dict=True,
         )
@@ -43,7 +50,7 @@ def create_lock_baseline(boq_header):
             continue
 
         # Set original and current quantities
-        frappe.db.sql(
+        current_boq_sql(
             "UPDATE `tabBOQ Item` SET original_qty = %s, current_revised_qty = %s, current_revised_unit_price = %s WHERE name = %s",
             (item.quantity, item.quantity, item.contract_unit_price, item.name),
         )
@@ -69,7 +76,7 @@ def create_lock_baseline(boq_header):
         revision.insert(ignore_permissions=True)
 
         # Link to BOQ Item
-        frappe.db.sql(
+        current_boq_sql(
             "UPDATE `tabBOQ Item` SET last_quantity_revision = %s WHERE name = %s",
             (revision.name, item.name),
         )
@@ -142,7 +149,7 @@ def create_quantity_revision(
 
 def approve_quantity_revision(revision_name):
     """Approve a quantity revision and apply it to the BOQ Item."""
-    revision = frappe.get_doc("BOQ Quantity Revision", revision_name)
+    revision = frappe.get_doc("BOQ Quantity Revision", revision_name, for_update=True)
 
     if revision.status == "Approved":
         return {"success": True, "message": "Already approved."}
@@ -162,10 +169,9 @@ def apply_approved_revision(revision):
 
     Uses DB row locking to prevent race conditions.
     """
-    # Lock the BOQ Item row
-    frappe.db.sql(
-        "SELECT name FROM `tabBOQ Item` WHERE name = %(name)s FOR UPDATE", {"name": revision.boq_item}
-    )
+    actual_header = lock_boq_item_header(revision.boq_item)
+    if actual_header != revision.boq_header:
+        frappe.throw(_("Revision BOQ Header does not match its item."))
 
     # Update current quantities
     frappe.db.set_value(
@@ -205,18 +211,7 @@ def create_variation_item_revision(
 
 def update_boq_header_totals(boq_header):
     """Recompute BOQ Header total_revised_value from current items."""
-    totals = frappe.db.sql(
-        """
-        SELECT
-            COALESCE(SUM(COALESCE(current_revised_qty, quantity) * COALESCE(current_revised_unit_price, contract_unit_price) * COALESCE(factor, 1.0)), 0)
-        FROM `tabBOQ Item`
-        WHERE boq_header = %(boq_header)s
-    """,
-        {"boq_header": boq_header},
-    )
-
-    total_revised = totals[0][0] if totals else 0
-
+    total_revised = read_boq_totals(boq_header)[3]
     frappe.db.set_value("BOQ Header", boq_header, "total_revised_value", total_revised, update_modified=False)
 
 
@@ -233,7 +228,11 @@ def process_approved_vo_lines(vo):
     if frappe.session.user != "Administrator":
         frappe.has_permission("Variation Order", "write", doc=vo, throw=True)
 
-    # --- PASS 1: Pre-validation & row locking ---
+    lock_boq_header(vo.boq_header)
+
+    # Validate in display order, then lock distinct existing items by name.
+    # Mutation order below still follows the approved lines.
+    existing_items = set()
     for line in vo.lines:
         if line.created_quantity_revision:
             continue
@@ -242,13 +241,17 @@ def process_approved_vo_lines(vo):
                 frappe.throw(
                     _("Row {0}: Linked BOQ Item is required for {1}.").format(line.idx, line.line_type)
                 )
-            locked = frappe.db.sql(
-                "SELECT name, current_revised_qty, current_revised_unit_price, original_qty FROM `tabBOQ Item` WHERE name = %s FOR UPDATE",
-                line.boq_item,
-                as_dict=True,
-            )
-            if not locked:
-                frappe.throw(_("Row {0}: BOQ Item {1} not found.").format(line.idx, line.boq_item))
+            existing_items.add(line.boq_item)
+    for item_name in sorted(existing_items):
+        locked = current_boq_sql(
+            "SELECT name, boq_header FROM `tabBOQ Item` WHERE name = %s FOR UPDATE NOWAIT",
+            item_name,
+            as_dict=True,
+        )
+        if not locked:
+            frappe.throw(_("BOQ Item {0} not found.").format(item_name))
+        if locked[0].boq_header != vo.boq_header:
+            frappe.throw(_("Variation Order item belongs to another BOQ Header."))
 
     # --- PASS 2: Apply mutations inside savepoint ---
     save_point = f"vo_approval_{frappe.generate_hash(length=8)}"

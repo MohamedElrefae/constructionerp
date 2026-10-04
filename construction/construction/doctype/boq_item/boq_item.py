@@ -4,6 +4,7 @@ from frappe.model.document import Document
 from frappe.utils import cint, flt
 
 from construction.services.boq_operational import validate_boq_item_stage_distribution
+from construction.services.boq_transactions import lock_boq_header
 
 
 class BOQItem(Document):
@@ -35,6 +36,12 @@ class BOQItem(Document):
     ]
 
     def validate(self):
+        previous = self.get_doc_before_save()
+        headers = {self.boq_header}
+        if previous:
+            headers.add(previous.boq_header)
+        for header in sorted(filter(None, headers)):
+            lock_boq_header(header)
         for step in self.PHASE1_STEPS:
             getattr(self, step)()
 
@@ -42,6 +49,11 @@ class BOQItem(Document):
         self._trigger_header_rollup()
 
     def on_trash(self):
+        lock_boq_header(self.boq_header)
+
+    def after_delete(self):
+        # Frappe runs on_trash before link checks and SQL deletion. Aggregate
+        # only after the row is removed, inside the same transaction.
         self._trigger_header_rollup()
 
     def _trigger_header_rollup(self):
@@ -51,8 +63,13 @@ class BOQItem(Document):
             return
         if not self.boq_header:
             return
-        header = frappe.get_doc("BOQ Header", self.boq_header)
-        header.recalculate_phase1_totals()
+        previous = self.get_doc_before_save()
+        headers = {self.boq_header}
+        if previous:
+            headers.add(previous.boq_header)
+        for header_name in sorted(filter(None, headers)):
+            header = frappe.get_doc("BOQ Header", header_name)
+            header.recalculate_phase1_totals()
 
     # --- Step 1: Leaf-only check ---
     def validate_leaf_only(self):
@@ -71,7 +88,7 @@ class BOQItem(Document):
             return
         if self.flags.get("ignore_boq_status_for_variation") and self.is_variation_item:
             return
-        status = frappe.db.get_value("BOQ Header", self.boq_header, "status")
+        status = lock_boq_header(self.boq_header).status
         if status == "Locked":
             frappe.throw(_("Cannot modify BOQ Item: BOQ is Locked."))
         if status == "Frozen":
@@ -169,9 +186,15 @@ class BOQItem(Document):
                     "docstatus": 1,
                 },
                 "name",
+                for_update=True,
+                wait=False,
             )
             if name:
-                return flt(frappe.db.get_value("BOQ Cost Analysis", name, "total_unit_cost"))
+                return flt(
+                    frappe.db.get_value(
+                        "BOQ Cost Analysis", name, "total_unit_cost", for_update=True, wait=False
+                    )
+                )
         except (frappe.DoesNotExistError, frappe.EmptyQueryValuesError):
             return None
         except Exception as e:

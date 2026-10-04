@@ -3,6 +3,8 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import flt
 
+from construction.services.boq_transactions import current_boq_sql, lock_boq_item_header
+
 
 class BOQCostAnalysis(Document):
     def validate(self):
@@ -22,6 +24,8 @@ class BOQCostAnalysis(Document):
         self.db_set("approved_on", frappe.utils.now(), update_modified=False)
 
     def before_cancel(self):
+        if self.boq_item:
+            lock_boq_item_header(self.boq_item)
         self.db_set("analysis_status", "Cancelled", update_modified=False)
 
     def on_cancel(self):
@@ -86,20 +90,17 @@ class BOQCostAnalysis(Document):
         if not self.boq_item:
             return
 
-        # Lock parent BOQ Item row to serialize concurrent approvals for the same item
-        frappe.db.sql(
-            "SELECT name FROM `tabBOQ Item` WHERE name = %(item)s FOR UPDATE",
-            {"item": self.boq_item},
-        )
+        lock_boq_item_header(self.boq_item)
 
-        other_approved = frappe.db.sql(
+        other_approved = current_boq_sql(
             """
             SELECT name FROM `tabBOQ Cost Analysis`
             WHERE boq_item = %(boq_item)s
               AND analysis_status = 'Approved'
               AND name != %(name)s
               AND docstatus = 1
-            FOR UPDATE
+            ORDER BY name
+            FOR UPDATE NOWAIT
             """,
             {"boq_item": self.boq_item, "name": self.name},
             as_dict=True,
@@ -112,7 +113,8 @@ class BOQCostAnalysis(Document):
     def update_boq_item_estimated_cost(self):
         if not self.boq_item:
             return
-        item_doc = frappe.get_doc("BOQ Item", self.boq_item)
+        lock_boq_item_header(self.boq_item)
+        item_doc = frappe.get_doc("BOQ Item", self.boq_item, for_update=True)
         item_doc.db_set("est_unit_cost", self.total_unit_cost, update_modified=False)
         item_doc.calculate_cost_buildup()
         item_doc.db_set(
@@ -135,19 +137,21 @@ class BOQCostAnalysis(Document):
         header.recalculate_phase1_totals()
 
     def restore_prior_analysis_if_any(self):
-        prior = frappe.db.get_value(
-            "BOQ Cost Analysis",
-            {
-                "boq_item": self.boq_item,
-                "analysis_status": "Superseded",
-                "docstatus": 1,
-                "name": ["!=", self.name],
-            },
-            "name",
-            order_by="modified desc",
+        if not self.boq_item:
+            return
+        lock_boq_item_header(self.boq_item)
+        rows = current_boq_sql(
+            """
+            SELECT name FROM `tabBOQ Cost Analysis`
+            WHERE boq_item = %(item)s AND analysis_status = 'Superseded'
+              AND docstatus = 1 AND name != %(current)s
+            ORDER BY modified DESC LIMIT 1 FOR UPDATE NOWAIT
+            """,
+            {"item": self.boq_item, "current": self.name},
         )
+        prior = rows[0][0] if rows else None
         if prior:
-            prior_doc = frappe.get_doc("BOQ Cost Analysis", prior)
+            prior_doc = frappe.get_doc("BOQ Cost Analysis", prior, for_update=True)
             prior_doc.db_set("analysis_status", "Approved", update_modified=False)
             prior_doc.update_boq_item_estimated_cost()
 

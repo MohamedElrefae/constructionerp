@@ -3,6 +3,7 @@ from frappe import _
 from frappe.model.document import Document
 
 from construction.api.scope_context_api import get_user_scope_context
+from construction.services.boq_transactions import lock_boq_header, read_boq_totals
 
 
 class BOQHeader(Document):
@@ -102,58 +103,38 @@ class BOQHeader(Document):
             self.total_budgeted_cost = 0
             self.total_revised_value = 0
             return
-        totals = frappe.db.sql(
-            """
-			SELECT
-				COALESCE(SUM(CASE WHEN is_variation_item = 0 THEN line_total ELSE 0 END), 0),
-				COALESCE(SUM(CASE WHEN is_variation_item = 0 THEN est_line_total ELSE 0 END), 0),
-				COALESCE(SUM(CASE WHEN is_variation_item = 0 THEN quantity * est_unit_cost * COALESCE(factor, 1.0) ELSE 0 END), 0),
-				COALESCE(SUM(COALESCE(current_revised_qty, quantity) * COALESCE(current_revised_unit_price, contract_unit_price) * COALESCE(factor, 1.0)), 0)
-			FROM `tabBOQ Item`
-			WHERE boq_header = %s
-		""",
-            self.name,
-        )
-        if totals and totals[0]:
-            self.total_contract_value = totals[0][0]
-            self.total_estimated_value = totals[0][1]
-            self.total_budgeted_cost = totals[0][2]
-            self.total_revised_value = totals[0][3]
-        else:
-            self.total_contract_value = 0
-            self.total_estimated_value = 0
-            self.total_budgeted_cost = 0
-            self.total_revised_value = 0
+        totals = read_boq_totals(self.name)
+        (
+            self.total_contract_value,
+            self.total_estimated_value,
+            self.total_budgeted_cost,
+            self.total_revised_value,
+        ) = totals
 
     def recalculate_phase1_totals(self):
         """Recalculate all Phase 1 roll-up totals from BOQ Items.
-        Called by BOQ Item on_update and on_trash.
-        Uses a single SQL query with 4 SUMs and db_set to avoid
+        Called by BOQ Item on_update and after_delete.
+        Uses a guarded current read with 4 SUMs and db_set to avoid
         triggering a full save cycle.
 
         Variation items are excluded from contract totals but included in revised totals.
         """
-        totals = frappe.db.sql(
-            """
-			SELECT
-				COALESCE(SUM(CASE WHEN is_variation_item = 0 THEN line_total ELSE 0 END), 0),
-				COALESCE(SUM(CASE WHEN is_variation_item = 0 THEN est_line_total ELSE 0 END), 0),
-				COALESCE(SUM(CASE WHEN is_variation_item = 0 THEN quantity * est_unit_cost * COALESCE(factor, 1.0) ELSE 0 END), 0),
-                COALESCE(SUM(COALESCE(current_revised_qty, quantity) * COALESCE(current_revised_unit_price, contract_unit_price) * COALESCE(factor, 1.0)), 0)
-			FROM `tabBOQ Item`
-			WHERE boq_header = %s
-		""",
-            self.name,
+        totals = read_boq_totals(self.name)
+        self.db_set(
+            dict(
+                zip(
+                    (
+                        "total_contract_value",
+                        "total_estimated_value",
+                        "total_budgeted_cost",
+                        "total_revised_value",
+                    ),
+                    totals,
+                    strict=True,
+                )
+            ),
+            update_modified=False,
         )
-        tcv = totals[0][0] if totals and totals[0] else 0
-        tev = totals[0][1] if totals and totals[0] else 0
-        tbc = totals[0][2] if totals and totals[0] else 0
-        trv = totals[0][3] if totals and totals[0] else 0
-
-        self.db_set("total_contract_value", tcv, update_modified=False)
-        self.db_set("total_estimated_value", tev, update_modified=False)
-        self.db_set("total_budgeted_cost", tbc, update_modified=False)
-        self.db_set("total_revised_value", trv, update_modified=False)
         self.recalculate_structure_rollups()
 
     def recalculate_structure_rollups(self):
@@ -161,6 +142,7 @@ class BOQHeader(Document):
         if not self.name:
             return
 
+        lock_boq_header(self.name)
         frappe.db.sql(
             """
             UPDATE `tabBOQ Structure` target
