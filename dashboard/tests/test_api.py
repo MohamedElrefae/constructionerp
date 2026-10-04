@@ -1,5 +1,6 @@
 """API endpoint integration tests verifying read-only scope, auth, and contract."""
 
+import ast
 import json
 from pathlib import Path
 
@@ -8,6 +9,19 @@ import pytest
 
 from dashboard.app import app
 from dashboard.auth import auth_store, session_manager
+from dashboard.bootstrap import ENGINEERING_CONTEXT_PATHS, ENGINEERING_STARTUP_POLICY
+from dashboard.config import REPO_ROOT
+
+
+def test_engineering_policy_constants_match_orchestrator_contract():
+    module_path = REPO_ROOT / "orchestrator" / "engineering_startup.py"
+    assignments = {}
+    for node in ast.parse(module_path.read_text()).body:
+        if isinstance(node, ast.Assign) and isinstance(node.targets[0], ast.Name):
+            if node.targets[0].id in ("POLICY", "CONTEXT_PATHS"):
+                assignments[node.targets[0].id] = ast.literal_eval(node.value)
+    assert assignments["POLICY"] == ENGINEERING_STARTUP_POLICY
+    assert list(assignments["CONTEXT_PATHS"]) == list(ENGINEERING_CONTEXT_PATHS)
 
 
 @pytest.fixture

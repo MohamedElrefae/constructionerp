@@ -10,7 +10,7 @@ from pathlib import Path
 import engineering_startup as startup
 import pytest
 from candidates import freeze, git
-from core import WorkflowError, bytes_hash
+from core import WorkflowError, bytes_hash, digest
 from engine import Engine
 from test_engine import Stub, plan_token
 
@@ -390,6 +390,154 @@ def test_legacy_checkpoint_and_minimal_synthetic_repos_unchanged(configured):
     assert "engineering_startup_policy" not in e.config
     assert e.run()["gate"]["scope"] == "PLAN"
     e.close()
+
+
+def test_job_without_startup_evidence_fails_closed(engineering):
+    root, config = engineering
+    e = Engine(root, launcher=Stub())
+    e.initialize(config)
+    state = e._prepare({"view": e.view()})
+    job = e.store.job(state["view"]["active_jobs"][0])
+    del job["spec"]["engineering_startup"]
+    with pytest.raises(WorkflowError, match="startup evidence missing"):
+        e._validate_engineering_job(job)
+    e.close()
+
+
+def test_unreadable_or_self_inconsistent_evidence_rejected(engineering, tmp_path):
+    root, config = engineering
+    e = Engine(root, launcher=Stub())
+    e.initialize(config)
+    candidate = e.config["candidate"]
+    ref = startup.run(
+        root, e.config, candidate, e.runtime, root / "docs/ai/work-items/test-work", tmp_path / "ok.json"
+    )
+    assert startup.verify_report(root, e.config, candidate["candidate_id"], ref)[1]["passed"]
+    unreadable = tmp_path / "unreadable.json"
+    unreadable.write_text("{not json")
+    bad_ref = {"path": str(unreadable), "sha256": bytes_hash(unreadable.read_bytes())}
+    with pytest.raises(WorkflowError, match="evidence unreadable"):
+        startup.verify_report(root, e.config, candidate["candidate_id"], bad_ref)
+    report = json.loads(Path(ref["path"]).read_text())
+    report["inputs_digest"] = "0" * 64
+    tampered = tmp_path / "tampered.json"
+    tampered.write_text(json.dumps(report))
+    tampered_ref = {"path": str(tampered), "sha256": bytes_hash(tampered.read_bytes())}
+    with pytest.raises(WorkflowError, match="internal binding mismatch"):
+        startup.verify_report(root, e.config, candidate["candidate_id"], tampered_ref)
+    for value in ([], None):
+        unreadable.write_text(json.dumps(value))
+        bad_ref["sha256"] = bytes_hash(unreadable.read_bytes())
+        with pytest.raises(WorkflowError, match="evidence unreadable"):
+            startup.verify_report(root, e.config, candidate["candidate_id"], bad_ref)
+    unreadable.unlink()
+    with pytest.raises(WorkflowError, match="evidence unreadable"):
+        startup.verify_report(root, e.config, candidate["candidate_id"], bad_ref)
+    for invalid_ref in ({}, {"path": None, "sha256": "unused"}):
+        with pytest.raises(WorkflowError, match="evidence unreadable"):
+            startup.verify_report(root, e.config, candidate["candidate_id"], invalid_ref)
+    for invalid_context in ([None], [{}], [{"path": None, "sha256": "unused"}]):
+        report = json.loads(Path(ref["path"]).read_text())
+        report["inputs"]["context"] = invalid_context
+        report["inputs_digest"] = digest(report["inputs"])
+        tampered.write_text(json.dumps(report))
+        tampered_ref["sha256"] = bytes_hash(tampered.read_bytes())
+        with pytest.raises(WorkflowError, match="internal binding mismatch"):
+            startup.verify_report(root, e.config, candidate["candidate_id"], tampered_ref)
+    report = json.loads(Path(ref["path"]).read_text())
+    report["baseline"] = None
+    tampered.write_text(json.dumps(report))
+    tampered_ref["sha256"] = bytes_hash(tampered.read_bytes())
+    with pytest.raises(WorkflowError, match="internal binding mismatch"):
+        startup.verify_report(root, e.config, candidate["candidate_id"], tampered_ref)
+    e.close()
+
+
+def test_failed_evidence_records_unexpected_errors(engineering, monkeypatch):
+    root, config = engineering
+    e = Engine(root, launcher=Stub())
+    e.initialize(config)
+    candidate = e.config["candidate"]
+
+    def unexpected(*args, **kwargs):
+        raise RuntimeError("unexpected coordinator error")
+
+    monkeypatch.setattr(startup, "checker_inputs", unexpected)
+    report_path = e.runtime / "unexpected.json"
+    with pytest.raises(RuntimeError, match="unexpected coordinator error"):
+        startup.run(root, e.config, candidate, e.runtime, root / "docs/ai/work-items/test-work", report_path)
+    report = json.loads(report_path.read_text())
+    assert not report["passed"]
+    assert report["failure"] == "unexpected coordinator error"
+    e.close()
+
+
+def test_symlinked_checker_inputs_are_bound_explicitly(engineering, tmp_path):
+    root, config = engineering
+    startup.configure_new(root, config)
+    doctype = root / "construction/construction/doctype"
+    doctype.mkdir(parents=True)
+    outside = tmp_path / "outside.json"
+    outside.write_text("{}")
+    (doctype / "linked.json").symlink_to(outside)
+    directory_target = tmp_path / "linked-dir"
+    directory_target.mkdir()
+    (directory_target / "nested.json").write_text("{}")
+    (doctype / "linked-dir").symlink_to(directory_target, target_is_directory=True)
+    entries = {e["path"]: e for e in startup.checker_inputs(root, config)["checker_inputs"]}
+    file_link = entries["construction/construction/doctype/linked.json"]
+    assert file_link["kind"] == "symlink"
+    assert file_link["sha256"] == bytes_hash(str(outside).encode())
+    dir_link = entries["construction/construction/doctype/linked-dir"]
+    assert dir_link["kind"] == "symlink"
+    assert "construction/construction/doctype/linked-dir/nested.json" not in entries
+    assert outside.read_text() == "{}"
+
+
+@pytest.mark.parametrize(
+    "link_path,is_directory",
+    [
+        ("construction/patches/linked.py", False),
+        ("construction/construction/doctype/linked.json", False),
+        ("construction/construction/doctype/linked-dir", True),
+    ],
+)
+def test_symlinked_checker_inputs_block_startup_with_frozen_evidence(
+    engineering, tmp_path, link_path, is_directory
+):
+    root, config = engineering
+    target = tmp_path / "unbound-target"
+    if is_directory:
+        target.mkdir()
+        (target / "schema.json").write_text("{}")
+    else:
+        target.write_text("{}")
+    link = root / link_path
+    link.parent.mkdir(parents=True, exist_ok=True)
+    link.symlink_to(target, target_is_directory=is_directory)
+    git(root, "add", ".")
+    git(root, "-c", "core.hooksPath=/dev/null", "commit", "-m", "linked input fixture")
+    config["base_commit"] = git(root, "rev-parse", "HEAD").decode().strip()
+    stub = Stub()
+    e = Engine(root, launcher=stub)
+    try:
+        e.initialize(config)
+        with pytest.raises(WorkflowError, match="checker input symlink refused"):
+            e._prepare({"view": e.view()})
+        reports = list((e.runtime / "startup").glob("*.json"))
+        assert len(reports) == 1
+        report = json.loads(reports[0].read_text())
+        assert not report["passed"]
+        assert link_path in report["failure"]
+        assert report["commands"] == []
+        assert any(
+            entry["path"] == link_path and entry["kind"] == "symlink"
+            for entry in report["inputs"]["checker_inputs"]
+        )
+        assert not stub.starts
+        assert not e.view()["active_jobs"]
+    finally:
+        e.close()
 
 
 def test_timeout_includes_child_that_closes_pipes_and_output_is_bounded(tmp_path):

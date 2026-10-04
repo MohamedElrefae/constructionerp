@@ -111,23 +111,35 @@ def validate_scope(config):
                 )
 
 
+def _tree_paths(directory):
+    """Yield every entry without descending into symlinked directories."""
+    for current, dirnames, filenames in os.walk(directory, followlinks=False):
+        for name in (*dirnames, *filenames):
+            yield Path(current) / name
+
+
 def checker_inputs(root, config):
     """Bind every source/schema input read by the two repository checkers."""
     root = Path(root).resolve()
-    names = {*CHECKERS, "ADR.md", "construction/hooks.py", "construction/api/theme_api.py"}
-    entries = []
-    for base, pattern in (
-        ("construction/construction/doctype", "**/*"),
-        ("construction/patches", "**/*"),
-    ):
+    paths = {
+        name: within(root, name, allow_leaf_symlink=True)
+        for name in (*CHECKERS, "ADR.md", "construction/hooks.py", "construction/api/theme_api.py")
+    }
+    for base in ("construction/construction/doctype", "construction/patches"):
         directory = within(root, base)
         if directory.exists():
-            names.update(str(p.relative_to(root)) for p in directory.glob(pattern))
-    for name in sorted(names):
-        path = within(root, name)
+            for p in _tree_paths(directory):
+                paths[str(p.relative_to(root))] = p
+    entries = []
+    for name in sorted(paths):
+        path = paths[name]
         if "__pycache__" in path.parts or path.suffix == ".pyc":
             continue
-        if path.is_dir():
+        if path.is_symlink():
+            entries.append(
+                {"path": name, "kind": "symlink", "sha256": bytes_hash(os.fsencode(os.readlink(path)))}
+            )
+        elif path.is_dir():
             entries.append({"path": name, "kind": "directory"})
         elif path.is_file():
             entries.append({"path": name, "kind": "file", "sha256": bytes_hash(path.read_bytes())})
@@ -288,6 +300,11 @@ def run(root, config, candidate, runtime, work, report_path):
         recheck(root, candidate["manifest"], config["generated"])
         before = checker_inputs(root, config)
         report.update(baseline=git_baseline(root), inputs=before, inputs_digest=digest(before))
+        linked = [e["path"] for e in before["checker_inputs"] if e["kind"] == "symlink"]
+        if linked:
+            # The checkers follow links, but a target-path hash does not bind the
+            # target contents. Keep the evidence; never accept unbound inputs.
+            raise WorkflowError("Engineering startup checker input symlink refused: " + linked[0])
         for index, checker in enumerate(CHECKERS):
             argv = [sys.executable, checker]
             wrapped = _offline_command(argv, root, work, runtime)
@@ -316,7 +333,7 @@ def run(root, config, candidate, runtime, work, report_path):
         if checker_inputs(root, config) != before:
             raise WorkflowError("Engineering startup inputs changed during checks")
         report["passed"] = True
-    except (OSError, WorkflowError) as exc:
+    except Exception as exc:
         report["failure"] = str(exc)
         raise
     finally:
@@ -330,17 +347,51 @@ def run(root, config, candidate, runtime, work, report_path):
 
 
 def verify_report(root, config, candidate_id, ref, *, allow_builder_changes=False):
-    path = Path(ref["path"])
-    if path.is_symlink() or bytes_hash(path.read_bytes()) != ref["sha256"]:
-        raise WorkflowError("Engineering startup evidence digest mismatch")
-    report = json.loads(path.read_text())
+    if (
+        not isinstance(ref, dict)
+        or not isinstance(ref.get("path"), str)
+        or not isinstance(ref.get("sha256"), str)
+    ):
+        raise WorkflowError("Engineering startup evidence unreadable")
+    try:
+        path = Path(ref["path"])
+        if path.is_symlink():
+            raise WorkflowError("Engineering startup evidence digest mismatch")
+        raw = path.read_bytes()
+        if bytes_hash(raw) != ref["sha256"]:
+            raise WorkflowError("Engineering startup evidence digest mismatch")
+        report = json.loads(raw)
+    except (OSError, ValueError) as exc:
+        raise WorkflowError("Engineering startup evidence unreadable") from exc
+    if not isinstance(report, dict):
+        raise WorkflowError("Engineering startup evidence unreadable")
     if (
         not report.get("passed")
         or report.get("schema") != POLICY
         or report.get("candidate_id") != candidate_id
     ):
         raise WorkflowError("Engineering startup evidence binding mismatch")
+    inputs = report.get("inputs")
+    if (
+        not isinstance(inputs, dict)
+        or not isinstance(inputs.get("context"), list)
+        or any(
+            not isinstance(entry, dict)
+            or not isinstance(entry.get("path"), str)
+            or not isinstance(entry.get("sha256"), str)
+            for entry in inputs["context"]
+        )
+    ):
+        raise WorkflowError("Engineering startup evidence internal binding mismatch")
+    try:
+        inputs_digest = digest(inputs)
+    except (TypeError, ValueError) as exc:
+        raise WorkflowError("Engineering startup evidence internal binding mismatch") from exc
+    if inputs_digest != report.get("inputs_digest"):
+        raise WorkflowError("Engineering startup evidence internal binding mismatch")
     baseline = report.get("baseline", {})
+    if not isinstance(baseline, dict):
+        raise WorkflowError("Engineering startup evidence internal binding mismatch")
     for name, args in (
         ("root", ("rev-parse", "--show-toplevel")),
         ("branch", ("rev-parse", "--abbrev-ref", "HEAD")),
@@ -351,7 +402,7 @@ def verify_report(root, config, candidate_id, ref, *, allow_builder_changes=Fals
     current = checker_inputs(root, config)
     mutable = mutable_context_paths(config) if allow_builder_changes else set()
     if [e for e in current["context"] if e["path"] not in mutable] != [
-        e for e in report["inputs"]["context"] if e["path"] not in mutable
+        e for e in inputs["context"] if e["path"] not in mutable
     ]:
         raise WorkflowError("Engineering context changed after startup")
     if not allow_builder_changes and digest(current) != report["inputs_digest"]:
