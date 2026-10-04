@@ -197,3 +197,12 @@ this work item's own evidence logs are unchanged.
 |---|---|
 | `scripts/run_bilingual_regression_matrix.sh` | shared runner expanded to **19 modules / 234 tests** |
 
+
+## 14. Amendments (2026-10-04, post-`bilingual-financial-reports`)
+
+Digests are recorded as `amendments[]` entries in `evidence/MANIFEST.json`;
+this work item's own evidence logs are unchanged.
+
+| Artefact | Why it moved |
+|---|---|
+| `scripts/run_bilingual_regression_matrix.sh` | shared runner expanded to **21 modules / 258 tests** (`test_stage4_report_extension`, `test_stage7_bilingual_reports`) |

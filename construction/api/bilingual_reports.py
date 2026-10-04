@@ -66,7 +66,6 @@ def localized_report(report_name, filters=None, lang=None, mode=None):
     execute = getattr(module, "execute", None) or (module if callable(module) else None)
     filters = _ensure_required(filters, report_name)
     _out = execute(filters=filters)
-    _out = execute(filters=filters)
     if isinstance(_out, tuple) and len(_out) >= 2:
         # vendor execution already ran here (AR Aging returns a documented
         # 6-valued tuple); post-process only the bilingual contract surface.
@@ -86,10 +85,10 @@ def _ensure_required(filters, report_name):
     company = filters.get("company") or frappe.defaults.get_user_default("Company")
 
     if report_name == "General Ledger":
-        fy = _resolve_fy(company)
-        bounds = _fy_bounds(company)
-        filters.setdefault("from_date", bounds["start"])
-        filters.setdefault("to_date", bounds["end"])
+        if not (filters.get("from_date") and filters.get("to_date")):
+            bounds = _fy_bounds(company)
+            filters.setdefault("from_date", bounds["start"])
+            filters.setdefault("to_date", bounds["end"])
         return filters
 
     if report_name == "Accounts Receivable":

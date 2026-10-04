@@ -277,7 +277,12 @@ doc_events = {
     # Stage 3 P0: Arabic account-name writes are confined to the governed
     # bilingual API; any direct form/REST save that changes the field is
     # refused. The hook also maintains the normalized Arabic search key.
-    "Account": {"validate": "construction.services.bilingual_service.enforce_account_arabic_policy"},
+    "Account": {
+        "validate": "construction.services.bilingual_service.enforce_account_arabic_policy",
+        "on_update": "construction.services.report_bilingual_extension.bust_account_mapping_cache",
+        "on_trash": "construction.services.report_bilingual_extension.bust_account_mapping_cache",
+        "after_rename": "construction.services.report_bilingual_extension.bust_account_mapping_cache",
+    },
     "Item": {
         "validate": [
             "construction.services.bilingual_service.enforce_bilingual_arabic_policy",

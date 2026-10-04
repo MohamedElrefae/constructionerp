@@ -268,3 +268,17 @@ field folding closes) and `registry-only-candidate.log` / `.json` (decision inpu
   vendor path there is *fetch-all + Python regex* rather than SQL `LIKE`; folding
   `get_std_fields_list` into `search_fields` covers that shape too, and it is also why UOM's
   baseline (~1.3 ms) is heavier than an ordinary doctype's (~0.7 ms).
+
+---
+
+## 12. Amendments (post-completion)
+
+### 12.1 Re-pin by bilingual-financial-reports (2026-10-04)
+
+Digests are recorded as `amendments[]` entries in `evidence/MANIFEST.json`;
+this work item's own evidence logs are unchanged.
+
+| Artefact | Why it moved |
+|---|---|
+| `construction/hooks.py` | living file; `Account` `doc_events` mapping-cache bust hooks added — `on_update` / `on_trash` / `after_rename` → `construction.services.report_bilingual_extension.bust_account_mapping_cache` (R7, `bilingual-financial-reports`) |
+| `scripts/run_bilingual_regression_matrix.sh` | shared runner expanded to **21 modules / 258 tests** (`test_stage4_report_extension`, `test_stage7_bilingual_reports`) |

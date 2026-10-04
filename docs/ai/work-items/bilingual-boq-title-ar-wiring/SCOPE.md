@@ -315,3 +315,12 @@ this work item's own evidence logs are unchanged.
 | Artefact | Why it moved |
 |---|---|
 | `construction/hooks.py` | living file; Tier-4 `override_whitelisted_methods` binding added — `frappe.desk.search.search_link` → `construction.api.desk_link_search.search_link` (A1, `bilingual-desk-link-dispatch`) |
+
+### 8.6 Re-pin by bilingual-financial-reports (2026-10-04)
+
+Digests are recorded as `amendments[]` entries in `evidence/MANIFEST.json`;
+this work item's own evidence logs are unchanged.
+
+| Artefact | Why it moved |
+|---|---|
+| `construction/hooks.py` | living file; `Account` `doc_events` mapping-cache bust hooks added — `on_update` / `on_trash` / `after_rename` → `construction.services.report_bilingual_extension.bust_account_mapping_cache` (R7, `bilingual-financial-reports`) |

@@ -34,15 +34,17 @@ class TestBilingualReportsAPI(unittest.TestCase):
             self._call("Sales Register", _stub_module([], []))
 
     def test_ar_mode_localizes_account_label(self):
-        ext = __import__(
-            "construction.services.report_bilingual_extension", fromlist=["x"]
-        )
+        # R2b: patch the API module's own binding — patching the service
+        # attribute only does not intercept (the API binds its global at import,
+        # so earlier tests were passing by import-order luck).
+        import construction.api.bilingual_reports as api_mod
+
         mod = _stub_module(
             [{"fieldname": "account", "label": "Account"}],
             [{"account": "Rent", "debit": 100}],
         )
         with mock.patch.object(
-            ext, "load_account_arabic_mapping", return_value={"Rent": "إيجار"}
+            api_mod, "load_account_arabic_mapping", return_value={"Rent": "إيجار"}
         ):
             out = self._call("Trial Balance", mod, mode="ar")
         self.assertEqual(out["mode"], "ar")
@@ -50,20 +52,22 @@ class TestBilingualReportsAPI(unittest.TestCase):
         self.assertEqual(out["data"][0]["debit"], 100)
 
     def test_both_mode_keeps_identity_prefix(self):
-        ext = __import__(
-            "construction.services.report_bilingual_extension", fromlist=["x"]
-        )
+        import construction.api.bilingual_reports as api_mod
+
         mod = _stub_module([{"fieldname": "account"}], [{"account": "Rent"}])
-        with mock.patch.object(ext, "load_account_arabic_mapping", return_value={"Rent": "إيجار"}):
+        with mock.patch.object(
+            api_mod, "load_account_arabic_mapping", return_value={"Rent": "إيجار"}
+        ):
             out = self._call("Trial Balance", mod, mode="both")
         self.assertEqual(out["data"][0]["account"], "Rent — إيجار")
 
     def test_en_mode_untouched(self):
-        ext = __import__(
-            "construction.services.report_bilingual_extension", fromlist=["x"]
-        )
+        import construction.api.bilingual_reports as api_mod
+
         mod = _stub_module([{"fieldname": "account"}], [{"account": "Rent"}])
-        with mock.patch.object(ext, "load_account_arabic_mapping", return_value={"Rent": "إيجار"}):
+        with mock.patch.object(
+            api_mod, "load_account_arabic_mapping", return_value={"Rent": "إيجار"}
+        ):
             out = self._call("Trial Balance", mod, mode="en")
         self.assertEqual(out["data"][0]["account"], "Rent")
 
@@ -120,4 +124,52 @@ class TestRealModuleSmoke(unittest.TestCase):
             from construction.api.bilingual_reports import localized_report
 
             out = localized_report("Trial Balance", mode="ar", filters='{"company": "Elrefae"}')
-            self.assertGreaterEqual(gm.return_value.execute.call_count, 1)
+            self.assertEqual(gm.return_value.execute.call_count, 1)
+            self.assertEqual(out["mode"], "ar")
+
+
+class TestGenuineAuthorization(unittest.TestCase):
+    """AGENTS.md §4.7: the role gate must hold for a real user, unmocked."""
+
+    USER = "ct-finance-noperm@example.com"
+
+    def test_non_admin_without_accounts_roles_is_rejected_before_execute(self):
+        import frappe
+
+        if not frappe.db.exists("User", self.USER):
+            frappe.get_doc(
+                {
+                    "doctype": "User",
+                    "email": self.USER,
+                    "first_name": "CT",
+                    "new_password": "ct-test-pw-123",
+                    "user_type": "System User",
+                    "send_welcome_email": 0,
+                    "roles": [],
+                }
+            ).insert(ignore_permissions=True)
+        frappe.db.commit()
+        frappe.set_user(self.USER)
+        try:
+            with mock.patch("frappe.get_module") as gm:
+                from construction.api.bilingual_reports import localized_report
+
+                with self.assertRaises(frappe.PermissionError):
+                    localized_report("Trial Balance", filters=None, mode="ar")
+                self.assertEqual(
+                    gm.call_count, 0, "vendor module must not be resolved for a rejected user"
+                )
+        finally:
+            frappe.set_user("Administrator")
+            if frappe.db.exists("User", self.USER):
+                frappe.delete_doc("User", self.USER, force=True, ignore_permissions=True)
+            frappe.db.commit()
+
+        with mock.patch("frappe.get_module") as gm:
+            gm.return_value.execute = mock.Mock(
+                return_value=([{"fieldname": "account"}], [{"account": "Cash"}])
+            )
+            from construction.api.bilingual_reports import localized_report
+
+            out = localized_report("Trial Balance", filters='{"company": "Elrefae"}', mode="ar")
+        self.assertEqual(out["report_name"], "Trial Balance")

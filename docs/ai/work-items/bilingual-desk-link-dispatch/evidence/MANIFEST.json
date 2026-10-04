@@ -1,6 +1,6 @@
 {
   "artefacts": {
-    "docs/ai/work-items/bilingual-desk-link-dispatch/SCOPE.md": "cff9922af0427975c81408a931be46b7e3dc5e6c0cf62db5035ddc5357bbfbc4",
+    "docs/ai/work-items/bilingual-desk-link-dispatch/SCOPE.md": "8a5d95a6627ae82ba81b0a42ace62da15b47913d6bba3fe958eee1bce3a4d6c8",
     "docs/ai/work-items/bilingual-desk-link-dispatch/evidence/test_bilingual_desk_link_dispatch.log": "575c48df2e9dae5635e8788801b7124bebcbbdb725e7e0e797d201b9e3955357",
     "docs/ai/work-items/bilingual-desk-link-dispatch/evidence/regression-matrix.log": "5d756efbb0b15e0ed279acf56dae75cf180362923217be01e1fbac396e5f9061",
     "docs/ai/work-items/bilingual-desk-link-dispatch/evidence/reconciliation.log": "fe7599afda02fef12c02cc8371370a4175260680ae1b7515bb656ada2d2fef71",
@@ -19,10 +19,32 @@
     "docs/ai/work-items/bilingual-desk-link-dispatch/evidence/scripts/field_coverage_probe.py": "39c9a66b1884c2ea6401143631a74761e0528135da1573366127b540d669a11d",
     "construction/api/desk_link_search.py": "d53ec43fc65d6867410d670babce94a6f7943d712e3ec0c7c49b9c25c01c8cc2",
     "construction/tests/test_bilingual_desk_link_dispatch.py": "e15b2b2d95f111dbf23ed782a41897c41f5dc66a2549ef39d085bc6ee8c28bc4",
-    "construction/hooks.py": "b668f76ddf186ab45682956c2adaa487bcce66a69abc4bf9e93bc9b984f8c247",
-    "scripts/run_bilingual_regression_matrix.sh": "428501e860b12cabc385f86899bda0f10666aa8923d8174b6d1c76d7c7d3feaa"
+    "construction/hooks.py": "3a0abaa00a0e5f8bce851cc84226551c9e8f4093372ecfa4561d01879ccd0233",
+    "scripts/run_bilingual_regression_matrix.sh": "100d5cc11c913a5584a0b6c7e6d5fce0bb607761690a23a658eaeb5e84350659"
   },
-  "amendments": [],
+  "amendments": [
+    {
+      "date": "2026-10-04",
+      "artefact": "construction/hooks.py",
+      "from": "b668f76ddf186ab45682956c2adaa487bcce66a69abc4bf9e93bc9b984f8c247",
+      "to": "3a0abaa00a0e5f8bce851cc84226551c9e8f4093372ecfa4561d01879ccd0233",
+      "reason": "living file; Account doc_events mapping-cache bust hooks added (R7: on_update/on_trash/after_rename -> construction.services.report_bilingual_extension.bust_account_mapping_cache) by bilingual-financial-reports"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "scripts/run_bilingual_regression_matrix.sh",
+      "from": "428501e860b12cabc385f86899bda0f10666aa8923d8174b6d1c76d7c7d3feaa",
+      "to": "100d5cc11c913a5584a0b6c7e6d5fce0bb607761690a23a658eaeb5e84350659",
+      "reason": "shared runner expanded to 21 modules / 258 tests (test_stage4_report_extension, test_stage7_bilingual_reports added) by bilingual-financial-reports"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "docs/ai/work-items/bilingual-desk-link-dispatch/SCOPE.md",
+      "from": "cff9922af0427975c81408a931be46b7e3dc5e6c0cf62db5035ddc5357bbfbc4",
+      "to": "8a5d95a6627ae82ba81b0a42ace62da15b47913d6bba3fe958eee1bce3a4d6c8",
+      "reason": "amendment note documenting the re-pin performed by bilingual-financial-reports"
+    }
+  ],
   "base_commit": "4341542",
   "branch": "develop",
   "work_item": "bilingual-desk-link-dispatch",

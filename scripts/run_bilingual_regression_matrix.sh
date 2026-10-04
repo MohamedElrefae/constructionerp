@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Persisted runner for the canonical bilingual regression matrix.
-# Executes all 19 bilingual test modules (234 total tests).
+# Executes all 21 bilingual test modules (258 total tests).
 
 set -euo pipefail
 
@@ -27,6 +27,8 @@ MODULES=(
     "construction.tests.test_boq_link_queries"
     "construction.tests.test_transaction_link_search"
     "construction.tests.test_bilingual_desk_link_dispatch"
+    "construction.tests.test_stage4_report_extension"
+    "construction.tests.test_stage7_bilingual_reports"
 )
 
 cd "$BENCH_DIR"
