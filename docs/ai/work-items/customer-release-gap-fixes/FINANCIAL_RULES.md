@@ -18,7 +18,7 @@ The shared calculation lives in `construction/services/boq_pricing.py`, identifi
 
 ## BOQ factor
 
-The owner confirms **factor must be greater than zero**. Missing values default to 1; explicit zero, negative and nonfinite factors are refused. Positive fractional factors remain valid.
+The owner confirms **factor must be greater than zero**. Missing values default to 1; explicit zero, negative and nonfinite factors are refused. Positive fractional factors remain valid. The owner additionally confirms that factor multiplies physical resource quantities and values: BOQ quantity 10 × factor 0.5 × one cement unit per BOQ unit requires **5 cement units**. The resource summary includes wastage and divides batch analysis quantities/costs by `analysis_qty`; its existing planning basis remains contract quantity. A revised-quantity resource plan would be a separate explicit requirement.
 
 Contract line value is `quantity × contract unit price × factor`; estimated/budgeted direct cost uses `quantity × estimated direct unit cost × factor`. Controllers, workbook preview and import updates preserve this meaning. An older zero/negative factor blocks guarded total recalculation and exports until reviewed and corrected; it is never silently converted to 1. The preview validator's existing swapped row-number/type arguments were also corrected; regression tests reach the actual workbook parser.
 
@@ -30,7 +30,7 @@ Each new approval records the actual analysis it supersedes, under the BOQ trans
 
 Duplicate active approvals, cycles, mismatched identities, invalid snapshots and missing restoration evidence require reconciliation. Restoration never guesses a manual cost. Historical approval self-links remain intact and may refer to cancelled history; cancellation retains native checks for other linked DocTypes.
 
-The additive patch labels unversioned submitted/cancelled analyses `legacy-unversioned/v0` and unresolved items **Legacy Review**, preserving recorded prices, amounts, statuses and approval attribution. Ordinary saves and new approvals on unresolved legacy bases are blocked until a reviewed conversion establishes reliable evidence. The patch also preserves a newer active approved basis on replay. There is no general legacy-conversion UI or customer-data repair in this batch. That reviewed conversion and representative upgrade remain open release work.
+The additive patch labels unversioned submitted/cancelled analyses `legacy-unversioned/v0` and unresolved items **Legacy Review**, preserving recorded prices, amounts, statuses and approval attribution. Ordinary saves and new approvals on unresolved legacy bases are blocked until a reviewed conversion establishes reliable evidence. The patch also preserves a newer active approved basis on replay. A non-RPC operator conversion now requires an explicit reviewed manual basis, a saved replacement draft, native permissions, reason and a matching preview digest. It retains old financial amounts and approval attribution, supersedes the prior active legacy analysis and approves the replacement atomically. See [the conversion runbook](LEGACY_CONVERSION_RUNBOOK.md). No actual customer data was converted; representative upgrade/conversion remains a release gate.
 
 ## Permanent quantity approval history
 
@@ -40,7 +40,7 @@ A correction is a **new revision**. First approval through ordinary document CRU
 
 Draft revisions cannot change current quantities. Reapplying old approval history cannot replace a newer projection; repeating the current approval is a no-op. Guards use the stored revision values, not an arbitrary caller object's amounts. Immutable numeric comparison uses database storage scale rather than displayed currency precision, preserving sub-cent protection while accepting unchanged fractional computed percentages.
 
-These rules do not certify all permission/import/report routes. Some existing readers calculate revised figures from Variation Order deltas while others read quantity-revision projections. Customer release still requires a unified reader audit and representative historical reconciliation; approved history must not be rewritten to make those views agree.
+Revised BOQ reports and Excel export now consume the current quantity/rate projection, including standalone corrections and variation items. VO attribution remains separate from current totals. New quantity/VO snapshots capture factor and financial-rule version; successive VO amounts are incremental from the previous current state. Client-approved VO snapshots are server-immutable. Existing unversioned approved history is preserved; no historical factor or amount is guessed. Remaining readers/routes and representative historical reconciliation still require qualification.
 
 ## Verification and next development
 

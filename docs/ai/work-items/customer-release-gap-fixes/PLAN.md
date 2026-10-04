@@ -45,3 +45,14 @@ Each change needs a bounded diff, actual relevant verification, and honest limit
 ## Owner-rule follow-up (2026-10-05)
 
 The parent implemented confirmed pricing/provenance/factor/projection rules. GPT-6 Luna added the optional tax workbook path and bounded permanence guards; parent reviewed and verified the integrated result. A further read-only review found unsafe unresolved legacy edits/approval without restoration evidence; parent corrected both. Real migration exposed sidebar-before-page ordering and new-record save defects; corrected in a separate bounded setup commit. See STATUS.md and VERIFICATION.md for actual candidate evidence and remaining release gates.
+
+
+## Integrated candidate and remaining boundary (2026-10-05)
+
+Main source through `7839e67` was merged and tested. Main then advanced to `3fa285a` with two documentation/evidence-only population commits; these were merged locally without executing their site scripts. App source and CI remain byte-identical to the tested code commit `4be0712`. The integrated candidate is `46e50cef334a4f51c9faea04c99bf9b5f7401a7f`.
+
+The parent implemented current report projections, factor-bound immutable revision/VO values, resource factor/wastage/analysis-quantity normalization, reviewed operator legacy conversion, BOQ parent permission hooks, native import permissions/numeric validation, POST-only BOQ mutations and removal of automatic global System Manager grants. Luna supplied bounded test cases, read-only review and the conversion runbook; parent reviewed the diff and executed the integrated checks. This is direct authorized collaboration, not native orchestrator execution or independent human certification.
+
+Final selected suite: 219 Python tests in 17 modules, 35 JavaScript tests, eleven authenticated HTTP access checks, repeated synthetic restore/migrations and both context checkers pass. The isolated candidate runtime passes `pip check`; advisory qualification remains open. The owner confirms physical resource factor behavior (10 × 0.5 × 1 = 5). See STATUS.md and VERIFICATION.md for precise evidence and limits.
+
+Existing shared sites remain outside mutation scope. Main points at live Bench sites, so advancing it requires the named site/backup and reviewed upgrade sequence. Delivery architecture, promised workload, representative customer data, framework/security qualification, actual UI checks, observed GitHub CI and release authority remain open. Prepare and review all available results before asking for the final gated action; never treat an unanswered question as approval.

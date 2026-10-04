@@ -81,6 +81,17 @@
 
 ## 3. In Progress (Active Work — Updated After Every Session)
 
+
+### Customer release gaps — integrated consultant candidate (2026-10-05)
+- Final main inspection: `3fa285a` with unrelated untracked `docs/ai/work-items/bilingual-wave2-group-masters-population/`; preserved, outside candidate.
+- Code `4be0712`; integrated branch candidate `46e50cef334a4f51c9faea04c99bf9b5f7401a7f` in customer-release-gap-fixes worktree. Main source through 7839e67 and later documentation-only population commits through 3fa285a were merged locally; site population scripts were not run. Main checkout remains on its existing linked-site code.
+- Owner confirms factor multiplies physical resource quantities and values: BOQ 10 × factor .5 × one resource unit = 5. Standard/FINANCIAL_RULES record this with previous additive/manual-restoration/permanent-history decisions.
+- Corrected current revised reports/export, factor-bound immutable quantity/VO snapshots and incremental deltas, resource normalization/wastage, reviewed operator-only legacy conversion, native Project Link/BOQ parent permissions, POST-only mutations, native permission-aware numeric import and global auto-grant removal.
+- Final isolated candidate runtime: pip check passes after compatible updates/tool separation; 219 Python tests in 17 modules, fresh 35 JS passes, eleven native HTTP checks, synthetic restore with financial/history/file/secret preservation and two migrations, schema/context/Ruff checks pass. Exact evidence and limitations in work-item VERIFICATION/TESTED_FILES.
+- Repeated Python audit reports 108 advisory entries in nine packages, with duplicates and unfixed/vendor-constrained entries; not exploit proof or security clearance. Shared runtime preserved. Recovery preserves a deliberately introduced legacy budget discrepancy; no repair was claimed.
+- Actual customer conversion/upgrade, main-site integration, delivery/workload choices, vendor qualification/rebuild, complete browser/role/capacity matrix, observed GitHub CI and human/release authority remain open. Named source site/backup is required before existing-site upgrade; unanswered questions are not approval.
+- Luna performed bounded tests/read-only review/runbook; parent owned policy/security and reviewed/tested integrated changes. Local commit hooks disabled to keep findings local. Private fixture servers stopped at final handover, data retained. No push/deployment or existing-site mutation by this task.
+
 ### Customer release gap corrections — owner-rule follow-up (2026-10-05)
 - Branch `codex/customer-release-gap-fixes`, worktree `/home/mohamed/frappe-bench/worktrees/customer-release-gap-fixes`, remains isolated. Main observed at `7839e67` with an unrelated untracked bilingual-wave1-masters-population work item; no main edits/merge/push/deployment.
 - Owner confirms positive factor (reject zero, missing→1), additive direct-cost percentages (100 +10% overhead +10% profit =120), cancellation restores prior approved/captured manual costs, and approved quantity history is permanent with new corrections. See `docs/ai/work-items/customer-release-gap-fixes/FINANCIAL_RULES.md`; professional standard now records these for future sessions.
@@ -222,6 +233,10 @@
 ---
 
 ## 6. Session Log (Append-Only — Most Recent First)
+
+
+### 2026-10-05 — integrated customer-release correction candidate
+Completed local source integration and reviewed legacy conversion/access/report corrections (4be0712; 46e50ce retains concurrent evidence). Verified 219 Python / 35 JS, native authenticated access, synthetic backup/restore/repeated migration and constraints. Owner's factor applies to resource quantities/values. Retained exact local evidence and all sixteen open acceptance requirements; existing-site/customer release remains gated by named backup/site, delivery/workload decisions and outstanding security/UI/CI/qualification. Private data stays local and transmitting hooks disabled.
 
 ### Session 2026-10-05 — Confirmed owner financial rules implemented and verified
 - Owner decisions are explicit: positive factors; additive shared direct-cost percentages (120 example); recoverable manual/prior cost restoration; permanent quantity approvals corrected through new records. The rule contract and standard were updated locally.

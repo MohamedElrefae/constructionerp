@@ -1,0 +1,24 @@
+{
+  "backup_seconds": 1.206,
+  "database_rows_match": true,
+  "encrypted_secret_decrypts": true,
+  "preserved_fixture_rollup_mismatches": [
+    "total_budgeted_cost"
+  ],
+  "private_attachment_hash_matches": true,
+  "restore_seconds": 24.858,
+  "row_counts": {
+    "BOQ Cost Analysis": 1,
+    "BOQ Cost Analysis Detail": 1,
+    "BOQ Header": 1,
+    "BOQ Item": 1,
+    "BOQ Quantity Revision": 2,
+    "BOQ Structure": 1,
+    "File": 1
+  },
+  "schema": "synthetic-recovery-drill/v1",
+  "scope": "Synthetic fixture only; not a representative customer upgrade, production SLA or hosting approval.",
+  "source_and_restored_rollup_audits_match": true,
+  "source_site": "release-gaps.localhost",
+  "target_site": "release-restore.localhost"
+}

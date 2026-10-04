@@ -111,3 +111,69 @@ All sixteen release gaps remain tracked in STATUS.md. The owner's decisions clos
 Source commits: `a01ac75` (financial rules) and `efda04d` (migration setup). Both were committed with external-memory hooks disabled for those commands; documentation follows separately.
 
 After verification, only the two private fixture servers restarted for this follow-up were gracefully stopped. Their data/configuration remain local for deliberate replay; existing site services were not stopped.
+
+## Integrated candidate — final verification (2026-10-05)
+
+**This section supersedes earlier candidate/environment claims for the current handover.** Earlier sections remain historical. Their `/tmp` probe scripts/logs were no longer present after a runtime restart; historical committed fingerprints remain, but those paths must not be reported as currently available proof.
+
+Financial/security code commit: `4be0712db90897f8947199f91665275909b7652d`. Integrated candidate: `46e50cef334a4f51c9faea04c99bf9b5f7401a7f`. Main source through `7839e67` was merged before the final suite, including bilingual Desk/report work. Main advanced to `3fa285a` during verification; its later commits add population documentation/evidence only. They were merged after the suite without executing their site scripts. App source and CI bytes match the tested code commit. Subsequent handover changes affect documentation only.
+
+### Actual final selected run
+
+All modules below ran sequentially in `release-gaps.localhost` using the private `candidate-env`, after the thirteen compatible dependency updates and final source edits. No existing shared site was selected. [Count record](QUALIFIED_TEST_COUNTS.JSON).
+
+| Module suffix (`construction.tests.test_`) | Passed |
+| --- | ---: |
+| boq_properties | 17 |
+| quantity_revisions | 31 |
+| variation_orders | 27 |
+| cost_analysis_engine | 37 |
+| cost_database_api | 23 |
+| customer_release_financial_guards | 12 |
+| boq_transactions | 12 |
+| boq_wbs_generation | 2 |
+| boq_structure_conversion | 1 |
+| boq_structure_delete_safety | 1 |
+| boq_excel_parser | 4 |
+| boq_rollup_audit | 5 |
+| bilingual_install_schema | 6 |
+| boq_legacy_cost_conversion | 8 |
+| boq_parent_permissions | 6 |
+| bilingual_desk_link_dispatch | 17 |
+| stage7_bilingual_reports | 10 |
+| **Total** | **219** |
+
+Selected JavaScript properties were rerun: **35 passed / nine suites**. Some legacy Python property cases remain placeholders. These counts do not measure complete-app coverage.
+
+New regressions establish independent factor-aware revision/VO/report/export examples, standalone corrections and variation item projections, successive incremental VOs, approved snapshot resave/tamper refusal, the owner's physical-resource example with wastage/batch normalization, malformed workbook numeric rejection in preview and commit, absence of automatic vendor role grants and caller-transaction preservation, eight reviewed conversion invariants, and native read/write/list boundaries across six BOQ DocTypes with assigned Project permissions and the working scope filter disabled. The corrected Project Link is required for native user permissions.
+
+Ruff lint and format checks pass on all 22 touched/new Python files; the earlier harmless adjacent-f-string formatting difference in install.py is normalized. Whitespace checks pass. Reviewed schema regeneration and final schema/context checks pass: 21 schema owners plus one override; eleven context checks. Candidate `pip check` passes. Dependency advisories remain as described in DEPENDENCY_REVIEW.md; compatibility alone is not security clearance.
+
+### Native HTTP access checks
+
+The actual Frappe WSGI pipeline used token-authenticated synthetic Project Manager credentials with one assigned Project. [Nonsecret result record](QUALIFIED_HTTP_ACCESS.JSON): allowed item read 200, forbidden item read 403, permission-filtered list 200 with only the allowed item, forbidden write 403, forbidden reassignment 403, allowed private file 200, forbidden private file 403, mutation GET 403, allowed mutation POST 200, forbidden mutation POST 403 and forbidden Excel export 403. Stored forbidden parent/header remained unchanged; the allowed transition persisted.
+
+The initial probe hit the fixture test runner's maintenance mode (503). HTTP was enabled only on that disposable fixture. A second fixture error used identical attachment bytes, so Frappe deduplicated both files to the accessible content; the final probe uses distinct bytes and verifies the intended forbidden attachment. These were probe corrections, not hidden app fixes. The final probe's synthetic credential was disabled afterward; no credential is committed. This is eleven request checks for one role/project boundary, not browser evidence, a complete role/company/share matrix or production reverse-proxy validation.
+
+### Backup, restore and repeated migrations
+
+A populated synthetic source fixture deliberately includes legacy cost/history, two approved quantity records, a private Arabic UTF-8 attachment and an encrypted test User API secret. A native database/public-files/private-files/config backup was restored into **release-restore.localhost**, with a new database on a second isolated MariaDB server. Original encryption key was restored while new database credentials/socket were retained. The source site was preserved.
+
+[Nonsecret recovery record](RECOVERY_EVIDENCE.JSON): backup 1.206 seconds; restore 24.858 seconds; header/structure/item/analysis/detail/file rows and two revisions hash-match. The private attachment bytes match and the encrypted secret decrypts to the expected hash. Two native migrations on the restored fixture passed; the verification passed again afterward. Source and restored read-only rollup audits match. The fixture's deliberate legacy direct database edit leaves `total_budgeted_cost` discrepant before and after restoration; that discrepancy is preserved, not repaired. This proves faithful recovery of the selected fixture, not commercial reconciliation or a representative prior-version upgrade.
+
+Initial operator-script mistakes were corrected before success: native new-site initialization was required, and the audit's actual key is `mismatched_fields`. An initial zero-discrepancy assertion was inappropriate for the deliberately inconsistent legacy fixture; the correct criterion is exact source/restored audit equality plus row/file/secret preservation. No force overwrite or original-site repair was used.
+
+### Isolation, reproduction and evidence
+
+Private bench: `/home/mohamed/frappe-bench/release-tests/customer-release-gap-fixes`. Its candidate runtime, database directories and configuration are separate from existing services. Use the direct helper from that bench's `sites` directory after deliberately restarting only its retained private servers:
+
+```bash
+PYTHONPATH=/home/mohamed/frappe-bench/worktrees/customer-release-gap-fixes \
+  /home/mohamed/frappe-bench/release-tests/customer-release-gap-fixes/candidate-env/bin/python \
+  -m frappe.utils.bench_helper frappe --site release-gaps.localhost run-tests \
+  --app construction --module construction.tests.test_boq_legacy_cost_conversion
+```
+
+Private scripts are under the bench's `private/` directory: final_verification.py, recovery_drill.py and http_access_probe.py. The latter two create synthetic data and contain exact bench/site guards; do not retarget them to customer sites. Backups/config/secrets remain private and outside Git. Final successful logs are under `logs/qualified-*`, `recovery-*`, and `final-*`. File hashes include source/test/schema/CI inputs plus successful logs and public inventory summaries. `OWNER_RULES_TESTED_FILES.json` preserves the preceding efda04d fingerprint; FIRST_BATCH_TESTED_FILES.json preserves the earlier batch.
+
+GPT-6 Luna supplied bounded tests, read-only inventories/review and the conversion runbook. The parent reviewed the integrated diff, owned financial/security implementation, corrected discovered defects, ran the final suite/HTTP/recovery checks and committed locally with transmitting hooks disabled. No native orchestrator run, human independent release review, v15/runtime matrix, complete browser/capacity/security clearance, actual GitHub run, representative customer conversion, existing-site installation, push/deployment or customer release approval is claimed. See STATUS.md for all remaining requirements and the named-site authorization boundary.
