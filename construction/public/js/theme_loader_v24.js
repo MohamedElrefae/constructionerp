@@ -2,8 +2,7 @@
 /**
  * Construction Theme v5.15 — Isolated Zone Placement
  * Desk: <ul.ct-topbar-zone.ct-zone--desk> appended to .desktop-navbar
- * Standard: <div.ct-topbar-zone.ct-topbar-zone--standard> absolute in .page-head
- * No injection into Frappe containers, no evacuation, no retries.
+ * Standard: theme controls share the page-head-content flex row with actions.
  */
 
 (function () {
@@ -363,7 +362,10 @@
 					zone.className = "ct-topbar-zone ct-topbar-zone--standard";
 					zone.style.cssText =
 						"display:flex;align-items:center;margin-left:auto;flex-shrink:0;gap:4px;padding:0 4px;";
-					pageHead.appendChild(zone);
+					// The outer header contains a full-width Bootstrap container.
+					// A sibling zone overflows it and can cover the Save button.
+					var content = pageHead.querySelector(".page-head-content") || pageHead;
+					content.appendChild(zone);
 					return zone;
 				}
 

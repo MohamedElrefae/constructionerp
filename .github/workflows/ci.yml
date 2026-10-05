@@ -145,4 +145,4 @@ jobs:
         working-directory: /home/runner/frappe-bench/apps/construction/construction/tests
         run: |
           npm ci --no-audit --no-fund
-          node --test test_print_settings_properties.js
+          node --test --test-isolation=none test_print_settings_properties.js

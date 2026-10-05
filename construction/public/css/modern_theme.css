@@ -4338,6 +4338,31 @@ html.ct-enterprise .ct-topbar-zone.ct-topbar-zone--standard .ct-topbar-item {
   align-items: center;
 }
 
+/* Keep customer actions reachable when the custom controls fill the header.
+   Frappe's flex-nowrap utility otherwise forces them outside its container. */
+html.ct-enterprise .page-head:has(.ct-topbar-zone--standard) .page-head-content {
+  flex-wrap: wrap !important;
+  height: auto;
+  min-height: var(--page-head-height);
+}
+
+html.ct-enterprise .page-head:has(.ct-topbar-zone--standard) .page-title {
+  flex: 1 1 180px;
+  min-width: 0;
+}
+
+html.ct-enterprise .page-head:has(.ct-topbar-zone--standard) .page-actions {
+  flex: 1 1 320px;
+  min-width: 0;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+html.ct-enterprise .page-head:has(.ct-topbar-zone--standard) .custom-actions,
+html.ct-enterprise .page-head:has(.ct-topbar-zone--standard) .standard-actions {
+  flex-wrap: wrap;
+}
+
 /* ─── Actions Zone (fallback, prepended to .page-actions) ─── */
 html.ct-enterprise .ct-topbar-zone.ct-topbar-zone--actions {
   display: inline-flex;

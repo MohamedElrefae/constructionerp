@@ -11,6 +11,8 @@ import contextlib
 import unittest
 from unittest import mock
 
+from frappe.tests.utils import FrappeTestCase
+
 
 def _stub_module(columns, data):
     import types
@@ -52,8 +54,13 @@ def _patched_report_modules(mapping):
 
 class TestBilingualReportsAPI(unittest.TestCase):
     def _call(self, name, mock_module, mode=None, lang=None, filters=None):
-        with mock.patch("frappe.get_module", return_value=mock_module), mock.patch(
-            "frappe.only_for", lambda *a, **k: None
+        import construction.api.bilingual_reports as api_mod
+        from construction.api.bilingual_reports import PILOT_REPORTS
+
+        with (
+            _patched_report_modules({PILOT_REPORTS[name]: mock_module}),
+            mock.patch("frappe.only_for", lambda *a, **k: None),
+            mock.patch.object(api_mod, "_check_report_access"),
         ):
             from construction.api.bilingual_reports import localized_report
 
@@ -62,9 +69,12 @@ class TestBilingualReportsAPI(unittest.TestCase):
     def test_unknown_report_fails_closed(self):
         import frappe
 
+        from construction.api.bilingual_reports import localized_report
+
         before = frappe.get_all("Account", limit=1)  # realtime site reachable
         with self.assertRaises(frappe.ValidationError):
-            self._call("Sales Register", _stub_module([], []))
+            with mock.patch("frappe.only_for", lambda *a, **k: None):
+                localized_report("Sales Register", filters=None, mode="ar")
 
     def test_ar_mode_localizes_account_label(self):
         # R2b: patch the API module's own binding — patching the service
@@ -76,9 +86,7 @@ class TestBilingualReportsAPI(unittest.TestCase):
             [{"fieldname": "account", "label": "Account"}],
             [{"account": "Rent", "debit": 100}],
         )
-        with mock.patch.object(
-            api_mod, "load_account_arabic_mapping", return_value={"Rent": "إيجار"}
-        ):
+        with mock.patch.object(api_mod, "load_account_arabic_mapping", return_value={"Rent": "إيجار"}):
             out = self._call("Trial Balance", mod, mode="ar")
         self.assertEqual(out["mode"], "ar")
         self.assertEqual(out["data"][0]["account"], "إيجار")
@@ -88,9 +96,7 @@ class TestBilingualReportsAPI(unittest.TestCase):
         import construction.api.bilingual_reports as api_mod
 
         mod = _stub_module([{"fieldname": "account"}], [{"account": "Rent"}])
-        with mock.patch.object(
-            api_mod, "load_account_arabic_mapping", return_value={"Rent": "إيجار"}
-        ):
+        with mock.patch.object(api_mod, "load_account_arabic_mapping", return_value={"Rent": "إيجار"}):
             out = self._call("Trial Balance", mod, mode="both")
         self.assertEqual(out["data"][0]["account"], "Rent — إيجار")
 
@@ -98,9 +104,7 @@ class TestBilingualReportsAPI(unittest.TestCase):
         import construction.api.bilingual_reports as api_mod
 
         mod = _stub_module([{"fieldname": "account"}], [{"account": "Rent"}])
-        with mock.patch.object(
-            api_mod, "load_account_arabic_mapping", return_value={"Rent": "إيجار"}
-        ):
+        with mock.patch.object(api_mod, "load_account_arabic_mapping", return_value={"Rent": "إيجار"}):
             out = self._call("Trial Balance", mod, mode="en")
         self.assertEqual(out["data"][0]["account"], "Rent")
 
@@ -112,10 +116,13 @@ class TestStatementAllowlist(unittest.TestCase):
     STATEMENTS = ("Balance Sheet", "Profit and Loss Statement")
 
     def _call(self, name, mock_module, mode=None, filters=None):
+        import construction.api.bilingual_reports as api_mod
         from construction.api.bilingual_reports import PILOT_REPORTS, localized_report
 
-        with mock.patch("frappe.only_for", lambda *a, **k: None), _patched_report_modules(
-            {PILOT_REPORTS[name]: mock_module}
+        with (
+            mock.patch("frappe.only_for", lambda *a, **k: None),
+            mock.patch.object(api_mod, "_check_report_access"),
+            _patched_report_modules({PILOT_REPORTS[name]: mock_module}),
         ):
             return localized_report(name, filters=filters, mode=mode)
 
@@ -136,9 +143,7 @@ class TestStatementAllowlist(unittest.TestCase):
 
         for name in self.STATEMENTS:
             mod = _stub_module([{"fieldname": "account"}], [{"account": "Cash"}])
-            with mock.patch.object(
-                api_mod, "load_account_arabic_mapping", return_value={}
-            ):
+            with mock.patch.object(api_mod, "load_account_arabic_mapping", return_value={}):
                 out = self._call(name, mod, mode="ar", filters='{"company": "Elrefae"}')
             self.assertEqual(mod.execute.call_count, 1, name)
             self.assertEqual(out["report_name"], name)
@@ -159,9 +164,7 @@ class TestStatementAllowlist(unittest.TestCase):
             "load_account_arabic_mapping",
             return_value={"Cash in Hand": "النقدية"},
         ):
-            out = self._call(
-                "Balance Sheet", mod, mode="ar", filters='{"company": "Elrefae"}'
-            )
+            out = self._call("Balance Sheet", mod, mode="ar", filters='{"company": "Elrefae"}')
         self.assertEqual(out["data"][0]["account_name"], "النقدية")
         self.assertEqual(out["data"][0]["account"], "Cash")
 
@@ -264,63 +267,416 @@ class TestRealModuleSmoke(unittest.TestCase):
                     localized_report("Trial Balance", filters=native, mode="ar")
 
     def test_object_filters_accepted(self):
-        with mock.patch("frappe.only_for", lambda *a, **k: None), mock.patch(
-            "frappe.get_module"
-        ) as gm:
-            gm.return_value.execute = mock.Mock(return_value=([], []))
+        import construction.api.bilingual_reports as api_mod
+        from construction.api.bilingual_reports import PILOT_REPORTS
+
+        mod = _stub_module([], [])
+        with (
+            mock.patch("frappe.only_for", lambda *a, **k: None),
+            mock.patch.object(api_mod, "_check_report_access"),
+            _patched_report_modules({PILOT_REPORTS["Trial Balance"]: mod}),
+        ):
             from construction.api.bilingual_reports import localized_report
 
             out = localized_report("Trial Balance", mode="ar", filters='{"company": "Elrefae"}')
-            self.assertEqual(gm.return_value.execute.call_count, 1)
+            self.assertEqual(mod.execute.call_count, 1)
             self.assertEqual(out["mode"], "ar")
 
 
-class TestGenuineAuthorization(unittest.TestCase):
-    """AGENTS.md §4.7: the role gate must hold for a real user, unmocked."""
+class TestGenuineAuthorization(FrappeTestCase):
+    """Exercise the report and Company gates with real roles and User Permissions."""
 
-    USER = "ct-finance-noperm@example.com"
-
-    def test_non_admin_without_accounts_roles_is_rejected_before_execute(self):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
         import frappe
 
-        if not frappe.db.exists("User", self.USER):
+        cls.addClassCleanup(cls._rollback_fixtures)
+        companies = frappe.get_all("Company", pluck="name", order_by="name asc")
+        if not companies:
+            raise AssertionError("Authorization tests require an installed Company fixture.")
+        cls.allowed_company = companies[0]
+        suffix = frappe.generate_hash(length=8)
+        if len(companies) > 1:
+            cls.denied_company = companies[1]
+        else:
+            source = frappe.get_doc("Company", cls.allowed_company)
+            denied = frappe.get_doc(
+                {
+                    "doctype": "Company",
+                    "company_name": f"CT Report Denied {suffix}",
+                    "abbr": f"CR{suffix[:4]}",
+                    "default_currency": source.default_currency,
+                    "country": source.country,
+                    "create_chart_of_accounts_based_on": "Existing Company",
+                    "existing_company": cls.allowed_company,
+                }
+            ).insert(ignore_permissions=True)
+            cls.denied_company = denied.name
+        cls.no_role_user = cls._create_user(f"ct-report-norole-{suffix}@example.test", [])
+        cls.accounts_user = cls._create_user(f"ct-report-accounts-{suffix}@example.test", ["Accounts User"])
+        frappe.get_doc(
+            {
+                "doctype": "User Permission",
+                "user": cls.accounts_user,
+                "allow": "Company",
+                "for_value": cls.allowed_company,
+                "apply_to_all_doctypes": 1,
+                "hide_descendants": 1,
+            }
+        ).insert(ignore_permissions=True)
+
+    @classmethod
+    def _create_user(cls, email, roles):
+        import frappe
+
+        return (
             frappe.get_doc(
                 {
                     "doctype": "User",
-                    "email": self.USER,
-                    "first_name": "CT",
-                    "new_password": "ct-test-pw-123",
+                    "email": email,
+                    "first_name": "CT Report Authorization",
                     "user_type": "System User",
                     "send_welcome_email": 0,
-                    "roles": [],
+                    "roles": [{"role": role} for role in roles],
                 }
-            ).insert(ignore_permissions=True)
-        frappe.db.commit()
-        frappe.set_user(self.USER)
+            )
+            .insert(ignore_permissions=True)
+            .name
+        )
+
+    @classmethod
+    def _rollback_fixtures(cls):
+        import frappe
+
+        frappe.set_user("Administrator")
+        frappe.db.rollback()
+        frappe.clear_cache()
+
+    def test_non_admin_without_accounts_roles_is_rejected_before_report_or_vendor(self):
+        import frappe
+
+        frappe.set_user(self.no_role_user)
         try:
             with _patched_report_modules({}) as resolved:
                 from construction.api.bilingual_reports import localized_report
 
                 with self.assertRaises(frappe.PermissionError):
                     localized_report("Trial Balance", filters=None, mode="ar")
-                # Tier 5E: the same gate holds for the statement names.
                 with self.assertRaises(frappe.PermissionError):
                     localized_report("Balance Sheet", filters=None, mode="ar")
-                self.assertEqual(
-                    resolved, [], "vendor module must not be resolved for a rejected user"
-                )
+                self.assertEqual(resolved, [])
         finally:
             frappe.set_user("Administrator")
-            if frappe.db.exists("User", self.USER):
-                frappe.delete_doc("User", self.USER, force=True, ignore_permissions=True)
-            frappe.db.commit()
 
-        from construction.api.bilingual_reports import PILOT_REPORTS
+    def test_admin_can_read_real_company_and_report_then_execute_stub(self):
+        import frappe
+
+        from construction.api.bilingual_reports import PILOT_REPORTS, localized_report
 
         stub = _stub_module([{"fieldname": "account"}], [{"account": "Cash"}])
-        with _patched_report_modules({PILOT_REPORTS["Trial Balance"]: stub}):
-            from construction.api.bilingual_reports import localized_report
-
-            out = localized_report("Trial Balance", filters='{"company": "Elrefae"}', mode="ar")
+        filters = {
+            "company": self.allowed_company,
+            "filter_based_on": "Date Range",
+            "period_start_date": "2026-01-01",
+            "period_end_date": "2026-12-31",
+        }
+        with _patched_report_modules({PILOT_REPORTS["Balance Sheet"]: stub}):
+            out = localized_report("Balance Sheet", filters=filters, mode="ar")
         self.assertEqual(stub.execute.call_count, 1)
-        self.assertEqual(out["report_name"], "Trial Balance")
+        self.assertEqual(out["report_name"], "Balance Sheet")
+
+    def test_accounts_user_can_read_assigned_company_and_report(self):
+        import frappe
+
+        from construction.api.bilingual_reports import PILOT_REPORTS, localized_report
+
+        stub = _stub_module([{"fieldname": "account"}], [{"account": "Cash"}])
+        frappe.set_user(self.accounts_user)
+        try:
+            with _patched_report_modules({PILOT_REPORTS["Balance Sheet"]: stub}):
+                out = localized_report(
+                    "Balance Sheet",
+                    filters={
+                        "company": self.allowed_company,
+                        "filter_based_on": "Date Range",
+                        "period_start_date": "2026-01-01",
+                        "period_end_date": "2026-12-31",
+                    },
+                    mode="en",
+                )
+            self.assertEqual(stub.execute.call_count, 1)
+            self.assertEqual(out["report_name"], "Balance Sheet")
+        finally:
+            frappe.set_user("Administrator")
+
+    def test_disabled_native_report_is_rejected_before_vendor_resolution(self):
+        import frappe
+
+        from construction.api.bilingual_reports import PILOT_REPORTS, localized_report
+
+        report_name = "Balance Sheet"
+        original_disabled = frappe.db.get_value("Report", report_name, "disabled")
+        stub = _stub_module([], [])
+        try:
+            frappe.db.set_value("Report", report_name, "disabled", 1, update_modified=False)
+            with _patched_report_modules({PILOT_REPORTS[report_name]: stub}) as resolved:
+                with self.assertRaises(frappe.ValidationError):
+                    localized_report(
+                        report_name,
+                        filters={
+                            "company": self.allowed_company,
+                            "filter_based_on": "Date Range",
+                            "period_start_date": "2026-01-01",
+                            "period_end_date": "2026-12-31",
+                        },
+                        mode="en",
+                    )
+            self.assertEqual(resolved, [])
+            stub.execute.assert_not_called()
+        finally:
+            frappe.db.set_value("Report", report_name, "disabled", original_disabled, update_modified=False)
+            frappe.clear_cache(doctype="Report")
+
+    def test_accounts_user_cannot_run_report_for_unassigned_company(self):
+        import frappe
+
+        from construction.api.bilingual_reports import PILOT_REPORTS, localized_report
+
+        stub = _stub_module([], [])
+        frappe.set_user(self.accounts_user)
+        try:
+            with _patched_report_modules({PILOT_REPORTS["Balance Sheet"]: stub}) as resolved:
+                with self.assertRaises(frappe.PermissionError):
+                    localized_report(
+                        "Balance Sheet",
+                        filters={
+                            "company": self.denied_company,
+                            "filter_based_on": "Date Range",
+                            "period_start_date": "2026-01-01",
+                            "period_end_date": "2026-12-31",
+                        },
+                        mode="en",
+                    )
+            self.assertEqual(resolved, [], "authorization must fail before resolving vendor report")
+            stub.execute.assert_not_called()
+        finally:
+            frappe.set_user("Administrator")
+
+
+class TestFiscalYearReportDefaults(FrappeTestCase):
+    """Native fiscal-year fixtures prove date anchoring against real ERPNext data.
+
+    FrappeTestCase owns this class's transaction: it rolls back fixture inserts
+    on class cleanup. The extra cleanup also clears ERPNext's FY cache after
+    rollback so later tests cannot observe rows which no longer exist.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        import frappe
+        from frappe.utils import add_days, add_years, getdate
+
+        cls.addClassCleanup(cls._rollback_fixtures_and_clear_fiscal_year_cache)
+        cls.company = frappe.db.get_value("Company", {}, "name")
+        if not cls.company:
+            raise AssertionError("Fiscal-year integration tests require an installed Company fixture.")
+
+        cls.created_fiscal_years = []
+        cls.target_date = "2026-06-15"
+        cls.historical_date = "2024-06-15"
+        cls.fiscal_year_2026 = cls._get_or_create_fiscal_year(
+            cls.target_date, "2026-01-01", "2026-12-31", "2026"
+        )
+        cls.fiscal_year_2024 = cls._get_or_create_fiscal_year(
+            cls.historical_date, "2024-01-01", "2024-12-31", "2024"
+        )
+
+        latest_end = frappe.db.get_value(
+            "Fiscal Year", {"disabled": 0}, "year_end_date", order_by="year_end_date desc"
+        )
+        if not latest_end:
+            raise AssertionError("Fiscal-year integration tests require at least one installed Fiscal Year.")
+        future_start = add_days(getdate(latest_end), 1)
+        future_end = add_days(add_years(future_start, 1), -1)
+        cls.future_fiscal_year = cls._create_fiscal_year(
+            f"_CT Bilingual Report Future {frappe.generate_hash(length=8)}",
+            future_start,
+            future_end,
+        )
+
+        from erpnext.accounts.utils import get_fiscal_year
+
+        cls.no_year_date = add_days(
+            frappe.db.get_value(
+                "Fiscal Year", {"disabled": 0}, "year_start_date", order_by="year_start_date asc"
+            ),
+            -1,
+        )
+        cls.assert_no_fiscal_year_for_date = not get_fiscal_year(
+            date=cls.no_year_date,
+            company=cls.company,
+            verbose=0,
+            as_dict=True,
+            raise_on_missing=False,
+        )
+
+    @classmethod
+    def _rollback_fixtures_and_clear_fiscal_year_cache(cls):
+        import frappe
+
+        frappe.db.rollback()
+        frappe.cache().delete_key("fiscal_years")
+
+    @classmethod
+    def _get_or_create_fiscal_year(cls, reference_date, start_date, end_date, label):
+        import frappe
+        from erpnext.accounts.utils import get_fiscal_year
+
+        existing = get_fiscal_year(
+            date=reference_date,
+            company=cls.company,
+            verbose=0,
+            as_dict=True,
+            raise_on_missing=False,
+        )
+        if existing:
+            return existing
+        return cls._create_fiscal_year(
+            f"_CT Bilingual Report {label} {frappe.generate_hash(length=8)}",
+            start_date,
+            end_date,
+        )
+
+    @classmethod
+    def _create_fiscal_year(cls, name, start_date, end_date):
+        import frappe
+
+        if frappe.db.exists("Fiscal Year", name):
+            raise AssertionError("Generated test Fiscal Year name unexpectedly collided.")
+        fiscal_year = frappe.get_doc(
+            {
+                "doctype": "Fiscal Year",
+                "year": name,
+                "year_start_date": start_date,
+                "year_end_date": end_date,
+                "companies": [{"company": cls.company}],
+            }
+        ).insert(ignore_permissions=True)
+        cls.created_fiscal_years.append(fiscal_year.name)
+        return fiscal_year
+
+    def _call(self, name, filters, *, today=None, module=None):
+        import construction.api.bilingual_reports as api_mod
+        from construction.api.bilingual_reports import PILOT_REPORTS, localized_report
+
+        module = module or _stub_module([], [])
+        patches = [
+            mock.patch("frappe.only_for", lambda *a, **k: None),
+            # These tests isolate fiscal defaults and vendor payload. Native
+            # report/company authorization is covered by TestGenuineAuthorization.
+            mock.patch.object(api_mod, "_check_report_access"),
+            _patched_report_modules({PILOT_REPORTS[name]: module}),
+            mock.patch.object(api_mod, "load_account_arabic_mapping", return_value={}),
+        ]
+        if today:
+            patches.append(mock.patch("frappe.utils.today", return_value=today))
+        with contextlib.ExitStack() as stack:
+            for patcher in patches:
+                stack.enter_context(patcher)
+            response = localized_report(name, filters=filters, mode="en")
+        return module, response
+
+    def test_future_configured_year_does_not_hijack_requested_2026_trial_balance(self):
+        from erpnext.accounts.utils import get_fiscal_year
+
+        newest_without_date = get_fiscal_year(
+            company=self.company, verbose=0, as_dict=True, raise_on_missing=True
+        )
+        self.assertEqual(newest_without_date.name, self.future_fiscal_year.name)
+
+        module, _response = self._call(
+            "Trial Balance",
+            {
+                "company": self.company,
+                "from_date": str(self.fiscal_year_2026.year_start_date),
+                "to_date": str(self.fiscal_year_2026.year_end_date),
+            },
+        )
+        report_filters = module.execute.call_args.kwargs["filters"]
+        self.assertEqual(report_filters["fiscal_year"], self.fiscal_year_2026.name)
+        self.assertEqual(report_filters["from_date"], str(self.fiscal_year_2026.year_start_date))
+        self.assertEqual(report_filters["to_date"], str(self.fiscal_year_2026.year_end_date))
+
+    def test_historical_general_ledger_end_uses_the_anchored_fiscal_year(self):
+        from frappe.utils import today
+
+        module, _response = self._call(
+            "General Ledger",
+            {"company": self.company, "from_date": str(self.fiscal_year_2024.year_start_date)},
+        )
+        report_filters = module.execute.call_args.kwargs["filters"]
+        self.assertEqual(report_filters["from_date"], str(self.fiscal_year_2024.year_start_date))
+        self.assertEqual(report_filters["to_date"], str(self.fiscal_year_2024.year_end_date))
+        self.assertLess(report_filters["to_date"], today())
+
+    def test_explicit_trial_balance_fiscal_year_is_preserved(self):
+        module, _response = self._call(
+            "Trial Balance",
+            {
+                "company": self.company,
+                "fiscal_year": self.fiscal_year_2024.name,
+                "from_date": "2026-06-15",
+                "to_date": "2026-12-31",
+            },
+        )
+        report_filters = module.execute.call_args.kwargs["filters"]
+        self.assertEqual(report_filters["fiscal_year"], self.fiscal_year_2024.name)
+
+    def test_explicit_fiscal_period_bounds_do_not_need_a_year_for_today(self):
+        self.assertTrue(self.assert_no_fiscal_year_for_date)
+        module, _response = self._call(
+            "Balance Sheet",
+            {
+                "company": self.company,
+                "filter_based_on": "Fiscal Year",
+                "from_fiscal_year": self.fiscal_year_2024.name,
+                "to_fiscal_year": self.future_fiscal_year.name,
+            },
+            today=self.no_year_date,
+        )
+        report_filters = module.execute.call_args.kwargs["filters"]
+        self.assertEqual(report_filters["from_fiscal_year"], self.fiscal_year_2024.name)
+        self.assertEqual(report_filters["to_fiscal_year"], self.future_fiscal_year.name)
+
+        date_range_module, _response = self._call(
+            "Balance Sheet",
+            {
+                "company": self.company,
+                "filter_based_on": "Date Range",
+                "period_start_date": str(self.fiscal_year_2024.year_start_date),
+                "period_end_date": str(self.fiscal_year_2024.year_end_date),
+            },
+            today=self.no_year_date,
+        )
+        date_range_filters = date_range_module.execute.call_args.kwargs["filters"]
+        self.assertEqual(date_range_filters["period_start_date"], str(self.fiscal_year_2024.year_start_date))
+        self.assertEqual(date_range_filters["period_end_date"], str(self.fiscal_year_2024.year_end_date))
+
+    def test_requested_date_without_fiscal_year_fails_closed(self):
+        from erpnext.accounts.utils import FiscalYearError
+
+        self.assertTrue(self.assert_no_fiscal_year_for_date)
+        module = _stub_module([], [])
+        with self.assertRaises(FiscalYearError):
+            self._call(
+                "Trial Balance",
+                {
+                    "company": self.company,
+                    "from_date": str(self.no_year_date),
+                    "to_date": str(self.no_year_date),
+                },
+                module=module,
+            )
+        module.execute.assert_not_called()
