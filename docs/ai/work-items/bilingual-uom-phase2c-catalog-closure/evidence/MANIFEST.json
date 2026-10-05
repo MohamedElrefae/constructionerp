@@ -1,0 +1,32 @@
+{
+  "work_item": "bilingual-uom-phase2c-catalog-closure",
+  "base_commit": "3e871f0",
+  "branch": "develop",
+  "generated_utc": "2026-10-05T17:55:00Z",
+  "primary_invariant": "Zero translation writes on 204 Phase 2C units; 45 populated UOMs intact with server-derived norm; frozen uom.json (d6e27a01...) and D5 triad untouched; zero modification to vendor code under apps/frappe or apps/erpnext; all 30 existing manifests untouched (zero re-pins); private site storage protected",
+  "decisions_settled": {
+    "R1": "zero translation writes - no doc.save() or SQL UPDATE on 204 Phase 2C units; read-only audit with rollback",
+    "R2": "fail-closed zero-usage check - scanned 105 table/column pairs in MariaDB, asserted 0 operational references",
+    "R3": "immutable categorization taxonomy - 204 units partitioned into 4 categories (89 physical/thermal, 79 obsolete imperial, 30 electromagnetic/optical, 6 misc) summing exactly to 204",
+    "R4": "formal closure ratification - UOM catalog lifecycle formally concluded and sealed with 45 active bilingual units",
+    "R5": "confidentiality policy enforced - strictly local commit with core.hooksPath=/dev/null; zero push",
+    "R6": "ephemeral redis hygiene - ports 11000/13000 terminated immediately after test suite run; dump.rdb untracked",
+    "R7": "manifest integrity - manifest #31 pins all 8 artefacts with zero re-pins across the 30 existing manifests"
+  },
+  "test_results": {
+    "zero_usage_audit": "PASS - 0 references across 105 table/column pairs; 45 populated / 253 total verified (zero-usage-safety-check.log)",
+    "unit_tests": "PASS - test_transaction_link_search 20/20, test_bilingual_desk_link_dispatch 17/17 (test-gates.log)",
+    "lints": "PASS - lint_scope_metadata, ai_context_check (11/11), lint_translation_writes, schema_drift_checker, py_compile, bash -n (lint-gates.log)",
+    "adr_reconciler": "PASS - 19/19 reconciled matches (lint-gates.log)"
+  },
+  "artefacts": {
+    "docs/ai/work-items/bilingual-uom-phase2c-catalog-closure/SCOPE.md": "7e3a81896281d12aff8924b32a4fc70c5a7859f2a0ca3ee066af13e2684d141a",
+    "docs/ai/work-items/bilingual-uom-phase2c-catalog-closure/UOM_CATALOG_CLOSURE_RATIFICATION.md": "b65a203bd878e80f3796f0487e11622ad78cff67e83ce2abcf3c4bcbe51980c3",
+    "docs/ai/work-items/bilingual-uom-phase2c-catalog-closure/evidence/PHASE2C_EXCLUSION_TAXONOMY.md": "9bb87247b782feb29a84ec6ebc5e2c8a7d4e82c19ec10f02f3c7bd0bd9f5e0e7",
+    "docs/ai/work-items/bilingual-uom-phase2c-catalog-closure/evidence/lint-gates.log": "9f8368ce1f2da8aa02235db73b5563952ab29eaf1e33c6350dc959fbde625f3c",
+    "docs/ai/work-items/bilingual-uom-phase2c-catalog-closure/evidence/manifest-integrity.log": "1b899d05f8efa3916d26d801b74c295827b1e4b2cd598306548b889cf5bbae03",
+    "docs/ai/work-items/bilingual-uom-phase2c-catalog-closure/evidence/scripts/check_phase2c_zero_usage.py": "6c3f6e7c227bfb477987ef4523af17bf090a034f2e346079760e40bf2b421f1f",
+    "docs/ai/work-items/bilingual-uom-phase2c-catalog-closure/evidence/test-gates.log": "a401760161e996693e244ee8c5ac1a4e0daf85ea60042cf2c498266b3c2fa402",
+    "docs/ai/work-items/bilingual-uom-phase2c-catalog-closure/evidence/zero-usage-safety-check.log": "d727837a728529cc8de882a3316cb378007ac638004e8957fd23c6576061ee7b"
+  }
+}

@@ -1,0 +1,109 @@
+============================================================
+TEST GATES EXECUTION LOG
+Work Item: bilingual-uom-phase2c-catalog-closure
+Base Commit: 3e871f0
+Site: v16.localhost
+Date: 2026-10-05
+============================================================
+
+[1/3] Ephemeral Redis Lifecycle
+- Queue Redis (port 11000): STARTED (daemonized, config/redis_queue.conf)
+- Cache Redis (port 13000): STARTED (daemonized, config/redis_cache.conf)
+- Status: Active during test window.
+
+[2/3] Test Module 1: Transaction Link Search
+Command: bench --site v16.localhost run-tests --module construction.tests.test_transaction_link_search
+
+Starting test run with parameters: site=v16.localhost, module=construction.tests.test_transaction_link_search, verbose=False, tests=(), force=False, profile=False, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+View detailed logs (using --verbose): /home/mohamed/frappe-bench/logs/frappe.testing.log
+
+Running 20 unspecified-category tests for construction
+
+construction.tests.test_transaction_link_search.TestAllowListValidation
+    ✔  test_registered_doctypes_accepted
+    ✔  test_seed_required_targets
+    ✔  test_unregistered_doctype_returns_empty
+
+construction.tests.test_transaction_link_search.TestClientFilterSanitization
+    ✔  test_json_string_filters_parsed_and_sanitized
+    ✔  test_meta_and_link_field_stripped
+
+construction.tests.test_transaction_link_search.TestClientServerAllowListDrift
+    ✔  test_js_transactional_targets_match_server_config
+
+construction.tests.test_transaction_link_search.TestDirectionalProperties
+    ✔  test_property_2_bounded_recall
+    ✔  test_property_3_native_agreement_on_latin_vocabulary
+    ✔  test_property_4_determinism
+
+construction.tests.test_transaction_link_search.TestEmptyAndLatinQueries
+    ✔  test_empty_txt_bypasses_preresolution
+    ✔  test_latin_query_passthrough
+    ✔  test_native_search_fields_derivation
+    ✔  test_whitespace_txt_bypasses_preresolution
+
+construction.tests.test_transaction_link_search.TestInvariantGuard
+    ✔  test_code_diad_byte_identical_across_reference_commits
+    ✔  test_registry_growth_is_monotonic
+    ✔  test_registry_growth_is_purely_additive_at_doctype_level
+
+construction.tests.test_transaction_link_search.TestSeededArabicEndToEnd
+    ✔  test_arabic_search_matches_and_enriches_labels
+    ✔  test_unmatched_arabic_returns_no_phantoms
+
+construction.tests.test_transaction_link_search.TestTopKBoundary
+    ✔  test_preresolution_requests_and_caps_at_top_k
+
+construction.tests.test_transaction_link_search.TestTxtCorrectnessTrap
+    ✔  test_txt_trap_asserted_downstream_receives_empty_txt
+
+----------------------------------------------------------------------
+Ran 20 tests in 0.397s
+
+OK (20/20 PASS)
+
+[3/3] Test Module 2: Bilingual Desk Link Dispatch
+Command: bench --site v16.localhost run-tests --module construction.tests.test_bilingual_desk_link_dispatch
+
+Starting test run with parameters: site=v16.localhost, module=construction.tests.test_bilingual_desk_link_dispatch, verbose=False, tests=(), force=False, profile=False, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+View detailed logs (using --verbose): /home/mohamed/frappe-bench/logs/frappe.testing.log
+
+Running 17 unspecified-category tests for construction
+
+construction.tests.test_bilingual_desk_link_dispatch.TestDeskLinkDispatch
+    ✔  test_arabic_path_denies_records_for_non_admin
+    ✔  test_arabic_path_enforces_permissions_via_get_list
+    ✔  test_arabic_path_returns_row_matched_only_on_vendor_field
+    ✔  test_arabic_query_skips_vendor_baseline
+    ✔  test_dict_rows_satisfy_build_for_autosuggest
+    ✔  test_dispatcher_canonical_positional_order_keeps_filters
+    ✔  test_enabled_disabled_constraints_mirrored
+    ✔  test_explicit_searchfield_keeps_vendor_ownership
+    ✔  test_genuine_entry_point_arabic_and_latin
+    ✔  test_latin_query_is_vendor_passthrough
+    ✔  test_non_active_registry_entry_fails_closed
+    ✔  test_override_hook_binding_resolves_to_dispatcher
+    ✔  test_registry_unreadable_fails_closed
+    ✔  test_sidecar_rows_satisfy_build_for_autosuggest
+    ✔  test_unregistered_doctype_is_vendor_passthrough
+    ✔  test_unusable_filters_return_vendor_result_unchanged
+    ✔  test_vendor_search_fields_folded_into_registry_query
+
+----------------------------------------------------------------------
+Ran 17 tests in 1.954s
+
+OK (17/17 PASS)
+
+============================================================
+POST-TEST CLEANUP & VERIFICATION
+- Ephemeral Redis shutdown:
+  - Port 11000: TERMINATED
+  - Port 13000: TERMINATED
+  - Verified closed via ps aux / socket check.
+- Test Residue Audit:
+  - Test fixture CT-DISP-ITEM-A6 child table rows cleaned.
+  - Zero test residue across database.
+============================================================
+SUMMARY: 37/37 TESTS PASS (20/20 + 17/17)
+VERDICT: PASS
+============================================================

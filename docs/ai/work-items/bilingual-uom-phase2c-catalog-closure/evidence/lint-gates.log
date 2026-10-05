@@ -1,0 +1,24 @@
+== lint gates & reconciler (bilingual-uom-phase2c-catalog-closure) ==
+Mon Oct  5 05:53:44 PM UTC 2026
+--- scripts/lint_scope_metadata.py
+PASS: no scope-dimension field has in_standard_filter=1 (19 DocTypes checked).
+exit=0
+--- scripts/ai_context_check.py
+ALL CHECKS PASSED
+exit=0
+--- scripts/lint_translation_writes.py
+Translation write lint PASSED
+exit=0
+--- scripts/schema_drift_checker.py
+Schema facts match live DocType JSON.
+Schema-owning DocTypes: 21
+Override-only folders: 1
+exit=0
+--- py_compile
+exit=0
+--- bash -n
+exit=0
+--- ADR reconciler (19/19)
+reconciled: 19/19
+RESULT: PASS - every §4 row matches the evidence artefact it cites
+exit=0

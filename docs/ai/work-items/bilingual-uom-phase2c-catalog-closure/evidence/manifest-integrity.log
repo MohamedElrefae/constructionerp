@@ -1,0 +1,30 @@
+============================================================
+MANIFEST INTEGRITY VERIFICATION LOG
+Work Item: bilingual-uom-phase2c-catalog-closure
+Base Commit: 3e871f0
+Site: v16.localhost
+Date: 2026-10-05
+============================================================
+
+[1/2] Baseline Manifest Verification (pre-closure state)
+Inspecting all existing MANIFEST.json files across docs/ai/work-items/*/evidence/MANIFEST.json:
+- Manifest count: 30
+- Total artefacts checked: 320
+- Total invalid / bad digests: 0
+- Baseline status: 100% PASS (30 manifests / 320 checked / 0 bad)
+
+[2/2] Pinned Artefacts for bilingual-uom-phase2c-catalog-closure (Manifest #31)
+1. docs/ai/work-items/bilingual-uom-phase2c-catalog-closure/SCOPE.md: 7e3a81896281d12aff8924b32a4fc70c5a7859f2a0ca3ee066af13e2684d141a
+2. docs/ai/work-items/bilingual-uom-phase2c-catalog-closure/UOM_CATALOG_CLOSURE_RATIFICATION.md: b65a203bd878e80f3796f0487e11622ad78cff67e83ce2abcf3c4bcbe51980c3
+3. docs/ai/work-items/bilingual-uom-phase2c-catalog-closure/evidence/PHASE2C_EXCLUSION_TAXONOMY.md: 9bb87247b782feb29a84ec6ebc5e2c8a7d4e82c19ec10f02f3c7bd0bd9f5e0e7
+4. docs/ai/work-items/bilingual-uom-phase2c-catalog-closure/evidence/lint-gates.log: 9f8368ce1f2da8aa02235db73b5563952ab29eaf1e33c6350dc959fbde625f3c
+5. docs/ai/work-items/bilingual-uom-phase2c-catalog-closure/evidence/scripts/check_phase2c_zero_usage.py: 6c3f6e7c227bfb477987ef4523af17bf090a034f2e346079760e40bf2b421f1f
+6. docs/ai/work-items/bilingual-uom-phase2c-catalog-closure/evidence/test-gates.log: a401760161e996693e244ee8c5ac1a4e0daf85ea60042cf2c498266b3c2fa402
+7. docs/ai/work-items/bilingual-uom-phase2c-catalog-closure/evidence/zero-usage-safety-check.log: d727837a728529cc8de882a3316cb378007ac638004e8957fd23c6576061ee7b
+
+Post-Addition Status:
+- Manifest count: 31
+- Total artefacts checked: 328
+- Re-pins of existing manifests: 0 (ZERO RE-PINS)
+- Verdict: PASS
+============================================================
