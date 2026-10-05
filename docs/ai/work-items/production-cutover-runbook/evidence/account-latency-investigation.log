@@ -1,0 +1,64 @@
+== F-D-1 investigation: Account link-search latency, production-shaped queries ==
+utc=2026-10-05T20:51:14Z  site=v16.localhost  doctype=Account  company=Elrefae (ledger-bearing, 4 GL rows)
+privacy R4: no query text is printed (length + sha8 only); no Arabic value emitted.
+ADR ceiling under test: Tier-1 <= 1.50 ms P95; Tier-2A ratio <= 1.15x (bilingual-performance-sla.md)
+
+query A = full stored Arabic value (shape probed by cutover_smoke_tests.py S3)
+          chars=26 sha8=1066f796
+query B = 5-char Arabic prefix (typeahead shape)
+          chars=5 sha8=8de80b41
+query C = 5-char ASCII prefix of the English name (fair ADR comparative shape)
+          chars=5 sha8=f2da589a
+Account rows: total=2102  in-company=86  (ADR fixture prefix CT-T3- matches ~2 rows on a test bench)
+
+[1] DESK SURFACE  searchable_link_search  (protocol: rounds=3 samples=50 warmup=5, min-of-rounds nearest-rank P95)
+    A full-Arabic-value query : p95= 3.340 ms  median= 2.334 ms  mean= 2.439 ms  -> BREACH
+    B 5-char Arabic prefix    : p95= 2.698 ms  median= 2.269 ms  mean= 2.329 ms  -> BREACH
+    C 5-char ASCII prefix     : p95= 3.284 ms  median= 2.497 ms  mean= 2.581 ms  -> BREACH
+    reference: S3 baseline pin for Account/ar = 3.075 ms (reproduced by A within run-to-run noise)
+    reference: the other 14 cutover doctypes pin at 0.65-1.10 ms P95 on the same surface
+
+[2] ADR SECTION 4 METHODOLOGY  measure_search_p95 (5 rounds x 50 samples, alternating order, GC paused)
+    leg 1 = Stage-1A native get_list (account_name/name OR-LIKE);  leg 2 = governed search_bilingual
+    query C (ASCII prefix) so both legs search the same language field
+    run 1: native p95= 1.402 ms (OK) | governed p95= 1.668 ms (BREACH) | ratio=1.1897x (BREACH)
+           match sets: native=1 governed=1 equal=True   sql/call: native=1.00 governed=1.00
+           (RANK_WINDOW=5000; run-to-run spread is reported because a sub-2 ms baseline is noisy)
+    run 2: native p95= 1.449 ms (OK) | governed p95= 1.567 ms (BREACH) | ratio=1.0814x (OK)
+           match sets: native=1 governed=1 equal=True   sql/call: native=1.00 governed=1.00
+
+[3] FIELD-SCOPE NOTE for query B (Arabic prefix)
+    native or-filters (account_name, name) match 0 row(s); governed (bilingual+norm) match 1 row(s)
+    -> the ADR comparative ratio is NOT comparable for Arabic query text: the two legs search
+       different fields by design, so an equal-match-set precondition cannot hold for B.
+
+CONCLUSIONS
+  1. On the desk surface the suite gates, Account BREACHES Tier-1 for every query shape tested
+     (A 3.340 ms, B 2.698 ms, C 3.284 ms vs 1.50 ms ceiling); the remaining 14 cutover doctypes are
+     compliant at 0.65-1.10 ms on the identical harness.
+  2. The breach is NOT cutover-induced: S3 measured 3.075 ms before the dry-run and 3.123 ms
+     after it - identical within run-to-run noise, and no cutover step touches Account SQL.
+  3. The ADR Section 4 pin (Account native 1.322 / governed 1.482 ms) was calibrated on the
+     synthetic fixture prefix CT-T3- over a handful of fixture rows; at 2102 live Account rows
+     the same methodology returns the values printed above, so the frozen pin does not transfer
+     to production query text.
+  4. For Arabic query text the ADR comparative ratio cannot be computed honestly (field-scope
+     mismatch, section [3]); for ASCII query text both legs are reported above with their match-set
+     sizes so the reader can judge comparability directly.
+  5. Disposition: carried in latency-baseline.json as compliant:false and gated by baseline x 1.25;
+     reported every run as S3-absolute ADVISORY. Owner decision required (runbook section 10, item 5).
+
+This file contains no Arabic codepoints (verified by the repository-wide work-item scan in gates.log).
+
+[4] FILTER-SCOPE CONTROL (isolates row volume from dispatcher overhead)
+    same query C, same desk surface, same protocol; only the company filter changes.
+    search_rows: unfiltered scans all 2102 Account rows; filtered scans the 86 Elrefae rows.
+    desk UNFILTERED (as measured in [1]) : p95= 3.341 ms median= 2.550 ms -> BREACH
+    desk FILTERED   company=Elrefae      : p95= 1.977 ms median= 1.575 ms -> BREACH
+    service governed, FILTERED (from [2]) : p95= 1.567-1.668 ms (median not recorded)
+    delta attributable to the unfiltered row scope: +1.364 ms
+
+[5] VERDICT
+    The breach persists WITH the company filter (p95=1.977 ms), so row scope alone does
+    not explain it; dispatcher/permission overhead is implicated.
+    Either way it is stable across the cutover dry-run and is NOT cutover-induced.

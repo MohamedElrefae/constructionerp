@@ -1,0 +1,160 @@
+{
+  "budget_ms": 1.5,
+  "captured_utc": "2026-10-05T20:42:21Z",
+  "expect_gate": "closed",
+  "probes": {
+    "Account/ar": {
+      "compliant": false,
+      "p50": 2.408,
+      "p95": 3.075
+    },
+    "Account/en": {
+      "compliant": false,
+      "p50": 2.659,
+      "p95": 3.064
+    },
+    "Company/ar": {
+      "compliant": true,
+      "p50": 0.679,
+      "p95": 0.877
+    },
+    "Company/en": {
+      "compliant": true,
+      "p50": 0.661,
+      "p95": 0.922
+    },
+    "Cost Center/ar": {
+      "compliant": true,
+      "p50": 0.926,
+      "p95": 0.94
+    },
+    "Cost Center/en": {
+      "compliant": true,
+      "p50": 0.738,
+      "p95": 0.986
+    },
+    "Customer Group/ar": {
+      "compliant": true,
+      "p50": 0.557,
+      "p95": 0.653
+    },
+    "Customer Group/en": {
+      "compliant": true,
+      "p50": 0.558,
+      "p95": 0.762
+    },
+    "Customer/ar": {
+      "compliant": true,
+      "p50": 0.611,
+      "p95": 0.909
+    },
+    "Customer/en": {
+      "compliant": true,
+      "p50": 0.905,
+      "p95": 0.9
+    },
+    "Department/ar": {
+      "compliant": true,
+      "p50": 0.77,
+      "p95": 0.974
+    },
+    "Department/en": {
+      "compliant": true,
+      "p50": 0.752,
+      "p95": 0.883
+    },
+    "Item Group/ar": {
+      "compliant": true,
+      "p50": 0.569,
+      "p95": 0.792
+    },
+    "Item Group/en": {
+      "compliant": true,
+      "p50": 0.569,
+      "p95": 0.718
+    },
+    "Item/ar": {
+      "compliant": true,
+      "p50": 0.721,
+      "p95": 1.005
+    },
+    "Item/en": {
+      "compliant": true,
+      "p50": 0.732,
+      "p95": 0.903
+    },
+    "Project/ar": {
+      "compliant": true,
+      "p50": 0.599,
+      "p95": 0.878
+    },
+    "Project/en": {
+      "compliant": true,
+      "p50": 0.601,
+      "p95": 0.746
+    },
+    "Supplier Group/ar": {
+      "compliant": true,
+      "p50": 0.582,
+      "p95": 0.883
+    },
+    "Supplier Group/en": {
+      "compliant": true,
+      "p50": 0.585,
+      "p95": 0.846
+    },
+    "Task/ar": {
+      "compliant": true,
+      "p50": 0.635,
+      "p95": 0.762
+    },
+    "Task/en": {
+      "compliant": true,
+      "p50": 0.594,
+      "p95": 0.717
+    },
+    "Terms and Conditions/ar": {
+      "compliant": true,
+      "p50": 0.549,
+      "p95": 0.918
+    },
+    "Terms and Conditions/en": {
+      "compliant": true,
+      "p50": 0.824,
+      "p95": 0.944
+    },
+    "Territory/ar": {
+      "compliant": true,
+      "p50": 0.58,
+      "p95": 0.699
+    },
+    "Territory/en": {
+      "compliant": true,
+      "p50": 0.591,
+      "p95": 0.699
+    },
+    "UOM/ar": {
+      "compliant": true,
+      "p50": 0.81,
+      "p95": 1.01
+    },
+    "UOM/en": {
+      "compliant": true,
+      "p50": 0.814,
+      "p95": 1.015
+    },
+    "Warehouse/ar": {
+      "compliant": true,
+      "p50": 0.758,
+      "p95": 1.09
+    },
+    "Warehouse/en": {
+      "compliant": true,
+      "p50": 0.646,
+      "p95": 0.908
+    }
+  },
+  "protocol": "min-of-rounds nearest-rank P95, rounds=3, samples=50, warmup=5",
+  "site": "v16.localhost",
+  "surface": "searchable_dropdown.searchable_link_search"
+}
