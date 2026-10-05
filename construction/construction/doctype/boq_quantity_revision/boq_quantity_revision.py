@@ -106,17 +106,57 @@ class BOQQuantityRevision(Document):
                     _("Rate change justification is required when change exceeds 25% from contract.")
                 )
 
+    APPROVED_IMMUTABLE_FIELDS = (
+        "boq_header",
+        "boq_structure",
+        "boq_item",
+        "variation_order",
+        "revision_type",
+        "previous_qty",
+        "revised_qty",
+        "delta_qty",
+        "delta_from_contract_qty",
+        "contract_unit_price",
+        "revised_unit_price",
+        "previous_value",
+        "revised_value",
+        "delta_value",
+        "approved_by",
+        "approved_on",
+    )
+
     def validate_approval_integrity(self):
-        # Check if document is being edited after approval
-        if self.name and frappe.db.exists("BOQ Quantity Revision", self.name):
-            old_status = frappe.db.get_value("BOQ Quantity Revision", self.name, "status")
-            if old_status == "Approved" and self.status != "Approved":
-                # Allow changing from Approved to Rejected only
-                if self.status != "Rejected":
-                    frappe.throw(_("Approved revisions cannot be casually edited."))
-            if old_status == "Approved" and self.status == "Approved":
-                # Re-saving approved record - allow but warn
-                pass
+        old_doc = self.get_doc_before_save()
+        if not old_doc and self.name and frappe.db.exists("BOQ Quantity Revision", self.name):
+            old_doc = frappe.get_doc("BOQ Quantity Revision", self.name)
+        if old_doc and old_doc.status == "Approved":
+            changed = []
+            for field in self.APPROVED_IMMUTABLE_FIELDS:
+                old_val = old_doc.get(field)
+                new_val = self.get(field)
+                if field in (
+                    "previous_qty",
+                    "revised_qty",
+                    "delta_qty",
+                    "delta_from_contract_qty",
+                    "contract_unit_price",
+                    "revised_unit_price",
+                    "previous_value",
+                    "revised_value",
+                    "delta_value",
+                ):
+                    if abs(flt(old_val) - flt(new_val)) > 0.0001:
+                        changed.append(field)
+                elif (old_val or "") != (new_val or ""):
+                    changed.append(field)
+            if changed:
+                frappe.throw(
+                    _("Approved revision is immutable. Fields '{0}' cannot be changed; create a new revision instead.").format(
+                        "', '".join(changed)
+                    )
+                )
+            if self.status not in ("Approved", "Rejected"):
+                frappe.throw(_("Approved revisions cannot be casually edited."))
 
     def on_update(self):
         if self.status == "Approved" and not self.approved_by:

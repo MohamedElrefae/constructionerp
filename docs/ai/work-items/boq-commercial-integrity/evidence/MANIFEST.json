@@ -1,0 +1,21 @@
+{
+  "work_item": "boq-commercial-integrity",
+  "manifest_number": 37,
+  "branch": "develop",
+  "base_commit": "355936b",
+  "primary_invariant": "zero vendor edits; all existing matrix tests pass; BOQ deletion triggers header rollup in after_delete; approved revisions immutable on commercial fields; factor strictly positive (>0) with 1.0 default",
+  "test_results": {
+    "test_boq_financial_integrity": "5/5 PASS",
+    "regression_matrix": "21/21 modules, 273 tests PASS",
+    "gates": "PASS (6 lints, ADR reconciler 19/19)"
+  },
+  "artefacts": {
+    "docs/ai/work-items/boq-commercial-integrity/SCOPE.md": "0363af555b39eeb5b0d3842df4f9c40064f4a0d62503a81a04683d12495d0eb0",
+    "docs/ai/work-items/boq-commercial-integrity/evidence/gates.log": "2a00273ee47fa3bc04318e5884990947c66552c34dcc0d61ff97490c2800648d",
+    "docs/ai/work-items/boq-commercial-integrity/evidence/regression-matrix.log": "a0758b22b632b87a11e3ba243d4c104900a00531b1ae608c4e5968c8429d38c8",
+    "docs/ai/work-items/boq-commercial-integrity/evidence/test-execution.log": "8c579e0c77aaf23e4460eb75fa25126f756f913fe627feee0881ab148dccf56d",
+    "construction/construction/doctype/boq_item/boq_item.py": "2b7846603ffa9b60f0b3de6b7c0663c37f44f28682cb4b1f23fb14271feb22e6",
+    "construction/construction/doctype/boq_quantity_revision/boq_quantity_revision.py": "1ba928a28f0d58e93ae03b56046e08f86c7fad4147c0692e9f1d544498a63625",
+    "construction/tests/test_boq_financial_integrity.py": "4c0aecc9bcdccce1e9c9581c069b71eceffbe308b4ed17132b33a1b0aba775d5"
+  }
+}

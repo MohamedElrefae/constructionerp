@@ -1,0 +1,17 @@
+Starting test run with parameters: site=v16.localhost, module=construction.tests.test_boq_financial_integrity, verbose=False, tests=(), force=False, profile=False, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+View detailed logs (using --verbose): /home/mohamed/frappe-bench/logs/frappe.testing.log
+
+Running 5 old-frappe-test-class-category tests for construction
+
+construction.tests.test_boq_financial_integrity.TestBoqFinancialIntegrity
+   [32m ✔ [0m test_g01_delete_last_item_zeroes_totals
+   [32m ✔ [0m test_g01_item_deletion_updates_header_totals
+   [32m ✔ [0m test_g02_approved_revision_blocks_commercial_edits
+   [32m ✔ [0m test_g04_missing_factor_defaults_to_one
+   [32m ✔ [0m test_g04_zero_or_negative_factor_rejected
+
+
+----------------------------------------------------------------------
+Ran 5 tests in 1.235s
+
+OK

@@ -42,6 +42,12 @@ class BOQItem(Document):
         self._trigger_header_rollup()
 
     def on_trash(self):
+        # No rollup here: the row still exists at on_trash time, so a
+        # recalculation would capture the to-be-deleted row and leave the
+        # header stale when deletion succeeds.  Rollup runs in after_delete.
+        pass
+
+    def after_delete(self):
         self._trigger_header_rollup()
 
     def _trigger_header_rollup(self):
@@ -123,7 +129,6 @@ class BOQItem(Document):
         """Enforce non-negative guards on user-editable inputs and range guards on percentages."""
         non_negative_fields = [
             "quantity",
-            "factor",
             "est_unit_cost",
             "est_unit_price",
             "contract_unit_price",
@@ -132,6 +137,10 @@ class BOQItem(Document):
             val = flt(self.get(field))
             if val < 0:
                 frappe.throw(_("Field '{0}' must be non-negative. Got: {1}").format(field, val))
+        if self.factor in (None, ""):
+            self.factor = 1.0
+        elif flt(self.factor) <= 0:
+            frappe.throw(_("Factor must be greater than zero. Got: {0}").format(self.factor))
         pct_fields = ["overhead_pct", "profit_pct"]
         for field in pct_fields:
             val = flt(self.get(field))
