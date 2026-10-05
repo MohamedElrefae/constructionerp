@@ -81,6 +81,10 @@
 
 ## 3. In Progress (Active Work — Updated After Every Session)
 
+### Standing owner confidentiality decision (2026-10-05)
+- Owner explicitly chooses to keep the implementation confidential. OWNER_CONFIDENTIALITY_POLICY.md and the mandatory Professional Engineering Standard now prohibit new source/private findings in public repositories, branches or PRs. The earlier public-CI approval proposal is superseded; do not retry it. Prepared release candidate a6bc51c stays local. A specifically approved private destination/content scope is needed before provider CI upload; none was created or selected here.
+- This is documentation-only direct owner instruction work. No public upload, visibility change, license change, source integration, site migration, provider run or customer deployment. Existing immutable agent packets were not rewritten; new contexts must carry the rule. Local commits disable transmitting hooks per command.
+
 ### Engineering startup hardening follow-up (2026-10-04)
 - Reviewed the owner's three-file hardening diff and committed the resulting code/tests separately as `89bb3b9` on develop, preserving the preceding Company bilingual commit `165c238`.
 - Unexpected startup exceptions receive frozen failure evidence; malformed/unreadable report references, context/baseline shapes and internally inconsistent input digests fail with WorkflowError. Dashboard constants alignment is covered by an AST guard.
@@ -214,6 +218,10 @@
 ---
 
 ## 6. Session Log (Append-Only — Most Recent First)
+
+### Session 2026-10-05 — Confidential implementation is a standing owner instruction
+- Recorded the explicit owner choice in both main and release checkouts, including mandatory startup instructions, session memory and a mirrored confidentiality policy. Release CI/status instructions now use private CI as the pending route. The unpublished candidate remains preserved locally; previous public copies cannot be recalled by this policy.
+- Read actual AGENTS/standard/session instructions, context index, workflow, schema summaries, current release plan/CI/status and operating profile; inspected checkout status/HEAD and the transmitting post-commit hook. Context index/workflow in main match the inspected release copies; schema facts are separately checked and differ legitimately. Both schema checkers pass (21 owners + one override), both context checkers pass (11/0). Main baseline 5d96f12; release baseline 2b45606. Unrelated population/triage documents and dump.rdb are preserved. No app behavior changes require repeating business tests.
 
 ### Session 2026-10-04 — Independent review of startup hardening
 - Files read: root AGENTS/workflow, professional standard sections 1–4, current SESSION_MEMORY, context index, schema-facts summary, startup source/core path helpers, startup fixture/tests, the three-file diff, and previous independent verification records.
