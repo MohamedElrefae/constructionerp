@@ -4,6 +4,8 @@ This is the consultant's engineering recommendation, not a hosting purchase, sup
 
 ## Delivery and isolation
 
+The owner chose confidential implementation on 2026-10-05. Source publication and CI must follow [the standing private-destination policy](../../OWNER_CONFIDENTIALITY_POLICY.md); the old public CI proposal is superseded. This choice does not itself select hosting. A customer administering a self-hosted Frappe server can inspect installed Python source, and browser-delivered assets are inspectable. Assess owner-managed hosting if backend source access must remain under the owner's control. No remote visibility or license changes are implied.
+
 Start with a separate Frappe site and database for each customer. Keep development and synthetic/test records outside customer sites. Site separation reduces accidental cross-customer access; it does not isolate the shared app code, Python runtime, workers or host. Use a separate Bench/runtime for a customer requiring an independent upgrade schedule or stronger operational isolation. Never advertise a shared-site multi-company service before a complete access matrix has passed.
 
 Pin Construction, Frappe and ERPNext commits and preserve the resolved dependency inventory and asset hashes with each release. The current qualification covers only the recorded Frappe 16.18.1 / ERPNext 16.18.3 commits on MariaDB 10.11 and the isolated Python 3.14 runtime. Do not advertise v15 or other database/runtime combinations from this evidence. A clean build and `pip check` establish installability and metadata consistency; unresolved advisories remain a separate release gate.

@@ -4,6 +4,7 @@ Owner request: correct the sixteen release gaps while another task works on the 
 
 ## Checkout and authority
 
+- Standing owner decision on 2026-10-05: keep implementation confidential. The earlier public CI proposal is superseded. Follow OWNER_CONFIDENTIALITY_POLICY.md and the mandatory standard; prepare a named private destination and reviewed outgoing candidate before any missing upload approval. This amendment authorizes recording the instruction, not creating a remote, uploading, changing visibility or deploying.
 - Worktree: `/home/mohamed/frappe-bench/worktrees/customer-release-gap-fixes`.
 - Branch: `codex/customer-release-gap-fixes`; base `4341542ab2d6979ee0af1795fbd92d34f2dd2344`.
 - Main checkout contains another task's bilingual changes (desk links initially; financial reports at final review). Do not edit or stage those changes; integration requires a separate reconciliation.

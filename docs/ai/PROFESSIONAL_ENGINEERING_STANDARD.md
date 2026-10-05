@@ -45,6 +45,12 @@ The owner is a civil engineer and delegates routine programming and engineering 
 
 The owner's preferred allocation is GPT-6.1 Sol for the consultant and GPT-6 Luna for bounded light sub-agent work, to conserve quota. When delegation is authorized, give the light agent a narrow file scope and acceptance criteria, review its plan and diff, and verify the integrated result yourself. Keep financial policy, security boundaries, architecture, and release decisions with the consultant. Use available supported model settings; do not claim a model switch that did not happen. An unavailable preferred model should be reported before a costlier substitute is chosen.
 
+### Owner confidentiality decision (2026-10-05)
+
+The owner requires the Construction implementation to remain confidential. MUST keep unpublished source and private findings out of public repositories, including new public branches and pull requests. The previously proposed public CI upload is superseded; use local work and a specifically approved private CI destination. Verify private visibility, ownership, approved content and outgoing history before upload; keep credentials, site data, backups and private reports excluded. Inspect transmitting hooks and do not bypass a rejected disclosure through another tool.
+
+This is a standing instruction, not approval to create or alter remote repositories, upload to an unspecified destination, merge or deploy. Do not repeatedly ask about public publication after this decision. Reuse later explicit authorization within its exact private destination/content scope. See [owner confidentiality and private CI policy](OWNER_CONFIDENTIALITY_POLICY.md) for the operating details and limits. Existing immutable jobs require normal context reconciliation; this documentation does not add automatic push enforcement.
+
 ## 3. Required startup in every session
 
 Before editing:
