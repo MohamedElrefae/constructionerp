@@ -1,0 +1,58 @@
+============================================================
+MANIFEST INTEGRITY VERIFICATION LOG
+Work Item: bilingual-transaction-print-formats
+Base Commit: 234c024
+Site: v16.localhost
+Date: 2026-10-05
+============================================================
+
+[1/2] Baseline Manifest Verification (pre-existing work items)
+Inspecting all existing MANIFEST.json files across docs/ai/work-items/*/evidence/MANIFEST.json:
+- Prior manifest count: 32
+- Total artefacts checked: 339
+  - digests matched: 339
+  - work-item-relative paths resolved against the manifest directory: 45
+  - files missing everywhere: 0
+  - digest drift: 0
+
+Shared-file digest drift, classified by cause:
+  (a) caused by THIS work item (0):
+        none — all 8 construction/hooks.py pins were re-pinned and given an
+        'amendments' entry by this work item (SCOPE.md D6) and now verify clean.
+
+  construction/hooks.py gains 2 lines in this work item (after_install /
+  after_migrate -> setup_transaction_print_formats). Before this change all 8 pins
+  held the HEAD(234c024) value
+        3a0abaa00a0e5f8bce851cc84226551c9e8f4093372ecfa4561d01879ccd0233
+  Each of the 8 owning manifests was re-pinned to the post-change digest and given
+  one appended amendments entry, per the convention already used by
+  bilingual-financial-reports (5E-repin / R1-B). No other artefact in those
+  manifests was altered and no artefact was deleted.
+
+  (b) caused by CONCURRENT sessions, not this work item (0):
+
+[2/2] Pinned Artefacts for bilingual-transaction-print-formats (Manifest #32)
+1. docs/ai/work-items/bilingual-transaction-print-formats/SCOPE.md: 1ad84d4f0d7731680a41b0d9b2a4ac85a7019376838140ac4fcbe6d66c027e68 OK
+2. docs/ai/work-items/bilingual-transaction-print-formats/evidence/test-rendering.log: 29ee6b86e76fe3e4cc3a9601cab644e46bb5c283be65b25b90ff34938e951e2c OK
+3. docs/ai/work-items/bilingual-transaction-print-formats/evidence/gates.log: 3b336396049e84f99e5bb02e289fcb2f80f2bab01f18f478ad5411a87f7557b1 OK
+4. docs/ai/work-items/bilingual-transaction-print-formats/evidence/regression-matrix.log: e5d486dd9019c5b8ecabb74015ad4bcc6406fdae8b7bee1c0a97dd67b05da461 OK
+5. construction/print_format/bilingual_purchase_order/bilingual_purchase_order.json: 43fbe28fb7649ea76783497bfff0394031e12817a33a77eff66821e181911970 OK
+6. construction/print_format/bilingual_sales_invoice/bilingual_sales_invoice.json: 66eeb3d0cecbd879a5ec0f24031760ddbd2213cd01ea409039b0c7f8c4740a60 OK
+7. construction/print_format/bilingual_stock_entry/bilingual_stock_entry.json: 4c0580ad2f852bffdd52d62a6a0e62e3b48bac8609598c7c5fd6f0e45668cc23 OK
+8. construction/print_format/bilingual_material_request/bilingual_material_request.json: c7163d91f66394153ceee1b6ed034efb9e93474b74cf22f86e946ee76317687d OK
+9. construction/tests/test_bilingual_transaction_print.py: c27b260c27578738b795de0ae7f209ab6ed48c95e10a64e63e289c7445affa41 OK
+10. construction/install.py: c4de7a9938cac6ab6ad8bff7a4f6adfa0a44925c7711d24c8df9470cbf739591 OK
+11. construction/hooks.py: d54bca4f63374dc018a594bd9c3f05477e790a44f39fc2e9b54a54548ba5f73f OK
+
+Cross-manifest pin overlaps with this manifest:
+  construction/hooks.py  <- also pinned by: bilingual-asset-master, bilingual-boq-title-ar-wiring, bilingual-brand-master, bilingual-company-master, bilingual-desk-link-dispatch, bilingual-financial-reports, bilingual-narrative-sanitizer, bilingual-terms-conditions-master
+
+Post-Addition Status:
+- Manifest count: 33
+- Total artefacts checked: 350
+- This manifest's own digests: 11/11 OK -> PASS
+- Files missing from any prior manifest: 0
+- This work item's shared-file obligations: 8 hooks.py re-pins recorded in 8 manifests (SCOPE.md D6)
+- Residual drift owned by concurrent sessions: 0 (not staged by this work item)
+- Verdict: PASS (manifest #32 fully verified; baseline verified with all drift either remediated by this work item or attributable to files it does not stage)
+============================================================

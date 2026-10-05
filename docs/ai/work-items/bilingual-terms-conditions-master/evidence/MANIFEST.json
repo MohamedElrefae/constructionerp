@@ -11,7 +11,7 @@
     "construction/patches.txt": "ca7f3feb133a27ae44f7c89b07226e413ffaedd2cbdc194f357f92e4a61d0a1c",
     "construction/tests/test_bilingual_terms_conditions_pilot.py": "e99b681f0d0f21c9300efede6afcf0a501cd59bcf6d9fd20f5486d3b045c71d8",
     "construction/data/bilingual/bilingual_registry.json": "eceff821f017f7eb7613ebc122ef7b35cdb32170db685e9a32cdbf45435f0243",
-    "construction/hooks.py": "3a0abaa00a0e5f8bce851cc84226551c9e8f4093372ecfa4561d01879ccd0233",
+    "construction/hooks.py": "d54bca4f63374dc018a594bd9c3f05477e790a44f39fc2e9b54a54548ba5f73f",
     "scripts/run_bilingual_regression_matrix.sh": "100d5cc11c913a5584a0b6c7e6d5fce0bb607761690a23a658eaeb5e84350659"
   },
   "base_commit": "0f3bd24ba4c096104ff826c490462c47c6aaf696",
@@ -167,6 +167,13 @@
       "from": "e19a3774b54883c5c8fd97106019adc567cee7d6661fc94a1231431efd6b2565",
       "to": "9ae88ad0950b4186ed374dc8e870e7d3352580476cffd22e965524a80bb2b3ab",
       "reason": "amendment note documenting the re-pin performed by bilingual-financial-reports"
+    },
+    {
+      "date": "2026-10-05",
+      "artefact": "construction/hooks.py",
+      "from": "3a0abaa00a0e5f8bce851cc84226551c9e8f4093372ecfa4561d01879ccd0233",
+      "to": "d54bca4f63374dc018a594bd9c3f05477e790a44f39fc2e9b54a54548ba5f73f",
+      "reason": "hooks.py gains the after_install/after_migrate registration of construction.install.setup_transaction_print_formats (+2 lines) added by bilingual-transaction-print-formats; digest re-pinned to post-change content, no other artefact in this manifest changed"
     }
   ]
 }

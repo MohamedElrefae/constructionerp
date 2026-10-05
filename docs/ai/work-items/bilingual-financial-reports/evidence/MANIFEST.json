@@ -18,7 +18,7 @@
     "construction/services/report_bilingual_extension.py": "fe841d5db4787f681ea2ab882f31494438b25b9742b45ec102dc0211e9190269",
     "construction/tests/test_stage4_report_extension.py": "0d640f3882a476a92ef8d7c6eeb1e579469df81e18449747b8a657ba01c1b191",
     "construction/tests/test_stage7_bilingual_reports.py": "c7a7bf9b61ff8459c07fac27925ec673316122afbbc66710432566e5b0c75154",
-    "construction/hooks.py": "3a0abaa00a0e5f8bce851cc84226551c9e8f4093372ecfa4561d01879ccd0233",
+    "construction/hooks.py": "d54bca4f63374dc018a594bd9c3f05477e790a44f39fc2e9b54a54548ba5f73f",
     "scripts/run_bilingual_regression_matrix.sh": "100d5cc11c913a5584a0b6c7e6d5fce0bb607761690a23a658eaeb5e84350659"
   },
   "amendments": [
@@ -28,6 +28,13 @@
       "cause": "Tier 5E adds Balance Sheet + Profit and Loss Statement to PILOT_REPORTS and the stage7 suite gains 6 statement tests",
       "fix": "2 digests re-pinned to the post-5E content of bilingual_reports.py and test_stage7_bilingual_reports.py; no other artefact in this manifest changed (matrix script untouched after the 8-manifest pin-blast was discovered)",
       "disclosure": "SCOPE.md R6 + this item's SCOPE.md R6/A1 + both MANIFEST.json amendment notes"
+    },
+    {
+      "id": "TPF-hooks",
+      "when": "Transactional print formats (bilingual-transaction-print-formats, base 234c024)",
+      "cause": "construction/hooks.py registers construction.install.setup_transaction_print_formats in after_install and after_migrate (+2 lines); all 8 prior hooks.py pins matched HEAD(234c024) before this change",
+      "fix": "1 digest re-pinned to the post-registration content of construction/hooks.py; no other artefact in this manifest changed",
+      "disclosure": "docs/ai/work-items/bilingual-transaction-print-formats/SCOPE.md + that item's MANIFEST.json + evidence/manifest-integrity.log"
     }
   ],
   "base_commit": "dd4ea6d",

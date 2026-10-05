@@ -217,16 +217,38 @@ def setup_boq_integration():
     setup_boq_print_formats()
 
 
+# Bilingual transactional print formats shipped as Print Format JSON under
+# construction/print_format/<slug>/<slug>.json. Registered on install and migrate
+# so the formats exist on any site that installs or upgrades the app.
+TRANSACTION_PRINT_FORMAT_SLUGS = (
+    "bilingual_purchase_order",
+    "bilingual_sales_invoice",
+    "bilingual_stock_entry",
+    "bilingual_material_request",
+)
+
+
+def setup_transaction_print_formats():
+    print_format_dir = os.path.join(frappe.get_app_path("construction"), "print_format")
+    for slug in TRANSACTION_PRINT_FORMAT_SLUGS:
+        _upsert_print_format_file(os.path.join(print_format_dir, slug, f"{slug}.json"))
+
+
 def setup_boq_print_formats():
+    _upsert_print_format_file(
+        os.path.join(
+            frappe.get_app_path("construction"),
+            "print_format",
+            "boq_print_format",
+            "boq_print_format.json",
+        )
+    )
+
+
+def _upsert_print_format_file(print_format_path):
     if not frappe.db.exists("DocType", "Print Format"):
         return
 
-    print_format_path = os.path.join(
-        frappe.get_app_path("construction"),
-        "print_format",
-        "boq_print_format",
-        "boq_print_format.json",
-    )
     if not os.path.exists(print_format_path):
         return
 

@@ -1,0 +1,658 @@
+=== MODULE construction.tests.test_bilingual_account_pilot ===
+Starting test run with parameters: site=v16.localhost, module=construction.tests.test_bilingual_account_pilot, verbose=False, tests=(), force=False, profile=False, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+View detailed logs (using --verbose): /home/mohamed/frappe-bench/logs/frappe.testing.log
+
+Running 53 unspecified-category tests for construction
+
+construction.tests.test_bilingual_account_pilot.TestBilingualAccountPilot
+    ✔  test_active_mapping_fails_closed_on_schema_mismatch
+    ✔  test_arabic_edit_rejects_all_bidi_controls
+    ✔  test_arabic_edit_rejects_control_characters
+    ✔  test_arabic_edit_requires_write_permission
+       ▸  /home/mohamed/frappe-bench/apps/frappe/frappe/model/qb_query.py:153: V17FrappeDeprecationWarning: This codepath was marked (DATE: 2024-01-01) deprecated for removal (from v17 onwards); note:
+       ▸   The 'limit_page_length' parameter is deprecated. Use 'limit' instead.
+       ▸  
+       ▸    deprecation_warning(
+    ✔  test_arabic_field_is_read_only
+    ✔  test_arabic_only_edit_preserves_identity_and_records_version
+    ✔  test_blank_query_is_bounded_and_text_query_reports_truncation
+    ✔  test_comparative_p95_artifact_bound_and_gate
+    ✔  test_comparative_p95_live_measurement_is_balanced_and_bound
+    ✔  test_direct_form_save_bypass_refused_even_for_administrator
+    ✔  test_direct_form_save_bypass_refused_for_writer
+    ✔  test_display_name_fallback_modes
+    ✔  test_fallback_chain_by_session_language
+    ✔  test_get_account_identity_payload
+    ✔  test_governed_edit_maintains_normalized_search_key
+    ✔  test_governed_rename_end_to_end  (2.85s)
+    ✔  test_governed_rename_requires_permission
+    ✔  test_governed_rename_requires_reason
+    ✔  test_governed_rename_rolls_back_when_audit_fails
+    ✔  test_governed_token_is_bound_to_the_exact_operation
+    ✔  test_http_dispatch_through_overridden_endpoint
+    ✔  test_identity_read_refused_without_permission
+    ✔  test_insertion_with_arabic_name_refused
+    ✔  test_negative_zero_and_oversized_pagination_inputs_are_lower_bounded
+    ✔  test_non_arabic_saves_still_pass_the_hook
+    ✔  test_non_integer_pagination_inputs_are_cross_path_consistent
+    ✔  test_norm_field_patch_idempotent_and_reversible
+    ✔  test_normalized_key_invariant_on_unchanged_save
+    ✔  test_overridden_endpoint_dispatches_to_governed_wrapper
+    ✔  test_page_length_is_clamped_against_client_input
+    ✔  test_ranking_beyond_thousand_boundary
+    ✔  test_ranking_is_global_with_genuine_competitors_both_paths
+    ✔  test_real_window_boundary_5000_and_5001_both_paths
+    ✔  test_registry_error_propagates_through_dropdown_path
+    ✔  test_registry_loads_and_maps_resolved_fields
+    ✔  test_rename_failure_duplicate_number_rolls_back_scoped
+    ✔  test_rename_failure_keeps_caller_transaction_work
+    ✔  test_rename_success_does_not_commit_caller_work
+    ✔  test_search_bilingual_page_length_and_start
+    ✔  test_search_bilingual_pagination_pages_are_ordered_and_disjoint
+       ▸  /home/mohamed/frappe-bench/apps/frappe/frappe/model/qb_query.py:146: V17FrappeDeprecationWarning: This codepath was marked (DATE: 2024-01-01) deprecated for removal (from v17 onwards); note:
+       ▸   The 'limit_start' parameter is deprecated. Use 'offset' instead.
+       ▸  
+       ▸    deprecation_warning(
+    ✔  test_search_bilingual_respects_permissions
+    ✔  test_search_bilingual_single_query_and_hits
+    ✔  test_search_matches_despite_alef_tatweel_diacritics
+    ✔  test_search_performance_smoke
+    ✔  test_searchable_link_search_arabic_session_prefers_arabic
+    ✔  test_searchable_link_search_english_baseline_unchanged
+    ✔  test_searchable_link_search_pagination_uses_start
+    ✔  test_stale_concurrent_save_is_refused
+    ✔  test_track_changes_patch_idempotent_and_reversible
+    ✔  test_tree_children_batched_and_labeled
+    ✔  test_unmapped_or_planned_doctype_returns_none
+    ✔  test_vendor_rename_endpoint_is_overridden
+    ✔  test_writer_role_can_set_arabic_only
+
+
+----------------------------------------------------------------------
+Ran 53 tests in 11.640s
+
+OK
+=== MODULE construction.tests.test_bilingual_boq_print ===
+Starting test run with parameters: site=v16.localhost, module=construction.tests.test_bilingual_boq_print, verbose=False, tests=(), force=False, profile=False, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+View detailed logs (using --verbose): /home/mohamed/frappe-bench/logs/frappe.testing.log
+
+Running 10 unspecified-category tests for construction
+
+construction.tests.test_bilingual_boq_print.TestBilingualBOQPrint
+    ✔  test_active_and_schema_installed_fail_closed_on_missing_field
+    ✔  test_arabic_edit_rejects_bidi_controls
+    ✔  test_norm_field_patch_idempotent_and_reversible
+    ✔  test_print_rendering_flag_off_monolingual_baseline
+    ✔  test_print_rendering_flag_on_dual_language
+    ✔  test_registry_loads_and_maps_resolved_boq_fields
+    ✔  test_search_matches_despite_alef_tatweel_diacritics
+       ▸  /home/mohamed/frappe-bench/apps/frappe/frappe/model/qb_query.py:153: V17FrappeDeprecationWarning: This codepath was marked (DATE: 2024-01-01) deprecated for removal (from v17 onwards); note:
+       ▸   The 'limit_page_length' parameter is deprecated. Use 'limit' instead.
+       ▸  
+       ▸    deprecation_warning(
+    ✔  test_server_authoritative_norm_derivation_and_poison_overwritten
+    ✔  test_wbs_code_exclusivity_and_ascii_invariant
+    ✔  test_zero_service_edits_guard
+
+
+----------------------------------------------------------------------
+Ran 10 tests in 2.841s
+
+OK
+=== MODULE construction.tests.test_bilingual_data_import ===
+Starting test run with parameters: site=v16.localhost, module=construction.tests.test_bilingual_data_import, verbose=False, tests=(), force=False, profile=False, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+View detailed logs (using --verbose): /home/mohamed/frappe-bench/logs/frappe.testing.log
+
+Running 6 unspecified-category tests for construction
+
+construction.tests.test_bilingual_data_import.TestBilingualDataImport
+    ✔  test_data_import_account_asymmetry_enforced
+    ✔  test_data_import_across_classification_masters
+    ✔  test_data_import_insert_bidi_rejection
+    ✔  test_data_import_insert_norm_derivation_overwrites_poison
+    ✔  test_data_import_update_norm_derivation_and_bidi_rejection
+    ✔  test_zero_service_edits_guard
+
+
+----------------------------------------------------------------------
+Ran 6 tests in 1.355s
+
+OK
+=== MODULE construction.tests.test_bilingual_wave1_pilot ===
+Starting test run with parameters: site=v16.localhost, module=construction.tests.test_bilingual_wave1_pilot, verbose=False, tests=(), force=False, profile=False, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+View detailed logs (using --verbose): /home/mohamed/frappe-bench/logs/frappe.testing.log
+
+Running 8 unspecified-category tests for construction
+
+construction.tests.test_bilingual_wave1_pilot.TestBilingualWave1Pilot
+    ✔  test_active_and_schema_installed_fail_closed_on_missing_norm_field
+    ✔  test_arabic_edit_rejects_bidi_controls
+    ✔  test_norm_field_patch_idempotent_and_reversible
+    ✔  test_registry_loads_and_maps_resolved_norm_fields
+    ✔  test_rename_doc_preserves_arabic_and_norm_keys  (4.38s)
+    ✔  test_search_matches_despite_alef_tatweel_diacritics
+       ▸  /home/mohamed/frappe-bench/apps/frappe/frappe/model/qb_query.py:153: V17FrappeDeprecationWarning: This codepath was marked (DATE: 2024-01-01) deprecated for removal (from v17 onwards); note:
+       ▸   The 'limit_page_length' parameter is deprecated. Use 'limit' instead.
+       ▸  
+       ▸    deprecation_warning(
+    ✔  test_search_projection_includes_arabic_fields
+    ✔  test_server_authoritative_norm_derivation_and_poison_overwritten
+
+
+----------------------------------------------------------------------
+Ran 8 tests in 5.944s
+
+OK
+=== MODULE construction.tests.test_bilingual_wave1_phase2_pilot ===
+Starting test run with parameters: site=v16.localhost, module=construction.tests.test_bilingual_wave1_phase2_pilot, verbose=False, tests=(), force=False, profile=False, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+View detailed logs (using --verbose): /home/mohamed/frappe-bench/logs/frappe.testing.log
+
+Running 8 unspecified-category tests for construction
+
+construction.tests.test_bilingual_wave1_phase2_pilot.TestBilingualWave1Phase2Pilot
+    ✔  test_active_and_schema_installed_fail_closed_on_missing_phase2_field
+    ✔  test_arabic_edit_rejects_bidi_controls
+    ✔  test_norm_field_patch_idempotent_and_reversible
+    ✔  test_registry_loads_and_maps_resolved_phase2_fields
+    ✔  test_search_matches_despite_alef_tatweel_diacritics
+       ▸  /home/mohamed/frappe-bench/apps/frappe/frappe/model/qb_query.py:153: V17FrappeDeprecationWarning: This codepath was marked (DATE: 2024-01-01) deprecated for removal (from v17 onwards); note:
+       ▸   The 'limit_page_length' parameter is deprecated. Use 'limit' instead.
+       ▸  
+       ▸    deprecation_warning(
+    ✔  test_server_authoritative_norm_derivation_and_poison_overwritten
+    ✔  test_tree_identity_invariant_and_rename_preservation  (5.15s)
+    ✔  test_zero_service_edits_guard
+
+
+----------------------------------------------------------------------
+Ran 8 tests in 6.566s
+
+OK
+=== MODULE construction.tests.test_bilingual_wave2a_pilot ===
+Starting test run with parameters: site=v16.localhost, module=construction.tests.test_bilingual_wave2a_pilot, verbose=False, tests=(), force=False, profile=False, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+View detailed logs (using --verbose): /home/mohamed/frappe-bench/logs/frappe.testing.log
+
+Running 8 unspecified-category tests for construction
+
+construction.tests.test_bilingual_wave2a_pilot.TestBilingualWave2aPilot
+    ✔  test_active_and_schema_installed_fail_closed_on_missing_wave2a_field
+    ✔  test_arabic_edit_rejects_bidi_controls
+    ✔  test_norm_field_patch_idempotent_and_reversible
+    ✔  test_registry_loads_and_maps_resolved_wave2a_fields
+    ✔  test_search_matches_despite_alef_tatweel_diacritics
+       ▸  /home/mohamed/frappe-bench/apps/frappe/frappe/model/qb_query.py:153: V17FrappeDeprecationWarning: This codepath was marked (DATE: 2024-01-01) deprecated for removal (from v17 onwards); note:
+       ▸   The 'limit_page_length' parameter is deprecated. Use 'limit' instead.
+       ▸  
+       ▸    deprecation_warning(
+    ✔  test_server_authoritative_norm_derivation_and_poison_overwritten
+    ✔  test_tree_identity_invariant_and_rename_preservation  (5.56s)
+    ✔  test_zero_service_edits_guard
+
+
+----------------------------------------------------------------------
+Ran 8 tests in 7.269s
+
+OK
+=== MODULE construction.tests.test_bilingual_employee_pilot ===
+Starting test run with parameters: site=v16.localhost, module=construction.tests.test_bilingual_employee_pilot, verbose=False, tests=(), force=False, profile=False, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+View detailed logs (using --verbose): /home/mohamed/frappe-bench/logs/frappe.testing.log
+
+Running 8 unspecified-category tests for construction
+
+construction.tests.test_bilingual_employee_pilot.TestBilingualEmployeePilot
+    ✔  test_active_and_schema_installed_fail_closed_on_missing_employee_field
+    ✔  test_arabic_edit_rejects_bidi_controls
+    ✔  test_norm_field_patch_idempotent_and_reversible
+    ✔  test_registry_loads_and_maps_resolved_employee_fields
+    ✔  test_search_matches_despite_alef_tatweel_diacritics
+       ▸  /home/mohamed/frappe-bench/apps/frappe/frappe/model/qb_query.py:153: V17FrappeDeprecationWarning: This codepath was marked (DATE: 2024-01-01) deprecated for removal (from v17 onwards); note:
+       ▸   The 'limit_page_length' parameter is deprecated. Use 'limit' instead.
+       ▸  
+       ▸    deprecation_warning(
+    ✔  test_server_authoritative_norm_derivation_and_poison_overwritten
+    ✔  test_tree_identity_invariant_and_rename_preservation
+    ✔  test_zero_service_edits_guard
+
+
+----------------------------------------------------------------------
+Ran 8 tests in 4.283s
+
+OK
+=== MODULE construction.tests.test_bilingual_department_pilot ===
+Starting test run with parameters: site=v16.localhost, module=construction.tests.test_bilingual_department_pilot, verbose=False, tests=(), force=False, profile=False, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+View detailed logs (using --verbose): /home/mohamed/frappe-bench/logs/frappe.testing.log
+
+Running 8 unspecified-category tests for construction
+
+construction.tests.test_bilingual_department_pilot.TestBilingualDepartmentPilot
+    ✔  test_active_and_schema_installed_fail_closed_on_missing_department_field
+    ✔  test_arabic_edit_rejects_bidi_controls
+    ✔  test_norm_field_patch_idempotent_and_reversible
+    ✔  test_registry_loads_and_maps_resolved_department_fields
+    ✔  test_search_matches_despite_alef_tatweel_diacritics
+       ▸  /home/mohamed/frappe-bench/apps/frappe/frappe/model/qb_query.py:153: V17FrappeDeprecationWarning: This codepath was marked (DATE: 2024-01-01) deprecated for removal (from v17 onwards); note:
+       ▸   The 'limit_page_length' parameter is deprecated. Use 'limit' instead.
+       ▸  
+       ▸    deprecation_warning(
+    ✔  test_server_authoritative_norm_derivation_and_poison_overwritten
+    ✔  test_tree_identity_invariant_and_rename_preservation
+    ✔  test_zero_service_edits_guard
+
+
+----------------------------------------------------------------------
+Ran 8 tests in 2.414s
+
+OK
+=== MODULE construction.tests.test_bilingual_task_pilot ===
+Starting test run with parameters: site=v16.localhost, module=construction.tests.test_bilingual_task_pilot, verbose=False, tests=(), force=False, profile=False, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+View detailed logs (using --verbose): /home/mohamed/frappe-bench/logs/frappe.testing.log
+
+Running 8 unspecified-category tests for construction
+
+construction.tests.test_bilingual_task_pilot.TestBilingualTaskPilot
+    ✔  test_active_and_schema_installed_fail_closed_on_missing_task_field
+    ✔  test_arabic_edit_rejects_bidi_controls
+    ✔  test_identity_invariant_and_tree_preservation
+    ✔  test_norm_field_patch_idempotent_and_reversible
+    ✔  test_registry_loads_and_maps_resolved_task_fields
+    ✔  test_search_matches_despite_alef_tatweel_diacritics
+       ▸  /home/mohamed/frappe-bench/apps/frappe/frappe/model/qb_query.py:153: V17FrappeDeprecationWarning: This codepath was marked (DATE: 2024-01-01) deprecated for removal (from v17 onwards); note:
+       ▸   The 'limit_page_length' parameter is deprecated. Use 'limit' instead.
+       ▸  
+       ▸    deprecation_warning(
+    ✔  test_server_authoritative_norm_derivation_and_poison_overwritten
+    ✔  test_zero_service_edits_guard
+
+
+----------------------------------------------------------------------
+Ran 8 tests in 1.693s
+
+OK
+=== MODULE construction.tests.test_bilingual_asset_category_pilot ===
+Starting test run with parameters: site=v16.localhost, module=construction.tests.test_bilingual_asset_category_pilot, verbose=False, tests=(), force=False, profile=False, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+View detailed logs (using --verbose): /home/mohamed/frappe-bench/logs/frappe.testing.log
+
+Running 8 unspecified-category tests for construction
+
+construction.tests.test_bilingual_asset_category_pilot.TestBilingualAssetCategoryPilot
+    ✔  test_active_and_schema_installed_fail_closed_on_missing_asset_category_field
+    ✔  test_arabic_edit_rejects_bidi_controls
+    ✔  test_identity_invariant_and_rename_preservation
+    ✔  test_norm_field_patch_idempotent_and_reversible
+    ✔  test_registry_loads_and_maps_resolved_asset_category_fields
+    ✔  test_search_matches_despite_alef_tatweel_diacritics
+       ▸  /home/mohamed/frappe-bench/apps/frappe/frappe/model/qb_query.py:153: V17FrappeDeprecationWarning: This codepath was marked (DATE: 2024-01-01) deprecated for removal (from v17 onwards); note:
+       ▸   The 'limit_page_length' parameter is deprecated. Use 'limit' instead.
+       ▸  
+       ▸    deprecation_warning(
+    ✔  test_server_authoritative_norm_derivation_and_poison_overwritten
+    ✔  test_zero_service_edits_guard
+
+
+----------------------------------------------------------------------
+Ran 8 tests in 1.582s
+
+OK
+=== MODULE construction.tests.test_bilingual_payment_terms_template_pilot ===
+Starting test run with parameters: site=v16.localhost, module=construction.tests.test_bilingual_payment_terms_template_pilot, verbose=False, tests=(), force=False, profile=False, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+View detailed logs (using --verbose): /home/mohamed/frappe-bench/logs/frappe.testing.log
+
+Running 8 unspecified-category tests for construction
+
+construction.tests.test_bilingual_payment_terms_template_pilot.TestBilingualPaymentTermsTemplatePilot
+    ✔  test_active_and_schema_installed_fail_closed_on_missing_payment_terms_template_field
+    ✔  test_arabic_edit_rejects_bidi_controls
+    ✔  test_identity_invariant_and_rename_preservation
+    ✔  test_norm_field_patch_idempotent_and_reversible
+    ✔  test_registry_loads_and_maps_resolved_payment_terms_template_fields
+    ✔  test_search_matches_despite_alef_tatweel_diacritics
+       ▸  /home/mohamed/frappe-bench/apps/frappe/frappe/model/qb_query.py:153: V17FrappeDeprecationWarning: This codepath was marked (DATE: 2024-01-01) deprecated for removal (from v17 onwards); note:
+       ▸   The 'limit_page_length' parameter is deprecated. Use 'limit' instead.
+       ▸  
+       ▸    deprecation_warning(
+    ✔  test_server_authoritative_norm_derivation_and_poison_overwritten
+    ✔  test_zero_service_edits_guard
+
+
+----------------------------------------------------------------------
+Ran 8 tests in 1.693s
+
+OK
+=== MODULE construction.tests.test_bilingual_brand_pilot ===
+Starting test run with parameters: site=v16.localhost, module=construction.tests.test_bilingual_brand_pilot, verbose=False, tests=(), force=False, profile=False, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+View detailed logs (using --verbose): /home/mohamed/frappe-bench/logs/frappe.testing.log
+
+Running 8 unspecified-category tests for construction
+
+construction.tests.test_bilingual_brand_pilot.TestBilingualBrandPilot
+    ✔  test_active_and_schema_installed_fail_closed_on_missing_brand_field
+    ✔  test_arabic_edit_rejects_bidi_controls
+    ✔  test_identity_invariant_and_rename_preservation
+    ✔  test_norm_field_patch_idempotent_and_reversible
+    ✔  test_registry_loads_and_maps_resolved_brand_fields
+    ✔  test_search_matches_despite_alef_tatweel_diacritics
+       ▸  /home/mohamed/frappe-bench/apps/frappe/frappe/model/qb_query.py:153: V17FrappeDeprecationWarning: This codepath was marked (DATE: 2024-01-01) deprecated for removal (from v17 onwards); note:
+       ▸   The 'limit_page_length' parameter is deprecated. Use 'limit' instead.
+       ▸  
+       ▸    deprecation_warning(
+    ✔  test_server_authoritative_norm_derivation_and_poison_overwritten
+    ✔  test_zero_service_edits_guard
+
+
+----------------------------------------------------------------------
+Ran 8 tests in 1.552s
+
+OK
+=== MODULE construction.tests.test_bilingual_terms_conditions_pilot ===
+Starting test run with parameters: site=v16.localhost, module=construction.tests.test_bilingual_terms_conditions_pilot, verbose=False, tests=(), force=False, profile=False, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+View detailed logs (using --verbose): /home/mohamed/frappe-bench/logs/frappe.testing.log
+
+Running 8 unspecified-category tests for construction
+
+construction.tests.test_bilingual_terms_conditions_pilot.TestBilingualTermsConditionsPilot
+    ✔  test_active_and_schema_installed_fail_closed_on_missing_terms_conditions_field
+    ✔  test_arabic_edit_rejects_bidi_controls
+    ✔  test_identity_invariant_and_rename_preservation
+    ✔  test_norm_field_patch_idempotent_and_reversible
+    ✔  test_registry_loads_and_maps_resolved_terms_conditions_fields
+    ✔  test_search_matches_despite_alef_tatweel_diacritics
+       ▸  /home/mohamed/frappe-bench/apps/frappe/frappe/model/qb_query.py:153: V17FrappeDeprecationWarning: This codepath was marked (DATE: 2024-01-01) deprecated for removal (from v17 onwards); note:
+       ▸   The 'limit_page_length' parameter is deprecated. Use 'limit' instead.
+       ▸  
+       ▸    deprecation_warning(
+    ✔  test_server_authoritative_norm_derivation_and_poison_overwritten
+    ✔  test_zero_service_edits_guard
+
+
+----------------------------------------------------------------------
+Ran 8 tests in 1.594s
+
+OK
+=== MODULE construction.tests.test_bilingual_asset_pilot ===
+Starting test run with parameters: site=v16.localhost, module=construction.tests.test_bilingual_asset_pilot, verbose=False, tests=(), force=False, profile=False, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+View detailed logs (using --verbose): /home/mohamed/frappe-bench/logs/frappe.testing.log
+
+Running 8 unspecified-category tests for construction
+
+construction.tests.test_bilingual_asset_pilot.TestBilingualAssetPilot
+    ✔  test_active_and_schema_installed_fail_closed_on_missing_asset_field
+    ✔  test_arabic_edit_rejects_bidi_controls
+    ✔  test_naming_series_identity_invariant_and_rename_preservation
+    ✔  test_norm_field_patch_idempotent_and_reversible
+    ✔  test_registry_loads_and_maps_resolved_asset_fields
+    ✔  test_search_matches_despite_alef_tatweel_diacritics
+       ▸  /home/mohamed/frappe-bench/apps/frappe/frappe/model/qb_query.py:153: V17FrappeDeprecationWarning: This codepath was marked (DATE: 2024-01-01) deprecated for removal (from v17 onwards); note:
+       ▸   The 'limit_page_length' parameter is deprecated. Use 'limit' instead.
+       ▸  
+       ▸    deprecation_warning(
+    ✔  test_server_authoritative_norm_derivation_and_poison_overwritten
+    ✔  test_zero_service_edits_guard
+
+
+----------------------------------------------------------------------
+Ran 8 tests in 2.240s
+
+OK
+=== MODULE construction.tests.test_bilingual_company_pilot ===
+Starting test run with parameters: site=v16.localhost, module=construction.tests.test_bilingual_company_pilot, verbose=False, tests=(), force=False, profile=False, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+View detailed logs (using --verbose): /home/mohamed/frappe-bench/logs/frappe.testing.log
+
+Running 8 unspecified-category tests for construction
+
+construction.tests.test_bilingual_company_pilot.TestBilingualCompanyPilot
+    ✔  test_active_and_schema_installed_fail_closed_on_missing_company_field
+    ✔  test_arabic_edit_rejects_bidi_controls
+    ✔  test_identity_invariant_and_rename_preservation  (4.28s)
+    ✔  test_norm_field_patch_idempotent_and_reversible
+    ✔  test_registry_loads_and_maps_resolved_company_fields
+    ✔  test_search_matches_despite_alef_tatweel_diacritics
+       ▸  /home/mohamed/frappe-bench/apps/frappe/frappe/model/qb_query.py:153: V17FrappeDeprecationWarning: This codepath was marked (DATE: 2024-01-01) deprecated for removal (from v17 onwards); note:
+       ▸   The 'limit_page_length' parameter is deprecated. Use 'limit' instead.
+       ▸  
+       ▸    deprecation_warning(
+    ✔  test_server_authoritative_norm_derivation_and_poison_overwritten
+    ✔  test_zero_service_edits_guard
+
+
+----------------------------------------------------------------------
+Ran 8 tests in 6.678s
+
+OK
+=== MODULE construction.tests.test_bilingual_narrative_sanitizer ===
+Starting test run with parameters: site=v16.localhost, module=construction.tests.test_bilingual_narrative_sanitizer, verbose=False, tests=(), force=False, profile=False, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+View detailed logs (using --verbose): /home/mohamed/frappe-bench/logs/frappe.testing.log
+
+Running 20 unspecified-category tests for construction
+
+construction.tests.test_bilingual_narrative_sanitizer.TestBdiJoin
+    ✔  test_bdi_join_custom_separator
+    ✔  test_bdi_join_empty_and_none
+    ✔  test_bdi_join_single_escape_no_double_escape
+    ✔  test_bdi_join_wrapping_and_escaping
+
+construction.tests.test_bilingual_narrative_sanitizer.TestDocEventsValidation
+    ✔  test_child_table_validation_fails_dirty
+    ✔  test_parent_doc_validation_fails_dirty
+    ✔  test_parent_doc_validation_passes_clean
+
+construction.tests.test_bilingual_narrative_sanitizer.TestDynamicMetadataDerivation
+    ✔  test_meta_derivation_item_fields
+    ✔  test_meta_failure_falls_back_without_caching
+
+construction.tests.test_bilingual_narrative_sanitizer.TestHtmlSanitizerAndValidator
+    ✔  test_attribute_override_caught
+    ✔  test_c0_c1_control_characters_rejected
+    ✔  test_entity_decoded_override_rejected
+    ✔  test_literal_overrides_and_isolates_rejected
+    ✔  test_lrm_rlm_alm_accepted
+    ✔  test_markup_preserved
+    ✔  test_text_inside_failed_node_caught
+
+construction.tests.test_bilingual_narrative_sanitizer.TestPlainTextValidator
+    ✔  test_plain_text_entity_decoded_override_rejected
+    ✔  test_plain_text_lrm_rlm_alm_accepted
+    ✔  test_plain_text_multiline_support
+
+construction.tests.test_bilingual_narrative_sanitizer.TestRegistryImmutability
+    ✔  test_registry_remains_unchanged
+
+
+----------------------------------------------------------------------
+Ran 20 tests in 0.102s
+
+OK
+=== MODULE construction.tests.test_boq_link_queries ===
+Starting test run with parameters: site=v16.localhost, module=construction.tests.test_boq_link_queries, verbose=False, tests=(), force=False, profile=False, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+View detailed logs (using --verbose): /home/mohamed/frappe-bench/logs/frappe.testing.log
+
+Running 12 old-frappe-test-class-category tests for construction
+
+construction.tests.test_boq_link_queries.TestBOQLinkQueries
+    ✔  test_boq_header_arabic_exact_and_normalized_search
+    ✔  test_boq_header_query_applies_explicit_allowed_status_filter
+    ✔  test_boq_header_query_enforces_project_scope_without_implicit_status_filter
+    ✔  test_boq_header_scope_default_respects_explicit_project
+       ▸  /home/mohamed/frappe-bench/apps/frappe/frappe/model/qb_query.py:153: V17FrappeDeprecationWarning: This codepath was marked (DATE: 2024-01-01) deprecated for removal (from v17 onwards); note:
+       ▸   The 'limit_page_length' parameter is deprecated. Use 'limit' instead.
+       ▸  
+       ▸    deprecation_warning(
+    ✔  test_boq_structure_and_item_queries_follow_scope_chain
+    ✔  test_boq_structure_arabic_exact_and_normalized_search
+    ✔  test_boq_structure_query_requires_header_when_requested
+    ✔  test_boq_structure_query_returns_all_leaf_nodes_for_selected_header
+    ✔  test_closed_row_gate_returns_no_boq_dropdown_options
+    ✔  test_english_search_invariance_and_column_shape
+    ✔  test_scope_project_query_returns_current_scope_project
+    ✔  test_scope_token_endpoint_matches_service_token
+
+
+----------------------------------------------------------------------
+Ran 12 tests in 1.340s
+
+OK
+=== MODULE construction.tests.test_transaction_link_search ===
+Starting test run with parameters: site=v16.localhost, module=construction.tests.test_transaction_link_search, verbose=False, tests=(), force=False, profile=False, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+View detailed logs (using --verbose): /home/mohamed/frappe-bench/logs/frappe.testing.log
+
+Running 20 unspecified-category tests for construction
+
+construction.tests.test_transaction_link_search.TestAllowListValidation
+    ✔  test_registered_doctypes_accepted
+    ✔  test_seed_required_targets
+    ✔  test_unregistered_doctype_returns_empty
+
+construction.tests.test_transaction_link_search.TestClientFilterSanitization
+    ✔  test_json_string_filters_parsed_and_sanitized
+    ✔  test_meta_and_link_field_stripped
+
+construction.tests.test_transaction_link_search.TestClientServerAllowListDrift
+    ✔  test_js_transactional_targets_match_server_config
+
+construction.tests.test_transaction_link_search.TestDirectionalProperties
+    ✔  test_property_2_bounded_recall
+       ▸  /home/mohamed/frappe-bench/apps/frappe/frappe/model/qb_query.py:153: V17FrappeDeprecationWarning: This codepath was marked (DATE: 2024-01-01) deprecated for removal (from v17 onwards); note:
+       ▸   The 'limit_page_length' parameter is deprecated. Use 'limit' instead.
+       ▸  
+       ▸    deprecation_warning(
+    ✔  test_property_3_native_agreement_on_latin_vocabulary
+    ✔  test_property_4_determinism
+
+construction.tests.test_transaction_link_search.TestEmptyAndLatinQueries
+    ✔  test_empty_txt_bypasses_preresolution
+    ✔  test_latin_query_passthrough
+    ✔  test_native_search_fields_derivation
+    ✔  test_whitespace_txt_bypasses_preresolution
+
+construction.tests.test_transaction_link_search.TestInvariantGuard
+    ✔  test_code_diad_byte_identical_across_reference_commits
+    ✔  test_registry_growth_is_monotonic
+    ✔  test_registry_growth_is_purely_additive_at_doctype_level
+
+construction.tests.test_transaction_link_search.TestSeededArabicEndToEnd
+    ✔  test_arabic_search_matches_and_enriches_labels
+       ▸  /home/mohamed/frappe-bench/apps/frappe/frappe/model/qb_query.py:153: V17FrappeDeprecationWarning: This codepath was marked (DATE: 2024-01-01) deprecated for removal (from v17 onwards); note:
+       ▸   The 'limit_page_length' parameter is deprecated. Use 'limit' instead.
+       ▸  
+       ▸    deprecation_warning(
+    ✔  test_unmatched_arabic_returns_no_phantoms
+
+construction.tests.test_transaction_link_search.TestTopKBoundary
+    ✔  test_preresolution_requests_and_caps_at_top_k
+
+construction.tests.test_transaction_link_search.TestTxtCorrectnessTrap
+    ✔  test_txt_trap_asserted_downstream_receives_empty_txt
+
+
+----------------------------------------------------------------------
+Ran 20 tests in 0.335s
+
+OK
+=== MODULE construction.tests.test_bilingual_desk_link_dispatch ===
+Starting test run with parameters: site=v16.localhost, module=construction.tests.test_bilingual_desk_link_dispatch, verbose=False, tests=(), force=False, profile=False, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+View detailed logs (using --verbose): /home/mohamed/frappe-bench/logs/frappe.testing.log
+
+Running 17 unspecified-category tests for construction
+
+construction.tests.test_bilingual_desk_link_dispatch.TestDeskLinkDispatch
+    ✔  test_arabic_path_denies_records_for_non_admin
+       ▸  /home/mohamed/frappe-bench/apps/frappe/frappe/model/qb_query.py:153: V17FrappeDeprecationWarning: This codepath was marked (DATE: 2024-01-01) deprecated for removal (from v17 onwards); note:
+       ▸   The 'limit_page_length' parameter is deprecated. Use 'limit' instead.
+       ▸  
+       ▸    deprecation_warning(
+    ✔  test_arabic_path_enforces_permissions_via_get_list
+    ✔  test_arabic_path_returns_row_matched_only_on_vendor_field
+    ✔  test_arabic_query_skips_vendor_baseline
+    ✔  test_dict_rows_satisfy_build_for_autosuggest
+    ✔  test_dispatcher_canonical_positional_order_keeps_filters
+    ✔  test_enabled_disabled_constraints_mirrored
+    ✔  test_explicit_searchfield_keeps_vendor_ownership
+    ✔  test_genuine_entry_point_arabic_and_latin
+    ✔  test_latin_query_is_vendor_passthrough
+    ✔  test_non_active_registry_entry_fails_closed
+    ✔  test_override_hook_binding_resolves_to_dispatcher
+    ✔  test_registry_unreadable_fails_closed
+    ✔  test_sidecar_rows_satisfy_build_for_autosuggest
+    ✔  test_unregistered_doctype_is_vendor_passthrough
+    ✔  test_unusable_filters_return_vendor_result_unchanged
+    ✔  test_vendor_search_fields_folded_into_registry_query
+
+
+----------------------------------------------------------------------
+Ran 17 tests in 1.714s
+
+OK
+=== MODULE construction.tests.test_stage4_report_extension ===
+Starting test run with parameters: site=v16.localhost, module=construction.tests.test_stage4_report_extension, verbose=False, tests=(), force=False, profile=False, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+View detailed logs (using --verbose): /home/mohamed/frappe-bench/logs/frappe.testing.log
+
+Running 14 unspecified-category tests for construction
+
+construction.tests.test_stage4_report_extension.TestReportExtensionIntegration
+    ✔  test_financial_statements_reports_are_supported
+    ✔  test_general_ledger_bilingualize_readonly
+    ✔  test_rollback_note_documented
+    ✔  test_trial_balance_bilingualize_readonly
+
+construction.tests.test_stage4_report_extension.TestReportExtensionPure
+    ✔  test_account_save_busts_mapping_cache
+    ✔  test_arabic_mode_swaps_label
+    ✔  test_both_mode_shows_pair
+    ✔  test_columnar_row_translates_account_column
+    ✔  test_english_mode_preserves_labels
+    ✔  test_mapping_cache_hit_serves_identical_mapping
+    ✔  test_mapping_load_matches_reference_build
+    ✔  test_report_label_field_configurations
+    ✔  test_sources_are_not_mutated
+    ✔  test_unknown_label_kept_identity
+
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.379s
+
+OK
+=== MODULE construction.tests.test_stage7_bilingual_reports ===
+Starting test run with parameters: site=v16.localhost, module=construction.tests.test_stage7_bilingual_reports, verbose=False, tests=(), force=False, profile=False, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+View detailed logs (using --verbose): /home/mohamed/frappe-bench/logs/frappe.testing.log
+
+Running 25 unspecified-category tests for construction
+
+construction.tests.test_stage7_bilingual_reports.TestBilingualReportsAPI
+    ✔  test_ar_mode_localizes_account_label
+    ✔  test_both_mode_keeps_identity_prefix
+    ✔  test_en_mode_untouched
+    ✔  test_unknown_report_fails_closed
+
+construction.tests.test_stage7_bilingual_reports.TestExpandedReportAllowlist
+    ✔  test_cash_flow_period_defaults
+    ✔  test_column_headers_localized_ar_en_both
+    ✔  test_column_headers_pure_source_untouched
+    ✔  test_expanded_execute_runs_exactly_once
+    ✔  test_localize_column_label_unit
+    ✔  test_mission_reports_in_allowlist
+    ✔  test_report_path_makes_zero_db_writes
+    ✔  test_summary_caller_report_date_wins
+    ✔  test_summary_defaults_report_date_window
+
+construction.tests.test_stage7_bilingual_reports.TestGenuineAuthorization
+    ✔  test_non_admin_without_accounts_roles_is_rejected_before_execute
+
+construction.tests.test_stage7_bilingual_reports.TestRealModuleSmoke
+    ✔  test_malformed_filters_fail_closed
+    ✔  test_non_object_filters_fail_closed
+    ✔  test_non_object_native_filters_fail_closed
+    ✔  test_object_filters_accepted
+    ✔  test_pilot_modules_import_and_expose_execute
+
+construction.tests.test_stage7_bilingual_reports.TestStatementAllowlist
+    ✔  test_statement_ar_mode_localizes_account_name
+    ✔  test_statement_caller_values_win
+    ✔  test_statement_execute_runs_exactly_once
+    ✔  test_statement_period_defaults_date_range
+    ✔  test_statement_period_defaults_fiscal_year_and_fallback
+    ✔  test_statement_reports_in_allowlist
+
+
+----------------------------------------------------------------------
+Ran 25 tests in 1.184s
+
+OK

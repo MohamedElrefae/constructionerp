@@ -1,0 +1,65 @@
+{
+  "artefacts": {
+    "docs/ai/work-items/bilingual-transaction-print-formats/SCOPE.md": "1ad84d4f0d7731680a41b0d9b2a4ac85a7019376838140ac4fcbe6d66c027e68",
+    "docs/ai/work-items/bilingual-transaction-print-formats/evidence/test-rendering.log": "29ee6b86e76fe3e4cc3a9601cab644e46bb5c283be65b25b90ff34938e951e2c",
+    "docs/ai/work-items/bilingual-transaction-print-formats/evidence/gates.log": "3b336396049e84f99e5bb02e289fcb2f80f2bab01f18f478ad5411a87f7557b1",
+    "docs/ai/work-items/bilingual-transaction-print-formats/evidence/regression-matrix.log": "e5d486dd9019c5b8ecabb74015ad4bcc6406fdae8b7bee1c0a97dd67b05da461",
+    "construction/print_format/bilingual_purchase_order/bilingual_purchase_order.json": "43fbe28fb7649ea76783497bfff0394031e12817a33a77eff66821e181911970",
+    "construction/print_format/bilingual_sales_invoice/bilingual_sales_invoice.json": "66eeb3d0cecbd879a5ec0f24031760ddbd2213cd01ea409039b0c7f8c4740a60",
+    "construction/print_format/bilingual_stock_entry/bilingual_stock_entry.json": "4c0580ad2f852bffdd52d62a6a0e62e3b48bac8609598c7c5fd6f0e45668cc23",
+    "construction/print_format/bilingual_material_request/bilingual_material_request.json": "c7163d91f66394153ceee1b6ed034efb9e93474b74cf22f86e946ee76317687d",
+    "construction/tests/test_bilingual_transaction_print.py": "c27b260c27578738b795de0ae7f209ab6ed48c95e10a64e63e289c7445affa41",
+    "construction/install.py": "c4de7a9938cac6ab6ad8bff7a4f6adfa0a44925c7711d24c8df9470cbf739591",
+    "construction/hooks.py": "d54bca4f63374dc018a594bd9c3f05477e790a44f39fc2e9b54a54548ba5f73f"
+  },
+  "base_commit": "234c02446deb3dd10567bfcbc995732ccd8cc19e",
+  "branch": "develop",
+  "site": "v16.localhost",
+  "manifest_number": 32,
+  "primary_invariant": {
+    "claim": "Four bilingual transactional print formats shipped and registered; zero edits to bilingual_service.py, searchable_dropdown/api/search.py, bilingual_registry.json and fixtures/uom.json; zero apps/frappe and apps/erpnext edits",
+    "bilingual_service_py_diff_lines": 0,
+    "search_py_diff_lines": 0,
+    "bilingual_registry_json_diff_lines": 0,
+    "uom_json_diff_lines": 0,
+    "frozen_surfaces_verified_at": "234c02446deb3dd10567bfcbc995732ccd8cc19e",
+    "frozen_surface_guard_test": "construction.tests.test_bilingual_transaction_print.test_frozen_surfaces_byte_identical_to_base_commit"
+  },
+  "decisions_settled": {
+    "D1_supplier_customer_arabic_field": "Briefing's supplier_name_ar / customer_name_ar do not exist on v16.localhost; verified live columns supplier_name_in_arabic / customer_name_in_arabic used instead (SHOW COLUMNS evidence recorded in SCOPE.md)",
+    "D2_material_request_header_fields": "tabMaterial Request has no department/project column; header prints Company, Request No., Request Type, Request Date, Required Date, Status; department shown per line",
+    "D3_select_label_maps": "purpose and material_request_type rendered through explicit Jinja option->Arabic maps covering every installed option, joined with bdi_join",
+    "D4_installation_wiring": "New construction.install.setup_transaction_print_formats registered in after_install and after_migrate; setup_boq_print_formats body extracted to shared _upsert_print_format_file with verbatim behaviour",
+    "D5_render_path": "Assertions use frappe.get_print (real printview), not a synthetic Jinja context",
+    "D6_shared_file_amendment": "construction/hooks.py +2 lines invalidate 8 prior manifests pinning it; all 8 re-pinned to the post-change digest and given one appended 'amendments' entry each (convention established by bilingual-financial-reports amendments 5E-repin / R1-B); no other artefact in those manifests altered"
+  },
+  "test_results": {
+    "unit_suite": {
+      "module": "construction.tests.test_bilingual_transaction_print",
+      "tests": 10,
+      "passed": 10,
+      "failed": 0,
+      "log": "docs/ai/work-items/bilingual-transaction-print-formats/evidence/test-rendering.log"
+    },
+    "canonical_matrix": {
+      "modules": 21,
+      "tests": 273,
+      "passed": 273,
+      "failed": 0,
+      "log": "docs/ai/work-items/bilingual-transaction-print-formats/evidence/regression-matrix.log",
+      "note": "First attempt failed 1/273 on test_bilingual_account_pilot.test_track_changes_patch_idempotent_and_reversible (pre-existing meta-cache flake, passes in isolation); immediate full re-run passed 273/273"
+    },
+    "lint_gates": {
+      "lints": 6,
+      "reconciliation": {
+        "rows_parsed": 19,
+        "sources_located": 19,
+        "mismatched": 0,
+        "unsourced": 0,
+        "result": "PASS"
+      },
+      "log": "docs/ai/work-items/bilingual-transaction-print-formats/evidence/gates.log"
+    }
+  },
+  "amendments": []
+}
