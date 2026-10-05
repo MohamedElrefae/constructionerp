@@ -92,9 +92,12 @@ jobs:
       - name: Install
         working-directory: /home/runner/frappe-bench
         run: |
-          bench get-app erpnext https://github.com/frappe/erpnext --branch version-16
-          git -C apps/erpnext fetch --depth=1 upstream 2807c9f08fff3f161c0a2e10745a26aa6331ffd5
-          git -C apps/erpnext checkout --detach FETCH_HEAD
+          # Pin before Bench installs dependencies or builds assets: building
+          # the moving branch first can modify its lockfile and block checkout.
+          git init "$RUNNER_TEMP/erpnext"
+          git -C "$RUNNER_TEMP/erpnext" fetch --depth=1 https://github.com/frappe/erpnext 2807c9f08fff3f161c0a2e10745a26aa6331ffd5
+          git -C "$RUNNER_TEMP/erpnext" checkout -b ci-pin FETCH_HEAD
+          bench get-app --skip-assets erpnext "$RUNNER_TEMP/erpnext" --branch ci-pin
           test "$(git -C apps/erpnext rev-parse HEAD)" = 2807c9f08fff3f161c0a2e10745a26aa6331ffd5
           bench setup requirements frappe erpnext
           bench get-app construction $GITHUB_WORKSPACE
