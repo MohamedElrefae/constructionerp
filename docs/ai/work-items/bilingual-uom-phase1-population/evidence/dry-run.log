@@ -1,0 +1,21 @@
+FIXTURE_FILE_PRE rows=12 bilingual_edit_applied=no sha256=aaf5784064788f4d1658c8e039ebd59d7af38c4214e5e09c699220d92385904a
+DRY UOM 'M3' before=<empty> after=0804df0daf3d4a64 norm=0804df0daf3d4a64 WOULD_WRITE WOULD_ENABLE
+DRY UOM 'M2' before=<empty> after=e7b2a3d2f82114c7 norm=e7b2a3d2f82114c7 WOULD_WRITE WOULD_ENABLE
+DRY UOM 'M' before=<empty> after=60d80267fce4afdb norm=60d80267fce4afdb WOULD_WRITE WOULD_ENABLE
+DRY UOM 'TON' before=<empty> after=6c97adc355134976 norm=6c97adc355134976 WOULD_WRITE WOULD_ENABLE
+DRY UOM 'KG' before=<empty> after=174e94ae4c517269 norm=174e94ae4c517269 WOULD_WRITE WOULD_ENABLE
+DRY UOM 'PCS' before=<empty> after=848514abbbfdcec4 norm=848514abbbfdcec4 WOULD_WRITE WOULD_ENABLE
+DRY UOM 'LS' before=<empty> after=3dd22c2ed2f99121 norm=3dd22c2ed2f99121 WOULD_WRITE WOULD_ENABLE
+DRY UOM 'DAY' before=<empty> after=eb07f635d8831be8 norm=eb07f635d8831be8 WOULD_WRITE WOULD_ENABLE
+DRY UOM 'HR' before=<empty> after=44c3abfb7720d08f norm=44c3abfb7720d08f WOULD_WRITE WOULD_ENABLE
+DRY UOM 'BAG' before=<empty> after=89e2f096fa1aa360 norm=89e2f096fa1aa360 WOULD_WRITE WOULD_ENABLE
+DRY UOM 'LTR' before=<empty> after=15a5db957dcc091a norm=15a5db957dcc091a WOULD_WRITE WOULD_ENABLE
+DRY UOM 'SET' before=<empty> after=663173f1daa44b54 norm=663173f1daa44b54 WOULD_WRITE WOULD_ENABLE
+DRY UOM 'Nos' before=<empty> after=a760cfd5140ee8f2 norm=a760cfd5140ee8f2 WOULD_WRITE ALREADY_ENABLED
+DRY UOM 'Tonne' before=<empty> after=6c97adc355134976 norm=6c97adc355134976 WOULD_WRITE ALREADY_ENABLED
+DRY UOM 'Box' before=<empty> after=e8c39755d5e8255c norm=e8c39755d5e8255c WOULD_WRITE ALREADY_ENABLED
+POPULATED_NOW UOM=0
+SUMMARY rows=15 would_write=15 already_applied=0 would_enable=12
+PRIVATE dry-run.json sha256=00c3470a00df688004f685a7d3c0b47ae5c051b2ed2de9fe5eab82127d826d73
+WRITES_PERFORMED: 0
+DRY-RUN RESULT: PASS (15/15 rows validated; 12 enables planned; approved v2 sha matched; zero writes)
