@@ -1,0 +1,20 @@
+SITE total=276 arabic_populated=0
+DRY Department 'All Departments' before=<empty> after=1e39724d0f697a36 norm=953da4de61d76829 WOULD_WRITE R3B_ROOT_SAVE lft=1 rgt=578 parent=''
+DRY Department 'Accounts - E' before=<empty> after=c447ac426926bfdd norm=c447ac426926bfdd WOULD_WRITE PLAIN_SAVE lft=36 rgt=37 parent='All Departments'
+DRY Department 'Customer Service - E' before=<empty> after=c3bb52b717b9a3dd norm=c3bb52b717b9a3dd WOULD_WRITE PLAIN_SAVE lft=80 rgt=81 parent='All Departments'
+DRY Department 'Dispatch - E' before=<empty> after=1aa66bd3aba79178 norm=1aa66bd3aba79178 WOULD_WRITE PLAIN_SAVE lft=124 rgt=125 parent='All Departments'
+DRY Department 'Human Resources - E' before=<empty> after=6c30b5a7d30b2084 norm=6c30b5a7d30b2084 WOULD_WRITE PLAIN_SAVE lft=168 rgt=169 parent='All Departments'
+DRY Department 'Legal - E' before=<empty> after=27d92f02de403003 norm=27d92f02de403003 WOULD_WRITE PLAIN_SAVE lft=212 rgt=213 parent='All Departments'
+DRY Department 'Management - E' before=<empty> after=a3b53d11ac2037a6 norm=5a711a0479928d95 WOULD_WRITE PLAIN_SAVE lft=256 rgt=257 parent='All Departments'
+DRY Department 'Marketing - E' before=<empty> after=3776fdd780cc5fba norm=3776fdd780cc5fba WOULD_WRITE PLAIN_SAVE lft=300 rgt=301 parent='All Departments'
+DRY Department 'Operations - E' before=<empty> after=edf92ea1e76aa075 norm=edf92ea1e76aa075 WOULD_WRITE PLAIN_SAVE lft=344 rgt=345 parent='All Departments'
+DRY Department 'Production - E' before=<empty> after=03b47ea3ac24f2b1 norm=6558616b9f7919de WOULD_WRITE PLAIN_SAVE lft=388 rgt=389 parent='All Departments'
+DRY Department 'Purchase - E' before=<empty> after=2a14f93caa3227fc norm=2a14f93caa3227fc WOULD_WRITE PLAIN_SAVE lft=432 rgt=433 parent='All Departments'
+DRY Department 'Quality Management - E' before=<empty> after=c763cdc6e15b187d norm=d8fb5844ee1e6c87 WOULD_WRITE PLAIN_SAVE lft=476 rgt=477 parent='All Departments'
+DRY Department 'Research & Development - E' before=<empty> after=5d930a6078e38e92 norm=5d930a6078e38e92 WOULD_WRITE PLAIN_SAVE lft=520 rgt=521 parent='All Departments'
+DRY Department 'Sales - E' before=<empty> after=7bf1b13416bcd084 norm=7bf1b13416bcd084 WOULD_WRITE PLAIN_SAVE lft=564 rgt=565 parent='All Departments'
+EXCLUSIONS excluded_rows=262 (test-company noise, untouched)
+SUMMARY rows=14 would_write=14 plain=13 r3b_root=1
+PRIVATE dry-run.json sha256=e3277e411205ab3c5a48b81fa6f0170325342f05e447118f811dddff820cfaf0
+WRITES_PERFORMED: 0
+DRY-RUN RESULT: PASS (14/14 rows validated; 13 plain + 1 R3B root planned; approved v2 sha matched; zero writes)

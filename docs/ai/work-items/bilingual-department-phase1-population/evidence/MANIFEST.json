@@ -1,0 +1,67 @@
+{
+  "artefacts": {
+    "docs/ai/work-items/bilingual-department-phase1-population/SCOPE.md": "0fa5ad320402893289d9115df69ae06c2774bf7da7de6abcb76fcb0122393ac7",
+    "docs/ai/work-items/bilingual-department-phase1-population/evidence/inventory-export.log": "aa3cc38b0d65d7aaa28164fa431961fdbb93c3079eed70cbc0ca0c61423fcb22",
+    "docs/ai/work-items/bilingual-department-phase1-population/evidence/dry-run.log": "10e9910955327c877c6413521d28e53677cf68e9707489e0e8ee74e21a540d28",
+    "docs/ai/work-items/bilingual-department-phase1-population/evidence/apply.log": "434f4da060bebcd3cc57389f4f9340af123282db59cd38057967f68eaa87c326",
+    "docs/ai/work-items/bilingual-department-phase1-population/evidence/post-import-verification.log": "815669c6c310440508f963ae85fb84305601b2f13d91eb500475a6360df1d818",
+    "docs/ai/work-items/bilingual-department-phase1-population/evidence/regression-matrix.log": "69b4fecd358d5b37ec4c1768892a100c4fdead1deaec6c7ad658fa09db636099",
+    "docs/ai/work-items/bilingual-department-phase1-population/evidence/reconciliation.log": "c275c7ef647847a29183ba4ef2b0d67de786be14e9c9d2976017a962f653c16d",
+    "docs/ai/work-items/bilingual-department-phase1-population/evidence/owner-approval.md": "af5f1f6785912eea693e57f255148fafd9e0bee5a58ba082c59c646b8b117056",
+    "docs/ai/work-items/bilingual-department-phase1-population/evidence/review-ai-a2.md": "9d7bf99191d4d416ce94cdf7200e4e0fbb481b293f77cca41f46342a4dd82771",
+    "docs/ai/work-items/bilingual-department-phase1-population/evidence/scripts/export_department_inventory.py": "ee7d7240abf0e8dae074dfb05478ea5cb9bfdf2409266f1ef3a1c1a299ade932",
+    "docs/ai/work-items/bilingual-department-phase1-population/evidence/scripts/dry_run_department_phase1.py": "a555495dc58e23705b65adf338dc40c8b5bb00f977a5ffaa44a539e529f348f7",
+    "docs/ai/work-items/bilingual-department-phase1-population/evidence/scripts/apply_department_phase1.py": "53a6831b20901b4758f468c66e827a8d619cd948dad59004a62aca1d47957252",
+    "docs/ai/work-items/bilingual-department-phase1-population/evidence/scripts/verify_department_phase1.py": "c9abf11c04f10b00570b068fd67981d83d759263a841cba85b9fad3fc0cb57bb"
+  },
+  "amendments": [
+    {
+      "id": "V2",
+      "when": "apply attempt 1",
+      "cause": "stale old_parent bookkeeping (NULL vs parent_department='All Departments' on 12 of 14 rows) sent frappe update_nsm() down its sibling-repositioning branch, which would rewrite lft/rgt across the whole tree; strict per-row frozen-field check caught it at the third row and the whole transaction rolled back fail-closed with zero writes (an intermediate rerun then aborted at parse time - SyntaxError in the script edit, no site interaction)",
+      "fix": "old_parent pre-synced to the unchanged parent before each save - the very field update_nsm syncs unconditionally in both branches, so no extra write is introduced and the move branch is skipped; strict identity/tree/field-diff checks retained; all other validations (bidi policy, NestedSet validate_ledger, links) still run on every row; attempt 2 wrote 14/14 with only department_name_ar + _norm (+ old_parent bookkeeping sync) changed",
+      "disclosure": "SCOPE.md F-5G-9 + V2, apply.log attempt-1 block + ATTEMPT 2 separator"
+    },
+    {
+      "id": "V3",
+      "when": "verify attempt 1",
+      "cause": "read-only TypeError in the evidence script (hashlib.sha256(open(...)) missing .read()) while computing the uom.json digest, after every substantive row/completeness/exclusion/usage check had already passed",
+      "fix": "digest read corrected and the entire verification rerun end-to-end: PASS with every check green; no write path involved at any point",
+      "disclosure": "SCOPE.md V3 + final passing run in post-import-verification.log"
+    }
+  ],
+  "base_commit": "9ccb4cd",
+  "branch": "develop",
+  "work_item": "bilingual-department-phase1-population",
+  "primary_invariant": "D5 triad (bilingual_service.py, searchable_dropdown/api/search.py) and bilingual_registry.json byte-identical to base 9ccb4cd (call-only, never edited); zero app-file changes this cycle (no fixture, patch, hook, test, JS, registry or ?v= edits - the diff is this work-item directory only); exactly the 14 owner-approved Phase-1 rows (root All Departments + 13 Elrefae departments) written on site v16.localhost via standard doc.save() with server-derived _norm, root under the disclosed R3B workaround (owner-approval.md 1-2) and disclosed V2 old_parent pre-sync; frozen fields name/department_name/parent_department/company/is_group/disabled/lft/rgt verified unchanged on all 14; the 262 excluded test-company rows, all other doctype data, and every prior bilingual surface (items 8, customers 1, suppliers 0, cost centers 3, warehouses 6, projects 5, accounts 81, groups 6/5/8/4, Company empty, UOM 15 Arabic / 253 enabled, uom.json sha unchanged) untouched; no Translation doctype writes; private values under sites/v16.localhost/private/department-phase1-population/ (privacy R4 - Arabic values never enter committed files this cycle); production mutation never authorized",
+  "decisions_settled": {
+    "R1": "in-scope = company-less root + every row of the active company Elrefae; export derives from live data and asserts against a frozen literal of 14 row names; classification root=1/real=13/test-company=260/_Test-label=2; run result PASS (PHASE1_FROZEN_MATCH yes, PRE_STATE_ARABIC 0, excluded 262)",
+    "R2": "D4/D5 cycle with owner approval as hard gate: export -> probes P1-P4 -> proposal v1 (14) -> fresh non-author round-1 review (13 approve / 1 revise on the root, in-app precedent; 2 non-blocking notes) -> revision applied -> proposal v2 sha-bound approval (values + R3B mechanism + 14/262 phasing) -> dry-run -> apply -> verification",
+    "R3": "standard doc.save() through the registered enforce_bilingual_arabic_policy hook; root row under the owner-approved 5D-R3b-style workaround (flags.ignore_mandatory + module-scoped get_root_of->None restored in finally); V2 disclosed mid-cycle for the stale old_parent NSM trap after fail-closed attempt 1",
+    "R4": "privacy: proposal/review/dry-run/apply values private under sites/v16.localhost/private/department-phase1-population/; committed evidence carries counts, classifications, verdicts, sha16 value hashes and digests only - no Arabic value is written to any committed file this cycle (no fixture edit exists for Department, F-5G-5)",
+    "R5": "completeness = exactly 14 site rows with department_name_ar (0 missing / 0 extra), norm consistency 14/14, identity + tree (name/department_name/parent/company/is_group/disabled/lft/rgt) unchanged 14/14, exclusions 262 intact, probe residue 0, total 276, usage surface root Arabic visible with scope ref intact, old_parent synced per V2",
+    "R6": "new files under this work-item directory only -> zero shared-file edits -> zero manifest re-pins (Department pinned by no prior manifest); glossary untouched (47 terms, 0 exact matches on the 14 labels)",
+    "R7": "no display/config/registry changes; name never altered (autoname/before_rename untouched); no parent/company moves; old_parent sync is the standard update_nsm bookkeeping operation, disclosed as V2; Company Arabic left empty (separate tier)"
+  },
+  "test_results": {
+    "regression_matrix": "21 modules / 264 tests, all OK",
+    "adr_reconciler": "19/19 PASS",
+    "lints": "lint_scope_metadata PASS, ai_context_check PASS, lint_translation_writes PASS, schema_drift_checker PASS, py_compile PASS, bash -n PASS",
+    "inventory_export": "PASS (276 rows classified, PHASE1_FROZEN_MATCH yes for the 14-row allowlist, PRE_STATE_ARABIC 0, excluded 262, usage + F-5G-1..8 printed)",
+    "probes": "P1 root MandatoryError, P2 NestedSetRecursionError, P3 root workaround SAVE_OK, P4 plain row SAVE_OK - all rolled back, 0 residue",
+    "dry_run": "PASS (14/14 validated, 13 plain + 1 R3B root planned, approved v2 sha matched, 0 writes)",
+    "apply_attempt_1": "FAIL-CLOSED rollback, zero writes (stale old_parent NSM repositioning caught by strict field check; led to disclosed V2; a further intermediate rerun died at parse time with no site interaction)",
+    "apply": "PASS (14/14 written, 0 skipped, 0 failed, r3b_root=1, only Arabic+norm+old_parent bookkeeping changed, transaction committed)",
+    "post_import_verification": "PASS (populated=14 norm_consistent=14 identity_unchanged=14 tree_unchanged=14, site Arabic total exactly 14, exclusions 262 intact, probe residue 0, usage surface yes, frozen prior surfaces incl. 5F UOM + uom.json sha unchanged, get_root_of patch restored; corrected rerun after read-only V3)"
+  },
+  "private_artefacts": {
+    "note": "site master data - privacy R4; digests only, values never committed",
+    "proposal.json": "dba85a4ceba5826094c1c7b6e25117afe8e0a696bcb1c3564699b0d736bf64a4 (owner-approved, version 2, 14 rows)",
+    "proposal-v1.json": "cb0a10ee61e7bad14eb6847acc26530af6d351b5848781a80948a7307cee5c0a (round-1 input)",
+    "review-ai-a2.json": "eaf0ec7174a24a71846f4ab23441c521b140e7894e779ec767038019f362f82d",
+    "dry-run.json": "e3277e411205ab3c5a48b81fa6f0170325342f05e447118f811dddff820cfaf0 (rollback: before-values all empty, frozen-field snapshots)",
+    "apply.json": "b8ff968b0ff24ca95fe9cf7b5a178a0432484a830d8032945f0b05e59ff56142"
+  },
+  "site_migration": "none - no patch, no schema change; site data only: 14 bilingual Department rows (and their server-derived _norm values) populated on v16.localhost, a non-production test site, plus the disclosed old_parent bookkeeping sync on 12 rows",
+  "causal_order": "export/inventory -> probes P1-P4 -> proposal v1 -> fresh non-author review (13/14 + revise) -> v2 sha-bound owner approval (values + R3B + phasing) -> dry-run (0 writes) -> apply attempt 1 fail-closed (V2 disclosed) -> apply attempt 2 PASS -> post-import verification (V3 corrected rerun) -> matrix + reconciler + lints -> capture logs (2>&1) -> git add -f the .log -> SHA-256 digests -> MANIFEST.json -> commit"
+}

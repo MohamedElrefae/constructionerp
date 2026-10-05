@@ -1,0 +1,25 @@
+PREVALIDATE_OK rows=14 plain=13 r3b_root=1 site_arabic=0 excluded=262
+WRITE Department 'All Departments' value=1e39724d0f697a36 norm=953da4de61d76829 identity=unchanged tree=unchanged R3B_ROOT
+WRITE Department 'Accounts - E' value=c447ac426926bfdd norm=c447ac426926bfdd identity=unchanged tree=unchanged PLAIN
+FAIL during apply, transaction rolled back: RuntimeError: Customer Service - E: lft/rgt changed
+
+
+===== ATTEMPT 2 (after disclosed amendment V2: old_parent pre-sync) =====
+PREVALIDATE_OK rows=14 plain=13 r3b_root=1 site_arabic=0 excluded=262
+WRITE Department 'All Departments' value=1e39724d0f697a36 norm=953da4de61d76829 identity=unchanged tree=unchanged fields_changed=['department_name_ar', 'department_name_ar_norm', 'old_parent'] R3B_ROOT
+WRITE Department 'Accounts - E' value=c447ac426926bfdd norm=c447ac426926bfdd identity=unchanged tree=unchanged fields_changed=['department_name_ar', 'department_name_ar_norm'] PLAIN
+WRITE Department 'Customer Service - E' value=c3bb52b717b9a3dd norm=c3bb52b717b9a3dd identity=unchanged tree=unchanged fields_changed=['department_name_ar', 'department_name_ar_norm', 'old_parent'] PLAIN
+WRITE Department 'Dispatch - E' value=1aa66bd3aba79178 norm=1aa66bd3aba79178 identity=unchanged tree=unchanged fields_changed=['department_name_ar', 'department_name_ar_norm', 'old_parent'] PLAIN
+WRITE Department 'Human Resources - E' value=6c30b5a7d30b2084 norm=6c30b5a7d30b2084 identity=unchanged tree=unchanged fields_changed=['department_name_ar', 'department_name_ar_norm', 'old_parent'] PLAIN
+WRITE Department 'Legal - E' value=27d92f02de403003 norm=27d92f02de403003 identity=unchanged tree=unchanged fields_changed=['department_name_ar', 'department_name_ar_norm', 'old_parent'] PLAIN
+WRITE Department 'Management - E' value=a3b53d11ac2037a6 norm=5a711a0479928d95 identity=unchanged tree=unchanged fields_changed=['department_name_ar', 'department_name_ar_norm', 'old_parent'] PLAIN
+WRITE Department 'Marketing - E' value=3776fdd780cc5fba norm=3776fdd780cc5fba identity=unchanged tree=unchanged fields_changed=['department_name_ar', 'department_name_ar_norm', 'old_parent'] PLAIN
+WRITE Department 'Operations - E' value=edf92ea1e76aa075 norm=edf92ea1e76aa075 identity=unchanged tree=unchanged fields_changed=['department_name_ar', 'department_name_ar_norm', 'old_parent'] PLAIN
+WRITE Department 'Production - E' value=03b47ea3ac24f2b1 norm=6558616b9f7919de identity=unchanged tree=unchanged fields_changed=['department_name_ar', 'department_name_ar_norm', 'old_parent'] PLAIN
+WRITE Department 'Purchase - E' value=2a14f93caa3227fc norm=2a14f93caa3227fc identity=unchanged tree=unchanged fields_changed=['department_name_ar', 'department_name_ar_norm', 'old_parent'] PLAIN
+WRITE Department 'Quality Management - E' value=c763cdc6e15b187d norm=d8fb5844ee1e6c87 identity=unchanged tree=unchanged fields_changed=['department_name_ar', 'department_name_ar_norm', 'old_parent'] PLAIN
+WRITE Department 'Research & Development - E' value=5d930a6078e38e92 norm=5d930a6078e38e92 identity=unchanged tree=unchanged fields_changed=['department_name_ar', 'department_name_ar_norm', 'old_parent'] PLAIN
+WRITE Department 'Sales - E' value=7bf1b13416bcd084 norm=7bf1b13416bcd084 identity=unchanged tree=unchanged fields_changed=['department_name_ar', 'department_name_ar_norm', 'old_parent'] PLAIN
+SUMMARY written=14 skipped=0 failed=0 r3b_root=1
+PRIVATE apply.json sha256=b8ff968b0ff24ca95fe9cf7b5a178a0432484a830d8032945f0b05e59ff56142
+APPLY RESULT: PASS
