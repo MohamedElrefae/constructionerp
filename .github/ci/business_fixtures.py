@@ -4,6 +4,13 @@ Invoke from the CI disposable ``test_site`` after installing Construction and
 before the configured test modules. Company insertion uses ERPNext's native
 controller so its standard chart, departments, warehouses, and defaults are
 created through the same lifecycle used by ERPNext setup.
+
+The company intentionally matches ERPNext's canonical test company
+(``erpnext/setup/doctype/company/test_records.json``: ``_Test Company``,
+India, INR, Standard chart). Frappe's legacy ``FrappeTestCase`` preparation
+preloads ERPNext's standard test records (Purchase Invoice, Fiscal Year, ...)
+for this company; a different currency makes those records fail validation,
+and a different company name leaves them unseeded.
 """
 
 import os
@@ -13,8 +20,8 @@ import frappe
 
 COMPANY_NAME = "_Test Company"
 COMPANY_ABBR = "_TC"
-COMPANY_CURRENCY = "EGP"
-COMPANY_COUNTRY = "Egypt"
+COMPANY_CURRENCY = "INR"
+COMPANY_COUNTRY = "India"
 
 
 def seed():
@@ -51,6 +58,7 @@ def seed():
             _assert_fixture_company(company)
 
         _ensure_transit_warehouse_type()
+        _ensure_current_fiscal_year()
         global_defaults = frappe.get_doc("Global Defaults")
         global_defaults.update(
             {
@@ -84,6 +92,48 @@ def _ensure_transit_warehouse_type():
         frappe.get_doc({"doctype": "Warehouse Type", "name": "Transit"}).insert(
             ignore_permissions=True
         )
+
+
+def _ensure_current_fiscal_year():
+    """Seed one active calendar-year Fiscal Year covering the current date.
+
+    A bare ``bench new-site`` has no Fiscal Year (ERPNext's setup wizard
+    normally creates one), so report defaults that resolve ``get_fiscal_year``
+    fail closed. The document intentionally has no ``companies`` rows: ERPNext
+    applies company-less Fiscal Years to every Company, which is how the
+    report tests exercise a non-installed company label (for example the
+    ``Elrefae`` filters in the bilingual statement tests). CI evidence shows
+    the legacy test-record preparation does not create Fiscal Year rows, so
+    this company-less year is the only source and cannot overlap. The year is
+    derived from the current date so the fixture stays valid on later CI dates.
+    """
+    from erpnext.accounts.utils import get_fiscal_year
+    from frappe.utils import add_days, add_years, getdate
+
+    today = getdate(frappe.utils.today())
+    year = str(today.year)
+    existing = get_fiscal_year(
+        date=today,
+        company=COMPANY_NAME,
+        verbose=0,
+        as_dict=True,
+        raise_on_missing=False,
+    )
+    if existing:
+        return existing.name
+    if frappe.db.exists("Fiscal Year", year):
+        raise RuntimeError(f"Refusing to seed over unrecognized Fiscal Year: {year!r}")
+    start = getdate(f"{year}-01-01")
+    end = add_days(add_years(start, 1), -1)
+    fiscal_year = frappe.get_doc(
+        {
+            "doctype": "Fiscal Year",
+            "year": year,
+            "year_start_date": start,
+            "year_end_date": end,
+        }
+    ).insert(ignore_permissions=True)
+    return fiscal_year.name
 
 
 def _assert_fixture_company(company):

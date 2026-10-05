@@ -1,5 +1,26 @@
 # Verification evidence and practical limits
 
+## Private provider CI — current status (2026-10-05)
+
+The owner authorized private CI at `MohamedElrefae/constructionerp-private` for the reviewed code-only candidate; observed repository visibility was **Private**. Initial snapshot `11c48b2d9223153c83a6523261f625e484506f30` has 569 source/build files and 515 candidate-bound matching files. It included two small, non-sensitive `.bak` Workspace Sidebar source templates; later exports removed them. Current run 7 export `8ddea9fc53d0b3b5389246183511fb614b9e73ec` has 568 files: 566 unchanged non-workflow candidate files, the workflow, and a gated numeric-progress probe. Inherited history, private reports, credentials, site data and actual backups are excluded.
+
+Run 1 ([37330205489](https://github.com/MohamedElrefae/constructionerp-private/actions/runs/37330205489)) failed before tests because ERPNext install/build changed `banking/yarn.lock` before the pinned checkout. Run 2 ([37333165347](https://github.com/MohamedElrefae/constructionerp-private/actions/runs/37333165347)) was canceled after about 6m32s with output ending at `Installing construction...`; no tests ran and the cause is unknown. Run 3 ([37334550063](https://github.com/MohamedElrefae/constructionerp-private/actions/runs/37334550063)) failed with exit code 2 before Construction install because `--verbose` followed the subcommand. Runs 4 ([37335468850](https://github.com/MohamedElrefae/constructionerp-private/actions/runs/37335468850)) and 5 ([37337011288](https://github.com/MohamedElrefae/constructionerp-private/actions/runs/37337011288)) failed during install with timeout exit 124. A minute-60 SQL snapshot on run 5 showed an active `User Type` DocField query and no row locks or lock wait; one snapshot does not establish the cause. Run 6 ([37338321317](https://github.com/MohamedElrefae/constructionerp-private/actions/runs/37338321317)) was canceled when superseded by run 7, not passed or normally timed out. Its 46-frame trace reached released-translation import. Source review found 4,337 released Arabic rows and repeated global cache invalidation/System Settings reload as a plausible cost driver, not a confirmed app defect or runtime estimate. Run 7 ([37339470201](https://github.com/MohamedElrefae/constructionerp-private/actions/runs/37339470201), commit `8ddea9fc53d0b3b5389246183511fb614b9e73ec) started 2026-10-05 19:16:17 Africa/Cairo; Construction installation began around 19:21 and is still in progress per parent. It uses a 45-minute job limit, a 1,800-second install timeout, and a gated numeric-only progress probe; test gates are unchanged. **No provider test result is established yet; do not claim a pass.** No app code changed for this diagnosis. See [PRIVATE_CI.md](PRIVATE_CI.md) for the full source/upload mapping. This provider status does not replace local functional evidence or establish release approval.
+
+## Private CI stabilization ledger (2026-10-06)
+
+All runs on `MohamedElrefae/constructionerp-private`, branch `codex/customer-release-ci-20261005` (visibility Private, unchanged).
+
+| Run | SHA | Outcome | Key fixture change |
+| --- | --- | --- | --- |
+| 8 | `116562f` | Failed after 3 modules, exit 1 | `test_stage7_bilingual_reports` 7 errors; discovery aborted with `ModuleNotFoundError: No module named 'pytest'` (test imports pytest/hypothesis). |
+| 9 | `8f7ea41` | Failed across modules | `pytest==9.0.3` + `hypothesis==6.155.1` install step added (fixed discovery). New failure: `ValidationError: Party Account _Test Payable - _TC currency (EGP) and document currency (INR) should be same` — synthetic company used EGP/Egypt while Frappe legacy test records are INR/India for `_Test Company`. |
+| 10 | `6646a1b` | Failed in `test_stage7_bilingual_reports` (3 errors) | Company aligned to canonical `_Test Company` / INR / India (matches `erpnext/setup/doctype/company/test_records.json`). New failure: `FiscalYearError: Date 2026-10-05 is not in any active Fiscal Year for Elrefae` — company-scoped year missing. |
+| 11 | `f63d739` | **PASS** | Fiscal Year fixture changed to a company-less active calendar year (ERPNext applies to every company; matches non-installed `Elrefae` label exercised by bilingual statement tests). All 17/17 modules green, 35/35 JS property tests pass. |
+
+**Final result:** Run 11 completed 2026-10-05 18:10–18:30:15 UTC; fresh install PASS; Python 234 tests 17/17 modules OK; JS 35 pass / 0 fail. All fixture adjustments are CI-harness scoped only (`.github/workflows/ci.yml` and `.github/ci/business_fixtures.py`); no application logic, test assertions, site data, credentials, reports, or backups were added or modified.
+
+Source candidate SHA: `f63d7395975ff31dbafb2c70c8130ac9a92afbf9`; reviewed code-only candidate `a6bc51c3172255a242674576fecf96c6cfb46ac4` has 515 bound app/CI/package files matching the clean private snapshot recorded in [PRIVATE_CI.md](PRIVATE_CI.md).
+
 2026-10-04. Tested the task worktree source; the code is committed as candidate `d4f071e`. The concurrently edited main app is outside this candidate. `TESTED_FILES.json` contains exact SHA-256 hashes for thirty tested source/test/CI files. Subsequent documentation commits do not change those files.
 
 ## Environment isolation

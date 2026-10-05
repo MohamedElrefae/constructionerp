@@ -90,6 +90,14 @@ jobs:
         env:
           FRAPPE_DOCKER_BUILD: '1'
 
+      - name: Install Python test dependencies
+        # Construction ships pytest/hypothesis property tests that Frappe's
+        # native test runner imports while discovering modules. Without these
+        # packages the runner aborts before executing most selected modules.
+        # Pinned to the versions used by the qualified local runtime.
+        working-directory: /home/runner/frappe-bench
+        run: env/bin/pip install "pytest==9.0.3" "hypothesis==6.155.1"
+
       - name: Install
         id: install
         working-directory: /home/runner/frappe-bench
