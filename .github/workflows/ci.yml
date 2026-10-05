@@ -16,6 +16,7 @@ concurrency:
 jobs:
   tests:
     runs-on: ubuntu-24.04
+    timeout-minutes: 25
     strategy:
       fail-fast: false
     name: Server
@@ -104,10 +105,13 @@ jobs:
           bench setup requirements --dev
           bench new-site --db-root-password root --admin-password admin test_site
           bench --site test_site install-app erpnext
-          bench --site test_site install-app construction
+          # Bound fresh-install stalls and retain Python stacks on timeout.
+          timeout --signal=ABRT --kill-after=15s 300s bench --verbose --site test_site install-app construction
           bench build
         env:
           CI: 'Yes'
+          PYTHONUNBUFFERED: '1'
+          PYTHONFAULTHANDLER: '1'
           FRAPPE_DOCKER_BUILD: '1'
 
       - name: Verify App Installation
