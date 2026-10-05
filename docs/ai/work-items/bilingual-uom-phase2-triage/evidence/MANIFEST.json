@@ -1,0 +1,47 @@
+{
+  "artefacts": {
+    "docs/ai/work-items/bilingual-uom-phase2-triage/SCOPE.md": "ba8ba27b44ad54aa99a8a216a9ba71ffa2bc91d0eab0bdfb92e97f2ad622e441",
+    "docs/ai/work-items/bilingual-uom-phase2-triage/evidence/apply.log": "db5ffb23cde10d0968bb1a73d2f0b79b6cde9055f7b031921d56a68c8f5a01f4",
+    "docs/ai/work-items/bilingual-uom-phase2-triage/evidence/dry-run.log": "31fdfe99fd1c8fd89bf47de925ac10fca374b8e24eb8cb8040b88df1263b05b5",
+    "docs/ai/work-items/bilingual-uom-phase2-triage/evidence/inventory-triage.log": "4dbea1ee10507d5bf73ab4e6b6d6b0212786d9575907fdbf0bb26db1c3c839fc",
+    "docs/ai/work-items/bilingual-uom-phase2-triage/evidence/owner-approval.md": "8fb9f338a9e96e8145146ecdfdce9fc9642a6bd334232d575bb5c196008ce9a1",
+    "docs/ai/work-items/bilingual-uom-phase2-triage/evidence/post-import-verification.log": "ce7a233595aeca0fd54517268f6919eafdc4e958025890d03a3001d8b049ea36",
+    "docs/ai/work-items/bilingual-uom-phase2-triage/evidence/reconciliation.log": "c275c7ef647847a29183ba4ef2b0d67de786be14e9c9d2976017a962f653c16d",
+    "docs/ai/work-items/bilingual-uom-phase2-triage/evidence/regression-matrix.log": "02f6d4f3cd0456fe47628cc86db57a782e7830c7b5ed3abed8b7ef272eb0dd67",
+    "docs/ai/work-items/bilingual-uom-phase2-triage/evidence/review-ai-a2.md": "8059c1ab8db1abc5431e15983808fbbad4386b250dac9fcfb9c35f83b6d91c78",
+    "docs/ai/work-items/bilingual-uom-phase2-triage/evidence/scripts/apply_uom_phase2.py": "9ad386d13fc8b01c24e89890fb08c3c9b67eb8f1dc678a0e568ed9398ab21187",
+    "docs/ai/work-items/bilingual-uom-phase2-triage/evidence/scripts/dry_run_uom_phase2.py": "345e5d623b198189512545d3e553db71c93fe6ce3df69e50671da112e02de1b4",
+    "docs/ai/work-items/bilingual-uom-phase2-triage/evidence/scripts/export_uom_phase2_triage.py": "a5094b0b8da324c25976974351a16085fa5a89dfde22749301e2bbe16d44df32",
+    "docs/ai/work-items/bilingual-uom-phase2-triage/evidence/scripts/generate_proposal.py": "ea8f1faadf91ed12e55a43a975d7ab8612171894b9cc57909ea3f4719583c7d8",
+    "docs/ai/work-items/bilingual-uom-phase2-triage/evidence/scripts/verify_uom_phase2.py": "8651f9bafb3d825d6275d1de179a581ca8f292c62255652b2e415c2cff478905"
+  },
+  "amendments": [],
+  "base_commit": "5d96f12",
+  "branch": "develop",
+  "work_item": "bilingual-uom-phase2-triage",
+  "primary_invariant": "D5 triad (bilingual_service.py, searchable_dropdown/api/search.py) and bilingual_registry.json byte-identical to base 5d96f12 (call-only, never edited); no file under apps/frappe or apps/erpnext modified; Phase 1 uom.json already finalized with enabled:1 + uom_name_ar on 12 rows; Phase 2+ is database-only seed population via doc.save(); Company master reserved for parallel lane; vendor rows and F4-pruned Pint (US)/Acre documented as Phase 2C exceptions; zero bulk-translation of 234 units",
+  "decisions_settled": {
+    "R1": "deterministic triage classification: vendor_fixture (_Test*) never translated; phase1_frozen (15 rows) preserved; phase2a (29) priority construction & engineering physical units; phase2b (1) commercial count unit (Pair); phase2c (204) exclusions formally audited and deprioritized; F4-pruned Pint (US)/Acre remain in-use untranslated Phase 2+ candidates",
+    "R2": "D4/D5 cycle with owner approval as hard gate: export -> proposal (private JSON, R4 privacy) -> Round-1 AI-A2 review -> owner approval gate (sha-bound) -> dry-run (0 writes) -> governed apply (doc.save()) -> post-import verification -> matrix + reconciler + lints -> manifest pinning",
+    "R3": "standard doc.save() through the registered enforce_bilingual_arabic_policy hook; uom_name_ar_norm auto-derived server-side; fail-closed rollback on any validation error; fixture JSON not edited in this phase (Phase 1 already finalized)",
+    "R4": "privacy: proposal/review/dry-run/apply values private under sites/v16.localhost/private/uom-phase2-triage/; committed evidence carries counts, classifications, verdicts, sha256 digests only; Phase 2C units have zero Arabic values drafted",
+    "R5": "vendor boundary: zero files under apps/frappe / apps/erpnext changes; bilingual_service.py + bilingual_registry.json byte-identical to base; no hook, patch, or test-matrix change; Company master untouched for parallel lane",
+    "R6": "translation values are proposals under owner review (Egyptian construction usage); distinctness invariant: two different English units must not share same Arabic translation unless genuine synonyms; glossary has no unit terms (R6 owner review flagged separately)",
+    "R7": "no display/config/registry changes; uom_name_ar_norm deliberately absent from JSON (contract: server-derived on every import); no Translation doctype writes; production_mutation_authorized: false (test site only)"
+  },
+  "test_results": {
+    "regression_matrix": "PASS - 21 modules / 264 tests OK, 0 failures",
+    "adr_reconciler": "PASS - reconciled: 19/19 RESULT: PASS",
+    "lints": "PASS - lint_scope_metadata, ai_context_check (11/11), lint_translation_writes, schema_drift_checker, py_compile, bash -n all green",
+    "inventory_export": "PASS - 253 rows classified (Phase 1 = 15, Vendor Fixtures = 2, F4-Pruned = 2, Phase 2A = 29, Phase 2B = 1, Phase 2C = 204)",
+    "dry_run": "PASS - asserts WRITES_PERFORMED: 0, all 30 target rows exist with empty uom_name_ar, distinctness invariant upheld",
+    "apply": "PASS - 30 rows written via doc.save() through registered policy hook with server-derived norm; fail-closed rollback; fixture file not edited",
+    "post_import_verification": "PASS - verified=30, norm_consistent=30, identity_unchanged=30, exceptions=0; 15 Phase-1 UOMs intact, frozen prior surfaces intact, total UOMs = 253 (45 with Arabic)"
+  },
+  "private_artefacts": {
+    "note": "site master data - privacy R4; digests only, values never committed",
+    "proposal.json": "sites/v16.localhost/private/uom-phase2-triage/proposal.json (SHA-256 930b91cd2f5c64ec70e0cbaff0a998ea6423c29db901ac7779a8e626da39617a)"
+  },
+  "site_migration": "none - no patch, no schema change; site data only: Phase 2A/2B/2C triage classification on v16.localhost, non-production test site; database writes only via governed doc.save() cycle after owner approval",
+  "causal_order": "export/inventory (read-only) -> classification vs frozen allowlists -> proposal draft (private JSON, R4) -> Round-1 AI-A2 review -> owner approval gate (sha-bound) -> dry-run (0 writes, sha gate) -> governed apply (doc.save() x Phase 2A/2B rows) -> post-import verification -> matrix + reconciler + lints -> capture logs (2>&1) -> git add -f the .log -> SHA-256 digests -> MANIFEST.json -> commit"
+}

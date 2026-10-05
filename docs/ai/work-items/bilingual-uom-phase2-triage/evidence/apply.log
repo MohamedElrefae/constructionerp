@@ -1,0 +1,42 @@
+============================================================
+UOM PHASE 2+ GOVERNED APPLY
+Base commit: 5d96f12
+============================================================
+
+  Ampere: Saved uom_name_ar='أمبير', norm derived server-side
+  Centimeter: Saved uom_name_ar='سنتيمتر', norm derived server-side
+  Cubic Centimeter: Saved uom_name_ar='سنتيمتر مكعب', norm derived server-side
+  Cubic Foot: Saved uom_name_ar='قدم مكعب', norm derived server-side
+  Cubic Meter: Saved uom_name_ar='متر مكعب', norm derived server-side
+  Cubic Yard: Saved uom_name_ar='ياردة مكعبة', norm derived server-side
+  Foot: Saved uom_name_ar='قدم', norm derived server-side
+  Gram: Saved uom_name_ar='جرام', norm derived server-side
+  Horsepower: Saved uom_name_ar='حصان', norm derived server-side
+  Hour: Saved uom_name_ar='ساعة', norm derived server-side
+  Inch: Saved uom_name_ar='بوصة', norm derived server-side
+  Joule: Saved uom_name_ar='جول', norm derived server-side
+  Kilojoule: Saved uom_name_ar='كيلوجول', norm derived server-side
+  Kilometer: Saved uom_name_ar='كيلومتر', norm derived server-side
+  Kilowatt: Saved uom_name_ar='كيلوواط', norm derived server-side
+  Meter: Saved uom_name_ar='متر', norm derived server-side
+  Milligram: Saved uom_name_ar='مليجرام', norm derived server-side
+  Millimeter: Saved uom_name_ar='مليمتر', norm derived server-side
+  Minute: Saved uom_name_ar='دقيقة', norm derived server-side
+  Ounce: Saved uom_name_ar='أونصة', norm derived server-side
+  Pound: Saved uom_name_ar='رطل', norm derived server-side
+  Second: Saved uom_name_ar='ثانية', norm derived server-side
+  Square Foot: Saved uom_name_ar='قدم مربع', norm derived server-side
+  Square Meter: Saved uom_name_ar='متر مربع', norm derived server-side
+  Square Yard: Saved uom_name_ar='ياردة مربعة', norm derived server-side
+  Tesla: Saved uom_name_ar='تسلا', norm derived server-side
+  Watt: Saved uom_name_ar='واط', norm derived server-side
+  Week: Saved uom_name_ar='أسبوع', norm derived server-side
+  Yard: Saved uom_name_ar='ياردة', norm derived server-side
+  Pair: Saved uom_name_ar='زوج', norm derived server-side
+
+TRANSACTION COMMITTED SUCCESSFULLY
+
+============================================================
+APPLY RESULT
+SUMMARY written=30 skipped=0 failed=0
+============================================================

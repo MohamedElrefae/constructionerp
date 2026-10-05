@@ -1,0 +1,48 @@
+============================================================
+UOM PHASE 2+ DRY-RUN VALIDATION
+Base commit: 5d96f12
+============================================================
+
+--- Validation: Target rows exist and have empty uom_name_ar ---
+  Ampere: empty uom_name_ar — OK
+  Centimeter: empty uom_name_ar — OK
+  Cubic Centimeter: empty uom_name_ar — OK
+  Cubic Foot: empty uom_name_ar — OK
+  Cubic Meter: empty uom_name_ar — OK
+  Cubic Yard: empty uom_name_ar — OK
+  Foot: empty uom_name_ar — OK
+  Gram: empty uom_name_ar — OK
+  Horsepower: empty uom_name_ar — OK
+  Hour: empty uom_name_ar — OK
+  Inch: empty uom_name_ar — OK
+  Joule: empty uom_name_ar — OK
+  Kilojoule: empty uom_name_ar — OK
+  Kilometer: empty uom_name_ar — OK
+  Kilowatt: empty uom_name_ar — OK
+  Meter: empty uom_name_ar — OK
+  Milligram: empty uom_name_ar — OK
+  Millimeter: empty uom_name_ar — OK
+  Minute: empty uom_name_ar — OK
+  Ounce: empty uom_name_ar — OK
+  Pound: empty uom_name_ar — OK
+  Second: empty uom_name_ar — OK
+  Square Foot: empty uom_name_ar — OK
+  Square Meter: empty uom_name_ar — OK
+  Square Yard: empty uom_name_ar — OK
+  Tesla: empty uom_name_ar — OK
+  Watt: empty uom_name_ar — OK
+  Week: empty uom_name_ar — OK
+  Yard: empty uom_name_ar — OK
+  Pair: empty uom_name_ar — OK
+
+--- WRITES_PERFORMED: 0 ---
+--- ASSERTION: WRITES_PERFORMED must be 0 ---
+  PASS: All target rows have empty uom_name_ar. Zero writes performed.
+
+--- Distinctness Invariant Check ---
+  PASS: Distinctness invariant upheld — no duplicate Arabic translations.
+
+============================================================
+DRY-RUN RESULT
+PASS
+============================================================
