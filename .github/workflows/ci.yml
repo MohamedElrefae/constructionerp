@@ -91,6 +91,7 @@ jobs:
           FRAPPE_DOCKER_BUILD: '1'
 
       - name: Install
+        id: install
         working-directory: /home/runner/frappe-bench
         run: |
           # Pin before Bench installs dependencies or builds assets: building
@@ -135,6 +136,9 @@ jobs:
         run: |
           set -euo pipefail
           bench --site test_site set-config allow_tests true
+          # Bare app installation does not run ERPNext's setup wizard.
+          # Seed only synthetic CI business fixtures through native documents.
+          PYTHONPATH="$GITHUB_WORKSPACE/.github/ci${PYTHONPATH:+:$PYTHONPATH}" bench --site test_site execute "__import__('business_fixtures').seed()"
           modules=(
             construction.tests.test_boq_properties
             construction.tests.test_quantity_revisions
@@ -154,11 +158,18 @@ jobs:
             construction.tests.test_bilingual_desk_link_dispatch
             construction.tests.test_stage7_bilingual_reports
           )
+          test_status=0
           for module in "${modules[@]}"; do
-            bench --site test_site run-tests --app construction --module "$module"
+            if ! bench --site test_site run-tests --app construction --module "$module"; then
+              test_status=1
+            fi
           done
+          exit "$test_status"
 
       - name: Run JS Property Tests
+        # JS checks are independent of a Python test failure. Preserve failure
+        # of the job while collecting both suites after successful installation.
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         working-directory: /home/runner/frappe-bench/apps/construction/construction/tests
         run: |
           npm ci --no-audit --no-fund
