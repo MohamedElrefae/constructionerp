@@ -1,0 +1,60 @@
+SITE total=21 arabic_populated=0
+ROW test_noise name='_Test Company' label='_Test Company' abbr='_TC' currency='INR' country='India' parent=None is_group=0
+ROW test_noise name='_Test Company 1' label='_Test Company 1' abbr='_TC1' currency='USD' country='United States' parent=None is_group=0
+ROW test_noise name='_Test Company 2' label='_Test Company 2' abbr='_TC2' currency='EUR' country='Germany' parent=None is_group=0
+ROW test_noise name='_Test Company 3' label='_Test Company 3' abbr='_TC3' currency='INR' country='Pakistan' parent=None is_group=1
+ROW test_noise name='_Test Company 4' label='_Test Company 4' abbr='_TC4' currency='INR' country='Pakistan' parent='_Test Company 3' is_group=1
+ROW test_noise name='_Test Company 5' label='_Test Company 5' abbr='_TC5' currency='INR' country='Pakistan' parent='_Test Company 4' is_group=0
+ROW test_noise name='_Test Company 6' label='_Test Company 6' abbr='_TC6' currency='INR' country='India' parent=None is_group=1
+ROW test_noise name='_Test Company 7' label='_Test Company 7' abbr='_TC7' currency='USD' country='United States' parent='_Test Company 6' is_group=1
+ROW test_noise name='_Test Company SA VAT' label='_Test Company SA VAT' abbr='_TCSV' currency='ZAR' country='South Africa' parent=None is_group=0
+ROW test_noise name='_Test Company UAE VAT' label='_Test Company UAE VAT' abbr='_TCUV' currency='AED' country='United Arab Emirates' parent=None is_group=0
+ROW test_noise name='_Test Company with perpetual inventory' label='_Test Company with perpetual inventory' abbr='TCP1' currency='INR' country='India' parent=None is_group=0
+ROW test_noise name='_Test Opening Invoice Company' label='_Test Opening Invoice Company' abbr='_TOIC' currency='INR' country='Pakistan' parent=None is_group=0
+ROW test_noise name='_Test Support SLA' label='_Test Support SLA' abbr='_TSS' currency='INR' country='India' parent=None is_group=0
+ROW test_noise name='Best Test' label='Best Test' abbr='BT' currency='INR' country='India' parent=None is_group=0
+ROW test_noise name='Child Company India' label='Child Company India' abbr='CCI' currency='INR' country='India' parent='Parent Group Company India' is_group=0
+ROW test_noise name='Child Company US' label='Child Company US' abbr='CCU' currency='USD' country='United States' parent='Parent Group Company India' is_group=0
+ROW active_owner name='Elrefae' label='Elrefae' abbr='E' currency='EGP' country='Egypt' parent=None is_group=0
+ROW test_noise name='Parent Group Company India' label='Parent Group Company India' abbr='PGCI' currency='INR' country='India' parent=None is_group=1
+ROW test_noise name='Test Quality Company' label='Test Quality Company' abbr='TQC' currency='INR' country='India' parent=None is_group=0
+ROW test_noise name='Trial Balance Company' label='Trial Balance Company' abbr='TBC' currency='INR' country='India' parent=None is_group=0
+ROW test_noise name='Wind Power LLC' label='Wind Power LLC' abbr='WP' currency='USD' country='United States' parent=None is_group=0
+CLASS active_owner=1 test_noise=20
+USAGE company='Best Test' test_noise Account=94 Cost Center=2
+USAGE company='Child Company India' test_noise Account=94 Cost Center=2
+USAGE company='Child Company US' test_noise Account=97 Cost Center=2
+USAGE company='Elrefae' active_owner Account=86 Cost Center=3 GL Entry=4 Journal Entry=2 Project=5 Sales Invoice=1 User Scope Context=5
+USAGE company='Parent Group Company India' test_noise Account=94 Cost Center=2
+USAGE company='Test Quality Company' test_noise Account=94 Cost Center=2 User Scope Context=2
+USAGE company='Trial Balance Company' test_noise Account=94 Cost Center=2
+USAGE company='Wind Power LLC' test_noise Account=97 Cost Center=2
+USAGE company='_Test Company' test_noise Account=119 Cost Center=6 Employee=3 Journal Entry=1524 Project=6 Purchase Invoice=1016 Sales Invoice=4064
+USAGE company='_Test Company 1' test_noise Account=135 Cost Center=2
+USAGE company='_Test Company 2' test_noise Account=107 Cost Center=2
+USAGE company='_Test Company 3' test_noise Account=95 Cost Center=2
+USAGE company='_Test Company 4' test_noise Account=95 Cost Center=2
+USAGE company='_Test Company 5' test_noise Account=95 Cost Center=2
+USAGE company='_Test Company 6' test_noise Account=94 Cost Center=2
+USAGE company='_Test Company 7' test_noise Account=97 Cost Center=2
+USAGE company='_Test Company SA VAT' test_noise Account=95 Cost Center=2
+USAGE company='_Test Company UAE VAT' test_noise Account=99 Cost Center=2
+USAGE company='_Test Company with perpetual inventory' test_noise Account=132 Cost Center=2
+USAGE company='_Test Opening Invoice Company' test_noise Account=95 Cost Center=2
+USAGE company='_Test Support SLA' test_noise Account=94 Cost Center=2
+USAGE_SUMMARY active_in_scope_selector=True
+FIXTURE_JSON company_fixture_files=none
+HOOKS Company validate=['construction.services.bilingual_service.enforce_bilingual_arabic_policy', 'construction.services.narrative_sanitizer.validate_narrative_fields']
+REGISTRY state=active fields=company_name/company_name_ar/company_name_ar_norm identity=name
+BRAND_ROOT_CORROBORATION source=p95_harness(AR_FIXTURES[0], synthetic pool on throwaway CT-COMP rows) file=measure_company_p95.py:40 sha16=63f48828f9f20a78 role=candidate_primary
+BRAND_ROOT_CORROBORATION source=pilot_test(test value on _Test Company% row, restore+commit) file=test_bilingual_company_pilot.py:135 sha16=0c0897cd368556de role=candidate_alternate_suffix_variant
+GLOSSARY company-name terms=0 (only generic child-company entry; no term governs the owner brand or its legal suffix)
+FINDINGS F-5H-1 21 companies: 1 active owner (Elrefae, EGP/Egypt, flat, in transactional + scope-selector use) + 20 test noise (13 _Test* + 7 demo/test records; 5 is_group, 5 parented — all test)
+FINDINGS F-5H-2 Company.save() enqueues jobs: without queue redis (11000) the save raises ConnectionError mid-flight — apply must run with the queue up (probe-disclosed); enqueue source not statically isolated, apply.log must capture the traceback/job name
+FINDINGS F-5H-3 no Company fixture JSON -> no sync-wipe risk; hook binding present; registry active
+FINDINGS F-5H-4 Arabic pre-state 0 site-wide; identity name == company_name for Elrefae ('Elrefae'); no name edits ever (rename triggers abbr cascade)
+FINDINGS F-5H-5 brand root corroborated by two committed artefacts (sha16 above) — in-repo corroboration, NOT an established display name for Elrefae; primary + alternates = owner display-form decision (no glossary term)
+FINDINGS F-5H-6 Company.on_update unconditionally re-sets Currency EGP enabled=1 (already 1) -> bumps tabCurrency.modified; the 1-row invariant covers company fields; verify expects/discloses the Currency modified bump
+PHASE1_FROZEN_MATCH yes (1 = Elrefae)
+PRE_STATE_ARABIC 0
+INVENTORY RESULT: PASS

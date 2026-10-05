@@ -1,0 +1,22 @@
+== gates (Tier 5H) ==
+Mon Oct  5 02:44:26 PM UTC 2026
+--- scripts/lint_scope_metadata.py
+PASS: no scope-dimension field has in_standard_filter=1 (19 DocTypes checked).
+exit=0
+--- scripts/ai_context_check.py
+Checks failed: 0
+
+ALL CHECKS PASSED
+exit=0
+--- scripts/lint_translation_writes.py
+Translation write lint PASSED
+exit=0
+--- scripts/schema_drift_checker.py
+Schema facts match live DocType JSON.
+Schema-owning DocTypes: 21
+Override-only folders: 1
+exit=0
+--- py_compile
+exit=0
+--- bash -n
+exit=0
