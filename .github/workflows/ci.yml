@@ -16,7 +16,7 @@ concurrency:
 jobs:
   tests:
     runs-on: ubuntu-24.04
-    timeout-minutes: 25
+    timeout-minutes: 45
     strategy:
       fail-fast: false
     name: Server
@@ -105,8 +105,18 @@ jobs:
           bench setup requirements --dev
           bench new-site --db-root-password root --admin-password admin test_site
           bench --site test_site install-app erpnext
-          # Bound fresh-install stalls and retain Python stacks on timeout.
-          timeout --signal=ABRT --kill-after=15s 300s bench --verbose --site test_site install-app construction
+          # This database is a new CI-only fixture. Capture active queries
+          # during a stall; preserve the installation's nonzero exit status.
+          (
+            sleep 60
+            mariadb --host 127.0.0.1 --port 3306 -u root -proot -e "SHOW FULL PROCESSLIST; SHOW ENGINE INNODB STATUS;"
+          ) &
+          install_diagnostic_pid=$!
+          trap 'kill "$install_diagnostic_pid" 2>/dev/null || true' EXIT
+          PYTHONPATH="$GITHUB_WORKSPACE/.github/ci/install_stack_probe${PYTHONPATH:+:$PYTHONPATH}" CONSTRUCTION_CI_INSTALL_PROBE=1 timeout --signal=ABRT --kill-after=15s 1800s bench --verbose --site test_site install-app construction
+          kill "$install_diagnostic_pid" 2>/dev/null || true
+          wait "$install_diagnostic_pid" 2>/dev/null || true
+          trap - EXIT
           bench build
         env:
           CI: 'Yes'
