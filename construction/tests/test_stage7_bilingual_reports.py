@@ -4,7 +4,10 @@ Extends the Stage-4 extension-point suite: endpoint surface behavior
 (fail-closed report allowlist, mode normalization, pure transform
 round-trip with a stub vendor execute), plus the Tier-5E statement
 expansion (Balance Sheet / Profit and Loss Statement: allowlist,
-single-execute, period defaults, genuine-auth extension).
+single-execute, period defaults, genuine-auth extension), and the
+Stage-7 report expansion (Accounts Receivable Summary, Accounts Payable
+Summary, Cash Flow: allowlist, report-specific defaults, localized column
+headers, mutation guard, genuine-auth extension).
 """
 
 import contextlib
@@ -219,6 +222,187 @@ class TestStatementAllowlist(unittest.TestCase):
         self.assertEqual(f.get("accumulated_values"), 1)
 
 
+class TestExpandedReportAllowlist(unittest.TestCase):
+    """Stage 7 report expansion: Accounts Receivable Summary, Accounts Payable
+    Summary and Cash Flow join the fail-closed allowlist under the unchanged
+    single-execute / genuine-authorization contract, with report-specific
+    read-only defaults and localized column headers."""
+
+    EXPANDED = ("Accounts Receivable Summary", "Accounts Payable Summary", "Cash Flow")
+    MISSION = ("General Ledger", "Trial Balance", "Accounts Receivable Summary",
+               "Accounts Payable Summary", "Cash Flow")
+
+    def _call(self, name, mock_module, mode=None, filters=None):
+        from construction.api.bilingual_reports import PILOT_REPORTS, localized_report
+
+        with mock.patch("frappe.only_for", lambda *a, **k: None), _patched_report_modules(
+            {PILOT_REPORTS[name]: mock_module}
+        ):
+            return localized_report(name, filters=filters, mode=mode)
+
+    def test_mission_reports_in_allowlist(self):
+        import frappe
+
+        from construction.api.bilingual_reports import PILOT_REPORTS
+
+        for name in self.MISSION:
+            self.assertIn(name, PILOT_REPORTS)
+            path = PILOT_REPORTS[name]
+            self.assertNotIn(".execute", path, f"{name} module path must stay importable")
+            mod = frappe.get_module(path)
+            self.assertTrue(callable(getattr(mod, "execute", None)), name)
+
+    def test_expanded_execute_runs_exactly_once(self):
+        import construction.api.bilingual_reports as api_mod
+
+        for name in self.EXPANDED:
+            mod = _stub_module([{"fieldname": "account"}], [{"account": "Cash"}])
+            with mock.patch.object(
+                api_mod, "load_account_arabic_mapping", return_value={}
+            ):
+                out = self._call(name, mod, mode="ar", filters='{"company": "Elrefae"}')
+            self.assertEqual(mod.execute.call_count, 1, name)
+            self.assertEqual(out["report_name"], name)
+            self.assertEqual(out["mode"], "ar")
+
+    def test_summary_defaults_report_date_window(self):
+        # AR/AP Summary subclass the vendor ReceivablePayableReport: the
+        # ageing window is `report_date`, defaulted read-only from the
+        # viewer's to_date (falling back to the fiscal-year end).
+        for name in ("Accounts Receivable Summary", "Accounts Payable Summary"):
+            mod = _stub_module([], [])
+            self._call(
+                name,
+                mod,
+                mode="en",
+                filters='{"company": "Elrefae", "to_date": "2026-10-05"}',
+            )
+            f = mod.execute.call_args.kwargs["filters"]
+            self.assertEqual(f.get("report_date"), "2026-10-05", name)
+            self.assertEqual(f.get("to_date"), "2026-10-05", name)
+            self.assertEqual(f.get("ageing_based_on"), "Posting Date", name)
+            self.assertTrue(f.get("fiscal_year"), name)
+
+    def test_summary_caller_report_date_wins(self):
+        mod = _stub_module([], [])
+        self._call(
+            "Accounts Payable Summary",
+            mod,
+            mode="en",
+            filters='{"company": "Elrefae", "report_date": "2026-03-31", "ageing_based_on": "Posting Date"}',
+        )
+        f = mod.execute.call_args.kwargs["filters"]
+        self.assertEqual(f.get("report_date"), "2026-03-31")
+
+    def test_cash_flow_period_defaults(self):
+        # Cash Flow consumes the same vendor get_period_list contract as the
+        # Tier-5E statements (Date Range driven by the viewer's dates).
+        mod = _stub_module([], [])
+        self._call(
+            "Cash Flow",
+            mod,
+            mode="en",
+            filters='{"company": "Elrefae", "from_date": "2026-01-01", "to_date": "2026-10-05"}',
+        )
+        f = mod.execute.call_args.kwargs["filters"]
+        self.assertEqual(f.get("filter_based_on"), "Date Range")
+        self.assertEqual(f.get("periodicity"), "Yearly")
+        self.assertEqual(f.get("period_start_date"), "2026-01-01")
+        self.assertEqual(f.get("period_end_date"), "2026-10-05")
+        self.assertEqual(f.get("accumulated_values"), 0)
+
+        mod = _stub_module([], [])
+        self._call(
+            "Cash Flow",
+            mod,
+            mode="en",
+            filters='{"company": "Elrefae", "filter_based_on": "Fiscal Year", "fiscal_year": "2026", "periodicity": "Monthly"}',
+        )
+        f = mod.execute.call_args.kwargs["filters"]
+        self.assertEqual(f.get("from_fiscal_year"), "2026")
+        self.assertEqual(f.get("to_fiscal_year"), "2026")
+        self.assertEqual(f.get("periodicity"), "Monthly")
+
+    def test_column_headers_localized_ar_en_both(self):
+        labels = ["Posting Date", "Debit (SAR)", "Age (Days)", "Party"]
+        mod = _stub_module(
+            [{"fieldname": "posting_date", "label": l} for l in labels],
+            [{"posting_date": "2026-01-01"}],
+        )
+        out = self._call("General Ledger", mod, mode="en")
+        self.assertEqual([c["label"] for c in out["columns"]], labels)
+
+        mod = _stub_module(
+            [{"fieldname": "posting_date", "label": l} for l in labels],
+            [{"posting_date": "2026-01-01"}],
+        )
+        out = self._call("General Ledger", mod, mode="ar")
+        self.assertEqual(
+            [c["label"] for c in out["columns"]],
+            ["تاريخ الترحيل", "مدين (SAR)", "Age (Days)", "الطرف"],
+        )
+
+        mod = _stub_module(
+            [{"fieldname": "posting_date", "label": l} for l in labels],
+            [{"posting_date": "2026-01-01"}],
+        )
+        out = self._call("General Ledger", mod, mode="both")
+        self.assertEqual(
+            [c["label"] for c in out["columns"]][0],
+            "Posting Date — تاريخ الترحيل",
+        )
+        self.assertEqual([c["label"] for c in out["columns"]][2], "Age (Days)")
+
+    def test_column_headers_pure_source_untouched(self):
+        # the vendor's column structures must never be mutated in place
+        source = [{"fieldname": "debit", "label": "Debit"}]
+        mod = _stub_module(source, [])
+        self._call("Trial Balance", mod, mode="ar")
+        self.assertEqual(source[0]["label"], "Debit")
+
+    def test_localize_column_label_unit(self):
+        from construction.api.bilingual_reports import localize_column_label
+
+        self.assertEqual(localize_column_label("Balance", "ar"), "الرصيد")
+        self.assertEqual(localize_column_label("Balance (SAR)", "ar"), "الرصيد (SAR)")
+        self.assertEqual(localize_column_label("Balance", "en"), "Balance")
+        self.assertEqual(localize_column_label("Age (Days)", "ar"), "Age (Days)")
+        self.assertEqual(localize_column_label("", "ar"), "")
+        self.assertEqual(
+            localize_column_label("Voucher No", "both"), "Voucher No — رقم السند"
+        )
+
+    def test_report_path_makes_zero_db_writes(self):
+        # mutation guard: no database write primitive may fire while a
+        # report renders (probe covers row counts on the live site too)
+        import frappe
+
+        def _guard(name):
+            def _fail(*a, **k):
+                raise AssertionError(f"DB write attempted via frappe.db.{name}")
+
+            return _fail
+
+        for name in self.EXPANDED:
+            mod = _stub_module([{"fieldname": "account"}], [{"account": "Cash"}])
+            with mock.patch("frappe.only_for", lambda *a, **k: None), mock.patch.object(
+                frappe.db, "set_value", _guard("set_value"), create=True
+            ), mock.patch.object(frappe.db, "insert", _guard("insert"), create=True), mock.patch.object(
+                frappe.db, "delete", _guard("delete"), create=True
+            ):
+                from construction.api.bilingual_reports import localized_report
+
+                with _patched_report_modules_from_name(name, mod):
+                    localized_report(name, filters='{"company": "Elrefae"}', mode="ar")
+            self.assertEqual(mod.execute.call_count, 1, name)
+
+
+def _patched_report_modules_from_name(report_name, mock_module):
+    from construction.api.bilingual_reports import PILOT_REPORTS
+
+    return _patched_report_modules({PILOT_REPORTS[report_name]: mock_module})
+
+
 class TestRealModuleSmoke(unittest.TestCase):
     """Unmocked smoke: every pilot path is a real importable module exposing a
     callable execute (P1 review note: function paths cannot be imported)."""
@@ -306,6 +490,12 @@ class TestGenuineAuthorization(unittest.TestCase):
                 # Tier 5E: the same gate holds for the statement names.
                 with self.assertRaises(frappe.PermissionError):
                     localized_report("Balance Sheet", filters=None, mode="ar")
+                # Stage 7 expansion: the new names are rejected before any
+                # vendor module resolution for the same non-admin user.
+                with self.assertRaises(frappe.PermissionError):
+                    localized_report("Accounts Payable Summary", filters=None, mode="ar")
+                with self.assertRaises(frappe.PermissionError):
+                    localized_report("Cash Flow", filters=None, mode="ar")
                 self.assertEqual(
                     resolved, [], "vendor module must not be resolved for a rejected user"
                 )

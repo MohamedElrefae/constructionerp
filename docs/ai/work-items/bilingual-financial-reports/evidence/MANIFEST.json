@@ -14,10 +14,10 @@
     "docs/ai/work-items/bilingual-financial-reports/evidence/report-p95-measurement.json": "7b7404831cfbf35c29e1a092eb4374e3eb0fa94193df0ddf001955c6231be8e4",
     "docs/ai/work-items/bilingual-financial-reports/evidence/scripts/probe_report_execution.py": "a8c5053382a06968f17d5b2e85aade6b43cf28ad5781adb6de97dbbd099e0fb0",
     "docs/ai/work-items/bilingual-financial-reports/evidence/scripts/measure_report_p95.py": "c859dd8cc9caba02052feea1298d73e22b8ff73fba2b77a84e2461be59e57ca5",
-    "construction/api/bilingual_reports.py": "c3ff53361b60346d3c61c7199da807fca0d68390ff6a45599673f8cb6c84ba22",
+    "construction/api/bilingual_reports.py": "eacb19b1a811b95babfa4ea73a1eb8e899fcdcd3357e3b92b5c1a494a78f8337",
     "construction/services/report_bilingual_extension.py": "fe841d5db4787f681ea2ab882f31494438b25b9742b45ec102dc0211e9190269",
     "construction/tests/test_stage4_report_extension.py": "0d640f3882a476a92ef8d7c6eeb1e579469df81e18449747b8a657ba01c1b191",
-    "construction/tests/test_stage7_bilingual_reports.py": "c7a7bf9b61ff8459c07fac27925ec673316122afbbc66710432566e5b0c75154",
+    "construction/tests/test_stage7_bilingual_reports.py": "d9c92d10782a2917ad0727a064525f91b828431441bfe4d304845b7aa8972372",
     "construction/hooks.py": "d54bca4f63374dc018a594bd9c3f05477e790a44f39fc2e9b54a54548ba5f73f",
     "scripts/run_bilingual_regression_matrix.sh": "100d5cc11c913a5584a0b6c7e6d5fce0bb607761690a23a658eaeb5e84350659"
   },
@@ -28,6 +28,13 @@
       "cause": "Tier 5E adds Balance Sheet + Profit and Loss Statement to PILOT_REPORTS and the stage7 suite gains 6 statement tests",
       "fix": "2 digests re-pinned to the post-5E content of bilingual_reports.py and test_stage7_bilingual_reports.py; no other artefact in this manifest changed (matrix script untouched after the 8-manifest pin-blast was discovered)",
       "disclosure": "SCOPE.md R6 + this item's SCOPE.md R6/A1 + both MANIFEST.json amendment notes"
+    },
+    {
+      "id": "R1-B",
+      "when": "Stage-7 report expansion (bilingual-financial-reports-expansion, base 234c024)",
+      "cause": "construction/api/bilingual_reports.py (3 new allowlisted reports + governed COLUMN_LABELS header localization) and construction/tests/test_stage7_bilingual_reports.py (9 expansion tests + auth extension) changed after this manifest last pinned them",
+      "fix": "2 digests re-pinned to the post-expansion content; no other artefact in this manifest changed (report_bilingual_extension.py and the matrix script remain byte-identical to base)",
+      "disclosure": "docs/ai/work-items/bilingual-financial-reports-expansion/SCOPE.md R6 + that item's MANIFEST.json"
     },
     {
       "id": "TPF-hooks",

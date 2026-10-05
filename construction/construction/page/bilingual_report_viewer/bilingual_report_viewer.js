@@ -11,7 +11,13 @@ frappe.pages["bilingual-report-viewer"].on_page_load = function (wrapper) {
 		"Accounts Receivable",
 		"Balance Sheet",
 		"Profit and Loss Statement",
+		"Accounts Receivable Summary",
+		"Accounts Payable Summary",
+		"Cash Flow",
 	];
+	// Trial Balance is fiscal-year driven; every other statement is driven by
+	// the from/to date window (Stage 7 extension: filter display per report).
+	const fiscal_year_reports = ["Trial Balance"];
 	const modes = ["ar", "en", "both"];
 
 	page.add_field({
@@ -20,7 +26,10 @@ frappe.pages["bilingual-report-viewer"].on_page_load = function (wrapper) {
 		options: reports.join("\n"),
 		default: "Trial Balance",
 		fieldname: "report",
-		change: run,
+		change: function () {
+			sync_filter_display();
+			run();
+		},
 	});
 	page.add_field({
 		label: "الوضع",
@@ -51,7 +60,27 @@ frappe.pages["bilingual-report-viewer"].on_page_load = function (wrapper) {
 		default: frappe.datetime.get_today(),
 		change: run,
 	});
+	page.add_field({
+		label: "السنة المالية",
+		fieldtype: "Link",
+		options: "Fiscal Year",
+		fieldname: "fiscal_year",
+		change: run,
+	});
 	page.set_primary_action("عرض", () => run());
+
+	function fiscal_year_mode() {
+		return fiscal_year_reports.indexOf(page.fields_dict.report.get_value() || "Trial Balance") >= 0;
+	}
+
+	function sync_filter_display() {
+		const fy = fiscal_year_mode();
+		// date window vs fiscal-year selector: exactly one is offered per report
+		page.fields_dict.fiscal_year.wrapper.toggle(fy);
+		page.fields_dict.from_date.wrapper.toggle(!fy);
+		page.fields_dict.to_date.wrapper.toggle(!fy);
+	}
+	sync_filter_display();
 
 	const $body = page.views.main.find(".layout-main-section");
 	$body.append('<div class="bilingual-report-area pt-3" style="overflow:auto"></div>');
@@ -76,22 +105,28 @@ frappe.pages["bilingual-report-viewer"].on_page_load = function (wrapper) {
 		}
 		const from = page.fields_dict.from_date.get_value();
 		const to = page.fields_dict.to_date.get_value();
+		const fiscal_year = page.fields_dict.fiscal_year.get_value();
+		const party_type = name === "Accounts Payable Summary" ? "Supplier" : "Customer";
 		const my = ++run_seq;
+		const filters = {
+			company: company,
+			from_date: from,
+			to_date: to,
+			report_date: to,
+			ageing_based_on: "Posting Date",
+			party_type: party_type,
+			group_by_party: true,
+		};
+		if (fiscal_year) {
+			filters.fiscal_year = fiscal_year;
+		}
 		area().html('<div class="text-muted" style="padding:12px">' + __("Loading") + "</div>");
 		frappe.call({
 			method: "construction.api.bilingual_reports.localized_report",
 			args: {
 				report_name: name,
 				mode: mode,
-				filters: JSON.stringify({
-					company: company,
-					from_date: from,
-					to_date: to,
-					report_date: to,
-					ageing_based_on: "Posting Date",
-					party_type: "Customer",
-					group_by_party: true,
-				}),
+				filters: JSON.stringify(filters),
 			},
 			callback: (r) => { if (my === run_seq) safe_render(r && r.message); },
 			error: (e) => {
