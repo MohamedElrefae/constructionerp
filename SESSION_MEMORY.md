@@ -81,6 +81,13 @@
 
 ## 3. In Progress (Active Work — Updated After Every Session)
 
+### Named private CI authorization and execution (2026-10-05)
+- Owner requested a continuation handoff while run 8 was still running: `/home/mohamed/frappe-bench/worktrees/customer-release-gap-fixes/docs/ai/work-items/customer-release-gap-fixes/HANDOFF_2026-10-05_PRIVATE_CI.md`. Read it before resuming; remote CI continues and no final pass is recorded.
+- Owner explicitly authorizes private MohamedElrefae/constructionerp-private creation, reviewed a6bc51c code-only upload and CI. Repository created and observed Private under personal owner, no added collaborators. Reuse this named authorization; public source publication and unrelated future app/history uploads remain excluded.
+- Clean export root `11c48b2` contains 569 exact-byte source/build files and omits inherited history and 1,066 tracked files. Initial export retained two obsolete 917-byte source fixture `.bak` templates (not site backups or records); later removed from the current tree, historical root preserved. Private reports, credentials, site backups and site records remain excluded. Private branch `codex/customer-release-ci-20261005`; never upload main/release document-bearing history.
+- Current private export `116562f95fc9625df82b0cceb12c094337337a05` has 569 files: 566 unchanged original non-workflow files, corrected CI workflow and two gated CI-only helpers. App logic remains the approved a6 candidate. Run 7 completed fresh installation (Construction native install about 7m27s, including all 4,337 packaged Arabic rows); first Python module then failed all 17 tests because the bare site lacked a Company fixture. Run 8 `37342111971` is running after adding a guarded synthetic EGP/Egypt Company/Global Defaults fixture through native ERPNext documents. All 17 Python modules now collect failures with nonzero aggregate exit; JS runs independently after successful installation. No provider pass yet; PRIVATE_CI.md is the detailed record. Prior run 6 captured the translation importer, consistent with costly per-row broad cache invalidation; no proven deadlock or recursive loading.
+- Local confidential reports/policy/session notes remain excluded from private remote. Transmitting hooks disabled per local commit. Main remains another chat's active checkout; no release app integration, original-site migration or customer deployment performed.
+
 ### Standing owner confidentiality decision (2026-10-05)
 - Owner explicitly chooses to keep the implementation confidential. OWNER_CONFIDENTIALITY_POLICY.md and the mandatory Professional Engineering Standard now prohibit new source/private findings in public repositories, branches or PRs. The earlier public-CI approval proposal is superseded; do not retry it. Prepared release candidate a6bc51c stays local. A specifically approved private destination/content scope is needed before provider CI upload; none was created or selected here.
 - This is documentation-only direct owner instruction work. No public upload, visibility change, license change, source integration, site migration, provider run or customer deployment. Existing immutable agent packets were not rewritten; new contexts must carry the rule. Local commits disable transmitting hooks per command.
@@ -257,6 +264,9 @@
 ---
 
 ## 6. Session Log (Append-Only — Most Recent First)
+
+### Session 2026-10-05 — Owner-approved private CI
+Created the named Private repository and uploaded the history-free export of a6 as `11c48b2`; private reports, credentials, site backups and site records excluded. Subsequent harness-only corrections pin ERPNext before building and capture installation progress. Current export `116562f` has 569 files, app logic unchanged, obsolete source fixture backup templates removed from current tree. Run 7 completed installation but failed missing-Company test setup; run 8 `37342111971` remains in progress, no provider pass. Detailed actual outcomes, source mapping and limitations are in release-worktree PRIVATE_CI.md. No shared-site integration or customer release.
 
 ### Session 2026-10-05 — Confidential implementation is a standing owner instruction
 - Recorded the explicit owner choice in both main and release checkouts, including mandatory startup instructions, session memory and a mirrored confidentiality policy. Release CI/status instructions now use private CI as the pending route. The unpublished candidate remains preserved locally; previous public copies cannot be recalled by this policy.
