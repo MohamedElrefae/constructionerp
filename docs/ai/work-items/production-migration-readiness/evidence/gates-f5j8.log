@@ -1,0 +1,4 @@
+CMD: runner --dry-run --allow-sites prod.example.com (F-5J-8)
+runner_sha16=2d1f3581b1acbc83
+RESULT: FAIL — site 'v16.localhost' not in --allow-sites and site_config lacks production_mutation_authorized: true (F-5J-8 governance guard)
+rc=1

@@ -1,0 +1,14 @@
+SOURCE wave1-population rows=9 sha256=a00cfb432ed6680eefb20f22cc852923f059ff9320533569cdb57791e1cd1c77
+SOURCE wave1-phase2-population rows=13 sha256=e68ef0c687516a110ed553a52cfe7d871808ba6007d9c1444ec1739730108557
+SOURCE wave2-group-masters-population rows=23 sha256=08dba90a8134c238d2e2e74b69081c0ec0c879ddecb82b2b7bb3a0ed2f6ea47e
+SOURCE department-phase1-population rows=14 sha256=dba85a4ceba5826094c1c7b6e25117afe8e0a696bcb1c3564699b0d736bf64a4
+SOURCE company-phase1-population rows=1 sha256=b5fcc02a6854ebb27b71082b71c1b3f9d4ac43f737b013809697c2a23e79478a
+SOURCE uom-phase1-population rows=15 sha256=18a16a953ebbaad704acc7982ed96de71808235c7fc5b258b6825fbd80598bbf
+SOURCE uom-phase2-triage rows=30 sha256=930b91cd2f5c64ec70e0cbaff0a998ea6423c29db901ac7779a8e626da39617a
+SOURCE site-export Account rows=81
+SOURCE site-export Task rows=1
+SOURCE site-export Terms and Conditions rows=1
+BUNDLE rows=188 doctypes=15 counts={"Account": 81, "Company": 1, "Cost Center": 3, "Customer": 1, "Customer Group": 5, "Department": 14, "Item": 8, "Item Group": 6, "Project": 5, "Supplier Group": 8, "Task": 1, "Terms and Conditions": 1, "Territory": 4, "UOM": 45, "Warehouse": 5}
+UNAPPROVED_POPULATED == fixture-only: yes
+PRIVATE consolidated_values.json sha256=7390a0c87f8ebab1e602521549b775f8768d3ab9bb40a1caf055f4c5c31d53bf
+CONSOLIDATE RESULT: PASS

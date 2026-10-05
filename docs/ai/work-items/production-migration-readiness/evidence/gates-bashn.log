@@ -1,0 +1,2 @@
+CMD: bash -n apps/construction/scripts/run_bilingual_regression_matrix.sh
+rc=0
