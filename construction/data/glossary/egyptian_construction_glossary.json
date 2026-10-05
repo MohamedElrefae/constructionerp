@@ -1,8 +1,8 @@
 {
   "meta": {
     "name": "Egyptian Construction & Accounting Glossary",
-    "version": "2.0",
-    "date": "2026-09-01",
+    "version": "2.1",
+    "date": "2026-10-05",
     "author": "Construction ERP localization review — upgraded to schema v2 per handoff plan",
     "dialect": "Egyptian professional Arabic (MSA technical vocabulary, Egyptian construction practice)",
     "notes": [
@@ -11,8 +11,8 @@
       "Applied via approved_ar_overrides.csv (Packaged Release) — never via vendor .po edits.",
       "Terms are region-specific to Egypt; Subcontractor family must NEVER use manufacturing phrasing (التصنيع بالعقد)."
     ],
-    "previous_version": "1.0",
-    "previous_checksum": "ca5cf24465e8011de37a6410483a80f1b916ddee78cd9902b8c7dddc9e1ab8a3",
+    "previous_version": "2.0",
+    "previous_checksum": "aefbbf633d432fb93ac63996960bb58d0bd005e973e0e461f4480d7ae46b51b4",
     "term_count": 47
   },
   "terms": [
@@ -21,16 +21,16 @@
       "context": "",
       "origin_app": "frappe",
       "domain": "software-hierarchy",
-      "approved_ar": "إضافة فرع",
+      "approved_ar": "إضافة حساب فرعي",
       "forbidden_ar": [
         "طفل",
         "أطفال"
       ],
-      "usage_notes": "Tree-view action.",
-      "references": "Frappe treeview.js:301; glossary v1.0",
+      "usage_notes": "Tree-view action. Applies to every tree view (Account, Cost Center, Department, Warehouse, Project, Item Group ...), not to accounts only.",
+      "references": "Frappe treeview.js:301; glossary v1.0. Superseded by release payload v1.1 (owner-directed 2026-09-03, commit 4fede75) because the value is a global tree action; approved_ar aligned to approved_ar_overrides.csv. Context risk noted in sign-off 6.2.",
       "a1_status": "Approved",
       "a2_status": "Approved",
-      "version": "2.0"
+      "version": "2.1"
     },
     {
       "source_text": "Child Table",
