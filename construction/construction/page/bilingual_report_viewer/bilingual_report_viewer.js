@@ -19,6 +19,8 @@ frappe.pages["bilingual-report-viewer"].on_page_load = function (wrapper) {
 	// the from/to date window (Stage 7 extension: filter display per report).
 	const fiscal_year_reports = ["Trial Balance"];
 	const modes = ["ar", "en", "both"];
+	const defaults = (frappe.boot.user && frappe.boot.user.defaults) || {};
+	const default_company = defaults.company || defaults.Company || "";
 
 	page.add_field({
 		label: "النوع",
@@ -44,6 +46,7 @@ frappe.pages["bilingual-report-viewer"].on_page_load = function (wrapper) {
 		fieldtype: "Link",
 		options: "Company",
 		fieldname: "company",
+		default: default_company,
 		change: run,
 	});
 	page.add_field({
@@ -93,21 +96,19 @@ frappe.pages["bilingual-report-viewer"].on_page_load = function (wrapper) {
 		return $(page.views.main.find(".layout-main-section")).find(".bilingual-report-area");
 	}
 
-		let __seq = 0;
 	let run_seq = 0;
 	function run() {
+		const my = ++run_seq;
 		const name = page.fields_dict.report.get_value() || "Trial Balance";
 		const mode = page.fields_dict.mode.get_value() || "ar";
-		let company = page.fields_dict.company.get_value();
+		const company = page.fields_dict.company.get_value() || default_company;
 		if (!company) {
-			const d = (frappe.boot.user && frappe.boot.user.defaults) || {};
-			company = d.company || d.Company || "Elrefae";
+			area().text(__("Please select a company."));
+			return;
 		}
 		const from = page.fields_dict.from_date.get_value();
-		const to = page.fields_dict.to_date.get_value();
-		const fiscal_year = page.fields_dict.fiscal_year.get_value();
+		const fiscal_year = page.fields_dict.fiscal_year ? page.fields_dict.fiscal_year.get_value() : null;
 		const party_type = name === "Accounts Payable Summary" ? "Supplier" : "Customer";
-		const my = ++run_seq;
 		const filters = {
 			company: company,
 			from_date: from,
@@ -130,8 +131,9 @@ frappe.pages["bilingual-report-viewer"].on_page_load = function (wrapper) {
 			},
 			callback: (r) => { if (my === run_seq) safe_render(r && r.message); },
 			error: (e) => {
-				const text = e && e._error_message ? e._error_message : (e ? frappe.utils.escape_html(JSON.stringify(e).slice(0, 140)) : "error");
-				area().html('<div class="text-muted" style="padding:12px">خطأ في التقرير: ' + (text || "") + "</div>");
+				if (my !== run_seq) return;
+				const text = e && e._error_message ? String(e._error_message) : __("Unable to load the report.");
+				area().text(__("Report error: {0}", [text]));
 			},
 		});
 	}

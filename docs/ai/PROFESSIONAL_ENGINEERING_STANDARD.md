@@ -8,6 +8,8 @@
 
 **Current release assessment:** [Customer release gaps](CUSTOMER_RELEASE_GAPS_2026-10-04.md)
 
+**Latest correction evidence:** [Current release ledger](work-items/customer-release-gap-fixes/STATUS.md). Read it with the dated assessment; passing selected checks does not close every release gate.
+
 ## 1. Consultant's recommendation to the owner
 
 Keep the existing Frappe/ERPNext foundation and build a disciplined engineering process around it. Your construction knowledge is a substantial part of the product's value. AI can help implement it, but professional quality depends on explicit business rules, verifiable behavior, controlled changes, and reliable operation.
@@ -36,6 +38,12 @@ Follow [AGENT_WORKFLOW.md](../../AGENT_WORKFLOW.md) when the task belongs to its
 For workflow changes or integration of these standards into agent execution, read the [future development workflow review](FUTURE_DEVELOPMENT_WORKFLOW_REVIEW_2026-10-04.md). It reconciles the August proposal, legacy active plans, and the older controller worktree with current implementation. Its work packages are recommendations, not approved contract amendments. Ensure this standard reaches each role through the applicable versioned, read-only context mechanism; a link in the main checkout alone does not distribute it to older worktrees or sandboxes.
 
 If a task requires a new business decision, ask a concise question while completing independent authorized work. Routine engineering choices and already authorized actions do not need repeated owner confirmation. If a rule blocks an action, identify the exact rule and concrete action; prepare the reviewable result before seeking approval for its final gated step.
+
+### Owner's consultant delegation (2026-10-04)
+
+The owner is a civil engineer and delegates routine programming and engineering decisions to the consultant within the requested task. Choose implementation details, testing, refactoring boundaries, and technical corrections autonomously; explain consequential tradeoffs in plain language. Ask the owner about construction workflows, commercial calculation rules, consequential architecture or delivery choices, and any verification or action requiring authority the session does not supply. Never invent business approval or release evidence.
+
+The owner's preferred allocation is GPT-6.1 Sol for the consultant and GPT-6 Luna for bounded light sub-agent work, to conserve quota. When delegation is authorized, give the light agent a narrow file scope and acceptance criteria, review its plan and diff, and verify the integrated result yourself. Keep financial policy, security boundaries, architecture, and release decisions with the consultant. Use available supported model settings; do not claim a model switch that did not happen. An unavailable preferred model should be reported before a costlier substitute is chosen.
 
 ### Owner confidentiality decision (2026-10-05)
 
@@ -137,7 +145,7 @@ Affected forms, APIs, imports, reports, prints, and exports:
 Acceptance checks and customer-visible behavior:
 ```
 
-Keep this brief for a simple feature. Do not silently decide an owner's commercial policy while fixing a technical bug. Current decisions include factor-zero meaning, cancellation fallback, margin layering, active scope meaning, supported versions, delivery model, capacity promise, and backup/recovery targets.
+Keep this brief for a simple feature. Do not silently decide an owner's commercial policy while fixing a technical bug. Confirmed owner financial rules: factor must be positive (missing defaults to 1) and multiply physical resource quantities and values (quantity 10 × factor 0.5 × one resource unit = 5 units); overhead, profit and configured tender tax allowances share direct cost, applied once (100 + 10% + 10% = 120); cancelling an active cost analysis restores eligible prior approval or captured manual estimate with provenance; approved quantity history is permanent and corrections use new revisions. Follow [the implemented financial contract](work-items/customer-release-gap-fixes/FINANCIAL_RULES.md), including unresolved legacy protection. Active scope meaning, supported versions, delivery model, capacity promise, and backup/recovery targets remain separate decisions.
 
 For calculations, the owner should supply or approve small independent construction examples. These examples become acceptance fixtures. Agent-produced expected values copied from the same formula are weak evidence. Technical choices such as helper names, local refactoring, and parameter binding remain the agent's responsibility.
 

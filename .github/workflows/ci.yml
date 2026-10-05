@@ -5,15 +5,18 @@ on:
     branches:
       - develop
       - main
+      - codex/customer-release-ci-*
   pull_request:
+  workflow_dispatch:
 
 concurrency:
-  group: develop-construction-${{ github.event.number }}
+  group: construction-ci-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
   tests:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
     strategy:
       fail-fast: false
     name: Server
@@ -28,7 +31,7 @@ jobs:
         ports:
           - 11000:6379
       mariadb:
-        image: mariadb:10.6
+        image: mariadb:10.11
         env:
           MYSQL_ROOT_PASSWORD: root
         ports:
@@ -63,7 +66,9 @@ jobs:
 
       - name: Install MariaDB build dependencies
         # Frappe v16's mysqlclient dependency builds from source on Linux/Python 3.14.
-        run: sudo apt-get update && sudo apt-get install -y mariadb-client default-libmysqlclient-dev build-essential pkg-config
+        # The VO business suite renders an actual PDF; provide its native
+        # renderer and Arabic fonts rather than silently skipping that test.
+        run: sudo apt-get update && sudo apt-get install -y mariadb-client default-libmysqlclient-dev build-essential pkg-config wkhtmltopdf fonts-noto-core
 
       - name: Install uv
         run: pip install uv
@@ -72,6 +77,11 @@ jobs:
         run: |
           pip install frappe-bench
           bench init --skip-redis-config-generation --skip-assets --frappe-branch version-16 --python "$(which python)" ~/frappe-bench
+          git -C ~/frappe-bench/apps/frappe fetch --depth=1 upstream 81aadb9ba1bc07abccd8f720af80f4f2fb4a68a0
+          git -C ~/frappe-bench/apps/frappe checkout --detach FETCH_HEAD
+          test "$(git -C ~/frappe-bench/apps/frappe rev-parse HEAD)" = 81aadb9ba1bc07abccd8f720af80f4f2fb4a68a0
+          cd ~/frappe-bench
+          bench setup requirements frappe
           mariadb --host 127.0.0.1 --port 3306 -u root -proot -e "SET GLOBAL character_set_server = 'utf8mb4'"
           mariadb --host 127.0.0.1 --port 3306 -u root -proot -e "SET GLOBAL collation_server = 'utf8mb4_unicode_ci'"
         # Bench attempts to reload Supervisor after each app install.  CI has
@@ -80,18 +90,47 @@ jobs:
         env:
           FRAPPE_DOCKER_BUILD: '1'
 
+      - name: Install Python test dependencies
+        # Construction ships pytest/hypothesis property tests that Frappe's
+        # native test runner imports while discovering modules. Without these
+        # packages the runner aborts before executing most selected modules.
+        # Pinned to the versions used by the qualified local runtime.
+        working-directory: /home/runner/frappe-bench
+        run: env/bin/pip install "pytest==9.0.3" "hypothesis==6.155.1"
+
       - name: Install
+        id: install
         working-directory: /home/runner/frappe-bench
         run: |
-          bench get-app erpnext https://github.com/frappe/erpnext --branch version-16 --resolve-deps
+          # Pin before Bench installs dependencies or builds assets: building
+          # the moving branch first can modify its lockfile and block checkout.
+          git init "$RUNNER_TEMP/erpnext"
+          git -C "$RUNNER_TEMP/erpnext" fetch --depth=1 https://github.com/frappe/erpnext 2807c9f08fff3f161c0a2e10745a26aa6331ffd5
+          git -C "$RUNNER_TEMP/erpnext" checkout -b ci-pin FETCH_HEAD
+          bench get-app --skip-assets erpnext "$RUNNER_TEMP/erpnext" --branch ci-pin
+          test "$(git -C apps/erpnext rev-parse HEAD)" = 2807c9f08fff3f161c0a2e10745a26aa6331ffd5
+          bench setup requirements frappe erpnext
           bench get-app construction $GITHUB_WORKSPACE
           bench setup requirements --dev
           bench new-site --db-root-password root --admin-password admin test_site
           bench --site test_site install-app erpnext
-          bench --site test_site install-app construction
+          # This database is a new CI-only fixture. Capture active queries
+          # during a stall; preserve the installation's nonzero exit status.
+          (
+            sleep 60
+            mariadb --host 127.0.0.1 --port 3306 -u root -proot -e "SHOW FULL PROCESSLIST; SHOW ENGINE INNODB STATUS;"
+          ) &
+          install_diagnostic_pid=$!
+          trap 'kill "$install_diagnostic_pid" 2>/dev/null || true' EXIT
+          PYTHONPATH="$GITHUB_WORKSPACE/.github/ci/install_stack_probe${PYTHONPATH:+:$PYTHONPATH}" CONSTRUCTION_CI_INSTALL_PROBE=1 timeout --signal=ABRT --kill-after=15s 1800s bench --verbose --site test_site install-app construction
+          kill "$install_diagnostic_pid" 2>/dev/null || true
+          wait "$install_diagnostic_pid" 2>/dev/null || true
+          trap - EXIT
           bench build
         env:
           CI: 'Yes'
+          PYTHONUNBUFFERED: '1'
+          PYTHONFAULTHANDLER: '1'
           FRAPPE_DOCKER_BUILD: '1'
 
       - name: Verify App Installation
@@ -100,8 +139,46 @@ jobs:
           bench --site test_site list-apps | grep construction
           echo "Construction app installed successfully"
 
+      - name: Run Python Business Regression Tests
+        working-directory: /home/runner/frappe-bench
+        run: |
+          set -euo pipefail
+          bench --site test_site set-config allow_tests true
+          # Bare app installation does not run ERPNext's setup wizard.
+          # Seed only synthetic CI business fixtures through native documents.
+          PYTHONPATH="$GITHUB_WORKSPACE/.github/ci${PYTHONPATH:+:$PYTHONPATH}" bench --site test_site execute "__import__('business_fixtures').seed()"
+          modules=(
+            construction.tests.test_boq_properties
+            construction.tests.test_quantity_revisions
+            construction.tests.test_variation_orders
+            construction.tests.test_cost_analysis_engine
+            construction.tests.test_cost_database_api
+            construction.tests.test_customer_release_financial_guards
+            construction.tests.test_boq_transactions
+            construction.tests.test_boq_wbs_generation
+            construction.tests.test_boq_structure_conversion
+            construction.tests.test_boq_structure_delete_safety
+            construction.tests.test_boq_excel_parser
+            construction.tests.test_boq_rollup_audit
+            construction.tests.test_bilingual_install_schema
+            construction.tests.test_boq_legacy_cost_conversion
+            construction.tests.test_boq_parent_permissions
+            construction.tests.test_bilingual_desk_link_dispatch
+            construction.tests.test_stage7_bilingual_reports
+          )
+          test_status=0
+          for module in "${modules[@]}"; do
+            if ! bench --site test_site run-tests --app construction --module "$module"; then
+              test_status=1
+            fi
+          done
+          exit "$test_status"
+
       - name: Run JS Property Tests
+        # JS checks are independent of a Python test failure. Preserve failure
+        # of the job while collecting both suites after successful installation.
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         working-directory: /home/runner/frappe-bench/apps/construction/construction/tests
         run: |
-          npm install --no-audit --no-fund
-          node --test test_print_settings_properties.js
+          npm ci --no-audit --no-fund
+          node --test --test-isolation=none test_print_settings_properties.js

@@ -1,0 +1,124 @@
+{
+  "acceptance": {
+    "approved_quantity_tamper_refused": true,
+    "approved_status_reversal_refused": true,
+    "legacy_approved_revisions_checked": 35,
+    "legacy_client_approved_vo_link_failures": 1,
+    "legacy_client_approved_vo_other_validation_failures": 24,
+    "legacy_client_approved_vos_checked": 0,
+    "new_correction_rolled_back": true,
+    "orphaned_revisions_excluded_from_native_resave": 184
+  },
+  "audit_summary": {
+    "broken_project_links": 0,
+    "cost_analyses": 0,
+    "headers": 23,
+    "headers_with_rollup_mismatches": 0,
+    "invalid_factor_items": 0,
+    "missing_factor_items": 0,
+    "quantity_revisions": 219,
+    "revision_statuses": [
+      {
+        "count": 219,
+        "status": "Approved"
+      }
+    ],
+    "structures_with_rollup_mismatches": 0
+  },
+  "backup_seconds": 27.965,
+  "before_after_audit_summaries_equal": true,
+  "comparison": {
+    "encrypted_auth_rows_unchanged": true,
+    "isolated_copy": "release-v16-copy.localhost",
+    "new_schema": {
+      "item_cost_basis": true,
+      "project_field_type": "Link",
+      "revision_pricing_factor": true,
+      "vo_pricing_factor": true
+    },
+    "old_columns_comparison_mismatches": [],
+    "restored_file_count": 48,
+    "restored_files_unchanged": true,
+    "schema": "named-v16-upgrade-rehearsal/v1",
+    "scope": "Owner-authorized v16 backup copy; no original-site migration or financial repair yet.",
+    "source_site": "v16.localhost",
+    "table_counts": {
+      "BOQ Cost Analysis": 0,
+      "BOQ Cost Analysis Detail": 0,
+      "BOQ Header": 23,
+      "BOQ Item": 34,
+      "BOQ Item Stage": 2,
+      "BOQ Quantity Revision": 219,
+      "BOQ Structure": 59,
+      "Company": 21,
+      "Customer": 12,
+      "File": 119,
+      "GL Entry": 4,
+      "Item": 43,
+      "Payment Entry": 0,
+      "Project": 11,
+      "Purchase Invoice": 1008,
+      "Sales Invoice": 4033,
+      "Supplier": 10,
+      "User Permission": 6,
+      "VO Line": 27,
+      "Variation Order": 34
+    }
+  },
+  "date": "2026-10-05",
+  "integrated_source_candidate": "46e50cef334a4f51c9faea04c99bf9b5f7401a7f",
+  "legacy_revision_link_counts": {
+    "linked": 35.0,
+    "missing_header": 184.0,
+    "missing_item": 184.0,
+    "missing_structure": 184.0,
+    "total": 219
+  },
+  "legacy_vo_failure_categories": {
+    "missing_link": 1,
+    "missing_signed_reference": 9,
+    "unregistered_pdf": 15
+  },
+  "limits": "Private test archive/exclusion registry retained; original records intact. No in-app archive flag/filter, original-site installation, destructive cleanup, real legacy cost conversion or customer release approval. Twenty selected table comparisons do not cover every database table.",
+  "owner_test_classification": "Test records; preserve them and separate them from operational data.",
+  "private_local_artifact_sha256": {
+    "/home/mohamed/frappe-bench/release-tests/customer-release-gap-fixes/private/v16-upgrade-20261005/acceptance.json": "877839cad264995bb9d94d397a96f5d4cac4a10e314a22ce2138069a1338f9dc",
+    "/home/mohamed/frappe-bench/release-tests/customer-release-gap-fixes/private/v16-upgrade-20261005/acceptance.log": "75fd74a46dacd5f0c43552c597fd95f25d1e2f0fb376c016bddab2ae66e147d7",
+    "/home/mohamed/frappe-bench/release-tests/customer-release-gap-fixes/private/v16-upgrade-20261005/acceptance_copy.py": "d61953e5dc1f3093f1e5d858f9db6d1b5963d62a0f214e2f737ff652f9fb7909",
+    "/home/mohamed/frappe-bench/release-tests/customer-release-gap-fixes/private/v16-upgrade-20261005/after-audit-private.json": "1de81105be51411e63e931b79f3ee632e239c72a58638eb0c9f2d858fe67ce61",
+    "/home/mohamed/frappe-bench/release-tests/customer-release-gap-fixes/private/v16-upgrade-20261005/after-audit-summary.json": "b6f39643320c1a8bcceabae7377e1df2d0e2f1b728fd0f321d5508334d9b5ba2",
+    "/home/mohamed/frappe-bench/release-tests/customer-release-gap-fixes/private/v16-upgrade-20261005/after-audit.log": "f8356fb7a50c00a6360b46236fe533b9503cc02890e5afe870ca98c4788ded66",
+    "/home/mohamed/frappe-bench/release-tests/customer-release-gap-fixes/private/v16-upgrade-20261005/audit_copy.py": "34b84833393f9840c70f644382a8b64760ef4b9093d8aa37e312b14499917da8",
+    "/home/mohamed/frappe-bench/release-tests/customer-release-gap-fixes/private/v16-upgrade-20261005/backup.log": "f71039c674af2205de1e7ac25ff9bde917c5929f1fd0264d6dfc6c4dffe6839c",
+    "/home/mohamed/frappe-bench/release-tests/customer-release-gap-fixes/private/v16-upgrade-20261005/backup_source.py": "1c7c81f5b6ad0b10ea1d362bfe7d6152850f95d57326635414fc2c3f66f9ba0b",
+    "/home/mohamed/frappe-bench/release-tests/customer-release-gap-fixes/private/v16-upgrade-20261005/baseline.json": "b55de250f719174ba766c5da0fed42f07eb4e58187aaa04f478b25b9c3716d59",
+    "/home/mohamed/frappe-bench/release-tests/customer-release-gap-fixes/private/v16-upgrade-20261005/baseline.log": "cf6ed672c54c0f135cd4589925be4270edad9d09e3bfaed1917f07dabeb9efbd",
+    "/home/mohamed/frappe-bench/release-tests/customer-release-gap-fixes/private/v16-upgrade-20261005/before-audit-private.json": "1de81105be51411e63e931b79f3ee632e239c72a58638eb0c9f2d858fe67ce61",
+    "/home/mohamed/frappe-bench/release-tests/customer-release-gap-fixes/private/v16-upgrade-20261005/before-audit-summary.json": "b6f39643320c1a8bcceabae7377e1df2d0e2f1b728fd0f321d5508334d9b5ba2",
+    "/home/mohamed/frappe-bench/release-tests/customer-release-gap-fixes/private/v16-upgrade-20261005/before-audit.log": "f8356fb7a50c00a6360b46236fe533b9503cc02890e5afe870ca98c4788ded66",
+    "/home/mohamed/frappe-bench/release-tests/customer-release-gap-fixes/private/v16-upgrade-20261005/compare-1.log": "2acbdaf3d0a4219429052167fd44aeb559bbcbd5c47174cfca2ebcc4606bd2a9",
+    "/home/mohamed/frappe-bench/release-tests/customer-release-gap-fixes/private/v16-upgrade-20261005/compare-2.log": "2acbdaf3d0a4219429052167fd44aeb559bbcbd5c47174cfca2ebcc4606bd2a9",
+    "/home/mohamed/frappe-bench/release-tests/customer-release-gap-fixes/private/v16-upgrade-20261005/compare-after-acceptance.log": "2acbdaf3d0a4219429052167fd44aeb559bbcbd5c47174cfca2ebcc4606bd2a9",
+    "/home/mohamed/frappe-bench/release-tests/customer-release-gap-fixes/private/v16-upgrade-20261005/comparison.json": "8c227e606368294fcbebcb09514275bf7697d328b327b910abc174aaa98d856d",
+    "/home/mohamed/frappe-bench/release-tests/customer-release-gap-fixes/private/v16-upgrade-20261005/copy_and_compare.py": "cda1a5f0467b3c31a8da593094008d37778fe38ffbe22ce18254bc23d942033f",
+    "/home/mohamed/frappe-bench/release-tests/customer-release-gap-fixes/private/v16-upgrade-20261005/legacy-link-summary.json": "3d6e03317463f56f35fd315b9d226c3afc29c34193249d0099a274fec67dddbc",
+    "/home/mohamed/frappe-bench/release-tests/customer-release-gap-fixes/private/v16-upgrade-20261005/migrate-1.log": "0ab638eccf422e2195fde248e6c5c78ccd149168158e0390433e93cea4210687",
+    "/home/mohamed/frappe-bench/release-tests/customer-release-gap-fixes/private/v16-upgrade-20261005/migrate-2.log": "4e5ec8b8eb0134bf12dca6540fc853df39a0e61e54bf3bce86b74f6c214449e4",
+    "/home/mohamed/frappe-bench/release-tests/customer-release-gap-fixes/private/v16-upgrade-20261005/restore.log": "8e9b319374fe91b49342a02845095b9a125836d5525e3e589f9687b023be772a",
+    "/home/mohamed/frappe-bench/release-tests/customer-release-gap-fixes/private/v16-upgrade-20261005/source-state.json": "a5867057dd21902f7c8156b0754cc08d2fa9113f13927657579b80332ca4feba",
+    "/home/mohamed/frappe-bench/release-tests/customer-release-gap-fixes/private/v16-upgrade-20261005/test-history-archive.json": "a6b461c1fe3f0b2c75d621b95b3981db53e4e6d7fc357ca80e71552eef55f362",
+    "/home/mohamed/frappe-bench/release-tests/customer-release-gap-fixes/private/v16-upgrade-20261005/test-history-registry.json": "3ba4a34231a7e504a7f84287b277b9c286e4151428d81755dfb376e4fa3ddac6",
+    "/home/mohamed/frappe-bench/release-tests/customer-release-gap-fixes/private/v16-upgrade-20261005/vo-failures-private.json": "327aaf642174f06e60d2279e4a4827898dae7a8863a7feb08de396dc6b149b47"
+  },
+  "restore_seconds": 117.892,
+  "schema": "owner-authorized-v16-rehearsal-evidence/v1",
+  "source_authority": "Owner selected v16.localhost for requested backup/isolated-upgrade rehearsal.",
+  "source_backup_sha256": {
+    "backup_path_conf": "c8bc70dd07a61785091d16bd0560d75c88d2d4dc95923f621bc51603b24a809a",
+    "backup_path_db": "e9622db8d3ccaefac24f4c5d883d359ad89a6312e0c390ee92b603886ded5e22",
+    "backup_path_files": "8e275b15c324937e2ef2dc6e76dcb238879c5bfa4f56898889a6d91481944b34",
+    "backup_path_private_files": "d57a361a9a4aebf1168ecbc618bf8c4f344d5892a70543c22d3a0216cfed38d2"
+  },
+  "startup_checkout": "6a5634be76e7f52bb82c546ed8900d4d7d2e8b8d",
+  "tested_code_commit": "4be0712db90897f8947199f91665275909b7652d"
+}

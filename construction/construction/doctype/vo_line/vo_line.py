@@ -3,6 +3,8 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import flt
 
+from construction.services.boq_pricing import positive_factor
+
 
 class VOLine(Document):
     def validate_against_parent(self, parent):
@@ -21,7 +23,16 @@ class VOLine(Document):
             item = frappe.db.get_value(
                 "BOQ Item",
                 self.boq_item,
-                ["boq_header", "structure", "quantity", "current_revised_qty", "unit", "contract_unit_price"],
+                [
+                    "boq_header",
+                    "structure",
+                    "quantity",
+                    "current_revised_qty",
+                    "unit",
+                    "contract_unit_price",
+                    "current_revised_unit_price",
+                    "factor",
+                ],
                 as_dict=True,
             )
             if not item:
@@ -44,7 +55,15 @@ class VOLine(Document):
             self.title = structure.title
             self.unit = item.unit
             self.contract_qty = flt(item.quantity)
-            self.previous_qty = flt(item.current_revised_qty)  # Reference: current revised qty
+            self.previous_qty = flt(
+                item.current_revised_qty if item.current_revised_qty is not None else item.quantity
+            )
+            self.previous_unit_price = flt(
+                item.current_revised_unit_price
+                if item.current_revised_unit_price is not None
+                else item.contract_unit_price
+            )
+            self.pricing_factor = positive_factor(item.factor)
             self.contract_unit_price = flt(item.contract_unit_price)
             if self.line_type == "Omission":
                 self.revised_qty = 0
@@ -77,6 +96,8 @@ class VOLine(Document):
             self.contract_qty = 0
             self.previous_qty = 0
             self.contract_unit_price = 0
+            self.previous_unit_price = 0
+            self.pricing_factor = 1  # New Item VOs create unit-factor BOQ Items.
             self.rate_change_triggered = 1
             self.wbs_code = self.wbs_code or self.get_next_new_item_wbs(parent)
         else:
@@ -117,9 +138,12 @@ class VOLine(Document):
         if flt(self.revised_qty) < 0:
             frappe.throw(_("Revised quantity cannot be negative."))
 
-        self.contract_line_value = flt(self.contract_qty) * flt(self.contract_unit_price)
-        self.revised_line_value = flt(self.revised_qty) * flt(self.revised_unit_price)
-        self.line_delta_value = self.revised_line_value - self.contract_line_value
+        factor = positive_factor(self.pricing_factor)
+        self.financial_rule_version = "quantity-value-factor/v1"
+        self.contract_line_value = flt(self.contract_qty) * flt(self.contract_unit_price) * factor
+        self.previous_line_value = flt(self.previous_qty) * flt(self.previous_unit_price) * factor
+        self.revised_line_value = flt(self.revised_qty) * flt(self.revised_unit_price) * factor
+        self.line_delta_value = self.revised_line_value - self.previous_line_value
 
         # Legacy field for compatibility
         self.abs_change_pct = self.change_pct_from_contract
@@ -138,7 +162,7 @@ class VOLine(Document):
         if self.line_type == "Omission":
             self.revised_unit_price = 0
             self.revised_line_value = 0
-            self.line_delta_value = -1 * flt(self.contract_line_value)
+            self.line_delta_value = -1 * flt(self.previous_line_value)
 
     def get_next_new_item_wbs(self, parent):
         vo_prefix = parent.vo_number or "VO-000"

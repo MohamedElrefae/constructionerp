@@ -4,8 +4,8 @@ Construction-owned whitelisted API over the Stage-4 extension-point spike
 (`construction.services.report_bilingual_extension`). It renders the
 approved pilot reports' vendor `execute` output (read-only) in Arabic /
 English / Both modes without editing any vendor file, Report DocType, or
-runtime data. Site permissions are enforced by the vendor reports' own
-execute paths; this module only post-processes the returned structures.
+runtime data. Native report and company authorization runs before resolving
+the vendor module; vendor execution then produces the structures to transform.
 
 Pilot scope (owner decision 2026-09-21):
   General Ledger, Trial Balance, Accounts Receivable (Aging), plus one BOQ
@@ -157,13 +157,14 @@ def localized_report(report_name, filters=None, lang=None, mode=None):
 
     - `report_name` must be in PILOT_REPORTS (fail-closed otherwise).
     - `mode`: `ar` (default for an ar* session), `en`, or `both`.
-    - Vendor report `execute` runs read-only under the caller's permissions.
+    - Native report/company permission checks precede vendor execution.
     - Returns {columns, data, mode, report_name} — source data untouched.
     """
     if report_name not in PILOT_REPORTS:
         frappe.throw(frappe._("Unsupported report: {0}").format(report_name))
     frappe.only_for(("Accounts User", "Accounts Manager", "System Manager"))
     filters = _parse_filters(filters)
+    _check_report_access(report_name, filters)
     lang = mode or lang or (frappe.local.lang if getattr(frappe.local, "lang", None) else "en")
     mode = normalize_mode(lang)
     module = frappe.get_module(PILOT_REPORTS[report_name])
@@ -213,20 +214,50 @@ def _localize_columns(columns, lang):
     return localized
 
 
+def _check_report_access(report_name, filters):
+    from frappe.desk.query_report import get_report_doc, validate_filters_permissions
+
+    # Direct vendor execute() does not run query_report.run's authorization.
+    # Honor Report roles, report permission and disabled state, then bind the
+    # selected/default company to native document permissions before any SQL.
+    get_report_doc(report_name)
+    company = (
+        filters.get("company")
+        or frappe.defaults.get_user_default("Company")
+        or frappe.db.get_single_value("Global Defaults", "default_company")
+    )
+    if not isinstance(company, str) or not company.strip():
+        frappe.throw(frappe._("Please select a company."))
+    frappe.get_doc("Company", company).check_permission("read")
+    filters["company"] = company
+    validate_filters_permissions(report_name, filters, frappe.session.user)
+
+
 def _ensure_required(filters, report_name):
     """Vendor-required fiscal year + date-window defaults (read-only)."""
-    company = filters.get("company") or frappe.defaults.get_user_default("Company")
+    company = (
+        filters.get("company")
+        or frappe.defaults.get_user_default("Company")
+        or frappe.db.get_single_value("Global Defaults", "default_company")
+    )
+    reference_date = (
+        filters.get("from_date")
+        or filters.get("period_start_date")
+        or filters.get("report_date")
+        or filters.get("to_date")
+        or frappe.utils.today()
+    )
 
     if report_name == "General Ledger":
         if not (filters.get("from_date") and filters.get("to_date")):
-            bounds = _fy_bounds(company)
+            bounds = _fy_bounds(company, reference_date)
             filters.setdefault("from_date", bounds["start"])
             filters.setdefault("to_date", bounds["end"])
         return filters
 
     if report_name == "Accounts Receivable":
-        fy = _resolve_fy(company)
-        bounds = _fy_bounds(company)
+        fy = filters.get("fiscal_year") or _resolve_fy(company, reference_date)
+        bounds = _fy_bounds(company, reference_date)
         filters.setdefault("report_date", bounds["end"])
         filters.setdefault("to_date", bounds["end"])
         filters.setdefault("fiscal_year", fy or filters.get("fiscal_year"))
@@ -235,7 +266,7 @@ def _ensure_required(filters, report_name):
 
     if report_name == "Trial Balance":
         if not filters.get("fiscal_year"):
-            filters["fiscal_year"] = _resolve_fy(company)
+            filters["fiscal_year"] = _resolve_fy(company, reference_date)
         return filters
 
     if report_name in RECEIVABLE_PAYABLE_SUMMARY_REPORTS:
@@ -256,13 +287,17 @@ def _ensure_required(filters, report_name):
         filters.setdefault("accumulated_values", 0)
         filters.setdefault("filter_based_on", "Date Range")
         if filters.get("filter_based_on") == "Fiscal Year":
-            fy = _resolve_fy(company)
-            filters.setdefault("from_fiscal_year", filters.get("fiscal_year") or fy)
-            filters.setdefault("to_fiscal_year", filters.get("fiscal_year") or fy)
+            if not (filters.get("from_fiscal_year") and filters.get("to_fiscal_year")):
+                fy = filters.get("fiscal_year") or _resolve_fy(company, reference_date)
+                filters.setdefault("from_fiscal_year", fy)
+                filters.setdefault("to_fiscal_year", fy)
         else:
-            bounds = _fy_bounds(company)
-            filters.setdefault("period_start_date", filters.get("from_date") or bounds["start"])
-            filters.setdefault("period_end_date", filters.get("to_date") or bounds["end"])
+            filters.setdefault("period_start_date", filters.get("from_date"))
+            filters.setdefault("period_end_date", filters.get("to_date"))
+            if not (filters.get("period_start_date") and filters.get("period_end_date")):
+                bounds = _fy_bounds(company, reference_date)
+                filters["period_start_date"] = filters.get("period_start_date") or bounds["start"]
+                filters["period_end_date"] = filters.get("period_end_date") or bounds["end"]
         return filters
 
     return filters
@@ -282,42 +317,25 @@ def _account_mapping(company):
     return load_account_arabic_mapping(company)
 
 
-def _fy_bounds(company):
-    import datetime
+def _fy_bounds(company, reference_date=None):
+    fy = _fiscal_year(company, reference_date)
+    return {"start": str(fy.year_start_date), "end": str(fy.year_end_date)}
 
-    fy = _resolve_fy(company)
-    fy_doc = (
-        frappe.get_all(
-            "Fiscal Year",
-            filters={"name": fy, "disabled": 0},
-            fields=["year_start_date", "year_end_date"],
-            limit=1,
-        )
-        if fy
-        else []
+
+def _resolve_fy(company, reference_date=None):
+    return _fiscal_year(company, reference_date).name
+
+
+def _fiscal_year(company, reference_date=None):
+    from erpnext.accounts.utils import get_fiscal_year
+
+    # Without a date ERPNext returns its newest configured year, including
+    # future years. Keep the requested reporting period and company together;
+    # missing configuration must not silently select an unrelated year.
+    return get_fiscal_year(
+        date=reference_date or frappe.utils.today(),
+        company=company,
+        verbose=0,
+        as_dict=True,
+        raise_on_missing=True,
     )
-    today = frappe.utils.today()
-    if fy_doc and fy_doc[0].get("year_start_date"):
-        start = str(fy_doc[0].get("year_start_date"))
-        end = str(fy_doc[0].get("year_end_date")) if str(fy_doc[0].get("year_end_date")) >= today else today
-        return {"start": start, "end": end}
-    from datetime import date, timedelta
-
-    return {"start": str(date.today() - timedelta(days=365)), "end": today}
-
-
-def _resolve_fy(company):
-    if not company:
-        return None
-    try:
-        from erpnext.accounts.utils import get_fiscal_year
-
-        fy = get_fiscal_year(company=company, raise_on_missing=False, boolean=0, verbose=0, as_dict=True)
-        if fy:
-            return fy.get("name") if isinstance(fy, dict) else fy[0]
-    except Exception:
-        pass
-    fy_name = frappe.get_all(
-        "Fiscal Year", filters={"disabled": 0}, fields=["name"], order_by="year_start_date desc", limit=1
-    )
-    return fy_name[0]["name"] if fy_name else None

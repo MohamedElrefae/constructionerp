@@ -6,6 +6,7 @@ import frappe
 from frappe import _
 
 from construction.construction.utils.export_sanitizer import sanitize_spreadsheet_value
+from construction.services.boq_pricing import positive_factor
 
 
 class BOQExportService:
@@ -268,7 +269,12 @@ class BOQExportService:
         )
         from construction.services.variation_orders import get_revised_boq_rows
 
-        revised_map = {row["boq_item"]: row for row in get_revised_boq_rows(boq_header)}
+        for item in items:
+            item["factor"] = positive_factor(item.get("factor"))
+
+        revised_map = {
+            row["boq_item"]: row for row in get_revised_boq_rows(boq_header, include_variation=True)
+        }
 
         # Create a map of structure to items
         item_map = {}
@@ -310,7 +316,7 @@ class BOQExportService:
                     node_data["unit"] = item.get("unit")
                     node_data["contract_unit_price"] = item.get("contract_unit_price")
                     node_data["line_total"] = item.get("line_total")
-                    node_data["factor"] = item.get("factor", 1.0)
+                    node_data["factor"] = item["factor"]
                     node_data["is_variation_item"] = item.get("is_variation_item") or structure.get(
                         "is_variation_item"
                     )

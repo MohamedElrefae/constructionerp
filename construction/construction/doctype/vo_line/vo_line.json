@@ -18,6 +18,10 @@
     "delta_from_contract_qty",
     "change_pct_from_contract",
     "rate_change_triggered",
+    "pricing_factor",
+    "financial_rule_version",
+    "previous_unit_price",
+    "previous_line_value",
     "contract_unit_price",
     "revised_unit_price",
     "rate_change_justification",
@@ -200,6 +204,30 @@
       "fieldname": "notes",
       "fieldtype": "Small Text",
       "label": "Notes"
+    },
+    {
+      "fieldname": "pricing_factor",
+      "fieldtype": "Float",
+      "label": "Approval Pricing Factor",
+      "read_only": 1
+    },
+    {
+      "fieldname": "financial_rule_version",
+      "fieldtype": "Data",
+      "label": "Financial Rule Version",
+      "read_only": 1
+    },
+    {
+      "fieldname": "previous_unit_price",
+      "fieldtype": "Currency",
+      "label": "Previous Unit Price",
+      "read_only": 1
+    },
+    {
+      "fieldname": "previous_line_value",
+      "fieldtype": "Currency",
+      "label": "Previous Line Value",
+      "read_only": 1
     }
   ],
   "istable": 1,

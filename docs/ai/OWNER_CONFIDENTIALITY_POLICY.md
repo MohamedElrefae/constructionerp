@@ -15,11 +15,15 @@ This is the owner's standing instruction for Construction development, release p
 - Do not use private source excerpts or customer records in public web searches, issues or support messages. Public upstream documentation and generic searches remain available.
 - Preserve the boundary after a tool rejection. Do not obtain the same public disclosure through browser upload, an alternate remote, a PR or another transport.
 
-## CI continuation
+## CI continuation — named authorization, 2026-10-05
 
-The prepared code-only release candidate `a6bc51c3172255a242674576fecf96c6cfb46ac4` remains local. Its former proposed public branch `codex/customer-release-ci-20261005` is no longer the authorized publication route. The owner chose confidentiality, not permission to retry that public push. Provider CI remains pending until a named private destination and upload scope are approved.
+The owner explicitly authorized: “create the private GitHub repository MohamedElrefae/constructionerp-private, upload the reviewed code-only candidate a6bc51c, and run CI. Keep private reports, credentials, backups and site data excluded.” This authorization persists for completing this candidate's CI at the named private destination, including bounded installation/test-harness corrections required to execute the existing checks. It does not approve unrelated future app candidates or arbitrary local Git history.
 
-For an approved private destination, verify visibility and outgoing content, upload only the approved candidate, then retain the actual CI run URL, triggering ref, exact SHA, result and failures in local release evidence. Local tests or a prepared workflow do not establish provider CI success. No private destination has been selected or created by this documentation change.
+[MohamedElrefae/constructionerp-private](https://github.com/MohamedElrefae/constructionerp-private) was created under the named personal owner and observed **Private** before upload, without adding collaborators. The clean root snapshot `11c48b2d9223153c83a6523261f625e484506f30` contains 569 allowlisted source/build files byte-identical to `a6bc51c3172255a242674576fecf96c6cfb46ac4`. It excludes inherited history and 1,066 tracked files, including documentation/reports and stashed-code backups, as well as all untracked/site/private data. Its different SHA reflects this protective export, not a changed app. The initial root retained two obsolete 917-byte source fixture `.bak` templates without site records; these were subsequently removed from the current export, without rewriting historical Git. No private site backups were uploaded. Current export `116562f` contains 569 files; 566 original non-workflow files remain byte-identical, alongside bounded CI harness corrections, a gated installation diagnostic helper, and guarded synthetic CI business fixtures. The private branch is `codex/customer-release-ci-20261005`; never push the main or release checkout's document-bearing history there.
+
+Actual CI execution is now authorized and occurred. Retain run URL, triggering ref, exact SHA and completed result in local release evidence. The first run failed at installation before tests; a bounded workflow-only correction was pushed as `2f054fec0796166016e41e1a9ec4c3ad032cd994`. See [private CI publication/run record](work-items/customer-release-gap-fixes/PRIVATE_CI.md) in the release worktree for current outcome, evidence and subsequent harness corrections. Do not equate authorization, a prepared workflow or a partial provider run with CI success.
+
+Before any continuation upload, verify the named destination remains private and keep content/history within this reviewed scope. Do not publish local reports, credentials, backups, site records or external-memory metadata. Existing public remotes are outside this authorization. No merge, shared-site migration, customer deployment or public visibility change is granted.
 
 ## Source access and prior exposure
 
@@ -33,4 +37,4 @@ The essential rules are also written directly in the mandatory Professional Engi
 
 Existing immutable governed job packets are not rewritten by this change. Reconcile older contexts through their workflow and refresh candidate-bound startup evidence when required. These are documented agent instructions, not a newly implemented automatic Git/network enforcement mechanism.
 
-Recorded in the main app checkout and the isolated customer-release worktree. Only instruction/session/release documentation changes; no app code, site data, remote settings, publication, CI execution or deployment is implied.
+Recorded in the main app checkout and the isolated customer-release worktree. This local policy records the separately authorized private creation, code-only upload and CI execution. It grants no additional source integration, site mutation, customer deployment or public publication.

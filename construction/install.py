@@ -121,89 +121,39 @@ def setup_website_branding():
 
 
 def fix_select_permissions():
-    """Set select=1 on all DocPerm records that have read=1 but select=0.
+    """Enable select for app-owned readable permissions; leave vendor roles alone.
 
-    In Frappe v16, DatabaseQuery.check_select_permission() requires
-    'select' permission for frappe.get_list() calls (used by Number
-    Cards, Dashboard Charts, etc.). ERPNext ships most roles with
-    read=1 but select=0, which causes permission errors on workspace
-    widgets for non-admin users.
-
-    This is idempotent and safe: 'read' already grants data visibility,
-    'select' just allows the query to run.
+    Permission setup participates in the install/migration transaction and
+    must surface errors instead of committing or silently skipping failures.
     """
-    try:
-        updated = frappe.db.sql(
-            "UPDATE `tabDocPerm` SET `select`=1 WHERE `read`=1 AND `select`=0",
-            update=True,
-        )
-        if updated:
-            frappe.db.commit()
-            frappe.clear_cache()
-    except Exception:
-        pass
+    frappe.db.sql("""
+        UPDATE `tabDocPerm` permission
+        JOIN `tabDocType` doctype ON doctype.name = permission.parent
+        SET permission.`select` = 1
+        WHERE doctype.module = 'Construction'
+          AND permission.`read` = 1 AND permission.`select` = 0
+    """)
+    frappe.clear_cache()
 
 
 def fix_system_manager_permissions():
-    """Ensure System Manager role has DocPerm entries on ALL doctypes.
+    """Repair impossible legacy import flags without creating any role grants.
 
-    In some local databases, System Manager DocPerm entries are missing
-    from ERPNext doctypes (Sales Order, Purchase Order, Project, etc.).
-    Without these, even System Manager users get 'Insufficient Permission'
-    errors on workspace Number Cards and Dashboard Charts.
-
-    This is idempotent: it only inserts entries where none exist.
+    Older app releases added System Manager rights to every vendor DocType.
+    Do not repeat that policy. Native DocType sync and explicit customer role
+    management own role grants. Existing valid rights are preserved; removing
+    old grants needs a separately reviewed inventory because their origin is
+    not reliably identifiable from DocPerm alone.
     """
-    try:
-        doctypes = frappe.db.sql("""
-            SELECT DISTINCT dt.name
-            FROM `tabDocType` dt
-            WHERE NOT EXISTS (
-                SELECT 1 FROM `tabDocPerm` dp
-                WHERE dp.parent = dt.name AND dp.role = 'System Manager'
-            )
-            AND dt.name NOT IN ('DocType', 'DocField', 'DocPerm', 'Custom Field',
-                'Property Setter', 'Installed Application', 'Installed Apps',
-                'Module Def', 'Module Onboarding', 'Section Order')
-        """)
-
-        inserted = 0
-        for (dt_name,) in doctypes:
-            try:
-                meta = frappe.get_meta(dt_name)
-                frappe.get_doc(
-                    {
-                        "doctype": "DocPerm",
-                        "parent": dt_name,
-                        "parenttype": "DocType",
-                        "parentfield": "permissions",
-                        "role": "System Manager",
-                        "permlevel": 0,
-                        "read": 1,
-                        "write": 1,
-                        "create": 1,
-                        "delete": 1,
-                        "submit": 1 if meta.is_submittable else 0,
-                        "cancel": 1 if meta.is_submittable else 0,
-                        "amend": 1 if meta.is_submittable else 0,
-                        "print": 1,
-                        "email": 1,
-                        "report": 1,
-                        "import": 1,
-                        "export": 1,
-                        "share": 1,
-                        "select": 1,
-                    }
-                ).db_insert()
-                inserted += 1
-            except Exception:
-                pass
-
-        if inserted:
-            frappe.db.commit()
-            frappe.clear_cache()
-    except Exception:
-        pass
+    frappe.db.sql("""
+        UPDATE `tabDocPerm` permission
+        JOIN `tabDocType` doctype ON doctype.name = permission.parent
+        SET permission.`import` = 0
+        WHERE permission.role = 'System Manager'
+          AND permission.`import` = 1
+          AND (COALESCE(doctype.allow_import, 0) = 0 OR doctype.issingle = 1)
+    """)
+    frappe.clear_cache()
 
 
 def setup_boq_integration():
@@ -1280,7 +1230,7 @@ def _ensure_unique_index_or_fail():
     if idx_def:
         # Incorrect (wrong column/order/uniqueness/type) → drop and rebuild.
         frappe.db.sql(f"ALTER TABLE `tabMaterial Request` DROP INDEX `{idx_name}`")
-    frappe.db.sql(f"CREATE UNIQUE INDEX `{idx_name}` " f"ON `tabMaterial Request` (`{stored_col}`)")
+    frappe.db.sql(f"CREATE UNIQUE INDEX `{idx_name}` ON `tabMaterial Request` (`{stored_col}`)")
     # Post-create verification — a wrong definition must abort, not pass silently.
     idx_after = frappe.db.sql(
         """
@@ -1605,7 +1555,8 @@ def setup_construction_workspace_page():
         with open(workspace_path) as f:
             workspace_data = json.load(f)
 
-        if frappe.db.exists("Workspace", "Construction"):
+        exists = frappe.db.exists("Workspace", "Construction")
+        if exists:
             workspace = frappe.get_doc("Workspace", "Construction")
             for fieldname in (
                 "label",
@@ -1634,7 +1585,10 @@ def setup_construction_workspace_page():
         else:
             workspace = frappe.get_doc(workspace_data)
 
-        workspace.save(ignore_permissions=True)
+        if exists:
+            workspace.save(ignore_permissions=True)
+        else:
+            workspace.insert(ignore_permissions=True)
 
     if frappe.db.table_exists("Workspace Sidebar"):
         setup_workspace_sidebar()

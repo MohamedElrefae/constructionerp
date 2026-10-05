@@ -8,10 +8,10 @@
     "docs/ai/work-items/bilingual-terms-conditions-master/evidence/terms-conditions-p95-measurement.json": "9a594d1d93363fa82225a7c0399874c78c4b5bc440791ba65443cc418463df19",
     "docs/ai/work-items/bilingual-terms-conditions-master/evidence/scripts/measure_terms_conditions_p95.py": "2eae5564093b2a72050713f0edb56086f345b09041608a7c5529fda77be23e32",
     "construction/patches/v9_12/add_terms_and_conditions_arabic_fields.py": "d35871d78e58493e1d70a6be056abda1189a425e90374d524b5c29fdf509d6dc",
-    "construction/patches.txt": "ca7f3feb133a27ae44f7c89b07226e413ffaedd2cbdc194f357f92e4a61d0a1c",
+    "construction/patches.txt": "c442ac1fbc3a27a09c38309c784c039bffeec6624f55807947d49dbffb1171fd",
     "construction/tests/test_bilingual_terms_conditions_pilot.py": "e99b681f0d0f21c9300efede6afcf0a501cd59bcf6d9fd20f5486d3b045c71d8",
     "construction/data/bilingual/bilingual_registry.json": "eceff821f017f7eb7613ebc122ef7b35cdb32170db685e9a32cdbf45435f0243",
-    "construction/hooks.py": "d54bca4f63374dc018a594bd9c3f05477e790a44f39fc2e9b54a54548ba5f73f",
+    "construction/hooks.py": "7131a471c9af7983c418983beca71933daef905555b94e0e5b4654e3aa087224",
     "scripts/run_bilingual_regression_matrix.sh": "100d5cc11c913a5584a0b6c7e6d5fce0bb607761690a23a658eaeb5e84350659"
   },
   "base_commit": "0f3bd24ba4c096104ff826c490462c47c6aaf696",
@@ -174,6 +174,20 @@
       "from": "3a0abaa00a0e5f8bce851cc84226551c9e8f4093372ecfa4561d01879ccd0233",
       "to": "d54bca4f63374dc018a594bd9c3f05477e790a44f39fc2e9b54a54548ba5f73f",
       "reason": "hooks.py gains the after_install/after_migrate registration of construction.install.setup_transaction_print_formats (+2 lines) added by bilingual-transaction-print-formats; digest re-pinned to post-change content, no other artefact in this manifest changed"
+    },
+    {
+      "date": "2026-10-06",
+      "artefact": "construction/hooks.py",
+      "from": "d54bca4f63374dc018a594bd9c3f05477e790a44f39fc2e9b54a54548ba5f73f",
+      "to": "7131a471c9af7983c418983beca71933daef905555b94e0e5b4654e3aa087224",
+      "reason": "Customer release integration merge (codex/customer-release-gap-fixes): commercial gap fixes, CI harness, and bilingual engine unification"
+    },
+    {
+      "date": "2026-10-06",
+      "artefact": "construction/patches.txt",
+      "from": "ca7f3feb133a27ae44f7c89b07226e413ffaedd2cbdc194f357f92e4a61d0a1c",
+      "to": "c442ac1fbc3a27a09c38309c784c039bffeec6624f55807947d49dbffb1171fd",
+      "reason": "Customer release integration merge (codex/customer-release-gap-fixes): commercial gap fixes, CI harness, and bilingual engine unification"
     }
   ]
 }

@@ -147,6 +147,56 @@ class TestCostAnalysisEngine(FrappeTestCase):
         self.assertAlmostEqual(analysis.total_direct_cost, 200.0, places=2)
         self.assertAlmostEqual(analysis.total_unit_cost, 200.0, places=2)
 
+    def test_resource_plan_normalizes_batch_factor_and_wastage(self):
+        from construction.services.boq_report_service import get_resource_requirement_summary
+
+        self.item.factor = 0.5
+        self.item.save(ignore_permissions=True)
+        code = self._make_item_doctype("Batch planning material")
+        analysis = self._make_cost_analysis(
+            self.item.name,
+            details=[
+                {
+                    "cost_stream": "M",
+                    "item_code": code,
+                    "resource_uom": "Nos",
+                    "qty_per_boq_unit": 2,
+                    "cost_rate": 100,
+                    "wastage_pct": 0,
+                }
+            ],
+        )
+        analysis.analysis_qty = 2
+        analysis.save(ignore_permissions=True)
+        analysis.submit()
+        plan = get_resource_requirement_summary(self.header.name)
+        self.assertEqual(len(plan), 1)
+        self.assertEqual(plan[0].total_resource_qty, 5)
+        self.assertEqual(plan[0].total_resource_cost, 500)
+        self.assertEqual(plan[0].avg_cost_rate, 100)
+        self.assertEqual(self.header.reload().total_budgeted_cost, 500)
+        replacement = self._make_cost_analysis(
+            self.item.name,
+            details=[
+                {
+                    "cost_stream": "M",
+                    "item_code": code,
+                    "resource_uom": "Nos",
+                    "qty_per_boq_unit": 2,
+                    "cost_rate": 100,
+                    "wastage_pct": 10,
+                }
+            ],
+        )
+        replacement.analysis_qty = 2
+        replacement.save(ignore_permissions=True)
+        replacement.submit()
+        plan = get_resource_requirement_summary(self.header.name)
+        self.assertAlmostEqual(plan[0].total_resource_qty, 5.5)
+        self.assertEqual(plan[0].total_resource_cost, 550)
+        self.assertEqual(plan[0].avg_cost_rate, 100)
+        self.assertEqual(self.header.reload().total_budgeted_cost, 550)
+
     def test_composite_analysis_rolls_up(self):
         """Composite analysis rolls up to BOQ Item."""
         item_code_1 = self._make_item_doctype("Mat-001", "Material 1")
@@ -1027,3 +1077,292 @@ class TestCostAnalysisEngine(FrappeTestCase):
         self.assertAlmostEqual(flt(l_row.cost_rate), 50.0, places=2)
         self.assertNotEqual(l_row.rate_source, "Resource Price History")
         self.assertNotEqual(l_row.rate_source, "Last PI")
+
+    def _priced_analysis(self, cost, overhead=0, profit=0, tax=0, analysis_qty=1):
+        analysis = self._make_cost_analysis(
+            self.item.name,
+            details=[
+                {
+                    "cost_stream": "M",
+                    "item_code": self._make_item_doctype(),
+                    "resource_uom": "Nos",
+                    "qty_per_boq_unit": analysis_qty,
+                    "cost_rate": cost,
+                    "wastage_pct": 0,
+                }
+            ],
+        )
+        analysis.update(
+            {
+                "analysis_qty": analysis_qty,
+                "overhead_pct": overhead,
+                "profit_pct": profit,
+                "tender_tax_pct": tax,
+            }
+        )
+        analysis.save(ignore_permissions=True)
+        return analysis
+
+    def test_owner_additive_price_reaches_item_header_report_and_export(self):
+        from construction.services.boq_export_service import BOQExportService
+        from construction.services.boq_report_service import get_boq_cost_analysis_summary
+
+        self.item.factor = 0.5
+        self.item.save(ignore_permissions=True)
+        analysis = self._priced_analysis(100, overhead=10, profit=10, analysis_qty=2)
+        analysis.submit()
+        self.item.reload()
+        self.header.reload()
+        self.assertEqual(analysis.total_direct_cost, 200)
+        self.assertEqual(analysis.total_unit_cost, 100)
+        self.assertEqual(analysis.suggested_sell_rate, 120)
+        self.assertEqual(self.item.est_unit_cost, 100)
+        self.assertEqual(self.item.calculated_sell_price, 120)
+        self.assertEqual((self.item.overhead_amount, self.item.profit_amount), (10, 10))
+        self.assertEqual(self.item.est_line_total, 500)
+        self.assertEqual(self.item.line_total, 2500)
+        self.assertEqual(self.header.total_budgeted_cost, 500)
+        summary = get_boq_cost_analysis_summary(self.header.name)
+        self.assertEqual(summary[0].suggested_sell_rate, 120)
+        rows = BOQExportService.get_tree_data(self.header.name)
+        row = next(row for row in rows if row.get("name") == self.item.structure)
+        self.assertEqual(row["factor"], 0.5)
+        self.assertEqual(row["line_total"], 2500)
+        # An ordinary save must not add margins a second time.
+        self.item.save(ignore_permissions=True)
+        self.assertEqual(self.item.reload().calculated_sell_price, 120)
+
+    def test_tender_tax_allowance_uses_the_same_direct_cost_base(self):
+        analysis = self._priced_analysis(100, overhead=10, profit=10, tax=5)
+        analysis.submit()
+        self.item.reload()
+        self.assertEqual(analysis.suggested_sell_rate, 125)
+        self.assertEqual(self.item.tender_tax_amount, 5)
+        self.assertEqual(self.item.calculated_sell_price, 125)
+
+    def test_last_analysis_cancel_restores_manual_inputs_and_totals(self):
+        self.item.update({"est_unit_cost": 75, "overhead_pct": 8, "profit_pct": 12, "tender_tax_pct": 4})
+        self.item.save(ignore_permissions=True)
+        analysis = self._priced_analysis(100, 10, 10, 5)
+        analysis.submit()
+        analysis.cancel()
+        self.item.reload()
+        self.header.reload()
+        self.assertEqual(self.item.cost_basis, "Manual")
+        self.assertFalse(self.item.active_cost_analysis)
+        self.assertEqual(
+            (self.item.est_unit_cost, self.item.overhead_pct, self.item.profit_pct, self.item.tender_tax_pct),
+            (75, 8, 12, 4),
+        )
+        self.assertEqual(self.item.calculated_sell_price, 93)
+        self.assertEqual(self.header.total_budgeted_cost, 750)
+        snapshot = frappe.parse_json(self.item.manual_cost_snapshot)
+        self.assertEqual(snapshot.schema, "boq-manual-cost/v1")
+        self.assertEqual(snapshot.captured_by, "Administrator")
+
+    def test_manual_estimate_changed_between_approval_cycles_is_restored(self):
+        self.item.est_unit_cost = 40
+        self.item.save(ignore_permissions=True)
+        first = self._priced_analysis(100)
+        first.submit()
+        first.cancel()
+        self.item.reload()
+        self.item.est_unit_cost = 60
+        self.item.save(ignore_permissions=True)
+        second = self._priced_analysis(200)
+        second.submit()
+        second.cancel()
+        self.assertEqual(self.item.reload().est_unit_cost, 60)
+
+    def test_zero_manual_estimate_is_preserved_as_evidence(self):
+        self.item.est_unit_cost = 0
+        self.item.save(ignore_permissions=True)
+        analysis = self._priced_analysis(100)
+        analysis.submit()
+        analysis.cancel()
+        self.assertEqual(self.item.reload().est_unit_cost, 0)
+        self.assertEqual(self.item.cost_basis, "Manual")
+
+    def test_cancelled_superseded_analysis_does_not_replace_active_cost(self):
+        first = self._priced_analysis(100, 10, 10)
+        first.submit()
+        second = self._priced_analysis(200, 5, 5)
+        second.submit()
+        first.reload().cancel()
+        self.item.reload()
+        self.assertEqual(self.item.active_cost_analysis, second.name)
+        self.assertEqual(self.item.est_unit_cost, 200)
+        second.cancel()
+        self.assertEqual(self.item.reload().cost_basis, "Manual")
+
+    def test_multiple_cancellations_restore_approval_chain_then_manual(self):
+        self.item.est_unit_cost = 70
+        self.item.save(ignore_permissions=True)
+        first = self._priced_analysis(100, 10, 10)
+        first.submit()
+        second = self._priced_analysis(200, 5, 5)
+        second.submit()
+        third = self._priced_analysis(300, 3, 7)
+        third.submit()
+        third.cancel()
+        self.assertEqual(self.item.reload().active_cost_analysis, second.name)
+        self.assertEqual(self.item.calculated_sell_price, 220)
+        second.reload().cancel()
+        self.assertEqual(self.item.reload().active_cost_analysis, first.name)
+        self.assertEqual(self.item.calculated_sell_price, 120)
+        first.reload().cancel()
+        self.assertEqual(self.item.reload().est_unit_cost, 70)
+
+    def test_legacy_missing_manual_evidence_refuses_cancellation(self):
+        analysis = self._priced_analysis(100)
+        analysis.submit()
+        # Represents pre-upgrade evidence, not an ordinary writable field.
+        frappe.db.set_value("BOQ Item", self.item.name, "manual_cost_snapshot", None)
+        with self.assertRaises(frappe.ValidationError):
+            analysis.cancel()
+        stored = frappe.get_doc("BOQ Cost Analysis", analysis.name)
+        self.assertEqual(stored.docstatus, 1)
+        self.assertEqual(stored.analysis_status, "Approved")
+        self.assertEqual(self.item.reload().est_unit_cost, 100)
+
+    def test_cost_provenance_and_approved_pricing_cannot_be_forged(self):
+        analysis = self._priced_analysis(100, 10, 10)
+        analysis.submit()
+        for field, value in (
+            ("est_unit_cost", 1),
+            ("overhead_pct", 0),
+            ("tender_tax_pct", 5),
+            ("active_cost_analysis", None),
+            ("cost_basis", "Manual"),
+            ("manual_cost_snapshot", "{}"),
+        ):
+            with self.subTest(field=field):
+                candidate = frappe.get_doc("BOQ Item", self.item.name)
+                candidate.set(field, value)
+                with self.assertRaises(frappe.ValidationError):
+                    candidate.save(ignore_permissions=True)
+                self.assertEqual(self.item.reload().est_unit_cost, 100)
+
+    def test_factor_zero_negative_and_nonfinite_are_rejected(self):
+        for factor in (0, -1, float("nan"), float("inf")):
+            with self.subTest(factor=factor):
+                candidate = frappe.get_doc("BOQ Item", self.item.name)
+                candidate.factor = factor
+                with self.assertRaises(frappe.ValidationError):
+                    candidate.save(ignore_permissions=True)
+                self.assertEqual(self.item.reload().factor, 1)
+
+    def test_missing_factor_defaults_and_fractional_factor_scales_totals(self):
+        self.item.factor = None
+        self.item.save(ignore_permissions=True)
+        self.assertEqual(self.item.reload().factor, 1)
+        self.item.factor = 0.25
+        self.item.save(ignore_permissions=True)
+        self.assertEqual(self.item.reload().line_total, 1250)
+        self.assertEqual(self.header.reload().total_contract_value, 1250)
+
+    def test_legacy_zero_factor_does_not_export_or_roll_up_as_one(self):
+        from construction.services.boq_export_service import BOQExportService
+        from construction.services.boq_transactions import read_boq_totals
+
+        frappe.db.set_value("BOQ Item", self.item.name, "factor", 0)
+        with self.assertRaises(frappe.ValidationError):
+            BOQExportService.get_tree_data(self.header.name)
+        with self.assertRaises(frappe.ValidationError):
+            read_boq_totals(self.header.name)
+
+    def test_analysis_invalid_resource_or_percentage_refuses_save(self):
+        analysis = self._priced_analysis(100)
+        for field, value in (
+            ("analysis_qty", 0),
+            ("overhead_pct", -1),
+            ("profit_pct", 101),
+            ("tender_tax_pct", float("inf")),
+        ):
+            with self.subTest(field=field):
+                candidate = frappe.get_doc("BOQ Cost Analysis", analysis.name)
+                candidate.set(field, value)
+                with self.assertRaises(frappe.ValidationError):
+                    candidate.save(ignore_permissions=True)
+        for field, value in (("cost_rate", -1), ("qty_per_boq_unit", -1), ("wastage_pct", 101)):
+            with self.subTest(field=field):
+                candidate = frappe.get_doc("BOQ Cost Analysis", analysis.name)
+                candidate.details[0].set(field, value)
+                with self.assertRaises(frappe.ValidationError):
+                    candidate.save(ignore_permissions=True)
+
+    def test_duplicate_active_cost_approvals_require_reconciliation(self):
+        first = self._priced_analysis(100)
+        first.submit()
+        second = self._priced_analysis(200)
+        second.submit()
+        # Corrupt legacy history must not silently choose one competing basis.
+        frappe.db.set_value("BOQ Cost Analysis", first.name, "analysis_status", "Approved")
+        with self.assertRaises(frappe.ValidationError):
+            self.item.reload().save(ignore_permissions=True)
+        with self.assertRaises(frappe.ValidationError):
+            second.cancel()
+        self.assertEqual(self.item.reload().est_unit_cost, 200)
+        self.assertEqual(second.reload().docstatus, 1)
+
+    def test_cost_analysis_derives_header_and_rejects_company_mismatch(self):
+        analysis = self._priced_analysis(100)
+        other_header = frappe.get_doc(
+            {
+                "doctype": "BOQ Header",
+                "project": self.project,
+                "title": "Another tender",
+                "status": "Draft",
+                "boq_type": "Tender",
+            }
+        ).insert(ignore_permissions=True)
+        analysis.boq_header = other_header.name
+        # Native fetch_from already restores the authoritative parent. Either
+        # native derivation or controller rejection prevents a forged identity.
+        analysis.save(ignore_permissions=True)
+        self.assertEqual(analysis.reload().boq_header, self.header.name)
+        company = frappe.get_doc(
+            {
+                "doctype": "Company",
+                "company_name": "Owner pricing other company " + frappe.generate_hash(length=6),
+                "abbr": frappe.generate_hash(length=5),
+                "default_currency": "EGP",
+                "country": "Egypt",
+            }
+        ).insert(ignore_permissions=True)
+        analysis.company = company.name
+        with self.assertRaises(frappe.ValidationError):
+            analysis.save(ignore_permissions=True)
+        self.assertEqual(analysis.reload().company, self.company)
+
+    def test_legacy_review_cannot_be_repriced_or_superseded_without_conversion(self):
+        first = self._priced_analysis(100)
+        first.submit()
+        frappe.db.set_value("BOQ Cost Analysis", first.name, "pricing_rule_version", "legacy-unversioned/v0")
+        frappe.db.set_value(
+            "BOQ Item",
+            self.item.name,
+            {
+                "cost_basis": "Legacy Review",
+                "active_cost_analysis": None,
+                "manual_cost_snapshot": None,
+            },
+        )
+        self.item.reload()
+        before = (self.item.est_unit_cost, self.item.calculated_sell_price)
+        self.item.est_unit_cost = 75
+        with self.assertRaises(frappe.ValidationError):
+            self.item.save(ignore_permissions=True)
+        replacement = self._priced_analysis(200)
+        with self.assertRaises(frappe.ValidationError):
+            replacement.submit()
+        self.assertEqual(replacement.reload().docstatus, 0)
+        self.assertEqual(first.reload().analysis_status, "Approved")
+        self.item.reload()
+        self.assertEqual((self.item.est_unit_cost, self.item.calculated_sell_price), before)
+        # No active approval is not proof that a historical manual basis exists.
+        frappe.db.set_value("BOQ Cost Analysis", first.name, "analysis_status", "Superseded")
+        replacement.reload()
+        with self.assertRaises(frappe.ValidationError):
+            replacement.submit()
+        self.assertEqual(replacement.reload().docstatus, 0)

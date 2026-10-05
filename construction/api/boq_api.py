@@ -82,7 +82,7 @@ def get_children(doctype, parent="", boq_header=None, is_root=False, **filters):
     return nodes
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def add_node():
     """Add a new BOQ Structure node from the tree view with permission enforcement."""
     from frappe.desk.treeview import make_tree_args
@@ -111,7 +111,7 @@ def add_node():
     return doc.name
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def create_boq_node(boq_header, parent_structure=None, title=None, is_group=0):
     """Create a new BOQ Structure node from the tree view with permission check."""
     require_boq_access(boq_header, ptype="write")
@@ -129,7 +129,7 @@ def create_boq_node(boq_header, parent_structure=None, title=None, is_group=0):
     return {"success": True, "name": doc.name}
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def advance_boq_status(boq_header, target_status):
     """Advance BOQ status to next state with write permission check."""
     require_boq_access(boq_header, ptype="write")
@@ -229,7 +229,7 @@ def export_boq_pdf(boq_header, column_config=None):
     return result
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def import_boq_excel(file_url, boq_header, dry_run=1, confirmed_import_mode=None, row_resolutions=None):
     """Import BOQ from Excel with write permission checks."""
     require_boq_access(boq_header, ptype="write")
@@ -263,7 +263,7 @@ def generate_boq_import_error_report(
     )
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def bulk_update_boq_item_stages(updates):
     """Bulk update BOQ Item Stage measurement/certification fields through normal validation."""
     from construction.services.feature_flags import is_enabled
@@ -306,7 +306,7 @@ def bulk_update_boq_item_stages(updates):
 # ---------------------------------------------------------------------------
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def create_variation_order(boq_header, reason=None, description=None, engineer_name=None):
     """Create a Draft Variation Order for the given Locked BOQ Header."""
     from construction.services.feature_flags import is_enabled
@@ -341,7 +341,7 @@ def create_variation_order(boq_header, reason=None, description=None, engineer_n
     return {"success": True, "name": vo.name, "vo_number": vo.vo_number}
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def transition_variation_order(vo_name, new_status, client_approval_document=None):
     """Transition a Variation Order to the next status with role + signed-PDF checks."""
     from construction.services.feature_flags import is_enabled
@@ -456,7 +456,7 @@ def get_revised_boq_view(boq_header):
     }
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def create_material_request_for_vo(vo_name):
     """Create a Draft Material Request for variation items in an approved VO (idempotent & collision-safe)."""
     from construction.services.feature_flags import is_enabled

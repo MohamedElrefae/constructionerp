@@ -106,11 +106,16 @@ class TestBoqFinancialIntegrity(FrappeTestCase):
         with self.assertRaises(frappe.ValidationError):
             rev_fail2.save(ignore_permissions=True)
 
-        # Unchanged commercial fields + metadata-only change is allowed
+        # Unchanged approved revision save is allowed (preserves snapshot)
         rev_ok = frappe.get_doc("BOQ Quantity Revision", revision.name)
-        rev_ok.reason = "Administrative note"
         rev_ok.save(ignore_permissions=True)
         self.assertEqual(rev_ok.status, "Approved")
+
+        # Modifying fields on approved revision is blocked under permanent approval rules
+        rev_blocked = frappe.get_doc("BOQ Quantity Revision", revision.name)
+        rev_blocked.reason = "Administrative note"
+        with self.assertRaises(frappe.ValidationError):
+            rev_blocked.save(ignore_permissions=True)
 
     def test_g04_zero_or_negative_factor_rejected(self):
         header, items = _make_header_with_items("G04 Factor", [{"title": "A", "quantity": 10, "rate": 10}])

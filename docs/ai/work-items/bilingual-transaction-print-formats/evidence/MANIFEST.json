@@ -9,8 +9,8 @@
     "construction/print_format/bilingual_stock_entry/bilingual_stock_entry.json": "4c0580ad2f852bffdd52d62a6a0e62e3b48bac8609598c7c5fd6f0e45668cc23",
     "construction/print_format/bilingual_material_request/bilingual_material_request.json": "c7163d91f66394153ceee1b6ed034efb9e93474b74cf22f86e946ee76317687d",
     "construction/tests/test_bilingual_transaction_print.py": "c27b260c27578738b795de0ae7f209ab6ed48c95e10a64e63e289c7445affa41",
-    "construction/install.py": "c4de7a9938cac6ab6ad8bff7a4f6adfa0a44925c7711d24c8df9470cbf739591",
-    "construction/hooks.py": "d54bca4f63374dc018a594bd9c3f05477e790a44f39fc2e9b54a54548ba5f73f"
+    "construction/install.py": "e5ca7232e762030b9d8172f55855b1b1ef80397598122214553c66fa61108e76",
+    "construction/hooks.py": "7131a471c9af7983c418983beca71933daef905555b94e0e5b4654e3aa087224"
   },
   "base_commit": "234c02446deb3dd10567bfcbc995732ccd8cc19e",
   "branch": "develop",
@@ -61,5 +61,20 @@
       "log": "docs/ai/work-items/bilingual-transaction-print-formats/evidence/gates.log"
     }
   },
-  "amendments": []
+  "amendments": [
+    {
+      "id": "A1",
+      "when": "customer release integration",
+      "cause": "consolidation merge of customer-release-gap-fixes into develop updating hooks.py",
+      "fix": "re-pinned construction/hooks.py to post-merge content; verified all tests pass clean",
+      "disclosure": "Consolidation merge commit + amendments entry"
+    },
+    {
+      "id": "A2",
+      "when": "customer release integration",
+      "cause": "consolidation merge of customer-release-gap-fixes into develop updating install.py",
+      "fix": "re-pinned construction/install.py to post-merge content; verified all tests pass clean",
+      "disclosure": "Consolidation merge commit + amendments entry"
+    }
+  ]
 }

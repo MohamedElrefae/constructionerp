@@ -23,6 +23,27 @@
       "cause": "construction/api/bilingual_reports.py (3 new allowlisted reports + governed COLUMN_LABELS header localization) and construction/tests/test_stage7_bilingual_reports.py (9 expansion tests + auth extension) changed after this manifest last pinned them",
       "fix": "2 digests re-pinned to the post-expansion content; no other artefact in this manifest changed (report_bilingual_extension.py and the matrix script remain byte-identical to base)",
       "disclosure": "docs/ai/work-items/bilingual-financial-reports-expansion/SCOPE.md R6 + that item's MANIFEST.json"
+    },
+    {
+      "id": "A4",
+      "when": "customer release integration",
+      "cause": "consolidation merge of customer-release-gap-fixes into develop updating bilingual_reports.py",
+      "fix": "re-pinned construction/api/bilingual_reports.py to post-merge content; verified all tests pass clean",
+      "disclosure": "Consolidation merge commit + amendments entry"
+    },
+    {
+      "id": "A5",
+      "when": "customer release integration",
+      "cause": "consolidation merge of customer-release-gap-fixes into develop updating bilingual_report_viewer.js",
+      "fix": "re-pinned construction/construction/page/bilingual_report_viewer/bilingual_report_viewer.js to post-merge content; verified all tests pass clean",
+      "disclosure": "Consolidation merge commit + amendments entry"
+    },
+    {
+      "id": "A6",
+      "when": "customer release integration",
+      "cause": "consolidation merge of customer-release-gap-fixes into develop updating test_stage7_bilingual_reports.py",
+      "fix": "re-pinned construction/tests/test_stage7_bilingual_reports.py to post-merge content; verified all tests pass clean",
+      "disclosure": "Consolidation merge commit + amendments entry"
     }
   ],
   "primary_invariant": "D5 triad (bilingual_service.py, searchable_dropdown/api/search.py) and bilingual_registry.json byte-identical to base 890ae14 (call-only); no file under apps/frappe or apps/erpnext modified; the fail-closed allowlist PILOT_REPORTS expands by exactly two names (Balance Sheet, Profit and Loss Statement) and rejects every other name before import; vendor execute runs exactly once per request (R2) under the unchanged genuine role gate (R3: Accounts User/Manager/System Manager, non-admin rejected before any vendor resolution); R4 statement period defaults are read-only setdefault filling of the vendor get_period_list contract with caller values winning; viewer page Select gains the same two options (page bundle, not hook-registered, no ?v= bump); zero data mutation (probe mutation guard PASS, Account 2102 / GL Entry 4 unchanged); exactly one manifest re-pinned (bilingual-financial-reports, 2 digests, disclosed); matrix script byte-identical to base (module list 21, comment 258 left stale under disclosed A1) while the suite itself grows to 264 tests",
@@ -54,8 +75,8 @@
     "docs/ai/work-items/bilingual-report-statements-allowlist/evidence/reconciliation.log": "c275c7ef647847a29183ba4ef2b0d67de786be14e9c9d2976017a962f653c16d",
     "docs/ai/work-items/bilingual-report-statements-allowlist/evidence/lints.log": "6ed2c3048c826c2eae6ae937d361258fce8c67453ba1bbbc941ddfaac07d79d6",
     "docs/ai/work-items/bilingual-report-statements-allowlist/evidence/scripts/probe_statements_execution.py": "dcdc4f75e56916c59b0e8df7b1dd5b2c77bb7b0af8004bd03231b7231df6679f",
-    "construction/api/bilingual_reports.py": "eacb19b1a811b95babfa4ea73a1eb8e899fcdcd3357e3b92b5c1a494a78f8337",
-    "construction/construction/page/bilingual_report_viewer/bilingual_report_viewer.js": "765724fc90648229356d2fbea0581d5171e77e9f61dec54a8a35bef0c2f904f4",
-    "construction/tests/test_stage7_bilingual_reports.py": "d9c92d10782a2917ad0727a064525f91b828431441bfe4d304845b7aa8972372"
+    "construction/api/bilingual_reports.py": "d9970f8d3a834e675b26195871b8f00396c36ec0d0b0b8990ef7563591f0d846",
+    "construction/construction/page/bilingual_report_viewer/bilingual_report_viewer.js": "9ed7a7c8076c3bf56006e249ebb671065bfb6d41318af81393775d029c42735f",
+    "construction/tests/test_stage7_bilingual_reports.py": "b5cff52998c90dc2028a7edfb3d6c5ee01a981670ad4949b303247f7daad9c4f"
   }
 }

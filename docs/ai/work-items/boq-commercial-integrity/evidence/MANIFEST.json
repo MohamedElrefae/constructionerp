@@ -14,8 +14,31 @@
     "docs/ai/work-items/boq-commercial-integrity/evidence/gates.log": "2a00273ee47fa3bc04318e5884990947c66552c34dcc0d61ff97490c2800648d",
     "docs/ai/work-items/boq-commercial-integrity/evidence/regression-matrix.log": "a0758b22b632b87a11e3ba243d4c104900a00531b1ae608c4e5968c8429d38c8",
     "docs/ai/work-items/boq-commercial-integrity/evidence/test-execution.log": "8c579e0c77aaf23e4460eb75fa25126f756f913fe627feee0881ab148dccf56d",
-    "construction/construction/doctype/boq_item/boq_item.py": "2b7846603ffa9b60f0b3de6b7c0663c37f44f28682cb4b1f23fb14271feb22e6",
-    "construction/construction/doctype/boq_quantity_revision/boq_quantity_revision.py": "1ba928a28f0d58e93ae03b56046e08f86c7fad4147c0692e9f1d544498a63625",
-    "construction/tests/test_boq_financial_integrity.py": "4c0aecc9bcdccce1e9c9581c069b71eceffbe308b4ed17132b33a1b0aba775d5"
-  }
+    "construction/construction/doctype/boq_item/boq_item.py": "5d68afaf65ab39f9efc214869440808f4e25f85fa04b5560b3458911f517a06b",
+    "construction/construction/doctype/boq_quantity_revision/boq_quantity_revision.py": "d66e328f7befb2f52119092ecbc1d3172ceda3e4b550841a87a6af6ad561d910",
+    "construction/tests/test_boq_financial_integrity.py": "95d97eb3f33fcc443bad491b2e002e54f8cf8bee7a657fc731ecdde7b6cad4e7"
+  },
+  "amendments": [
+    {
+      "id": "A1",
+      "when": "customer release integration",
+      "cause": "consolidation merge of customer-release-gap-fixes into develop updating boq_item.py",
+      "fix": "re-pinned construction/construction/doctype/boq_item/boq_item.py to post-merge content; verified all tests pass clean",
+      "disclosure": "Consolidation merge commit + amendments entry"
+    },
+    {
+      "id": "A2",
+      "when": "customer release integration",
+      "cause": "consolidation merge of customer-release-gap-fixes into develop updating boq_quantity_revision.py",
+      "fix": "re-pinned construction/construction/doctype/boq_quantity_revision/boq_quantity_revision.py to post-merge content; verified all tests pass clean",
+      "disclosure": "Consolidation merge commit + amendments entry"
+    },
+    {
+      "id": "A3",
+      "when": "customer release integration",
+      "cause": "consolidation merge of customer-release-gap-fixes into develop updating test_boq_financial_integrity.py",
+      "fix": "re-pinned construction/tests/test_boq_financial_integrity.py to post-merge content; verified all tests pass clean",
+      "disclosure": "Consolidation merge commit + amendments entry"
+    }
+  ]
 }

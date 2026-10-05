@@ -2,7 +2,7 @@
 
 > Generated from live DocType JSON by `scripts/schema_drift_checker.py --update`.
 > Do not hand-edit field tables. Update the DocType JSON, then regenerate this file.
-> Last verified: 2026-09-10
+> Last verified: 2026-10-04
 
 ## Summary
 
@@ -12,13 +12,13 @@
 
 | Folder | DocType | JSON | Fields | Notes |
 |---|---|---|---:|---|
-| `boq_cost_analysis` | BOQ Cost Analysis | `boq_cost_analysis.json` | 30 |  |
+| `boq_cost_analysis` | BOQ Cost Analysis | `boq_cost_analysis.json` | 33 |  |
 | `boq_cost_analysis_detail` | BOQ Cost Analysis Detail | `boq_cost_analysis_detail.json` | 11 | Child table |
 | `boq_header` | BOQ Header | `boq_header.json` | 12 |  |
 | `boq_import_batch` | BOQ Import Batch | `boq_import_batch.json` | 18 |  |
-| `boq_item` | BOQ Item | `boq_item.json` | 48 |  |
+| `boq_item` | BOQ Item | `boq_item.json` | 53 |  |
 | `boq_item_stage` | BOQ Item Stage | `boq_item_stage.json` | 16 |  |
-| `boq_quantity_revision` | BOQ Quantity Revision | `boq_quantity_revision.json` | 35 |  |
+| `boq_quantity_revision` | BOQ Quantity Revision | `boq_quantity_revision.json` | 37 |  |
 | `boq_structure` | BOQ Structure | `boq_structure.json` | 31 |  |
 | `construction_settings` | Construction Settings | `construction_settings.json` | 28 |  |
 | `construction_theme` | Construction Theme | `construction_theme.json` | 94 |  |
@@ -32,7 +32,7 @@
 | `user_desk_theme` | User Desk Theme | `user_desk_theme.json` | 25 |  |
 | `user_scope_context` | User Scope Context | `user_scope_context.json` | 10 |  |
 | `variation_order` | Variation Order | `variation_order.json` | 22 |  |
-| `vo_line` | VO Line | `vo_line.json` | 27 | Child table |
+| `vo_line` | VO Line | `vo_line.json` | 31 | Child table |
 | `journal_entry` | Journal Entry | - | - | Override only; no local schema JSON |
 
 ## Critical Invariants
@@ -45,7 +45,7 @@
 
 ## Field Snapshot
 
-### BOQ Cost Analysis (`boq_cost_analysis/boq_cost_analysis.json`) - 30 fields
+### BOQ Cost Analysis (`boq_cost_analysis/boq_cost_analysis.json`) - 33 fields
 
 | Field | Type | Options | Flags |
 |---|---|---|---|
@@ -56,7 +56,7 @@
 | `boq_structure` | Link | BOQ Structure | read_only |
 | `project` | Link | Project | read_only |
 | `company` | Link | Company | reqd |
-| `analysis_status` | Select | Draft / Approved / Superseded | reqd |
+| `analysis_status` | Select | Draft / Approved / Superseded / Cancelled | reqd |
 | `cb_identity` | Column Break |  |  |
 | `analysis_uom` | Link | UOM | reqd |
 | `analysis_qty` | Float |  | reqd |
@@ -79,6 +79,9 @@
 | `approved_by` | Link | User | read_only |
 | `approved_on` | Datetime |  | read_only |
 | `remarks` | Small Text |  |  |
+| `tender_tax_pct` | Percent |  |  |
+| `pricing_rule_version` | Data |  | read_only |
+| `supersedes_analysis` | Link | BOQ Cost Analysis | read_only |
 
 ### BOQ Cost Analysis Detail (`boq_cost_analysis_detail/boq_cost_analysis_detail.json`) - 11 fields
 
@@ -100,7 +103,7 @@
 
 | Field | Type | Options | Flags |
 |---|---|---|---|
-| `project` | Data |  | reqd, hidden, read_only |
+| `project` | Link | Project | reqd, hidden, read_only |
 | `project_name` | Data |  | read_only |
 | `boq_type` | Select | Tender / Contract / Variation |  |
 | `status` | Select | Draft / Pricing / Frozen / Locked |  |
@@ -136,7 +139,7 @@
 | `warnings_json` | Long Text |  |  |
 | `preview_json` | Long Text |  |  |
 
-### BOQ Item (`boq_item/boq_item.json`) - 48 fields
+### BOQ Item (`boq_item/boq_item.json`) - 53 fields
 
 | Field | Type | Options | Flags |
 |---|---|---|---|
@@ -161,10 +164,10 @@
 | `sb_quantity` | Section Break |  |  |
 | `quantity` | Float |  |  |
 | `unit` | Link | UOM |  |
-| `factor` | Float |  |  |
+| `factor` | Float |  | reqd |
 | `has_stages` | Check |  |  |
 | `cb_quantity` | Column Break |  |  |
-| `est_unit_cost` | Currency |  | read_only |
+| `est_unit_cost` | Currency |  |  |
 | `est_unit_price` | Currency |  |  |
 | `contract_unit_price` | Currency |  |  |
 | `line_total` | Currency |  | read_only |
@@ -188,6 +191,11 @@
 | `sb_future_cost_control` | Section Break |  | hidden |
 | `sb_future_progress` | Section Break |  | hidden |
 | `sb_future_payment` | Section Break |  | hidden |
+| `tender_tax_pct` | Percent |  |  |
+| `tender_tax_amount` | Currency |  | read_only |
+| `cost_basis` | Select | Manual / Approved Analysis / Legacy Review | read_only |
+| `active_cost_analysis` | Link | BOQ Cost Analysis | read_only |
+| `manual_cost_snapshot` | Long Text |  | hidden, read_only |
 
 ### BOQ Item Stage (`boq_item_stage/boq_item_stage.json`) - 16 fields
 
@@ -210,7 +218,7 @@
 | `sb_notes` | Section Break |  |  |
 | `description` | Small Text |  |  |
 
-### BOQ Quantity Revision (`boq_quantity_revision/boq_quantity_revision.json`) - 35 fields
+### BOQ Quantity Revision (`boq_quantity_revision/boq_quantity_revision.json`) - 37 fields
 
 | Field | Type | Options | Flags |
 |---|---|---|---|
@@ -249,6 +257,8 @@
 | `sb_approval` | Section Break |  |  |
 | `approved_by` | Link | User | read_only |
 | `approved_on` | Datetime |  | read_only |
+| `pricing_factor` | Float |  | read_only |
+| `financial_rule_version` | Data |  | read_only |
 
 ### BOQ Structure (`boq_structure/boq_structure.json`) - 31 fields
 
@@ -598,7 +608,7 @@
 | `total_contract_delta` | Currency |  | read_only |
 | `notes` | Text Editor |  |  |
 
-### VO Line (`vo_line/vo_line.json`) - 27 fields
+### VO Line (`vo_line/vo_line.json`) - 31 fields
 
 | Field | Type | Options | Flags |
 |---|---|---|---|
@@ -629,6 +639,10 @@
 | `created_boq_item` | Link | BOQ Item | read_only |
 | `created_quantity_revision` | Link | BOQ Quantity Revision | read_only |
 | `notes` | Small Text |  |  |
+| `pricing_factor` | Float |  | read_only |
+| `financial_rule_version` | Data |  | read_only |
+| `previous_unit_price` | Currency |  | read_only |
+| `previous_line_value` | Currency |  | read_only |
 
 ## Validation Checklist
 

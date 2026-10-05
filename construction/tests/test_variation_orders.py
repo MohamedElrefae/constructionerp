@@ -151,6 +151,157 @@ class TestVariationOrders(FrappeTestCase):
         self.assertEqual(node["vo_value_delta"], 500)
         self.assertEqual(node["revised_value"], 5500)
 
+    def test_factor_scaled_vo_projection_and_incremental_deltas(self):
+        header, item = self._make_boq_item("VO Factor Projection", quantity=100, rate=50)
+        item.factor = 0.5
+        item.save(ignore_permissions=True)
+        self._move_header_to_locked(header.name)
+
+        first = self._make_vo(header.name, item.name, revised_qty=110, revised_rate=50)
+        first.insert(ignore_permissions=True)
+        first = self._approve_by_client(self._approve_to_engineer(first))
+        first_revision = frappe.get_doc("BOQ Quantity Revision", first.lines[0].created_quantity_revision)
+        self.assertEqual(first_revision.pricing_factor, 0.5)
+        self.assertEqual(first_revision.delta_value, 250)
+
+        row = next(row for row in get_revised_boq_rows(header.name) if row["boq_item"] == item.name)
+        self.assertEqual(row["revised_qty"], 110)
+        self.assertEqual(row["vo_value_delta"], 250)
+        self.assertEqual(row["revised_value"], 2750)
+        self.assertEqual(header.reload().total_revised_value, 2750)
+
+        second = self._make_vo(header.name, item.name, revised_qty=120, revised_rate=50)
+        second.insert(ignore_permissions=True)
+        second = self._approve_by_client(self._approve_to_engineer(second))
+        second_revision = frappe.get_doc("BOQ Quantity Revision", second.lines[0].created_quantity_revision)
+        self.assertEqual(second_revision.previous_qty, 110)
+        self.assertEqual(second_revision.delta_qty, 10)
+        self.assertEqual(second_revision.delta_value, 250)
+
+        row = next(row for row in get_revised_boq_rows(header.name) if row["boq_item"] == item.name)
+        self.assertEqual(row["vo_qty_delta"], 20)
+        self.assertEqual(row["vo_value_delta"], 500)
+        self.assertEqual(row["revised_value"], 3000)
+        self.assertEqual(header.reload().total_revised_value, 3000)
+
+    def test_client_approved_vo_snapshot_survives_resaves_and_rejects_tampering(self):
+        header, item = self._make_boq_item("VO Frozen Snapshot", quantity=100, rate=50)
+        item.factor = 0.5
+        item.save(ignore_permissions=True)
+        self._move_header_to_locked(header.name)
+        vo = self._make_vo(header.name, item.name, revised_qty=110, revised_rate=50)
+        vo.insert(ignore_permissions=True)
+        vo = self._approve_by_client(self._approve_to_engineer(vo))
+
+        line_fields = (
+            "previous_qty",
+            "previous_unit_price",
+            "pricing_factor",
+            "delta_qty",
+            "delta_from_contract_qty",
+            "contract_line_value",
+            "previous_line_value",
+            "revised_line_value",
+            "line_delta_value",
+            "financial_rule_version",
+        )
+        before_line = {field: vo.lines[0].get(field) for field in line_fields}
+        before_total = vo.total_contract_delta
+        before_revision_count = frappe.db.count("BOQ Quantity Revision", {"variation_order": vo.name})
+
+        for _ in range(2):
+            vo.save(ignore_permissions=True)
+            vo.reload()
+            self.assertEqual({field: vo.lines[0].get(field) for field in line_fields}, before_line)
+            self.assertEqual(vo.total_contract_delta, before_total)
+            self.assertEqual(
+                frappe.db.count("BOQ Quantity Revision", {"variation_order": vo.name}), before_revision_count
+            )
+
+        tampered = frappe.get_doc("Variation Order", vo.name)
+        tampered.lines[0].line_delta_value = before_line["line_delta_value"] + 1
+        with self.assertRaises(frappe.ValidationError):
+            tampered.save(ignore_permissions=True)
+
+        persisted = frappe.get_doc("Variation Order", vo.name)
+        self.assertEqual({field: persisted.lines[0].get(field) for field in line_fields}, before_line)
+        self.assertEqual(persisted.total_contract_delta, before_total)
+
+    def test_variation_item_standalone_correction_updates_report_and_export_tree(self):
+        from construction.services.quantity_revisions import (
+            approve_quantity_revision,
+            create_quantity_revision,
+        )
+        from construction.services.variation_orders import get_revised_variation_rows
+
+        header, _item = self._make_boq_item("Variation Item Correction", quantity=100, rate=50)
+        group = frappe.get_doc(
+            {
+                "doctype": "BOQ Structure",
+                "boq_header": header.name,
+                "title": "Variation Group",
+                "is_group": 1,
+            }
+        ).insert(ignore_permissions=True)
+        self._move_header_to_locked(header.name)
+        vo = frappe.get_doc(
+            {
+                "doctype": "Variation Order",
+                "boq_header": header.name,
+                "status": "Draft",
+                "lines": [
+                    {
+                        "doctype": "VO Line",
+                        "line_type": "New Item",
+                        "boq_structure": group.name,
+                        "title": "Variation item",
+                        "unit": self._get_uom(),
+                        "revised_qty": 12,
+                        "revised_unit_price": 80,
+                        "rate_change_justification": "Approved additional scope.",
+                    }
+                ],
+            }
+        ).insert(ignore_permissions=True)
+        vo = self._approve_by_client(self._approve_to_engineer(vo))
+        variation_item = frappe.get_doc("BOQ Item", vo.lines[0].created_boq_item)
+        correction = create_quantity_revision(
+            boq_item=variation_item.name,
+            previous_qty=12,
+            revised_qty=14,
+            contract_unit_price=80,
+            revised_unit_price=80,
+            reason="Correct approved variation quantity",
+            rate_change_justification="Quantity correction reviewed.",
+        )
+        approve_quantity_revision(correction.name)
+
+        revised_row = next(
+            row for row in get_revised_variation_rows(header.name) if row.boq_item == variation_item.name
+        )
+        self.assertEqual(revised_row.delta_qty, 14)
+        self.assertEqual(revised_row.revised_unit_price, 80)
+        self.assertEqual(revised_row.revised_line_value, 1120)
+        tree_row = next(
+            row
+            for row in BOQExportService.get_tree_data(header.name)
+            if row["name"] == variation_item.structure
+        )
+        self.assertEqual(tree_row["revised_qty"], 14)
+        self.assertEqual(tree_row["revised_value"], 1120)
+
+    def test_revised_reports_reject_legacy_zero_factor(self):
+        from construction.services.revised_boq_queries import get_revised_boq
+
+        header, item = self._make_boq_item("Invalid Factor Report", quantity=100, rate=50)
+        self._move_header_to_locked(header.name)
+        frappe.db.set_value("BOQ Item", item.name, "factor", 0)
+
+        with self.assertRaises(frappe.ValidationError):
+            get_revised_boq_rows(header.name)
+        with self.assertRaises(frappe.ValidationError):
+            get_revised_boq(header.name)
+
     def test_excel_export_includes_revised_boq_columns(self):
         import openpyxl
 

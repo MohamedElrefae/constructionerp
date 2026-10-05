@@ -3,15 +3,19 @@ from frappe import _
 from frappe.utils import cint
 from frappe.utils.nestedset import NestedSet
 
+from construction.services.boq_transactions import lock_boq_header
+
 
 class BOQStructure(NestedSet):
     nsm_parent_field = "parent_structure"
 
     def validate(self):
+        lock_boq_header(self.boq_header)
         self.enforce_boq_status()
         self.sync_rollup_fields()
 
     def before_insert(self):
+        lock_boq_header(self.boq_header, before_insert=True)
         if not self.flags.get("ignore_wbs_generation"):
             self.wbs_code = self.generate_wbs_code()
 
@@ -25,6 +29,7 @@ class BOQStructure(NestedSet):
         self._trigger_header_rollup()
 
     def on_trash(self):
+        lock_boq_header(self.boq_header)
         if not self.is_group:
             from construction.services.boq_lifecycle import validate_boq_structure_leaf_delete_safety
 
@@ -197,7 +202,7 @@ class BOQStructure(NestedSet):
     def enforce_boq_status(self):
         if self.flags.get("ignore_boq_status_for_variation") and self.is_variation_item:
             return
-        status = frappe.db.get_value("BOQ Header", self.boq_header, "status")
+        status = lock_boq_header(self.boq_header).status
         if status in ("Frozen", "Locked"):
             frappe.throw(_("Cannot modify BOQ Structure: BOQ is {0}.").format(status))
 
@@ -235,7 +240,7 @@ class BOQStructure(NestedSet):
         )
 
     def ensure_draft_for_conversion(self):
-        status = frappe.db.get_value("BOQ Header", self.boq_header, "status")
+        status = lock_boq_header(self.boq_header).status
         if status != "Draft":
             frappe.throw(_("Cannot convert BOQ Structure nodes unless BOQ Header is Draft."))
 

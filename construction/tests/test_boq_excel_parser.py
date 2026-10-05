@@ -733,7 +733,12 @@ def run_boq_print_format_registration_smoke() -> dict:
             header.name, "General Site Works", "01", is_group=1, title_ar="أعمال الموقع العام"
         )
         _insert_manual_structure(
-            header.name, "Site Preparation", "01.001", is_group=0, parent_structure=root.name, title_ar="تجهيز الموقع"
+            header.name,
+            "Site Preparation",
+            "01.001",
+            is_group=0,
+            parent_structure=root.name,
+            title_ar="تجهيز الموقع",
         )
         context = {
             "header": BOQExportService.get_boq_header_data(header.name),
@@ -853,6 +858,39 @@ class TestBOQExcelParser(FrappeTestCase):
             self.assertEqual(result["preview_tree"][1]["parent"], "10")
         finally:
             os.remove(path)
+
+    def test_explicit_zero_negative_and_invalid_factor_are_preview_errors(self):
+        for factor in (0, -1, "NaN", "Infinity", "invalid"):
+            with self.subTest(factor=factor):
+                path = _make_workbook(
+                    [
+                        ["Description", "Unit", "Quantity", "Unit Price", "Factor"],
+                        ["Concrete", "m3", 10, 100, factor],
+                    ]
+                )
+                try:
+                    result = BOQImportService.parse_workbook(path)
+                    self.assertFalse(result["success"])
+                    self.assertIn("invalid_factor", [error["code"] for error in result["errors"]])
+                finally:
+                    os.remove(path)
+
+    def test_missing_and_fractional_factors_preserve_their_meaning(self):
+        for factor, expected in ((None, 1), (0.5, 0.5)):
+            with self.subTest(factor=factor):
+                path = _make_workbook(
+                    [
+                        ["Description", "Unit", "Quantity", "Unit Price", "Factor"],
+                        ["Concrete", "m3", 10, 100, factor],
+                    ]
+                )
+                try:
+                    result = BOQImportService.parse_workbook(path)
+                    self.assertTrue(result["success"])
+                    item = next(row for row in result["preview_rows"] if row["detected_type"] == "Item")
+                    self.assertEqual(item["normalized"]["factor"], expected)
+                finally:
+                    os.remove(path)
 
 
 def _ensure_header():

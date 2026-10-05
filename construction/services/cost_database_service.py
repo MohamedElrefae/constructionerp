@@ -1,10 +1,15 @@
 import io
+import posixpath
+import xml.etree.ElementTree as ET
+import zipfile
 from datetime import datetime
 
 import frappe
 from frappe import _
 from frappe.utils import cint, flt, getdate, today
 
+from construction.services.boq_import_service import BOQImportService
+from construction.services.boq_pricing import number
 from construction.services.resource_price_service import get_suggested_rate
 
 # ---------------------------------------------------------------------------
@@ -15,6 +20,13 @@ from construction.services.resource_price_service import get_suggested_rate
 # Subcontract, Overhead). Used to validate an incoming cost_stream filter so a
 # mistyped or unfiltered request can never widen beyond the requested stream.
 VALID_COST_STREAMS = frozenset({"M", "L", "P", "S", "O"})
+
+# Keep the offered import path within the established BOQ XLSX safety envelope.
+COST_DATABASE_MAX_FILE_SIZE_BYTES = BOQImportService.MAX_FILE_SIZE
+COST_DATABASE_MAX_WORKSHEETS = 10
+COST_DATABASE_MAX_IMPORTED_ROWS = 2000
+COST_DATABASE_MAX_TRAVERSED_ROWS = 50000
+COST_DATABASE_MAX_RESULT_MESSAGES = 100
 
 
 def bulk_reprice_analyses(
@@ -63,11 +75,12 @@ def bulk_reprice_analyses(
     if company:
         filters["company"] = company
 
-    analysis_names = frappe.db.get_all(
+    analysis_names = frappe.get_list(
         "BOQ Cost Analysis",
         filters=filters,
         pluck="name",
         order_by="modified desc",
+        limit_page_length=0,
     )
 
     detail_filters = {}
@@ -88,10 +101,11 @@ def bulk_reprice_analyses(
         # BOQ Cost Analysis Detail rows carry no resource_type field; resolve it
         # from the linked Item's construction_resource_type custom field instead.
         resource_type_items = set(
-            frappe.get_all(
+            frappe.get_list(
                 "Item",
                 filters={"construction_resource_type": resource_type},
                 pluck="name",
+                limit_page_length=0,
             )
         )
         if not resource_type_items:
@@ -195,16 +209,12 @@ def _apply_bulk_reprice_to_analysis(
     # (item_code, supplier): two rows can legitimately share the same item and
     # supplier while belonging to different cost streams. Keying eligibility on
     # the tuple would let one stream's filter update a row of another stream.
-    eligible_by_name = None
-    if cost_stream:
-        eligible_by_name = {r.get("name") for r in rows_for_doc if r.get("name")}
+    eligible_by_name = {r.get("name") for r in rows_for_doc if r.get("name")}
 
     for row in doc.get("details") or []:
-        if cost_stream:
-            # Only repricing rows whose exact child row was pre-filtered as
-            # belonging to the requested stream.
-            if row.get("name") not in eligible_by_name:
-                continue
+        # Every filter (resource code/type/stream) applies to exact rows.
+        if row.get("name") not in eligible_by_name:
+            continue
 
         # Match the preloaded detail row so row.item_code/supplier are canonical.
         suggested = bulk_rate_lookup.resolve(
@@ -306,7 +316,7 @@ def _build_bulk_rate_lookup(item_codes, as_of_date=None):
         rph_filters = [["item_code", "in", item_list], ["status", "Active"]]
         if as_of_date:
             rph_filters.append(["price_date", "<=", as_of_date])
-        history_rows = frappe.get_all(
+        history_rows = frappe.get_list(
             "Resource Price History",
             filters=rph_filters,
             fields=[
@@ -324,7 +334,7 @@ def _build_bulk_rate_lookup(item_codes, as_of_date=None):
             limit_page_length=0,
         )
         # Item Price fallback (Standard Buying, buying).
-        price_rows = frappe.get_all(
+        price_rows = frappe.get_list(
             "Item Price",
             filters=[["item_code", "in", item_list], ["buying", 1], ["price_list", "Standard Buying"]],
             fields=["item_code", "price_list_rate"],
@@ -386,6 +396,14 @@ COLUMN_ALIASES = {
     "description_ar": ["description_ar", "الوصف عربي"],
     "overhead_pct": ["overhead_pct", "overhead", "نسبة العمارة"],
     "profit_pct": ["profit_pct", "profit", "نسبة الربح"],
+    "tender_tax_pct": [
+        "tender_tax_pct",
+        "tax_allowance_pct",
+        "tender_tax",
+        "tax_allowance",
+        "نسبة ضريبة المناقصة",
+        "نسبة الضريبة",
+    ],
     "qty_per_boq_unit": ["qty_per_boq_unit", "quantity", "الكمية", "coef", "qty"],
     "wastage_pct": ["wastage_pct", "wastage", "الهالك", "loss", "wastage_percent"],
     "cost_rate": ["cost_rate", "cost_rate", "سعر الوحدة", "unit_cost"],
@@ -466,9 +484,24 @@ def import_cost_database_from_excel(
         "boq_cost_analysis_templates": [],
     }
 
+    if not isinstance(file_content, (bytes, bytearray)):
+        errors.append("Excel file content must be bytes")
+        return _build_result(False, dry_run, records_created, errors, warnings)
+    if len(file_content) > COST_DATABASE_MAX_FILE_SIZE_BYTES:
+        limit_mib = COST_DATABASE_MAX_FILE_SIZE_BYTES // (1024 * 1024)
+        errors.append(f"Uploaded file exceeds the maximum allowed size of {limit_mib} MiB")
+        return _build_result(False, dry_run, records_created, errors, warnings)
+
     if not company:
         errors.append("company is required")
         return _build_result(False, dry_run, records_created, errors, warnings)
+
+    if frappe.session.user != "Administrator":
+        # Preview and commit have the same authorization contract. Validate
+        # before parsing or returning company defaults/existing record names.
+        frappe.has_permission("Company", "read", doc=company, throw=True)
+        for doctype in ("Resource Price History", "Item", "BOQ Cost Analysis"):
+            frappe.has_permission(doctype, "create", throw=True)
 
     if not frappe.db.exists("Company", company):
         errors.append(f"Company {company} does not exist")
@@ -478,9 +511,17 @@ def import_cost_database_from_excel(
     default_price_date = price_date or today()
 
     try:
-        wb = openpyxl.load_workbook(io.BytesIO(file_content), data_only=True)
+        # Reuse the BOQ importer's ZIP/XML pre-scan before openpyxl can parse
+        # worksheet objects. The archive is already bounded to 25 MiB.
+        sheet_bounds = _prescan_cost_database_xlsx(file_content)
+        wb = openpyxl.load_workbook(io.BytesIO(file_content), data_only=True, read_only=True)
     except Exception as e:
-        errors.append(f"Could not read Excel file: {str(e)}")
+        errors.append(f"Could not read Excel file safely: {str(e)}")
+        return _build_result(False, dry_run, records_created, errors, warnings)
+
+    if len(wb.worksheets) > COST_DATABASE_MAX_WORKSHEETS:
+        wb.close()
+        errors.append(f"Workbook contains more than {COST_DATABASE_MAX_WORKSHEETS} worksheets")
         return _build_result(False, dry_run, records_created, errors, warnings)
 
     resources_sheet = _find_sheet(wb, ["Resources", "resources", "موارد"])
@@ -492,18 +533,45 @@ def import_cost_database_from_excel(
     )
 
     if not resources_sheet:
+        wb.close()
         errors.append("Resources sheet not found")
         return _build_result(False, dry_run, records_created, errors, warnings)
     if not templates_sheet:
+        wb.close()
         errors.append("BOQItemTemplates sheet not found")
         return _build_result(False, dry_run, records_created, errors, warnings)
     if not rate_sheet:
+        wb.close()
         errors.append("RateAnalysis sheet not found")
         return _build_result(False, dry_run, records_created, errors, warnings)
 
-    resources_data = _sheet_to_records(resources_sheet)
-    templates_data = _sheet_to_records(templates_sheet)
-    rate_data = _sheet_to_records(rate_sheet)
+    for sheet in (resources_sheet, templates_sheet, rate_sheet):
+        # Read-only mode trusts declared dimensions. The pre-scan found real
+        # XML bounds, so clear the cache before iterating with those bounds.
+        sheet.reset_dimensions()
+
+    try:
+        remaining_rows = COST_DATABASE_MAX_IMPORTED_ROWS
+        remaining_traversed = COST_DATABASE_MAX_TRAVERSED_ROWS
+        resources_data, traversed = _sheet_to_records(
+            resources_sheet, remaining_rows, remaining_traversed, sheet_bounds[resources_sheet.title]
+        )
+        remaining_rows -= len(resources_data)
+        remaining_traversed -= traversed
+        templates_data, traversed = _sheet_to_records(
+            templates_sheet, remaining_rows, remaining_traversed, sheet_bounds[templates_sheet.title]
+        )
+        remaining_rows -= len(templates_data)
+        remaining_traversed -= traversed
+        rate_data, _ = _sheet_to_records(
+            rate_sheet, remaining_rows, remaining_traversed, sheet_bounds[rate_sheet.title]
+        )
+    except (ValueError, frappe.ValidationError) as e:
+        wb.close()
+        errors.append(str(e))
+        return _build_result(False, dry_run, records_created, errors, warnings)
+    finally:
+        wb.close()
 
     # --- Validate headers ---
     if resources_data:
@@ -523,6 +591,28 @@ def import_cost_database_from_excel(
         return _build_result(False, dry_run, records_created, errors, warnings)
 
     # --- Build lookup maps ---
+    for sheet_name, rows, fields in (
+        ("Resources", resources_data, ("unit_price_egp", "exchange_rate")),
+        ("BOQItemTemplates", templates_data, ("overhead_pct", "profit_pct", "tender_tax_pct")),
+        ("RateAnalysis", rate_data, ("qty_per_boq_unit", "wastage_pct", "cost_rate")),
+    ):
+        for index, row in enumerate(rows, start=2):
+            for field in fields:
+                value = row.get(field)
+                if field == "exchange_rate" and value in (None, ""):
+                    value = 1
+                try:
+                    row[field] = number(
+                        value,
+                        field,
+                        maximum=100 if field.endswith("_pct") else None,
+                        positive=field == "exchange_rate",
+                    )
+                except frappe.ValidationError as exc:
+                    errors.append(f"{sheet_name} row {index}: {exc}")
+    if errors:
+        return _build_result(False, dry_run, records_created, errors, warnings)
+
     resource_code_to_name = {}
     template_name_to_doc = {}
 
@@ -583,6 +673,34 @@ def import_cost_database_from_excel(
     if errors:
         return _build_result(False, dry_run, records_created, errors, warnings)
 
+    if frappe.session.user != "Administrator":
+        for row in resources_data:
+            code = _clean_string(row.get("resource_code"))
+            if code and frappe.db.exists("Item", code):
+                frappe.has_permission("Item", "write", doc=code, throw=True)
+            uom = _clean_string(row.get("uom"))
+            if uom and not frappe.db.exists("UOM", uom):
+                frappe.has_permission("UOM", "create", throw=True)
+        for row in templates_data:
+            existing = frappe.db.get_value(
+                "BOQ Cost Analysis",
+                {
+                    "template_name": _clean_string(row.get("template_name")),
+                    "company": company,
+                    "is_template": 1,
+                },
+                "name",
+            )
+            if existing:
+                doc = frappe.get_doc("BOQ Cost Analysis", existing)
+                frappe.has_permission(
+                    "BOQ Cost Analysis", "read" if doc.docstatus else "write", doc=doc, throw=True
+                )
+                if auto_submit and doc.docstatus == 0:
+                    frappe.has_permission("BOQ Cost Analysis", "submit", doc=doc, throw=True)
+        if auto_submit:
+            frappe.has_permission("BOQ Cost Analysis", "submit", throw=True)
+
     if dry_run:
         return _build_result(True, dry_run, records_created, errors, warnings)
 
@@ -617,7 +735,7 @@ def import_cost_database_from_excel(
         # Ensure UOM exists
         if uom and not frappe.db.exists("UOM", uom):
             try:
-                frappe.get_doc({"doctype": "UOM", "uom_name": uom}).insert(ignore_permissions=True)
+                frappe.get_doc({"doctype": "UOM", "uom_name": uom}).insert()
             except Exception as e:
                 warnings.append(f"Could not create UOM {uom}: {str(e)}")
 
@@ -638,7 +756,7 @@ def import_cost_database_from_excel(
                         "default_cost_stream": cost_stream,
                     }
                 )
-                item_doc.insert(ignore_permissions=True)
+                item_doc.insert()
                 records_created["items"].append(resource_code)
             except Exception as e:
                 errors.append(f"Resources row {idx}: failed to create Item {resource_code}: {str(e)}")
@@ -663,7 +781,7 @@ def import_cost_database_from_excel(
                     item_doc.default_cost_stream = cost_stream
                     changed = True
                 if changed:
-                    item_doc.save(ignore_permissions=True)
+                    item_doc.save()
                     records_updated["items"].append(resource_code)
             except Exception as e:
                 warnings.append(f"Resources row {idx}: failed to update Item {resource_code}: {str(e)}")
@@ -705,7 +823,7 @@ def import_cost_database_from_excel(
                         "remarks": remarks,
                     }
                 )
-                history.insert(ignore_permissions=True)
+                history.insert()
                 records_created["resource_price_history"].append(history.name)
         except Exception as e:
             errors.append(f"Resources row {idx}: failed to create Resource Price History: {str(e)}")
@@ -721,6 +839,9 @@ def import_cost_database_from_excel(
         uom = _clean_string(row.get("uom"))
         overhead_pct = flt(row.get("overhead_pct"))
         profit_pct = flt(row.get("profit_pct"))
+        # Preserve malformed inputs for the controller's numeric validation;
+        # flt("invalid") would silently turn a tax allowance into zero.
+        tender_tax_pct = row.get("tender_tax_pct")
         currency = _clean_string(row.get("currency")) or default_currency
 
         # Build details from rate analysis
@@ -766,6 +887,7 @@ def import_cost_database_from_excel(
                 existing_doc.analysis_uom = uom
                 existing_doc.overhead_pct = overhead_pct
                 existing_doc.profit_pct = profit_pct
+                existing_doc.tender_tax_pct = tender_tax_pct
                 existing_doc.currency = currency
                 existing_doc.details = []
                 for detail in details:
@@ -773,7 +895,7 @@ def import_cost_database_from_excel(
                 if auto_submit:
                     existing_doc.submit()
                 else:
-                    existing_doc.save(ignore_permissions=True)
+                    existing_doc.save()
                 records_updated["boq_cost_analysis_templates"].append(existing_template)
                 continue
 
@@ -791,11 +913,12 @@ def import_cost_database_from_excel(
                     "company": company,
                     "overhead_pct": overhead_pct,
                     "profit_pct": profit_pct,
+                    "tender_tax_pct": tender_tax_pct,
                     "analysis_status": "Draft",
                     "details": details,
                 }
             )
-            analysis.insert(ignore_permissions=True)
+            analysis.insert()
 
             if auto_submit:
                 analysis.submit()
@@ -882,6 +1005,7 @@ def generate_cost_database_template(mode="blank"):
         "uom",
         "overhead_pct",
         "profit_pct",
+        "tender_tax_pct",
         "currency",
     ]
     ws_tpl = wb.create_sheet("BOQItemTemplates")
@@ -1167,6 +1291,7 @@ def _add_sample_templates(ws):
             "m³",
             12,
             8,
+            0,
             "EGP",
         ],
         [
@@ -1177,9 +1302,10 @@ def _add_sample_templates(ws):
             "m³",
             12,
             8,
+            0,
             "EGP",
         ],
-        ["02-WALL-BRK-10", "10 cm Red Brick Wall", "حائط طوب أحمر 10 سم", "Blockwork", "m²", 10, 8, "EGP"],
+        ["02-WALL-BRK-10", "10 cm Red Brick Wall", "حائط طوب أحمر 10 سم", "Blockwork", "m²", 10, 8, 0, "EGP"],
     ]
     for row in sample:
         ws.append(row)
@@ -1212,23 +1338,185 @@ def _find_sheet(wb, candidates):
     return None
 
 
-def _sheet_to_records(sheet):
-    """Convert an openpyxl sheet to a list of dicts with normalized column names."""
-    if not sheet or sheet.max_row < 2:
-        return []
+def _prescan_cost_database_xlsx(file_content):
+    """Apply shared archive guards and scan worksheet parts resolved via workbook relationships."""
+    archive = io.BytesIO(file_content)
+    BOQImportService._prescan_xlsx(archive)
+    archive.seek(0)
+    try:
+        with zipfile.ZipFile(archive, "r") as workbook_zip:
+            relationships = {}
+            with workbook_zip.open("xl/_rels/workbook.xml.rels") as stream:
+                for _, element in ET.iterparse(stream, events=("end",)):
+                    if element.tag.rsplit("}", 1)[-1] == "Relationship":
+                        rel_id = element.get("Id")
+                        rel_type = element.get("Type") or ""
+                        if rel_id and rel_type.endswith("/worksheet"):
+                            target_mode = (element.get("TargetMode") or "").lower()
+                            target = element.get("Target") or ""
+                            relationships[rel_id] = _resolve_worksheet_target(target, target_mode)
+                    element.clear()
 
-    headers = []
-    for cell in sheet[1]:
-        headers.append(_canonical_column(cell.value))
+            sheet_refs = []
+            with workbook_zip.open("xl/workbook.xml") as stream:
+                for _, element in ET.iterparse(stream, events=("end",)):
+                    if element.tag.rsplit("}", 1)[-1] == "sheet":
+                        rel_id = next(
+                            (
+                                value
+                                for key, value in element.attrib.items()
+                                if key.rsplit("}", 1)[-1] == "id"
+                            ),
+                            None,
+                        )
+                        sheet_refs.append((element.get("name") or "", rel_id))
+                    element.clear()
+            if len(sheet_refs) > COST_DATABASE_MAX_WORKSHEETS:
+                raise ValueError(f"Workbook contains more than {COST_DATABASE_MAX_WORKSHEETS} worksheets")
+            worksheet_targets = []
+            for title, rel_id in sheet_refs:
+                if not rel_id or rel_id not in relationships:
+                    raise ValueError(f"Worksheet {title!r} has no internal worksheet relationship")
+                worksheet_targets.append((title, relationships[rel_id]))
+            target_names = [target for _, target in worksheet_targets]
+            if len(set(target_names)) != len(target_names):
+                raise ValueError("Multiple worksheet entries resolve to the same XML part")
+            if len(worksheet_targets) > COST_DATABASE_MAX_WORKSHEETS:
+                raise ValueError(
+                    f"Workbook archive contains more than {COST_DATABASE_MAX_WORKSHEETS} worksheet parts"
+                )
+            sheet_bounds = {}
+            for title, name in worksheet_targets:
+                try:
+                    info = workbook_zip.getinfo(name)
+                except KeyError as exc:
+                    raise ValueError(f"Worksheet XML part {name!r} is missing") from exc
+                sheet_bounds[title] = _prescan_worksheet_part(workbook_zip, info, title)
+            return sheet_bounds
+    except (KeyError, zipfile.BadZipFile, ET.ParseError, ValueError) as exc:
+        raise ValueError(f"Invalid or unsafe cost database workbook: {exc}") from exc
+
+
+def _resolve_worksheet_target(target, target_mode=""):
+    """Resolve relationship targets while confining them to worksheet parts."""
+    if target_mode == "external" or not target or "\\" in target or "?" in target or "#" in target:
+        raise ValueError("External or invalid worksheet relationship target")
+    from urllib.parse import unquote
+
+    decoded = unquote(target)
+    if any(part in (".", "..") for part in decoded.split("/")):
+        raise ValueError("Worksheet relationship target contains a traversal segment")
+    if decoded.startswith("/"):
+        if not decoded.startswith("/xl/"):
+            raise ValueError("Absolute worksheet relationship target is outside the workbook")
+        resolved = posixpath.normpath(decoded.lstrip("/"))
+    else:
+        resolved = posixpath.normpath(posixpath.join("xl", decoded))
+    if not resolved.startswith("xl/worksheets/") or resolved == "xl/worksheets/":
+        raise ValueError("Worksheet relationship target is outside xl/worksheets")
+    return resolved
+
+
+def _prescan_worksheet_part(workbook_zip, info, title):
+    """Enforce worksheet XML size, dimensions, row/cell coordinates, and merge bounds."""
+    if info.file_size > BOQImportService.MAX_WORKSHEET_XML_BYTES:
+        raise ValueError(f"Worksheet {title!r} XML part exceeds its size limit")
+    row_count = 0
+    max_row = 0
+    max_column = 0
+    merge_count = 0
+    merged_area = 0
+    with workbook_zip.open(info, "r") as stream:
+        for _, element in ET.iterparse(stream, events=("end",)):
+            local_name = element.tag.rsplit("}", 1)[-1]
+            if local_name == "dimension":
+                declared_row, declared_column = BOQImportService._dimension_bounds(element.get("ref") or "")
+                if declared_row > BOQImportService.MAX_ROWS or declared_column > BOQImportService.MAX_COLS:
+                    raise ValueError(f"Worksheet {title!r} declared dimensions exceed safety limits")
+                max_row = max(max_row, declared_row)
+                max_column = max(max_column, declared_column)
+            elif local_name == "row":
+                row_count += 1
+                row_text = element.get("r")
+                if row_text and not row_text.isdigit():
+                    raise ValueError(f"Worksheet {title!r} has an invalid row coordinate")
+                actual_row = int(row_text) if row_text else row_count
+                if actual_row < 1 or actual_row > BOQImportService.MAX_ROWS:
+                    raise ValueError(f"Worksheet {title!r} row coordinate exceeds safety limits")
+                max_row = max(max_row, actual_row)
+            elif local_name == "c":
+                actual_row, actual_column = BOQImportService._cell_ref_to_indices(element.get("r") or "")
+                if (
+                    not actual_row
+                    or not actual_column
+                    or actual_row > BOQImportService.MAX_ROWS
+                    or actual_column > BOQImportService.MAX_COLS
+                ):
+                    raise ValueError(f"Worksheet {title!r} cell coordinate exceeds safety limits")
+                max_row = max(max_row, actual_row)
+                max_column = max(max_column, actual_column)
+            elif local_name == "mergeCell":
+                merge_count += 1
+                if merge_count > BOQImportService.MAX_MERGED_RANGES:
+                    raise ValueError(f"Worksheet {title!r} has too many merged ranges")
+                ref = element.get("ref") or ""
+                merged_area += BOQImportService._merged_range_cell_area(ref)
+                endpoints = ref.split(":")
+                if len(endpoints) != 2:
+                    raise ValueError(f"Worksheet {title!r} has an invalid merged range")
+                first_row, first_column = BOQImportService._cell_ref_to_indices(endpoints[0])
+                last_row, last_column = BOQImportService._cell_ref_to_indices(endpoints[1])
+                if not all((first_row, first_column, last_row, last_column)):
+                    raise ValueError(f"Worksheet {title!r} has an invalid merged range")
+                merged_row = max(first_row, last_row)
+                merged_column = max(first_column, last_column)
+                if (
+                    merged_area > BOQImportService.MAX_TOTAL_MERGED_CELLS
+                    or merged_row > BOQImportService.MAX_ROWS
+                    or merged_column > BOQImportService.MAX_COLS
+                ):
+                    raise ValueError(f"Worksheet {title!r} merged ranges exceed safety limits")
+                max_row = max(max_row, merged_row)
+                max_column = max(max_column, merged_column)
+            element.clear()
+    if row_count > BOQImportService.MAX_ROWS:
+        raise ValueError(f"Worksheet {title!r} exceeds its row-count limit")
+    return max(max_row, 1), max(max_column, 1)
+
+
+def _sheet_to_records(
+    sheet,
+    imported_row_limit=COST_DATABASE_MAX_IMPORTED_ROWS,
+    traversed_row_limit=COST_DATABASE_MAX_TRAVERSED_ROWS,
+    verified_bounds=(1, 1),
+):
+    """Convert an openpyxl sheet to a list of dicts with normalized column names."""
+    if not sheet:
+        return [], 0
+
+    max_row, max_column = verified_bounds
+    header_rows = sheet.iter_rows(min_row=1, max_row=1, max_col=max_column, values_only=True)
+    headers = [_canonical_column(value) for value in next(header_rows, ())]
 
     records = []
-    for row in sheet.iter_rows(min_row=2, values_only=True):
+    traversed_rows = 0
+    for row in sheet.iter_rows(min_row=2, max_row=max_row, max_col=max_column, values_only=True):
+        traversed_rows += 1
+        if traversed_rows > traversed_row_limit:
+            raise ValueError(
+                f"Cost database workbook exceeds the {COST_DATABASE_MAX_TRAVERSED_ROWS}-row traversal safety limit"
+            )
         record = {}
         for idx, value in enumerate(row):
             if idx < len(headers):
                 record[headers[idx]] = value
-        records.append(record)
-    return records
+        if any(value is not None and value != "" for value in row):
+            if len(records) >= imported_row_limit:
+                raise ValueError(
+                    f"Cost database workbook exceeds the {COST_DATABASE_MAX_IMPORTED_ROWS}-imported-row limit"
+                )
+            records.append(record)
+    return records, traversed_rows
 
 
 def _canonical_column(value):
@@ -1276,6 +1564,8 @@ def _parse_date(value):
 def _build_result(
     success, dry_run, records_created, errors, warnings, records_updated=None, records_skipped=None
 ):
+    errors = _bounded_result_messages(errors)
+    warnings = _bounded_result_messages(warnings)
     return {
         "success": success,
         "dry_run": dry_run,
@@ -1285,3 +1575,13 @@ def _build_result(
         "errors": errors,
         "warnings": warnings,
     }
+
+
+def _bounded_result_messages(messages):
+    messages = list(messages or [])
+    if len(messages) <= COST_DATABASE_MAX_RESULT_MESSAGES:
+        return messages
+    return [
+        *messages[: COST_DATABASE_MAX_RESULT_MESSAGES - 1],
+        f"{len(messages) - COST_DATABASE_MAX_RESULT_MESSAGES + 1} additional messages omitted",
+    ]

@@ -14,11 +14,11 @@
     "docs/ai/work-items/bilingual-financial-reports/evidence/report-p95-measurement.json": "7b7404831cfbf35c29e1a092eb4374e3eb0fa94193df0ddf001955c6231be8e4",
     "docs/ai/work-items/bilingual-financial-reports/evidence/scripts/probe_report_execution.py": "a8c5053382a06968f17d5b2e85aade6b43cf28ad5781adb6de97dbbd099e0fb0",
     "docs/ai/work-items/bilingual-financial-reports/evidence/scripts/measure_report_p95.py": "c859dd8cc9caba02052feea1298d73e22b8ff73fba2b77a84e2461be59e57ca5",
-    "construction/api/bilingual_reports.py": "eacb19b1a811b95babfa4ea73a1eb8e899fcdcd3357e3b92b5c1a494a78f8337",
+    "construction/api/bilingual_reports.py": "d9970f8d3a834e675b26195871b8f00396c36ec0d0b0b8990ef7563591f0d846",
     "construction/services/report_bilingual_extension.py": "fe841d5db4787f681ea2ab882f31494438b25b9742b45ec102dc0211e9190269",
     "construction/tests/test_stage4_report_extension.py": "0d640f3882a476a92ef8d7c6eeb1e579469df81e18449747b8a657ba01c1b191",
-    "construction/tests/test_stage7_bilingual_reports.py": "d9c92d10782a2917ad0727a064525f91b828431441bfe4d304845b7aa8972372",
-    "construction/hooks.py": "d54bca4f63374dc018a594bd9c3f05477e790a44f39fc2e9b54a54548ba5f73f",
+    "construction/tests/test_stage7_bilingual_reports.py": "b5cff52998c90dc2028a7edfb3d6c5ee01a981670ad4949b303247f7daad9c4f",
+    "construction/hooks.py": "7131a471c9af7983c418983beca71933daef905555b94e0e5b4654e3aa087224",
     "scripts/run_bilingual_regression_matrix.sh": "100d5cc11c913a5584a0b6c7e6d5fce0bb607761690a23a658eaeb5e84350659"
   },
   "amendments": [
@@ -42,6 +42,27 @@
       "cause": "construction/hooks.py registers construction.install.setup_transaction_print_formats in after_install and after_migrate (+2 lines); all 8 prior hooks.py pins matched HEAD(234c024) before this change",
       "fix": "1 digest re-pinned to the post-registration content of construction/hooks.py; no other artefact in this manifest changed",
       "disclosure": "docs/ai/work-items/bilingual-transaction-print-formats/SCOPE.md + that item's MANIFEST.json + evidence/manifest-integrity.log"
+    },
+    {
+      "id": "A4",
+      "when": "customer release integration",
+      "cause": "consolidation merge of customer-release-gap-fixes into develop updating bilingual_reports.py",
+      "fix": "re-pinned construction/api/bilingual_reports.py to post-merge content; verified all tests pass clean",
+      "disclosure": "Consolidation merge commit + amendments entry"
+    },
+    {
+      "id": "A5",
+      "when": "customer release integration",
+      "cause": "consolidation merge of customer-release-gap-fixes into develop updating hooks.py",
+      "fix": "re-pinned construction/hooks.py to post-merge content; verified all tests pass clean",
+      "disclosure": "Consolidation merge commit + amendments entry"
+    },
+    {
+      "id": "A6",
+      "when": "customer release integration",
+      "cause": "consolidation merge of customer-release-gap-fixes into develop updating test_stage7_bilingual_reports.py",
+      "fix": "re-pinned construction/tests/test_stage7_bilingual_reports.py to post-merge content; verified all tests pass clean",
+      "disclosure": "Consolidation merge commit + amendments entry"
     }
   ],
   "base_commit": "dd4ea6d",
