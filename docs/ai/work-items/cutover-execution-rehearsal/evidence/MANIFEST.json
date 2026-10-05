@@ -1,0 +1,20 @@
+{
+  "work_item": "cutover-execution-rehearsal",
+  "manifest_number": 36,
+  "branch": "develop",
+  "base_commit": "355936b",
+  "primary_invariant": "production_mutation_authorized remains unset/false; zero database writes (dry-run only); smoke checks and orchestrator steps rollback in finally; no vendor files modified; local execution only",
+  "test_results": {
+    "preflight": "PASS (P1-P6)",
+    "rehearsal": "D1 PASS (188 already applied, 0 writes); D2 stopped on pre-existing Project count drift (190 vs 189)",
+    "smoke_tests": "PASS (S1-S8)",
+    "gates": "PASS (6 lints, ADR reconciler 19/19, matrix 21/21)"
+  },
+  "artefacts": {
+    "docs/ai/work-items/cutover-execution-rehearsal/SCOPE.md": "5ea83796c0a4f01ff390a80fce04d5456bc3ec943cca6b612607564b7b677f7e",
+    "docs/ai/work-items/cutover-execution-rehearsal/evidence/preflight.log": "e209b1447a207cbd80f44c983b82da970f3eb353c73849c6642a854014a6b665",
+    "docs/ai/work-items/cutover-execution-rehearsal/evidence/rehearsal-execution.log": "6d27227a6974483cce4ac2cb0b77d20d423acc4a1329538b467e215c5d4e6eb7",
+    "docs/ai/work-items/cutover-execution-rehearsal/evidence/smoke-tests.log": "ff8ee0b0f0dd12d111f234deab87320b20c5cb9f4713db0dafa381519b375ccf",
+    "docs/ai/work-items/cutover-execution-rehearsal/evidence/gates.log": "aae6aba9449cf72e57d6502940d827dc40a9d37a88218190ee0c1b4ce051f83c"
+  }
+}

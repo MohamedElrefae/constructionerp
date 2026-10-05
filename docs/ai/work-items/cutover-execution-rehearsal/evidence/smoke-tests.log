@@ -1,0 +1,15 @@
+CUTOVER SMOKE TESTS site=v16.localhost gate=closed budget_ms=1.5 surface=searchable_dropdown.searchable_link_search
+ENV load1=1.37 load5=1.10 load15=0.92 (latency gates are only meaningful on a quiesced bench)
+S1 PASS: registry loaded, arabic+norm columns present and utf8mb4 on all 15 cutover doctypes
+S2 PASS: governance gate closed as expected (production_mutation_authorized=None)
+S8 PASS: redis reachable on queue:11000, cache:13000
+S3 PASS: 30 probes correct; every P95 within its gate (worst 2.737 ms at Account/ar)
+S3-absolute ADVISORY: ADR Tier-1 ceiling 1.50 ms still breached by 2 probes carried from baseline: ['Account/ar', 'Account/en'] — pre-existing drift, not cutover-induced
+S4 ADVISORY: transactional link sidecar has no ratified latency budget; measured from a Customer query — Sales Order: p50=1.327 p95=1.451 max=1.481 | Purchase Order: p50=0.630 p95=0.697 max=0.724 | Material Request: p50=1.443 p95=1.562 max=1.622 | Sales Invoice: p50=1.895 p95=2.068 max=2.072
+S5 PASS: Balance Sheet: 5 columns x 10 rows in 137.7 ms (en mode, company with 4 GL rows)
+S5 PASS: Profit and Loss Statement: 5 columns x 6 rows in 48.4 ms (en mode, company with 4 GL rows)
+S5 PASS: report generation read-only (Account=2102, GL Entry=4 unchanged)
+S6 SKIP: Purchase Order: no documents on this site (nothing to preview — disclosed, not a pass)
+S6 PASS: print previews rendered with document name present: Sales Invoice(17197 chars, <table), Stock Entry(15358 chars, <table), Material Request(11576 chars, <table)
+S7 PASS: maintenance_mode is off (site serving traffic)
+SMOKE RESULT: PASS (9 checks passed, 2 advisory: S3-absolute, S4 (4.7s)

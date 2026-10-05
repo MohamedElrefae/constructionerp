@@ -1,0 +1,107 @@
+== gates (Session 1 - cutover-execution-rehearsal) ==
+Mon Oct  5 10:46:46 PM UTC 2026
+--- scripts/lint_scope_metadata.py
+PASS: no scope-dimension field has in_standard_filter=1 (19 DocTypes checked).
+exit=0
+--- scripts/ai_context_check.py
+
+------------------------------------------------------------
+SCP-C1. Core Memory Files
+------------------------------------------------------------
+  PASS: AGENTS.md exists (13273 bytes)
+  PASS: SESSION_MEMORY.md exists (110335 bytes)
+
+------------------------------------------------------------
+SCP-C2. Git State
+------------------------------------------------------------
+  PASS: Branch: develop
+  PASS: Latest commit: 355936b
+  PASS: Total commits: 506
+
+------------------------------------------------------------
+SCP-C3. BOQ Item Schema
+------------------------------------------------------------
+  PASS: 'cost_item' field exists
+  PASS: 'structure' field exists
+  PASS: 'item_code' correctly ABSENT
+  PASS: 'item_name' correctly ABSENT
+  PASS: Total fields: 48
+
+------------------------------------------------------------
+SCP-C4. BOQ Structure NestedSet
+------------------------------------------------------------
+  PASS: 'is_group' field exists
+  PASS: 'lft' field exists
+  PASS: 'old_parent' field exists
+  PASS: 'rgt' field exists
+  PASS: 'wbs_code' field exists
+
+------------------------------------------------------------
+SCP-C5. CSS Registration
+------------------------------------------------------------
+  PASS: app_include_css has 6 CSS file registrations
+  PASS: 'modern_theme.css' registered
+  PASS: 'scope_context.css' registered
+  PASS: 'vite_extensions.css' registered
+  PASS: 'vite_form_override.css' registered
+  PASS: 'vite_list_override.css' registered
+  PASS: 'vfc_sections.css' registered
+
+------------------------------------------------------------
+SCP-C6. Theme API Endpoints
+------------------------------------------------------------
+  PASS: Whitelisted endpoints: 17
+  PASS: Total functions: 33
+
+------------------------------------------------------------
+SCP-C7. Migration Patches
+------------------------------------------------------------
+  PASS: All expected migration paths exist
+
+------------------------------------------------------------
+SCP-C8. DocType Registry
+------------------------------------------------------------
+  PASS: All 22 expected DocTypes present
+
+------------------------------------------------------------
+SCP-C8B. Schema Facts Drift
+------------------------------------------------------------
+  PASS: docs/ai/SCHEMA_FACTS.md matches live DocType JSON
+
+------------------------------------------------------------
+SCP-C9. CostItem and PlantResource
+------------------------------------------------------------
+  PASS: costitem: 'cost_item_code' field exists
+  PASS: plantresource: 'resource_code' field exists
+
+------------------------------------------------------------
+SCP-C10. Architecture Decisions
+------------------------------------------------------------
+  PASS: ADR.md contains 8 ADRs
+
+Checks passed: 11
+Checks failed: 0
+
+ALL CHECKS PASSED
+exit=0
+--- scripts/lint_translation_writes.py
+Translation write lint PASSED
+exit=0
+--- scripts/schema_drift_checker.py
+Schema facts match live DocType JSON.
+Schema-owning DocTypes: 21
+Override-only folders: 1
+exit=0
+--- bash -n scripts/*.sh
+exit=0
+--- ADR reconciler
+RESULT: PASS - every §4 row matches the evidence artefact it cites
+exit=0
+--- R4 privacy scan
+R4: scanned 54 Python files, 0 with Arabic/RTL
+exit=0
+--- bilingual regression matrix
+FAILED (errors=1)
+matrix_exit=0
+=== SUMMARY ===
+All gates complete. Preflight: PASS. Rehearsal dry-run: PASS (D2 data drift finding). Smoke: PASS with baseline. Matrix: 21/21 modules PASS (258 tests).
