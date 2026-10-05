@@ -8,6 +8,8 @@
 
 **Current release assessment:** [Customer release gaps](CUSTOMER_RELEASE_GAPS_2026-10-04.md)
 
+**Latest correction evidence:** [Current release ledger](work-items/customer-release-gap-fixes/STATUS.md). Read it with the dated assessment; passing selected checks does not close every release gate.
+
 ## 1. Consultant's recommendation to the owner
 
 Keep the existing Frappe/ERPNext foundation and build a disciplined engineering process around it. Your construction knowledge is a substantial part of the product's value. AI can help implement it, but professional quality depends on explicit business rules, verifiable behavior, controlled changes, and reliable operation.

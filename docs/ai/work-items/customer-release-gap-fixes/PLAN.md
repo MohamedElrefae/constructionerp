@@ -61,3 +61,8 @@ Existing shared sites remain outside mutation scope. Main points at live Bench s
 ## Owner-authorized named-site rehearsal (2026-10-05)
 
 The owner selected v16.localhost after the request for a source backup/isolated upgrade. Native backup, restoration to a new private site, two candidate migrations, read-only audits, existing-column/file/auth preservation comparisons and rolled-back acceptance probes are complete. No original-site migration or shared-code advance occurred. The owner classified 184 orphaned approvals and 25 invalid-evidence VOs as test records; preserve them in private test-only archive/exclusion inputs, not customer seeds. Read V16_UPGRADE_REHEARSAL.md for exact evidence and limits. Source authorization is established; do not ask again for the same rehearsal scope.
+
+
+## Latest follow-up scope and authority
+
+The owner asked to finish the end-to-end work using GPT-6 Luna. This authorizes the bounded consultant/sub-agent continuation and named v16 work already recorded. Local source4f110b0 includes reconciled mainaecef45 and reviewed browser/report fixes. Native report/default tests, clean rebuild, advisory validation, capacity measurement and private evidence/documentation are within this scope. Public-source upload and migration of the other shared sites were separately identified for explicit approval; no unanswered question is permission. See current STATUS.md rather than earlier historical candidate identities. No customer release, vendor-security acceptance or SLA is invented.
