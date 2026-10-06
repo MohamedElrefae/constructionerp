@@ -31,12 +31,17 @@ boundaries, Bleach/HTML sanitization).
 
 ## 3. Reconciliation against the 70/108 GHSA identities
 
-Full per-identity listing in `evidence/dependency-reconciliation.log`
-(generated from `ADVISORY_INVENTORY.json`, 108 scanner entries across 9
-packages; the 70 unique GHSA identities are the deduped subset). Cryptography,
-pyOpenSSL, Pillow and sqlparse/sql_metadata targets are metadata-permitted;
-pdfkit, WeasyPrint, pdfkit SSRF, oauthlib 4.0 and 9 later PyJWT/pypdf fixes are
-residual and covered by compensating controls or documented as blocked upstream.
+Full per-identity listing in `evidence/dependency-reconciliation.log`, generated
+by `scripts/reconcile_dependencies.py` from `ADVISORY_INVENTORY.json`. The
+inventory holds 108 scanner entries across 9 packages (177 distributions
+scanned); deduplicating by GHSA identity (falling back to the scanner id) yields
+the 70 unique advisory identities cited in `SECURITY_UPGRADE_PATH.md`. The
+target pins admit the recorded fix for 22 identities (cryptography 4, Pillow 13,
+sqlparse 5). The remaining 48 identities are residual: pdfkit (1, no patch),
+WeasyPrint (2, SSRF fix 70.0 blocked), oauthlib (1, fix 4.0.0 blocked by
+framework cap), PyJWT (14, fixes 2.14/2.15 blocked) and pypdf (27, fixes above
+the framework pin) — each covered by a compensating control or documented as
+blocked upstream.
 
 ## 4. Compensating controls implemented
 
@@ -57,6 +62,7 @@ residual and covered by compensating controls or documented as blocked upstream.
 - `bench --site v16.localhost run-tests --module construction.tests.test_dependency_security_guards`: 33 tests, OK (`evidence/security-guards.log`).
 - `lint_scope_metadata.py`, `ai_context_check.py`, `schema_drift_checker.py`, `lint_translation_writes.py`: all PASS (`evidence/gates.log`).
 - `pip check`: 2 pre-existing frappe 16.18.1 metadata warnings (filelock, requests), unrelated to this change.
+- Manifest integrity: `scripts/generate_manifest.py` writes `evidence/MANIFEST.json` (13 entries) and `scripts/verify_manifest.py` re-hashes every entry — `RESULT: PASS (all digests verified)`.
 
 ## 6. Residuals & follow-ups
 
