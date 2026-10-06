@@ -1,0 +1,63 @@
+# G10 Application-Level Compensating Controls — Unit Test Evidence
+# Generated: 2026-10-06T10:56:17Z
+# Command: PYTHONPATH=<worktree> bench --site v16.localhost run-tests --module construction.tests.test_dependency_security_guards
+# Ephemeral Redis: 11000/13000 (system Redis 6379 untouched)
+
+Starting test run with parameters: site=v16.localhost, module=construction.tests.test_dependency_security_guards, verbose=False, tests=(), force=False, profile=False, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+View detailed logs (using --verbose): /home/mohamed/frappe-bench/logs/frappe.testing.log
+
+Running 33 unspecified-category tests for construction
+
+construction.tests.test_dependency_security_guards.TestLocalAssetProtocol
+    ✔  test_file_scheme_blocked
+    ✔  test_protocol_relative_blocked
+    ✔  test_relative_path_allowed
+    ✔  test_remote_http_blocked
+    ✔  test_traversal_blocked
+
+construction.tests.test_dependency_security_guards.TestPdfPageLimit
+    ✔  test_garbage_pdf_rejected
+       ▸  EOF marker not found
+    ✔  test_oversized_pdf_rejected
+    ✔  test_small_pdf_page_count
+       ▸  incorrect startxref pointer(4)
+       ▸  parsing for Object Streams
+
+construction.tests.test_dependency_security_guards.TestRichTextSanitization
+    ✔  test_benign_markup_preserved
+    ✔  test_event_attribute_stripped
+    ✔  test_safe_text_passes
+    ✔  test_script_stripped
+    ✔  test_unsafe_text_detected
+
+construction.tests.test_dependency_security_guards.TestSsrfGuard
+    ✔  test_embedded_credentials_blocked
+    ✔  test_file_scheme_blocked
+    ✔  test_javascript_scheme_blocked
+    ✔  test_localhost_blocked
+    ✔  test_loopback_blocked
+    ✔  test_metadata_ip_blocked
+    ✔  test_private_range_blocked
+    ✔  test_public_https_allowed
+
+construction.tests.test_dependency_security_guards.TestSvgSanitization
+    ✔  test_benign_svg_accepted
+    ✔  test_event_handler_rejected
+    ✔  test_external_href_rejected
+    ✔  test_foreign_object_rejected
+    ✔  test_javascript_uri_rejected
+    ✔  test_script_tag_rejected
+
+construction.tests.test_dependency_security_guards.TestUploadValidation
+    ✔  test_disallowed_extension_rejected
+    ✔  test_fake_pdf_rejected
+    ✔  test_fake_png_rejected
+    ✔  test_oversize_rejected
+    ✔  test_valid_pdf_accepted
+    ✔  test_valid_png_accepted
+
+
+----------------------------------------------------------------------
+Ran 33 tests in 0.038s
+
+OK

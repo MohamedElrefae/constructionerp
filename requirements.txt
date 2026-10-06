@@ -1,2 +1,11 @@
 # Frappe framework is the only dependency — managed by bench
 frappe
+
+# G10 target alignment with Frappe v16.36.1 (2026-10-05) — applied only on
+# next coordinated candidate build; the live bench env keeps its recorded pins
+# until the candidate rehearsal. See docs/ai/work-items/dependency-security-remediation/SCOPE.md.
+cryptography~=50.0.0
+pyOpenSSL~=26.4.0
+Pillow~=12.3.0
+sqlparse~=0.6.0
+sql_metadata~=3.0.1

@@ -4,11 +4,23 @@ authors = [
     { name = "mohamed", email = "mohamedelrefae@gmail.com"}
 ]
 description = "construction"
-requires-python = ">=3.10"
+requires-python = ">=3.14,<3.15"
 readme = "README.md"
 dynamic = ["version"]
 dependencies = [
     # "frappe~=15.0.0" # Installed and managed by bench.
+    #
+    # G10 dependency security remediation — aligned with the upstream
+    # Frappe v16.36.1 / ERPNext v16.37.0 constraint set (see
+    # docs/ai/work-items/dependency-security-remediation/SCOPE.md and
+    # docs/ai/work-items/customer-release-gap-fixes/SECURITY_UPGRADE_PATH.md).
+    # These pins must be applied as a coordinated framework upgrade; the
+    # pre-v16.36 framework caps some of them below the advisory fix version.
+    "cryptography~=50.0.0",
+    "pyOpenSSL~=26.4.0",
+    "Pillow~=12.3.0",
+    "sqlparse~=0.6.0",
+    "sql_metadata~=3.0.1",
 ]
 
 [build-system]
