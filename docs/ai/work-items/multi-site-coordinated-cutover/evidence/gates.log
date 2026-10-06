@@ -1,0 +1,20 @@
+$ python3 scripts/lint_scope_metadata.py
+PASS: no scope-dimension field has in_standard_filter=1 (19 DocTypes checked).
+rc=0
+
+$ python3 scripts/ai_context_check.py
+Checks failed: 0
+
+ALL CHECKS PASSED
+rc=0
+
+$ python3 scripts/schema_drift_checker.py
+Schema facts match live DocType JSON.
+Schema-owning DocTypes: 21
+Override-only folders: 1
+rc=0
+
+$ python3 scripts/lint_translation_writes.py
+Translation write lint PASSED
+rc=0
+
