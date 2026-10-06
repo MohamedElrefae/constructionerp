@@ -1,6 +1,8 @@
 # G10 Application-Level Compensating Controls — Unit Test Evidence
-# Generated: 2026-10-06T10:56:17Z
-# Command: PYTHONPATH=<worktree> bench --site v16.localhost run-tests --module construction.tests.test_dependency_security_guards
+# Generated: 2026-10-06T11:00:58Z
+# Verification command (OPENCODE_PARALLEL_EXECUTION_MASTER.md):
+#   cd /home/mohamed/frappe-bench
+#   bench --site v16.localhost run-tests --module construction.tests.test_dependency_security_guards
 # Ephemeral Redis: 11000/13000 (system Redis 6379 untouched)
 
 Starting test run with parameters: site=v16.localhost, module=construction.tests.test_dependency_security_guards, verbose=False, tests=(), force=False, profile=False, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
