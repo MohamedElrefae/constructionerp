@@ -1,0 +1,22 @@
+Starting test run with parameters: site=v16.localhost, module=construction.tests.test_e2e_bilingual_commercial_workflow, verbose=False, tests=(), force=False, profile=False, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+View detailed logs (using --verbose): /home/mohamed/frappe-bench/logs/frappe.testing.log
+
+Running 10 old-frappe-test-class-category tests for construction
+
+construction.tests.test_e2e_bilingual_commercial_workflow.TestE2EBilingualCommercialWorkflow
+   [32m ✔ [0m test_phase1_boq_header_groups_and_additive_pricing
+   [32m ✔ [0m test_phase2_leaf_item_delete_rolls_up_header_totals
+   [32m ✔ [0m test_phase2_positive_factor_enforced
+   [32m ✔ [0m test_phase2_variation_revision_frozen_fields_and_rollup
+   [32m ✔ [0m test_phase3_bilingual_print_formats [31m (2.3s)[0m
+   [32m ✔ [0m test_phase4_bilingual_reports_localized_headers
+   [32m ✔ [0m test_phase4_global_defaults_company_fallback
+   [32m ✔ [0m test_phase4_no_vendor_column_mutation
+   [32m ✔ [0m test_phase4_role_permission_barrier
+   [32m ✔ [0m test_phase4_unknown_report_fails_closed
+
+
+----------------------------------------------------------------------
+Ran 10 tests in 3.578s
+
+OK

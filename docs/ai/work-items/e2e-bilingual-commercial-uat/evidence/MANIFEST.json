@@ -1,0 +1,27 @@
+{
+  "base_commit": "7cdb01d56db3be36edbfa9a69e884ff7a280277b",
+  "branch": "opencode/session-3c-uat",
+  "files": {
+    "construction/tests/test_e2e_bilingual_commercial_workflow.py": "519ff9b41b8fb33e9b774e632124f8a1e6beb46ba316be0fa35e04ff50f5aa57",
+    "docs/ai/work-items/e2e-bilingual-commercial-uat/SCOPE.md": "44e792961c89208e49721c25dc17d8e41a548e0783296f7d57c330361274f139",
+    "docs/ai/work-items/e2e-bilingual-commercial-uat/evidence/e2e-workflow-execution.log": "1c3af33f3962693fc99eb258bc5dbd5b63e6444981446b48686bf9e3518cf0dd",
+    "docs/ai/work-items/e2e-bilingual-commercial-uat/evidence/gates.log": "328fd9d5eb0ab2a5cf8793087dcf06f9801df7e8c273aa2bc3445dfb97e84b0b",
+    "docs/ai/work-items/e2e-bilingual-commercial-uat/evidence/rendered-samples/material-request.Construction-Bilingual-Material-Request.html": "0620f07891d6c38cba786a1d9a927d863114f50c1cbd37f250a923843f263701",
+    "docs/ai/work-items/e2e-bilingual-commercial-uat/evidence/rendered-samples/purchase-order.Construction-Bilingual-Purchase-Order.html": "5acfcd87a8160350eef01741888b26641badc9956d3483654cdf4d62a84e0bf0",
+    "docs/ai/work-items/e2e-bilingual-commercial-uat/evidence/rendered-samples/report-accounts-payable-summary.json": "1ec8a443e9fabe8fccd68b4832b5779fec41f7aa5f5ae0730c0bd05ea2ee0aa4",
+    "docs/ai/work-items/e2e-bilingual-commercial-uat/evidence/rendered-samples/report-accounts-receivable-summary.json": "91fe0902cb1dc4767de87ae381375f30a11d648442d58c210a9c0781d225f105",
+    "docs/ai/work-items/e2e-bilingual-commercial-uat/evidence/rendered-samples/report-balance-sheet.json": "74db861e54fb97916771593d5b13d15a52be6adcfed86f538f090fa479564b1f",
+    "docs/ai/work-items/e2e-bilingual-commercial-uat/evidence/rendered-samples/report-cash-flow.json": "0dade261233df45a382e37127d7d3f5f085ae5a29beb77716ba7c044902b80b9",
+    "docs/ai/work-items/e2e-bilingual-commercial-uat/evidence/rendered-samples/report-general-ledger.json": "736e72913a9650c7b82d16ac6dd7ccc612701b049b59d42e9b3a95873532b474",
+    "docs/ai/work-items/e2e-bilingual-commercial-uat/evidence/rendered-samples/report-profit-and-loss-statement.json": "1dd8639a58763ff1c6c1478dab768b6b0d9c293699f0393160c2cb08d12aa34c",
+    "docs/ai/work-items/e2e-bilingual-commercial-uat/evidence/rendered-samples/report-trial-balance.json": "602fceb319466f39668dc498523de0984172a5156355b4e6c5dac177d1f15ff6",
+    "docs/ai/work-items/e2e-bilingual-commercial-uat/evidence/rendered-samples/sales-invoice.Construction-Bilingual-Sales-Invoice.html": "ea362ab7635391db7c7f7fca9f78d513e955ccc1a40202155e2bcdc527ad751d",
+    "docs/ai/work-items/e2e-bilingual-commercial-uat/evidence/rendered-samples/stock-entry.Construction-Bilingual-Stock-Entry.html": "7766ab95049d05c6b42681ffc1f6cf44a04ea093c806c36022473f129b122ff2",
+    "docs/ai/work-items/e2e-bilingual-commercial-uat/scripts/generate_manifest.py": "a1a81df65af1094016bcebae8f0890ce7c6957934e357cd8378bfd89ae1493b5",
+    "docs/ai/work-items/e2e-bilingual-commercial-uat/scripts/verify_manifest.py": "396acdd0a548cf80b876bfb86c7e3269112ef800281eac16b6db5cba7c47b01b"
+  },
+  "generated_utc": "2026-10-06T11:20:19Z",
+  "hash_algorithm": "sha256",
+  "session": "3C",
+  "work_item": "e2e-bilingual-commercial-uat"
+}
