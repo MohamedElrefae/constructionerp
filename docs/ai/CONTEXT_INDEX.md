@@ -34,6 +34,8 @@ Use the current source/schema, explicit owner instructions, and applicable gover
 | `scripts/schema_drift_checker.py` | Compares schema facts with current repository DocType JSON; no database validation |
 | `docs/ai/work-items/engineering-startup-gates/IMPLEMENTATION.md` | Automatic coordinator startup policy, required context, exact factual write scope, and legacy-task behavior |
 | `docs/ai/work-items/engineering-startup-gates/REVIEW.md` | Independent review and verification of startup integration; qualification limits |
+| `docs/ai/work-items/customer-release-gap-fixes/STATUS.md` | Customer release gate ledger; G10, G12, G14, G15, G16 SATISFIED on develop (2026-10-06); all 16 gates qualified |
+| `docs/ai/CUSTOMER_RELEASE_CANDIDATE_SUMMARY.md` | Release candidate summary: identity, integrity architecture, test coverage, security hardening, cutover/operating profile, governance |
 
 For every session, follow [the standard's startup checklist](PROFESSIONAL_ENGINEERING_STANDARD.md): read actual context files, capture checkout/branch/HEAD/status, and run both checkers before planning or editing. Record results and a truthful Files Read list. Recheck affected facts after concurrent changes. These are local checks, not proof of latest remote code or deployed schema.
 

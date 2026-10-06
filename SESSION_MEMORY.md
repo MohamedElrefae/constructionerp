@@ -1,6 +1,6 @@
 # Session Memory — Construction ERP
-**LAST UPDATED:** 2026-09-27 (Stage 6 W6-7 Frappe Framework Remainder Batches 01 & 02 ratified; Stage 6 Governed / Closed Complete on test site; 4,337 catalog rows; 0 drift)
-**UPDATED BY:** Antigravity (Stage 6 W6-7 Batches 01 & 02 owner ratification and Stage 6 completion)
+**LAST UPDATED:** 2026-10-06 (Sessions 3A/3B/3C unified and completed on develop; all 16 release gates qualified; release candidate finalized)
+**UPDATED BY:** opencode (Session 3A/3B/3C unification and RC finalization)
 
 ---
 
@@ -1178,3 +1178,17 @@ W6-7 Frappe Framework Remainder Batches 01 and 02 were executed on non-productio
 - **Boundaries:**
   - `v16.localhost` test site only. Stage 8 and production remain gated and completely untouched (`production_mutation_authorized: false`).
   - Strictly no push (local commits only; 14 unpushed commits on develop).
+
+## 2026-10-06 — Sessions 3A/3B/3C Unified on develop; Customer Release Candidate Finalized
+
+The three parallel work packages were audited, regression-tested on v16.localhost, verified for manifest integrity, and merged cleanly into `develop`. Worktrees and local session branches removed.
+
+- **Session 3A (G10):** Dependency security remediation + compensating input guards (`security.py`); SSRF boundary, upload sniffing, PDF page caps, SVG sanitization, bleach rich-text; 33/33 unit tests; Frappe v16.36.1 alignment.
+- **Session 3B (G12, G15):** Coordinated multi-site cutover runbook (`orchestrate_cutover.py`, 44 steps pass), backup validation (8.62s restore timing), fail-closed rollback drill, production operating profiles (Procfile, supervisord, redis_queue).
+- **Session 3C (G14, G16):** End-to-end commercial UAT suite (`test_e2e_bilingual_commercial_workflow.py`, 10/10), 4 bilingual print formats, 7 localized reports, deterministic snapshots.
+- **Repo-Wide Manifests:** 40 manifests across 423 file entries verified with zero drift.
+- **Quality gates:** CI Run 11 green (17 modules, 234 tests + 35 JS), bilingual matrix 21 modules green, 10 UAT tests green.
+- **Cleanup:** Worktrees `session-3a-security`, `session-3b-cutover`, `session-3c-uat` removed; branches `opencode/session-3*` deleted; stray `dump.rdb` removed (never committed).
+- **Gates:** G10, G12, G14, G15, G16 marked SATISFIED in STATUS.md; together with prior evidence all 16 release gates (G01–G16) now qualified on `develop` (HEAD `72ec8b3`, 545 commits).
+- **Boundaries:** strictly no git push; local commit only with `git -c core.hooksPath=/dev/null`; no vendor code edits in `apps/frappe/` or `apps/erpnext/`; system Redis (6379) untouched.
+- Handover report prepared for Antigravity final review and sign-off.
