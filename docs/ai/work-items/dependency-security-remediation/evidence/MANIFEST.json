@@ -1,0 +1,18 @@
+{
+  "branch": "opencode/session-3a-security",
+  "files": {
+    "construction/construction/utils/security.py": "d5d0de961126da627a1c43f42fe2e46201aabf746eaf3013d6cd077d0cfd9ac7",
+    "construction/tests/test_dependency_security_guards.py": "dfbc46d1f341fca5e6e1e717e2458bd412df3f83390c04166edf6df5a40fa216",
+    "construction/utils/security.py": "a0a61825dcdcec2038e8ae4f04739a6016708c4132e6dedf8d1e589020a4e755",
+    "docs/ai/work-items/dependency-security-remediation/SCOPE.md": "cb3e4cdeacd9207d44f7cc5ea1d92702343dbc42412d8050a7748cf2960b7d22",
+    "docs/ai/work-items/dependency-security-remediation/evidence/clean-build.log": "8327b6c8e8a6681de9c21213d206e4a29ca73fd9e8e2a53156d7c0551efeca41",
+    "docs/ai/work-items/dependency-security-remediation/evidence/dependency-reconciliation.log": "2fd89ed2ae7fda3babf0bfa4300c11b6becaf9efd74a2bb5ae0d598537c71f0c",
+    "docs/ai/work-items/dependency-security-remediation/evidence/gates.log": "82b158cfc07eb53e9b5d0106e3881acc51c992cb0ef2b3db7890f44af0f89e00",
+    "docs/ai/work-items/dependency-security-remediation/evidence/security-guards.log": "da68b0b596c4a2f7a3d7e70152204dfe77abed8a1c4e2e36c334bef885726903",
+    "docs/ai/work-items/dependency-security-remediation/scripts/reconcile_dependencies.py": "cb17ec7fcd12af4a2c07910508a9083c474702a800911dd4168e9014b416c4de",
+    "requirements.txt": "17d4e8e80d88940d333826ed93099bc1c25304593553f05b92e8c50188fe4b09"
+  },
+  "generated_utc": "2026-10-06T10:55:18.167319Z",
+  "session": "3A",
+  "work_item": "dependency-security-remediation"
+}
