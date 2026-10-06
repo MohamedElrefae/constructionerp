@@ -1,7 +1,7 @@
 # Customer Release Candidate Summary
 
 **Date:** 2026-10-06
-**Release Candidate Identity:** branch `develop`, HEAD `72ec8b3` (545 commits), working tree `/home/mohamed/frappe-bench/apps/construction`. Strictly local; zero push to remotes.
+**Release Candidate Identity:** branch `develop`, HEAD `4c236bd` (546 commits), working tree `/home/mohamed/frappe-bench/apps/construction`. Strictly local; zero push to remotes.
 
 ---
 
