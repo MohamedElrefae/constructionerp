@@ -18,6 +18,7 @@ Run with:
 """
 
 import json
+import os
 import unittest
 from pathlib import Path
 from types import ModuleType
@@ -429,10 +430,10 @@ class TestE2EBilingualCommercialWorkflow(FrappeTestCase):
         cases.append(("material-request", mr, "Construction Bilingual Material Request", html))
         self.assertIn("<bdi>", html)
         self.assertIn("طلب مواد", html)
-
-        for slug, doc, print_format, html in cases:
-            snapshot = _evidence_path(f"{slug}.{print_format}.html".replace(" ", "-"))
-            snapshot.write_text(html, encoding="utf-8")
+        if os.environ.get("RECORD_RENDERED_SAMPLES") == "1":
+            for slug, doc, print_format, html in cases:
+                snapshot = _evidence_path(f"{slug}.{print_format}.html".replace(" ", "-"))
+                snapshot.write_text(html, encoding="utf-8")
 
     # ------------------------------------------------------------------
     # Phase 4 — Bilingual financial reporting
@@ -480,24 +481,25 @@ class TestE2EBilingualCommercialWorkflow(FrappeTestCase):
                         self.assertTrue(any("حسا" in (l or "") or "حساب" in (l or "") for l in labels))
                     else:
                         self.assertTrue(any("—" in (l or "") for l in labels))
-                snapshot = _evidence_path(
-                    f"report-{report.replace(' ', '-').lower()}.json"
-                )
-                captured = {}
-                payload_ar = self._localized(report, "ar", captured)
-                payload_both = self._localized(report, "both", captured)
-                snapshot.write_text(
-                    json.dumps(
-                        {
-                            "report": report,
-                            "ar_columns": [c.get("label") for c in payload_ar["columns"]],
-                            "both_columns": [c.get("label") for c in payload_both["columns"]],
-                        },
-                        ensure_ascii=False,
-                        indent=2,
-                    ),
-                    encoding="utf-8",
-                )
+                if os.environ.get("RECORD_RENDERED_SAMPLES") == "1":
+                    snapshot = _evidence_path(
+                        f"report-{report.replace(' ', '-').lower()}.json"
+                    )
+                    captured = {}
+                    payload_ar = self._localized(report, "ar", captured)
+                    payload_both = self._localized(report, "both", captured)
+                    snapshot.write_text(
+                        json.dumps(
+                            {
+                                "report": report,
+                                "ar_columns": [c.get("label") for c in payload_ar["columns"]],
+                                "both_columns": [c.get("label") for c in payload_both["columns"]],
+                            },
+                            ensure_ascii=False,
+                            indent=2,
+                        ),
+                        encoding="utf-8",
+                    )
 
     def test_phase4_unknown_report_fails_closed(self):
         import construction.api.bilingual_reports as api_mod
