@@ -1,0 +1,24 @@
+{
+  "work_item": "multi-site-coordinated-cutover",
+  "gates": "G12, G15",
+  "branch": "opencode/session-3b-cutover",
+  "primary_invariant": "zero DB mutation (dry-run only); maintenance_mode restored in finally; system redis 6379 untouched; no vendor edits; no push; hooksPath=/dev/null",
+  "test_results": {
+    "preflight": "PASS (17 steps, 0 failures)",
+    "cutover_drill": "PASS (19 steps, 0 failures; bilingual migration dry-run rc=0)",
+    "rollback_drill": "simulated fault abort; rollback rc=0 (8 steps)",
+    "gates": "PASS (4/4 linters)",
+    "verification_command": "orchestrate_cutover.py --dry-run rc=0 (44 steps, 0 failures)"
+  },
+  "artefacts": {
+    "docs/ai/work-items/multi-site-coordinated-cutover/SCOPE.md": "c1795ea29ae2168e1443f58c12bbd9a72459616083f329ed94167faa4ba0f116",
+    "docs/ai/work-items/multi-site-coordinated-cutover/evidence/cutover-drill.log": "7364d8d7b2671411cfac29b6b853d17c1b503641d8101423a3380190f71ee2a8",
+    "docs/ai/work-items/multi-site-coordinated-cutover/evidence/gates.log": "2bc2981b7bdc5b26b559c811e762faba1b873270c3eeb0cd8423c3998c7eae09",
+    "docs/ai/work-items/multi-site-coordinated-cutover/evidence/multi-site-preflight.log": "a48b15d6493779825d256a2f6d29c2898ed035414b9121005d9c3c6151e2e630",
+    "docs/ai/work-items/multi-site-coordinated-cutover/evidence/operating-profile/Procfile": "57c062a5e11c5c4fd2d82eb964d9a1dd09f3676b0a82194ea19d2079e8065074",
+    "docs/ai/work-items/multi-site-coordinated-cutover/evidence/operating-profile/redis_queue.conf": "e08f0fd7d088ce15e55aa1a30e16982986bfaaae8e03de9a5359455222f96b89",
+    "docs/ai/work-items/multi-site-coordinated-cutover/evidence/operating-profile/supervisord.conf.template": "08364a9b495c55b945e77d89b327a92696387ae0c2285e8482479771a1f60258",
+    "docs/ai/work-items/multi-site-coordinated-cutover/evidence/rollback-drill.log": "54ff33d0050c11168e6c60fedddbcc64c4ad334ae5b7d74f6ad567c2c86cffa0",
+    "docs/ai/work-items/multi-site-coordinated-cutover/scripts/orchestrate_cutover.py": "56135f68aebe3579563b8b3915714ed282c466831375b37ca2a56875c02247a9"
+  }
+}
