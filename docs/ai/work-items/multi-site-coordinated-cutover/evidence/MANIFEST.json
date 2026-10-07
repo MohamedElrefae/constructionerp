@@ -19,6 +19,6 @@
     "docs/ai/work-items/multi-site-coordinated-cutover/evidence/operating-profile/redis_queue.conf": "e08f0fd7d088ce15e55aa1a30e16982986bfaaae8e03de9a5359455222f96b89",
     "docs/ai/work-items/multi-site-coordinated-cutover/evidence/operating-profile/supervisord.conf.template": "08364a9b495c55b945e77d89b327a92696387ae0c2285e8482479771a1f60258",
     "docs/ai/work-items/multi-site-coordinated-cutover/evidence/rollback-drill.log": "54ff33d0050c11168e6c60fedddbcc64c4ad334ae5b7d74f6ad567c2c86cffa0",
-    "docs/ai/work-items/multi-site-coordinated-cutover/scripts/orchestrate_cutover.py": "56135f68aebe3579563b8b3915714ed282c466831375b37ca2a56875c02247a9"
+    "docs/ai/work-items/multi-site-coordinated-cutover/scripts/orchestrate_cutover.py": "7537a6da301ca36aff8ba42d0a32a6731e814bb6e4bd9bdbc4a474a4935cdf7c"
   }
 }
