@@ -44,6 +44,13 @@
       "cause": "consolidation merge of customer-release-gap-fixes into develop updating test_stage7_bilingual_reports.py",
       "fix": "re-pinned construction/tests/test_stage7_bilingual_reports.py to post-merge content; verified all tests pass clean",
       "disclosure": "Consolidation merge commit + amendments entry"
+    },
+    {
+      "id": "ci-fix-7",
+      "when": "2026-10-07 CI regression fix",
+      "cause": "stage7 suite hardcoded Company \"Elrefae\"; replaced with dynamic Global Defaults default_company resolution (CI seeds _Test Company)",
+      "fix": "artefact re-pinned to current sha256",
+      "disclosure": "CI fix briefing letter 2026-10-07"
     }
   ],
   "primary_invariant": "D5 triad (bilingual_service.py, searchable_dropdown/api/search.py) and bilingual_registry.json byte-identical to base 890ae14 (call-only); no file under apps/frappe or apps/erpnext modified; the fail-closed allowlist PILOT_REPORTS expands by exactly two names (Balance Sheet, Profit and Loss Statement) and rejects every other name before import; vendor execute runs exactly once per request (R2) under the unchanged genuine role gate (R3: Accounts User/Manager/System Manager, non-admin rejected before any vendor resolution); R4 statement period defaults are read-only setdefault filling of the vendor get_period_list contract with caller values winning; viewer page Select gains the same two options (page bundle, not hook-registered, no ?v= bump); zero data mutation (probe mutation guard PASS, Account 2102 / GL Entry 4 unchanged); exactly one manifest re-pinned (bilingual-financial-reports, 2 digests, disclosed); matrix script byte-identical to base (module list 21, comment 258 left stale under disclosed A1) while the suite itself grows to 264 tests",
@@ -77,6 +84,6 @@
     "docs/ai/work-items/bilingual-report-statements-allowlist/evidence/scripts/probe_statements_execution.py": "dcdc4f75e56916c59b0e8df7b1dd5b2c77bb7b0af8004bd03231b7231df6679f",
     "construction/api/bilingual_reports.py": "d9970f8d3a834e675b26195871b8f00396c36ec0d0b0b8990ef7563591f0d846",
     "construction/construction/page/bilingual_report_viewer/bilingual_report_viewer.js": "9ed7a7c8076c3bf56006e249ebb671065bfb6d41318af81393775d029c42735f",
-    "construction/tests/test_stage7_bilingual_reports.py": "b5cff52998c90dc2028a7edfb3d6c5ee01a981670ad4949b303247f7daad9c4f"
+    "construction/tests/test_stage7_bilingual_reports.py": "e1dd56959e99e08422a175ba6edbb9c24e24de2c61dfe65d5a5fc00550fa6b23"
   }
 }

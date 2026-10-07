@@ -247,6 +247,7 @@ class BOQCostAnalysis(Document):
                     frappe.throw(_("Previous legacy cost basis requires review before cancellation."))
                 return prior
             target = prior.get("supersedes_analysis")
+        item = frappe.get_doc("BOQ Item", self.boq_item, for_update=True)
         if not item.get("manual_cost_snapshot"):
             if not frappe.db.has_column("BOQ Item", "manual_cost_snapshot"):
                 return None

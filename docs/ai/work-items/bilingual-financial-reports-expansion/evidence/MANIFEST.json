@@ -9,35 +9,35 @@
       "when": "live probe evidence capture",
       "cause": "tabAccount row count oscillated 2102 <-> 2103 across separate probe runs because Sessions A/C/D were running their own suites against the shared v16.localhost site while this session worked",
       "fix": "NOT a defect of this item: the probe's mutation guard compares counts within one retained run (2103 -> 2103, PASS) and the unit guard asserts no frappe.db write primitive fires; the cross-run oscillation is recorded in SCOPE.md A1 so a later auditor does not misread it",
-      "disclosure": "SCOPE.md \u00a78 A1 + this amendments entry"
+      "disclosure": "SCOPE.md §8 A1 + this amendments entry"
     },
     {
       "id": "A2",
       "when": "regression matrix execution",
       "cause": "Session A's concurrent bench run-tests (full matrix) was active on the same site and the same ephemeral redis 11000/13000 ports",
       "fix": "matrix run and redis teardown deferred until no other run-tests process remained (SCOPE.md R8); the matrix in this manifest is this session's own run, 21/21 modules / 273 tests",
-      "disclosure": "SCOPE.md \u00a73 R8 + \u00a78 A2 + this amendments entry"
+      "disclosure": "SCOPE.md §3 R8 + §8 A2 + this amendments entry"
     },
     {
       "id": "A3",
       "when": "COLUMN_LABELS implementation",
       "cause": "five column labels beyond the briefing's enumerated eight had a single unambiguous approved tabTranslation ar row (Currency, Account Number, Customer Name, Supplier Name, Closing Balance)",
       "fix": "added to the governed map so AR/AP summary and trial-balance headers are not half-translated; no contested or malformed approved row was added (SCOPE.md R3 table)",
-      "disclosure": "SCOPE.md \u00a73 R3 + \u00a78 A3 + this amendments entry"
+      "disclosure": "SCOPE.md §3 R3 + §8 A3 + this amendments entry"
     },
     {
       "id": "A4",
       "when": "viewer payload implementation",
       "cause": "the viewer hard-coded party_type: 'Customer' for every report, which constrains a payables report to customers in the vendor return-entries path",
       "fix": "party_type is now 'Supplier' for Accounts Payable Summary and unchanged ('Customer') for every other report; dates, group_by_party and the render path are untouched",
-      "disclosure": "SCOPE.md \u00a73 R5 + \u00a78 A4 + this amendments entry"
+      "disclosure": "SCOPE.md §3 R5 + §8 A4 + this amendments entry"
     },
     {
       "id": "A5",
       "when": "manifest verification",
       "cause": "construction/hooks.py and construction/install.py were modified in the shared working tree by Session A (print-format install hooks) at 23:30, invalidating the hooks.py digest in 9 pre-existing manifests that pin it",
       "fix": "NOT re-pinned here: those files are outside this item's scope (zero edits by this session) and are pinned at their new digest by Session A's manifest #32; Antigravity resolves the 8 stale hooks.py digests at commit time",
-      "disclosure": "SCOPE.md \u00a73 R6 + this amendments entry + session handover"
+      "disclosure": "SCOPE.md §3 R6 + this amendments entry + session handover"
     },
     {
       "id": "A6",
@@ -59,6 +59,13 @@
       "cause": "consolidation merge of customer-release-gap-fixes into develop updating test_stage7_bilingual_reports.py",
       "fix": "re-pinned construction/tests/test_stage7_bilingual_reports.py to post-merge content; verified all tests pass clean",
       "disclosure": "Consolidation merge commit + amendments entry"
+    },
+    {
+      "id": "ci-fix-9",
+      "when": "2026-10-07 CI regression fix",
+      "cause": "stage7 suite hardcoded Company \"Elrefae\"; replaced with dynamic Global Defaults default_company resolution (CI seeds _Test Company)",
+      "fix": "artefact re-pinned to current sha256",
+      "disclosure": "CI fix briefing letter 2026-10-07"
     }
   ],
   "primary_invariant": "D5 triad (bilingual_service.py, searchable_dropdown/api/search.py) and bilingual_registry.json byte-identical to base 234c024 (call-only); construction/services/report_bilingual_extension.py, overrides/report_guard.py, overrides/scope_report.py, hooks.py, install.py and scripts/run_bilingual_regression_matrix.sh byte-identical to base (zero edits by this session); no file under apps/frappe or apps/erpnext modified; the fail-closed allowlist PILOT_REPORTS expands by exactly three names (Accounts Receivable Summary, Accounts Payable Summary, Cash Flow) and still rejects every other name before import; General Ledger and Trial Balance were already present and remain covered; vendor execute runs exactly once per request under the unchanged genuine role gate (Accounts User/Manager/System Manager, non-admin rejected before any vendor resolution, now also proven for Accounts Payable Summary and Cash Flow); all filter defaults are read-only setdefault fills of the vendor contracts with caller values winning (report_date window for the AR/AP summaries, get_period_list period contract for Cash Flow); column headers localize from the deterministic governed COLUMN_LABELS map in ar/both only, on freshly built column dicts (source structures untouched), with en byte-identical and unmapped labels passing through; the viewer page Select gains the three statements with a date-range vs fiscal-year filter toggle and party_type Supplier for the payables report (page bundle, not hook-registered, no ?v= bump); zero data mutation (probe within-run guard PASS: Account/GL Entry/Report/Translation identical, unit guard proves no frappe.db write primitive fires); exactly two manifests re-pinned (5 digests, disclosed) while the matrix script stays byte-identical (stale 258 comment retained under the 5E A1 precedent) and the suite grows to 273 tests",
@@ -66,7 +73,7 @@
     "R1": "allowlist expands by exactly three names; unknown names still fail closed before import; GL/TB asserted as already present",
     "R2": "report-specific read-only defaults: report_date/to_date/ageing_based_on/fiscal_year for AR+AP Summary; Cash Flow routed through the existing get_period_list statement branch (PERIOD_CONTRACT_REPORTS)",
     "R3": "deterministic hardcoded COLUMN_LABELS harvested read-only from tabTranslation ar rows (owner-approved approach); recorded ambiguity resolutions; malformed/contested labels deliberately unmapped and pass through; base-label matching preserves currency suffixes",
-    "R4": "header localization applies to every allowlisted report in ar/both; both mode mirrors the cell convention 'EN \u2014 AR'; fresh column dicts, never in-place mutation",
+    "R4": "header localization applies to every allowlisted report in ar/both; both mode mirrors the cell convention 'EN — AR'; fresh column dicts, never in-place mutation",
     "R5": "viewer gains three options plus a fiscal_year field shown only for Trial Balance (date fields hidden in exchange); party_type Supplier for Accounts Payable Summary; no ?v= bump (page bundle)",
     "R6": "exactly two manifests re-pinned, 5 digests (bilingual-financial-reports: api + stage7 test; bilingual-report-statements-allowlist: api + viewer + stage7 test), each with an amendment entry; Session A's hooks.py/install.py changes excluded",
     "R7": "no report_guard/scope_report/report_bilingual_extension/hooks/install/registry/matrix-script edits (report_guard already contains all five briefing names)",
@@ -93,6 +100,6 @@
     "docs/ai/work-items/bilingual-financial-reports-expansion/evidence/scripts/probe_report_expansion.py": "83531d62b17cc17adc7dfdd6d9b0d4c13fa9ba8de292443257f7e6e9321f1add",
     "construction/api/bilingual_reports.py": "d9970f8d3a834e675b26195871b8f00396c36ec0d0b0b8990ef7563591f0d846",
     "construction/construction/page/bilingual_report_viewer/bilingual_report_viewer.js": "9ed7a7c8076c3bf56006e249ebb671065bfb6d41318af81393775d029c42735f",
-    "construction/tests/test_stage7_bilingual_reports.py": "b5cff52998c90dc2028a7edfb3d6c5ee01a981670ad4949b303247f7daad9c4f"
+    "construction/tests/test_stage7_bilingual_reports.py": "e1dd56959e99e08422a175ba6edbb9c24e24de2c61dfe65d5a5fc00550fa6b23"
   }
 }

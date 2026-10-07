@@ -55,6 +55,14 @@ def _patched_report_modules(mapping):
         yield resolved
 
 
+
+
+def _default_company():
+    import frappe
+
+    return frappe.db.get_single_value("Global Defaults", "default_company") or "Elrefae"
+
+
 class TestBilingualReportsAPI(unittest.TestCase):
     def _call(self, name, mock_module, mode=None, lang=None, filters=None):
         import construction.api.bilingual_reports as api_mod
@@ -147,7 +155,7 @@ class TestStatementAllowlist(unittest.TestCase):
         for name in self.STATEMENTS:
             mod = _stub_module([{"fieldname": "account"}], [{"account": "Cash"}])
             with mock.patch.object(api_mod, "load_account_arabic_mapping", return_value={}):
-                out = self._call(name, mod, mode="ar", filters='{"company": "Elrefae"}')
+                out = self._call(name, mod, mode="ar", filters='{"company": "' + _default_company() + '"}')
             self.assertEqual(mod.execute.call_count, 1, name)
             self.assertEqual(out["report_name"], name)
             self.assertEqual(out["mode"], "ar")
@@ -167,7 +175,7 @@ class TestStatementAllowlist(unittest.TestCase):
             "load_account_arabic_mapping",
             return_value={"Cash in Hand": "النقدية"},
         ):
-            out = self._call("Balance Sheet", mod, mode="ar", filters='{"company": "Elrefae"}')
+            out = self._call("Balance Sheet", mod, mode="ar", filters='{"company": "' + _default_company() + '"}')
         self.assertEqual(out["data"][0]["account_name"], "النقدية")
         self.assertEqual(out["data"][0]["account"], "Cash")
 
@@ -180,7 +188,7 @@ class TestStatementAllowlist(unittest.TestCase):
                 name,
                 mod,
                 mode="en",
-                filters='{"company": "Elrefae", "from_date": "2026-01-01", "to_date": "2026-10-05"}',
+                filters='{"company": "' + _default_company() + '", "from_date": "2026-01-01", "to_date": "2026-10-05"}',
             )
             f = mod.execute.call_args.kwargs["filters"]
             self.assertEqual(f.get("filter_based_on"), "Date Range", name)
@@ -197,7 +205,7 @@ class TestStatementAllowlist(unittest.TestCase):
             "Balance Sheet",
             mod,
             mode="en",
-            filters='{"company": "Elrefae", "filter_based_on": "Fiscal Year", "fiscal_year": "2026"}',
+            filters='{"company": "' + _default_company() + '", "filter_based_on": "Fiscal Year", "fiscal_year": "2026"}',
         )
         f = mod.execute.call_args.kwargs["filters"]
         self.assertEqual(f.get("from_fiscal_year"), "2026")
@@ -216,7 +224,7 @@ class TestStatementAllowlist(unittest.TestCase):
             "Balance Sheet",
             mod,
             mode="en",
-            filters='{"company": "Elrefae", "periodicity": "Monthly", "filter_based_on": "Date Range", "period_start_date": "2026-03-01", "period_end_date": "2026-03-31", "accumulated_values": 1}',
+            filters='{"company": "' + _default_company() + '", "periodicity": "Monthly", "filter_based_on": "Date Range", "period_start_date": "2026-03-01", "period_end_date": "2026-03-31", "accumulated_values": 1}',
         )
         f = mod.execute.call_args.kwargs["filters"]
         self.assertEqual(f.get("periodicity"), "Monthly")
@@ -263,7 +271,7 @@ class TestExpandedReportAllowlist(unittest.TestCase):
             with mock.patch.object(
                 api_mod, "load_account_arabic_mapping", return_value={}
             ):
-                out = self._call(name, mod, mode="ar", filters='{"company": "Elrefae"}')
+                out = self._call(name, mod, mode="ar", filters='{"company": "' + _default_company() + '"}')
             self.assertEqual(mod.execute.call_count, 1, name)
             self.assertEqual(out["report_name"], name)
             self.assertEqual(out["mode"], "ar")
@@ -278,7 +286,7 @@ class TestExpandedReportAllowlist(unittest.TestCase):
                 name,
                 mod,
                 mode="en",
-                filters='{"company": "Elrefae", "to_date": "2026-10-05"}',
+                filters='{"company": "' + _default_company() + '", "to_date": "2026-10-05"}',
             )
             f = mod.execute.call_args.kwargs["filters"]
             self.assertEqual(f.get("report_date"), "2026-10-05", name)
@@ -292,7 +300,7 @@ class TestExpandedReportAllowlist(unittest.TestCase):
             "Accounts Payable Summary",
             mod,
             mode="en",
-            filters='{"company": "Elrefae", "report_date": "2026-03-31", "ageing_based_on": "Posting Date"}',
+            filters='{"company": "' + _default_company() + '", "report_date": "2026-03-31", "ageing_based_on": "Posting Date"}',
         )
         f = mod.execute.call_args.kwargs["filters"]
         self.assertEqual(f.get("report_date"), "2026-03-31")
@@ -305,7 +313,7 @@ class TestExpandedReportAllowlist(unittest.TestCase):
             "Cash Flow",
             mod,
             mode="en",
-            filters='{"company": "Elrefae", "from_date": "2026-01-01", "to_date": "2026-10-05"}',
+            filters='{"company": "' + _default_company() + '", "from_date": "2026-01-01", "to_date": "2026-10-05"}',
         )
         f = mod.execute.call_args.kwargs["filters"]
         self.assertEqual(f.get("filter_based_on"), "Date Range")
@@ -319,7 +327,7 @@ class TestExpandedReportAllowlist(unittest.TestCase):
             "Cash Flow",
             mod,
             mode="en",
-            filters='{"company": "Elrefae", "filter_based_on": "Fiscal Year", "fiscal_year": "2026", "periodicity": "Monthly"}',
+            filters='{"company": "' + _default_company() + '", "filter_based_on": "Fiscal Year", "fiscal_year": "2026", "periodicity": "Monthly"}',
         )
         f = mod.execute.call_args.kwargs["filters"]
         self.assertEqual(f.get("from_fiscal_year"), "2026")
@@ -396,7 +404,7 @@ class TestExpandedReportAllowlist(unittest.TestCase):
                 from construction.api.bilingual_reports import localized_report
 
                 with _patched_report_modules_from_name(name, mod):
-                    localized_report(name, filters='{"company": "Elrefae"}', mode="ar")
+                    localized_report(name, filters='{"company": "' + _default_company() + '"}', mode="ar")
             self.assertEqual(mod.execute.call_count, 1, name)
 
 
@@ -462,7 +470,7 @@ class TestRealModuleSmoke(unittest.TestCase):
         ):
             from construction.api.bilingual_reports import localized_report
 
-            out = localized_report("Trial Balance", mode="ar", filters='{"company": "Elrefae"}')
+            out = localized_report("Trial Balance", mode="ar", filters='{"company": "' + _default_company() + '"}')
             self.assertEqual(mod.execute.call_count, 1)
             self.assertEqual(out["mode"], "ar")
 

@@ -17,7 +17,7 @@
     "construction/api/bilingual_reports.py": "d9970f8d3a834e675b26195871b8f00396c36ec0d0b0b8990ef7563591f0d846",
     "construction/services/report_bilingual_extension.py": "fe841d5db4787f681ea2ab882f31494438b25b9742b45ec102dc0211e9190269",
     "construction/tests/test_stage4_report_extension.py": "0d640f3882a476a92ef8d7c6eeb1e579469df81e18449747b8a657ba01c1b191",
-    "construction/tests/test_stage7_bilingual_reports.py": "b5cff52998c90dc2028a7edfb3d6c5ee01a981670ad4949b303247f7daad9c4f",
+    "construction/tests/test_stage7_bilingual_reports.py": "e1dd56959e99e08422a175ba6edbb9c24e24de2c61dfe65d5a5fc00550fa6b23",
     "construction/hooks.py": "7131a471c9af7983c418983beca71933daef905555b94e0e5b4654e3aa087224",
     "scripts/run_bilingual_regression_matrix.sh": "100d5cc11c913a5584a0b6c7e6d5fce0bb607761690a23a658eaeb5e84350659"
   },
@@ -63,6 +63,13 @@
       "cause": "consolidation merge of customer-release-gap-fixes into develop updating test_stage7_bilingual_reports.py",
       "fix": "re-pinned construction/tests/test_stage7_bilingual_reports.py to post-merge content; verified all tests pass clean",
       "disclosure": "Consolidation merge commit + amendments entry"
+    },
+    {
+      "id": "ci-fix-7",
+      "when": "2026-10-07 CI regression fix",
+      "cause": "stage7 suite hardcoded Company \"Elrefae\"; replaced with dynamic Global Defaults default_company resolution (CI seeds _Test Company)",
+      "fix": "artefact re-pinned to current sha256",
+      "disclosure": "CI fix briefing letter 2026-10-07"
     }
   ],
   "base_commit": "dd4ea6d",
