@@ -182,7 +182,7 @@ def verify_backup(site, path, cfg, dry_run):
     record(f"backup-verify[{site}]", status,
            f"{os.path.basename(path)} size={size}B age={age_s:.0f}s "
            f"sha256={digest[:16]}... gzip_ok={gzip_ok} "
-           f"restore_timing={restore_s:.2f}s dry_run={dry_run}")
+           f"restore_timing={restore_s or 0:.2f}s dry_run={dry_run}")
     return {"path": path, "size": size, "sha256": digest, "age_s": age_s,
             "gzip_ok": gzip_ok, "restore_timing_s": restore_s}
 
