@@ -167,6 +167,8 @@ jobs:
               construction.tests.test_customer_release_financial_guards
               construction.tests.test_bilingual_install_schema
               construction.tests.test_stage7_bilingual_reports
+              construction.tests.test_cost_analysis_engine
+              construction.tests.test_boq_legacy_cost_conversion
             )
           elif [[ "${{ github.event.inputs.test_suite || '' }}" == "smoke" ]]; then
             echo "::notice::Executing Tier 1 Fast Smoke Matrix (Manual Selection)"
@@ -176,6 +178,8 @@ jobs:
               construction.tests.test_customer_release_financial_guards
               construction.tests.test_bilingual_install_schema
               construction.tests.test_stage7_bilingual_reports
+              construction.tests.test_cost_analysis_engine
+              construction.tests.test_boq_legacy_cost_conversion
             )
           else
             echo "::notice::Executing Tier 2 Full 17-Module Business Regression Matrix on ${{ github.ref }}"
@@ -206,6 +210,14 @@ jobs:
             fi
           done
           exit "$test_status"
+
+      - name: Quality Linters
+        working-directory: ${{ github.workspace }}
+        run: |
+          python3 scripts/lint_scope_metadata.py
+          python3 scripts/ai_context_check.py
+          python3 scripts/schema_drift_checker.py
+          python3 scripts/lint_translation_writes.py
 
       - name: Run JS Property Tests
         # JS checks are independent of a Python test failure. Preserve failure
