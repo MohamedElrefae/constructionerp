@@ -8,6 +8,15 @@ on:
       - codex/customer-release-ci-*
   pull_request:
   workflow_dispatch:
+    inputs:
+      test_suite:
+        description: 'Test suite to run'
+        required: false
+        default: 'full'
+        type: choice
+        options:
+          - full
+          - smoke
 
 concurrency:
   group: construction-ci-${{ github.event.pull_request.number || github.ref }}
@@ -147,25 +156,49 @@ jobs:
           # Bare app installation does not run ERPNext's setup wizard.
           # Seed only synthetic CI business fixtures through native documents.
           PYTHONPATH="$GITHUB_WORKSPACE/.github/ci${PYTHONPATH:+:$PYTHONPATH}" bench --site test_site execute "__import__('business_fixtures').seed()"
-          modules=(
-            construction.tests.test_boq_properties
-            construction.tests.test_quantity_revisions
-            construction.tests.test_variation_orders
-            construction.tests.test_cost_analysis_engine
-            construction.tests.test_cost_database_api
-            construction.tests.test_customer_release_financial_guards
-            construction.tests.test_boq_transactions
-            construction.tests.test_boq_wbs_generation
-            construction.tests.test_boq_structure_conversion
-            construction.tests.test_boq_structure_delete_safety
-            construction.tests.test_boq_excel_parser
-            construction.tests.test_boq_rollup_audit
-            construction.tests.test_bilingual_install_schema
-            construction.tests.test_boq_legacy_cost_conversion
-            construction.tests.test_boq_parent_permissions
-            construction.tests.test_bilingual_desk_link_dispatch
-            construction.tests.test_stage7_bilingual_reports
-          )
+          # Tiered CI: Pull Requests run a fast smoke matrix (~8-10 min).
+          # Pushes to develop / main run the full 17-module regression matrix (~20 min).
+          # workflow_dispatch allows explicitly selecting 'smoke' or 'full'.
+          if [[ "${{ github.event_name }}" == "pull_request" && "${{ github.event.inputs.test_suite || '' }}" != "full" ]]; then
+            echo "::notice::Executing Tier 1 Fast Smoke Matrix for PR #${{ github.event.pull_request.number }}"
+            modules=(
+              construction.tests.test_boq_properties
+              construction.tests.test_boq_transactions
+              construction.tests.test_customer_release_financial_guards
+              construction.tests.test_bilingual_install_schema
+              construction.tests.test_stage7_bilingual_reports
+            )
+          elif [[ "${{ github.event.inputs.test_suite || '' }}" == "smoke" ]]; then
+            echo "::notice::Executing Tier 1 Fast Smoke Matrix (Manual Selection)"
+            modules=(
+              construction.tests.test_boq_properties
+              construction.tests.test_boq_transactions
+              construction.tests.test_customer_release_financial_guards
+              construction.tests.test_bilingual_install_schema
+              construction.tests.test_stage7_bilingual_reports
+            )
+          else
+            echo "::notice::Executing Tier 2 Full 17-Module Business Regression Matrix on ${{ github.ref }}"
+            modules=(
+              construction.tests.test_boq_properties
+              construction.tests.test_quantity_revisions
+              construction.tests.test_variation_orders
+              construction.tests.test_cost_analysis_engine
+              construction.tests.test_cost_database_api
+              construction.tests.test_customer_release_financial_guards
+              construction.tests.test_boq_transactions
+              construction.tests.test_boq_wbs_generation
+              construction.tests.test_boq_structure_conversion
+              construction.tests.test_boq_structure_delete_safety
+              construction.tests.test_boq_excel_parser
+              construction.tests.test_boq_rollup_audit
+              construction.tests.test_bilingual_install_schema
+              construction.tests.test_boq_legacy_cost_conversion
+              construction.tests.test_boq_parent_permissions
+              construction.tests.test_bilingual_desk_link_dispatch
+              construction.tests.test_stage7_bilingual_reports
+            )
+          fi
           test_status=0
           for module in "${modules[@]}"; do
             if ! bench --site test_site run-tests --app construction --module "$module"; then
