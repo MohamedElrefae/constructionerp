@@ -1,6 +1,5 @@
 import frappe
 
-
 TARGETS = (
     {
         "dt": "Item",
@@ -8,6 +7,7 @@ TARGETS = (
         "label": "Item Name Arabic (Search Key)",
         "insert_after": "item_name_ar",
         "source_field": "item_name_ar",
+        "source_insert_after": "item_name",
     },
     {
         "dt": "Customer",
@@ -15,6 +15,7 @@ TARGETS = (
         "label": "Customer Name in Arabic (Search Key)",
         "insert_after": "customer_name_in_arabic",
         "source_field": "customer_name_in_arabic",
+        "source_insert_after": "customer_name",
     },
     {
         "dt": "Supplier",
@@ -22,6 +23,7 @@ TARGETS = (
         "label": "Supplier Name in Arabic (Search Key)",
         "insert_after": "supplier_name_in_arabic",
         "source_field": "supplier_name_in_arabic",
+        "source_insert_after": "supplier_name",
     },
 )
 
@@ -35,21 +37,36 @@ def execute():
     - Customer (`customer_name_in_arabic_norm`)
     - Supplier (`supplier_name_in_arabic_norm`)
 
-    Idempotent; safe to re-run. Reversible via `revert()`.
+    Missing Arabic source fields are installed before backfill. Existing
+    fields and source values are preserved. Idempotent; safe to re-run.
+    `revert()` removes derived search keys only, preserving source fields.
     """
     if not frappe.db.exists("DocType", "Custom Field"):
         return
 
-    try:
-        from frappe.custom.doctype.custom_field.custom_field import create_custom_field
-    except ImportError:
-        frappe.log_error("Could not import create_custom_field", "Patch v9_2")
-        return
+    from frappe.custom.doctype.custom_field.custom_field import create_custom_field
 
     for target in TARGETS:
         dt = target["dt"]
         if not frappe.db.exists("DocType", dt):
             continue
+
+        # Patches run before after_migrate provisions the bilingual registry.
+        # Older sites may not have these Arabic source fields yet. Provision
+        # them before reading any values; preserve existing customizations.
+        meta = frappe.get_meta(dt, cached=False)
+        if not meta.has_field(target["source_field"]):
+            create_custom_field(
+                dt,
+                {
+                    "fieldname": target["source_field"],
+                    "fieldtype": "Data",
+                    "label": "Name (Arabic)",
+                    "insert_after": target["source_insert_after"],
+                    "translatable": 0,
+                },
+                ignore_validate=True,
+            )
 
         field_def = {
             "fieldname": target["fieldname"],
@@ -68,13 +85,16 @@ def execute():
             "name",
         )
         if not exists:
-            try:
-                create_custom_field(dt, field_def, ignore_validate=True)
-            except Exception:
-                frappe.log_error(
-                    f"Failed to create custom field {target['fieldname']} on {dt}",
-                    "Patch v9_2",
-                )
+            # Propagate failures so Patch Log cannot record an incomplete patch.
+            create_custom_field(dt, field_def, ignore_validate=True)
+
+        # A failed earlier attempt can leave metadata without its DB column.
+        if not all(
+            frappe.db.has_column(dt, field) for field in (target["source_field"], target["fieldname"])
+        ):
+            frappe.clear_cache(doctype=dt)
+            frappe.db.updatedb(dt)
+        frappe.clear_cache(doctype=dt)
 
     _backfill()
 

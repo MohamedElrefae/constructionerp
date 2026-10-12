@@ -38,51 +38,50 @@ def execute():
 
     batch = 500
     total_backfilled = 0
-    for is_catalog in (1, 0):
-        offset = 0
-        while True:
-            rows = frappe.get_all(
-                "Translation",
-                filters={"ct_is_catalog_entry": is_catalog}
-                if frappe.db.has_column("Translation", "ct_is_catalog_entry")
-                else {},
-                fields=[
-                    "name",
-                    "language",
-                    "source_text",
-                    "context",
-                    "ct_app",
-                    "ct_key_digest",
-                    "ct_search_normalized",
-                    "ct_origin",
-                ],
-                limit_start=offset,
-                limit_page_length=batch,
-            )
-            if not rows:
-                break
-            for r in rows:
-                lang = r.language or ""
-                src = r.source_text or ""
-                ctx = r.context or ""
-                app = r.get("ct_app") or ""
-                digest = _digest(lang, src, ctx, app, bool(is_catalog))
-                norm = _norm(src)
-                updates = {}
-                if (r.get("ct_key_digest") or "") != digest:
-                    updates["ct_key_digest"] = digest
-                if has_norm and (r.get("ct_search_normalized") or "") != norm:
-                    updates["ct_search_normalized"] = norm
-                if not is_catalog and has_origin:
-                    cur_origin = (r.get("ct_origin") or "").strip()
-                    if not cur_origin:
-                        updates["ct_origin"] = "Site Override"
-                if updates:
-                    frappe.db.set_value("Translation", r.name, updates, update_modified=False)
-                    total_backfilled += 1
-            offset += batch
-            if len(rows) < batch:
-                break
+    last_name = ""
+    while True:
+        rows = frappe.get_all(
+            "Translation",
+            filters={"name": (">", last_name)},
+            fields=[
+                "name",
+                "language",
+                "source_text",
+                "context",
+                "ct_app",
+                "ct_is_catalog_entry",
+                "ct_key_digest",
+                "ct_search_normalized",
+                "ct_origin",
+            ],
+            order_by="name asc",
+            limit_page_length=batch,
+        )
+        if not rows:
+            break
+        for r in rows:
+            is_catalog = bool(r.get("ct_is_catalog_entry"))
+            lang = r.language or ""
+            src = r.source_text or ""
+            ctx = r.context or ""
+            app = r.get("ct_app") or ""
+            digest = _digest(lang, src, ctx, app, is_catalog)
+            norm = _norm(src)
+            updates = {}
+            if r.get("ct_is_catalog_entry") is None:
+                updates["ct_is_catalog_entry"] = 0
+            if (r.get("ct_key_digest") or "") != digest:
+                updates["ct_key_digest"] = digest
+            if has_norm and (r.get("ct_search_normalized") or "") != norm:
+                updates["ct_search_normalized"] = norm
+            if not is_catalog and has_origin:
+                cur_origin = (r.get("ct_origin") or "").strip()
+                if not cur_origin:
+                    updates["ct_origin"] = "Site Override"
+            if updates:
+                frappe.db.set_value("Translation", r.name, updates, update_modified=False)
+                total_backfilled += 1
+        last_name = rows[-1].name
     frappe.db.commit()
     print(f"[v8_6] Backfilled {total_backfilled} digests/normalized/origin")
 
@@ -168,6 +167,6 @@ def execute():
     )[0][0]
     print(f"[v8_6] Verification: dup_groups={verify_dup} null_digests={verify_null}")
     if verify_dup or verify_null:
-        print("[v8_6] VERIFICATION FAILED")
+        frappe.throw("Patch v8_6 failed: duplicate translation identities or missing digests remain")
     else:
         print("[v8_6] VERIFICATION PASSED")

@@ -180,42 +180,57 @@ def ensure_translation_identity():
         return hashlib.sha256(raw.encode("utf-8")).hexdigest()
 
     backfilled = 0
-    rows = frappe.get_all(
-        "Translation",
-        filters={"ct_key_digest": ("in", ("", None))},
-        fields=[
-            "name",
-            "language",
-            "source_text",
-            "context",
-            "ct_app",
-            "ct_is_catalog_entry",
-            "ct_origin",
-            "ct_key_digest",
-            "ct_search_normalized",
-        ],
-        limit_page_length=0,
-    )
-    for r in rows:
-        lang = r.language or ""
-        src = r.source_text or ""
-        ctx = r.context or ""
-        app = r.get("ct_app") or ""
-        is_catalog = bool(r.get("ct_is_catalog_entry"))
-        updates = {
-            "ct_key_digest": _digest(lang, src, ctx, app, is_catalog),
-            "ct_search_normalized": strip_html_tags(src).strip(),
-        }
-        if (
-            not is_catalog
-            and frappe.db.has_column("Translation", "ct_origin")
-            and not (r.get("ct_origin") or "").strip()
-        ):
-            updates["ct_origin"] = "Site Override"
-        frappe.db.set_value("Translation", r.name, updates, update_modified=False)
-        backfilled += 1
+    last_name = ""
+    while True:
+        # SQL NULL never matches IN ('', NULL). Also repair legacy NULL
+        # catalog flags so those runtime overrides reach the loader's = 0 query.
+        # Keyset pagination stays stable as repaired rows leave the result set.
+        rows = frappe.db.sql(
+            """
+            SELECT name, language, source_text, context, ct_app,
+                   ct_is_catalog_entry, ct_origin, ct_key_digest, ct_search_normalized
+            FROM `tabTranslation`
+            WHERE (ct_key_digest IS NULL OR ct_key_digest = '' OR ct_is_catalog_entry IS NULL)
+              AND name > %(last_name)s
+            ORDER BY name
+            LIMIT 500
+            """,
+            {"last_name": last_name},
+            as_dict=True,
+        )
+        if not rows:
+            break
+        pending = []
+        identities = {}
+        for r in rows:
+            is_catalog = bool(r.get("ct_is_catalog_entry"))
+            digest = _digest(r.language, r.source_text, r.context, r.get("ct_app"), is_catalog)
+            owner = frappe.db.get_value("Translation", {"ct_key_digest": digest}, "name")
+            if (owner and owner != r.name) or digest in identities:
+                # Preserve both translations rather than guessing which value
+                # a customer intended to keep under the existing unique index.
+                frappe.throw(
+                    "Legacy Translation identity collision; reconcile duplicate rows before retrying"
+                )
+            identities[digest] = r.name
+            updates = {
+                "ct_key_digest": digest,
+                "ct_search_normalized": strip_html_tags(r.source_text or "").strip(),
+            }
+            if r.get("ct_is_catalog_entry") is None:
+                updates["ct_is_catalog_entry"] = 0
+            if not is_catalog and not (r.get("ct_origin") or "").strip():
+                updates["ct_origin"] = "Site Override"
+            pending.append((r.name, updates))
+        for name, updates in pending:
+            frappe.db.set_value("Translation", name, updates, update_modified=False)
+            backfilled += 1
+        last_name = rows[-1].name
     if backfilled:
         frappe.db.commit()
+        from frappe.translate import clear_cache
+
+        clear_cache()
     return {"backfilled": backfilled}
 
 
@@ -223,3 +238,13 @@ def apply():
     """Run from patches / migrate."""
     ensure_custom_fields()
     frappe.db.commit()
+
+
+def count_incomplete_translation_identities():
+    """Verify the migration postcondition without treating NULL as a value."""
+    return frappe.db.sql(
+        """
+        SELECT COUNT(*) FROM `tabTranslation`
+        WHERE ct_key_digest IS NULL OR ct_key_digest = '' OR ct_is_catalog_entry IS NULL
+        """
+    )[0][0]
