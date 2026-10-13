@@ -36,3 +36,4 @@ construction.patches.v9_13.add_asset_arabic_fields
 construction.patches.v9_14.add_company_arabic_fields
 construction.patches.v9_15.version_boq_cost_basis
 construction.patches.v9_16.repair_legacy_translation_identity
+construction.patches.v9_17.align_legacy_sidebar_title_case
