@@ -143,13 +143,38 @@ CUSTOM_FIELDS = [
 
 def ensure_custom_fields():
     """Idempotently create the Translation catalog custom fields."""
+    review_status_options_changed = False
     for field in CUSTOM_FIELDS:
         try:
             create_custom_field(field["dt"], field, ignore_validate=True)
+            # create_custom_field is create-only: on older sites it leaves a
+            # stale Select option list in place. The release importer writes
+            # "Released" to runtime Translation rows, so reconcile this
+            # app-owned field before that after_migrate hook runs.
+            if field["fieldname"] == "ct_review_status":
+                existing = frappe.db.get_value(
+                    "Custom Field",
+                    {"dt": field["dt"], "fieldname": field["fieldname"]},
+                    ["name", "options"],
+                    as_dict=True,
+                )
+                if existing and existing.options != field["options"]:
+                    frappe.db.set_value(
+                        "Custom Field",
+                        existing.name,
+                        "options",
+                        field["options"],
+                        update_modified=False,
+                    )
+                    review_status_options_changed = True
         except Exception:
+            if field["fieldname"] == "ct_review_status":
+                raise
             frappe.log_error(
                 f"Failed to create custom field {field['fieldname']}", "Translation Catalog Setup"
             )
+    if review_status_options_changed:
+        frappe.clear_cache(doctype="Translation")
 
 
 def ensure_translation_identity():

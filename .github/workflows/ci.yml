@@ -69,6 +69,7 @@ jobs:
           python construction/tests/test_wave1_arabic_norm_patch.py -v
           python construction/tests/test_translation_identity_migration.py -v
           python construction/tests/test_legacy_sidebar_title_patch.py -v
+          python construction/tests/test_translation_review_status_options.py -v
 
       - name: Cache pip
         uses: actions/cache@v4
