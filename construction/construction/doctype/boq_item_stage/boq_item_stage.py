@@ -43,6 +43,7 @@ class BOQItemStage(Document):
         self.fetch_parent_context()
         self.enforce_certification_role()
         self.enforce_stage_edit_policy()
+        self.enforce_measurement_field_policy()
         validate_stage_quantities(self)
 
     def enforce_scope_context_project(self):
@@ -160,6 +161,60 @@ class BOQItemStage(Document):
                         header_status, ", ".join(changed)
                     )
                 )
+
+    # Fields a caller without BOQ Header write may change on an existing,
+    # non-certified stage. Planning identity and planned quantities stay with
+    # header writers (PM/Owner); certification stays with certifier roles.
+    MEASUREMENT_EDITABLE_FIELDS = frozenset(
+        {
+            "measured_executed_qty",
+            "percent_complete",
+            "description",
+            "stage_status",
+        }
+    )
+
+    def enforce_measurement_field_policy(self):
+        """F11-D003: engineers record unapproved measurements; PM/Owner plan and certify.
+
+        Callers admitted through the parent-read exception (no header write)
+        may only touch measurement fields on non-certified stages. Creation
+        is unrestricted (new records are uncertified, distribution-capped and
+        removable by header writers). Certified-state and frozen/locked rules
+        above still apply first.
+        """
+        if frappe.session.user == "Administrator":
+            return
+        if self.is_new():
+            return
+        if not self.boq_header:
+            return
+        if frappe.has_permission("BOQ Header", "write", doc=self.boq_header):
+            return
+        old_doc = self.get_doc_before_save()
+        if not old_doc:
+            return
+        changed = [
+            fieldname
+            for fieldname in (
+                "project",
+                "boq_header",
+                "boq_structure",
+                "boq_item",
+                "stage_code",
+                "stage_name",
+                "planned_qty",
+            )
+            if self._field_changed(old_doc, fieldname)
+        ]
+        if changed:
+            labels = [(self.meta.get_label(f) or f) for f in changed]
+            frappe.throw(
+                _(
+                    "Only the BOQ Header writer may change planning fields on a stage: {0}. Record measurements instead."
+                ).format(", ".join(labels)),
+                frappe.PermissionError,
+            )
 
     def enforce_certification_role(self):
         if self._user_can_certify():

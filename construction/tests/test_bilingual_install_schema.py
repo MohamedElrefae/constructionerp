@@ -112,14 +112,38 @@ class TestBilingualInstallSchema(FrappeTestCase):
         for field in frappe.get_meta("Workspace").get_table_fields():
             frappe.db.delete(field.options, {"parent": "Construction", "parenttype": "Workspace"})
         frappe.db.delete("Workspace", {"name": "Construction"})
-        with patch.dict(frappe.conf, {"developer_mode": 0}):
+        # F35-D001: two reconciliations in one. (1) The reconciler is documented
+        # "Called by after_migrate hook" and the vendor's archived-model guard
+        # (WorkspaceSidebar.refuse_new_rows) explicitly allows saves under the
+        # migrate/patch/install flags — invoking it outside that context tests a
+        # configuration the vendor forbids, so run it in context. The guard itself
+        # is never bypassed. (2) The sidebar record follows the config title
+        # ("Construction Home" since the ENV-D001 retitle), not a hardcoded name.
+        import json
+        import os
+
+        with open(
+            os.path.join(frappe.get_app_path("construction"), "config", "workspace_sidebar_items.json")
+        ) as f:
+            sidebar_name = json.load(f)["title"]
+        prev_flag = frappe.flags.in_migrate
+        frappe.flags.in_migrate = True
+        try:
+            with patch.dict(frappe.conf, {"developer_mode": 0}):
+                setup_construction_workspace_page()
+        finally:
+            frappe.flags.in_migrate = prev_flag
+        self.assertTrue(frappe.db.exists("Workspace", "Construction"))
+        page = frappe.get_doc("Workspace", "Construction")
+        self.assertTrue(page.public)
+        sidebar = frappe.get_doc("Workspace Sidebar", sidebar_name)
+        links = [(row.link_type, row.link_to) for row in sidebar.items if row.link_to]
+        self.assertIn(("Workspace", "Construction"), links)
+        prev_flag = frappe.flags.in_migrate
+        frappe.flags.in_migrate = True
+        try:
             setup_construction_workspace_page()
-            self.assertTrue(frappe.db.exists("Workspace", "Construction"))
-            page = frappe.get_doc("Workspace", "Construction")
-            self.assertTrue(page.public)
-            sidebar = frappe.get_doc("Workspace Sidebar", "Construction")
-            links = [(row.link_type, row.link_to) for row in sidebar.items if row.link_to]
-            self.assertIn(("Workspace", "Construction"), links)
-            setup_construction_workspace_page()
-            repeated = frappe.get_doc("Workspace Sidebar", "Construction")
-            self.assertEqual([(row.link_type, row.link_to) for row in repeated.items if row.link_to], links)
+        finally:
+            frappe.flags.in_migrate = prev_flag
+        repeated = frappe.get_doc("Workspace Sidebar", sidebar_name)
+        self.assertEqual([(row.link_type, row.link_to) for row in repeated.items if row.link_to], links)

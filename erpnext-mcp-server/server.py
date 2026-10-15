@@ -159,6 +159,20 @@ def tool_get_boq_header(name: str) -> dict:
     f = get_frappe()
     guard_doctype("BOQ Header")
     doc = f.get_doc("BOQ Header", name)
+    # F27 (UAT-D005): BOQ Header carries no `items` child table — BOQ Item rows link
+    # back via `boq_header` (see AGENTS.md §3C). `doc.get("items", [])` always yielded
+    # None/[], so callers iterating it hit TypeError. Query the children explicitly.
+    guard_doctype("BOQ Item")
+    rows = f.get_all(
+        "BOQ Item",
+        filters={"boq_header": doc.name},
+        fields=[
+            "name", "structure", "cost_item", "item_type", "quantity", "unit",
+            "est_unit_cost", "contract_unit_price", "line_total",
+        ],
+        order_by="creation asc",
+        limit_page_length=0,
+    )
     return {
         "name": doc.name,
         "project": doc.project,
@@ -179,7 +193,7 @@ def tool_get_boq_header(name: str) -> dict:
                 "contract_unit_price": item.contract_unit_price,
                 "line_total": item.line_total,
             }
-            for item in doc.get("items", [])
+            for item in rows
         ],
     }
 

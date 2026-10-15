@@ -12,6 +12,23 @@ bench get-app $URL_OF_THIS_REPO --branch develop
 bench install-app construction
 ```
 
+### Packaging
+
+Canonical build: Flit via `pyproject.toml` (version 0.0.5, dynamic from
+`construction/__init__.py`). `bench get-app` + `bench install-app` is the supported
+delivery route; direct `pip install` of legacy `setup.py` is removed. Source maps
+(`*.map` under `construction/public/dist/`) are build outputs for local debugging and are
+not shipped. Canonical app entry: `/app/construction`.
+
+### Guides
+
+- [Customer onboarding](docs/CUSTOMER_ONBOARDING.md) — installation, first login, roles,
+  languages/themes, BOQ lifecycle, support boundary.
+- [Bilingual task guides](docs/BILINGUAL_TASK_GUIDES.md) — core tasks and troubleshooting
+  in Arabic and English.
+- [Maintenance](docs/MAINTENANCE.md) — for engineers maintaining this app.
+- [Distribution](docs/DISTRIBUTION.md) — what ships to customers and what never does.
+
 ### Contributing
 
 This app uses `pre-commit` for code formatting and linting. Please [install pre-commit](https://pre-commit.com/#installation) and enable it for this repository:

@@ -355,6 +355,21 @@ class VariationOrder(Document):
 
         file_doc = frappe.get_doc("File", file_name)
 
+        # F11: approval evidence must not be publicly downloadable. Public
+        # /files/ assets bypass application authorization on a production web
+        # server, so the signed PDF has to live under /private/files/ where
+        # every download passes the guarded endpoint (see
+        # construction.overrides.file_download). Tick "Is Private" on the
+        # File before client approval; this gate refuses public files.
+        # Already-approved history is exempt so historical re-saves keep
+        # working; the requirement applies at the approval transition.
+        previous = self.get_doc_before_save()
+        if (not previous or previous.status != CLIENT_APPROVED_STATUS) and not file_doc.is_private:
+            frappe.throw(
+                _("Client approval document must be a private file. Mark the attachment private and retry."),
+                frappe.ValidationError,
+            )
+
         if not str(file_doc.file_name or "").lower().endswith(".pdf") and not doc_str.lower().endswith(
             ".pdf"
         ):

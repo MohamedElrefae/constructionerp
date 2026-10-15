@@ -185,7 +185,7 @@
 
 	function saveUserSettings(doctype, key, value) {
 		try {
-			frappe.model.user_settings.save(doctype, key, value);
+			return frappe.model.user_settings.save(doctype, key, value);
 		} catch (e) {
 			vfcDebugLog("warn", "[VFC] frappe.model.user_settings.save failed:", e);
 		}
@@ -225,7 +225,7 @@
 			// Escape key closes panel
 			if (!VFC._escListenerAttached) {
 				document.addEventListener("keydown", (e) => {
-					if (e.key === "Escape") VFC._closeAll();
+					if (e.key === "Escape") VFC._closeAllIfClean();
 				});
 				VFC._escListenerAttached = true;
 			}
@@ -335,6 +335,9 @@
               <div class="vfc-section-title" style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--ct-text-muted);margin-bottom:10px">
                 ${ICON_COL} ${__("Column Density")}
               </div>
+              <div style="font-size:10px;color:var(--ct-text-muted);margin-bottom:8px">${__(
+                "Density saves automatically when you pick it."
+              )}</div>
               <div class="vfc-density-seg" data-panel="${panelId}">
                 <div class="vfc-den-opt" data-den="1" title="${__(
 					"1 Column — stacked, easy reading"
@@ -423,7 +426,7 @@
 
         <!-- Footer -->
         <div class="vfc-foot">
-          <span class="vfc-foot-hint">${__("Saved via user settings")}</span>
+          <span class="vfc-foot-hint" id="vfc-status-${dtId}">${__("Saved via user settings")}</span>
           <button class="btn btn-default btn-sm" data-vfc-close="${panelId}">${__(
 				"Close"
 			)}</button>
@@ -439,6 +442,9 @@
 
 			// Make panel draggable and resizable
 			this._makeDraggableAndResizable(panel);
+
+			// F23-D002: warn before leaving the form with staged changes.
+			this._registerLeaveGuard(frm, dt);
 
 			// Wire up events
 			this._wirePanel(frm, panel, dtId, fields);
@@ -479,7 +485,7 @@
 
 			// Close buttons
 			panel.querySelectorAll("[data-vfc-close]").forEach((el) => {
-				el.addEventListener("click", () => this._togglePanel(frm, false));
+				el.addEventListener("click", () => this._closeIfClean(frm, dt));
 			});
 
 			// Tab switching
@@ -603,9 +609,7 @@
 			if (cntEl) cntEl.textContent = visible;
 		},
 
-		/* ─────────────────────────────────────────────────────────
-       _onVisChange — called when a visibility checkbox changes
-    ───────────────────────────────────────────────────────── */
+
 		_onVisChange(checkbox, doctype) {
 			const fieldname = checkbox.getAttribute("data-field");
 			const show = checkbox.checked;
@@ -628,8 +632,93 @@
 			const cntEl = document.getElementById(`vfc-vis-cnt-${dtId}`);
 			if (badge) badge.textContent = visibleCount + reqCount;
 			if (cntEl) cntEl.textContent = visibleCount + reqCount;
+
+			// F23-D002: visibility is staged, not saved. Reflect that in the panel so the
+			// difference from density (which saves on click) is never a surprise.
+			this._updateDirtyStatus(doctype);
 		},
 
+		/* ─────────────────────────────────────────────────────────
+       _dirtyFields — fieldnames whose staged visibility differs from the saved list.
+
+       Only the Fields tab's staged state is tracked. Density is applied and saved the moment
+       it is picked, so it can never be "pending".
+    ───────────────────────────────────────────────────────── */
+		_dirtyFields(doctype) {
+			const saved = (loadUserSettings(doctype).vfc_hidden_fields || []).slice().sort();
+			const panel = cur_frm?._vfc_panel;
+			if (!panel) return [];
+			const checks = Array.from(panel.querySelectorAll(".vfc-vis-check"));
+			const staged = checks
+				.filter((c) => !c.checked && !c.disabled)
+				.map((c) => c.getAttribute("data-field"))
+				.sort();
+			return saved.filter((f) => !staged.includes(f)).concat(staged.filter((f) => !saved.includes(f)));
+		},
+
+		/* ─────────────────────────────────────────────────────────
+       _updateDirtyStatus — drive the unsaved-changes indicator in the panel footer.
+    ───────────────────────────────────────────────────────── */
+		_updateDirtyStatus(doctype) {
+			const panel = cur_frm?._vfc_panel;
+			const el = panel?.querySelector(`#vfc-status-${doctype.replace(/\s/g, "-")}`);
+			if (!el) return;
+			const dirty = this._dirtyFields(doctype);
+			if (dirty.length) {
+				el.textContent = __("Unsaved changes: {0} field(s). Apply & Save to keep them.", [dirty.length]);
+				el.style.color = "var(--ct-danger)";
+				el.style.fontWeight = "700";
+				el.classList.add("vfc-dirty");
+			} else {
+				el.textContent = __("Saved via user settings");
+				el.style.color = "";
+				el.style.fontWeight = "";
+				el.classList.remove("vfc-dirty");
+			}
+			const apply = panel.querySelector(`[data-vfc-apply="${doctype}"]`);
+			if (apply) apply.classList.toggle("vfc-apply-pending", dirty.length > 0);
+		},
+
+		/* ─────────────────────────────────────────────────────────
+       _closeIfClean — close the panel, or warn first when staged changes would be lost.
+
+       F23-D002: the Close button, the Escape key and the backdrop all route through here,
+       so none of them can silently discard staged visibility.
+    ───────────────────────────────────────────────────────── */
+		_closeIfClean(frm, doctype) {
+			if (!this._dirtyFields(doctype).length) {
+				this._togglePanel(frm, false);
+				return;
+			}
+			frappe.confirm(
+				__("You have unsaved layout changes. Close and discard them?"),
+				() => this._togglePanel(frm, false),
+				() => {} // Keep editing: leave the panel open
+			);
+		},
+
+		/* ─────────────────────────────────────────────────────────
+       _onRouteChange — warn when leaving the form with staged changes.
+
+       The panel is DOM that dies with the form, so navigating away discards whatever is
+       staged. The router fires "change" without checking a return value, so this warns and,
+       when declined, puts the address bar back on the form the user was on.
+    ───────────────────────────────────────────────────────── */
+		_onRouteChange(frm, doctype) {
+			if (!this._dirtyFields(doctype).length) return;
+			const from = frappe.get_route_str();
+			frappe.confirm(
+				__("You have unsaved layout changes. Leave and discard them?"),
+				() => {}, // Already on the new route; nothing to undo
+				() => {
+					frappe.set_route(...from.split("/"), { replace: true });
+				}
+			);
+		},
+
+		/* ─────────────────────────────────────────────────────────
+       _onVisChange — called when a visibility checkbox changes
+    ───────────────────────────────────────────────────────── */
 		/* ─────────────────────────────────────────────────────────
        _renderPresetList
     ───────────────────────────────────────────────────────── */
@@ -775,7 +864,7 @@
 		/* ─────────────────────────────────────────────────────────
        _applyAndSave — main Apply & Save button handler
     ───────────────────────────────────────────────────────── */
-		_applyAndSave(frm, dtId) {
+		async _applyAndSave(frm, dtId) {
 			const dt = frm.doctype;
 
 			// 1. Apply density
@@ -784,13 +873,18 @@
 
 			// 2. Apply visibility + save hidden list
 			const hiddenFields = this._applyVisibility(frm, dtId);
-			saveUserSettings(dt, "vfc_hidden_fields", hiddenFields);
+			// F23-D002: await the save before refreshing the dirty indicator, otherwise the
+			// indicator reads the old saved state and still reports unsaved changes.
+			await saveUserSettings(dt, "vfc_hidden_fields", hiddenFields);
+
+			// F23-D002: the staged change is now saved — clear the indicator.
+			this._updateDirtyStatus(dt);
 
 			// 3. Apply preset (if one is selected)
 			const activePreset = frm._vfc_panel?.querySelector(".vfc-pre-item.vfc-pre-active");
 			if (activePreset) {
 				const key = activePreset.getAttribute("data-preset-key");
-				saveUserSettings(dt, "vfc_preset", key);
+				await saveUserSettings(dt, "vfc_preset", key);
 			}
 
 			// 4. Save sections layout if modified (System Manager only)
@@ -862,8 +956,11 @@
 
 						const result = resp?.message;
 						resetDensity(dt);
-						resetUserSettings(dt);
+						// F23-D002: await the reset so the indicator does not read the pre-reset state.
+						await resetUserSettings(dt);
 						this._restoreVfcHiddenFieldVisibility(frm, hiddenFields);
+						// F23-D002: staged visibility is discarded by the reset — clear the indicator.
+						this._updateDirtyStatus(dt);
 						this._renderDensityPreview(dtId, loadDensity(dt));
 
 						if (window.VFCLayoutEngine) {
@@ -943,7 +1040,7 @@
 				backdrop.id = "vfc-backdrop";
 				backdrop.className = "vfc-backdrop";
 				document.body.appendChild(backdrop);
-				backdrop.addEventListener("click", () => VFC._closeAll());
+				backdrop.addEventListener("click", () => VFC._closeAllIfClean());
 			}
 
 			if (shouldOpen) {
@@ -978,6 +1075,42 @@
 				b.classList.remove("vfc-open");
 			});
 			document.getElementById("vfc-backdrop")?.classList.remove("vfc-backdrop-open");
+		},
+
+		/* ─────────────────────────────────────────────────────────
+       _closeAllIfClean — close every open panel, but only after warning about staged
+       changes. Used by the Escape key and the backdrop, which would otherwise discard
+       whatever the Fields tab has staged (F23-D002).
+    ───────────────────────────────────────────────────────── */
+		_closeAllIfClean() {
+			const open = Array.from(document.querySelectorAll(".vfc-panel.vfc-panel-open"));
+			if (!open.length) return;
+			const dirty = open.filter((p) => {
+				const dt = p.getAttribute("data-doctype");
+				return dt && this._dirtyFields(dt).length;
+			});
+			if (!dirty.length) {
+				this._closeAll();
+				return;
+			}
+			frappe.confirm(
+				__("You have unsaved layout changes. Close and discard them?"),
+				() => this._closeAll(),
+				() => {} // Keep editing
+			);
+		},
+
+		/* ─────────────────────────────────────────────────────────
+       _warnBeforeLeaving — register the route-change guard for one form.
+
+       Called once per form when the panel is built. The router fires "change" without
+       consulting a return value, so a declined warning restores the previous URL instead.
+    ───────────────────────────────────────────────────────── */
+		_registerLeaveGuard(frm, doctype) {
+			if (frm._vfc_leave_guard) return;
+			const handler = () => this._onRouteChange(frm, doctype);
+			frappe.router.on("change", handler);
+			frm._vfc_leave_guard = handler;
 		},
 
 		/* ─────────────────────────────────────────────────────────

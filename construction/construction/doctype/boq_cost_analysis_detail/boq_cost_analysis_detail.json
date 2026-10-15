@@ -86,7 +86,7 @@
       "fieldname": "rate_source",
       "fieldtype": "Select",
       "label": "Rate Source",
-      "options": "Manual\nImport\nItem Price\nLast PI\nLast PO\nWeighted Average\nSupplier-Specific\nProject-Specific\nResource Price History\nTemplate"
+      "options": "Manual\nImport\nItem Price\nLast PI\nLast PO\nWeighted Average\nSupplier-Specific\nProject-Specific\nResource Price History\nLast Price History\nTemplate"
     },
     {
       "fieldname": "supplier",

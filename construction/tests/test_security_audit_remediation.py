@@ -79,7 +79,28 @@ class TestSecurityAuditRemediation(FrappeTestCase):
                 if frappe.db.exists(doctype, name):
                     frappe.delete_doc(doctype, name, force=1, ignore_permissions=True)
             except Exception as e:
-                errors.append(f"{doctype} {name}: {e}")
+                # F24-D002: Approved Quantity Revisions are permanent by product design
+                # (boq_quantity_revision.on_trash refuses when approval evidence exists).
+                # The product guard is NOT weakened for tests. When the refused row is an
+                # isolated fixture of this test run — its VO is in this test's tracked
+                # list — the row is removed directly so the run stays hermetic. Any other
+                # refusal is still reported as an error.
+                if doctype == "BOQ Quantity Revision" and _is_approval_refusal(name, vos):
+                    frappe.db.delete(doctype, {"name": name})
+                else:
+                    errors.append(f"{doctype} {name}: {e}")
+
+        def _is_approval_refusal(name, tracked_vos):
+            try:
+                row = frappe.db.get_value(
+                    "BOQ Quantity Revision",
+                    name,
+                    ["status", "variation_order"],
+                    as_dict=True,
+                )
+            except Exception:
+                return False
+            return bool(row and row.status == "Approved" and row.variation_order in (tracked_vos or []))
 
         # Quantity Revisions linked to tracked VOs
         for vo in vos:
@@ -466,6 +487,21 @@ class TestSecurityAuditRemediation(FrappeTestCase):
         submitter_user = self._create_test_user("vo_submitter", "Project Manager")
         engineer_user = self._create_test_user("vo_engineer", "Site Engineer")
         client_user = self._create_test_user("vo_client", "Construction Owner")
+
+        # This positive workflow needs active scope; separate missing-scope
+        # tests deliberately retain scopeless users and enforcement stays ON.
+        company = frappe.db.get_value("Project", self.project_name, "company")
+        for user in (submitter_user, engineer_user, client_user):
+            frappe.get_doc(
+                {
+                    "doctype": "User Scope Context",
+                    "user": user,
+                    "company": company,
+                    "project": self.project_name,
+                }
+            ).insert(ignore_permissions=True)
+        frappe.local._boq_perm_scope_dims = {}
+        frappe.local.request_cache.clear()
 
         # Project Manager creates and submits VO
         frappe.set_user(submitter_user)

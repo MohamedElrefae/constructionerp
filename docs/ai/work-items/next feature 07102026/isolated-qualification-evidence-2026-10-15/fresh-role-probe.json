@@ -1,0 +1,75 @@
+{
+  "maintainer": {
+    "Company": {
+      "read": false,
+      "create": false,
+      "write": false,
+      "submit": false
+    },
+    "Item": {
+      "read": false,
+      "create": false,
+      "write": false,
+      "submit": false
+    },
+    "UOM": {
+      "read": false,
+      "create": false,
+      "write": false,
+      "submit": false
+    },
+    "Resource Price History": {
+      "read": false,
+      "create": false,
+      "write": false,
+      "submit": false
+    },
+    "BOQ Cost Analysis": {
+      "read": false,
+      "create": false,
+      "write": false,
+      "submit": false
+    }
+  },
+  "pm": {
+    "Company": {
+      "read": false,
+      "create": false,
+      "write": false,
+      "submit": false
+    },
+    "Item": {
+      "read": false,
+      "create": false,
+      "write": false,
+      "submit": false
+    },
+    "UOM": {
+      "read": false,
+      "create": false,
+      "write": false,
+      "submit": false
+    },
+    "Resource Price History": {
+      "read": true,
+      "create": false,
+      "write": false,
+      "submit": false
+    },
+    "BOQ Cost Analysis": {
+      "read": true,
+      "create": true,
+      "write": true,
+      "submit": true
+    }
+  },
+  "workspaces": {
+    "Construction": true,
+    "Site Work": true,
+    "Estimating and Commercial": true,
+    "Procurement and Stores": true,
+    "Finance": true,
+    "Cost Database": true
+  },
+  "scope_default": 1
+}

@@ -1,0 +1,626 @@
+{
+  "head": "fa380226d641f32f749c7ae003f82eeb6404ba2c",
+  "tracked_diff_sha256": "a4dda0debdf65fa673c30f15d54f658d4060e2be03bc6024ee7d1af8f3233d9c",
+  "untracked_files": [
+    {
+      "path": "construction/api/construction_reports.py",
+      "bytes": 7935,
+      "sha256": "ee34372eea5e1d8fcf933d1020dc765e4f101f375faa5c9d692d0e90a50c8b5c"
+    },
+    {
+      "path": "construction/construction/page/construction_report_viewer/construction_report_viewer.js",
+      "bytes": 6283,
+      "sha256": "1df3676595d783cde18c6057e85025e2a7e2bf54c14269a500279f56a2b7ff05"
+    },
+    {
+      "path": "construction/construction/page/construction_report_viewer/construction_report_viewer.json",
+      "bytes": 437,
+      "sha256": "63a22ce81cecf778bfacfca2c1e0be238f406e731f7ce13e2e9b5ba1c0f19a02"
+    },
+    {
+      "path": "construction/construction/page/cost_database_workbench/cost_database_workbench.js",
+      "bytes": 10202,
+      "sha256": "9dfdb12f3edfd6875aded885d0f95827fce11467b34304e54311fce17c644e98"
+    },
+    {
+      "path": "construction/construction/page/cost_database_workbench/cost_database_workbench.json",
+      "bytes": 428,
+      "sha256": "b8c6fd32b63c71fee720b9f9aa182895358d31ba2b58f83dfca91e6ceadb9523"
+    },
+    {
+      "path": "construction/construction/sidebar/construction_home/construction_home.json",
+      "bytes": 6432,
+      "sha256": "2d7bbac9f2aa427e7d4f4215f23bd165fa756b18ca627783bb97346c3593d571"
+    },
+    {
+      "path": "construction/construction/workspace/cost_database/cost_database.json",
+      "bytes": 2189,
+      "sha256": "ea76f3f8e20c74357c0678703e9d5efc3bcf7f53a7e1840803e882113662f5c1"
+    },
+    {
+      "path": "construction/construction/workspace/estimating_and_commercial/estimating_and_commercial.json",
+      "bytes": 4119,
+      "sha256": "0dfd3d4a9f28bed64dafa56bbd34af58365f928b7ffc42584f4ca30c0667855c"
+    },
+    {
+      "path": "construction/construction/workspace/finance/finance.json",
+      "bytes": 2547,
+      "sha256": "9598fb983e18261fab3dca84331ae62346442479e60b2c297442201184123ebd"
+    },
+    {
+      "path": "construction/construction/workspace/procurement_and_stores/procurement_and_stores.json",
+      "bytes": 2812,
+      "sha256": "693792dc50ed8d11622dce799ba3916f4594631c1cc72b816f79da898a411930"
+    },
+    {
+      "path": "construction/construction/workspace/site_work/site_work.json",
+      "bytes": 2174,
+      "sha256": "0d79d85306b58700f5b69293a506900d63975ec5148f952f829a43316bf35416"
+    },
+    {
+      "path": "construction/overrides/file_download.py",
+      "bytes": 1123,
+      "sha256": "b20a2197336bd2979f41ae86f744b5960297e31d85c797f8c6fdcf2ef1c2a3ad"
+    },
+    {
+      "path": "construction/overrides/file_permissions.py",
+      "bytes": 3759,
+      "sha256": "e5d75023ecd7a955aa5d3993d7050052c630e05d263a2e93e23dba2b810f2176"
+    },
+    {
+      "path": "construction/tests/test_boq_import_idempotency.py",
+      "bytes": 4687,
+      "sha256": "4b246f6ecf0e125f4d470b9bfa53ba19676b3d315d0be2df8aa2b86c96d67bc7"
+    },
+    {
+      "path": "construction/tests/test_cost_database_isolation.py",
+      "bytes": 5156,
+      "sha256": "134e2dd2bf91ace852334d5a75c8354466570b3de456048d7fd5c61de93b903c"
+    },
+    {
+      "path": "construction/tests/test_f21_price_history_row_auth.py",
+      "bytes": 16609,
+      "sha256": "b3a56d3334aae13f1e5d7ad50cced37ddfe513df677852a766afb7bd9f446c3b"
+    },
+    {
+      "path": "construction/tests/test_f22_arabic_coverage.py",
+      "bytes": 7044,
+      "sha256": "83a58711f5e62970aa695e01da8cc5588c71932883018ebb4123dc19bb326471"
+    },
+    {
+      "path": "construction/tests/test_packaged_translation_adoption.py",
+      "bytes": 4701,
+      "sha256": "bf3394d0c2bd6820838496db75913aecfb47640bb2be7549a4e541a37647a86a"
+    },
+    {
+      "path": "construction/tests/test_project_display_name_authorization.py",
+      "bytes": 3923,
+      "sha256": "4a13c5126bed3d867fb7eff799bfdb7101ffc8c95d0e481f17a183457a617825"
+    },
+    {
+      "path": "construction/tests/test_report_export_authorization.py",
+      "bytes": 6379,
+      "sha256": "956c341b1d273c467c0c04f355a115774f5d1c81773f0dfb65dc20b2f7d80260"
+    },
+    {
+      "path": "construction/tests/test_scope_and_measurement_policy.py",
+      "bytes": 5342,
+      "sha256": "64853459e8fb2b3e4d2a2a3b135631d15480b1fe757943070c94774ae9d61bad"
+    },
+    {
+      "path": "construction/tests/test_vo_approval_parent_gate.py",
+      "bytes": 7001,
+      "sha256": "a40291d6289d0914e932c0744e27c211b3b96110beb4395aae39c038a5e044b2"
+    },
+    {
+      "path": "docs/BILINGUAL_TASK_GUIDES.md",
+      "bytes": 5470,
+      "sha256": "43a1c523119b0319d70dd8e3caa1f7f130490fdafb4459e5b737981cb3368119"
+    },
+    {
+      "path": "docs/CUSTOMER_ONBOARDING.md",
+      "bytes": 2936,
+      "sha256": "2feebe41f912315039516f2ae7824caf9371aab11d393ac92f299a4cabb0181d"
+    },
+    {
+      "path": "docs/DISTRIBUTION.md",
+      "bytes": 1792,
+      "sha256": "95548182c4b16236dca600209e3b2aac78649080288880a7e537386acba8e6df"
+    },
+    {
+      "path": "docs/DOCUMENTATION_INDEX.md",
+      "bytes": 9448,
+      "sha256": "5abf3d27323f19b1ab6bf900d893d3dd904af2153c23f06309342ec0e217f523"
+    },
+    {
+      "path": "docs/MAINTENANCE.md",
+      "bytes": 3498,
+      "sha256": "726130549b94d771f545514d793405aa514436da4715f084812700f43164332a"
+    },
+    {
+      "path": "docs/PERMISSION_SETUP.md",
+      "bytes": 2826,
+      "sha256": "30a2cf7961a6e88d76de6c2318b48d0ca6c1947f1a47aada0ca2b2566bee0e77"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_erp_egypt_mena_market_benchmark.md",
+      "bytes": 35704,
+      "sha256": "6bd78b8c90b3b750552ccab8b5c835b324fbfc8ec20ca8edda97ebc0d22b3c60"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_foundation_build_input_manifest_2026-10-12.json",
+      "bytes": 813221,
+      "sha256": "a293ee06d5d2c8951b3565b5c755523ead7cfb51843a879aaf299684f420c43b"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_foundation_build_input_manifest_2026-10-14.json",
+      "bytes": 363631,
+      "sha256": "a1614f23e4a30fb41e71ad431434a92d40ba2f80bab7b9ecba4a3c3c4c5ab4a1"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_foundation_delivery_artifact_evidence_2026-10-12.json",
+      "bytes": 395963,
+      "sha256": "f31eefc2fe5464209326a2c6472afcb192e5b23404d01baf55d629adc34051f4"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_foundation_delivery_artifact_review_2026-10-12.md",
+      "bytes": 12667,
+      "sha256": "5ce407236e409748f4024deac68629389c51f017139c927a7d261a1c2d58607a"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_foundation_delivery_artifact_verification_2026-10-12.json",
+      "bytes": 1032647,
+      "sha256": "97d876d73d5f215432f687a49a465124bdedd17a617ebff3a767d9505f22797b"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_foundation_documentation_catalog_2026-10-12.json",
+      "bytes": 785597,
+      "sha256": "8c94c655bf3027746e21e43c0675a21d4cf89986fff725034c5f7a8b4c4c5afe"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_foundation_documentation_organization_review_2026-10-12.md",
+      "bytes": 9283,
+      "sha256": "5c60fd8745942546e38d39cf87b6530dcc4d4a8be6aaca4528b7690b03ba7a29"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_foundation_f02_uat_manifest_2026-10-12.md",
+      "bytes": 5692,
+      "sha256": "ebcbf0d13a8369ed4eb441096f67c4968be67b2cf7b9d11c247a0af8594ddb8a"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_foundation_f03_site_reconciliation_2026-10-13.md",
+      "bytes": 6820,
+      "sha256": "620044de5e460491909b95000038b7b5807e8d169a78c36b03d24855b283868d"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_foundation_f04_fixtures_2026-10-13.md",
+      "bytes": 3775,
+      "sha256": "3893197a8ad7aca159d5a9c1bce2e5b3cc8fa9c2840f1346ef3af3376a0d6086"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_foundation_f05_engineering_evidence_2026-10-13.md",
+      "bytes": 3370,
+      "sha256": "f8a013095c92423db94215cd502a256546c286b75dadb852695005d52621a9e5"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_foundation_f06_engineering_evidence_2026-10-13.md",
+      "bytes": 5073,
+      "sha256": "6a159dc3287a468d0e40dcf73f85b27990c5569ede69909114d4c1293ea939a2"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_foundation_f07_engineering_evidence_2026-10-13.md",
+      "bytes": 2003,
+      "sha256": "c34403a48225985737526d1a7b1f7cae0192de28e9998e33a085dd26a7aaad88"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_foundation_f08_engineering_evidence_2026-10-13.md",
+      "bytes": 2649,
+      "sha256": "acb037cf8a69b39abae21edd50419ff3a54c1a2f3db8186cb93ae0d167b9ff52"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_foundation_f09_engineering_evidence_2026-10-13.md",
+      "bytes": 1943,
+      "sha256": "307d477e15ce6507867ce00b631a44b693446f06fe0e1a0c683de314d1be1c35"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_foundation_f10_integrity_audit_2026-10-13.md",
+      "bytes": 3225,
+      "sha256": "f36944413b109e7ba399cafc26b23004a8d274b925f21a874d9baf52e08f6a80"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_foundation_f11_f12_policy_proposal_2026-10-13.md",
+      "bytes": 4700,
+      "sha256": "3159fdd6c8aea37cb7b586c4a4491f0b32b6226269b9d4c6f420c891e12e1c1b"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_foundation_f11_matrix_evidence_2026-10-13.md",
+      "bytes": 5350,
+      "sha256": "d993043c2cafe49f90925ec44a15c3e564999cc511a5bd382f0bdb07e15c3024"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_foundation_f13_runtime_manifest_2026-10-13.md",
+      "bytes": 5657,
+      "sha256": "6a4b08d46bc04744a54e7902e074d70f97338e080afb831f3e488705f8d923a8"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_foundation_f14_bounds_evidence_2026-10-13.md",
+      "bytes": 3157,
+      "sha256": "e985c8c50ea8585c7ebd5a9d7a441d16fe1396a703fa92239423bd5dbacabe75"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_foundation_f16_repair_evidence_2026-10-13.md",
+      "bytes": 3743,
+      "sha256": "630cb7a2682d819bceedb4f9e953fe848b29bc032704756786c4523b9f23acfb"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_foundation_f17_evidence_2026-10-13.md",
+      "bytes": 1920,
+      "sha256": "aa7ed8f99145ca7e8563a38fbcca6d9e89d5a73673d786a74ef52001cbd83174"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_foundation_f18_f19_contract_source_evidence_2026-10-12.json",
+      "bytes": 5682,
+      "sha256": "8aabe84b1151cacf793e317d1b5c48af27057e24d7ec2ca6a1c85dd22f27c386"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_foundation_f18_maintainer_matrix_2026-10-13.md",
+      "bytes": 5865,
+      "sha256": "545ba7eb4df53512e3c3030beb72d3ef1da717913e181d5800d4c6e910149188"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_foundation_f18_service_contract_design_2026-10-12.md",
+      "bytes": 14229,
+      "sha256": "534101701d59735cf173a7719f4168d7ab83f8cb5558ba4592f61c9e5eb117f9"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_foundation_f18_ui_evidence_2026-10-13.md",
+      "bytes": 2729,
+      "sha256": "00fc594b3170f8d2d23dcc24a6952fca25a16e981ba63f36d165263a1d58657b"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_foundation_f19_evidence_2026-10-13.md",
+      "bytes": 2071,
+      "sha256": "f50a785dcbae230c6fbad13499b011c7d21fad61a8073e4cabc99c142be180b4"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_foundation_f19_service_contract_design_2026-10-12.md",
+      "bytes": 13977,
+      "sha256": "3bc62fc3dcd7e595bf110021b8c7e46a9194fa970fd08732a381589c650c5bc2"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_foundation_f20_evidence_2026-10-13.md",
+      "bytes": 4952,
+      "sha256": "1f2238d3600cab4efefab0cbc7330b0c0b0e8269c27588de97b5261bda11cacb"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_foundation_f21_evidence_2026-10-14.md",
+      "bytes": 15939,
+      "sha256": "76233b4f2ecd511fd54134642cfbe22e3d12b2500580a7b08aa4baf4ebbea0f5"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_foundation_f22_evidence_2026-10-14.md",
+      "bytes": 9513,
+      "sha256": "b63098a5e46a9030beaf1699500dc463e76618cdc6af3de3ded4808387de6b6f"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_foundation_f23_evidence_2026-10-14.md",
+      "bytes": 6113,
+      "sha256": "3e68791747654bdf91e207f1df005dabbce5da1b4a6c51ccc1138f2544315261"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_foundation_f24_evidence_2026-10-14.md",
+      "bytes": 9457,
+      "sha256": "826e4d1d860f107a8c953163de7c45f261190954ea5958aeb80656c992c726d4"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_foundation_f25_evidence_2026-10-14.md",
+      "bytes": 6509,
+      "sha256": "08c2b17420db1d63b90828dc80dc4059ba18949019165d72472a15e453674ff5"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_foundation_f26_evidence_2026-10-14.md",
+      "bytes": 4726,
+      "sha256": "cf61f4f33a0ab096b5c99a7e72f8f190f8f5d0df7e6439d6d2f4898ed8a7ce36"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_foundation_f28_evidence_2026-10-14.md",
+      "bytes": 3757,
+      "sha256": "a627de535cd5baad119f11dd9a2b8680f884663db6e912d505f947a2335ed39a"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_foundation_f31_evidence_2026-10-14.md",
+      "bytes": 5841,
+      "sha256": "b7f90ee2456527e5c4bd1c9d7b61230cb1d0c7e16428f31e481b9f6618006d7e"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_foundation_f36_evidence_2026-10-14.md",
+      "bytes": 3345,
+      "sha256": "bd401729f59ae0edab0abf99fe87f2b2c676bf64df5b798d229e48e5cead9c94"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_foundation_f38_evidence_2026-10-14.md",
+      "bytes": 6069,
+      "sha256": "c0526b78ea494985b201ca3795f89baa174c5b617f8315ba6efb0ef3b26dfb3c"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_foundation_feature_route_inventory_2026-10-12.md",
+      "bytes": 62687,
+      "sha256": "12165ee0c130fbe3ec365414d1b5f750ea83e08f8f713d3f7b17311f3cd5c78c"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_foundation_gap_ledger_2026-10-12.md",
+      "bytes": 12773,
+      "sha256": "2bdea05bbfcd1618a60861bded5c3374569c86393d7140002abe9dc57757afc5"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_foundation_isolated_qualification_2026-10-15.md",
+      "bytes": 9658,
+      "sha256": "5930f68b5460fe04a02921d9f71814c5dc20b59fb78c01916238477585da40d8"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_foundation_kickoff_decision_request_2026-10-12.md",
+      "bytes": 6094,
+      "sha256": "7dbdda273442d9b366bf1e5c7681325dc5722dd4c772c1e8fa3a650bd062ccba"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_foundation_override_compatibility_register_2026-10-12.md",
+      "bytes": 21576,
+      "sha256": "b4f46b84c499119c60f9e21d4e9d50430584265f14ae9cfc13dc9a727ae51501"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_foundation_remediation_master_plan_2026-10-12.md",
+      "bytes": 64600,
+      "sha256": "8927505ce24ba3a10b83500e39dd7f725bab92ed163503abf8d3685ec711d5f7"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_foundation_runtime_asset_consistency_review_2026-10-12.md",
+      "bytes": 22279,
+      "sha256": "47e1b11fb56c951f4ddf4afa35027ed2519d44fb800830a09edb66e0f5b5d460"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_foundation_runtime_asset_evidence_2026-10-12.json",
+      "bytes": 33419,
+      "sha256": "57b26be28f26298879c9b5840d117f96a01fe4cad5dd3b2da92fd763cf683fcd"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_foundation_sidebar_fix_review_2026-10-13.json",
+      "bytes": 2072,
+      "sha256": "01caa72d718cd18747af109efca96377d8342871f87c476748c56caf0381668e"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_foundation_source_inventory_2026-10-12.json",
+      "bytes": 222503,
+      "sha256": "91e4edd775dc5c91258b624e5d87ed74c607566460d3a2d7cf31094a8864b9d3"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_foundation_work_register_2026-10-12.md",
+      "bytes": 66619,
+      "sha256": "45fc5fd69beaddb417c6d8f97c4c1919c9dd84477f9ff9e19bb87dad5e26df62"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_platform_analysis_report.md",
+      "bytes": 39699,
+      "sha256": "e0f946ddcf795f1de6c37b0f4473266fa8822233a3c24daffede2d9eb3d9c8cd"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_platform_engineering_review_for_gm.md",
+      "bytes": 48094,
+      "sha256": "fae60a6d11ff6fba9db4055fc850910b52b9b0bcfdbdbfd6db340c1e0a70ff1c"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_platform_engineering_review_for_gm_v2_1_revised.md",
+      "bytes": 48733,
+      "sha256": "eaf023ff89e61bf42f41106caf08b7f82538e8b15651afa7924c133327434f6b"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/construction_platform_engineering_review_summary_v1_0.md",
+      "bytes": 6576,
+      "sha256": "f2e9a8472ebc52aab16b2781a860bf57a1ceaad76f269f22d4104cdabc4f1850"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/consultant_review_line_by_line_reconciliation_2026-10-12.md",
+      "bytes": 121379,
+      "sha256": "0a60ce7cb68ba2567006be51c34cdc5999f005d260564c3b70454cd1b4ed0257"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/denied.png",
+      "bytes": 79264,
+      "sha256": "1d7a182bae98e84cb3950393178f60890454cbd10dfaea7c4974538f54503dab"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/existing_features_owner_ui_acceptance_plan_2026-10-12.md",
+      "bytes": 68742,
+      "sha256": "cab3024027c43b7fe9827e8d7768eee4c8a5d4b34b683777a056490b921d34cb"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/import-commit.png",
+      "bytes": 73173,
+      "sha256": "83cd7e807041eb21fa3a9c004ac3ec343d5e48aed4e941614208e0155225c7d1"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/import-preview.png",
+      "bytes": 86352,
+      "sha256": "851abbecfb5c77813754b362f6a34b2324f564307f6b49fe5d4376cfe5f9863e"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/isolated-qualification-evidence-2026-10-15/asset-warm-verification.json",
+      "bytes": 85,
+      "sha256": "ac5e9d32435288adcee99f24d523f6ffcaf7dc4921ade9363d0867f020b163b7"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/isolated-qualification-evidence-2026-10-15/compliant-build.json",
+      "bytes": 400,
+      "sha256": "ab6a6fe6e243b45ee93e15e065da7099af67ed2ae1fe47fb777ab3fc53bbbc57"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/isolated-qualification-evidence-2026-10-15/fresh-clean-qualified.json",
+      "bytes": 1878,
+      "sha256": "61687659358bb13d368674e5c9edc864ac476b97526b1674f1a0e7215f719590"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/isolated-qualification-evidence-2026-10-15/fresh-role-probe.json",
+      "bytes": 1405,
+      "sha256": "59e8dc20795b8716deaa4abb897f3f9bfd1c003e0ad9e835520ad0e6817f3b39"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/isolated-qualification-evidence-2026-10-15/full-matrix-initial-output.json",
+      "bytes": 2295,
+      "sha256": "4fb04418f60a6c81b37b3b467ec0cf8cb3111a59fb90a4e7dfa4dd78334c86e0"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/isolated-qualification-evidence-2026-10-15/full-matrix-verified-reruns.json",
+      "bytes": 4515,
+      "sha256": "38cff1b65376294867049384f069cc1282b4dc1c83d4d03a9eac81983c9259b5"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/isolated-qualification-evidence-2026-10-15/lab_http_probe.py",
+      "bytes": 2135,
+      "sha256": "97ed1f2e39744d082fc55b2cb5b2fdac843af4e66e99961eb665ec60b6b1b9ce"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/isolated-qualification-evidence-2026-10-15/recovery-after.json",
+      "bytes": 9644,
+      "sha256": "a788eac92c68533f845993a230007998b34585e2a95c4c2fd653b6fe0d5b9b7b"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/isolated-qualification-evidence-2026-10-15/recovery-before.json",
+      "bytes": 9644,
+      "sha256": "a788eac92c68533f845993a230007998b34585e2a95c4c2fd653b6fe0d5b9b7b"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/isolated-qualification-evidence-2026-10-15/recovery-timing.json",
+      "bytes": 156,
+      "sha256": "6a347032afa7dc89f2699a0839a7648a6c5cb7188f0bdfa27fbe4ac42e9fddf8"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/isolated-qualification-evidence-2026-10-15/recovery-verdict.json",
+      "bytes": 162,
+      "sha256": "64566b9346bff3c8290c5d75a3173efee4d39167df6768e1e3997d460a96fe25"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/isolated-qualification-evidence-2026-10-15/recovery_tools.py",
+      "bytes": 1599,
+      "sha256": "cc539ee1934c65ce800c1ec5d0fd8e060ea496d67029adc2215badaf905f3110"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/isolated-qualification-evidence-2026-10-15/rehearsal-credential-verification.json",
+      "bytes": 1970,
+      "sha256": "abb63d67bbe17c661bc2e10935206f35e51b65e9a89fc5e92f7d02239f6d2479"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/isolated-qualification-evidence-2026-10-15/run_full_matrix.py",
+      "bytes": 1412,
+      "sha256": "5c43ce6fefafc9b5060abef0971cc707691273de3a61dd513603772e54918953"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/isolated-qualification-evidence-2026-10-15/run_lab.py",
+      "bytes": 6875,
+      "sha256": "2c06dcecf80b6ebf47ff32becb0359211f1a619ed894baaa7f2a27a1499d3f9a"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/isolated-qualification-evidence-2026-10-15/source-backup-manifest.json",
+      "bytes": 683,
+      "sha256": "ec9d4eb028f0f85cbf03b68657f97ec3397ba9318c730955a01e8df81efbd444"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/isolated-qualification-evidence-2026-10-15/source-file-comparison.json",
+      "bytes": 138,
+      "sha256": "2c0e986ab81db2d7a94c4a3ee503033243658ca873c9c00db11fe551d470a654"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/isolated-qualification-evidence-2026-10-15/translation-adoption-tests.json",
+      "bytes": 1258,
+      "sha256": "560445b095b42f3338776689b0ab95621442ffc7780d853603ae39118d2dcdd8"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/isolated-qualification-evidence-2026-10-15/upgrade-http-after.json",
+      "bytes": 296,
+      "sha256": "267ee48268671e28ce5f04811dc0fe18ec2a5675492c0862d98b4dc409fca95c"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/isolated-qualification-evidence-2026-10-15/upgrade-qualified.json",
+      "bytes": 9644,
+      "sha256": "a788eac92c68533f845993a230007998b34585e2a95c4c2fd653b6fe0d5b9b7b"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/isolated-qualification-evidence-2026-10-15/upgrade-restored.json",
+      "bytes": 9644,
+      "sha256": "36eaed428d0cbc362e1ad40eaf68169150bbd058808467b9cc2a5c1d295a21c5"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/isolated-qualification-evidence-2026-10-15/verified-rerun-log-summaries.json",
+      "bytes": 1162,
+      "sha256": "073e6997865a879fc8d3a49588608b0dbfe7b2f02b142929b74de05f4b8e863d"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/owner_decision_sheet_2026-10-14.md",
+      "bytes": 4545,
+      "sha256": "bd853f527a5df7b3f0d9886914235fae7de823c5ebc24c805c7884f1736cb945"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/owner_ui_defect_register_2026-10-12.md",
+      "bytes": 10921,
+      "sha256": "937b3d60b7b2e56c43c813643edd30766cc51f640ee5e18529da30b868e9ffdf"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/owner_ui_test_results_2026-10-12.md",
+      "bytes": 11770,
+      "sha256": "12aa538d52a63c0325e6930719ac343fea9e97d70388abf014c12aae38c5e2d5"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/permission_reconciliation_baseline_2026-10-14.json",
+      "bytes": 35319,
+      "sha256": "402de3e2229ba76eec9a513c1af5ebafee28900f2c54cc6fc2e2a52c1d85ca87"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/readonly-denied.png",
+      "bytes": 78896,
+      "sha256": "0e424434287ddd448c3a0fe0028c2b6f9a1b24727834a9dcb3c001eeef9fdfc5"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/reprice.png",
+      "bytes": 67247,
+      "sha256": "e84aa3f7a9ffd6d02672e6c5ac7b65e702de45607785a72186ae9f573e1d32a5"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/summary.png",
+      "bytes": 135855,
+      "sha256": "f02eddc7d99a401d377104d2ebeb5d36d44e8f5c678d5be9985ac2794b3d62eb"
+    },
+    {
+      "path": "docs/ai/work-items/next feature 07102026/views.png",
+      "bytes": 107047,
+      "sha256": "5a5e74265a6315cb7ab6ccb9e0db25e8af42dd891ccf8503af5c73de4db2e402"
+    },
+    {
+      "path": "scripts/apply_report_audience_company_read.py",
+      "bytes": 5293,
+      "sha256": "548da246a4ae20ddd3fb26a14a334dac649f9a127552f3b7be3c8f3ecb99ae3a"
+    },
+    {
+      "path": "scripts/permission_reconciliation.py",
+      "bytes": 4025,
+      "sha256": "d999f7ea0040344f74c5fc9480c21e5c7a944b35435add15c18545b928b043c4"
+    },
+    {
+      "path": "scripts/stage_distribution.py",
+      "bytes": 4729,
+      "sha256": "96450042832e05cc1d157993f08301d1a6ef8280005da7a77f19793e45130fce"
+    },
+    {
+      "path": "scripts/verify_distribution.py",
+      "bytes": 3049,
+      "sha256": "0e13e7b8dadaa1e29862b915873a3118ceac4354b4440aebdef8ec34923a48f5"
+    },
+    {
+      "path": "scripts/verify_staged_distribution.py",
+      "bytes": 4466,
+      "sha256": "44ac5c16ed2bcc05282dcaea26241eba5eebbfc23b58243393be9abc0235a4e8"
+    }
+  ],
+  "exclusions_from_commit_batch": [
+    "orchestrator/engine.py",
+    "pre-existing living-document scope pending owner decision"
+  ],
+  "customer_delivery": "unpublished curated staging; final committed-route qualification pending"
+}

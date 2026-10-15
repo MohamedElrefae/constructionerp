@@ -140,6 +140,11 @@ def get_resource_price_history(item_code=None, supplier=None, region=None, from_
     query = (
         frappe.qb.from_(RPH)
         .select(
+            # `name` is not decoration: F19's report_view filters every row through
+            # `_readable_rph`, which needs the document identity to check permission. A row
+            # without it passes unchecked, so price history reached personas with no
+            # Resource Price History rights (buyer/store/accounts) -- F21-D002.
+            RPH.name,
             RPH.item_code,
             RPH.item_name,
             RPH.resource_type,

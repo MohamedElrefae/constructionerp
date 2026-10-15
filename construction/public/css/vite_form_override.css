@@ -702,6 +702,16 @@ html.ct-enterprise .vfc-foot-hint {
   flex: 1;
 }
 
+/* F23-D002: the unsaved-changes indicator must be impossible to miss. */
+html.ct-enterprise .vfc-foot-hint.vfc-dirty {
+  color: var(--ct-danger);
+  font-weight: 700;
+}
+
+html.ct-enterprise .vfc-apply-pending {
+  box-shadow: 0 0 0 2px var(--ct-danger);
+}
+
 /* Density segment control */
 html.ct-enterprise .vfc-density-seg {
   display: grid;

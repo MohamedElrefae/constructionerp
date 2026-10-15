@@ -1,0 +1,844 @@
+{
+  "candidate": "c9e6803c5ac63073aeb0b166c779844d29051d8d",
+  "evidence_kind": "source/configuration only; no dependency resolver/build/site/browser/CI execution",
+  "inspection_python": "3.14.5",
+  "project": {
+    "project": {
+      "name": "construction",
+      "authors": [
+        {
+          "name": "mohamed",
+          "email": "mohamedelrefae@gmail.com"
+        }
+      ],
+      "description": "construction",
+      "requires-python": ">=3.14,<3.15",
+      "readme": "README.md",
+      "dynamic": [
+        "version"
+      ],
+      "dependencies": [
+        "cryptography~=50.0.0",
+        "pyOpenSSL~=26.4.0",
+        "Pillow~=12.3.0",
+        "sqlparse~=0.6.0",
+        "sql_metadata~=3.0.1"
+      ]
+    },
+    "build-system": {
+      "requires": [
+        "flit_core >=3.4,<4"
+      ],
+      "build-backend": "flit_core.buildapi"
+    },
+    "tool": {
+      "bench": {
+        "dev-dependencies": {}
+      },
+      "ruff": {
+        "line-length": 110,
+        "target-version": "py310",
+        "lint": {
+          "select": [
+            "F",
+            "E",
+            "W",
+            "I",
+            "UP",
+            "B",
+            "RUF"
+          ],
+          "ignore": [
+            "B007",
+            "B017",
+            "B018",
+            "B023",
+            "B904",
+            "E101",
+            "E402",
+            "E501",
+            "E722",
+            "E741",
+            "F401",
+            "F403",
+            "F405",
+            "F722",
+            "F841",
+            "RUF002",
+            "RUF003",
+            "RUF010",
+            "RUF012",
+            "RUF013",
+            "UP006",
+            "UP007",
+            "UP015",
+            "UP035",
+            "W191"
+          ],
+          "typing-modules": [
+            "frappe.types.DF"
+          ]
+        },
+        "format": {
+          "quote-style": "double",
+          "indent-style": "space",
+          "docstring-code-format": true
+        }
+      },
+      "flit": {
+        "module": {
+          "name": "construction"
+        },
+        "sdist": {
+          "exclude": [
+            "orchestrator/",
+            "tests_offline/"
+          ]
+        }
+      }
+    },
+    "deploy": {
+      "dependencies": {
+        "apt": {
+          "packages": []
+        }
+      }
+    }
+  },
+  "legacy_setup_version": "0.1.0",
+  "version_definitions": {
+    "construction/__init__.py": [
+      "0.0.5"
+    ],
+    "construction/construction/__init__.py": []
+  },
+  "requirements_declarations": [
+    "frappe",
+    "cryptography~=50.0.0",
+    "pyOpenSSL~=26.4.0",
+    "Pillow~=12.3.0",
+    "sqlparse~=0.6.0",
+    "sql_metadata~=3.0.1"
+  ],
+  "vendor_checkout_references": {
+    "frappe": {
+      "checkout_head": "81aadb9ba1bc07abccd8f720af80f4f2fb4a68a0",
+      "source_version": "16.18.1",
+      "requires_python": ">=3.14,<3.15",
+      "relevant_dependencies": [
+        "Pillow~=12.2.0",
+        "cryptography~=46.0.3",
+        "pyOpenSSL~=26.0.0",
+        "sqlparse~=0.5.5",
+        "sql_metadata~=2.19.0"
+      ],
+      "source_hashes": {
+        "/home/mohamed/frappe-bench/apps/frappe/pyproject.toml": "8a1a902b178864ad285e6b1c597a29bfbfdd1efbd6938b22d1cb53962d06286d",
+        "/home/mohamed/frappe-bench/apps/frappe/frappe/__init__.py": "2e9dacf096a53245ac84e476fa800fb91516c135c36ac82747ea7915ecbb79bc",
+        "/home/mohamed/frappe-bench/apps/frappe/frappe/desk/form/meta.py": "19fa136ce4280d1fb6473ffae0f4240aab6320c2bbf0f1c2dc19c2047d9f6a53"
+      },
+      "ci_ref_present": true
+    },
+    "erpnext": {
+      "checkout_head": "2807c9f08fff3f161c0a2e10745a26aa6331ffd5",
+      "source_version": "16.18.3",
+      "requires_python": ">=3.14",
+      "relevant_dependencies": [],
+      "source_hashes": {
+        "/home/mohamed/frappe-bench/apps/erpnext/pyproject.toml": "2818c57f0575645d9d370af221fc65f830dfb9eeac54defdb41bb8c9b4e86a66",
+        "/home/mohamed/frappe-bench/apps/erpnext/erpnext/__init__.py": "6983aa1cd0a0a8f363f3bbb4fd515699506b151f22b45eadd6a25a52f96489b6"
+      },
+      "ci_ref_present": true
+    }
+  },
+  "ci": {
+    "runtime_python": "3.14",
+    "node_major": 24,
+    "node_check_latest": true,
+    "linter_python": "3.10",
+    "dependency_audit_python": "3.10",
+    "dependency_audit_command": "pip-audit --desc on .",
+    "workflow_hashes": {
+      ".github/workflows/ci.yml": "264eca24cee3b8b592673169dc43f3d8f406eb70518d2b1b6a636ce6e1daad35",
+      ".github/workflows/linter.yml": "37a7efda9c25b1de46b3231efe583db51e3c8620bcee3b2d411530783c638920"
+    },
+    "reproducibility_followups": [
+      "unversioned frappe-bench/uv installer tools",
+      "moving version-16 branch before explicit Frappe checkout",
+      "Redis alpine/MariaDB10.11 image tags without digests",
+      "action tags and Node patch version not immutable",
+      "Semgrep rule checkout on moving branch"
+    ]
+  },
+  "global_assets": [
+    {
+      "hook": "app_include_js",
+      "url": "/assets/construction/js/boq_export_columns.js?v=1",
+      "source_path": "construction/public/js/boq_export_columns.js",
+      "source_exists": true,
+      "version_query": "1",
+      "bytes": 4312
+    },
+    {
+      "hook": "app_include_js",
+      "url": "/assets/construction/js/print_settings_dialog.js",
+      "source_path": "construction/public/js/print_settings_dialog.js",
+      "source_exists": true,
+      "version_query": null,
+      "bytes": 23528
+    },
+    {
+      "hook": "app_include_js",
+      "url": "/assets/construction/js/construction_export_menu.js",
+      "source_path": "construction/public/js/construction_export_menu.js",
+      "source_exists": true,
+      "version_query": null,
+      "bytes": 6039
+    },
+    {
+      "hook": "app_include_js",
+      "url": "/assets/construction/js/generic_export_menu.js?v=1",
+      "source_path": "construction/public/js/generic_export_menu.js",
+      "source_exists": true,
+      "version_query": "1",
+      "bytes": 14589
+    },
+    {
+      "hook": "app_include_js",
+      "url": "/assets/construction/js/theme_loader_v24.js?v=2.6.2",
+      "source_path": "construction/public/js/theme_loader_v24.js",
+      "source_exists": true,
+      "version_query": "2.6.2",
+      "bytes": 34601
+    },
+    {
+      "hook": "app_include_js",
+      "url": "/assets/construction/js/typography_settings.js?v=21",
+      "source_path": "construction/public/js/typography_settings.js",
+      "source_exists": true,
+      "version_query": "21",
+      "bytes": 30401
+    },
+    {
+      "hook": "app_include_js",
+      "url": "/assets/construction/js/searchable_dropdown/utils.js",
+      "source_path": "construction/public/js/searchable_dropdown/utils.js",
+      "source_exists": true,
+      "version_query": null,
+      "bytes": 2625
+    },
+    {
+      "hook": "app_include_js",
+      "url": "/assets/construction/js/searchable_dropdown/searchable_dropdown.js?v=1",
+      "source_path": "construction/public/js/searchable_dropdown/searchable_dropdown.js",
+      "source_exists": true,
+      "version_query": "1",
+      "bytes": 4590
+    },
+    {
+      "hook": "app_include_js",
+      "url": "/assets/construction/js/overrides/ct_select_control.js?v=2",
+      "source_path": "construction/public/js/overrides/ct_select_control.js",
+      "source_exists": true,
+      "version_query": "2",
+      "bytes": 13262
+    },
+    {
+      "hook": "app_include_js",
+      "url": "/assets/construction/js/overrides/ct_link_control.js?v=17",
+      "source_path": "construction/public/js/overrides/ct_link_control.js",
+      "source_exists": true,
+      "version_query": "17",
+      "bytes": 23724
+    },
+    {
+      "hook": "app_include_js",
+      "url": "/assets/construction/js/theme_loader_v16.js?v=2",
+      "source_path": "construction/public/js/theme_loader_v16.js",
+      "source_exists": true,
+      "version_query": "2",
+      "bytes": 834
+    },
+    {
+      "hook": "app_include_js",
+      "url": "/assets/construction/js/scope_context.js?v=3",
+      "source_path": "construction/public/js/scope_context.js",
+      "source_exists": true,
+      "version_query": "3",
+      "bytes": 11255
+    },
+    {
+      "hook": "app_include_js",
+      "url": "/assets/construction/js/frappe_compat_patches.js?v=2",
+      "source_path": "construction/public/js/frappe_compat_patches.js",
+      "source_exists": true,
+      "version_query": "2",
+      "bytes": 6964
+    },
+    {
+      "hook": "app_include_js",
+      "url": "/assets/construction/js/scope_context_ui.js?v=5",
+      "source_path": "construction/public/js/scope_context_ui.js",
+      "source_exists": true,
+      "version_query": "5",
+      "bytes": 9193
+    },
+    {
+      "hook": "app_include_js",
+      "url": "/assets/construction/js/scope_context_list_filter.js?v=3",
+      "source_path": "construction/public/js/scope_context_list_filter.js",
+      "source_exists": true,
+      "version_query": "3",
+      "bytes": 4149
+    },
+    {
+      "hook": "app_include_js",
+      "url": "/assets/construction/js/scope_context_form_defaults.js?v=3",
+      "source_path": "construction/public/js/scope_context_form_defaults.js",
+      "source_exists": true,
+      "version_query": "3",
+      "bytes": 2373
+    },
+    {
+      "hook": "app_include_js",
+      "url": "/assets/construction/js/vfc_config.js?v=1",
+      "source_path": "construction/public/js/vfc_config.js",
+      "source_exists": true,
+      "version_query": "1",
+      "bytes": 749
+    },
+    {
+      "hook": "app_include_js",
+      "url": "/assets/construction/js/scope_context_report_filters.js?v=4",
+      "source_path": "construction/public/js/scope_context_report_filters.js",
+      "source_exists": true,
+      "version_query": "4",
+      "bytes": 14120
+    },
+    {
+      "hook": "app_include_js",
+      "url": "/assets/construction/js/ct_list_view_config.js?v=1",
+      "source_path": "construction/public/js/ct_list_view_config.js",
+      "source_exists": true,
+      "version_query": "1",
+      "bytes": 3555
+    },
+    {
+      "hook": "app_include_js",
+      "url": "/assets/construction/js/sidebar_accordion.js?v=1",
+      "source_path": "construction/public/js/sidebar_accordion.js",
+      "source_exists": true,
+      "version_query": "1",
+      "bytes": 1052
+    },
+    {
+      "hook": "app_include_js",
+      "url": "/assets/construction/js/translation_list_tools.js?v=6",
+      "source_path": "construction/public/js/translation_list_tools.js",
+      "source_exists": true,
+      "version_query": "6",
+      "bytes": 8577
+    },
+    {
+      "hook": "app_include_js",
+      "url": "/assets/construction/js/boq_filters.js?v=8",
+      "source_path": "construction/public/js/boq_filters.js",
+      "source_exists": true,
+      "version_query": "8",
+      "bytes": 21667
+    },
+    {
+      "hook": "app_include_js",
+      "url": "/assets/construction/js/filter_fix.js?v=11",
+      "source_path": "construction/public/js/filter_fix.js",
+      "source_exists": true,
+      "version_query": "11",
+      "bytes": 22121
+    },
+    {
+      "hook": "app_include_js",
+      "url": "/assets/construction/js/native_frappe_controls_compat.js?v=9",
+      "source_path": "construction/public/js/native_frappe_controls_compat.js",
+      "source_exists": true,
+      "version_query": "9",
+      "bytes": 21006
+    },
+    {
+      "hook": "app_include_js",
+      "url": "/assets/construction/js/vite_layout_controls.js?v=1.21",
+      "source_path": "construction/public/js/vite_layout_controls.js",
+      "source_exists": true,
+      "version_query": "1.21",
+      "bytes": 70105
+    },
+    {
+      "hook": "app_include_js",
+      "url": "/assets/construction/js/vfc_layout_engine.js?v=1.44",
+      "source_path": "construction/public/js/vfc_layout_engine.js",
+      "source_exists": true,
+      "version_query": "1.44",
+      "bytes": 49615
+    },
+    {
+      "hook": "app_include_css",
+      "url": "/assets/construction/css/modern_theme.css?v=2.5.9",
+      "source_path": "construction/public/css/modern_theme.css",
+      "source_exists": true,
+      "version_query": "2.5.9",
+      "bytes": 146350
+    },
+    {
+      "hook": "app_include_css",
+      "url": "/assets/construction/css/scope_context.css?v=2",
+      "source_path": "construction/public/css/scope_context.css",
+      "source_exists": true,
+      "version_query": "2",
+      "bytes": 1040
+    },
+    {
+      "hook": "app_include_css",
+      "url": "/assets/construction/css/vite_extensions.css?v=1.3",
+      "source_path": "construction/public/css/vite_extensions.css",
+      "source_exists": true,
+      "version_query": "1.3",
+      "bytes": 2597
+    },
+    {
+      "hook": "app_include_css",
+      "url": "/assets/construction/css/vite_form_override.css?v=1.5",
+      "source_path": "construction/public/css/vite_form_override.css",
+      "source_exists": true,
+      "version_query": "1.5",
+      "bytes": 26890
+    },
+    {
+      "hook": "app_include_css",
+      "url": "/assets/construction/css/vite_list_override.css?v=1.3",
+      "source_path": "construction/public/css/vite_list_override.css",
+      "source_exists": true,
+      "version_query": "1.3",
+      "bytes": 10847
+    },
+    {
+      "hook": "app_include_css",
+      "url": "/assets/construction/css/vfc_sections.css?v=1.6",
+      "source_path": "construction/public/css/vfc_sections.css",
+      "source_exists": true,
+      "version_query": "1.6",
+      "bytes": 10811
+    },
+    {
+      "hook": "web_include_js",
+      "url": "/assets/construction/js/theme_loader_v24.js?v=2.6.2",
+      "source_path": "construction/public/js/theme_loader_v24.js",
+      "source_exists": true,
+      "version_query": "2.6.2",
+      "bytes": 34601
+    },
+    {
+      "hook": "web_include_css",
+      "url": "/assets/construction/css/modern_theme.css?v=2.5.8",
+      "source_path": "construction/public/css/modern_theme.css",
+      "source_exists": true,
+      "version_query": "2.5.8",
+      "bytes": 146350
+    },
+    {
+      "hook": "web_include_css",
+      "url": "/assets/construction/css/email_theme.css",
+      "source_path": "construction/public/css/email_theme.css",
+      "source_exists": true,
+      "version_query": null,
+      "bytes": 1698
+    },
+    {
+      "hook": "email_css",
+      "url": "/assets/construction/css/email_theme.css",
+      "source_path": "construction/public/css/email_theme.css",
+      "source_exists": true,
+      "version_query": null,
+      "bytes": 1698
+    },
+    {
+      "hook": "print_css",
+      "url": "/assets/construction/css/print_theme.css",
+      "source_path": "construction/public/css/print_theme.css",
+      "source_exists": true,
+      "version_query": null,
+      "bytes": 1891
+    }
+  ],
+  "form_asset_registrations": [
+    {
+      "hook": "doctype_js",
+      "doctype": "BOQ Header",
+      "registration": "construction/construction/doctype/boq_header/boq_header.js",
+      "local_vendor_resolved_path": "construction/construction/construction/doctype/boq_header/boq_header.js",
+      "resolved_exists": false,
+      "repository_relative_candidate": "construction/construction/doctype/boq_header/boq_header.js",
+      "candidate_exists": true,
+      "native_convention_available": true
+    },
+    {
+      "hook": "doctype_js",
+      "doctype": "BOQ Item",
+      "registration": "construction/construction/doctype/boq_item/boq_item.js",
+      "local_vendor_resolved_path": "construction/construction/construction/doctype/boq_item/boq_item.js",
+      "resolved_exists": false,
+      "repository_relative_candidate": "construction/construction/doctype/boq_item/boq_item.js",
+      "candidate_exists": true,
+      "native_convention_available": true
+    },
+    {
+      "hook": "doctype_js",
+      "doctype": "BOQ Item Stage",
+      "registration": "construction/construction/doctype/boq_item_stage/boq_item_stage.js",
+      "local_vendor_resolved_path": "construction/construction/construction/doctype/boq_item_stage/boq_item_stage.js",
+      "resolved_exists": false,
+      "repository_relative_candidate": "construction/construction/doctype/boq_item_stage/boq_item_stage.js",
+      "candidate_exists": true,
+      "native_convention_available": true
+    },
+    {
+      "hook": "doctype_js",
+      "doctype": "Construction Settings",
+      "registration": "construction/construction/doctype/construction_settings/construction_settings.js",
+      "local_vendor_resolved_path": "construction/construction/construction/doctype/construction_settings/construction_settings.js",
+      "resolved_exists": false,
+      "repository_relative_candidate": "construction/construction/doctype/construction_settings/construction_settings.js",
+      "candidate_exists": true,
+      "native_convention_available": true
+    },
+    {
+      "hook": "doctype_js",
+      "doctype": "Scope Report Access Log",
+      "registration": "construction/construction/doctype/scope_report_access_log/scope_report_access_log.js",
+      "local_vendor_resolved_path": "construction/construction/construction/doctype/scope_report_access_log/scope_report_access_log.js",
+      "resolved_exists": false,
+      "repository_relative_candidate": "construction/construction/doctype/scope_report_access_log/scope_report_access_log.js",
+      "candidate_exists": true,
+      "native_convention_available": true
+    },
+    {
+      "hook": "doctype_js",
+      "doctype": "User Desk Theme",
+      "registration": "construction/construction/doctype/user_desk_theme/user_desk_theme.js",
+      "local_vendor_resolved_path": "construction/construction/construction/doctype/user_desk_theme/user_desk_theme.js",
+      "resolved_exists": false,
+      "repository_relative_candidate": "construction/construction/doctype/user_desk_theme/user_desk_theme.js",
+      "candidate_exists": true,
+      "native_convention_available": true
+    },
+    {
+      "hook": "doctype_js",
+      "doctype": "Variation Order",
+      "registration": "construction/construction/doctype/variation_order/variation_order.js",
+      "local_vendor_resolved_path": "construction/construction/construction/doctype/variation_order/variation_order.js",
+      "resolved_exists": false,
+      "repository_relative_candidate": "construction/construction/doctype/variation_order/variation_order.js",
+      "candidate_exists": true,
+      "native_convention_available": true
+    },
+    {
+      "hook": "doctype_js",
+      "doctype": "Account",
+      "registration": "public/js/bilingual/account_form.js",
+      "local_vendor_resolved_path": "construction/public/js/bilingual/account_form.js",
+      "resolved_exists": true,
+      "repository_relative_candidate": "construction/public/js/bilingual/account_form.js",
+      "candidate_exists": true,
+      "native_convention_available": false
+    },
+    {
+      "hook": "doctype_list_js",
+      "doctype": "Item",
+      "registration": "construction/public/js/item_list.js",
+      "local_vendor_resolved_path": "construction/construction/public/js/item_list.js",
+      "resolved_exists": true,
+      "repository_relative_candidate": "construction/construction/public/js/item_list.js",
+      "candidate_exists": true,
+      "native_convention_available": false
+    },
+    {
+      "hook": "doctype_list_js",
+      "doctype": "BOQ Item",
+      "registration": "construction/construction/doctype/boq_item/boq_item_list.js",
+      "local_vendor_resolved_path": "construction/construction/construction/doctype/boq_item/boq_item_list.js",
+      "resolved_exists": false,
+      "repository_relative_candidate": "construction/construction/doctype/boq_item/boq_item_list.js",
+      "candidate_exists": true,
+      "native_convention_available": true
+    },
+    {
+      "hook": "doctype_list_js",
+      "doctype": "BOQ Structure",
+      "registration": "construction/construction/doctype/boq_structure/boq_structure_list.js",
+      "local_vendor_resolved_path": "construction/construction/construction/doctype/boq_structure/boq_structure_list.js",
+      "resolved_exists": false,
+      "repository_relative_candidate": "construction/construction/doctype/boq_structure/boq_structure_list.js",
+      "candidate_exists": true,
+      "native_convention_available": true
+    },
+    {
+      "hook": "doctype_list_js",
+      "doctype": "Variation Order",
+      "registration": "construction/construction/doctype/variation_order/variation_order_list.js",
+      "local_vendor_resolved_path": "construction/construction/construction/doctype/variation_order/variation_order_list.js",
+      "resolved_exists": false,
+      "repository_relative_candidate": "construction/construction/doctype/variation_order/variation_order_list.js",
+      "candidate_exists": true,
+      "native_convention_available": true
+    },
+    {
+      "hook": "doctype_tree_js",
+      "doctype": "BOQ Structure",
+      "registration": "construction/construction/doctype/boq_structure/boq_structure_tree.js",
+      "local_vendor_resolved_path": "construction/construction/construction/doctype/boq_structure/boq_structure_tree.js",
+      "resolved_exists": false,
+      "repository_relative_candidate": "construction/construction/doctype/boq_structure/boq_structure_tree.js",
+      "candidate_exists": true,
+      "native_convention_available": true
+    },
+    {
+      "hook": "doctype_tree_js",
+      "doctype": "Account",
+      "registration": "public/js/bilingual/account_tree.js",
+      "local_vendor_resolved_path": "construction/public/js/bilingual/account_tree.js",
+      "resolved_exists": true,
+      "repository_relative_candidate": "construction/public/js/bilingual/account_tree.js",
+      "candidate_exists": true,
+      "native_convention_available": false
+    }
+  ],
+  "test_package": {
+    "name": "print-settings-tests",
+    "private": true,
+    "scripts": {
+      "test": "node --test test_print_settings_properties.js"
+    },
+    "devDependencies": {
+      "fast-check": "^3.0.0"
+    },
+    "dependencies": {
+      "@playwright/test": "^1.60.0",
+      "playwright": "^1.60.0"
+    }
+  },
+  "test_package_lock_version": 3,
+  "test_lock_root_matches": {
+    "dependencies": true,
+    "devDependencies": true
+  },
+  "resolved_test_dependencies": {
+    "fast-check": {
+      "version": "3.23.2",
+      "engines": {
+        "node": ">=8.0.0"
+      }
+    },
+    "playwright": {
+      "version": "1.60.0",
+      "engines": {
+        "node": ">=18"
+      }
+    },
+    "@playwright/test": {
+      "version": "1.60.0",
+      "engines": {
+        "node": ">=18"
+      }
+    }
+  },
+  "hooks_counts": {
+    "after_install": 15,
+    "after_migrate": 18,
+    "app_include_js": 26,
+    "app_include_css": 6
+  },
+  "patches_count": 37,
+  "last_patch": "construction.patches.v9_15.version_boq_cost_basis",
+  "direct_dispatcher_test_methods": [
+    {
+      "name": "test_override_hook_binding_resolves_to_dispatcher",
+      "line": 53
+    },
+    {
+      "name": "test_latin_query_is_vendor_passthrough",
+      "line": 56
+    },
+    {
+      "name": "test_unregistered_doctype_is_vendor_passthrough",
+      "line": 62
+    },
+    {
+      "name": "test_registry_unreadable_fails_closed",
+      "line": 67
+    },
+    {
+      "name": "test_non_active_registry_entry_fails_closed",
+      "line": 76
+    },
+    {
+      "name": "test_dispatcher_canonical_positional_order_keeps_filters",
+      "line": 90
+    },
+    {
+      "name": "test_dict_rows_satisfy_build_for_autosuggest",
+      "line": 108
+    },
+    {
+      "name": "test_sidecar_rows_satisfy_build_for_autosuggest",
+      "line": 128
+    },
+    {
+      "name": "test_genuine_entry_point_arabic_and_latin",
+      "line": 136
+    },
+    {
+      "name": "test_arabic_path_enforces_permissions_via_get_list",
+      "line": 166
+    },
+    {
+      "name": "test_arabic_query_skips_vendor_baseline",
+      "line": 197
+    },
+    {
+      "name": "test_vendor_search_fields_folded_into_registry_query",
+      "line": 209
+    },
+    {
+      "name": "test_enabled_disabled_constraints_mirrored",
+      "line": 230
+    },
+    {
+      "name": "test_arabic_path_returns_row_matched_only_on_vendor_field",
+      "line": 250
+    },
+    {
+      "name": "test_explicit_searchfield_keeps_vendor_ownership",
+      "line": 284
+    },
+    {
+      "name": "test_unusable_filters_return_vendor_result_unchanged",
+      "line": 296
+    },
+    {
+      "name": "test_arabic_path_denies_records_for_non_admin",
+      "line": 307
+    }
+  ],
+  "root_js_build_files_present": [],
+  "tracked_generated_assets": [
+    "construction/public/js/construction.bundle.js"
+  ],
+  "source_file_sha256": {
+    "pyproject.toml": "2b6030953d81950753ab712f5e46363df857313d125105608511d2bbe001885c",
+    "requirements.txt": "17d4e8e80d88940d333826ed93099bc1c25304593553f05b92e8c50188fe4b09",
+    "setup.py": "8c8ff19e07f2478e918c142daed4acbc05bf097c3cb58b44bb054d43ed73b6a0",
+    "construction/hooks.py": "7131a471c9af7983c418983beca71933daef905555b94e0e5b4654e3aa087224",
+    ".github/workflows/ci.yml": "264eca24cee3b8b592673169dc43f3d8f406eb70518d2b1b6a636ce6e1daad35",
+    ".github/workflows/linter.yml": "37a7efda9c25b1de46b3231efe583db51e3c8620bcee3b2d411530783c638920",
+    ".pre-commit-config.yaml": "b4be57e394e34e0b034319917095b11306d56ae3f83a990ffe1e4f455c8f309e",
+    "ADR.md": "ae4880e16898541133d0b14bea9b501ba00dcbd43fe9fd9367df5a744faaf103",
+    "construction/__init__.py": "2137c6f704928c28ceb994b3fdaa5d144cdf71ac6079c82505e585b5d6a0cba7",
+    "construction/construction/__init__.py": "c9ca507daf41a1e6b4208167adf5f42ab84fbab314d4ce69f1a1599f15f1465f",
+    "construction/public/js/boq_export_columns.js": "21c9268ffe277b51f0c0342a5c65fb0254c63431e3c030a5e1e1b1e088a24819",
+    "construction/public/js/print_settings_dialog.js": "7d6d395c1ebfe0ead50b07d0906d9257a288bd954ca03d649c91526f6fe16bc6",
+    "construction/public/js/construction_export_menu.js": "1b0699aab8dae5bcbabe5af84b024711e34d8ec08b41c6fd3b023a13d2c07a4c",
+    "construction/public/js/generic_export_menu.js": "0656a14fa091bafc59b206d5ccf25fbc6b2f55df32fc3f385ef8bc42096d187a",
+    "construction/public/js/theme_loader_v24.js": "fb7dffedb0230722f9120cccad225d22a48886878dd475d0a2c5b5e8e4662cc3",
+    "construction/public/js/typography_settings.js": "8363c4c159d5b11d9300e37e95faf5a4fff4949d435e68899c9e2efbca28463b",
+    "construction/public/js/searchable_dropdown/utils.js": "6432a0cf5cc43d313bee7dfe10770f083506e82179be8598fa9f3a14379da532",
+    "construction/public/js/searchable_dropdown/searchable_dropdown.js": "cfca754ee98f35392313271f16848ccc9499d7a98668b7d61c2d3d6863b62fee",
+    "construction/public/js/overrides/ct_select_control.js": "2ca25e8aae35e7751b6a96224d8ebe568e578b087197872fee01dba0ef3122ac",
+    "construction/public/js/overrides/ct_link_control.js": "69fd49c59240e322b43eb23b0001bb9a316467336d28482bce5cb8155651705a",
+    "construction/public/js/theme_loader_v16.js": "454aaa27c085848f5016f1400c83fabcb97099a176ed4a3836e77ce51093bab3",
+    "construction/public/js/scope_context.js": "3a12d6fe7ee63284ae67eca50b9436a82c654d604b1254b23041ca23992bd4a4",
+    "construction/public/js/frappe_compat_patches.js": "9086b4bc555406a474785897c63cc51378dd7efaef984a22ee9a99a1b22a8f35",
+    "construction/public/js/scope_context_ui.js": "009e3ff52e2c4c93589b083d1cc5d9e0faeccffc2cd0142503148143bf7b4454",
+    "construction/public/js/scope_context_list_filter.js": "b0378d79385aac79eebae06b15a2b302474b1495cc0a402b6807ffcc8cb2988a",
+    "construction/public/js/scope_context_form_defaults.js": "ed9f4edb3c24eac1b5cb67b045b84d1429bcf0d26f138ac09a6f56f25356f0e8",
+    "construction/public/js/vfc_config.js": "69caeb79bf09d7b3efab2f9806c018c64365b5cd8823c1fefe08ab3cbb5b9e01",
+    "construction/public/js/scope_context_report_filters.js": "39553efa5432ed233f300cfffad83cada2b60d87e4d1f2aae8c60441b7f7c727",
+    "construction/public/js/ct_list_view_config.js": "d1d6ceec15fdcdf95414a1f3d06e18c65d43acd1da95c76433e83b081ba0e237",
+    "construction/public/js/sidebar_accordion.js": "ff919e041d3d69237d016817cabbe28072b4ab73a2c4bb779ea4cbb770d5b1dc",
+    "construction/public/js/translation_list_tools.js": "fb0c9d362bc537217ab491765a350dba6abe7446640920cd304bd966ff276097",
+    "construction/public/js/boq_filters.js": "024e25e5ead45ea1669264eb21fd3b7154eb733c0fcce895e4914f355a1adcd0",
+    "construction/public/js/filter_fix.js": "3dd4c0b53e3a4b2f8ee933b9d0c10409fd575e673c78450babf95548c2be7356",
+    "construction/public/js/native_frappe_controls_compat.js": "a65dbe3365976eb635293b527da4f215d40532111c06ac3f6154fc1cc2f376d9",
+    "construction/public/js/vite_layout_controls.js": "15a06ab6c39802716a509101c49c854c010a92ce18e9a2bca7b206a73abdc48b",
+    "construction/public/js/vfc_layout_engine.js": "7e16e992fbd0147b30b40d921c8bd1a0b09d820651afd7a79d9c5e27534956c8",
+    "construction/public/css/modern_theme.css": "d25cc35efaa816d8f61cf1095c352286c2f8b5eeb9ed87cc1b0eef278fb467ad",
+    "construction/public/css/scope_context.css": "492dd3792fc2efc14b019da322d9f22dc8f6610b7dcc7b95bfc661294c14772a",
+    "construction/public/css/vite_extensions.css": "aaa25d479c962f7d5883e25fd70e1a5d21e6f03caa394d1d9f88613d2dc8fd53",
+    "construction/public/css/vite_form_override.css": "1d6d53d8f32129e0e642deb726b5e2eeb40b6e4fdddd09af3b2d281b5048a575",
+    "construction/public/css/vite_list_override.css": "a958761808e8550ec0eb7affdc75bfa19f87c82409dc6aa8b09d70816087f005",
+    "construction/public/css/vfc_sections.css": "81e66836133017ea7025e6e87cd56251e0adb19812a59b686d6bba7244d1512a",
+    "construction/public/css/email_theme.css": "ee8afe05bc62886db0d87d1a9462fd421d51c163f0d2ef8b6e06397f31cfde8d",
+    "construction/public/css/print_theme.css": "d7b06557009f12fa01407638b9467345e910a054ffa4f48bf43ba6f497a54ab9",
+    "construction/construction/doctype/boq_header/boq_header.js": "113193ffda62922b373a6de94806786a23e7e5dba05192ac3808794653908cec",
+    "construction/construction/doctype/boq_item/boq_item.js": "0589c0c88e51c8dfaad4836d34be9091216d2cf51865b785bfec2afa304d3652",
+    "construction/construction/doctype/boq_item_stage/boq_item_stage.js": "bad1eee46cc7d43367cdf3eb1525fea6cfb0de75e7d7ad71fe010b02eeffb984",
+    "construction/construction/doctype/construction_settings/construction_settings.js": "631be6162cd4ba5dc120b772c3d95979c9165f7d09ba76dc76dd0e0e979b226c",
+    "construction/construction/doctype/scope_report_access_log/scope_report_access_log.js": "2bc6adac5c68040fa3d03c1b7dee3ceafa365acfed5e4b3499b7a30006cd1ef5",
+    "construction/construction/doctype/user_desk_theme/user_desk_theme.js": "8e26e86ea167ffc05cd33d3fbeef9298004acff02a55320b8152d79b5f9eba16",
+    "construction/construction/doctype/variation_order/variation_order.js": "98fc0ebb5255d5460ba18e24d146da04cbd62ae6c6b9ecdd51b83b116e430112",
+    "construction/public/js/bilingual/account_form.js": "6e5826d946fa495c94966134a092cc2b8feb0597ef8f3476e81cd76b1fa1d68e",
+    "construction/construction/public/js/item_list.js": "917ece600d13cdb91e9948e9cd4854893bc7d34ade926bdaa8e91d798b20e9d7",
+    "construction/construction/doctype/boq_item/boq_item_list.js": "50238dfec7244f1efcddf7129c1264860652858d8ce8e41bf1c2391adaf58294",
+    "construction/construction/doctype/boq_structure/boq_structure_list.js": "6559a91e993d74a22083f817ea56ea3ae4bb8556a6dccd40fe100de0165ea410",
+    "construction/construction/doctype/variation_order/variation_order_list.js": "ff34ceb04b8ab89b162a0b4b1797a7f22ebf35ba19a66cb8d90f230d8b5619a6",
+    "construction/construction/doctype/boq_structure/boq_structure_tree.js": "e23c41d7f112c05b664a72ccbc42cdba088fc561bf9ed1b2890408d9742656e1",
+    "construction/public/js/bilingual/account_tree.js": "1c9b5ba88b871f0562bc5b0785af9fa5cc6865f043e7e4cf0ee95ec745c18fac",
+    "construction/tests/package.json": "7460c724ac8374c3c664655c3db9f467ca633b1db91a08ffec63a784b01208d2",
+    "construction/tests/package-lock.json": "60afceb3764d45ce4b5d9ffc82944a83b696c3564b8ea417eeba257e34cceb1f",
+    "construction/public/js/construction.bundle.js": "e8aeefd274a75b2b81cdb51e593e1b3dd9972f26fc83027c8a09b88b41c385ff",
+    "AGENTS.md": "6c8c80103a2094e8943b415026b0dec272d6960002341e14f2dbcaa019db4da3",
+    "docs/onboarding.md": "a329ba14fd0cf02eaaf92de1b788de7ebefe983df8c8a2f9738391a1a1695a0c",
+    "README.md": "41353416176ad7be4992f5c442ed2b3e5fe0554ee9e7ea3d87ad869d13775384",
+    "construction/tests/test_bilingual_desk_link_dispatch.py": "e15b2b2d95f111dbf23ed782a41897c41f5dc66a2549ef39d085bc6ee8c28bc4",
+    "construction/patches.txt": "c442ac1fbc3a27a09c38309c784c039bffeec6624f55807947d49dbffb1171fd"
+  },
+  "source_dependency_range_comparison": [
+    {
+      "dependency": "cryptography",
+      "construction": "cryptography~=50.0.0",
+      "frappe_ci_pin": "cryptography~=46.0.3",
+      "construction_interval": ">=50.0.0,<50.1.0",
+      "frappe_interval": ">=46.0.3,<46.1.0",
+      "intersects": false
+    },
+    {
+      "dependency": "pyOpenSSL",
+      "construction": "pyOpenSSL~=26.4.0",
+      "frappe_ci_pin": "pyOpenSSL~=26.0.0",
+      "construction_interval": ">=26.4.0,<26.5.0",
+      "frappe_interval": ">=26.0.0,<26.1.0",
+      "intersects": false
+    },
+    {
+      "dependency": "Pillow",
+      "construction": "Pillow~=12.3.0",
+      "frappe_ci_pin": "Pillow~=12.2.0",
+      "construction_interval": ">=12.3.0,<12.4.0",
+      "frappe_interval": ">=12.2.0,<12.3.0",
+      "intersects": false
+    },
+    {
+      "dependency": "sqlparse",
+      "construction": "sqlparse~=0.6.0",
+      "frappe_ci_pin": "sqlparse~=0.5.5",
+      "construction_interval": ">=0.6.0,<0.7.0",
+      "frappe_interval": ">=0.5.5,<0.6.0",
+      "intersects": false
+    },
+    {
+      "dependency": "sql_metadata",
+      "construction": "sql_metadata~=3.0.1",
+      "frappe_ci_pin": "sql_metadata~=2.19.0",
+      "construction_interval": ">=3.0.1,<3.1.0",
+      "frappe_interval": ">=2.19.0,<2.20.0",
+      "intersects": false
+    }
+  ]
+}

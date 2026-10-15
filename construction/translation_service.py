@@ -804,6 +804,67 @@ def assert_translation_health():
     return h
 
 
+def adopt_matching_packaged_translation(source_text, decision_ref, language="ar", context=""):
+    """Operator-only adoption of an identical, already released translation.
+
+    This never resolves a text conflict, releases a proposal, or accepts an
+    arbitrary file. Existing identities and text are preserved, and the
+    operator decision is recorded rather than inventing reviewer approval.
+    The caller owns the transaction; migration remains fail-closed by default.
+    """
+    import csv
+    from html import escape
+    from pathlib import Path
+
+    frappe.only_for("System Manager")
+    if not isinstance(decision_ref, str) or not decision_ref.strip():
+        frappe.throw("An operator decision reference is required")
+    source_text = _runtime_source(source_text)
+    context = (context or "").strip()
+    path = Path(frappe.get_app_path("construction", "data", "translations", "approved_ar_overrides.csv"))
+    with path.open(encoding="utf-8") as handle:
+        matches = [
+            row
+            for row in csv.DictReader(handle)
+            if row.get("release_status") == "Released"
+            and (row.get("language") or "ar") == language
+            and _runtime_source(row.get("source_text")) == source_text
+            and (row.get("context") or "").strip() == context
+        ]
+    if len(matches) != 1:
+        frappe.throw("Exactly one matching packaged release is required")
+    rows = _get_runtime_rows(language, source_text, context)
+    if len(rows) != 1:
+        frappe.throw("Exactly one existing runtime translation is required")
+    payload = matches[0]
+    doc = frappe.get_doc("Translation", rows[0].name)
+    doc.check_permission("write")
+    if doc.translated_text != payload.get("translated_text"):
+        frappe.throw("Translation text differs from the packaged release; explicit review is required")
+    if doc.get("ct_origin") == "Packaged Release":
+        return {"name": doc.name, "changed": False}
+    if doc.get("ct_origin") not in ("Site Override", "", None):
+        frappe.throw("Unsupported translation origin")
+    previous_version = doc.get("ct_release_version")
+    previous_app = doc.get("ct_app")
+    # Runtime identities exclude app; align provenance without changing the key.
+    doc.ct_app = payload.get("ct_app") or ""
+    _apply_origin(doc, "Packaged Release", payload.get("release_version"), frappe.session.user)
+    doc.save()
+    doc.add_comment(
+        "Info", "Matching packaged translation adopted by operator decision: " + escape(decision_ref.strip())
+    )
+    invalidate_translation_caches(language)
+    return {
+        "name": doc.name,
+        "changed": True,
+        "previous_version": previous_version,
+        "release_version": doc.get("ct_release_version"),
+        "previous_app": previous_app,
+        "app": doc.get("ct_app"),
+    }
+
+
 def import_released_overrides_hook():
     res = import_released_overrides(dry_run=False, _skip_permission=True)
     if res.get("drift"):

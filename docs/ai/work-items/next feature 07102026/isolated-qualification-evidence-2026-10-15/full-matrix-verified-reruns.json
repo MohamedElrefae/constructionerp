@@ -1,0 +1,135 @@
+[
+  {
+    "module": "test_boq_properties",
+    "log": "matrix-test_boq_properties.log",
+    "tests": 17,
+    "native_summary_pass": true,
+    "sha256": "8fdf7ac574bdcb9d03de4ae46a0b8d0c84a619f8ef6df4bea62e2ba829fb6661"
+  },
+  {
+    "module": "test_quantity_revisions",
+    "log": "matrix-test_quantity_revisions.log",
+    "tests": 31,
+    "native_summary_pass": true,
+    "sha256": "118beee4422eaf94b3c5002975c6d2205d96797bedf3e16afa77ce5030cb1031"
+  },
+  {
+    "module": "test_variation_orders",
+    "log": "matrix-test_variation_orders-retest.log",
+    "tests": 27,
+    "native_summary_pass": true,
+    "sha256": "21529a5fa370dcac01dc6cbeafbc49a8444564fd1708ecfd01fac453391c6d2c"
+  },
+  {
+    "module": "test_cost_analysis_engine",
+    "log": "matrix-test_cost_analysis_engine.log",
+    "tests": 38,
+    "native_summary_pass": true,
+    "sha256": "e22ed9faccfde60d88e0b5cf613a6477b86384f8cbd1cfe97be2f64d389177aa"
+  },
+  {
+    "module": "test_cost_database_api",
+    "log": "matrix-test_cost_database_api.log",
+    "tests": 26,
+    "native_summary_pass": true,
+    "sha256": "bb685c89290a10140d6931a17b14b726e09d20f01d5e97c971d9d03c6e68812a"
+  },
+  {
+    "module": "test_customer_release_financial_guards",
+    "log": "matrix-test_customer_release_financial_guards.log",
+    "tests": 12,
+    "native_summary_pass": true,
+    "sha256": "1d663328c141e4f282f77e3d27115428047f0f73e6165233ea0a9e6462cb0318"
+  },
+  {
+    "module": "test_boq_transactions",
+    "log": "matrix-test_boq_transactions.log",
+    "tests": 12,
+    "native_summary_pass": true,
+    "sha256": "22cc1d913480b3b672d080048ea23b2108f060833eebe89df0a921047036dc56"
+  },
+  {
+    "module": "test_boq_wbs_generation",
+    "log": "matrix-test_boq_wbs_generation.log",
+    "tests": 2,
+    "native_summary_pass": true,
+    "sha256": "69e31daaff21230fb60e9a4a792edf306250c7ec9dc4edbacda7242a818820f9"
+  },
+  {
+    "module": "test_boq_structure_conversion",
+    "log": "matrix-test_boq_structure_conversion.log",
+    "tests": 1,
+    "native_summary_pass": true,
+    "sha256": "528b3b05b50e4eb8890564960cc62492966e668ee5071568a72b19018c4fac58"
+  },
+  {
+    "module": "test_boq_structure_delete_safety",
+    "log": "matrix-test_boq_structure_delete_safety.log",
+    "tests": 1,
+    "native_summary_pass": true,
+    "sha256": "076e5ee444acf401fde1774b728fc697aea38561d4b948a08fe4b3cce899e74d"
+  },
+  {
+    "module": "test_boq_excel_parser",
+    "log": "matrix-test_boq_excel_parser.log",
+    "tests": 4,
+    "native_summary_pass": true,
+    "sha256": "cb31f29baa5498a6c4be7c513503c12b65be649ec71557e13f227529ae0d6c10"
+  },
+  {
+    "module": "test_boq_rollup_audit",
+    "log": "matrix-test_boq_rollup_audit.log",
+    "tests": 5,
+    "native_summary_pass": true,
+    "sha256": "a8e3d0fb11de19b2915b8d14a2c99e58143cd537c676cdf2a52b0487e3044843"
+  },
+  {
+    "module": "test_bilingual_install_schema",
+    "log": "matrix-test_bilingual_install_schema.log",
+    "tests": 6,
+    "native_summary_pass": true,
+    "sha256": "7ee6606aa34b0a1b0f0e72dc9adc7487d941da41f42415bc9414274de7d7edb9"
+  },
+  {
+    "module": "test_packaged_translation_adoption",
+    "log": "matrix-test_packaged_translation_adoption.log",
+    "tests": 6,
+    "native_summary_pass": true,
+    "sha256": "273a674fd8bb131fcc4179eb8f014250189d9c9466a7d06e3150549efa8bf246"
+  },
+  {
+    "module": "test_report_export_authorization",
+    "log": "matrix-test_report_export_authorization.log",
+    "tests": 7,
+    "native_summary_pass": true,
+    "sha256": "b60c06ebabe96902c2f42976726ae39bb02f0e737ba22c26e7119c917d58d193"
+  },
+  {
+    "module": "test_boq_legacy_cost_conversion",
+    "log": "matrix-test_boq_legacy_cost_conversion.log",
+    "tests": 8,
+    "native_summary_pass": true,
+    "sha256": "75038539cd2c5206f9e0839aec5f45cfe1ba159f666a5b1da3d1a9db1aeba733"
+  },
+  {
+    "module": "test_boq_parent_permissions",
+    "log": "matrix-test_boq_parent_permissions.log",
+    "tests": 6,
+    "native_summary_pass": true,
+    "sha256": "f3243e893ee260cb4d6bc82d3128e7ef357504590808e9ddfcf959cd4c9bc16d"
+  },
+  {
+    "module": "test_bilingual_desk_link_dispatch",
+    "log": "matrix-test_bilingual_desk_link_dispatch.log",
+    "tests": 17,
+    "native_summary_pass": true,
+    "sha256": "26313626615ef6ea3ad266f40ce1347f0cfbdb987efc3ea8b091d5548521514d"
+  },
+  {
+    "module": "test_stage7_bilingual_reports",
+    "log": "matrix-test_stage7_bilingual_reports.log",
+    "tests": 10,
+    "native_summary_pass": true,
+    "sha256": "6adf1a8c0772b0588e94d71412061dbe3e772d97101cfadc5bf0266a5335eba9"
+  }
+]

@@ -1,0 +1,112 @@
+{
+ "charts": [],
+ "content": "[]",
+ "custom_blocks": [],
+ "doctype": "Workspace",
+ "external_link": null,
+ "hide_custom": 0,
+ "icon": null,
+ "indicator_color": "green",
+ "is_hidden": 0,
+ "label": "Site Work",
+ "link_to": null,
+ "link_type": "DocType",
+ "links": [
+  {
+   "dependencies": null,
+   "description": null,
+   "hidden": 0,
+   "icon": null,
+   "is_query_report": 0,
+   "label": "Site execution",
+   "link_count": 0,
+   "link_to": null,
+   "link_type": "DocType",
+   "onboard": 0,
+   "only_for": null,
+   "report_ref_doctype": null,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": null,
+   "description": null,
+   "hidden": 0,
+   "icon": null,
+   "is_query_report": 0,
+   "label": "BOQ Item Stage",
+   "link_count": 0,
+   "link_to": "BOQ Item Stage",
+   "link_type": "DocType",
+   "onboard": 0,
+   "only_for": null,
+   "report_ref_doctype": null,
+   "type": "Link"
+  },
+  {
+   "dependencies": null,
+   "description": null,
+   "hidden": 0,
+   "icon": null,
+   "is_query_report": 0,
+   "label": "Timesheet",
+   "link_count": 0,
+   "link_to": "Timesheet",
+   "link_type": "DocType",
+   "onboard": 0,
+   "only_for": null,
+   "report_ref_doctype": null,
+   "type": "Link"
+  },
+  {
+   "dependencies": null,
+   "description": null,
+   "hidden": 0,
+   "icon": null,
+   "is_query_report": 0,
+   "label": "Material Request",
+   "link_count": 0,
+   "link_to": "Material Request",
+   "link_type": "DocType",
+   "onboard": 0,
+   "only_for": null,
+   "report_ref_doctype": null,
+   "type": "Link"
+  },
+  {
+   "dependencies": null,
+   "description": null,
+   "hidden": 0,
+   "icon": null,
+   "is_query_report": 0,
+   "label": "BOQ Item",
+   "link_count": 0,
+   "link_to": "BOQ Item",
+   "link_type": "DocType",
+   "onboard": 0,
+   "only_for": null,
+   "report_ref_doctype": null,
+   "type": "Link"
+  }
+ ],
+ "module": "construction",
+ "module_onboarding": null,
+ "name": "Site Work",
+ "number_cards": [],
+ "parent_page": null,
+ "public": 1,
+ "quick_lists": [],
+ "restrict_to_domain": null,
+ "roles": [
+  {
+   "role": "Site Engineer"
+  },
+  {
+   "role": "Projects User"
+  }
+ ],
+ "sequence_id": 0.0,
+ "shortcuts": [],
+ "standard": 1,
+ "title": "Site Work",
+ "type": "Workspace"
+}

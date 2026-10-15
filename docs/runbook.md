@@ -24,7 +24,7 @@ The script verifies:
 | Database backup < 24h old | Rollback point for schema migration (R2) |
 | ≥ 2 GB free disk | Backups + migration need headroom |
 
-Exit code `0` = safe to deploy. **Any FAIL/WARN = stop and fix first.**
+Exit code `0` means these preflight checks passed. Deployment also requires a qualified candidate, the named site’s authorization, a recoverable backup and the applicable release decision. **Any FAIL/WARN = stop and fix first.** See the [documentation index](DOCUMENTATION_INDEX.md) and current operating profile.
 
 ### 0.2 Full deployment sequence
 
@@ -52,6 +52,126 @@ redis-server config/redis_queue.conf --daemonize yes
 ```
 
 Then re-run the pre-flight script. If the client uses systemd/supervisor, enable those units instead so Redis survives reboots.
+
+**Recovery symptoms (observed 2026-10-14 during F22 browser work):** Redis dying does not always present as a Redis error. It presented as
+- intermittent `PermissionError`s that looked like permission defects, and
+- `500 The page could not be built` on a workspace route, with a traceback ending in
+  `Error 111 connecting to 127.0.0.1:13000`.
+
+Confirm before diagnosing anything else:
+
+```bash
+redis-cli -p 13000 ping   # cache: must answer PONG
+redis-cli -p 11000 ping   # queue: must answer PONG
+```
+
+Both instances must be up. A single live `redis-server` process on 6379 (a leftover system
+instance) is not the bench's Redis. After restarting them, re-take any evidence gathered
+while they were down — a permission or routing conclusion drawn from an outage is not
+valid evidence.
+
+---
+
+## 0.4 Identifying which site served an HTTP request (MANDATORY before UI evidence)
+
+`bench serve` binds **one** site at startup, chosen in this order: `--site`, then
+`$FRAPPE_SITE`, then `default_site` in `sites/common_site_config.json`
+(`frappe/utils/bench_helper.py` → `get_sites`). It does **not** re-read the setting per
+request, and `dns_multitenant` does not change that: with `serve_default_site: true`,
+`frappe.app.init_request` resolves the site from the bound `_site` **before** the Host
+header is considered.
+
+Consequences, all observed 2026-10-14:
+
+- A `Host:` header or `X-Frappe-Site-Name` header does **not** select the site.
+- A refused login does not identify the site: `f04-pm@v16rehearsal.local` was answered
+  `Invalid login credentials` by `v16.localhost`, where that user does not exist, and the
+  rehearsal site's own credentials worked server-side. **Never treat "Invalid login
+  credentials" as evidence about credentials.**
+- Changing `default_site` requires a server restart to take effect.
+
+Verify the serving site first, then take UI evidence:
+
+```bash
+# 1. Which site is bound?
+ps aux | grep '[b]ench_helper'                 # shows "frappe serve --port 8000"
+grep default_site sites/common_site_config.json
+
+# 2. Positive proof: log in a user that exists on exactly one site.
+curl -s -X POST -H 'Content-Type: application/x-www-form-urlencoded' \
+  --data 'usr=<user>@v16rehearsal.local&pwd=<password>' \
+  http://127.0.0.1:8000/api/method/login
+# {"message":"Logged In"} means that site is being served. 401 "Invalid login
+# credentials" means either the wrong site or the wrong password — resolve which
+# with a direct server-side check (frappe.auth.check_password) before concluding.
+
+# 3. Or read the site's own log after a request:
+ls -t sites/*/logs/frappe.log | head -3       # the freshest entry names the site
+```
+
+For rehearsal-site UI work, temporarily set `default_site` (disclosed in the work item),
+restart `bench serve`, verify by step 2, and restore the previous value afterwards.
+
+---
+
+## 0.5 Cache-buster discipline and safe restarts (F25, 2026-10-14)
+
+**After any `?v=` bump in `hooks.py`:** the `?v=` query defeats *browser* caching, but the
+desk HTML embedding those URLs is itself server-cached. Always run, in order:
+
+```bash
+bench --site <site> clear-cache
+# then verify the served HTML carries the new versions BEFORE browser evidence:
+curl -s <desk-url> | grep -o "vite_layout_controls.js?v=[0-9.]*"
+```
+
+A passing `frappe.get_hooks` read is not proof the browser will receive it — the served
+HTML is the proof.
+
+**Restarting `bench serve`:** never `pkill -f` with a pattern that matches your own shell
+command (observed 2026-10-14: `pkill -f "bench_helper frappe serve"` matched the shell
+running it and killed the operator session along with the server). Use the port to find the
+exact PID, or a bracket pattern that cannot self-match:
+
+```bash
+SS=$(ss -ltnp 2>/dev/null | grep ':8000' | grep -oP 'pid=\K[0-9]+' | head -1)
+kill $SS
+# or: pkill -f "[b]ench_helper frappe serve"
+sleep 3
+nohup /home/mohamed/.local/bin/bench serve --port 8000 > /tmp/opencode/<task>.log 2>&1 &
+sleep 15; curl -s -o /dev/null -w "ping=%{http_code}\n" http://127.0.0.1:8000/api/method/frappe.ping
+```
+
+After any restart, re-verify Redis (`redis-cli -p 13000 ping`, `-p 11000 ping`) and the
+serving site (§0.4) before resuming evidence.
+
+---
+
+## 0.6 Recovery rehearsal (F32 preparation — no execution here)
+
+Backup integrity for the F02 baseline (`20261013_052916`, verified 2026-10-14 with
+`gzip -t` / `tar -t`, all three archives OK):
+
+- `sites/v16rehearsal.localhost/private/backups/20261013_052916-v16rehearsal_localhost-database.sql.gz` (68 MB)
+- `...-files.tar`, `...-private-files.tar`
+
+Restore rehearsal (operator with DBA access, isolated site only — never over a live site):
+
+```bash
+bench new-site <recovery>.localhost --admin-password '<from-operator-channel>'
+bench --site <recovery>.localhost restore \
+  sites/v16rehearsal.localhost/private/backups/20261013_052916-v16rehearsal_localhost-database.sql.gz \
+  --with-private-files sites/v16rehearsal.localhost/private/backups/20261013_052916-v16rehearsal_localhost-private-files.tar \
+  --with-public-files sites/v16rehearsal.localhost/private/backups/20261013_052916-v16rehearsal_localhost-files.tar
+bench --site <recovery>.localhost install-app construction
+bench --site <recovery>.localhost migrate
+```
+
+Rollback decision: if migration fails, the decision is restore-again vs fix-forward, made by
+the operator with the engineer — never `--force` a migrate past a DDL error, and never
+restore over the site the backup came from without a fresh backup first. The rehearsal must
+record row counts (BOQ Header/Item/Structure, Cost Analysis, Quantity Revision, File) before
+and after, plus the permission-reconciliation baseline diff.
 
 ---
 

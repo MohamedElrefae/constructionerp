@@ -74,77 +74,77 @@
 				var BOQ_FULL_COLUMNS = [
 					{
 						field_key: "wbs_code",
-						label: "WBS Code",
+						label: __("WBS Code"),
 						default_width: 12,
 						default_visible: true,
 						default_sort_order: 0,
 					},
 					{
 						field_key: "title",
-						label: "Title / Description",
+						label: __("Title / Description"),
 						default_width: 30,
 						default_visible: true,
 						default_sort_order: 1,
 					},
 					{
 						field_key: "type",
-						label: "Type",
+						label: __("Type"),
 						default_width: 6,
 						default_visible: true,
 						default_sort_order: 2,
 					},
 					{
 						field_key: "unit",
-						label: "Unit",
+						label: __("Unit"),
 						default_width: 5,
 						default_visible: true,
 						default_sort_order: 3,
 					},
 					{
 						field_key: "quantity",
-						label: "Quantity",
+						label: __("Quantity"),
 						default_width: 8,
 						default_visible: true,
 						default_sort_order: 4,
 					},
 					{
 						field_key: "contract_unit_price",
-						label: "Unit Price",
+						label: __("Unit Price"),
 						default_width: 10,
 						default_visible: true,
 						default_sort_order: 5,
 					},
 					{
 						field_key: "factor",
-						label: "Factor",
+						label: __("Factor"),
 						default_width: 5,
 						default_visible: true,
 						default_sort_order: 6,
 					},
 					{
 						field_key: "line_total",
-						label: "Line Total",
+						label: __("Line Total"),
 						default_width: 10,
 						default_visible: true,
 						default_sort_order: 7,
 					},
 					{
 						field_key: "owner_ref_no",
-						label: "Ref",
+						label: __("Ref"),
 						default_width: 9,
 						default_visible: true,
 						default_sort_order: 8,
 					},
 					{
 						field_key: "owner_page",
-						label: "Owner Page",
+						label: __("Owner Page"),
 						default_width: 5,
 						default_visible: false,
 						default_sort_order: 9,
 					},
 					{
 						field_key: "owner_file_ref",
-						label: "File Ref",
+						label: __("File Ref"),
 						default_width: 5,
 						default_visible: false,
 						default_sort_order: 10,
@@ -154,70 +154,70 @@
 				var BOQ_HEADER_COLUMNS = [
 					{
 						field_key: "name",
-						label: "BOQ ID",
+						label: __("BOQ ID"),
 						default_width: 15,
 						default_visible: true,
 						default_sort_order: 0,
 					},
 					{
 						field_key: "title",
-						label: "Title",
+						label: __("Title"),
 						default_width: 20,
 						default_visible: true,
 						default_sort_order: 1,
 					},
 					{
 						field_key: "project_name",
-						label: "Project",
+						label: __("Project"),
 						default_width: 20,
 						default_visible: true,
 						default_sort_order: 2,
 					},
 					{
 						field_key: "boq_type",
-						label: "BOQ Type",
+						label: __("BOQ Type"),
 						default_width: 10,
 						default_visible: true,
 						default_sort_order: 3,
 					},
 					{
 						field_key: "status",
-						label: "Status",
+						label: __("Status"),
 						default_width: 10,
 						default_visible: true,
 						default_sort_order: 4,
 					},
 					{
 						field_key: "version",
-						label: "Version",
+						label: __("Version"),
 						default_width: 8,
 						default_visible: true,
 						default_sort_order: 5,
 					},
 					{
 						field_key: "total_contract_value",
-						label: "Total Contract Value",
+						label: __("Total Contract Value"),
 						default_width: 15,
 						default_visible: true,
 						default_sort_order: 6,
 					},
 					{
 						field_key: "total_budgeted_cost",
-						label: "Total Budgeted Cost",
+						label: __("Total Budgeted Cost"),
 						default_width: 15,
 						default_visible: true,
 						default_sort_order: 7,
 					},
 					{
 						field_key: "created_on",
-						label: "Created On",
+						label: __("Created On"),
 						default_width: 12,
 						default_visible: false,
 						default_sort_order: 8,
 					},
 					{
 						field_key: "modified_on",
-						label: "Modified On",
+						label: __("Modified On"),
 						default_width: 12,
 						default_visible: false,
 						default_sort_order: 9,
@@ -447,37 +447,234 @@
 					frm.add_custom_button(
 						__("Import Excel"),
 						() => {
+							// K-01 repair (F16): explicit two-step preview -> confirm flow.
+							// The API defaults to dry_run=1 (preview); the old handler
+							// displayed "Import successful" for an unsaved preview.
+							// This dialog validates first, shows row/error counts, and
+							// commits only after explicit confirmation with the
+							// confirmed import mode. A busy guard prevents duplicates.
+							let busy = false;
+							let last_preview = null;
+							let last_file_url = null;
 							const d = new frappe.ui.Dialog({
-								title: "Import BOQ from Excel",
+								title: __("Import BOQ from Excel"),
 								fields: [
 									{
-										label: "Excel File",
+										label: __("Excel File"),
 										fieldname: "file_url",
 										fieldtype: "Attach",
 										reqd: 1,
 									},
+									{
+										label: __("Import Mode"),
+										fieldname: "import_mode",
+										fieldtype: "Select",
+										// F36-D003: options stay English enum codes on purpose.
+										// They were translated for F22, but confirmed_import_mode
+										// must be one of IMPORT_MODES ("Structured", …) and the
+										// round-trip broke: the API returns English while the
+										// control only accepted Arabic, so Confirm Import died on
+										// empty mode. The Arabic description below explains the choice.
+										options: ["Structured", "Semi-Structured", "Flat"],
+										description: __("Confirm the detected workbook layout before committing."),
+										depends_on: "eval:doc.__show_commit",
+									},
+									{
+										fieldname: "result_html",
+										fieldtype: "HTML",
+									},
 								],
-								primary_action_label: "Import",
+								primary_action_label: __("Validate"),
 								primary_action(values) {
-									frappe.call({
-										method: "construction.api.boq_api.import_boq_excel",
-										args: {
-											file_url: values.file_url,
-											boq_header: frm.doc.name,
-										},
-										callback(r) {
-											if (r.message && r.message.success) {
+									if (busy) return;
+									if (!values.file_url) {
+										frappe.msgprint(__("Please attach an Excel file first."));
+										return;
+									}
+									if (!d.__confirm_armed) {
+										run_preview(values.file_url);
+									} else {
+										run_commit(values.file_url, values.import_mode);
+									}
+								},
+							});
+
+							// F36-D003: frappe.ui.Dialog does not initialise `doc`, so the
+							// `depends_on: "eval:doc.__show_commit"` gate and every direct
+							// `d.doc.__show_commit = …` assignment below threw
+							// ("Cannot set properties of undefined") inside the preview
+							// callback — after the API answered 200 — leaving the dialog
+							// stuck on "Validating…" with the preview never rendered.
+							// Initialise the backing object once, here.
+							d.doc = d.doc || {};
+							(d.doc = d.doc || {}).__show_commit = false;
+
+							function set_result($node) {
+								d.fields_dict.result_html.$wrapper.empty().append($node);
+							}
+
+							function show_info(text) {
+								set_result($("<p>").addClass("text-muted").text(text));
+							}
+
+							function show_errors(errors) {
+								const $wrap = $("<div>");
+								$wrap.append(
+									$("<p>").addClass("text-danger").text(
+										__("Validation found {0} blocking error(s). Fix the workbook and validate again. No records were saved.", [errors.length])
+									)
+								);
+								const $list = $("<ul>");
+								(errors || []).slice(0, 50).forEach((e) => {
+									const row = e.row_no ? `Row ${e.row_no}: ` : "";
+									$list.append($("<li>").text(row + (e.message || e.code || "Error")));
+								});
+								$wrap.append($list);
+								if ((errors || []).length > 50) {
+									$wrap.append(
+										$("<p>").addClass("text-muted").text(
+											__("Showing first 50 of {0} errors. Use the error report for the full list.", [errors.length])
+										)
+									);
+								}
+								set_result($wrap);
+							}
+
+							function show_preview(msg) {
+								const summary = msg.summary || {};
+								const $wrap = $("<div>");
+								$wrap.append(
+									$("<p>").text(
+										__("Preview only — nothing saved yet. Rows: {0}, sections: {1}, items: {2}, warnings: {3}.",
+											[summary.row_count || 0, summary.section_count || 0, summary.item_count || 0, (msg.warnings || []).length])
+									)
+								);
+								if ((msg.warnings || []).length) {
+									const $wlist = $("<ul>");
+									(msg.warnings || []).slice(0, 20).forEach((w) => {
+										$wlist.append($("<li>").text(w.message || w.code || "Warning"));
+									});
+									$wrap.append($("<p>").addClass("text-muted").text(__("Warnings:")));
+									$wrap.append($wlist);
+								}
+								$wrap.append(
+									$("<p>").text(
+										__("Detected layout: {0}. Confirm the mode, then choose Confirm Import to save.", [msg.detected_import_mode || "—"])
+									)
+								);
+								set_result($wrap);
+							}
+
+							function run_preview(file_url) {
+								last_file_url = file_url;
+								busy = true;
+								d.get_primary_btn().prop("disabled", true);
+								show_info(__("Validating workbook…"));
+								frappe.call({
+									method: "construction.api.boq_api.import_boq_excel",
+									args: {
+										file_url: file_url,
+										boq_header: frm.doc.name,
+										dry_run: 1,
+									},
+									callback(r) {
+										busy = false;
+										d.get_primary_btn().prop("disabled", false);
+										const msg = r.message;
+										if (!msg) {
+											show_info(__("Validation failed without a server response. Nothing was saved."));
+											return;
+										}
+										if (msg.success && !(msg.errors || []).length) {
+											last_preview = msg;
+											d.set_value("import_mode", msg.detected_import_mode);
+											d.__confirm_armed = true;
+											(d.doc = d.doc || {}).__show_commit = true;
+											d.refresh();
+											// F36-D003: d.refresh() rebuilds the fields and drops staged
+											// values that live only in the controls, not in doc, so
+											// Confirm Import would die on mandatory validation
+											// ("missing: Excel File") or on empty mode. Restore both.
+											d.set_value("file_url", file_url);
+											d.set_value("import_mode", msg.detected_import_mode);
+											show_preview(msg);
+											d.set_primary_action(__("Confirm Import"), d.primary_action);
+										} else {
+											show_errors(msg.errors || [{ message: msg.error || __("Validation failed.") }]);
+										}
+									},
+									error() {
+										busy = false;
+										d.get_primary_btn().prop("disabled", false);
+										show_info(__("Validation request failed. Nothing was saved."));
+									},
+								});
+							}
+
+							function run_commit(file_url, import_mode) {
+								if (!last_preview || file_url !== last_file_url) {
+									last_preview = null;
+									d.__confirm_armed = false;
+									(d.doc = d.doc || {}).__show_commit = false;
+									d.refresh();
+									d.set_primary_action(__("Validate"), d.primary_action);
+									show_info(__("The file changed since validation. Validate again before confirming import."));
+									return;
+								}
+								if (!import_mode) {
+									frappe.msgprint(__("Please confirm the import mode."));
+									return;
+								}
+								busy = true;
+								d.get_primary_btn().prop("disabled", true);
+								show_info(__("Committing import…"));
+								frappe.call({
+									method: "construction.api.boq_api.import_boq_excel",
+									args: {
+										file_url: file_url,
+										boq_header: frm.doc.name,
+										dry_run: 0,
+										confirmed_import_mode: import_mode,
+									},
+									callback(r) {
+										busy = false;
+										d.get_primary_btn().prop("disabled", false);
+										const msg = r.message;
+										if (msg && msg.success && msg.dry_run === false) {
+											if (msg.duplicate_suppressed) {
+												const n_items = (msg.summary || {}).item_count || 0;
 												d.hide();
 												frm.reload_doc();
 												frappe.show_alert({
-													message: "Import successful",
+													message: __("Already imported: this file is recorded under batch {0} ({1} items). No duplicates created.", [msg.import_batch || "—", n_items]),
+													indicator: "blue",
+												});
+											} else {
+												const n_items = (msg.created_items || []).length;
+												const n_struct = (msg.created_structures || []).length;
+												d.hide();
+												frm.reload_doc();
+												frappe.show_alert({
+													message: __("Imported {0} items in {1} structures (batch {2}).", [n_items, n_struct, msg.import_batch || "—"]),
 													indicator: "green",
 												});
 											}
-										},
-									});
-								},
-							});
+										} else {
+											show_errors((msg && msg.errors) || [{ message: (msg && msg.error) || __("Import failed.") }]);
+											d.__confirm_armed = false;
+											(d.doc = d.doc || {}).__show_commit = false;
+											d.refresh();
+											d.set_primary_action(__("Validate"), d.primary_action);
+										}
+									},
+									error() {
+										busy = false;
+										d.get_primary_btn().prop("disabled", false);
+										show_info(__("Import request failed. Verify saved records before retrying; do not blindly repeat."));
+									},
+								});
+							}
+
 							d.show();
 						},
 						__("Actions")

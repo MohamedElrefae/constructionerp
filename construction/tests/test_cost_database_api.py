@@ -722,6 +722,90 @@ class TestCostDatabaseAPI(FrappeTestCase):
             1,
         )
 
+    def test_import_uom_case_variants_reuse_item(self):
+        """F35: UOM codes compare case-insensitively on Item reuse.
+
+        The framework stores the canonical Link target name on save ("Ton" is
+        stored as "TON"), so an exact string compare false-conflicted on every
+        re-import. Mixed-case re-import must reuse the Item; a genuinely
+        different UOM must still refuse the row.
+        """
+        from construction.services.cost_database_service import import_cost_database_from_excel
+
+        content = self._build_test_excel()
+        first = import_cost_database_from_excel(
+            file_content=content,
+            file_name="test_import.xlsx",
+            company=self.company,
+        )
+        self.assertTrue(first["success"], msg=str(first["errors"]))
+        self.assertEqual(frappe.db.get_value("Item", "API-CEM-001", "stock_uom"), "TON")
+
+        # Same file again (file says "Ton", stored canonical "TON") → reuse, no error.
+        second = import_cost_database_from_excel(
+            file_content=content,
+            file_name="test_import.xlsx",
+            company=self.company,
+        )
+        self.assertTrue(second["success"], msg=str(second["errors"]))
+
+    def test_import_reuses_identical_existing_item(self):
+        """F35: a pre-existing Item with identical managed values is reused untouched."""
+        from construction.services.cost_database_service import import_cost_database_from_excel
+
+        frappe.get_doc(
+            {
+                "doctype": "Item",
+                "item_code": "API-CEM-001",
+                "item_name": "API Cement",
+                "item_name_ar": "أسمنت API",
+                "item_group": "All Item Groups",
+                "stock_uom": "TON",
+                "is_stock_item": 0,
+                "is_construction_resource": 1,
+                "construction_resource_type": "Material",
+                "default_cost_stream": "M",
+            }
+        ).insert(ignore_permissions=True)
+        content = self._build_test_excel()
+        result = import_cost_database_from_excel(
+            file_content=content,
+            file_name="test_import.xlsx",
+            company=self.company,
+        )
+        self.assertTrue(result["success"], msg=str(result["errors"]))
+        self.assertEqual(frappe.db.count("Item", {"item_code": "API-CEM-001"}), 1)
+
+    def test_import_refuses_genuinely_different_uom(self):
+        """F35: case-insensitivity must not mask a real UOM conflict (Ton vs Nos)."""
+        from construction.services.cost_database_service import import_cost_database_from_excel
+
+        frappe.get_doc(
+            {
+                "doctype": "Item",
+                "item_code": "API-CEM-001",
+                "item_name": "API Cement",
+                "item_name_ar": "أسمنت API",
+                "item_group": "All Item Groups",
+                "stock_uom": "Nos",
+                "is_stock_item": 0,
+                "is_construction_resource": 1,
+                "construction_resource_type": "Material",
+                "default_cost_stream": "M",
+            }
+        ).insert(ignore_permissions=True)
+        content = self._build_test_excel()
+        result = import_cost_database_from_excel(
+            file_content=content,
+            file_name="test_import.xlsx",
+            company=self.company,
+        )
+        self.assertFalse(result["success"])
+        self.assertTrue(
+            any("UOM" in str(e) for e in result["errors"]),
+            msg=str(result["errors"]),
+        )
+
     def test_import_cost_database_updates_draft_template(self):
         """Re-import with a changed rate updates the draft template instead of duplicating it."""
         from construction.services.cost_database_service import import_cost_database_from_excel

@@ -75,7 +75,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/*requirements.txt', '**/pyproject.toml', '**/setup.py', '**/setup.cfg') }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/*requirements.txt', '**/pyproject.toml', '**/setup.cfg') }}
           restore-keys: |
             ${{ runner.os }}-pip-
             ${{ runner.os }}-
@@ -93,9 +93,13 @@ jobs:
         run: |
           pip install frappe-bench
           bench init --skip-redis-config-generation --skip-assets --frappe-branch version-16 --python "$(which python)" ~/frappe-bench
-          git -C ~/frappe-bench/apps/frappe fetch --depth=1 upstream 81aadb9ba1bc07abccd8f720af80f4f2fb4a68a0
+          # F35 PREP 2026-10-14 (UNQUALIFIED until the matching CI run succeeds):
+          # vendor pins aligned to the qualified bench revs (frappe 16.51.1 / erpnext 16.50.0)
+          # that all F24/F25 evidence binds. Previous pins: frappe 81aadb9 (16.18.1),
+          # erpnext 2807c9f (16.18.3). No upload or commit implied.
+          git -C ~/frappe-bench/apps/frappe fetch --depth=1 upstream 2871914b69b6e14a4b023d9b7cc52dc3e269cc1b
           git -C ~/frappe-bench/apps/frappe checkout --detach FETCH_HEAD
-          test "$(git -C ~/frappe-bench/apps/frappe rev-parse HEAD)" = 81aadb9ba1bc07abccd8f720af80f4f2fb4a68a0
+          test "$(git -C ~/frappe-bench/apps/frappe rev-parse HEAD)" = 2871914b69b6e14a4b023d9b7cc52dc3e269cc1b
           cd ~/frappe-bench
           bench setup requirements frappe
           mariadb --host 127.0.0.1 --port 3306 -u root -proot -e "SET GLOBAL character_set_server = 'utf8mb4'"
@@ -121,10 +125,10 @@ jobs:
           # Pin before Bench installs dependencies or builds assets: building
           # the moving branch first can modify its lockfile and block checkout.
           git init "$RUNNER_TEMP/erpnext"
-          git -C "$RUNNER_TEMP/erpnext" fetch --depth=1 https://github.com/frappe/erpnext 2807c9f08fff3f161c0a2e10745a26aa6331ffd5
+          git -C "$RUNNER_TEMP/erpnext" fetch --depth=1 https://github.com/frappe/erpnext 7474d9e786277383de1242ab882f16856d17a9c9
           git -C "$RUNNER_TEMP/erpnext" checkout -b ci-pin FETCH_HEAD
           bench get-app --skip-assets erpnext "$RUNNER_TEMP/erpnext" --branch ci-pin
-          test "$(git -C apps/erpnext rev-parse HEAD)" = 2807c9f08fff3f161c0a2e10745a26aa6331ffd5
+          test "$(git -C apps/erpnext rev-parse HEAD)" = 7474d9e786277383de1242ab882f16856d17a9c9
           bench setup requirements frappe erpnext
           bench get-app construction $GITHUB_WORKSPACE
           bench setup requirements --dev
@@ -164,7 +168,7 @@ jobs:
           # Seed only synthetic CI business fixtures through native documents.
           PYTHONPATH="$GITHUB_WORKSPACE/.github/ci${PYTHONPATH:+:$PYTHONPATH}" bench --site test_site execute "__import__('business_fixtures').seed()"
           # Tiered CI: Pull Requests run a fast smoke matrix (~8-10 min).
-          # Pushes to develop / main run the full 17-module regression matrix (~20 min).
+          # Pushes to develop / main run the full 19-module regression matrix (~20 min).
           # workflow_dispatch allows explicitly selecting 'smoke' or 'full'.
           if [[ "${{ github.event_name }}" == "pull_request" && "${{ github.event.inputs.test_suite || '' }}" != "full" ]]; then
             echo "::notice::Executing Tier 1 Fast Smoke Matrix for PR #${{ github.event.pull_request.number }}"
@@ -173,6 +177,8 @@ jobs:
               construction.tests.test_boq_transactions
               construction.tests.test_customer_release_financial_guards
               construction.tests.test_bilingual_install_schema
+              construction.tests.test_packaged_translation_adoption
+              construction.tests.test_report_export_authorization
               construction.tests.test_stage7_bilingual_reports
               construction.tests.test_cost_analysis_engine
               construction.tests.test_boq_legacy_cost_conversion
@@ -184,12 +190,14 @@ jobs:
               construction.tests.test_boq_transactions
               construction.tests.test_customer_release_financial_guards
               construction.tests.test_bilingual_install_schema
+              construction.tests.test_packaged_translation_adoption
+              construction.tests.test_report_export_authorization
               construction.tests.test_stage7_bilingual_reports
               construction.tests.test_cost_analysis_engine
               construction.tests.test_boq_legacy_cost_conversion
             )
           else
-            echo "::notice::Executing Tier 2 Full 17-Module Business Regression Matrix on ${{ github.ref }}"
+            echo "::notice::Executing Tier 2 Full 19-Module Business Regression Matrix on ${{ github.ref }}"
             modules=(
               construction.tests.test_boq_properties
               construction.tests.test_quantity_revisions
@@ -204,6 +212,8 @@ jobs:
               construction.tests.test_boq_excel_parser
               construction.tests.test_boq_rollup_audit
               construction.tests.test_bilingual_install_schema
+              construction.tests.test_packaged_translation_adoption
+              construction.tests.test_report_export_authorization
               construction.tests.test_boq_legacy_cost_conversion
               construction.tests.test_boq_parent_permissions
               construction.tests.test_bilingual_desk_link_dispatch

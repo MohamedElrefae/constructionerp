@@ -1661,6 +1661,7 @@ CONSTRUCTION_ROLES = (
     ("Construction Owner", "Owns construction data; full rights on BOQ Cost Analysis and cost data."),
     ("Project Manager", "Manages projects; can create/submit analyses and certify stages."),
     ("Site Engineer", "Field execution role; read-only access to cost data."),
+    ("Cost Database Maintainer", "Cost-library operator; access requires explicit reviewed permission setup."),
 )
 
 

@@ -131,7 +131,7 @@ app_include_css = [
     # ─── Vite UI — MUST load LAST to win cascade ───
     # Phase 1: Visual Foundation
     "/assets/construction/css/vite_extensions.css?v=1.3",
-    "/assets/construction/css/vite_form_override.css?v=1.5",
+    "/assets/construction/css/vite_form_override.css?v=1.6",
     "/assets/construction/css/vite_list_override.css?v=1.3",
     # Phase 2: Form Layout Engine section card styles
     "/assets/construction/css/vfc_sections.css?v=1.6",
@@ -186,7 +186,7 @@ app_include_js = [
     # Must load last: native Frappe affordances remain available after theme styling
     "/assets/construction/js/native_frappe_controls_compat.js?v=9",
     # ─── Vite UI Phase 2: Form Config — auto-attaches to every form. MUST load LAST ───
-    "/assets/construction/js/vite_layout_controls.js?v=1.21",
+    "/assets/construction/js/vite_layout_controls.js?v=1.22",
     # Phase 2: Generic Layout Engine — re-parents field wrappers per Form Layout Profile.
     # Must load AFTER vite_layout_controls.js (engine fires at 250ms, controls at 150ms).
     "/assets/construction/js/vfc_layout_engine.js?v=1.44",
@@ -196,7 +196,7 @@ app_include_js = [
 # CSS includes for unauthenticated pages (login, etc.)
 # v2.4-r3: modern_theme.css handles all theming including login
 web_include_css = [
-    "/assets/construction/css/modern_theme.css?v=2.5.8",
+    "/assets/construction/css/modern_theme.css?v=2.5.9",
     "/assets/construction/css/email_theme.css",
 ]
 
@@ -239,6 +239,9 @@ override_whitelisted_methods = {
     # vendor form flow) are routed through the governed, atomic wrapper.
     "erpnext.accounts.doctype.account.account.update_account_number": "construction.services.bilingual_service.governed_rename_account",
     "frappe.desk.search.search_link": "construction.api.desk_link_search.search_link",
+    # F11: vendor file download performs no attached-document check; the
+    # wrapper enforces the BOQ attachment boundary and delegates the rest.
+    "frappe.handler.download_file": "construction.overrides.file_download.download_file",
 }
 
 # Override core Translation controller so edited catalog rows become runtime translations.
@@ -399,6 +402,15 @@ has_permission = {
         "Variation Order",
     )
 }
+
+# F11-D002: BOQ Header direct reads/writes additionally require the selected
+# scope to cover the header's project/company (authorization boundary, not a
+# list filter). Native role/User Permission checks still apply independently.
+has_permission["BOQ Header"] = "construction.overrides.boq_permissions.has_boq_header_permission"
+
+# F11: Files attached to BOQ doctypes inherit the parent's read/write
+# boundary; all other files keep vendor behavior.
+has_permission["File"] = "construction.overrides.file_permissions.has_file_parent_permission"
 
 # Fixtures - Phase 2: Construction Theme records
 fixtures = [

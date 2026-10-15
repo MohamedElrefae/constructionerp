@@ -554,6 +554,22 @@ def get_project_display_name(project):
         if not (scope_doc and scope_doc.project and scope_doc.project == str(project).strip()):
             # Identical denial for missing AND unauthorized names.
             frappe.throw(_("Not authorized to access this project."), frappe.PermissionError)
+        # The active-scope comparison above IS the authorization for this one name, so the
+        # lookup below must not re-apply a doctype-wide read check the caller never needed:
+        # `frappe.get_list` raises "Insufficient Permission" for a DocType the user cannot
+        # read at all, which made this documented fallback unreachable and put a 403 dialog
+        # on every BOQ Header form for personas with no Project read (observed f04-pm,
+        # F22-D004). Reading one already-authorized name keeps the same answer without the
+        # doctype-wide gate.
+        project_name = frappe.db.sql(
+            "SELECT project_name FROM `tabProject` WHERE name = %(name)s LIMIT 1",
+            {"name": str(project).strip()},
+        )
+        project_name = project_name[0][0] if project_name else None
+        if not project_name:
+            # Same generic denial as above: no existence oracle either way.
+            frappe.throw(_("Not authorized to access this project."), frappe.PermissionError)
+        return {"project_name": project_name}
 
     rows = frappe.get_list(
         "Project",

@@ -329,6 +329,32 @@ class BOQImportService:
 
         if not preview.get("success") or preview.get("errors"):
             frappe.throw(_("BOQ Excel import has blocking errors and cannot be committed."))
+
+        # F16 duplicate-click / uncertain-retry protection: the same attachment
+        # committed twice must not create duplicate structures and items. When
+        # a Committed batch already records this exact file URL for the header
+        # *and* its imported items are still present, return the existing
+        # outcome instead of committing again. If items were deleted since,
+        # fall through to a fresh commit (explicit user re-confirmation).
+        # Byte-identical re-uploads receive fresh URLs and are not deduped
+        # here; content-digest detection remains a separately tracked item.
+        duplicate_of = BOQImportService._find_committed_batch(file_url, boq_header)
+        if duplicate_of:
+            return {
+                "success": True,
+                "dry_run": False,
+                "duplicate_suppressed": True,
+                "boq_header": boq_header,
+                "import_batch": duplicate_of.name,
+                "confirmed_import_mode": duplicate_of.import_mode,
+                "summary": {
+                    "row_count": duplicate_of.row_count,
+                    "section_count": duplicate_of.section_count,
+                    "item_count": duplicate_of.item_count,
+                },
+                "created_structures": [],
+                "created_items": [],
+            }
         if (preview.get("import_policy") or {}).get("requires_async"):
             frappe.throw(
                 _("This BOQ Excel import exceeds the synchronous row threshold and must use async import.")
@@ -402,6 +428,23 @@ class BOQImportService:
         }
 
     @staticmethod
+    def _find_committed_batch(file_url, boq_header):
+        """Return a Committed batch for the same attachment whose items still exist, else None."""
+        if not file_url:
+            return None
+        rows = frappe.db.get_all(
+            "BOQ Import Batch",
+            filters={"boq_header": boq_header, "source_file": file_url, "status": "Committed"},
+            fields=["name", "import_mode", "row_count", "section_count", "item_count"],
+            order_by="creation desc",
+            limit=5,
+        )
+        for row in rows:
+            live_items = frappe.db.count("BOQ Item", {"boq_header": boq_header, "import_batch": row.name})
+            if live_items and live_items == (row.item_count or 0):
+                return row
+        return None
+
     def _validate_commit_wbs_uniqueness(boq_header: str, structures: list[dict]) -> None:
         frappe.db.sql("select name from `tabBOQ Header` where name = %s for update", boq_header)
 
@@ -666,7 +709,7 @@ class BOQImportService:
         batch.boq_header = boq_header
         batch.status = status
         batch.import_mode = import_mode
-        batch.source_file = file_url if not os.path.isabs(file_url) else None
+        batch.source_file = file_url if not (os.path.isabs(file_url) and os.path.exists(file_url)) else None
         batch.source_file_name = os.path.basename(file_path)
         batch.sheet_name = preview.get("sheet_name")
         batch.row_count = summary.get("row_count") or 0
@@ -732,6 +775,11 @@ class BOQImportService:
             frappe.throw(_("BOQ Item was not created for imported structure {0}.").format(structure.name))
 
         item = frappe.get_doc("BOQ Item", item_name)
+        # F17: carry the imported description onto the item itself. Structure
+        # titles hold the text, but item list views, reports and exports key
+        # on cost_item; leaving it blank orphans the line's specification.
+        if structure.title and not item.cost_item:
+            item.cost_item = structure.title
         item.quantity = normalized.get("quantity") or 0
         item.unit = normalized.get("unit")
         from construction.services.boq_pricing import positive_factor

@@ -1,0 +1,65 @@
+{
+  "site": "f31fresh-clean.localhost",
+  "apps": [
+    "frappe",
+    "erpnext",
+    "construction"
+  ],
+  "app_path": "/tmp/construction-foundation-lab-20261014/apps/construction/construction",
+  "counts": {
+    "BOQ Header": 0,
+    "BOQ Item": 0,
+    "BOQ Structure": 0,
+    "BOQ Cost Analysis": 0,
+    "BOQ Quantity Revision": 0,
+    "Variation Order": 0,
+    "File": 2,
+    "User": 2,
+    "Custom DocPerm": 7
+  },
+  "settings": {
+    "enable_scope_context": 1,
+    "enable_boq_excel_import_preview": 0,
+    "enable_boq_excel_import_commit": 0,
+    "enable_stage_measurement_ui": 0
+  },
+  "schema": {
+    "CostItem": {
+      "doctype": false,
+      "table": false
+    },
+    "PlantResource": {
+      "doctype": false,
+      "table": false
+    }
+  },
+  "maintainer_role": false,
+  "company_custom_roles": [],
+  "workspaces": [
+    "Cost Database",
+    "Site Work",
+    "Finance",
+    "Estimating and Commercial",
+    "Procurement and Stores",
+    "Construction"
+  ],
+  "sidebars": [
+    {
+      "name": "Construction Home",
+      "title": "Construction Home",
+      "standard": 1
+    }
+  ],
+  "business_hashes": {
+    "BOQ Header": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "BOQ Item": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "BOQ Structure": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "BOQ Cost Analysis": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "BOQ Cost Analysis Detail": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "BOQ Quantity Revision": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "Variation Order": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "VO Line": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "headers": [],
+  "analyses": []
+}

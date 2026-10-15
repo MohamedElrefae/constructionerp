@@ -626,6 +626,16 @@ def import_cost_database_from_excel(
             errors.append(f"Resources row {idx}: resource_code is required")
             continue
 
+        # F18: rows carry their own company scope. A non-empty row company
+        # that differs from the requested import company is refused in both
+        # preview and commit — never silently restamped.
+        row_company = _clean_string(row.get("company"))
+        if row_company and row_company != company:
+            errors.append(
+                f"Resources row {idx}: row company '{row_company}' does not match import company '{company}'"
+            )
+            continue
+
         resource_type = _clean_string(row.get("resource_type"))
         if resource_type not in valid_resource_types:
             errors.append(f"Resources row {idx}: invalid resource_type '{resource_type}'")
@@ -642,6 +652,47 @@ def import_cost_database_from_excel(
             )
 
         resource_code_to_name[resource_code] = _clean_string(row.get("name_en"))
+
+        # F18 preview-time shared-master check (read-only): the same
+        # compatibility rule enforced at commit, so conflicts and proposed
+        # creations are visible before confirmation.
+        if frappe.db.exists("Item", resource_code):
+            existing = frappe.db.get_value(
+                "Item",
+                resource_code,
+                ["item_name", "item_name_ar", "is_construction_resource", "construction_resource_type",
+                 "default_cost_stream", "stock_uom"],
+                as_dict=True,
+            )
+            if existing:
+                _conflicts = []
+                _name_en = _clean_string(row.get("name_en"))
+                _name_ar = _clean_string(row.get("name_ar"))
+                _rtype = _clean_string(row.get("resource_type"))
+                _stream = _clean_string(row.get("cost_stream")) or RESOURCE_TYPE_TO_STREAM.get(_rtype)
+                _uom = _clean_string(row.get("uom"))
+                if _name_en and existing.item_name != _name_en:
+                    _conflicts.append("item_name differs")
+                if _name_ar and existing.item_name_ar != _name_ar:
+                    _conflicts.append("item_name_ar differs")
+                if not existing.is_construction_resource:
+                    _conflicts.append("not a construction resource")
+                if _rtype and existing.construction_resource_type != _rtype:
+                    _conflicts.append("resource type differs")
+                if _stream and existing.default_cost_stream != _stream:
+                    _conflicts.append("cost stream differs")
+                # F35: UOM codes are identifiers, not prose. The framework normalises a
+                # Link value to the canonical target name on save ("Ton" is stored as
+                # "TON"), so an exact string compare false-conflicts on re-import.
+                # Compare case-insensitively; names/type/stream stay exact.
+                if _uom and (existing.stock_uom or "") != _uom and (existing.stock_uom or "").lower() != _uom.lower():
+                    _conflicts.append("stock UOM differs")
+                if _conflicts:
+                    errors.append(
+                        f"Resources row {idx}: existing Item {resource_code} conflicts "
+                        f"({'; '.join(_conflicts)}). Reuse requires identical values."
+                    )
+                    continue
 
     # --- Validate templates ---
     template_names = set()
@@ -674,10 +725,14 @@ def import_cost_database_from_excel(
         return _build_result(False, dry_run, records_created, errors, warnings)
 
     if frappe.session.user != "Administrator":
+        # Per-write authorization, checked before parsing results are used.
+        # Item writes are absent by design (reuse-or-refuse above), so only
+        # Item create is required — never Item write. UOM inserts below reuse
+        # this same-request check.
         for row in resources_data:
             code = _clean_string(row.get("resource_code"))
             if code and frappe.db.exists("Item", code):
-                frappe.has_permission("Item", "write", doc=code, throw=True)
+                continue  # reuse path performs no write; conflicts already refused above
             uom = _clean_string(row.get("uom"))
             if uom and not frappe.db.exists("UOM", uom):
                 frappe.has_permission("UOM", "create", throw=True)
@@ -702,7 +757,18 @@ def import_cost_database_from_excel(
             frappe.has_permission("BOQ Cost Analysis", "submit", throw=True)
 
     if dry_run:
-        return _build_result(True, dry_run, records_created, errors, warnings)
+        # F18: preview discloses proposed shared-master creations (no writes here).
+        proposed = {"items": [], "uoms": []}
+        for row in resources_data:
+            _code = _clean_string(row.get("resource_code"))
+            if _code and not frappe.db.exists("Item", _code):
+                proposed["items"].append(_code)
+            _uom = _clean_string(row.get("uom"))
+            if _uom and not frappe.db.exists("UOM", _uom) and _uom not in proposed["uoms"]:
+                proposed["uoms"].append(_uom)
+        _result = _build_result(True, dry_run, records_created, errors, warnings)
+        _result["proposed_creates"] = proposed
+        return _result
 
     if frappe.session.user != "Administrator":
         frappe.has_permission("Resource Price History", "create", throw=True)
@@ -762,29 +828,42 @@ def import_cost_database_from_excel(
                 errors.append(f"Resources row {idx}: failed to create Item {resource_code}: {str(e)}")
                 continue
         else:
+            # F18 shared-master isolation: an existing Item is reused only when
+            # every managed field the row provides already matches. Any
+            # conflict — different names, a non-construction item, a different
+            # type/stream/UOM — is a row error, never a silent rename or
+            # re-flag. UI confirmation must not authorize shared-master
+            # changes, so there is no override path here. This also removes
+            # the need for Item write authority: importing creates new codes
+            # (Item create) but never modifies existing ones.
             try:
                 item_doc = frappe.get_doc("Item", resource_code)
-                changed = False
-                if item_doc.item_name != name_en:
-                    item_doc.item_name = name_en
-                    changed = True
+                conflicts = []
+                if name_en and item_doc.item_name != name_en:
+                    conflicts.append(f"item_name is '{item_doc.item_name}'")
                 if name_ar and item_doc.get("item_name_ar") != name_ar:
-                    item_doc.item_name_ar = name_ar
-                    changed = True
-                if not item_doc.is_construction_resource:
-                    item_doc.is_construction_resource = 1
-                    changed = True
-                if item_doc.construction_resource_type != resource_type:
-                    item_doc.construction_resource_type = resource_type
-                    changed = True
-                if cost_stream and item_doc.default_cost_stream != cost_stream:
-                    item_doc.default_cost_stream = cost_stream
-                    changed = True
-                if changed:
-                    item_doc.save()
-                    records_updated["items"].append(resource_code)
+                    conflicts.append("item_name_ar differs")
+                if not item_doc.get("is_construction_resource"):
+                    conflicts.append("not a construction resource")
+                if resource_type and item_doc.get("construction_resource_type") != resource_type:
+                    conflicts.append(
+                        f"resource type is '{item_doc.get('construction_resource_type')}'"
+                    )
+                if cost_stream and item_doc.get("default_cost_stream") != cost_stream:
+                    conflicts.append(f"cost stream is '{item_doc.get('default_cost_stream')}'")
+                # F35: same case-insensitive UOM rule as the create-path check above —
+                # the framework stores the canonical target name ("TON" for "Ton").
+                if uom and (item_doc.get("stock_uom") or "") != uom and (item_doc.get("stock_uom") or "").lower() != uom.lower():
+                    conflicts.append(f"stock UOM is '{item_doc.get('stock_uom')}'")
+                if conflicts:
+                    errors.append(
+                        f"Resources row {idx}: existing Item {resource_code} conflicts "
+                        f"({'; '.join(conflicts)}). Reuse requires identical values."
+                    )
+                    continue
             except Exception as e:
-                warnings.append(f"Resources row {idx}: failed to update Item {resource_code}: {str(e)}")
+                errors.append(f"Resources row {idx}: failed to verify Item {resource_code}: {str(e)}")
+                continue
 
         # Create Resource Price History (idempotent: skip identical existing rows)
         try:

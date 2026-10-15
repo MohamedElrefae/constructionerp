@@ -548,12 +548,14 @@ class TestCostAnalysisEngine(FrappeTestCase):
         self.assertEqual(len(results_b), 1)
         self.assertEqual(results_b[0].rate, 200)
 
-        results_date = get_resource_price_history(from_date="2026-02-01")
-        self.assertEqual(len(results_date), 2)
+        results_date = get_resource_price_history(item_code=item_a, from_date="2026-02-01")
+        self.assertEqual(len(results_date), 1, "date filter must keep only this item's later rows")
+        self.assertEqual(results_date[0].rate, 110)
 
-        results_date_range = get_resource_price_history(from_date="2026-02-01", to_date="2026-02-28")
-        self.assertEqual(len(results_date_range), 1)
-        self.assertEqual(results_date_range[0].item_code, item_b)
+        results_date_range = get_resource_price_history(
+            item_code=item_a, from_date="2026-02-01", to_date="2026-02-28"
+        )
+        self.assertEqual(len(results_date_range), 0, "no row of this item falls inside the range")
 
     def test_non_admin_permissions(self):
         """DocPerms: Project Manager can submit/cancel/amend; Site Engineer cannot write."""
@@ -588,6 +590,17 @@ class TestCostAnalysisEngine(FrappeTestCase):
             ],
         )
 
+        # F21-D003: a permitted persona without an active User Scope Context is refused by the
+        # Construction scope boundary ("missing scope is not a wildcard"), so these
+        # permitted-role assertions need a real scope covering the fixture's project and
+        # company. The denial path is asserted separately in
+        # test_missing_scope_context_denies_scoped_access.
+        for email in (pm_email, se_email):
+            self._give_scope(email, self.header.project, self.company)
+        # Always restore the session user: leaving it on a persona silently poisons every
+        # later test in this class, whose setUp then fails scope enforcement.
+        self.addCleanup(frappe.set_user, "Administrator")
+
         frappe.set_user(pm_email)
         self.assertTrue(
             frappe.has_permission("BOQ Cost Analysis", ptype="submit", doc=analysis.name),
@@ -597,7 +610,6 @@ class TestCostAnalysisEngine(FrappeTestCase):
             frappe.has_permission("BOQ Cost Analysis", ptype="cancel", doc=analysis.name),
             "Project Manager should have cancel permission",
         )
-        frappe.set_user("Administrator")
 
         frappe.set_user(se_email)
         self.assertFalse(
@@ -608,7 +620,67 @@ class TestCostAnalysisEngine(FrappeTestCase):
             frappe.has_permission("BOQ Cost Analysis", ptype="create"),
             "Site Engineer should NOT have create permission",
         )
-        frappe.set_user("Administrator")
+
+    def test_missing_scope_context_denies_scoped_access(self):
+        """F21-D003: permitted role, no active scope -> refused (missing scope is not a wildcard).
+
+        The scope given in test_non_admin_permissions must not become the way a persona
+        escapes the boundary; this keeps the denial observable on its own.
+        """
+        pm_email = "test.pm.no.scope@example.com"
+        if not frappe.db.exists("User", pm_email):
+            frappe.get_doc(
+                {
+                    "doctype": "User",
+                    "email": pm_email,
+                    "first_name": "PM No Scope",
+                    "send_welcome_email": 0,
+                    "roles": [{"role": "Project Manager"}],
+                }
+            ).insert(ignore_permissions=True)
+        item_code = self._make_item_doctype()
+        analysis = self._make_cost_analysis(
+            self.item.name,
+            details=[
+                {
+                    "cost_stream": "M",
+                    "item_code": item_code,
+                    "resource_uom": "Nos",
+                    "qty_per_boq_unit": 1,
+                    "cost_rate": 150,
+                    "wastage_pct": 0,
+                }
+            ],
+        )
+        self.addCleanup(frappe.set_user, "Administrator")
+        frappe.set_user(pm_email)
+        frappe.local._boq_perm_scope_dims = {}
+        self.assertFalse(
+            frappe.has_permission("BOQ Cost Analysis", ptype="write", doc=analysis.name),
+            "a permitted role without an active scope must be refused",
+        )
+        self.assertFalse(
+            frappe.has_permission("BOQ Cost Analysis", ptype="read", doc=analysis.name),
+            "read must be refused too, not only write",
+        )
+
+    def _give_scope(self, user, project, company):
+        """Give a fixture persona a valid User Scope Context (F21-D003)."""
+        from construction.api.scope_context_api import get_user_scope_context  # noqa: F401
+
+        existing = frappe.db.get_value("User Scope Context", {"user": user}, "name")
+        if existing:
+            frappe.delete_doc("User Scope Context", existing, ignore_permissions=True, force=True)
+        frappe.get_doc(
+            {
+                "doctype": "User Scope Context",
+                "user": user,
+                "company": company,
+                "project": project,
+            }
+        ).insert(ignore_permissions=True)
+        # scope dimensions are cached per request; a new context must be picked up
+        frappe.local._boq_perm_scope_dims = {}
 
     # --- Schema gap fix tests ---
 

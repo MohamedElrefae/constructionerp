@@ -1,0 +1,398 @@
+{
+  "site": "f31upgrade.localhost",
+  "apps": [
+    "frappe",
+    "erpnext",
+    "construction"
+  ],
+  "app_path": "/tmp/construction-foundation-lab-20261014/apps/construction/construction",
+  "counts": {
+    "BOQ Header": 36,
+    "BOQ Item": 94,
+    "BOQ Structure": 162,
+    "BOQ Cost Analysis": 12,
+    "BOQ Quantity Revision": 235,
+    "Variation Order": 45,
+    "File": 188,
+    "User": 48,
+    "Custom DocPerm": 106
+  },
+  "settings": {
+    "enable_scope_context": 0,
+    "enable_boq_excel_import_preview": 1,
+    "enable_boq_excel_import_commit": 1,
+    "enable_stage_measurement_ui": 1
+  },
+  "schema": {
+    "CostItem": {
+      "doctype": false,
+      "table": true
+    },
+    "PlantResource": {
+      "doctype": false,
+      "table": true
+    }
+  },
+  "maintainer_role": true,
+  "company_custom_roles": [
+    "Cost Database Maintainer",
+    "Auditor",
+    "Employee",
+    "Stock User",
+    "Accounts Manager",
+    "Desk User",
+    "Purchase User",
+    "Sales Manager",
+    "HR User",
+    "System Manager",
+    "Accounts User",
+    "Projects User",
+    "Sales User",
+    "HR Manager",
+    "Project Manager",
+    "Construction Owner",
+    "Site Engineer",
+    "Read-Only"
+  ],
+  "workspaces": [
+    "Cost Database",
+    "Finance",
+    "Procurement and Stores",
+    "Estimating and Commercial",
+    "Site Work",
+    "Construction"
+  ],
+  "sidebars": [
+    {
+      "name": "Construction Home",
+      "title": "Construction Home",
+      "standard": 1
+    }
+  ],
+  "business_hashes": {
+    "BOQ Header": "80015667c4d1eb6a0fe6e18a64071c834c54412d3e6822e439dcce0999845f78",
+    "BOQ Item": "2897bf505ff00bb8ee287920513970fed186c7ee8d358f30267d111dfc1d5bb5",
+    "BOQ Structure": "642fdca922806af8496a991effcd38a0f0c7fae2c719ee702b4ecab085a7a3ff",
+    "BOQ Cost Analysis": "1ac535e1d20a782dcc97b6a51f11cbff3a6038589680cbbef940be3d94834dad",
+    "BOQ Cost Analysis Detail": "ee30e9d66c3999d329fb24896dafb0c8662b9fdb77e80567e079b3673f4c7b89",
+    "BOQ Quantity Revision": "8cad91ef9990b2fb6f64b3e40429896599d15e76973e5c8d4793e68fffbd5a20",
+    "Variation Order": "c87097ad98b8a5a616749dec77b2796781f7f3564a4dee0d2a0be3ef627d834f",
+    "VO Line": "f66e5a9cd33c5c2de27b3295299f254afb541a83041860464a1eebc91dfb1048"
+  },
+  "headers": [
+    {
+      "name": "BOQ-2026-0001",
+      "status": "Pricing",
+      "project": "PROJ-0001",
+      "total_contract_value": 0.0,
+      "total_budgeted_cost": 0.0
+    },
+    {
+      "name": "BOQ-2026-0002",
+      "status": "Pricing",
+      "project": "PROJ-0001",
+      "total_contract_value": 12500.0,
+      "total_budgeted_cost": 0.0
+    },
+    {
+      "name": "BOQ-2026-0004",
+      "status": "Pricing",
+      "project": "PROJ-0002",
+      "total_contract_value": 0.0,
+      "total_budgeted_cost": 0.0
+    },
+    {
+      "name": "BOQ-2026-0006",
+      "status": "Frozen",
+      "project": "PROJ-0002",
+      "total_contract_value": 0.0,
+      "total_budgeted_cost": 0.0
+    },
+    {
+      "name": "BOQ-2026-0274",
+      "status": "Locked",
+      "project": "PROJ-0008",
+      "total_contract_value": 5000.0,
+      "total_budgeted_cost": 0.0
+    },
+    {
+      "name": "BOQ-2026-0629",
+      "status": "Pricing",
+      "project": "PROJ-0002",
+      "total_contract_value": 9000.0,
+      "total_budgeted_cost": 0.0
+    },
+    {
+      "name": "BOQ-2026-0632",
+      "status": "Draft",
+      "project": "PROJ-0001",
+      "total_contract_value": 0.0,
+      "total_budgeted_cost": 0.0
+    },
+    {
+      "name": "BOQ-2026-0635",
+      "status": "Locked",
+      "project": "PROJ-0001",
+      "total_contract_value": 0.0,
+      "total_budgeted_cost": 0.0
+    },
+    {
+      "name": "BOQ-2026-0638",
+      "status": "Locked",
+      "project": "PROJ-0001",
+      "total_contract_value": 0.0,
+      "total_budgeted_cost": 0.0
+    },
+    {
+      "name": "BOQ-2026-0642",
+      "status": "Locked",
+      "project": "PROJ-0001",
+      "total_contract_value": 0.0,
+      "total_budgeted_cost": 0.0
+    },
+    {
+      "name": "BOQ-2026-0646",
+      "status": "Locked",
+      "project": "PROJ-0001",
+      "total_contract_value": 9000.0,
+      "total_budgeted_cost": 0.0
+    },
+    {
+      "name": "BOQ-2026-0650",
+      "status": "Locked",
+      "project": "PROJ-0001",
+      "total_contract_value": 9000.0,
+      "total_budgeted_cost": 0.0
+    },
+    {
+      "name": "BOQ-2026-0654",
+      "status": "Locked",
+      "project": "PROJ-0001",
+      "total_contract_value": 9000.0,
+      "total_budgeted_cost": 0.0
+    },
+    {
+      "name": "BOQ-2026-1171",
+      "status": "Locked",
+      "project": "PROJ-0010",
+      "total_contract_value": 5000.0,
+      "total_budgeted_cost": 0.0
+    },
+    {
+      "name": "BOQ-2026-1173",
+      "status": "Locked",
+      "project": "PROJ-0010",
+      "total_contract_value": 5000.0,
+      "total_budgeted_cost": 0.0
+    },
+    {
+      "name": "BOQ-2026-1175",
+      "status": "Locked",
+      "project": "PROJ-0010",
+      "total_contract_value": 5000.0,
+      "total_budgeted_cost": 0.0
+    },
+    {
+      "name": "BOQ-2026-1177",
+      "status": "Locked",
+      "project": "PROJ-0010",
+      "total_contract_value": 5000.0,
+      "total_budgeted_cost": 0.0
+    },
+    {
+      "name": "BOQ-2026-1183",
+      "status": "Locked",
+      "project": "PROJ-0010",
+      "total_contract_value": 5000.0,
+      "total_budgeted_cost": 0.0
+    },
+    {
+      "name": "BOQ-2026-1193",
+      "status": "Locked",
+      "project": "PROJ-0010",
+      "total_contract_value": 5000.0,
+      "total_budgeted_cost": 0.0
+    },
+    {
+      "name": "BOQ-2026-1199",
+      "status": "Locked",
+      "project": "PROJ-0010",
+      "total_contract_value": 5000.0,
+      "total_budgeted_cost": 0.0
+    },
+    {
+      "name": "BOQ-2026-1201",
+      "status": "Locked",
+      "project": "PROJ-0010",
+      "total_contract_value": 5000.0,
+      "total_budgeted_cost": 0.0
+    },
+    {
+      "name": "BOQ-2026-1207",
+      "status": "Locked",
+      "project": "PROJ-0010",
+      "total_contract_value": 5000.0,
+      "total_budgeted_cost": 0.0
+    },
+    {
+      "name": "BOQ-2026-7449",
+      "status": "Draft",
+      "project": "PROJ-0011",
+      "total_contract_value": 0.0,
+      "total_budgeted_cost": 0.0
+    },
+    {
+      "name": "BOQ-2026-8566",
+      "status": "Draft",
+      "project": "PROJ-0014",
+      "total_contract_value": 720.0,
+      "total_budgeted_cost": 500.0
+    },
+    {
+      "name": "BOQ-2026-8571",
+      "status": "Draft",
+      "project": "PROJ-0014",
+      "total_contract_value": 1000.0,
+      "total_budgeted_cost": 500.0
+    },
+    {
+      "name": "BOQ-2026-8575",
+      "status": "Locked",
+      "project": "PROJ-0014",
+      "total_contract_value": 1000.0,
+      "total_budgeted_cost": 600.0
+    },
+    {
+      "name": "BOQ-2026-8579",
+      "status": "Draft",
+      "project": "PROJ-0014",
+      "total_contract_value": 5000.0,
+      "total_budgeted_cost": 5000.0
+    },
+    {
+      "name": "BOQ-2026-8582",
+      "status": "Draft",
+      "project": "PROJ-0014",
+      "total_contract_value": 10000.0,
+      "total_budgeted_cost": 6000.0
+    },
+    {
+      "name": "BOQ-2026-8587",
+      "status": "Draft",
+      "project": "PROJ-0015",
+      "total_contract_value": 125.0,
+      "total_budgeted_cost": 100.0
+    },
+    {
+      "name": "BOQ-2026-8595",
+      "status": "Draft",
+      "project": "PROJ-0014",
+      "total_contract_value": 18000.0,
+      "total_budgeted_cost": 0.0
+    },
+    {
+      "name": "BOQ-2026-8605",
+      "status": "Draft",
+      "project": "PROJ-0014",
+      "total_contract_value": 1000.0,
+      "total_budgeted_cost": 0.0
+    },
+    {
+      "name": "BOQ-2026-8614",
+      "status": "Draft",
+      "project": "PROJ-0014",
+      "total_contract_value": 1260.0,
+      "total_budgeted_cost": 0.0
+    },
+    {
+      "name": "BOQ-2026-8622",
+      "status": "Draft",
+      "project": "PROJ-0014",
+      "total_contract_value": 53600.0,
+      "total_budgeted_cost": 0.0
+    },
+    {
+      "name": "BOQ-2026-8642",
+      "status": "Locked",
+      "project": "PROJ-0014",
+      "total_contract_value": 1250.0,
+      "total_budgeted_cost": 1000.0
+    },
+    {
+      "name": "BOQ-2026-8992",
+      "status": "Draft",
+      "project": "PROJ-0014",
+      "total_contract_value": 1200.0,
+      "total_budgeted_cost": 1000.0
+    },
+    {
+      "name": "BOQ-2026-8994",
+      "status": "Draft",
+      "project": "PROJ-0014",
+      "total_contract_value": 1200.0,
+      "total_budgeted_cost": 1000.0
+    }
+  ],
+  "analyses": [
+    {
+      "name": "BCA-2026-00001",
+      "docstatus": 2,
+      "analysis_status": "Cancelled"
+    },
+    {
+      "name": "BCA-2026-00002",
+      "docstatus": 2,
+      "analysis_status": "Cancelled"
+    },
+    {
+      "name": "BCA-2026-00003",
+      "docstatus": 2,
+      "analysis_status": "Cancelled"
+    },
+    {
+      "name": "BCA-2026-00004",
+      "docstatus": 2,
+      "analysis_status": "Cancelled"
+    },
+    {
+      "name": "BCA-2026-00005",
+      "docstatus": 2,
+      "analysis_status": "Cancelled"
+    },
+    {
+      "name": "BCA-2026-00006",
+      "docstatus": 1,
+      "analysis_status": "Superseded"
+    },
+    {
+      "name": "BCA-2026-00007",
+      "docstatus": 1,
+      "analysis_status": "Superseded"
+    },
+    {
+      "name": "BCA-2026-00008",
+      "docstatus": 2,
+      "analysis_status": "Cancelled"
+    },
+    {
+      "name": "BCA-2026-00009",
+      "docstatus": 1,
+      "analysis_status": "Approved"
+    },
+    {
+      "name": "BCA-2026-00010",
+      "docstatus": 1,
+      "analysis_status": "Approved"
+    },
+    {
+      "name": "BCA-2026-00011",
+      "docstatus": 0,
+      "analysis_status": "Draft"
+    },
+    {
+      "name": "BCA-2026-00012",
+      "docstatus": 0,
+      "analysis_status": "Draft"
+    }
+  ]
+}

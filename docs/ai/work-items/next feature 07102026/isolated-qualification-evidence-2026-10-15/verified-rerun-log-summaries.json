@@ -1,0 +1,38 @@
+[
+  {
+    "log": "target-test_security_audit_remediation.log",
+    "native_summary_pass": true,
+    "tests": 24,
+    "sha256": "87b5cfbb4b1d50b7d1247bbbf452b0a6a0287fc5f5cf7aa1ef7c28f85cd66fb9"
+  },
+  {
+    "log": "target-test_f21_price_history_row_auth.log",
+    "native_summary_pass": true,
+    "tests": 9,
+    "sha256": "4fa174e7fc6c937aea83da5665b2e792df33170f88bf0316dc365792fd6517f4"
+  },
+  {
+    "log": "target-test_scope_and_measurement_policy.log",
+    "native_summary_pass": true,
+    "tests": 5,
+    "sha256": "76887f0281a1691dc79ed2f28a5823ab60f5f0c27a94902d3d3ee052f1872985"
+  },
+  {
+    "log": "target-test_vo_approval_parent_gate.log",
+    "native_summary_pass": true,
+    "tests": 5,
+    "sha256": "397ebbc2fd23657827debaba382e03c6e66815f8be60890e3ae976cd87b82e57"
+  },
+  {
+    "log": "target-test_packaged_translation_adoption.log",
+    "native_summary_pass": true,
+    "tests": 6,
+    "sha256": "0b805770455003bb3baa59e8341888755e7b6917cb08a75e1133f8714ac40e05"
+  },
+  {
+    "log": "report-export-after.log",
+    "native_summary_pass": true,
+    "tests": 7,
+    "sha256": "8c920cecb1a60759f240c3e3f1c817e2dd51b05413b44043ec397de25a55ab6b"
+  }
+]

@@ -1,0 +1,15 @@
+{
+  "backend": "3.12.0",
+  "artifacts": {
+    "construction-0.0.5-py3-none-any.whl": {
+      "sha256": "133107f7b3fe1f82aa0990b1316c1cbe1d2f7fec801f51b4793bfb445ce89b81",
+      "members": 1244,
+      "source_maps": 0
+    },
+    "construction-0.0.5.tar.gz": {
+      "sha256": "02ac07bd815d79470af20dd17dcfa1e53468fca6feef50fbe127ae703589723a",
+      "members": 1244,
+      "source_maps": 0
+    }
+  }
+}
