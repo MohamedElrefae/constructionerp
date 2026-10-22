@@ -6,6 +6,10 @@ on:
       - develop
       - main
       - codex/customer-release-ci-*
+      - codex/foundation-ci-20261018-qualified
+      - codex/foundation-ci-20261018-qualified-r2
+      - codex/foundation-ci-20261018-qualified-r3
+      - codex/foundation-ci-20261018-qualified-r4
   pull_request:
   workflow_dispatch:
     inputs:
@@ -70,6 +74,12 @@ jobs:
           python construction/tests/test_translation_identity_migration.py -v
           python construction/tests/test_legacy_sidebar_title_patch.py -v
           python construction/tests/test_translation_review_status_options.py -v
+          python construction/tests/test_boq_dimension_policy.py -v
+          python construction/tests/test_timesheet_project_scope.py -v
+          python construction/tests/test_boq_journal_project.py -v
+          python -m unittest discover -s tests_offline -p 'test_semgrep_review_ledger.py' -v
+          python -m unittest discover -s tests_offline -p 'test_distribution_packaging.py' -v
+          python -m unittest discover -s tests_offline -p 'test_customer_artifact_probe.py' -v
 
       - name: Cache pip
         uses: actions/cache@v4
@@ -100,6 +110,22 @@ jobs:
           git -C ~/frappe-bench/apps/frappe fetch --depth=1 upstream 2871914b69b6e14a4b023d9b7cc52dc3e269cc1b
           git -C ~/frappe-bench/apps/frappe checkout --detach FETCH_HEAD
           test "$(git -C ~/frappe-bench/apps/frappe rev-parse HEAD)" = 2871914b69b6e14a4b023d9b7cc52dc3e269cc1b
+          # F44 Pillow-13 private vendor divergence (owner-authorized, PRIVATE and
+          # VERSIONED). The reviewed divergence commit af44091716ed4e9be32720483a27d3f1937ad7fd
+          # is NOT published to any public frappe repository and is NOT fetchable by
+          # SHA. It is reconstructed locally from the recorded raw commit object after
+          # the reviewed one-line patch is applied, and the applier proves the base
+          # checkout, the patch bytes, the staged tree, the commit SHA/tree/parent and
+          # a clean tracked working tree AND index. It fails closed and never resets.
+          # This runs BEFORE `bench setup requirements frappe`, so the dependency
+          # install resolves `Pillow~=13.0.0` from the effective vendor tree.
+          # NOT an upstream-supported Frappe release.
+          python3 "$GITHUB_WORKSPACE/.github/ci/apply_private_vendor_divergence.py" \
+            "$HOME/frappe-bench/apps/frappe" \
+            "$GITHUB_WORKSPACE/.github/ci/vendor_patches/frappe-pillow13-vendor-divergence.patch" \
+            "$GITHUB_WORKSPACE/.github/ci/vendor_patches/frappe-pillow13-vendor-divergence.json"
+          test "$(git -C ~/frappe-bench/apps/frappe rev-parse HEAD)" = af44091716ed4e9be32720483a27d3f1937ad7fd
+          test "$(git -C ~/frappe-bench/apps/frappe rev-parse HEAD^{tree})" = 231f1d8b87171dfc6fcedb1ae320195953539c34
           cd ~/frappe-bench
           bench setup requirements frappe
           mariadb --host 127.0.0.1 --port 3306 -u root -proot -e "SET GLOBAL character_set_server = 'utf8mb4'"
@@ -159,16 +185,28 @@ jobs:
           bench --site test_site list-apps | grep construction
           echo "Construction app installed successfully"
 
+      - name: Verify translation transaction ownership
+        working-directory: /home/runner/frappe-bench
+        run: env/bin/python -m unittest discover -s "$GITHUB_WORKSPACE/tests_offline" -p 'test_translation_tools_atomicity.py' -v
+
       - name: Run Python Business Regression Tests
         working-directory: /home/runner/frappe-bench
         run: |
           set -euo pipefail
+          # Execution boundary: re-assert the effective committed private vendor
+          # identity and a clean tracked working tree and index BEFORE the business
+          # regression suite executes against this bench.
+          python3 "$GITHUB_WORKSPACE/.github/ci/apply_private_vendor_divergence.py" \
+            /home/runner/frappe-bench/apps/frappe \
+            "$GITHUB_WORKSPACE/.github/ci/vendor_patches/frappe-pillow13-vendor-divergence.patch" \
+            "$GITHUB_WORKSPACE/.github/ci/vendor_patches/frappe-pillow13-vendor-divergence.json" \
+            --verify
           bench --site test_site set-config allow_tests true
           # Bare app installation does not run ERPNext's setup wizard.
           # Seed only synthetic CI business fixtures through native documents.
           PYTHONPATH="$GITHUB_WORKSPACE/.github/ci${PYTHONPATH:+:$PYTHONPATH}" bench --site test_site execute "__import__('business_fixtures').seed()"
           # Tiered CI: Pull Requests run a fast smoke matrix (~8-10 min).
-          # Pushes to develop / main run the full 19-module regression matrix (~20 min).
+          # Pushes to develop / main and the qualified-candidate branch run the full business regression matrix.
           # workflow_dispatch allows explicitly selecting 'smoke' or 'full'.
           if [[ "${{ github.event_name }}" == "pull_request" && "${{ github.event.inputs.test_suite || '' }}" != "full" ]]; then
             echo "::notice::Executing Tier 1 Fast Smoke Matrix for PR #${{ github.event.pull_request.number }}"
@@ -179,9 +217,12 @@ jobs:
               construction.tests.test_bilingual_install_schema
               construction.tests.test_packaged_translation_adoption
               construction.tests.test_report_export_authorization
+              construction.tests.test_resource_requirement_authorization
               construction.tests.test_stage7_bilingual_reports
               construction.tests.test_cost_analysis_engine
               construction.tests.test_boq_legacy_cost_conversion
+              construction.tests.test_omission_attribution
+              construction.tests.test_timesheet_designation
             )
           elif [[ "${{ github.event.inputs.test_suite || '' }}" == "smoke" ]]; then
             echo "::notice::Executing Tier 1 Fast Smoke Matrix (Manual Selection)"
@@ -192,12 +233,15 @@ jobs:
               construction.tests.test_bilingual_install_schema
               construction.tests.test_packaged_translation_adoption
               construction.tests.test_report_export_authorization
+              construction.tests.test_resource_requirement_authorization
               construction.tests.test_stage7_bilingual_reports
               construction.tests.test_cost_analysis_engine
               construction.tests.test_boq_legacy_cost_conversion
+              construction.tests.test_omission_attribution
+              construction.tests.test_timesheet_designation
             )
           else
-            echo "::notice::Executing Tier 2 Full 19-Module Business Regression Matrix on ${{ github.ref }}"
+            echo "::notice::Executing Tier 2 Full Business Regression Matrix on ${{ github.ref }}"
             modules=(
               construction.tests.test_boq_properties
               construction.tests.test_quantity_revisions
@@ -214,13 +258,37 @@ jobs:
               construction.tests.test_bilingual_install_schema
               construction.tests.test_packaged_translation_adoption
               construction.tests.test_report_export_authorization
+              construction.tests.test_resource_requirement_authorization
               construction.tests.test_boq_legacy_cost_conversion
               construction.tests.test_boq_parent_permissions
               construction.tests.test_bilingual_desk_link_dispatch
               construction.tests.test_stage7_bilingual_reports
+              construction.tests.test_omission_attribution
+              construction.tests.test_timesheet_designation
             )
           fi
+          # Foundation authorization and transaction safety tests run for PR smoke too.
+          mandatory_modules=(
+            construction.tests.test_security_user_desk_theme_owner
+            construction.tests.test_personal_layout_authorization
+            construction.tests.test_translation_digest_unique_index
+            construction.tests.test_transaction_boundary_ownership
+            construction.tests.test_native_security_rest_authorization
+            construction.tests.test_project_display_name_authorization
+            construction.tests.test_translation_catalog_http_atomicity
+            construction.tests.test_semgrep_bounded_fixes
+            construction.tests.test_perf_boq_capture_cleanup
+            construction.tests.test_dependency_security_guards
+            construction.tests.test_timesheet_project_scope_native
+            construction.tests.test_boq_journal_project_native
+            construction.tests.test_hook_regression
+          )
           test_status=0
+          for module in "${mandatory_modules[@]}"; do
+            if ! bench --site test_site run-tests --app construction --module "$module"; then
+              test_status=1
+            fi
+          done
           for module in "${modules[@]}"; do
             if ! bench --site test_site run-tests --app construction --module "$module"; then
               test_status=1
@@ -241,6 +309,442 @@ jobs:
         # of the job while collecting both suites after successful installation.
         if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         working-directory: /home/runner/frappe-bench/apps/construction/construction/tests
+        env:
+          # CI must execute the REAL pinned Frappe dispatcher. The pinned upstream
+          # base is 2871914b69b6e14a4b023d9b7cc52dc3e269cc1b; the EFFECTIVE private
+          # vendor commit is af44091716ed4e9be32720483a27d3f1937ad7fd (owner-
+          # authorized, PRIVATE, VERSIONED divergence reconstructed by the setup
+          # step). The dispatcher file is byte-identical to the base. A missing or
+          # mismatched dispatcher fails the job; the local mirror is never
+          # substituted silently in CI.
+          F44_PINNED_SCRIPT_MANAGER: /home/runner/frappe-bench/apps/frappe/frappe/public/js/frappe/form/script_manager.js
+          # F44: the pinned vendor ROOT is AUTHORITATIVE for the BOQ native
+          # query regression. It must hold the exact pinned vendor checkouts
+          # (Frappe effective af44091716ed4e9be32720483a27d3f1937ad7fd from base
+          # 2871914b69b6e14a4b023d9b7cc52dc3e269cc1b, ERPNext
+          # 7474d9e786277383de1242ab882f16856d17a9c9). A missing, empty or
+          # tampered root FAILS the job; the regression never falls back to a
+          # sibling or mirror copy of the vendor.
+          F44_PINNED_VENDOR_ROOT: /home/runner/frappe-bench/apps
         run: |
+          # Measurement/execution boundary: re-assert the effective committed
+          # private vendor identity and that the tracked working tree AND index are
+          # clean against it (a missing, reverted or tampered divergence fails here
+          # instead of being silently executed).
+          python3 "$GITHUB_WORKSPACE/.github/ci/apply_private_vendor_divergence.py" \
+            /home/runner/frappe-bench/apps/frappe \
+            "$GITHUB_WORKSPACE/.github/ci/vendor_patches/frappe-pillow13-vendor-divergence.patch" \
+            "$GITHUB_WORKSPACE/.github/ci/vendor_patches/frappe-pillow13-vendor-divergence.json" \
+            --verify
+          test "$(git -C /home/runner/frappe-bench/apps/frappe rev-parse HEAD)" = af44091716ed4e9be32720483a27d3f1937ad7fd
+          test "$(git -C /home/runner/frappe-bench/apps/frappe rev-parse HEAD^{tree})" = 231f1d8b87171dfc6fcedb1ae320195953539c34
+          test "$(git -C /home/runner/frappe-bench/apps/erpnext rev-parse HEAD)" = 7474d9e786277383de1242ab882f16856d17a9c9
           npm ci --no-audit --no-fund
-          node --test --test-isolation=none test_print_settings_properties.js
+          node --test --test-isolation=none test_print_settings_properties.js test_cur_frm_owner_context.js test_timesheet_designation_client.js test_boq_native_query_client.js
+
+  stage2-evidence-protocol:
+    name: Stage-2 evidence protocol (round trip + CLI matrix)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    env:
+      # The protocol layers are REQUIRED in CI: a missing pinned vendor input
+      # must fail this job, never skip it and report green.
+      STAGE2_PROTOCOL_CI: '1'
+      GITHUB_ACTIONS: 'true'
+    steps:
+      - name: Checkout construction at bench layout path
+        uses: actions/checkout@v4
+        with:
+          path: bench/apps/construction
+
+      # Exact pinned vendor inputs (qualified Frappe/ERPNext checkouts). The
+      # digests are recorded in construction/data/localization/vendor_ci_inputs.json.
+      #
+      # The PUBLIC base commit is fetched; the owner-authorized PRIVATE divergence
+      # commit is reconstructed locally by the transport step below (never fetched,
+      # never published). Its catalog and script_manager bytes are identical to the
+      # base, so the recorded fixture digests still describe exactly these bytes.
+      - name: Checkout pinned Frappe catalog and script manager
+        uses: actions/checkout@v4
+        with:
+          repository: frappe/frappe
+          ref: 2871914b69b6e14a4b023d9b7cc52dc3e269cc1b
+          path: bench/apps/frappe
+          sparse-checkout: |
+            frappe/locale
+            frappe/public/js/frappe/form/script_manager.js
+            /pyproject.toml
+          sparse-checkout-cone-mode: false
+          fetch-depth: 1
+
+      - name: Checkout pinned ERPNext catalog
+        uses: actions/checkout@v4
+        with:
+          repository: frappe/erpnext
+          ref: 7474d9e786277383de1242ab882f16856d17a9c9
+          path: bench/apps/erpnext
+          sparse-checkout: erpnext/locale
+          sparse-checkout-cone-mode: false
+          fetch-depth: 1
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+
+      - name: Apply approved private Frappe vendor divergence (exact commit)
+        # This job runs the localization gate suite, so it must evaluate the same
+        # effective vendor as the Server, C2 and Linters jobs instead of a base the
+        # recorded vendor baseline no longer pins. The reviewed private commit is
+        # reconstructed locally; HEAD, HEAD tree, parent and a clean tracked working
+        # tree and index are asserted. NOT an upstream-supported Frappe release.
+        run: |
+          set -euo pipefail
+          APP_ROOT="$GITHUB_WORKSPACE/bench/apps/construction"
+          VENDOR_ROOT="$GITHUB_WORKSPACE/bench/apps/frappe"
+          python3 "$APP_ROOT/.github/ci/apply_private_vendor_divergence.py" \
+            "$VENDOR_ROOT" \
+            "$APP_ROOT/.github/ci/vendor_patches/frappe-pillow13-vendor-divergence.patch" \
+            "$APP_ROOT/.github/ci/vendor_patches/frappe-pillow13-vendor-divergence.json"
+          test "$(git -C "$VENDOR_ROOT" rev-parse HEAD)" = af44091716ed4e9be32720483a27d3f1937ad7fd
+          test "$(git -C "$VENDOR_ROOT" rev-parse HEAD^{tree})" = 231f1d8b87171dfc6fcedb1ae320195953539c34
+
+      - name: Verify the pinned vendor inputs
+        run: |
+          set -euo pipefail
+          # Measurement boundary: the fixture digests and the recorded commits below
+          # are only meaningful against the exact effective private vendor.
+          APP_ROOT="$GITHUB_WORKSPACE/bench/apps/construction"
+          VENDOR_ROOT="$GITHUB_WORKSPACE/bench/apps/frappe"
+          python3 "$APP_ROOT/.github/ci/apply_private_vendor_divergence.py" \
+            "$VENDOR_ROOT" \
+            "$APP_ROOT/.github/ci/vendor_patches/frappe-pillow13-vendor-divergence.patch" \
+            "$APP_ROOT/.github/ci/vendor_patches/frappe-pillow13-vendor-divergence.json" \
+            --verify
+          test "$(git -C "$VENDOR_ROOT" rev-parse HEAD)" = af44091716ed4e9be32720483a27d3f1937ad7fd
+          test "$(git -C "$VENDOR_ROOT" rev-parse HEAD^{tree})" = 231f1d8b87171dfc6fcedb1ae320195953539c34
+          python3 - <<'PY'
+          import hashlib, json, os, sys
+          root = os.environ["GITHUB_WORKSPACE"]
+          pins = json.loads(
+              open(os.path.join(root, "bench/apps/construction/construction/data/localization/vendor_ci_inputs.json"), encoding="utf-8").read()
+          )["apps"]
+          failures = []
+          for app, spec in sorted(pins.items()):
+              base = os.path.join(root, "bench/apps", app)
+              for rel, want in sorted(spec["inputs"].items()):
+                  path = os.path.join(base, rel)
+                  if not os.path.isfile(path):
+                      failures.append(f"{app}/{rel}: missing")
+                      continue
+                  got = hashlib.sha256(open(path, "rb").read()).hexdigest()
+                  if got != want["sha256"]:
+                      failures.append(f"{app}/{rel}: sha256 {got} != pinned {want['sha256']}")
+          for app, spec in sorted(pins.items()):
+              head = os.popen(f"git -C {os.path.join(root, 'bench/apps', app)} rev-parse HEAD").read().strip()
+              if head != spec["commit"]:
+                  failures.append(f"{app}: HEAD {head} != pinned {spec['commit']}")
+          if failures:
+              print("PINNED VENDOR INPUTS MISSING OR CHANGED:", file=sys.stderr)
+              for f in failures:
+                  print("  - " + f, file=sys.stderr)
+              sys.exit(1)
+          print("pinned vendor inputs verified")
+          PY
+
+      - name: Protocol round trip (synthetic captures -> assembler -> checker)
+        working-directory: ${{ github.workspace }}/bench/apps/construction
+        env:
+          STAGE2_VENDOR_APPS_DIR: ${{ github.workspace }}/bench/apps
+        run: python3 construction/tests/tools/test_stage2_evidence_roundtrip.py -v
+
+      - name: Negative CLI matrix (both spellings, every invalid invocation)
+        working-directory: ${{ github.workspace }}/bench/apps/construction
+        env:
+          STAGE2_VENDOR_APPS_DIR: ${{ github.workspace }}/bench/apps
+        run: |
+          python3 construction/tests/tools/test_stage2_evidence_cli_matrix.py -v
+          python3 construction/tests/tools/test_stage2_evidence_shallow_vendor.py -v
+
+      - name: Frozen contract / live source agreement (independent extraction)
+        # The frozen contract is a reviewed input; it is only trustworthy while
+        # the source it was measured from is unchanged. This step re-derives the
+        # module counts with a second, independent extraction and fails when
+        # the frozen contract has drifted from the source.
+        working-directory: ${{ github.workspace }}/bench/apps/construction
+        run: python3 construction/tests/tools/test_stage2_contract_source_agreement.py -v
+
+      - name: Standalone localization gate suite (the frozen contract source)
+        working-directory: ${{ github.workspace }}/bench/apps/construction
+        run: python3 construction/tests/test_localization_gates.py -v
+
+  customer-artifact-qualification:
+    name: Curated artifact on fresh Bench
+    if: ${{ (github.event_name == 'push' && (startsWith(github.ref, 'refs/heads/codex/customer-release-ci-') || github.ref == 'refs/heads/codex/foundation-ci-20261018-qualified' || github.ref == 'refs/heads/codex/foundation-ci-20261018-qualified-r2' || github.ref == 'refs/heads/codex/foundation-ci-20261018-qualified-r3' || github.ref == 'refs/heads/codex/foundation-ci-20261018-qualified-r4')) || (github.event_name == 'workflow_dispatch' && github.event.inputs.test_suite == 'full') }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    permissions:
+      contents: read
+
+    services:
+      redis-cache:
+        image: redis:alpine
+        ports:
+          - 13000:6379
+      redis-queue:
+        image: redis:alpine
+        ports:
+          - 11000:6379
+      mariadb:
+        image: mariadb:10.11
+        env:
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: --health-cmd="mariadb-admin ping" --health-interval=5s --health-timeout=2s --health-retries=3
+
+    steps:
+      - name: Checkout exact candidate source
+        uses: actions/checkout@v4
+
+      - name: Verify committed source identity
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain)"
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          check-latest: true
+
+      - name: Run customer artifact verifier regressions
+        run: python -m unittest discover -s tests_offline -p 'test_customer_artifact_probe.py' -v
+
+      - name: Stage and bind clean customer Git root
+        env:
+          CUSTOMER_REPO: ${{ runner.temp }}/customer-dist
+          ARTIFACT_BINDING: ${{ runner.temp }}/customer-artifact-binding.json
+        run: |
+          set -euo pipefail
+          test ! -e "$CUSTOMER_REPO"
+          python3 scripts/stage_distribution.py --out "$CUSTOMER_REPO"
+          python3 scripts/verify_staged_distribution.py --dir "$CUSTOMER_REPO"
+          git -C "$CUSTOMER_REPO" init -b qa-candidate
+          git -C "$CUSTOMER_REPO" add -f -A
+          git -C "$CUSTOMER_REPO" -c user.name='C2 disposable QA' -c user.email='c2-qa@example.invalid' commit -m 'Disposable curated customer artifact'
+          CUSTOMER_COMMIT="$(git -C "$CUSTOMER_REPO" rev-parse HEAD)"
+          python3 .github/ci/customer_artifact_probe.py \
+            --repo "$CUSTOMER_REPO" \
+            --source-sha "$GITHUB_SHA" \
+            --expected-commit "$CUSTOMER_COMMIT" \
+            --write-binding "$ARTIFACT_BINDING"
+          echo "CUSTOMER_COMMIT=$CUSTOMER_COMMIT" >> "$GITHUB_ENV"
+
+      - name: Setup isolated Bench and pinned Frappe
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y mariadb-client default-libmysqlclient-dev build-essential pkg-config wkhtmltopdf fonts-noto-core
+          pip install frappe-bench
+          BENCH_ROOT="$RUNNER_TEMP/c2-bench"
+          test ! -e "$BENCH_ROOT"
+          bench init --skip-redis-config-generation --skip-assets --frappe-branch version-16 --python "$(which python)" "$BENCH_ROOT"
+          git -C "$BENCH_ROOT/apps/frappe" fetch --depth=1 upstream 2871914b69b6e14a4b023d9b7cc52dc3e269cc1b
+          git -C "$BENCH_ROOT/apps/frappe" checkout --detach FETCH_HEAD
+          test "$(git -C "$BENCH_ROOT/apps/frappe" rev-parse HEAD)" = 2871914b69b6e14a4b023d9b7cc52dc3e269cc1b
+          # F44 Pillow-13 private vendor divergence: same fail-closed transport as
+          # the Server job. The reviewed private commit is reconstructed locally
+          # (never fetched) and the effective committed HEAD/tree plus a clean
+          # tracked working tree and index are asserted BEFORE the dependency
+          # install. NOT an upstream-supported Frappe release.
+          python3 "$GITHUB_WORKSPACE/.github/ci/apply_private_vendor_divergence.py" \
+            "$BENCH_ROOT/apps/frappe" \
+            "$GITHUB_WORKSPACE/.github/ci/vendor_patches/frappe-pillow13-vendor-divergence.patch" \
+            "$GITHUB_WORKSPACE/.github/ci/vendor_patches/frappe-pillow13-vendor-divergence.json"
+          test "$(git -C "$BENCH_ROOT/apps/frappe" rev-parse HEAD)" = af44091716ed4e9be32720483a27d3f1937ad7fd
+          test "$(git -C "$BENCH_ROOT/apps/frappe" rev-parse HEAD^{tree})" = 231f1d8b87171dfc6fcedb1ae320195953539c34
+          cd "$BENCH_ROOT"
+          bench setup requirements frappe
+          mariadb --host 127.0.0.1 --port 3306 -u root -proot -e "SET GLOBAL character_set_server = 'utf8mb4'"
+          mariadb --host 127.0.0.1 --port 3306 -u root -proot -e "SET GLOBAL collation_server = 'utf8mb4_unicode_ci'"
+        env:
+          FRAPPE_DOCKER_BUILD: '1'
+
+      - name: Install pinned ERPNext and only the staged customer app
+        run: |
+          set -euo pipefail
+          BENCH_ROOT="$RUNNER_TEMP/c2-bench"
+          # Measurement boundary: re-assert the effective committed private vendor
+          # identity and a clean tracked working tree and index BEFORE any further
+          # install or measurement runs against this bench.
+          python3 "$GITHUB_WORKSPACE/.github/ci/apply_private_vendor_divergence.py" \
+            "$BENCH_ROOT/apps/frappe" \
+            "$GITHUB_WORKSPACE/.github/ci/vendor_patches/frappe-pillow13-vendor-divergence.patch" \
+            "$GITHUB_WORKSPACE/.github/ci/vendor_patches/frappe-pillow13-vendor-divergence.json" \
+            --verify
+          git init "$RUNNER_TEMP/erpnext"
+          git -C "$RUNNER_TEMP/erpnext" fetch --depth=1 https://github.com/frappe/erpnext 7474d9e786277383de1242ab882f16856d17a9c9
+          git -C "$RUNNER_TEMP/erpnext" checkout -b ci-pin FETCH_HEAD
+          cd "$BENCH_ROOT"
+          bench get-app --skip-assets erpnext "$RUNNER_TEMP/erpnext" --branch ci-pin
+          test "$(git -C apps/erpnext rev-parse HEAD)" = 7474d9e786277383de1242ab882f16856d17a9c9
+          bench setup requirements frappe erpnext
+          bench get-app construction "$RUNNER_TEMP/customer-dist" --branch qa-candidate
+          bench setup requirements frappe erpnext construction
+          python3 "$GITHUB_WORKSPACE/.github/ci/customer_artifact_probe.py" \
+            --repo "$BENCH_ROOT/apps/construction" \
+            --source-sha "$GITHUB_SHA" \
+            --expected-commit "$CUSTOMER_COMMIT" \
+            --expected-origin "$RUNNER_TEMP/customer-dist" \
+            --expected-remote upstream \
+            --expected-binding "$RUNNER_TEMP/customer-artifact-binding.json"
+        env:
+          FRAPPE_DOCKER_BUILD: '1'
+
+      - name: Create fresh C2 site and install apps
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP/c2-bench"
+          bench new-site --db-root-password root --admin-password admin c2_customer_site
+          bench --site c2_customer_site install-app erpnext
+          bench --site c2_customer_site install-app construction
+        env:
+          FRAPPE_DOCKER_BUILD: '1'
+
+      - name: Verify installed customer app identity
+        run: |
+          set -euo pipefail
+          BENCH_ROOT="$RUNNER_TEMP/c2-bench"
+          python3 "$GITHUB_WORKSPACE/.github/ci/customer_artifact_probe.py" \
+            --repo "$BENCH_ROOT/apps/construction" \
+            --source-sha "$GITHUB_SHA" \
+            --expected-commit "$CUSTOMER_COMMIT" \
+            --expected-origin "$RUNNER_TEMP/customer-dist" \
+            --expected-remote upstream \
+            --expected-binding "$RUNNER_TEMP/customer-artifact-binding.json"
+          cd "$BENCH_ROOT"
+          bench --site c2_customer_site list-apps
+          PYTHONPATH="$GITHUB_WORKSPACE/.github/ci${PYTHONPATH:+:$PYTHONPATH}" \
+            C2_EXPECTED_APP_PATH="$BENCH_ROOT/apps/construction/construction" \
+            bench --site c2_customer_site execute "__import__('customer_artifact_probe').verify_import_path()"
+          PYTHONPATH="$GITHUB_WORKSPACE/.github/ci${PYTHONPATH:+:$PYTHONPATH}" \
+            bench --site c2_customer_site execute "__import__('customer_artifact_probe').verify_generated_theme_assets()"
+
+      - name: Migrate fresh C2 site a second time
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP/c2-bench"
+          bench --site c2_customer_site migrate
+          bench --site c2_customer_site migrate
+        env:
+          FRAPPE_DOCKER_BUILD: '1'
+
+      - name: Build assets and reverify exact artifact bytes
+        run: |
+          set -euo pipefail
+          BENCH_ROOT="$RUNNER_TEMP/c2-bench"
+          cd "$BENCH_ROOT"
+          bench build
+          python3 "$GITHUB_WORKSPACE/.github/ci/customer_artifact_probe.py" \
+            --repo "$BENCH_ROOT/apps/construction" \
+            --source-sha "$GITHUB_SHA" \
+            --expected-commit "$CUSTOMER_COMMIT" \
+            --expected-origin "$RUNNER_TEMP/customer-dist" \
+            --expected-remote upstream \
+            --expected-binding "$RUNNER_TEMP/customer-artifact-binding.json"
+          PYTHONPATH="$GITHUB_WORKSPACE/.github/ci${PYTHONPATH:+:$PYTHONPATH}" \
+            C2_EXPECTED_APP_PATH="$BENCH_ROOT/apps/construction/construction" \
+            bench --site c2_customer_site execute "__import__('customer_artifact_probe').verify_import_path()"
+          PYTHONPATH="$GITHUB_WORKSPACE/.github/ci${PYTHONPATH:+:$PYTHONPATH}" \
+            bench --site c2_customer_site execute "__import__('customer_artifact_probe').verify_generated_theme_assets()"
+        env:
+          FRAPPE_DOCKER_BUILD: '1'
+
+      - name: Create token-bound synthetic recovery markers
+        run: |
+          set -euo pipefail
+          RECOVERY_TOKEN="$(python3 -c 'import uuid; print(uuid.uuid4().hex)')"
+          echo "C2_RECOVERY_TOKEN=$RECOVERY_TOKEN" >> "$GITHUB_ENV"
+          RECOVERY_BACKUP="$RUNNER_TEMP/c2-recovery-$RECOVERY_TOKEN-backup"
+          test ! -e "$RECOVERY_BACKUP"
+          mkdir "$RECOVERY_BACKUP"
+          echo "C2_RECOVERY_BACKUP=$RECOVERY_BACKUP" >> "$GITHUB_ENV"
+          cd "$RUNNER_TEMP/c2-bench"
+          PYTHONPATH="$GITHUB_WORKSPACE/.github/ci${PYTHONPATH:+:$PYTHONPATH}" \
+            C2_EXPECTED_SITE=c2_customer_site \
+            C2_RUNNER_TEMP="$RUNNER_TEMP" \
+            C2_RECOVERY_TOKEN="$RECOVERY_TOKEN" \
+            bench --site c2_customer_site execute "__import__('customer_artifact_probe').prepare_recovery_marker()"
+
+      - name: Backup and validate same-version C2 recovery input
+        run: |
+          set -euo pipefail
+          BENCH_ROOT="$RUNNER_TEMP/c2-bench"
+          RECORD="$RUNNER_TEMP/c2-recovery-$C2_RECOVERY_TOKEN.json"
+          cd "$BENCH_ROOT"
+          bench --site c2_customer_site backup --with-files --backup-path "$C2_RECOVERY_BACKUP"
+          python3 "$GITHUB_WORKSPACE/.github/ci/customer_artifact_probe.py" \
+            --validate-recovery-backup \
+            --backup-dir "$C2_RECOVERY_BACKUP" \
+            --recovery-record "$RECORD" \
+            --backup-validation-output "$C2_RECOVERY_BACKUP/validation.json"
+          SQL_FILE="$(find "$C2_RECOVERY_BACKUP" -maxdepth 1 -type f -name '*-c2_customer_site-database.sql.gz' -print -quit)"
+          PUBLIC_FILES="$(find "$C2_RECOVERY_BACKUP" -maxdepth 1 -type f \( -name '*-c2_customer_site-files.tar' -o -name '*-c2_customer_site-files.tgz' \) -print -quit)"
+          PRIVATE_FILES="$(find "$C2_RECOVERY_BACKUP" -maxdepth 1 -type f \( -name '*-c2_customer_site-private-files.tar' -o -name '*-c2_customer_site-private-files.tgz' \) -print -quit)"
+          test -n "$SQL_FILE" && test -n "$PUBLIC_FILES" && test -n "$PRIVATE_FILES"
+          echo "C2_RECOVERY_SQL=$SQL_FILE" >> "$GITHUB_ENV"
+          echo "C2_RECOVERY_PUBLIC=$PUBLIC_FILES" >> "$GITHUB_ENV"
+          echo "C2_RECOVERY_PRIVATE=$PRIVATE_FILES" >> "$GITHUB_ENV"
+
+      - name: Delete only synthetic recovery markers
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP/c2-bench"
+          PYTHONPATH="$GITHUB_WORKSPACE/.github/ci${PYTHONPATH:+:$PYTHONPATH}" \
+            C2_EXPECTED_SITE=c2_customer_site \
+            C2_RUNNER_TEMP="$RUNNER_TEMP" \
+            C2_RECOVERY_TOKEN="$C2_RECOVERY_TOKEN" \
+            bench --site c2_customer_site execute "__import__('customer_artifact_probe').delete_recovery_marker()"
+
+      - name: Restore the same fresh C2 site without validation bypasses
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP/c2-bench"
+          bench --site c2_customer_site restore "$C2_RECOVERY_SQL" \
+            --db-root-username root \
+            --db-root-password root \
+            --with-public-files "$C2_RECOVERY_PUBLIC" \
+            --with-private-files "$C2_RECOVERY_PRIVATE"
+          bench --site c2_customer_site migrate
+          PYTHONPATH="$GITHUB_WORKSPACE/.github/ci${PYTHONPATH:+:$PYTHONPATH}" \
+            C2_EXPECTED_SITE=c2_customer_site \
+            C2_RUNNER_TEMP="$RUNNER_TEMP" \
+            C2_RECOVERY_TOKEN="$C2_RECOVERY_TOKEN" \
+            bench --site c2_customer_site execute "__import__('customer_artifact_probe').assert_recovery_marker()"
+
+      - name: Reverify customer artifact after restore
+        run: |
+          set -euo pipefail
+          BENCH_ROOT="$RUNNER_TEMP/c2-bench"
+          python3 "$GITHUB_WORKSPACE/.github/ci/customer_artifact_probe.py" \
+            --repo "$BENCH_ROOT/apps/construction" \
+            --source-sha "$GITHUB_SHA" \
+            --expected-commit "$CUSTOMER_COMMIT" \
+            --expected-origin "$RUNNER_TEMP/customer-dist" \
+            --expected-remote upstream \
+            --expected-binding "$RUNNER_TEMP/customer-artifact-binding.json"
+          cd "$BENCH_ROOT"
+          PYTHONPATH="$GITHUB_WORKSPACE/.github/ci${PYTHONPATH:+:$PYTHONPATH}" \
+            C2_EXPECTED_APP_PATH="$BENCH_ROOT/apps/construction/construction" \
+            bench --site c2_customer_site execute "__import__('customer_artifact_probe').verify_import_path()"
+          PYTHONPATH="$GITHUB_WORKSPACE/.github/ci${PYTHONPATH:+:$PYTHONPATH}" \
+            bench --site c2_customer_site execute "__import__('customer_artifact_probe').verify_generated_theme_assets()"

@@ -12,7 +12,7 @@ import frappe
 def execute():
     """
     Enable the global export menu toggle on existing installations.
-    Uses frappe.db.set_value (no timestamp touch) per AGENTS.md §4.6.
+    Uses the Single DocType API and leaves modified timestamps unchanged.
     """
     try:
         # Only set to 1 if the field currently holds a falsy value.
@@ -20,9 +20,8 @@ def execute():
         # timestamp conflicts on the singleton settings document.
         current = frappe.db.get_single_value("Construction Settings", "enable_global_export_menu")
         if not current:
-            frappe.db.set_value(
+            frappe.db.set_single_value(
                 "Construction Settings",
-                None,
                 "enable_global_export_menu",
                 1,
                 update_modified=False,

@@ -70,15 +70,17 @@ def _create_fixtures():
     """Create Employee fixture rows."""
     created = []
     for i in range(FIXTURES_COUNT):
-        d = frappe.get_doc({
-            "doctype": "Employee",
-            "first_name": f"{PREFIX}Test-{i:02d}",
-            "gender": "Male",
-            "date_of_birth": "1990-01-01",
-            "date_of_joining": "2020-01-01",
-            "company": COMPANY,
-            "status": "Active",
-        })
+        d = frappe.get_doc(
+            {
+                "doctype": "Employee",
+                "first_name": f"{PREFIX}Test-{i:02d}",
+                "gender": "Male",
+                "date_of_birth": "1990-01-01",
+                "date_of_joining": "2020-01-01",
+                "company": COMPANY,
+                "status": "Active",
+            }
+        )
         d.insert(ignore_permissions=True)
         created.append(d.name)
     frappe.db.commit()
@@ -170,10 +172,14 @@ def measure():
         "match_sets_equal": base_ids == bilin_ids,
         "baseline_p95_over_bilingual_p95": round(
             _nearest_rank_p95(base_samples) / _nearest_rank_p95(bilin_samples), 4
-        ) if _nearest_rank_p95(bilin_samples) else None,
+        )
+        if _nearest_rank_p95(bilin_samples)
+        else None,
         "bilingual_p95_ratio_of_baseline": round(
             _nearest_rank_p95(bilin_samples) / _nearest_rank_p95(base_samples), 4
-        ) if _nearest_rank_p95(base_samples) else None,
+        )
+        if _nearest_rank_p95(base_samples)
+        else None,
         "order_balance": "alternating (even pair baseline-first, odd pair bilingual-first); GC paused during timed region",
         "query_counts": {
             "baseline_counts": base_counts,
@@ -234,7 +240,20 @@ if __name__ == "__main__":
     with open(os.path.abspath(path), "w", encoding="utf-8") as fh:
         json.dump(out, fh, indent=1, sort_keys=True)
         fh.write("\n")
-    print("MEASUREMENT:", json.dumps({out["result"]["doctype"]: out["result"].get("bilingual_p95_ratio_of_baseline")}, sort_keys=True))
-    print("P95_MS:", json.dumps({"baseline": out["result"]["baseline"]["p95_ms"], "bilingual": out["result"]["bilingual"]["p95_ms"]}))
+    print(
+        "MEASUREMENT:",
+        json.dumps(
+            {out["result"]["doctype"]: out["result"].get("bilingual_p95_ratio_of_baseline")}, sort_keys=True
+        ),
+    )
+    print(
+        "P95_MS:",
+        json.dumps(
+            {
+                "baseline": out["result"]["baseline"]["p95_ms"],
+                "bilingual": out["result"]["bilingual"]["p95_ms"],
+            }
+        ),
+    )
     print("MATCH_SETS_EQUAL:", out["result"].get("match_sets_equal"))
     print("CLEANUP_LEFTOVER:", len(out["cleanup"]["leftover"]))

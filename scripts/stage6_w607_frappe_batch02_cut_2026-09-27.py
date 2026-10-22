@@ -6,6 +6,7 @@ docs/arabic_coverage_gap_report_2026-08-22.csv, enriches them with locations
 and contexts from apps/frappe/frappe/locale/ar.po, and writes:
   docs/translation/stage6_w607_frappe_batch02_rows_2026-09-27.csv
 """
+
 from __future__ import annotations
 
 import csv
@@ -13,6 +14,7 @@ import hashlib
 import json
 import re
 from pathlib import Path
+
 from babel.messages.pofile import read_po
 
 BENCH_ROOT = Path(__file__).resolve().parents[3]
@@ -36,11 +38,7 @@ def read_csv(path: Path) -> list[dict[str, str]]:
 
 
 def main() -> None:
-    catalog = {
-        (r.get("source_text") or "").strip()
-        for r in read_csv(APPROVED)
-        if r.get("source_text")
-    }
+    catalog = {(r.get("source_text") or "").strip() for r in read_csv(APPROVED) if r.get("source_text")}
     decision_doc = json.loads(DECISIONS.read_text(encoding="utf-8"))
     decision_keys = {
         (entry.get("source_text") or "").strip()
@@ -56,16 +54,12 @@ def main() -> None:
                 if k:
                     prior.add(k)
 
-    tech_keys = {
-        (r.get("source_text") or "").strip()
-        for r in read_csv(TECH)
-        if r.get("source_text")
-    }
-    dedup_keys = {
-        (r.get("source_text") or "").strip()
-        for r in read_csv(DEDUP)
-        if r.get("source_text")
-    } if DEDUP.exists() else set()
+    tech_keys = {(r.get("source_text") or "").strip() for r in read_csv(TECH) if r.get("source_text")}
+    dedup_keys = (
+        {(r.get("source_text") or "").strip() for r in read_csv(DEDUP) if r.get("source_text")}
+        if DEDUP.exists()
+        else set()
+    )
 
     blocked = catalog | decision_keys | prior | tech_keys | dedup_keys
 
@@ -82,7 +76,7 @@ def main() -> None:
     seen: set[str] = set()
     uniq: list[dict[str, str]] = []
     for r in raw:
-        st = (r.get("source_text") or "").strip().replace(r'\"', '"')
+        st = (r.get("source_text") or "").strip().replace(r"\"", '"')
         if st and st not in seen:
             seen.add(st)
             r["source_text"] = st
@@ -90,18 +84,17 @@ def main() -> None:
 
     html = {r["source_text"].strip() for r in uniq if RE_HTML.search(r["source_text"])}
     newline = {
-        r["source_text"].strip() for r in uniq
+        r["source_text"].strip()
+        for r in uniq
         if r["source_text"].strip() not in html and ("\n" in r["source_text"] or "\r" in r["source_text"])
     }
     overlong = {
-        r["source_text"].strip() for r in uniq
+        r["source_text"].strip()
+        for r in uniq
         if r["source_text"].strip() not in html | newline and len(r["source_text"].strip()) > MAX_LEN
     }
 
-    eligible = [
-        r for r in uniq
-        if r["source_text"].strip() not in html | newline | overlong
-    ]
+    eligible = [r for r in uniq if r["source_text"].strip() not in html | newline | overlong]
 
     fresh = sorted(
         (r for r in eligible if r["source_text"].strip() not in blocked),
@@ -118,11 +111,13 @@ def main() -> None:
         else:
             locs = "in-ledger (no vendor PO location match)"
 
-        output_rows.append({
-            "source_text": st,
-            "context": ctx,
-            "locations": locs,
-        })
+        output_rows.append(
+            {
+                "source_text": st,
+                "context": ctx,
+                "locations": locs,
+            }
+        )
 
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     with OUTPUT.open("w", encoding="utf-8", newline="") as h:

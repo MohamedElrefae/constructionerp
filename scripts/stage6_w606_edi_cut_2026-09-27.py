@@ -3,6 +3,7 @@
 
 Extracts all 26 EDI rows from docs/erpnext_ar_missing_review_filled.csv.
 """
+
 from __future__ import annotations
 
 import csv
@@ -12,6 +13,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 LEDGER = ROOT / "docs/erpnext_ar_missing_review_filled.csv"
 OUT = ROOT / "docs/translation/stage6_w606_edi_rows_2026-09-27.csv"
+
 
 def cut_edi_scope():
     with LEDGER.open(encoding="utf-8", newline="") as h:
@@ -42,6 +44,7 @@ def cut_edi_scope():
     sha = hashlib.sha256(OUT.read_bytes()).hexdigest()
     print(f"Wrote {len(edi_rows)} rows to {OUT}")
     print(f"SHA-256: {sha}")
+
 
 if __name__ == "__main__":
     cut_edi_scope()

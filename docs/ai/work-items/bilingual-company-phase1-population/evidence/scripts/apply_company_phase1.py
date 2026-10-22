@@ -42,8 +42,23 @@ def byte_scan(value):
         problems.append("whitespace")
     for ch in value:
         cp = ord(ch)
-        if cp in (0x200E, 0x200F, 0x202A, 0x202B, 0x202C, 0x202D, 0x202E,
-                  0x2066, 0x2067, 0x2068, 0x2069, 0x200B, 0x200C, 0x200D, 0xFEFF):
+        if cp in (
+            0x200E,
+            0x200F,
+            0x202A,
+            0x202B,
+            0x202C,
+            0x202D,
+            0x202E,
+            0x2066,
+            0x2067,
+            0x2068,
+            0x2069,
+            0x200B,
+            0x200C,
+            0x200D,
+            0xFEFF,
+        ):
             problems.append(f"bidi/zw U+{cp:04X}")
         elif cp < 0x20 or cp == 0x7F or 0x80 <= cp <= 0x9F:
             problems.append(f"control U+{cp:04X}")
@@ -59,6 +74,7 @@ def byte_scan(value):
 def queue_snapshot():
     """Lengths + payloads of every queues:* list on the queue redis."""
     import redis as _redis
+
     r = _redis.StrictRedis(host=QUEUE_HOST, port=QUEUE_PORT, decode_responses=True)
     snap = {}
     for key in sorted(r.keys("queues:*")):
@@ -71,7 +87,7 @@ def queue_delta(before, after):
     for key in sorted(set(before) | set(after)):
         b, a = before.get(key, []), after.get(key, [])
         if a != b:
-            out[key] = {"before": len(b), "after": len(a), "added": a[len(b):]}
+            out[key] = {"before": len(b), "after": len(a), "added": a[len(b) :]}
     return out
 
 
@@ -80,7 +96,7 @@ def main():
     try:
         q_before = queue_snapshot()
         print(f"QUEUE_GATE reachable at {QUEUE_HOST}:{QUEUE_PORT} snapshot={q_before}")
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         print(f"FAIL: queue redis unreachable — {type(exc).__name__}: {exc}")
         sys.exit(1)
 
@@ -117,9 +133,11 @@ def main():
             print(f"FAIL pre-validate {name}: {problems}")
             sys.exit(1)
         snap = frappe.db.get_value(
-            "Company", name,
-            [LABEL_FIELD, "abbr", "default_currency", "country", "parent_company",
-             "is_group", AR_FIELD], as_dict=True)
+            "Company",
+            name,
+            [LABEL_FIELD, "abbr", "default_currency", "country", "parent_company", "is_group", AR_FIELD],
+            as_dict=True,
+        )
         if not snap:
             print(f"FAIL pre-validate {name}: absent")
             sys.exit(1)
@@ -142,8 +160,10 @@ def main():
     if site_ar != 0 or total != TOTAL_EXPECTED or excluded != EXCLUDED_EXPECTED:
         print(f"FAIL pre-state: arabic={site_ar} total={total} excluded={excluded}")
         sys.exit(1)
-    print(f"PREVALIDATE_OK rows={len(plan)} plain={len(plan)} site_arabic=0 "
-          f"total={total} excluded={excluded}")
+    print(
+        f"PREVALIDATE_OK rows={len(plan)} plain={len(plan)} site_arabic=0 "
+        f"total={total} excluded={excluded}"
+    )
 
     # Apply through the standard document lifecycle.
     results = []
@@ -155,7 +175,11 @@ def main():
                 continue
             d = frappe.get_doc("Company", item["name"])
             label_before = d.get(LABEL_FIELD)
-            abbr_before, cur_before, country_before = d.get("abbr"), d.get("default_currency"), d.get("country")
+            abbr_before, cur_before, country_before = (
+                d.get("abbr"),
+                d.get("default_currency"),
+                d.get("country"),
+            )
             parent_before, grp_before = d.get("parent_company"), d.get("is_group")
             coa_before = d.get("chart_of_accounts")
             before_fields = dict(d.as_dict())
@@ -163,7 +187,11 @@ def main():
             d.save()
             if d.get(LABEL_FIELD) != label_before:
                 raise RuntimeError(f"{item['name']}: company_name changed")
-            if (d.get("abbr"), d.get("default_currency"), d.get("country")) != (abbr_before, cur_before, country_before):
+            if (d.get("abbr"), d.get("default_currency"), d.get("country")) != (
+                abbr_before,
+                cur_before,
+                country_before,
+            ):
                 raise RuntimeError(f"{item['name']}: abbr/currency/country changed")
             if d.get("parent_company") != parent_before or d.get("is_group") != grp_before:
                 raise RuntimeError(f"{item['name']}: shape changed")
@@ -176,19 +204,30 @@ def main():
                 raise RuntimeError(f"{item['name']}: norm not server-derived")
             after_fields = dict(d.as_dict())
             allowed = {AR_FIELD, NORM_FIELD}
-            changed = {k for k in before_fields
-                       if before_fields.get(k) != after_fields.get(k)
-                       and k not in ("modified", "modified_by", "idx")}
+            changed = {
+                k
+                for k in before_fields
+                if before_fields.get(k) != after_fields.get(k) and k not in ("modified", "modified_by", "idx")
+            }
             unexpected = changed - allowed
             if unexpected:
                 raise RuntimeError(f"{item['name']}: unexpected field changes {sorted(unexpected)}")
-            print(f"WRITE Company {item['name']!r} value={sha16(item['value'])} "
-                  f"norm={sha16(expected)} identity=unchanged frozen=unchanged "
-                  f"fields_changed={sorted(changed)} PLAIN")
-            results.append({"name": item["name"], "action": "written",
-                            "value": item["value"], "norm": expected, "path": "PLAIN"})
+            print(
+                f"WRITE Company {item['name']!r} value={sha16(item['value'])} "
+                f"norm={sha16(expected)} identity=unchanged frozen=unchanged "
+                f"fields_changed={sorted(changed)} PLAIN"
+            )
+            results.append(
+                {
+                    "name": item["name"],
+                    "action": "written",
+                    "value": item["value"],
+                    "norm": expected,
+                    "path": "PLAIN",
+                }
+            )
         frappe.db.commit()
-    except Exception as exc:  # noqa: BLE001 - fail-closed rollback
+    except Exception as exc:
         frappe.db.rollback()
         print(f"FAIL during apply, transaction rolled back: {type(exc).__name__}: {exc}")
         sys.exit(1)
@@ -198,8 +237,10 @@ def main():
     q_added = queue_delta(q_before, q_after)
     print(f"QUEUE_ENQUEUED {json.dumps(q_added, ensure_ascii=False)}")
     if not q_added:
-        print("QUEUE_NOTE no new queue entries observed (job may have run inline or been "
-              "consumed); P1/P2 remain the empirical evidence for F-5H-2")
+        print(
+            "QUEUE_NOTE no new queue entries observed (job may have run inline or been "
+            "consumed); P1/P2 remain the empirical evidence for F-5H-2"
+        )
 
     private = {
         "proposal_sha256": APPROVED_SHA,

@@ -58,9 +58,7 @@ class TestBOQImportIdempotency(FrappeTestCase):
         result = self._preview_commit(furl, False)
         self.assertTrue(result.get("success"))
         self.assertFalse(result.get("dry_run"))
-        self.assertEqual(
-            frappe.db.count("BOQ Item", {"boq_header": self.hdr}), before + 1
-        )
+        self.assertEqual(frappe.db.count("BOQ Item", {"boq_header": self.hdr}), before + 1)
         self.assertTrue(frappe.db.exists("BOQ Import Batch", result.get("import_batch")))
 
     def test_duplicate_commit_suppressed(self):
@@ -96,7 +94,9 @@ class TestBOQImportIdempotency(FrappeTestCase):
         first = self._preview_commit(furl, False)
         self.assertTrue(first.get("success"))
         for name in frappe.db.get_list(
-            "BOQ Item", filters={"boq_header": self.hdr, "import_batch": first.get("import_batch")}, pluck="name"
+            "BOQ Item",
+            filters={"boq_header": self.hdr, "import_batch": first.get("import_batch")},
+            pluck="name",
         ):
             frappe.delete_doc("BOQ Item", name, ignore_permissions=True)
         second = self._preview_commit(furl, False)

@@ -666,7 +666,7 @@ class TestCostAnalysisEngine(FrappeTestCase):
 
     def _give_scope(self, user, project, company):
         """Give a fixture persona a valid User Scope Context (F21-D003)."""
-        from construction.api.scope_context_api import get_user_scope_context  # noqa: F401
+        from construction.api.scope_context_api import get_user_scope_context
 
         existing = frappe.db.get_value("User Scope Context", {"user": user}, "name")
         if existing:

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Authoritative candidate translations dictionary for W6-6 Manufacturing Batch 01 (83 rows)."""
 
 MANUFACTURING_BATCH01_TRANSLATIONS = {

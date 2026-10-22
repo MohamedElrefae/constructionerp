@@ -28,15 +28,25 @@ frappe.pages["construction-report-viewer"].on_page_load = function (wrapper) {
 	const $root = $(page.views.main.find(".layout-main-section"));
 	$root.append(
 		'<div class="row pt-3">' +
-			'<div class="col-sm-3"><label>' + __("Company") + " (الشركة)</label>" +
+			'<div class="col-sm-3"><label>' +
+			__("Company") +
+			" (الشركة)</label>" +
 			'<input class="form-control" data-f="company" value=""></div>' +
-			'<div class="col-sm-3"><label>' + __("BOQ Header (optional)") + "</label>" +
+			'<div class="col-sm-3"><label>' +
+			__("BOQ Header (optional)") +
+			"</label>" +
 			'<input class="form-control" data-f="boq_header"></div>' +
-			'<div class="col-sm-2"><label>' + __("Page size") + "</label>" +
+			'<div class="col-sm-2"><label>' +
+			__("Page size") +
+			"</label>" +
 			'<input class="form-control" data-f="page_size" value="50"></div>' +
 			'<div class="col-sm-4"><label>&nbsp;</label><br>' +
-			'<button class="btn btn-primary btn-sm" data-a="run">' + __("View") + "</button> " +
-			'<button class="btn btn-default btn-sm" data-a="export">' + __("Export") + "</button></div>" +
+			'<button class="btn btn-primary btn-sm" data-a="run">' +
+			__("View") +
+			"</button> " +
+			'<button class="btn btn-default btn-sm" data-a="export">' +
+			__("Export") +
+			"</button></div>" +
 			"</div>" +
 			'<div class="crv-basis pt-2 text-muted"></div>' +
 			'<div class="crv-area pt-2" style="overflow:auto"></div>'
@@ -89,7 +99,10 @@ frappe.pages["construction-report-viewer"].on_page_load = function (wrapper) {
 			},
 			error: (e) => {
 				if (my !== seq) return;
-				const text = e && e._error_message ? String(e._error_message) : __("Unable to load the view.");
+				const text =
+					e && e._error_message
+						? String(e._error_message)
+						: __("Unable to load the view.");
 				area().html('<div class="alert alert-danger">' + esc(text) + "</div>");
 			},
 		});
@@ -109,7 +122,11 @@ frappe.pages["construction-report-viewer"].on_page_load = function (wrapper) {
 		}
 		const cols = out.columns || [];
 		const rows = out.rows || [];
-		let info = __("Page {0}: {1} of {2} rows.", [out.page || 1, rows.length, out.row_count || 0]);
+		let info = __("Page {0}: {1} of {2} rows.", [
+			out.page || 1,
+			rows.length,
+			out.row_count || 0,
+		]);
 		if (out.has_more) info += " " + __("Narrow filters or export for the full set.");
 		let html = "<p class=text-muted>" + esc(info) + "</p>";
 		if (!rows.length) {
@@ -129,22 +146,48 @@ frappe.pages["construction-report-viewer"].on_page_load = function (wrapper) {
 	}
 
 	function render_integrity(out) {
-		let html = "<p>" + esc(__("Stored vs recomputed header totals; mismatches are investigation inputs, not repair orders.")) + "</p>";
+		let html =
+			"<p>" +
+			esc(
+				__(
+					"Stored vs recomputed header totals; mismatches are investigation inputs, not repair orders."
+				)
+			) +
+			"</p>";
 		const mism = (out.mismatched_fields || []).join(", ");
-		html += "<p>" + esc(__("Header {0}: mismatched fields: {1}.", [out.boq_header || "—", mism || __("none")])) + "</p>";
+		html +=
+			"<p>" +
+			esc(
+				__("Header {0}: mismatched fields: {1}.", [
+					out.boq_header || "—",
+					mism || __("none"),
+				])
+			) +
+			"</p>";
 		const structs = out.structures || [];
 		if (structs.length) {
-			html += '<div class="table-responsive"><table class="table table-hover"><thead><tr><th>' +
-				esc(__("Structure")) + "</th><th>" + esc(__("Mismatched fields")) + "</th></tr></thead><tbody>";
+			html +=
+				'<div class="table-responsive"><table class="table table-hover"><thead><tr><th>' +
+				esc(__("Structure")) +
+				"</th><th>" +
+				esc(__("Mismatched fields")) +
+				"</th></tr></thead><tbody>";
 			structs.forEach((s) => {
-				html += "<tr><td>" + esc(s.name || s.structure) + "</td><td>" +
-					esc((s.mismatched_fields || []).join(", ")) + "</td></tr>";
+				html +=
+					"<tr><td>" +
+					esc(s.name || s.structure) +
+					"</td><td>" +
+					esc((s.mismatched_fields || []).join(", ")) +
+					"</td></tr>";
 			});
 			html += "</tbody></table></div>";
 		} else {
 			html += "<p>" + esc(__("No structure mismatches recorded.")) + "</p>";
 		}
-		html += "<p class=text-muted>" + esc(__("Limit: {0}.", [out.aggregation_limit || "—"])) + "</p>";
+		html +=
+			"<p class=text-muted>" +
+			esc(__("Limit: {0}.", [out.aggregation_limit || "—"])) +
+			"</p>";
 		area().html(html);
 	}
 
@@ -162,14 +205,30 @@ frappe.pages["construction-report-viewer"].on_page_load = function (wrapper) {
 				const m = r.message || {};
 				if (m.file_url) {
 					window.open(m.file_url);
-					area().html('<div class="alert alert-success">' +
-						esc(__("Exported {0} rows{1}.", [m.row_count || 0, m.truncated ? " (" + __("truncated at the export limit") + ")" : ""])) + "</div>");
+					area().html(
+						'<div class="alert alert-success">' +
+							esc(
+								__("Exported {0} rows{1}.", [
+									m.row_count || 0,
+									m.truncated
+										? " (" + __("truncated at the export limit") + ")"
+										: "",
+								])
+							) +
+							"</div>"
+					);
 				} else {
-					area().html('<div class="alert alert-danger">' + esc(__("Export refused.")) + "</div>");
+					area().html(
+						'<div class="alert alert-danger">' + esc(__("Export refused.")) + "</div>"
+					);
 				}
 			},
 			error: () => {
-				area().html('<div class="alert alert-danger">' + esc(__("Export request failed.")) + "</div>");
+				area().html(
+					'<div class="alert alert-danger">' +
+						esc(__("Export request failed.")) +
+						"</div>"
+				);
 			},
 		});
 	});

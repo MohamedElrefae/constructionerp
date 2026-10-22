@@ -237,11 +237,7 @@ class TestBilingualTermsConditionsPilot(unittest.TestCase):
 
             # 2. searchable_dropdown.searchable_link_search
             dropdown_res = searchable_link_search(doctype="Terms and Conditions", txt=query)
-            items = (
-                dropdown_res.get("results", [])
-                if isinstance(dropdown_res, dict)
-                else dropdown_res
-            )
+            items = dropdown_res.get("results", []) if isinstance(dropdown_res, dict) else dropdown_res
             dropdown_names = [r["value"] for r in items]
             self.assertIn(
                 doc.name,

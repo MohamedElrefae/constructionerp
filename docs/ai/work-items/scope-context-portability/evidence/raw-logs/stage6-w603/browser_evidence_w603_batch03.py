@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Headless Desk verification for W6-3 batch-03; password via stdin."""
+
 from __future__ import annotations
 
 import csv
@@ -74,14 +75,22 @@ with sync_playwright() as p:
         for key in keys
         if resolved.get(key) != expected[key]
     ]
-    add("all-payload-and-preserve-translations", not mismatches, {"matched": len(keys)-len(mismatches), "total": len(keys), "mismatches": mismatches[:10]})
+    add(
+        "all-payload-and-preserve-translations",
+        not mismatches,
+        {"matched": len(keys) - len(mismatches), "total": len(keys), "mismatches": mismatches[:10]},
+    )
 
     boot_messages = page.evaluate(
         """(keys)=>{const m=(frappe.boot&&frappe.boot.__messages)||{};const o={};for(const k of keys)o[k]=m[k];return o;}""",
         keys,
     )
     boot_mismatches = [key for key in keys if boot_messages.get(key) != expected[key]]
-    add("boot-message-payload-exact", not boot_mismatches, {"matched": len(keys)-len(boot_mismatches), "total": len(keys), "mismatches": boot_mismatches[:10]})
+    add(
+        "boot-message-payload-exact",
+        not boot_mismatches,
+        {"matched": len(keys) - len(boot_mismatches), "total": len(keys), "mismatches": boot_mismatches[:10]},
+    )
 
     body = page.locator("body").inner_text()
     words = sorted(set(re.findall(r"[؀-ۿ]{2,}", body)))

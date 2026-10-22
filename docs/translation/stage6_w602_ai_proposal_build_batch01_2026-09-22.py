@@ -154,7 +154,7 @@ A = {
     "Opportunities by Medium": "الفرص حسب الوسيط",
     "Opportunities by Source": "الفرص حسب المصدر",
     "POS Opening Entry has been cancelled. Please refresh the page.": "تم إلغاء قيد فتح نقطة البيع. يرجى تحديث الصفحة.",
-    " Address": " العنوان"
+    " Address": " العنوان",
 }
 
 
@@ -181,7 +181,7 @@ def main():
     for s, ar in A.items():
         assert "\x00" not in ar
         assert ar[: len(ar) - len(ar.lstrip())] == s[: len(s) - len(s.lstrip())], f"affix-lstrip: {s!r}"
-        assert ar[len(ar.rstrip()):] == s[len(s.rstrip()):], f"affix-rstrip: {s!r}"
+        assert ar[len(ar.rstrip()) :] == s[len(s.rstrip()) :], f"affix-rstrip: {s!r}"
         src_ph = sorted(ph_re.findall(s))
         ar_ph = sorted(ph_re.findall(ar))
         assert src_ph == ar_ph, f"placeholder mismatch on {s!r}: {src_ph} != {ar_ph}"
@@ -337,7 +337,9 @@ def main():
     SITE_RECON.write_text(json.dumps(recon_out, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
     after = len(out_rows)
-    print(f"preserved={len(preserved_srcs)} already={len(already_srcs)} technical={len(tech_srcs)} payload={len(payload_srcs)}")
+    print(
+        f"preserved={len(preserved_srcs)} already={len(already_srcs)} technical={len(tech_srcs)} payload={len(payload_srcs)}"
+    )
     print(f"approved rows {before} -> {after}")
     print(f"wrote {PAYLOAD}")
     print(f"wrote {RELEASED_LIST} ({len(payload_srcs)} lines)")

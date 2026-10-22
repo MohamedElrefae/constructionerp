@@ -365,7 +365,7 @@ def main():
     for s, ar in A.items():
         assert "\x00" not in ar
         assert ar[: len(ar) - len(ar.lstrip())] == s[: len(s) - len(s.lstrip())], f"affix-lstrip: {s!r}"
-        assert ar[len(ar.rstrip()):] == s[len(s.rstrip()):], f"affix-rstrip: {s!r}"
+        assert ar[len(ar.rstrip()) :] == s[len(s.rstrip()) :], f"affix-rstrip: {s!r}"
         src_ph = sorted(ph_re.findall(s))
         ar_ph = sorted(ph_re.findall(ar))
         assert src_ph == ar_ph, f"placeholder mismatch on {s!r}: {src_ph} != {ar_ph}"

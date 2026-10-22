@@ -53,8 +53,23 @@ def byte_scan(value):
         problems.append("whitespace")
     for ch in value:
         cp = ord(ch)
-        if cp in (0x200E, 0x200F, 0x202A, 0x202B, 0x202C, 0x202D, 0x202E,
-                  0x2066, 0x2067, 0x2068, 0x2069, 0x200B, 0x200C, 0x200D, 0xFEFF):
+        if cp in (
+            0x200E,
+            0x200F,
+            0x202A,
+            0x202B,
+            0x202C,
+            0x202D,
+            0x202E,
+            0x2066,
+            0x2067,
+            0x2068,
+            0x2069,
+            0x200B,
+            0x200C,
+            0x200D,
+            0xFEFF,
+        ):
             problems.append(f"bidi/zw U+{cp:04X}")
         elif cp < 0x20 or cp == 0x7F or 0x80 <= cp <= 0x9F:
             problems.append(f"control U+{cp:04X}")
@@ -93,18 +108,24 @@ def main():
             fails.append(f"UOM {name}: byte scan {problems}")
         if d.get(LABEL_FIELD) != row["english_label"]:
             fails.append(f"UOM {name}: identity changed")
-        print(f"ROW_OK UOM {name!r} value={sha16(stored)} norm={sha16(d.get(NORM_FIELD) or '')} identity=unchanged")
+        print(
+            f"ROW_OK UOM {name!r} value={sha16(stored)} norm={sha16(d.get(NORM_FIELD) or '')} identity=unchanged"
+        )
 
     # 3: completeness — exactly the approved 15 site-wide.
-    populated = {r["name"] for r in frappe.get_all(
-        "UOM", filters={AR_FIELD: ("!=", "")}, fields=["name"], limit_page_length=0)}
+    populated = {
+        r["name"]
+        for r in frappe.get_all("UOM", filters={AR_FIELD: ("!=", "")}, fields=["name"], limit_page_length=0)
+    }
     missing = approved_names - populated
     extra = populated - approved_names
     if missing:
         fails.append(f"approved rows not populated: {sorted(missing)}")
     if extra:
         fails.append(f"unexpected populated rows: {sorted(extra)}")
-    print(f"COMPLETENESS site_arabic_total={len(populated)} approved=15 missing={len(missing)} extra={len(extra)}")
+    print(
+        f"COMPLETENESS site_arabic_total={len(populated)} approved=15 missing={len(missing)} extra={len(extra)}"
+    )
 
     # 4: exception integrity.
     for name in sorted(PRUNED):
@@ -145,6 +166,7 @@ def main():
 
     # 7: picker visibility (F2 closed: all 15 enabled).
     from frappe.desk.search import search_link
+
     hidden = []
     for name in sorted(approved_names):
         hits = [o.get("value") for o in search_link("UOM", name, page_length=50)]
@@ -160,12 +182,12 @@ def main():
     proof_ok = True
     try:
         from frappe.core.doctype.data_import.data_import import import_doc
+
         import_doc(UOM_JSON, sort=True)
         for r in proposal["rows"]:
             if r["name"] not in FIXTURE_NAMES:
                 continue
-            db_row = frappe.db.get_value(
-                "UOM", r["name"], [AR_FIELD, NORM_FIELD, "enabled"], as_dict=True)
+            db_row = frappe.db.get_value("UOM", r["name"], [AR_FIELD, NORM_FIELD, "enabled"], as_dict=True)
             if not db_row or db_row.get(AR_FIELD) != r["arabic"]:
                 proof_ok = False
                 fails.append(f"durability proof: {r['name']} Arabic lost/changed under fixture sync")
@@ -175,7 +197,7 @@ def main():
             elif db_row.get(NORM_FIELD) != normalize_arabic(r["arabic"]):
                 proof_ok = False
                 fails.append(f"durability proof: {r['name']} norm not re-derived on import")
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         proof_ok = False
         fails.append(f"durability proof raised: {exc}")
     finally:
@@ -183,7 +205,11 @@ def main():
         frappe.db.rollback()
     # Re-read post-rollback to prove the proof left no trace.
     post = frappe.db.get_value("UOM", "M3", [AR_FIELD, "enabled"], as_dict=True)
-    if not post or post.get(AR_FIELD) != next(r for r in proposal["rows"] if r["name"] == "M3")["arabic"] or int(post.get("enabled") or 0) != 1:
+    if (
+        not post
+        or post.get(AR_FIELD) != next(r for r in proposal["rows"] if r["name"] == "M3")["arabic"]
+        or int(post.get("enabled") or 0) != 1
+    ):
         fails.append("durability proof rollback failed to restore M3")
     print(f"DURABILITY_PROOF fixture_sync_roundtrip={'PASS' if proof_ok else 'FAIL'} rollback_restored=yes")
 
@@ -221,16 +247,21 @@ def main():
     if company_ar:
         fails.append(f"Company.company_name_ar was written: {sha16(company_ar)}")
     groups = {
-        dt: frappe.db.sql(
-            f"SELECT COUNT(*) FROM `tab{dt}` WHERE {col} IS NOT NULL AND {col} != ''"
-        )[0][0]
-        for dt, col in (("Item Group", "item_group_name_ar"), ("Customer Group", "customer_group_name_ar"),
-                        ("Supplier Group", "supplier_group_name_ar"), ("Territory", "territory_name_ar"))
+        dt: frappe.db.sql(f"SELECT COUNT(*) FROM `tab{dt}` WHERE {col} IS NOT NULL AND {col} != ''")[0][0]
+        for dt, col in (
+            ("Item Group", "item_group_name_ar"),
+            ("Customer Group", "customer_group_name_ar"),
+            ("Supplier Group", "supplier_group_name_ar"),
+            ("Territory", "territory_name_ar"),
+        )
     }
     if groups != {"Item Group": 6, "Customer Group": 5, "Supplier Group": 8, "Territory": 4}:
         fails.append(f"5D group surfaces drifted: {groups}")
-    print(f"FROZEN_SURFACES " + " ".join(f"{k}={prior[k]}" for k in sorted(prior))
-          + f" company_ar={'empty' if not company_ar else 'WRITTEN'} groups={groups}")
+    print(
+        "FROZEN_SURFACES "
+        + " ".join(f"{k}={prior[k]}" for k in sorted(prior))
+        + f" company_ar={'empty' if not company_ar else 'WRITTEN'} groups={groups}"
+    )
     print(f"COUNTS_OK uom_total={total}")
 
     if fails:
@@ -238,10 +269,14 @@ def main():
             print("FAIL:", f)
         print("VERIFICATION RESULT: FAIL")
         sys.exit(1)
-    print("SUMMARY approved=15 populated=15 norm_consistent=15 identity_unchanged=15 "
-          "fixtures_enabled=12 visibility=15/15 exceptions=0 durability=PASS prior_frozen=yes")
-    print("ROLLBACK_REF dry-run.json (before-values: all empty) sha256="
-          + hashlib.sha256(open(f"{PRIVATE}/dry-run.json", "rb").read()).hexdigest())
+    print(
+        "SUMMARY approved=15 populated=15 norm_consistent=15 identity_unchanged=15 "
+        "fixtures_enabled=12 visibility=15/15 exceptions=0 durability=PASS prior_frozen=yes"
+    )
+    print(
+        "ROLLBACK_REF dry-run.json (before-values: all empty) sha256="
+        + hashlib.sha256(open(f"{PRIVATE}/dry-run.json", "rb").read()).hexdigest()
+    )
     print("VERIFICATION RESULT: PASS")
 
 

@@ -38,12 +38,17 @@ def _get_project_and_company():
     proj = frappe.db.get_value("Project", {}, ["name", "company"], as_dict=True)
     if proj and proj.name:
         return proj.name, proj.company
-    company = frappe.db.get_single_value("Global Defaults", "default_company") or frappe.get_all("Company", limit=1)[0].name
-    doc = frappe.get_doc({
-        "doctype": "Project",
-        "project_name": f"Test Project {uuid4().hex[:6]}",
-        "company": company,
-    }).insert(ignore_permissions=True)
+    company = (
+        frappe.db.get_single_value("Global Defaults", "default_company")
+        or frappe.get_all("Company", limit=1)[0].name
+    )
+    doc = frappe.get_doc(
+        {
+            "doctype": "Project",
+            "project_name": f"Test Project {uuid4().hex[:6]}",
+            "company": company,
+        }
+    ).insert(ignore_permissions=True)
     return doc.name, company
 
 
@@ -110,7 +115,9 @@ class TestBilingualBOQPrint(unittest.TestCase):
         patch_revert()
         for dt, fn in targets:
             frappe.clear_cache(doctype=dt)
-            self.assertFalse(frappe.get_meta(dt).has_field(fn), f"Field {fn} still present on {dt} after revert")
+            self.assertFalse(
+                frappe.get_meta(dt).has_field(fn), f"Field {fn} still present on {dt} after revert"
+            )
 
         # Re-execute to restore required schema for subsequent tests
         patch_execute()
@@ -190,15 +197,17 @@ class TestBilingualBOQPrint(unittest.TestCase):
             )
 
             # 2. BOQ Structure
-            structure = frappe.get_doc({
-                "doctype": "BOQ Structure",
-                "boq_header": header.name,
-                "title": "Excavation Works",
-                "title_ar": "أعمال الحفريات والأساسات العميقة",
-                "title_ar_norm": "POISONED-KEY-STRUCT",
-                "wbs_code": "01",
-                "is_group": 1,
-            })
+            structure = frappe.get_doc(
+                {
+                    "doctype": "BOQ Structure",
+                    "boq_header": header.name,
+                    "title": "Excavation Works",
+                    "title_ar": "أعمال الحفريات والأساسات العميقة",
+                    "title_ar_norm": "POISONED-KEY-STRUCT",
+                    "wbs_code": "01",
+                    "is_group": 1,
+                }
+            )
             structure.flags.ignore_wbs_generation = True
             structure.insert(ignore_permissions=True)
 
@@ -219,23 +228,25 @@ class TestBilingualBOQPrint(unittest.TestCase):
     def test_arabic_edit_rejects_bidi_controls(self):
         """title_ar rejects bidi controls (C0, C1, DEL, overrides, isolates, LRM/RLM/ALM)."""
         forbidden_samples = [
-            "أعمال\u202eالموقع",  # Right-to-Left Override
-            "أعمال\u200eالموقع",  # LRM
-            "أعمال\u202bالموقع",  # RLE
-            "أعمال\x00الموقع",  # NUL
+            "أعمال\u202eالموقع",  # Right-to-Left Override  # noqa: RUF001 -- intentional Arabic security-test fixture
+            "أعمال\u200eالموقع",  # LRM  # noqa: RUF001 -- intentional Arabic security-test fixture
+            "أعمال\u202bالموقع",  # RLE  # noqa: RUF001 -- intentional Arabic security-test fixture
+            "أعمال\x00الموقع",  # NUL  # noqa: RUF001 -- intentional Arabic security-test fixture
         ]
         header = None
         structure = None
         try:
             header = _make_header(f"Test BOQ Bidi {uuid4().hex[:6]}")
 
-            structure = frappe.get_doc({
-                "doctype": "BOQ Structure",
-                "boq_header": header.name,
-                "title": "Bidi Test Structure",
-                "wbs_code": "99",
-                "is_group": 1,
-            })
+            structure = frappe.get_doc(
+                {
+                    "doctype": "BOQ Structure",
+                    "boq_header": header.name,
+                    "title": "Bidi Test Structure",
+                    "wbs_code": "99",
+                    "is_group": 1,
+                }
+            )
             structure.flags.ignore_wbs_generation = True
             structure.insert(ignore_permissions=True)
 
@@ -278,14 +289,16 @@ class TestBilingualBOQPrint(unittest.TestCase):
             header = _make_header(f"Test WBS Invariant {uuid4().hex[:6]}")
 
             wbs_test_val = "01.002.A-1"
-            structure = frappe.get_doc({
-                "doctype": "BOQ Structure",
-                "boq_header": header.name,
-                "title": "Substructure Concrete",
-                "title_ar": "خرسانة الأساسات المسلحة",
-                "wbs_code": wbs_test_val,
-                "is_group": 0,
-            })
+            structure = frappe.get_doc(
+                {
+                    "doctype": "BOQ Structure",
+                    "boq_header": header.name,
+                    "title": "Substructure Concrete",
+                    "title_ar": "خرسانة الأساسات المسلحة",
+                    "wbs_code": wbs_test_val,
+                    "is_group": 0,
+                }
+            )
             structure.flags.ignore_wbs_generation = True
             structure.insert(ignore_permissions=True)
 
@@ -320,26 +333,30 @@ class TestBilingualBOQPrint(unittest.TestCase):
                 title_ar="أعمال تطوير الموقع",
             )
 
-            struct_root = frappe.get_doc({
-                "doctype": "BOQ Structure",
-                "boq_header": header.name,
-                "title": "Earthworks",
-                "title_ar": "الأعمال الترابية",
-                "wbs_code": "01",
-                "is_group": 1,
-            })
+            struct_root = frappe.get_doc(
+                {
+                    "doctype": "BOQ Structure",
+                    "boq_header": header.name,
+                    "title": "Earthworks",
+                    "title_ar": "الأعمال الترابية",
+                    "wbs_code": "01",
+                    "is_group": 1,
+                }
+            )
             struct_root.flags.ignore_wbs_generation = True
             struct_root.insert(ignore_permissions=True)
 
-            struct_leaf = frappe.get_doc({
-                "doctype": "BOQ Structure",
-                "boq_header": header.name,
-                "parent_structure": struct_root.name,
-                "title": "Site Clearing",
-                "title_ar": "تنظيف الموقع",
-                "wbs_code": "01.001",
-                "is_group": 0,
-            })
+            struct_leaf = frappe.get_doc(
+                {
+                    "doctype": "BOQ Structure",
+                    "boq_header": header.name,
+                    "parent_structure": struct_root.name,
+                    "title": "Site Clearing",
+                    "title_ar": "تنظيف الموقع",
+                    "wbs_code": "01.001",
+                    "is_group": 0,
+                }
+            )
             struct_leaf.flags.ignore_wbs_generation = True
             struct_leaf.insert(ignore_permissions=True)
 
@@ -395,12 +412,14 @@ class TestBilingualBOQPrint(unittest.TestCase):
 
             _, company = _get_project_and_company()
             proj_id = f"PROJ-BIL-{uuid4().hex[:6]}"
-            test_project = frappe.get_doc({
-                "doctype": "Project",
-                "project_name": proj_id,
-                "project_name_ar": "مشروع البرج التجاري الحديث",
-                "company": company,
-            }).insert(ignore_permissions=True)
+            test_project = frappe.get_doc(
+                {
+                    "doctype": "Project",
+                    "project_name": proj_id,
+                    "project_name_ar": "مشروع البرج التجاري الحديث",
+                    "company": company,
+                }
+            ).insert(ignore_permissions=True)
 
             header = _make_header(
                 "Main Commercial Center BOQ",
@@ -408,26 +427,30 @@ class TestBilingualBOQPrint(unittest.TestCase):
                 project=test_project.name,
             )
 
-            struct_root = frappe.get_doc({
-                "doctype": "BOQ Structure",
-                "boq_header": header.name,
-                "title": "Civil and Structural Package",
-                "title_ar": "حزمة الأعمال المدنية والإنشائية",
-                "wbs_code": "01",
-                "is_group": 1,
-            })
+            struct_root = frappe.get_doc(
+                {
+                    "doctype": "BOQ Structure",
+                    "boq_header": header.name,
+                    "title": "Civil and Structural Package",
+                    "title_ar": "حزمة الأعمال المدنية والإنشائية",
+                    "wbs_code": "01",
+                    "is_group": 1,
+                }
+            )
             struct_root.flags.ignore_wbs_generation = True
             struct_root.insert(ignore_permissions=True)
 
-            struct_leaf = frappe.get_doc({
-                "doctype": "BOQ Structure",
-                "boq_header": header.name,
-                "parent_structure": struct_root.name,
-                "title": "Substructure Reinforced Concrete",
-                "title_ar": "خرسانة الأساسات المسلحة",
-                "wbs_code": "01.001",
-                "is_group": 0,
-            })
+            struct_leaf = frappe.get_doc(
+                {
+                    "doctype": "BOQ Structure",
+                    "boq_header": header.name,
+                    "parent_structure": struct_root.name,
+                    "title": "Substructure Reinforced Concrete",
+                    "title_ar": "خرسانة الأساسات المسلحة",
+                    "wbs_code": "01.001",
+                    "is_group": 0,
+                }
+            )
             struct_leaf.flags.ignore_wbs_generation = True
             struct_leaf.insert(ignore_permissions=True)
 
@@ -463,10 +486,17 @@ class TestBilingualBOQPrint(unittest.TestCase):
             html_full = BOQExportService._render_template("boq_print_format.html", context)
             expected_header_title = f"<bdi>{header.title}</bdi> / <bdi>{header.title_ar}</bdi>"
             self.assertIn(expected_header_title, html_full)
-            expected_proj = f"<bdi>{test_project.project_name}</bdi> / <bdi>{test_project.project_name_ar}</bdi>"
+            expected_proj = (
+                f"<bdi>{test_project.project_name}</bdi> / <bdi>{test_project.project_name_ar}</bdi>"
+            )
             self.assertIn(expected_proj, html_full)
-            self.assertIn("<bdi>Civil and Structural Package</bdi> / <bdi>حزمة الأعمال المدنية والإنشائية</bdi>", html_full)
-            self.assertIn("<bdi>Substructure Reinforced Concrete</bdi> / <bdi>خرسانة الأساسات المسلحة</bdi>", html_full)
+            self.assertIn(
+                "<bdi>Civil and Structural Package</bdi> / <bdi>حزمة الأعمال المدنية والإنشائية</bdi>",
+                html_full,
+            )
+            self.assertIn(
+                "<bdi>Substructure Reinforced Concrete</bdi> / <bdi>خرسانة الأساسات المسلحة</bdi>", html_full
+            )
             self.assertIn("01.001", html_full)
 
             # 2. Render boq_header_print.html
@@ -499,14 +529,16 @@ class TestBilingualBOQPrint(unittest.TestCase):
                 title_ar=h_ar,
             )
 
-            structure = frappe.get_doc({
-                "doctype": "BOQ Structure",
-                "boq_header": header.name,
-                "title": "Deep Excavation",
-                "title_ar": s_ar,
-                "wbs_code": "88",
-                "is_group": 1,
-            })
+            structure = frappe.get_doc(
+                {
+                    "doctype": "BOQ Structure",
+                    "boq_header": header.name,
+                    "title": "Deep Excavation",
+                    "title_ar": s_ar,
+                    "wbs_code": "88",
+                    "is_group": 1,
+                }
+            )
             structure.flags.ignore_wbs_generation = True
             structure.insert(ignore_permissions=True)
             frappe.db.commit()

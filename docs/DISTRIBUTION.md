@@ -8,9 +8,11 @@ artifact**. This file defines the curated customer set and how it is verified.
 ## Customer set
 
 - `construction/` package, **excluding**:
-  - `construction/public/dist/js/*.map` (build outputs; regenerable via `bench build`)
-  - `construction/tests/*.png` and any future committed screenshots (evidence, not fixtures)
-  - `__pycache__` / `*.pyc` (git-ignored; verifier fails if any are tracked)
+  - all of `construction/tests/` (test code remains in the maintainer repository and CI)
+  - all of `construction/data/localization/` (site-specific qualification manifests,
+    export metadata, vendor catalog gate inputs, and localization qualification evidence)
+  - every `*.map` under `construction/public/dist/` (build outputs; regenerable via `bench build`)
+  - `__pycache__` / `*.pyc`
 - Repo root customer files: `README.md`, `LICENSE*`, `pyproject.toml`, `requirements.txt`
 - Customer docs: `docs/CUSTOMER_ONBOARDING.md`, `docs/MAINTENANCE.md`,
   `docs/onboarding.md`, `docs/token_reference.md`, `docs/PERMISSION_SETUP.md`, `docs/BILINGUAL_TASK_GUIDES.md`
@@ -22,14 +24,23 @@ artifact**. This file defines the curated customer set and how it is verified.
 - `orchestrator/`, `tests_offline/` (already excluded from sdist)
 - `erpnext-mcp-server/` (outside the package; separate delivery decision, still open)
 - `.map` files anywhere under `construction/public/dist/`
+- customer tests, vendor-upgrade review JSON, and qualification data under `construction/`
 
 ## Verification
 
 ```bash
-python3 scripts/verify_distribution.py
+STAGE_DIR="/tmp/opencode/customer-dist-<unique-name>"
+python3 scripts/stage_distribution.py --out "$STAGE_DIR"
+python3 scripts/verify_staged_distribution.py --dir "$STAGE_DIR"
 ```
 
-The script fails on: any tracked `.map` under `construction/public/dist/`, any tracked
-`.png` under `construction/tests/`, any tracked `__pycache__`/`.pyc`, any `setup.py` at the
-root (legacy metadata removed 2026-10-14), and any path from the never-ship list appearing
-in the customer set. Run it before final `bench get-app` qualification.
+The stager reads only committed `HEAD` blobs; untracked, ignored, and working-tree changes
+cannot enter the artifact. Its manifest binds the exact source commit and each staged file
+hash. It only accepts a new, nonexistent output path outside and not an ancestor of the app
+checkout; it never removes an existing path. The staged verifier checks the shared never-ship
+policy, required runtime files and a nonempty license, customer allowlist, document links,
+per-file hashes, and every canonical `content:` reference on a Released translation row.
+Staging is local preparation only, not a customer install source. After owner review, transfer
+the verified tree into the approved curated private customer repository and qualify that exact
+release ref before documenting any customer `bench get-app` command. Never install the
+engineering checkout or its development branch for a customer.

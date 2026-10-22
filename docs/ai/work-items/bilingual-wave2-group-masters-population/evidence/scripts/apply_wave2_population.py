@@ -53,9 +53,7 @@ def _load_root_patch_modules():
     import erpnext.setup.doctype.supplier_group.supplier_group as sg
     import erpnext.setup.doctype.territory.territory as tr
 
-    ROOT_PATCH_MODULES.update(
-        {"Customer Group": cg, "Supplier Group": sg, "Territory": tr}
-    )
+    ROOT_PATCH_MODULES.update({"Customer Group": cg, "Supplier Group": sg, "Territory": tr})
 
 
 def save_with_root_workaround(d, item):
@@ -105,8 +103,23 @@ def byte_scan(value):
         problems.append("whitespace")
     for ch in value:
         cp = ord(ch)
-        if cp in (0x200E, 0x200F, 0x202A, 0x202B, 0x202C, 0x202D, 0x202E,
-                  0x2066, 0x2067, 0x2068, 0x2069, 0x200B, 0x200C, 0x200D, 0xFEFF):
+        if cp in (
+            0x200E,
+            0x200F,
+            0x202A,
+            0x202B,
+            0x202C,
+            0x202D,
+            0x202E,
+            0x2066,
+            0x2067,
+            0x2068,
+            0x2069,
+            0x200B,
+            0x200C,
+            0x200D,
+            0xFEFF,
+        ):
             problems.append(f"bidi/zw U+{cp:04X}")
         elif cp < 0x20 or cp == 0x7F or 0x80 <= cp <= 0x9F:
             problems.append(f"control U+{cp:04X}")
@@ -164,9 +177,13 @@ def main():
             sys.exit(1)
         plan.append(
             {
-                "doctype": doctype, "name": name, "field": ar_field,
-                "norm_field": norm_field, "label_field": label_field,
-                "value": value, "already": bool(current),
+                "doctype": doctype,
+                "name": name,
+                "field": ar_field,
+                "norm_field": norm_field,
+                "label_field": label_field,
+                "value": value,
+                "already": bool(current),
                 "label_before": d.get(label_field),
             }
         )
@@ -180,8 +197,9 @@ def main():
             d = frappe.get_doc(item["doctype"], item["name"])
             if item["already"]:
                 print(f"SKIP {item['doctype']} {item['name']!r} already applied")
-                results.append({**{k: item[k] for k in ("doctype", "name")},
-                                "action": "skip-already-applied"})
+                results.append(
+                    {**{k: item[k] for k in ("doctype", "name")}, "action": "skip-already-applied"}
+                )
                 continue
             d.set(item["field"], item["value"])
             # enforce_bilingual_arabic_policy: bidi gate + server-derived norm.
@@ -218,11 +236,16 @@ def main():
                 f"WRITE {item['doctype']} {item['name']!r} value={sha16(item['value'])} "
                 f"norm={sha16(expected_norm)} identity=unchanged"
             )
-            results.append({**{k: item[k] for k in ("doctype", "name")},
-                            "action": "written", "value": item["value"],
-                            "norm": expected_norm})
+            results.append(
+                {
+                    **{k: item[k] for k in ("doctype", "name")},
+                    "action": "written",
+                    "value": item["value"],
+                    "norm": expected_norm,
+                }
+            )
         frappe.db.commit()
-    except Exception as exc:  # noqa: BLE001 - fail-closed rollback
+    except Exception as exc:
         frappe.db.rollback()
         print(f"FAIL during apply, transaction rolled back: {exc}")
         sys.exit(1)

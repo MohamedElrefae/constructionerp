@@ -22,9 +22,16 @@ Owned inputs (never vendor catalogs):
   construction/data/localization/stage2_inventory_manifest.json
 
 Usage:
-  python3 scripts/check_localization_gates.py [--files f ...] [--update-baselines [--delta-reviewed F]] [--audit-vendor-coverage] [--root=DIR]
+  python3 scripts/check_localization_gates.py [--files f ...] [--update-baselines [--delta-reviewed F]]
+      [--audit-vendor-coverage] [--root=DIR] [--expected-evidence-site=SITE] [--evidence-dir=DIR]
+      [--evidence-contract=current|legacy]
 
 Every check resolves paths from an explicit root (default: repository checkout).
+Options accept both the separated (--opt value) and the inline (--opt=value)
+spelling; unknown, duplicated or empty options are refused by name.
+The evidence contract is an explicit invocation choice: "current" (the frozen,
+reviewed 2026-10-20 contract) or "legacy" (the preserved 2026-09-29 contract
+the recorded historical evidence set was validated against).
 Exit 0 pass, 1 fail. Output sorted for determinism.
 """
 
@@ -839,6 +846,7 @@ def check_csv(errors, root=None):
         rows = list(reader)
     seen = set()
     n = 0
+    pinned = None
     for row in rows:
         raw_src = row.get("source_text") or ""
         src = raw_src.strip()
@@ -938,7 +946,8 @@ def check_csv(errors, root=None):
                     "(source+translation must appear; edits invalidate)"
                 )
         proposal_sha = hashlib.sha256(f"{raw_src}|{val}".encode()).hexdigest()
-        pinned = load_decisions(root)
+        if pinned is None:
+            pinned = load_decisions(root)
         did = row_decision_id(ident_parts, ref_entries)
         stored = (pinned.get("decisions") or {}).get(did)
         if stored is None:
@@ -1494,7 +1503,51 @@ EXPECTED_COMMANDS = {
     "sync.txt": "COMMAND: bench --site v16.localhost console sync_translation_catalog(dry_run=False)",
     "vendor-audit.txt": "COMMAND: python3 scripts/check_localization_gates.py --audit-vendor-coverage",
 }
-EXPECTED_MODULES = [
+
+# ---------------------------------------------------------------------------
+# Site-aware evidence protocol (execution order 31).
+#
+# The expected evidence site is supplied explicitly by the invoking execution
+# order (CLI/config) and is NEVER inferred from the evidence being validated.
+# The legacy default keeps the historical validation semantics for the
+# previously recorded envelopes; new captures must carry their real site.
+# ---------------------------------------------------------------------------
+DEFAULT_EVIDENCE_SITE = "v16.localhost"
+EVIDENCE_SITE = DEFAULT_EVIDENCE_SITE
+EVIDENCE_DIR = None
+EVIDENCE_SITE_REQUIRED = False
+
+
+def expected_commands(site: str) -> dict:
+    """Command map for the given evidence site (site-touching envelopes name it)."""
+    return {
+        key: (value.replace(DEFAULT_EVIDENCE_SITE, site) if DEFAULT_EVIDENCE_SITE in value else value)
+        for key, value in EXPECTED_COMMANDS.items()
+    }
+
+
+# ---------------------------------------------------------------------------
+# Evidence contracts (frozen, reviewed inputs — never derived from the
+# evidence that is being validated).
+#
+# TWO contracts live here and both are preserved:
+#
+#   * LEGACY_*  — the expectation the recorded 2026-09-29 evidence set was
+#     validated against (817/265/667/29 and the 92/11 module counts). It is
+#     kept verbatim so the historical evidence set stays verifiable through
+#     the explicitly historical path; it is never silently overwritten.
+#
+#   * CURRENT_* — the expectation frozen on 2026-10-20 from executed
+#     measurements on the pinned bench layout. The counts and the source
+#     pins come from real runs; the review record naming the commands,
+#     the artifact hashes and the reviewer is
+#     construction/tests/tools/stage2_current_measurements.md (+ .json).
+#
+# The active contract is an explicit invocation choice (--evidence-contract);
+# it is never inferred from the evidence being validated.
+# ---------------------------------------------------------------------------
+LEGACY_CONTRACT_ID = "stage2-legacy-contract/2026-09-29"
+LEGACY_EXPECTED_MODULES = [
     ("construction.searchable_dropdown.tests.test_search_api", 13),
     ("construction.searchable_dropdown.tests.test_integration", 6),
     ("construction.tests.test_bilingual_account_schema", 5),
@@ -1507,8 +1560,125 @@ EXPECTED_MODULES = [
     ("construction.tests.test_stage4_report_extension", 11),
     ("construction.tests.test_stage4_review_bundle", 36),
 ]
-EXPECTED_GATE = {"catalog": 817, "files": 265, "wrapped": 667, "json_labels": 29, "missing": 0}
+LEGACY_EXPECTED_GATE = {
+    "catalog": 817,
+    "files": 265,
+    "wrapped": 667,
+    "json_labels": 29,
+    "missing": 0,
+}
+# The historical contract is not bound to source pins: the recorded 2026-09-29
+# evidence set is bound to its own root and HEAD, not to the live tree.
+LEGACY_SOURCE_PINS = {}
+
+# 2026-10-22 — bounded current-contract reconciliation.
+#
+# The reviewed JE candidate added exactly ONE NEW production module,
+# construction/services/boq_journal_project.py. The source scan counts every
+# localizable file under construction/, so the extract FILE count moved
+# 328 -> 329 and nothing else moved. The counts frozen below were
+# RE-MEASURED on that candidate (root
+# /tmp/f44-je-private-ci-preparation-20261022/apps/construction, source HEAD
+# a7686c518ce7be7d91758a0cc8854199e1304e45, tree
+# 5ebd6ba9a5b22a50c51efa0aa91a43cfc98a4960, 2381 tracked files, branch
+# codex/customer-release-ci-je-project-20261022):
+#
+#   GITHUB_ACTIONS=true python3 scripts/check_localization_gates.py --ci-source-only
+#   -> exit 0; catalog=1052 files=329 wrapped=861 json_labels=77 missing=0
+#      csv_rows=4337 raw_text=7/0/2 errors=0
+#
+# The raw artefact (sha256 8d9109845421d44ef8d87d60877c25f8448870b743ed4f35b5428902fa3a6d36)
+# is stored at
+# construction/tests/tools/measurements/2026-10-22-je-current/m1_source_scan.txt
+# and is recorded as measurement M1B in
+# construction/tests/tools/stage2_current_measurements.json (+ .md twin).
+#
+# The superseded 2026-10-20 contract (files=328) is preserved verbatim as
+# history in that same record; the 2026-09-29 historical contract and its
+# explicit --evidence-contract=legacy path are untouched.
+CURRENT_CONTRACT_ID = "stage2-current-contract/2026-10-22"
+CURRENT_EXPECTED_MODULES = [
+    ("construction.searchable_dropdown.tests.test_search_api", 13),
+    ("construction.searchable_dropdown.tests.test_integration", 6),
+    ("construction.tests.test_bilingual_account_schema", 5),
+    ("construction.tests.test_translation_catalog", 3),
+    ("construction.tests.test_translation_stabilization_gates", 8),
+    ("construction.tests.test_localization_gates", 101),
+    ("construction.tests.test_bilingual_service", 38),
+    ("construction.tests.test_bilingual_account_pilot", 53),
+    ("construction.tests.test_stage4_account_language", 6),
+    ("construction.tests.test_stage4_report_extension", 14),
+    ("construction.tests.test_stage4_review_bundle", 36),
+]
+CURRENT_EXPECTED_GATE = {
+    "catalog": 1052,
+    # 329 is the measured extract file count of the reviewed candidate at
+    # a7686c518ce7be7d91758a0cc8854199e1304e45 (measurement M1B). It was 328
+    # at the 2026-10-20 measurement; one NEW production module was added
+    # since. Every other value is unchanged. See the CURRENT_CONTRACT_ID
+    # comment above and construction/tests/tools/stage2_current_measurements.json.
+    "files": 329,
+    "wrapped": 861,
+    "json_labels": 77,
+    "missing": 0,
+}
+# The current contract is tied to the real source artifacts the counts were
+# measured from: if one of them changes, the frozen counts can no longer be
+# trusted and the contract must be re-measured and re-reviewed. The checker
+# enforces this (fail closed) instead of accepting a drifted expectation.
+CURRENT_SOURCE_PINS = {
+    "construction/locale/ar.po": ("8b065ad4ae18b59421a24f230ce2069e94103a1b6f8249c87b06464fcb015c0b"),
+    "construction/data/translations/approved_ar_overrides.csv": (
+        "845ab43ea0bef6d7db9f3875b8ceadafa0c923934c69607e6d6ceda715262318"
+    ),
+    "construction/data/localization/localization_manifest.json": (
+        "816ccc57fb233a5ad95ea391c43bafba34809a5bc894cfe8a5cc3fe29d10b85e"
+    ),
+    "construction/data/localization/vendor_catalog_baseline.json": (
+        # 2026-10-21: the reviewed controlled re-record of ONLY apps.frappe.commit
+        # (2871914b -> af440917 private vendor divergence) plus its dated coordinator
+        # review provenance. The catalog inventory, counts and PO digest are unchanged.
+        "8407099579b8f99a1ed04258ae2df70021d2c4205aad149c8d43dffec531fd69"
+    ),
+    "construction/data/localization/stage2_inventory_manifest.json": (
+        "7e639ec8182f14aaa7f1c23a71519100f789c6ec05d20d83cbe4d4335e051d60"
+    ),
+}
+
+CONTRACTS = {
+    "current": {
+        "id": CURRENT_CONTRACT_ID,
+        "modules": CURRENT_EXPECTED_MODULES,
+        "gate": CURRENT_EXPECTED_GATE,
+        "source_pins": CURRENT_SOURCE_PINS,
+    },
+    "legacy": {
+        "id": LEGACY_CONTRACT_ID,
+        "modules": LEGACY_EXPECTED_MODULES,
+        "gate": LEGACY_EXPECTED_GATE,
+        "source_pins": LEGACY_SOURCE_PINS,
+    },
+}
+DEFAULT_CONTRACT = "current"
+EVIDENCE_CONTRACT = DEFAULT_CONTRACT
+
+# Backwards-compatible aliases: the default (current) contract.
+EXPECTED_MODULES = CURRENT_EXPECTED_MODULES
+EXPECTED_GATE = CURRENT_EXPECTED_GATE
 EXPECTED_DRYRUN = {"total": 4337, "created": 0, "updated": 0, "skipped": 4337, "drift": 0}
+
+
+def active_contract() -> dict:
+    """The contract the current invocation validates against."""
+    return CONTRACTS[EVIDENCE_CONTRACT]
+
+
+def expected_modules() -> list:
+    return active_contract()["modules"]
+
+
+def expected_gate() -> dict:
+    return active_contract()["gate"]
 
 
 ARTIFACT_PATHS = {
@@ -1532,7 +1702,7 @@ INDEX_VERSION = "INDEX_VERSION: 1"
 
 def check_envelope_schema(fname, results, errors, root, live_artifacts):
     """Exact ordered template per envelope; every result line consumed once."""
-    mods = [(m, n) for m, n in EXPECTED_MODULES]
+    mods = [(m, n) for m, n in expected_modules()]
     total = sum(n for _, n in mods)
     mod_line = ("re", r"^\S+ :: Ran \d+ tests .*?\bOK\b$")
     templates = {
@@ -1661,13 +1831,13 @@ def check_envelope_schema(fname, results, errors, root, live_artifacts):
     if fname == "all-tests.txt":
         mods_found = re.findall(r"^(\S+) :: Ran (\d+) tests .*?\bOK\b", text, re.M)
         magg = re.search(r"AGGREGATE total=(\d+) failed=(\d+)", text)
-        if [(m, int(n)) for m, n in mods_found] != EXPECTED_MODULES or not magg:
+        if [(m, int(n)) for m, n in mods_found] != expected_modules() or not magg:
             errors.append(f"evidence-schema: {fname} module identities/counts differ from contract")
         elif sum(int(n) for _, n in mods_found) != int(magg.group(1)) or magg.group(2) != "0":
             errors.append(f"evidence-arithmetic: {fname} module sum != aggregate total or failed != 0")
     if fname == "gate-tests-standalone.txt":
         m = re.search(r"^Ran (\d+) tests", text, re.M)
-        if not m or int(m.group(1)) != dict(EXPECTED_MODULES)["construction.tests.test_localization_gates"]:
+        if not m or int(m.group(1)) != dict(expected_modules())["construction.tests.test_localization_gates"]:
             errors.append(f"evidence-schema: {fname} standalone count differs from contract")
         if not re.search(r"^OK$", text, re.M):
             errors.append(f"evidence-schema: {fname} must record OK")
@@ -1685,15 +1855,15 @@ def check_envelope_schema(fname, results, errors, root, live_artifacts):
             "gate_errors": _num(r"errors=(\d+)"),
         }
         want = {
-            "catalog": EXPECTED_GATE["catalog"],
-            "wrapped": EXPECTED_GATE["wrapped"],
-            "json_labels": EXPECTED_GATE["json_labels"],
+            "catalog": expected_gate()["catalog"],
+            "wrapped": expected_gate()["wrapped"],
+            "json_labels": expected_gate()["json_labels"],
             "missing": 0,
             "gate_errors": 0,
         }
         if got != want:
             errors.append(f"evidence-schema: {fname} gate result object differs from contract")
-        if f'"files": {EXPECTED_GATE["files"]}' not in text:
+        if f'"files": {expected_gate()["files"]}' not in text:
             errors.append(f"evidence-schema: {fname} file count differs from contract")
     if fname == "final-dryrun.txt":
         m = re.search(r"total=(\d+) created=(\d+) updated=(\d+) skipped=(\d+) drift=(\d+)", text)
@@ -1771,11 +1941,25 @@ def check_evidence_index(errors, root=None):
     if not str(root).endswith("apps/construction"):
         errors.append(f"evidence-root: candidate root {root} is not an apps/construction layout")
         return {}
-    evdir = root / "docs/ai/work-items/erp-arabic-bilingual-data/evidence/raw-logs/stage2"
+    evdir = EVIDENCE_DIR or (root / "docs/ai/work-items/erp-arabic-bilingual-data/evidence/raw-logs/stage2")
     idxp = evdir / "index.txt"
     if not idxp.exists():
         errors.append("evidence-index-missing: index.txt not found")
         return {}
+    # The frozen contract is tied to the real source artifacts its counts were
+    # measured from. A changed source artifact invalidates the frozen counts,
+    # so the contract must be re-measured and re-reviewed (fail closed).
+    for rel, pinned in sorted(active_contract()["source_pins"].items()):
+        live_path = root / rel
+        if not live_path.exists():
+            errors.append(f"evidence-contract-source-missing: {rel} not in candidate")
+            continue
+        if sha256(live_path) != pinned:
+            errors.append(
+                f"evidence-contract-source-drift: {rel} changed since the contract was frozen "
+                f"(live {sha256(live_path)[:12]}… != pinned {pinned[:12]}…) — re-measure and re-review "
+                f"the contract ({active_contract()['id']})"
+            )
     index_lines = [l for l in idxp.read_text(encoding="utf-8").splitlines() if l.strip()]
     if not index_lines or index_lines[0].strip() != INDEX_VERSION:
         errors.append(f"evidence-index-version: first line must be {INDEX_VERSION!r}")
@@ -1792,7 +1976,9 @@ def check_evidence_index(errors, root=None):
             rows.append((m.group(1), m.group(2)))
             continue
         m2 = re.match(
-            r"^(COMMAND|STARTED_UTC|FINISHED_UTC|EXIT_CODE|ENVELOPE_LINES|ARTIFACTS" r"|CANDIDATE_ROOT):", s
+            r"^(COMMAND|STARTED_UTC|FINISHED_UTC|EXIT_CODE|ENVELOPE_LINES|ARTIFACTS"
+            r"|CANDIDATE_ROOT|EVIDENCE_SITE):",
+            s,
         )
         m3 = re.match(r"^([A-Za-z_]+_SHA256): ([0-9a-f]{64})$", s)
         if not m2 and not m3:
@@ -1816,6 +2002,8 @@ def check_evidence_index(errors, root=None):
             seq_kinds.append("head")
         elif s.startswith("CANDIDATE_ROOT:"):
             seq_kinds.append("croot")
+        elif s.startswith("EVIDENCE_SITE:"):
+            seq_kinds.append("site")
         elif s == "ARTIFACTS:":
             seq_kinds.append("artifacts")
         elif re.match(r"^[A-Za-z_]+_SHA256: [0-9a-f]{64}$", s):
@@ -1824,10 +2012,13 @@ def check_evidence_index(errors, root=None):
             seq_kinds.append("length")
         else:
             seq_kinds.append("unknown")
+    site_aware = EVIDENCE_SITE_REQUIRED or any(s.startswith("EVIDENCE_SITE:") for s in ordered)
     want_kinds = (
         ["version", "command", "started"]
         + ["hash"] * len(EVIDENCE_FILES)
-        + ["exit", "finished", "head", "croot", "artifacts"]
+        + ["exit", "finished", "head", "croot"]
+        + (["site"] if site_aware else [])
+        + ["artifacts"]
         + ["artifact"] * len(ARTIFACT_PATHS)
         + ["length"]
     )
@@ -1846,6 +2037,18 @@ def check_evidence_index(errors, root=None):
         )
     elif root_rows[0].split(":", 1)[1].strip() != str(root.resolve()):
         errors.append(f"evidence-index-root: {root_rows[0]!r} != invocation root {str(root.resolve())!r}")
+    site_rows = [s for s in ordered if s.startswith("EVIDENCE_SITE:")]
+    if EVIDENCE_SITE_REQUIRED and len(site_rows) != 1:
+        errors.append(
+            f"evidence-index-site: exactly one EVIDENCE_SITE row required for the expected site "
+            f"{EVIDENCE_SITE!r} (found {len(site_rows)})"
+        )
+    elif len(site_rows) > 1:
+        errors.append(f"evidence-index-site: exactly one EVIDENCE_SITE row required (found {len(site_rows)})")
+    elif site_rows and site_rows[0].split(":", 1)[1].strip() != EVIDENCE_SITE:
+        errors.append(
+            f"evidence-index-site: {site_rows[0]!r} does not match the expected evidence site {EVIDENCE_SITE!r}"
+        )
     if len(head_rows) != 1:
         errors.append(
             f"evidence-index-head: exactly one CANDIDATE_HEAD row required (found {len(head_rows)})"
@@ -1929,7 +2132,14 @@ def check_evidence_index(errors, root=None):
             if l.strip()
             and not any(
                 l.startswith(m)
-                for m in ("COMMAND:", "STARTED_UTC:", "FINISHED_UTC:", "EXIT_CODE:", "ENVELOPE_LINES:")
+                for m in (
+                    "COMMAND:",
+                    "STARTED_UTC:",
+                    "FINISHED_UTC:",
+                    "EXIT_CODE:",
+                    "ENVELOPE_LINES:",
+                    "SITE:",
+                )
             )
         ]
         check_envelope_schema(fname, _res_lines, errors, root, live_artifacts)
@@ -1945,8 +2155,21 @@ def check_evidence_index(errors, root=None):
         start = one("STARTED_UTC:", origin)
         finish = one("FINISHED_UTC:", origin)
         exitc = one("EXIT_CODE:", origin)
-        if cmd is not None and ("COMMAND: " + cmd) != EXPECTED_COMMANDS[fname]:
+        if cmd is not None and ("COMMAND: " + cmd) != expected_commands(EVIDENCE_SITE)[fname]:
             errors.append(f"evidence-command: {fname} unexpected COMMAND {cmd!r}")
+        site_rows = [l for l in content.splitlines() if l.startswith("SITE:")]
+        if EVIDENCE_SITE_REQUIRED and len(site_rows) != 1:
+            errors.append(
+                f"evidence-envelope-site: {fname} must have exactly one SITE row for the expected "
+                f"site {EVIDENCE_SITE!r} (found {len(site_rows)})"
+            )
+        elif len(site_rows) > 1:
+            errors.append(f"evidence-site: {fname} must have at most one SITE row (found {len(site_rows)})")
+        elif site_rows and site_rows[0][len("SITE:") :].strip() != EVIDENCE_SITE:
+            errors.append(
+                f"evidence-site-mismatch: {fname} records site {site_rows[0][len('SITE:'):].strip()!r}, "
+                f"expected {EVIDENCE_SITE!r}"
+            )
         if exitc != "0":
             errors.append(f"evidence-exit: {fname} EXIT_CODE is {exitc!r}, required 0")
         try:
@@ -2001,7 +2224,7 @@ def check_evidence_index(errors, root=None):
         if fname == "all-tests.txt":
             mods = re.findall(r"^(\S+) :: Ran (\d+) tests .*?\bOK\b", content, re.M)
             magg = re.search(r"AGGREGATE total=(\d+) failed=(\d+)", content)
-            if [(m, int(n)) for m, n in mods] != EXPECTED_MODULES or not magg:
+            if [(m, int(n)) for m, n in mods] != expected_modules() or not magg:
                 errors.append(f"evidence-schema: {fname} module identities/counts differ from contract")
             elif sum(int(n) for _, n in mods) != int(magg.group(1)) or magg.group(2) != "0":
                 errors.append(f"evidence-arithmetic: {fname} module sum != aggregate total or failed != 0")
@@ -2009,7 +2232,7 @@ def check_evidence_index(errors, root=None):
             m = re.search(r"^Ran (\d+) tests", content, re.M)
             if (
                 not m
-                or int(m.group(1)) != dict(EXPECTED_MODULES)["construction.tests.test_localization_gates"]
+                or int(m.group(1)) != dict(expected_modules())["construction.tests.test_localization_gates"]
             ):
                 errors.append(f"evidence-schema: {fname} standalone count differs from contract")
             if not re.search(r"^OK$", content, re.M):
@@ -2028,15 +2251,15 @@ def check_evidence_index(errors, root=None):
                 "gate_errors": _num(r"errors=(\d+)"),
             }
             want = {
-                "catalog": EXPECTED_GATE["catalog"],
-                "wrapped": EXPECTED_GATE["wrapped"],
-                "json_labels": EXPECTED_GATE["json_labels"],
+                "catalog": expected_gate()["catalog"],
+                "wrapped": expected_gate()["wrapped"],
+                "json_labels": expected_gate()["json_labels"],
                 "missing": 0,
                 "gate_errors": 0,
             }
             if got != want:
                 errors.append(f"evidence-schema: {fname} gate result object differs from contract")
-            if f'"files": {EXPECTED_GATE["files"]}' not in content:
+            if f'"files": {expected_gate()["files"]}' not in content:
                 errors.append(f"evidence-schema: {fname} file count differs from contract")
         if fname == "final-dryrun.txt":
             m = re.search(r"total=(\d+) created=(\d+) updated=(\d+) skipped=(\d+) drift=(\d+)", content)
@@ -2461,27 +2684,114 @@ def audit_vendor_coverage(errors, root=None):
             errors.append(f"vendor-covered-stale: {line!r} not in current vendor catalogs")
 
 
+CLI_FLAGS = ("--update-baselines", "--audit-vendor-coverage", "--skip-evidence", "--ci-source-only")
+CLI_VALUE_OPTIONS = (
+    "--expected-evidence-site",
+    "--evidence-dir",
+    "--root",
+    "--delta-reviewed",
+    "--evidence-contract",
+)
+CLI_LIST_OPTIONS = ("--files",)
+
+
+def parse_cli_args(args, errors):
+    """Explicit CLI contract (fail closed before any work is done).
+
+    Accepted spellings: ``--opt value`` and ``--opt=value``. Unknown options,
+    duplicated options, missing values and empty values are refused by name so
+    that a malformed invocation can never be silently reinterpreted as a
+    different check.
+
+    Returns (flags, values, files, has_files).
+    """
+    flags = set()
+    values = {}
+    files = []
+    has_files = False
+    items = list(args)
+    index = 0
+    while index < len(items):
+        arg = items[index]
+        if arg in CLI_LIST_OPTIONS:
+            has_files = True
+            files = items[index + 1 :]
+            break
+        name, sep, inline = arg.partition("=")
+        if name in CLI_FLAGS:
+            if sep:
+                errors.append(f"cli-option: {name} does not take a value")
+            else:
+                flags.add(name)
+        elif name in CLI_VALUE_OPTIONS:
+            if name in values:
+                errors.append(f"cli-option: {name} may be supplied only once")
+            if sep:
+                value = inline
+            elif index + 1 < len(items):
+                index += 1
+                value = items[index]
+            else:
+                errors.append(f"cli-option: {name} requires a value")
+                index += 1
+                continue
+            value = value.strip()
+            if not value:
+                errors.append(f"cli-option: {name} must not be empty")
+            else:
+                values[name] = value
+        elif arg.startswith("-"):
+            errors.append(f"cli-option: unknown option {name!r}")
+        else:
+            errors.append(f"cli-option: unexpected argument {arg!r}")
+        index += 1
+    return flags, values, files, has_files
+
+
 def main(argv, root=None):
     errors = []
     counts = {}
     args = list(argv[1:])
-    rflag = [a for a in args if a.startswith("--root=")]
-    if rflag and root is None:
-        root = Path(rflag[0].split("=", 1)[1])
-        args = [a for a in args if not a.startswith("--root=")]
+    global EVIDENCE_SITE, EVIDENCE_DIR, EVIDENCE_SITE_REQUIRED, EVIDENCE_CONTRACT
+    EVIDENCE_SITE = DEFAULT_EVIDENCE_SITE
+    EVIDENCE_DIR = None
+    EVIDENCE_SITE_REQUIRED = False
+    EVIDENCE_CONTRACT = DEFAULT_CONTRACT
+    flags, values, files, has_files = parse_cli_args(args, errors)
+    if errors:
+        for err in sorted(errors):
+            print("FAIL " + err)
+        print(f"checked={json.dumps(counts, sort_keys=True, default=str)} errors={len(errors)}")
+        return 1, counts, sorted(errors)
+    if "--expected-evidence-site" in values:
+        EVIDENCE_SITE = values["--expected-evidence-site"]
+        EVIDENCE_SITE_REQUIRED = True
+    if "--evidence-contract" in values:
+        chosen = values["--evidence-contract"]
+        if chosen not in CONTRACTS:
+            errors.append(
+                f"cli-option: --evidence-contract must be one of {sorted(CONTRACTS)}, got {chosen!r}"
+            )
+            for err in sorted(errors):
+                print("FAIL " + err)
+            print(f"checked={json.dumps(counts, sort_keys=True, default=str)} errors={len(errors)}")
+            return 1, counts, sorted(errors)
+        EVIDENCE_CONTRACT = chosen
+    if "--evidence-dir" in values:
+        EVIDENCE_DIR = Path(values["--evidence-dir"])
+    if "--root" in values and root is None:
+        root = Path(values["--root"])
     root = _root(root)
-    if "--update-baselines" in args:
+    if "--update-baselines" in flags:
         code = update_baselines(args, errors, root)
         return code, counts, sorted(errors)
-    if "--audit-vendor-coverage" in args:
+    if "--audit-vendor-coverage" in flags:
         audit_vendor_coverage(errors, root)
         for err in sorted(errors):
             print("FAIL " + err)
         print(f"errors={len(errors)}")
         return (1 if errors else 0), counts, sorted(errors)
-    files = []
-    if "--files" in args:
-        files = args[args.index("--files") + 1 :]
+    if has_files:
         owned, sources, json_sources, skipped = classify_files(errors, files, root)
         if not owned and not sources and not json_sources and not errors:
             errors.append("files-empty: --files supplied but no checkable targets")
@@ -2492,8 +2802,8 @@ def main(argv, root=None):
     else:
         import os as _os
 
-        bootstrap_skip = "--skip-evidence" in args
-        ci_source_only = "--ci-source-only" in args
+        bootstrap_skip = "--skip-evidence" in flags
+        ci_source_only = "--ci-source-only" in flags
         if bootstrap_skip and _os.environ.get("STAGE2_EVIDENCE_BOOTSTRAP") != "1":
             errors.append("evidence-bootstrap: --skip-evidence requires STAGE2_EVIDENCE_BOOTSTRAP=1")
             print(f"checked={json.dumps(counts, sort_keys=True, default=str)} errors={len(errors)}")

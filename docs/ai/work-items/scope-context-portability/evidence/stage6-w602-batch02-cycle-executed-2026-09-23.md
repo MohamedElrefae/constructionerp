@@ -136,7 +136,7 @@ workspace modules; Arabic sidebar.
 ### Teardown (after browser evidence completed)
 
 - Temporary UAT password rotated to `ct-w60b-rotated-off` (evidence password
-  `ct-w602-evidence-1` rejected with HTTP 401).
+  `[REDACTED_LOCAL_TEST_CREDENTIAL]` rejected with HTTP 401).
 - `Administrator.language` restored to `en`.
 
 ## 6. Pre-commit artifact hashes
@@ -170,3 +170,6 @@ Cycle commit: **`b3b0681`** (parent `90bc65e`).
 - **Out**: all other W6 matrix batches; any production mutation / catalog /
   DB rollout / Stage 8 production work (still gated on real production data +
   named production site + rollout window + AI-R on exact release commit).
+
+
+Technical note: The local test credential was redacted; the recorded HTTP 401 result and historical narrative are unchanged.

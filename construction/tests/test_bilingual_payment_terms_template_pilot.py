@@ -173,34 +173,40 @@ class TestBilingualPaymentTermsTemplatePilot(unittest.TestCase):
         """Payment Terms Template name remains English value; autoname enforces non-empty; rename preserves Arabic."""
         # 1. Assert empty template_name is rejected by naming path (autoname)
         with self.assertRaises(frappe.ValidationError):
-            bad_doc = frappe.get_doc({
-                "doctype": "Payment Terms Template",
-                "template_name": "",
-                "terms": [{
-                    "payment_term": "_Test COD",
-                    "invoice_portion": 100.0,
-                    "due_date_based_on": "Day(s) after invoice date",
-                }],
-            })
+            bad_doc = frappe.get_doc(
+                {
+                    "doctype": "Payment Terms Template",
+                    "template_name": "",
+                    "terms": [
+                        {
+                            "payment_term": "_Test COD",
+                            "invoice_portion": 100.0,
+                            "due_date_based_on": "Day(s) after invoice date",
+                        }
+                    ],
+                }
+            )
             bad_doc.insert(ignore_permissions=True)
 
         # 2. Insert valid bilingual fixture with required detail row
         template_ar = "شروط الدفع القياسية للمشروع"
         test_template_name = f"Terms {uuid4().hex[:6]}"
 
-        tmpl = frappe.get_doc({
-            "doctype": "Payment Terms Template",
-            "template_name": test_template_name,
-            "template_name_ar": template_ar,
-            "terms": [
-                {
-                    "payment_term": "_Test COD",
-                    "description": "_Test Cash on Delivery",
-                    "invoice_portion": 100.0,
-                    "due_date_based_on": "Day(s) after invoice date",
-                }
-            ],
-        })
+        tmpl = frappe.get_doc(
+            {
+                "doctype": "Payment Terms Template",
+                "template_name": test_template_name,
+                "template_name_ar": template_ar,
+                "terms": [
+                    {
+                        "payment_term": "_Test COD",
+                        "description": "_Test Cash on Delivery",
+                        "invoice_portion": 100.0,
+                        "due_date_based_on": "Day(s) after invoice date",
+                    }
+                ],
+            }
+        )
         tmpl.insert(ignore_permissions=True)
         old_id = tmpl.name
 

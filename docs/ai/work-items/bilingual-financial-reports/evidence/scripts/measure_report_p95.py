@@ -78,9 +78,7 @@ def _code_hashes():
     app = frappe.get_app_path("construction")
     return {
         "bilingual_reports.py": _sha(os.path.join(app, "api/bilingual_reports.py")),
-        "report_bilingual_extension.py": _sha(
-            os.path.join(app, "services/report_bilingual_extension.py")
-        ),
+        "report_bilingual_extension.py": _sha(os.path.join(app, "services/report_bilingual_extension.py")),
         "hooks.py": _sha(os.path.join(app, "hooks.py")),
     }
 
@@ -206,8 +204,7 @@ def _measure_case(report_key, filters):
         "sla_evaluation": {
             "tier": tier,
             "tier_rule": (
-                "baseline P95 >= 1.0 ms => Tier 2A <= 1.15x; "
-                "baseline P95 < 1.0 ms => Tier 2B <= 1.50x"
+                "baseline P95 >= 1.0 ms => Tier 2A <= 1.15x; " "baseline P95 < 1.0 ms => Tier 2B <= 1.50x"
             ),
             "tier_ratio_ceiling": ceiling,
             "ratio": ratio,
@@ -218,11 +215,7 @@ def _measure_case(report_key, filters):
                 "(decision R5); bilingual absolute P95 is recorded for disclosure"
             ),
             "bilingual_p95_ms": bilin_min_p95,
-            "verdict": (
-                "COMPLIANT_WITH_TWO_TIER_SLA"
-                if (ratio_pass and contract_pass)
-                else "NON_COMPLIANT"
-            ),
+            "verdict": ("COMPLIANT_WITH_TWO_TIER_SLA" if (ratio_pass and contract_pass) else "NON_COMPLIANT"),
         },
         "per_round_samples": {
             "baseline": rounds_base_samples,
@@ -255,8 +248,7 @@ def measure():
     return {
         "cases": cases,
         "all_cases_compliant": all(
-            case["sla_evaluation"]["verdict"] == "COMPLIANT_WITH_TWO_TIER_SLA"
-            for case in cases.values()
+            case["sla_evaluation"]["verdict"] == "COMPLIANT_WITH_TWO_TIER_SLA" for case in cases.values()
         ),
         "call_signature": (
             "baseline = <vendor module>.execute(filters=<dict>); "

@@ -545,7 +545,8 @@ def get_project_display_name(project):
 
     permitted = False
     try:
-        permitted = bool(frappe.has_permission("Project", "read"))
+        frappe.has_permission("Project", "read", throw=True)
+        permitted = True
     except Exception:
         permitted = False
 

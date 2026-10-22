@@ -1,4 +1,5 @@
 """Read-only live Translation reconciliation for proposed W6-1 Accounts Batch 02 scope."""
+
 from __future__ import annotations
 
 import csv
@@ -33,21 +34,27 @@ try:
         "Translation",
         filters={"language": "ar", "ct_is_catalog_entry": 0},
         fields=[
-            "name", "source_text", "translated_text", "context", "ct_origin",
-            "ct_app", "ct_release_version", "ct_is_catalog_entry",
+            "name",
+            "source_text",
+            "translated_text",
+            "context",
+            "ct_origin",
+            "ct_app",
+            "ct_release_version",
+            "ct_is_catalog_entry",
         ],
         limit_page_length=0,
     )
-    exact_matches = [
-        row for row in rows
-        if row.source_text in keys
-        and not (row.context or "")
-    ]
+    exact_matches = [row for row in rows if row.source_text in keys and not (row.context or "")]
     by_key: dict[str, list] = {key: [] for key in keys}
     for row in exact_matches:
         by_key[row.source_text].append(row)
 
-    missing_runtime = [key for key, found in by_key.items() if not found or not any((r.translated_text or "").strip() for r in found)]
+    missing_runtime = [
+        key
+        for key, found in by_key.items()
+        if not found or not any((r.translated_text or "").strip() for r in found)
+    ]
     site_overrides = []
     nonempty_other = []
     for key, found in by_key.items():
@@ -83,7 +90,9 @@ try:
         "note": "Read-only exact runtime lookup reconciliation for proposed W6-1 Accounts Batch 02 scope on v16.localhost.",
     }
     OUT.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    print(f"Recon complete: total={len(keys)}, site_overrides={len(site_overrides)}, nonempty_other={len(nonempty_other)}, missing={len(missing_runtime)}")
+    print(
+        f"Recon complete: total={len(keys)}, site_overrides={len(site_overrides)}, nonempty_other={len(nonempty_other)}, missing={len(missing_runtime)}"
+    )
     print(f"Output: {OUT}")
 finally:
     frappe.destroy()

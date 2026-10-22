@@ -4,7 +4,6 @@ import os
 import sys
 import threading
 
-
 if os.environ.get("CONSTRUCTION_CI_INSTALL_PROBE") == "1":
 
     def dump_install_stack():

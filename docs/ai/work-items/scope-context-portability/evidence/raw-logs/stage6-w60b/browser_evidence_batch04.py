@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """W6-0b batch-4 Arabic browser evidence (headless, ar Desk session)."""
 
+# Historical evidence capture script; rerunning it does not reproduce the archived evidence.
 import json
+import os
 import re
 import sys
 from datetime import datetime, timezone
@@ -11,7 +13,7 @@ from playwright.sync_api import sync_playwright
 
 BASE = "http://v16.localhost:8000"
 OUT = Path(__file__).resolve().parent
-PASSWORD = "ct-w60b-evidence-1"
+PASSWORD = os.environ["CONSTRUCTION_EVIDENCE_PASSWORD"]
 
 PROBES = {
     "Click here": "انقر هنا",
@@ -104,9 +106,7 @@ with sync_playwright() as p:
     uniq = sorted(set(re.findall(r"[؀-ۿ]{2,}", body)))
     add("rendered-dom-arabic-words", len(uniq) >= 5, {"count": len(uniq), "sample": uniq[:20]})
     module_hits = [
-        w
-        for w in ["الأدوات", "المحاسبة", "المشتريات", "المشاريع", "المخزون", "البيع"]
-        if w in body
+        w for w in ["الأدوات", "المحاسبة", "المشتريات", "المشاريع", "المخزون", "البيع"] if w in body
     ]
     add("rendered-workspace-modules", len(module_hits) >= 3, module_hits)
     try:

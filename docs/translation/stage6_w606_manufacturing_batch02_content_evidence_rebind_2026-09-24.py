@@ -1,4 +1,5 @@
 """Rebind Batch 02 decision provenance to literal, quote-safe content evidence."""
+
 from __future__ import annotations
 
 import csv
@@ -56,11 +57,16 @@ def main() -> None:
         val = row["translated_text"] or ""
         decision_id = row_decision_id(row_identity_fields(row, src, val), refs)
         rebuilt[decision_id] = {
-            "language": row["language"], "ct_app": row["ct_app"], "context": row["context"],
-            "source_text": src, "translated_text": val, "domain": row["domain"],
+            "language": row["language"],
+            "ct_app": row["ct_app"],
+            "context": row["context"],
+            "source_text": src,
+            "translated_text": val,
+            "domain": row["domain"],
             "reviewers": [row["a1_reviewer"], row["a2_reviewer"], row["a3_reviewer"]],
             "timestamps": [row["a1_approved_at"], row["a2_approved_at"], row["a3_approved_at"]],
-            "release_version": row["release_version"], "references": row["references"],
+            "release_version": row["release_version"],
+            "references": row["references"],
             "proposal": {"arabic": val, "sha256": hashlib.sha256(f"{src}|{val}".encode()).hexdigest()},
             "verdicts": {
                 role: {"decision": "approve", "confidence": "high", "session": session}
@@ -79,12 +85,18 @@ def main() -> None:
         writer = csv.DictWriter(handle, fieldnames=list(catalog_rows[0]), lineterminator="\n")
         writer.writeheader()
         writer.writerows(catalog_rows)
-    decision_doc["generated_utc"] = __import__("datetime").datetime.now(__import__("datetime").timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    decision_doc["generated_utc"] = (
+        __import__("datetime")
+        .datetime.now(__import__("datetime").timezone.utc)
+        .strftime("%Y-%m-%dT%H:%M:%SZ")
+    )
     decision_doc["note"] = (
         "Historical decisions retained; W6-6 Manufacturing Batch 02 decisions bind to the literal "
         "quote-safe text evidence artifact, exact proposal/scope hashes, and A1/A2/A3 PASS."
     )
-    DECISIONS.write_text(json.dumps(decision_doc, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    DECISIONS.write_text(
+        json.dumps(decision_doc, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
     print(f"literal_content_evidence_sha256={sha(EVIDENCE)}")
     print(f"catalog_sha256={sha(CATALOG)}")
     print(f"decisions_sha256={sha(DECISIONS)}")

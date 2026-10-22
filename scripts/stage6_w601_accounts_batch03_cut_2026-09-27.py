@@ -73,17 +73,14 @@ def main() -> None:
     live = [row for row in raw_rows if row not in skip]
     html = {row["msgid"] for row in live if RE_HTML.search(row["msgid"])}
     newline = {
-        row["msgid"] for row in live
+        row["msgid"]
+        for row in live
         if row["msgid"] not in html and ("\n" in row["msgid"] or "\r" in row["msgid"])
     }
     overlong = {
-        row["msgid"] for row in live
-        if row["msgid"] not in html | newline and len(row["msgid"]) > MAX_LEN
+        row["msgid"] for row in live if row["msgid"] not in html | newline and len(row["msgid"]) > MAX_LEN
     }
-    eligible = [
-        row for row in live
-        if row["msgid"] not in html | newline | overlong
-    ]
+    eligible = [row for row in live if row["msgid"] not in html | newline | overlong]
     assert len(eligible) == 1198, f"Expected 1198 eligible rows, got {len(eligible)}"
 
     # Reconstruct the 1056 accounts queue pinned at W6-1 inception (commit ea553f2)
@@ -105,10 +102,14 @@ def main() -> None:
     }
 
     prior: set[str] = set()
-    rows_paths = subprocess.check_output(
-        ["git", "ls-tree", "-r", "--name-only", "ea553f2", "docs/translation"],
-        cwd=ROOT,
-    ).decode("utf-8").splitlines()
+    rows_paths = (
+        subprocess.check_output(
+            ["git", "ls-tree", "-r", "--name-only", "ea553f2", "docs/translation"],
+            cwd=ROOT,
+        )
+        .decode("utf-8")
+        .splitlines()
+    )
     for p in rows_paths:
         if "rows" in p and p.endswith(".csv") and "accounts" not in p:
             content = subprocess.check_output(["git", "show", f"ea553f2:{p}"], cwd=ROOT).decode("utf-8")
@@ -122,19 +123,21 @@ def main() -> None:
     )
     assert len(overlap) == 142, f"Expected 142 already-covered keys, got {len(overlap)}"
     assert len(fresh) == 1056, f"Expected 1056 fresh rows, got {len(fresh)}"
-    batch = fresh[START:START + CAP]
+    batch = fresh[START : START + CAP]
     assert len(batch) == CAP
 
     output_rows = []
     for row in batch:
         suggested = row.get("msgstr") or ""
-        output_rows.append({
-            "source_text": row["msgid"],
-            "suggested_ar": suggested,
-            "locations": row.get("locations") or "",
-            "area": "accounts",
-            "has_pre_filled": "1" if suggested.strip() else "0",
-        })
+        output_rows.append(
+            {
+                "source_text": row["msgid"],
+                "suggested_ar": suggested,
+                "locations": row.get("locations") or "",
+                "area": "accounts",
+                "has_pre_filled": "1" if suggested.strip() else "0",
+            }
+        )
     buffer = io.StringIO(newline="")
     writer = csv.DictWriter(buffer, fieldnames=FIELDS, lineterminator="\n")
     writer.writeheader()
@@ -142,8 +145,12 @@ def main() -> None:
     payload = buffer.getvalue().encode("utf-8")
     OUTPUT.write_bytes(payload)
     print(f"raw={raw_count} unique={len(raw_rows)} skipped={len(skip)}")
-    print(f"excluded_html={len(html)} excluded_newline={len(newline)} excluded_overlong={len(overlong)} already_covered={len(overlap)}")
-    print(f"fresh_total={len(fresh)} batch03={len(batch)} remaining_after_batch03={len(fresh) - (START + len(batch))}")
+    print(
+        f"excluded_html={len(html)} excluded_newline={len(newline)} excluded_overlong={len(overlong)} already_covered={len(overlap)}"
+    )
+    print(
+        f"fresh_total={len(fresh)} batch03={len(batch)} remaining_after_batch03={len(fresh) - (START + len(batch))}"
+    )
     print(
         "batch03_prefilled="
         f"{sum(row['has_pre_filled'] == '1' for row in output_rows)} "

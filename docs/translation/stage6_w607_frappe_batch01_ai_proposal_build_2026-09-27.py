@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Build and structurally validate Stage 6 W6-7 Frappe Framework Remainder Batch 01 proposal CSV."""
+
 from __future__ import annotations
 
 import csv
@@ -33,10 +34,7 @@ def build_proposal():
     assert scope_sha == SCOPE_SHA, f"Scope SHA mismatch: expected {SCOPE_SHA}, got {scope_sha}"
 
     recon = json.loads(RECON_JSON.read_text(encoding="utf-8"))
-    site_overrides_map = {
-        item["source_text"]: item["translated_text"]
-        for item in recon["site_overrides"]
-    }
+    site_overrides_map = {item["source_text"]: item["translated_text"] for item in recon["site_overrides"]}
 
     with SCOPE_CSV.open(encoding="utf-8", newline="") as h:
         scope_rows = list(csv.DictReader(h))
@@ -57,9 +55,9 @@ def build_proposal():
         if src in site_overrides_map:
             disposition = "preserved-site-override"
             comment = "Preserved verbatim from live v16.localhost tabTranslation (Plan §12)"
-            assert trans == site_overrides_map[src], (
-                f"Preserved mismatch for {src!r}: dict={trans!r}, live={site_overrides_map[src]!r}"
-            )
+            assert (
+                trans == site_overrides_map[src]
+            ), f"Preserved mismatch for {src!r}: dict={trans!r}, live={site_overrides_map[src]!r}"
             preserved_count += 1
         elif src in TECHNICAL_KEYS:
             disposition = "EXCEPTION-technical"
@@ -81,13 +79,15 @@ def build_proposal():
             assert src.endswith(":") == trans.endswith(":"), f"Colon mismatch for {src!r}"
             assert src.endswith("...") == trans.endswith("..."), f"Ellipsis mismatch for {src!r}"
 
-        proposal_rows.append({
-            "source_text": src,
-            "context": ctx,
-            "proposed_translation": trans,
-            "disposition": disposition,
-            "review_comments": comment,
-        })
+        proposal_rows.append(
+            {
+                "source_text": src,
+                "context": ctx,
+                "proposed_translation": trans,
+                "disposition": disposition,
+                "review_comments": comment,
+            }
+        )
 
     assert preserved_count == 1, f"Expected 1 preserved-site-override, got {preserved_count}"
     assert technical_count == 2, f"Expected 2 EXCEPTION-technical, got {technical_count}"
@@ -108,7 +108,9 @@ def build_proposal():
     print(f"Generated proposal CSV with {len(proposal_rows)} rows: {OUT_CSV}")
     print(f"Scope CSV SHA-256:    {SCOPE_SHA}")
     print(f"Proposal CSV SHA-256: {proposal_sha}")
-    print(f"Disposition partition: {preserved_count} preserved-site-override, {technical_count} EXCEPTION-technical, {payload_count} PROPOSED-payload")
+    print(
+        f"Disposition partition: {preserved_count} preserved-site-override, {technical_count} EXCEPTION-technical, {payload_count} PROPOSED-payload"
+    )
     return proposal_sha
 
 

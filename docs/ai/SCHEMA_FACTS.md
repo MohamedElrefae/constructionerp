@@ -2,7 +2,7 @@
 
 > Generated from live DocType JSON by `scripts/schema_drift_checker.py --update`.
 > Do not hand-edit field tables. Update the DocType JSON, then regenerate this file.
-> Last verified: 2026-10-04
+> Last verified: 2026-10-15
 
 ## Summary
 
@@ -95,7 +95,7 @@
 | `wastage_pct` | Percent |  |  |
 | `cost_rate` | Currency |  | reqd |
 | `amount` | Currency |  | read_only |
-| `rate_source` | Select | Manual / Import / Item Price / Last PI / Last PO / Weighted Average / Supplier-Specific / Project-Specific / Resource Price History / Template |  |
+| `rate_source` | Select | Manual / Import / Item Price / Last PI / Last PO / Weighted Average / Supplier-Specific / Project-Specific / Resource Price History / Last Price History / Template |  |
 | `supplier` | Link | Supplier |  |
 | `remarks` | Small Text |  |  |
 

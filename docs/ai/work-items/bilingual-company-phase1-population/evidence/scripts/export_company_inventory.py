@@ -37,8 +37,16 @@ def main():
 
     rows = frappe.get_all(
         "Company",
-        fields=["name", "company_name", "abbr", "default_currency", "country",
-                "parent_company", "is_group", "company_name_ar"],
+        fields=[
+            "name",
+            "company_name",
+            "abbr",
+            "default_currency",
+            "country",
+            "parent_company",
+            "is_group",
+            "company_name_ar",
+        ],
         order_by="name",
     )
     if len(rows) != total:
@@ -67,17 +75,27 @@ def main():
     print(f"CLASS active_owner={active} test_noise={noise}")
 
     # Usage attribution per company across core transactional + master tables.
-    usage_tables = ["Journal Entry", "Sales Invoice", "Purchase Invoice", "GL Entry",
-                    "Project", "User Scope Context", "Employee", "Cost Center", "Account"]
+    usage_tables = [
+        "Journal Entry",
+        "Sales Invoice",
+        "Purchase Invoice",
+        "GL Entry",
+        "Project",
+        "User Scope Context",
+        "Employee",
+        "Cost Center",
+        "Account",
+    ]
     usage = {}
     for t in usage_tables:
         try:
             for r in frappe.db.sql(
                 f"SELECT company, COUNT(*) AS n FROM `tab{t}` "
                 f"WHERE company IS NOT NULL AND company != '' GROUP BY company",
-                as_dict=True):
+                as_dict=True,
+            ):
                 usage.setdefault(r["company"], {})[t] = r["n"]
-        except Exception as exc:  # noqa: BLE001
+        except Exception as exc:
             print(f"USAGE_TABLE_ERROR {t}: {exc}")
     for comp in sorted(usage):
         cls = "active_owner" if comp in PHASE1_FROZEN else "test_noise"
@@ -95,15 +113,22 @@ def main():
     fx = [f for f in os.listdir(fixture_dir) if "compan" in f.lower()]
     print(f"FIXTURE_JSON company_fixture_files={fx or 'none'}")
     import construction.hooks as h
+
     bound = h.doc_events.get("Company", {}).get("validate", "")
     print(f"HOOKS Company validate={bound!r}")
     import json as _json
-    reg = _json.load(open(
-        "/home/mohamed/frappe-bench/apps/construction/construction/data/bilingual/bilingual_registry.json"))
+
+    reg = _json.load(
+        open(
+            "/home/mohamed/frappe-bench/apps/construction/construction/data/bilingual/bilingual_registry.json"
+        )
+    )
     crec = reg["doctypes"].get("Company", {})
-    print(f"REGISTRY state={crec.get('state')} fields="
-          f"{crec.get('english_field')}/{crec.get('arabic_field')}/{crec.get('norm_field')} "
-          f"identity={crec.get('identity_field')}")
+    print(
+        f"REGISTRY state={crec.get('state')} fields="
+        f"{crec.get('english_field')}/{crec.get('arabic_field')}/{crec.get('norm_field')} "
+        f"identity={crec.get('identity_field')}"
+    )
     if crec.get("state") != "active" or crec.get("arabic_field") != "company_name_ar":
         fails.append("registry Company entry drifted")
 
@@ -116,14 +141,13 @@ def main():
         "38e1e5b1cc224f3f": "candidate_alternate_bare",
     }
     precedent_files = {
-        "p95_harness(AR_FIXTURES[0], synthetic pool on throwaway CT-COMP rows)":
-            "/home/mohamed/frappe-bench/apps/construction/docs/ai/work-items/"
-            "bilingual-company-master/evidence/scripts/measure_company_p95.py",
-        "pilot_test(test value on _Test Company% row, restore+commit)":
-            "/home/mohamed/frappe-bench/apps/construction/construction/tests/"
-            "test_bilingual_company_pilot.py",
+        "p95_harness(AR_FIXTURES[0], synthetic pool on throwaway CT-COMP rows)": "/home/mohamed/frappe-bench/apps/construction/docs/ai/work-items/"
+        "bilingual-company-master/evidence/scripts/measure_company_p95.py",
+        "pilot_test(test value on _Test Company% row, restore+commit)": "/home/mohamed/frappe-bench/apps/construction/construction/tests/"
+        "test_bilingual_company_pilot.py",
     }
     import re as _re
+
     for label, path in precedent_files.items():
         hits = []
         for lineno, line in enumerate(open(path, encoding="utf-8"), 1):
@@ -135,33 +159,49 @@ def main():
             fails.append(f"precedent parse {label}: {len(hits)} hits != 1")
             continue
         lineno, digest, role = hits[0]
-        print(f"BRAND_ROOT_CORROBORATION source={label} file={os.path.basename(path)}"
-              f":{lineno} sha16={digest} role={role}")
-    print("GLOSSARY company-name terms=0 (only generic child-company entry; no term "
-          "governs the owner brand or its legal suffix)")
+        print(
+            f"BRAND_ROOT_CORROBORATION source={label} file={os.path.basename(path)}"
+            f":{lineno} sha16={digest} role={role}"
+        )
+    print(
+        "GLOSSARY company-name terms=0 (only generic child-company entry; no term "
+        "governs the owner brand or its legal suffix)"
+    )
 
     if fails:
         for f in fails:
             print("FAIL:", f)
         print("INVENTORY RESULT: FAIL")
         sys.exit(1)
-    print("FINDINGS F-5H-1 21 companies: 1 active owner (Elrefae, EGP/Egypt, flat, "
-          "in transactional + scope-selector use) + 20 test noise (13 _Test* + 7 demo/test "
-          "records; 5 is_group, 5 parented — all test)")
-    print("FINDINGS F-5H-2 Company.save() enqueues jobs: without queue redis (11000) the "
-          "save raises ConnectionError mid-flight — apply must run with the queue up "
-          "(probe-disclosed); enqueue source not statically isolated, apply.log must "
-          "capture the traceback/job name")
-    print("FINDINGS F-5H-3 no Company fixture JSON -> no sync-wipe risk; hook binding "
-          "present; registry active")
-    print("FINDINGS F-5H-4 Arabic pre-state 0 site-wide; identity name == company_name "
-          "for Elrefae ('Elrefae'); no name edits ever (rename triggers abbr cascade)")
-    print("FINDINGS F-5H-5 brand root corroborated by two committed artefacts "
-          "(sha16 above) — in-repo corroboration, NOT an established display name for "
-          "Elrefae; primary + alternates = owner display-form decision (no glossary term)")
-    print("FINDINGS F-5H-6 Company.on_update unconditionally re-sets Currency EGP "
-          "enabled=1 (already 1) -> bumps tabCurrency.modified; the 1-row invariant "
-          "covers company fields; verify expects/discloses the Currency modified bump")
+    print(
+        "FINDINGS F-5H-1 21 companies: 1 active owner (Elrefae, EGP/Egypt, flat, "
+        "in transactional + scope-selector use) + 20 test noise (13 _Test* + 7 demo/test "
+        "records; 5 is_group, 5 parented — all test)"
+    )
+    print(
+        "FINDINGS F-5H-2 Company.save() enqueues jobs: without queue redis (11000) the "
+        "save raises ConnectionError mid-flight — apply must run with the queue up "
+        "(probe-disclosed); enqueue source not statically isolated, apply.log must "
+        "capture the traceback/job name"
+    )
+    print(
+        "FINDINGS F-5H-3 no Company fixture JSON -> no sync-wipe risk; hook binding "
+        "present; registry active"
+    )
+    print(
+        "FINDINGS F-5H-4 Arabic pre-state 0 site-wide; identity name == company_name "
+        "for Elrefae ('Elrefae'); no name edits ever (rename triggers abbr cascade)"
+    )
+    print(
+        "FINDINGS F-5H-5 brand root corroborated by two committed artefacts "
+        "(sha16 above) — in-repo corroboration, NOT an established display name for "
+        "Elrefae; primary + alternates = owner display-form decision (no glossary term)"
+    )
+    print(
+        "FINDINGS F-5H-6 Company.on_update unconditionally re-sets Currency EGP "
+        "enabled=1 (already 1) -> bumps tabCurrency.modified; the 1-row invariant "
+        "covers company fields; verify expects/discloses the Currency modified bump"
+    )
     print("PHASE1_FROZEN_MATCH yes (1 = Elrefae)")
     print("PRE_STATE_ARABIC 0")
     print("INVENTORY RESULT: PASS")

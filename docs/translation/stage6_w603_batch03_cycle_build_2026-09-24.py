@@ -4,6 +4,7 @@ This script modifies only repository release artifacts and never the Frappe
 site. Run after proposal quorum PASS; AI-R must approve the resulting exact
 bundle before the test-site import.
 """
+
 from __future__ import annotations
 
 import csv
@@ -40,10 +41,23 @@ VERSION = "1.6"
 NOW = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
 DECISION_REF = "stage6-W6-3 batch-03 owner-approved 2026-09-24"
 FIELDS = [
-    "language", "source_text", "context", "ct_app", "translated_text", "domain",
-    "release_status", "release_version", "a1_reviewer", "a1_approved_at",
-    "a2_reviewer", "a2_approved_at", "a3_reviewer", "a3_approved_at",
-    "references", "notes", "decision_ref",
+    "language",
+    "source_text",
+    "context",
+    "ct_app",
+    "translated_text",
+    "domain",
+    "release_status",
+    "release_version",
+    "a1_reviewer",
+    "a1_approved_at",
+    "a2_reviewer",
+    "a2_approved_at",
+    "a3_reviewer",
+    "a3_approved_at",
+    "references",
+    "notes",
+    "decision_ref",
 ]
 
 
@@ -72,7 +86,11 @@ def main() -> None:
     for r in proposal:
         actual_counts[r["proposed_disposition"]] = actual_counts.get(r["proposed_disposition"], 0) + 1
     assert actual_counts == expected_counts, actual_counts
-    assert all(r["proposed_ar"] == site_values[r["source_text"]] for r in proposal if r["proposed_disposition"] == "preserved-site-override")
+    assert all(
+        r["proposed_ar"] == site_values[r["source_text"]]
+        for r in proposal
+        if r["proposed_disposition"] == "preserved-site-override"
+    )
     assert all(r["proposed_ar"] == "" for r in proposal if r["proposed_disposition"] == "EXCEPTION-technical")
     for reviewer in REVIEWERS:
         data = (ROOT / reviewer["path"]).read_text(encoding="utf-8")
@@ -84,28 +102,40 @@ def main() -> None:
         disp = r["proposed_disposition"]
         if disp == "PROPOSED-payload":
             translated = r["proposed_ar"]
-            released_rows.append({
-                "language": "ar", "source_text": r["source_text"], "context": "",
-                "ct_app": "erpnext", "translated_text": translated,
-                "domain": "stock-desk", "release_status": "Released",
-                "release_version": VERSION,
-                "a1_reviewer": "AI-A1 (/root/w603_a1)", "a1_approved_at": NOW,
-                "a2_reviewer": "AI-A2 (/root/w603_a2)", "a2_approved_at": NOW,
-                "a3_reviewer": "AI-A3 (/root/w603_a3)", "a3_approved_at": NOW,
-                "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-03",
-                "notes": "AI proposal; independent A1/A2/A3 PASS bound to proposal SHA " + PROPOSAL_SHA,
-                "decision_ref": f"content:{PAYLOAD.relative_to(ROOT)}",
-            })
+            released_rows.append(
+                {
+                    "language": "ar",
+                    "source_text": r["source_text"],
+                    "context": "",
+                    "ct_app": "erpnext",
+                    "translated_text": translated,
+                    "domain": "stock-desk",
+                    "release_status": "Released",
+                    "release_version": VERSION,
+                    "a1_reviewer": "AI-A1 (/root/w603_a1)",
+                    "a1_approved_at": NOW,
+                    "a2_reviewer": "AI-A2 (/root/w603_a2)",
+                    "a2_approved_at": NOW,
+                    "a3_reviewer": "AI-A3 (/root/w603_a3)",
+                    "a3_approved_at": NOW,
+                    "references": "glossary v2.0; vendor stock PO locations; plan D5; W6-3 batch-03",
+                    "notes": "AI proposal; independent A1/A2/A3 PASS bound to proposal SHA " + PROPOSAL_SHA,
+                    "decision_ref": f"content:{PAYLOAD.relative_to(ROOT)}",
+                }
+            )
             disp = "quorum-confirmed-payload"
         else:
             translated = r["proposed_ar"]
-        applied.append({
-            "source_text": r["source_text"], "translated_text": translated,
-            "quorum_decision": disp,
-            "disposition_rationale": r["disposition_rationale"],
-            "decision_ref": DECISION_REF,
-            "proposal_sha256": PROPOSAL_SHA,
-        })
+        applied.append(
+            {
+                "source_text": r["source_text"],
+                "translated_text": translated,
+                "quorum_decision": disp,
+                "disposition_rationale": r["disposition_rationale"],
+                "decision_ref": DECISION_REF,
+                "proposal_sha256": PROPOSAL_SHA,
+            }
+        )
 
     with PAYLOAD.open("w", encoding="utf-8", newline="") as fh:
         writer = csv.DictWriter(fh, fieldnames=list(applied[0]), lineterminator="\n")
@@ -132,29 +162,54 @@ def main() -> None:
         src, val = r["source_text"], r["translated_text"]
         proposal_hash = hashlib.sha256(f"{src}|{val}".encode()).hexdigest()
         ident_parts = [
-            r["language"], r["ct_app"], r["context"], src, val,
-            r["a1_reviewer"], r["a1_approved_at"], r["a2_reviewer"], r["a2_approved_at"],
-            r["a3_reviewer"], r["a3_approved_at"], r["release_version"], r["domain"],
-            r["references"], proposal_hash,
+            r["language"],
+            r["ct_app"],
+            r["context"],
+            src,
+            val,
+            r["a1_reviewer"],
+            r["a1_approved_at"],
+            r["a2_reviewer"],
+            r["a2_approved_at"],
+            r["a3_reviewer"],
+            r["a3_approved_at"],
+            r["release_version"],
+            r["domain"],
+            r["references"],
+            proposal_hash,
         ]
         did = row_decision_id(ident_parts, refs)
         assert did not in old
         old[did] = {
-            "language": r["language"], "ct_app": r["ct_app"], "context": r["context"],
-            "source_text": src, "translated_text": val, "domain": r["domain"],
+            "language": r["language"],
+            "ct_app": r["ct_app"],
+            "context": r["context"],
+            "source_text": src,
+            "translated_text": val,
+            "domain": r["domain"],
             "reviewers": [r["a1_reviewer"], r["a2_reviewer"], r["a3_reviewer"]],
             "timestamps": [r["a1_approved_at"], r["a2_approved_at"], r["a3_approved_at"]],
-            "release_version": r["release_version"], "references": r["references"],
+            "release_version": r["release_version"],
+            "references": r["references"],
             "proposal": {"arabic": val, "sha256": proposal_hash},
             "verdicts": {
-                reviewer["id"]: {"decision": "approve", "confidence": "high", "session": reviewer["session"], "model": reviewer["model"]}
+                reviewer["id"]: {
+                    "decision": "approve",
+                    "confidence": "high",
+                    "session": reviewer["session"],
+                    "model": reviewer["model"],
+                }
                 for reviewer in REVIEWERS
             },
             "artifacts": refs,
         }
     doc["generated_utc"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-    doc["note"] = "W6-3 batch-03 additions bind quorum PASS to the exact proposal SHA; historical decisions retained."
-    DECISIONS.write_text(json.dumps(doc, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    doc["note"] = (
+        "W6-3 batch-03 additions bind quorum PASS to the exact proposal SHA; historical decisions retained."
+    )
+    DECISIONS.write_text(
+        json.dumps(doc, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
 
     print(f"scope={len(scope)} dispositions={actual_counts} releases={len(released_rows)}")
     print(f"catalog={len(existing)}+{len(released_rows)}={len(existing)+len(released_rows)}")

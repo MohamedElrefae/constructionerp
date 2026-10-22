@@ -212,7 +212,18 @@
 			vfcDebugLog("log", "[VFC] attach() called for:", frm.doctype);
 			// Idempotency: only inject once per frm instance
 			if (frm._vfc_attached) {
-				// On subsequent refreshes, just re-apply saved state
+				// Native refresh_header() clears custom_actions and removes the
+				// injected button. Re-inject when it is missing/detached;
+				// _injectButton is idempotent (icon/badge guards, label dedupe).
+				// Panel build and the Escape listener are NOT repeated here.
+				if (!frm._vfc_btn || !document.documentElement.contains(frm._vfc_btn)) {
+					vfcDebugLog(
+						"log",
+						"[VFC] toolbar cleared; re-injecting button for",
+						frm.doctype
+					);
+					this._injectButton(frm);
+				}
 				this._restoreState(frm);
 				return;
 			}
@@ -239,34 +250,36 @@
 			const pageHead =
 				frm.page.page_actions?.[0] || frm.page.$page?.find(".page-actions")?.[0];
 
-			// Use Frappe's native button API to add it to the right side of page head
-			frm.page.add_inner_button(
-				`${ICON_GRID} ${__("Form Config")}`,
-				() => this._togglePanel(frm),
-				null,
-				"vfc-btn"
-			);
+			// Native buttons escape labels; decorate the returned element with
+			// the icon so its SVG cannot become an oversized text label.
+			const label = __("Form Config");
+			const $btn = frm.page.add_inner_button(label, () => this._togglePanel(frm));
 
-			// Find the button we just added and enhance it
-			setTimeout(() => {
-				const btn = frm.page.inner_toolbar
-					?.find("button")
-					.filter((_, el) => el.innerHTML.includes("Form Config"))
-					.get(0);
+			// Use the returned handle instead of searching for an English label.
+			const btn = $btn && $btn.jquery ? $btn.get(0) : $btn || null;
 
-				if (btn) {
-					btn.classList.add("vfc-btn");
-					frm._vfc_btn = btn;
+			if (!btn) return;
+			btn.classList.add("vfc-btn");
+			frm._vfc_btn = btn;
 
-					// Add badge
-					const badge = document.createElement("span");
-					badge.className = "vfc-badge";
-					badge.id = `vfc-badge-${frm.doctype.replace(/\s/g, "-")}`;
-					badge.textContent = this._countVisibleFields(frm);
-					btn.style.position = "relative";
-					btn.appendChild(badge);
-				}
-			}, 100);
+			// The static icon is decorative; the translated label names the button.
+			if (!btn.querySelector(".vfc-btn-icon")) {
+				const icon = document.createElement("span");
+				icon.className = "vfc-btn-icon";
+				icon.setAttribute("aria-hidden", "true");
+				icon.innerHTML = ICON_GRID;
+				btn.insertBefore(icon, btn.querySelector(".es-button__label") || btn.firstChild);
+			}
+
+			// Native button reuse must not duplicate the icon or badge.
+			if (!btn.querySelector(".vfc-badge")) {
+				const badge = document.createElement("span");
+				badge.className = "vfc-badge";
+				badge.id = `vfc-badge-${frm.doctype.replace(/\s/g, "-")}`;
+				badge.textContent = this._countVisibleFields(frm);
+				btn.style.position = "relative";
+				btn.appendChild(badge);
+			}
 		},
 
 		/* ─────────────────────────────────────────────────────────
@@ -288,6 +301,8 @@
 			panel.id = panelId;
 			panel.className = "vfc-panel";
 			panel.setAttribute("data-doctype", dt);
+			// Inline controls resolve to the exact form that rendered this panel.
+			panel.__vfc_frm = frm;
 
 			panel.innerHTML = `
         <!-- Head -->
@@ -336,8 +351,8 @@
                 ${ICON_COL} ${__("Column Density")}
               </div>
               <div style="font-size:10px;color:var(--ct-text-muted);margin-bottom:8px">${__(
-                "Density saves automatically when you pick it."
-              )}</div>
+					"Density saves automatically when you pick it."
+				)}</div>
               <div class="vfc-density-seg" data-panel="${panelId}">
                 <div class="vfc-den-opt" data-den="1" title="${__(
 					"1 Column — stacked, easy reading"
@@ -426,7 +441,9 @@
 
         <!-- Footer -->
         <div class="vfc-foot">
-          <span class="vfc-foot-hint" id="vfc-status-${dtId}">${__("Saved via user settings")}</span>
+          <span class="vfc-foot-hint" id="vfc-status-${dtId}">${__(
+				"Saved via user settings"
+			)}</span>
           <button class="btn btn-default btn-sm" data-vfc-close="${panelId}">${__(
 				"Close"
 			)}</button>
@@ -594,7 +611,7 @@
             <input type="checkbox" id="vfc_vc_${dtId}_${f.fieldname}"
               data-field="${f.fieldname}" class="vfc-vis-check"
               ${isHidden ? "" : "checked"}
-              onchange="window._VFC._onVisChange(this, '${frm.doctype}')" />
+				  onchange="window._VFC._onVisChange(this, '${frm.doctype}')" />
             <span class="vfc-vis-label">${__(f.label || f.fieldname)}</span>
             <span class="vfc-vis-type">${f.fieldtype}</span>
           </label>`;
@@ -609,15 +626,23 @@
 			if (cntEl) cntEl.textContent = visible;
 		},
 
+		_editorForm(element, doctype) {
+			const panel = element?.closest?.(".vfc-panel");
+			const frm = panel?.__vfc_frm;
+			return frm && frm.doctype === doctype && frm._vfc_panel === panel && panel.isConnected
+				? frm
+				: null;
+		},
 
-		_onVisChange(checkbox, doctype) {
+		_onVisChange(checkbox, expectedDoctype) {
+			const frm = this._editorForm(checkbox, expectedDoctype);
+			if (!frm) return;
+			const doctype = frm.doctype;
 			const fieldname = checkbox.getAttribute("data-field");
 			const show = checkbox.checked;
 
 			// Live toggle on the form
-			if (frappe.ui.form && cur_frm && cur_frm.doctype === doctype) {
-				cur_frm.toggle_display(fieldname, show);
-			}
+			if (frappe.ui.form) frm.toggle_display(fieldname, show);
 
 			// Update badge
 			const dtId = doctype.replace(/\s/g, "-");
@@ -625,8 +650,8 @@
 			const visibleCount = Array.from(allChecks).filter(
 				(c) => c.checked && !c.disabled
 			).length;
-			const reqCount = cur_frm?.fields_dict
-				? Object.values(cur_frm.fields_dict).filter((f) => f.df?.reqd).length
+			const reqCount = frm.fields_dict
+				? Object.values(frm.fields_dict).filter((f) => f.df?.reqd).length
 				: 0;
 			const badge = document.getElementById(`vfc-badge-${doctype.replace(/\s/g, "-")}`);
 			const cntEl = document.getElementById(`vfc-vis-cnt-${dtId}`);
@@ -635,7 +660,7 @@
 
 			// F23-D002: visibility is staged, not saved. Reflect that in the panel so the
 			// difference from density (which saves on click) is never a surprise.
-			this._updateDirtyStatus(doctype);
+			this._updateDirtyStatus(frm);
 		},
 
 		/* ─────────────────────────────────────────────────────────
@@ -644,28 +669,35 @@
        Only the Fields tab's staged state is tracked. Density is applied and saved the moment
        it is picked, so it can never be "pending".
     ───────────────────────────────────────────────────────── */
-		_dirtyFields(doctype) {
-			const saved = (loadUserSettings(doctype).vfc_hidden_fields || []).slice().sort();
-			const panel = cur_frm?._vfc_panel;
+		_dirtyFields(frm) {
+			if (!frm) return [];
+			const saved = (loadUserSettings(frm.doctype).vfc_hidden_fields || []).slice().sort();
+			const panel = frm._vfc_panel;
 			if (!panel) return [];
 			const checks = Array.from(panel.querySelectorAll(".vfc-vis-check"));
 			const staged = checks
 				.filter((c) => !c.checked && !c.disabled)
 				.map((c) => c.getAttribute("data-field"))
 				.sort();
-			return saved.filter((f) => !staged.includes(f)).concat(staged.filter((f) => !saved.includes(f)));
+			return saved
+				.filter((f) => !staged.includes(f))
+				.concat(staged.filter((f) => !saved.includes(f)));
 		},
 
 		/* ─────────────────────────────────────────────────────────
        _updateDirtyStatus — drive the unsaved-changes indicator in the panel footer.
     ───────────────────────────────────────────────────────── */
-		_updateDirtyStatus(doctype) {
-			const panel = cur_frm?._vfc_panel;
+		_updateDirtyStatus(frm) {
+			const panel = frm?._vfc_panel;
+			const doctype = frm?.doctype;
+			if (!doctype) return;
 			const el = panel?.querySelector(`#vfc-status-${doctype.replace(/\s/g, "-")}`);
 			if (!el) return;
-			const dirty = this._dirtyFields(doctype);
+			const dirty = this._dirtyFields(frm);
 			if (dirty.length) {
-				el.textContent = __("Unsaved changes: {0} field(s). Apply & Save to keep them.", [dirty.length]);
+				el.textContent = __("Unsaved changes: {0} field(s). Apply & Save to keep them.", [
+					dirty.length,
+				]);
 				el.style.color = "var(--ct-danger)";
 				el.style.fontWeight = "700";
 				el.classList.add("vfc-dirty");
@@ -685,8 +717,8 @@
        F23-D002: the Close button, the Escape key and the backdrop all route through here,
        so none of them can silently discard staged visibility.
     ───────────────────────────────────────────────────────── */
-		_closeIfClean(frm, doctype) {
-			if (!this._dirtyFields(doctype).length) {
+		_closeIfClean(frm) {
+			if (!this._dirtyFields(frm).length) {
 				this._togglePanel(frm, false);
 				return;
 			}
@@ -704,8 +736,8 @@
        staged. The router fires "change" without checking a return value, so this warns and,
        when declined, puts the address bar back on the form the user was on.
     ───────────────────────────────────────────────────────── */
-		_onRouteChange(frm, doctype) {
-			if (!this._dirtyFields(doctype).length) return;
+		_onRouteChange(frm) {
+			if (!this._dirtyFields(frm).length) return;
 			const from = frappe.get_route_str();
 			frappe.confirm(
 				__("You have unsaved layout changes. Leave and discard them?"),
@@ -878,7 +910,7 @@
 			await saveUserSettings(dt, "vfc_hidden_fields", hiddenFields);
 
 			// F23-D002: the staged change is now saved — clear the indicator.
-			this._updateDirtyStatus(dt);
+			this._updateDirtyStatus(frm);
 
 			// 3. Apply preset (if one is selected)
 			const activePreset = frm._vfc_panel?.querySelector(".vfc-pre-item.vfc-pre-active");
@@ -960,7 +992,7 @@
 						await resetUserSettings(dt);
 						this._restoreVfcHiddenFieldVisibility(frm, hiddenFields);
 						// F23-D002: staged visibility is discarded by the reset — clear the indicator.
-						this._updateDirtyStatus(dt);
+						this._updateDirtyStatus(frm);
 						this._renderDensityPreview(dtId, loadDensity(dt));
 
 						if (window.VFCLayoutEngine) {
@@ -1086,8 +1118,7 @@
 			const open = Array.from(document.querySelectorAll(".vfc-panel.vfc-panel-open"));
 			if (!open.length) return;
 			const dirty = open.filter((p) => {
-				const dt = p.getAttribute("data-doctype");
-				return dt && this._dirtyFields(dt).length;
+				return p.__vfc_frm && this._dirtyFields(p.__vfc_frm).length;
 			});
 			if (!dirty.length) {
 				this._closeAll();
@@ -1440,14 +1471,14 @@
 			}" style="display:flex;align-items:center;background:var(--ct-bg-3);border:1px solid var(--ct-border);padding:6px 8px;border-radius:4px;font-size:11px;cursor:grab;margin-bottom:4px;gap:6px">
               <span class="vfc-sort-handle" style="color:var(--ct-text-muted);cursor:grab">☰</span>
               <span class="vfc-arrow-controls" style="display:inline-flex;gap:2px">
-                <button class="btn btn-default btn-xs" onclick="window._VFC._moveFieldUp('${
+                <button class="btn btn-default btn-xs" onclick="window._VFC._moveFieldUp(this, '${
 					frm.doctype
 				}', ${sIdx}, '${fld.fieldname}')" ${
 							first ? "disabled style='opacity:0.3'" : ""
 						} style="padding:0 4px;font-size:10px;line-height:1.4" title="${__(
 							"Move Up"
 						)}">▲</button>
-                <button class="btn btn-default btn-xs" onclick="window._VFC._moveFieldDown('${
+                <button class="btn btn-default btn-xs" onclick="window._VFC._moveFieldDown(this, '${
 					frm.doctype
 				}', ${sIdx}, '${fld.fieldname}')" ${
 							last ? "disabled style='opacity:0.3'" : ""
@@ -1480,14 +1511,14 @@
             <div style="display:flex;align-items:center;gap:6px">
               <span class="vfc-sec-sort-handle" style="color:var(--ct-text-muted);cursor:grab;font-size:14px">☰</span>
               <span class="vfc-arrow-controls" style="display:inline-flex;gap:2px">
-                <button class="btn btn-default btn-xs" onclick="window._VFC._moveSectionUp('${
+                <button class="btn btn-default btn-xs" onclick="window._VFC._moveSectionUp(this, '${
 					frm.doctype
 				}', ${sIdx})" ${
 					secFirst ? "disabled style='opacity:0.3'" : ""
 				} style="padding:0 4px;font-size:10px;line-height:1.4" title="${__(
 					"Move Up"
 				)}">▲</button>
-                <button class="btn btn-default btn-xs" onclick="window._VFC._moveSectionDown('${
+                <button class="btn btn-default btn-xs" onclick="window._VFC._moveSectionDown(this, '${
 					frm.doctype
 				}', ${sIdx})" ${
 					secLast ? "disabled style='opacity:0.3'" : ""
@@ -1533,7 +1564,7 @@
                 Clpsd
               </label>
 
-              <button class="btn btn-default btn-xs" onclick="window._VFC._deleteSection('${
+              <button class="btn btn-default btn-xs" onclick="window._VFC._deleteSection(this, '${
 					frm.doctype
 				}', ${sIdx})" style="padding:2px 5px;color:var(--ct-danger);border-color:transparent;background:transparent" title="${__(
 					"Delete Section"
@@ -1640,8 +1671,9 @@
 		},
 
 		_onFieldColChange(select, doctype, sIdx, fieldname) {
-			if (cur_frm && cur_frm.doctype === doctype && cur_frm._vfc_temp_layout) {
-				const field = (cur_frm._vfc_temp_layout[sIdx].fields || []).find(
+			const frm = this._editorForm(select, doctype);
+			if (frm?._vfc_temp_layout) {
+				const field = (frm._vfc_temp_layout[sIdx].fields || []).find(
 					(f) => f.fieldname === fieldname
 				);
 				if (field) {
@@ -1651,39 +1683,43 @@
 		},
 
 		_onSecLabelChange(input, doctype, sIdx) {
-			if (cur_frm && cur_frm.doctype === doctype && cur_frm._vfc_temp_layout) {
-				if (cur_frm._vfc_temp_layout[sIdx]._unassigned) return;
-				cur_frm._vfc_temp_layout[sIdx].label = input.value;
+			const frm = this._editorForm(input, doctype);
+			if (frm?._vfc_temp_layout) {
+				if (frm._vfc_temp_layout[sIdx]._unassigned) return;
+				frm._vfc_temp_layout[sIdx].label = input.value;
 			}
 		},
 
 		_onSecColCountChange(select, doctype, sIdx) {
-			if (cur_frm && cur_frm.doctype === doctype && cur_frm._vfc_temp_layout) {
-				cur_frm._vfc_temp_layout[sIdx].column_count = parseInt(select.value, 10);
+			const frm = this._editorForm(select, doctype);
+			if (frm?._vfc_temp_layout) {
+				frm._vfc_temp_layout[sIdx].column_count = parseInt(select.value, 10);
 			}
 		},
 
 		_onSecCollapsibleChange(checkbox, doctype, sIdx) {
-			if (cur_frm && cur_frm.doctype === doctype && cur_frm._vfc_temp_layout) {
-				cur_frm._vfc_temp_layout[sIdx].collapsible = checkbox.checked;
+			const frm = this._editorForm(checkbox, doctype);
+			if (frm?._vfc_temp_layout) {
+				frm._vfc_temp_layout[sIdx].collapsible = checkbox.checked;
 				if (!checkbox.checked) {
-					cur_frm._vfc_temp_layout[sIdx].collapsed_by_default = false;
+					frm._vfc_temp_layout[sIdx].collapsed_by_default = false;
 				}
-				this._renderSectionsListHTML(cur_frm, doctype.replace(/\s/g, "-"));
+				this._renderSectionsListHTML(frm, doctype.replace(/\s/g, "-"));
 			}
 		},
 
-		_deleteSection(doctype, sIdx) {
-			if (cur_frm && cur_frm.doctype === doctype && cur_frm._vfc_temp_layout) {
-				if (cur_frm._vfc_temp_layout[sIdx]._unassigned) return;
-				const deletedSec = cur_frm._vfc_temp_layout[sIdx];
+		_deleteSection(element, doctype, sIdx) {
+			const frm = this._editorForm(element, doctype);
+			if (frm?._vfc_temp_layout) {
+				if (frm._vfc_temp_layout[sIdx]._unassigned) return;
+				const deletedSec = frm._vfc_temp_layout[sIdx];
 				const fieldsToMove = deletedSec.fields || [];
 
-				cur_frm._vfc_temp_layout.splice(sIdx, 1);
+				frm._vfc_temp_layout.splice(sIdx, 1);
 
 				if (fieldsToMove.length) {
-					if (!cur_frm._vfc_temp_layout.length) {
-						cur_frm._vfc_temp_layout.push({
+					if (!frm._vfc_temp_layout.length) {
+						frm._vfc_temp_layout.push({
 							id: "sec_default_moved",
 							label: "General Info",
 							column_count: 2,
@@ -1694,13 +1730,13 @@
 							fields: [],
 						});
 					}
-					cur_frm._vfc_temp_layout[0].fields = (
-						cur_frm._vfc_temp_layout[0].fields || []
-					).concat(fieldsToMove);
+					frm._vfc_temp_layout[0].fields = (frm._vfc_temp_layout[0].fields || []).concat(
+						fieldsToMove
+					);
 				}
 
 				const dtId = doctype.replace(/\s/g, "-");
-				this._renderSectionsListHTML(cur_frm, dtId);
+				this._renderSectionsListHTML(frm, dtId);
 			}
 		},
 
@@ -1754,8 +1790,9 @@
 		},
 
 		_onSecCollapsedByDefaultChange(checkbox, doctype, sIdx) {
-			if (cur_frm && cur_frm.doctype === doctype && cur_frm._vfc_temp_layout) {
-				cur_frm._vfc_temp_layout[sIdx].collapsed_by_default = checkbox.checked;
+			const frm = this._editorForm(checkbox, doctype);
+			if (frm?._vfc_temp_layout) {
+				frm._vfc_temp_layout[sIdx].collapsed_by_default = checkbox.checked;
 			}
 		},
 
@@ -1763,42 +1800,46 @@
         Field and Section move handlers (Phase 4 — touch arrow controls)
      ───────────────────────────────────────────────────────── */
 
-		_moveFieldUp(doctype, sIdx, fieldname) {
-			if (!cur_frm || cur_frm.doctype !== doctype || !cur_frm._vfc_temp_layout) return;
-			const fields = cur_frm._vfc_temp_layout[sIdx].fields || [];
+		_moveFieldUp(element, doctype, sIdx, fieldname) {
+			const frm = this._editorForm(element, doctype);
+			if (!frm?._vfc_temp_layout) return;
+			const fields = frm._vfc_temp_layout[sIdx].fields || [];
 			const idx = fields.findIndex((f) => f.fieldname === fieldname);
 			if (idx <= 0) return;
 			[fields[idx - 1], fields[idx]] = [fields[idx], fields[idx - 1]];
 			fields.forEach((f, i) => (f.sort_order = i + 1));
-			this._renderSectionsListHTML(cur_frm, doctype.replace(/\s/g, "-"));
+			this._renderSectionsListHTML(frm, doctype.replace(/\s/g, "-"));
 		},
 
-		_moveFieldDown(doctype, sIdx, fieldname) {
-			if (!cur_frm || cur_frm.doctype !== doctype || !cur_frm._vfc_temp_layout) return;
-			const fields = cur_frm._vfc_temp_layout[sIdx].fields || [];
+		_moveFieldDown(element, doctype, sIdx, fieldname) {
+			const frm = this._editorForm(element, doctype);
+			if (!frm?._vfc_temp_layout) return;
+			const fields = frm._vfc_temp_layout[sIdx].fields || [];
 			const idx = fields.findIndex((f) => f.fieldname === fieldname);
 			if (idx < 0 || idx >= fields.length - 1) return;
 			[fields[idx], fields[idx + 1]] = [fields[idx + 1], fields[idx]];
 			fields.forEach((f, i) => (f.sort_order = i + 1));
-			this._renderSectionsListHTML(cur_frm, doctype.replace(/\s/g, "-"));
+			this._renderSectionsListHTML(frm, doctype.replace(/\s/g, "-"));
 		},
 
-		_moveSectionUp(doctype, sIdx) {
-			if (!cur_frm || cur_frm.doctype !== doctype || !cur_frm._vfc_temp_layout) return;
+		_moveSectionUp(element, doctype, sIdx) {
+			const frm = this._editorForm(element, doctype);
+			if (!frm?._vfc_temp_layout) return;
 			if (sIdx <= 0) return;
-			const layout = cur_frm._vfc_temp_layout;
+			const layout = frm._vfc_temp_layout;
 			[layout[sIdx - 1], layout[sIdx]] = [layout[sIdx], layout[sIdx - 1]];
 			layout.forEach((s, i) => (s.sort_order = i + 1));
-			this._renderSectionsListHTML(cur_frm, doctype.replace(/\s/g, "-"));
+			this._renderSectionsListHTML(frm, doctype.replace(/\s/g, "-"));
 		},
 
-		_moveSectionDown(doctype, sIdx) {
-			if (!cur_frm || cur_frm.doctype !== doctype || !cur_frm._vfc_temp_layout) return;
-			const layout = cur_frm._vfc_temp_layout;
+		_moveSectionDown(element, doctype, sIdx) {
+			const frm = this._editorForm(element, doctype);
+			if (!frm?._vfc_temp_layout) return;
+			const layout = frm._vfc_temp_layout;
 			if (sIdx < 0 || sIdx >= layout.length - 1) return;
 			[layout[sIdx], layout[sIdx + 1]] = [layout[sIdx + 1], layout[sIdx]];
 			layout.forEach((s, i) => (s.sort_order = i + 1));
-			this._renderSectionsListHTML(cur_frm, doctype.replace(/\s/g, "-"));
+			this._renderSectionsListHTML(frm, doctype.replace(/\s/g, "-"));
 		},
 
 		_makeDraggableAndResizable(panel) {

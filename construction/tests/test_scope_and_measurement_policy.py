@@ -12,7 +12,9 @@ import frappe
 from frappe.tests.utils import FrappeTestCase
 
 IN_SCOPE_HDR = "BOQ-2026-8582"  # PROJ-0014, _Test Company (header-level scope probes)
-OUT_SCOPE_HDR = "BOQ-2026-8587"  # PROJ-0015, _Test Company (covered by PM's Company grant, outside PM's scope)
+OUT_SCOPE_HDR = (
+    "BOQ-2026-8587"  # PROJ-0015, _Test Company (covered by PM's Company grant, outside PM's scope)
+)
 
 
 class TestScopeBoundaryAndMeasurementPolicy(FrappeTestCase):
@@ -33,13 +35,28 @@ class TestScopeBoundaryAndMeasurementPolicy(FrappeTestCase):
             root.update({"title": "F11P Root", "boq_header": hdr, "project": "PROJ-0014", "is_group": 1})
             root.insert(ignore_permissions=True)
             leaf = frappe.new_doc("BOQ Structure")
-            leaf.update({"title": "F11P Leaf", "boq_header": hdr, "project": "PROJ-0014",
-                         "parent_structure": root.name, "is_group": 0})
+            leaf.update(
+                {
+                    "title": "F11P Leaf",
+                    "boq_header": hdr,
+                    "project": "PROJ-0014",
+                    "parent_structure": root.name,
+                    "is_group": 0,
+                }
+            )
             leaf.insert(ignore_permissions=True)
             auto = frappe.db.get_value("BOQ Item", {"structure": leaf.name}, "name")
             d = frappe.get_doc("BOQ Item", auto)
-            d.update({"cost_item": "F11 policy works", "quantity": 1000, "unit": "Nos", "factor": 1,
-                      "est_unit_cost": 10, "contract_unit_price": 12})
+            d.update(
+                {
+                    "cost_item": "F11 policy works",
+                    "quantity": 1000,
+                    "unit": "Nos",
+                    "factor": 1,
+                    "est_unit_cost": 10,
+                    "contract_unit_price": 12,
+                }
+            )
             d.save(ignore_permissions=True)
         cls.hdr = hdr
         cls.item = frappe.db.get_value("BOQ Item", {"boq_header": hdr}, "name")

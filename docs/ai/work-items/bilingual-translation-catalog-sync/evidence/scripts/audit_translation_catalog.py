@@ -38,20 +38,67 @@ WORK_ITEM = "bilingual-translation-catalog-sync"
 
 # Master label probes required by the briefing (pass F).
 MASTER_LABELS = [
-    "Company", "Department", "UOM", "Unit of Measure", "Account",
-    "Cost Center", "Warehouse", "Project", "Item", "Customer", "Supplier",
+    "Company",
+    "Department",
+    "UOM",
+    "Unit of Measure",
+    "Account",
+    "Cost Center",
+    "Warehouse",
+    "Project",
+    "Item",
+    "Customer",
+    "Supplier",
     "Chart of Accounts",
 ]
 
 # Standard action-button probes required by the briefing (pass G).
 ACTION_BUTTONS = [
-    "Save", "Submit", "Cancel", "Amend", "Delete", "Print", "Email", "Close",
-    "Reopen", "Draft", "Add", "Edit", "Remove", "Clear", "Search", "Filter",
-    "Refresh", "New", "Copy", "Rename", "Enable", "Disable", "Activate",
-    "Add Row", "Remove Row", "Save and Submit", "Save as Draft", "View",
-    "Open", "Confirm", "Yes", "No", "OK", "Back", "Next", "Done",
-    "Archive", "Restore", "Duplicate", "Share", "Download", "Upload",
-    "Add Child", "Expand All", "Collapse All",
+    "Save",
+    "Submit",
+    "Cancel",
+    "Amend",
+    "Delete",
+    "Print",
+    "Email",
+    "Close",
+    "Reopen",
+    "Draft",
+    "Add",
+    "Edit",
+    "Remove",
+    "Clear",
+    "Search",
+    "Filter",
+    "Refresh",
+    "New",
+    "Copy",
+    "Rename",
+    "Enable",
+    "Disable",
+    "Activate",
+    "Add Row",
+    "Remove Row",
+    "Save and Submit",
+    "Save as Draft",
+    "View",
+    "Open",
+    "Confirm",
+    "Yes",
+    "No",
+    "OK",
+    "Back",
+    "Next",
+    "Done",
+    "Archive",
+    "Restore",
+    "Duplicate",
+    "Share",
+    "Download",
+    "Upload",
+    "Add Child",
+    "Expand All",
+    "Collapse All",
 ]
 
 # English text for the harmonisation patch (no Arabic literals in this file:
@@ -94,8 +141,21 @@ def byte_scan(value):
         cp = ord(ch)
         cat = unicodedata.category(ch)
         if cp in (
-            0x200E, 0x200F, 0x202A, 0x202B, 0x202C, 0x202D, 0x202E,
-            0x2066, 0x2067, 0x2068, 0x2069, 0x200B, 0x200C, 0x200D, 0xFEFF,
+            0x200E,
+            0x200F,
+            0x202A,
+            0x202B,
+            0x202C,
+            0x202D,
+            0x202E,
+            0x2066,
+            0x2067,
+            0x2068,
+            0x2069,
+            0x200B,
+            0x200C,
+            0x200D,
+            0xFEFF,
         ):
             problems.append(f"bidi/zero-width U+{cp:04X}")
         elif cp < 0x20 or cp == 0x7F or 0x80 <= cp <= 0x9F:
@@ -121,8 +181,7 @@ def released_payload_rows():
         for row in csv.DictReader(fh):
             if (row.get("release_status") or "").strip() != "Released":
                 continue
-            key = ((row.get("source_text") or "").strip(),
-                   (row.get("context") or "").strip())
+            key = ((row.get("source_text") or "").strip(), (row.get("context") or "").strip())
             out.setdefault(key, []).append(row)
     return out
 
@@ -136,7 +195,9 @@ def git_head(short=True):
     try:
         out = subprocess.run(
             ["git", "-C", str(REPO), "rev-parse", "--short" if short else "", "HEAD"],
-            capture_output=True, text=True, check=True,
+            capture_output=True,
+            text=True,
+            check=True,
         ).stdout.strip()
         return out
     except Exception as exc:  # pragma: no cover - defensive
@@ -209,14 +270,16 @@ def scan_hardcoded_arabic_labels():
         for line in text.splitlines():
             for m in HARDCODED_AR_RE.finditer(line):
                 lit = m.group(1) or m.group(2) or ""
-                if any("\u0600" <= ch <= "\u06FF" for ch in lit):
+                if any("\u0600" <= ch <= "\u06ff" for ch in lit):
                     digests.append(s16(lit))
         if digests:
-            out.append({
-                "path": str(path.relative_to(REPO)),
-                "hardcoded_arabic_labels": len(digests),
-                "digests": sorted(set(digests)),
-            })
+            out.append(
+                {
+                    "path": str(path.relative_to(REPO)),
+                    "hardcoded_arabic_labels": len(digests),
+                    "digests": sorted(set(digests)),
+                }
+            )
     return sorted(out, key=lambda d: d["path"])
 
 
@@ -251,16 +314,23 @@ def scan_variant_sources(glossary_value, payload_value):
             rel = str(path.relative_to(REPO))
             role = classify_variant(rel, bool(g_hits), bool(p_hits))
             if rel.endswith(".py") and any(
-                k in text for k in ("set_value", "upsert_runtime_translation",
-                                    "import_released_overrides", "TREE_ACTION_TRANSLATIONS")
+                k in text
+                for k in (
+                    "set_value",
+                    "upsert_runtime_translation",
+                    "import_released_overrides",
+                    "TREE_ACTION_TRANSLATIONS",
+                )
             ):
                 role = "app_python_write_path"
-            hits.append({
-                "path": rel,
-                "role": role,
-                "glossary_value_hits": g_hits,
-                "payload_value_hits": p_hits,
-            })
+            hits.append(
+                {
+                    "path": rel,
+                    "role": role,
+                    "glossary_value_hits": g_hits,
+                    "payload_value_hits": p_hits,
+                }
+            )
     return sorted(hits, key=lambda h: (h["role"], h["path"]))
 
 
@@ -269,8 +339,14 @@ def fetch_ar_rows():
         "Translation",
         filters={"language": "ar"},
         fields=[
-            "name", "source_text", "translated_text", "context",
-            "ct_origin", "ct_review_status", "ct_is_catalog_entry", "ct_app",
+            "name",
+            "source_text",
+            "translated_text",
+            "context",
+            "ct_origin",
+            "ct_review_status",
+            "ct_is_catalog_entry",
+            "ct_app",
         ],
         order_by="modified asc, creation asc, name asc",
         limit_page_length=0,
@@ -299,35 +375,42 @@ def build_patch(glossary, payload):
             continue
         forbidden = [t for t in (term.get("forbidden_ar") or []) if t and t in target]
         if forbidden:
-            patches.append({
-                "source_text": src,
-                "error": "released payload value violates the glossary forbidden_ar list",
-                "forbidden_hit_count": len(forbidden),
-            })
+            patches.append(
+                {
+                    "source_text": src,
+                    "error": "released payload value violates the glossary forbidden_ar list",
+                    "forbidden_hit_count": len(forbidden),
+                }
+            )
             continue
         after = dict(term)
         after["approved_ar"] = target
         after["usage_notes"] = NEW_USAGE_NOTES
         after["references"] = NEW_REFERENCES
         after["version"] = "2.1"
-        patches.append({
-            "source_text": src,
-            "context": ctx,
-            "field_changes": {
-                "approved_ar": {"before_sha16": s16(term.get("approved_ar")),
-                                "after_sha16": s16(target)},
-                "usage_notes": {"before_sha16": s16(term.get("usage_notes")),
-                                "after_sha16": s16(NEW_USAGE_NOTES)},
-                "references": {"before_sha16": s16(term.get("references")),
-                               "after_sha16": s16(NEW_REFERENCES)},
-                "version": {"before": term.get("version"), "after": "2.1"},
-            },
-            "before": term,
-            "after": after,
-            "byte_scan_after": byte_scan(target),
-            "payload_release_version": (prow.get("release_version") or "").strip(),
-            "payload_decision_ref": (prow.get("decision_ref") or "").strip(),
-        })
+        patches.append(
+            {
+                "source_text": src,
+                "context": ctx,
+                "field_changes": {
+                    "approved_ar": {"before_sha16": s16(term.get("approved_ar")), "after_sha16": s16(target)},
+                    "usage_notes": {
+                        "before_sha16": s16(term.get("usage_notes")),
+                        "after_sha16": s16(NEW_USAGE_NOTES),
+                    },
+                    "references": {
+                        "before_sha16": s16(term.get("references")),
+                        "after_sha16": s16(NEW_REFERENCES),
+                    },
+                    "version": {"before": term.get("version"), "after": "2.1"},
+                },
+                "before": term,
+                "after": after,
+                "byte_scan_after": byte_scan(target),
+                "payload_release_version": (prow.get("release_version") or "").strip(),
+                "payload_decision_ref": (prow.get("decision_ref") or "").strip(),
+            }
+        )
     return patches
 
 
@@ -354,8 +437,9 @@ def main():
     payload = released_payload_rows()
     terms = glossary["terms"]
 
-    import construction.translation_loader  # noqa: F401  installs the runtime loader
     import frappe.translate as frappe_translate
+
+    import construction.translation_loader
 
     print("=" * 78)
     print(f"AUDIT {WORK_ITEM}")
@@ -374,13 +458,17 @@ def main():
     print(f"rows_total                  : {len(rows)}")
     print(f"by_ct_is_catalog_entry      : {dict(Counter(r.get('ct_is_catalog_entry') for r in rows))}")
     print(f"by_ct_origin                : {dict(Counter((r.get('ct_origin') or '<none>') for r in rows))}")
-    print(f"by_ct_review_status         : {dict(Counter((r.get('ct_review_status') or '<none>') for r in rows))}")
+    print(
+        f"by_ct_review_status         : {dict(Counter((r.get('ct_review_status') or '<none>') for r in rows))}"
+    )
     print(f"empty_translated_text_rows  : {sum(1 for r in rows if not (r.get('translated_text') or ''))}")
     by_src = defaultdict(list)
     for r in rows:
         by_src[r["source_text"]].append(r)
     dup_groups = {k: v for k, v in by_src.items() if len(v) > 1}
-    print(f"duplicate_source_text_groups: {len(dup_groups)} (extra rows {sum(len(v) - 1 for v in dup_groups.values())})")
+    print(
+        f"duplicate_source_text_groups: {len(dup_groups)} (extra rows {sum(len(v) - 1 for v in dup_groups.values())})"
+    )
 
     # ---------------- Pass B: stored-row conformance ----------------
     print("\n--- PASS B: stored-row conformance vs 47 glossary terms ---")
@@ -407,17 +495,23 @@ def main():
                 state = "DIVERGENT"
                 divergent_rows.append((src, m))
             if state != "EXACT":
-                print(f"  {state:9} {src!r} name={m['name']} ctx={m['context']!r} "
-                      f"cat={m.get('ct_is_catalog_entry')} origin={m.get('ct_origin')!r} "
-                      f"cur_sha16={s16(cur)} appr_sha16={s16(appr)}")
-    print(f"stored exact={stored_exact} divergent={stored_divergent} empty={stored_empty} "
-          f"terms_without_row={stored_missing} of {len(terms)}")
+                print(
+                    f"  {state:9} {src!r} name={m['name']} ctx={m['context']!r} "
+                    f"cat={m.get('ct_is_catalog_entry')} origin={m.get('ct_origin')!r} "
+                    f"cur_sha16={s16(cur)} appr_sha16={s16(appr)}"
+                )
+    print(
+        f"stored exact={stored_exact} divergent={stored_divergent} empty={stored_empty} "
+        f"terms_without_row={stored_missing} of {len(terms)}"
+    )
 
     # ---------------- Pass C: effective rendered conformance (AUTHORITATIVE) ---
     frappe_translate.clear_cache()
     merged = frappe_translate.get_all_translations("ar")
     print("\n--- PASS C: EFFECTIVE rendered conformance (authoritative) ---")
-    print(f"loader_installed            : {construction.translation_loader.is_translation_loader_installed()}")
+    print(
+        f"loader_installed            : {construction.translation_loader.is_translation_loader_installed()}"
+    )
     print(f"rendered_dict_size          : {len(merged)}")
     render_match = render_divergent = render_absent = 0
     rendered_divergences = []
@@ -435,14 +529,24 @@ def main():
             rendered_divergences.append({"source_text": src, "state": "empty"})
         elif got != appr:
             render_divergent += 1
-            print(f"  DIVERGENT {src!r} rendered_sha16={s16(got)} appr_sha16={s16(appr)} "
-                  f"rendered_len={len(got)} byte_scan={byte_scan(got)}")
-            rendered_divergences.append({"source_text": src, "state": "divergent",
-                                         "rendered_sha16": s16(got), "appr_sha16": s16(appr)})
+            print(
+                f"  DIVERGENT {src!r} rendered_sha16={s16(got)} appr_sha16={s16(appr)} "
+                f"rendered_len={len(got)} byte_scan={byte_scan(got)}"
+            )
+            rendered_divergences.append(
+                {
+                    "source_text": src,
+                    "state": "divergent",
+                    "rendered_sha16": s16(got),
+                    "appr_sha16": s16(appr),
+                }
+            )
         else:
             render_match += 1
-    print(f"rendered match={render_match} divergent={render_divergent} absent_or_empty={render_absent} "
-          f"of {len(terms)}")
+    print(
+        f"rendered match={render_match} divergent={render_divergent} absent_or_empty={render_absent} "
+        f"of {len(terms)}"
+    )
 
     # ---------------- Pass D: forbidden-term violations at term keys ----------
     print("\n--- PASS D: forbidden_ar violations at term keys (rendered) ---")
@@ -451,7 +555,7 @@ def main():
         got = merged.get(t["source_text"]) or ""
         if not got:
             continue
-        for tok in (t.get("forbidden_ar") or []):
+        for tok in t.get("forbidden_ar") or []:
             if tok and word_boundary(tok).search(got):
                 violations += 1
                 print(f"  VIOLATION {t['source_text']!r} token_sha16={s16(tok)} value_sha16={s16(got)}")
@@ -500,27 +604,37 @@ def main():
             else:
                 comparison = "baseline_available"
                 verdict = "MISMATCH"
-        print(f"  {verdict:9} {label!r:22} sha16={s16(got) if got else '-':16} "
-              f"len={len(got) if got else 0} comparison={comparison}"
-              + (f" baseline_sha16={s16(baseline)}" if baseline else " baseline=<none committed>"))
-        master_rows.append({
-            "label": label,
-            "present": present,
-            "sha16": s16(got) if got else None,
-            "comparison": comparison,
-            "verdict": verdict,
-            "baseline_sha16": s16(baseline) if baseline else None,
-            "baseline_source": str(SMOKE_TEST.relative_to(REPO)) if baseline else None,
-        })
+        print(
+            f"  {verdict:9} {label!r:22} sha16={s16(got) if got else '-':16} "
+            f"len={len(got) if got else 0} comparison={comparison}"
+            + (f" baseline_sha16={s16(baseline)}" if baseline else " baseline=<none committed>")
+        )
+        master_rows.append(
+            {
+                "label": label,
+                "present": present,
+                "sha16": s16(got) if got else None,
+                "comparison": comparison,
+                "verdict": verdict,
+                "baseline_sha16": s16(baseline) if baseline else None,
+                "baseline_source": str(SMOKE_TEST.relative_to(REPO)) if baseline else None,
+            }
+        )
     print(f"master_labels_present       : {masters_present}/{len(MASTER_LABELS)}")
-    print(f"master_labels_with_baseline : {masters_baseline_available}/{len(MASTER_LABELS)} "
-          f"(source {SMOKE_TEST.relative_to(REPO)})")
-    print(f"master_labels_value_verified: {masters_value_verified}/{masters_baseline_available} "
-          f"of those carrying a committed baseline")
+    print(
+        f"master_labels_with_baseline : {masters_baseline_available}/{len(MASTER_LABELS)} "
+        f"(source {SMOKE_TEST.relative_to(REPO)})"
+    )
+    print(
+        f"master_labels_value_verified: {masters_value_verified}/{masters_baseline_available} "
+        f"of those carrying a committed baseline"
+    )
     if masters_baseline_available < len(MASTER_LABELS):
-        print(f"  NOTE (finding C-05): {len(MASTER_LABELS) - masters_baseline_available} of "
-              f"{len(MASTER_LABELS)} master labels have NO committed ratified baseline; they are "
-              f"presence-only and are NOT claimed value-verified.")
+        print(
+            f"  NOTE (finding C-05): {len(MASTER_LABELS) - masters_baseline_available} of "
+            f"{len(MASTER_LABELS)} master labels have NO committed ratified baseline; they are "
+            f"presence-only and are NOT claimed value-verified."
+        )
 
     # ---------------- Pass G: standard action buttons ------------------------
     print("\n--- PASS G: standard action buttons ---")
@@ -546,19 +660,30 @@ def main():
                 continue
             cur = m.get("translated_text") or ""
             if not cur:
-                inert_empty.append({"source_text": src, "name": m["name"],
-                                    "review": m.get("ct_review_status")})
+                inert_empty.append(
+                    {"source_text": src, "name": m["name"], "review": m.get("ct_review_status")}
+                )
             elif cur != appr:
-                inert_divergent.append({
-                    "source_text": src, "name": m["name"], "context": m.get("context"),
-                    "cur_sha16": s16(cur), "appr_sha16": s16(appr),
-                    "review": m.get("ct_review_status"), "renders": False,
-                })
-    print(f"inert_divergent_rows        : {len(inert_divergent)} "
-          f"(sources {len({d['source_text'] for d in inert_divergent})})")
+                inert_divergent.append(
+                    {
+                        "source_text": src,
+                        "name": m["name"],
+                        "context": m.get("context"),
+                        "cur_sha16": s16(cur),
+                        "appr_sha16": s16(appr),
+                        "review": m.get("ct_review_status"),
+                        "renders": False,
+                    }
+                )
+    print(
+        f"inert_divergent_rows        : {len(inert_divergent)} "
+        f"(sources {len({d['source_text'] for d in inert_divergent})})"
+    )
     for d in inert_divergent:
-        print(f"  INERT-DIVERGENT {d['source_text']!r} name={d['name']} "
-              f"cur_sha16={d['cur_sha16']} appr_sha16={d['appr_sha16']} review={d['review']!r}")
+        print(
+            f"  INERT-DIVERGENT {d['source_text']!r} name={d['name']} "
+            f"cur_sha16={d['cur_sha16']} appr_sha16={d['appr_sha16']} review={d['review']!r}"
+        )
     print(f"inert_empty_rows            : {len(inert_empty)}")
     for d in inert_empty:
         print(f"  INERT-EMPTY     {d['source_text']!r} name={d['name']} review={d['review']!r}")
@@ -570,8 +695,10 @@ def main():
     real = [p for p in patches if not p.get("error")]
     print(f"glossary_terms_diverging_from_released_payload: {len(real)}")
     for p in real:
-        print(f"  PATCH {p['source_text']!r} payload_v={p['payload_release_version']} "
-              f"decision_ref={p['payload_decision_ref']!r}")
+        print(
+            f"  PATCH {p['source_text']!r} payload_v={p['payload_release_version']} "
+            f"decision_ref={p['payload_decision_ref']!r}"
+        )
         for f, c in p["field_changes"].items():
             print(f"        {f}: {c}")
         print(f"        byte_scan_after={p['byte_scan_after']}")
@@ -591,29 +718,31 @@ def main():
         found = scan_variant_sources(g_val, p_val)
         print(f"  source {src!r}: files carrying one/both competing values = {len(found)}")
         for h in found:
-            print(f"    {h['role']:24} {h['path']} "
-                  f"glossary_value_hits={h['glossary_value_hits']} "
-                  f"payload_value_hits={h['payload_value_hits']}")
+            print(
+                f"    {h['role']:24} {h['path']} "
+                f"glossary_value_hits={h['glossary_value_hits']} "
+                f"payload_value_hits={h['payload_value_hits']}"
+            )
         app_variants.append({"source_text": src, "files": found})
-    write_paths = [h for a in app_variants for h in a["files"]
-                   if h["role"] == "app_python_write_path"]
-    render_paths = [h for a in app_variants for h in a["files"]
-                    if h["role"] == "app_render_source"]
-    print(f"  app_python_write_path files : {len(write_paths)} "
-          f"-> {[h['path'] for h in write_paths]}")
-    print(f"  app_render_source files     : {len(render_paths)} "
-          f"-> {[h['path'] for h in render_paths]}")
+    write_paths = [h for a in app_variants for h in a["files"] if h["role"] == "app_python_write_path"]
+    render_paths = [h for a in app_variants for h in a["files"] if h["role"] == "app_render_source"]
+    print(f"  app_python_write_path files : {len(write_paths)} " f"-> {[h['path'] for h in write_paths]}")
+    print(f"  app_render_source files     : {len(render_paths)} " f"-> {[h['path'] for h in render_paths]}")
     if write_paths:
-        print("  RISK (finding C-06): a registered patch/review script still carries the "
-              "glossary-side value; on a fresh install or patch re-run it would overwrite the "
-              "runtime row. Mitigated today by construction/translation_service.py "
-              "import_released_overrides_hook (hooks.py after_install/after_migrate), which "
-              "re-imports the payload and clears drift in the same migrate cycle. Not mutated "
-              "this cycle - outside the owner-approved change set.")
+        print(
+            "  RISK (finding C-06): a registered patch/review script still carries the "
+            "glossary-side value; on a fresh install or patch re-run it would overwrite the "
+            "runtime row. Mitigated today by construction/translation_service.py "
+            "import_released_overrides_hook (hooks.py after_install/after_migrate), which "
+            "re-imports the payload and clears drift in the same migrate cycle. Not mutated "
+            "this cycle - outside the owner-approved change set."
+        )
     if render_paths:
-        print("  NOTE (finding C-07): a JSX component hardcodes an Arabic label. It is not "
-              "registered in hooks.py app_include_js and no module imports it, so it does not "
-              "render; recorded as dormant source divergence only.")
+        print(
+            "  NOTE (finding C-07): a JSX component hardcodes an Arabic label. It is not "
+            "registered in hooks.py app_include_js and no module imports it, so it does not "
+            "render; recorded as dormant source divergence only."
+        )
 
     # ---------------- Pass J2: hardcoded Arabic labels in app JS(X) ----------
     print("\n--- PASS J2: hardcoded Arabic __() labels in app JS(X) (REPORT ONLY) ---")
@@ -621,14 +750,18 @@ def main():
     if not hardcoded:
         print("  (none)")
     for d in hardcoded:
-        print(f"  {d['path']} hardcoded_arabic_labels={d['hardcoded_arabic_labels']} "
-              f"digests={d['digests'][:6]}{'...' if len(d['digests']) > 6 else ''}")
+        print(
+            f"  {d['path']} hardcoded_arabic_labels={d['hardcoded_arabic_labels']} "
+            f"digests={d['digests'][:6]}{'...' if len(d['digests']) > 6 else ''}"
+        )
     tv = next((d for d in hardcoded if d["path"].endswith("components/TreeView.jsx")), None)
     if tv:
-        print("  FINDING C-07: construction/public/js/components/TreeView.jsx passes hardcoded "
-              "Arabic to __(); the file is not in hooks.py app_include_js and is imported by no "
-              "module, so it never renders. Dormant source divergence only - not mutated this "
-              "cycle (outside the owner-approved change set).")
+        print(
+            "  FINDING C-07: construction/public/js/components/TreeView.jsx passes hardcoded "
+            "Arabic to __(); the file is not in hooks.py app_include_js and is imported by no "
+            "module, so it never renders. Dormant source divergence only - not mutated this "
+            "cycle (outside the owner-approved change set)."
+        )
 
     # ---------------- Proposal ----------------------------------------------
     PRIVATE.mkdir(parents=True, exist_ok=True)
@@ -685,10 +818,12 @@ def main():
     print(f"sha256                  : {sha256_bytes(out.read_bytes())}")
     print(f"glossary_sha256_before  : {glossary_sha_before}")
     print(f"glossary_sha256_after   : {after_sha}")
-    print(f"site_translation_writes : 0")
+    print("site_translation_writes : 0")
     print(f"glossary_term_patches   : {len(real)}")
-    print("Arabic values are held in the private proposal only (privacy R4); "
-          "this log carries sha16 digests exclusively.")
+    print(
+        "Arabic values are held in the private proposal only (privacy R4); "
+        "this log carries sha16 digests exclusively."
+    )
     print("\nAUDIT RESULT: PASS" if not errors else "\nAUDIT RESULT: FAIL")
 
 

@@ -1272,10 +1272,7 @@ class TestBilingualAccountPilot(unittest.TestCase):
         import json
         import math
 
-        stage3 = (
-            ROOT
-            / "docs/ai/work-items/erp-arabic-bilingual-data/evidence/raw-logs/stage3"
-        )
+        stage3 = ROOT / "docs/ai/work-items/erp-arabic-bilingual-data/evidence/raw-logs/stage3"
         artifact_path = stage3 / "p95-measurement-wave1.json"
         baseline_path = stage3 / "p95-measurement.json"
         self.assertTrue(

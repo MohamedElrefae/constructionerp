@@ -48,6 +48,23 @@ class TestBilingualWave1Phase2Pilot(unittest.TestCase):
     def setUpClass(cls):
         frappe.set_user("Administrator")
         patch_execute()
+        cls._cc_parent = None
+
+        # Test-owned fixture: a valid Cost Center parent belonging to the
+        # fixture's own company, so tests do not depend on hardcoded names.
+        company = frappe.db.get_value("Company", {}, "name") or "Elrefae"
+        roots = frappe.get_all(
+            "Cost Center",
+            filters={"company": company, "parent_cost_center": ["is", "not set"]},
+            limit=1,
+        )
+        if roots:
+            cls._cc_parent = roots[0].name
+
+    @classmethod
+    def tearDownClass(cls):
+        # No fixture to clean up: we reuse an existing root Cost Center.
+        pass
 
     def test_zero_service_edits_guard(self):
         """Phase 2 primary claim: bilingual_service.py and search.py must be byte-identical to commit 81af417."""
@@ -140,7 +157,12 @@ class TestBilingualWave1Phase2Pilot(unittest.TestCase):
     def test_server_authoritative_norm_derivation_and_poison_overwritten(self):
         """Client-passed POISONED-KEY is overwritten with server-derived norm on save."""
         targets = [
-            ("Cost Center", "cost_center_name_ar", "cost_center_name_ar_norm", "مركز تكلفة العمليات الإنشائية"),
+            (
+                "Cost Center",
+                "cost_center_name_ar",
+                "cost_center_name_ar_norm",
+                "مركز تكلفة العمليات الإنشائية",
+            ),
             ("Warehouse", "warehouse_name_ar", "warehouse_name_ar_norm", "مستودع المواد الإنشائية الرئيسي"),
             ("Project", "project_name_ar", "project_name_ar_norm", "مشروع البرج التجاري الأول"),
         ]
@@ -241,12 +263,14 @@ class TestBilingualWave1Phase2Pilot(unittest.TestCase):
         abbr = frappe.get_cached_value("Company", company, "abbr") or "E"
 
         # Warehouse rename test
-        wh_doc = frappe.get_doc({
-            "doctype": "Warehouse",
-            "warehouse_name": "CT-TEST-P2-WH-RN1",
-            "warehouse_name_ar": "مستودع إعادة تسمية",
-            "company": company,
-        })
+        wh_doc = frappe.get_doc(
+            {
+                "doctype": "Warehouse",
+                "warehouse_name": "CT-TEST-P2-WH-RN1",
+                "warehouse_name_ar": "مستودع إعادة تسمية",
+                "company": company,
+            }
+        )
         wh_doc.insert(ignore_permissions=True)
         old_wh_name = wh_doc.name
         new_wh_name = f"CT-TEST-P2-WH-RN2 - {abbr}"
@@ -261,13 +285,15 @@ class TestBilingualWave1Phase2Pilot(unittest.TestCase):
             frappe.delete_doc("Warehouse", new_wh_name, force=True)
 
         # Cost Center rename test
-        cc_doc = frappe.get_doc({
-            "doctype": "Cost Center",
-            "cost_center_name": "CT-TEST-P2-CC-RN1",
-            "cost_center_name_ar": "مركز إعادة تسمية",
-            "parent_cost_center": orig_parent or "Elrefae - E",
-            "company": company,
-        })
+        cc_doc = frappe.get_doc(
+            {
+                "doctype": "Cost Center",
+                "cost_center_name": "CT-TEST-P2-CC-RN1",
+                "cost_center_name_ar": "مركز إعادة تسمية",
+                "parent_cost_center": self._cc_parent,
+                "company": company,
+            }
+        )
         cc_doc.insert(ignore_permissions=True)
         old_cc_name = cc_doc.name
         new_cc_name = f"CT-TEST-P2-CC-RN2 - {abbr}"
@@ -282,12 +308,14 @@ class TestBilingualWave1Phase2Pilot(unittest.TestCase):
             frappe.delete_doc("Cost Center", new_cc_name, force=True)
 
         # Project rename test
-        prj_doc = frappe.get_doc({
-            "doctype": "Project",
-            "project_name": "CT-TEST-P2-PRJ-RN1",
-            "project_name_ar": "مشروع إعادة تسمية",
-            "company": company,
-        })
+        prj_doc = frappe.get_doc(
+            {
+                "doctype": "Project",
+                "project_name": "CT-TEST-P2-PRJ-RN1",
+                "project_name_ar": "مشروع إعادة تسمية",
+                "company": company,
+            }
+        )
         prj_doc.insert(ignore_permissions=True)
         old_prj_name = prj_doc.name
         new_prj_name = f"{old_prj_name}-REN"
@@ -319,7 +347,11 @@ class TestBilingualWave1Phase2Pilot(unittest.TestCase):
                 frappe.db.commit()
 
                 # Query with Alef variant / tatweel / missing hamza
-                query = "ادارة" if "إدارة" in canonical_ar else ("الادوات" if "الأدوات" in canonical_ar else "الابراج")
+                query = (
+                    "ادارة"
+                    if "إدارة" in canonical_ar
+                    else ("الادوات" if "الأدوات" in canonical_ar else "الابراج")
+                )
 
                 # Test 1: bilingual_service.search_bilingual
                 results = svc.search_bilingual(dt, txt=query)

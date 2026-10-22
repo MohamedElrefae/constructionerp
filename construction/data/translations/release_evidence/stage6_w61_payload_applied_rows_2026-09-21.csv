@@ -1,0 +1,148 @@
+source_text,translated_text,quorum_decision,decision_ref
+0 - 30 Days,0 - 30 يومًا,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+30 - 60 Days,30 - 60 يومًا,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+60 - 90 Days,60 - 90 يومًا,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+90 - 120 Days,90 - 120 يومًا,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+A Reverse Journal Entry {0} already exists for this Journal Entry.,قيد يومية عكسي {0} موجود بالفعل لهذا القيد.,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Above 120 Days,أكثر من 120 يوما,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Account Currency (From),عملة الحساب (من),quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Account Currency (To),عملة الحساب (إلى),quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Account {0} should be of type Expense,الحساب {0} يجب أن يكون من نوع المصروفات,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Add Columns in Transaction Currency,إضافة أعمدة بعملة المعاملة,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Advance Taxes and Charges,الضرائب والرسوم المسبقة,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Advance Voucher No,رقم سند الدفعة المقدمة,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Advance Voucher Type,نوع سند الدفعة المقدمة,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Advance paid against {0} {1} cannot be greater than Grand Total {2},الدفعة المقدمة المدفوعة مقابل {0} {1} لا يمكن أن تتجاوز الإجمالي الكلي {2},quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Against Voucher No,مقابل رقم السند,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Ageing Report based on {0} up to {1},تقرير التقادم استنادًا إلى {0} حتى {1},quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+All Parties,كل الجهات,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Allocate Payment Request,تخصيص طلب الدفع,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Amount in {0},المبلغ بعملة {0},quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Apply Tax Withholding Amount,تطبيق مبلغ ضريبة الخصم,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Asset Disposal,استبعاد الأصل,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Bank Account No,رقم الحساب البنكي,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Book Advance Payments as Liability option is chosen. Paid From account changed from {0} to {1}.,تم اختيار تسجيل الدفعات المقدمة كالتزام. تم تغيير حساب الدفع من {0} إلى {1}.,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Book Advance Payments in Separate Party Account,تسجيل الدفعات المقدمة في حساب جهة منفصل,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Books have been closed till the period ending on {0},تم إغلاق الدفاتر حتى الفترة المنتهية في {0},quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Calculate Ageing With,حساب التقادم حسب,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+"Can not filter based on Child Account, if grouped by Account",لا يمكن التصفية بواسطة حساب فرعي عند التجميع حسب الحساب,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Can refer row only if the charge type is 'On Previous Row Amount' or 'Previous Row Total',يمكن الإحالة إلى الصف فقط عندما يكون نوع الحسبة «على مبلغ الصف السابق» أو «إجمالي الصفوف السابقة»,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Cannot apply TDS against multiple parties in one entry,لا يمكن تطبيق ضريبة الاستقطاع على أكثر من طرف واحد في القيد نفسه,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Cannot create accounting entries against disabled accounts: {0},لا يمكن إنشاء قيود محاسبية على حسابات معطّلة: {0},quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Cannot delete Exchange Gain/Loss row,لا يمكن حذف صف أرباح/خسائر فروق العملة,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Cannot receive from customer against negative outstanding,لا يمكن التحصيل من العميل مقابل رصيد مستحق سالب (دائن),quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Cannot {0} from {1} without any negative outstanding invoice,لا يمكن {0} من {1} دون فواتير لها رصيد مستحق سالب,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Categorize by,تصنيف حسب,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Categorize by Account,تصنيف حسب الحساب,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Categorize by Party,تصنيف حسب الجهة,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Categorize by Voucher,تصنيف حسب السند,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Categorize by Voucher (Consolidated),تصنيف حسب السند (مجمع),quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Charge of type 'Actual' in row {0} cannot be included in Item Rate or Paid Amount,الحسبة من نوع «فعلي» في الصف {0} لا يمكن إدخالها في سعر البند أو المبلغ المدفوع,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Closing [Opening + Total],الإغلاق [الافتتاحي + الإجمالي],quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Consolidated Trial Balance,ميزان المراجعة المجمع,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Consolidated Trial Balance can be generated for Companies having same root Company.,يمكن إنشاء ميزان مراجعة موحد للشركات التابعة لنفس الشركة الرئيسية.,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Consolidated Trial balance could not be generated as Exchange Rate from {0} to {1} is not available for {2}.,تعذّر إنشاء ميزان المراجعة الموحد؛ لا يوجد سعر صرف من {0} إلى {1} لصالح {2}.,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Credit (Transaction),الدائن (المعاملة),quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Customer Group: {0} does not exist,مجموعة العملاء: {0} غير موجودة,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Debit (Transaction),المدين (المعاملة),quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Disabled Account Selected,تم تحديد حساب معطل,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Discount of {} applied as per Payment Term,تم تطبيق خصم {} وفق شروط السداد,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Employee Advance,سلفة موظف,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Exchange Gain Or Loss,ربح أو خسارة الصرف,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Exchange Rate,سعر الصرف,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Expense Claim,مطالبة مصروف,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+For All Stock Asset Accounts,لكل حسابات أصول المخزون,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+"For row {0} in {1}. To include {2} in Item rate, rows {3} must also be included",للصف {0} في {1}. لإدراج {2} في سعر البند يجب إدراج الصفوف {3} أيضًا,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Foreign Currency Translation Reserve,احتياطي فروق ترجمة العملات الأجنبية,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Full and Final Statement,بيان نهائي وشامل,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+GL Balance,رصيد دفتر الأستاذ العام,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Get Balance,جلب الرصيد,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Get Outstanding Orders,جلب الأوامر المستحقة,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+If this is undesirable please cancel the corresponding Payment Entry.,إن كان هذا غير مرغوب، فيرجى إلغاء سند الدفع المقابل.,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Ignore Exchange Rate Revaluation and Gain / Loss Journals,تجاهل قيود إعادة تقييم أسعار الصرف وقيد الربح/الخسارة,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Ignore System Generated Credit / Debit Notes,تجاهل إشعارات الدائن/المدين المنشأة تلقائيًا,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+In Party Currency,بعملة الجهة,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Incorrect Payment Type,نوع دفع غير صحيح,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Interest and/or dunning fee,فوائد و/أو رسوم إنذار,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Invalid Allocated Amount,مبلغ مخصص غير صالح,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Invalid Purchase Invoice,فاتورة شراء غير صالحة,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Invalid value {0} for {1} against account {2},قيمة غير صالحة {0} لـ {1} مقابل الحساب {2},quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Is Exchange Gain / Loss?,هل هو ربح/خسارة صرف؟,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Is Tax Withholding Account,حساب ضريبة خصم,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Journal Entry for Asset scrapping cannot be cancelled. Please restore the Asset.,لا يمكن إلغاء قيد يومية إعدام (التخلص من) الأصل؛ يرجى استعادة حالة الأصل.,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Journal Entry type should be set as Depreciation Entry for asset depreciation,يجب تعيين نوع قيد اليومية كقيد إهلاك لإهلاك الأصل,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Loan,قرض,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Making Journal Entries against advance accounts: {0} is not recommended. These Journals won't be available for Reconciliation.,إثبات قيود يومية على حسابات الدفعات المقدمة: {0} غير مستحسن؛ لن تكون هذه القيود متاحة للتسوية.,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Missing Default in Company,إعداد افتراضي مفقود في الشركة,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+No difference found for stock account {0},لا يوجد فرق لحساب المخزون {0},quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+No outstanding {0} found for the {1} {2} which qualify the filters you have specified.,لا توجد مبالغ مستحقة {0} للمستند {1} {2} ضمن عوامل التصفية المحددة.,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Offsetting for Accounting Dimension,مقابلة البعد المحاسبي,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Opening Entry can not be created after Period Closing Voucher is created.,لا يمكن إنشاء قيد الافتتاحي بعد إنشاء مستند إقفال الفترة.,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Paid Amount After Tax,المبلغ المدفوع بعد الضريبة,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Paid Amount After Tax (Company Currency),المبلغ المدفوع بعد الضريبة (عملة الشركة),quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Paid From Account Type,نوع الحساب المدفوع منه,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Paid To Account Type,نوع الحساب المدفوع إليه,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Particulars,البيان,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Party Not Required,الجهة غير مطلوبة,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Party can only be one of {0},يجب أن يكون الطرف أحد ما يلي: {0},quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Payment Request Outstanding,مستحق طلب الدفع,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Payment Term Outstanding,مستحق شرط الدفع,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Payment term {0} not used in {1},شرط السداد {0} غير مستخدم في {1},quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Payroll Entry,قيد الرواتب,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Period Closed,الفترة مغلقة,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Period Closing Entry For Current Period,قيد إغلاق الفترة للفترة الحالية,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Periodic Accounting,محاسبة دورية,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Periodic Accounting Entry,قيد محاسبة دوري,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Periodic Accounting Entry is not allowed for company {0} with perpetual inventory enabled,القيود المحاسبية الدورية غير مسموحة للشركة {0} مع تمكين نظام المخزون المستمر,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Periodic Entry Difference Account,حساب فرق القيد الدوري,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Please Specify Account,يرجى تحديد الحساب,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Please mention '{0}' in Company: {1},يرجى ذكر '{0}' في الشركة: {1},quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Please select Periodic Accounting Entry Difference Account,يرجى اختيار حساب فروق القيود المحاسبية الدورية,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Please select Stock Asset Account,يرجى اختيار حساب أصول المخزون,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Please set '{0}' in Company: {1},يرجى تعيين '{0}' في الشركة: {1},quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Please set {0} in Company {1} to account for Exchange Gain / Loss,يرجى تعيين {0} في الشركة {1} لاحتساب أرباح/خسائر فروق الصرف,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Printed on {0},طبع في {0},quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Received Amount After Tax,المبلغ المستلم بعد الضريبة,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Received Amount After Tax (Company Currency),المبلغ المستلم بعد الضريبة (عملة الشركة),quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Received Amount cannot be greater than Paid Amount,المبلغ المستلم لا يمكن أن يتجاوز المبلغ المدفوع,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Reconcile Effect On,أثر التسوية في,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Reconcile on Advance Payment Date,التسوية بتاريخ الدفعة المقدمة,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+References {0} of type {1} had no outstanding amount left before submitting the Payment Entry. Now they have a negative outstanding amount.,المراجعات {0} من نوع {1} لم يكن لديها رصيد مستحق عند ترحيل سند الدفع؛ أصبح رصيدها مستحقًا دائنًا.,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Revaluation Journals,قيود إعادة التقييم,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Reversal Of,عكس,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Row #{0}: Allocated Amount cannot be greater than Outstanding Amount of Payment Request {1},الصف #{0}: المبلغ المخصص لا يمكن أن يتجاوز المبلغ المستحق لطلب الدفع {1},quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Row #{0}: Allocated amount:{1} is greater than outstanding amount:{2} for Payment Term {3},الصف #{0}: المبلغ المخصص {1} أكبر من المبلغ المستحق {2} لشرط السداد {3},quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Row #{0}: Cannot allocate more than {1} against payment term {2},الصف #{0}: لا يمكن تخصيص أكثر من {1} مقابل شرط السداد {2},quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+"Row #{0}: For {1}, you can select reference document only if account gets credited",الصف #{0}: في {1} يمكن اختيار مستند مرجعي فقط إذا حُسِب للحساب على أنه دائن,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+"Row #{0}: For {1}, you can select reference document only if account gets debited",الصف #{0}: في {1} يمكن اختيار مستند مرجعي فقط إذا كان الحساب يُمَدَّن,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Row {0}: Account {1} and Party Type {2} have different account types,الصف {0}: الحساب {1} ونوع الطرف {2} ينتميان لأنواع حسابات مختلفة,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Row {0}: Both Debit and Credit values cannot be zero,الصف {0}: لا يمكن أن تكون قيمتا المدين والدائن صفرًا معًا,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Rows: {0} have 'Payment Entry' as reference_type. This should not be set manually.,الصفوف: {0} تستخدم «سند دفع» كنوع مرجع؛ لا يجوز تعيين هذا يدويًا.,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+STATEMENT OF ACCOUNTS,كشف الحساب,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Show Credit / Debit in Company Currency,إظهار الدائن/المدين بعملة الشركة,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Show GL Balance,إظهار رصيد دفتر الأستاذ العام,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Show Group Accounts,إظهار الحسابات المجمعة,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Show Net Values in Party Account,إظهار القيم الصافية في حساب الجهة,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Show Remarks,إظهار الملاحظات,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Show net values in opening and closing columns,عرض القيم الصافية في عمودي الافتتاحي والإغلاق,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Source Exchange Rate,سعر صرف المصدر,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Splitting {0} {1} into {2} rows as per Payment Terms,تجزئة {0} {1} إلى {2} صفوف وفق شروط السداد,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Stock Asset Account,حساب أصل المخزون,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Target Exchange Rate,سعر الصرف الهدف,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Tax Id: {0},الرقم الضريبي: {0},quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+The task has been enqueued as a background job.,تم إدراج المهمة في قائمة انتظار الخلفية.,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+"To use a different finance book, please uncheck 'Include Default FB Entries'",لاستخدام سجلات مالية مختلفة، يرجى إلغاء «تضمين منشورات الدفتر المالي الافتراضي»,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Total Amount Due,إجمالي المبلغ المستحق,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Total Taxes and Charges,إجمالي الضرائب والرسوم,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Unset Matched Payment Request,إلغاء تعيين طلب الدفع المطابق,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+View Exchange Gain/Loss Journals,عرض قيود أرباح/خسائر الصرف,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+Voucher Subtype,النوع الفرعي للسند,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+With Period Closing Entry For Opening Balances,مع قيد إقفال الفترة لأرصدة الافتتاح,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+You cannot create/amend any accounting entries till this date.,لا يمكن إنشاء أو تعديل أي قيود محاسبية حتى هذا التاريخ.,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+paid to,مدفوع إلى,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+{0} has Payment Term based allocation enabled. Select a Payment Term for Row #{1} in Payment References section,{0} مفعّل فيه التخصيص وفق شروط السداد؛ اختر شرط سداد للصف #{1} في قسم مراجع الدفع,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+{0} is mandatory for account {1},{0} إلزامي للحساب {1},quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+{0} until {1},{0} حتى {1},quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+{0} {1} has already been fully paid.,{0} {1} مدفوع بالكامل بالفعل.,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+{0} {1} has already been partly paid. Please use the 'Get Outstanding Invoice' or the 'Get Outstanding Orders' button to get the latest outstanding amounts.,{0} {1} مدفوع جزئيًا؛ استخدم زر «جلب الفواتير المستحقة» أو «جلب الأوامر المستحقة» لجلب أحدث المبالغ المستحقة.,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21
+{0} {1} is on hold,{0} {1} موقوف (معلّق) حاليًا,quorum-confirmed (release payload row),stage6-W6-1 owner-approved 2026-09-21

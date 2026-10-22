@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """W6-0b batch-3 Arabic browser evidence (headless, ar Desk session)."""
 
+# Historical evidence capture script; rerunning it does not reproduce the archived evidence.
 import json
+import os
 import re
 import sys
 from datetime import datetime, timezone
@@ -11,7 +13,7 @@ from playwright.sync_api import sync_playwright
 
 BASE = "http://v16.localhost:8000"
 OUT = Path(__file__).resolve().parent
-PASSWORD = "ct-w60b-evidence-1"
+PASSWORD = os.environ["CONSTRUCTION_EVIDENCE_PASSWORD"]
 
 PROBES = {
     "Workspace Visibility": "ظهور مساحة العمل",
@@ -35,9 +37,11 @@ results = {
     "checks": [],
 }
 
+
 def add(name, ok, detail):
     results["checks"].append({"name": name, "ok": bool(ok), "detail": detail})
     print(("PASS " if ok else "FAIL ") + name + ": " + str(detail)[:220], flush=True)
+
 
 with sync_playwright() as p:
     browser = p.chromium.launch(headless=True)
@@ -63,7 +67,7 @@ with sync_playwright() as p:
     all_ok = True
     for k, exp in PROBES.items():
         got = resolved.get(k)
-        ok = (got == exp)
+        ok = got == exp
         all_ok = all_ok and ok
         add("translate:" + k, ok, {"expected": exp, "got": got})
     add(
@@ -92,13 +96,15 @@ with sync_playwright() as p:
     body = page.locator("body").inner_text()
     uniq = sorted(set(re.findall(r"[\u0600-\u06FF]{2,}", body)))
     add("rendered-dom-arabic-words", len(uniq) >= 5, {"count": len(uniq), "sample": uniq[:20]})
-    module_hits = [w for w in ["الأدوات", "المحاسبة", "المشتريات", "المشاريع", "المخزون", "البيع"] if w in body]
+    module_hits = [
+        w for w in ["الأدوات", "المحاسبة", "المشتريات", "المشاريع", "المخزون", "البيع"] if w in body
+    ]
     add("rendered-workspace-modules", len(module_hits) >= 3, module_hits)
     try:
         side = [
             t.strip()
             for t in page.locator(".standard-sidebar-item").all_inner_texts()
-            if t and any("\u0600" <= ch <= "\u06FF" for ch in t)
+            if t and any("\u0600" <= ch <= "\u06ff" for ch in t)
         ]
     except Exception:
         side = []

@@ -482,7 +482,7 @@ def _render_pdf_template(doctype, docname, columns, row):
     export_date = format_datetime(now_datetime())
 
     template_path = "construction/templates/generic_export_pdf.html"
-    return frappe.render_template(
+    return frappe.render_template(  # nosemgrep: frappe-ssti -- fixed repository template; caller values are context only
         template_path,
         {
             "doctype": doctype,
@@ -503,7 +503,7 @@ def _render_list_pdf_template(doctype, columns, rows):
     export_date = format_datetime(now_datetime())
 
     template_path = "construction/templates/generic_export_list_pdf.html"
-    return frappe.render_template(
+    return frappe.render_template(  # nosemgrep: frappe-ssti -- fixed repository template; caller values are context only
         template_path,
         {
             "doctype": doctype,

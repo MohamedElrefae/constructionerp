@@ -186,13 +186,16 @@ def desk_tier_score(text: str) -> int:
     if DESK_PHRASE.search(t):
         return 4
     # short imperative/action phrases common on toolbars
-    if re.search(
-        r"(?i)\b(save|submit|cancel|filter|sort|search|refresh|export|import"
-        r"|delete|duplicate|rename|assign|share|approve|reject|archive"
-        r"|restore|discard|confirm|loading|notification|workspace|sidebar"
-        r"|toolbar|modal|dialog|preview|publish|amend)\b",
-        t,
-    ) and len(t) <= 40:
+    if (
+        re.search(
+            r"(?i)\b(save|submit|cancel|filter|sort|search|refresh|export|import"
+            r"|delete|duplicate|rename|assign|share|approve|reject|archive"
+            r"|restore|discard|confirm|loading|notification|workspace|sidebar"
+            r"|toolbar|modal|dialog|preview|publish|amend)\b",
+            t,
+        )
+        and len(t) <= 40
+    ):
         return 3
     if len(t) <= 20 and " " in t and t[0].isupper():
         return 2

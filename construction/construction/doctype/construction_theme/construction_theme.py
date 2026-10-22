@@ -443,6 +443,8 @@ class ConstructionTheme(Document):
         cache_key = f"construction_theme:{frappe.local.site}"
         frappe.cache().delete_value(cache_key)
 
+        # Site-wide public theme-cache invalidation; payload contains only the theme key, no user preferences.
+        # nosemgrep: frappe-realtime-pick-room -- intentional site-wide style invalidation
         frappe.publish_realtime("theme_updated", {"theme": self.name})
 
     def on_trash(self):

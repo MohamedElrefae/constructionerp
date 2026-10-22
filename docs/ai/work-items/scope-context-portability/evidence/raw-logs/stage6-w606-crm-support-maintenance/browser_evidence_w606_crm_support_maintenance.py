@@ -98,7 +98,11 @@ with sync_playwright() as p:
         """(keys)=>keys.filter(k => Object.prototype.hasOwnProperty.call((frappe.boot&&frappe.boot.__messages)||{}, k));""",
         excluded,
     )
-    add("deferred-and-technical-absent", not excluded_hits, {"excluded": len(excluded), "unexpected": excluded_hits})
+    add(
+        "deferred-and-technical-absent",
+        not excluded_hits,
+        {"excluded": len(excluded), "unexpected": excluded_hits},
+    )
 
     body = page.locator("body").inner_text()
     words = sorted(set(re.findall(r"[؀-ۿ]{2,}", body)))

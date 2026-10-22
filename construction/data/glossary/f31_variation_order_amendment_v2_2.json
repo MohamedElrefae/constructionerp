@@ -1,0 +1,87 @@
+{
+  "schema": "glossary-amendment/v1",
+  "work_item": "F31-D001 Variation Order glossary alignment",
+  "created_utc": "2026-10-18T00:18:32Z",
+  "authorization": "Owner-directed F31-D001 term amendment; bounded local technical execution delegated to consultant. Parent approved the one-term v2.2 preparation/apply scope.",
+  "scope": {
+    "glossary_path": "construction/data/glossary/egyptian_construction_glossary.json",
+    "terms_changed": 1,
+    "source_text": "Variation Order",
+    "origin_app": "construction",
+    "domain": "boq",
+    "term_count_preserved": 47,
+    "schema_changed": false,
+    "translation_database_writes": 0
+  },
+  "before": {
+    "sha256": "7afbef1ab892f466eb14471c99a9e76dde65b4f2e9d4a40a1405e34addc6894d",
+    "meta_version": "2.1",
+    "term": {
+      "source_text": "Variation Order",
+      "context": "",
+      "origin_app": "construction",
+      "domain": "boq",
+      "approved_ar": "أمر تغيير",
+      "forbidden_ar": [],
+      "usage_notes": "VO. Previously generic/absent.",
+      "references": "Glossary v1.0 provisional",
+      "a1_status": "Approved",
+      "a2_status": "Approved",
+      "version": "2.0"
+    }
+  },
+  "after": {
+    "sha256": "9cbdb04120a3f6dec0d9e813b89980ba389ffad3974b4dbb36e08d9dfd8aaf81",
+    "meta_version": "2.2",
+    "meta_date": "2026-10-18",
+    "previous_version": "2.1",
+    "previous_checksum": "7afbef1ab892f466eb14471c99a9e76dde65b4f2e9d4a40a1405e34addc6894d",
+    "term": {
+      "source_text": "Variation Order",
+      "context": "",
+      "origin_app": "construction",
+      "domain": "boq",
+      "approved_ar": "أمر التغيير",
+      "forbidden_ar": [],
+      "usage_notes": "Variation Order (VO). Definite form per owner decision F31-D001 (2026-10-14). Exact label reviewed by AI-A1/A2 on 2026-10-17 UTC and AI-A3 on 2026-10-18 UTC. AI review only; no human, legal, or Egyptian industry certification. The label does not change workflow, approval authority, entitlement, or pricing.",
+      "references": "Owner decision F31-D001 (2026-10-14); approved_ar_overrides.csv v1.1; bounded AI-A1/A2/A3 review in f31_decision_evidence_2026-10-14.md and f31_review_evidence_2026-10-18.json; one-term glossary amendment v2.2 proposal.",
+      "a1_status": "Approved",
+      "a2_status": "Approved",
+      "version": "2.2"
+    }
+  },
+  "payload_binding": {
+    "path": "construction/data/translations/approved_ar_overrides.csv",
+    "sha256": "5125ea686928c620a26b180a0f942e1ef96dc7a86a008502f3e91a5a09e8c820"
+  },
+  "review_provenance": {
+    "AI-A1": {
+      "model": "GPT-6 Luna",
+      "session": "/root/arabic_amendment_a1",
+      "timestamp_utc": "2026-10-17T23:29:51Z",
+      "decision": "approve",
+      "confidence": 0.78
+    },
+    "AI-A2": {
+      "model": "GPT-6 Luna",
+      "session": "/root/arabic_amendment_a2",
+      "timestamp_utc": "2026-10-17T23:29:58Z",
+      "decision": "approve",
+      "confidence": 0.88
+    },
+    "AI-A3": {
+      "model": "GPT-6 Luna",
+      "session": "/root/arabic_amendment_a3",
+      "timestamp_utc": "2026-10-18T00:13:53Z",
+      "decision": "approve",
+      "confidence": "high"
+    },
+    "package_status": "The exact-label review is approved; A3 review of the corrected metadata and this glossary v2.2 candidate remains pending. No site migration or qualification run is represented."
+  },
+  "limits": [
+    "No human, legal, or Egyptian industry certification is claimed.",
+    "No workflow, approval authority, entitlement, or pricing behavior changes.",
+    "No Translation table or site writes.",
+    "Historical v1.0 registry is unchanged."
+  ]
+}

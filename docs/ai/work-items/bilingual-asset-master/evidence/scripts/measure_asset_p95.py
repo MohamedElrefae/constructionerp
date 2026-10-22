@@ -62,12 +62,8 @@ def _code_hashes():
         "bilingual_service.py": _sha(os.path.join(app, "services/bilingual_service.py")),
         "bilingual_registry.py": _sha(os.path.join(app, "services/bilingual_registry.py")),
         "search.py": _sha(os.path.join(app, "searchable_dropdown/api/search.py")),
-        "bilingual_registry.json": _sha(
-            os.path.join(app, "data/bilingual/bilingual_registry.json")
-        ),
-        "add_asset_arabic_fields.py": _sha(
-            os.path.join(app, "patches/v9_13/add_asset_arabic_fields.py")
-        ),
+        "bilingual_registry.json": _sha(os.path.join(app, "data/bilingual/bilingual_registry.json")),
+        "add_asset_arabic_fields.py": _sha(os.path.join(app, "patches/v9_13/add_asset_arabic_fields.py")),
     }
 
 
@@ -132,15 +128,11 @@ def _create_fixtures():
 
 def _delete_fixtures():
     """Delete draft Asset fixtures plus their Asset Activity audit rows."""
-    rows = frappe.get_all(
-        "Asset", filters=_fixture_filter(), fields=["name"], limit_page_length=0
-    )
+    rows = frappe.get_all("Asset", filters=_fixture_filter(), fields=["name"], limit_page_length=0)
     for r in rows:
         if frappe.db.exists("Asset", r["name"]):
             frappe.delete_doc("Asset", r["name"], force=True, ignore_permissions=True)
-        for a in frappe.get_all(
-            "Asset Activity", filters={"asset": r["name"]}, pluck="name", limit=0
-        ):
+        for a in frappe.get_all("Asset Activity", filters={"asset": r["name"]}, pluck="name", limit=0):
             frappe.delete_doc("Asset Activity", a, force=True, ignore_permissions=True)
     frappe.db.commit()
     return len(rows)
@@ -229,18 +221,14 @@ def measure():
         "baseline": {
             "p95_ms": base_min_p95,
             "round_p95_ms": rounds_base_p95,
-            "median_ms": round(
-                _true_median(rounds_base_samples[best_base_round]), 3
-            ),
+            "median_ms": round(_true_median(rounds_base_samples[best_base_round]), 3),
             "best_round": best_base_round + 1,
             "match_set_count": len(base_ids),
         },
         "bilingual": {
             "p95_ms": bilin_min_p95,
             "round_p95_ms": rounds_bilin_p95,
-            "median_ms": round(
-                _true_median(rounds_bilin_samples[best_bilin_round]), 3
-            ),
+            "median_ms": round(_true_median(rounds_bilin_samples[best_bilin_round]), 3),
             "best_round": best_bilin_round + 1,
             "match_set_count": len(bilin_ids),
         },
@@ -251,8 +239,7 @@ def measure():
         "sla_evaluation": {
             "tier": tier,
             "tier_rule": (
-                "baseline P95 >= 1.0 ms => Tier 2A <= 1.15x; "
-                "baseline P95 < 1.0 ms => Tier 2B <= 1.50x"
+                "baseline P95 >= 1.0 ms => Tier 2A <= 1.15x; " "baseline P95 < 1.0 ms => Tier 2B <= 1.50x"
             ),
             "tier_ratio_ceiling": ceiling,
             "ratio": ratio,
@@ -260,11 +247,7 @@ def measure():
             "universal_ceiling_ms": UNIVERSAL_CEILING_MS,
             "bilingual_p95_ms": bilin_min_p95,
             "ceiling_pass": ceiling_pass,
-            "verdict": (
-                "COMPLIANT_WITH_TWO_TIER_SLA"
-                if (tier_pass and ceiling_pass)
-                else "NON_COMPLIANT"
-            ),
+            "verdict": ("COMPLIANT_WITH_TWO_TIER_SLA" if (tier_pass and ceiling_pass) else "NON_COMPLIANT"),
         },
         "per_round_samples": {
             "baseline": rounds_base_samples,
@@ -329,7 +312,15 @@ if __name__ == "__main__":
         fh.write("\n")
     ev = out["result"]["sla_evaluation"]
     print("MEASUREMENT:", json.dumps({out["result"]["doctype"]: ev["ratio"]}, sort_keys=True))
-    print("P95_MS:", json.dumps({"baseline": out["result"]["baseline"]["p95_ms"], "bilingual": out["result"]["bilingual"]["p95_ms"]}))
+    print(
+        "P95_MS:",
+        json.dumps(
+            {
+                "baseline": out["result"]["baseline"]["p95_ms"],
+                "bilingual": out["result"]["bilingual"]["p95_ms"],
+            }
+        ),
+    )
     print("TIER:", json.dumps(ev, sort_keys=True))
     print("MATCH_SETS_EQUAL:", out["result"].get("match_sets_equal"))
     print("CLEANUP_LEFTOVER:", len(out["cleanup"]["leftover"]))

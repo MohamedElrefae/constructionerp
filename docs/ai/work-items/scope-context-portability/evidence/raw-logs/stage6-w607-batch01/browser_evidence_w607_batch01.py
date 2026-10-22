@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Playwright headless browser verification for Stage 6 W6-7 Frappe Framework Remainder Batch 01."""
+
 import csv
 import json
 import re
@@ -75,43 +76,53 @@ with sync_playwright() as p:
     add("boot-messages-ge-1000", (boot.get("messages_len") or 0) >= 1000, boot.get("messages_len"))
 
     # Check released payload keys (247 keys)
-    rel_items = [
-        {"source": key, "context": expected[key]["context"]}
-        for key in released_keys
-    ]
+    rel_items = [{"source": key, "context": expected[key]["context"]} for key in released_keys]
     resolved_rel = page.evaluate(
         """(items)=>{const o={};for(const it of items){try{o[it.source]=it.context ? __(it.source, null, it.context) : __(it.source);}catch(e){o[it.source]='ERR:'+e.message;}}return o;}""",
         rel_items,
     )
     rel_mismatches = [
-        {"source": item["source"], "expected": expected[item["source"]]["translation"], "got": resolved_rel.get(item["source"])}
+        {
+            "source": item["source"],
+            "expected": expected[item["source"]]["translation"],
+            "got": resolved_rel.get(item["source"]),
+        }
         for item in rel_items
         if resolved_rel.get(item["source"]) != expected[item["source"]]["translation"]
     ]
     add(
         "all-released-payload-translations",
         not rel_mismatches,
-        {"matched": len(rel_items) - len(rel_mismatches), "total": len(rel_items), "mismatches": rel_mismatches[:10]},
+        {
+            "matched": len(rel_items) - len(rel_mismatches),
+            "total": len(rel_items),
+            "mismatches": rel_mismatches[:10],
+        },
     )
 
     # Check all translated batch keys in runtime (248 keys, excluding 2 technical exceptions)
-    all_items = [
-        {"source": key, "context": expected[key]["context"]}
-        for key in expected.keys()
-    ]
+    all_items = [{"source": key, "context": expected[key]["context"]} for key in expected.keys()]
     resolved_all = page.evaluate(
         """(items)=>{const o={};for(const it of items){try{o[it.source]=it.context ? __(it.source, null, it.context) : __(it.source);}catch(e){o[it.source]='ERR:'+e.message;}}return o;}""",
         all_items,
     )
     all_mismatches = [
-        {"source": item["source"], "expected": expected[item["source"]]["translation"], "got": resolved_all.get(item["source"])}
+        {
+            "source": item["source"],
+            "expected": expected[item["source"]]["translation"],
+            "got": resolved_all.get(item["source"]),
+        }
         for item in all_items
         if resolved_all.get(item["source"]) != expected[item["source"]]["translation"]
     ]
     add(
         "all-batch-keys-resolved",
         not all_mismatches,
-        {"matched": len(all_items) - len(all_mismatches), "total": len(all_items), "mismatches": all_mismatches[:10]},
+        {
+            "matched": len(all_items) - len(all_mismatches),
+            "total": len(all_items),
+            "mismatches": all_mismatches[:10],
+        },
     )
 
     # Check that technical exception rows are NOT in released list
@@ -126,7 +137,11 @@ with sync_playwright() as p:
     preserved_key = "Parent-to-child or child-to-different-child grouping is not allowed."
     preserved_val = "لا يُسمح بالتجميع من السجل الرئيسي إلى سجل فرعي أو من سجل فرعي إلى سجل فرعي آخر."
     resolved_pres = page.evaluate("""(k)=>{return __(k);}""", preserved_key)
-    add("preserved-site-override-matched", resolved_pres == preserved_val, {"expected": preserved_val, "got": resolved_pres})
+    add(
+        "preserved-site-override-matched",
+        resolved_pres == preserved_val,
+        {"expected": preserved_val, "got": resolved_pres},
+    )
 
     # Page errors
     add("no-page-errors", len(page_errors) == 0, {"errors": page_errors})

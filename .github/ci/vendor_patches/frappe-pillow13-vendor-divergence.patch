@@ -1,0 +1,13 @@
+diff --git a/pyproject.toml b/pyproject.toml
+index 5ef0d1a..09f840b 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -15,7 +15,7 @@ dependencies = [
+     "filetype~=1.2.0",
+     "GitPython~=3.1.45",
+     "Jinja2~=3.1.6",
+-    "Pillow~=12.3.0",
++    "Pillow~=13.0.0",
+     "PyJWT~=2.13.0",
+     "duckdb~=1.4.3",
+     "pyarrow~=25.0.0",

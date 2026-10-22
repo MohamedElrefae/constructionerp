@@ -31,3 +31,4 @@ construction/construction/utils/scope_validation.py :: error_message | technical
 construction/api/cost_database_api.py :: e | technical | rethrow of caught runtime exception (exception chaining, no static text) | Stage 2 builder — code inspection
 form_layout_profile join | technical | "<br>".join of wrapped per-field messages/warnings (verified wrapped at construction) | Stage 2 builder — code inspection
 str(e) | technical | bare str(exception) rethrow passes through the caught exception object; by construction it carries no static localizable UI string at the sink site | Stage 2 builder — sink-shape rule
+construction/services/narrative_sanitizer.py :: msg | technical | fail-closed helper rethrows caller-wrapped message (verified at both call sites — each uses _() wrapping) | Stage 2 builder — code inspection

@@ -484,7 +484,7 @@ def import_cost_database_from_excel(
         "boq_cost_analysis_templates": [],
     }
 
-    if not isinstance(file_content, (bytes, bytearray)):
+    if not isinstance(file_content, (bytes | bytearray)):
         errors.append("Excel file content must be bytes")
         return _build_result(False, dry_run, records_created, errors, warnings)
     if len(file_content) > COST_DATABASE_MAX_FILE_SIZE_BYTES:
@@ -660,8 +660,14 @@ def import_cost_database_from_excel(
             existing = frappe.db.get_value(
                 "Item",
                 resource_code,
-                ["item_name", "item_name_ar", "is_construction_resource", "construction_resource_type",
-                 "default_cost_stream", "stock_uom"],
+                [
+                    "item_name",
+                    "item_name_ar",
+                    "is_construction_resource",
+                    "construction_resource_type",
+                    "default_cost_stream",
+                    "stock_uom",
+                ],
                 as_dict=True,
             )
             if existing:
@@ -685,7 +691,11 @@ def import_cost_database_from_excel(
                 # Link value to the canonical target name on save ("Ton" is stored as
                 # "TON"), so an exact string compare false-conflicts on re-import.
                 # Compare case-insensitively; names/type/stream stay exact.
-                if _uom and (existing.stock_uom or "") != _uom and (existing.stock_uom or "").lower() != _uom.lower():
+                if (
+                    _uom
+                    and (existing.stock_uom or "") != _uom
+                    and (existing.stock_uom or "").lower() != _uom.lower()
+                ):
                     _conflicts.append("stock UOM differs")
                 if _conflicts:
                     errors.append(
@@ -846,14 +856,16 @@ def import_cost_database_from_excel(
                 if not item_doc.get("is_construction_resource"):
                     conflicts.append("not a construction resource")
                 if resource_type and item_doc.get("construction_resource_type") != resource_type:
-                    conflicts.append(
-                        f"resource type is '{item_doc.get('construction_resource_type')}'"
-                    )
+                    conflicts.append(f"resource type is '{item_doc.get('construction_resource_type')}'")
                 if cost_stream and item_doc.get("default_cost_stream") != cost_stream:
                     conflicts.append(f"cost stream is '{item_doc.get('default_cost_stream')}'")
                 # F35: same case-insensitive UOM rule as the create-path check above —
                 # the framework stores the canonical target name ("TON" for "Ton").
-                if uom and (item_doc.get("stock_uom") or "") != uom and (item_doc.get("stock_uom") or "").lower() != uom.lower():
+                if (
+                    uom
+                    and (item_doc.get("stock_uom") or "") != uom
+                    and (item_doc.get("stock_uom") or "").lower() != uom.lower()
+                ):
                     conflicts.append(f"stock UOM is '{item_doc.get('stock_uom')}'")
                 if conflicts:
                     errors.append(

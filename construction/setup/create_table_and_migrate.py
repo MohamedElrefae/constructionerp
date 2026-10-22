@@ -209,6 +209,7 @@ def run():
             created += 1
             print(f"  Created: {theme['name']}")
 
+    # nosemgrep: frappe-manual-commit -- reviewed explicit bench-execute migration boundary; not a request or registered hook
     frappe.db.commit()
 
     print("\n✓ Migration Complete:")

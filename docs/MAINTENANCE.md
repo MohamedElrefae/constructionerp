@@ -1,60 +1,54 @@
-# Construction ERP — Developer Maintenance Guide
+# Construction ERP — Site Maintenance
 
-Audience: engineers maintaining this app. Engineering scripts and governance references below require the authorized private maintainer checkout; they are not all included in the curated customer distribution. For the permission model in full, read
-`docs/ai/PROFESSIONAL_ENGINEERING_STANDARD.md` and `AGENTS.md` first; this guide is the
-day-to-day companion, not a replacement.
+This guide is for the customer’s Frappe site administrator. Use the approved customer
+repository and qualified release ref provided with your delivery. Do not update an
+installed site from an engineering checkout or development branch.
 
-## 1. Architecture map
+## Before an update
 
-- `construction/api/` — whitelisted RPC boundaries. Every endpoint validates input,
-  enforces document permission + scope, and restricts mutation methods. Whitelisting alone
-  is never authorization.
-- `construction/services/` — business logic (BOQ lifecycle, import, cost database, reports
-  as internal helpers, transaction validation, bilingual policy).
-- `construction/overrides/` — framework hooks. The full inventory with upstream targets
-  and signatures lives in
-  `docs/ai/work-items/next feature 07102026/construction_foundation_f24_evidence_2026-10-14.md`.
-  Re-check it on every vendor bump.
-- `construction/public/js/` — Desk JS. `vite_layout_controls.js` (VFC panel),
-  `vfc_layout_engine.js`, `construction_export_menu.js`, `generic_export_menu.js`,
-  `print_settings_dialog.js`, compat shims. **Any touched file bumps its `?v=` in
-  `hooks.py`, then `bench --site <site> clear-cache`, then verify the served HTML carries
-  the new versions** (the embedding HTML is server-cached; `get_hooks` alone is not proof).
-- `construction/construction/` — DocTypes, pages, workspaces, the app-shipped Sidebar
-  fixture (`sidebar/construction_home/`), print formats.
+1. Schedule a maintenance window and notify users.
+2. Take a full site backup and confirm that the database and files backup completed.
+3. Record the current app version and the exact customer release ref being installed.
+4. Confirm that the target Frappe and ERPNext versions satisfy the app’s release
+   requirements in `pyproject.toml`.
 
-## 2. Non-negotiable conventions
-
-1. All SQL parameterized (`%(name)s`), never f-strings.
-2. New transactional DocType with scope dimensions → the Scope Context checklist in
-   `AGENTS.md` §4.9, then `python3 scripts/lint_scope_metadata.py`.
-3. Translation writes go through `construction.translation_service.upsert_runtime_translation`
-   (never direct `tabTranslation` edits) — see `scripts/lint_translation_writes.py`.
-4. Tests run as non-admin personas where scope matters; one process per persona in
-   multi-user probes (`@request_cache` survives `set_user`).
-5. Python 3.10 quote-nesting compatible, even though the runtime is 3.14.
-
-## 3. Everyday commands
+## Install an approved release
 
 ```bash
-python3 scripts/ai_context_check.py          # context + schema gate
-python3 scripts/schema_drift_checker.py      # live schema vs JSON
-python3 scripts/lint_translation_writes.py   # translation-write lint
-bench --site <site> run-tests --module construction.tests.<module>
-bench --site <site> clear-cache              # after any ?v= bump
-python3 scripts/permission_reconciliation.py --site <site>   # effective vs standard perms
-python3 scripts/permission_reconciliation.py --site <site> --baseline <file>  # drift gate
+cd $PATH_TO_YOUR_BENCH
+APP_REPOSITORY="<APPROVED_CUSTOMER_REPOSITORY_URL>"
+APP_RELEASE_REF="<QUALIFIED_RELEASE_REF>"
+SITE_NAME="<YOUR_SITE_NAME>"
+bench get-app --branch "$APP_RELEASE_REF" construction "$APP_REPOSITORY"
+bench --site "$SITE_NAME" install-app construction
 ```
 
-## 4. Packaging
+For an update to an existing site, retrieve the approved release using the operator’s
+established Bench update procedure, then run:
 
-Canonical: Flit via `pyproject.toml` (dynamic version from `construction/__init__.py`).
-Source maps under `construction/public/dist/js/*.map` are build outputs — never commit them,
-excluded from sdist. Test screenshots live under evidence docs, never in `construction/tests/`.
-`bench get-app` ships the whole checkout, so internal evidence under `docs/ai/` must stay out
-of any customer route (see `docs/DISTRIBUTION.md`).
+```bash
+bench --site "$SITE_NAME" migrate
+bench --site "$SITE_NAME" clear-cache
+```
 
-## 5. What never changes without an owner decision
+Do not run migration on a customer site until the backup has been verified and the
+release notes identify the update as qualified for that site’s current versions.
 
-Permission grants, Page read, shell renames, scope-model changes, deletion of approved
-history or legacy tables, delivery-route changes, vendor-bump adoption.
+## If an update fails
+
+Stop further migrations or manual database edits. Preserve the command output and time,
+then contact the operator or implementation partner. Follow the site’s tested restore
+procedure if service recovery is required; do not restore a backup over a live site
+without the owner’s incident approval.
+
+## Compatibility and app behavior
+
+The installed app package contains the application modules, DocType definitions, hooks,
+patches, public assets, and runtime translation and glossary data. Bench manages Frappe
+and ERPNext; app dependencies and supported framework versions are declared in
+`pyproject.toml` and `requirements.txt`. The customer release notes are authoritative for
+the exact framework versions qualified with a particular app release.
+
+For role setup, follow [Permission Setup](PERMISSION_SETUP.md). For normal operator
+workflows, follow [Customer Onboarding](CUSTOMER_ONBOARDING.md) and [Bilingual Task
+Guides](BILINGUAL_TASK_GUIDES.md).

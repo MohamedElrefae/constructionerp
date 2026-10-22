@@ -24,8 +24,18 @@ import frappe
 PRIVATE = "/home/mohamed/frappe-bench/sites/v16.localhost/private/department-phase1-population"
 APPROVED_SHA = "dba85a4ceba5826094c1c7b6e25117afe8e0a696bcb1c3564699b0d736bf64a4"
 AR_FIELD, NORM_FIELD, LABEL_FIELD = "department_name_ar", "department_name_ar_norm", "department_name"
-FROZEN_FIELDS = ["name", LABEL_FIELD, "parent_department", "company", "is_group",
-                 "disabled", "lft", "rgt", AR_FIELD, NORM_FIELD]
+FROZEN_FIELDS = [
+    "name",
+    LABEL_FIELD,
+    "parent_department",
+    "company",
+    "is_group",
+    "disabled",
+    "lft",
+    "rgt",
+    AR_FIELD,
+    NORM_FIELD,
+]
 
 
 def sha16(text):
@@ -38,8 +48,23 @@ def byte_scan(value):
         problems.append("whitespace")
     for ch in value:
         cp = ord(ch)
-        if cp in (0x200E, 0x200F, 0x202A, 0x202B, 0x202C, 0x202D, 0x202E,
-                  0x2066, 0x2067, 0x2068, 0x2069, 0x200B, 0x200C, 0x200D, 0xFEFF):
+        if cp in (
+            0x200E,
+            0x200F,
+            0x202A,
+            0x202B,
+            0x202C,
+            0x202D,
+            0x202E,
+            0x2066,
+            0x2067,
+            0x2068,
+            0x2069,
+            0x200B,
+            0x200C,
+            0x200D,
+            0xFEFF,
+        ):
             problems.append(f"bidi/zw U+{cp:04X}")
         elif cp < 0x20 or cp == 0x7F or 0x80 <= cp <= 0x9F:
             problems.append(f"control U+{cp:04X}")
@@ -107,11 +132,19 @@ def main():
             f"after={sha16(value)} norm={sha16(norm_preview)} {state} {state_root} "
             f"lft={snap['lft']} rgt={snap['rgt']} parent={snap['parent_department']!r}"
         )
-        rows_out.append({"doctype": "Department", "name": name,
-                         "label": snap[LABEL_FIELD], "before": current,
-                         "after": value if not current else current,
-                         "norm_preview": norm_preview, "state": state,
-                         "save_path": state_root, "snapshot": snap})
+        rows_out.append(
+            {
+                "doctype": "Department",
+                "name": name,
+                "label": snap[LABEL_FIELD],
+                "before": current,
+                "after": value if not current else current,
+                "norm_preview": norm_preview,
+                "state": state,
+                "save_path": state_root,
+                "snapshot": snap,
+            }
+        )
 
     excluded = frappe.db.count("Department") - len(rows_out)
     if excluded != 262:
@@ -120,7 +153,9 @@ def main():
 
     would = sum(1 for r in rows_out if r["state"] == "WOULD_WRITE")
     root_saves = sum(1 for r in rows_out if r["save_path"] == "R3B_ROOT_SAVE")
-    print(f"SUMMARY rows={len(rows_out)} would_write={would} plain={len(rows_out) - root_saves} r3b_root={root_saves}")
+    print(
+        f"SUMMARY rows={len(rows_out)} would_write={would} plain={len(rows_out) - root_saves} r3b_root={root_saves}"
+    )
     if fail:
         for f in fail:
             print("FAIL:", f)
@@ -130,16 +165,17 @@ def main():
         print(f"FAIL: rows={len(rows_out)} root_saves={root_saves}, expected 14/1")
         sys.exit(1)
 
-    private = {"proposal_sha256": sha, "rows": rows_out,
-               "excluded_rows": excluded, "writes_performed": 0}
+    private = {"proposal_sha256": sha, "rows": rows_out, "excluded_rows": excluded, "writes_performed": 0}
     with open(f"{PRIVATE}/dry-run.json", "w", encoding="utf-8") as fh:
         json.dump(private, fh, indent=2, ensure_ascii=False)
         fh.write("\n")
     dry_sha = hashlib.sha256(open(f"{PRIVATE}/dry-run.json", "rb").read()).hexdigest()
     print(f"PRIVATE dry-run.json sha256={dry_sha}")
     print("WRITES_PERFORMED: 0")
-    print("DRY-RUN RESULT: PASS (14/14 rows validated; 13 plain + 1 R3B root planned; "
-          "approved v2 sha matched; zero writes)")
+    print(
+        "DRY-RUN RESULT: PASS (14/14 rows validated; 13 plain + 1 R3B root planned; "
+        "approved v2 sha matched; zero writes)"
+    )
 
 
 if __name__ == "__main__":

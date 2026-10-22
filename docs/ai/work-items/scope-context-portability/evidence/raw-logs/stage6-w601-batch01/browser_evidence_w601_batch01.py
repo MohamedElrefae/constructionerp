@@ -24,10 +24,7 @@ with APPLIED.open(encoding="utf-8", newline="") as handle:
 
 released_keys = set(RELEASED_TXT.read_text(encoding="utf-8").splitlines())
 
-expected = {
-    row["source_text"].strip(): row["translated_text"].strip()
-    for row in applied
-}
+expected = {row["source_text"].strip(): row["translated_text"].strip() for row in applied}
 
 results = {
     "batch": "stage6-w601-accounts-batch01",
@@ -83,7 +80,11 @@ with sync_playwright() as p:
     add(
         "all-released-payload-translations",
         not rel_mismatches,
-        {"matched": len(rel_keys) - len(rel_mismatches), "total": len(rel_keys), "mismatches": rel_mismatches[:10]},
+        {
+            "matched": len(rel_keys) - len(rel_mismatches),
+            "total": len(rel_keys),
+            "mismatches": rel_mismatches[:10],
+        },
     )
 
     # Check all 250 batch keys in runtime
@@ -100,7 +101,11 @@ with sync_playwright() as p:
     add(
         "all-batch-keys-translations",
         not all_mismatches,
-        {"matched": len(all_keys) - len(all_mismatches), "total": len(all_keys), "mismatches": all_mismatches[:10]},
+        {
+            "matched": len(all_keys) - len(all_mismatches),
+            "total": len(all_keys),
+            "mismatches": all_mismatches[:10],
+        },
     )
 
     body = page.locator("body").inner_text()

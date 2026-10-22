@@ -121,7 +121,7 @@ frappe.ui.form.on("Construction Theme", {
 					if (r.message && r.message.css) {
 						frm.show_preview_dialog(r.message.css);
 					} else if (r.message && r.message.error) {
-						frappe.msgprint(__("Error generating preview: ") + r.message.error);
+						frappe.msgprint(__("Error generating preview: {0}", [r.message.error]));
 					}
 				},
 				error: function () {

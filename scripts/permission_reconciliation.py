@@ -18,8 +18,21 @@ reviewing each delta (F31/F41).
 import json
 import sys
 
-RIGHTS = ["read", "write", "create", "delete", "submit", "cancel", "amend",
-          "report", "export", "import", "share", "print", "email"]
+RIGHTS = [
+    "read",
+    "write",
+    "create",
+    "delete",
+    "submit",
+    "cancel",
+    "amend",
+    "report",
+    "export",
+    "import",
+    "share",
+    "print",
+    "email",
+]
 
 
 def collect(site):
@@ -28,18 +41,18 @@ def collect(site):
     frappe.init(site=site, sites_path="sites")
     frappe.connect()
     frappe.set_user("Administrator")
-    doctypes = sorted(
-        {r["parent"] for r in frappe.db.get_list("Custom DocPerm", fields=["parent"])}
-    )
+    doctypes = sorted({r["parent"] for r in frappe.db.get_list("Custom DocPerm", fields=["parent"])})
     report = {"site": site, "customized_doctypes": {}}
     for dt in doctypes:
         std = {
             r["role"]: {k: r.get(k, 0) for k in RIGHTS}
-            for r in frappe.db.get_list("DocPerm", filters={"parent": dt, "permlevel": 0}, fields=["role"] + RIGHTS)
+            for r in frappe.db.get_list(
+                "DocPerm", filters={"parent": dt, "permlevel": 0}, fields=["role", *RIGHTS]
+            )
         }
         custom = {
             r["role"]: {k: r.get(k, 0) for k in RIGHTS}
-            for r in frappe.db.get_list("Custom DocPerm", filters={"parent": dt}, fields=["role"] + RIGHTS)
+            for r in frappe.db.get_list("Custom DocPerm", filters={"parent": dt}, fields=["role", *RIGHTS])
         }
         # Effective rights = custom rows only (standard displaced).
         report["customized_doctypes"][dt] = {
@@ -48,8 +61,11 @@ def collect(site):
             "roles_only_in_custom": sorted(set(custom) - set(std)),
             "roles_missing_vs_standard": sorted(set(std) - set(custom)),
             "changed_rights": {
-                role: {k: {"standard": std[role][k], "custom": custom[role][k]}
-                       for k in RIGHTS if std[role][k] != custom[role][k]}
+                role: {
+                    k: {"standard": std[role][k], "custom": custom[role][k]}
+                    for k in RIGHTS
+                    if std[role][k] != custom[role][k]
+                }
                 for role in sorted(set(std) & set(custom))
                 if any(std[role][k] != custom[role][k] for k in RIGHTS)
             },
@@ -79,7 +95,9 @@ def main():
     else:
         for dt, info in report["customized_doctypes"].items():
             print(f"== {dt} ==")
-            print(f"  standard roles ({len(info['standard_roles'])}) custom roles ({len(info['custom_roles'])})")
+            print(
+                f"  standard roles ({len(info['standard_roles'])}) custom roles ({len(info['custom_roles'])})"
+            )
             if info["roles_only_in_custom"]:
                 print(f"  added roles: {info['roles_only_in_custom']}")
             if info["roles_missing_vs_standard"]:

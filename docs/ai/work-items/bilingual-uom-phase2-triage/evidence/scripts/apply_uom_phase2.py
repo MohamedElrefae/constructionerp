@@ -12,8 +12,9 @@ Logs to evidence/apply.log.
 """
 
 import json
-import sys
 import os
+import sys
+
 import frappe
 
 

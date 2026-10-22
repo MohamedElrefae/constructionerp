@@ -150,18 +150,14 @@ def main():
 
         if password:
             login_body = urllib_encode({"usr": "Administrator", "pwd": password})
-            status, _, sid_new = http_req_attested(
-                host, "/api/method/login", method="POST", body=login_body
-            )
+            status, _, sid_new = http_req_attested(host, "/api/method/login", method="POST", body=login_body)
             sid = sid_new
             if sid_new is None and any("connection:" in x for x in FAILURES):
                 pass  # the connection failure is already recorded
             if not sid:
                 fail("desk-boot", f"login failed / no session cookie ({status})")
             else:
-                dstatus, html, _ = http_req_attested(
-                    host, "/desk", headers={"Cookie": "sid=" + sid}
-                )
+                dstatus, html, _ = http_req_attested(host, "/desk", headers={"Cookie": "sid=" + sid})
                 if dstatus != 200:
                     fail("desk-boot", f"desk route status {dstatus}")
                 else:
@@ -193,7 +189,10 @@ def main():
                                     repr(key) + " absent from fresh boot __messages",
                                 )
         else:
-            fail("desk-boot", "no password available — the fresh Arabic Desk boot check is mandatory; run the preflight with credentials via STDIN or a TTY")
+            fail(
+                "desk-boot",
+                "no password available — the fresh Arabic Desk boot check is mandatory; run the preflight with credentials via STDIN or a TTY",
+            )
     finally:
         if sid:
             # unconditional cleanup: log the UAT session out on success OR failure
@@ -207,7 +206,6 @@ def main():
 
 
 def urllib_encode(d):
-
     return urllib.parse.urlencode(d)
 
 

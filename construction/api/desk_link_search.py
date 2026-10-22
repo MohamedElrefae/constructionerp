@@ -41,14 +41,14 @@ import frappe
 from frappe.desk.search import (
     build_for_autosuggest,
     get_std_fields_list,
+)
+from frappe.desk.search import (
     search_link as _vendor_search_link,
 )
 
 from construction.services.bilingual_registry import default_registry_path, load_registry
 
-_ARABIC_RE = re.compile(
-    "[\u0600-\u06ff\u0750-\u077f\u08a0-\u08ff\ufb50-\ufbff\ufe70-\ufeff]"
-)
+_ARABIC_RE = re.compile("[\u0600-\u06ff\u0750-\u077f\u08a0-\u08ff\ufb50-\ufbff\ufe70-\ufeff]")
 
 
 def contains_arabic(txt):
@@ -179,7 +179,7 @@ def _field_list(value):
                 return [stripped]
             return [str(f) for f in parsed] if isinstance(parsed, list) else [stripped]
         return [stripped] if stripped else []
-    if isinstance(value, (list, tuple)):
+    if isinstance(value, (list | tuple)):
         return [str(f) for f in value]
     return [str(value)]
 
@@ -284,14 +284,14 @@ def merge_results(baseline, extra, page_length):
 def search_link(
     doctype: str,
     txt: str,
-    query: "str | None" = None,
-    filters: "str | dict | list | None" = None,
+    query: str | None = None,
+    filters: str | dict | list | None = None,
     page_length: int = 10,
-    searchfield: "str | None" = None,
-    reference_doctype: "str | None" = None,
+    searchfield: str | None = None,
+    reference_doctype: str | None = None,
     ignore_user_permissions: bool = False,
     *,
-    link_fieldname: "str | None" = None,
+    link_fieldname: str | None = None,
 ):
     """Bilingual entry point bound over ``frappe.desk.search.search_link``.
 

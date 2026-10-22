@@ -5,10 +5,12 @@ ten governed envelopes + index.txt. See docs/ai/work-items/.../evidence.
 """
 
 import hashlib
+import importlib.util
 import json
 import os
 import re
 import subprocess
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -16,6 +18,23 @@ APP = Path(__file__).resolve().parents[3]  # apps/construction
 ROOT = APP
 CAP = Path(os.environ.get("STAGE2_EVIDENCE_CAPTURE_DIR", "/tmp/opencode/stage2"))
 EV = ROOT / "docs/ai/work-items/erp-arabic-bilingual-data/evidence/raw-logs/stage2"
+
+
+def _load_checker():
+    """The frozen contract lives in the checker: single source of truth.
+
+    The assembler must never carry its own copy of the expected counts, or the
+    two drift apart and a stale expectation silently reaches the evidence.
+    """
+    path = ROOT / "scripts" / "check_localization_gates.py"
+    spec = importlib.util.spec_from_file_location("stage2_checker_contract", path)
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+CHECKER = _load_checker()
 
 ARTIFACT_PATHS = {
     "CHECKER_SHA256": "scripts/check_localization_gates.py",
@@ -57,19 +76,23 @@ EXPECTED_COMMANDS = {
     "sync.txt": "COMMAND: bench --site v16.localhost console sync_translation_catalog(dry_run=False)",
     "vendor-audit.txt": "COMMAND: python3 scripts/check_localization_gates.py --audit-vendor-coverage",
 }
-MODULES = [
-    ("construction.searchable_dropdown.tests.test_search_api",),
-    ("construction.searchable_dropdown.tests.test_integration",),
-    ("construction.tests.test_bilingual_account_schema",),
-    ("construction.tests.test_translation_catalog",),
-    ("construction.tests.test_translation_stabilization_gates",),
-    ("construction.tests.test_localization_gates",),
-    ("construction.tests.test_bilingual_service",),
-    ("construction.tests.test_bilingual_account_pilot",),
-    ("construction.tests.test_stage4_account_language",),
-    ("construction.tests.test_stage4_report_extension",),
-    ("construction.tests.test_stage4_review_bundle",),
-]
+# Site-aware evidence protocol (execution order 31): the evidence site is an
+# explicit invocation choice; the collector never runs against a protected site
+# unless that exact site is the one the execution order authorized.
+DEFAULT_EVIDENCE_SITE = "v16.localhost"
+EVIDENCE_SITE = DEFAULT_EVIDENCE_SITE
+CAPTURES = Path(os.environ.get("STAGE2_EVIDENCE_CAPTURE_DIR", "/tmp/opencode/stage2"))
+OUTPUT_DIR = None
+
+
+def expected_commands(site: str) -> dict:
+    return {
+        key: (value.replace(DEFAULT_EVIDENCE_SITE, site) if DEFAULT_EVIDENCE_SITE in value else value)
+        for key, value in EXPECTED_COMMANDS.items()
+    }
+
+
+MODULES = [(module,) for module, _count in CHECKER.CURRENT_EXPECTED_MODULES]
 
 
 def sha(path):
@@ -81,11 +104,11 @@ def sha(path):
 
 
 def ts(name):
-    return (CAP / name).read_text().strip()
+    return (CAPTURES / name).read_text().strip()
 
 
 def clean(raw_name):
-    return re.sub(r"\x1b\[[0-9;]*m", "", (CAP / raw_name).read_text(errors="replace"))
+    return re.sub(r"\x1b\[[0-9;]*m", "", (CAPTURES / raw_name).read_text(errors="replace"))
 
 
 def main():
@@ -95,7 +118,11 @@ def main():
     env = {}
 
     m = re.search(r"^Ran (\d+) tests in [\d.]+s$", clean("standalone.out"), re.M)
-    assert m and int(m.group(1)) == 92, m
+    # The captured count is transcribed verbatim: the assembler is a protocol
+    # transcriber, NOT the gate. The frozen contract decides whether the
+    # captured number is acceptable, so a tampered count must reach the
+    # checker and be rejected there with an explicit error.
+    assert m, m
     ok = re.search(r"^OK$", clean("standalone.out"), re.M)
     env["gate-tests-standalone.txt"] = (
         ts("standalone.start"),
@@ -209,12 +236,24 @@ def main():
         ts("vendor.finish"),
     )
 
+    for fname, (start, body, finish) in env.items():
+        raw_command = next((l for l in body if l.startswith("COMMAND: ") or "COMMAND: bench --site" in l), "")
+        for line in body:
+            if "bench --site " in line:
+                recorded_site = line.split("bench --site ", 1)[1].split()[0].strip()
+                if recorded_site != EVIDENCE_SITE:
+                    raise SystemExit(
+                        f"capture {fname} was executed against site {recorded_site!r}, "
+                        f"not the requested {EVIDENCE_SITE!r}"
+                    )
     NO_REORDER = {"freshness-envelope.txt", "merkle.txt"}
+    EV.mkdir(parents=True, exist_ok=True)
     for fname in EVIDENCE_FILES:
         start, body, finish = env[fname]
         if fname in NO_REORDER:
             lines = [
-                EXPECTED_COMMANDS[fname],
+                "COMMAND: " + expected_commands(EVIDENCE_SITE)[fname][len("COMMAND: ") :],
+                "SITE: " + EVIDENCE_SITE,
                 "STARTED_UTC: " + start,
                 *body,
                 "EXIT_CODE: 0",
@@ -226,7 +265,8 @@ def main():
             ]
             results = [l for l in body if l not in marks]
             lines = [
-                EXPECTED_COMMANDS[fname],
+                "COMMAND: " + expected_commands(EVIDENCE_SITE)[fname][len("COMMAND: ") :],
+                "SITE: " + EVIDENCE_SITE,
                 "STARTED_UTC: " + start,
                 *results,
                 "EXIT_CODE: 0",
@@ -253,14 +293,92 @@ def main():
         "FINISHED_UTC: " + finish,
         "CANDIDATE_HEAD: " + head,
         "CANDIDATE_ROOT: " + str(ROOT.resolve()),
+        "EVIDENCE_SITE: " + EVIDENCE_SITE,
         "ARTIFACTS:",
     ]
     for k in ARTIFACT_PATHS:
         lines.append(k + ": " + art[k])
     lines.append(f"ENVELOPE_LINES: {len(lines) + 1}")
     (EV / "index.txt").write_text("\n".join(lines) + "\n", encoding="utf-8")
-    print("assembled", len(env), "envelopes + index; HEAD", head[:12], "aggregate", total)
+    print(
+        "assembled",
+        len(env),
+        "envelopes + index; HEAD",
+        head[:12],
+        "aggregate",
+        total,
+        "contract",
+        CHECKER.CURRENT_CONTRACT_ID,
+    )
+
+
+ASSEMBLER_VALUE_OPTIONS = ("--site", "--captures", "--out")
+
+
+def parse_cli_args(argv):
+    """Explicit CLI contract (fail closed).
+
+    Accepted spellings: ``--opt value`` and ``--opt=value``. Unknown options,
+    duplicated options, missing values and empty values are refused by name.
+    Returns (values, errors).
+    """
+    values = {}
+    errors = []
+    items = list(argv)
+    index = 0
+    while index < len(items):
+        arg = items[index]
+        name, sep, inline = arg.partition("=")
+        if name not in ASSEMBLER_VALUE_OPTIONS:
+            if arg.startswith("-"):
+                errors.append(f"cli-option: unknown option {name!r}")
+            else:
+                errors.append(f"cli-option: unexpected argument {arg!r}")
+        else:
+            if name in values:
+                errors.append(f"cli-option: {name} may be supplied only once")
+            if sep:
+                value = inline
+            elif index + 1 < len(items):
+                index += 1
+                value = items[index]
+            else:
+                errors.append(f"cli-option: {name} requires a value")
+                index += 1
+                continue
+            value = value.strip()
+            if not value:
+                errors.append(f"cli-option: {name} must not be empty")
+            else:
+                values[name] = value
+        index += 1
+    return values, errors
+
+
+def _cli(argv=None) -> None:
+    global EVIDENCE_SITE, CAPTURES, OUTPUT_DIR, EV
+    argv = list(sys.argv[1:] if argv is None else argv)
+    # Every invocation starts from the declared defaults: no state leaks from a
+    # previous (possibly failed) invocation into the next one.
+    EVIDENCE_SITE = DEFAULT_EVIDENCE_SITE
+    CAPTURES = Path(os.environ.get("STAGE2_EVIDENCE_CAPTURE_DIR", "/tmp/opencode/stage2"))
+    OUTPUT_DIR = None
+    EV = ROOT / "docs/ai/work-items/erp-arabic-bilingual-data/evidence/raw-logs/stage2"
+    values, errors = parse_cli_args(argv)
+    if errors:
+        for err in errors:
+            print("FAIL " + err)
+        raise SystemExit(1)
+    if "--site" in values:
+        EVIDENCE_SITE = values["--site"]
+    if "--captures" in values:
+        CAPTURES = Path(values["--captures"])
+    if "--out" in values:
+        OUTPUT_DIR = Path(values["--out"])
+    if OUTPUT_DIR is not None:
+        EV = OUTPUT_DIR
 
 
 if __name__ == "__main__":
+    _cli()
     main()

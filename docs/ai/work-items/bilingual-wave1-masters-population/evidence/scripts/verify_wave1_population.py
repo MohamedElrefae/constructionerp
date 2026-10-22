@@ -27,8 +27,14 @@ FIELDS = {
     "Supplier": ("supplier_name_in_arabic", "supplier_name_in_arabic_norm", "supplier_name"),
 }
 SCAFFOLD = {
-    "Item": ["Loyal Item", "Stock-Reco-batch-Item-1", "Stock-Reco-Serial-Item-1",
-             "Stock-Reco-Serial-Item-2", "Test Asset Item", "Test Esstimate"],
+    "Item": [
+        "Loyal Item",
+        "Stock-Reco-batch-Item-1",
+        "Stock-Reco-Serial-Item-1",
+        "Stock-Reco-Serial-Item-2",
+        "Test Asset Item",
+        "Test Esstimate",
+    ],
     "Customer": ["Test Loyalty Customer"],
 }
 EXPECTED_TOTALS = {"Item": 43, "Customer": 12, "Supplier": 10}
@@ -44,8 +50,23 @@ def byte_scan(value):
         problems.append("whitespace")
     for ch in value:
         cp = ord(ch)
-        if cp in (0x200E, 0x200F, 0x202A, 0x202B, 0x202C, 0x202D, 0x202E,
-                  0x2066, 0x2067, 0x2068, 0x2069, 0x200B, 0x200C, 0x200D, 0xFEFF):
+        if cp in (
+            0x200E,
+            0x200F,
+            0x202A,
+            0x202B,
+            0x202C,
+            0x202D,
+            0x202E,
+            0x2066,
+            0x2067,
+            0x2068,
+            0x2069,
+            0x200B,
+            0x200C,
+            0x200D,
+            0xFEFF,
+        ):
             problems.append(f"bidi/zw U+{cp:04X}")
         elif cp < 0x20 or cp == 0x7F or 0x80 <= cp <= 0x9F:
             problems.append(f"control U+{cp:04X}")
@@ -103,8 +124,10 @@ def main():
     counts = {}
     for doctype in FIELDS:
         counts[doctype] = populated(doctype, FIELDS[doctype][0])
-    print(f"COMPLETENESS items={counts['Item']}/8 customers={counts['Customer']}/1 "
-          f"suppliers={counts['Supplier']}/0 (zero-population exception)")
+    print(
+        f"COMPLETENESS items={counts['Item']}/8 customers={counts['Customer']}/1 "
+        f"suppliers={counts['Supplier']}/0 (zero-population exception)"
+    )
     if counts["Item"] != 8:
         fails.append(f"Item populated {counts['Item']} != 8")
     if counts["Customer"] != 1:
@@ -137,8 +160,10 @@ def main():
     )[0][0]
     if accounts_ar != 81:
         fails.append(f"Account Arabic count {accounts_ar} != 81 (Account surface touched)")
-    print(f"COUNTS_OK items={EXPECTED_TOTALS['Item']} customers={EXPECTED_TOTALS['Customer']} "
-          f"suppliers={EXPECTED_TOTALS['Supplier']} accounts_arabic={accounts_ar}")
+    print(
+        f"COUNTS_OK items={EXPECTED_TOTALS['Item']} customers={EXPECTED_TOTALS['Customer']} "
+        f"suppliers={EXPECTED_TOTALS['Supplier']} accounts_arabic={accounts_ar}"
+    )
 
     # 8: registry mapping resolves against live schema + norm-key search path.
     for doctype in ("Item", "Customer"):
@@ -168,8 +193,10 @@ def main():
         print("VERIFICATION RESULT: FAIL")
         sys.exit(1)
     print("SUMMARY in_scope=9 populated=9 norm_consistent=9 identity_unchanged=9 exceptions=0")
-    print("ROLLBACK_REF dry-run.json (before-values: all empty) sha256="
-          + hashlib.sha256(open(f"{PRIVATE}/dry-run.json", "rb").read()).hexdigest())
+    print(
+        "ROLLBACK_REF dry-run.json (before-values: all empty) sha256="
+        + hashlib.sha256(open(f"{PRIVATE}/dry-run.json", "rb").read()).hexdigest()
+    )
     print("VERIFICATION RESULT: PASS")
 
 

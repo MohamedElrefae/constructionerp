@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """W6-0b batch-5 site recon: list ar Translation rows for scope keys with ct_origin."""
+
 from __future__ import annotations
 
 import csv

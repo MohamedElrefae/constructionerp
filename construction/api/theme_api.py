@@ -333,7 +333,7 @@ def save_user_theme_settings(inherit_from_site, light_theme=None, dark_theme=Non
 @frappe.whitelist()
 def get_modern_theme_settings():
     """
-    Get site-wide Modern Theme Settings (admin only)
+    Get shared site-wide Modern Theme Settings for authenticated users.
 
     Returns:
         dict: Site theme configuration
@@ -2802,6 +2802,7 @@ def _get_frontend_theme_key(theme_doc_name, mode):
     return theme_doc_name
 
 
+# nosemgrep: guest-whitelisted-method -- Guest boot contract returns only theme, mode, and source; covered by test_guest_theme_rest_and_settings_methods_are_denied_but_boot_is_minimal.
 @frappe.whitelist(allow_guest=True)
 def get_user_theme_for_boot():
     """
@@ -2824,11 +2825,18 @@ def get_user_theme_for_boot():
 
         # Guest user - use site defaults
         if user == "Guest":
-            site_settings = frappe.db.get_value(
-                "Modern Theme Settings",
-                {"name": "Modern Theme Settings"},
-                ["default_light_theme", "default_dark_theme", "allow_user_override"],
-                as_dict=True,
+            site_settings = frappe._dict(
+                {
+                    "default_light_theme": frappe.db.get_single_value(
+                        "Modern Theme Settings", "default_light_theme"
+                    ),
+                    "default_dark_theme": frappe.db.get_single_value(
+                        "Modern Theme Settings", "default_dark_theme"
+                    ),
+                    "allow_user_override": frappe.db.get_single_value(
+                        "Modern Theme Settings", "allow_user_override"
+                    ),
+                }
             )
 
             if site_settings:
@@ -2890,11 +2898,15 @@ def get_user_theme_for_boot():
             }
 
         # User inherits from site or no custom theme set - check site defaults
-        site_settings = frappe.db.get_value(
-            "Modern Theme Settings",
-            {"name": "Modern Theme Settings"},
-            ["default_light_theme", "default_dark_theme"],
-            as_dict=True,
+        site_settings = frappe._dict(
+            {
+                "default_light_theme": frappe.db.get_single_value(
+                    "Modern Theme Settings", "default_light_theme"
+                ),
+                "default_dark_theme": frappe.db.get_single_value(
+                    "Modern Theme Settings", "default_dark_theme"
+                ),
+            }
         )
 
         if site_settings:
@@ -2911,7 +2923,15 @@ def get_user_theme_for_boot():
         return {"theme": construction_key, "mode": mode, "source": "mode_fallback"}
 
     except Exception as e:
-        frappe.log_error(f"Error getting theme for boot: {str(e)}")
+        if frappe.session.user == "Guest":
+            # Guest read failures must not create an Error Log document: the
+            # global scope hook correctly rejects every Guest-side write.
+            try:
+                frappe.logger().error(f"Error getting theme for Guest boot: {e}")
+            except Exception:
+                pass
+        else:
+            frappe.log_error(f"Error getting theme for boot: {str(e)}")
         return {"theme": "light", "mode": "light", "source": "error_fallback"}
 
 

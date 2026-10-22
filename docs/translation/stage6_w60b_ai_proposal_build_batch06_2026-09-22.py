@@ -258,7 +258,6 @@ A = {
     "Internal record of document shares": "سجل داخلي لمشاركات المستندات",
     "Introduction": "مقدمة",
     "Invalid": "غير صالح",
-
     "Invalid Code. Please try again.": "رمز غير صالح. يرجى المحاولة مرة أخرى.",
     "Invalid Condition: {}": "شرط غير صالح: {}",
     "Invalid Naming Series: {}": "سلسلة تسمية غير صالحة: {}",

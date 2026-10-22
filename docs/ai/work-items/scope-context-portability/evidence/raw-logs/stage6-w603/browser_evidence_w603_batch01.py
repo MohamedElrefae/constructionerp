@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
+# Historical evidence capture script; rerunning it does not reproduce the archived evidence.
 import json
+import os
 import re
 import sys
 from datetime import datetime, timezone
@@ -9,7 +11,7 @@ from playwright.sync_api import sync_playwright
 
 BASE = "http://v16.localhost:8000"
 OUT = Path(__file__).resolve().parent
-PASSWORD = "ct-w60x-evidence-1"
+PASSWORD = os.environ["CONSTRUCTION_EVIDENCE_PASSWORD"]
 PROBES = {
     "% of materials delivered against this Pick List": "% o نسبة المواد المسلمة مقابل قائمة الانتقاء هذه",
     "A Packing Slip can only be created for Draft Delivery Note.": "يمكن إنشاء سند التعبئة فقط لإذن التسليم المبدئي.",
@@ -80,7 +82,11 @@ with sync_playwright() as p:
         """(src)=>{try{return __(src,['X','Y']);}catch(e){return 'ERR:'+e.message;}}""",
         PLACEHOLDER_SRC,
     )
-    add("translate-placeholder", placeholder == PLACEHOLDER_EXP, {"expected": PLACEHOLDER_EXP, "got": placeholder})
+    add(
+        "translate-placeholder",
+        placeholder == PLACEHOLDER_EXP,
+        {"expected": PLACEHOLDER_EXP, "got": placeholder},
+    )
 
     boot_lookup = page.evaluate(
         """(keys)=>{const m=(frappe.boot&&frappe.boot.__messages)||{};const o={};for(const k of keys)o[k]=m[k];return o;}""",
@@ -96,7 +102,9 @@ with sync_playwright() as p:
     body = page.locator("body").inner_text()
     words = sorted(set(re.findall(r"[؀-ۿ]{2,}", body)))
     add("rendered-dom-arabic-words", len(words) >= 5, {"count": len(words), "sample": words[:20]})
-    modules = [word for word in ["الأدوات", "المحاسبة", "المشتريات", "المشاريع", "المخزون", "البيع"] if word in body]
+    modules = [
+        word for word in ["الأدوات", "المحاسبة", "المشتريات", "المشاريع", "المخزون", "البيع"] if word in body
+    ]
     add("rendered-workspace-modules", len(modules) >= 3, modules)
     try:
         sidebar = [

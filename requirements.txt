@@ -6,6 +6,10 @@ frappe
 # until the candidate rehearsal. See docs/ai/work-items/dependency-security-remediation/SCOPE.md.
 cryptography~=50.0.0
 pyOpenSSL~=26.4.0
-Pillow~=12.3.0
+# Pillow 13.0.0 (2026-10-21): owner-authorized PRIVATE, VERSIONED vendor
+# divergence from pinned Frappe 2871914b (16.51.1). No upstream Frappe v16
+# release declares Pillow~=13.0.0; this is NOT an upstream-supported release.
+# See docs/ai/work-items/dependency-security-remediation/PRIVATE_VENDOR_PILLOW13_DIVERGENCE_2026-10-21.md
+Pillow~=13.0.0
 sqlparse~=0.6.0
 sql_metadata~=3.0.1

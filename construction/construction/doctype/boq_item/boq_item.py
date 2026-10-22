@@ -49,7 +49,7 @@ class BOQItem(Document):
         headers = {self.boq_header}
         if previous:
             headers.add(previous.boq_header)
-        for header in sorted(filter(None, headers)):
+        for header in sorted(header for header in headers if header):
             lock_boq_header(header)
         self.validate_cost_provenance()
         for step in self.PHASE1_STEPS:
@@ -79,7 +79,7 @@ class BOQItem(Document):
         headers = {self.boq_header}
         if previous:
             headers.add(previous.boq_header)
-        for header_name in sorted(filter(None, headers)):
+        for header_name in sorted(header for header in headers if header):
             header = frappe.get_doc("BOQ Header", header_name)
             header.recalculate_phase1_totals()
 
@@ -204,7 +204,10 @@ class BOQItem(Document):
             frappe.throw(_("Multiple approved analyses require reconciliation before repricing this item."))
         if approved:
             analysis = frappe.get_doc("BOQ Cost Analysis", approved[0][0], for_update=True)
-            if getattr(analysis, "pricing_rule_version", None) and analysis.pricing_rule_version != PRICING_RULE:
+            if (
+                getattr(analysis, "pricing_rule_version", None)
+                and analysis.pricing_rule_version != PRICING_RULE
+            ):
                 frappe.throw(_("Legacy approved pricing requires review before repricing this item."))
             for field in PERCENT_FIELDS:
                 self.set(field, analysis.get(field))

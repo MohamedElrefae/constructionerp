@@ -1,10 +1,7 @@
-"""Verify the curated customer distribution (F28-D003, docs/DISTRIBUTION.md).
+"""Run preliminary checkout hygiene checks; this does not certify a customer artifact.
 
-Fails on anything that must not reach a customer artifact: tracked source maps, tracked
-test screenshots, tracked bytecode, legacy setup.py, or never-ship paths leaking into the
-customer set. Run before final `bench get-app` qualification.
-
-Usage (from the app root):  python3 scripts/verify_distribution.py
+The staged tree must be built and checked with stage_distribution.py and
+verify_staged_distribution.py as described in docs/DISTRIBUTION.md.
 """
 
 import subprocess

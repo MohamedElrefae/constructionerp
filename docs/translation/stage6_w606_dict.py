@@ -2,6 +2,7 @@
 113 unlocalized runtime keys in ERPNext Assets domain.
 Adheres to EAS / IFRS terminology and ERPNext Arabic conventions.
 """
+
 from __future__ import annotations
 
 ASSETS_CANDIDATE_TRANSLATIONS: dict[str, str] = {

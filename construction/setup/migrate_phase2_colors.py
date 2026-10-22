@@ -33,6 +33,7 @@ def after_migrate():
                 "preview_colors": '["#0F172A","#2563EB","#1E293B","#F8FAFC","#2563EB33"]',
             },
         )
+        # nosemgrep: frappe-manual-commit -- reviewed operator-only palette migration; this function is not a registered lifecycle hook
         frappe.db.commit()
         print("✅ Construction Dark updated to enterprise blue/slate palette")
     else:
@@ -64,6 +65,7 @@ def after_migrate():
                 "preview_colors": '["#F8FAFC","#2563EB","#FFFFFF","#0F172A","#2563EB15"]',
             },
         )
+        # nosemgrep: frappe-manual-commit -- reviewed operator-only palette migration; this function is not a registered lifecycle hook
         frappe.db.commit()
         print("✅ Construction Light updated to enterprise blue/slate palette")
     else:

@@ -62,9 +62,7 @@ def _code_hashes():
         "hooks.py": _sha(os.path.join(app, "hooks.py")),
         "search.py": _sha(os.path.join(app, "searchable_dropdown/api/search.py")),
         "bilingual_service.py": _sha(os.path.join(app, "services/bilingual_service.py")),
-        "bilingual_registry.json": _sha(
-            os.path.join(app, "data/bilingual/bilingual_registry.json")
-        ),
+        "bilingual_registry.json": _sha(os.path.join(app, "data/bilingual/bilingual_registry.json")),
     }
 
 
@@ -103,9 +101,7 @@ def _create_fixtures():
 
 
 def _delete_fixtures():
-    rows = frappe.get_all(
-        "UOM", filters=_fixture_filter(), fields=["name"], limit_page_length=0
-    )
+    rows = frappe.get_all("UOM", filters=_fixture_filter(), fields=["name"], limit_page_length=0)
     for row in rows:
         if frappe.db.exists("UOM", row["name"]):
             frappe.delete_doc("UOM", row["name"], force=True, ignore_permissions=True)
@@ -115,9 +111,7 @@ def _delete_fixtures():
 
 def _vendor(txt):
     """Plain side: the stock endpoint on the same Arabic text."""
-    return frappe.desk.search.search_link(
-        "UOM", txt, filters=None, page_length=PAGE_LENGTH
-    )
+    return frappe.desk.search.search_link("UOM", txt, filters=None, page_length=PAGE_LENGTH)
 
 
 def _registry_only(txt):
@@ -216,8 +210,7 @@ def measure(txt):
         "sla_evaluation": {
             "tier": tier,
             "tier_rule": (
-                "baseline P95 >= 1.0 ms => Tier 2A <= 1.15x; "
-                "baseline P95 < 1.0 ms => Tier 2B <= 1.50x"
+                "baseline P95 >= 1.0 ms => Tier 2A <= 1.15x; " "baseline P95 < 1.0 ms => Tier 2B <= 1.50x"
             ),
             "tier_ratio_ceiling": ceiling,
             "ratio": ratio,
@@ -226,9 +219,7 @@ def measure(txt):
             "candidate_p95_ms": cand_min_p95,
             "ceiling_pass": ceiling_pass,
             "verdict_if_adopted": (
-                "COMPLIANT_WITH_TWO_TIER_SLA"
-                if (tier_pass and ceiling_pass and subset)
-                else "NON_COMPLIANT"
+                "COMPLIANT_WITH_TWO_TIER_SLA" if (tier_pass and ceiling_pass and subset) else "NON_COMPLIANT"
             ),
         },
         "per_round_samples": {
@@ -245,9 +236,7 @@ def run():
         res = measure(TXT_ARABIC)
     finally:
         _delete_fixtures()
-        leftover = frappe.get_all(
-            "UOM", filters=_fixture_filter(), pluck="name", limit_page_length=0
-        )
+        leftover = frappe.get_all("UOM", filters=_fixture_filter(), pluck="name", limit_page_length=0)
         cleanup = {"created": len(created), "leftover": leftover}
 
     return {
@@ -280,9 +269,7 @@ if __name__ == "__main__":
         frappe.connect()
     frappe.set_user("Administrator")
     out = run()
-    path = os.path.abspath(
-        os.path.join(os.path.dirname(__file__), "..", "registry-only-candidate.json")
-    )
+    path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "registry-only-candidate.json"))
     with open(path, "w", encoding="utf-8") as fh:
         json.dump(out, fh, indent=1, sort_keys=True)
         fh.write("\n")

@@ -1,6 +1,5 @@
 import frappe
 
-
 TARGETS = (
     {
         "dt": "Item Group",

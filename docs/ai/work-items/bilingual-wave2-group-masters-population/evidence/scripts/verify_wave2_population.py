@@ -53,8 +53,23 @@ def byte_scan(value):
         problems.append("whitespace")
     for ch in value:
         cp = ord(ch)
-        if cp in (0x200E, 0x200F, 0x202A, 0x202B, 0x202C, 0x202D, 0x202E,
-                  0x2066, 0x2067, 0x2068, 0x2069, 0x200B, 0x200C, 0x200D, 0xFEFF):
+        if cp in (
+            0x200E,
+            0x200F,
+            0x202A,
+            0x202B,
+            0x202C,
+            0x202D,
+            0x202E,
+            0x2066,
+            0x2067,
+            0x2068,
+            0x2069,
+            0x200B,
+            0x200C,
+            0x200D,
+            0xFEFF,
+        ):
             problems.append(f"bidi/zw U+{cp:04X}")
         elif cp < 0x20 or cp == 0x7F or 0x80 <= cp <= 0x9F:
             problems.append(f"control U+{cp:04X}")
@@ -125,9 +140,7 @@ def main():
         doctype, name = row["doctype"], row["name"]
         norm_field = FIELDS[doctype][1]
         key = normalize_arabic(row["arabic"])
-        hit = frappe.get_all(
-            doctype, filters={norm_field: key}, fields=["name"], limit_page_length=5
-        )
+        hit = frappe.get_all(doctype, filters={norm_field: key}, fields=["name"], limit_page_length=5)
         if any(h["name"] == name for h in hit):
             norm_hits += 1
         else:
@@ -142,9 +155,7 @@ def main():
         ("Territory", ("territory_name_ar", "territory_name", None)),
     ):
         violations = []
-        for r in frappe.get_all(
-            doctype, fields=["name", label_field, ar_field], limit_page_length=0
-        ):
+        for r in frappe.get_all(doctype, fields=["name", label_field, ar_field], limit_page_length=0):
             if r["name"] in in_scope_names[doctype]:
                 continue
             if r[ar_field]:
@@ -152,7 +163,9 @@ def main():
         if violations:
             fails.append(f"{doctype}: exception violations {violations}")
         else:
-            print(f"EXCEPTIONS_OK {doctype}: all {EXPECTED_TOTALS[doctype] - EXPECTED_IN_SCOPE[doctype]} non-in-scope rows empty")
+            print(
+                f"EXCEPTIONS_OK {doctype}: all {EXPECTED_TOTALS[doctype] - EXPECTED_IN_SCOPE[doctype]} non-in-scope rows empty"
+            )
 
     # 7: totals unchanged + prior-tier surfaces frozen.
     for doctype, expected in EXPECTED_TOTALS.items():
@@ -192,7 +205,8 @@ def main():
         fails.append(f"Company.company_name_ar was written: {sha16(company_ar)}")
 
     print(
-        "FROZEN_SURFACES " + " ".join(f"{k}={prior[k]}" for k in sorted(prior))
+        "FROZEN_SURFACES "
+        + " ".join(f"{k}={prior[k]}" for k in sorted(prior))
         + f" company_ar={'empty' if not company_ar else 'WRITTEN'}"
     )
     print(

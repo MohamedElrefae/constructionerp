@@ -22,18 +22,43 @@ PROPOSAL_SHA = "d8a2a8df2c040434b82d4d813f96e510e454b0f11114a31cf709db62bf60f266
 APPROVED_BEFORE_SHA = "ab2350759c9bbeda8d637442ef756b3e28229b1bebae8d76e95ec31c655fa749"
 DECISIONS_BEFORE_SHA = "2cef685c7ded52d83fdd3e1e504f4175495f01d12563079d8a3f1f72cfea178b"
 REVIEWERS = (
-    {"id": "AI-A1", "session": "/root/w606_crm_a1_corrected", "path": "docs/ai/work-items/scope-context-portability/evidence/stage6-w606-ai-a1-crm-support-maintenance-corrected-2026-09-24.md"},
-    {"id": "AI-A2", "session": "/root/w606_crm_a2_corrected", "path": "docs/ai/work-items/scope-context-portability/evidence/stage6-w606-ai-a2-crm-support-maintenance-corrected-2026-09-24.md"},
-    {"id": "AI-A3", "session": "/root/w606_crm_a3_corrected", "path": "docs/ai/work-items/scope-context-portability/evidence/stage6-w606-ai-a3-crm-support-maintenance-corrected-2026-09-24.md"},
+    {
+        "id": "AI-A1",
+        "session": "/root/w606_crm_a1_corrected",
+        "path": "docs/ai/work-items/scope-context-portability/evidence/stage6-w606-ai-a1-crm-support-maintenance-corrected-2026-09-24.md",
+    },
+    {
+        "id": "AI-A2",
+        "session": "/root/w606_crm_a2_corrected",
+        "path": "docs/ai/work-items/scope-context-portability/evidence/stage6-w606-ai-a2-crm-support-maintenance-corrected-2026-09-24.md",
+    },
+    {
+        "id": "AI-A3",
+        "session": "/root/w606_crm_a3_corrected",
+        "path": "docs/ai/work-items/scope-context-portability/evidence/stage6-w606-ai-a3-crm-support-maintenance-corrected-2026-09-24.md",
+    },
 )
 AI_R_REPORT = "docs/ai/work-items/scope-context-portability/evidence/stage6-w606-ai-r-crm-support-maintenance-final-2026-09-24.md"
 VERSION = "1.10"
 DOMAIN = "crm-support-maintenance"
 FIELDS = [
-    "language", "source_text", "context", "ct_app", "translated_text", "domain",
-    "release_status", "release_version", "a1_reviewer", "a1_approved_at",
-    "a2_reviewer", "a2_approved_at", "a3_reviewer", "a3_approved_at",
-    "references", "notes", "decision_ref",
+    "language",
+    "source_text",
+    "context",
+    "ct_app",
+    "translated_text",
+    "domain",
+    "release_status",
+    "release_version",
+    "a1_reviewer",
+    "a1_approved_at",
+    "a2_reviewer",
+    "a2_approved_at",
+    "a3_reviewer",
+    "a3_approved_at",
+    "references",
+    "notes",
+    "decision_ref",
 ]
 
 
@@ -69,7 +94,9 @@ def main():
     }
     site_map = {row["source_text"]: row["translated_text"] for row in recon["site_overrides"]}
     assert len(site_map) == 76
-    assert all(row["proposed_ar"] == site_map[row["source_text"]] for row in dispositions["preserved-site-override"])
+    assert all(
+        row["proposed_ar"] == site_map[row["source_text"]] for row in dispositions["preserved-site-override"]
+    )
     for reviewer in REVIEWERS:
         report = (ROOT / reviewer["path"]).read_text(encoding="utf-8")
         assert PROPOSAL_SHA in report and "PASS" in report
@@ -93,17 +120,27 @@ def main():
         disposition = row["proposed_disposition"]
         if disposition == "PROPOSED-payload":
             assert source not in existing_keys and arabic.strip()
-            released.append({
-                "language": "ar", "source_text": source, "context": "", "ct_app": "erpnext",
-                "translated_text": arabic, "domain": DOMAIN, "release_status": "Released",
-                "release_version": VERSION,
-                "a1_reviewer": reviewer_names["AI-A1"], "a1_approved_at": now,
-                "a2_reviewer": reviewer_names["AI-A2"], "a2_approved_at": now,
-                "a3_reviewer": reviewer_names["AI-A3"], "a3_approved_at": now,
-                "references": "Glossary v2.0; vendor ERPNext CRM/Support/Maintenance PO locations; W6-6 CRM Support Maintenance",
-                "notes": f"Renewed A1/A2/A3 PASS bound to proposal SHA {PROPOSAL_SHA}; owner-approved corrected scope SHA {SCOPE_SHA}",
-                "decision_ref": f"content:{PAYLOAD.relative_to(ROOT)}",
-            })
+            released.append(
+                {
+                    "language": "ar",
+                    "source_text": source,
+                    "context": "",
+                    "ct_app": "erpnext",
+                    "translated_text": arabic,
+                    "domain": DOMAIN,
+                    "release_status": "Released",
+                    "release_version": VERSION,
+                    "a1_reviewer": reviewer_names["AI-A1"],
+                    "a1_approved_at": now,
+                    "a2_reviewer": reviewer_names["AI-A2"],
+                    "a2_approved_at": now,
+                    "a3_reviewer": reviewer_names["AI-A3"],
+                    "a3_approved_at": now,
+                    "references": "Glossary v2.0; vendor ERPNext CRM/Support/Maintenance PO locations; W6-6 CRM Support Maintenance",
+                    "notes": f"Renewed A1/A2/A3 PASS bound to proposal SHA {PROPOSAL_SHA}; owner-approved corrected scope SHA {SCOPE_SHA}",
+                    "decision_ref": f"content:{PAYLOAD.relative_to(ROOT)}",
+                }
+            )
             applied_disposition = "quorum-confirmed-payload"
         elif disposition == "preserved-site-override":
             assert site_map[source] == arabic
@@ -116,15 +153,17 @@ def main():
             applied_disposition = "EXCEPTION-technical (empty, vendor rendering retained)"
         else:
             raise AssertionError(disposition)
-        applied.append({
-            "source_text": source,
-            "translated_text": arabic,
-            "quorum_decision": applied_disposition,
-            "disposition_rationale": row["disposition_rationale"],
-            "decision_ref": f"content:{PAYLOAD.relative_to(ROOT)}",
-            "scope_sha256": SCOPE_SHA,
-            "proposal_sha256": PROPOSAL_SHA,
-        })
+        applied.append(
+            {
+                "source_text": source,
+                "translated_text": arabic,
+                "quorum_decision": applied_disposition,
+                "disposition_rationale": row["disposition_rationale"],
+                "decision_ref": f"content:{PAYLOAD.relative_to(ROOT)}",
+                "scope_sha256": SCOPE_SHA,
+                "proposal_sha256": PROPOSAL_SHA,
+            }
+        )
     assert len(applied) == 119 and len(released) == 38
     with PAYLOAD.open("w", encoding="utf-8", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=list(applied[0]), lineterminator="\n")
@@ -135,31 +174,54 @@ def main():
     refs = [{"ref": f"content:{PAYLOAD.relative_to(ROOT)}", "sha256": payload_hash}]
     for row in released:
         source, value = row["source_text"], row["translated_text"]
-        proposal_hash = hashlib.sha256(f"{source}|{value}".encode("utf-8")).hexdigest()
+        proposal_hash = hashlib.sha256(f"{source}|{value}".encode()).hexdigest()
         ident = [
-            row["language"], row["ct_app"], row["context"], source, value,
-            row["a1_reviewer"], row["a1_approved_at"], row["a2_reviewer"], row["a2_approved_at"],
-            row["a3_reviewer"], row["a3_approved_at"], row["release_version"], row["domain"],
-            row["references"], proposal_hash,
+            row["language"],
+            row["ct_app"],
+            row["context"],
+            source,
+            value,
+            row["a1_reviewer"],
+            row["a1_approved_at"],
+            row["a2_reviewer"],
+            row["a2_approved_at"],
+            row["a3_reviewer"],
+            row["a3_approved_at"],
+            row["release_version"],
+            row["domain"],
+            row["references"],
+            proposal_hash,
         ]
         decision_id = row_decision_id(ident, refs)
         assert decision_id not in old_decisions
         old_decisions[decision_id] = {
-            "language": row["language"], "ct_app": row["ct_app"], "context": row["context"],
-            "source_text": source, "translated_text": value, "domain": row["domain"],
+            "language": row["language"],
+            "ct_app": row["ct_app"],
+            "context": row["context"],
+            "source_text": source,
+            "translated_text": value,
+            "domain": row["domain"],
             "reviewers": [row["a1_reviewer"], row["a2_reviewer"], row["a3_reviewer"]],
             "timestamps": [row["a1_approved_at"], row["a2_approved_at"], row["a3_approved_at"]],
-            "release_version": row["release_version"], "references": row["references"],
+            "release_version": row["release_version"],
+            "references": row["references"],
             "proposal": {"arabic": value, "sha256": proposal_hash},
-            "verdicts": {reviewer["id"]: {"decision": "approve", "confidence": "high", "session": reviewer["session"]} for reviewer in REVIEWERS},
+            "verdicts": {
+                reviewer["id"]: {"decision": "approve", "confidence": "high", "session": reviewer["session"]}
+                for reviewer in REVIEWERS
+            },
             "artifacts": refs,
         }
     with APPROVED.open("a", encoding="utf-8", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=FIELDS, lineterminator="\n")
         writer.writerows(released)
     decision_doc["generated_utc"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-    decision_doc["note"] = "W6-6 CRM Support Maintenance corrected bundle; 38 released rows bound to renewed A1/A2/A3 PASS; historical decisions retained."
-    DECISIONS.write_text(json.dumps(decision_doc, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    decision_doc["note"] = (
+        "W6-6 CRM Support Maintenance corrected bundle; 38 released rows bound to renewed A1/A2/A3 PASS; historical decisions retained."
+    )
+    DECISIONS.write_text(
+        json.dumps(decision_doc, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
     print(f"scope=119 preserve=76 deferred=4 technical=1 released={len(released)}")
     print(f"catalog={len(approved)}+{len(released)}={len(approved) + len(released)}")
     print(f"payload_sha256={payload_hash}")

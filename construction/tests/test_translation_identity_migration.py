@@ -33,6 +33,22 @@ class Row(dict):
             raise AttributeError(name) from exc
 
 
+class CallbackManager:
+    def __init__(self):
+        self.callbacks = []
+
+    def add(self, callback):
+        self.callbacks.append(callback)
+
+    def run(self):
+        callbacks, self.callbacks = self.callbacks, []
+        for callback in callbacks:
+            callback()
+
+    def reset(self):
+        self.callbacks = []
+
+
 class TestTranslationIdentityMigration(TestCase):
     def setUp(self):
         self.connection = sqlite3.connect(":memory:")
@@ -49,14 +65,18 @@ class TestTranslationIdentityMigration(TestCase):
         self.columns = {row[1] for row in self.connection.execute("PRAGMA table_info(tabTranslation)")}
         self.write_count = 0
         self.cache_clears = 0
+        self.commit_count = 0
+        self.after_commit = CallbackManager()
         frappe = ModuleType("frappe")
+        frappe._ = lambda message: message
         frappe.throw = self.throw
         frappe.db = SimpleNamespace(
             sql=self.sql,
             get_value=self.get_value,
             set_value=self.set_value,
             has_column=lambda dt, field: field in self.columns,
-            commit=self.connection.commit,
+            commit=self.commit,
+            after_commit=self.after_commit,
             delete=lambda *args: self.fail("Repair must preserve every Translation row"),
         )
         frappe.get_all = self.get_all
@@ -96,9 +116,25 @@ class TestTranslationIdentityMigration(TestCase):
     def clear_cache(self):
         self.cache_clears += 1
 
+    def commit(self):
+        self.commit_count += 1
+        self.connection.commit()
+
     def sql(self, query, values=None, as_dict=False):
         normalized = query.strip().lower()
         if normalized.startswith("show index"):
+            if as_dict:
+                return [
+                    Row(
+                        {
+                            "Key_name": "ct_translation_key_digest",
+                            "Non_unique": 0,
+                            "Seq_in_index": 1,
+                            "Column_name": "ct_key_digest",
+                            "Sub_part": None,
+                        }
+                    )
+                ]
             return [("ct_translation_key_digest",)]
         if normalized.startswith("alter table"):
             return []  # MariaDB-specific DDL is outside this SQLite regression.
@@ -109,7 +145,7 @@ class TestTranslationIdentityMigration(TestCase):
     def get_all(self, dt, fields, filters=None, order_by=None, limit_page_length=0, limit_start=0):
         conditions, parameters = [], []
         for field, value in (filters or {}).items():
-            if isinstance(value, (list, tuple)):
+            if isinstance(value, (list | tuple)):
                 operator, value = value
                 if operator == "in":
                     conditions.append(f"{field} IN ({','.join('?' for _ in value)})")
@@ -171,6 +207,11 @@ class TestTranslationIdentityMigration(TestCase):
             self.insert(f"row-{index:04}", catalog=None if index % 2 else 0)
         before = self.snapshot()
         self.forward.execute()
+        self.assertEqual(self.cache_clears, 0, "migration must defer Translation cache work until commit")
+        self.assertEqual(len(self.after_commit.callbacks), 1)
+        self.connection.commit()
+        self.after_commit.run()
+        self.assertEqual(self.cache_clears, 1)
         after = self.snapshot()
         self.assertEqual(len(after), 1000)
         self.assertTrue(all(row.ct_key_digest and row.ct_is_catalog_entry == 0 for row in after))
@@ -195,8 +236,29 @@ class TestTranslationIdentityMigration(TestCase):
         self.insert("missing-null", catalog=0)
         self.insert("missing-empty", catalog=0, digest="")
         self.insert("valid", catalog=0, digest="existing-digest")
+        self.connection.commit()
+        before = self.snapshot()
+        self.commit_count = 0
         self.assertEqual(self.setup.ensure_translation_identity(), {"backfilled": 2})
         self.assertEqual(self.get_value("Translation", {"name": "valid"}, "ct_key_digest"), "existing-digest")
+        self.assertEqual(self.commit_count, 0, "identity hook must leave DML in the caller's transaction")
+        self.assertEqual(len(self.after_commit.callbacks), 1)
+        self.connection.rollback()
+        self.after_commit.reset()
+        self.assertEqual(self.snapshot(), before, "outer rollback must undo the identity backfill")
+        self.assertEqual(self.cache_clears, 0, "rolled-back identity rows must not trigger cache clearing")
+
+    def test_hook_clears_cache_only_after_outer_commit(self):
+        self.insert("missing-null", catalog=0)
+        self.connection.commit()
+        self.commit_count = 0
+        self.assertEqual(self.setup.ensure_translation_identity(), {"backfilled": 1})
+        self.assertEqual(self.cache_clears, 0)
+        self.assertEqual(self.commit_count, 0, "identity hook must not commit independently")
+        self.commit()
+        self.after_commit.run()
+        self.assertEqual(self.cache_clears, 1)
+        self.assertEqual(self.commit_count, 1, "only the simulated outer transaction committed")
 
     def test_catalog_runtime_and_context_use_distinct_canonical_identities(self):
         self.insert("catalog", catalog=1, source="Shared")

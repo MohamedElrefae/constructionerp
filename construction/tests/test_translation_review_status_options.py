@@ -27,6 +27,7 @@ class TestTranslationReviewStatusOptions(TestCase):
             self.field.options = value
 
         frappe = ModuleType("frappe")
+        frappe._ = lambda message: message
         frappe.db = SimpleNamespace(get_value=get_value, set_value=set_value)
         frappe.clear_cache = lambda **kwargs: self.cache_clears.append(kwargs)
         frappe.log_error = lambda *args, **kwargs: None
@@ -85,6 +86,7 @@ def setup_fields():
     module = importlib.util.module_from_spec(spec)
     # CUSTOM_FIELDS is declarative, but importing needs the Frappe module.
     frappe = ModuleType("frappe")
+    frappe._ = lambda message: message
     custom = ModuleType("frappe.custom.doctype.custom_field.custom_field")
     custom.create_custom_field = lambda *args, **kwargs: None
     with patch.dict("sys.modules", {"frappe": frappe, custom.__name__: custom}):

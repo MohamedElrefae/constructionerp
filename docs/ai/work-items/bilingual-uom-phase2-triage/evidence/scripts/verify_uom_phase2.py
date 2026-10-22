@@ -17,11 +17,12 @@ Logs to evidence/post-import-verification.log.
 """
 
 import json
-import sys
 import os
-import frappe
-from construction.services.bilingual_service import normalize_arabic
+import sys
 
+import frappe
+
+from construction.services.bilingual_service import normalize_arabic
 
 FROZEN_PRIOR = {
     "accounts_ar": 81,
@@ -35,8 +36,21 @@ FROZEN_PRIOR = {
 }
 
 PHASE1_NAMES = {
-    "M3", "M2", "M", "TON", "KG", "PCS", "LS", "DAY", "HR", "BAG", "LTR", "SET",
-    "Nos", "Tonne", "Box",
+    "M3",
+    "M2",
+    "M",
+    "TON",
+    "KG",
+    "PCS",
+    "LS",
+    "DAY",
+    "HR",
+    "BAG",
+    "LTR",
+    "SET",
+    "Nos",
+    "Tonne",
+    "Box",
 }
 
 

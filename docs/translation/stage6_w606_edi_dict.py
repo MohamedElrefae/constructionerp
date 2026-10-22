@@ -11,7 +11,6 @@ EDI_TRANSLATIONS = {
     "Import Genericode File": "استيراد ملف Genericode",
     "Importing Common Codes": "جار استيراد الأكواد المشتركة",
     "Select Columns and Filters": "تحديد الأعمدة وعوامل التصفية",
-
     # 17 Proposed Payload Rows
     "Are you sure you want to delete {0}?<p>This action will also delete all associated Common Code documents.</p>": "هل أنت متأكد من رغبتك في حذف {0}؟<p>سيؤدي هذا الإجراء أيضًا إلى حذف جميع مستندات الكود المشترك المرتبطة.</p>",
     "Canonical URI": "المعرف الموحد القياسي (Canonical URI)",

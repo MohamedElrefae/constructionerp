@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """W6-3 batch-01 site recon: list ar Translation rows for scope keys with ct_origin."""
+
 from __future__ import annotations
 
 import csv
@@ -64,8 +65,7 @@ result = {
     "site_override_origin_rows": len(site_overrides),
     "site_overrides": site_overrides,
     "preserved": [
-        {"source_text": m["source_text"], "translated_text": m["translated_text"]}
-        for m in site_overrides
+        {"source_text": m["source_text"], "translated_text": m["translated_text"]} for m in site_overrides
     ],
     "nonempty_matches": nonempty,
     "matches": matches,
@@ -75,14 +75,37 @@ result = {
     ),
 }
 OUT.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-print(json.dumps({k: result[k] for k in (
-    "scope_rows", "runtime_rows_scanned", "match_count", "exact_case_matches",
-    "missing_count", "matched_nonempty_values", "site_override_origin_rows")}, ensure_ascii=False))
+print(
+    json.dumps(
+        {
+            k: result[k]
+            for k in (
+                "scope_rows",
+                "runtime_rows_scanned",
+                "match_count",
+                "exact_case_matches",
+                "missing_count",
+                "matched_nonempty_values",
+                "site_override_origin_rows",
+            )
+        },
+        ensure_ascii=False,
+    )
+)
 print("SITE_OVERRIDES", len(site_overrides))
 for m in site_overrides:
     print("  PRESERVE", repr(m["source_text"]), "->", (m["translated_text"] or "")[:60], "|", m["ct_origin"])
 print("NONEMPTY other:")
 for m in nonempty:
     if (m["ct_origin"] or "").lower() != "site override":
-        print("  VAL", repr(m["source_text"]), "->", (m["translated_text"] or "")[:60], "|", repr(m["ct_origin"]), "| cat", m["ct_is_catalog_entry"])
+        print(
+            "  VAL",
+            repr(m["source_text"]),
+            "->",
+            (m["translated_text"] or "")[:60],
+            "|",
+            repr(m["ct_origin"]),
+            "| cat",
+            m["ct_is_catalog_entry"],
+        )
 frappe.destroy()

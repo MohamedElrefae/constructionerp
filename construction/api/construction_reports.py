@@ -74,8 +74,18 @@ def report_view(
         rows = [r for r in rows if _readable_item(r.get("boq_item"))]
         basis = "Current estimated direct cost vs contract rate; margin_pct is markup on direct cost % (undefined when cost is zero)."
     elif report == "resource_requirements":
-        rows = svc.get_resource_requirement_summary(boq_header)
-        rows = [r for r in rows if _readable_item(r.get("boq_item"))]
+        # Authorization is resolved BEFORE aggregation: the service only
+        # aggregates contributions from BOQ Items the caller may read. The
+        # aggregate query groups by stream/resource/UOM and therefore has no
+        # single boq_item identity to filter on afterwards.
+        authorized_items = []
+        if boq_header:
+            authorized_items = [
+                it.name
+                for it in frappe.get_all("BOQ Item", filters={"boq_header": boq_header}, fields=["name"])
+                if _readable_item(it.name)
+            ]
+        rows = svc.get_resource_requirement_summary(boq_header, authorized_items=authorized_items)
         basis = "Contract-quantity resource plan (contract qty x factor x wastage / analysis qty); not a revised-quantity forecast."
     elif report == "price_history":
         rows = svc.get_resource_price_history(

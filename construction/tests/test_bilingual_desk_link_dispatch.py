@@ -2,7 +2,8 @@ import unittest
 from unittest.mock import patch as mock_patch
 
 import frappe
-from frappe.desk.search import build_for_autosuggest, search_link as vendor_search_link
+from frappe.desk.search import build_for_autosuggest
+from frappe.desk.search import search_link as vendor_search_link
 
 from construction.api import desk_link_search as desk_link_module
 from construction.api.desk_link_search import (
@@ -74,9 +75,7 @@ class TestDeskLinkDispatch(unittest.TestCase):
         self.assertEqual(ours, theirs)
 
     def test_non_active_registry_entry_fails_closed(self):
-        data, errors = frappe.get_attr(
-            "construction.services.bilingual_registry.load_registry"
-        )()
+        data, errors = frappe.get_attr("construction.services.bilingual_registry.load_registry")()
         self.assertFalse(errors)
         data["doctypes"]["UOM"]["state"] = "schema_installed"
         with mock_patch(
@@ -137,9 +136,7 @@ class TestDeskLinkDispatch(unittest.TestCase):
         original_request = getattr(frappe.local, "request", None)
         original_form_dict = getattr(frappe.local, "form_dict", None)
         try:
-            frappe.local.request = frappe._dict(
-                method="GET", path="/api/method/" + OVERRIDE_TARGET
-            )
+            frappe.local.request = frappe._dict(method="GET", path="/api/method/" + OVERRIDE_TARGET)
             frappe.local.form_dict = frappe._dict(
                 cmd=OVERRIDE_TARGET,
                 doctype="UOM",
@@ -175,9 +172,7 @@ class TestDeskLinkDispatch(unittest.TestCase):
             seen.append(("get_all", args[0] if args else kwargs.get("doctype")))
             return real_get_all(*args, **kwargs)
 
-        with mock_patch.object(frappe, "get_list", spy_list), mock_patch.object(
-            frappe, "get_all", spy_all
-        ):
+        with mock_patch.object(frappe, "get_list", spy_list), mock_patch.object(frappe, "get_all", spy_all):
             search_link("UOM", ARABIC_SHARED, filters=None, page_length=10)
 
         self.assertIn(("get_list", "UOM"), seen)
@@ -202,9 +197,7 @@ class TestDeskLinkDispatch(unittest.TestCase):
             search_link("UOM", UOM_A, filters=None, page_length=10)
             self.assertEqual(calls, ["UOM"], "Latin query must stay a literal passthrough")
             search_link("Contact", ARABIC_SHARED, filters=None, page_length=10)
-            self.assertEqual(
-                calls, ["UOM", "Contact"], "unregistered doctype must stay on the vendor path"
-            )
+            self.assertEqual(calls, ["UOM", "Contact"], "unregistered doctype must stay on the vendor path")
 
     def test_vendor_search_fields_folded_into_registry_query(self):
         captured = {}
@@ -213,9 +206,7 @@ class TestDeskLinkDispatch(unittest.TestCase):
             captured.update(kwargs)
             return []
 
-        with mock_patch(
-            "construction.searchable_dropdown.api.search.searchable_link_search", spy
-        ):
+        with mock_patch("construction.searchable_dropdown.api.search.searchable_link_search", spy):
             search_link("Item", ITEM_ARABIC_DESCRIPTION, filters=None, page_length=10)
 
         self.assertTrue(captured, "Arabic query must reach the registry half")
@@ -223,9 +214,7 @@ class TestDeskLinkDispatch(unittest.TestCase):
         self.assertEqual(folded, vendor_search_fields("Item"))
         for field in ("name", "item_name", "description", "item_group", "customer_code"):
             self.assertIn(field, folded, "vendor search field must be folded into the query")
-        self.assertEqual(
-            captured.get("search_fields"), folded, "folded fields must travel as search_fields"
-        )
+        self.assertEqual(captured.get("search_fields"), folded, "folded fields must travel as search_fields")
 
     def test_enabled_disabled_constraints_mirrored(self):
         captured = {}
@@ -234,9 +223,7 @@ class TestDeskLinkDispatch(unittest.TestCase):
             captured.update(kwargs)
             return []
 
-        with mock_patch(
-            "construction.searchable_dropdown.api.search.searchable_link_search", spy
-        ):
+        with mock_patch("construction.searchable_dropdown.api.search.searchable_link_search", spy):
             search_link("UOM", ARABIC_SHARED, filters=None, page_length=10)
             uom_filters = dict(captured.get("filters") or {})
             search_link("Account", ARABIC_SHARED, filters=None, page_length=10)
@@ -264,9 +251,7 @@ class TestDeskLinkDispatch(unittest.TestCase):
             }
         ).insert(ignore_permissions=True)
         try:
-            vendor_rows = vendor_search_link(
-                "Item", ITEM_ARABIC_DESCRIPTION, filters=None, page_length=20
-            )
+            vendor_rows = vendor_search_link("Item", ITEM_ARABIC_DESCRIPTION, filters=None, page_length=20)
             self.assertIn(
                 ITEM_CODE,
                 [row["value"] for row in vendor_rows],
@@ -284,9 +269,7 @@ class TestDeskLinkDispatch(unittest.TestCase):
     def test_explicit_searchfield_keeps_vendor_ownership(self):
         calls, patcher = self._spy_vendor()
         with patcher:
-            ours = search_link(
-                "UOM", ARABIC_SHARED, filters=None, page_length=10, searchfield="uom_name"
-            )
+            ours = search_link("UOM", ARABIC_SHARED, filters=None, page_length=10, searchfield="uom_name")
         self.assertEqual(calls, ["UOM"], "searchfield must fall back to the vendor path")
         theirs = vendor_search_link(
             "UOM", ARABIC_SHARED, filters=None, page_length=10, searchfield="uom_name"
@@ -299,9 +282,7 @@ class TestDeskLinkDispatch(unittest.TestCase):
         with patcher:
             ours = search_link("UOM", ARABIC_SHARED, filters=list_filters, page_length=10)
         self.assertEqual(calls, ["UOM"], "list-shaped filters must stay on the vendor path")
-        theirs = vendor_search_link(
-            "UOM", ARABIC_SHARED, filters=list_filters, page_length=10
-        )
+        theirs = vendor_search_link("UOM", ARABIC_SHARED, filters=list_filters, page_length=10)
         self.assertEqual(ours, theirs, "unfiltered Arabic rows must never widen a filtered query")
 
     def test_arabic_path_denies_records_for_non_admin(self):
@@ -330,8 +311,6 @@ class TestDeskLinkDispatch(unittest.TestCase):
         # read permission (search.py:220), so the assertion is on the outcome:
         # nothing readable must leak, and the same query must work for a
         # permitted user.
-        self.assertEqual(
-            rows, [], "no record may appear through the Arabic path without read permission"
-        )
+        self.assertEqual(rows, [], "no record may appear through the Arabic path without read permission")
         control = search_link("UOM", ARABIC_SHARED, filters=None, page_length=10)
         self.assertTrue(control, "control: the same query must return rows for a permitted user")

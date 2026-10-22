@@ -43,7 +43,6 @@ class TestBoqFinancialIntegrity(FrappeTestCase):
         frappe.db.sql("DELETE FROM `tabBOQ Structure` WHERE title LIKE '%%G%%'")
         frappe.db.sql("DELETE FROM `tabBOQ Header` WHERE title LIKE '%%G%%'")
 
-    
     def test_g01_item_deletion_updates_header_totals(self):
         header, items = _make_header_with_items(
             "G01 Deletion Rollup",
@@ -52,7 +51,9 @@ class TestBoqFinancialIntegrity(FrappeTestCase):
                 {"title": "B", "quantity": 20, "rate": 10},
             ],
         )
-        totals = frappe.db.get_value("BOQ Header", header.name, ["total_contract_value", "total_revised_value"], as_dict=True)
+        totals = frappe.db.get_value(
+            "BOQ Header", header.name, ["total_contract_value", "total_revised_value"], as_dict=True
+        )
         self.assertEqual(frappe.utils.flt(totals.total_contract_value), 300)
 
         frappe.delete_doc("BOQ Item", items[0].name, ignore_permissions=True)
@@ -60,9 +61,7 @@ class TestBoqFinancialIntegrity(FrappeTestCase):
         self.assertEqual(frappe.utils.flt(totals.total_contract_value), 200)
 
     def test_g01_delete_last_item_zeroes_totals(self):
-        header, items = _make_header_with_items(
-            "G01 Last Item", [{"title": "A", "quantity": 5, "rate": 100}]
-        )
+        header, items = _make_header_with_items("G01 Last Item", [{"title": "A", "quantity": 5, "rate": 100}])
         frappe.delete_doc("BOQ Item", items[0].name, ignore_permissions=True)
         totals = frappe.db.get_value("BOQ Header", header.name, ["total_contract_value"], as_dict=True)
         self.assertEqual(frappe.utils.flt(totals.total_contract_value), 0)

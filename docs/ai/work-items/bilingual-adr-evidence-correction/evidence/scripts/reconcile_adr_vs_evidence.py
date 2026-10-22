@@ -32,11 +32,7 @@ def normalise_doctype(cell: str) -> str:
 
 
 def artefacts() -> list[Path]:
-    return sorted(
-        p
-        for p in EVIDENCE_ROOT.rglob("*.json")
-        if p.name != "MANIFEST.json" and p.is_file()
-    )
+    return sorted(p for p in EVIDENCE_ROOT.rglob("*.json") if p.name != "MANIFEST.json" and p.is_file())
 
 
 def doctype_result(payload: object) -> dict[str, tuple[float, float]]:
@@ -56,7 +52,7 @@ def doctype_result(payload: object) -> dict[str, tuple[float, float]]:
         bilingual = result.get("bilingual") or result.get("governed") or {}
         base = result["baseline"].get("p95_ms")
         gov = bilingual.get("p95_ms")
-        if isinstance(base, (int, float)) and isinstance(gov, (int, float)):
+        if isinstance(base, int | float) and isinstance(gov, int | float):
             name = result.get("doctype")
             if isinstance(name, str) and name:
                 found[name] = (float(base), float(gov))
@@ -70,7 +66,7 @@ def doctype_result(payload: object) -> dict[str, tuple[float, float]]:
             bilingual = entry.get("bilingual") or entry.get("governed") or {}
             base = baseline.get("p95_ms")
             gov = bilingual.get("p95_ms")
-            if isinstance(base, (int, float)) and isinstance(gov, (int, float)):
+            if isinstance(base, int | float) and isinstance(gov, int | float):
                 found[name] = (float(base), float(gov))
 
     return found

@@ -44,14 +44,17 @@ def run(sizes=None, cleanup=True):
 
 
 def _capture(size, cleanup=True):
-    frappe.set_user("Administrator")
     company = frappe.db.get_value("Company", {}, "name") or "_Test Company"
-    project = (
-        frappe.db.get_value("Project", {"project_name": "_Perf Harness Project"}, "name")
-        or frappe.get_doc({"doctype": "Project", "project_name": "_Perf Harness Project", "company": company})
-        .insert(ignore_permissions=True)
-        .name
-    )
+    project = frappe.db.get_value("Project", {"project_name": "_Perf Harness Project"}, "name")
+    project_created = project is None
+    if project_created:
+        project = (
+            frappe.get_doc(
+                {"doctype": "Project", "project_name": "_Perf Harness Project", "company": company}
+            )
+            .insert(ignore_permissions=True)
+            .name
+        )
 
     header = frappe.get_doc(
         {
@@ -149,7 +152,7 @@ def _capture(size, cleanup=True):
     }
 
     if cleanup:
-        _cleanup(header.name, section.name, project)
+        _cleanup(header.name, section.name, project, project_created=project_created)
     return result
 
 
@@ -159,9 +162,7 @@ def getrusage_self():
     return resource.RUSAGE_SELF
 
 
-def _cleanup(header_name, section_name, project):
-    frappe.set_user("Administrator")
-
+def _cleanup(header_name, section_name, project, project_created=False):
     def rm(doctype, name):
         try:
             if frappe.db.exists(doctype, name):
@@ -176,5 +177,7 @@ def _cleanup(header_name, section_name, project):
     ):
         rm("BOQ Structure", s)
     rm("BOQ Header", header_name)
-    rm("Project", project)
+    if project_created:
+        rm("Project", project)
+    # nosemgrep: frappe-manual-commit -- bench-execute harness cleanup persists only its tracked fixture deletions
     frappe.db.commit()

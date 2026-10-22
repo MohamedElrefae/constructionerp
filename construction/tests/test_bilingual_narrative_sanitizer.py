@@ -13,18 +13,19 @@ Pursuant to docs/ai/work-items/bilingual-narrative-sanitizer/SCOPE.md:
 """
 
 import unittest
-import markupsafe
+
 import frappe
+import markupsafe
 
 from construction.services.bilingual_registry import registry_sha256
 from construction.services.narrative_sanitizer import (
+    CHILD_NARRATIVE_FIELDS_CONFIG,
+    NARRATIVE_FIELDS_CONFIG,
     bdi_join,
     find_offending_codepoint,
     sanitize_and_validate_html,
-    validate_plain_text_narrative,
     validate_narrative_fields,
-    NARRATIVE_FIELDS_CONFIG,
-    CHILD_NARRATIVE_FIELDS_CONFIG,
+    validate_plain_text_narrative,
 )
 
 
@@ -76,7 +77,9 @@ class TestHtmlSanitizerAndValidator(unittest.TestCase):
 
     def test_markup_preserved(self):
         """HTML markup, attributes, and tags survive untouched."""
-        markup = '<p dir="rtl" class="intro"><strong>Bold</strong> text with <br> and <ul><li>item</li></ul></p>'
+        markup = (
+            '<p dir="rtl" class="intro"><strong>Bold</strong> text with <br> and <ul><li>item</li></ul></p>'
+        )
         result = sanitize_and_validate_html(markup, fieldname="notes")
         self.assertEqual(result, markup)
 
@@ -271,6 +274,7 @@ class TestDynamicMetadataDerivation(unittest.TestCase):
     def test_meta_failure_falls_back_without_caching(self):
         """When get_meta fails, fallback to baseline is returned but NOT cached."""
         from unittest.mock import patch
+
         from construction.services.narrative_sanitizer import get_narrative_fields_for_doctype
 
         synthetic_dt = "SyntheticTestDocType"
@@ -281,7 +285,11 @@ class TestDynamicMetadataDerivation(unittest.TestCase):
             res = get_narrative_fields_for_doctype(synthetic_dt)
             self.assertEqual(res, {})
 
-            cache = getattr(frappe.local, "_ct_narrative_fields_cache", {}) if getattr(frappe, "local", None) else {}
+            cache = (
+                getattr(frappe.local, "_ct_narrative_fields_cache", {})
+                if getattr(frappe, "local", None)
+                else {}
+            )
             self.assertNotIn(synthetic_dt, cache)
 
 

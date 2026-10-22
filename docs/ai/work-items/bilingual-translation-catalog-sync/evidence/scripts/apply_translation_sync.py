@@ -45,9 +45,18 @@ def translation_digest():
         limit_page_length=0,
     )
     payload = json.dumps(
-        [[r["name"], r.get("translated_text"), r.get("ct_origin"),
-          r.get("ct_is_catalog_entry"), str(r.get("modified"))] for r in rows],
-        ensure_ascii=False, sort_keys=True,
+        [
+            [
+                r["name"],
+                r.get("translated_text"),
+                r.get("ct_origin"),
+                r.get("ct_is_catalog_entry"),
+                str(r.get("modified")),
+            ]
+            for r in rows
+        ],
+        ensure_ascii=False,
+        sort_keys=True,
     )
     return sha256_bytes(payload.encode("utf-8")), len(rows)
 
@@ -70,8 +79,10 @@ def main():
     raw_before = GLOSSARY.read_bytes()
     gloss_before = sha256_bytes(raw_before)
     if gloss_before != proposal["glossary_sha256_before"]:
-        print(f"FAIL: live glossary sha {gloss_before} != before-sha "
-              f"{proposal['glossary_sha256_before']} (fail-closed abort)")
+        print(
+            f"FAIL: live glossary sha {gloss_before} != before-sha "
+            f"{proposal['glossary_sha256_before']} (fail-closed abort)"
+        )
         sys.exit(1)
     print(f"glossary sha256 before  : {gloss_before}")
 
@@ -103,17 +114,21 @@ def main():
         if not p:
             continue
         before_val = term.get("approved_ar") or ""
-        if hashlib.sha256(before_val.encode("utf-8")).hexdigest()[:16] != \
-                p["field_changes"]["approved_ar"]["before_sha16"]:
+        if (
+            hashlib.sha256(before_val.encode("utf-8")).hexdigest()[:16]
+            != p["field_changes"]["approved_ar"]["before_sha16"]
+        ):
             print(f"FAIL: {term['source_text']!r} live value diverged; abort")
             sys.exit(1)
         after = p["after"]
         term.clear()
         term.update(after)
         patched += 1
-        print(f"PATCHED {term['source_text']!r} "
-              f"approved_ar -> {p['field_changes']['approved_ar']['after_sha16']} "
-              f"version -> {after.get('version')}")
+        print(
+            f"PATCHED {term['source_text']!r} "
+            f"approved_ar -> {p['field_changes']['approved_ar']['after_sha16']} "
+            f"version -> {after.get('version')}"
+        )
 
     if patched != len(by_src):
         print(f"FAIL: patched {patched} of {len(by_src)} proposed terms; abort")

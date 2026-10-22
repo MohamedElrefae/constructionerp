@@ -153,10 +153,10 @@ class TestBilingualDepartmentPilot(unittest.TestCase):
     def test_arabic_edit_rejects_bidi_controls(self):
         """department_name_ar rejects bidi controls (C0, C1, DEL, overrides, isolates, LRM/RLM/ALM)."""
         forbidden_samples = [
-            "إدارة\u202eالمشاريع",  # Right-to-Left Override
-            "إدارة\u200eالمشاريع",  # LRM
-            "إدارة\u202bالمشاريع",  # RLE
-            "إدارة\x00المشاريع",  # NUL
+            "إدارة\u202eالمشاريع",  # Right-to-Left Override  # noqa: RUF001 -- intentional Arabic security-test fixture
+            "إدارة\u200eالمشاريع",  # LRM  # noqa: RUF001 -- intentional Arabic security-test fixture
+            "إدارة\u202bالمشاريع",  # RLE  # noqa: RUF001 -- intentional Arabic security-test fixture
+            "إدارة\x00المشاريع",  # NUL  # noqa: RUF001 -- intentional Arabic security-test fixture
         ]
         doc = _get_target_department()
         orig_val = doc.get("department_name_ar")
@@ -171,19 +171,24 @@ class TestBilingualDepartmentPilot(unittest.TestCase):
 
     def test_tree_identity_invariant_and_rename_preservation(self):
         """Department preserves parent_department link, tree structure, and retains Arabic/norm keys across rename."""
-        company = frappe.db.get_single_value("Global Defaults", "default_company") or frappe.get_all("Company", limit=1)[0].name
+        company = (
+            frappe.db.get_single_value("Global Defaults", "default_company")
+            or frappe.get_all("Company", limit=1)[0].name
+        )
         parent_root = frappe.get_all("Department", filters={"is_group": 1}, limit=1)[0].name
         dept_ar = "قسم التخطيط والمتابعة"
         test_dept_name = f"Test Planning {frappe.generate_hash(length=4)}"
 
-        dept = frappe.get_doc({
-            "doctype": "Department",
-            "department_name": test_dept_name,
-            "company": company,
-            "parent_department": parent_root,
-            "is_group": 0,
-            "department_name_ar": dept_ar,
-        })
+        dept = frappe.get_doc(
+            {
+                "doctype": "Department",
+                "department_name": test_dept_name,
+                "company": company,
+                "parent_department": parent_root,
+                "is_group": 0,
+                "department_name_ar": dept_ar,
+            }
+        )
         dept.insert(ignore_permissions=True)
         old_id = dept.name
         new_id = f"{old_id}-RENAMED"

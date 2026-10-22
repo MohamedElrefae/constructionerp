@@ -18,6 +18,7 @@ from construction.overrides.file_permissions import (
 )
 
 
+# nosemgrep: guest-whitelisted-method -- Preserve native public-file downloads while construction attachments remain parent-permission guarded; covered by test_native_download_denies_guest_and_unrelated_user_but_keeps_public_files.
 @frappe.whitelist(allow_guest=True)
 def download_file(file_url: str):
     file_doc = find_file_by_url(file_url)

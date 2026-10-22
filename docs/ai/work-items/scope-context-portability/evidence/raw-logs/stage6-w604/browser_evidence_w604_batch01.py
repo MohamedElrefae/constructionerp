@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Headless Arabic Desk verification for W6-4 batch-01; password via stdin."""
+
 from __future__ import annotations
 
 import csv

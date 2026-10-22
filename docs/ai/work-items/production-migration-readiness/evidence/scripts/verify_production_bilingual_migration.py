@@ -26,6 +26,7 @@ Exit 0 = PASS, 1 = FAIL. Read-only: opens a transaction, rolls it back.
 
 import argparse
 import hashlib
+import itertools
 import json
 import os
 import sys
@@ -36,13 +37,25 @@ APPS = f"{BENCH}/apps"
 SITES = f"{BENCH}/sites"
 sys.path.insert(0, f"{APPS}/construction")
 
-import frappe  # noqa: E402
+import frappe
 
 EXPECTED_VALUES_SHA256 = "7390a0c87f8ebab1e602521549b775f8768d3ab9bb40a1caf055f4c5c31d53bf"
 TOPO = [
-    "Company", "Account", "Cost Center", "Warehouse", "Project",
-    "Item Group", "Customer Group", "Supplier Group", "Territory",
-    "Department", "Task", "UOM", "Item", "Customer", "Terms and Conditions",
+    "Company",
+    "Account",
+    "Cost Center",
+    "Warehouse",
+    "Project",
+    "Item Group",
+    "Customer Group",
+    "Supplier Group",
+    "Territory",
+    "Department",
+    "Task",
+    "UOM",
+    "Item",
+    "Customer",
+    "Terms and Conditions",
 ]
 TREE = {
     "Company": "parent_company",
@@ -77,8 +90,9 @@ def ok(msg):
 
 
 def registry():
-    return json.load(open(f"{APPS}/construction/construction/data/bilingual/"
-                          "bilingual_registry.json", encoding="utf-8"))
+    return json.load(
+        open(f"{APPS}/construction/construction/data/bilingual/" "bilingual_registry.json", encoding="utf-8")
+    )
 
 
 def capture(reg):
@@ -93,10 +107,8 @@ def capture(reg):
             fields.append(m["english_field"])
         if dt in TREE:
             fields += [TREE[dt], "old_parent", "lft", "rgt"]
-        rows = frappe.get_all(dt, filters={m["arabic_field"]: ("!=", "")},
-                              fields=fields, limit_page_length=0)
-        snap[dt] = {r["name"]: {k: r.get(k) for k in fields if k != "name"}
-                    for r in rows}
+        rows = frappe.get_all(dt, filters={m["arabic_field"]: ("!=", "")}, fields=fields, limit_page_length=0)
+        snap[dt] = {r["name"]: {k: r.get(k) for k in fields if k != "name"} for r in rows}
     return snap
 
 
@@ -118,24 +130,28 @@ def main():
         if args.snapshot_out:
             private_root = os.path.realpath(os.path.join(SITES, args.site, "private"))
             if not os.path.realpath(args.snapshot_out).startswith(private_root + os.sep):
-                log("VERIFY RESULT: FAIL — snapshot contains Arabic values; R4 requires "
-                    f"a path under {private_root}/")
+                log(
+                    "VERIFY RESULT: FAIL — snapshot contains Arabic values; R4 requires "
+                    f"a path under {private_root}/"
+                )
                 return 1
             snap = capture(reg)
             raw = json.dumps(snap, indent=1, ensure_ascii=False, sort_keys=True) + "\n"
             open(args.snapshot_out, "w", encoding="utf-8").write(raw)
             n = sum(len(v) for v in snap.values())
-            log(f"SNAPSHOT wrote {args.snapshot_out}: {n} populated rows across "
+            log(
+                f"SNAPSHOT wrote {args.snapshot_out}: {n} populated rows across "
                 f"{len(snap)} doctypes sha16="
-                f"{hashlib.sha256(raw.encode()).hexdigest()[:16]}")
+                f"{hashlib.sha256(raw.encode()).hexdigest()[:16]}"
+            )
             return 0
 
         from construction.services.bilingual_service import _normalize_arabic
 
         # ---------------------------------------------------- V1 counts
         values_path = args.values or os.path.join(
-            SITES, args.site, "private", "production-migration",
-            "consolidated_values.json")
+            SITES, args.site, "private", "production-migration", "consolidated_values.json"
+        )
         raw = open(values_path, "rb").read()
         if hashlib.sha256(raw).hexdigest() != EXPECTED_VALUES_SHA256:
             fail("values bundle sha mismatch (approval binding)")
@@ -150,22 +166,25 @@ def main():
             total += n
             expect = want[dt] + (1 if dt == FIXTURE[0] else 0)
             if n != expect:
-                fail(f"{dt}: populated-arabic {n} != approved {want[dt]}"
-                     + (" (+1 fixture)" if dt == FIXTURE[0] else ""))
+                fail(
+                    f"{dt}: populated-arabic {n} != approved {want[dt]}"
+                    + (" (+1 fixture)" if dt == FIXTURE[0] else "")
+                )
         if total != EXPECTED_POPULATED:
-            fail(f"total populated-arabic {total} != {EXPECTED_POPULATED} "
-                 f"({EXPECTED_APPROVED} approved + 1 fixture)")
+            fail(
+                f"total populated-arabic {total} != {EXPECTED_POPULATED} "
+                f"({EXPECTED_APPROVED} approved + 1 fixture)"
+            )
         else:
-            ok(f"V1 counts: {EXPECTED_APPROVED} approved rows across 15 doctypes "
-               f"({EXPECTED_POPULATED} populated incl. frozen fixture)")
-        fx = frappe.db.get_value(FIXTURE[0], FIXTURE[1],
-                                 reg["doctypes"]["Warehouse"]["arabic_field"])
+            ok(
+                f"V1 counts: {EXPECTED_APPROVED} approved rows across 15 doctypes "
+                f"({EXPECTED_POPULATED} populated incl. frozen fixture)"
+            )
+        fx = frappe.db.get_value(FIXTURE[0], FIXTURE[1], reg["doctypes"]["Warehouse"]["arabic_field"])
         if not fx:
             fail("frozen fixture row/value missing (5C exclusion broken)")
         else:
-            fx_norm = frappe.db.get_value(
-                FIXTURE[0], FIXTURE[1],
-                reg["doctypes"]["Warehouse"]["norm_field"])
+            fx_norm = frappe.db.get_value(FIXTURE[0], FIXTURE[1], reg["doctypes"]["Warehouse"]["norm_field"])
             if fx_norm != _normalize_arabic(fx):
                 fail("frozen fixture norm not server-derivable-equal")
 
@@ -177,8 +196,7 @@ def main():
             if not frappe.db.exists(dt, row["name"]):
                 fail(f"missing document: {dt} {row['name']}")
                 continue
-            live, norm = frappe.db.get_value(dt, row["name"],
-                                             [m["arabic_field"], m["norm_field"]])
+            live, norm = frappe.db.get_value(dt, row["name"], [m["arabic_field"], m["norm_field"]])
             if (live or None) != row["arabic"]:
                 bad_equal += 1
                 fail(f"value drift: {dt} {row['name']}")
@@ -186,8 +204,10 @@ def main():
                 bad_norm += 1
                 fail(f"norm not server-derivable-equal: {dt} {row['name']}")
         if not bad_norm and not bad_equal:
-            ok("V2 values byte-equal to approval; all 189 norms (188 approved + "
-               "fixture) server-derived and correct")
+            ok(
+                "V2 values byte-equal to approval; all 189 norms (188 approved + "
+                "fixture) server-derived and correct"
+            )
 
         # ------------------------------------------- V3 frozen vs --pre
         if args.pre:
@@ -200,8 +220,7 @@ def main():
                 if set(pre[dt]) != set(post.get(dt, {})):
                     fail(f"{dt}: row set drift vs pre-snapshot")
                     continue
-                exempt = {reg["doctypes"][dt]["arabic_field"],
-                          reg["doctypes"][dt]["norm_field"]}
+                exempt = {reg["doctypes"][dt]["arabic_field"], reg["doctypes"][dt]["norm_field"]}
                 for name in pre[dt]:
                     a, b = pre[dt][name], post[dt][name]
                     for k in a:
@@ -217,8 +236,7 @@ def main():
 
         # ------------------------------------------------- V4 tree checks
         for dt, parent_f in TREE.items():
-            rows = frappe.get_all(dt, fields=["name", parent_f, "lft", "rgt"],
-                                  limit_page_length=0)
+            rows = frappe.get_all(dt, fields=["name", parent_f, "lft", "rgt"], limit_page_length=0)
             names = {r["name"] for r in rows}
             ivals, roots = [], 0
             for r in rows:
@@ -231,7 +249,7 @@ def main():
                     fail(f"{dt} {r['name']}: dangling parent {r[parent_f]!r}")
                 ivals.append((r.lft, r.rgt, r["name"]))
             ivals.sort()
-            for (l1, r1, n1), (l2, r2, n2) in zip(ivals, ivals[1:]):
+            for (l1, r1, n1), (l2, r2, n2) in itertools.pairwise(ivals):
                 # lft strictly increasing: valid iff disjoint or next nested in prev.
                 if r1 <= l2:
                     continue
@@ -239,8 +257,7 @@ def main():
                     continue
                 fail(f"{dt}: overlapping intervals {n1}/{n2}")
             if args.pre and dt in pre:
-                pre_tree = {n: (v.get(parent_f), v.get("lft"), v.get("rgt"))
-                            for n, v in pre[dt].items()}
+                pre_tree = {n: (v.get(parent_f), v.get("lft"), v.get("rgt")) for n, v in pre[dt].items()}
                 post_tree = {r["name"]: (r[parent_f], r.lft, r.rgt) for r in rows}
                 # pre-snapshot holds populated rows only: compare that subset
                 # (row-set equality is enforced by V3).
@@ -256,20 +273,21 @@ def main():
         if not args.skip_probes:
             from construction.services.bilingual_service import search_bilingual
             from construction.services.transaction_link_search import search_transactions
+
             lat = []
             for dt in TOPO:
                 m = reg["doctypes"][dt]
-                row = next(iter(bundle_row for bundle_row in bundle["rows"]
-                                if bundle_row["doctype"] == dt))
+                row = next(iter(bundle_row for bundle_row in bundle["rows"] if bundle_row["doctype"] == dt))
                 name = row["name"]
                 ar = row["arabic"]
-                english = (frappe.db.get_value(dt, name, m["english_field"])
-                           if m.get("english_field") else None) or name
+                english = (
+                    frappe.db.get_value(dt, name, m["english_field"]) if m.get("english_field") else None
+                ) or name
                 for q, tag in ((ar, "ar"), (english, "en")):
                     t0 = time.perf_counter()
                     try:
                         res = search_bilingual(dt, txt=q, page_length=20, with_meta=True)
-                    except Exception as exc:  # noqa: BLE001
+                    except Exception as exc:
                         fail(f"probe {dt} [{tag}] raised: {exc}")
                         continue
                     dt_ms = (time.perf_counter() - t0) * 1000
@@ -286,11 +304,13 @@ def main():
                     lat.append((time.perf_counter() - t0) * 1000)
                     if not isinstance(res, list):
                         fail(f"search_transactions({target}) non-list return")
-                except Exception as exc:  # noqa: BLE001
+                except Exception as exc:
                     fail(f"search_transactions({target}) raised: {exc}")
             if lat:
-                ok(f"V5 probes: {len(lat)} queries, p50={sorted(lat)[len(lat)//2]:.1f}ms "
-                   f"max={max(lat):.1f}ms")
+                ok(
+                    f"V5 probes: {len(lat)} queries, p50={sorted(lat)[len(lat)//2]:.1f}ms "
+                    f"max={max(lat):.1f}ms"
+                )
 
         if fails:
             log(f"VERIFY RESULT: FAIL ({len(fails)} failed checks)")

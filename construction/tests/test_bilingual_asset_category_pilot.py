@@ -153,10 +153,10 @@ class TestBilingualAssetCategoryPilot(unittest.TestCase):
     def test_arabic_edit_rejects_bidi_controls(self):
         """asset_category_name_ar rejects bidi controls (C0, C1, DEL, overrides, isolates, LRM/RLM/ALM)."""
         forbidden_samples = [
-            "فئة\u202eالأصول",  # Right-to-Left Override
-            "فئة\u200eالأصول",  # LRM
-            "فئة\u202bالأصول",  # RLE
-            "فئة\x00الأصول",  # NUL
+            "فئة\u202eالأصول",  # Right-to-Left Override  # noqa: RUF001 -- intentional Arabic security-test fixture
+            "فئة\u200eالأصول",  # LRM  # noqa: RUF001 -- intentional Arabic security-test fixture
+            "فئة\u202bالأصول",  # RLE  # noqa: RUF001 -- intentional Arabic security-test fixture
+            "فئة\x00الأصول",  # NUL  # noqa: RUF001 -- intentional Arabic security-test fixture
         ]
         doc = _get_target_asset_category()
         orig_val = doc.get("asset_category_name_ar")
@@ -175,19 +175,23 @@ class TestBilingualAssetCategoryPilot(unittest.TestCase):
         cat_ar = "فئة المركبات والشاحنات"
         test_cat_name = f"Vehicles {uuid4().hex[:6]}"
 
-        cat = frappe.get_doc({
-            "doctype": "Asset Category",
-            "asset_category_name": test_cat_name,
-            "asset_category_name_ar": cat_ar,
-            "accounts": [
-                {
-                    "company_name": existing.accounts[0].company_name,
-                    "fixed_asset_account": existing.accounts[0].fixed_asset_account,
-                    "accumulated_depreciation_account": existing.accounts[0].accumulated_depreciation_account,
-                    "depreciation_expense_account": existing.accounts[0].depreciation_expense_account,
-                }
-            ],
-        })
+        cat = frappe.get_doc(
+            {
+                "doctype": "Asset Category",
+                "asset_category_name": test_cat_name,
+                "asset_category_name_ar": cat_ar,
+                "accounts": [
+                    {
+                        "company_name": existing.accounts[0].company_name,
+                        "fixed_asset_account": existing.accounts[0].fixed_asset_account,
+                        "accumulated_depreciation_account": existing.accounts[
+                            0
+                        ].accumulated_depreciation_account,
+                        "depreciation_expense_account": existing.accounts[0].depreciation_expense_account,
+                    }
+                ],
+            }
+        )
         cat.insert(ignore_permissions=True)
         old_id = cat.name
 

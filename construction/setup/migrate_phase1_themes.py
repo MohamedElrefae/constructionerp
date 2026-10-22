@@ -145,6 +145,7 @@ def run():
             frappe.log_error(f"Error migrating theme {theme_name}: {str(e)}")
             click.echo(f"  Error: {theme_name} - {str(e)}")
 
+    # nosemgrep: frappe-manual-commit -- reviewed explicit bench-execute theme migration or rollback boundary
     frappe.db.commit()
 
     # Log results
@@ -194,6 +195,7 @@ def rollback():
     except Exception as e:
         click.echo(f"  Warning: Could not clear User Desk Theme: {e}")
 
+    # nosemgrep: frappe-manual-commit -- reviewed explicit bench-execute theme migration or rollback boundary
     frappe.db.commit()
 
     click.echo("Rollback complete. Clear browser cache and refresh.")

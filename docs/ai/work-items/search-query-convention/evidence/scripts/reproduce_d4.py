@@ -34,13 +34,17 @@ def hr(title):
 def section_a():
     hr("A. Signatures and the positional mapping search_widget applies")
     from frappe.desk.search import search_widget
+
     from construction.searchable_dropdown.api.search import searchable_link_search
 
     src = inspect.getsource(search_widget)
     call_block = [
         line.strip()
         for line in src.splitlines()
-        if re.search(r"frappe\.call\(|^\s*query,|doctype,|txt,|searchfield,|start,|page_length,|filters,|as_dict=", line)
+        if re.search(
+            r"frappe\.call\(|^\s*query,|doctype,|txt,|searchfield,|start,|page_length,|filters,|as_dict=",
+            line,
+        )
     ]
     print("search_widget custom-query call site (frappe/desk/search.py):")
     for line in call_block[:12]:
@@ -53,7 +57,7 @@ def section_a():
     sent = ["doctype", "txt", "searchfield", "start", "page_length", "filters"]
     print("\n  # | search_widget sends | -> | callee parameter")
     print("  ---+---------------------+----+------------------")
-    for i, (got, want) in enumerate(zip(sent, callee), start=1):
+    for i, (got, want) in enumerate(zip(sent, callee, strict=False), start=1):
         flag = "  <-- SHIFTED" if got != want else ""
         print(f"  {i:>2} | {got:<19} | -> | {want}{flag}")
 
@@ -64,9 +68,15 @@ def section_b():
 
     print(inspect.getsource(f.call).strip())
     from frappe import get_newargs
+
     from construction.searchable_dropdown.api.search import searchable_link_search
 
-    kwargs = {"as_dict": False, "reference_doctype": None, "ignore_user_permissions": False, "link_fieldname": None}
+    kwargs = {
+        "as_dict": False,
+        "reference_doctype": None,
+        "ignore_user_permissions": False,
+        "link_fieldname": None,
+    }
     kept = get_newargs(searchable_link_search, kwargs)
     print("kwargs sent :", sorted(kwargs))
     print("kwargs kept :", sorted(kept), " <- 'as_dict' has nowhere to go")
@@ -115,7 +125,9 @@ def section_d():
                     hits.append((path.name, lineno, line.strip()[:96]))
         return hits
 
-    ctor_hits = scan(r"new SearchableDropdownEnhancer|searchable_dropdown\.enhance\s*\(|enhanceCustomerField|enhanceSupplierField")
+    ctor_hits = scan(
+        r"new SearchableDropdownEnhancer|searchable_dropdown\.enhance\s*\(|enhanceCustomerField|enhanceSupplierField"
+    )
     print("loaded JS files scanned            :", len(loaded))
     print("enhancer constructor / enhance() call sites:")
     for name, lineno, text in ctor_hits:
@@ -132,16 +144,22 @@ def section_d():
     for name, lineno, text in query_hits:
         kind = "comment" if text.lstrip().startswith(("*", "//", "/*")) else "code"
         print(f"    {name}:{lineno} [{kind}]: {text}")
-    code_users = [h for h in query_hits if not h[2].lstrip().startswith(("*", "//", "/*")) and h[0] != "searchable_dropdown.js"]
+    code_users = [
+        h
+        for h in query_hits
+        if not h[2].lstrip().startswith(("*", "//", "/*")) and h[0] != "searchable_dropdown.js"
+    ]
     print("    -> code references outside the enhancer module:", code_users or "NONE")
 
     configs = sorted((APP_ROOT / "construction/public/js/searchable_dropdown/config").glob("*.js"))
     print("\nconfig files that WOULD wire it     :", [c.name for c in configs])
     for cfg in configs:
         print(f"    registered in hooks.py? {cfg.name}: {cfg.name in hooks}")
-    print("nested searchable_dropdown/hooks.py loaded by root hooks.py?:",
-          "searchable_dropdown.hooks" in hooks,
-          "(Frappe only reads the app-root hooks.py)")
+    print(
+        "nested searchable_dropdown/hooks.py loaded by root hooks.py?:",
+        "searchable_dropdown.hooks" in hooks,
+        "(Frappe only reads the app-root hooks.py)",
+    )
     print("=> the class is exported, never instantiated; the defective path has no browser caller.")
 
 

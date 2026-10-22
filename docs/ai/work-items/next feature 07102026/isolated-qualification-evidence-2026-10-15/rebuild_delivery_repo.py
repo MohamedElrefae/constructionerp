@@ -6,6 +6,7 @@ single squashed commit, no remotes. Verification: exactly one reachable commit,
 `git log --all` clean of never-ship paths, file-by-file hash match against the
 staged manifest. NO publication, NO remotes, NO push.
 """
+
 import hashlib
 import json
 import os
@@ -16,9 +17,17 @@ import sys
 STAGE = "/tmp/opencode/customer-dist"
 DEST = "/tmp/opencode/customer-repo"
 
-NEVER_SHIP_GLOBS = ["docs/ai/", "orchestrator/", "erpnext-mcp-server/", "tests_offline/",
-                    ".map", "tests/*.png", "docs/translation/", "docs/scope_context_option_",
-                    "docs/feature_reviews/evidence/"]
+NEVER_SHIP_GLOBS = [
+    "docs/ai/",
+    "orchestrator/",
+    "erpnext-mcp-server/",
+    "tests_offline/",
+    ".map",
+    "tests/*.png",
+    "docs/translation/",
+    "docs/scope_context_option_",
+    "docs/feature_reviews/evidence/",
+]
 
 
 def sha(p):
@@ -54,9 +63,16 @@ assert init.returncode == 0, init.stderr
 run(["git", "config", "user.email", "delivery-prep@local.invalid"], DEST)
 run(["git", "config", "user.name", "Delivery Preparation"], DEST)
 run(["git", "add", "-A"], DEST)
-commit = run(["git", "commit", "-q", "-m",
-              "Customer candidate: curated set per docs/DISTRIBUTION.md "
-              "(local preparation, unpublished)"], DEST)
+commit = run(
+    [
+        "git",
+        "commit",
+        "-q",
+        "-m",
+        "Customer candidate: curated set per docs/DISTRIBUTION.md " "(local preparation, unpublished)",
+    ],
+    DEST,
+)
 assert commit.returncode == 0, commit.stderr
 
 # --- verification ---
@@ -99,8 +115,11 @@ print(f"files compared: {len(staged_files)} | mismatches: {len(mismatch)}")
 for m in mismatch[:10]:
     print("   MISMATCH:", m)
 
-ok = (commits == "1" and not remotes and not leaks and not mismatch
-      and len(tracked) == len(staged_files))
-print("VERIFICATION:", "PASSED — separate clean repo, 1 commit, 0 remotes, "
-      "0 never-ship paths, byte-identical" if ok else "FAILED")
+ok = commits == "1" and not remotes and not leaks and not mismatch and len(tracked) == len(staged_files)
+print(
+    "VERIFICATION:",
+    "PASSED — separate clean repo, 1 commit, 0 remotes, " "0 never-ship paths, byte-identical"
+    if ok
+    else "FAILED",
+)
 sys.exit(0 if ok else 1)

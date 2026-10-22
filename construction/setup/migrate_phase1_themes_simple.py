@@ -240,6 +240,7 @@ def run():
             frappe.logger().error(f"[Theme Migration] Error migrating {theme_name}: {str(e)}")
             click.echo(f"  Error: {theme_name} - {str(e)}")
 
+    # nosemgrep: frappe-manual-commit -- reviewed explicit bench-execute theme migration boundary
     frappe.db.commit()
 
     # Log results

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Read-only live-site reconciliation for W6-3 batch 02."""
+
 from __future__ import annotations
 
 import csv
@@ -36,10 +37,7 @@ try:
     by_key = {key: [row for row in exact if row.source_text == key] for key in keys}
     assert all(by_key.values()), "scope key missing from live Translation inventory"
     site_overrides = {
-        key: next(
-            row for row in matches
-            if (row.ct_origin or "").lower() == "site override"
-        )
+        key: next(row for row in matches if (row.ct_origin or "").lower() == "site override")
         for key, matches in by_key.items()
         if any((row.ct_origin or "").lower() == "site override" for row in matches)
     }
@@ -60,13 +58,12 @@ try:
         "site_override_key_count": len(site_overrides),
         "site_overrides": preserved,
         "nonempty_non_site_override_keys": sorted(
-            key for key, matches in by_key.items()
-            if key not in site_overrides
-            and any((row.translated_text or "").strip() for row in matches)
+            key
+            for key, matches in by_key.items()
+            if key not in site_overrides and any((row.translated_text or "").strip() for row in matches)
         ),
         "catalog_key_count": sum(
-            any(bool(row.ct_is_catalog_entry) for row in matches)
-            for matches in by_key.values()
+            any(bool(row.ct_is_catalog_entry) for row in matches) for matches in by_key.values()
         ),
         "note": (
             "Read-only exact-key dump of Arabic Translation rows on the test site. "
@@ -74,13 +71,18 @@ try:
         ),
     }
     OUT.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(json.dumps({
-        "scope_rows": result["scope_rows"],
-        "scope_keys_with_exact_match": result["scope_keys_with_exact_match"],
-        "site_override_key_count": result["site_override_key_count"],
-        "nonempty_non_site_override_keys": len(result["nonempty_non_site_override_keys"]),
-        "catalog_key_count": result["catalog_key_count"],
-        "runtime_rows_scanned": result["runtime_rows_scanned"],
-    }, ensure_ascii=False))
+    print(
+        json.dumps(
+            {
+                "scope_rows": result["scope_rows"],
+                "scope_keys_with_exact_match": result["scope_keys_with_exact_match"],
+                "site_override_key_count": result["site_override_key_count"],
+                "nonempty_non_site_override_keys": len(result["nonempty_non_site_override_keys"]),
+                "catalog_key_count": result["catalog_key_count"],
+                "runtime_rows_scanned": result["runtime_rows_scanned"],
+            },
+            ensure_ascii=False,
+        )
+    )
 finally:
     frappe.destroy()

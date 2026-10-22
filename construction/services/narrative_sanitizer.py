@@ -16,8 +16,9 @@ Enforces:
 
 import html
 from html.parser import HTMLParser
-import markupsafe
+
 import frappe
+import markupsafe
 from frappe import _
 
 from construction.services.bilingual_registry import is_safe_narrative_text
@@ -162,7 +163,12 @@ def find_offending_codepoint(text):
             return f"U+{code:04X}"
     for ch in text:
         code = ord(ch)
-        if (0x202A <= code <= 0x202E) or (0x2066 <= code <= 0x2069) or (0x00 <= code <= 0x1F) or (0x7F <= code <= 0x9F):
+        if (
+            (0x202A <= code <= 0x202E)
+            or (0x2066 <= code <= 0x2069)
+            or (0x00 <= code <= 0x1F)
+            or (0x7F <= code <= 0x9F)
+        ):
             return f"U+{code:04X}"
     return None
 

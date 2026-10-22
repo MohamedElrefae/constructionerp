@@ -15,7 +15,7 @@ def _normalize_source_text(source: str) -> str:
     if not source:
         return ""
     if "\x00" in source:
-        frappe.throw("source_text contains embedded NUL")
+        frappe.throw(_("source_text contains embedded NUL"))
     return source
 
 
@@ -398,6 +398,59 @@ def _ensure_catalog_fields():
     ensure_custom_fields()
 
 
+_REQUIRED_CATALOG_FIELDS = (
+    "ct_is_catalog_entry",
+    "ct_app",
+    "ct_po_translation",
+    "ct_review_status",
+    "ct_catalog_synced_at",
+)
+
+
+def _require_catalog_fields():
+    """Check catalog schema without performing DDL in a catalog transaction.
+
+    Operators can install missing fields through the normal setup/migration
+    path; these POST endpoints must not create schema as a side effect.
+    """
+    missing = [
+        fieldname
+        for fieldname in _REQUIRED_CATALOG_FIELDS
+        if not frappe.db.has_column("Translation", fieldname)
+    ]
+    if missing:
+        frappe.throw(_("catalog fields not present"))
+
+
+def _clear_catalog_caches_after_commit():
+    """Best-effort cache invalidation after the catalog DB commit succeeds."""
+
+    def _log_failure(description):
+        try:
+            frappe.logger("translation_tools").exception(
+                "Committed translation catalog, but %s failed", description
+            )
+        except Exception:
+            # The database is already committed. Logging must not turn this
+            # best-effort callback into a failed HTTP response either.
+            pass
+
+    operations = (
+        (
+            "translation catalog cache-key invalidation",
+            lambda: frappe.cache.delete_value(
+                keys=["bootinfo", USER_TRANSLATION_KEY, MERGED_TRANSLATION_KEY]
+            ),
+        ),
+        ("translation catalog cache clearing", frappe.clear_cache),
+    )
+    for description, operation in operations:
+        try:
+            operation()
+        except Exception:
+            _log_failure(description)
+
+
 def _po_path_for_app(app):
     return Path(frappe.get_app_path(app)) / "locale" / "ar.po"
 
@@ -424,7 +477,7 @@ def get_translation_catalog_stats():
     }
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def sync_translation_catalog(apps=None, dry_run=True, batch_size=1000):
     """Seed/update Translation rows from each app's Arabic .po catalog.
 
@@ -437,7 +490,7 @@ def sync_translation_catalog(apps=None, dry_run=True, batch_size=1000):
     msgids can be synced in seconds rather than minutes).
     """
     frappe.only_for("System Manager")
-    _ensure_catalog_fields()
+    _require_catalog_fields()
 
     apps = apps or CATALOG_APPS
     if isinstance(apps, str):
@@ -583,9 +636,8 @@ def sync_translation_catalog(apps=None, dry_run=True, batch_size=1000):
 
     if not dry_run:
         _flush_inserts()
-        frappe.db.commit()
-        frappe.cache.delete_value(keys=["bootinfo", USER_TRANSLATION_KEY, MERGED_TRANSLATION_KEY])
-        frappe.clear_cache()
+        if created or updated:
+            frappe.db.after_commit.add(_clear_catalog_caches_after_commit)
 
     return {
         "apps": apps,
@@ -595,7 +647,7 @@ def sync_translation_catalog(apps=None, dry_run=True, batch_size=1000):
     }
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def reset_catalog_overrides(apps=None, dry_run=True):
     """Remove catalog rows that no longer exist in the .po files (cleanup).
 
@@ -603,7 +655,7 @@ def reset_catalog_overrides(apps=None, dry_run=True):
     from upstream catalogs.
     """
     frappe.only_for("System Manager")
-    _ensure_catalog_fields()
+    _require_catalog_fields()
 
     apps = apps or CATALOG_APPS
     if isinstance(apps, str):
@@ -626,7 +678,11 @@ def reset_catalog_overrides(apps=None, dry_run=True):
     to_delete = []
     for row in frappe.get_all(
         "Translation",
-        filters={"language": "ar", "ct_is_catalog_entry": 1},
+        filters={
+            "language": "ar",
+            "ct_is_catalog_entry": 1,
+            "ct_app": ["in", apps],
+        },
         fields=["name", "source_text", "context", "ct_app"],
         limit_page_length=0,
     ):
@@ -637,9 +693,8 @@ def reset_catalog_overrides(apps=None, dry_run=True):
     if not dry_run:
         for name in to_delete:
             frappe.db.delete("Translation", name)
-        frappe.db.commit()
-        frappe.cache.delete_value(keys=["bootinfo", USER_TRANSLATION_KEY, MERGED_TRANSLATION_KEY])
-        frappe.clear_cache()
+        if to_delete:
+            frappe.db.after_commit.add(_clear_catalog_caches_after_commit)
 
     return {"deleted": len(to_delete), "dry_run": dry_run}
 

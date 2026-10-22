@@ -25,7 +25,7 @@ def _headers(doc):
     structure = doc.get("structure") or doc.get("boq_structure")
     if structure:
         headers.add(frappe.db.get_value("BOQ Structure", structure, "boq_header"))
-    return set(filter(None, headers))
+    return {header for header in headers if header}
 
 
 def has_boq_parent_permission(doc, ptype, user=None, **kwargs):

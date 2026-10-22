@@ -1,17 +1,25 @@
 {
   "apps": {
     "erpnext": {
-      "commit": "2807c9f08fff3f161c0a2e10745a26aa6331ffd5",
-      "count": 8997,
-      "msgid_sha": "247da6ff1223ba8692be575eb788e35165936fca55d083ea20fa3256c487e2a9",
-      "po_sha": "2dfe0a5d07b091d1d34563fa53aac9f4665519aa9672303b4cd6fe3b2d705275"
+      "commit": "7474d9e786277383de1242ab882f16856d17a9c9",
+      "count": 10300,
+      "msgid_sha": "596af34a482cb5fc623426607a7ea7123dfd77ac31b3533dd74bba1a144386ed",
+      "po_sha": "54c346cc2e4628b4f2abb37cb5fb05cc996f79388501f72c0dce4f0bfbf4b65b"
     },
     "frappe": {
-      "commit": "81aadb9ba1bc07abccd8f720af80f4f2fb4a68a0",
-      "count": 5902,
-      "msgid_sha": "b71294ed6f92cb9eb3e67992a82cbe0706e0f93681b32477b619aaaaabca0fdb",
-      "po_sha": "cc353e76ebd37c0ef0d72f79cf0c081a460cfa5fe6846dcf36d122384c225502"
+      "commit": "af44091716ed4e9be32720483a27d3f1937ad7fd",
+      "commit_pin_review": {
+        "recorded_utc": "2026-10-21T17:39:24Z",
+        "recorded_by": "F44 pillow13 linters-alignment coordinator review (DeepSeek V4.1 Flash free)",
+        "authority": "coordinator technical review of an owner-approved private isolated vendor candidate; NOT human approval and NOT an upstream-supported release",
+        "basis": "private Frappe v16 vendor divergence af44091716ed4e9be32720483a27d3f1937ad7fd (parent 2871914b69b6e14a4b023d9b7cc52dc3e269cc1b, tree 231f1d8b87171dfc6fcedb1ae320195953539c34) whose only change is pyproject.toml Pillow~=12.3.0 -> Pillow~=13.0.0",
+        "catalog_delta": "none: apps.frappe inventory and ar.po bytes are identical between the old and the new pin (ad0c7b27c0406257911210b5c5a354a2fa9506f8fac1b9552806c592c7038205, count 6340, msgid_sha unchanged); only the recorded vendor commit pin moves",
+        "transport": ".github/ci/vendor_patches/frappe-pillow13-vendor-divergence.json plus .github/ci/apply_private_vendor_divergence.py reconstruct and verify the exact commit in every gate-consuming CI job"
+      },
+      "count": 6340,
+      "msgid_sha": "74640c27087d4ab687311dad237879b4eea7cac3d05837f9c9d2239c11565c00",
+      "po_sha": "ad0c7b27c0406257911210b5c5a354a2fa9506f8fac1b9552806c592c7038205"
     }
   },
-  "recorded_utc": "2026-09-29T20:03:00Z"
+  "recorded_utc": "2026-10-19T19:08:13Z"
 }

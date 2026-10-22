@@ -56,9 +56,11 @@ class TestConnectionExceptionRecorded(unittest.TestCase):
     def test_main_posts_login_request(self):
         mod = load_module()
         mod.FAILURES.clear()
-        desk_html = "frappe.boot = " + json.dumps(
-            {"lang": "ar", "__messages": {str(i): "v" for i in range(1000)}}
-        ) + ";\n"
+        desk_html = (
+            "frappe.boot = "
+            + json.dumps({"lang": "ar", "__messages": {str(i): "v" for i in range(1000)}})
+            + ";\n"
+        )
         with (
             unittest.mock.patch("sys.argv", ["uat_preflight.py", "--port=8002"]),
             unittest.mock.patch("sys.stdin", io.StringIO("password\n")),

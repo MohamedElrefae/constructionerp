@@ -34,6 +34,7 @@
 
 	const cascadeFields = ["boq_header", "boq_structure", "boq_item", "boq_item_stage"];
 	const directLaborDesignations = frappe.boot.direct_labor_designations || [];
+	const mountedBoqForms = new Set();
 	let lastKnownScopeToken = null;
 	let tokenFetchInFlight = null;
 
@@ -400,6 +401,173 @@
 		};
 	}
 
+	// ---------------------------------------------------------------------------
+	// The BOQ Item Link query of the child grids.
+	//
+	// Frappe stores the query of a child-table Link field in the grid field info
+	// (`grid.fieldinfo[fieldname]`): `frm.set_query(field, parent, fn)` writes
+	// `grid.get_field(field).get_query = fn`, and both the inline grid control
+	// (grid_row.js) and the expanded row form (grid_row_form.js) copy that
+	// value onto the field control when the row is created or expanded.
+	//
+	// ERPNext provisions an accounting dimension for the BOQ Item DocType
+	// (construction/install.py::setup_boq_accounting_dimension derives the
+	// fieldname "boq_item" from the dimension label) and installs its own query
+	// for that field from an ASYNCHRONOUS server callback
+	// (erpnext/public/js/utils/dimension_tree_filter.js::setup_child_filters),
+	// i.e. after this file installed the BOQ query. That overwrite dropped the
+	// BOQ omission / header / structure / status / scope filters and let an
+	// omitted BOQ Item be offered in the native dropdown.
+	//
+	// "boq_item" is the ONLY colliding field: it is the only BOQ field that
+	// ERPNext treats as an accounting dimension. The other three BOQ fields
+	// keep the plain native query mechanism, so no foreign writer is frozen
+	// anywhere else.
+	//
+	// The pinned ERPNext query is NOT discarded. It carries the account of the
+	// current row, and that account selects the applicable Accounting
+	// Dimension Filter (Allow / Restrict) of the "BOQ Item" dimension. The
+	// composed query therefore keeps BOTH policies:
+	//   * the BOQ cascade filters (omission / header / structure / status /
+	//     scope), and
+	//   * the native per-account dimension restriction, applied on the server by
+	//     construction/api/boq_link_queries.py::get_boq_items.
+	//
+	// The native query is asked for the account of the current row. When it
+	// cannot answer, the search is CLOSED: the BOQ query never continues
+	// without the native per-account policy.
+	// ---------------------------------------------------------------------------
+	// The accounting dimension that ERPNext provisions for the BOQ Item DocType
+	// (construction/install.py::setup_boq_accounting_dimension derives the
+	// fieldname "boq_item" from the dimension label). The native query of the
+	// "boq_item" field answers for exactly this dimension.
+	const BOQ_ITEM_DIMENSION = "boq_item";
+
+	function boqItemQueryState(grid) {
+		if (!grid.__ct_boq_item_query_state) {
+			grid.__ct_boq_item_query_state = {
+				appQuery: null,
+				nativeQuery: null,
+				nativeWrites: 0,
+				pinned: false,
+				nativePolicyUnavailableNotified: false,
+			};
+		}
+		return grid.__ct_boq_item_query_state;
+	}
+
+	// The outcome of the captured native ERPNext query.
+	//
+	//   { account: "<account>" }  the native per-account policy applies.
+	//   { account: null }         no native policy applies: no native query is
+	//                              installed, or the row carries no account.
+	//   { account: null, failed: true }
+	//                              the native policy could NOT be determined.
+	//
+	// A failure must NEVER be reported as "no native policy". Reporting it that
+	// way drops the per-account Accounting Dimension Filter (Allow / Restrict)
+	// of the BOQ Item dimension and silently widens the search. The caller
+	// closes the search instead of continuing without the policy.
+	function nativeRowAccount(state, doc, cdt, cdn) {
+		if (!state.nativeQuery) return { account: null };
+
+		let nativeArgs = null;
+		try {
+			nativeArgs = state.nativeQuery(doc, cdt, cdn);
+		} catch (error) {
+			// The pinned vendor query reads the row from `locals` and fails when
+			// the row is not registered there. The failure is reported, not
+			// swallowed: the caller closes the search.
+			return { account: null, failed: true, error: error };
+		}
+
+		const nativeFilters = nativeArgs && nativeArgs.filters;
+		if (!nativeFilters || typeof nativeFilters !== "object") {
+			// An unrecognised answer: the native policy is unknown.
+			return { account: null, failed: true, error: null };
+		}
+		if (nativeFilters.dimension !== BOQ_ITEM_DIMENSION) {
+			// The captured query does not answer for the BOQ Item dimension, so
+			// the native policy of that dimension cannot be determined.
+			return { account: null, failed: true, error: null };
+		}
+
+		const account = nativeFilters.account;
+		if (account === undefined || account === null || account === "") {
+			// A row without an account has no native dimension policy.
+			return { account: null };
+		}
+		if (typeof account !== "string") {
+			return { account: null, failed: true, error: null };
+		}
+		return { account: account };
+	}
+
+	// The native policy could not be determined. The user is told once that the
+	// dropdown was closed and the cause is logged for support. The search
+	// itself is closed by the caller, so no BOQ Item is ever offered without the
+	// native per-account restriction.
+	function notifyNativePolicyUnavailable(state, error) {
+		if (error && typeof console !== "undefined" && console && console.error) {
+			console.error("[BOQ] the native accounting dimension policy is unavailable", error);
+		}
+		if (state.nativePolicyUnavailableNotified) return;
+		state.nativePolicyUnavailableNotified = true;
+		showNotice(
+			"BOQ Item dropdown closed: the accounting dimension filter of the row could not be applied.",
+			"red"
+		);
+	}
+
+	function pinBoqItemQuery(grid, appQueryFn) {
+		const info = grid.get_field("boq_item");
+		if (!info) return;
+		const state = boqItemQueryState(grid);
+		state.appQuery = appQueryFn;
+		if (!state.pinned) {
+			// The vendor may have installed its query before this app ran.
+			const existing = info.get_query;
+			if (typeof existing === "function") {
+				state.nativeQuery = existing;
+				state.nativeWrites += 1;
+			}
+			state.pinned = true;
+		}
+		Object.defineProperty(info, "get_query", {
+			configurable: true,
+			enumerable: true,
+			get() {
+				return function (doc, cdt, cdn) {
+					const args = (state.appQuery && state.appQuery(doc, cdt, cdn)) || {};
+					const filters = Object.assign({}, args.filters);
+					const native = nativeRowAccount(state, doc, cdt, cdn);
+					if (native.failed) {
+						// The native per-account Accounting Dimension Filter could
+						// not be determined. Continuing would offer BOQ Items
+						// without that policy, so the search is closed explicitly
+						// (the server denies every item of a closed gate) instead
+						// of failing open with an account-less search.
+						notifyNativePolicyUnavailable(state, native.error);
+						filters.require_gate = true;
+						filters.gate_open = 0;
+						return { query: args.query, filters: filters };
+					}
+					if (native.account) filters.account = native.account;
+					return { query: args.query, filters: filters };
+				};
+			},
+			set(value) {
+				// The pinned ERPNext accounting-dimension setup writes its query
+				// here. It is kept as the source of the native account policy
+				// instead of replacing the BOQ cascade query.
+				if (typeof value === "function") {
+					state.nativeQuery = value;
+					state.nativeWrites += 1;
+				}
+			},
+		});
+	}
+
 	function setChildQueries(frm, tableField) {
 		const grid = frm.fields_dict[tableField] && frm.fields_dict[tableField].grid;
 		if (!grid) return;
@@ -418,17 +586,19 @@
 			);
 		});
 
-		frm.set_query("boq_item", tableField, function (doc, cdt, cdn) {
-			return queryArgs(
-				"construction.api.boq_link_queries.get_boq_items",
-				buildItemFilters(frm, getGridRow(grid, cdt, cdn))
-			);
-		});
-
 		frm.set_query("boq_item_stage", tableField, function (doc, cdt, cdn) {
 			return queryArgs(
 				"construction.api.boq_link_queries.get_boq_item_stages",
 				buildStageFilters(frm, getGridRow(grid, cdt, cdn))
+			);
+		});
+
+		// The BOQ Item field is pinned (see pinBoqItemQuery): it is the only BOQ
+		// field that ERPNext installs an accounting-dimension query on.
+		pinBoqItemQuery(grid, function (doc, cdt, cdn) {
+			return queryArgs(
+				"construction.api.boq_link_queries.get_boq_items",
+				buildItemFilters(frm, getGridRow(grid, cdt, cdn))
 			);
 		});
 
@@ -448,16 +618,6 @@
 				return queryArgs(
 					"construction.api.boq_link_queries.get_boq_structures",
 					buildStructureFilters(frm, getGridRow(grid, cdt, cdn))
-				);
-			};
-		}
-
-		const boqItemField = grid.get_field("boq_item");
-		if (boqItemField) {
-			boqItemField.get_query = function (doc, cdt, cdn) {
-				return queryArgs(
-					"construction.api.boq_link_queries.get_boq_items",
-					buildItemFilters(frm, getGridRow(grid, cdt, cdn))
 				);
 			};
 		}
@@ -597,15 +757,18 @@
 	function wireParent(doctype, tableField) {
 		frappe.ui.form.on(doctype, {
 			setup(frm) {
+				trackBoqForm(frm);
 				setChildQueries(frm, tableField);
 				installSaveGuard(frm);
 			},
 			onload(frm) {
+				trackBoqForm(frm);
 				initializeScopeToken();
 				installSaveGuard(frm);
 				syncTimesheetDesignation(frm);
 			},
 			refresh(frm) {
+				trackBoqForm(frm);
 				setChildQueries(frm, tableField);
 				installSaveGuard(frm);
 				syncTimesheetDesignation(frm);
@@ -705,14 +868,33 @@
 	}
 
 	function wireScopeChange() {
+		frappe.router.on("change", pruneUnmountedBoqForms);
 		$(document).on("scope:changed.ct_boq", function () {
-			const frm = cur_frm;
-			if (frm && childTables[frm.doc.doctype]) {
-				rebindOnScopeChange(frm);
-			} else {
-				initializeScopeToken();
-			}
+			const forms = pruneUnmountedBoqForms();
+			if (!forms.length) initializeScopeToken();
+			forms.forEach(rebindOnScopeChange);
 		});
+	}
+
+	function trackBoqForm(frm) {
+		if (frm && childTables[frm.doc?.doctype]) mountedBoqForms.add(frm);
+	}
+
+	function pruneUnmountedBoqForms() {
+		const mounted = [];
+		mountedBoqForms.forEach((frm) => {
+			const wrapper = frm.wrapper && (frm.wrapper[0] || frm.wrapper);
+			if (!wrapper || !wrapper.isConnected) {
+				mountedBoqForms.delete(frm);
+				return;
+			}
+			if (!childTables[frm.doc?.doctype]) {
+				mountedBoqForms.delete(frm);
+				return;
+			}
+			mounted.push(frm);
+		});
+		return mounted;
 	}
 
 	function applyCollapsedRowsGuidance(frm) {

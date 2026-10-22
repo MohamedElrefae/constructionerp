@@ -95,9 +95,7 @@ def main():
         if row["msgid"] not in html and ("\n" in row["msgid"] or "\r" in row["msgid"])
     }
     long_rows = {
-        row["msgid"]
-        for row in live
-        if row["msgid"] not in html | newline and len(row["msgid"]) > MAX_LEN
+        row["msgid"] for row in live if row["msgid"] not in html | newline and len(row["msgid"]) > MAX_LEN
     }
     rest = [row for row in live if row["msgid"] not in html | newline | long_rows]
     excluded = {
@@ -134,9 +132,15 @@ def main():
     assert hashlib.sha256(payload).hexdigest() == EXPECTED_SHA
     OUTPUT.write_bytes(payload)
     print(f"raw_unique={len(raw)} live_after_skip={len(live)} scope={len(scope)}")
-    print(f"projects={sum(row['area'] == 'projects' for row in output_rows)} subcontracting={sum(row['area'] == 'subcontracting' for row in output_rows)}")
-    print(f"prefilled={sum(row['has_pre_filled'] == '1' for row in output_rows)} unfilled={sum(row['has_pre_filled'] == '0' for row in output_rows)}")
-    print(f"excluded_html={len(html)} excluded_newline={len(newline)} excluded_long={len(long_rows)} excluded_catalog_or_prior={len(excluded)} skipped_yes={len(raw) - len(live)}")
+    print(
+        f"projects={sum(row['area'] == 'projects' for row in output_rows)} subcontracting={sum(row['area'] == 'subcontracting' for row in output_rows)}"
+    )
+    print(
+        f"prefilled={sum(row['has_pre_filled'] == '1' for row in output_rows)} unfilled={sum(row['has_pre_filled'] == '0' for row in output_rows)}"
+    )
+    print(
+        f"excluded_html={len(html)} excluded_newline={len(newline)} excluded_long={len(long_rows)} excluded_catalog_or_prior={len(excluded)} skipped_yes={len(raw) - len(live)}"
+    )
     print(f"sha256={EXPECTED_SHA}")
     print(f"output={OUTPUT}")
 

@@ -415,6 +415,21 @@ class TestCSVQuorum(unittest.TestCase):
         errors, _ = self.run_csv([row2])
         self.assertTrue(any("decision-identity" in e or "decision-binding" in e for e in errors), errors)
 
+    def test_decisions_load_once_per_invocation(self):
+        from unittest import mock
+
+        rows = [self.row(context="first"), self.row(context="second")]
+        with mock.patch.object(g, "load_decisions", wraps=g.load_decisions) as load:
+            errors, n = self.run_csv(rows)
+            self.assertEqual(errors, [])
+            self.assertEqual(n, 2)
+            self.assertEqual(load.call_count, 1)
+
+            errors, n = self.run_csv(rows)
+            self.assertEqual(errors, [])
+            self.assertEqual(n, 2)
+            self.assertEqual(load.call_count, 2)
+
 
 class TestRoutingAndVendor(unittest.TestCase):
     def test_absent_file_fails_closed(self):
@@ -1203,15 +1218,18 @@ class TestRound4Gates(unittest.TestCase):
             # live checkout untouched
             self.assertFalse((g.ROOT / "construction" / "data" / "localization" / written[0].name).exists())
 
-    def _evidence_fixture_root(self, tmp, mutate=None, bodies_param=None):
+    def _evidence_fixture_root(self, tmp, mutate=None, bodies_param=None, contract="current"):
         import datetime as _dt
 
         now = _dt.datetime.now(_dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
         import hashlib as _hl
 
         cmds = dict(g.EXPECTED_COMMANDS)
-        mods = "\n".join(f"{m} :: Ran {n} tests in 0.1s OK" for m, n in g.EXPECTED_MODULES)
-        total = sum(n for _, n in g.EXPECTED_MODULES)
+        spec = g.CONTRACTS[contract]
+        expected_modules = list(spec["modules"])
+        expected_gate = dict(spec["gate"])
+        mods = "\n".join(f"{m} :: Ran {n} tests in 0.1s OK" for m, n in expected_modules)
+        total = sum(n for _, n in expected_modules)
         results = {
             "all-tests.txt": None,  # filled below with real SHAs
             "final-dryrun.txt": None,
@@ -1272,13 +1290,13 @@ class TestRound4Gates(unittest.TestCase):
         ):
             _art[mark] = _hl.sha256((root / rel).read_bytes()).hexdigest()
         results["all-tests.txt"] = mods + f"\nAGGREGATE total={total} failed=0"
-        results["final-dryrun.txt"] = "In [1]: DRY total=%d created=%d updated=%d skipped=%d drift=0" % (
-            g.EXPECTED_DRYRUN["total"], g.EXPECTED_DRYRUN["created"], g.EXPECTED_DRYRUN["updated"], g.EXPECTED_DRYRUN["skipped"],
+        results["final-dryrun.txt"] = (
+            f"In [1]: DRY total={g.EXPECTED_DRYRUN['total']} created={g.EXPECTED_DRYRUN['created']} updated={g.EXPECTED_DRYRUN['updated']} skipped={g.EXPECTED_DRYRUN['skipped']} drift=0"
         )
         results["full-gate.txt"] = (
-            f'checked={{"construction/locale/ar.po": {g.EXPECTED_GATE["catalog"]}, '
-            f'"files": {g.EXPECTED_GATE["files"]}, "wrapped": {g.EXPECTED_GATE["wrapped"]}, '
-            f'"json_labels": {g.EXPECTED_GATE["json_labels"]}, "missing": 0}} errors=0'
+            f'checked={{"construction/locale/ar.po": {expected_gate["catalog"]}, '
+            f'"files": {expected_gate["files"]}, "wrapped": {expected_gate["wrapped"]}, '
+            f'"json_labels": {expected_gate["json_labels"]}, "missing": 0}} errors=0'
         )
         results["sync.txt"] = "In [2]: SYNC:{'created': 0, 'updated': 0}"
         _fresh_json = (
@@ -1291,7 +1309,7 @@ class TestRound4Gates(unittest.TestCase):
             "--- JSON START ---\n" + _fresh_json + "\n--- JSON END ---"
         )
         results["gate-tests-standalone.txt"] = (
-            f"Ran {dict(g.EXPECTED_MODULES)['construction.tests.test_localization_gates']} tests in 0.1s\nOK"
+            f"Ran {dict(expected_modules)['construction.tests.test_localization_gates']} tests in 0.1s\nOK"
         )
         results["lints-diffcheck.txt"] = (
             "PASS: no scope-dimension field has in_standard_filter=1\n"
@@ -1545,6 +1563,130 @@ class TestRound4Gates(unittest.TestCase):
             g.check_evidence_index(errors, root=root)
             self.assertTrue(any("command" in e.lower() and "sync.txt" in e for e in errors), errors)
 
+    def _bind_site(self, dst, site):
+        """Rewrite a synthetic capture set so it records the given evidence site."""
+        import re as _re
+
+        def _rewrite(text):
+            lines = text.splitlines()
+            out = []
+            for line in lines:
+                if line.startswith("STARTED_UTC:"):
+                    out.append(f"SITE: {site}")
+                out.append(line)
+                if line.startswith("ENVELOPE_LINES:"):
+                    count = int(line.split(":", 1)[1].strip())
+                    out[-1] = f"ENVELOPE_LINES: {count + 1}"
+            return "\n".join(out) + "\n"
+
+        for name in list(g.EVIDENCE_FILES):
+            path = dst / name
+            if not path.exists():
+                continue
+            body = path.read_text(encoding="utf-8").replace("--site v16.localhost", f"--site {site}")
+            path.write_text(_rewrite(body), encoding="utf-8")
+
+        # The index binds every envelope by digest: refresh those rows after the rewrite.
+        import hashlib as _hashlib
+
+        idx_path = dst / "index.txt"
+        idx_lines = []
+        for line in idx_path.read_text(encoding="utf-8").splitlines():
+            match = _re.match(r"^([0-9a-f]{64})\s+(\S+\.txt)$", line)
+            if match and (dst / match.group(2)).exists():
+                digest = _hashlib.sha256((dst / match.group(2)).read_bytes()).hexdigest()
+                idx_lines.append(f"{digest}  {match.group(2)}")
+            else:
+                idx_lines.append(line)
+        body = "\n".join(idx_lines) + "\n"
+
+        for name in ["index.txt"]:
+            path = dst / name
+            if not path.exists():
+                continue
+            # `body` already carries the refreshed envelope digests.
+            body = body.replace("--site v16.localhost", f"--site {site}")
+            if name == "index.txt":
+                # The index carries the evidence site in its own grammar row.
+                lines = body.splitlines()
+                out = []
+                for line in lines:
+                    out.append(line)
+                    if line.startswith("CANDIDATE_ROOT:"):
+                        out.append(f"EVIDENCE_SITE: {site}")
+                    if line.startswith("ENVELOPE_LINES:"):
+                        count = int(line.split(":", 1)[1].strip())
+                        out[-1] = f"ENVELOPE_LINES: {count + 1}"
+                body = "\n".join(out) + "\n"
+                path.write_text(body, encoding="utf-8")
+                continue
+            path.write_text(_rewrite(body), encoding="utf-8")
+
+    def test_evidence_isolated_site_accepted(self):
+        """A capture set bound to the authorized isolated site validates."""
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as tmp:
+            site = "v16-correction.localhost"
+
+            def mutate(dst):
+                self._bind_site(dst, site)
+
+            root = self._evidence_fixture_root(tmp, mutate=mutate)
+            errors = []
+            previous = g.EVIDENCE_SITE
+            previous_required = g.EVIDENCE_SITE_REQUIRED
+            g.EVIDENCE_SITE = site
+            g.EVIDENCE_SITE_REQUIRED = True
+            try:
+                g.check_evidence_index(errors, root=root)
+            finally:
+                g.EVIDENCE_SITE = previous
+                g.EVIDENCE_SITE_REQUIRED = previous_required
+            # The whole error list must be empty, not merely free of "site" strings.
+            self.assertEqual(errors, [])
+
+    def test_evidence_wrong_site_rejected(self):
+        """A capture set recorded for another site is rejected."""
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as tmp:
+
+            def mutate(dst):
+                self._bind_site(dst, "v16.localhost")
+
+            root = self._evidence_fixture_root(tmp, mutate=mutate)
+            errors = []
+            previous = g.EVIDENCE_SITE
+            g.EVIDENCE_SITE = "v16-correction.localhost"
+            try:
+                g.check_evidence_index(errors, root=root)
+            finally:
+                g.EVIDENCE_SITE = previous
+            self.assertTrue(
+                any("site" in e.lower() for e in errors),
+                errors,
+            )
+
+    def test_evidence_markerless_data_rejected_in_site_aware_mode(self):
+        """Site-less legacy data must not be accepted as current isolated-site evidence."""
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = self._evidence_fixture_root(tmp)
+            errors = []
+            previous = g.EVIDENCE_SITE
+            previous_required = g.EVIDENCE_SITE_REQUIRED
+            g.EVIDENCE_SITE = "v16-correction.localhost"
+            g.EVIDENCE_SITE_REQUIRED = True
+            try:
+                g.check_evidence_index(errors, root=root)
+            finally:
+                g.EVIDENCE_SITE = previous
+                g.EVIDENCE_SITE_REQUIRED = previous_required
+            self.assertTrue(errors, "markerless evidence must be rejected in site-aware mode")
+            self.assertTrue(any("site" in e.lower() for e in errors), errors)
+
     def test_evidence_junk_index_line_rejected(self):
         import tempfile
 
@@ -1628,6 +1770,80 @@ class TestRound4Gates(unittest.TestCase):
             errors = []
             g.check_evidence_index(errors, root=root)
             self.assertEqual(errors, [])
+
+    # -- the frozen evidence contracts ------------------------------------
+    def test_legacy_contract_values_are_preserved(self):
+        """The historical (2026-09-29) expectation is kept, not silently overwritten."""
+        self.assertEqual(
+            g.LEGACY_EXPECTED_GATE,
+            {"catalog": 817, "files": 265, "wrapped": 667, "json_labels": 29, "missing": 0},
+        )
+        legacy = dict(g.LEGACY_EXPECTED_MODULES)
+        self.assertEqual(legacy["construction.tests.test_localization_gates"], 92)
+        self.assertEqual(legacy["construction.tests.test_stage4_report_extension"], 11)
+        self.assertEqual(sum(n for _, n in g.LEGACY_EXPECTED_MODULES), 271)
+        self.assertEqual(len(g.LEGACY_EXPECTED_MODULES), 11)
+        self.assertNotEqual(g.LEGACY_EXPECTED_GATE, g.CURRENT_EXPECTED_GATE)
+        self.assertIn("legacy", g.CONTRACTS)
+        self.assertIn("current", g.CONTRACTS)
+
+    def test_legacy_evidence_set_validates_under_the_legacy_contract(self):
+        """The historical verification path still accepts its own expectation."""
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = self._evidence_fixture_root(tmp, contract="legacy")
+            errors = []
+            previous = g.EVIDENCE_CONTRACT
+            g.EVIDENCE_CONTRACT = "legacy"
+            try:
+                g.check_evidence_index(errors, root=root)
+            finally:
+                g.EVIDENCE_CONTRACT = previous
+            self.assertEqual(errors, [])
+
+    def test_legacy_evidence_set_is_rejected_by_the_current_contract(self):
+        """The two expectations are distinct; neither is inferred from the data."""
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = self._evidence_fixture_root(tmp, contract="legacy")
+            errors = []
+            previous = g.EVIDENCE_CONTRACT
+            g.EVIDENCE_CONTRACT = "current"
+            try:
+                g.check_evidence_index(errors, root=root)
+            finally:
+                g.EVIDENCE_CONTRACT = previous
+            self.assertTrue(errors, "the legacy expectation must not pass the current contract")
+            self.assertTrue(any("contract" in e for e in errors), errors)
+
+    def test_current_contract_is_pinned_to_the_live_source_artifacts(self):
+        """The frozen contract is tied to real source artifacts, not to bare numbers."""
+        self.assertTrue(g.CURRENT_SOURCE_PINS, "the current contract must pin its source artifacts")
+        for rel, want in sorted(g.CURRENT_SOURCE_PINS.items()):
+            path = g.ROOT / rel
+            self.assertTrue(path.is_file(), f"contract-pinned source missing: {rel}")
+            self.assertEqual(
+                g.sha256(path),
+                want,
+                f"contract-pinned source drifted: {rel} — re-measure and re-review the contract",
+            )
+
+    def test_contract_source_drift_is_refused(self):
+        """A source artifact that no longer matches the frozen pin is refused."""
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = self._evidence_fixture_root(tmp)
+            drifted = root / "construction/locale/ar.po"
+            drifted.write_text(drifted.read_text(encoding="utf-8") + "\n", encoding="utf-8")
+            errors = []
+            g.check_evidence_index(errors, root=root)
+            self.assertTrue(
+                any("contract-source-drift" in e for e in errors),
+                f"the drifted source artifact must be named: {errors}",
+            )
 
 
 if __name__ == "__main__":

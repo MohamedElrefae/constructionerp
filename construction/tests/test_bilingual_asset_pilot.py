@@ -87,9 +87,7 @@ def _delete_asset(name):
     """Delete a draft Asset fixture plus its Asset Activity audit rows."""
     if frappe.db.exists("Asset", name):
         frappe.delete_doc("Asset", name, force=True, ignore_permissions=True)
-    for row in frappe.get_all(
-        "Asset Activity", filters={"asset": name}, pluck="name", limit=0
-    ):
+    for row in frappe.get_all("Asset Activity", filters={"asset": name}, pluck="name", limit=0):
         frappe.delete_doc("Asset Activity", row, force=True, ignore_permissions=True)
     frappe.db.commit()
 
@@ -153,9 +151,7 @@ class TestBilingualAssetPilot(unittest.TestCase):
         self.assertIsNone(m["resolved"].get("code_field"))
         self.assertEqual(m["resolved"].get("identity_field"), "name")
         self.assertFalse(bool((m.get("tree") or {}).get("enabled")))
-        self.assertEqual(
-            m.get("search", {}).get("fields"), ["asset_name", "asset_name_ar"]
-        )
+        self.assertEqual(m.get("search", {}).get("fields"), ["asset_name", "asset_name_ar"])
 
     def test_active_and_schema_installed_fail_closed_on_missing_asset_field(self):
         """If norm_field is declared on schema_installed Asset but missing from schema, fail closed."""
@@ -272,9 +268,7 @@ class TestBilingualAssetPilot(unittest.TestCase):
             self.assertEqual(renamed.name, new_id)
             self.assertEqual(renamed.asset_name, test_asset_name)
             self.assertEqual(renamed.asset_name_ar, asset_ar)
-            self.assertEqual(
-                renamed.asset_name_ar_norm, normalize_arabic(asset_ar)
-            )
+            self.assertEqual(renamed.asset_name_ar_norm, normalize_arabic(asset_ar))
         finally:
             for candidate in (old_id, f"{old_id}-RENAMED"):
                 _delete_asset(candidate)
@@ -298,11 +292,7 @@ class TestBilingualAssetPilot(unittest.TestCase):
 
             # 2. searchable_dropdown.searchable_link_search
             dropdown_res = searchable_link_search(doctype="Asset", txt=query)
-            items = (
-                dropdown_res.get("results", [])
-                if isinstance(dropdown_res, dict)
-                else dropdown_res
-            )
+            items = dropdown_res.get("results", []) if isinstance(dropdown_res, dict) else dropdown_res
             dropdown_names = [r["value"] for r in items]
             self.assertIn(
                 doc.name,

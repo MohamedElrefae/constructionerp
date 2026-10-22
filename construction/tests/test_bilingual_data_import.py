@@ -15,6 +15,7 @@ from pathlib import Path
 
 import frappe
 from frappe.core.doctype.data_import.importer import Importer
+
 from construction.services.bilingual_registry import normalize_arabic
 
 
@@ -25,19 +26,23 @@ class TestBilingualDataImport(unittest.TestCase):
 
     def _run_csv_import(self, doctype: str, csv_content: str, import_type: str = "Insert New Records"):
         """Helper to execute Data Import from CSV content string."""
-        file_doc = frappe.get_doc({
-            "doctype": "File",
-            "file_name": f"test_bilingual_import_{frappe.generate_hash(length=8)}.csv",
-            "content": csv_content,
-            "is_private": 1,
-        }).insert()
+        file_doc = frappe.get_doc(
+            {
+                "doctype": "File",
+                "file_name": f"test_bilingual_import_{frappe.generate_hash(length=8)}.csv",
+                "content": csv_content,
+                "is_private": 1,
+            }
+        ).insert()
 
-        di = frappe.get_doc({
-            "doctype": "Data Import",
-            "reference_doctype": doctype,
-            "import_type": import_type,
-            "import_file": file_doc.file_url,
-        }).insert()
+        di = frappe.get_doc(
+            {
+                "doctype": "Data Import",
+                "reference_doctype": doctype,
+                "import_type": import_type,
+                "import_file": file_doc.file_url,
+            }
+        ).insert()
 
         try:
             importer = Importer(doctype, data_import=di)
@@ -83,16 +88,15 @@ class TestBilingualDataImport(unittest.TestCase):
         # Embed Right-to-Left Override (\u202e)
         bad_arabic = "متر\u202eمكعب"
 
-        csv_content = (
-            "uom_name,uom_name_ar\n"
-            f"{test_uom_name},{bad_arabic}\n"
-        )
+        csv_content = "uom_name,uom_name_ar\n" f"{test_uom_name},{bad_arabic}\n"
 
         logs, di, file_doc = self._run_csv_import("UOM", csv_content)
         try:
             self.assertTrue(logs, "No import logs returned")
             self.assertEqual(logs[0].get("success"), 0, "Row with bidi control should have failed import!")
-            self.assertFalse(frappe.db.exists("UOM", test_uom_name), "Document with bidi control was created in DB!")
+            self.assertFalse(
+                frappe.db.exists("UOM", test_uom_name), "Document with bidi control was created in DB!"
+            )
         finally:
             if frappe.db.exists("UOM", test_uom_name):
                 frappe.delete_doc_if_exists("UOM", test_uom_name, force=True)
@@ -103,11 +107,13 @@ class TestBilingualDataImport(unittest.TestCase):
     def test_data_import_update_norm_derivation_and_bidi_rejection(self):
         """Updating existing records via Data Import must overwrite poisoned keys and reject bidi controls."""
         test_uom_name = f"UOM-UPD-{frappe.generate_hash(length=6)}"
-        uom = frappe.get_doc({
-            "doctype": "UOM",
-            "uom_name": test_uom_name,
-            "uom_name_ar": "وحدة أساسية",
-        }).insert()
+        uom = frappe.get_doc(
+            {
+                "doctype": "UOM",
+                "uom_name": test_uom_name,
+                "uom_name_ar": "وحدة أساسية",
+            }
+        ).insert()
         frappe.db.commit()
 
         try:
@@ -115,8 +121,7 @@ class TestBilingualDataImport(unittest.TestCase):
             update_ar = "وحدة معدلة"
             expected_norm = normalize_arabic(update_ar)
             csv_update = (
-                "name,uom_name_ar,uom_name_ar_norm\n"
-                f"{test_uom_name},{update_ar},POISON_UPDATE_KEY\n"
+                "name,uom_name_ar,uom_name_ar_norm\n" f"{test_uom_name},{update_ar},POISON_UPDATE_KEY\n"
             )
             logs, di1, f1 = self._run_csv_import("UOM", csv_update, import_type="Update Existing Records")
             self.assertEqual(logs[0].get("success"), 1)
@@ -127,11 +132,10 @@ class TestBilingualDataImport(unittest.TestCase):
             frappe.delete_doc_if_exists("File", f1.name, force=True)
 
             # 2. Update with bidi control -> should fail and preserve old value
-            csv_bad_update = (
-                "name,uom_name_ar\n"
-                f"{test_uom_name},وحدة\u2066غير آمنة\n"
+            csv_bad_update = "name,uom_name_ar\n" f"{test_uom_name},وحدة\u2066غير آمنة\n"
+            logs2, di2, f2 = self._run_csv_import(
+                "UOM", csv_bad_update, import_type="Update Existing Records"
             )
-            logs2, di2, f2 = self._run_csv_import("UOM", csv_bad_update, import_type="Update Existing Records")
             self.assertEqual(logs2[0].get("success"), 0)
             reloaded2 = frappe.get_doc("UOM", test_uom_name)
             self.assertEqual(reloaded2.uom_name_ar, update_ar)  # unchanged
@@ -143,7 +147,10 @@ class TestBilingualDataImport(unittest.TestCase):
 
     def test_data_import_account_asymmetry_enforced(self):
         """Account cannot carry Arabic name on insert via Data Import (financial governance invariant)."""
-        company = frappe.db.get_single_value("Global Defaults", "default_company") or frappe.get_all("Company", limit=1)[0].name
+        company = (
+            frappe.db.get_single_value("Global Defaults", "default_company")
+            or frappe.get_all("Company", limit=1)[0].name
+        )
         parent = frappe.get_all("Account", filters={"company": company, "is_group": 1}, limit=1)[0].name
 
         bad_acc_name = f"Test Acc Bad {frappe.generate_hash(length=4)}"
@@ -165,14 +172,13 @@ class TestBilingualDataImport(unittest.TestCase):
 
         # Importing Account without Arabic name must succeed
         good_acc_name = f"Test Acc Good {frappe.generate_hash(length=4)}"
-        csv_good = (
-            "account_name,company,parent_account\n"
-            f"{good_acc_name},{company},{parent}\n"
-        )
+        csv_good = "account_name,company,parent_account\n" f"{good_acc_name},{company},{parent}\n"
         logs_good, di2, f2 = self._run_csv_import("Account", csv_good)
         created_good = None
         try:
-            self.assertEqual(logs_good[0].get("success"), 1, f"Importing Account without Arabic failed: {logs_good}")
+            self.assertEqual(
+                logs_good[0].get("success"), 1, f"Importing Account without Arabic failed: {logs_good}"
+            )
             created_good = frappe.db.exists("Account", {"account_name": good_acc_name, "company": company})
             self.assertIsNotNone(created_good, "Valid Account without Arabic was not created!")
         finally:

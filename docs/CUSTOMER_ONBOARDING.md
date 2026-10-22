@@ -8,19 +8,37 @@ tracked separately and never ships with the app.
 
 ```bash
 cd $PATH_TO_YOUR_BENCH
-bench get-app $URL_OF_THIS_REPO --branch develop
-bench install-app construction
+SITE_NAME="<YOUR_SITE_NAME>"
+APP_REPOSITORY="<APPROVED_CUSTOMER_REPOSITORY_URL>"
+APP_RELEASE_REF="<QUALIFIED_RELEASE_REF>"
+bench get-app --branch "$APP_RELEASE_REF" construction "$APP_REPOSITORY"
+bench --site "$SITE_NAME" install-app construction
 ```
+
+Use only the repository URL and release ref supplied for your customer delivery. The
+local staging directory used to prepare that delivery is not an install source; the
+engineering checkout and its development branch are not customer release channels.
 
 Build: Flit via `pyproject.toml` (version 0.0.5). Canonical app entry after login:
 `/app/construction`.
 
 ## 2. First login
 
-1. Log in as Administrator.
+Before using the app on a fresh site, complete the ERPNext Setup Wizard and create the
+Company and other standard masters required for your operation. Confirm the standard
+Warehouse Type **Transit**, UOMs **Nos**, **M3**, **Meter**, and **Kg**, and Item Group
+**All Item Groups** exist; these are ERPNext setup data, not created by this app.
+
+BOQ Excel import commit is disabled by default. After validating the import workflow and
+confirming the responsible user permissions, an administrator may enable
+`enable_boq_excel_import_commit` in **Construction Settings**. Keep it disabled until
+the site is ready for committed imports.
+
+1. Log in as Administrator and finish any remaining ERPNext setup wizard steps.
 2. Open **Construction Home** (`/app/construction`). You should see the work areas:
    Site execution, Estimating and commercial, Procurement and stores, Finance, Cost database.
-3. Create your Company, then a Project, then a BOQ Header. Each next field unlocks after
+3. Confirm the Company and required standard masters are present, then create a Project
+   and a BOQ Header. Each next field unlocks after
    the previous one is set (Project → BOQ Header → BOQ Structure → BOQ Item).
 
 ## 3. Roles
@@ -45,6 +63,10 @@ right-to-left). Light and dark themes are available from the theme menu; the cho
 remembered per user. Column density on forms saves automatically; field-visibility changes
 are staged until you press **Apply & Save** — the panel tells you when changes are unsaved
 and warns before discarding them.
+
+The release includes the authored theme stylesheets. Per-theme CSS and the login-theme
+stylesheet are generated from installed theme records during app installation or theme
+updates; they are runtime outputs, not release source files.
 
 ## 5. BOQ lifecycle (normal operation)
 

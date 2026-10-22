@@ -22,7 +22,9 @@ class BOQCostAnalysis(Document):
 
     def validate(self):
         previous = self.get_doc_before_save()
-        if (self.get("supersedes_analysis") or "") != ((previous.get("supersedes_analysis") if previous else None) or ""):
+        if (self.get("supersedes_analysis") or "") != (
+            (previous.get("supersedes_analysis") if previous else None) or ""
+        ):
             frappe.throw(_("Previous approved analysis is managed by the approval service."))
         self.validate_boq_item()
         self.validate_scope_context()
@@ -68,7 +70,7 @@ class BOQCostAnalysis(Document):
         ):
             if self.get(field) and self.get(field) != actual:
                 frappe.throw(
-                    _("Cost analysis {0} must match its BOQ Item.").format(self.meta.get_label(field))
+                    _("Cost analysis {0} must match its BOQ Item.").format(_(self.meta.get_label(field)))
                 )
             self.set(field, actual)
         if frappe.session.user != "Administrator":
@@ -155,7 +157,11 @@ class BOQCostAnalysis(Document):
                 if frappe.db.get_value("BOQ Cost Analysis", row.name, "pricing_rule_version") != PRICING_RULE:
                     frappe.throw(_("Previous legacy cost basis requires review before a new approval."))
         self.supersedes_analysis = other_approved[0].name if other_approved else None
-        if not other_approved and (item.get("cost_basis") or "Manual") == "Manual" and not item.get("active_cost_analysis"):
+        if (
+            not other_approved
+            and (item.get("cost_basis") or "Manual") == "Manual"
+            and not item.get("active_cost_analysis")
+        ):
             history = current_boq_sql(
                 "SELECT name FROM `tabBOQ Cost Analysis` WHERE boq_item = %s AND docstatus > 0 LIMIT 1 FOR UPDATE NOWAIT",
                 self.boq_item,
@@ -243,7 +249,10 @@ class BOQCostAnalysis(Document):
             if prior.boq_item != self.boq_item:
                 frappe.throw(_("Previous cost analysis belongs to another BOQ Item."))
             if prior.docstatus == 1 and prior.analysis_status == "Superseded":
-                if getattr(prior, "pricing_rule_version", None) and prior.pricing_rule_version != PRICING_RULE:
+                if (
+                    getattr(prior, "pricing_rule_version", None)
+                    and prior.pricing_rule_version != PRICING_RULE
+                ):
                     frappe.throw(_("Previous legacy cost basis requires review before cancellation."))
                 return prior
             target = prior.get("supersedes_analysis")

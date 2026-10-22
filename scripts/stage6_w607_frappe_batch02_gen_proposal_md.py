@@ -31,7 +31,7 @@ lines = [
     "| Disposition | Count | Description |",
     "| :--- | :---: | :--- |",
     "| **`preserved-site-override`** | 0 | No active site overrides on `v16.localhost` (all 244 keys missing in runtime `tabTranslation`) |",
-    "| **`EXCEPTION-technical`** | 1 | Unresolved JS template literal expression (`{0} ${skip_list ? \"\" : type}`); empty translation |",
+    '| **`EXCEPTION-technical`** | 1 | Unresolved JS template literal expression (`{0} ${skip_list ? "" : type}`); empty translation |',
     "| **`PROPOSED-payload`** | 243 | Candidate Arabic translations for Frappe framework UI strings |",
     "| **Total** | **244** | **0 + 1 + 243 = 244** |",
     "",

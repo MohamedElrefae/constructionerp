@@ -69,11 +69,13 @@ def _create_fixtures():
     """Create Task fixture rows."""
     created = []
     for i in range(FIXTURES_COUNT):
-        d = frappe.get_doc({
-            "doctype": "Task",
-            "subject": f"{PREFIX}Test-{i:02d}",
-            "is_group": 0,
-        })
+        d = frappe.get_doc(
+            {
+                "doctype": "Task",
+                "subject": f"{PREFIX}Test-{i:02d}",
+                "is_group": 0,
+            }
+        )
         d.insert(ignore_permissions=True)
         created.append(d.name)
     frappe.db.commit()
@@ -164,10 +166,14 @@ def measure():
         "match_sets_equal": base_ids == bilin_ids,
         "baseline_p95_over_bilingual_p95": round(
             _nearest_rank_p95(base_samples) / _nearest_rank_p95(bilin_samples), 4
-        ) if _nearest_rank_p95(bilin_samples) else None,
+        )
+        if _nearest_rank_p95(bilin_samples)
+        else None,
         "bilingual_p95_ratio_of_baseline": round(
             _nearest_rank_p95(bilin_samples) / _nearest_rank_p95(base_samples), 4
-        ) if _nearest_rank_p95(base_samples) else None,
+        )
+        if _nearest_rank_p95(base_samples)
+        else None,
         "order_balance": "alternating (even pair baseline-first, odd pair bilingual-first); GC paused during timed region",
         "query_counts": {
             "baseline_counts": base_counts,
@@ -227,7 +233,20 @@ if __name__ == "__main__":
     with open(os.path.abspath(path), "w", encoding="utf-8") as fh:
         json.dump(out, fh, indent=1, sort_keys=True)
         fh.write("\n")
-    print("MEASUREMENT:", json.dumps({out["result"]["doctype"]: out["result"].get("bilingual_p95_ratio_of_baseline")}, sort_keys=True))
-    print("P95_MS:", json.dumps({"baseline": out["result"]["baseline"]["p95_ms"], "bilingual": out["result"]["bilingual"]["p95_ms"]}))
+    print(
+        "MEASUREMENT:",
+        json.dumps(
+            {out["result"]["doctype"]: out["result"].get("bilingual_p95_ratio_of_baseline")}, sort_keys=True
+        ),
+    )
+    print(
+        "P95_MS:",
+        json.dumps(
+            {
+                "baseline": out["result"]["baseline"]["p95_ms"],
+                "bilingual": out["result"]["bilingual"]["p95_ms"],
+            }
+        ),
+    )
     print("MATCH_SETS_EQUAL:", out["result"].get("match_sets_equal"))
     print("CLEANUP_LEFTOVER:", len(out["cleanup"]["leftover"]))

@@ -125,9 +125,7 @@ class TestReportExtensionPure(unittest.TestCase):
             self.assertIsNotNone(frappe.cache.get_value(key))
 
             set_account_name_ar(acc.name, marker)
-            self.assertIsNone(
-                frappe.cache.get_value(key), "Account save must bust the company key"
-            )
+            self.assertIsNone(frappe.cache.get_value(key), "Account save must bust the company key")
             fresh = rbe.load_account_arabic_mapping(company)
             self.assertEqual(fresh.get(acc.name), marker)
         finally:

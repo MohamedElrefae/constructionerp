@@ -84,28 +84,61 @@ class TestBilingualTransactionPrint(unittest.TestCase):
         cls._project = None
         cls._supplier = None
         cls._created = []
+        cls._company_existed = False
+        cls._company_original_ar = None
 
-        cls._project = frappe.get_doc(
-            {
-                "doctype": "Project",
-                "project_name": f"CT Print & Test {uuid4().hex[:6]}",
-                "company": COMPANY,
-                "project_name_ar": "مشروع تجربة الطباعة",
-            }
-        ).insert(ignore_permissions=True)
+        # Test-owned fixture: ensure Company "Elrefae" has its Arabic name for
+        # bilingual print rendering. Restores prior state in tearDownClass.
+        # Record whether the company existed separately from its original value
+        # so that None values are restored correctly.
+        cls._company_existed = bool(frappe.db.exists("Company", COMPANY))
+        if cls._company_existed:
+            doc = frappe.get_doc("Company", COMPANY)
+            cls._company_original_ar = doc.company_name_ar
+            if doc.company_name_ar != COMPANY_AR:
+                doc.company_name_ar = COMPANY_AR
+                doc.save(ignore_permissions=True)
+        else:
+            # Create company with Arabic name set during creation
+            frappe.get_doc(
+                {
+                    "doctype": "Company",
+                    "company_name": COMPANY,
+                    "abbr": "E",
+                    "default_currency": "EGP",
+                    "country": "Egypt",
+                    "company_name_ar": COMPANY_AR,
+                }
+            ).insert(ignore_permissions=True)
 
-        cls._supplier = frappe.get_doc(
-            {
-                "doctype": "Supplier",
-                "supplier_name": f"CT Print Supplier {uuid4().hex[:6]}",
-                "supplier_group": "All Supplier Groups",
-                "supplier_type": "Company",
-                "supplier_name_in_arabic": "مورد تجربة الطباعة",
-            }
-        ).insert(ignore_permissions=True)
+        try:
+            cls._project = frappe.get_doc(
+                {
+                    "doctype": "Project",
+                    "project_name": f"CT Print & Test {uuid4().hex[:6]}",
+                    "company": COMPANY,
+                    "project_name_ar": "مشروع تجربة الطباعة",
+                }
+            ).insert(ignore_permissions=True)
+
+            cls._supplier = frappe.get_doc(
+                {
+                    "doctype": "Supplier",
+                    "supplier_name": f"CT Print Supplier {uuid4().hex[:6]}",
+                    "supplier_group": "All Supplier Groups",
+                    "supplier_type": "Company",
+                    "supplier_name_in_arabic": "مورد تجربة الطباعة",
+                }
+            ).insert(ignore_permissions=True)
+        except Exception:
+            cls.tearDownClass()
+            raise
 
     @classmethod
     def tearDownClass(cls):
+        # Clean up in dependency order: transaction records first, then
+        # Project/Supplier (which may be referenced by transactions), then
+        # the Company fixture.
         for doctype, name in reversed(cls._created):
             if frappe.db.exists(doctype, name):
                 try:
@@ -113,13 +146,27 @@ class TestBilingualTransactionPrint(unittest.TestCase):
                 except Exception:
                     frappe.db.rollback()
         cls._created = []
-        for doctype, name in (("Supplier", getattr(cls._supplier, "name", None)),
-                              ("Project", getattr(cls._project, "name", None))):
-            if name and frappe.db.exists(doctype, name):
-                try:
-                    frappe.delete_doc(doctype, name, force=True, ignore_permissions=True)
-                except Exception:
-                    frappe.db.rollback()
+
+        if cls._project and frappe.db.exists("Project", cls._project.name):
+            try:
+                frappe.delete_doc("Project", cls._project.name, force=True, ignore_permissions=True)
+            except Exception:
+                frappe.db.rollback()
+        if cls._supplier and frappe.db.exists("Supplier", cls._supplier.name):
+            try:
+                frappe.delete_doc("Supplier", cls._supplier.name, force=True, ignore_permissions=True)
+            except Exception:
+                frappe.db.rollback()
+
+        # Restore Company "Elrefae" to its pre-test state
+        company = frappe.db.exists("Company", COMPANY)
+        if company:
+            doc = frappe.get_doc("Company", COMPANY)
+            if cls._company_existed:
+                doc.company_name_ar = cls._company_original_ar
+                doc.save(ignore_permissions=True)
+            else:
+                frappe.delete_doc("Company", COMPANY, force=True, ignore_permissions=True)
         frappe.db.commit()
 
     def _track(self, doctype, doc):
@@ -262,9 +309,7 @@ class TestBilingualTransactionPrint(unittest.TestCase):
                 "company": COMPANY,
                 "transaction_date": today(),
                 "schedule_date": add_days(today(), 7),
-                "items": [
-                    {"item_code": STOCK_ITEM, "qty": 5, "uom": UOM, "warehouse": WAREHOUSE}
-                ],
+                "items": [{"item_code": STOCK_ITEM, "qty": 5, "uom": UOM, "warehouse": WAREHOUSE}],
             }
         )
         html = _render("Material Request", mr.name, PRINT_FORMATS["bilingual_material_request"][0])

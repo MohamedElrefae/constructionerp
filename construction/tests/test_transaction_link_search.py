@@ -128,6 +128,7 @@ class TestTxtCorrectnessTrap(unittest.TestCase):
         calls = []
 
         import construction.services.transaction_link_search as mod
+
         real_func = mod.searchable_link_search
 
         def mock_search(doctype, txt="", **kwargs):
@@ -147,7 +148,9 @@ class TestTxtCorrectnessTrap(unittest.TestCase):
             # Transaction leg MUST have received txt="" to avoid the naming-series trap
             tx_calls = [c for c in calls if c["doctype"] == "Sales Order"]
             self.assertTrue(len(tx_calls) >= 1)
-            self.assertEqual(tx_calls[0]["txt"], "", "TRAP TRIGGERED: Transaction call received non-empty txt!")
+            self.assertEqual(
+                tx_calls[0]["txt"], "", "TRAP TRIGGERED: Transaction call received non-empty txt!"
+            )
             self.assertIn("customer", tx_calls[0]["kwargs"].get("filters", {}))
 
 
@@ -255,9 +258,7 @@ class TestInvariantGuard(unittest.TestCase):
 
     @classmethod
     def current_registry(cls):
-        return json.loads(
-            (cls.repo_dir() / cls.REGISTRY_PATH).read_text(encoding="utf-8")
-        )
+        return json.loads((cls.repo_dir() / cls.REGISTRY_PATH).read_text(encoding="utf-8"))
 
     @classmethod
     def state_rank(cls, state):
@@ -266,9 +267,7 @@ class TestInvariantGuard(unittest.TestCase):
     def test_code_diad_byte_identical_across_reference_commits(self):
         for c in self.COMMITS:
             for f in self.CODE_FILES:
-                diff = subprocess.check_output(
-                    ["git", "diff", c, "--", f], cwd=self.repo_dir()
-                ).decode()
+                diff = subprocess.check_output(["git", "diff", c, "--", f], cwd=self.repo_dir()).decode()
                 self.assertFalse(diff.strip(), f"Invariant diff found vs {c} on {f}")
 
     def test_registry_growth_is_monotonic(self):
@@ -279,9 +278,7 @@ class TestInvariantGuard(unittest.TestCase):
             if key == "doctypes":
                 continue
             self.assertIn(key, current, f"registry top-level block removed: {key}")
-            self.assertEqual(
-                current[key], value, f"registry top-level block mutated: {key}"
-            )
+            self.assertEqual(current[key], value, f"registry top-level block mutated: {key}")
 
         old_doctypes = baseline["doctypes"]
         new_doctypes = current["doctypes"]
@@ -301,14 +298,10 @@ class TestInvariantGuard(unittest.TestCase):
                         cur[field].get("enabled") or not value.get("enabled"),
                         f"{dt}: search disabled after being enabled",
                     )
-                    lost = set(value.get("fields") or []) - set(
-                        cur[field].get("fields") or []
-                    )
+                    lost = set(value.get("fields") or []) - set(cur[field].get("fields") or [])
                     self.assertFalse(lost, f"{dt}: search.fields lost {sorted(lost)}")
                 else:
-                    self.assertEqual(
-                        cur[field], value, f"{dt}: entry key '{field}' mutated"
-                    )
+                    self.assertEqual(cur[field], value, f"{dt}: entry key '{field}' mutated")
 
     def test_registry_growth_is_purely_additive_at_doctype_level(self):
         """Every doctype present at the baseline still exists (no silent drops)."""
@@ -342,9 +335,9 @@ class TestClientServerAllowListDrift(unittest.TestCase):
     def test_js_transactional_targets_match_server_config(self):
         """The client routing list must equal the server-authoritative allow-list."""
         repo_dir = Path(__file__).resolve().parents[2]
-        src = (
-            repo_dir / "construction/public/js/searchable_dropdown/searchable_dropdown.js"
-        ).read_text(encoding="utf-8")
+        src = (repo_dir / "construction/public/js/searchable_dropdown/searchable_dropdown.js").read_text(
+            encoding="utf-8"
+        )
         match = re.search(r"const transactionalTargets\s*=\s*\[(.*?)\]", src, re.S)
         self.assertIsNotNone(match, "transactionalTargets array not found in JS")
         js_targets = set(re.findall(r'"([^"]+)"', match.group(1)))

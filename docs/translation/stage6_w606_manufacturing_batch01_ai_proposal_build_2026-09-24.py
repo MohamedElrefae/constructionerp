@@ -1,4 +1,5 @@
 """Build proposal CSV for W6-6 Manufacturing Batch 01."""
+
 from __future__ import annotations
 
 import csv
@@ -47,22 +48,31 @@ for row in scope_rows:
     ar_ph = sorted(re.findall(r"\{[0-9]*\}", ar))
     assert src_ph == ar_ph, f"Placeholder mismatch for {src!r}: {src_ph} vs {ar_ph}"
 
-    proposal_rows.append({
-        "source_text": src,
-        "proposed_ar": ar,
-        "proposed_disposition": disp,
-        "disposition_rationale": rat,
-        "decision_ref": "stage6-W6-6 Manufacturing Batch 01 owner-approved 2026-09-24",
-        "locations": loc,
-    })
+    proposal_rows.append(
+        {
+            "source_text": src,
+            "proposed_ar": ar,
+            "proposed_disposition": disp,
+            "disposition_rationale": rat,
+            "decision_ref": "stage6-W6-6 Manufacturing Batch 01 owner-approved 2026-09-24",
+            "locations": loc,
+        }
+    )
 
 assert len(proposal_rows) == 250
 
 with OUT.open("w", encoding="utf-8", newline="") as handle:
-    writer = csv.DictWriter(handle, fieldnames=[
-        "source_text", "proposed_ar", "proposed_disposition",
-        "disposition_rationale", "decision_ref", "locations"
-    ])
+    writer = csv.DictWriter(
+        handle,
+        fieldnames=[
+            "source_text",
+            "proposed_ar",
+            "proposed_disposition",
+            "disposition_rationale",
+            "decision_ref",
+            "locations",
+        ],
+    )
     writer.writeheader()
     writer.writerows(proposal_rows)
 

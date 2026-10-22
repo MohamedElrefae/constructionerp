@@ -3,6 +3,7 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import flt
 
+from construction.services.boq_lookups import is_omitted_boq_item
 from construction.services.boq_pricing import positive_factor
 
 
@@ -39,7 +40,7 @@ class VOLine(Document):
                 frappe.throw(_("BOQ Item {0} does not exist.").format(self.boq_item))
             if item.boq_header != parent.boq_header:
                 frappe.throw(_("VO Line BOQ Item must belong to the selected BOQ Header."))
-            if flt(item.current_revised_qty if item.current_revised_qty is not None else item.quantity) <= 0:
+            if is_omitted_boq_item(item):
                 frappe.throw(_("Omitted BOQ Items cannot be selected for a new Variation Order line."))
 
             structure = frappe.db.get_value(

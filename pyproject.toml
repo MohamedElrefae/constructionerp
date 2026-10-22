@@ -16,9 +16,18 @@ dependencies = [
     # docs/ai/work-items/customer-release-gap-fixes/SECURITY_UPGRADE_PATH.md).
     # These pins must be applied as a coordinated framework upgrade; the
     # pre-v16.36 framework caps some of them below the advisory fix version.
+    #
+    # Pillow 13.0.0 (2026-10-21): owner-authorized PRIVATE, VERSIONED vendor
+    # divergence from pinned Frappe 2871914b (16.51.1). No upstream Frappe v16
+    # release declares Pillow~=13.0.0, so this app pin is only buildable against
+    # the private vendor commit recorded in
+    # docs/ai/work-items/dependency-security-remediation/PRIVATE_VENDOR_PILLOW13_DIVERGENCE_2026-10-21.md
+    # It is NOT an upstream-supported release. The framework floor below is
+    # deliberately unchanged.
+    "bleach~=6.4.0",
     "cryptography~=50.0.0",
     "pyOpenSSL~=26.4.0",
-    "Pillow~=12.3.0",
+    "Pillow~=13.0.0",
     "sqlparse~=0.6.0",
     "sql_metadata~=3.0.1",
 ]

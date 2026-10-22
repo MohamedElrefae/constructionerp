@@ -57,10 +57,7 @@ def run_report(name, filters, mode):
 
 
 def labels(out, limit=8):
-    return [
-        (c or {}).get("label")
-        for c in (out.get("columns") or [])[:limit]
-    ]
+    return [(c or {}).get("label") for c in (out.get("columns") or [])[:limit]]
 
 
 def main():
@@ -78,7 +75,7 @@ def main():
         for mode in ("ar", "en"):
             try:
                 out, elapsed = run_report(name, filters, mode)
-            except Exception as exc:  # noqa: BLE001 - probe must surface any failure
+            except Exception as exc:
                 print(f"REPORT {name} mode={mode}: FAIL {type(exc).__name__}: {exc}")
                 ok = False
                 continue

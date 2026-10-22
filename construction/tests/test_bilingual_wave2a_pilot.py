@@ -151,8 +151,18 @@ class TestBilingualWave2aPilot(unittest.TestCase):
         """Client-passed POISONED-KEY is overwritten with server-derived norm on save."""
         targets = [
             ("Item Group", "item_group_name_ar", "item_group_name_ar_norm", "مجموعة المواد الخام"),
-            ("Customer Group", "customer_group_name_ar", "customer_group_name_ar_norm", "عملاء المشاريع الحكومية"),
-            ("Supplier Group", "supplier_group_name_ar", "supplier_group_name_ar_norm", "موردو المعدات الثقيلة"),
+            (
+                "Customer Group",
+                "customer_group_name_ar",
+                "customer_group_name_ar_norm",
+                "عملاء المشاريع الحكومية",
+            ),
+            (
+                "Supplier Group",
+                "supplier_group_name_ar",
+                "supplier_group_name_ar_norm",
+                "موردو المعدات الثقيلة",
+            ),
             ("Territory", "territory_name_ar", "territory_name_ar_norm", "المنطقة الشرقية"),
             ("UOM", "uom_name_ar", "uom_name_ar_norm", "متر مكعب خرسانة"),
         ]
@@ -210,9 +220,27 @@ class TestBilingualWave2aPilot(unittest.TestCase):
         """Tree nodes preserve ASCII name, parent pointer, and retain Arabic and norm keys across renames."""
         # 1. Tree identity checks across the 4 classification trees
         trees = [
-            ("Item Group", "parent_item_group", "item_group_name", "item_group_name_ar", "مجموعة اختبار الشجرة"),
-            ("Customer Group", "parent_customer_group", "customer_group_name", "customer_group_name_ar", "فئة عملاء اختبار"),
-            ("Supplier Group", "parent_supplier_group", "supplier_group_name", "supplier_group_name_ar", "فئة موردين اختبار"),
+            (
+                "Item Group",
+                "parent_item_group",
+                "item_group_name",
+                "item_group_name_ar",
+                "مجموعة اختبار الشجرة",
+            ),
+            (
+                "Customer Group",
+                "parent_customer_group",
+                "customer_group_name",
+                "customer_group_name_ar",
+                "فئة عملاء اختبار",
+            ),
+            (
+                "Supplier Group",
+                "parent_supplier_group",
+                "supplier_group_name",
+                "supplier_group_name_ar",
+                "فئة موردين اختبار",
+            ),
             ("Territory", "parent_territory", "territory_name", "territory_name_ar", "منطقة اختبار الشجرة"),
         ]
         for dt, pf, name_field, ar_fn, test_label in trees:
@@ -239,8 +267,20 @@ class TestBilingualWave2aPilot(unittest.TestCase):
         # 2. Rename preservation across all five classification masters
         rename_targets = [
             ("Item Group", "item_group_name", "item_group_name_ar", "parent_item_group", "All Item Groups"),
-            ("Customer Group", "customer_group_name", "customer_group_name_ar", "parent_customer_group", "All Customer Groups"),
-            ("Supplier Group", "supplier_group_name", "supplier_group_name_ar", "parent_supplier_group", "All Supplier Groups"),
+            (
+                "Customer Group",
+                "customer_group_name",
+                "customer_group_name_ar",
+                "parent_customer_group",
+                "All Customer Groups",
+            ),
+            (
+                "Supplier Group",
+                "supplier_group_name",
+                "supplier_group_name_ar",
+                "parent_supplier_group",
+                "All Supplier Groups",
+            ),
             ("Territory", "territory_name", "territory_name_ar", "parent_territory", "All Territories"),
             ("UOM", "uom_name", "uom_name_ar", None, None),
         ]
@@ -293,10 +333,16 @@ class TestBilingualWave2aPilot(unittest.TestCase):
                 frappe.db.commit()
 
                 # Query with Alef variant (missing hamza)
-                query = "ادوات" if "أدوات" in canonical_ar else (
-                    "ادارة" if "إدارة" in canonical_ar else (
-                        "اجهزة" if "أجهزة" in canonical_ar else (
-                            "اقليم" if "إقليم" in canonical_ar else "امتار"
+                query = (
+                    "ادوات"
+                    if "أدوات" in canonical_ar
+                    else (
+                        "ادارة"
+                        if "إدارة" in canonical_ar
+                        else (
+                            "اجهزة"
+                            if "أجهزة" in canonical_ar
+                            else ("اقليم" if "إقليم" in canonical_ar else "امتار")
                         )
                     )
                 )

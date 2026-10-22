@@ -31,6 +31,7 @@ import time
 
 import frappe
 from frappe.desk.search import search_link
+
 from construction.searchable_dropdown.api.search import searchable_link_search
 
 ROUNDS = 5
@@ -82,8 +83,11 @@ def _ids(rows):
 # BOQ Header Fixtures
 # ─────────────────────────────────────────────────────────────────────────────
 
+
 def _delete_header_fixtures():
-    rows = frappe.get_all("BOQ Header", filters={"title": ["like", PREFIX_H + "%"]}, fields=["name"], limit_page_length=0)
+    rows = frappe.get_all(
+        "BOQ Header", filters={"title": ["like", PREFIX_H + "%"]}, fields=["name"], limit_page_length=0
+    )
     for r in rows:
         if frappe.db.exists("BOQ Header", r["name"]):
             frappe.delete_doc("BOQ Header", r["name"], force=True, ignore_permissions=True)
@@ -108,12 +112,14 @@ def _create_header_fixtures():
     ]
     created = []
     for i in range(FIXTURES_COUNT):
-        d = frappe.get_doc({
-            "doctype": "BOQ Header",
-            "project": "PROJ-0001",
-            "title": f"{PREFIX_H}Test-{i:02d}",
-            "title_ar": arabic_titles[i % len(arabic_titles)],
-        })
+        d = frappe.get_doc(
+            {
+                "doctype": "BOQ Header",
+                "project": "PROJ-0001",
+                "title": f"{PREFIX_H}Test-{i:02d}",
+                "title_ar": arabic_titles[i % len(arabic_titles)],
+            }
+        )
         d.insert(ignore_permissions=True)
         created.append(d.name)
     frappe.db.commit()
@@ -123,6 +129,7 @@ def _create_header_fixtures():
 # ─────────────────────────────────────────────────────────────────────────────
 # BOQ Structure Fixtures
 # ─────────────────────────────────────────────────────────────────────────────
+
 
 def _delete_structure_fixtures():
     leaves = frappe.get_all(
@@ -169,26 +176,30 @@ def _create_structure_fixtures(header_name):
 
     created = []
     for i in range(6):
-        g = frappe.get_doc({
-            "doctype": "BOQ Structure",
-            "boq_header": header_name,
-            "title": f"{PREFIX_S}Group-{i:02d}",
-            "title_ar": group_titles_ar[i],
-            "wbs_code": f"0{i+1}",
-            "is_group": 1,
-        })
+        g = frappe.get_doc(
+            {
+                "doctype": "BOQ Structure",
+                "boq_header": header_name,
+                "title": f"{PREFIX_S}Group-{i:02d}",
+                "title_ar": group_titles_ar[i],
+                "wbs_code": f"0{i+1}",
+                "is_group": 1,
+            }
+        )
         g.insert(ignore_permissions=True)
         created.append(g.name)
 
-        child = frappe.get_doc({
-            "doctype": "BOQ Structure",
-            "boq_header": header_name,
-            "title": f"{PREFIX_S}Item-{i:02d}",
-            "title_ar": item_titles_ar[i],
-            "wbs_code": f"0{i+1}.01",
-            "is_group": 0,
-            "parent_structure": g.name,
-        })
+        child = frappe.get_doc(
+            {
+                "doctype": "BOQ Structure",
+                "boq_header": header_name,
+                "title": f"{PREFIX_S}Item-{i:02d}",
+                "title_ar": item_titles_ar[i],
+                "wbs_code": f"0{i+1}.01",
+                "is_group": 0,
+                "parent_structure": g.name,
+            }
+        )
         child.insert(ignore_permissions=True)
         created.append(child.name)
 
@@ -199,6 +210,7 @@ def _create_structure_fixtures(header_name):
 # ─────────────────────────────────────────────────────────────────────────────
 # Measurement Engine (5 rounds x n=100)
 # ─────────────────────────────────────────────────────────────────────────────
+
 
 def _measure_doctype_multi_round(doctype, txt, baseline_fn, bilingual_fn):
     def timed(fn):
@@ -286,7 +298,9 @@ def _measure_doctype_multi_round(doctype, txt, baseline_fn, bilingual_fn):
         "bilingual_p95_ratio_of_baseline": ratio,
         "baseline_p95_over_bilingual_p95": round(min_base_p95 / min_bilin_p95, 4) if min_bilin_p95 else None,
         "tier": tier,
-        "relative_gate": "1.15x OK" if (tier == "2A" and relative_gate_pass) else ("1.50x OK" if relative_gate_pass else "FAIL"),
+        "relative_gate": "1.15x OK"
+        if (tier == "2A" and relative_gate_pass)
+        else ("1.50x OK" if relative_gate_pass else "FAIL"),
         "absolute_gate": "OK" if absolute_gate_pass else "FAIL",
         "order_balance": "alternating (even pair baseline-first, odd pair bilingual-first); GC paused during timed region",
     }
@@ -304,7 +318,9 @@ def run_header():
         )
     finally:
         _delete_header_fixtures()
-        leftover = frappe.get_all("BOQ Header", filters={"title": ["like", PREFIX_H + "%"]}, pluck="name", limit_page_length=0)
+        leftover = frappe.get_all(
+            "BOQ Header", filters={"title": ["like", PREFIX_H + "%"]}, pluck="name", limit_page_length=0
+        )
         cleanup = {"created": len(created), "leftover": leftover}
 
     return {
@@ -349,7 +365,9 @@ def run_structure():
         )
     finally:
         _delete_structure_fixtures()
-        leftover = frappe.get_all("BOQ Structure", filters={"title": ["like", PREFIX_S + "%"]}, pluck="name", limit_page_length=0)
+        leftover = frappe.get_all(
+            "BOQ Structure", filters={"title": ["like", PREFIX_S + "%"]}, pluck="name", limit_page_length=0
+        )
         cleanup = {"created": len(created), "leftover": leftover}
 
     return {

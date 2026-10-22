@@ -117,9 +117,7 @@ def main() -> None:
         ledger = list(csv.DictReader(fh))
 
     live = [
-        r
-        for r in ledger
-        if (r.get("skip") or "").strip().lower() != "yes" and (r.get("msgid") or "").strip()
+        r for r in ledger if (r.get("skip") or "").strip().lower() != "yes" and (r.get("msgid") or "").strip()
     ]
 
     stock_rows: list[dict] = []
@@ -145,18 +143,12 @@ def main() -> None:
     # exclusions/catalog/prior -> scope)
     b_html = [r for r in stock_rows if RE_HTML.search(r["msgid"])]
     k_html = {r["msgid"] for r in b_html}
-    b_nl = [
-        r
-        for r in stock_rows
-        if r["msgid"] not in k_html and ("\n" in r["msgid"] or "\r" in r["msgid"])
-    ]
+    b_nl = [r for r in stock_rows if r["msgid"] not in k_html and ("\n" in r["msgid"] or "\r" in r["msgid"])]
     k_nl = {r["msgid"] for r in b_nl}
     b_len = [
         r
         for r in stock_rows
-        if r["msgid"] not in k_html
-        and r["msgid"] not in k_nl
-        and len(r["msgid"]) > MAX_LEN
+        if r["msgid"] not in k_html and r["msgid"] not in k_nl and len(r["msgid"]) > MAX_LEN
     ]
     k_len = {r["msgid"] for r in b_len}
     rest = [
@@ -184,16 +176,12 @@ def main() -> None:
         r
         for r in rest
         if r["msgid"] not in k_catalog
-        and not any(
-            r["msgid"] in s
-            for s in (tech_excl, dedup_excl, b1, b2, w61, prior)
-        )
+        and not any(r["msgid"] in s for s in (tech_excl, dedup_excl, b1, b2, w61, prior))
     ]
 
     # identity
     assert (
-        len(b_html) + len(b_nl) + len(b_len) + len(b_catalog) + len(b_excl) + len(scope)
-        == raw_unique
+        len(b_html) + len(b_nl) + len(b_len) + len(b_catalog) + len(b_excl) + len(scope) == raw_unique
     ), "partition identity failed"
     assert raw_unique == 789, f"expected raw 789, got {raw_unique}"
     assert not b_catalog and not b_excl
@@ -259,16 +247,14 @@ def main() -> None:
     )
     # stripped-form collision watch (batch-01 Address precedent)
     cat_stripped = {k.strip() for k in catalog}
-    stripped_hits = sorted(
-        {k for k in scope_keys if k != k.strip() and k.strip() in cat_stripped}
-    )
+    stripped_hits = sorted({k for k in scope_keys if k != k.strip() and k.strip() in cat_stripped})
     print(f"  stripped-form catalog collisions    : {len(stripped_hits)} {stripped_hits}")
     print()
     print("proposed disposition breakdown (NOT yet quorum):")
     print(f"  PROPOSED-payload                    : {len(proposed_payload)}")
     print(f"  PROPOSED-EXCEPTION-technical        : {len(proposed_tech)}")
-    print(f"  preserved-site-override (cycle-time): unknown until site recon")
-    print(f"  already-released in scope           : 0")
+    print("  preserved-site-override (cycle-time): unknown until site recon")
+    print("  already-released in scope           : 0")
     print(f"  total scope                         : {len(scope)}")
     print(f"    pre-filled msgstr                 : {prefilled}")
     print(f"    unfilled (AI proposal at cycle)   : {len(scope) - prefilled}")

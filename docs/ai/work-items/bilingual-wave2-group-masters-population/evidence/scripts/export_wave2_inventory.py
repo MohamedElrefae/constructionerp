@@ -103,8 +103,7 @@ def main():
             )
         for r in sorted(classified["vendor_fixture"], key=lambda x: x["name"]):
             print(
-                f"  ROW VENDOR_FIXTURE name={r['name']!r} label={r[label_field]!r} "
-                f"arabic={r[ar_field]!r}"
+                f"  ROW VENDOR_FIXTURE name={r['name']!r} label={r[label_field]!r} " f"arabic={r[ar_field]!r}"
             )
         summary[doctype] = [
             len(rows),
@@ -119,7 +118,12 @@ def main():
     import erpnext
 
     erpnext_pkg = os.path.dirname(erpnext.__file__)
-    parent_fields = ("parent_item_group", "parent_customer_group", "parent_supplier_group", "parent_territory")
+    parent_fields = (
+        "parent_item_group",
+        "parent_customer_group",
+        "parent_supplier_group",
+        "parent_territory",
+    )
     seen_meta = set()
     for path in sorted(glob.glob(os.path.join(erpnext_pkg, "**", "doctype", "*", "*.json"), recursive=True)):
         meta_name = os.path.basename(path).rsplit(".", 1)[0]

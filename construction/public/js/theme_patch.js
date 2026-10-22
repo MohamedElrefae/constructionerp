@@ -83,8 +83,9 @@
 					window.ConstructionTheme.setMode(mode);
 					if (window.frappe.show_alert)
 						frappe.show_alert(
-							"Theme Changed to Construction " +
-								(mode === "dark" ? "Dark" : "Light"),
+							__("Theme changed to Construction {0}", [
+								mode === "dark" ? __("Dark") : __("Light"),
+							]),
 							2
 						);
 				} else {

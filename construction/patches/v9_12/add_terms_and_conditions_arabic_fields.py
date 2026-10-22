@@ -1,6 +1,5 @@
 import frappe
 
-
 TARGETS = (
     {
         "dt": "Terms and Conditions",

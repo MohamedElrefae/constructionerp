@@ -76,7 +76,7 @@ def main():
             f["to_date"] = frappe.utils.today()
         try:
             out, elapsed = run_report(name, f, "ar")
-        except Exception as exc:  # noqa: BLE001 - probe must surface any failure
+        except Exception as exc:
             print(f"REPORT {name}: FAIL {type(exc).__name__}: {exc}")
             ok = False
             continue
@@ -91,12 +91,8 @@ def main():
     tb_filters = dict(FILTERS["Trial Balance"])
     en_out, _ = run_report("Trial Balance", tb_filters, "en")
     ar_out, _ = run_report("Trial Balance", tb_filters, "ar")
-    en_labels = [
-        r.get("account") for r in en_out["data"] if isinstance(r, dict)
-    ][:6]
-    ar_labels = [
-        r.get("account") for r in ar_out["data"] if isinstance(r, dict)
-    ][:6]
+    en_labels = [r.get("account") for r in en_out["data"] if isinstance(r, dict)][:6]
+    ar_labels = [r.get("account") for r in ar_out["data"] if isinstance(r, dict)][:6]
     swapped = en_labels != ar_labels
     ok = ok and swapped
     print("TB_EN_LABELS:", json.dumps(en_labels, ensure_ascii=False))

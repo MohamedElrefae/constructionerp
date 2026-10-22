@@ -1,4 +1,5 @@
 """Read-only live-site reconciliation for the owner-approved W6-3 batch 03."""
+
 from __future__ import annotations
 
 import csv
@@ -53,17 +54,29 @@ def execute():
         "site_override_key_count": len(site_overrides),
         "site_overrides": preserved,
         "nonempty_non_site_override_keys": sorted(
-            key for key, found in matches.items()
+            key
+            for key, found in matches.items()
             if key not in site_overrides and any((row.translated_text or "").strip() for row in found)
         ),
         "catalog_key_count": sum(
-            any(bool(row.ct_is_catalog_entry) for row in found)
-            for found in matches.values()
+            any(bool(row.ct_is_catalog_entry) for row in found) for found in matches.values()
         ),
         "note": "Read-only exact-key snapshot from the authorized test site; Site Overrides are preserve-only under plan §12.",
     }
     OUT.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(json.dumps({key: result[key] for key in (
-        "scope_rows", "scope_keys_with_exact_match", "missing_keys",
-        "site_override_key_count", "catalog_key_count", "runtime_rows_scanned",
-    )}, ensure_ascii=False))
+    print(
+        json.dumps(
+            {
+                key: result[key]
+                for key in (
+                    "scope_rows",
+                    "scope_keys_with_exact_match",
+                    "missing_keys",
+                    "site_override_key_count",
+                    "catalog_key_count",
+                    "runtime_rows_scanned",
+                )
+            },
+            ensure_ascii=False,
+        )
+    )

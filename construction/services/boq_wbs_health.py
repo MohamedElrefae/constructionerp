@@ -4,6 +4,7 @@ from collections import Counter
 from typing import Any
 
 import frappe
+from frappe import _
 
 WBS_UNIQUE_CONSTRAINT_NAME = "unique_boq_header_wbs_code"
 WBS_UNIQUE_COLUMNS = ("boq_header", "wbs_code")
@@ -125,13 +126,15 @@ def ensure_wbs_unique_constraint() -> dict[str, Any]:
 
     report = run_wbs_health_check()
     if not report.get("healthy"):
-        frappe.throw("Cannot add BOQ Structure WBS unique constraint because WBS health check found issues.")
+        frappe.throw(
+            _("Cannot add BOQ Structure WBS unique constraint because WBS health check found issues.")
+        )
 
     existing_index = get_wbs_unique_index_name()
     if existing_index:
         return {"created": False, "index_name": existing_index, "health": report["summary"]}
 
-    frappe.db.sql(
+    frappe.db.sql(  # nosemgrep: frappe-sql-format-injection -- index name is the fixed module constant
         f"""
         ALTER TABLE `tabBOQ Structure`
         ADD UNIQUE KEY `{WBS_UNIQUE_CONSTRAINT_NAME}` (`boq_header`, `wbs_code`)

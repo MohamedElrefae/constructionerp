@@ -1209,7 +1209,6 @@ def test_open_finding_digests_uses_reproduction_digest():
 def test_decision_scope_token_schema_rejects_bad_payloads(configured):
     """T5: the schema itself refuses malformed DECISION tokens."""
     from jsonschema import ValidationError
-
     from validate import validate_document
 
     e = decision_gate(configured)
@@ -1334,15 +1333,12 @@ def test_roles_model_and_binary_are_pinned():
     roles = json.loads((root / "orchestrator/roles.json").read_text())
     locked = json.loads((root / "orchestrator/roles.lock.json").read_text())["roles"]
 
-    assert set(roles) == set(locked), (
-        f"role set differs from lock: {sorted(set(roles) ^ set(locked))}"
-    )
+    assert set(roles) == set(locked), f"role set differs from lock: {sorted(set(roles) ^ set(locked))}"
     for name, expected in locked.items():
         actual = roles[name]
         for field in ("tool", "binary", "model"):
             assert actual[field] == expected[field], (
-                f"{name}.{field} drifted from committed pin: "
-                f"{actual[field]!r} != {expected[field]!r}"
+                f"{name}.{field} drifted from committed pin: " f"{actual[field]!r} != {expected[field]!r}"
             )
 
 
@@ -1415,7 +1411,7 @@ def test_evidence_directory_may_be_read_only_context(configured):
         e.initialize(config)
         assert e.config["read_only_context_paths"] == config["read_only_context_paths"]
         assert "AGENTS.md" not in e.config["generated"]
-        assert e.config["generated"][3] == "docs/ai/work-items/%s/evidence/" % config["work_item"]
+        assert e.config["generated"][3] == f"docs/ai/work-items/{config['work_item']}/evidence/"
     finally:
         e.close()
 
@@ -1425,7 +1421,7 @@ def test_generated_scratch_paths_still_reject_read_only_context(configured):
     root, config = configured
     (root / "AGENTS.md").write_text("# agent context\n")
     (root / "SESSION_MEMORY.md").write_text("# session memory\n")
-    work_rel = "docs/ai/work-items/%s" % config["work_item"]
+    work_rel = f"docs/ai/work-items/{config['work_item']}"
     for forbidden in (work_rel + "/runs/job-1", work_rel + "/inbox/x", work_rel + "/STATE.json"):
         cfg = dict(config)
         cfg["read_only_context_paths"] = ["AGENTS.md", "SESSION_MEMORY.md", forbidden]
@@ -1540,9 +1536,11 @@ def test_blocked_owner_decision_captures_retry_role(configured):
         assert v["pause_reason"] == "OWNER_DECISION"
         assert v["prior"]["next_roles"] == ["builder"], v["prior"]
         assert v["attempt"] == 2, v["attempt"]
+
         def builder_results():
             return [
-                ev for ev in e.store.events()
+                ev
+                for ev in e.store.events()
                 if ev["kind"] == "result" and ev["payload"].get("role") == "builder"
             ]
 

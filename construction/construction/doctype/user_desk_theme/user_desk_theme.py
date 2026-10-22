@@ -11,6 +11,8 @@ class UserDeskTheme(Document):
 
     def validate(self):
         """Validate user theme settings"""
+        self.validate_user_ownership()
+
         # Check if user override is allowed
         try:
             site_settings = frappe.get_doc("Modern Theme Settings")
@@ -32,6 +34,15 @@ class UserDeskTheme(Document):
             frappe.throw(_("User '{0}' does not exist").format(self.user))
 
         self.validate_typography()
+
+    def validate_user_ownership(self):
+        """Keep ordinary users' theme preferences attached to their own account."""
+        current_user = frappe.session.user
+        if current_user == "Administrator" or "System Manager" in frappe.get_roles(current_user):
+            return
+
+        if current_user in ("", "Guest") or self.user != current_user:
+            frappe.throw(_("Not permitted"), frappe.PermissionError)
 
     def validate_typography(self):
         """Keep typography values in a small, safe range."""

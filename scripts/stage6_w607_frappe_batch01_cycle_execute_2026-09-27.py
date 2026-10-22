@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Cycle execution script for Stage 6 W6-7 Frappe Framework Remainder Batch 01 (250 rows)."""
+
 from __future__ import annotations
 
 import csv
@@ -28,17 +29,42 @@ APPROVED_BEFORE_SHA = "d8dd39618b980bb1d92a7ab9f030e7d0080889efc78635a6b7f1a6cf1
 DECISIONS_BEFORE_SHA = "7474fc1314ca031fa3d461898718e38f70bb2fe279d58aa3d3ecc681f9454c51"
 
 REVIEWERS = (
-    {"id": "AI-A1", "session": "587ab6c8-7f50-4429-aa68-1eaa4577cc29", "path": "docs/ai/work-items/scope-context-portability/evidence/stage6-w607-ai-a1-frappe-batch01-2026-09-27.md"},
-    {"id": "AI-A2", "session": "94a20e4c-f986-47ca-bc06-624f0cdfd642", "path": "docs/ai/work-items/scope-context-portability/evidence/stage6-w607-ai-a2-frappe-batch01-2026-09-27.md"},
-    {"id": "AI-A3", "session": "23b5b2db-a2e8-44b6-966b-d2eb63a7ddaf", "path": "docs/ai/work-items/scope-context-portability/evidence/stage6-w607-ai-a3-frappe-batch01-2026-09-27.md"},
+    {
+        "id": "AI-A1",
+        "session": "587ab6c8-7f50-4429-aa68-1eaa4577cc29",
+        "path": "docs/ai/work-items/scope-context-portability/evidence/stage6-w607-ai-a1-frappe-batch01-2026-09-27.md",
+    },
+    {
+        "id": "AI-A2",
+        "session": "94a20e4c-f986-47ca-bc06-624f0cdfd642",
+        "path": "docs/ai/work-items/scope-context-portability/evidence/stage6-w607-ai-a2-frappe-batch01-2026-09-27.md",
+    },
+    {
+        "id": "AI-A3",
+        "session": "23b5b2db-a2e8-44b6-966b-d2eb63a7ddaf",
+        "path": "docs/ai/work-items/scope-context-portability/evidence/stage6-w607-ai-a3-frappe-batch01-2026-09-27.md",
+    },
 )
 VERSION = "1.17"
 DOMAIN = "frappe"
 FIELDS = [
-    "language", "source_text", "context", "ct_app", "translated_text", "domain",
-    "release_status", "release_version", "a1_reviewer", "a1_approved_at",
-    "a2_reviewer", "a2_approved_at", "a3_reviewer", "a3_approved_at",
-    "references", "notes", "decision_ref",
+    "language",
+    "source_text",
+    "context",
+    "ct_app",
+    "translated_text",
+    "domain",
+    "release_status",
+    "release_version",
+    "a1_reviewer",
+    "a1_approved_at",
+    "a2_reviewer",
+    "a2_approved_at",
+    "a3_reviewer",
+    "a3_approved_at",
+    "references",
+    "notes",
+    "decision_ref",
 ]
 
 
@@ -75,7 +101,10 @@ def main():
     }
     site_map = {row["source_text"]: row["translated_text"] for row in recon["site_overrides"]}
     assert len(site_map) == 1
-    assert all(row["proposed_translation"] == site_map[row["source_text"]] for row in dispositions["preserved-site-override"])
+    assert all(
+        row["proposed_translation"] == site_map[row["source_text"]]
+        for row in dispositions["preserved-site-override"]
+    )
 
     for reviewer in REVIEWERS:
         report = (ROOT / reviewer["path"]).read_text(encoding="utf-8")
@@ -99,25 +128,27 @@ def main():
     for row in dispositions["PROPOSED-payload"]:
         source = row["source_text"]
         arabic = row["proposed_translation"]
-        released_rows.append({
-            "language": "ar",
-            "source_text": source.strip(),
-            "context": (row.get("context") or "").strip(),
-            "ct_app": "frappe",
-            "translated_text": arabic.strip(),
-            "domain": DOMAIN,
-            "release_status": "Released",
-            "release_version": VERSION,
-            "a1_reviewer": reviewer_names["AI-A1"],
-            "a1_approved_at": now,
-            "a2_reviewer": reviewer_names["AI-A2"],
-            "a2_approved_at": now,
-            "a3_reviewer": reviewer_names["AI-A3"],
-            "a3_approved_at": now,
-            "references": scope_loc_map.get(source, "").strip(),
-            "notes": "Owner approved W6-7 Frappe framework Batch 01 on test site v16.localhost",
-            "decision_ref": "",
-        })
+        released_rows.append(
+            {
+                "language": "ar",
+                "source_text": source.strip(),
+                "context": (row.get("context") or "").strip(),
+                "ct_app": "frappe",
+                "translated_text": arabic.strip(),
+                "domain": DOMAIN,
+                "release_status": "Released",
+                "release_version": VERSION,
+                "a1_reviewer": reviewer_names["AI-A1"],
+                "a1_approved_at": now,
+                "a2_reviewer": reviewer_names["AI-A2"],
+                "a2_approved_at": now,
+                "a3_reviewer": reviewer_names["AI-A3"],
+                "a3_approved_at": now,
+                "references": scope_loc_map.get(source, "").strip(),
+                "notes": "Owner approved W6-7 Frappe framework Batch 01 on test site v16.localhost",
+                "decision_ref": "",
+            }
+        )
     assert len(released_rows) == 247
 
     # Applied payload rows (exact 250 rows matching scope)
@@ -137,15 +168,17 @@ def main():
             arabic = ""
             applied = "NO (technical exclusion)"
 
-        applied_rows.append({
-            "source_text": row["source_text"],
-            "context": row.get("context", ""),
-            "proposed_translation": row["proposed_translation"],
-            "final_translation": arabic,
-            "final_disposition": final_disp,
-            "applied": applied,
-            "review_comments": row.get("review_comments", ""),
-        })
+        applied_rows.append(
+            {
+                "source_text": row["source_text"],
+                "context": row.get("context", ""),
+                "proposed_translation": row["proposed_translation"],
+                "final_translation": arabic,
+                "final_disposition": final_disp,
+                "applied": applied,
+                "review_comments": row.get("review_comments", ""),
+            }
+        )
 
     with PAYLOAD.open("w", encoding="utf-8", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=list(applied_rows[0].keys()))
@@ -180,7 +213,10 @@ def main():
             "release_version": r["release_version"],
             "references": r["references"],
             "proposal": {"arabic": value, "sha256": hashlib.sha256(f"{source}|{value}".encode()).hexdigest()},
-            "verdicts": {role: {"decision": "approve", "confidence": "high", "session": reviewer_names[role]} for role in ("AI-A1", "AI-A2", "AI-A3")},
+            "verdicts": {
+                role: {"decision": "approve", "confidence": "high", "session": reviewer_names[role]}
+                for role in ("AI-A1", "AI-A2", "AI-A3")
+            },
             "artifacts": refs,
         }
     assert len(new_decisions) == 247
@@ -189,7 +225,9 @@ def main():
     assert len(old_decisions) == 3847 + 247 == 4094
     decision_doc["generated_utc"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     decision_doc["note"] = "W6-7 Frappe framework Batch 01 decisions added; content-evidence bound."
-    DECISIONS.write_text(json.dumps(decision_doc, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    DECISIONS.write_text(
+        json.dumps(decision_doc, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
 
     approved_all = approved + released_rows
     assert len(approved_all) == 4094
@@ -198,7 +236,7 @@ def main():
         writer.writeheader()
         writer.writerows(approved_all)
 
-    print(f"Cycle execution complete:")
+    print("Cycle execution complete:")
     print(f"  Payload rows: {PAYLOAD} ({len(applied_rows)} rows, sha256: {sha256(PAYLOAD)})")
     print(f"  Released list: {RELEASED} ({len(released_rows)} rows, sha256: {sha256(RELEASED)})")
     print(f"  Content evidence: {EVIDENCE} ({len(released_rows)} rows, sha256: {evidence_sha})")

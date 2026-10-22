@@ -1,4 +1,5 @@
 import frappe
+from frappe.desk.search import build_for_autosuggest
 from frappe.tests.utils import FrappeTestCase
 
 from construction.api.boq_link_queries import (
@@ -10,7 +11,6 @@ from construction.api.boq_link_queries import (
     get_scope_projects,
 )
 from construction.services.scope_resolution import get_scope_token
-from frappe.desk.search import build_for_autosuggest
 
 
 class TestBOQLinkQueries(FrappeTestCase):
@@ -361,28 +361,52 @@ class TestBOQLinkQueries(FrappeTestCase):
 
         # 1. Exact match on raw title_ar
         rows = get_boq_structures(
-            "BOQ Structure", "الخرسانة", "name", 0, 20, {"boq_header": self.draft_header.name}, enforce_scope=True
+            "BOQ Structure",
+            "الخرسانة",
+            "name",
+            0,
+            20,
+            {"boq_header": self.draft_header.name},
+            enforce_scope=True,
         )
         names = {row[0] for row in rows}
         self.assertIn(arabic_structure.name, names)
 
         # 2. Normalized match with Alef variant (اعمال instead of أعمال)
         rows_norm = get_boq_structures(
-            "BOQ Structure", "اعمال الخرسانة", "name", 0, 20, {"boq_header": self.draft_header.name}, enforce_scope=True
+            "BOQ Structure",
+            "اعمال الخرسانة",
+            "name",
+            0,
+            20,
+            {"boq_header": self.draft_header.name},
+            enforce_scope=True,
         )
         names_norm = {row[0] for row in rows_norm}
         self.assertIn(arabic_structure.name, names_norm)
 
         # 3. Normalized match with tatweel
         rows_tatweel = get_boq_structures(
-            "BOQ Structure", "الخرســــانة", "name", 0, 20, {"boq_header": self.draft_header.name}, enforce_scope=True
+            "BOQ Structure",
+            "الخرســــانة",
+            "name",
+            0,
+            20,
+            {"boq_header": self.draft_header.name},
+            enforce_scope=True,
         )
         names_tatweel = {row[0] for row in rows_tatweel}
         self.assertIn(arabic_structure.name, names_tatweel)
 
         # 4. Fail-closed: non-matching Arabic returns nothing
         rows_mismatch = get_boq_structures(
-            "BOQ Structure", "دهانات", "name", 0, 20, {"boq_header": self.draft_header.name}, enforce_scope=True
+            "BOQ Structure",
+            "دهانات",
+            "name",
+            0,
+            20,
+            {"boq_header": self.draft_header.name},
+            enforce_scope=True,
         )
         names_mismatch = {row[0] for row in rows_mismatch}
         self.assertNotIn(arabic_structure.name, names_mismatch)

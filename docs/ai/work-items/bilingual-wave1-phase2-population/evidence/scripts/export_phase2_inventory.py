@@ -46,10 +46,7 @@ TRIO = {
 
 def vendor_fixture(name, label):
     probes = (name, label or "")
-    return any(
-        p.startswith(("_Test", "Test", "CT-TEST", "TEST-"))
-        for p in probes
-    )
+    return any(p.startswith(("_Test", "Test", "CT-TEST", "TEST-")) for p in probes)
 
 
 def main():
@@ -89,9 +86,7 @@ def main():
         if already:
             fail.append(f"{doctype}: in-scope rows already populated pre-cycle: {already}")
 
-        missing_company = [
-            r["name"] for r in rows if r.get("company") is None
-        ]
+        missing_company = [r["name"] for r in rows if r.get("company") is None]
         print(
             f"{doctype.replace(' ', '_').upper()} total={len(rows)} "
             f"in_scope={len(classified['in_scope'])} "
@@ -107,19 +102,15 @@ def main():
             )
         for r in sorted(classified["vendor_fixture"], key=lambda x: x["name"]):
             print(
-                f"  ROW VENDOR_FIXTURE name={r['name']!r} label={r[label_field]!r} "
-                f"arabic={r[ar_field]!r}"
+                f"  ROW VENDOR_FIXTURE name={r['name']!r} label={r[label_field]!r} " f"arabic={r[ar_field]!r}"
             )
-        others = sorted(
-            (r["company"], r["name"]) for r in classified["other_company"]
-        )
+        others = sorted((r["company"], r["name"]) for r in classified["other_company"])
         by_company = {}
         for company, name in others:
             by_company.setdefault(company, []).append(name)
         for company in sorted(by_company):
             print(
-                f"  OTHER_COMPANY {company!r} rows={len(by_company[company])} "
-                f"names={by_company[company]}"
+                f"  OTHER_COMPANY {company!r} rows={len(by_company[company])} " f"names={by_company[company]}"
             )
         summary[doctype] = [
             len(rows),

@@ -1,4 +1,5 @@
 """UAT Preflight and Playwright browser evidence runner with atomic teardown for W6-6 EDI."""
+
 from __future__ import annotations
 
 import secrets
@@ -31,7 +32,9 @@ frappe.destroy()
 print("Administrator configured with temp password and language=ar")
 """
 
-res = subprocess.run([PYTHON, "-c", setup_cmd], capture_output=True, text=True, cwd="/home/mohamed/frappe-bench")
+res = subprocess.run(
+    [PYTHON, "-c", setup_cmd], capture_output=True, text=True, cwd="/home/mohamed/frappe-bench"
+)
 print(res.stdout)
 if res.returncode != 0:
     print(res.stderr)
@@ -42,11 +45,16 @@ try:
     print("Running uat_preflight.py...")
     preflight_proc = subprocess.run(
         [
-            PYTHON, str(ROOT / "scripts/uat_preflight.py"),
-            "--site", "v16.localhost",
-            "--user", "Administrator",
-            "--key", "Canonical URI",
-            "--min-messages", "1000",
+            PYTHON,
+            str(ROOT / "scripts/uat_preflight.py"),
+            "--site",
+            "v16.localhost",
+            "--user",
+            "Administrator",
+            "--key",
+            "Canonical URI",
+            "--min-messages",
+            "1000",
         ],
         input=temp_password + "\n",
         text=True,
@@ -94,7 +102,9 @@ except Exception as e:
 frappe.destroy()
 print("Teardown complete: language='en', password rotated.")
 """
-    t_res = subprocess.run([PYTHON, "-c", teardown_cmd], capture_output=True, text=True, cwd="/home/mohamed/frappe-bench")
+    t_res = subprocess.run(
+        [PYTHON, "-c", teardown_cmd], capture_output=True, text=True, cwd="/home/mohamed/frappe-bench"
+    )
     print(t_res.stdout)
 
 print("UAT Preflight and Browser verification completed successfully!")

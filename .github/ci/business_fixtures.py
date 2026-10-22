@@ -17,7 +17,6 @@ import os
 
 import frappe
 
-
 COMPANY_NAME = "_Test Company"
 COMPANY_ABBR = "_TC"
 COMPANY_CURRENCY = "INR"

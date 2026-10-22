@@ -1,4 +1,5 @@
 """Read-only live Translation reconciliation for proposed W6-6 Manufacturing Batch 02 scope."""
+
 from __future__ import annotations
 
 import csv
@@ -30,15 +31,19 @@ try:
         "Translation",
         filters={"language": "ar", "ct_is_catalog_entry": 0},
         fields=[
-            "name", "source_text", "translated_text", "context", "ct_origin",
-            "ct_app", "ct_release_version", "ct_is_catalog_entry",
+            "name",
+            "source_text",
+            "translated_text",
+            "context",
+            "ct_origin",
+            "ct_app",
+            "ct_release_version",
+            "ct_is_catalog_entry",
         ],
         limit_page_length=0,
     )
     matches = [
-        row for row in rows
-        if (row.source_text or "").strip() in normalized_keys
-        and not (row.context or "")
+        row for row in rows if (row.source_text or "").strip() in normalized_keys and not (row.context or "")
     ]
     by_key: dict[str, list] = {key: [] for key in keys}
     for row in matches:

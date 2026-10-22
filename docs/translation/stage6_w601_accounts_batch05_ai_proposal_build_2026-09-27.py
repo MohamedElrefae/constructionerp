@@ -1,12 +1,13 @@
 """Build proposal CSV for W6-1 Accounts Batch 05."""
+
 from __future__ import annotations
 
 import csv
 import hashlib
 import json
 import re
-from pathlib import Path
 import sys
+from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 if str(SCRIPT_DIR) not in sys.path:
@@ -65,31 +66,45 @@ for row in scope_rows:
         # Verification: check leading/trailing whitespace affix parity
         src_leading = len(src) - len(src.lstrip())
         ar_leading = len(ar) - len(ar.lstrip())
-        assert src_leading == ar_leading, f"Leading whitespace mismatch for {src!r}: {src_leading} vs {ar_leading}"
+        assert (
+            src_leading == ar_leading
+        ), f"Leading whitespace mismatch for {src!r}: {src_leading} vs {ar_leading}"
 
         src_trailing = len(src) - len(src.rstrip())
         ar_trailing = len(ar) - len(ar.rstrip())
-        assert src_trailing == ar_trailing, f"Trailing whitespace mismatch for {src!r}: {src_trailing} vs {ar_trailing}"
+        assert (
+            src_trailing == ar_trailing
+        ), f"Trailing whitespace mismatch for {src!r}: {src_trailing} vs {ar_trailing}"
 
         assert "\n" not in ar and "\r" not in ar, f"Newline in translation for {src!r}"
         assert ar != src, f"Source-equal translation for {src!r}"
 
-    proposal_rows.append({
-        "source_text": src,
-        "proposed_ar": ar,
-        "proposed_disposition": disp,
-        "disposition_rationale": rat,
-        "decision_ref": "stage6-W6-1 Accounts Batch 05 pending-owner-approval 2026-09-27",
-        "locations": loc,
-    })
+    proposal_rows.append(
+        {
+            "source_text": src,
+            "proposed_ar": ar,
+            "proposed_disposition": disp,
+            "disposition_rationale": rat,
+            "decision_ref": "stage6-W6-1 Accounts Batch 05 pending-owner-approval 2026-09-27",
+            "locations": loc,
+        }
+    )
 
 assert len(proposal_rows) == 56
 
 with OUT.open("w", encoding="utf-8", newline="") as handle:
-    writer = csv.DictWriter(handle, fieldnames=[
-        "source_text", "proposed_ar", "proposed_disposition",
-        "disposition_rationale", "decision_ref", "locations"
-    ], lineterminator="\n")
+    writer = csv.DictWriter(
+        handle,
+        fieldnames=[
+            "source_text",
+            "proposed_ar",
+            "proposed_disposition",
+            "disposition_rationale",
+            "decision_ref",
+            "locations",
+        ],
+        lineterminator="\n",
+    )
     writer.writeheader()
     writer.writerows(proposal_rows)
 

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Cycle execution script for Stage 6 W6-6 EDI Remainder (26 rows)."""
+
 from __future__ import annotations
 
 import csv
@@ -28,25 +29,53 @@ APPROVED_BEFORE_SHA = "2433317e119298dd8d611b6ab7d1043866a76d4008326e4295d5bedf6
 DECISIONS_BEFORE_SHA = "4df47fb2541916efb8239536c075376a10838e4f11710a50c5cd664faa8076c6"
 
 REVIEWERS = (
-    {"id": "AI-A1", "session": "5a0de693-30d2-4e43-b9db-e83f33c99629", "path": "docs/ai/work-items/scope-context-portability/evidence/stage6-w606-ai-a1-edi-2026-09-27.md"},
-    {"id": "AI-A2", "session": "a16d4be2-b4f6-4649-949a-d5b77bd6267c", "path": "docs/ai/work-items/scope-context-portability/evidence/stage6-w606-ai-a2-edi-2026-09-27.md"},
-    {"id": "AI-A3", "session": "79f75948-125f-423e-996a-e1891d85b9d3", "path": "docs/ai/work-items/scope-context-portability/evidence/stage6-w606-ai-a3-edi-2026-09-27.md"},
+    {
+        "id": "AI-A1",
+        "session": "5a0de693-30d2-4e43-b9db-e83f33c99629",
+        "path": "docs/ai/work-items/scope-context-portability/evidence/stage6-w606-ai-a1-edi-2026-09-27.md",
+    },
+    {
+        "id": "AI-A2",
+        "session": "a16d4be2-b4f6-4649-949a-d5b77bd6267c",
+        "path": "docs/ai/work-items/scope-context-portability/evidence/stage6-w606-ai-a2-edi-2026-09-27.md",
+    },
+    {
+        "id": "AI-A3",
+        "session": "79f75948-125f-423e-996a-e1891d85b9d3",
+        "path": "docs/ai/work-items/scope-context-portability/evidence/stage6-w606-ai-a3-edi-2026-09-27.md",
+    },
 )
 VERSION = "1.16"
 DOMAIN = "edi"
 FIELDS = [
-    "language", "source_text", "context", "ct_app", "translated_text", "domain",
-    "release_status", "release_version", "a1_reviewer", "a1_approved_at",
-    "a2_reviewer", "a2_approved_at", "a3_reviewer", "a3_approved_at",
-    "references", "notes", "decision_ref",
+    "language",
+    "source_text",
+    "context",
+    "ct_app",
+    "translated_text",
+    "domain",
+    "release_status",
+    "release_version",
+    "a1_reviewer",
+    "a1_approved_at",
+    "a2_reviewer",
+    "a2_approved_at",
+    "a3_reviewer",
+    "a3_approved_at",
+    "references",
+    "notes",
+    "decision_ref",
 ]
+
 
 def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
+
 def read_rows(path: Path) -> list[dict[str, str]]:
     with path.open(encoding="utf-8", newline="") as handle:
         return list(csv.DictReader(handle))
+
 
 def main():
     assert sha256(SCOPE) == SCOPE_SHA, f"Scope mismatch: {sha256(SCOPE)}"
@@ -71,7 +100,10 @@ def main():
     }
     site_map = {row["source_text"]: row["translated_text"] for row in recon["site_overrides"]}
     assert len(site_map) == 9
-    assert all(row["proposed_translation"] == site_map[row["source_text"]] for row in dispositions["preserved-site-override"])
+    assert all(
+        row["proposed_translation"] == site_map[row["source_text"]]
+        for row in dispositions["preserved-site-override"]
+    )
 
     for reviewer in REVIEWERS:
         report = (ROOT / reviewer["path"]).read_text(encoding="utf-8")
@@ -95,25 +127,27 @@ def main():
     for row in dispositions["PROPOSED-payload"]:
         source = row["source_text"]
         arabic = row["proposed_translation"]
-        released_rows.append({
-            "language": "ar",
-            "source_text": source.strip(),
-            "context": "",
-            "ct_app": "erpnext",
-            "translated_text": arabic.strip(),
-            "domain": DOMAIN,
-            "release_status": "Released",
-            "release_version": VERSION,
-            "a1_reviewer": reviewer_names["AI-A1"],
-            "a1_approved_at": now,
-            "a2_reviewer": reviewer_names["AI-A2"],
-            "a2_approved_at": now,
-            "a3_reviewer": reviewer_names["AI-A3"],
-            "a3_approved_at": now,
-            "references": scope_loc_map.get(source, ""),
-            "notes": "Owner approved W6-6 EDI remainder on test site v16.localhost",
-            "decision_ref": "",
-        })
+        released_rows.append(
+            {
+                "language": "ar",
+                "source_text": source.strip(),
+                "context": "",
+                "ct_app": "erpnext",
+                "translated_text": arabic.strip(),
+                "domain": DOMAIN,
+                "release_status": "Released",
+                "release_version": VERSION,
+                "a1_reviewer": reviewer_names["AI-A1"],
+                "a1_approved_at": now,
+                "a2_reviewer": reviewer_names["AI-A2"],
+                "a2_approved_at": now,
+                "a3_reviewer": reviewer_names["AI-A3"],
+                "a3_approved_at": now,
+                "references": scope_loc_map.get(source, ""),
+                "notes": "Owner approved W6-6 EDI remainder on test site v16.localhost",
+                "decision_ref": "",
+            }
+        )
     assert len(released_rows) == 17
 
     evidence_lines = "".join(r["source_text"] + "\t" + r["translated_text"] + "\n" for r in released_rows)
@@ -142,7 +176,10 @@ def main():
             "release_version": r["release_version"],
             "references": r["references"],
             "proposal": {"arabic": value, "sha256": hashlib.sha256(f"{source}|{value}".encode()).hexdigest()},
-            "verdicts": {role: {"decision": "approve", "confidence": "high", "session": reviewer_names[role]} for role in ("AI-A1", "AI-A2", "AI-A3")},
+            "verdicts": {
+                role: {"decision": "approve", "confidence": "high", "session": reviewer_names[role]}
+                for role in ("AI-A1", "AI-A2", "AI-A3")
+            },
             "artifacts": refs,
         }
     assert len(new_decisions) == 17
@@ -151,7 +188,9 @@ def main():
     assert len(old_decisions) == 3830 + 17 == 3847
     decision_doc["generated_utc"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     decision_doc["note"] = "W6-6 EDI remainder decisions added; content-evidence bound."
-    DECISIONS.write_text(json.dumps(decision_doc, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    DECISIONS.write_text(
+        json.dumps(decision_doc, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
 
     approved_all = approved + released_rows
     assert len(approved_all) == 3847
@@ -162,6 +201,7 @@ def main():
 
     print(f"Catalog expanded to {len(approved_all)} rows (SHA: {sha256(APPROVED)})")
     print(f"Decisions expanded to {len(old_decisions)} decisions (SHA: {sha256(DECISIONS)})")
+
 
 if __name__ == "__main__":
     main()

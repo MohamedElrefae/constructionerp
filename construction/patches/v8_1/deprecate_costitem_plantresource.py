@@ -68,6 +68,7 @@ def _deprecate_costitem_records():
 def _table_row_count(table_name):
     if not frappe.db.table_exists(table_name):
         return 0
+    # nosemgrep: frappe-sql-format-injection -- private helper has only two fixed legacy-table callers
     rows = frappe.db.sql(f"SELECT COUNT(*) as cnt FROM `{table_name}`", as_dict=True)
     return rows[0]["cnt"] if rows else 0
 

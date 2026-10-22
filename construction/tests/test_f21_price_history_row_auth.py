@@ -337,8 +337,9 @@ class TestPriceHistoryWithheldInEveryForm(FrappeTestCase):
                 }
             ).insert(ignore_permissions=True)
         if not frappe.db.exists("User Scope Context", {"user": self.user}):
-            frappe.get_doc({"doctype": "User Scope Context", "user": self.user,
-                            "company": self.company}).insert(ignore_permissions=True)
+            frappe.get_doc(
+                {"doctype": "User Scope Context", "user": self.user, "company": self.company}
+            ).insert(ignore_permissions=True)
         frappe.set_user(self.user)
         clear_request_cache()
 

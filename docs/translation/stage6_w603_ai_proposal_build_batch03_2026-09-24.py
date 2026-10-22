@@ -3,6 +3,7 @@
 This proposal-only builder is pinned to the owner-approved batch SHA. It does
 not modify the managed catalog, release decisions, or the test site.
 """
+
 from __future__ import annotations
 
 import csv
@@ -72,7 +73,7 @@ A = {
     "Stock Closing Entry {0} has been queued for processing, system will take sometime to complete it.": "تم وضع قيد إقفال المخزون {0} في قائمة المعالجة؛ سيستغرق النظام بعض الوقت لإكماله.",
     "Stock Entries already created for Work Order {0}: {1}": "تم إنشاء قيود المخزون لأمر العمل {0} بالفعل: {1}",
     "Stock Ledger Entries and GL Entries are reposted for the selected Purchase Receipts": "أُعيد ترحيل قيود دفتر الأستاذ المخزني وقيود الأستاذ العام لسندات استلام الشراء المحددة",
-    "Stock Ledgers won’t be reposted.": "لن يُعاد ترحيل قيود دفتر الأستاذ المخزني.",
+    "Stock Ledgers won’t be reposted.": "لن يُعاد ترحيل قيود دفتر الأستاذ المخزني.",  # noqa: RUF001 -- preserve the catalog wording
     "Stock Reservation Entry cannot be updated as it has been delivered.": "لا يمكن تحديث قيد حجز المخزون بعد تسليم الكمية المحجوزة.",
     "Stock Reservation can only be created against {0}.": "لا يمكن إنشاء حجز المخزون إلا مقابل {0}.",
     "Stock cannot be reserved in group warehouse {0}.": "لا يمكن حجز المخزون في المستودع التجميعي {0}.",
@@ -151,31 +152,56 @@ def main() -> None:
     placeholder = re.compile(r"\{[^{}]*\}")
     for src, dst in A.items():
         assert dst and dst != src
-        assert sorted(placeholder.findall(src)) == sorted(placeholder.findall(dst)), f"placeholder mismatch: {src!r}"
+        assert sorted(placeholder.findall(src)) == sorted(
+            placeholder.findall(dst)
+        ), f"placeholder mismatch: {src!r}"
         assert not any(ch in dst for ch in "\x00\t\r\n")
         assert src[: len(src) - len(src.lstrip())] == dst[: len(dst) - len(dst.lstrip())]
-        assert src[len(src.rstrip()):] == dst[len(dst.rstrip()):]
-    fields = ["source_text", "proposed_ar", "proposed_disposition", "disposition_rationale", "decision_ref", "locations"]
+        assert src[len(src.rstrip()) :] == dst[len(dst.rstrip()) :]
+    fields = [
+        "source_text",
+        "proposed_ar",
+        "proposed_disposition",
+        "disposition_rationale",
+        "decision_ref",
+        "locations",
+    ]
     with OUT.open("w", encoding="utf-8", newline="") as fh:
         writer = csv.DictWriter(fh, fieldnames=fields, lineterminator="\n")
         writer.writeheader()
         for row in scope:
             src = row["source_text"]
             if src in preserved:
-                disp, ar, rationale = "preserved-site-override", preserved[src], "Preserve existing Site Override; no mutation."
+                disp, ar, rationale = (
+                    "preserved-site-override",
+                    preserved[src],
+                    "Preserve existing Site Override; no mutation.",
+                )
             elif src in TECHNICAL:
-                disp, ar, rationale = "EXCEPTION-technical", "", "Technical product-code token; retain vendor rendering."
+                disp, ar, rationale = (
+                    "EXCEPTION-technical",
+                    "",
+                    "Technical product-code token; retain vendor rendering.",
+                )
             else:
-                disp, ar, rationale = "PROPOSED-payload", A[src], "AI draft; requires independent A1/A2/A3 quorum."
-            writer.writerow({
-                "source_text": src,
-                "proposed_ar": ar,
-                "proposed_disposition": disp,
-                "disposition_rationale": rationale,
-                "decision_ref": DECISION_REF,
-                "locations": row["locations"],
-            })
-    print(f"scope={len(scope)} preserved={len(preserved)} technical={len(TECHNICAL)} proposed_payload={len(A)}")
+                disp, ar, rationale = (
+                    "PROPOSED-payload",
+                    A[src],
+                    "AI draft; requires independent A1/A2/A3 quorum.",
+                )
+            writer.writerow(
+                {
+                    "source_text": src,
+                    "proposed_ar": ar,
+                    "proposed_disposition": disp,
+                    "disposition_rationale": rationale,
+                    "decision_ref": DECISION_REF,
+                    "locations": row["locations"],
+                }
+            )
+    print(
+        f"scope={len(scope)} preserved={len(preserved)} technical={len(TECHNICAL)} proposed_payload={len(A)}"
+    )
     print(f"proposal={OUT.name} sha256={hashlib.sha256(OUT.read_bytes()).hexdigest()}")
 
 

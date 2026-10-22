@@ -155,10 +155,10 @@ class TestBilingualCompanyPilot(unittest.TestCase):
     def test_arabic_edit_rejects_bidi_controls(self):
         """company_name_ar rejects bidi controls (C0, C1, DEL, overrides, isolates, LRM/RLM/ALM)."""
         forbidden_samples = [
-            "شركة\u202eالإنشاءات",  # Right-to-Left Override
-            "شركة\u200eالإنشاءات",  # LRM
-            "شركة\u202bالإنشاءات",  # RLE
-            "شركة\x00الإنشاءات",  # NUL
+            "شركة\u202eالإنشاءات",  # Right-to-Left Override  # noqa: RUF001 -- intentional Arabic security-test fixture
+            "شركة\u200eالإنشاءات",  # LRM  # noqa: RUF001 -- intentional Arabic security-test fixture
+            "شركة\u202bالإنشاءات",  # RLE  # noqa: RUF001 -- intentional Arabic security-test fixture
+            "شركة\x00الإنشاءات",  # NUL  # noqa: RUF001 -- intentional Arabic security-test fixture
         ]
         doc = _get_target_company()
         orig_val = doc.get("company_name_ar")
@@ -254,11 +254,7 @@ class TestBilingualCompanyPilot(unittest.TestCase):
 
             # 2. searchable_dropdown.searchable_link_search
             dropdown_res = searchable_link_search(doctype="Company", txt=query)
-            items = (
-                dropdown_res.get("results", [])
-                if isinstance(dropdown_res, dict)
-                else dropdown_res
-            )
+            items = dropdown_res.get("results", []) if isinstance(dropdown_res, dict) else dropdown_res
             dropdown_names = [r["value"] for r in items]
             self.assertIn(
                 doc.name,

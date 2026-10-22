@@ -2,6 +2,7 @@ import frappe
 from frappe import _
 from frappe.utils import flt
 
+from construction.services.boq_pricing import positive_factor
 from construction.services.revised_boq_queries import validate_report_factors
 
 
@@ -85,48 +86,65 @@ def get_boq_item_cost_vs_contract(boq_header):
     return rows
 
 
-def get_resource_requirement_summary(boq_header):
+def get_resource_requirement_summary(boq_header, authorized_items=None):
     """Report 3: Resource Requirement Summary by resource stream.
 
     Contract-quantity resource plan, including factor and wastage. Batch
     analyses are normalized by analysis_qty for both quantities and costs.
+
+    ``authorized_items`` (optional) is the collection of BOQ Item names the
+    caller is permitted to read. When supplied, only contributions from those
+    items are aggregated; an empty collection yields no rows. When ``None``
+    (trusted internal callers), no item restriction is applied, preserving the
+    legacy behaviour. Authorization is resolved by the adapter BEFORE
+    aggregation so that grouped totals never include hidden contributions.
     """
-    validate_report_factors(boq_header)
-    invalid = frappe.db.sql(
-        """SELECT analysis.name FROM `tabBOQ Cost Analysis` analysis
-        JOIN `tabBOQ Item` item ON item.name = analysis.boq_item
-        WHERE item.boq_header = %s AND analysis.docstatus = 1
-          AND analysis.analysis_status = 'Approved'
-          AND (analysis.analysis_qty IS NULL OR analysis.analysis_qty <= 0) LIMIT 1""",
-        boq_header,
+    if authorized_items is None:
+        validate_report_factors(boq_header)
+    else:
+        if not authorized_items:
+            return []
+        for row in frappe.get_all(
+            "BOQ Item",
+            filters={"name": ("in", list(authorized_items))},
+            fields=["name", "factor"],
+        ):
+            positive_factor(row.factor)
+    values = {"boq_header": boq_header}
+    item_filter = ""
+    if authorized_items is not None:
+        item_filter = "AND item.name IN %(authorized_items)s"
+        values["authorized_items"] = tuple(authorized_items)
+    invalid_sql = (
+        "SELECT analysis.name FROM `tabBOQ Cost Analysis` analysis "
+        "JOIN `tabBOQ Item` item ON item.name = analysis.boq_item "
+        "WHERE item.boq_header = %(boq_header)s AND analysis.docstatus = 1 "
+        "AND analysis.analysis_status = 'Approved' "
+        "AND (analysis.analysis_qty IS NULL OR analysis.analysis_qty <= 0) " + item_filter + " LIMIT 1"
     )
+    invalid = frappe.db.sql(invalid_sql, values)
     if invalid:
         frappe.throw(_("Legacy analysis quantity requires review before resource planning."))
-    rows = frappe.db.sql(
-        """
-        SELECT
-            bcd.cost_stream,
-            bcd.item_code,
-            bcd.item_name,
-            bcd.resource_uom,
-            SUM(bcd.qty_per_boq_unit * (1 + COALESCE(bcd.wastage_pct, 0) / 100) * bi.quantity * COALESCE(bi.factor, 1) / bca.analysis_qty) as total_resource_qty,
-            SUM(bcd.amount * bi.quantity * COALESCE(bi.factor, 1) / bca.analysis_qty) /
-                NULLIF(SUM(bcd.qty_per_boq_unit * (1 + COALESCE(bcd.wastage_pct, 0) / 100) * bi.quantity * COALESCE(bi.factor, 1) / bca.analysis_qty), 0) as avg_cost_rate,
-            SUM(bcd.amount * bi.quantity * COALESCE(bi.factor, 1) / bca.analysis_qty) as total_resource_cost
-        FROM `tabBOQ Cost Analysis Detail` bcd
-        INNER JOIN `tabBOQ Cost Analysis` bca
-            ON bca.name = bcd.parent
-            AND bca.docstatus = 1
-            AND bca.analysis_status = 'Approved'
-        INNER JOIN `tabBOQ Item` bi
-            ON bi.name = bca.boq_item
-        WHERE bi.boq_header = %(boq_header)s
-        GROUP BY bcd.cost_stream, bcd.item_code, bcd.item_name, bcd.resource_uom
-        ORDER BY bcd.cost_stream, total_resource_cost DESC
-    """,
-        {"boq_header": boq_header},
-        as_dict=True,
+    agg_filter = ""
+    agg_values = {"boq_header": boq_header}
+    if authorized_items is not None:
+        agg_filter = "AND bi.name IN %(authorized_items)s"
+        agg_values["authorized_items"] = tuple(authorized_items)
+    agg_sql = (
+        "SELECT "
+        "bcd.cost_stream, bcd.item_code, bcd.item_name, bcd.resource_uom, "
+        "SUM(bcd.qty_per_boq_unit * (1 + COALESCE(bcd.wastage_pct, 0) / 100) * bi.quantity * COALESCE(bi.factor, 1) / bca.analysis_qty) as total_resource_qty, "
+        "SUM(bcd.amount * bi.quantity * COALESCE(bi.factor, 1) / bca.analysis_qty) / "
+        "NULLIF(SUM(bcd.qty_per_boq_unit * (1 + COALESCE(bcd.wastage_pct, 0) / 100) * bi.quantity * COALESCE(bi.factor, 1) / bca.analysis_qty), 0) as avg_cost_rate, "
+        "SUM(bcd.amount * bi.quantity * COALESCE(bi.factor, 1) / bca.analysis_qty) as total_resource_cost "
+        "FROM `tabBOQ Cost Analysis Detail` bcd "
+        "INNER JOIN `tabBOQ Cost Analysis` bca ON bca.name = bcd.parent AND bca.docstatus = 1 AND bca.analysis_status = 'Approved' "
+        "INNER JOIN `tabBOQ Item` bi ON bi.name = bca.boq_item "
+        "WHERE bi.boq_header = %(boq_header)s " + agg_filter + " "
+        "GROUP BY bcd.cost_stream, bcd.item_code, bcd.item_name, bcd.resource_uom "
+        "ORDER BY bcd.cost_stream, total_resource_cost DESC"
     )
+    rows = frappe.db.sql(agg_sql, agg_values, as_dict=True)
     return rows
 
 

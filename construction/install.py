@@ -1210,6 +1210,7 @@ def _ensure_unique_index_or_fail():
     idx_name = "uniq_mr_one_active_vo"
     # Commit pending DML so the subsequent DDL is allowed and so the reconciliation
     # state is durable. If this commit fails, the migration must abort.
+    # nosemgrep: frappe-manual-commit -- required pre-DDL durability boundary before MariaDB index reconciliation
     frappe.db.commit()
 
     idx_def = frappe.db.sql(
@@ -1229,7 +1230,9 @@ def _ensure_unique_index_or_fail():
         return
     if idx_def:
         # Incorrect (wrong column/order/uniqueness/type) → drop and rebuild.
+        # nosemgrep: frappe-sql-format-injection -- both identifiers are fixed local literals
         frappe.db.sql(f"ALTER TABLE `tabMaterial Request` DROP INDEX `{idx_name}`")
+    # nosemgrep: frappe-sql-format-injection -- both identifiers are fixed local literals
     frappe.db.sql(f"CREATE UNIQUE INDEX `{idx_name}` ON `tabMaterial Request` (`{stored_col}`)")
     # Post-create verification — a wrong definition must abort, not pass silently.
     idx_after = frappe.db.sql(
@@ -1661,7 +1664,10 @@ CONSTRUCTION_ROLES = (
     ("Construction Owner", "Owns construction data; full rights on BOQ Cost Analysis and cost data."),
     ("Project Manager", "Manages projects; can create/submit analyses and certify stages."),
     ("Site Engineer", "Field execution role; read-only access to cost data."),
-    ("Cost Database Maintainer", "Cost-library operator; access requires explicit reviewed permission setup."),
+    (
+        "Cost Database Maintainer",
+        "Cost-library operator; access requires explicit reviewed permission setup.",
+    ),
 )
 
 
@@ -1679,6 +1685,5 @@ def seed_construction_roles():
         created.append(role_name)
 
     if created:
-        frappe.db.commit()
         frappe.logger().info(f"Construction roles seeded: {', '.join(created)}")
     return created

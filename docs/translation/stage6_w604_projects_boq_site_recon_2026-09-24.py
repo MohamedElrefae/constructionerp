@@ -1,4 +1,5 @@
 """Read-only live Translation reconciliation for approved W6-4 scope."""
+
 from __future__ import annotations
 
 import csv
@@ -30,15 +31,19 @@ try:
         "Translation",
         filters={"language": "ar", "ct_is_catalog_entry": 0},
         fields=[
-            "name", "source_text", "translated_text", "context", "ct_origin",
-            "ct_app", "ct_release_version", "ct_is_catalog_entry",
+            "name",
+            "source_text",
+            "translated_text",
+            "context",
+            "ct_origin",
+            "ct_app",
+            "ct_release_version",
+            "ct_is_catalog_entry",
         ],
         limit_page_length=0,
     )
     matches = [
-        row for row in rows
-        if (row.source_text or "").strip() in normalized_keys
-        and not (row.context or "")
+        row for row in rows if (row.source_text or "").strip() in normalized_keys and not (row.context or "")
     ]
     by_key: dict[str, list] = {key: [] for key in keys}
     for row in matches:
@@ -80,8 +85,7 @@ try:
         "nonempty_non_site_override_row_count": len(nonempty_other),
         "nonempty_non_site_overrides": nonempty_other,
         "duplicate_runtime_keys": {
-            key: [row.name for row in found]
-            for key, found in by_key.items() if len(found) > 1
+            key: [row.name for row in found] for key, found in by_key.items() if len(found) > 1
         },
         "note": (
             "Read-only exact normalized runtime lookup reconciliation for the approved "
@@ -90,16 +94,21 @@ try:
         ),
     }
     OUT.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(json.dumps({
-        "site": SITE,
-        "scope_rows": result["scope_rows"],
-        "runtime_rows_scanned": result["runtime_rows_scanned"],
-        "matched_runtime_rows": result["matched_runtime_rows"],
-        "keys_with_runtime_match": result["keys_with_runtime_match"],
-        "missing_runtime_keys": len(missing_runtime),
-        "site_override_rows": len(site_overrides),
-        "nonempty_non_site_override_rows": len(nonempty_other),
-        "duplicate_runtime_keys": len(result["duplicate_runtime_keys"]),
-    }, ensure_ascii=False))
+    print(
+        json.dumps(
+            {
+                "site": SITE,
+                "scope_rows": result["scope_rows"],
+                "runtime_rows_scanned": result["runtime_rows_scanned"],
+                "matched_runtime_rows": result["matched_runtime_rows"],
+                "keys_with_runtime_match": result["keys_with_runtime_match"],
+                "missing_runtime_keys": len(missing_runtime),
+                "site_override_rows": len(site_overrides),
+                "nonempty_non_site_override_rows": len(nonempty_other),
+                "duplicate_runtime_keys": len(result["duplicate_runtime_keys"]),
+            },
+            ensure_ascii=False,
+        )
+    )
 finally:
     frappe.destroy()

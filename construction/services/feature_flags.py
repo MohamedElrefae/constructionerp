@@ -35,6 +35,7 @@ def set_flag(flag_name: str, value, *, commit: bool = False) -> None:
 
     frappe.db.set_single_value("Construction Settings", flag_name, 1 if value else 0)
     if commit:
+        # nosemgrep: frappe-manual-commit -- explicit caller opt-in commit=True for unwrapped smoke setup and restoration
         frappe.db.commit()
 
 

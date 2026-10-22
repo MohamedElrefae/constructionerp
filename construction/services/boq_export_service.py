@@ -719,9 +719,14 @@ class BOQExportService:
 
         # Get the absolute path to the templates directory
         app_path = frappe.get_app_path("construction")
+        # Defense-in-depth: reject path traversal in template_name
+        if not template_name or "/" in template_name or "\\" in template_name or ".." in template_name:
+            frappe.throw(_("Invalid template name: {0}").format(template_name), frappe.ValidationError)
         template_path = os.path.join(app_path, "templates", template_name)
         with open(template_path, "r") as f:
             template_str = f.read()
+        # The body comes from a repository template after rejecting path separators and traversal.
+        # nosemgrep: frappe-ssti -- audited repository template source
         return frappe.render_template(template_str, context)
 
     @staticmethod

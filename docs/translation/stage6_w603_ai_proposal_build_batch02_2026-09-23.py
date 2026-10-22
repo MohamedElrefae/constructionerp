@@ -3,6 +3,7 @@
 This script does not modify the managed catalog, release decisions, or site.
 It emits only a 250-row proposal/disposition table bound to the approved scope.
 """
+
 from __future__ import annotations
 
 import csv
@@ -132,6 +133,7 @@ A = {
     "Row #{0}: Source and Target Warehouse cannot be the same for Material Transfer": "الصف رقم {0}: لا يمكن أن يكون مستودع المصدر والوجهة واحدًا عند تحويل المواد",
 }
 
+
 def main() -> None:
     assert hashlib.sha256(SCOPE.read_bytes()).hexdigest() == SCOPE_SHA
     with SCOPE.open(encoding="utf-8", newline="") as fh:
@@ -142,16 +144,30 @@ def main() -> None:
     preserved = {r["source_text"]: r["translated_text"] for r in recon["site_overrides"]}
     keys = {r["source_text"] for r in scope}
     assert len(A) == 103, f"expected 103 releasable drafts, got {len(A)}"
-    assert set(A) | set(preserved) | TECHNICAL | set(DEFERRED_SOURCE_DEFECTS) == keys, "scope disposition does not partition exact keys"
-    assert not (set(A) & set(preserved) or set(A) & TECHNICAL or set(preserved) & TECHNICAL or set(A) & set(DEFERRED_SOURCE_DEFECTS))
+    assert (
+        set(A) | set(preserved) | TECHNICAL | set(DEFERRED_SOURCE_DEFECTS) == keys
+    ), "scope disposition does not partition exact keys"
+    assert not (
+        set(A) & set(preserved)
+        or set(A) & TECHNICAL
+        or set(preserved) & TECHNICAL
+        or set(A) & set(DEFERRED_SOURCE_DEFECTS)
+    )
     ph = re.compile(r"\{[^{}]*\}")
     for src, dst in A.items():
         assert dst and dst != src
         assert sorted(ph.findall(src)) == sorted(ph.findall(dst)), f"placeholder mismatch: {src!r}"
         assert not any(ch in dst for ch in "\x00\t\r\n")
         assert src[: len(src) - len(src.lstrip())] == dst[: len(dst) - len(dst.lstrip())]
-        assert src[len(src.rstrip()):] == dst[len(dst.rstrip()):]
-    fields = ["source_text", "proposed_ar", "proposed_disposition", "disposition_rationale", "decision_ref", "locations"]
+        assert src[len(src.rstrip()) :] == dst[len(dst.rstrip()) :]
+    fields = [
+        "source_text",
+        "proposed_ar",
+        "proposed_disposition",
+        "disposition_rationale",
+        "decision_ref",
+        "locations",
+    ]
     with OUT.open("w", encoding="utf-8", newline="") as fh:
         writer = csv.DictWriter(fh, fieldnames=fields, lineterminator="\n")
         writer.writeheader()
@@ -165,16 +181,23 @@ def main() -> None:
                 disp, ar = "DEFERRED-source-defect", ""
             else:
                 disp, ar = "PROPOSED-payload", A[src]
-            writer.writerow({
-                "source_text": src,
-                "proposed_ar": ar,
-                "proposed_disposition": disp,
-                "disposition_rationale": DEFERRED_SOURCE_DEFECTS.get(src, ""),
-                "decision_ref": DECISION_REF,
-                "locations": row["locations"],
-            })
-    print(f"scope={len(scope)} preserved={len(preserved)} technical={len(TECHNICAL)} deferred_source_defects={len(DEFERRED_SOURCE_DEFECTS)} draft_payload={len(A)}")
-    print(f"proposal={OUT.relative_to(HERE.parents[1])} sha256={hashlib.sha256(OUT.read_bytes()).hexdigest()}")
+            writer.writerow(
+                {
+                    "source_text": src,
+                    "proposed_ar": ar,
+                    "proposed_disposition": disp,
+                    "disposition_rationale": DEFERRED_SOURCE_DEFECTS.get(src, ""),
+                    "decision_ref": DECISION_REF,
+                    "locations": row["locations"],
+                }
+            )
+    print(
+        f"scope={len(scope)} preserved={len(preserved)} technical={len(TECHNICAL)} deferred_source_defects={len(DEFERRED_SOURCE_DEFECTS)} draft_payload={len(A)}"
+    )
+    print(
+        f"proposal={OUT.relative_to(HERE.parents[1])} sha256={hashlib.sha256(OUT.read_bytes()).hexdigest()}"
+    )
+
 
 if __name__ == "__main__":
     main()

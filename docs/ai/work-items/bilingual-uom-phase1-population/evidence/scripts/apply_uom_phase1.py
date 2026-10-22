@@ -40,8 +40,23 @@ def byte_scan(value):
         problems.append("whitespace")
     for ch in value:
         cp = ord(ch)
-        if cp in (0x200E, 0x200F, 0x202A, 0x202B, 0x202C, 0x202D, 0x202E,
-                  0x2066, 0x2067, 0x2068, 0x2069, 0x200B, 0x200C, 0x200D, 0xFEFF):
+        if cp in (
+            0x200E,
+            0x200F,
+            0x202A,
+            0x202B,
+            0x202C,
+            0x202D,
+            0x202E,
+            0x2066,
+            0x2067,
+            0x2068,
+            0x2069,
+            0x200B,
+            0x200C,
+            0x200D,
+            0xFEFF,
+        ):
             problems.append(f"bidi/zw U+{cp:04X}")
         elif cp < 0x20 or cp == 0x7F or 0x80 <= cp <= 0x9F:
             problems.append(f"control U+{cp:04X}")
@@ -126,11 +141,16 @@ def main():
         if is_fixture and int(d.get("enabled") or 0):
             print(f"FAIL pre-validate UOM {name}: fixture already enabled (F1 pre-state drift)")
             sys.exit(1)
-        plan.append({
-            "name": name, "value": value, "already": bool(current),
-            "fixture": is_fixture, "label_before": d.get(LABEL_FIELD),
-            "enabled_before": int(d.get("enabled") or 0),
-        })
+        plan.append(
+            {
+                "name": name,
+                "value": value,
+                "already": bool(current),
+                "fixture": is_fixture,
+                "label_before": d.get(LABEL_FIELD),
+                "enabled_before": int(d.get("enabled") or 0),
+            }
+        )
     print(f"PREVALIDATE_OK rows={len(plan)} fixtures_to_enable={sum(1 for p in plan if p['fixture'])}")
 
     # Apply through the standard document lifecycle (validate hook derives _norm).
@@ -157,16 +177,20 @@ def main():
                 raise RuntimeError(f"UOM {item['name']}: fixture enable not stored")
             print(
                 f"WRITE UOM {item['name']!r} value={sha16(item['value'])} "
-                f"norm={sha16(expected_norm)} identity=unchanged"
-                + (" enabled=1" if item["fixture"] else "")
+                f"norm={sha16(expected_norm)} identity=unchanged" + (" enabled=1" if item["fixture"] else "")
             )
-            results.append({
-                "name": item["name"], "action": "written", "value": item["value"],
-                "norm": expected_norm, "fixture": item["fixture"],
-                "enabled_after": int(d.get("enabled") or 0),
-            })
+            results.append(
+                {
+                    "name": item["name"],
+                    "action": "written",
+                    "value": item["value"],
+                    "norm": expected_norm,
+                    "fixture": item["fixture"],
+                    "enabled_after": int(d.get("enabled") or 0),
+                }
+            )
         frappe.db.commit()
-    except Exception as exc:  # noqa: BLE001 - fail-closed rollback
+    except Exception as exc:
         frappe.db.rollback()
         print(f"FAIL during apply, transaction rolled back: {exc}")
         sys.exit(1)
@@ -185,8 +209,10 @@ def main():
         json.dump(private, fh, indent=2, ensure_ascii=False)
         fh.write("\n")
     apply_sha = hashlib.sha256(open(f"{PRIVATE}/apply.json", "rb").read()).hexdigest()
-    print(f"SUMMARY written={private['written']} skipped={private['skipped']} failed=0 "
-          f"fixture_enabled={private['enabled']}")
+    print(
+        f"SUMMARY written={private['written']} skipped={private['skipped']} failed=0 "
+        f"fixture_enabled={private['enabled']}"
+    )
     print(f"PRIVATE apply.json sha256={apply_sha}")
     print("APPLY RESULT: PASS")
 

@@ -1,0 +1,143 @@
+{
+  "decision_ref": "content:construction/data/translations/f31_decision_evidence_2026-10-14.md",
+  "source_text": "Variation Order",
+  "translated_text": "أمر التغيير",
+  "release_version": "1.1",
+  "review_status": "translation_label_review_complete; corrected_metadata_and_glossary_package_reviewed",
+  "review_scope": "This exact label only; three bounded AI reviews; no human qualification, statutory/industry certification, or review of other translations is claimed.",
+  "reviews": {
+    "AI-A1": {
+      "session_id": "/root/arabic_amendment_a1",
+      "model": "GPT-6 Luna",
+      "timestamp_utc": "2026-10-17T23:29:51Z",
+      "decision": "approve",
+      "confidence": 0.78,
+      "confidence_label": "medium-high",
+      "scope_note": "Linguistic judgment only; label reads naturally as an identifiable order concerning a change."
+    },
+    "AI-A2": {
+      "session_id": "/root/arabic_amendment_a2",
+      "model": "GPT-6 Luna",
+      "timestamp_utc": "2026-10-17T23:29:58Z",
+      "decision": "approve",
+      "confidence": 0.88,
+      "scope_note": "Definite article preserves core document meaning; does not imply workflow, approval authority, entitlement, or pricing changes. No legal or industry-standard claim."
+    },
+    "AI-A3": {
+      "session_id": "/root/arabic_amendment_a3",
+      "model": "GPT-6 Luna",
+      "timestamp_utc": "2026-10-18T00:13:53Z",
+      "decision": "approve",
+      "confidence_label": "high",
+      "scope_note": "Fresh structural translation review of this exact label; not human/legal/industry certification, migration evidence, or site/test execution.",
+      "revision_history": [
+        {
+          "session_id": "/root/arabic_amendment_a3",
+          "timestamp_utc": "2026-10-17T23:30:28Z",
+          "decision": "revise",
+          "scope_note": "The prior normalization-equivalence claim was false because the normalizer retains ال; migration/history outcome was not proven by static review."
+        },
+        {
+          "session_id": "/root/arabic_amendment_a3",
+          "timestamp_utc": "2026-10-17T23:32:10Z",
+          "decision": "approve_evidence_only",
+          "scope_note": "Approved corrected evidence statements only; not a fresh translation approval or migration outcome."
+        },
+        {
+          "session_id": "/root/arabic_amendment_a3",
+          "timestamp_utc": "2026-10-18T00:13:53Z",
+          "decision": "approve_translation_label",
+          "confidence_label": "high",
+          "scope_note": "Fresh structural review of the exact label أمر التغيير."
+        }
+      ]
+    }
+  },
+  "verified_normalization": {
+    "old_label": "أمر تغيير",
+    "old_normalized": "امر تغيير",
+    "new_label": "أمر التغيير",
+    "new_normalized": "امر التغيير",
+    "normalizer_removes_definite_article": false
+  },
+  "open_requirements": [
+    "No human, legal, or Egyptian industry certification is claimed.",
+    "Migration/history compatibility, endpoint search behavior, and alias handling are unverified.",
+    "This package QA does not itself establish isolated-site migration, freshness, or customer release qualification."
+  ],
+  "historical_package": {
+    "status": "unverified_and_superseded",
+    "preserved_copy": "outside candidate workspace as f31_review_evidence_2026-10-18_original_unverified.json",
+    "reason": "Original session outputs were unavailable; prior acceptances and timestamps must not be treated as proven review evidence."
+  },
+  "historical_v1_0": {
+    "translated_text": "أمر تغيير",
+    "recorded_disposition": "legacy records describe batch acceptance under historical pre-v4 workflow",
+    "provenance_status": "not independently verified in this amendment review",
+    "note": "No historical approval/review is re-granted by the current amendment review."
+  },
+  "glossary_alignment": {
+    "glossary_path": "construction/data/glossary/egyptian_construction_glossary.json",
+    "previous_version": "2.1",
+    "previous_sha256": "7afbef1ab892f466eb14471c99a9e76dde65b4f2e9d4a40a1405e34addc6894d",
+    "candidate_version": "2.2",
+    "candidate_sha256": "9cbdb04120a3f6dec0d9e813b89980ba389ffad3974b4dbb36e08d9dfd8aaf81",
+    "proposal_path": "construction/data/glossary/f31_variation_order_amendment_v2_2.json",
+    "proposal_sha256": "48f69dff6ee5bf8c3cb06c6565aada10556c071d6851e1444585bb49f9266b46",
+    "scope": "One existing Variation Order term only; 47 terms preserved; no schema change or Translation/site writes.",
+    "package_review_status": "approved by independent AI package QA; no site qualification/publication claim"
+  },
+  "decision_note_sha256": "20498505950f0ecaf2de49e7521daceba9cf4034b1a7be8e272ce67d12c2a514",
+  "payload_csv_sha256": "5125ea686928c620a26b180a0f942e1ef96dc7a86a008502f3e91a5a09e8c820",
+  "package_qa": {
+    "reviewer_session": "/root/foundation_security_luna",
+    "model": "GPT-6 Luna",
+    "reviewed_utc": "2026-10-18T00:22:53Z",
+    "decision": "approve",
+    "confidence_label": "high",
+    "scope": "Release metadata and the one-term glossary v2.2 candidate only; confirmed exact artifact hashes/cross-bindings, CSV 4,337 rows with zero CSV errors, and no existing decision IDs removed or changed.",
+    "reviewed_pre_append_artifact_hashes": {
+      "approved_ar_overrides.csv": "cd8d5f15d9cc3cffeff9f79073ecd99d182e8fc871b5d3307038faae0fa79b14",
+      "f31_decision_evidence_2026-10-14.md": "54d9588b6bd4a479945594594844f1bd79f4d0df32b05889fdd11794d15514ee",
+      "f31_review_evidence_2026-10-18.json": "6cb6182376d6ecbac5b6acd6b0c7f92d79a116dcdeef0eef0488fa9c89ffefe0",
+      "release_decisions.json": "cae0288c548714e760824323e2c972ea553dafbb37b942046d9c76714e531cca",
+      "localization_manifest.json": "b97b6e9b714e957fd4bdcd8daf6aa43821869671e1739afa888bb18043daa6a8",
+      "egyptian_construction_glossary.json": "9cbdb04120a3f6dec0d9e813b89980ba389ffad3974b4dbb36e08d9dfd8aaf81",
+      "f31_variation_order_glossary_amendment_proposal_2026-10-18.json": "2b69cf50708881ccc867122313410af7f0d81120d8f25764dddc81e443ce4f60"
+    },
+    "review_record_note": "This is a separate administrative package-QA event. It does not replace or rewrite the original A3 revision/evidence-only/fresh-label review trace. Full reviewer output is preserved by the parent coordinator."
+  },
+  "delivery_metadata_relocation": {
+    "recorded_by": "Codex consultant under parent technical delegation, 2026-10-18",
+    "recorded_utc": "2026-10-18T00:31:29Z",
+    "authorization": "Parent-directed customer-package path correction after independent package QA approval.",
+    "scope": "Relocated the active one-term proposal reference from the internal docs/ai work-item path to construction/data/glossary; updated CSV, proposal payload binding, decision note, review bindings, and canonical release registry. Translation text, reviewer identities/timestamps/verdicts, glossary content, and historical v1.0 records were not changed.",
+    "previous_path": "docs/ai/work-items/next feature 07102026/f31_variation_order_glossary_amendment_proposal_2026-10-18.json",
+    "customer_package_path": "construction/data/glossary/f31_variation_order_amendment_v2_2.json",
+    "csv_sha256": "5125ea686928c620a26b180a0f942e1ef96dc7a86a008502f3e91a5a09e8c820",
+    "proposal_sha256": "48f69dff6ee5bf8c3cb06c6565aada10556c071d6851e1444585bb49f9266b46",
+    "decision_note_sha256": "ef7961910472d66662434c02c68671a1b01900db76275772bd237a3d1166cb37",
+    "reviewer_verdicts_changed": false,
+    "original_package_qa_preserved_as_pre_relocation_record": true
+  },
+  "payload_csv_sha256_scope": "Full CSV hash reviewed at the independent package-QA event; historical QA input only, not the current full-file binding.",
+  "current_payload_binding": {
+    "current_csv_sha256": "845ab43ea0bef6d7db9f3875b8ceadafa0c923934c69607e6d6ceda715262318",
+    "recorded_by": "Codex consultant under parent technical delegation, 2026-10-18",
+    "scope": "Technical evidence-path relocation only. 4,303 Released rows changed decision_ref paths to byte-identical customer-shipped evidence; all other CSV cells are unchanged. The Variation Order translation, reviewers, verdicts, and timestamps are unchanged. This binding does not add linguistic review or site qualification.",
+    "changed_decision_refs": 4303,
+    "unique_evidence_files": 28,
+    "linguistic_review_changed": false,
+    "new_linguistic_approval_claimed": false,
+    "prior_csv_sha256": "20b12fbe5b1bf2a88e97f80bda8c54d43006b6c8831c3340c54984cf33ce2ed0"
+  },
+  "previous_payload_bindings": [
+    {
+      "current_csv_sha256": "20b12fbe5b1bf2a88e97f80bda8c54d43006b6c8831c3340c54984cf33ce2ed0",
+      "recorded_by": "Codex consultant under parent technical delegation, 2026-10-18",
+      "scope": "Technical provenance clarification. Parent independently verified that the F31 Variation Order CSV row is byte-for-byte unchanged; only six unrelated Stage1C decision_ref cells changed after package QA.",
+      "linguistic_review_changed": false,
+      "new_linguistic_approval_claimed": false
+    }
+  ]
+}

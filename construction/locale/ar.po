@@ -3509,3 +3509,943 @@ msgstr "جارٍ التحميل"
 #: construction/construction/page/bilingual_report_viewer/bilingual_report_viewer.js
 msgid "No Data"
 msgstr "لا توجد بيانات"
+
+#: proposed (not approved)
+msgid "A BOQ Header name is required."
+msgstr "اسم رأس جدول الكميات مطلوب."
+
+#: proposed (not approved)
+msgid "A valid company filter is required."
+msgstr "يلزم تحديد مرشح شركة صالح."
+
+#: proposed (not approved)
+msgid "Accounts Manager"
+msgstr "مدير الحسابات"
+
+#: proposed (not approved)
+msgid "Accounts User"
+msgstr "مستخدم الحسابات"
+
+#: proposed (not approved)
+msgid "Already imported: this file is recorded under batch {0} ({1} items). No duplicates created."
+msgstr "سبق استيراد هذا الملف، وهو مسجل ضمن الدفعة {0} ({1} عنصرًا). لم تُنشأ سجلات مكررة."
+
+#: proposed (not approved)
+msgid "An explicit reviewed manual basis and review reason are required."
+msgstr "يلزم تقديم أساس يدوي صريح خضع للمراجعة، مع ذكر سبب المراجعة."
+
+#: proposed (not approved)
+msgid "An operator decision reference is required"
+msgstr "مطلوب مرجع قرار من المشغل"
+
+#: proposed (not approved)
+msgid "Analysis quantity"
+msgstr "كمية التحليل"
+
+#: proposed (not approved)
+msgid "Approval attribution is managed by the approval service."
+msgstr "تُدار بيانات إسناد الموافقة من خلال خدمة الموافقات."
+
+#: proposed (not approved)
+msgid "Approved cost and pricing percentages require a new cost analysis."
+msgstr "يتطلب تعديل التكلفة المعتمدة ونسب التسعير إعداد تحليل تكلفة جديد."
+
+#: proposed (not approved)
+msgid "Approved direct unit cost"
+msgstr "التكلفة المباشرة المعتمدة للوحدة"
+
+#: proposed (not approved)
+msgid "Approved or previously approved revisions cannot be deleted. Create a new revision for corrections."
+msgstr "لا يمكن حذف المراجعات المعتمدة أو التي سبق اعتمادها. أنشئ مراجعة جديدة لإجراء التصحيحات."
+
+#: proposed (not approved)
+msgid "Approved revision field {0} cannot be changed. Create a new revision for a correction."
+msgstr "لا يمكن تغيير الحقل {0} في مراجعة معتمدة. أنشئ مراجعة جديدة لإجراء التصحيح."
+
+#: proposed (not approved)
+msgid "Approved revision values must remain valid numbers."
+msgstr "يجب أن تظل قيم المراجعة المعتمدة أرقامًا صالحة."
+
+#: proposed (not approved)
+msgid "BOQ Header (optional)"
+msgstr "رأس جدول الكميات (اختياري)"
+
+#: proposed (not approved)
+msgid "BOQ Item does not exist"
+msgstr "بند جدول الكميات غير موجود"
+
+#: proposed (not approved)
+msgid "BOQ Item {0} not found."
+msgstr "تعذر العثور على بند جدول الكميات {0}."
+
+#: proposed (not approved)
+msgid "BOQ changed concurrently. Roll back and retry the complete operation."
+msgstr "تغيّر جدول الكميات بالتزامن مع هذه العملية. تراجع عنها ثم أعد تنفيذها بالكامل."
+
+#: proposed (not approved)
+msgid "BOQ management"
+msgstr "إدارة جدول الكميات"
+
+#: proposed (not approved)
+msgid "Bilingual schema for {0} requires existing field {1}"
+msgstr "يتطلب المخطط ثنائي اللغة لـ {0} وجود الحقل {1}."
+
+#: proposed (not approved)
+msgid "Buying"
+msgstr "الشراء"
+
+#: proposed (not approved)
+msgid "Change control"
+msgstr "التحكم في التغيير"
+
+#: proposed (not approved)
+msgid "Choose a workbook file first."
+msgstr "اختر ملف مصنف أولًا."
+
+#: proposed (not approved)
+msgid "Client approval document must be a private file. Mark the attachment private and retry."
+msgstr "يجب أن يكون مستند موافقة العميل ملفًا خاصًا. اجعل المرفق خاصًا ثم أعد المحاولة."
+
+#: proposed (not approved)
+msgid "Client-approved Variation Order evidence cannot be changed."
+msgstr "لا يمكن تغيير مستندات إثبات أمر التغيير المعتمد من العميل."
+
+#: proposed (not approved)
+msgid "Client-approved Variation Order line {0} cannot be changed."
+msgstr "لا يمكن تغيير بند أمر التغيير {0} المعتمد من العميل."
+
+#: proposed (not approved)
+msgid "Client-approved Variation Order lines cannot be changed."
+msgstr "لا يمكن تغيير بنود أمر التغيير المعتمد من العميل."
+
+#: proposed (not approved)
+msgid "Client-approved Variation Order lines cannot be reordered or replaced."
+msgstr "لا يمكن إعادة ترتيب بنود أمر التغيير المعتمد من العميل أو استبدالها."
+
+#: proposed (not approved)
+msgid "Client-approved Variation Order values must remain valid."
+msgstr "يجب أن تظل قيم أمر التغيير المعتمد من العميل صالحة."
+
+#: proposed (not approved)
+msgid "Commit request failed with unknown outcome. Check Resource Price History before retrying; do not blindly repeat."
+msgstr "تعذر تحديد نتيجة طلب التثبيت. تحقّق من سجل أسعار الموارد قبل إعادة المحاولة، ولا تكرر العملية دون تحقق."
+
+#: proposed (not approved)
+msgid "Commit request failed with unknown outcome. Check analyses before retrying; do not blindly repeat."
+msgstr "تعذر تحديد نتيجة طلب التثبيت. تحقّق من التحليلات قبل إعادة المحاولة، ولا تكرر العملية دون تحقق."
+
+#: proposed (not approved)
+msgid "Committed: {0} items, {1} price rows, {2} templates."
+msgstr "اكتمل الحفظ. عدد الأصناف: {0}؛ صفوف الأسعار: {1}؛ القوالب: {2}."
+
+#: proposed (not approved)
+msgid "Committing import…"
+msgstr "جارٍ حفظ بيانات الاستيراد…"
+
+#: proposed (not approved)
+msgid "Committing…"
+msgstr "جارٍ الحفظ…"
+
+#: proposed (not approved)
+msgid "Company (required)"
+msgstr "الشركة (مطلوبة)"
+
+#: proposed (not approved)
+msgid "Confirm Import"
+msgstr "تأكيد الاستيراد"
+
+#: proposed (not approved)
+msgid "Confirm import"
+msgstr "تأكيد الاستيراد"
+
+#: proposed (not approved)
+msgid "Confirm repricing"
+msgstr "تأكيد إعادة التسعير"
+
+#: proposed (not approved)
+msgid "Confirm the detected workbook layout before committing."
+msgstr "أكّد تخطيط المصنف المكتشف قبل التثبيت."
+
+#: proposed (not approved)
+msgid "Construction Bilingual Material Request"
+msgstr "طلب مواد ثنائي اللغة للإنشاءات"
+
+#: proposed (not approved)
+msgid "Construction Bilingual Purchase Order"
+msgstr "أمر شراء ثنائي اللغة للإنشاءات"
+
+#: proposed (not approved)
+msgid "Construction Bilingual Sales Invoice"
+msgstr "فاتورة مبيعات ثنائية اللغة للإنشاءات"
+
+#: proposed (not approved)
+msgid "Construction Bilingual Stock Entry"
+msgstr "قيد مخزون ثنائي اللغة للإنشاءات"
+
+#: proposed (not approved)
+msgid "Construction Home"
+msgstr "الصفحة الرئيسية للإنشاءات"
+
+#: proposed (not approved)
+msgid "Construction Owner"
+msgstr "مالك تطبيق الإنشاءات"
+
+#: proposed (not approved)
+msgid "Construction Report Viewer"
+msgstr "عارض تقارير الإنشاءات"
+
+#: proposed (not approved)
+msgid "Conversion review reason must not exceed 2000 characters."
+msgstr "يجب ألا يتجاوز سبب مراجعة التحويل 2000 حرف."
+
+#: proposed (not approved)
+msgid "Cost Database"
+msgstr "قاعدة بيانات التكاليف"
+
+#: proposed (not approved)
+msgid "Cost Database Maintainer"
+msgstr "مسؤول صيانة قاعدة بيانات التكاليف"
+
+#: proposed (not approved)
+msgid "Cost Database Workbench"
+msgstr "منصة عمل قاعدة بيانات التكاليف"
+
+#: proposed (not approved)
+msgid "Cost analysis {0} must match its BOQ Item."
+msgstr "يجب أن يتطابق تحليل التكلفة {0} مع بند جدول الكميات المرتبط به."
+
+#: proposed (not approved)
+msgid "Cost approval history requires reconciliation."
+msgstr "يلزم تسوية سجل اعتماد التكلفة."
+
+#: proposed (not approved)
+msgid "Cost database"
+msgstr "قاعدة بيانات التكاليف"
+
+#: proposed (not approved)
+msgid "Cost provenance is managed by cost approval and cancellation."
+msgstr "تُدار بيانات مصدر التكلفة عبر إجراءات اعتماد التكلفة وإلغاء اعتمادها."
+
+#: proposed (not approved)
+msgid "Density saves automatically when you pick it."
+msgstr "يُحفظ مستوى الكثافة تلقائيًا عند اختياره."
+
+#: proposed (not approved)
+msgid "Detected layout: {0}. Confirm the mode, then choose Confirm Import to save."
+msgstr "التخطيط المكتشف: {0}. أكّد الوضع، ثم اختر «تأكيد الاستيراد» للحفظ."
+
+#: proposed (not approved)
+msgid "Direct resource cost"
+msgstr "التكلفة المباشرة للموارد"
+
+#: proposed (not approved)
+msgid "Direct unit cost"
+msgstr "التكلفة المباشرة للوحدة"
+
+#: proposed (not approved)
+msgid "Download template"
+msgstr "تنزيل النموذج"
+
+#: proposed (not approved)
+msgid "Estimating and Commercial"
+msgstr "التقدير والشؤون التجارية"
+
+#: proposed (not approved)
+msgid "Estimating and commercial"
+msgstr "التقدير والشؤون التجارية"
+
+#: proposed (not approved)
+msgid "Estimation"
+msgstr "التقدير"
+
+#: proposed (not approved)
+msgid "Exactly one existing runtime translation is required"
+msgstr "مطلوب ترجمة وقت تشغيل واحدة موجودة بالضبط"
+
+#: proposed (not approved)
+msgid "Exactly one matching packaged release is required"
+msgstr "مطلوب إصدار مجمّع مطابق واحد بالضبط"
+
+#: proposed (not approved)
+msgid "Excel File"
+msgstr "ملف Excel"
+
+#: proposed (not approved)
+msgid "Export refused."
+msgstr "تم رفض التصدير."
+
+#: proposed (not approved)
+msgid "Export request failed."
+msgstr "فشل طلب التصدير."
+
+#: proposed (not approved)
+msgid "Exported {0} rows{1}."
+msgstr "تم تصدير عدد الصفوف: {0}{1}."
+
+#: proposed (not approved)
+msgid "Field '{0}' contains forbidden Unicode control character {1}"
+msgstr "يحتوي الحقل '{0}' على محرف تحكم Unicode محظور {1}."
+
+#: proposed (not approved)
+msgid "Finance"
+msgstr "المالية"
+
+#: proposed (not approved)
+msgid "Header company does not match the requested company."
+msgstr "لا تتطابق شركة الرأس مع الشركة المطلوبة."
+
+#: proposed (not approved)
+msgid "Header {0}: mismatched fields: {1}."
+msgstr "الرأس {0}: الحقول غير المتطابقة: {1}."
+
+#: proposed (not approved)
+msgid "Historical approval cannot be reapplied. Create a new correction revision."
+msgstr "لا يمكن إعادة تطبيق اعتماد سابق. أنشئ مراجعة تصحيحية جديدة."
+
+#: proposed (not approved)
+msgid "Import BOQ from Excel"
+msgstr "استيراد جدول الكميات من Excel"
+
+#: proposed (not approved)
+msgid "Import Mode"
+msgstr "وضع الاستيراد"
+
+#: proposed (not approved)
+msgid "Import failed."
+msgstr "فشل الاستيراد."
+
+#: proposed (not approved)
+msgid "Import request failed. Verify saved records before retrying; do not blindly repeat."
+msgstr "فشل طلب الاستيراد. تحقّق من السجلات المحفوظة قبل إعادة المحاولة، ولا تكرر العملية دون تحقق."
+
+#: proposed (not approved)
+msgid "Import section"
+msgstr "قسم الاستيراد"
+
+#: proposed (not approved)
+msgid "Imported {0} items in {1} structures (batch {2})."
+msgstr "تم الاستيراد: العناصر {0}، والهياكل {1} (الدفعة {2})."
+
+#: proposed (not approved)
+msgid "Item Price"
+msgstr "سعر الصنف"
+
+#: proposed (not approved)
+msgid "Item code (optional)"
+msgstr "رمز الصنف (اختياري)"
+
+#: proposed (not approved)
+msgid "Journal Entry"
+msgstr "قيد يومية"
+
+#: proposed (not approved)
+msgid "Legacy BOQ factors must be reviewed and corrected to positive values before recalculation."
+msgstr "يجب مراجعة عوامل جدول الكميات القديم وتصحيحها إلى قيم موجبة قبل إعادة الحساب."
+
+#: proposed (not approved)
+msgid "Legacy Translation identity collision; reconcile duplicate rows before retrying"
+msgstr "تعارض في معرّفات الترجمة القديمة؛ سوِّ الصفوف المكررة قبل إعادة المحاولة."
+
+#: proposed (not approved)
+msgid "Legacy Translation identity repair left incomplete rows"
+msgstr "أدى إصلاح معرّفات الترجمة القديمة إلى بقاء صفوف غير مكتملة."
+
+#: proposed (not approved)
+msgid "Legacy analysis quantity requires review before resource planning."
+msgstr "تتطلب كمية التحليل القديمة مراجعة قبل تخطيط الموارد."
+
+#: proposed (not approved)
+msgid "Legacy approved pricing requires review before repricing this item."
+msgstr "يتطلب التسعير القديم المعتمد مراجعة قبل إعادة تسعير هذا الصنف."
+
+#: proposed (not approved)
+msgid "Legacy approved pricing requires reviewed conversion before restoration."
+msgstr "يتطلب التسعير القديم المعتمد تحويلًا خاضعًا للمراجعة قبل الاستعادة."
+
+#: proposed (not approved)
+msgid "Legacy conversion preview has changed. Review a fresh preview."
+msgstr "تغيّرت معاينة التحويل القديم. راجع معاينة جديدة."
+
+#: proposed (not approved)
+msgid "Legacy cost basis requires a reviewed conversion before this item can be saved."
+msgstr "يتطلب أساس التكلفة القديم تحويلًا خاضعًا للمراجعة قبل حفظ هذا الصنف."
+
+#: proposed (not approved)
+msgid "Legacy cost basis requires reviewed conversion and restoration evidence before a new approval."
+msgstr "يتطلب أساس التكلفة القديم تحويلًا خاضعًا للمراجعة وإثبات الاستعادة قبل اعتماد جديد."
+
+#: proposed (not approved)
+msgid "Legacy cost history requires reconciliation before conversion."
+msgstr "يلزم تسوية سجل التكلفة القديم قبل التحويل."
+
+#: proposed (not approved)
+msgid "Library"
+msgstr "المكتبة"
+
+#: proposed (not approved)
+msgid "Limit: {0}."
+msgstr "الحد: {0}."
+
+#: proposed (not approved)
+msgid "Link field {0} is missing on {1}"
+msgstr "حقل الارتباط {0} غير موجود في {1}."
+
+#: proposed (not approved)
+msgid "Loading prospective changes… nothing saved."
+msgstr "جارٍ تحميل التغييرات المتوقعة… لم يُحفظ أي شيء."
+
+#: proposed (not approved)
+msgid "Material Request"
+msgstr "طلب مواد"
+
+#: proposed (not approved)
+msgid "Mismatched fields"
+msgstr "الحقول غير المتطابقة"
+
+#: proposed (not approved)
+msgid "Multiple approved analyses require reconciliation before a new approval."
+msgstr "تتطلب التحليلات المعتمدة المتعددة تسوية قبل اعتماد جديد."
+
+#: proposed (not approved)
+msgid "Multiple approved analyses require reconciliation before cancellation."
+msgstr "تتطلب التحليلات المعتمدة المتعددة تسوية قبل الإلغاء."
+
+#: proposed (not approved)
+msgid "Multiple approved analyses require reconciliation before repricing this item."
+msgstr "تتطلب التحليلات المعتمدة المتعددة تسوية قبل إعادة تسعير هذا الصنف."
+
+#: proposed (not approved)
+msgid "Narrow filters or export for the full set."
+msgstr "ضيّق نطاق عوامل التصفية أو صدّر المجموعة كاملة."
+
+#: proposed (not approved)
+msgid "New Items (shared masters — review before confirming):"
+msgstr "أصناف جديدة (بيانات رئيسية مشتركة — راجعها قبل التأكيد):"
+
+#: proposed (not approved)
+msgid "New UOMs (global):"
+msgstr "وحدات قياس جديدة (عالمية):"
+
+#: proposed (not approved)
+msgid "New Variation Item revisions require a variation BOQ Item."
+msgstr "تتطلب مراجعات بند التغيير الجديدة وجود بند تغيير في جدول الكميات."
+
+#: proposed (not approved)
+msgid "No data."
+msgstr "لا توجد بيانات."
+
+#: proposed (not approved)
+msgid "No rows for these filters."
+msgstr "لا توجد صفوف تطابق عوامل التصفية هذه."
+
+#: proposed (not approved)
+msgid "No structure mismatches recorded."
+msgstr "لم تُسجّل أي حالات عدم تطابق في الهيكل."
+
+#: proposed (not approved)
+msgid "Only Administrator may audit BOQ rollups."
+msgstr "يقتصر تدقيق إجماليات جدول الكميات على المستخدم «Administrator»."
+
+#: proposed (not approved)
+msgid "Only an approved revision can change current BOQ quantities."
+msgstr "لا يمكن تغيير كميات جدول الكميات الحالية إلا من خلال مراجعة معتمدة."
+
+#: proposed (not approved)
+msgid "Only the BOQ Header writer may change planning fields on a stage: {0}. Record measurements instead."
+msgstr "لا يحق إلا لمحرر رأس جدول الكميات تغيير حقول التخطيط في المرحلة {0}. سجّل القياسات بدلًا من ذلك."
+
+#: proposed (not approved)
+msgid "Only the Construction Owner can authorize legacy cost conversion."
+msgstr "يقتصر تفويض تحويل التكلفة القديمة على مالك تطبيق الإنشاءات."
+
+#: proposed (not approved)
+msgid "Original Lock revisions are created only by the baseline service."
+msgstr "لا تُنشأ مراجعات القفل الأصلي إلا بواسطة خدمة خط الأساس."
+
+#: proposed (not approved)
+msgid "Overhead percentage"
+msgstr "نسبة المصروفات العامة"
+
+#: proposed (not approved)
+msgid "Page size"
+msgstr "عدد الصفوف في الصفحة"
+
+#: proposed (not approved)
+msgid "Page {0}: {1} of {2} rows."
+msgstr "الصفحة {0}: {1} من أصل {2} صفًا."
+
+#: proposed (not approved)
+msgid "Patch v8_6 failed: duplicate translation identities or missing digests remain"
+msgstr "فشل التصحيح v8_6: هويات ترجمة مكررة أو مقتطفات مفقودة لا تزال موجودة"
+
+#: proposed (not approved)
+msgid "Payables and receivables"
+msgstr "الدائنون والمدينون"
+
+#: proposed (not approved)
+msgid "Please attach an Excel file first."
+msgstr "أرفق ملف Excel أولًا."
+
+#: proposed (not approved)
+msgid "Please confirm the import mode."
+msgstr "يرجى تأكيد وضع الاستيراد."
+
+#: proposed (not approved)
+msgid "Please select a company."
+msgstr "يرجى اختيار شركة."
+
+#: proposed (not approved)
+msgid "Preview failed. Nothing was saved."
+msgstr "فشلت المعاينة. لم يُحفظ أي شيء."
+
+#: proposed (not approved)
+msgid "Preview only — nothing saved yet for company {0}."
+msgstr "معاينة فقط — لم يُحفظ شيء بعد للشركة {0}."
+
+#: proposed (not approved)
+msgid "Preview only — nothing saved yet. Rows: {0}, sections: {1}, items: {2}, warnings: {3}."
+msgstr "معاينة فقط — لم يُحفظ شيء بعد. الصفوف: {0}، الأقسام: {1}، العناصر: {2}، التحذيرات: {3}."
+
+#: proposed (not approved)
+msgid "Preview repricing"
+msgstr "معاينة إعادة التسعير"
+
+#: proposed (not approved)
+msgid "Preview request failed. Nothing was saved."
+msgstr "فشل طلب المعاينة. لم يُحفظ أي شيء."
+
+#: proposed (not approved)
+msgid "Previous approved analysis is managed by the approval service."
+msgstr "تُدار التحليلات المعتمدة السابقة من خلال خدمة الموافقات."
+
+#: proposed (not approved)
+msgid "Previous cost analysis belongs to another BOQ Item."
+msgstr "ينتمي تحليل التكلفة السابق إلى بند آخر في جدول الكميات."
+
+#: proposed (not approved)
+msgid "Previous legacy cost basis requires review before a new approval."
+msgstr "يتطلب أساس التكلفة القديم السابق مراجعة قبل اعتماد جديد."
+
+#: proposed (not approved)
+msgid "Previous legacy cost basis requires review before cancellation."
+msgstr "يتطلب أساس التكلفة القديم السابق مراجعة قبل الإلغاء."
+
+#: proposed (not approved)
+msgid "Previous quantity has changed. Create or update the correction from current quantities."
+msgstr "تغيّرت الكمية السابقة. أنشئ التصحيح أو حدّثه استنادًا إلى الكميات الحالية."
+
+#: proposed (not approved)
+msgid "Prior manual estimate evidence requires review before cancellation."
+msgstr "يتطلب إثبات التقدير اليدوي السابق مراجعة قبل الإلغاء."
+
+#: proposed (not approved)
+msgid "Prior manual estimate is unavailable. Review the legacy cost basis before cancellation."
+msgstr "التقدير اليدوي السابق غير متاح. راجع أساس التكلفة القديم قبل الإلغاء."
+
+#: proposed (not approved)
+msgid "Procurement and Stores"
+msgstr "المشتريات والمخازن"
+
+#: proposed (not approved)
+msgid "Procurement and stores"
+msgstr "المشتريات والمخازن"
+
+#: proposed (not approved)
+msgid "Profit percentage"
+msgstr "نسبة الربح"
+
+#: proposed (not approved)
+msgid "Project Manager"
+msgstr "مدير المشروع"
+
+#: proposed (not approved)
+msgid "Projects User"
+msgstr "مستخدم المشاريع"
+
+#: proposed (not approved)
+msgid "Proposed new Items: {0}. Proposed new UOMs: {1}."
+msgstr "عناصر جديدة مقترحة: {0}. وحدات قياس جديدة مقترحة: {1}."
+
+#: proposed (not approved)
+msgid "Prospective only: {0} analyses, {1} rows to update, {2} unchanged."
+msgstr "للمعاينة فقط: عدد التحليلات {0}؛ الصفوف المطلوب تحديثها {1}؛ دون تغيير {2}."
+
+#: proposed (not approved)
+msgid "Purchase Invoice"
+msgstr "فاتورة شراء"
+
+#: proposed (not approved)
+msgid "Purchase Order"
+msgstr "أمر شراء"
+
+#: proposed (not approved)
+msgid "Purchase Receipt"
+msgstr "إيصال استلام مشتريات"
+
+#: proposed (not approved)
+msgid "Purchase User"
+msgstr "مستخدم المشتريات"
+
+#: proposed (not approved)
+msgid "Rates and prices"
+msgstr "الأسعار والتكاليف"
+
+#: proposed (not approved)
+msgid "Replacement must be a saved Draft cost analysis for this BOQ Item."
+msgstr "يجب أن يكون البديل تحليل تكلفة محفوظًا بحالة مسودة لبند جدول الكميات هذا."
+
+#: proposed (not approved)
+msgid "Report error: {0}"
+msgstr "خطأ في التقرير: {0}"
+
+#: proposed (not approved)
+msgid "Reports and views"
+msgstr "التقارير والعروض"
+
+#: proposed (not approved)
+msgid "Reprice section"
+msgstr "قسم إعادة التسعير"
+
+#: proposed (not approved)
+msgid "Repriced: {0} analyses, {1} rows updated, {2} unchanged."
+msgstr "تم إعادة تسعير: {0} تحليل، {1} صف محدث، {2} بدون تغيير."
+
+#: proposed (not approved)
+msgid "Request refused (HTTP {0}). Nothing was saved."
+msgstr "رُفض الطلب (HTTP {0}). لم يُحفظ أي شيء."
+
+#: proposed (not approved)
+msgid "Resource amount"
+msgstr "قيمة الموارد"
+
+#: proposed (not approved)
+msgid "Resource cost rate"
+msgstr "معدل تكلفة المورد"
+
+#: proposed (not approved)
+msgid "Resource quantity"
+msgstr "كمية المورد"
+
+#: proposed (not approved)
+msgid "Reviewed manual basis is missing {0}."
+msgstr "يفتقد الأساس اليدوي الخاضع للمراجعة إلى {0}."
+
+#: proposed (not approved)
+msgid "Revision BOQ Header does not match its item."
+msgstr "لا يتطابق رأس جدول الكميات للمراجعة مع بندها."
+
+#: proposed (not approved)
+msgid "Revision header and structure must match the BOQ Item."
+msgstr "يجب أن يتطابق رأس المراجعة وهيكلها مع بند جدول الكميات."
+
+#: proposed (not approved)
+msgid "Revision identity does not match its stored approval."
+msgstr "لا تتطابق هوية المراجعة مع بيانات اعتمادها المخزنة."
+
+#: proposed (not approved)
+msgid "Sales Invoice"
+msgstr "فاتورة مبيعات"
+
+#: proposed (not approved)
+msgid "Select a company first."
+msgstr "اختر شركة أولًا."
+
+#: proposed (not approved)
+msgid "Shared Items with conflicting names or flags are refused, never renamed. Confirm to commit."
+msgstr "تُرفض الأصناف المشتركة ذات الأسماء أو العلامات المتعارضة ولا يعاد تسميتها. أكّد للمتابعة بالتثبيت."
+
+#: proposed (not approved)
+msgid "Showing first 50 of {0} errors. Use the error report for the full list."
+msgstr "يُعرض أول 50 خطأً من أصل {0}. استخدم تقرير الأخطاء للاطلاع على القائمة كاملة."
+
+#: proposed (not approved)
+msgid "Sidebar Item"
+msgstr "عنصر الشريط الجانبي"
+
+#: proposed (not approved)
+msgid "Site Engineer"
+msgstr "مهندس موقع"
+
+#: proposed (not approved)
+msgid "Site Work"
+msgstr "أعمال الموقع"
+
+#: proposed (not approved)
+msgid "Site execution"
+msgstr "تنفيذ الموقع"
+
+#: proposed (not approved)
+msgid "Stock Entry"
+msgstr "قيد مخزون"
+
+#: proposed (not approved)
+msgid "Stock User"
+msgstr "مستخدم المخزون"
+
+#: proposed (not approved)
+msgid "Stored vs recomputed header totals; mismatches are investigation inputs, not repair orders."
+msgstr "إجماليات الرأس المخزنة مقارنةً بالمعاد احتسابها؛ حالات عدم التطابق مؤشرات للتحقيق وليست أوامر إصلاح."
+
+#: proposed (not approved)
+msgid "Stores"
+msgstr "المخازن"
+
+#: proposed (not approved)
+msgid "Structure"
+msgstr "الهيكل"
+
+#: proposed (not approved)
+msgid "Suggested selling rate"
+msgstr "سعر البيع المقترح"
+
+#: proposed (not approved)
+msgid "Tender tax allowance percentage"
+msgstr "نسبة مخصص ضريبة المناقصة"
+
+#: proposed (not approved)
+msgid "The BOQ Item for this revision no longer exists."
+msgstr "لم يعد بند جدول الكميات الخاص بهذه المراجعة موجودًا."
+
+#: proposed (not approved)
+msgid "The file changed since validation. Validate again before confirming import."
+msgstr "تغيّر الملف منذ التحقق منه. أعد التحقق قبل تأكيد الاستيراد."
+
+#: proposed (not approved)
+msgid "The revision BOQ changed concurrently. Reload and retry the deletion."
+msgstr "تغيّر جدول كميات المراجعة بالتزامن. أعد تحميله ثم أعد محاولة الحذف."
+
+#: proposed (not approved)
+msgid "The selected scope does not permit this company."
+msgstr "لا يسمح النطاق المحدد باستخدام هذه الشركة."
+
+#: proposed (not approved)
+msgid "Themes and scope"
+msgstr "المظاهر والنطاق"
+
+#: proposed (not approved)
+msgid "This BOQ is being changed by another user. Retry the complete operation."
+msgstr "يجري مستخدم آخر تعديل جدول الكميات هذا. أعد تنفيذ العملية بالكامل."
+
+#: proposed (not approved)
+msgid "This audit mirrors current controller semantics: BOQ Header totals do not filter item docstatus; "
+msgstr "يعكس هذا التدقيق سلوك المتحكم الحالي: إجماليات رأس جدول الكميات لا تستبعد البنود بحسب حالة المستند؛ "
+
+#: proposed (not approved)
+msgid "This item is not an unresolved legacy cost basis."
+msgstr "هذا الصنف لا يمثل أساس تكلفة قديمًا لم تتم تسويته."
+
+#: proposed (not approved)
+msgid "Timesheet"
+msgstr "جدول الدوام"
+
+#: proposed (not approved)
+msgid "Translation identity schema is unavailable; retry after repairing Custom Fields"
+msgstr "مخطط هوية الترجمة غير متاح؛ أعد المحاولة بعد إصلاح الحقول المخصصة."
+
+#: proposed (not approved)
+msgid "Translation text differs from the packaged release; explicit review is required"
+msgstr "يختلف نص الترجمة عن الإصدار المعبأ؛ ويلزم إجراء مراجعة صريحة."
+
+#: proposed (not approved)
+msgid "Unable to load the report."
+msgstr "تعذر تحميل التقرير."
+
+#: proposed (not approved)
+msgid "Unable to load the view."
+msgstr "تعذر تحميل العرض."
+
+#: proposed (not approved)
+msgid "Unknown report '{0}'."
+msgstr "التقرير '{0}' غير معروف."
+
+#: proposed (not approved)
+msgid "Unsaved changes: {0} field(s). Apply & Save to keep them."
+msgstr "تغييرات غير محفوظة: {0} حقل. اختر «تطبيق وحفظ» للاحتفاظ بها."
+
+#: proposed (not approved)
+msgid "Unsupported translation origin"
+msgstr "أصل ترجمة غير مدعوم"
+
+#: proposed (not approved)
+msgid "Uploaded file exceeds the maximum allowed size of {0} MiB."
+msgstr "يتجاوز حجم الملف المرفوع الحد الأقصى المسموح به وهو {0} ميبيبايت."
+
+#: proposed (not approved)
+msgid "Validate"
+msgstr "تحقق"
+
+#: proposed (not approved)
+msgid "Validate (preview)"
+msgstr "تحقق (معاينة)"
+
+#: proposed (not approved)
+msgid "Validating workbook…"
+msgstr "جارٍ التحقق من المصنف…"
+
+#: proposed (not approved)
+msgid "Validating… nothing saved yet."
+msgstr "جارٍ التحقق… لم يُحفظ أي شيء بعد."
+
+#: proposed (not approved)
+msgid "Validation failed without a server response. Nothing was saved."
+msgstr "فشل التحقق دون تلقي استجابة من الخادم. لم يُحفظ أي شيء."
+
+#: proposed (not approved)
+msgid "Validation failed."
+msgstr "فشل التحقق."
+
+#: proposed (not approved)
+msgid "Validation found blocking errors. No records were saved."
+msgstr "كشف التحقق عن أخطاء مانعة. لم تُحفظ أي سجلات."
+
+#: proposed (not approved)
+msgid "Validation found {0} blocking error(s). Fix the workbook and validate again. No records were saved."
+msgstr "كشف التحقق عن {0} خطأ مانع. أصلح المصنف ثم أعد التحقق. لم تُحفظ أي سجلات."
+
+#: proposed (not approved)
+msgid "Validation request failed. Nothing was saved."
+msgstr "فشل طلب التحقق. لم يُحفظ أي شيء."
+
+#: proposed (not approved)
+msgid "Variation Order item belongs to another BOQ Header."
+msgstr "ينتمي بند أمر التغيير إلى رأس جدول كميات آخر."
+
+#: proposed (not approved)
+msgid "Views"
+msgstr "العروض"
+
+#: proposed (not approved)
+msgid "Warnings:"
+msgstr "تحذيرات:"
+
+#: proposed (not approved)
+msgid "Wastage percentage"
+msgstr "نسبة الهدر"
+
+#: proposed (not approved)
+msgid "Work areas"
+msgstr "مناطق العمل"
+
+#: proposed (not approved)
+msgid "Workbook (.xlsx)"
+msgstr "ملف العمل (.xlsx)"
+
+#: proposed (not approved)
+msgid "Working…"
+msgstr "جاري العمل…"
+
+#: proposed (not approved)
+msgid "You are not permitted to access this file."
+msgstr "غير مصرح لك بالوصول إلى هذا الملف."
+
+#: proposed (not approved)
+msgid "You cannot approve BOQ revisions."
+msgstr "لا يمكنك اعتماد مراجعات جدول الكميات."
+
+#: proposed (not approved)
+msgid "You have unsaved layout changes. Close and discard them?"
+msgstr "لديك تغييرات غير محفوظة في التخطيط. هل تريد الإغلاق والتخلص منها؟"
+
+#: proposed (not approved)
+msgid "You have unsaved layout changes. Leave and discard them?"
+msgstr "لديك تغييرات غير محفوظة في التخطيط. هل تريد المغادرة والتخلص منها؟"
+
+#: proposed (not approved)
+msgid "greater than zero"
+msgstr "أكبر من صفر"
+
+#: proposed (not approved)
+msgid "non-negative"
+msgstr "غير سالب"
+
+#: proposed (not approved)
+msgid "none"
+msgstr "لا شيء"
+
+#: proposed (not approved)
+msgid "truncated at the export limit"
+msgstr "اقتُطع عند حد التصدير"
+
+#: proposed (not approved)
+msgid "{0} must be a valid number."
+msgstr "يجب أن تكون {0} رقمًا صالحًا."
+
+#: proposed (not approved)
+msgid "{0} must be finite and {1}."
+msgstr "يجب أن تكون {0} قيمة محدودة و{1}."
+
+#: proposed (not approved)
+msgid "{0} must not exceed {1}."
+msgstr "يجب ألا تتجاوز {0} القيمة {1}."
+
+#: construction/services/boq_export_service.py
+msgid "Invalid template name: {0}"
+msgstr "اسم النموذج غير صالح: {0}"
+
+#. AI linguistic review: GPT-6 Luna /root/arabic_amendment_a2, 2026-10-18 00:16:37 UTC; static message scope.
+msgid "Dark"
+msgstr "داكن"
+
+#. AI linguistic review: GPT-6 Luna /root/arabic_amendment_a2, 2026-10-18 00:16:37 UTC; static message scope.
+msgid "Light"
+msgstr "فاتح"
+
+#. AI linguistic review: GPT-6 Luna /root/arabic_amendment_a2, 2026-10-18 00:16:37 UTC; static message scope.
+msgid "Error generating preview: {0}"
+msgstr "خطأ في إنشاء المعاينة: {0}"
+
+#. AI linguistic review: GPT-6 Luna /root/arabic_amendment_a2, 2026-10-18 00:16:37 UTC; static message scope.
+msgid "Theme changed to Construction {0}"
+msgstr "تم تغيير سمة Construction إلى {0}"
+
+#. AI linguistic review: GPT-6 Luna /root/arabic_amendment_a2, 2026-10-18 00:16:37 UTC; static message scope.
+msgid "Translation health check failed: {0}"
+msgstr "فشل فحص سلامة الترجمة: {0}"
+
+#. AI linguistic review: GPT-6 Luna /root/arabic_amendment_a2, 2026-10-18 00:16:37 UTC; static message scope.
+msgid "Translation digest index {0} exists with an unexpected definition"
+msgstr "فهرس بصمة الترجمة {0} موجود بتعريف غير متوقع"
+
+#. AI linguistic review: GPT-6 Luna /root/arabic_amendment_a2, 2026-10-18 00:16:37 UTC; static message scope.
+msgid "Cannot enforce Translation identity while {0} digest rows are incomplete"
+msgstr "يتعذر فرض هوية الترجمة ما دامت هناك {0} من سجلات البصمة غير مكتملة"
+
+#. AI linguistic review: GPT-6 Luna /root/arabic_amendment_a2, 2026-10-18 00:16:37 UTC; static message scope.
+msgid "Cannot enforce Translation identity while duplicate digests remain"
+msgstr "يتعذر فرض هوية الترجمة ما دامت هناك بصمات مكررة"
+
+#. AI linguistic review: GPT-6 Luna /root/arabic_amendment_a2, 2026-10-18 00:16:37 UTC; static message scope.
+msgid "Translation digest unique index was not created as expected"
+msgstr "لم يتم إنشاء الفهرس الفريد لبصمة الترجمة على النحو المتوقع"
+
+#. AI linguistic review: GPT-6 Luna /root/arabic_amendment_a2, 2026-10-18 00:16:37 UTC; static message scope.
+msgid "Translation identity schema is unavailable; repair Custom Fields before retrying"
+msgstr "مخطط هوية الترجمة غير متاح؛ أصلح الحقول المخصصة قبل إعادة المحاولة"
+
+#. AI linguistic review: GPT-6 Luna /root/arabic_amendment_a2, 2026-10-18 00:16:37 UTC; static message scope.
+msgid "Translation digest uniqueness could not be verified"
+msgstr "تعذر التحقق من تفرد بصمة الترجمة"
+
+#: construction/services/boq_accounting.py
+msgid "Row {0}: Omitted BOQ Item {1} cannot be newly attributed to this row."
+msgstr ""
+
+#: construction/services/timesheet_designation.py
+msgid "Employee {0} has no company and cannot be used for BOQ attribution."
+msgstr ""
+
+#: construction/services/timesheet_designation.py
+msgid "Not permitted to select Employee {0}."
+msgstr ""
+
+#: construction/services/timesheet_designation.py
+msgid "Not permitted to use Timesheet."
+msgstr ""
+
+#: construction/services/timesheet_designation.py
+msgid "Scope boundary violation: Employee {0} does not match active user scope '{1}'."
+msgstr ""
+
+#: construction/services/timesheet_designation.py
+msgid "An active User Scope Context is required to select Employee {0}."
+msgstr ""

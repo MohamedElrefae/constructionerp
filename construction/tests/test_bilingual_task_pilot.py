@@ -156,10 +156,10 @@ class TestBilingualTaskPilot(unittest.TestCase):
     def test_arabic_edit_rejects_bidi_controls(self):
         """subject_ar rejects bidi controls (C0, C1, DEL, overrides, isolates, LRM/RLM/ALM)."""
         forbidden_samples = [
-            "مهمة\u202eالمشروع",  # Right-to-Left Override
-            "مهمة\u200eالمشروع",  # LRM
-            "مهمة\u202bالمشروع",  # RLE
-            "مهمة\x00المشروع",  # NUL
+            "مهمة\u202eالمشروع",  # Right-to-Left Override  # noqa: RUF001 -- intentional Arabic security-test fixture
+            "مهمة\u200eالمشروع",  # LRM  # noqa: RUF001 -- intentional Arabic security-test fixture
+            "مهمة\u202bالمشروع",  # RLE  # noqa: RUF001 -- intentional Arabic security-test fixture
+            "مهمة\x00المشروع",  # NUL  # noqa: RUF001 -- intentional Arabic security-test fixture
         ]
         doc = _get_target_task()
         orig_val = doc.get("subject_ar")
@@ -179,13 +179,15 @@ class TestBilingualTaskPilot(unittest.TestCase):
         task_ar = "مهمة إعداد المخططات الهندسية"
         test_subj = f"Engineering Drawing Preparation {uuid4().hex[:6]}"
 
-        task = frappe.get_doc({
-            "doctype": "Task",
-            "subject": test_subj,
-            "parent_task": parent_id,
-            "is_group": 0,
-            "subject_ar": task_ar,
-        })
+        task = frappe.get_doc(
+            {
+                "doctype": "Task",
+                "subject": test_subj,
+                "parent_task": parent_id,
+                "is_group": 0,
+                "subject_ar": task_ar,
+            }
+        )
         task.insert(ignore_permissions=True)
         old_id = task.name
 

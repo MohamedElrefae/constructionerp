@@ -37,8 +37,23 @@ def byte_scan(value):
         problems.append("whitespace")
     for ch in value:
         cp = ord(ch)
-        if cp in (0x200E, 0x200F, 0x202A, 0x202B, 0x202C, 0x202D, 0x202E,
-                  0x2066, 0x2067, 0x2068, 0x2069, 0x200B, 0x200C, 0x200D, 0xFEFF):
+        if cp in (
+            0x200E,
+            0x200F,
+            0x202A,
+            0x202B,
+            0x202C,
+            0x202D,
+            0x202E,
+            0x2066,
+            0x2067,
+            0x2068,
+            0x2069,
+            0x200B,
+            0x200C,
+            0x200D,
+            0xFEFF,
+        ):
             problems.append(f"bidi/zw U+{cp:04X}")
         elif cp < 0x20 or cp == 0x7F or 0x80 <= cp <= 0x9F:
             problems.append(f"control U+{cp:04X}")
@@ -110,12 +125,20 @@ def main():
             f"DRY UOM {name!r} before={sha16(current) if current else '<empty>'} "
             f"after={sha16(value)} norm={sha16(norm_preview)} {state} {enable_state}"
         )
-        rows_out.append({
-            "doctype": "UOM", "name": name, "label": live_label,
-            "before": current, "after": value if not current else current,
-            "norm_preview": norm_preview, "state": state,
-            "fixture": is_fixture, "enabled_before": enabled, "enable_state": enable_state,
-        })
+        rows_out.append(
+            {
+                "doctype": "UOM",
+                "name": name,
+                "label": live_label,
+                "before": current,
+                "after": value if not current else current,
+                "norm_preview": norm_preview,
+                "state": state,
+                "fixture": is_fixture,
+                "enabled_before": enabled,
+                "enable_state": enable_state,
+            }
+        )
 
     populated_now = frappe.db.sql(
         "SELECT COUNT(*) FROM `tabUOM` WHERE uom_name_ar IS NOT NULL AND uom_name_ar != ''"
@@ -152,7 +175,9 @@ def main():
     dry_sha = hashlib.sha256(open(f"{PRIVATE}/dry-run.json", "rb").read()).hexdigest()
     print(f"PRIVATE dry-run.json sha256={dry_sha}")
     print("WRITES_PERFORMED: 0")
-    print(f"DRY-RUN RESULT: PASS (15/15 rows validated; 12 enables planned; approved v2 sha matched; zero writes)")
+    print(
+        "DRY-RUN RESULT: PASS (15/15 rows validated; 12 enables planned; approved v2 sha matched; zero writes)"
+    )
 
 
 if __name__ == "__main__":

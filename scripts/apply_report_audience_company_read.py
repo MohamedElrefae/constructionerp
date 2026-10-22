@@ -24,8 +24,19 @@ import os
 import sys
 
 RIGHTS = [
-    "read", "write", "create", "delete", "submit", "cancel", "amend",
-    "report", "export", "import", "share", "print", "email",
+    "read",
+    "write",
+    "create",
+    "delete",
+    "submit",
+    "cancel",
+    "amend",
+    "report",
+    "export",
+    "import",
+    "share",
+    "print",
+    "email",
 ]
 
 # The documented per-view audience: these roles hold read on the estimation views'
@@ -67,8 +78,9 @@ def main():
 
     changed = False
     for doctype, roles in AUDIENCE.items():
-        existing = frappe.get_all("Custom DocPerm", filters={"parent": doctype},
-                                  fields=["name", "role"] + RIGHTS)
+        existing = frappe.get_all(
+            "Custom DocPerm", filters={"parent": doctype}, fields=["name", "role", *RIGHTS]
+        )
         by_role = {}
         for row in existing:
             by_role.setdefault(row["role"], []).append(row)
@@ -82,12 +94,17 @@ def main():
 
         for role in roles:
             rows = by_role.get(role) or []
-            read_row = next((r for r in rows if cint(r["read"]) == 1 and all(
-                not cint(r[k]) for k in RIGHTS if k != "read")), None)
+            read_row = next(
+                (
+                    r
+                    for r in rows
+                    if cint(r["read"]) == 1 and all(not cint(r[k]) for k in RIGHTS if k != "read")
+                ),
+                None,
+            )
             if read_row and not rows:
                 continue
-            exact = [r for r in rows if all(
-                (cint(r[k]) == (1 if k == "read" else 0)) for k in RIGHTS)]
+            exact = [r for r in rows if all((cint(r[k]) == (1 if k == "read" else 0)) for k in RIGHTS)]
             if exact:
                 print(f"== {doctype} / {role}: already read-only (no change)")
                 continue
@@ -96,7 +113,7 @@ def main():
                 # silently editing someone's grant.
                 print(f"== {doctype} / {role}: EXISTING rows found, not modified by this script:")
                 for r in rows:
-                    print("     ", {k: r[k] for k in ["name", "role"] + RIGHTS if k != "name"})
+                    print("     ", {k: r[k] for k in ["name", "role", *RIGHTS] if k != "name"})
                 continue
 
             print(f"== {doctype} / {role}: granting read only")

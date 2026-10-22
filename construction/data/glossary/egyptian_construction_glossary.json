@@ -1,18 +1,19 @@
 {
   "meta": {
     "name": "Egyptian Construction & Accounting Glossary",
-    "version": "2.1",
-    "date": "2026-10-05",
+    "version": "2.2",
+    "date": "2026-10-18",
     "author": "Construction ERP localization review — upgraded to schema v2 per handoff plan",
     "dialect": "Egyptian professional Arabic (MSA technical vocabulary, Egyptian construction practice)",
     "notes": [
       "Canonical source of truth for Arabic terminology. Schema v2 per TRANSLATION_SUBSYSTEM_STABILIZATION_PLAN.md.",
       "Each entry: source_text/context/origin_app/domain/approved_ar/forbidden_ar/usage_notes/references/a1_status/a2_status/version.",
       "Applied via approved_ar_overrides.csv (Packaged Release) — never via vendor .po edits.",
-      "Terms are region-specific to Egypt; Subcontractor family must NEVER use manufacturing phrasing (التصنيع بالعقد)."
+      "Terms are region-specific to Egypt; Subcontractor family must NEVER use manufacturing phrasing (التصنيع بالعقد).",
+      "2026-10-18: Variation Order glossary term updated to the owner-directed F31-D001 label in glossary v2.2. Exact-label AI review provenance is recorded in the bounded F31 evidence files; no human/legal/industry certification is claimed. No other term changed."
     ],
-    "previous_version": "2.0",
-    "previous_checksum": "aefbbf633d432fb93ac63996960bb58d0bd005e973e0e461f4480d7ae46b51b4",
+    "previous_version": "2.1",
+    "previous_checksum": "7afbef1ab892f466eb14471c99a9e76dde65b4f2e9d4a40a1405e34addc6894d",
     "term_count": 47
   },
   "terms": [
@@ -659,13 +660,13 @@
       "context": "",
       "origin_app": "construction",
       "domain": "boq",
-      "approved_ar": "أمر تغيير",
+      "approved_ar": "أمر التغيير",
       "forbidden_ar": [],
-      "usage_notes": "VO. Previously generic/absent.",
-      "references": "Glossary v1.0 provisional",
+      "usage_notes": "Variation Order (VO). Definite form per owner decision F31-D001 (2026-10-14). Exact label reviewed by AI-A1/A2 on 2026-10-17 UTC and AI-A3 on 2026-10-18 UTC. AI review only; no human, legal, or Egyptian industry certification. The label does not change workflow, approval authority, entitlement, or pricing.",
+      "references": "Owner decision F31-D001 (2026-10-14); approved_ar_overrides.csv v1.1; bounded AI-A1/A2/A3 review in f31_decision_evidence_2026-10-14.md and f31_review_evidence_2026-10-18.json; one-term glossary amendment v2.2 proposal.",
       "a1_status": "Approved",
       "a2_status": "Approved",
-      "version": "2.0"
+      "version": "2.2"
     },
     {
       "source_text": "Bill of Quantities",

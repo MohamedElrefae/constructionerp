@@ -1,4 +1,5 @@
 """Build proposal CSV for W6-6 CRM, Support & Maintenance."""
+
 from __future__ import annotations
 
 import csv
@@ -7,7 +8,11 @@ import json
 import re
 from pathlib import Path
 
-from stage6_w606_crm_support_maintenance_dict import DEFERRED_SOURCE_DEFECTS, TECHNICAL_EXCEPTIONS, TRANSLATIONS
+from stage6_w606_crm_support_maintenance_dict import (
+    DEFERRED_SOURCE_DEFECTS,
+    TECHNICAL_EXCEPTIONS,
+    TRANSLATIONS,
+)
 
 ROOT = Path("/home/mohamed/frappe-bench/apps/construction")
 SCOPE = ROOT / "docs/translation/stage6_w606_crm_support_maintenance_rows_2026-09-24.csv"
@@ -27,7 +32,9 @@ assert len(site_overrides_map) == 76
 
 missing_keys = set(recon["missing_runtime_keys"])
 assert len(missing_keys) == 43
-assert (set(TRANSLATIONS.keys()) | set(TECHNICAL_EXCEPTIONS.keys()) | set(DEFERRED_SOURCE_DEFECTS.keys())) == missing_keys
+assert (
+    set(TRANSLATIONS.keys()) | set(TECHNICAL_EXCEPTIONS.keys()) | set(DEFERRED_SOURCE_DEFECTS.keys())
+) == missing_keys
 
 proposal_rows = []
 for row in scope_rows:
@@ -55,14 +62,16 @@ for row in scope_rows:
         ar_ph = sorted(re.findall(r"\{[0-9]*\}", ar))
         assert src_ph == ar_ph, f"Placeholder mismatch for {src!r}: {src_ph} vs {ar_ph}"
 
-    proposal_rows.append({
-        "source_text": src,
-        "proposed_ar": ar,
-        "proposed_disposition": disp,
-        "disposition_rationale": rat,
-        "decision_ref": "stage6-W6-6 CRM Support Maintenance corrected-review-pending 2026-09-24",
-        "locations": loc,
-    })
+    proposal_rows.append(
+        {
+            "source_text": src,
+            "proposed_ar": ar,
+            "proposed_disposition": disp,
+            "disposition_rationale": rat,
+            "decision_ref": "stage6-W6-6 CRM Support Maintenance corrected-review-pending 2026-09-24",
+            "locations": loc,
+        }
+    )
 
 assert len(proposal_rows) == 119
 assert sum(row["proposed_disposition"] == "preserved-site-override" for row in proposal_rows) == 76
@@ -72,10 +81,17 @@ assert sum(row["proposed_disposition"] == "DEFERRED-source-defect" for row in pr
 assert len({row["source_text"] for row in proposal_rows}) == 119
 
 with OUT.open("w", encoding="utf-8", newline="") as handle:
-    writer = csv.DictWriter(handle, fieldnames=[
-        "source_text", "proposed_ar", "proposed_disposition",
-        "disposition_rationale", "decision_ref", "locations"
-    ])
+    writer = csv.DictWriter(
+        handle,
+        fieldnames=[
+            "source_text",
+            "proposed_ar",
+            "proposed_disposition",
+            "disposition_rationale",
+            "decision_ref",
+            "locations",
+        ],
+    )
     writer.writeheader()
     writer.writerows(proposal_rows)
 

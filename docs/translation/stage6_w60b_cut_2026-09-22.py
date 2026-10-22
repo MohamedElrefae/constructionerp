@@ -30,9 +30,7 @@ OUT_EXCL = ROOT / "docs" / "translation" / "stage6_w60b_dedup_exclusions_2026-09
 
 MAX_LEN = 40
 LOC_FALLBACK = "in-ledger (no vendor PO location match)"
-SUPPRESS_TECH = (
-    "Keep vendor code/symbol/markup content untouched — technical fragment, no translation"
-)
+SUPPRESS_TECH = "Keep vendor code/symbol/markup content untouched — technical fragment, no translation"
 SUPPRESS_PRIOR = "Already approved in a1/a2 overrides — excluded to avoid duplicate scope"
 AI_R_TECH = "AI-R: confirm technical suppress at W6-0b AI-R pass (stage6-w60b AI-R record)"
 AI_R_PRIOR = "AI-R: confirm prior-approved exclusion at W6-0b AI-R pass (stage6-w60b AI-R record)"
@@ -85,9 +83,7 @@ def main() -> None:
         rows.append(
             {
                 "source_text": text,
-                "classification": "EXCEPTION-technical"
-                if technical
-                else "translation-candidate",
+                "classification": "EXCEPTION-technical" if technical else "translation-candidate",
                 "location": LOC_FALLBACK,
                 "suppression_rationale": SUPPRESS_TECH if technical else "",
                 "ai_r_ref": AI_R_TECH if technical else AI_R_PRIOR,

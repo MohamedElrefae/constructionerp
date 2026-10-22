@@ -151,10 +151,10 @@ class TestBilingualEmployeePilot(unittest.TestCase):
     def test_arabic_edit_rejects_bidi_controls(self):
         """employee_name_ar rejects bidi controls (C0, C1, DEL, overrides, isolates, LRM/RLM/ALM)."""
         forbidden_samples = [
-            "أحمد\u202eالمنصوري",  # Right-to-Left Override
-            "أحمد\u200eالمنصوري",  # LRM
-            "أحمد\u202bالمنصوري",  # RLE
-            "أحمد\x00المنصوري",  # NUL
+            "أحمد\u202eالمنصوري",  # Right-to-Left Override  # noqa: RUF001 -- intentional Arabic security-test fixture
+            "أحمد\u200eالمنصوري",  # LRM  # noqa: RUF001 -- intentional Arabic security-test fixture
+            "أحمد\u202bالمنصوري",  # RLE  # noqa: RUF001 -- intentional Arabic security-test fixture
+            "أحمد\x00المنصوري",  # NUL  # noqa: RUF001 -- intentional Arabic security-test fixture
         ]
         doc = _get_target_employee()
         orig_val = doc.get("employee_name_ar")
@@ -193,17 +193,19 @@ class TestBilingualEmployeePilot(unittest.TestCase):
 
         # Rename preservation test
         emp_ar = "مهندس ضبط الجودة عمر"
-        emp = frappe.get_doc({
-            "doctype": "Employee",
-            "first_name": "Omar",
-            "last_name": "Test",
-            "gender": "Male",
-            "date_of_birth": "1990-01-01",
-            "date_of_joining": "2020-01-01",
-            "company": "Elrefae",
-            "status": "Active",
-            "employee_name_ar": emp_ar,
-        })
+        emp = frappe.get_doc(
+            {
+                "doctype": "Employee",
+                "first_name": "Omar",
+                "last_name": "Test",
+                "gender": "Male",
+                "date_of_birth": "1990-01-01",
+                "date_of_joining": "2020-01-01",
+                "company": "Elrefae",
+                "status": "Active",
+                "employee_name_ar": emp_ar,
+            }
+        )
         emp.insert(ignore_permissions=True)
         old_id = emp.name
         new_id = f"{old_id}-RENAMED"

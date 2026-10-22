@@ -56,8 +56,17 @@ def main():
 
     rows = frappe.get_all(
         "Department",
-        fields=["name", "department_name", "company", "parent_department", "is_group",
-                "disabled", "lft", "rgt", "department_name_ar"],
+        fields=[
+            "name",
+            "department_name",
+            "company",
+            "parent_department",
+            "is_group",
+            "disabled",
+            "lft",
+            "rgt",
+            "department_name_ar",
+        ],
         order_by="lft",
     )
     if len(rows) != total:
@@ -87,7 +96,9 @@ def main():
 
     frozen = set(PHASE1_FROZEN)
     if derived_phase1 != frozen:
-        fails.append(f"PHASE1 drift: extra={sorted(derived_phase1 - frozen)} missing={sorted(frozen - derived_phase1)}")
+        fails.append(
+            f"PHASE1 drift: extra={sorted(derived_phase1 - frozen)} missing={sorted(frozen - derived_phase1)}"
+        )
     if class_counts["root"] != 1 or class_counts["real_company"] != 13:
         fails.append(f"class counts drifted: {class_counts}")
     if class_counts["test_company"] + class_counts["label_noise"] != 262:
@@ -99,9 +110,20 @@ def main():
 
     # Usage attribution (live references from any table with a department column).
     usage_tables = [
-        "Employee", "Project", "Task", "User Scope Context", "Scope Report Access Log",
-        "GL Entry", "Journal Entry Account", "Sales Invoice", "Purchase Order", "Budget",
-        "Timesheet", "Sales Order", "Purchase Receipt", "Stock Entry",
+        "Employee",
+        "Project",
+        "Task",
+        "User Scope Context",
+        "Scope Report Access Log",
+        "GL Entry",
+        "Journal Entry Account",
+        "Sales Invoice",
+        "Purchase Order",
+        "Budget",
+        "Timesheet",
+        "Sales Order",
+        "Purchase Receipt",
+        "Stock Entry",
     ]
     used = {}
     for t in usage_tables:
@@ -123,6 +145,7 @@ def main():
 
     # Fixture-JSON status (contrast: uom.json had sync-wipe risk F5 in 5F).
     import os
+
     fixture_dir = "/home/mohamed/frappe-bench/apps/construction/construction/fixtures"
     dept_fixtures = [f for f in os.listdir(fixture_dir) if "department" in f.lower()]
     print(f"FIXTURE_JSON department_fixture_files={dept_fixtures or 'none'}")
@@ -141,8 +164,10 @@ def main():
     print("FINDINGS F-5G-1 actual total 276 frozen (5F scope note said 274 - stale off-hand figure)")
     print("FINDINGS F-5G-2 identity: name = '<label> - <abbr>' on all company rows; root name = label")
     print("FINDINGS F-5G-3 tree: single root, all 275 children flat under it, only root is_group=1")
-    print("FINDINGS F-5G-4 root save quirk probed: MandatoryError(company NULL) + NestedSetRecursionError "
-          "(validate self-parents) -> R3b-style ignore_mandatory + scoped get_root_of->None needed")
+    print(
+        "FINDINGS F-5G-4 root save quirk probed: MandatoryError(company NULL) + NestedSetRecursionError "
+        "(validate self-parents) -> R3b-style ignore_mandatory + scoped get_root_of->None needed"
+    )
     print("FINDINGS F-5G-5 no Department fixture JSON -> no sync-wipe risk (5F F5 does not apply)")
     print("FINDINGS F-5G-6 glossary: 47 terms, zero exact matches on the 14 Phase-1 labels")
     print("PHASE1_FROZEN_MATCH yes (14 = root + 13 Elrefae)")

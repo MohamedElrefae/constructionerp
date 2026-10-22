@@ -39,8 +39,23 @@ def byte_scan(value):
         problems.append("whitespace")
     for ch in value:
         cp = ord(ch)
-        if cp in (0x200E, 0x200F, 0x202A, 0x202B, 0x202C, 0x202D, 0x202E,
-                  0x2066, 0x2067, 0x2068, 0x2069, 0x200B, 0x200C, 0x200D, 0xFEFF):
+        if cp in (
+            0x200E,
+            0x200F,
+            0x202A,
+            0x202B,
+            0x202C,
+            0x202D,
+            0x202E,
+            0x2066,
+            0x2067,
+            0x2068,
+            0x2069,
+            0x200B,
+            0x200C,
+            0x200D,
+            0xFEFF,
+        ):
             problems.append(f"bidi/zw U+{cp:04X}")
         elif cp < 0x20 or cp == 0x7F or 0x80 <= cp <= 0x9F:
             problems.append(f"control U+{cp:04X}")
@@ -87,8 +102,11 @@ def main():
             print(f"FAIL pre-validate {name}: {problems}")
             sys.exit(1)
         snap = frappe.db.get_value(
-            "Department", name,
-            [LABEL_FIELD, "company", "parent_department", "is_group", AR_FIELD], as_dict=True)
+            "Department",
+            name,
+            [LABEL_FIELD, "company", "parent_department", "is_group", AR_FIELD],
+            as_dict=True,
+        )
         if not snap:
             print(f"FAIL pre-validate {name}: absent")
             sys.exit(1)
@@ -109,8 +127,7 @@ def main():
         elif snap["parent_department"] != "All Departments":
             print(f"FAIL pre-validate {name}: parent drift")
             sys.exit(1)
-        plan.append({"name": name, "value": value, "already": bool(snap[AR_FIELD]),
-                     "root": is_root})
+        plan.append({"name": name, "value": value, "already": bool(snap[AR_FIELD]), "root": is_root})
     site_ar = frappe.db.count("Department", {AR_FIELD: ("!=", "")})
     excluded = frappe.db.count("Department") - len(plan)
     if site_ar != 0 or excluded != 262:
@@ -120,6 +137,7 @@ def main():
 
     # Apply through the standard document lifecycle.
     import erpnext.setup.doctype.department.department as dept_mod
+
     orig_get_root_of = dept_mod.get_root_of
     results = []
     try:
@@ -143,7 +161,7 @@ def main():
             d.set("old_parent", d.get("parent_department") or None)
             if item["root"]:
                 dept_mod.get_root_of = lambda doctype: None  # disclosed R3B, P3-proven
-                d.flags.ignore_mandatory = True             # root has NULL company by design
+                d.flags.ignore_mandatory = True  # root has NULL company by design
                 path = "R3B_ROOT"
             else:
                 path = "PLAIN"
@@ -165,19 +183,30 @@ def main():
                 raise RuntimeError(f"{item['name']}: norm not server-derived")
             after_fields = dict(d.as_dict())
             allowed = {AR_FIELD, NORM_FIELD, "old_parent"}
-            changed = {k for k in before_fields
-                       if before_fields.get(k) != after_fields.get(k)
-                       and k not in ("modified", "modified_by", "idx")}
+            changed = {
+                k
+                for k in before_fields
+                if before_fields.get(k) != after_fields.get(k) and k not in ("modified", "modified_by", "idx")
+            }
             unexpected = changed - allowed
             if unexpected:
                 raise RuntimeError(f"{item['name']}: unexpected field changes {sorted(unexpected)}")
-            print(f"WRITE Department {item['name']!r} value={sha16(item['value'])} "
-                  f"norm={sha16(expected)} identity=unchanged tree=unchanged "
-                  f"fields_changed={sorted(changed)} {path}")
-            results.append({"name": item["name"], "action": "written",
-                            "value": item["value"], "norm": expected, "path": path})
+            print(
+                f"WRITE Department {item['name']!r} value={sha16(item['value'])} "
+                f"norm={sha16(expected)} identity=unchanged tree=unchanged "
+                f"fields_changed={sorted(changed)} {path}"
+            )
+            results.append(
+                {
+                    "name": item["name"],
+                    "action": "written",
+                    "value": item["value"],
+                    "norm": expected,
+                    "path": path,
+                }
+            )
         frappe.db.commit()
-    except Exception as exc:  # noqa: BLE001 - fail-closed rollback
+    except Exception as exc:
         frappe.db.rollback()
         print(f"FAIL during apply, transaction rolled back: {type(exc).__name__}: {exc}")
         sys.exit(1)
@@ -197,8 +226,10 @@ def main():
         json.dump(private, fh, indent=2, ensure_ascii=False)
         fh.write("\n")
     apply_sha = hashlib.sha256(open(f"{PRIVATE}/apply.json", "rb").read()).hexdigest()
-    print(f"SUMMARY written={private['written']} skipped={private['skipped']} failed=0 "
-          f"r3b_root={private['root_r3b']}")
+    print(
+        f"SUMMARY written={private['written']} skipped={private['skipped']} failed=0 "
+        f"r3b_root={private['root_r3b']}"
+    )
     print(f"PRIVATE apply.json sha256={apply_sha}")
     print("APPLY RESULT: PASS")
 

@@ -1,4 +1,5 @@
 """Build W6-6 proposal dispositions after owner-approved read-only recon."""
+
 from __future__ import annotations
 
 import csv
@@ -35,19 +36,27 @@ def main() -> None:
     assert len(set(preserve) & set(ASSETS_CANDIDATE_TRANSLATIONS)) == 0
     assert len(ASSETS_CANDIDATE_TRANSLATIONS) == 113
     keys = {row["source_text"] for row in scope}
-    assert set(preserve) | set(ASSETS_CANDIDATE_TRANSLATIONS) == keys, "proposal does not partition exact approved scope"
+    assert (
+        set(preserve) | set(ASSETS_CANDIDATE_TRANSLATIONS) == keys
+    ), "proposal does not partition exact approved scope"
     assert not recon.get("duplicate_runtime_keys")
 
     for source, arabic in ASSETS_CANDIDATE_TRANSLATIONS.items():
         assert arabic and arabic != source
         assert sorted(PLACEHOLDER.findall(source)) == sorted(PLACEHOLDER.findall(arabic)), source
-        assert source[: len(source) - len(source.lstrip())] == arabic[: len(arabic) - len(arabic.lstrip())], source
-        assert source[len(source.rstrip()):] == arabic[len(arabic.rstrip()):], source
+        assert (
+            source[: len(source) - len(source.lstrip())] == arabic[: len(arabic) - len(arabic.lstrip())]
+        ), source
+        assert source[len(source.rstrip()) :] == arabic[len(arabic.rstrip()) :], source
         assert not any(char in arabic for char in "\x00\t\r\n")
 
     fields = [
-        "source_text", "proposed_ar", "proposed_disposition",
-        "disposition_rationale", "decision_ref", "locations",
+        "source_text",
+        "proposed_ar",
+        "proposed_disposition",
+        "disposition_rationale",
+        "decision_ref",
+        "locations",
     ]
     with OUT.open("w", encoding="utf-8", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=fields, lineterminator="\n")
@@ -56,26 +65,32 @@ def main() -> None:
             source = row["source_text"]
             if source in preserve:
                 disposition, arabic, rationale = (
-                    "preserved-site-override", preserve[source],
+                    "preserved-site-override",
+                    preserve[source],
                     "Preserve the exact live v16.localhost Site Override; do not import or replace.",
                 )
             else:
                 disposition, arabic, rationale = (
-                    "PROPOSED-payload", ASSETS_CANDIDATE_TRANSLATIONS[source],
+                    "PROPOSED-payload",
+                    ASSETS_CANDIDATE_TRANSLATIONS[source],
                     "AI draft; requires independent A1/A2/A3 quorum before release.",
                 )
-            writer.writerow({
-                "source_text": source,
-                "proposed_ar": arabic,
-                "proposed_disposition": disposition,
-                "disposition_rationale": rationale,
-                "decision_ref": DECISION_REF,
-                "locations": row["locations"],
-            })
+            writer.writerow(
+                {
+                    "source_text": source,
+                    "proposed_ar": arabic,
+                    "proposed_disposition": disposition,
+                    "disposition_rationale": rationale,
+                    "decision_ref": DECISION_REF,
+                    "locations": row["locations"],
+                }
+            )
 
     payload = OUT.read_bytes()
     proposal_sha = hashlib.sha256(payload).hexdigest()
-    print(f"scope={len(scope)} preserve={len(preserve)} proposed_payload={len(ASSETS_CANDIDATE_TRANSLATIONS)}")
+    print(
+        f"scope={len(scope)} preserve={len(preserve)} proposed_payload={len(ASSETS_CANDIDATE_TRANSLATIONS)}"
+    )
     print(f"proposal_sha256={proposal_sha}")
     print(f"proposal={OUT}")
 

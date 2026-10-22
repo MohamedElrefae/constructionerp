@@ -105,20 +105,20 @@ def main():
     app_fixture_names = {r["name"] for r in fx_rows}
     if any("uom_name_ar" in r for r in fx_rows):
         fail.append("construction/fixtures/uom.json unexpectedly carries uom_name_ar (R3 disclosure stale)")
-    print(f"FIXTURE_JSON app_rows={len(fx_rows)} has_arabic_key={'yes' if any('uom_name_ar' in r for r in fx_rows) else 'no'}")
+    print(
+        f"FIXTURE_JSON app_rows={len(fx_rows)} has_arabic_key={'yes' if any('uom_name_ar' in r for r in fx_rows) else 'no'}"
+    )
 
     # --- Live usage joins (broad: any Item / any BOQ Item, R7).
     item_uoms = set(
         frappe.db.sql(
-            "SELECT DISTINCT stock_uom FROM tabItem "
-            "WHERE stock_uom IS NOT NULL AND stock_uom != ''",
+            "SELECT DISTINCT stock_uom FROM tabItem " "WHERE stock_uom IS NOT NULL AND stock_uom != ''",
             pluck=True,
         )
     )
     boq_units = set(
         frappe.db.sql(
-            "SELECT DISTINCT unit FROM `tabBOQ Item` "
-            "WHERE unit IS NOT NULL AND unit != ''",
+            "SELECT DISTINCT unit FROM `tabBOQ Item` " "WHERE unit IS NOT NULL AND unit != ''",
             pluck=True,
         )
     )
@@ -126,7 +126,16 @@ def main():
 
     rows = frappe.get_all(
         "UOM",
-        fields=["name", "uom_name", "uom_name_ar", "uom_name_ar_norm", "common_code", "symbol", "enabled", "category"],
+        fields=[
+            "name",
+            "uom_name",
+            "uom_name_ar",
+            "uom_name_ar_norm",
+            "common_code",
+            "symbol",
+            "enabled",
+            "category",
+        ],
         limit_page_length=0,
     )
     classified = {"vendor_fixture": [], "app_fixture": [], "in_use": [], "disabled": [], "remainder": []}
@@ -136,13 +145,10 @@ def main():
 
     # --- R1 frozen-allowlist assertion (derived from rules + live joins, less owner prune).
     derived_phase1 = (
-        {r["name"] for r in classified["app_fixture"]}
-        | {r["name"] for r in classified["in_use"]}
+        {r["name"] for r in classified["app_fixture"]} | {r["name"] for r in classified["in_use"]}
     ) - PRUNED_BY_OWNER
     if derived_phase1 != PHASE1_FROZEN:
-        fail.append(
-            f"rule-derived Phase-1 {sorted(derived_phase1)} != frozen {sorted(PHASE1_FROZEN)}"
-        )
+        fail.append(f"rule-derived Phase-1 {sorted(derived_phase1)} != frozen {sorted(PHASE1_FROZEN)}")
     print(f"PHASE1_FROZEN_MATCH {'yes' if derived_phase1 == PHASE1_FROZEN else 'NO'}")
     in_use_pruned = sorted({r["name"] for r in classified["in_use"]} & PRUNED_BY_OWNER)
     print(f"PRUNED_BY_OWNER {in_use_pruned}")
@@ -184,10 +190,7 @@ def main():
         hits = [o.get("value") for o in search_link("UOM", name, page_length=50)]
         (visible if name in hits else hidden).append(name)
     print(f"FINDING F2 phase1_visible_in_picker={len(visible)}/{len(derived_phase1)}")
-    print(
-        "FINDING F2 phase1_hidden_in_picker="
-        f"{[(n, enabled_map[n]) for n in hidden] or 'none'}"
-    )
+    print("FINDING F2 phase1_hidden_in_picker=" f"{[(n, enabled_map[n]) for n in hidden] or 'none'}")
 
     for cls in ("vendor_fixture", "app_fixture", "in_use", "disabled", "remainder"):
         members = sorted(classified[cls], key=lambda x: x["name"])
@@ -213,9 +216,11 @@ def main():
             print("FAIL:", f)
         print("INVENTORY RESULT: FAIL")
         sys.exit(1)
-    print("INVENTORY RESULT: PASS (R1 rule-derived Phase-1 matches frozen 15-row allowlist; "
-          "pre-state empty; F4 owner prune applied; F1/F2 findings reported; "
-          "no in_use row disabled)")
+    print(
+        "INVENTORY RESULT: PASS (R1 rule-derived Phase-1 matches frozen 15-row allowlist; "
+        "pre-state empty; F4 owner prune applied; F1/F2 findings reported; "
+        "no in_use row disabled)"
+    )
 
 
 if __name__ == "__main__":

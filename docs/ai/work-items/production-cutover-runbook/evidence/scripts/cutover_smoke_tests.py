@@ -64,12 +64,24 @@ APPS = os.path.join(BENCH, "apps")
 SITES = os.path.join(BENCH, "sites")
 sys.path.insert(0, os.path.join(APPS, "construction"))
 
-import frappe  # noqa: E402
+import frappe
 
 TOPO = [
-    "Company", "Account", "Cost Center", "Warehouse", "Project",
-    "Item Group", "Customer Group", "Supplier Group", "Territory",
-    "Department", "Task", "UOM", "Item", "Customer", "Terms and Conditions",
+    "Company",
+    "Account",
+    "Cost Center",
+    "Warehouse",
+    "Project",
+    "Item Group",
+    "Customer Group",
+    "Supplier Group",
+    "Territory",
+    "Department",
+    "Task",
+    "UOM",
+    "Item",
+    "Customer",
+    "Terms and Conditions",
 ]
 TX_TARGETS = ("Sales Order", "Purchase Order", "Material Request", "Sales Invoice")
 REPORTS = ("Balance Sheet", "Profit and Loss Statement")
@@ -117,13 +129,13 @@ def median(values):
 
 
 def registry():
-    path = os.path.join(APPS, "construction", "construction", "data",
-                        "bilingual", "bilingual_registry.json")
+    path = os.path.join(APPS, "construction", "construction", "data", "bilingual", "bilingual_registry.json")
     with open(path, encoding="utf-8") as handle:
         return json.load(handle)
 
 
 # ------------------------------------------------------------------ S1
+
 
 def check_bootstrap(reg):
     schema = frappe.conf.db_name
@@ -135,17 +147,24 @@ def check_bootstrap(reg):
             missing.append(f"{doctype}:absent-from-registry")
             continue
         table = "tab" + doctype
-        cols = {r.COLUMN_NAME for r in frappe.db.sql(
-            "SELECT COLUMN_NAME FROM information_schema.COLUMNS "
-            "WHERE TABLE_SCHEMA=%s AND TABLE_NAME=%s",
-            (schema, table), as_dict=True)}
+        cols = {
+            r.COLUMN_NAME
+            for r in frappe.db.sql(
+                "SELECT COLUMN_NAME FROM information_schema.COLUMNS "
+                "WHERE TABLE_SCHEMA=%s AND TABLE_NAME=%s",
+                (schema, table),
+                as_dict=True,
+            )
+        }
         for field in (meta["arabic_field"], meta["norm_field"]):
             if field not in cols:
                 missing.append(f"{table}.{field}")
         coll = frappe.db.sql(
             "SELECT TABLE_COLLATION FROM information_schema.TABLES "
             "WHERE TABLE_SCHEMA=%s AND TABLE_NAME=%s",
-            (schema, table), as_dict=True)
+            (schema, table),
+            as_dict=True,
+        )
         if not coll or not (coll[0].TABLE_COLLATION or "").startswith("utf8mb4"):
             bad_collation.append(table)
     if missing:
@@ -153,11 +172,15 @@ def check_bootstrap(reg):
     elif bad_collation:
         fail("S1", f"non-utf8mb4 tables: {bad_collation}")
     else:
-        ok("S1", f"registry loaded, arabic+norm columns present and utf8mb4 on "
-                 f"all {len(TOPO)} cutover doctypes")
+        ok(
+            "S1",
+            f"registry loaded, arabic+norm columns present and utf8mb4 on "
+            f"all {len(TOPO)} cutover doctypes",
+        )
 
 
 # ------------------------------------------------------------------ S2
+
 
 def check_gate(site, expect_gate):
     cfg_path = os.path.join(SITES, site, "site_config.json")
@@ -169,19 +192,20 @@ def check_gate(site, expect_gate):
     authorized = cfg.get("production_mutation_authorized")
     state = "open" if authorized is True else "closed"
     if state != expect_gate:
-        fail("S2", f"production_mutation_authorized={authorized!r} but this run "
-                   f"expects gate={expect_gate}")
+        fail(
+            "S2", f"production_mutation_authorized={authorized!r} but this run " f"expects gate={expect_gate}"
+        )
     else:
-        ok("S2", f"governance gate {state} as expected "
-                 f"(production_mutation_authorized={authorized!r})")
+        ok("S2", f"governance gate {state} as expected " f"(production_mutation_authorized={authorized!r})")
 
 
 # ------------------------------------------------------------------ S3
 
+
 def _link_search(doctype, query):
     from construction.searchable_dropdown.api.search import searchable_link_search
-    return searchable_link_search(doctype=doctype, txt=query, filters={},
-                                  page_length=20, searchfield="name")
+
+    return searchable_link_search(doctype=doctype, txt=query, filters={}, page_length=20, searchfield="name")
 
 
 def check_link_latency(reg, args, baseline):
@@ -191,25 +215,30 @@ def check_link_latency(reg, args, baseline):
     for attempt in range(1, attempts + 1):
         load = os.getloadavg()
         if attempts > 1:
-            log(f"S3 attempt {attempt}/{attempts} "
-                f"(load1={load[0]:.2f} load5={load[1]:.2f})")
+            log(f"S3 attempt {attempt}/{attempts} " f"(load1={load[0]:.2f} load5={load[1]:.2f})")
         measurements, misses = _measure_link_latency(
-            reg, args.rounds, args.samples, args.warmup, args.budget_ms)
+            reg, args.rounds, args.samples, args.warmup, args.budget_ms
+        )
         if misses:
             fail("S3", f"link search missed the queried row: {misses}")
             return
         verdict = _judge_link_latency(measurements, args, baseline, establish)
         if verdict != "retry" or attempt == attempts:
             if verdict == "retry":
-                fail("S3", "baseline still above --baseline-cap-ms after "
-                           f"{attempts} attempts on a contended bench "
-                           f"(worst {max(v['p95'] for v in measurements.values()):.3f} "
-                           "ms) — quiesce concurrent bench/test jobs and rerun")
+                fail(
+                    "S3",
+                    "baseline still above --baseline-cap-ms after "
+                    f"{attempts} attempts on a contended bench "
+                    f"(worst {max(v['p95'] for v in measurements.values()):.3f} "
+                    "ms) — quiesce concurrent bench/test jobs and rerun",
+                )
             return
-        log(f"S3 attempt {attempt} unusable "
+        log(
+            f"S3 attempt {attempt} unusable "
             f"(worst {max(v['p95'] for v in measurements.values()):.3f} ms, "
             f"cap {args.baseline_cap_ms} ms) — bench contended; waiting "
-            f"{args.establish_pause}s")
+            f"{args.establish_pause}s"
+        )
         time.sleep(args.establish_pause)
 
 
@@ -223,16 +252,19 @@ def _measure_link_latency(reg, rounds, samples, warmup, budget_ms):
             fail("S3", f"{doctype}: registry search not enabled")
             return {}, [f"{doctype}: registry search disabled"]
         rows = frappe.get_all(
-            doctype, filters={meta["arabic_field"]: ("!=", "")},
-            fields=["name", meta["arabic_field"],
-                    meta.get("english_field") or "name"],
-            limit_page_length=1)
+            doctype,
+            filters={meta["arabic_field"]: ("!=", "")},
+            fields=["name", meta["arabic_field"], meta.get("english_field") or "name"],
+            limit_page_length=1,
+        )
         if not rows:
             fail("S3", f"{doctype}: no populated row to probe")
             return {}, [f"{doctype}: no populated row"]
         row = rows[0]
-        probes = [("ar", row[meta["arabic_field"]]),
-                  ("en", row.get(meta.get("english_field") or "name") or row["name"])]
+        probes = [
+            ("ar", row[meta["arabic_field"]]),
+            ("en", row.get(meta.get("english_field") or "name") or row["name"]),
+        ]
         for lang, query in probes:
             result = _link_search(doctype, query)  # correctness, untimed
             values = {r.get("value") for r in (result or []) if isinstance(r, dict)}
@@ -266,16 +298,19 @@ def _judge_link_latency(measurements, args, baseline, establish):
     worst = measurements[worst_key]["p95"]
 
     if establish:
-        over_cap = [f"{k}={v['p95']:.3f}ms" for k, v in measurements.items()
-                    if v["p95"] > args.baseline_cap_ms]
+        over_cap = [
+            f"{k}={v['p95']:.3f}ms" for k, v in measurements.items() if v["p95"] > args.baseline_cap_ms
+        ]
         if over_cap:
             return "retry"
         payload = {
             "site": args.site,
             "captured_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
             "surface": SURFACE,
-            "protocol": (f"min-of-rounds nearest-rank P95, rounds={args.rounds}, "
-                         f"samples={args.samples}, warmup={args.warmup}"),
+            "protocol": (
+                f"min-of-rounds nearest-rank P95, rounds={args.rounds}, "
+                f"samples={args.samples}, warmup={args.warmup}"
+            ),
             "budget_ms": args.budget_ms,
             "expect_gate": args.expect_gate,
             "probes": measurements,
@@ -283,17 +318,26 @@ def _judge_link_latency(measurements, args, baseline, establish):
         with open(args.write_baseline, "w", encoding="utf-8") as handle:
             json.dump(payload, handle, indent=2, sort_keys=True)
             handle.write("\n")
-        ok("S3", f"correctness {len(measurements)}/{len(measurements)} probes hit; "
-                 f"baseline written to {os.path.basename(args.write_baseline)} "
-                 f"(worst {worst:.3f} ms at {worst_key})")
+        ok(
+            "S3",
+            f"correctness {len(measurements)}/{len(measurements)} probes hit; "
+            f"baseline written to {os.path.basename(args.write_baseline)} "
+            f"(worst {worst:.3f} ms at {worst_key})",
+        )
         breach = sorted(k for k, v in measurements.items() if not v["compliant"])
         if breach:
-            advise("S3-absolute", f"ADR Tier-1 ceiling {args.budget_ms:.2f} ms breached "
-                                  f"at baseline by {len(breach)} probes: {breach} — "
-                                  f"recorded in the pin, non-regression enforced from now on")
+            advise(
+                "S3-absolute",
+                f"ADR Tier-1 ceiling {args.budget_ms:.2f} ms breached "
+                f"at baseline by {len(breach)} probes: {breach} — "
+                f"recorded in the pin, non-regression enforced from now on",
+            )
         else:
-            ok("S3-absolute", f"every probe within the ADR Tier-1 ceiling "
-                              f"{args.budget_ms:.2f} ms (worst {worst:.3f} ms)")
+            ok(
+                "S3-absolute",
+                f"every probe within the ADR Tier-1 ceiling "
+                f"{args.budget_ms:.2f} ms (worst {worst:.3f} ms)",
+            )
         return "done"
 
     hard_failures = []
@@ -315,16 +359,25 @@ def _judge_link_latency(measurements, args, baseline, establish):
     if hard_failures:
         fail("S3", f"link-search latency gate breached: {hard_failures}")
         return "done"
-    ok("S3", f"{len(measurements)} probes correct; every P95 within its gate "
-             f"(worst {worst:.3f} ms at {worst_key})")
+    ok(
+        "S3",
+        f"{len(measurements)} probes correct; every P95 within its gate "
+        f"(worst {worst:.3f} ms at {worst_key})",
+    )
     if breach:
-        advise("S3-absolute", f"ADR Tier-1 ceiling {args.budget_ms:.2f} ms still breached "
-                              f"by {len(breach)} probes carried from baseline: {breach} "
-                              f"— pre-existing drift, not cutover-induced")
+        advise(
+            "S3-absolute",
+            f"ADR Tier-1 ceiling {args.budget_ms:.2f} ms still breached "
+            f"by {len(breach)} probes carried from baseline: {breach} "
+            f"— pre-existing drift, not cutover-induced",
+        )
     else:
-        ok("S3-absolute", f"every probe within the ADR Tier-1 ceiling "
-                          f"{args.budget_ms:.2f} ms (worst {worst:.3f} ms)")
+        ok(
+            "S3-absolute",
+            f"every probe within the ADR Tier-1 ceiling " f"{args.budget_ms:.2f} ms (worst {worst:.3f} ms)",
+        )
     return "done"
+
 
 def load_baseline(path):
     if not path:
@@ -337,13 +390,15 @@ def load_baseline(path):
 
 # ------------------------------------------------------------------ S4
 
+
 def check_transaction_link_latency():
     from construction.services.transaction_link_search import search_transactions
+
     source = None
-    for master, field in (("Customer", "customer_name_in_arabic"),
-                          ("Supplier", "supplier_name_in_arabic")):
-        found = frappe.get_all(master, filters={field: ("!=", "")},
-                               fields=["name", field], limit_page_length=1)
+    for master, field in (("Customer", "customer_name_in_arabic"), ("Supplier", "supplier_name_in_arabic")):
+        found = frappe.get_all(
+            master, filters={field: ("!=", "")}, fields=["name", field], limit_page_length=1
+        )
         if found:
             source = (master, field, found[0])
             break
@@ -365,91 +420,111 @@ def check_transaction_link_latency():
         if not isinstance(result, list):
             fail("S4", f"search_transactions({target}) returned {type(result).__name__}")
             return
-        report.append(f"{target}: p50={median(times):.3f} "
-                      f"p95={nearest_rank_p95(times):.3f} max={max(times):.3f}")
-    advise("S4", "transactional link sidecar has no ratified latency budget; "
-                 f"measured from a {master} query — " + " | ".join(report))
+        report.append(
+            f"{target}: p50={median(times):.3f} " f"p95={nearest_rank_p95(times):.3f} max={max(times):.3f}"
+        )
+    advise(
+        "S4",
+        "transactional link sidecar has no ratified latency budget; "
+        f"measured from a {master} query — " + " | ".join(report),
+    )
 
 
 # ------------------------------------------------------------------ S5
+
 
 def check_financial_reports():
     """Run on the ledger-bearing company; an empty ledger would be a vacuous pass."""
     companies = frappe.get_all("Company", fields=["name"], limit_page_length=0)
     ranked = []
     for company in companies:
-        ranked.append((frappe.db.count("GL Entry", {"company": company.name}),
-                       company.name))
+        ranked.append((frappe.db.count("GL Entry", {"company": company.name}), company.name))
     ranked.sort(reverse=True)
     if not ranked or ranked[0][0] == 0:
-        fail("S5", "no company carries GL Entry rows — financial reports would "
-                   "render empty and prove nothing")
+        fail(
+            "S5",
+            "no company carries GL Entry rows — financial reports would " "render empty and prove nothing",
+        )
         return
     gl_rows, company = ranked[0]
     today = frappe.utils.today()
-    filters = {"company": company,
-               "from_date": f"{today[:4]}-01-01",
-               "to_date": today}
-    before = {"Account": frappe.db.count("Account"),
-              "GL Entry": frappe.db.count("GL Entry")}
+    filters = {"company": company, "from_date": f"{today[:4]}-01-01", "to_date": today}
+    before = {"Account": frappe.db.count("Account"), "GL Entry": frappe.db.count("GL Entry")}
     for report_name in REPORTS:
         try:
             from construction.api.bilingual_reports import localized_report
+
             start = time.perf_counter()
             out = localized_report(report_name, filters=json.dumps(filters), mode="en")
             elapsed = (time.perf_counter() - start) * 1000.0
-        except Exception as exc:  # noqa: BLE001 - smoke test must surface it
+        except Exception as exc:
             fail("S5", f"{report_name}: {type(exc).__name__}: {exc}")
             return
         columns, data = out.get("columns"), out.get("data")
         if not isinstance(columns, list) or not isinstance(data, list) or not data:
-            fail("S5", f"{report_name}: empty or malformed result "
-                       f"(columns={type(columns).__name__}, data={type(data).__name__})")
+            fail(
+                "S5",
+                f"{report_name}: empty or malformed result "
+                f"(columns={type(columns).__name__}, data={type(data).__name__})",
+            )
             return
-        ok("S5", f"{report_name}: {len(columns)} columns x {len(data)} rows in "
-                 f"{elapsed:.1f} ms (en mode, company with {gl_rows} GL rows)")
-    after = {"Account": frappe.db.count("Account"),
-             "GL Entry": frappe.db.count("GL Entry")}
+        ok(
+            "S5",
+            f"{report_name}: {len(columns)} columns x {len(data)} rows in "
+            f"{elapsed:.1f} ms (en mode, company with {gl_rows} GL rows)",
+        )
+    after = {"Account": frappe.db.count("Account"), "GL Entry": frappe.db.count("GL Entry")}
     if before != after:
         fail("S5", f"report execution mutated ledger tables: {before} -> {after}")
     else:
-        ok("S5", f"report generation read-only (Account={before['Account']}, "
-                 f"GL Entry={before['GL Entry']} unchanged)")
+        ok(
+            "S5",
+            f"report generation read-only (Account={before['Account']}, "
+            f"GL Entry={before['GL Entry']} unchanged)",
+        )
 
 
 # ------------------------------------------------------------------ S6
 
+
 def check_print_previews():
     rendered = []
     for doctype in PRINT_DOCTYPES:
-        recent = frappe.get_all(doctype, fields=["name"],
-                                order_by="modified desc", limit_page_length=1)
+        recent = frappe.get_all(doctype, fields=["name"], order_by="modified desc", limit_page_length=1)
         if not recent:
-            log(f"S6 SKIP: {doctype}: no documents on this site "
-                f"(nothing to preview — disclosed, not a pass)")
+            log(
+                f"S6 SKIP: {doctype}: no documents on this site "
+                f"(nothing to preview — disclosed, not a pass)"
+            )
             continue
         name = recent[0].name
         try:
             html = frappe.get_print(doctype, name)
-        except Exception as exc:  # noqa: BLE001
+        except Exception as exc:
             fail("S6", f"{doctype}: print preview raised {type(exc).__name__}: {exc}")
             return
         if not isinstance(html, str) or len(html) < 200:
-            fail("S6", f"{doctype}: print preview too short "
-                       f"({0 if not isinstance(html, str) else len(html)} chars)")
+            fail(
+                "S6",
+                f"{doctype}: print preview too short "
+                f"({0 if not isinstance(html, str) else len(html)} chars)",
+            )
             return
         if name not in html:
-            fail("S6", f"{doctype}: rendered preview does not contain the "
-                       f"document name (wrong document or empty shell)")
+            fail(
+                "S6",
+                f"{doctype}: rendered preview does not contain the "
+                f"document name (wrong document or empty shell)",
+            )
             return
         marker = "<table" if "<table" in html else ("<div" if "<div" in html else "none")
         rendered.append(f"{doctype}({len(html)} chars, {marker})")
     if rendered:
-        ok("S6", "print previews rendered with document name present: "
-                 + ", ".join(rendered))
+        ok("S6", "print previews rendered with document name present: " + ", ".join(rendered))
 
 
 # ------------------------------------------------------------------ S7 / S8
+
 
 def check_maintenance(site, allow_maintenance):
     cfg_path = os.path.join(SITES, site, "site_config.json")
@@ -458,11 +533,13 @@ def check_maintenance(site, allow_maintenance):
     if mode in (0, None):
         ok("S7", "maintenance_mode is off (site serving traffic)")
     elif allow_maintenance:
-        advise("S7", "maintenance_mode is ON — accepted for this run "
-                     "(--allow-maintenance)")
+        advise("S7", "maintenance_mode is ON — accepted for this run " "(--allow-maintenance)")
     else:
-        fail("S7", "maintenance_mode is ON — cutover is not complete until "
-                   f"`bench --site {site} set-maintenance-mode off` has been run")
+        fail(
+            "S7",
+            "maintenance_mode is ON — cutover is not complete until "
+            f"`bench --site {site} set-maintenance-mode off` has been run",
+        )
 
 
 def check_redis():
@@ -479,28 +556,34 @@ def check_redis():
     if down:
         fail("S8", "redis unreachable: " + ", ".join(down))
     else:
-        ok("S8", "redis reachable on " +
-           ", ".join(f"{label}:{port}" for label, port in REDIS_PORTS))
+        ok("S8", "redis reachable on " + ", ".join(f"{label}:{port}" for label, port in REDIS_PORTS))
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--site", default="v16.localhost")
-    parser.add_argument("--budget-ms", type=float, default=1.50,
-                        help="ADR Tier-1 absolute ceiling for link search (ms)")
-    parser.add_argument("--baseline", default=None,
-                        help="latency baseline pin to compare against")
-    parser.add_argument("--write-baseline", default=None,
-                        help="establish the baseline pin (only when no pin exists)")
-    parser.add_argument("--regression-tolerance", type=float, default=1.25,
-                        help="allowed multiple of a baseline BREACH value")
-    parser.add_argument("--baseline-cap-ms", type=float, default=10.0,
-                        help="refuse to pin a baseline worse than this")
-    parser.add_argument("--establish-attempts", type=int, default=3,
-                        help="bounded retries while establishing a pin on a "
-                             "contended bench")
-    parser.add_argument("--establish-pause", type=float, default=5.0,
-                        help="seconds to wait between establish attempts")
+    parser.add_argument(
+        "--budget-ms", type=float, default=1.50, help="ADR Tier-1 absolute ceiling for link search (ms)"
+    )
+    parser.add_argument("--baseline", default=None, help="latency baseline pin to compare against")
+    parser.add_argument(
+        "--write-baseline", default=None, help="establish the baseline pin (only when no pin exists)"
+    )
+    parser.add_argument(
+        "--regression-tolerance", type=float, default=1.25, help="allowed multiple of a baseline BREACH value"
+    )
+    parser.add_argument(
+        "--baseline-cap-ms", type=float, default=10.0, help="refuse to pin a baseline worse than this"
+    )
+    parser.add_argument(
+        "--establish-attempts",
+        type=int,
+        default=3,
+        help="bounded retries while establishing a pin on a " "contended bench",
+    )
+    parser.add_argument(
+        "--establish-pause", type=float, default=5.0, help="seconds to wait between establish attempts"
+    )
     parser.add_argument("--rounds", type=int, default=3)
     parser.add_argument("--samples", type=int, default=50)
     parser.add_argument("--warmup", type=int, default=5)
@@ -516,8 +599,10 @@ def main():
     os.chdir(SITES)  # frappe resolves assets/assets.json relative to cwd
     baseline = load_baseline(args.baseline)
     if args.write_baseline and baseline is not None:
-        log(f"NOTE: {args.write_baseline} already exists — comparing against it "
-            f"instead of re-pinning (delete it deliberately to re-establish)")
+        log(
+            f"NOTE: {args.write_baseline} already exists — comparing against it "
+            f"instead of re-pinning (delete it deliberately to re-establish)"
+        )
         args.write_baseline = None
 
     frappe.init(site=args.site, sites_path=SITES)
@@ -526,17 +611,23 @@ def main():
     started = time.time()
     try:
         load = os.getloadavg()
-        log(f"CUTOVER SMOKE TESTS site={args.site} gate={args.expect_gate} "
-            f"budget_ms={args.budget_ms} surface={SURFACE}")
-        log(f"ENV load1={load[0]:.2f} load5={load[1]:.2f} load15={load[2]:.2f} "
-            f"(latency gates are only meaningful on a quiesced bench)")
+        log(
+            f"CUTOVER SMOKE TESTS site={args.site} gate={args.expect_gate} "
+            f"budget_ms={args.budget_ms} surface={SURFACE}"
+        )
+        log(
+            f"ENV load1={load[0]:.2f} load5={load[1]:.2f} load15={load[2]:.2f} "
+            f"(latency gates are only meaningful on a quiesced bench)"
+        )
         reg = registry()
         check_bootstrap(reg)
         check_gate(args.site, args.expect_gate)
         check_redis()
         if args.skip_latency:
-            log("S3 SKIP: --skip-latency (diagnostic runs only; a real cutover "
-                "must not skip the latency probe)")
+            log(
+                "S3 SKIP: --skip-latency (diagnostic runs only; a real cutover "
+                "must not skip the latency probe)"
+            )
         else:
             check_link_latency(reg, args, baseline)
             check_transaction_link_latency()
@@ -545,19 +636,23 @@ def main():
         check_maintenance(args.site, args.allow_maintenance)
 
         if fails:
-            log(f"SMOKE RESULT: FAIL ({len(fails)} failed: {', '.join(fails)}); "
+            log(
+                f"SMOKE RESULT: FAIL ({len(fails)} failed: {', '.join(fails)}); "
                 f"{len(passes)} passed, {len(advisories)} advisory "
-                f"({time.time() - started:.1f}s)")
+                f"({time.time() - started:.1f}s)"
+            )
             return 1
-        log(f"SMOKE RESULT: PASS ({len(passes)} checks passed, "
+        log(
+            f"SMOKE RESULT: PASS ({len(passes)} checks passed, "
             f"{len(advisories)} advisory: {', '.join(advisories) or 'none'} "
-            f"({time.time() - started:.1f}s)")
+            f"({time.time() - started:.1f}s)"
+        )
         return 0
     finally:
         try:
             frappe.db.rollback()
             frappe.db.close()
-        except Exception:  # noqa: BLE001 - close is best-effort
+        except Exception:
             pass
 
 

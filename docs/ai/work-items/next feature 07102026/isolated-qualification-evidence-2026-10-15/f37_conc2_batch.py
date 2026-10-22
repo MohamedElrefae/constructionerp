@@ -8,6 +8,7 @@ same-stage concurrent measurements, parallel approvals on different items.
 Engineering workload assumptions (NOT customer capacity): 2-4 threads, lab hardware,
 fresh small dataset. Timings are observations, not SLAs.
 """
+
 import sys
 import threading
 import time
@@ -29,8 +30,7 @@ def log(m):
 def fresh(user):
     import frappe as F
 
-    F.init(site="f31fresh-clean.localhost",
-           sites_path="/tmp/construction-foundation-lab-20261014/sites")
+    F.init(site="f31fresh-clean.localhost", sites_path="/tmp/construction-foundation-lab-20261014/sites")
     F.connect()
     F.set_user(user)
     return F
@@ -43,10 +43,12 @@ ITEMS = ["BOQI-BOQ-2026-0001-0002", "BOQI-BOQ-2026-0001-0003"]
 def t_vo_race():
     # two engineers approve the SAME submitted VO concurrently: single winner expected
     res = []
+
     def one():
         try:
             F = fresh("acc-eng@qualification.invalid")
             from construction.api.boq_api import transition_variation_order
+
             try:
                 r = transition_variation_order(vo_name=VOS[0], new_status="Approved by Engineer")
                 res.append(("ok", bool((r or {}).get("success", True))))
@@ -60,6 +62,7 @@ def t_vo_race():
                 frappe.destroy()
             except Exception:
                 pass
+
     ths = [threading.Thread(target=one) for _ in range(2)]
     [t.start() for t in ths]
     [t.join() for t in ths]
@@ -71,16 +74,33 @@ def t_vo_race():
 def t_parallel_approvals():
     # approvals on DIFFERENT items proceed independently
     res = []
+
     def one(idx):
         try:
             F = fresh("f31-pm@qualification.invalid")
             a = F.new_doc("BOQ Cost Analysis")
-            a.update({"title": f"ACC conc par {idx}", "boq_item": ITEMS[idx % 2],
-                      "boq_header": "BOQ-2026-0001",
-                      "project": F.db.get_value("BOQ Header", "BOQ-2026-0001", "project"),
-                      "company": "ACC Acceptance Co", "analysis_uom": "Nos", "currency": "EGP"})
-            a.append("details", {"cost_stream": "M", "item_code": "ACC-Cement", "resource_uom": "Nos",
-                                 "qty_per_boq_unit": 1, "cost_rate": 300 + idx, "wastage_pct": 0})
+            a.update(
+                {
+                    "title": f"ACC conc par {idx}",
+                    "boq_item": ITEMS[idx % 2],
+                    "boq_header": "BOQ-2026-0001",
+                    "project": F.db.get_value("BOQ Header", "BOQ-2026-0001", "project"),
+                    "company": "ACC Acceptance Co",
+                    "analysis_uom": "Nos",
+                    "currency": "EGP",
+                }
+            )
+            a.append(
+                "details",
+                {
+                    "cost_stream": "M",
+                    "item_code": "ACC-Cement",
+                    "resource_uom": "Nos",
+                    "qty_per_boq_unit": 1,
+                    "cost_rate": 300 + idx,
+                    "wastage_pct": 0,
+                },
+            )
             a.insert()
             t0 = time.time()
             a.submit()
@@ -97,6 +117,7 @@ def t_parallel_approvals():
                 frappe.destroy()
             except Exception:
                 pass
+
     ths = [threading.Thread(target=one, args=(i,)) for i in range(2)]
     t0 = time.time()
     [t.start() for t in ths]
@@ -107,6 +128,7 @@ def t_parallel_approvals():
 def t_same_stage_measure():
     # concurrent measurements on the SAME stage: no error, consistent final state
     res = []
+
     def one(v):
         try:
             F = fresh("acc-eng@qualification.invalid")
@@ -126,6 +148,7 @@ def t_same_stage_measure():
                 frappe.destroy()
             except Exception:
                 pass
+
     ths = [threading.Thread(target=one, args=(v,)) for v in (3, 7)]
     [t.start() for t in ths]
     [t.join() for t in ths]

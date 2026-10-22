@@ -1,4 +1,5 @@
 import frappe
+from frappe import _
 from frappe.utils import flt
 
 from construction.services.boq_pricing import positive_factor
@@ -14,7 +15,7 @@ def get_revised_qty(boq_item_name):
         as_dict=True,
     )
     if not item:
-        frappe.throw("BOQ Item does not exist", frappe.DoesNotExistError)
+        frappe.throw(_("BOQ Item does not exist"), frappe.DoesNotExistError)
     if (
         not item.last_quantity_revision
         and frappe.db.get_value("BOQ Header", item.boq_header, "status") != "Locked"

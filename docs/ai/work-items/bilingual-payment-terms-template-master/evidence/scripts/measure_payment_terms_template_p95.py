@@ -69,18 +69,20 @@ def _create_fixtures():
     """Create Payment Terms Template fixture rows with mandatory detail child rows."""
     created = []
     for i in range(FIXTURES_COUNT):
-        d = frappe.get_doc({
-            "doctype": "Payment Terms Template",
-            "template_name": f"{PREFIX}Test-{i:02d}",
-            "terms": [
-                {
-                    "payment_term": "_Test COD",
-                    "description": "_Test Cash on Delivery",
-                    "invoice_portion": 100.0,
-                    "due_date_based_on": "Day(s) after invoice date",
-                }
-            ],
-        })
+        d = frappe.get_doc(
+            {
+                "doctype": "Payment Terms Template",
+                "template_name": f"{PREFIX}Test-{i:02d}",
+                "terms": [
+                    {
+                        "payment_term": "_Test COD",
+                        "description": "_Test Cash on Delivery",
+                        "invoice_portion": 100.0,
+                        "due_date_based_on": "Day(s) after invoice date",
+                    }
+                ],
+            }
+        )
         d.insert(ignore_permissions=True)
         created.append(d.name)
     frappe.db.commit()
@@ -89,7 +91,9 @@ def _create_fixtures():
 
 def _delete_fixtures():
     """Delete Payment Terms Template fixtures and cascade to child detail rows."""
-    rows = frappe.get_all("Payment Terms Template", filters=_fixture_filter(), fields=["name"], limit_page_length=0)
+    rows = frappe.get_all(
+        "Payment Terms Template", filters=_fixture_filter(), fields=["name"], limit_page_length=0
+    )
     for r in rows:
         if frappe.db.exists("Payment Terms Template", r["name"]):
             frappe.delete_doc("Payment Terms Template", r["name"], force=True, ignore_permissions=True)
@@ -171,10 +175,14 @@ def measure():
         "match_sets_equal": base_ids == bilin_ids,
         "baseline_p95_over_bilingual_p95": round(
             _nearest_rank_p95(base_samples) / _nearest_rank_p95(bilin_samples), 4
-        ) if _nearest_rank_p95(bilin_samples) else None,
+        )
+        if _nearest_rank_p95(bilin_samples)
+        else None,
         "bilingual_p95_ratio_of_baseline": round(
             _nearest_rank_p95(bilin_samples) / _nearest_rank_p95(base_samples), 4
-        ) if _nearest_rank_p95(base_samples) else None,
+        )
+        if _nearest_rank_p95(base_samples)
+        else None,
         "order_balance": "alternating (even pair baseline-first, odd pair bilingual-first); GC paused during timed region",
         "query_counts": {
             "baseline_counts": base_counts,
@@ -192,8 +200,15 @@ def run():
         res = measure()
     finally:
         _delete_fixtures()
-        leftover_parent = frappe.get_all("Payment Terms Template", filters=_fixture_filter(), pluck="name", limit_page_length=0)
-        leftover_child = frappe.get_all("Payment Terms Template Detail", filters={"parent": ["like", PREFIX + "%"]}, pluck="name", limit_page_length=0)
+        leftover_parent = frappe.get_all(
+            "Payment Terms Template", filters=_fixture_filter(), pluck="name", limit_page_length=0
+        )
+        leftover_child = frappe.get_all(
+            "Payment Terms Template Detail",
+            filters={"parent": ["like", PREFIX + "%"]},
+            pluck="name",
+            limit_page_length=0,
+        )
         cleanup = {
             "created": len(created),
             "leftover": leftover_parent,
@@ -239,8 +254,21 @@ if __name__ == "__main__":
     with open(os.path.abspath(path), "w", encoding="utf-8") as fh:
         json.dump(out, fh, indent=1, sort_keys=True)
         fh.write("\n")
-    print("MEASUREMENT:", json.dumps({out["result"]["doctype"]: out["result"].get("bilingual_p95_ratio_of_baseline")}, sort_keys=True))
-    print("P95_MS:", json.dumps({"baseline": out["result"]["baseline"]["p95_ms"], "bilingual": out["result"]["bilingual"]["p95_ms"]}))
+    print(
+        "MEASUREMENT:",
+        json.dumps(
+            {out["result"]["doctype"]: out["result"].get("bilingual_p95_ratio_of_baseline")}, sort_keys=True
+        ),
+    )
+    print(
+        "P95_MS:",
+        json.dumps(
+            {
+                "baseline": out["result"]["baseline"]["p95_ms"],
+                "bilingual": out["result"]["bilingual"]["p95_ms"],
+            }
+        ),
+    )
     print("MATCH_SETS_EQUAL:", out["result"].get("match_sets_equal"))
     print("CLEANUP_LEFTOVER_PARENT:", len(out["cleanup"]["leftover"]))
     print("CLEANUP_LEFTOVER_CHILD:", len(out["cleanup"]["leftover_child_detail"]))

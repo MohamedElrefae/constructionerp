@@ -16,6 +16,18 @@
 	const CT_MULTI_ATTR = "data-ct-multisel-enhanced";
 	const CT_STYLE_ID = "ct-select-dropdown-sizing-fix-v1";
 
+	function controlOwnsElement(control, element) {
+		const wrappers = [
+			control && control.$wrapper,
+			control && control.wrapper,
+			control && control.$input,
+		];
+		return wrappers.some((wrapper) => {
+			const node = wrapper && (wrapper[0] || (wrapper.get && wrapper.get(0)) || wrapper);
+			return node === element || Boolean(node && node.contains && node.contains(element));
+		});
+	}
+
 	if (!document.getElementById(CT_STYLE_ID)) {
 		const style = document.createElement("style");
 		style.id = CT_STYLE_ID;
@@ -59,39 +71,20 @@
 				const $grid_row = $el.closest(".grid-row");
 				if ($grid_row.length) {
 					const grid_row_obj = $grid_row.data("grid_row");
-					if (
-						grid_row_obj &&
-						grid_row_obj.fields_dict &&
-						grid_row_obj.fields_dict[fieldname]
-					) {
-						return grid_row_obj.fields_dict[fieldname];
-					}
+					const field = grid_row_obj?.fields_dict?.[fieldname];
+					if (controlOwnsElement(field, el)) return field;
 				}
-				if (window.cur_frm && cur_frm.fields_dict && cur_frm.fields_dict[fieldname]) {
-					return cur_frm.fields_dict[fieldname];
-				}
-				if (
-					window.cur_dialog &&
-					cur_dialog.fields_dict &&
-					cur_dialog.fields_dict[fieldname]
-				) {
-					return cur_dialog.fields_dict[fieldname];
-				}
-				if (
-					window.cur_list &&
-					cur_list.page &&
-					cur_list.page.fields_dict &&
-					cur_list.page.fields_dict[fieldname]
-				) {
-					return cur_list.page.fields_dict[fieldname];
-				}
+				const dialogField = window.cur_dialog?.fields_dict?.[fieldname];
+				if (controlOwnsElement(dialogField, el)) return dialogField;
+				const listField = window.cur_list?.page?.fields_dict?.[fieldname];
+				if (controlOwnsElement(listField, el)) return listField;
 			}
 		}
 		if (frappe.query_report && frappe.query_report.filters) {
 			const fieldname =
 				$el.attr("data-fieldname") || $control_wrapper.attr("data-fieldname");
 			const filter = frappe.query_report.filters.find((f) => f.df.fieldname === fieldname);
-			if (filter) return filter;
+			if (controlOwnsElement(filter, el)) return filter;
 		}
 		return null;
 	}

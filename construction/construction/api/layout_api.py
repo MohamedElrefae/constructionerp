@@ -59,9 +59,16 @@ def get_active_layout(doctype: str) -> dict | None:
     if has_for_user:
         fields.append("for_user")
 
+    # Personal layouts contain the user's private section configuration. Keep
+    # foreign personal rows out of every resolver candidate set, including for
+    # administrators, so they cannot win role/default fallback by priority.
+    filters = {"reference_doctype": doctype, "enabled": 1}
+    or_filters = _personal_profile_or_filters(user) if has_for_user else None
+
     profiles = frappe.get_all(
         "Form Layout Profile",
-        filters={"reference_doctype": doctype, "enabled": 1},
+        filters=filters,
+        or_filters=or_filters,
         fields=fields,
         order_by="priority desc",
     )
@@ -112,7 +119,7 @@ def _profile_response(profile: dict) -> dict:
 # ──────────────────────────────────────────────────────────────────────
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def save_layout(
     doctype: str,
     profile_name: str,
@@ -190,12 +197,20 @@ def list_layouts(doctype: str) -> list[dict]:
         return []
 
     fields = ["name", "profile_name", "for_role", "is_default", "priority", "is_system", "layout_version"]
-    if frappe.db.has_column("Form Layout Profile", "for_user"):
+    has_for_user = frappe.db.has_column("Form Layout Profile", "for_user")
+    if has_for_user:
         fields.append("for_user")
+
+    user = frappe.session.user
+    filters = {"reference_doctype": doctype, "enabled": 1}
+    or_filters = None
+    if has_for_user and not _may_inspect_foreign_personal_profiles(user):
+        or_filters = _personal_profile_or_filters(user)
 
     return frappe.get_all(
         "Form Layout Profile",
-        filters={"reference_doctype": doctype, "enabled": 1},
+        filters=filters,
+        or_filters=or_filters,
         fields=fields,
         order_by="priority desc",
     )
@@ -206,7 +221,7 @@ def list_layouts(doctype: str) -> list[dict]:
 # ──────────────────────────────────────────────────────────────────────
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def delete_my_personal_layout(doctype: str) -> dict:
     """
     Delete the current user's personal for_user profile for a doctype.
@@ -233,7 +248,7 @@ def delete_my_personal_layout(doctype: str) -> dict:
     return {"status": "deleted", "name": existing}
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def delete_layout(name: str) -> dict:
     """
     Delete a Form Layout Profile by name.
@@ -324,3 +339,17 @@ def _require_system_manager():
             _("Only System Manager can modify Form Layout Profiles."),
             frappe.PermissionError,
         )
+
+
+def _personal_profile_or_filters(user: str) -> list[list]:
+    """Return explicit own-or-shared filters for privileged ``get_all`` reads."""
+    return [
+        ["for_user", "=", user],
+        ["for_user", "is", "not set"],
+        ["for_user", "=", ""],
+    ]
+
+
+def _may_inspect_foreign_personal_profiles(user: str) -> bool:
+    """System managers may inspect profiles; this never changes resolver scope."""
+    return user == "Administrator" or "System Manager" in frappe.get_roles(user)

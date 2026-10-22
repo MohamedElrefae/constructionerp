@@ -5,6 +5,7 @@ Covers app_include_css, app_include_js, web_include_css, web_include_js and
 website_context images — not just the 5 previously probed. Records presence,
 byte-identity (md5 source vs served), and version-consistency findings.
 """
+
 import hashlib
 import re
 import sys
@@ -77,13 +78,14 @@ not_synced = [r for r in rows if r.get("identity") == "NOT_SYNCED"]
 mismatch = [r for r in rows if r.get("identity") == "MISMATCH"]
 no_ver = [r for r in rows if r["version"] == "(none)"]
 
-print(f"registered assets swept: {len(rows)} "
-      f"(css={sum(1 for r in rows if r['hook'].endswith('css'))}, "
-      f"js={sum(1 for r in rows if r['hook'].endswith('js'))}, "
-      f"images={sum(1 for r in rows if r['hook'] == 'website_context')})")
+print(
+    f"registered assets swept: {len(rows)} "
+    f"(css={sum(1 for r in rows if r['hook'].endswith('css'))}, "
+    f"js={sum(1 for r in rows if r['hook'].endswith('js'))}, "
+    f"images={sum(1 for r in rows if r['hook'] == 'website_context')})"
+)
 for r in rows:
-    print(f"  [{r['identity'] if 'identity' in r else r['status']:>11}] "
-          f"{r['url']}  (v={r['version']})")
+    print(f"  [{r['identity'] if 'identity' in r else r['status']:>11}] " f"{r['url']}  (v={r['version']})")
 print()
 print("FINDINGS:")
 for f in findings:
@@ -105,5 +107,10 @@ for r in no_ver:
 
 fails = len(missing_src) + len(mismatch) + len(findings)
 print()
-print("SWEEP RESULT:", "FINDINGS PRESENT" if fails else "CLEAN (not-synced rows need bench --site <site> build/clear-cache before browser evidence)")
+print(
+    "SWEEP RESULT:",
+    "FINDINGS PRESENT"
+    if fails
+    else "CLEAN (not-synced rows need bench --site <site> build/clear-cache before browser evidence)",
+)
 sys.exit(0 if fails == 0 else 1)

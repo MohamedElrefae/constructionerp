@@ -33,15 +33,15 @@ import os
 import socket
 import sys
 import time
-from urllib.parse import urlparse
 from collections import OrderedDict
+from urllib.parse import urlparse
 
 BENCH = "/home/mohamed/frappe-bench"
 APPS = f"{BENCH}/apps"
 SITES = f"{BENCH}/sites"
 sys.path.insert(0, f"{APPS}/construction")
 
-import frappe  # noqa: E402
+import frappe
 
 EXPECTED_VALUES_SHA256 = "7390a0c87f8ebab1e602521549b775f8768d3ab9bb40a1caf055f4c5c31d53bf"
 DEFAULT_ALLOW_SITES = {"v16.localhost"}
@@ -49,9 +49,21 @@ BACKUP_MAX_AGE_S = 24 * 3600
 
 # Topological order (briefing §order; company first, leaf masters last).
 TOPO = [
-    "Company", "Account", "Cost Center", "Warehouse", "Project",
-    "Item Group", "Customer Group", "Supplier Group", "Territory",
-    "Department", "Task", "UOM", "Item", "Customer", "Terms and Conditions",
+    "Company",
+    "Account",
+    "Cost Center",
+    "Warehouse",
+    "Project",
+    "Item Group",
+    "Customer Group",
+    "Supplier Group",
+    "Territory",
+    "Department",
+    "Task",
+    "UOM",
+    "Item",
+    "Customer",
+    "Terms and Conditions",
 ]
 
 TREE_PARENT = {
@@ -76,8 +88,10 @@ ROOT_QUIRKS = {
     "Customer Group": {"patch_get_root_of": "erpnext.setup.doctype.customer_group.customer_group"},
     "Supplier Group": {"patch_get_root_of": "erpnext.setup.doctype.supplier_group.supplier_group"},
     "Territory": {"patch_get_root_of": "erpnext.setup.doctype.territory.territory"},
-    "Department": {"patch_get_root_of": "erpnext.setup.doctype.department.department",
-                   "ignore_mandatory": True},
+    "Department": {
+        "patch_get_root_of": "erpnext.setup.doctype.department.department",
+        "ignore_mandatory": True,
+    },
     "Cost Center": {"ignore_mandatory": True},
     # Account roots: `Account.validate_root_details` throws RootNotEditable on ANY
     # save of an existing root (account.py:213-215) — narrow scoped no-op patch of
@@ -105,6 +119,7 @@ def fail(msg):
 
 # ---------------------------------------------------------------- pre-flight
 
+
 def check_site(site, allow_sites):
     cfg_path = os.path.join(SITES, site, "site_config.json")
     if not os.path.isfile(cfg_path):
@@ -115,8 +130,10 @@ def check_site(site, allow_sites):
         return "allowlist", authorized
     if authorized:
         return "site_config flag", True
-    fail(f"site {site!r} not in --allow-sites and site_config lacks "
-         f"production_mutation_authorized: true (F-5J-8 governance guard)")
+    fail(
+        f"site {site!r} not in --allow-sites and site_config lacks "
+        f"production_mutation_authorized: true (F-5J-8 governance guard)"
+    )
 
 
 def check_values(path):
@@ -125,8 +142,10 @@ def check_values(path):
     raw = open(path, "rb").read()
     digest = hashlib.sha256(raw).hexdigest()
     if digest != EXPECTED_VALUES_SHA256:
-        fail(f"values bundle sha256 {digest[:16]} != committed "
-             f"{EXPECTED_VALUES_SHA256[:16]} (owner-approval binding broken)")
+        fail(
+            f"values bundle sha256 {digest[:16]} != committed "
+            f"{EXPECTED_VALUES_SHA256[:16]} (owner-approval binding broken)"
+        )
     bundle = json.loads(raw.decode("utf-8"))
     if bundle.get("row_count") != 188:
         fail(f"bundle row_count {bundle.get('row_count')} != 188")
@@ -149,32 +168,42 @@ def check_schema(reg):
     schema = frappe.conf.db_name
     for dt in TOPO:
         table = TABLE(dt)
-        cols = {r.COLUMN_NAME for r in frappe.db.sql(
-            "SELECT COLUMN_NAME FROM information_schema.COLUMNS "
-            "WHERE TABLE_SCHEMA=%s AND TABLE_NAME=%s",
-            (schema, table), as_dict=True)}
+        cols = {
+            r.COLUMN_NAME
+            for r in frappe.db.sql(
+                "SELECT COLUMN_NAME FROM information_schema.COLUMNS "
+                "WHERE TABLE_SCHEMA=%s AND TABLE_NAME=%s",
+                (schema, table),
+                as_dict=True,
+            )
+        }
         meta = reg["doctypes"][dt]
         for field in (meta["arabic_field"], meta["norm_field"]):
             if field not in cols:
                 fail(f"schema: {table}.{field} missing (custom-field patch not applied)")
         coll = frappe.db.sql(
             "SELECT TABLE_COLLATION FROM information_schema.TABLES "
-            "WHERE TABLE_SCHEMA=%s AND TABLE_NAME=%s", (schema, table), as_dict=True)
+            "WHERE TABLE_SCHEMA=%s AND TABLE_NAME=%s",
+            (schema, table),
+            as_dict=True,
+        )
         if not coll or not (coll[0].TABLE_COLLATION or "").startswith("utf8mb4"):
-            fail(f"schema: {table} collation "
-                 f"{coll[0].TABLE_COLLATION if coll else None} != utf8mb4 (F-5J-3)")
+            fail(
+                f"schema: {table} collation "
+                f"{coll[0].TABLE_COLLATION if coll else None} != utf8mb4 (F-5J-3)"
+            )
 
 
 def check_hooks():
     import construction.hooks as h
+
     doc_events = getattr(h, "doc_events", {})
     for dt in TOPO:
         ev = doc_events.get(dt, {})
         validates = ev.get("validate", [])
         if isinstance(validates, str):
             validates = [validates]
-        wanted = ("enforce_account_arabic_policy" if dt == "Account"
-                  else "enforce_bilingual_arabic_policy")
+        wanted = "enforce_account_arabic_policy" if dt == "Account" else "enforce_bilingual_arabic_policy"
         if not any(wanted in v for v in validates):
             fail(f"hooks: {dt}.validate not bound to {wanted} (F-5J-4)")
 
@@ -183,25 +212,31 @@ def check_backup(site, force):
     bdir = os.path.join(SITES, site, "private", "backups")
     if not os.path.isdir(bdir):
         fail(f"backup: {bdir} missing — take `bench backup --site {site}` first (F-5J-5)")
-    candidates = [os.path.join(bdir, f) for f in os.listdir(bdir)
-                  if f.endswith((".sql", ".sql.gz", ".sql.bz2", ".sql.xz"))]
+    candidates = [
+        os.path.join(bdir, f)
+        for f in os.listdir(bdir)
+        if f.endswith((".sql", ".sql.gz", ".sql.bz2", ".sql.xz"))
+    ]
     if not candidates:
         fail(f"backup: no dump in {bdir} — take `bench backup --site {site}` first (F-5J-5)")
     newest = max(candidates, key=os.path.getmtime)
     if os.path.getsize(newest) < 1024:
-        fail(f"backup: newest dump is implausibly small "
-             f"({os.path.getsize(newest)} bytes): {os.path.basename(newest)}")
+        fail(
+            f"backup: newest dump is implausibly small "
+            f"({os.path.getsize(newest)} bytes): {os.path.basename(newest)}"
+        )
     age = time.time() - os.path.getmtime(newest)
     if age > BACKUP_MAX_AGE_S and not force:
-        fail(f"backup: newest dump is {age/3600:.1f}h old (>24h): {os.path.basename(newest)} "
-             f"— refresh or --force (age gate only; F-5J-5)")
+        fail(
+            f"backup: newest dump is {age/3600:.1f}h old (>24h): {os.path.basename(newest)} "
+            f"— refresh or --force (age gate only; F-5J-5)"
+        )
     return newest, age
 
 
 def check_redis():
     pinged = []
-    for label, url in (("queue", frappe.conf.redis_queue or ""),
-                       ("cache", frappe.conf.redis_cache or "")):
+    for label, url in (("queue", frappe.conf.redis_queue or ""), ("cache", frappe.conf.redis_cache or "")):
         if not url:
             fail(f"redis: frappe.conf.redis_{label} unset")
         netloc = urlparse(url).netloc or urlparse("//" + url).netloc
@@ -214,12 +249,15 @@ def check_redis():
             s.close()
             pinged.append((label, port))
         except OSError as exc:
-            fail(f"redis {label} (127.0.0.1:{port}) unreachable: {exc} (F-5J-7) — "
-                 f"start it: redis-server --port {port} ...")
+            fail(
+                f"redis {label} (127.0.0.1:{port}) unreachable: {exc} (F-5J-7) — "
+                f"start it: redis-server --port {port} ..."
+            )
     return pinged
 
 
 # ------------------------------------------------------- classification model
+
 
 def classify(bundle, reg, mode):
     """Read-only classification. Returns (rows_by_doctype, summary)."""
@@ -228,8 +266,11 @@ def classify(bundle, reg, mode):
     for row in bundle["rows"]:
         dt = row["doctype"]
         ar = reg["doctypes"][dt]["arabic_field"]
-        live_raw = frappe.db.get_value(dt, row["name"], ar, order_by=None) \
-            if frappe.db.exists(dt, row["name"]) else None
+        live_raw = (
+            frappe.db.get_value(dt, row["name"], ar, order_by=None)
+            if frappe.db.exists(dt, row["name"])
+            else None
+        )
         if not frappe.db.exists(dt, row["name"]):
             status = "ABSENT"
         elif (live_raw or None) == row["arabic"]:
@@ -244,6 +285,7 @@ def classify(bundle, reg, mode):
 
 
 # -------------------------------------------------------------- root quirks
+
 
 class RootQuirk:
     """Scoped, restorable root-save workaround (F-5J-6). Restores in finally."""
@@ -294,22 +336,22 @@ class RootQuirk:
         plus the root-only mandatory bypass, all while the scoped
         validate_root_details no-op is active.
         """
-        from construction.services.bilingual_service import (
-            GOVERNED_EDIT_FLAG, validate_identity_text)
+        from construction.services.bilingual_service import GOVERNED_EDIT_FLAG, validate_identity_text
+
         if not frappe.has_permission("Account", "write", doc=name):
-            frappe.throw("root account save requires Account write permission",
-                         frappe.PermissionError)
+            frappe.throw("root account save requires Account write permission", frappe.PermissionError)
         text = arabic.strip()
         if not validate_identity_text(text):
-            frappe.throw("root account Arabic value failed identity validation",
-                         frappe.ValidationError)
+            frappe.throw("root account Arabic value failed identity validation", frappe.ValidationError)
         doc = frappe.get_doc("Account", name)
         doc.account_name_ar = text
         stored_old = frappe.db.get_value("Account", name, "account_name_ar") or None
         prior_flag = frappe.flags.get(GOVERNED_EDIT_FLAG)  # read BEFORE install
-        setattr(frappe.flags, GOVERNED_EDIT_FLAG,
-                {"doctype": "Account", "name": doc.name,
-                 "old": stored_old, "new": text})
+        setattr(
+            frappe.flags,
+            GOVERNED_EDIT_FLAG,
+            {"doctype": "Account", "name": doc.name, "old": stored_old, "new": text},
+        )
         try:
             doc.flags.ignore_mandatory = True  # root parent_account reqd=1
             doc.save()
@@ -331,9 +373,9 @@ class RootQuirk:
 
 # --------------------------------------------------------------------- apply
 
+
 def apply_writes(by_doctype, reg, reapply, rollback_rehearsal):
-    from construction.services.bilingual_service import (
-        _normalize_arabic, set_account_name_ar)
+    from construction.services.bilingual_service import _normalize_arabic, set_account_name_ar
 
     pre_state = snapshot_all(reg)
     counts = {"SAVED": 0, "SKIPPED": 0, "ROOT_SAVES": 0}
@@ -357,8 +399,7 @@ def apply_writes(by_doctype, reg, reapply, rollback_rehearsal):
                     continue
                 name = row["name"]
                 parent_field = TREE_PARENT.get(dt)
-                is_root = bool(parent_field and not frappe.db.get_value(
-                    dt, name, parent_field))
+                is_root = bool(parent_field and not frappe.db.get_value(dt, name, parent_field))
                 with RootQuirk(dt, is_root) as quirk:
                     if dt == "Account":
                         # Governed path: binds doctype/name/old/new token, derives
@@ -384,8 +425,7 @@ def apply_writes(by_doctype, reg, reapply, rollback_rehearsal):
             ar = reg["doctypes"][dt]["arabic_field"]
             norm = reg["doctypes"][dt]["norm_field"]
             for row, status in by_doctype[dt]:
-                live, live_norm = frappe.db.get_value(
-                    dt, row["name"], [ar, norm])
+                live, live_norm = frappe.db.get_value(dt, row["name"], [ar, norm])
                 if (live or None) != row["arabic"]:
                     raise PreflightError(f"post-write mismatch: {dt} {row['name']}")
                 if row["arabic"] and live_norm != _normalize_arabic(row["arabic"]):
@@ -393,8 +433,9 @@ def apply_writes(by_doctype, reg, reapply, rollback_rehearsal):
         post_state = snapshot_all(reg)
         tree_changed = compare_trees(pre_state, post_state)
         if tree_changed:
-            raise PreflightError(f"tree structure mutated by values-only save: "
-                                 f"{sorted(tree_changed)[:5]}")
+            raise PreflightError(
+                f"tree structure mutated by values-only save: " f"{sorted(tree_changed)[:5]}"
+            )
 
         if rollback_rehearsal:
             frappe.db.rollback()
@@ -426,10 +467,11 @@ def snapshot_all(reg):
         snap[dt] = {r["name"]: r[ar] for r in rows}
         if dt in TREE_PARENT:
             tree = frappe.get_all(
-                dt, fields=["name", TREE_PARENT[dt], "old_parent", "lft", "rgt"],
-                limit_page_length=0)
-            snap[dt + "::tree"] = {r["name"]: (r[TREE_PARENT[dt]] or None,
-                                               r.lft, r.rgt, r.old_parent) for r in tree}
+                dt, fields=["name", TREE_PARENT[dt], "old_parent", "lft", "rgt"], limit_page_length=0
+            )
+            snap[dt + "::tree"] = {
+                r["name"]: (r[TREE_PARENT[dt]] or None, r.lft, r.rgt, r.old_parent) for r in tree
+            }
     return snap
 
 
@@ -445,19 +487,24 @@ def compare_trees(a, b):
 
 # --------------------------------------------------------------------- main
 
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--site", default="v16.localhost")
     ap.add_argument("--values", default=None)
     ap.add_argument("--dry-run", action="store_true")
-    ap.add_argument("--force", action="store_true",
-                    help="bypass ONLY the backup age gate")
-    ap.add_argument("--allow-sites", default="v16.localhost",
-                    help="comma-separated development allowlist (F-5J-8)")
-    ap.add_argument("--reapply", action="store_true",
-                    help="resave rows already equal (validation; still conflict-safe)")
-    ap.add_argument("--rollback-rehearsal", action="store_true",
-                    help="VALIDATION-ONLY: apply all writes, verify, then roll back")
+    ap.add_argument("--force", action="store_true", help="bypass ONLY the backup age gate")
+    ap.add_argument(
+        "--allow-sites", default="v16.localhost", help="comma-separated development allowlist (F-5J-8)"
+    )
+    ap.add_argument(
+        "--reapply", action="store_true", help="resave rows already equal (validation; still conflict-safe)"
+    )
+    ap.add_argument(
+        "--rollback-rehearsal",
+        action="store_true",
+        help="VALIDATION-ONLY: apply all writes, verify, then roll back",
+    )
     args = ap.parse_args()
 
     if args.rollback_rehearsal and not args.dry_run:
@@ -472,14 +519,14 @@ def main():
         gate, authorized = check_site(args.site, allow)
         if args.rollback_rehearsal and gate != "allowlist":
             fail("--rollback-rehearsal is validation-only: refused on non-allowlisted sites")
-        log(f"PREFLIGHT site={args.site} gate={gate} "
-            f"production_mutation_authorized={authorized}")
+        log(f"PREFLIGHT site={args.site} gate={gate} " f"production_mutation_authorized={authorized}")
 
         reg = load_registry()
         log(f"PREFLIGHT registry: {len(TOPO)} doctypes, arabic+norm fields present")
 
         values_path = args.values or os.path.join(
-            SITES, args.site, "private", "production-migration", "consolidated_values.json")
+            SITES, args.site, "private", "production-migration", "consolidated_values.json"
+        )
         bundle, digest = check_values(values_path)
         log(f"PREFLIGHT values: rows={bundle['row_count']} sha256={digest[:16]}…")
 
@@ -518,9 +565,11 @@ def main():
             again, s2 = classify(bundle, reg, "dry")
             if s2 != summary:
                 raise PreflightError("dry-run mutated state")
-            log(f"RESULT: PASS dry-run, 0 writes, {summary['WOULD_WRITE']} would_write, "
+            log(
+                f"RESULT: PASS dry-run, 0 writes, {summary['WOULD_WRITE']} would_write, "
                 f"{summary['ALREADY_APPLIED']} already_applied "
-                f"({time.time()-started:.1f}s)")
+                f"({time.time()-started:.1f}s)"
+            )
             return 0
 
         if args.rollback_rehearsal:
@@ -538,9 +587,11 @@ def main():
             log(f"RESULT: PASS rehearsal ({time.time()-started:.1f}s) — site unchanged")
         else:
             if final["ALREADY_APPLIED"] != 188:
-                raise PreflightError("post-apply not all rows applied — NOTE: the "
-                                     "commit already happened; data IS persisted, "
-                                     "re-run the verifier to inspect final state")
+                raise PreflightError(
+                    "post-apply not all rows applied — NOTE: the "
+                    "commit already happened; data IS persisted, "
+                    "re-run the verifier to inspect final state"
+                )
             log(f"RESULT: PASS apply ({time.time()-started:.1f}s)")
         return 0
     except PreflightError as exc:

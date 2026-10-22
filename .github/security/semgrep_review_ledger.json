@@ -1,0 +1,586 @@
+{
+  "entries": [
+    {
+      "decision": "ACCEPT",
+      "finding": {
+        "check_id": "relaxed-permissions",
+        "end": {
+          "col": 6,
+          "line": 660,
+          "offset": 15813
+        },
+        "path": "construction/construction/doctype/construction_theme/construction_theme.json",
+        "start": {
+          "col": 5,
+          "line": 657,
+          "offset": 15769
+        }
+      },
+      "guards": [
+        {
+          "path": "construction/construction/doctype/construction_theme/construction_theme.py",
+          "sha256": "b40dded6e1fa7f4bcba0f1c1216a854082be8eb42a548a21b387e98f6d71b9ff"
+        },
+        {
+          "path": "construction/api/theme_api.py",
+          "sha256": "fc51b8c3ea0d1ac3a530ed1458ae72cc545ad9a1473df4067c00e830719f9938"
+        }
+      ],
+      "permission_record": {
+        "canonical_fields_sha256": "72ccff69af82b6f9051619f29b52a5e3af6c5e5ca76f7880f1f5c1787dade425",
+        "document_path": "construction/construction/doctype/construction_theme/construction_theme.json",
+        "index": 2
+      },
+      "review_gate": {
+        "combined_qualification_id": "foundation-local-phased-2026-10-18",
+        "combined_qualification_sha256": "5acf5ee374628851cd45a968e18470e5f10518ed5d7dd3aad2063cb8f0d32441",
+        "native_rest_log_sha256": "bd5160a7af6ea5cc6939c57e8ba0656656a3f22f8d034244b8a09fa0311addd8",
+        "native_rest_run_id": "native-rest-userpermission-guest-singlevalue-fix-2026-10-18",
+        "parent_review_id": "root-five-docperm-final-source-review-2026-10-18",
+        "reviewed_source_manifest_sha256": "89e222237e2e48eb771aa0836cdd4160722a10300bf5f265e258d57ab8d5a3bb"
+      },
+      "source_sha256": "0edfd2a1c190dcbe1ecb5d4b47daaf9f05428d38f9a9c1e3a1c743f48e3925b9",
+      "status": "REVIEWED",
+      "tests": [
+        {
+          "path": "construction/tests/test_native_security_rest_authorization.py",
+          "sha256": "65bc902f476942bdc1e04001ee981de8742a178fd1b65f0ff439d8d243db450e"
+        }
+      ]
+    },
+    {
+      "decision": "ACCEPT",
+      "finding": {
+        "check_id": "relaxed-permissions",
+        "end": {
+          "col": 4,
+          "line": 134,
+          "offset": 3008
+        },
+        "path": "construction/construction/doctype/form_layout_profile/form_layout_profile.json",
+        "start": {
+          "col": 3,
+          "line": 131,
+          "offset": 2972
+        }
+      },
+      "guards": [
+        {
+          "path": "construction/construction/api/layout_api.py",
+          "sha256": "c691e48bb1c21cabc7e5ebf1feed712f1c82c32c0cb0240d8cefc54d07d1adfc"
+        },
+        {
+          "path": "construction/overrides/layout_permissions.py",
+          "sha256": "640d09ea39e85bcb106f950443c2992f8866ffee9872695458bd95d01b529fe1"
+        },
+        {
+          "path": "construction/hooks.py",
+          "sha256": "a7a4053b141401d79f1ed6ff37a1a1a587779f1961a56c28b998e011ccd6973d"
+        }
+      ],
+      "permission_record": {
+        "canonical_fields_sha256": "72ccff69af82b6f9051619f29b52a5e3af6c5e5ca76f7880f1f5c1787dade425",
+        "document_path": "construction/construction/doctype/form_layout_profile/form_layout_profile.json",
+        "index": 1
+      },
+      "review_gate": {
+        "combined_qualification_id": "foundation-local-phased-2026-10-18",
+        "combined_qualification_sha256": "5acf5ee374628851cd45a968e18470e5f10518ed5d7dd3aad2063cb8f0d32441",
+        "native_rest_log_sha256": "bd5160a7af6ea5cc6939c57e8ba0656656a3f22f8d034244b8a09fa0311addd8",
+        "native_rest_run_id": "native-rest-userpermission-guest-singlevalue-fix-2026-10-18",
+        "parent_review_id": "root-five-docperm-final-source-review-2026-10-18",
+        "renewal_review_2026_10_19": {
+          "combined_source_sha256": "71d9bb479eb08f2bcb571e5ca714bc59b99339b6",
+          "order_reference": "30-primary-ledger-renewal-and-isolated-evidence-order.md",
+          "primary_review": "Primary re-reviewed the hooks.py diff (Timesheet client asset + ordered Timesheet validate derivation) and confirmed the Form Layout Profile, User Desk Theme and User Scope Context hook chains are unchanged, so the previously reviewed security hook behavior remains applicable; narrowly scoped renewal of the guard digest approved in order 30.",
+          "renewed_guard": {
+            "path": "construction/hooks.py",
+            "sha256": "0789109eaa315106e0be1dac2efac7323f7e58ceb19e6e97fae786a8e005932e"
+          },
+          "renewed_on": "2026-10-19",
+          "scope": "construction/hooks.py guard binding digest only; finding identity, other guards, tests, decision and the original review references are unchanged"
+        },
+        "renewal_review_2026_10_19_asset_version": {
+          "combined_source_sha256": "f97664c8882ff9a77fec11194b849f06ab9effb0",
+          "order_reference": "39-primary-native-event-and-dropdown-fix.md",
+          "primary_review": "Primary confirmed the Timesheet add-row cause and authorised the native-event fix plus a bounded asset-version bump where stale browser bytes are verified; the three hooks.py guard bindings are renewed under the same narrow scope as order 30.",
+          "renewed_guard": {
+            "path": "construction/hooks.py",
+            "sha256": "178183350ef365d074a5f803342b258a103bdc8c2dfc4b3bd49540a833071da6"
+          },
+          "renewed_on": "2026-10-19",
+          "scope": "construction/hooks.py guard binding digest only; the two bounded client asset-version bumps (ct_link_control.js v18->v19, boq_filters.js v9->v10) are the only source change; the reviewed hook chains themselves are unchanged"
+        },
+        "renewal_review_2026_10_20_asset_version": {
+          "combined_source_sha256": "f469ebcbad4f61664b9075ec415eb83d34f3774d",
+          "order_reference": "41-primary-child-dispatch-correction-and-retest.md",
+          "primary_review": "Primary confirmed the Timesheet add-row cause (the event must be registered on the child registry the pinned ScriptManager reads) and authorised the native-event fix plus a bounded asset-version bump where stale browser bytes are verified. The three hooks.py guard bindings are renewed under the same narrow scope as order 30.",
+          "renewed_guard": {
+            "path": "construction/hooks.py",
+            "sha256": "a433374a6417515686cc0b18266c8c1afae2a9debff60d3d79d02632ceb51ddc"
+          },
+          "renewed_on": "2026-10-20",
+          "scope": "construction/hooks.py guard binding digest only; the only source change is the bounded client asset-version bumps (timesheet_designation.js v=1->v=4, ct_link_control.js v=18->v=19, boq_filters.js v=9->v=10) required by the verified stale-browser-bytes failure; the reviewed hook chains are unchanged"
+        },
+        "renewal_review_2026_10_20_native_boq_query": {
+          "combined_source_sha256": "93128be2a41979b214e5f9de1c7502d3470b654e",
+          "order_reference": "30-primary-ledger-renewal-and-isolated-evidence-order.md; 43-primary-runtime-approval-and-current-evidence-contract.md",
+          "primary_review": "Parent reviewed actual hooks.py diff against dafba6f: only BOQ filter client registration comment and version v10 to v13 changed; Form Layout Profile, User Desk Theme and User Scope Context security hook chains are unchanged. This renewal is restricted to those three existing hooks.py guard bindings and corresponding canonical manifests. This does not approve unrelated findings or claim native/business acceptance. Historical stale-browser cause remains withdrawn as proven cause.",
+          "primary_review_record_sha256": "7d733c92ec597268a624fdc654d71ae319e6d815bacc6c2d69192767027e6661",
+          "renewed_guard": {
+            "path": "construction/hooks.py",
+            "sha256": "cd25636580ee98354afb1cc5424ee8d39294c713e09c835285fa136095be640a"
+          },
+          "renewed_on": "2026-10-20",
+          "reviewed_base_commit": "dafba6f50d77ff25c256bd89c7168d4cc3b2d3e9",
+          "reviewed_patch_sha256": "3bb456fc1882d778e07a68337ee866340c3ad942ce3839ec9966e8dc0b42e69b",
+          "scope": "Three hooks.py guard bindings only; preserve finding identities, other guards/tests, decisions, historical reviews and strict failure controls."
+        },
+        "renewal_review_2026_10_22_je_project": {
+          "order_reference": "30-primary-ledger-renewal-and-isolated-evidence-order.md",
+          "primary_review_record_sha256": "5ffac5f3219a09d2daebfcf55c487d21106e6671720918b2647fcb49490732b2",
+          "renewed_guard": {
+            "path": "construction/hooks.py",
+            "sha256": "0a6d919a734cbed30136398451b328599e4f8d26c4818578187ce9cfe68790b0"
+          },
+          "reviewed_base_commit": "62fb26ecfbbf8d56709864734359236d43c80171",
+          "reviewed_patch_sha256": "d50c6272d52a1c7ab40007b96a3736092274469221c51389c752ce95909079cc",
+          "scope": "Only3existinghooks.pybindings and canonicalmanifests; allotherdoc_eventschains identical. Findingidentities,otherguards/tests,decisions,history unchanged; no nativeacceptance."
+        },
+        "renewal_review_2026_10_22_vfc_asset_version": {
+          "primary_review_record_sha256": "043b418efbce3ade3eead35260b6ca44ffed38d1d935c2b3ad7893ab1b01ea3e",
+          "renewed_guard": {
+            "path": "construction/hooks.py",
+            "sha256": "1d828c16c1282fa582b868c24b9e2b45a2f011bb8c8eca12f829f0a533fc63a2"
+          },
+          "reviewed_base_commit": "23ee16050340b4f258c0c1985d7a99f3429958f4",
+          "reviewed_candidate_commit": "31d39737804af467e8c1fc4516a1797795e92e72",
+          "reviewed_patch_sha256": "f139b5efad6188c10136cd3e6580fe7b162da5a6ba18758f72f0b597ea23afd4",
+          "scope": "Only3hooks.pyguarddigests+theircanonicalmanifest+newreviewmetadata. Nochangefindingidentities/permissionJSON/checker/tests/status/decisions/negativecontrols/history. No newnativeRESTorbusinessacceptanceclaim."
+        },
+        "renewal_review_2026_10_23_vfc_reattach": {
+          "order_reference": "30-primary-ledger-renewal-and-isolated-evidence-order.md section2",
+          "primary_review_record_sha256": "5e4296097fa7229fb4e6124173a3afd619b6cb29d4ce750336f95e5e07745553",
+          "renewed_guard": {
+            "path": "construction/hooks.py",
+            "sha256": "a7a4053b141401d79f1ed6ff37a1a1a587779f1961a56c28b998e011ccd6973d"
+          },
+          "reviewed_base_commit": "a80035384f07d4c328ef2969279f972f1797c894",
+          "reviewed_candidate": "construction-vfc-reattach-r22 working tree, not frozen",
+          "reviewed_patch_scope": "hooks.py only",
+          "reviewed_patch_sha256": "2913d380a93876df4c4fa27312841382d40ddb52a959acfea5b9b79b483a0799",
+          "scope": "Only3hooks guard hashes + corresponding canonical manifests + truthful metadata; preserve all finding/source/permission/status/decision/test/history records."
+        },
+        "reviewed_source_manifest_sha256": "c9cbaaecde6c63e0d4e464f1176eb013f87006bc1db6fb203810e99b0bf6e448"
+      },
+      "source_sha256": "c9887ae7b2d6c2db422135dc3f4ef8dba90f7cafedf18b68455cf2714ebf47cf",
+      "status": "REVIEWED",
+      "tests": [
+        {
+          "path": "construction/tests/test_native_security_rest_authorization.py",
+          "sha256": "65bc902f476942bdc1e04001ee981de8742a178fd1b65f0ff439d8d243db450e"
+        },
+        {
+          "path": "construction/tests/test_personal_layout_authorization.py",
+          "sha256": "3153cae1aa9bcf7b1fc24fd8f04db88dd4908b79f5a8650bcfe40bac83eff18a"
+        }
+      ]
+    },
+    {
+      "decision": "ACCEPT",
+      "finding": {
+        "check_id": "relaxed-permissions",
+        "end": {
+          "col": 6,
+          "line": 107,
+          "offset": 2826
+        },
+        "path": "construction/construction/doctype/modern_theme_settings/modern_theme_settings.json",
+        "start": {
+          "col": 5,
+          "line": 104,
+          "offset": 2782
+        }
+      },
+      "guards": [
+        {
+          "path": "construction/construction/doctype/modern_theme_settings/modern_theme_settings.py",
+          "sha256": "db101c857c49ae1ed337022f93efcd185b5e99956f072f0f483f356d9779f2fd"
+        },
+        {
+          "path": "construction/api/theme_api.py",
+          "sha256": "fc51b8c3ea0d1ac3a530ed1458ae72cc545ad9a1473df4067c00e830719f9938"
+        }
+      ],
+      "permission_record": {
+        "canonical_fields_sha256": "72ccff69af82b6f9051619f29b52a5e3af6c5e5ca76f7880f1f5c1787dade425",
+        "document_path": "construction/construction/doctype/modern_theme_settings/modern_theme_settings.json",
+        "index": 1
+      },
+      "review_gate": {
+        "combined_qualification_id": "foundation-local-phased-2026-10-18",
+        "combined_qualification_sha256": "5acf5ee374628851cd45a968e18470e5f10518ed5d7dd3aad2063cb8f0d32441",
+        "native_rest_log_sha256": "bd5160a7af6ea5cc6939c57e8ba0656656a3f22f8d034244b8a09fa0311addd8",
+        "native_rest_run_id": "native-rest-userpermission-guest-singlevalue-fix-2026-10-18",
+        "parent_review_id": "root-five-docperm-final-source-review-2026-10-18",
+        "reviewed_source_manifest_sha256": "31f39f8e26596d7124c88d844d94287d5dd16b3c7d43d41375cf3b5cabd9ed84"
+      },
+      "source_sha256": "6485124974c95ea418126cf9ed9893ee29d511decfcf9682c94e6c24cb3b4f2d",
+      "status": "REVIEWED",
+      "tests": [
+        {
+          "path": "construction/tests/test_native_security_rest_authorization.py",
+          "sha256": "65bc902f476942bdc1e04001ee981de8742a178fd1b65f0ff439d8d243db450e"
+        }
+      ]
+    },
+    {
+      "decision": "ACCEPT",
+      "finding": {
+        "check_id": "relaxed-permissions",
+        "end": {
+          "col": 6,
+          "line": 239,
+          "offset": 7432
+        },
+        "path": "construction/construction/doctype/user_desk_theme/user_desk_theme.json",
+        "start": {
+          "col": 5,
+          "line": 232,
+          "offset": 7311
+        }
+      },
+      "guards": [
+        {
+          "path": "construction/construction/doctype/user_desk_theme/user_desk_theme.py",
+          "sha256": "d720aac0cd4815b6bae27de3897961a0f89c9ee4e03c2f38660893062fd23c65"
+        },
+        {
+          "path": "construction/hooks.py",
+          "sha256": "a7a4053b141401d79f1ed6ff37a1a1a587779f1961a56c28b998e011ccd6973d"
+        }
+      ],
+      "permission_record": {
+        "canonical_fields_sha256": "a9665b2030b393313a7e0a5043de56831aa4ea9a3564be793b5dee6c4e302c45",
+        "document_path": "construction/construction/doctype/user_desk_theme/user_desk_theme.json",
+        "index": 1
+      },
+      "review_gate": {
+        "combined_qualification_id": "foundation-local-phased-2026-10-18",
+        "combined_qualification_sha256": "5acf5ee374628851cd45a968e18470e5f10518ed5d7dd3aad2063cb8f0d32441",
+        "native_rest_log_sha256": "bd5160a7af6ea5cc6939c57e8ba0656656a3f22f8d034244b8a09fa0311addd8",
+        "native_rest_run_id": "native-rest-userpermission-guest-singlevalue-fix-2026-10-18",
+        "parent_review_id": "root-five-docperm-final-source-review-2026-10-18",
+        "renewal_review_2026_10_19": {
+          "combined_source_sha256": "71d9bb479eb08f2bcb571e5ca714bc59b99339b6",
+          "order_reference": "30-primary-ledger-renewal-and-isolated-evidence-order.md",
+          "primary_review": "Primary re-reviewed the hooks.py diff (Timesheet client asset + ordered Timesheet validate derivation) and confirmed the Form Layout Profile, User Desk Theme and User Scope Context hook chains are unchanged, so the previously reviewed security hook behavior remains applicable; narrowly scoped renewal of the guard digest approved in order 30.",
+          "renewed_guard": {
+            "path": "construction/hooks.py",
+            "sha256": "0789109eaa315106e0be1dac2efac7323f7e58ceb19e6e97fae786a8e005932e"
+          },
+          "renewed_on": "2026-10-19",
+          "scope": "construction/hooks.py guard binding digest only; finding identity, other guards, tests, decision and the original review references are unchanged"
+        },
+        "renewal_review_2026_10_19_asset_version": {
+          "combined_source_sha256": "f97664c8882ff9a77fec11194b849f06ab9effb0",
+          "order_reference": "39-primary-native-event-and-dropdown-fix.md",
+          "primary_review": "Primary confirmed the Timesheet add-row cause and authorised the native-event fix plus a bounded asset-version bump where stale browser bytes are verified; the three hooks.py guard bindings are renewed under the same narrow scope as order 30.",
+          "renewed_guard": {
+            "path": "construction/hooks.py",
+            "sha256": "178183350ef365d074a5f803342b258a103bdc8c2dfc4b3bd49540a833071da6"
+          },
+          "renewed_on": "2026-10-19",
+          "scope": "construction/hooks.py guard binding digest only; the two bounded client asset-version bumps (ct_link_control.js v18->v19, boq_filters.js v9->v10) are the only source change; the reviewed hook chains themselves are unchanged"
+        },
+        "renewal_review_2026_10_20_asset_version": {
+          "combined_source_sha256": "f469ebcbad4f61664b9075ec415eb83d34f3774d",
+          "order_reference": "41-primary-child-dispatch-correction-and-retest.md",
+          "primary_review": "Primary confirmed the Timesheet add-row cause (the event must be registered on the child registry the pinned ScriptManager reads) and authorised the native-event fix plus a bounded asset-version bump where stale browser bytes are verified. The three hooks.py guard bindings are renewed under the same narrow scope as order 30.",
+          "renewed_guard": {
+            "path": "construction/hooks.py",
+            "sha256": "a433374a6417515686cc0b18266c8c1afae2a9debff60d3d79d02632ceb51ddc"
+          },
+          "renewed_on": "2026-10-20",
+          "scope": "construction/hooks.py guard binding digest only; the only source change is the bounded client asset-version bumps (timesheet_designation.js v=1->v=4, ct_link_control.js v=18->v=19, boq_filters.js v=9->v=10) required by the verified stale-browser-bytes failure; the reviewed hook chains are unchanged"
+        },
+        "renewal_review_2026_10_20_native_boq_query": {
+          "combined_source_sha256": "93128be2a41979b214e5f9de1c7502d3470b654e",
+          "order_reference": "30-primary-ledger-renewal-and-isolated-evidence-order.md; 43-primary-runtime-approval-and-current-evidence-contract.md",
+          "primary_review": "Parent reviewed actual hooks.py diff against dafba6f: only BOQ filter client registration comment and version v10 to v13 changed; Form Layout Profile, User Desk Theme and User Scope Context security hook chains are unchanged. This renewal is restricted to those three existing hooks.py guard bindings and corresponding canonical manifests. This does not approve unrelated findings or claim native/business acceptance. Historical stale-browser cause remains withdrawn as proven cause.",
+          "primary_review_record_sha256": "7d733c92ec597268a624fdc654d71ae319e6d815bacc6c2d69192767027e6661",
+          "renewed_guard": {
+            "path": "construction/hooks.py",
+            "sha256": "cd25636580ee98354afb1cc5424ee8d39294c713e09c835285fa136095be640a"
+          },
+          "renewed_on": "2026-10-20",
+          "reviewed_base_commit": "dafba6f50d77ff25c256bd89c7168d4cc3b2d3e9",
+          "reviewed_patch_sha256": "3bb456fc1882d778e07a68337ee866340c3ad942ce3839ec9966e8dc0b42e69b",
+          "scope": "Three hooks.py guard bindings only; preserve finding identities, other guards/tests, decisions, historical reviews and strict failure controls."
+        },
+        "renewal_review_2026_10_22_je_project": {
+          "order_reference": "30-primary-ledger-renewal-and-isolated-evidence-order.md",
+          "primary_review_record_sha256": "5ffac5f3219a09d2daebfcf55c487d21106e6671720918b2647fcb49490732b2",
+          "renewed_guard": {
+            "path": "construction/hooks.py",
+            "sha256": "0a6d919a734cbed30136398451b328599e4f8d26c4818578187ce9cfe68790b0"
+          },
+          "reviewed_base_commit": "62fb26ecfbbf8d56709864734359236d43c80171",
+          "reviewed_patch_sha256": "d50c6272d52a1c7ab40007b96a3736092274469221c51389c752ce95909079cc",
+          "scope": "Only3existinghooks.pybindings and canonicalmanifests; allotherdoc_eventschains identical. Findingidentities,otherguards/tests,decisions,history unchanged; no nativeacceptance."
+        },
+        "renewal_review_2026_10_22_vfc_asset_version": {
+          "primary_review_record_sha256": "043b418efbce3ade3eead35260b6ca44ffed38d1d935c2b3ad7893ab1b01ea3e",
+          "renewed_guard": {
+            "path": "construction/hooks.py",
+            "sha256": "1d828c16c1282fa582b868c24b9e2b45a2f011bb8c8eca12f829f0a533fc63a2"
+          },
+          "reviewed_base_commit": "23ee16050340b4f258c0c1985d7a99f3429958f4",
+          "reviewed_candidate_commit": "31d39737804af467e8c1fc4516a1797795e92e72",
+          "reviewed_patch_sha256": "f139b5efad6188c10136cd3e6580fe7b162da5a6ba18758f72f0b597ea23afd4",
+          "scope": "Only3hooks.pyguarddigests+theircanonicalmanifest+newreviewmetadata. Nochangefindingidentities/permissionJSON/checker/tests/status/decisions/negativecontrols/history. No newnativeRESTorbusinessacceptanceclaim."
+        },
+        "renewal_review_2026_10_23_vfc_reattach": {
+          "order_reference": "30-primary-ledger-renewal-and-isolated-evidence-order.md section2",
+          "primary_review_record_sha256": "5e4296097fa7229fb4e6124173a3afd619b6cb29d4ce750336f95e5e07745553",
+          "renewed_guard": {
+            "path": "construction/hooks.py",
+            "sha256": "a7a4053b141401d79f1ed6ff37a1a1a587779f1961a56c28b998e011ccd6973d"
+          },
+          "reviewed_base_commit": "a80035384f07d4c328ef2969279f972f1797c894",
+          "reviewed_candidate": "construction-vfc-reattach-r22 working tree, not frozen",
+          "reviewed_patch_scope": "hooks.py only",
+          "reviewed_patch_sha256": "2913d380a93876df4c4fa27312841382d40ddb52a959acfea5b9b79b483a0799",
+          "scope": "Only3hooks guard hashes + corresponding canonical manifests + truthful metadata; preserve all finding/source/permission/status/decision/test/history records."
+        },
+        "reviewed_source_manifest_sha256": "f378e29a292561edf8de5144e4db1608abb25ea1db62f03492b07ce52b06ba39"
+      },
+      "source_sha256": "090006e01ba4b1e4fad6dea77543263b1507748129237c2f3d63a2d69b0dc023",
+      "status": "REVIEWED",
+      "tests": [
+        {
+          "path": "construction/tests/test_native_security_rest_authorization.py",
+          "sha256": "65bc902f476942bdc1e04001ee981de8742a178fd1b65f0ff439d8d243db450e"
+        },
+        {
+          "path": "construction/tests/test_security_user_desk_theme_owner.py",
+          "sha256": "f4894742db8f568ef5894febb778176893af730b2b7955621fa339f6360f8240"
+        }
+      ]
+    },
+    {
+      "decision": "ACCEPT",
+      "finding": {
+        "check_id": "relaxed-permissions",
+        "end": {
+          "col": 6,
+          "line": 116,
+          "offset": 2387
+        },
+        "path": "construction/construction/doctype/user_scope_context/user_scope_context.json",
+        "start": {
+          "col": 5,
+          "line": 110,
+          "offset": 2285
+        }
+      },
+      "guards": [
+        {
+          "path": "construction/overrides/scope_query.py",
+          "sha256": "c4875f2c30a27ef9c4c19d41f0717662dfadc94fb387afdb07b7935172744d3e"
+        },
+        {
+          "path": "construction/hooks.py",
+          "sha256": "a7a4053b141401d79f1ed6ff37a1a1a587779f1961a56c28b998e011ccd6973d"
+        },
+        {
+          "path": "construction/construction/doctype/user_scope_context/user_scope_context.py",
+          "sha256": "c7c47aa0a957d3476f72f6768eadcb32a6679231bac0e65282a0cda35bf6a278"
+        },
+        {
+          "path": "construction/api/scope_context_api.py",
+          "sha256": "f61bb31432ea22f641234704dabec1095416010875aa8548404f6c7e3cdcba1f"
+        }
+      ],
+      "permission_record": {
+        "canonical_fields_sha256": "dbc5ef3085f6d36fbe9348147eb7f86f07c5dc2a8a9efeb2d5886bd5092585f3",
+        "document_path": "construction/construction/doctype/user_scope_context/user_scope_context.json",
+        "index": 1
+      },
+      "review_gate": {
+        "combined_qualification_id": "foundation-local-phased-2026-10-18",
+        "combined_qualification_sha256": "5acf5ee374628851cd45a968e18470e5f10518ed5d7dd3aad2063cb8f0d32441",
+        "native_rest_log_sha256": "bd5160a7af6ea5cc6939c57e8ba0656656a3f22f8d034244b8a09fa0311addd8",
+        "native_rest_run_id": "native-rest-userpermission-guest-singlevalue-fix-2026-10-18",
+        "parent_review_id": "root-five-docperm-final-source-review-2026-10-18",
+        "renewal_review_2026_10_19": {
+          "combined_source_sha256": "71d9bb479eb08f2bcb571e5ca714bc59b99339b6",
+          "order_reference": "30-primary-ledger-renewal-and-isolated-evidence-order.md",
+          "primary_review": "Primary re-reviewed the hooks.py diff (Timesheet client asset + ordered Timesheet validate derivation) and confirmed the Form Layout Profile, User Desk Theme and User Scope Context hook chains are unchanged, so the previously reviewed security hook behavior remains applicable; narrowly scoped renewal of the guard digest approved in order 30.",
+          "renewed_guard": {
+            "path": "construction/hooks.py",
+            "sha256": "0789109eaa315106e0be1dac2efac7323f7e58ceb19e6e97fae786a8e005932e"
+          },
+          "renewed_on": "2026-10-19",
+          "scope": "construction/hooks.py guard binding digest only; finding identity, other guards, tests, decision and the original review references are unchanged"
+        },
+        "renewal_review_2026_10_19_asset_version": {
+          "combined_source_sha256": "f97664c8882ff9a77fec11194b849f06ab9effb0",
+          "order_reference": "39-primary-native-event-and-dropdown-fix.md",
+          "primary_review": "Primary confirmed the Timesheet add-row cause and authorised the native-event fix plus a bounded asset-version bump where stale browser bytes are verified; the three hooks.py guard bindings are renewed under the same narrow scope as order 30.",
+          "renewed_guard": {
+            "path": "construction/hooks.py",
+            "sha256": "178183350ef365d074a5f803342b258a103bdc8c2dfc4b3bd49540a833071da6"
+          },
+          "renewed_on": "2026-10-19",
+          "scope": "construction/hooks.py guard binding digest only; the two bounded client asset-version bumps (ct_link_control.js v18->v19, boq_filters.js v9->v10) are the only source change; the reviewed hook chains themselves are unchanged"
+        },
+        "renewal_review_2026_10_20_asset_version": {
+          "combined_source_sha256": "f469ebcbad4f61664b9075ec415eb83d34f3774d",
+          "order_reference": "41-primary-child-dispatch-correction-and-retest.md",
+          "primary_review": "Primary confirmed the Timesheet add-row cause (the event must be registered on the child registry the pinned ScriptManager reads) and authorised the native-event fix plus a bounded asset-version bump where stale browser bytes are verified. The three hooks.py guard bindings are renewed under the same narrow scope as order 30.",
+          "renewed_guard": {
+            "path": "construction/hooks.py",
+            "sha256": "a433374a6417515686cc0b18266c8c1afae2a9debff60d3d79d02632ceb51ddc"
+          },
+          "renewed_on": "2026-10-20",
+          "scope": "construction/hooks.py guard binding digest only; the only source change is the bounded client asset-version bumps (timesheet_designation.js v=1->v=4, ct_link_control.js v=18->v=19, boq_filters.js v=9->v=10) required by the verified stale-browser-bytes failure; the reviewed hook chains are unchanged"
+        },
+        "renewal_review_2026_10_20_native_boq_query": {
+          "combined_source_sha256": "93128be2a41979b214e5f9de1c7502d3470b654e",
+          "order_reference": "30-primary-ledger-renewal-and-isolated-evidence-order.md; 43-primary-runtime-approval-and-current-evidence-contract.md",
+          "primary_review": "Parent reviewed actual hooks.py diff against dafba6f: only BOQ filter client registration comment and version v10 to v13 changed; Form Layout Profile, User Desk Theme and User Scope Context security hook chains are unchanged. This renewal is restricted to those three existing hooks.py guard bindings and corresponding canonical manifests. This does not approve unrelated findings or claim native/business acceptance. Historical stale-browser cause remains withdrawn as proven cause.",
+          "primary_review_record_sha256": "7d733c92ec597268a624fdc654d71ae319e6d815bacc6c2d69192767027e6661",
+          "renewed_guard": {
+            "path": "construction/hooks.py",
+            "sha256": "cd25636580ee98354afb1cc5424ee8d39294c713e09c835285fa136095be640a"
+          },
+          "renewed_on": "2026-10-20",
+          "reviewed_base_commit": "dafba6f50d77ff25c256bd89c7168d4cc3b2d3e9",
+          "reviewed_patch_sha256": "3bb456fc1882d778e07a68337ee866340c3ad942ce3839ec9966e8dc0b42e69b",
+          "scope": "Three hooks.py guard bindings only; preserve finding identities, other guards/tests, decisions, historical reviews and strict failure controls."
+        },
+        "renewal_review_2026_10_22_je_project": {
+          "order_reference": "30-primary-ledger-renewal-and-isolated-evidence-order.md",
+          "primary_review_record_sha256": "5ffac5f3219a09d2daebfcf55c487d21106e6671720918b2647fcb49490732b2",
+          "renewed_guard": {
+            "path": "construction/hooks.py",
+            "sha256": "0a6d919a734cbed30136398451b328599e4f8d26c4818578187ce9cfe68790b0"
+          },
+          "reviewed_base_commit": "62fb26ecfbbf8d56709864734359236d43c80171",
+          "reviewed_patch_sha256": "d50c6272d52a1c7ab40007b96a3736092274469221c51389c752ce95909079cc",
+          "scope": "Only3existinghooks.pybindings and canonicalmanifests; allotherdoc_eventschains identical. Findingidentities,otherguards/tests,decisions,history unchanged; no nativeacceptance."
+        },
+        "renewal_review_2026_10_22_vfc_asset_version": {
+          "primary_review_record_sha256": "043b418efbce3ade3eead35260b6ca44ffed38d1d935c2b3ad7893ab1b01ea3e",
+          "renewed_guard": {
+            "path": "construction/hooks.py",
+            "sha256": "1d828c16c1282fa582b868c24b9e2b45a2f011bb8c8eca12f829f0a533fc63a2"
+          },
+          "reviewed_base_commit": "23ee16050340b4f258c0c1985d7a99f3429958f4",
+          "reviewed_candidate_commit": "31d39737804af467e8c1fc4516a1797795e92e72",
+          "reviewed_patch_sha256": "f139b5efad6188c10136cd3e6580fe7b162da5a6ba18758f72f0b597ea23afd4",
+          "scope": "Only3hooks.pyguarddigests+theircanonicalmanifest+newreviewmetadata. Nochangefindingidentities/permissionJSON/checker/tests/status/decisions/negativecontrols/history. No newnativeRESTorbusinessacceptanceclaim."
+        },
+        "renewal_review_2026_10_23_vfc_reattach": {
+          "order_reference": "30-primary-ledger-renewal-and-isolated-evidence-order.md section2",
+          "primary_review_record_sha256": "5e4296097fa7229fb4e6124173a3afd619b6cb29d4ce750336f95e5e07745553",
+          "renewed_guard": {
+            "path": "construction/hooks.py",
+            "sha256": "a7a4053b141401d79f1ed6ff37a1a1a587779f1961a56c28b998e011ccd6973d"
+          },
+          "reviewed_base_commit": "a80035384f07d4c328ef2969279f972f1797c894",
+          "reviewed_candidate": "construction-vfc-reattach-r22 working tree, not frozen",
+          "reviewed_patch_scope": "hooks.py only",
+          "reviewed_patch_sha256": "2913d380a93876df4c4fa27312841382d40ddb52a959acfea5b9b79b483a0799",
+          "scope": "Only3hooks guard hashes + corresponding canonical manifests + truthful metadata; preserve all finding/source/permission/status/decision/test/history records."
+        },
+        "reviewed_source_manifest_sha256": "d522b0e294f988cb668529e3a045d376fa818713c83f8a696dfb7fc7a99e1c74"
+      },
+      "source_sha256": "054446a3f27f7d5b34cfd542cbc9536f6f6d559246c5888a40dd6bdb510b3b24",
+      "status": "REVIEWED",
+      "tests": [
+        {
+          "path": "construction/tests/test_native_security_rest_authorization.py",
+          "sha256": "65bc902f476942bdc1e04001ee981de8742a178fd1b65f0ff439d8d243db450e"
+        }
+      ]
+    }
+  ],
+  "purpose": "Five independently pinned relaxed-permissions candidates; all PENDING and none approved.",
+  "required_targets": [
+    {
+      "check_id": "relaxed-permissions",
+      "end": {
+        "col": 6,
+        "line": 660,
+        "offset": 15813
+      },
+      "path": "construction/construction/doctype/construction_theme/construction_theme.json",
+      "start": {
+        "col": 5,
+        "line": 657,
+        "offset": 15769
+      }
+    },
+    {
+      "check_id": "relaxed-permissions",
+      "end": {
+        "col": 4,
+        "line": 134,
+        "offset": 3008
+      },
+      "path": "construction/construction/doctype/form_layout_profile/form_layout_profile.json",
+      "start": {
+        "col": 3,
+        "line": 131,
+        "offset": 2972
+      }
+    },
+    {
+      "check_id": "relaxed-permissions",
+      "end": {
+        "col": 6,
+        "line": 107,
+        "offset": 2826
+      },
+      "path": "construction/construction/doctype/modern_theme_settings/modern_theme_settings.json",
+      "start": {
+        "col": 5,
+        "line": 104,
+        "offset": 2782
+      }
+    },
+    {
+      "check_id": "relaxed-permissions",
+      "end": {
+        "col": 6,
+        "line": 239,
+        "offset": 7432
+      },
+      "path": "construction/construction/doctype/user_desk_theme/user_desk_theme.json",
+      "start": {
+        "col": 5,
+        "line": 232,
+        "offset": 7311
+      }
+    },
+    {
+      "check_id": "relaxed-permissions",
+      "end": {
+        "col": 6,
+        "line": 116,
+        "offset": 2387
+      },
+      "path": "construction/construction/doctype/user_scope_context/user_scope_context.json",
+      "start": {
+        "col": 5,
+        "line": 110,
+        "offset": 2285
+      }
+    }
+  ],
+  "scan_source": "Fresh final-candidate Semgrep JSON scan; raw artifact and SHA-256 retained in external qualification evidence.",
+  "scan_total_findings": 5,
+  "schema_version": 1
+}

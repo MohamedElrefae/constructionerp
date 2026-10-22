@@ -43,9 +43,18 @@ def translate_digest():
         limit_page_length=0,
     )
     payload = json.dumps(
-        [[r["name"], r.get("translated_text"), r.get("ct_origin"),
-          r.get("ct_is_catalog_entry"), str(r.get("modified"))] for r in rows],
-        ensure_ascii=False, sort_keys=True,
+        [
+            [
+                r["name"],
+                r.get("translated_text"),
+                r.get("ct_origin"),
+                r.get("ct_is_catalog_entry"),
+                str(r.get("modified")),
+            ]
+            for r in rows
+        ],
+        ensure_ascii=False,
+        sort_keys=True,
     )
     return sha256_bytes(payload.encode("utf-8")), len(rows)
 
@@ -75,12 +84,15 @@ def main():
 
     glossary = json.loads(GLOSSARY.read_bytes().decode("utf-8"))
     terms = glossary["terms"]
-    print(f"glossary meta version   : {glossary['meta']['version']} "
-          f"(previous {glossary['meta'].get('previous_version')})")
+    print(
+        f"glossary meta version   : {glossary['meta']['version']} "
+        f"(previous {glossary['meta'].get('previous_version')})"
+    )
     print(f"glossary terms          : {len(terms)}")
 
-    import construction.translation_loader  # noqa: F401
     import frappe.translate as frappe_translate
+
+    import construction.translation_loader
 
     frappe_translate.clear_cache()
     merged = frappe_translate.get_all_translations("ar")
@@ -105,7 +117,7 @@ def main():
             failures.append(f"term {src!r} divergent")
         else:
             match += 1
-        for tok in (t.get("forbidden_ar") or []):
+        for tok in t.get("forbidden_ar") or []:
             if tok and re.search(r"(?<![\u0600-\u06FF])" + re.escape(tok) + r"(?![\u0600-\u06FF])", got):
                 forbidden += 1
                 failures.append(f"forbidden token in {src!r}")
@@ -115,6 +127,7 @@ def main():
     print(f"forbidden violations    : {forbidden}")
 
     from construction import translation_service as ts
+
     health = ts.get_translation_health()
     print(f"health.loader_installed : {health['loader_installed']}")
     print(f"health.has_drift        : {health['has_drift']}")

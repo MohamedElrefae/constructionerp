@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Headless Arabic Desk verification for W6-6 Manufacturing Batch 01; password via stdin."""
+
 from __future__ import annotations
 
 import csv
@@ -67,9 +68,7 @@ with sync_playwright() as p:
     )
     add("boot-messages-ge-1000", msg_count >= 1000, msg_count)
 
-    boot_messages = page.evaluate(
-        "() => (window.frappe && frappe.boot && frappe.boot.__messages) || {}"
-    )
+    boot_messages = page.evaluate("() => (window.frappe && frappe.boot && frappe.boot.__messages) || {}")
     exact_matches: list[str] = []
     mismatches: list[dict[str, str]] = []
     for src, expected_ar in expected.items():

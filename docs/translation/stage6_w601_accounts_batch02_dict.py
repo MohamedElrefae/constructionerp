@@ -66,7 +66,7 @@ TRANSLATIONS = {
     "If enabled, this row's values will be displayed on financial charts": "إذا تم التفعيل، فستُعرض قيم هذا السطر في المخططات البيانية المالية",
     "If enabled, user will be alerted before resetting posting date to current date in relevant transactions": "إذا تم التفعيل، فسيتم تنبيه المستخدم قبل إعادة ضبط تاريخ الترحيل إلى التاريخ الحالي في المعاملات ذات الصلة",
     "If multiple Pricing Rules continue to prevail, users are asked to set Priority manually to resolve conflict.": "إذا استمر تعارض قواعد تسعير متعددة، يُطلب من المستخدمين تحديد الأولوية يدوياً لحل التعارض.",
-    "If rate is zero then item will be treated as \"Free Item\"": "إذا كان السعر صفراً، فسيُعامل الصنف على أنه \"صنف مجاني\"",
+    'If rate is zero then item will be treated as "Free Item"': 'إذا كان السعر صفراً، فسيُعامل الصنف على أنه "صنف مجاني"',
     "If unlimited expiry for the Loyalty Points, keep the Expiry Duration empty or 0.": "إذا كانت نقاط الولاء غير محددة الصلاحية، اترك مدة انتهاء الصلاحية فارغة أو 0.",
     "Ignore Is Opening check for reporting": "تجاهل علامة 'رصيد افتتاحي' لإعداد التقارير",
     "Ignore Voucher Type filter and Select Vouchers Manually": "تجاهل تصفية نوع السند وتحديد السندات يدوياً",

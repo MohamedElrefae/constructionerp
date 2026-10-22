@@ -4,12 +4,13 @@ import hashlib
 import json
 
 import frappe
+from frappe import _
 from frappe.translate import strip_html_tags
 
 
 def _digest(lang, src, ctx, app, is_catalog):
     if "\x00" in (src or "") or "\x00" in (ctx or "") or "\x00" in (app or ""):
-        frappe.throw("NUL in key")
+        frappe.throw(_("NUL in key"))
     payload = (
         [lang or "", src or "", ctx or "", app or "", "catalog"]
         if is_catalog
@@ -167,6 +168,6 @@ def execute():
     )[0][0]
     print(f"[v8_6] Verification: dup_groups={verify_dup} null_digests={verify_null}")
     if verify_dup or verify_null:
-        frappe.throw("Patch v8_6 failed: duplicate translation identities or missing digests remain")
+        frappe.throw(_("Patch v8_6 failed: duplicate translation identities or missing digests remain"))
     else:
         print("[v8_6] VERIFICATION PASSED")

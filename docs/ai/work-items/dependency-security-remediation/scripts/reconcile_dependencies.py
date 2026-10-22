@@ -118,7 +118,9 @@ def main() -> int:
         print(f"  - {name}~={version}")
     print()
 
-    header = f"{'package':<14}{'installed':<12}{'target':<12}{'uniq':>5}{'fixmax':>8}  {'outcome':<9} controls"
+    header = (
+        f"{'package':<14}{'installed':<12}{'target':<12}{'uniq':>5}{'fixmax':>8}  {'outcome':<9} controls"
+    )
     print(header)
     print("-" * len(header))
 

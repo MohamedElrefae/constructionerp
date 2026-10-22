@@ -7,6 +7,7 @@ rows marked ``ct_is_catalog_entry = 1`` are excluded from the in-memory
 """
 
 import frappe
+from frappe import _
 from frappe.custom.doctype.custom_field.custom_field import create_custom_field
 
 CUSTOM_FIELDS = [
@@ -235,7 +236,7 @@ def ensure_translation_identity():
                 # Preserve both translations rather than guessing which value
                 # a customer intended to keep under the existing unique index.
                 frappe.throw(
-                    "Legacy Translation identity collision; reconcile duplicate rows before retrying"
+                    _("Legacy Translation identity collision; reconcile duplicate rows before retrying")
                 )
             identities[digest] = r.name
             updates = {
@@ -252,17 +253,107 @@ def ensure_translation_identity():
             backfilled += 1
         last_name = rows[-1].name
     if backfilled:
-        frappe.db.commit()
+        frappe.db.after_commit.add(_clear_translation_identity_cache_after_commit)
+    ensure_translation_digest_unique_index()
+    return {"backfilled": backfilled}
+
+
+def _clear_translation_identity_cache_after_commit():
+    """Clear Translation cache after identity backfills commit; cache failure is non-fatal."""
+    try:
         from frappe.translate import clear_cache
 
         clear_cache()
-    return {"backfilled": backfilled}
+    except Exception:
+        try:
+            frappe.logger("translation_catalog_fields").exception(
+                "Committed Translation identity backfill, but cache clearing failed"
+            )
+        except Exception:
+            pass
+
+
+def ensure_translation_digest_unique_index():
+    """Ensure the canonical Translation digest is protected by its exact index.
+
+    Existing installations can have a non-unique index on ``ct_key_digest``;
+    that does not enforce identity uniqueness. Preserve all rows and fail
+    closed if data is incomplete or colliding before attempting DDL.
+    """
+    if not frappe.db.has_column("Translation", "ct_key_digest"):
+        return {"skipped": True, "reason": "ct_key_digest column unavailable"}
+
+    index_name = "ct_translation_key_digest"
+
+    def _exact_unique_index():
+        rows = frappe.db.sql(
+            "SHOW INDEX FROM `tabTranslation` WHERE Key_name = %(name)s",
+            {"name": index_name},
+            as_dict=True,
+        )
+        if len(rows) != 1:
+            return False
+        row = rows[0]
+        return (
+            row.get("Key_name") == index_name
+            and int(row.get("Non_unique", 1)) == 0
+            and int(row.get("Seq_in_index", 0)) == 1
+            and row.get("Column_name") == "ct_key_digest"
+            and row.get("Sub_part") is None
+        )
+
+    incomplete = frappe.db.sql(
+        """
+        SELECT COUNT(*) FROM `tabTranslation`
+        WHERE ct_key_digest IS NULL OR ct_key_digest = '' OR ct_is_catalog_entry IS NULL
+        """
+    )[0][0]
+    if incomplete:
+        frappe.throw(
+            frappe._("Cannot enforce Translation identity while {0} digest rows are incomplete").format(
+                incomplete
+            )
+        )
+
+    duplicates = frappe.db.sql(
+        """
+        SELECT ct_key_digest
+        FROM `tabTranslation`
+        GROUP BY ct_key_digest
+        HAVING COUNT(*) > 1
+        LIMIT 1
+        """,
+        as_dict=True,
+    )
+    if duplicates:
+        frappe.throw(frappe._("Cannot enforce Translation identity while duplicate digests remain"))
+
+    indexes = frappe.db.sql(
+        "SHOW INDEX FROM `tabTranslation` WHERE Key_name = %(name)s",
+        {"name": index_name},
+        as_dict=True,
+    )
+    if indexes:
+        if _exact_unique_index():
+            return {"created": False, "verified": True}
+        frappe.throw(
+            frappe._("Translation digest index {0} exists with an unexpected definition").format(index_name)
+        )
+
+    # MariaDB DDL implicitly commits. Commit first so Frappe's implicit-commit
+    # guard sees a clean transaction and any earlier migration writes are durable.
+    frappe.db.commit()  # nosemgrep: frappe-manual-commit -- before MariaDB implicit-commit index DDL
+    frappe.db.sql(
+        "ALTER TABLE `tabTranslation` " "ADD UNIQUE INDEX `ct_translation_key_digest` (`ct_key_digest`)"
+    )
+    if not _exact_unique_index():
+        frappe.throw(frappe._("Translation digest unique index was not created as expected"))
+    return {"created": True, "verified": True}
 
 
 def apply():
     """Run from patches / migrate."""
     ensure_custom_fields()
-    frappe.db.commit()
 
 
 def count_incomplete_translation_identities():

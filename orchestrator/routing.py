@@ -560,13 +560,14 @@ def apply_event(current, event, config):
             # The pause is resolved by this decision; drop the resume bookkeeping so the
             # view cannot present a stale pause (matches the owner resume path).
             state.update(pause_reason=None, resume_to=None, prior=None)
-            state["decision_refs"] = state.get("decision_refs", []) + [
+            state["decision_refs"] = [
+                *state.get("decision_refs", []),
                 {
                     "token_id": token["token_id"],
                     "disposition": token["disposition"],
                     "decision_hash": token["decision_hash"],
                     "resolved_finding_digests": token["resolved_finding_digests"],
-                }
+                },
             ]
         elif token["scope"] == "DRY_RUN":
             if token["candidate_id"] != state["candidate"]["candidate_id"]:

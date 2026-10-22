@@ -34,7 +34,10 @@ def main():
         payload = list(csv.DictReader(handle))
     released = [row for row in payload if row["quorum_decision"] == "quorum-confirmed-payload"]
     assert len(released) == 38
-    EVIDENCE.write_text("".join(row["source_text"] + "\t" + row["translated_text"] + "\n" for row in released), encoding="utf-8")
+    EVIDENCE.write_text(
+        "".join(row["source_text"] + "\t" + row["translated_text"] + "\n" for row in released),
+        encoding="utf-8",
+    )
     ref = f"content:{EVIDENCE.relative_to(ROOT)}"
     refs = [{"ref": ref, "sha256": sha(EVIDENCE)}]
     with CATALOG.open(encoding="utf-8", newline="") as handle:
@@ -55,13 +58,21 @@ def main():
         value = row["translated_text"] or ""
         decision_id = row_decision_id(row_identity_fields(row, source, value), refs)
         rebuilt[decision_id] = {
-            "language": row["language"], "ct_app": row["ct_app"], "context": row["context"],
-            "source_text": source, "translated_text": value, "domain": row["domain"],
+            "language": row["language"],
+            "ct_app": row["ct_app"],
+            "context": row["context"],
+            "source_text": source,
+            "translated_text": value,
+            "domain": row["domain"],
             "reviewers": [row["a1_reviewer"], row["a2_reviewer"], row["a3_reviewer"]],
             "timestamps": [row["a1_approved_at"], row["a2_approved_at"], row["a3_approved_at"]],
-            "release_version": row["release_version"], "references": row["references"],
+            "release_version": row["release_version"],
+            "references": row["references"],
             "proposal": {"arabic": value, "sha256": hashlib.sha256(f"{source}|{value}".encode()).hexdigest()},
-            "verdicts": {role: {"decision": "approve", "confidence": "high", "session": session} for role, session in REVIEW_SESSIONS.items()},
+            "verdicts": {
+                role: {"decision": "approve", "confidence": "high", "session": session}
+                for role, session in REVIEW_SESSIONS.items()
+            },
             "artifacts": refs,
         }
     assert len(rebuilt) == 38
@@ -77,8 +88,12 @@ def main():
         writer.writeheader()
         writer.writerows(catalog)
     decision_doc["generated_utc"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-    decision_doc["note"] = "W6-6 CRM Support Maintenance decisions rebound to literal quote-safe content evidence; historical decisions retained."
-    DECISIONS.write_text(json.dumps(decision_doc, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    decision_doc["note"] = (
+        "W6-6 CRM Support Maintenance decisions rebound to literal quote-safe content evidence; historical decisions retained."
+    )
+    DECISIONS.write_text(
+        json.dumps(decision_doc, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
     print(f"evidence_sha256={sha(EVIDENCE)}")
     print(f"payload_sha256={sha(PAYLOAD)}")
     print(f"catalog_sha256={sha(CATALOG)}")

@@ -34,15 +34,13 @@ from frappe import _
 from construction.searchable_dropdown.api.search import searchable_link_search
 
 __all__ = [
-    "search_transactions",
-    "TRANSACTION_LINK_CONFIG",
     "TOP_K_MASTER_MATCHES",
+    "TRANSACTION_LINK_CONFIG",
+    "search_transactions",
     "seed_required_targets",
 ]
 
-_ARABIC_RE = re.compile(
-    "[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]"
-)
+_ARABIC_RE = re.compile("[\u0600-\u06ff\u0750-\u077f\u08a0-\u08ff\ufb50-\ufdff\ufe70-\ufeff]")
 
 TOP_K_MASTER_MATCHES = 100
 
@@ -142,11 +140,7 @@ def _resolve_master_ids(master_doctype: str, txt: str) -> list[str]:
         page_length=TOP_K_MASTER_MATCHES,
         display_format="{name}",
     )
-    return [
-        row.get("value")
-        for row in (matches or [])[:TOP_K_MASTER_MATCHES]
-        if row.get("value")
-    ]
+    return [row.get("value") for row in (matches or [])[:TOP_K_MASTER_MATCHES] if row.get("value")]
 
 
 def _arabic_label_map(doctype: str, names: list[str]) -> dict[str, str]:
@@ -170,11 +164,7 @@ def _arabic_label_map(doctype: str, names: list[str]) -> dict[str, str]:
         filters={"name": ("in", list(names))},
         fields=["name", arabic_field],
     )
-    return {
-        row["name"]: str(row.get(arabic_field) or "")
-        for row in rows
-        if row.get(arabic_field)
-    }
+    return {row["name"]: str(row.get(arabic_field) or "") for row in rows if row.get(arabic_field)}
 
 
 def _enrich(results: list[dict], target_doctype: str, link_field: str, master_doctype: str) -> list[dict]:
@@ -204,9 +194,7 @@ def _enrich(results: list[dict], target_doctype: str, link_field: str, master_do
         return results
 
     value_to_label = {
-        row["name"]: labels.get(row.get(link_field))
-        for row in link_values
-        if row.get(link_field) in labels
+        row["name"]: labels.get(row.get(link_field)) for row in link_values if row.get(link_field) in labels
     }
     for row in results:
         arabic = value_to_label.get(row.get("value"))
@@ -221,8 +209,8 @@ def search_transactions(
     doctype: str,
     txt: str = "",
     searchfield: str | None = None,
-    start: "int | float | str | None" = 0,
-    page_length: "int | float | str | None" = 20,
+    start: int | float | str | None = 0,
+    page_length: int | float | str | None = 20,
     filters=None,
     as_dict: bool = False,
     reference_doctype: str | None = None,
@@ -244,9 +232,7 @@ def search_transactions(
 
     meta = frappe.get_meta(doctype)
     if not meta.has_field(link_field):
-        raise frappe.ValidationError(
-            _("Link field {0} is missing on {1}").format(link_field, doctype)
-        )
+        raise frappe.ValidationError(_("Link field {0} is missing on {1}").format(link_field, doctype))
 
     search_fields = _native_search_fields(doctype)
     client_filters = _sanitize_client_filters(filters, link_field)

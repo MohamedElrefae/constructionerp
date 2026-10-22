@@ -59,9 +59,12 @@ def classify_delta(old_map, new_map):
     for c, m in new_map:
         new_by_msgid.setdefault(m, set()).add(c)
     context_shift = sorted(
-        {"msgid": m, "old_contexts": sorted(old_by_msgid[m]), "new_contexts": sorted(new_by_msgid[m])}
-        for m in old_by_msgid
-        if m in new_by_msgid and old_by_msgid[m] != new_by_msgid[m]
+        (
+            {"msgid": m, "old_contexts": sorted(old_by_msgid[m]), "new_contexts": sorted(new_by_msgid[m])}
+            for m in old_by_msgid
+            if m in new_by_msgid and old_by_msgid[m] != new_by_msgid[m]
+        ),
+        key=lambda d: d["msgid"],
     )
     return added, removed, changed, context_shift
 

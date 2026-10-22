@@ -476,7 +476,9 @@
 										// control only accepted Arabic, so Confirm Import died on
 										// empty mode. The Arabic description below explains the choice.
 										options: ["Structured", "Semi-Structured", "Flat"],
-										description: __("Confirm the detected workbook layout before committing."),
+										description: __(
+											"Confirm the detected workbook layout before committing."
+										),
 										depends_on: "eval:doc.__show_commit",
 									},
 									{
@@ -520,21 +522,33 @@
 							function show_errors(errors) {
 								const $wrap = $("<div>");
 								$wrap.append(
-									$("<p>").addClass("text-danger").text(
-										__("Validation found {0} blocking error(s). Fix the workbook and validate again. No records were saved.", [errors.length])
-									)
+									$("<p>")
+										.addClass("text-danger")
+										.text(
+											__(
+												"Validation found {0} blocking error(s). Fix the workbook and validate again. No records were saved.",
+												[errors.length]
+											)
+										)
 								);
 								const $list = $("<ul>");
 								(errors || []).slice(0, 50).forEach((e) => {
 									const row = e.row_no ? `Row ${e.row_no}: ` : "";
-									$list.append($("<li>").text(row + (e.message || e.code || "Error")));
+									$list.append(
+										$("<li>").text(row + (e.message || e.code || "Error"))
+									);
 								});
 								$wrap.append($list);
 								if ((errors || []).length > 50) {
 									$wrap.append(
-										$("<p>").addClass("text-muted").text(
-											__("Showing first 50 of {0} errors. Use the error report for the full list.", [errors.length])
-										)
+										$("<p>")
+											.addClass("text-muted")
+											.text(
+												__(
+													"Showing first 50 of {0} errors. Use the error report for the full list.",
+													[errors.length]
+												)
+											)
 									);
 								}
 								set_result($wrap);
@@ -545,21 +559,35 @@
 								const $wrap = $("<div>");
 								$wrap.append(
 									$("<p>").text(
-										__("Preview only — nothing saved yet. Rows: {0}, sections: {1}, items: {2}, warnings: {3}.",
-											[summary.row_count || 0, summary.section_count || 0, summary.item_count || 0, (msg.warnings || []).length])
+										__(
+											"Preview only — nothing saved yet. Rows: {0}, sections: {1}, items: {2}, warnings: {3}.",
+											[
+												summary.row_count || 0,
+												summary.section_count || 0,
+												summary.item_count || 0,
+												(msg.warnings || []).length,
+											]
+										)
 									)
 								);
 								if ((msg.warnings || []).length) {
 									const $wlist = $("<ul>");
 									(msg.warnings || []).slice(0, 20).forEach((w) => {
-										$wlist.append($("<li>").text(w.message || w.code || "Warning"));
+										$wlist.append(
+											$("<li>").text(w.message || w.code || "Warning")
+										);
 									});
-									$wrap.append($("<p>").addClass("text-muted").text(__("Warnings:")));
+									$wrap.append(
+										$("<p>").addClass("text-muted").text(__("Warnings:"))
+									);
 									$wrap.append($wlist);
 								}
 								$wrap.append(
 									$("<p>").text(
-										__("Detected layout: {0}. Confirm the mode, then choose Confirm Import to save.", [msg.detected_import_mode || "—"])
+										__(
+											"Detected layout: {0}. Confirm the mode, then choose Confirm Import to save.",
+											[msg.detected_import_mode || "—"]
+										)
 									)
 								);
 								set_result($wrap);
@@ -582,7 +610,11 @@
 										d.get_primary_btn().prop("disabled", false);
 										const msg = r.message;
 										if (!msg) {
-											show_info(__("Validation failed without a server response. Nothing was saved."));
+											show_info(
+												__(
+													"Validation failed without a server response. Nothing was saved."
+												)
+											);
 											return;
 										}
 										if (msg.success && !(msg.errors || []).length) {
@@ -598,15 +630,27 @@
 											d.set_value("file_url", file_url);
 											d.set_value("import_mode", msg.detected_import_mode);
 											show_preview(msg);
-											d.set_primary_action(__("Confirm Import"), d.primary_action);
+											d.set_primary_action(
+												__("Confirm Import"),
+												d.primary_action
+											);
 										} else {
-											show_errors(msg.errors || [{ message: msg.error || __("Validation failed.") }]);
+											show_errors(
+												msg.errors || [
+													{
+														message:
+															msg.error || __("Validation failed."),
+													},
+												]
+											);
 										}
 									},
 									error() {
 										busy = false;
 										d.get_primary_btn().prop("disabled", false);
-										show_info(__("Validation request failed. Nothing was saved."));
+										show_info(
+											__("Validation request failed. Nothing was saved.")
+										);
 									},
 								});
 							}
@@ -618,7 +662,11 @@
 									(d.doc = d.doc || {}).__show_commit = false;
 									d.refresh();
 									d.set_primary_action(__("Validate"), d.primary_action);
-									show_info(__("The file changed since validation. Validate again before confirming import."));
+									show_info(
+										__(
+											"The file changed since validation. Validate again before confirming import."
+										)
+									);
 									return;
 								}
 								if (!import_mode) {
@@ -642,25 +690,45 @@
 										const msg = r.message;
 										if (msg && msg.success && msg.dry_run === false) {
 											if (msg.duplicate_suppressed) {
-												const n_items = (msg.summary || {}).item_count || 0;
+												const n_items =
+													(msg.summary || {}).item_count || 0;
 												d.hide();
 												frm.reload_doc();
 												frappe.show_alert({
-													message: __("Already imported: this file is recorded under batch {0} ({1} items). No duplicates created.", [msg.import_batch || "—", n_items]),
+													message: __(
+														"Already imported: this file is recorded under batch {0} ({1} items). No duplicates created.",
+														[msg.import_batch || "—", n_items]
+													),
 													indicator: "blue",
 												});
 											} else {
 												const n_items = (msg.created_items || []).length;
-												const n_struct = (msg.created_structures || []).length;
+												const n_struct = (msg.created_structures || [])
+													.length;
 												d.hide();
 												frm.reload_doc();
 												frappe.show_alert({
-													message: __("Imported {0} items in {1} structures (batch {2}).", [n_items, n_struct, msg.import_batch || "—"]),
+													message: __(
+														"Imported {0} items in {1} structures (batch {2}).",
+														[
+															n_items,
+															n_struct,
+															msg.import_batch || "—",
+														]
+													),
 													indicator: "green",
 												});
 											}
 										} else {
-											show_errors((msg && msg.errors) || [{ message: (msg && msg.error) || __("Import failed.") }]);
+											show_errors(
+												(msg && msg.errors) || [
+													{
+														message:
+															(msg && msg.error) ||
+															__("Import failed."),
+													},
+												]
+											);
 											d.__confirm_armed = false;
 											(d.doc = d.doc || {}).__show_commit = false;
 											d.refresh();
@@ -670,7 +738,11 @@
 									error() {
 										busy = false;
 										d.get_primary_btn().prop("disabled", false);
-										show_info(__("Import request failed. Verify saved records before retrying; do not blindly repeat."));
+										show_info(
+											__(
+												"Import request failed. Verify saved records before retrying; do not blindly repeat."
+											)
+										);
 									},
 								});
 							}

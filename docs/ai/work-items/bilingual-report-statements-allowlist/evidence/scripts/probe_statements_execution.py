@@ -56,11 +56,7 @@ def run_report(name, filters, mode):
 
 
 def labels(out, field):
-    return [
-        r.get(field)
-        for r in out.get("data") or []
-        if isinstance(r, dict) and r.get(field)
-    ][:6]
+    return [r.get(field) for r in out.get("data") or [] if isinstance(r, dict) and r.get(field)][:6]
 
 
 def main():
@@ -81,7 +77,7 @@ def main():
         for mode in ("ar", "en"):
             try:
                 out, elapsed = run_report(name, f, mode)
-            except Exception as exc:  # noqa: BLE001 - probe must surface any failure
+            except Exception as exc:
                 print(f"REPORT {name} mode={mode}: FAIL {type(exc).__name__}: {exc}")
                 ok = False
                 continue
@@ -110,7 +106,7 @@ def main():
             ok = ok and swapped
             print(f"BS_AR_MODE_SWAPPED[{field}]:", swapped)
         else:
-            pairs = list(zip(en_labels, ar_labels))
+            pairs = list(zip(en_labels, ar_labels, strict=False))
             mapped = [(e, a) for e, a in pairs if e in mapping]
             unmapped_ok = all(e == a for e, a in pairs if e not in mapping)
             mapped_ok = all(a == mapping[e] for e, a in mapped)

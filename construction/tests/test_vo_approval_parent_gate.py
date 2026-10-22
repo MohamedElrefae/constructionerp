@@ -10,7 +10,6 @@ remains required for the other five child doctypes.
 import frappe
 from frappe.tests.utils import FrappeTestCase
 
-
 HDR = "BOQ-2026-8575"
 
 

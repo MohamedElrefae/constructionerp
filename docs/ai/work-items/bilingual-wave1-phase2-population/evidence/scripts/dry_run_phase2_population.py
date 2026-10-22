@@ -36,8 +36,23 @@ def byte_scan(value):
         problems.append("whitespace")
     for ch in value:
         cp = ord(ch)
-        if cp in (0x200E, 0x200F, 0x202A, 0x202B, 0x202C, 0x202D, 0x202E,
-                  0x2066, 0x2067, 0x2068, 0x2069, 0x200B, 0x200C, 0x200D, 0xFEFF):
+        if cp in (
+            0x200E,
+            0x200F,
+            0x202A,
+            0x202B,
+            0x202C,
+            0x202D,
+            0x202E,
+            0x2066,
+            0x2067,
+            0x2068,
+            0x2069,
+            0x200B,
+            0x200C,
+            0x200D,
+            0xFEFF,
+        ):
             problems.append(f"bidi/zw U+{cp:04X}")
         elif cp < 0x20 or cp == 0x7F or 0x80 <= cp <= 0x9F:
             problems.append(f"control U+{cp:04X}")
@@ -75,7 +90,9 @@ def main():
             continue
         live_label = d.get(label_field)
         if live_label != row["english_label"]:
-            fail.append(f"{doctype} {name}: identity drift live={live_label!r} approved={row['english_label']!r}")
+            fail.append(
+                f"{doctype} {name}: identity drift live={live_label!r} approved={row['english_label']!r}"
+            )
         current = d.get(ar_field)
         if current:
             if current != value:
@@ -88,11 +105,17 @@ def main():
             f"DRY {doctype} {name!r} before={sha16(current) if current else '<empty>'} "
             f"after={sha16(value)} norm={sha16(norm_preview)} {state}"
         )
-        rows_out.append({
-            "doctype": doctype, "name": name, "label": live_label,
-            "before": current, "after": value if not current else current,
-            "norm_preview": norm_preview, "state": state,
-        })
+        rows_out.append(
+            {
+                "doctype": doctype,
+                "name": name,
+                "label": live_label,
+                "before": current,
+                "after": value if not current else current,
+                "norm_preview": norm_preview,
+                "state": state,
+            }
+        )
 
     for doctype, (ar_field, _nf, _lf) in FIELDS.items():
         populated_now = len(

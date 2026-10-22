@@ -306,7 +306,7 @@ DECISION_TOKEN = obj(
         "branch": TEXT,
         "expected_parent_sha": GIT_SHA,
     },
-    optional=("supersedes_decision_hash",)
+    optional=("supersedes_decision_hash",),
 )
 TOKEN = {
     "oneOf": [

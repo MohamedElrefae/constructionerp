@@ -1,13 +1,13 @@
 """F37 concurrency: writes, approvals, imports, reports on lab fresh site."""
+
 import sys
 import threading
 import time
 import traceback
 
 sys.path.insert(0, "/tmp/opencode")
-from lab_console import connect  # noqa: E402  (import for side effects only)
-
-import frappe  # noqa: E402
+import frappe
+from lab_console import connect
 
 SITE = "f31fresh-clean.localhost"
 RESULTS = []
@@ -51,12 +51,28 @@ def t_approve(idx):
         F = fresh_connect("f31-pm@qualification.invalid")
         item = F.db.get_value("BOQ Item", {"boq_header": "BOQ-2026-0008"}, "name")
         a = F.new_doc("BOQ Cost Analysis")
-        a.update({"title": f"ACC conc approval {idx}", "boq_item": item,
-                  "boq_header": "BOQ-2026-0008",
-                  "project": F.db.get_value("BOQ Header", "BOQ-2026-0008", "project"),
-                  "company": "ACC Acceptance Co", "analysis_uom": "Nos", "currency": "EGP"})
-        a.append("details", {"cost_stream": "M", "item_code": "ACC-Cement", "resource_uom": "Nos",
-                             "qty_per_boq_unit": 1, "cost_rate": 200 + idx, "wastage_pct": 0})
+        a.update(
+            {
+                "title": f"ACC conc approval {idx}",
+                "boq_item": item,
+                "boq_header": "BOQ-2026-0008",
+                "project": F.db.get_value("BOQ Header", "BOQ-2026-0008", "project"),
+                "company": "ACC Acceptance Co",
+                "analysis_uom": "Nos",
+                "currency": "EGP",
+            }
+        )
+        a.append(
+            "details",
+            {
+                "cost_stream": "M",
+                "item_code": "ACC-Cement",
+                "resource_uom": "Nos",
+                "qty_per_boq_unit": 1,
+                "cost_rate": 200 + idx,
+                "wastage_pct": 0,
+            },
+        )
         a.insert()
         t0 = time.time()
         try:
@@ -82,11 +98,17 @@ def t_write(idx):
         F = fresh_connect("f31-pm@qualification.invalid")
         t0 = time.time()
         st = F.new_doc("BOQ Item Stage")
-        st.update({"boq_header": "BOQ-2026-0001",
-                   "boq_item": F.db.get_value("BOQ Item", {"boq_header": "BOQ-2026-0001"}, "name"),
-                   "boq_structure": F.db.get_value("BOQ Item", {"boq_header": "BOQ-2026-0001"}, "structure"),
-                   "project": F.db.get_value("BOQ Header", "BOQ-2026-0001", "project"),
-                   "stage_name": f"ACC conc stage {idx}", "planned_qty": 5, "stage_status": "In Progress"})
+        st.update(
+            {
+                "boq_header": "BOQ-2026-0001",
+                "boq_item": F.db.get_value("BOQ Item", {"boq_header": "BOQ-2026-0001"}, "name"),
+                "boq_structure": F.db.get_value("BOQ Item", {"boq_header": "BOQ-2026-0001"}, "structure"),
+                "project": F.db.get_value("BOQ Header", "BOQ-2026-0001", "project"),
+                "stage_name": f"ACC conc stage {idx}",
+                "planned_qty": 5,
+                "stage_status": "In Progress",
+            }
+        )
         st.insert()
         F.db.commit()
         log(f"write[{idx}]: stage {st.name} in {time.time()-t0:.2f}s")
@@ -100,8 +122,13 @@ def t_write(idx):
 
 
 threads = []
-for fn, args, n in ((t_report, (), 2), (t_approve, (0,), 1), (t_approve, (1,), 1),
-                    (t_write, (0,), 1), (t_write, (1,), 1)):
+for fn, args, n in (
+    (t_report, (), 2),
+    (t_approve, (0,), 1),
+    (t_approve, (1,), 1),
+    (t_write, (0,), 1),
+    (t_write, (1,), 1),
+):
     for _ in range(n):
         th = threading.Thread(target=fn, args=args if isinstance(args, tuple) else (args,))
         threads.append(th)

@@ -55,8 +55,6 @@ def _patched_report_modules(mapping):
         yield resolved
 
 
-
-
 def _default_company():
     import frappe
 
@@ -175,7 +173,9 @@ class TestStatementAllowlist(unittest.TestCase):
             "load_account_arabic_mapping",
             return_value={"Cash in Hand": "النقدية"},
         ):
-            out = self._call("Balance Sheet", mod, mode="ar", filters='{"company": "' + _default_company() + '"}')
+            out = self._call(
+                "Balance Sheet", mod, mode="ar", filters='{"company": "' + _default_company() + '"}'
+            )
         self.assertEqual(out["data"][0]["account_name"], "النقدية")
         self.assertEqual(out["data"][0]["account"], "Cash")
 
@@ -188,7 +188,9 @@ class TestStatementAllowlist(unittest.TestCase):
                 name,
                 mod,
                 mode="en",
-                filters='{"company": "' + _default_company() + '", "from_date": "2026-01-01", "to_date": "2026-10-05"}',
+                filters='{"company": "'
+                + _default_company()
+                + '", "from_date": "2026-01-01", "to_date": "2026-10-05"}',
             )
             f = mod.execute.call_args.kwargs["filters"]
             self.assertEqual(f.get("filter_based_on"), "Date Range", name)
@@ -205,7 +207,9 @@ class TestStatementAllowlist(unittest.TestCase):
             "Balance Sheet",
             mod,
             mode="en",
-            filters='{"company": "' + _default_company() + '", "filter_based_on": "Fiscal Year", "fiscal_year": "2026"}',
+            filters='{"company": "'
+            + _default_company()
+            + '", "filter_based_on": "Fiscal Year", "fiscal_year": "2026"}',
         )
         f = mod.execute.call_args.kwargs["filters"]
         self.assertEqual(f.get("from_fiscal_year"), "2026")
@@ -224,7 +228,9 @@ class TestStatementAllowlist(unittest.TestCase):
             "Balance Sheet",
             mod,
             mode="en",
-            filters='{"company": "' + _default_company() + '", "periodicity": "Monthly", "filter_based_on": "Date Range", "period_start_date": "2026-03-01", "period_end_date": "2026-03-31", "accumulated_values": 1}',
+            filters='{"company": "'
+            + _default_company()
+            + '", "periodicity": "Monthly", "filter_based_on": "Date Range", "period_start_date": "2026-03-01", "period_end_date": "2026-03-31", "accumulated_values": 1}',
         )
         f = mod.execute.call_args.kwargs["filters"]
         self.assertEqual(f.get("periodicity"), "Monthly")
@@ -240,14 +246,20 @@ class TestExpandedReportAllowlist(unittest.TestCase):
     read-only defaults and localized column headers."""
 
     EXPANDED = ("Accounts Receivable Summary", "Accounts Payable Summary", "Cash Flow")
-    MISSION = ("General Ledger", "Trial Balance", "Accounts Receivable Summary",
-               "Accounts Payable Summary", "Cash Flow")
+    MISSION = (
+        "General Ledger",
+        "Trial Balance",
+        "Accounts Receivable Summary",
+        "Accounts Payable Summary",
+        "Cash Flow",
+    )
 
     def _call(self, name, mock_module, mode=None, filters=None):
         from construction.api.bilingual_reports import PILOT_REPORTS, localized_report
 
-        with mock.patch("frappe.only_for", lambda *a, **k: None), _patched_report_modules(
-            {PILOT_REPORTS[name]: mock_module}
+        with (
+            mock.patch("frappe.only_for", lambda *a, **k: None),
+            _patched_report_modules({PILOT_REPORTS[name]: mock_module}),
         ):
             return localized_report(name, filters=filters, mode=mode)
 
@@ -268,9 +280,7 @@ class TestExpandedReportAllowlist(unittest.TestCase):
 
         for name in self.EXPANDED:
             mod = _stub_module([{"fieldname": "account"}], [{"account": "Cash"}])
-            with mock.patch.object(
-                api_mod, "load_account_arabic_mapping", return_value={}
-            ):
+            with mock.patch.object(api_mod, "load_account_arabic_mapping", return_value={}):
                 out = self._call(name, mod, mode="ar", filters='{"company": "' + _default_company() + '"}')
             self.assertEqual(mod.execute.call_count, 1, name)
             self.assertEqual(out["report_name"], name)
@@ -300,7 +310,9 @@ class TestExpandedReportAllowlist(unittest.TestCase):
             "Accounts Payable Summary",
             mod,
             mode="en",
-            filters='{"company": "' + _default_company() + '", "report_date": "2026-03-31", "ageing_based_on": "Posting Date"}',
+            filters='{"company": "'
+            + _default_company()
+            + '", "report_date": "2026-03-31", "ageing_based_on": "Posting Date"}',
         )
         f = mod.execute.call_args.kwargs["filters"]
         self.assertEqual(f.get("report_date"), "2026-03-31")
@@ -313,7 +325,9 @@ class TestExpandedReportAllowlist(unittest.TestCase):
             "Cash Flow",
             mod,
             mode="en",
-            filters='{"company": "' + _default_company() + '", "from_date": "2026-01-01", "to_date": "2026-10-05"}',
+            filters='{"company": "'
+            + _default_company()
+            + '", "from_date": "2026-01-01", "to_date": "2026-10-05"}',
         )
         f = mod.execute.call_args.kwargs["filters"]
         self.assertEqual(f.get("filter_based_on"), "Date Range")
@@ -327,7 +341,9 @@ class TestExpandedReportAllowlist(unittest.TestCase):
             "Cash Flow",
             mod,
             mode="en",
-            filters='{"company": "' + _default_company() + '", "filter_based_on": "Fiscal Year", "fiscal_year": "2026", "periodicity": "Monthly"}',
+            filters='{"company": "'
+            + _default_company()
+            + '", "filter_based_on": "Fiscal Year", "fiscal_year": "2026", "periodicity": "Monthly"}',
         )
         f = mod.execute.call_args.kwargs["filters"]
         self.assertEqual(f.get("from_fiscal_year"), "2026")
@@ -359,7 +375,7 @@ class TestExpandedReportAllowlist(unittest.TestCase):
         )
         out = self._call("General Ledger", mod, mode="both")
         self.assertEqual(
-            [c["label"] for c in out["columns"]][0],
+            out["columns"][0]["label"],
             "Posting Date — تاريخ الترحيل",
         )
         self.assertEqual([c["label"] for c in out["columns"]][2], "Age (Days)")
@@ -379,9 +395,7 @@ class TestExpandedReportAllowlist(unittest.TestCase):
         self.assertEqual(localize_column_label("Balance", "en"), "Balance")
         self.assertEqual(localize_column_label("Age (Days)", "ar"), "Age (Days)")
         self.assertEqual(localize_column_label("", "ar"), "")
-        self.assertEqual(
-            localize_column_label("Voucher No", "both"), "Voucher No — رقم السند"
-        )
+        self.assertEqual(localize_column_label("Voucher No", "both"), "Voucher No — رقم السند")
 
     def test_report_path_makes_zero_db_writes(self):
         # mutation guard: no database write primitive may fire while a
@@ -396,10 +410,11 @@ class TestExpandedReportAllowlist(unittest.TestCase):
 
         for name in self.EXPANDED:
             mod = _stub_module([{"fieldname": "account"}], [{"account": "Cash"}])
-            with mock.patch("frappe.only_for", lambda *a, **k: None), mock.patch.object(
-                frappe.db, "set_value", _guard("set_value"), create=True
-            ), mock.patch.object(frappe.db, "insert", _guard("insert"), create=True), mock.patch.object(
-                frappe.db, "delete", _guard("delete"), create=True
+            with (
+                mock.patch("frappe.only_for", lambda *a, **k: None),
+                mock.patch.object(frappe.db, "set_value", _guard("set_value"), create=True),
+                mock.patch.object(frappe.db, "insert", _guard("insert"), create=True),
+                mock.patch.object(frappe.db, "delete", _guard("delete"), create=True),
             ):
                 from construction.api.bilingual_reports import localized_report
 
@@ -470,7 +485,9 @@ class TestRealModuleSmoke(unittest.TestCase):
         ):
             from construction.api.bilingual_reports import localized_report
 
-            out = localized_report("Trial Balance", mode="ar", filters='{"company": "' + _default_company() + '"}')
+            out = localized_report(
+                "Trial Balance", mode="ar", filters='{"company": "' + _default_company() + '"}'
+            )
             self.assertEqual(mod.execute.call_count, 1)
             self.assertEqual(out["mode"], "ar")
 
@@ -563,9 +580,7 @@ class TestGenuineAuthorization(FrappeTestCase):
                     localized_report("Accounts Payable Summary", filters=None, mode="ar")
                 with self.assertRaises(frappe.PermissionError):
                     localized_report("Cash Flow", filters=None, mode="ar")
-                self.assertEqual(
-                    resolved, [], "vendor module must not be resolved for a rejected user"
-                )
+                self.assertEqual(resolved, [], "vendor module must not be resolved for a rejected user")
         finally:
             frappe.set_user("Administrator")
 

@@ -202,9 +202,11 @@ def main() -> None:
         print(f"  file              : {path.relative_to(ROOT)}")
         print(f"  rows              : {b_n}")
         print(f"  sha256            : {b_sha}")
-        print(f"  disposition       : PROPOSED-payload={payload_n}  "
-              f"PROPOSED-EXCEPTION-technical={len(tech)}  already-released=0  "
-              f"total={b_n}")
+        print(
+            f"  disposition       : PROPOSED-payload={payload_n}  "
+            f"PROPOSED-EXCEPTION-technical={len(tech)}  already-released=0  "
+            f"total={b_n}"
+        )
         print(f"  pre-filled        : {prefilled}  unfilled={b_n - prefilled}")
         print(f"  overlap vs catalog(2319)     : {ov_cat}")
         print(f"  overlap vs prior stage6      : {ov_prior}")
@@ -229,8 +231,8 @@ def main() -> None:
     print(f"  union rows                : {len(union)} (== universe {UNIVERSE_ROWS})")
     print(f"  PROPOSED-payload          : {total_payload}")
     print(f"  PROPOSED-EXCEPTION-technical: {total_tech}")
-    print(f"  pairwise batch overlap    : 0 (all)")
-    print(f"  catalog/prior overlap     : 0 (all batches)")
+    print("  pairwise batch overlap    : 0 (all)")
+    print("  catalog/prior overlap     : 0 (all batches)")
     print()
     for p in out_paths:
         print(f"wrote {p}")

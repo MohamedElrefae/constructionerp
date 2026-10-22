@@ -64,17 +64,14 @@ def main() -> None:
     live = [row for row in raw_rows if row not in skip]
     html = {row["msgid"] for row in live if RE_HTML.search(row["msgid"])}
     newline = {
-        row["msgid"] for row in live
+        row["msgid"]
+        for row in live
         if row["msgid"] not in html and ("\n" in row["msgid"] or "\r" in row["msgid"])
     }
     overlong = {
-        row["msgid"] for row in live
-        if row["msgid"] not in html | newline and len(row["msgid"]) > MAX_LEN
+        row["msgid"] for row in live if row["msgid"] not in html | newline and len(row["msgid"]) > MAX_LEN
     }
-    eligible = [
-        row for row in live
-        if row["msgid"] not in html | newline | overlong
-    ]
+    eligible = [row for row in live if row["msgid"] not in html | newline | overlong]
 
     catalog = keys(APPROVED)
     decision_doc = json.loads(DECISIONS.read_text(encoding="utf-8"))
@@ -101,13 +98,15 @@ def main() -> None:
     output_rows = []
     for row in batch:
         suggested = row.get("msgstr") or ""
-        output_rows.append({
-            "source_text": row["msgid"],
-            "suggested_ar": suggested,
-            "locations": row.get("locations") or "",
-            "area": "manufacturing",
-            "has_pre_filled": "1" if suggested.strip() else "0",
-        })
+        output_rows.append(
+            {
+                "source_text": row["msgid"],
+                "suggested_ar": suggested,
+                "locations": row.get("locations") or "",
+                "area": "manufacturing",
+                "has_pre_filled": "1" if suggested.strip() else "0",
+            }
+        )
     buffer = io.StringIO(newline="")
     writer = csv.DictWriter(buffer, fieldnames=FIELDS, lineterminator="\n")
     writer.writeheader()
@@ -115,7 +114,9 @@ def main() -> None:
     payload = buffer.getvalue().encode("utf-8")
     OUTPUT.write_bytes(payload)
     print(f"raw={raw_count} unique={len(raw_rows)} skipped={len(skip)}")
-    print(f"excluded_html={len(html)} excluded_newline={len(newline)} excluded_overlong={len(overlong)} already_covered={len(overlap)}")
+    print(
+        f"excluded_html={len(html)} excluded_newline={len(newline)} excluded_overlong={len(overlong)} already_covered={len(overlap)}"
+    )
     print(f"fresh_total={len(fresh)} batch01={len(batch)} remaining_not_proposed={len(fresh) - len(batch)}")
     print(
         "batch01_prefilled="

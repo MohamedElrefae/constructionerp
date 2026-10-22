@@ -147,15 +147,25 @@ app_include_js = [
     "/assets/construction/js/generic_export_menu.js?v=1",
     "/assets/construction/js/theme_loader_v24.js?v=2.6.2",
     "/assets/construction/js/typography_settings.js?v=21",
+    # Timesheet direct-labor designation derivation (employee -> row designation)
+    "/assets/construction/js/timesheet_designation.js?v=4",
     # Searchable Dropdown Module — base class (must load before overrides)
     "/assets/construction/js/searchable_dropdown/utils.js",
     "/assets/construction/js/searchable_dropdown/searchable_dropdown.js?v=1",
     # Phase 2: Global ControlSelect override — searchable themed dropdown for all <select> fields
     # Replaces native HTML <select> app-wide (forms + report filters confirmed by diagnostic)
-    "/assets/construction/js/overrides/ct_select_control.js?v=2",
+    "/assets/construction/js/overrides/ct_select_control.js?v=3",
     # Phase 3: Global ControlLink auto-enhancer — replaces 3 manual config files
     # Auto-applies SearchableDropdownEnhancer to all Link fields on every page
-    "/assets/construction/js/overrides/ct_link_control.js?v=17",
+    # v20: the themed BOQ dropdown reads the BOQ Header of the CHILD ROW
+    # document of a transaction grid row (collapsed and expanded) instead of
+    # the parent transaction, and its BOQ search goes through the REAL pinned
+    # native contract of the control (get_search_args / set_custom_query),
+    # asked with the identity of the edited row, so the native query, the
+    # DocField restrictions, the gate, the scope, the omission and the
+    # accounting-dimension policy reach the request. A native policy that is
+    # absent, failed or malformed closes the search; there is no fallback.
+    "/assets/construction/js/overrides/ct_link_control.js?v=20",
     # v16 runtime safety net — no-op (CSS handles all styling)
     "/assets/construction/js/theme_loader_v16.js?v=2",
     # Scope Context — core class for managing user company/cost_center/project/dept scope
@@ -180,13 +190,18 @@ app_include_js = [
     # Translation workflow helpers (Arabic backlog + filters + catalog workbench)
     "/assets/construction/js/translation_list_tools.js?v=6",
     # BOQ integration filters for transaction child rows
-    "/assets/construction/js/boq_filters.js?v=8",
+    # v12: the BOQ Item Link query is pinned on the grid field info and composed
+    # with the native ERPNext accounting-dimension account policy, so the
+    # asynchronous ERPNext dimension setup can no longer replace it.
+    # v13: a failing native query closes the BOQ Item search instead of
+    # continuing without the native per-account Accounting Dimension Filter.
+    "/assets/construction/js/boq_filters.js?v=13",
     # Filter fix — injected AFTER Frappe bundle to win cascade order
     "/assets/construction/js/filter_fix.js?v=11",
     # Must load last: native Frappe affordances remain available after theme styling
     "/assets/construction/js/native_frappe_controls_compat.js?v=9",
     # ─── Vite UI Phase 2: Form Config — auto-attaches to every form. MUST load LAST ───
-    "/assets/construction/js/vite_layout_controls.js?v=1.22",
+    "/assets/construction/js/vite_layout_controls.js?v=1.25",
     # Phase 2: Generic Layout Engine — re-parents field wrappers per Form Layout Profile.
     # Must load AFTER vite_layout_controls.js (engine fires at 250ms, controls at 150ms).
     "/assets/construction/js/vfc_layout_engine.js?v=1.44",
@@ -245,7 +260,9 @@ override_whitelisted_methods = {
 }
 
 # Override core Translation controller so edited catalog rows become runtime translations.
-override_doctype_class = {
+# Retained architecture exception: catalog-aware subclass delegates native validate/on_update;
+# construction.tests.test_translation_catalog covers catalog preservation and runtime upserts.
+override_doctype_class = {  # nosemgrep: override-doctype-class -- reviewed superclass-preserving Translation extension
     "Translation": "construction.overrides.translation.CustomTranslation",
 }
 
@@ -272,8 +289,26 @@ doc_events = {
         "on_cancel": "construction.services.resource_price_service.cancel_price_history_for_document",
     },
     "Stock Entry": {"validate": "construction.services.boq_transaction_validation.validate_document"},
-    "Timesheet": {"validate": "construction.services.boq_transaction_validation.validate_document"},
-    "Journal Entry": {"validate": "construction.services.boq_transaction_validation.validate_document"},
+    "Timesheet": {
+        "validate": [
+            # Derive the row designation from the selected employee BEFORE the BOQ
+            # gate validation reads it, so a stale/spoofed client value can never
+            # survive a save and the gate input is always authentic.
+            "construction.services.timesheet_designation.derive_row_designations",
+            "construction.services.boq_transaction_validation.validate_document",
+        ]
+    },
+    "Journal Entry": {
+        "validate": [
+            # The shared BOQ validator normalizes the BOQ chain and validates the
+            # BOQ Header status first; the Journal Entry helper then derives and
+            # validates the authoritative BOQ project of every BOQ-bearing row,
+            # because the wildcard scope hook never sees a Journal Entry Account
+            # project (a Journal Entry has no parent ``project`` field).
+            "construction.services.boq_transaction_validation.validate_document",
+            "construction.services.boq_journal_project.validate_document",
+        ]
+    },
     "Sales Invoice": {"validate": "construction.services.boq_transaction_validation.validate_document"},
     "Material Request": {"validate": "construction.services.boq_transaction_validation.validate_document"},
     "BOQ Item Stage": {"before_delete": "construction.services.boq_lifecycle.before_delete_boq_item_stage"},
@@ -390,6 +425,9 @@ permission_query_conditions = {
         )
     },
 }
+permission_query_conditions["Form Layout Profile"] = (
+    "construction.overrides.layout_permissions.form_layout_profile_query_conditions"
+)
 
 has_permission = {
     doctype: "construction.overrides.boq_permissions.has_boq_parent_permission"
@@ -411,6 +449,9 @@ has_permission["BOQ Header"] = "construction.overrides.boq_permissions.has_boq_h
 # F11: Files attached to BOQ doctypes inherit the parent's read/write
 # boundary; all other files keep vendor behavior.
 has_permission["File"] = "construction.overrides.file_permissions.has_file_parent_permission"
+has_permission["Form Layout Profile"] = (
+    "construction.overrides.layout_permissions.has_form_layout_profile_permission"
+)
 
 # Fixtures - Phase 2: Construction Theme records
 fixtures = [

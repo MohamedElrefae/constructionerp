@@ -42,7 +42,7 @@ _SVG_EXTERNAL_REF = re.compile(
 
 _BLOCKED_SCHEMES = {"http", "https", "file", "ftp", "gopher", "data", "javascript", "smb", "ldap"}
 
-_BLEACH_ALLOWED_TAGS = list(bleach.sanitizer.ALLOWED_TAGS) + ["p", "br", "span", "div", "bdi"]
+_BLEACH_ALLOWED_TAGS = [*bleach.sanitizer.ALLOWED_TAGS, "p", "br", "span", "div", "bdi"]
 _BLEACH_ALLOWED_ATTRS = {"*": ["dir", "lang", "class"]}
 
 
@@ -90,8 +90,9 @@ def validate_pdf_page_limit(content: bytes, max_pages: int = MAX_PDF_PAGES) -> i
     if not content.startswith(b"%PDF-"):
         raise SecurityGuardError("pdf magic bytes missing")
     try:
-        from pypdf import PdfReader
         import io as _io
+
+        from pypdf import PdfReader
 
         pages = len(PdfReader(_io.BytesIO(content)).pages)
     except SecurityGuardError:

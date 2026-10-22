@@ -1,4 +1,5 @@
 """Deterministic Stage-2 Evidence Assembly for Stage 6 W6-7 Frappe Batch 01."""
+
 import csv
 import hashlib
 import json
@@ -8,17 +9,19 @@ from pathlib import Path
 
 ROOT = Path("/home/mohamed/frappe-bench/apps/construction")
 sys.path.insert(0, str(ROOT / "scripts"))
-from check_localization_gates import decision_root
-from construction.localization_inventory import merkle_root
-
 import frappe
+from check_localization_gates import decision_root
+
 from construction import localization_freshness
+from construction.localization_inventory import merkle_root
 
 frappe.init(site="v16.localhost", sites_path="/home/mohamed/frappe-bench/sites")
 frappe.connect()
 
+
 def sha256_file(p):
     return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+
 
 head = "60f7a82034479336db3af52edbc28641a6fdf692"
 now_utc = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -85,7 +88,9 @@ loc_manifest = {
     "site": "v16.localhost",
     "site_classification_sha": sha256_file(site_cls_path),
 }
-loc_manifest_path.write_text(json.dumps(loc_manifest, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+loc_manifest_path.write_text(
+    json.dumps(loc_manifest, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+)
 print(f"Updated localization_manifest.json (SHA: {sha256_file(loc_manifest_path)})")
 
 frappe.destroy()

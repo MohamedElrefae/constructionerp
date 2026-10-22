@@ -244,29 +244,47 @@ class TestBilingualWave1Pilot(unittest.TestCase):
         supp_fixture = frappe.get_all("Supplier", fields=["supplier_group"], limit=1)[0]
 
         targets = [
-            ("Item", {
-                "doctype": "Item",
-                "item_code": "CT-TEST-REN-ITM-01",
-                "item_name": "Test Rename Item",
-                "item_group": "All Item Groups",
-                "stock_uom": "Nos",
-                "item_name_ar": "صنف تجريبي قابل للتسمية",
-            }, "CT-TEST-REN-ITM-02", "item_name_ar", "item_name_ar_norm"),
-            ("Customer", {
-                "doctype": "Customer",
-                "customer_name": "CT-TEST-REN-CUST-01",
-                "customer_type": "Company",
-                "customer_group": cust_fixture["customer_group"],
-                "territory": cust_fixture["territory"],
-                "customer_name_in_arabic": "عميل تجريبي قابل للتسمية",
-            }, "CT-TEST-REN-CUST-02", "customer_name_in_arabic", "customer_name_in_arabic_norm"),
-            ("Supplier", {
-                "doctype": "Supplier",
-                "supplier_name": "CT-TEST-REN-SUPP-01",
-                "supplier_type": "Company",
-                "supplier_group": supp_fixture["supplier_group"],
-                "supplier_name_in_arabic": "مورد تجريبي قابل للتسمية",
-            }, "CT-TEST-REN-SUPP-02", "supplier_name_in_arabic", "supplier_name_in_arabic_norm"),
+            (
+                "Item",
+                {
+                    "doctype": "Item",
+                    "item_code": "CT-TEST-REN-ITM-01",
+                    "item_name": "Test Rename Item",
+                    "item_group": "All Item Groups",
+                    "stock_uom": "Nos",
+                    "item_name_ar": "صنف تجريبي قابل للتسمية",
+                },
+                "CT-TEST-REN-ITM-02",
+                "item_name_ar",
+                "item_name_ar_norm",
+            ),
+            (
+                "Customer",
+                {
+                    "doctype": "Customer",
+                    "customer_name": "CT-TEST-REN-CUST-01",
+                    "customer_type": "Company",
+                    "customer_group": cust_fixture["customer_group"],
+                    "territory": cust_fixture["territory"],
+                    "customer_name_in_arabic": "عميل تجريبي قابل للتسمية",
+                },
+                "CT-TEST-REN-CUST-02",
+                "customer_name_in_arabic",
+                "customer_name_in_arabic_norm",
+            ),
+            (
+                "Supplier",
+                {
+                    "doctype": "Supplier",
+                    "supplier_name": "CT-TEST-REN-SUPP-01",
+                    "supplier_type": "Company",
+                    "supplier_group": supp_fixture["supplier_group"],
+                    "supplier_name_in_arabic": "مورد تجريبي قابل للتسمية",
+                },
+                "CT-TEST-REN-SUPP-02",
+                "supplier_name_in_arabic",
+                "supplier_name_in_arabic_norm",
+            ),
         ]
         for dt, doc_data, new_name, ar_fn, norm_fn in targets:
             doc = frappe.get_doc(doc_data)

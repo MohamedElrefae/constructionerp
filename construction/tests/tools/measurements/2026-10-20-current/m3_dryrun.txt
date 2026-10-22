@@ -1,0 +1,8 @@
+Apps in this namespace:
+frappe, erpnext, construction
+
+In [1]: 
+In [2]: DRY_RESULT {'total': 4337, 'created': 0, 'updated': 0, 'skipped': 4337, 'drift': 0, 'preview': [], 'dry_run': True}
+
+In [3]: Do you really want to exit ([y]/n)? 
+

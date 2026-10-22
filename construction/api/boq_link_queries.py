@@ -70,6 +70,127 @@ def _apply_allowed_statuses(
     values["allowed_statuses"] = tuple(filters.get("allowed_statuses"))
 
 
+# ---------------------------------------------------------------------------
+# Native ERPNext accounting dimension policy (F44 round 2).
+#
+# ERPNext provisions the "BOQ Item" accounting dimension
+# (construction/install.py::setup_boq_accounting_dimension) and installs a
+# native query for the "boq_item" field of every BOQ enabled child table
+# (erpnext/public/js/utils/dimension_tree_filter.js::setup_child_filters).
+# That native query is
+# `erpnext.controllers.queries.get_filtered_dimensions`, which applies the
+# Accounting Dimension Filter of the row's account:
+#
+#   erpnext/controllers/queries.py::get_filtered_dimensions
+#     dimension_filters = get_dimension_filter_map().get((dimension, account))
+#     "Allow"    -> name  IN  (allowed_dimensions)
+#     otherwise  -> name NOT IN (allowed_dimensions)
+#
+# The BOQ cascade query replaces the native query for that field, so the app
+# must apply the same policy itself; otherwise the correction would silently
+# DROP the per-account dimension restriction (for example on Journal Entry
+# expense rows). The policy is taken from the pinned native helper and is
+# never re-implemented here, so it can neither widen nor narrow the native
+# rule.
+# ---------------------------------------------------------------------------
+BOQ_ITEM_DIMENSION = "boq_item"
+NATIVE_DIMENSION_ALLOWED_PARAM = "native_dimension_allowed"
+
+
+def _native_dimension_filter_map() -> dict[Any, Any]:
+    """Return the native ERPNext accounting dimension filter map.
+
+    Produced by the pinned ERPNext helper
+    `erpnext.accounts.doctype.accounting_dimension_filter.accounting_dimension_filter
+    ::get_dimension_filter_map`, which is the exact map the native
+    `get_filtered_dimensions` query uses. The import is local so this module
+    stays importable without ERPNext present.
+    """
+    from erpnext.accounts.doctype.accounting_dimension_filter.accounting_dimension_filter import (
+        get_dimension_filter_map,
+    )
+
+    return get_dimension_filter_map()
+
+
+def resolve_native_dimension_policy(
+    filters: dict[str, Any],
+    dimension: str = BOQ_ITEM_DIMENSION,
+    dimension_filter_map: dict[Any, Any] | None = None,
+) -> dict[str, Any]:
+    """Resolve the native dimension restriction that applies to the request.
+
+    Mirrors the pinned native semantics of
+    `erpnext.controllers.queries.get_filtered_dimensions` exactly:
+
+    * no account on the row           -> no restriction (the native map has no
+                                         entry for an absent account),
+    * account without a filter entry  -> no restriction,
+    * entry with "Allow"               -> the BOQ Item name must be one of the
+                                         allowed dimension values,
+    * any other entry ("Restrict")     -> the BOQ Item name must NOT be one of
+                                         the allowed dimension values.
+
+    Validation contract:
+      * The account is used ONLY as the policy key of the native map, exactly
+        as ERPNext uses it. It is never returned to the client, never logged
+        and never used to select or expose account data.
+      * It is never able to relax a BOQ gate: the resolved restriction is
+        applied IN ADDITION to the omission / header / structure / status /
+        scope conditions, never instead of them.
+      * A value that cannot be an Account name (control characters or beyond
+        the Account name length) has no native map entry either, so it is
+        ignored exactly like an unknown account.
+    """
+    account = filters.get("account")
+    if not isinstance(account, str) or not account:
+        return {"mode": None, "values": ()}
+    if len(account) > 140 or any(ord(character) < 32 for character in account):
+        return {"mode": None, "values": ()}
+
+    if dimension_filter_map is None:
+        dimension_filter_map = _native_dimension_filter_map()
+    entry = (dimension_filter_map or {}).get((dimension, account))
+    if not entry:
+        return {"mode": None, "values": ()}
+
+    allowed = tuple(entry.get("allowed_dimensions") or ())
+    mode = "allow" if entry.get("allow_or_restrict") == "Allow" else "restrict"
+    return {"mode": mode, "values": allowed}
+
+
+def apply_native_dimension_policy(
+    conditions: list[str],
+    values: dict[str, Any],
+    filters: dict[str, Any],
+    item_alias: str = "i",
+    dimension: str = BOQ_ITEM_DIMENSION,
+    dimension_filter_map: dict[Any, Any] | None = None,
+) -> dict[str, Any]:
+    """Add the native dimension restriction to a BOQ Item query.
+
+    The generated predicate is the effective predicate of the pinned native
+    query for the same (dimension, account) pair:
+
+    * "Allow"   -> `<alias>.name IN (<allowed dimension values>)`,
+    * otherwise -> `<alias>.name NOT IN (<allowed dimension values>)`.
+
+    An empty allowed list is the native edge case: ERPNext renders it as
+    `name IN ('')` / `name NOT IN ('')`, i.e. no item for "Allow" and every
+    item for "Restrict". The same values are bound here so the behaviour is
+    identical. The values are bound as query parameters, never interpolated.
+    """
+    policy = resolve_native_dimension_policy(filters, dimension, dimension_filter_map)
+    if policy["mode"] is None:
+        return policy
+
+    allowed = policy["values"] or ("",)
+    values[NATIVE_DIMENSION_ALLOWED_PARAM] = allowed
+    operator = "IN" if policy["mode"] == "allow" else "NOT IN"
+    conditions.append(f"{item_alias}.name {operator} %({NATIVE_DIMENSION_ALLOWED_PARAM})s")
+    return policy
+
+
 @frappe.whitelist()
 def get_boq_scope_token():
     """Return current BOQ scope details for client-side drift checks."""
@@ -289,6 +410,10 @@ def get_boq_items(
         join_project = apply_header_scope(conditions, values, scope, "h") or join_project
     _apply_allowed_statuses(conditions, values, filters, "h")
 
+    # The native ERPNext accounting dimension restriction of the row's account
+    # is preserved on top of the BOQ gates (see resolve_native_dimension_policy).
+    apply_native_dimension_policy(conditions, values, filters)
+
     where_clause = " AND ".join(conditions)
     query = (
         "\n\t\tSELECT i.name, h.title, i.quantity, h.project\n"
@@ -468,6 +593,11 @@ def get_vo_line_boq_items(
         return []
 
     conditions = ["i.docstatus < 2", "i.is_variation_item = 0"]
+
+    # Opt-in, null-safe omitted-item filtering: keeps this query at parity with
+    # get_boq_items (and the VO Line form query) so omitted options are not offered.
+    if filters.get("exclude_zero_revised"):
+        conditions.append("COALESCE(i.current_revised_qty, i.quantity) > 0")
     values = _limit_values(txt, start, page_len)
     join_header = False
     join_project = False

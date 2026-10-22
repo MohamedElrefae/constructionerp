@@ -3,6 +3,7 @@
 This script changes only the approved override catalog, content-bound release
 decisions, and batch evidence outputs. It never connects to Frappe or a site.
 """
+
 from __future__ import annotations
 
 import csv
@@ -33,25 +34,41 @@ DECISIONS_BEFORE_SHA = "c2e6da428e4a70b2037820faa39487df173eace77fb79d44d92979ed
 
 REVIEWERS = (
     {
-        "id": "AI-A1", "session": "/root/w606b02_a1_rev",
+        "id": "AI-A1",
+        "session": "/root/w606b02_a1_rev",
         "path": "docs/ai/work-items/scope-context-portability/evidence/stage6-w606-manufacturing-batch02-ai-a1-2026-09-24.md",
     },
     {
-        "id": "AI-A2", "session": "/root/w606b02_a2_rev",
+        "id": "AI-A2",
+        "session": "/root/w606b02_a2_rev",
         "path": "docs/ai/work-items/scope-context-portability/evidence/stage6-w606-manufacturing-batch02-ai-a2-2026-09-24.md",
     },
     {
-        "id": "AI-A3", "session": "/root/w606b02_a3_final",
+        "id": "AI-A3",
+        "session": "/root/w606b02_a3_final",
         "path": "docs/ai/work-items/scope-context-portability/evidence/stage6-w606-manufacturing-batch02-ai-a3-2026-09-24.md",
     },
 )
 VERSION = "1.9"
 DOMAIN = "manufacturing"
 FIELDS = [
-    "language", "source_text", "context", "ct_app", "translated_text", "domain",
-    "release_status", "release_version", "a1_reviewer", "a1_approved_at",
-    "a2_reviewer", "a2_approved_at", "a3_reviewer", "a3_approved_at",
-    "references", "notes", "decision_ref",
+    "language",
+    "source_text",
+    "context",
+    "ct_app",
+    "translated_text",
+    "domain",
+    "release_status",
+    "release_version",
+    "a1_reviewer",
+    "a1_approved_at",
+    "a2_reviewer",
+    "a2_approved_at",
+    "a3_reviewer",
+    "a3_approved_at",
+    "references",
+    "notes",
+    "decision_ref",
 ]
 
 
@@ -80,7 +97,9 @@ def main() -> None:
     for reviewer in REVIEWERS:
         p = ROOT / reviewer["path"]
         text = p.read_text(encoding="utf-8")
-        assert "PASS" in text and SCOPE_SHA in text and PROPOSAL_SHA in text, f"review not bound to exact hashes: {p}"
+        assert (
+            "PASS" in text and SCOPE_SHA in text and PROPOSAL_SHA in text
+        ), f"review not bound to exact hashes: {p}"
 
     approved_rows = read_rows(APPROVED)
     existing_keys = {row["source_text"] for row in approved_rows}
@@ -100,17 +119,27 @@ def main() -> None:
         if disposition == "PROPOSED-payload":
             assert src not in existing_keys, f"payload collision: {src!r}"
             assert arabic.strip(), f"empty payload: {src!r}"
-            released.append({
-                "language": "ar", "source_text": src, "context": "", "ct_app": "erpnext",
-                "translated_text": arabic, "domain": DOMAIN, "release_status": "Released",
-                "release_version": VERSION,
-                "a1_reviewer": reviewer_names["AI-A1"], "a1_approved_at": now,
-                "a2_reviewer": reviewer_names["AI-A2"], "a2_approved_at": now,
-                "a3_reviewer": reviewer_names["AI-A3"], "a3_approved_at": now,
-                "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
-                "notes": f"A1/A2/A3 PASS bound to proposal SHA {PROPOSAL_SHA}; owner-approved scope SHA {SCOPE_SHA}",
-                "decision_ref": f"content:{CONTENT_EVIDENCE.relative_to(ROOT)}",
-            })
+            released.append(
+                {
+                    "language": "ar",
+                    "source_text": src,
+                    "context": "",
+                    "ct_app": "erpnext",
+                    "translated_text": arabic,
+                    "domain": DOMAIN,
+                    "release_status": "Released",
+                    "release_version": VERSION,
+                    "a1_reviewer": reviewer_names["AI-A1"],
+                    "a1_approved_at": now,
+                    "a2_reviewer": reviewer_names["AI-A2"],
+                    "a2_approved_at": now,
+                    "a3_reviewer": reviewer_names["AI-A3"],
+                    "a3_approved_at": now,
+                    "references": "Glossary v2.0; vendor ERPNext Manufacturing PO locations; W6-6 Manufacturing Batch 02",
+                    "notes": f"A1/A2/A3 PASS bound to proposal SHA {PROPOSAL_SHA}; owner-approved scope SHA {SCOPE_SHA}",
+                    "decision_ref": f"content:{CONTENT_EVIDENCE.relative_to(ROOT)}",
+                }
+            )
             applied_disposition = "quorum-confirmed-payload"
         elif disposition == "preserved-site-override":
             assert site_map.get(src) == arabic, f"site override mismatch: {src!r}"
@@ -127,13 +156,17 @@ def main() -> None:
                 "Independent A1/A2/A3 quorum PASS; released as v1.9 with exact content evidence."
             )
 
-        applied.append({
-            "source_text": src, "translated_text": arabic,
-            "quorum_decision": applied_disposition,
-            "disposition_rationale": disposition_rationale,
-            "decision_ref": "stage6-W6-6 Manufacturing Batch 02 owner-approved 2026-09-24",
-            "scope_sha256": SCOPE_SHA, "proposal_sha256": PROPOSAL_SHA,
-        })
+        applied.append(
+            {
+                "source_text": src,
+                "translated_text": arabic,
+                "quorum_decision": applied_disposition,
+                "disposition_rationale": disposition_rationale,
+                "decision_ref": "stage6-W6-6 Manufacturing Batch 02 owner-approved 2026-09-24",
+                "scope_sha256": SCOPE_SHA,
+                "proposal_sha256": PROPOSAL_SHA,
+            }
+        )
 
     assert len(released) == 82 and len(applied) == 202
     with PAYLOAD.open("w", encoding="utf-8", newline="") as handle:
@@ -150,21 +183,37 @@ def main() -> None:
     refs = [{"ref": content_ref, "sha256": sha256(CONTENT_EVIDENCE)}]
     for row in released:
         src, val = row["source_text"], row["translated_text"]
-        proposal_hash = hashlib.sha256(f"{src}|{val}".encode("utf-8")).hexdigest()
+        proposal_hash = hashlib.sha256(f"{src}|{val}".encode()).hexdigest()
         ident_parts = [
-            row["language"], row["ct_app"], row["context"], src, val,
-            row["a1_reviewer"], row["a1_approved_at"], row["a2_reviewer"], row["a2_approved_at"],
-            row["a3_reviewer"], row["a3_approved_at"], row["release_version"], row["domain"],
-            row["references"], proposal_hash,
+            row["language"],
+            row["ct_app"],
+            row["context"],
+            src,
+            val,
+            row["a1_reviewer"],
+            row["a1_approved_at"],
+            row["a2_reviewer"],
+            row["a2_approved_at"],
+            row["a3_reviewer"],
+            row["a3_approved_at"],
+            row["release_version"],
+            row["domain"],
+            row["references"],
+            proposal_hash,
         ]
         decision_id = row_decision_id(ident_parts, refs)
         assert decision_id not in old_decisions, f"decision collision: {src!r}"
         old_decisions[decision_id] = {
-            "language": row["language"], "ct_app": row["ct_app"], "context": row["context"],
-            "source_text": src, "translated_text": val, "domain": row["domain"],
+            "language": row["language"],
+            "ct_app": row["ct_app"],
+            "context": row["context"],
+            "source_text": src,
+            "translated_text": val,
+            "domain": row["domain"],
             "reviewers": [row["a1_reviewer"], row["a2_reviewer"], row["a3_reviewer"]],
             "timestamps": [row["a1_approved_at"], row["a2_approved_at"], row["a3_approved_at"]],
-            "release_version": row["release_version"], "references": row["references"],
+            "release_version": row["release_version"],
+            "references": row["references"],
             "proposal": {"arabic": val, "sha256": proposal_hash},
             "verdicts": {
                 reviewer["id"]: {"decision": "approve", "confidence": "high", "session": reviewer["session"]}
@@ -181,7 +230,9 @@ def main() -> None:
         "Historical decisions retained; W6-6 Manufacturing Batch 02 additions bind 82 released rows "
         "to the exact proposal and scope hashes and independent A1/A2/A3 PASS."
     )
-    DECISIONS.write_text(json.dumps(decision_doc, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    DECISIONS.write_text(
+        json.dumps(decision_doc, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
 
     print(f"scope=202 preserve=119 technical=1 released={len(released)}")
     print(f"catalog={len(approved_rows)}+{len(released)}={len(approved_rows) + len(released)}")

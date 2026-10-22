@@ -77,9 +77,7 @@ def _code_hashes():
         "hooks.py": _sha(os.path.join(app, "hooks.py")),
         "search.py": _sha(os.path.join(app, "searchable_dropdown/api/search.py")),
         "bilingual_service.py": _sha(os.path.join(app, "services/bilingual_service.py")),
-        "bilingual_registry.json": _sha(
-            os.path.join(app, "data/bilingual/bilingual_registry.json")
-        ),
+        "bilingual_registry.json": _sha(os.path.join(app, "data/bilingual/bilingual_registry.json")),
     }
 
 
@@ -125,9 +123,7 @@ def _create_company_fixtures():
 
 
 def _delete_company_fixtures():
-    rows = frappe.get_all(
-        "Company", filters=_company_fixture_filter(), fields=["name"], limit_page_length=0
-    )
+    rows = frappe.get_all("Company", filters=_company_fixture_filter(), fields=["name"], limit_page_length=0)
     for row in rows:
         if frappe.db.exists("Company", row["name"]):
             frappe.delete_doc("Company", row["name"], force=True, ignore_permissions=True)
@@ -155,9 +151,7 @@ def _create_fixtures():
 
 def _delete_fixtures():
     """Delete UOM fixtures."""
-    rows = frappe.get_all(
-        "UOM", filters=_fixture_filter(), fields=["name"], limit_page_length=0
-    )
+    rows = frappe.get_all("UOM", filters=_fixture_filter(), fields=["name"], limit_page_length=0)
     for row in rows:
         if frappe.db.exists("UOM", row["name"]):
             frappe.delete_doc("UOM", row["name"], force=True, ignore_permissions=True)
@@ -167,18 +161,14 @@ def _delete_fixtures():
 
 def _vendor(txt, doctype):
     """Plain side: the stock endpoint, called exactly as desk would call it."""
-    return frappe.desk.search.search_link(
-        doctype, txt, filters=None, page_length=PAGE_LENGTH
-    )
+    return frappe.desk.search.search_link(doctype, txt, filters=None, page_length=PAGE_LENGTH)
 
 
 def _dispatch(txt, doctype):
     """Bilingual side: the bound override entry point."""
     from construction.api.desk_link_search import search_link as dispatch_search_link
 
-    return dispatch_search_link(
-        doctype, txt, filters=None, page_length=PAGE_LENGTH
-    )
+    return dispatch_search_link(doctype, txt, filters=None, page_length=PAGE_LENGTH)
 
 
 def _ids(rows):
@@ -284,8 +274,7 @@ def _measure_case(case_name, doctype, txt, expect_equal, expect_subset):
         "sla_evaluation": {
             "tier": tier,
             "tier_rule": (
-                "baseline P95 >= 1.0 ms => Tier 2A <= 1.15x; "
-                "baseline P95 < 1.0 ms => Tier 2B <= 1.50x"
+                "baseline P95 >= 1.0 ms => Tier 2A <= 1.15x; " "baseline P95 < 1.0 ms => Tier 2B <= 1.50x"
             ),
             "tier_ratio_ceiling": ceiling,
             "ratio": ratio,
@@ -333,8 +322,7 @@ def measure():
         "doctype": "UOM",
         "cases": cases,
         "all_cases_compliant": all(
-            case["sla_evaluation"]["verdict"] == "COMPLIANT_WITH_TWO_TIER_SLA"
-            for case in cases.values()
+            case["sla_evaluation"]["verdict"] == "COMPLIANT_WITH_TWO_TIER_SLA" for case in cases.values()
         ),
         "call_signature": (
             "both sides: search_link('UOM', txt, filters=None, page_length=20); "
@@ -354,9 +342,7 @@ def run():
     finally:
         _delete_fixtures()
         _delete_company_fixtures()
-        leftover_uom = frappe.get_all(
-            "UOM", filters=_fixture_filter(), pluck="name", limit_page_length=0
-        )
+        leftover_uom = frappe.get_all("UOM", filters=_fixture_filter(), pluck="name", limit_page_length=0)
         leftover_company = frappe.get_all(
             "Company",
             filters=_company_fixture_filter(),

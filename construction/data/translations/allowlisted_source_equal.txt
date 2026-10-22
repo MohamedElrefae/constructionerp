@@ -10,3 +10,14 @@ frappe |  | StartTLS | protocol proper noun | Stage 2 baseline — technical tok
 erpnext |  | lft | NestedSet column token, never user-visible | Stage 2 baseline — technical token convention
 erpnext |  | rgt | NestedSet column token, never user-visible | Stage 2 baseline — technical token convention
 erpnext |  | Prevdoc DocType | hidden read-only metadata label (packed_item.prevdoc_doctype); AI-A1 proposes نوع المستند السابق if surfaced — kept English only while hidden | AI-A1 triage 2026-09-04 /root/stage2_ai_a1 (propose on surface, do not rename identifier)
+construction |  | Construction Bilingual Sales Invoice | technical token / proper noun, language-neutral | Stage 2 builder — technical token convention
+construction |  | Construction Bilingual Stock Entry | technical token / proper noun, language-neutral | Stage 2 builder — technical token convention
+construction |  | Construction Home | technical token / proper noun, language-neutral | Stage 2 builder — technical token convention
+construction |  | Construction Owner | technical token / proper noun, language-neutral | Stage 2 builder — technical token convention
+construction |  | Finance | technical token / proper noun, language-neutral | Stage 2 builder — technical token convention
+construction |  | Project Manager | technical token / proper noun, language-neutral | Stage 2 builder — technical token convention
+construction |  | Purchase Invoice | technical token / proper noun, language-neutral | Stage 2 builder — technical token convention
+construction |  | Purchase Receipt | technical token / proper noun, language-neutral | Stage 2 builder — technical token convention
+construction |  | Site Engineer | technical token / proper noun, language-neutral | Stage 2 builder — technical token convention
+construction |  | Stores | technical token / proper noun, language-neutral | Stage 2 builder — technical token convention
+construction |  | Timesheet | technical token / proper noun, language-neutral | Stage 2 builder — technical token convention

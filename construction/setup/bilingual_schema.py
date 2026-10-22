@@ -7,6 +7,7 @@ business values are never overwritten here.
 """
 
 import frappe
+from frappe import _
 from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
 
 from construction.services.bilingual_service import get_mapping, get_registry
@@ -28,7 +29,9 @@ def ensure_bilingual_schema():
         for key in ("english_field", "code_field", "identity_field"):
             fieldname = mapping.get(key)
             if fieldname and fieldname != "name" and not meta.has_field(fieldname):
-                frappe.throw(f"Bilingual schema for {doctype} requires existing field {fieldname}")
+                frappe.throw(
+                    _("Bilingual schema for {0} requires existing field {1}").format(doctype, fieldname)
+                )
         definitions = []
         arabic = mapping.get("arabic_field")
         norm = mapping.get("norm_field")
@@ -71,4 +74,4 @@ def ensure_bilingual_schema():
         # collecting missing fields; refresh from DB before adapter validation.
         frappe.get_meta(doctype, cached=False)
         get_mapping(doctype)
-    return {"doctypes_checked": len(installed), "fields_created": sum(map(len, fields.values()))}
+    return {"doctypes_checked": len(installed), "fields_created": sum(len(rows) for rows in fields.values())}

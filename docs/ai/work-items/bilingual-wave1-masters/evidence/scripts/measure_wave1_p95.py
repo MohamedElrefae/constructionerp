@@ -53,13 +53,20 @@ FIXTURES_PER_DOCTYPE = 12
 # (doctype, required fixture fields, fixture-name field)
 FIXTURES = {
     "Item": ({"item_group": "All Item Groups", "stock_uom": "Nos"}, "item_code"),
-    "Customer": ({"customer_group": "_Test Customer Group", "territory": "India",
-                  "customer_type": "Company", "naming_series": "Naming Series"},
-                 "customer_name"),
-    "Supplier": ({"supplier_group": "All Supplier Groups", "naming_series": "Naming Series"},
-                 "supplier_name"),
-    "Project": ({"company": COMPANY, "naming_series": "Naming Series", "status": "Open"},
-                "project_name"),
+    "Customer": (
+        {
+            "customer_group": "_Test Customer Group",
+            "territory": "India",
+            "customer_type": "Company",
+            "naming_series": "Naming Series",
+        },
+        "customer_name",
+    ),
+    "Supplier": (
+        {"supplier_group": "All Supplier Groups", "naming_series": "Naming Series"},
+        "supplier_name",
+    ),
+    "Project": ({"company": COMPANY, "naming_series": "Naming Series", "status": "Open"}, "project_name"),
     "Cost Center": ({"company": COMPANY, "cost_center_number": None}, "cost_center_name"),
     "Warehouse": ({"company": COMPANY}, "warehouse_name"),
 }
@@ -99,8 +106,11 @@ def _root_cost_center():
 
 
 def _parent_field(doctype):
-    return "parent_cost_center" if doctype == "Cost Center" else (
-        "parent_warehouse" if doctype == "Warehouse" else None)
+    return (
+        "parent_cost_center"
+        if doctype == "Cost Center"
+        else ("parent_warehouse" if doctype == "Warehouse" else None)
+    )
 
 
 def _fixture_filter(doctype):
@@ -139,8 +149,7 @@ def _delete_fixtures(doctype, created):
     """Delete fixtures. For trees, delete deepest first so parent links never dangle."""
     pf = _parent_field(doctype)
     fields = ["name"] + ([pf] if pf else [])
-    rows = frappe.get_all(doctype, filters=_fixture_filter(doctype), fields=fields,
-                          limit_page_length=0)
+    rows = frappe.get_all(doctype, filters=_fixture_filter(doctype), fields=fields, limit_page_length=0)
     if doctype in ("Cost Center", "Warehouse"):
         # Deepest nodes first: depth approximated by parent-chain separators.
         ordered = sorted(rows, key=lambda r: -((r.get(pf) or "").count(" - ")))
@@ -246,10 +255,14 @@ def measure(doctype):
         "match_sets_equal": base_ids == bilin_ids,
         "baseline_p95_over_bilingual_p95": round(
             _nearest_rank_p95(base_samples) / _nearest_rank_p95(bilin_samples), 4
-        ) if _nearest_rank_p95(bilin_samples) else None,
+        )
+        if _nearest_rank_p95(bilin_samples)
+        else None,
         "bilingual_p95_ratio_of_baseline": round(
             _nearest_rank_p95(bilin_samples) / _nearest_rank_p95(base_samples), 4
-        ) if _nearest_rank_p95(base_samples) else None,
+        )
+        if _nearest_rank_p95(base_samples)
+        else None,
         "order_balance": "alternating (even pair baseline-first, odd pair bilingual-first); GC paused during timed region",
         "query_counts": {
             "baseline_counts": base_counts,
@@ -269,8 +282,9 @@ def run():
             results[doctype] = measure(doctype)
         finally:
             _delete_fixtures(doctype, created)
-            leftover = frappe.get_all(doctype, filters=_fixture_filter(doctype),
-                                      pluck="name", limit_page_length=0)
+            leftover = frappe.get_all(
+                doctype, filters=_fixture_filter(doctype), pluck="name", limit_page_length=0
+            )
             cleanup[doctype] = {"created": len(created), "leftover": leftover}
 
     payload = {
@@ -310,5 +324,10 @@ if __name__ == "__main__":
     with open(os.path.abspath(path), "w", encoding="utf-8") as fh:
         json.dump(out, fh, indent=1, sort_keys=True)
         fh.write("\n")
-    print("MEASUREMENT:", json.dumps({k: v.get("bilingual_p95_ratio_of_baseline") for k, v in out["results"].items()}, sort_keys=True))
+    print(
+        "MEASUREMENT:",
+        json.dumps(
+            {k: v.get("bilingual_p95_ratio_of_baseline") for k, v in out["results"].items()}, sort_keys=True
+        ),
+    )
     print("CLEANUP:", json.dumps({k: len(v["leftover"]) for k, v in out["cleanup"].items()}, sort_keys=True))

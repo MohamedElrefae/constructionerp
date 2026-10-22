@@ -73,7 +73,10 @@ frappe.pages["bilingual-report-viewer"].on_page_load = function (wrapper) {
 	page.set_primary_action("عرض", () => run());
 
 	function fiscal_year_mode() {
-		return fiscal_year_reports.indexOf(page.fields_dict.report.get_value() || "Trial Balance") >= 0;
+		return (
+			fiscal_year_reports.indexOf(page.fields_dict.report.get_value() || "Trial Balance") >=
+			0
+		);
 	}
 
 	function sync_filter_display() {
@@ -107,7 +110,10 @@ frappe.pages["bilingual-report-viewer"].on_page_load = function (wrapper) {
 			return;
 		}
 		const from = page.fields_dict.from_date.get_value();
-		const fiscal_year = page.fields_dict.fiscal_year ? page.fields_dict.fiscal_year.get_value() : null;
+		const to = page.fields_dict.to_date.get_value();
+		const fiscal_year = page.fields_dict.fiscal_year
+			? page.fields_dict.fiscal_year.get_value()
+			: null;
 		const party_type = name === "Accounts Payable Summary" ? "Supplier" : "Customer";
 		const filters = {
 			company: company,
@@ -129,10 +135,15 @@ frappe.pages["bilingual-report-viewer"].on_page_load = function (wrapper) {
 				mode: mode,
 				filters: JSON.stringify(filters),
 			},
-			callback: (r) => { if (my === run_seq) safe_render(r && r.message); },
+			callback: (r) => {
+				if (my === run_seq) safe_render(r && r.message);
+			},
 			error: (e) => {
 				if (my !== run_seq) return;
-				const text = e && e._error_message ? String(e._error_message) : __("Unable to load the report.");
+				const text =
+					e && e._error_message
+						? String(e._error_message)
+						: __("Unable to load the report.");
 				area().text(__("Report error: {0}", [text]));
 			},
 		});
@@ -143,7 +154,9 @@ frappe.pages["bilingual-report-viewer"].on_page_load = function (wrapper) {
 			const cols = (out && out.columns) || [];
 			const rows = (out && out.data) || [];
 			if (!rows.length) {
-				area().html('<div class="text-muted" style="padding:12px">' + __("No Data") + "</div>");
+				area().html(
+					'<div class="text-muted" style="padding:12px">' + __("No Data") + "</div>"
+				);
 				return;
 			}
 			let head = "<tr>";
@@ -154,9 +167,17 @@ frappe.pages["bilingual-report-viewer"].on_page_load = function (wrapper) {
 			let body = "";
 			for (const row of rows) {
 				if (Array.isArray(row)) {
-					body += "<tr>" + Array.from({length: cols.length}).map((_, i) => "<td>" + esc(row[i]) + "</td>").join("") + "</tr>";
+					body +=
+						"<tr>" +
+						Array.from({ length: cols.length })
+							.map((_, i) => "<td>" + esc(row[i]) + "</td>")
+							.join("") +
+						"</tr>";
 				} else if (row && typeof row === "object") {
-					body += "<tr>" + cols.map((c) => "<td>" + esc(row[c.fieldname]) + "</td>").join("") + "</tr>";
+					body +=
+						"<tr>" +
+						cols.map((c) => "<td>" + esc(row[c.fieldname]) + "</td>").join("") +
+						"</tr>";
 				}
 			}
 			area().html(

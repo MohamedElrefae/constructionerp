@@ -5,6 +5,17 @@ from construction.api.scope_context_api import get_allowed_scope_dimensions, get
 # Scope dimension columns recognized on documents.
 _SCOPE_DIMENSION_FIELDS = ("company", "project", "cost_center", "department")
 
+# A Timesheet carries its project on the parent under ``parent_project`` and on
+# every child row of ``time_logs``. The wildcard validate hook only ever sees
+# the parent document, so the generic ``doc.project`` rule never reached a
+# Timesheet project reference. These aliases make the SAME active
+# company/project boundary apply to a Timesheet, without changing any other
+# doctype and without invoking any child document lifecycle.
+_TIMESHEET_DOCTYPE = "Timesheet"
+_TIMESHEET_HEADER_PROJECT_FIELD = "parent_project"
+_TIMESHEET_ROWS_FIELD = "time_logs"
+_TIMESHEET_ROW_PROJECT_FIELD = "project"
+
 # Explicit service-only bypass token. Server code that MUST cross scope
 # boundaries programmatically (e.g. system migrations driven outside
 # install/patch flags) may set ``frappe.flags.construction_scope_bypass``.
@@ -81,6 +92,84 @@ def _validate_own_scope_context_write(doc):
             )
 
 
+def _timesheet_project_references(doc):
+    """Distinct project values a document references outside a ``project`` field.
+
+    A Timesheet stores its project on the parent under ``parent_project`` and
+    on every child row of ``time_logs``. Every other doctype returns an empty
+    list, so the generic document rules stay untouched.
+    """
+    if getattr(doc, "doctype", None) != _TIMESHEET_DOCTYPE:
+        return []
+
+    references = []
+    header_project = getattr(doc, _TIMESHEET_HEADER_PROJECT_FIELD, None)
+    if header_project:
+        references.append(header_project)
+
+    for row in getattr(doc, _TIMESHEET_ROWS_FIELD, None) or []:
+        if hasattr(row, "get"):
+            row_project = row.get(_TIMESHEET_ROW_PROJECT_FIELD)
+        else:
+            row_project = getattr(row, _TIMESHEET_ROW_PROJECT_FIELD, None)
+        if row_project and row_project not in references:
+            references.append(row_project)
+    return references
+
+
+def _referenced_project_companies(referenced_projects):
+    """Authoritative company of each referenced Project (server-side data)."""
+    companies = {}
+    for project in referenced_projects:
+        if project not in companies:
+            companies[project] = frappe.db.get_value("Project", project, "company")
+    return companies
+
+
+def _enforce_referenced_project_scope(scope, referenced_projects):
+    """Apply the active company/project boundary to referenced projects.
+
+    The boundary is the SAME one the generic document rules apply:
+
+    * a project-scoped active scope compares the referenced project with the
+      scope project;
+    * a company-only active scope compares the referenced Project's OWN
+      (authoritative) company with the scope company, so a blank document
+      company can never carry a cross-company project reference.
+
+    A reference whose company cannot be read fails closed.
+    """
+    if scope.project:
+        for project in referenced_projects:
+            if project != scope.project:
+                frappe.throw(
+                    frappe._(
+                        "Scope boundary violation: Document project '{0}' does not match active user scope '{1}.'"
+                    ).format(project, scope.project),
+                    frappe.PermissionError,
+                )
+        return
+
+    if not scope.company:
+        return
+
+    for project, project_company in _referenced_project_companies(referenced_projects).items():
+        if not project_company:
+            frappe.throw(
+                frappe._(
+                    "Scope boundary violation: Document project '{0}' does not match active user scope '{1}.'"
+                ).format(project, scope.company),
+                frappe.PermissionError,
+            )
+        if project_company != scope.company:
+            frappe.throw(
+                frappe._(
+                    "Scope boundary violation: Document company '{0}' does not match active user scope '{1}.'"
+                ).format(project_company, scope.company),
+                frappe.PermissionError,
+            )
+
+
 def validate(doc, method):
     # ─────────────────────────────────────────────────────────
     # ALWAYS: Branch-Company integrity (regardless of scope context)
@@ -141,7 +230,13 @@ def validate(doc, method):
         return
 
     scope = get_user_scope_context(user)
-    has_scope_fields = any(hasattr(doc, f) and getattr(doc, f, None) for f in _SCOPE_DIMENSION_FIELDS)
+    # A Timesheet project reference (the ``parent_project`` alias or a
+    # ``time_logs`` row project) makes the document a scoped document, so it
+    # can no longer evade the active-context requirement below.
+    referenced_projects = _timesheet_project_references(doc)
+    has_scope_fields = any(
+        hasattr(doc, f) and getattr(doc, f, None) for f in _SCOPE_DIMENSION_FIELDS
+    ) or bool(referenced_projects)
     if has_scope_fields and (not scope or not scope.company):
         frappe.throw(
             frappe._(
@@ -170,6 +265,11 @@ def validate(doc, method):
             ).format(doc.project, scope.project),
             frappe.PermissionError,
         )
+
+    # A Timesheet project reference carries the SAME boundary as a document
+    # ``project`` field: the wildcard hook never sees the child rows.
+    if referenced_projects:
+        _enforce_referenced_project_scope(scope, referenced_projects)
 
     # Enforce cost center boundary for scoped non-admin users
     if hasattr(doc, "cost_center") and doc.cost_center and scope.cost_center:

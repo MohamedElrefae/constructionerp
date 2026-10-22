@@ -61,7 +61,7 @@ def main():
 
     patches = proposal["glossary_term_patches"]
     print(f"planned glossary patches: {len(patches)}")
-    print(f"planned payload edits   : 0 (payload must stay byte-identical)")
+    print("planned payload edits   : 0 (payload must stay byte-identical)")
 
     ok = True
     rows = []
@@ -89,13 +89,23 @@ def main():
             print(f"FAIL: {src!r} proposed value contains a forbidden term")
             ok = False
             continue
-        print(f"PLANNED_GLOSSARY_EDIT {src!r} approved_ar {want_before} -> {want_after} "
-              f"version {p['field_changes']['version']['before']} -> "
-              f"{p['field_changes']['version']['after']}")
-        print(f"                      usage_notes -> {p['field_changes']['usage_notes']['after_sha16']} "
-              f"references -> {p['field_changes']['references']['after_sha16']}")
-        rows.append({"source_text": src, "before_sha16": want_before, "after_sha16": want_after,
-                     "after_value_private": after_val})
+        print(
+            f"PLANNED_GLOSSARY_EDIT {src!r} approved_ar {want_before} -> {want_after} "
+            f"version {p['field_changes']['version']['before']} -> "
+            f"{p['field_changes']['version']['after']}"
+        )
+        print(
+            f"                      usage_notes -> {p['field_changes']['usage_notes']['after_sha16']} "
+            f"references -> {p['field_changes']['references']['after_sha16']}"
+        )
+        rows.append(
+            {
+                "source_text": src,
+                "before_sha16": want_before,
+                "after_sha16": want_after,
+                "after_value_private": after_val,
+            }
+        )
 
     print(f"predicted glossary sha256 after: {proposal['glossary_sha256_after']}")
 

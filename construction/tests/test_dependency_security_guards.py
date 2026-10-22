@@ -70,7 +70,7 @@ class TestSvgSanitization(unittest.TestCase):
 
     def test_script_tag_rejected(self):
         with self.assertRaises(SecurityGuardError):
-            sanitize_svg(b'<svg><script>alert(1)</script></svg>')
+            sanitize_svg(b"<svg><script>alert(1)</script></svg>")
 
     def test_event_handler_rejected(self):
         with self.assertRaises(SecurityGuardError):
@@ -86,7 +86,7 @@ class TestSvgSanitization(unittest.TestCase):
 
     def test_foreign_object_rejected(self):
         with self.assertRaises(SecurityGuardError):
-            sanitize_svg(b'<svg><foreignObject><body>x</body></foreignObject></svg>')
+            sanitize_svg(b"<svg><foreignObject><body>x</body></foreignObject></svg>")
 
 
 class TestSsrfGuard(unittest.TestCase):

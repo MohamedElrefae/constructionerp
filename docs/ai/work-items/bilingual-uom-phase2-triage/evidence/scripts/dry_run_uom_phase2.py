@@ -9,11 +9,12 @@ DO NOT modify Company, hooks.py, bilingual_service.py, bilingual_registry.json,
 or run_bilingual_regression_matrix.sh — those are reserved for the concurrent lane.
 """
 
-import frappe
-import json
 import hashlib
-import sys
+import json
 import os
+import sys
+
+import frappe
 
 
 def main():
@@ -45,19 +46,21 @@ def main():
             has_arabic = bool(doc.uom_name_ar)
             if has_arabic:
                 writes_performed += 1
-                log_lines.append("  {}: ALREADY HAS uom_name_ar = '{}' — would require update".format(name, doc.uom_name_ar))
+                log_lines.append(
+                    f"  {name}: ALREADY HAS uom_name_ar = '{doc.uom_name_ar}' — would require update"
+                )
             else:
-                log_lines.append("  {}: empty uom_name_ar — OK".format(name))
+                log_lines.append(f"  {name}: empty uom_name_ar — OK")
         except Exception as e:
             writes_performed += 1
-            log_lines.append("  {}: NOT FOUND — {}".format(name, str(e)))
+            log_lines.append(f"  {name}: NOT FOUND — {str(e)}")
 
     log_lines.append("")
-    log_lines.append("--- WRITES_PERFORMED: {} ---".format(writes_performed))
+    log_lines.append(f"--- WRITES_PERFORMED: {writes_performed} ---")
     log_lines.append("--- ASSERTION: WRITES_PERFORMED must be 0 ---")
 
     if writes_performed > 0:
-        log_lines.append("  FAIL: {} rows already have uom_name_ar populated".format(writes_performed))
+        log_lines.append(f"  FAIL: {writes_performed} rows already have uom_name_ar populated")
     else:
         log_lines.append("  PASS: All target rows have empty uom_name_ar. Zero writes performed.")
 
@@ -66,7 +69,9 @@ def main():
     arabic_vals = [u["arabic"] for u in phase2a_units if u["arabic"]]
     if len(arabic_vals) != len(set(arabic_vals)):
         duplicates = [x for x in arabic_vals if arabic_vals.count(x) > 1]
-        log_lines.append("  FAIL: Distinctness invariant violated — duplicate Arabic values: {}".format(set(duplicates)))
+        log_lines.append(
+            f"  FAIL: Distinctness invariant violated — duplicate Arabic values: {set(duplicates)}"
+        )
     else:
         log_lines.append("  PASS: Distinctness invariant upheld — no duplicate Arabic translations.")
 
@@ -83,7 +88,7 @@ def main():
         f.write("\n".join(log_lines))
 
     print("\n".join(log_lines))
-    print("\nDry-run log written to: {}".format(evidence_path))
+    print(f"\nDry-run log written to: {evidence_path}")
 
     return writes_performed == 0
 

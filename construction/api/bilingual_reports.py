@@ -44,9 +44,7 @@ PILOT_REPORTS = {
     "Accounts Receivable Summary": (
         "erpnext.accounts.report.accounts_receivable_summary.accounts_receivable_summary"
     ),
-    "Accounts Payable Summary": (
-        "erpnext.accounts.report.accounts_payable_summary.accounts_payable_summary"
-    ),
+    "Accounts Payable Summary": ("erpnext.accounts.report.accounts_payable_summary.accounts_payable_summary"),
     "Cash Flow": "erpnext.accounts.report.cash_flow.cash_flow",
 }
 
@@ -55,7 +53,7 @@ STATEMENT_REPORTS = ("Balance Sheet", "Profit and Loss Statement")
 # Stage 7 extension: these reports consume the same vendor `get_period_list`
 # contract (filter_based_on / periodicity / period dates), so they share the
 # read-only defaults branch below.
-PERIOD_CONTRACT_REPORTS = STATEMENT_REPORTS + ("Cash Flow",)
+PERIOD_CONTRACT_REPORTS = (*STATEMENT_REPORTS, "Cash Flow")
 
 # Stage 7 extension: AR/AP Summary subclass the vendor ReceivablePayableReport
 # and need its `report_date` window defaults instead of the period contract.

@@ -186,6 +186,7 @@ def execute(commit=False, dry_run=False):
             print(f"[DRIFT] {source_text}: DB='{existing}' vs seed='{translated_text}'")
 
     if commit:
+        # nosemgrep: frappe-manual-commit -- explicit caller opt-in commit=True seed boundary before cache invalidation
         frappe.db.commit()
 
     _clear_translation_caches()

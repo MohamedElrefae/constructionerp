@@ -14,24 +14,54 @@ def _wb(resources, templates=None, rates=None):
     ws.title = "Resources"
     ws.append(
         [
-            "resource_code", "name_en", "name_ar", "resource_type", "cost_stream", "uom",
-            "unit_price_egp", "currency", "exchange_rate", "company", "region", "price_date",
-            "source_name", "supplier", "remarks",
+            "resource_code",
+            "name_en",
+            "name_ar",
+            "resource_type",
+            "cost_stream",
+            "uom",
+            "unit_price_egp",
+            "currency",
+            "exchange_rate",
+            "company",
+            "region",
+            "price_date",
+            "source_name",
+            "supplier",
+            "remarks",
         ]
     )
     for row in resources:
         ws.append(row)
     wt = wb.create_sheet("BOQItemTemplates")
     wt.append(
-        ["template_name", "description_en", "description_ar", "category", "uom",
-         "overhead_pct", "profit_pct", "tender_tax_pct", "currency"]
+        [
+            "template_name",
+            "description_en",
+            "description_ar",
+            "category",
+            "uom",
+            "overhead_pct",
+            "profit_pct",
+            "tender_tax_pct",
+            "currency",
+        ]
     )
     for row in templates or []:
         wt.append(row)
     wr = wb.create_sheet("RateAnalysis")
     wr.append(
-        ["template_name", "resource_code", "qty_per_boq_unit", "wastage_pct", "cost_stream",
-         "cost_rate", "rate_source", "supplier", "remarks"]
+        [
+            "template_name",
+            "resource_code",
+            "qty_per_boq_unit",
+            "wastage_pct",
+            "cost_stream",
+            "cost_rate",
+            "rate_source",
+            "supplier",
+            "remarks",
+        ]
     )
     for row in rates or []:
         wr.append(row)
@@ -73,7 +103,27 @@ class TestCostDatabaseIsolation(FrappeTestCase):
 
     def test_compatible_item_reused_unchanged(self):
         out = self._import(
-            _wb([["F18-COMPAT", "F18 compatible", "", "Material", "M", "Nos", 12, "EGP", 1, "", "", "2026-10-01", "F18", "", ""]]),
+            _wb(
+                [
+                    [
+                        "F18-COMPAT",
+                        "F18 compatible",
+                        "",
+                        "Material",
+                        "M",
+                        "Nos",
+                        12,
+                        "EGP",
+                        1,
+                        "",
+                        "",
+                        "2026-10-01",
+                        "F18",
+                        "",
+                        "",
+                    ]
+                ]
+            ),
             dry_run=False,
         )
         self.assertTrue(out["success"], out["errors"])
@@ -82,7 +132,27 @@ class TestCostDatabaseIsolation(FrappeTestCase):
         self.assertEqual(doc.stock_uom, "Nos")
 
     def test_conflicting_name_refused(self):
-        content = _wb([["F18-COMPAT", "Different name", "", "Material", "M", "Nos", 12, "EGP", 1, "", "", "2026-10-01", "F18", "", ""]])
+        content = _wb(
+            [
+                [
+                    "F18-COMPAT",
+                    "Different name",
+                    "",
+                    "Material",
+                    "M",
+                    "Nos",
+                    12,
+                    "EGP",
+                    1,
+                    "",
+                    "",
+                    "2026-10-01",
+                    "F18",
+                    "",
+                    "",
+                ]
+            ]
+        )
         preview = self._import(content, dry_run=True)
         self.assertFalse(preview["success"])
         self.assertTrue(any("conflicts" in e for e in preview["errors"]), preview["errors"])
@@ -92,7 +162,27 @@ class TestCostDatabaseIsolation(FrappeTestCase):
 
     def test_non_construction_item_refused(self):
         code = "_Test Extra Item 1"  # live ERPNext item, not a construction resource
-        content = _wb([[code, "Hijack attempt", "", "Material", "M", "Nos", 12, "EGP", 1, "", "", "2026-10-01", "F18", "", ""]])
+        content = _wb(
+            [
+                [
+                    code,
+                    "Hijack attempt",
+                    "",
+                    "Material",
+                    "M",
+                    "Nos",
+                    12,
+                    "EGP",
+                    1,
+                    "",
+                    "",
+                    "2026-10-01",
+                    "F18",
+                    "",
+                    "",
+                ]
+            ]
+        )
         before = frappe.get_doc("Item", code).item_name
         out = self._import(content, dry_run=False)
         self.assertFalse(out["success"])
@@ -101,7 +191,27 @@ class TestCostDatabaseIsolation(FrappeTestCase):
         self.assertFalse(frappe.get_doc("Item", code).get("is_construction_resource"))
 
     def test_row_company_mismatch_refused(self):
-        content = _wb([["F18-X1", "X", "", "Material", "M", "Nos", 10, "EGP", 1, "Elrefae", "", "2026-10-01", "F18", "", ""]])
+        content = _wb(
+            [
+                [
+                    "F18-X1",
+                    "X",
+                    "",
+                    "Material",
+                    "M",
+                    "Nos",
+                    10,
+                    "EGP",
+                    1,
+                    "Elrefae",
+                    "",
+                    "2026-10-01",
+                    "F18",
+                    "",
+                    "",
+                ]
+            ]
+        )
         for dry in (True, False):
             out = self._import(content, company="_Test Company", dry_run=dry)
             self.assertFalse(out["success"])
@@ -109,7 +219,27 @@ class TestCostDatabaseIsolation(FrappeTestCase):
         self.assertFalse(frappe.db.exists("Item", "F18-X1"))
 
     def test_preview_lists_proposed_creates(self):
-        content = _wb([["F18-NEWPROP", "New prop", "", "Material", "M", "Nos", 10, "EGP", 1, "", "", "2026-10-01", "F18", "", ""]])
+        content = _wb(
+            [
+                [
+                    "F18-NEWPROP",
+                    "New prop",
+                    "",
+                    "Material",
+                    "M",
+                    "Nos",
+                    10,
+                    "EGP",
+                    1,
+                    "",
+                    "",
+                    "2026-10-01",
+                    "F18",
+                    "",
+                    "",
+                ]
+            ]
+        )
         out = self._import(content, dry_run=True)
         self.assertTrue(out["success"], out["errors"])
         self.assertIn("F18-NEWPROP", (out.get("proposed_creates") or {}).get("items", []))

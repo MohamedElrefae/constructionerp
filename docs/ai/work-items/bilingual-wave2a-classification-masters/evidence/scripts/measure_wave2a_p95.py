@@ -51,8 +51,14 @@ FIXTURES_PER_DOCTYPE = 12
 # (doctype, required fixture fields, fixture-name field)
 FIXTURES = {
     "Item Group": ({"parent_item_group": "All Item Groups", "is_group": 0}, "item_group_name"),
-    "Customer Group": ({"parent_customer_group": "All Customer Groups", "is_group": 0}, "customer_group_name"),
-    "Supplier Group": ({"parent_supplier_group": "All Supplier Groups", "is_group": 0}, "supplier_group_name"),
+    "Customer Group": (
+        {"parent_customer_group": "All Customer Groups", "is_group": 0},
+        "customer_group_name",
+    ),
+    "Supplier Group": (
+        {"parent_supplier_group": "All Supplier Groups", "is_group": 0},
+        "supplier_group_name",
+    ),
     "Territory": ({"parent_territory": "All Territories", "is_group": 0}, "territory_name"),
     "UOM": ({"common_code": "W2A"}, "uom_name"),
 }
@@ -117,8 +123,7 @@ def _delete_fixtures(doctype, created):
     """Delete fixtures."""
     pf = _parent_field(doctype)
     fields = ["name"] + ([pf] if pf else [])
-    rows = frappe.get_all(doctype, filters=_fixture_filter(doctype), fields=fields,
-                          limit_page_length=0)
+    rows = frappe.get_all(doctype, filters=_fixture_filter(doctype), fields=fields, limit_page_length=0)
     for r in rows:
         if frappe.db.exists(doctype, r["name"]):
             frappe.delete_doc(doctype, r["name"], force=True, ignore_permissions=True)
@@ -211,10 +216,14 @@ def measure(doctype):
         "match_sets_equal": base_ids == bilin_ids,
         "baseline_p95_over_bilingual_p95": round(
             _nearest_rank_p95(base_samples) / _nearest_rank_p95(bilin_samples), 4
-        ) if _nearest_rank_p95(bilin_samples) else None,
+        )
+        if _nearest_rank_p95(bilin_samples)
+        else None,
         "bilingual_p95_ratio_of_baseline": round(
             _nearest_rank_p95(bilin_samples) / _nearest_rank_p95(base_samples), 4
-        ) if _nearest_rank_p95(base_samples) else None,
+        )
+        if _nearest_rank_p95(base_samples)
+        else None,
         "order_balance": "alternating (even pair baseline-first, odd pair bilingual-first); GC paused during timed region",
         "query_counts": {
             "baseline_counts": base_counts,
@@ -234,8 +243,9 @@ def run():
             results[doctype] = measure(doctype)
         finally:
             _delete_fixtures(doctype, created)
-            leftover = frappe.get_all(doctype, filters=_fixture_filter(doctype),
-                                      pluck="name", limit_page_length=0)
+            leftover = frappe.get_all(
+                doctype, filters=_fixture_filter(doctype), pluck="name", limit_page_length=0
+            )
             cleanup[doctype] = {"created": len(created), "leftover": leftover}
 
     payload = {
@@ -278,6 +288,14 @@ if __name__ == "__main__":
     with open(os.path.abspath(path), "w", encoding="utf-8") as fh:
         json.dump(out, fh, indent=1, sort_keys=True)
         fh.write("\n")
-    print("MEASUREMENT:", json.dumps({k: v.get("bilingual_p95_ratio_of_baseline") for k, v in out["results"].items()}, sort_keys=True))
-    print("MATCH_SETS_EQUAL:", json.dumps({k: v.get("match_sets_equal") for k, v in out["results"].items()}, sort_keys=True))
+    print(
+        "MEASUREMENT:",
+        json.dumps(
+            {k: v.get("bilingual_p95_ratio_of_baseline") for k, v in out["results"].items()}, sort_keys=True
+        ),
+    )
+    print(
+        "MATCH_SETS_EQUAL:",
+        json.dumps({k: v.get("match_sets_equal") for k, v in out["results"].items()}, sort_keys=True),
+    )
     print("CLEANUP:", json.dumps({k: len(v["leftover"]) for k, v in out["cleanup"].items()}, sort_keys=True))

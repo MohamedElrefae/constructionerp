@@ -33,8 +33,13 @@ from construction.tests.test_boq_helpers import get_or_create_test_project
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 EVIDENCE_DIR = (
-    REPO_ROOT / "docs" / "ai" / "work-items" / "e2e-bilingual-commercial-uat"
-    / "evidence" / "rendered-samples"
+    REPO_ROOT
+    / "docs"
+    / "ai"
+    / "work-items"
+    / "e2e-bilingual-commercial-uat"
+    / "evidence"
+    / "rendered-samples"
 )
 
 COMPANY = "Elrefae"
@@ -190,9 +195,7 @@ class TestE2EBilingualCommercialWorkflow(FrappeTestCase):
 
         item.reload()
         if frappe.db.has_column("BOQ Item", "cost_basis"):
-            self.assertEqual(
-                frappe.db.get_value("BOQ Item", item.name, "cost_basis"), "Approved Analysis"
-            )
+            self.assertEqual(frappe.db.get_value("BOQ Item", item.name, "cost_basis"), "Approved Analysis")
         if frappe.db.has_column("BOQ Item", "active_cost_analysis"):
             self.assertEqual(item.active_cost_analysis, analysis.name)
         self.assertEqual(flt(item.est_unit_cost), expected_direct)
@@ -304,14 +307,10 @@ class TestE2EBilingualCommercialWorkflow(FrappeTestCase):
 
     def test_phase2_leaf_item_delete_rolls_up_header_totals(self):
         header, item = self._boq_with_item(uuid4().hex[:6])
-        totals = frappe.db.get_value(
-            "BOQ Header", header.name, ["total_contract_value"], as_dict=True
-        )
+        totals = frappe.db.get_value("BOQ Header", header.name, ["total_contract_value"], as_dict=True)
         self.assertGreater(flt(totals.total_contract_value), 0)
         frappe.delete_doc("BOQ Item", item.name, ignore_permissions=True)
-        totals = frappe.db.get_value(
-            "BOQ Header", header.name, ["total_contract_value"], as_dict=True
-        )
+        totals = frappe.db.get_value("BOQ Header", header.name, ["total_contract_value"], as_dict=True)
         self.assertEqual(flt(totals.total_contract_value), 0)
 
     def test_phase2_positive_factor_enforced(self):
@@ -472,9 +471,7 @@ class TestE2EBilingualCommercialWorkflow(FrappeTestCase):
                     captured = {}
                     payload = self._localized(report, mode, captured)
                     self.assertEqual(payload["report_name"], report)
-                    labels = [
-                        col.get("label") for col in payload["columns"] if isinstance(col, dict)
-                    ]
+                    labels = [col.get("label") for col in payload["columns"] if isinstance(col, dict)]
                     if mode == "en":
                         self.assertIn("Account", labels)
                     elif mode == "ar":
@@ -482,9 +479,7 @@ class TestE2EBilingualCommercialWorkflow(FrappeTestCase):
                     else:
                         self.assertTrue(any("—" in (l or "") for l in labels))
                 if os.environ.get("RECORD_RENDERED_SAMPLES") == "1":
-                    snapshot = _evidence_path(
-                        f"report-{report.replace(' ', '-').lower()}.json"
-                    )
+                    snapshot = _evidence_path(f"report-{report.replace(' ', '-').lower()}.json")
                     captured = {}
                     payload_ar = self._localized(report, "ar", captured)
                     payload_both = self._localized(report, "both", captured)
@@ -542,7 +537,11 @@ class TestE2EBilingualCommercialWorkflow(FrappeTestCase):
             mock.patch("frappe.get_module", side_effect=_dispatch),
             mock.patch("frappe.only_for", lambda *a, **k: None),
             mock.patch.object(api_mod, "get_report_doc", create=True),
-            mock.patch.object(api_mod, "_check_report_access", side_effect=lambda rn, f: f.setdefault("company", fallback_company)),
+            mock.patch.object(
+                api_mod,
+                "_check_report_access",
+                side_effect=lambda rn, f: f.setdefault("company", fallback_company),
+            ),
         ):
             pass
 

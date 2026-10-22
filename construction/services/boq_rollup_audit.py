@@ -12,12 +12,15 @@ HEADER_TOTAL_FIELDS = (
 )
 STRUCTURE_TOTAL_FIELDS = ("item_count", "total_contract_value", "total_budgeted_cost")
 
-AGGREGATION_LIMIT = _(
-    "This audit mirrors current controller semantics: BOQ Header totals do not filter item docstatus; "
-    "contract, estimated, and budget totals exclude variation items, while revised totals include all items. "
-    "BOQ Structure totals include only structures and items with docstatus below 2, and include variation "
-    "items in contract and budget totals."
-)
+
+def _aggregation_limit():
+    """Translate this response text in the active request locale."""
+    return _(
+        "This audit mirrors current controller semantics: BOQ Header totals do not filter item docstatus; "
+        "contract, estimated, and budget totals exclude variation items, while revised totals include all items. "
+        "BOQ Structure totals include only structures and items with docstatus below 2, and include variation "
+        "items in contract and budget totals."
+    )
 
 
 def audit_boq_rollups(boq_header):
@@ -164,7 +167,7 @@ def audit_boq_rollups(boq_header):
             ),
         },
         "structures": audited_structures,
-        "aggregation_limit": AGGREGATION_LIMIT,
+        "aggregation_limit": _aggregation_limit(),
     }
 
 

@@ -10,30 +10,53 @@ unless they are genuine synonyms.
 Computes and records the SHA-256 hash of proposal.json.
 """
 
-import json
 import hashlib
-import sys
+import json
 import os
+import sys
 from datetime import datetime
-
 
 TRANSLATIONS = {
     # Phase 2A - Dimensional
     "Millimeter": {"arabic": "مليمتر", "confidence": "high", "provenance": "standard linear unit"},
     "Centimeter": {"arabic": "سنتيمتر", "confidence": "high", "provenance": "standard linear unit"},
-    "Meter": {"arabic": "متر", "confidence": "high", "provenance": "standard linear unit; synonym with M fixture"},
+    "Meter": {
+        "arabic": "متر",
+        "confidence": "high",
+        "provenance": "standard linear unit; synonym with M fixture",
+    },
     "Kilometer": {"arabic": "كيلومتر", "confidence": "high", "provenance": "standard linear unit"},
     "Inch": {"arabic": "بوصة", "confidence": "high", "provenance": "standard imperial linear unit"},
     "Foot": {"arabic": "قدم", "confidence": "high", "provenance": "standard imperial linear unit"},
     "Yard": {"arabic": "ياردة", "confidence": "high", "provenance": "standard imperial linear unit"},
     # Phase 2A - Area & Volume
-    "Square Meter": {"arabic": "متر مربع", "confidence": "high", "provenance": "standard area unit; synonym with M2 fixture"},
+    "Square Meter": {
+        "arabic": "متر مربع",
+        "confidence": "high",
+        "provenance": "standard area unit; synonym with M2 fixture",
+    },
     "Square Foot": {"arabic": "قدم مربع", "confidence": "high", "provenance": "standard imperial area unit"},
-    "Square Yard": {"arabic": "ياردة مربعة", "confidence": "high", "provenance": "standard imperial area unit"},
-    "Cubic Centimeter": {"arabic": "سنتيمتر مكعب", "confidence": "high", "provenance": "standard volume unit"},
+    "Square Yard": {
+        "arabic": "ياردة مربعة",
+        "confidence": "high",
+        "provenance": "standard imperial area unit",
+    },
+    "Cubic Centimeter": {
+        "arabic": "سنتيمتر مكعب",
+        "confidence": "high",
+        "provenance": "standard volume unit",
+    },
     "Cubic Foot": {"arabic": "قدم مكعب", "confidence": "high", "provenance": "standard imperial volume unit"},
-    "Cubic Yard": {"arabic": "ياردة مكعبة", "confidence": "high", "provenance": "standard imperial volume unit"},
-    "Cubic Meter": {"arabic": "متر مكعب", "confidence": "high", "provenance": "standard volume unit; synonym with M3 fixture"},
+    "Cubic Yard": {
+        "arabic": "ياردة مكعبة",
+        "confidence": "high",
+        "provenance": "standard imperial volume unit",
+    },
+    "Cubic Meter": {
+        "arabic": "متر مكعب",
+        "confidence": "high",
+        "provenance": "standard volume unit; synonym with M3 fixture",
+    },
     # Phase 2A - Mass
     "Gram": {"arabic": "جرام", "confidence": "high", "provenance": "standard mass unit"},
     "Milligram": {"arabic": "مليجرام", "confidence": "high", "provenance": "standard mass unit"},
@@ -50,7 +73,11 @@ TRANSLATIONS = {
     # Phase 2A - Time
     "Minute": {"arabic": "دقيقة", "confidence": "high", "provenance": "standard time unit"},
     "Second": {"arabic": "ثانية", "confidence": "high", "provenance": "standard time unit"},
-    "Hour": {"arabic": "ساعة", "confidence": "high", "provenance": "standard time unit; synonym with HR fixture"},
+    "Hour": {
+        "arabic": "ساعة",
+        "confidence": "high",
+        "provenance": "standard time unit; synonym with HR fixture",
+    },
     "Week": {"arabic": "أسبوع", "confidence": "high", "provenance": "standard time unit"},
     # Phase 2B - Commercial / Packaging
     "Pair": {"arabic": "زوج", "confidence": "high", "provenance": "standard pair/count unit"},
@@ -80,18 +107,23 @@ def load_triage_units():
                 name_part = parts[0].strip()
                 name = name_part.split(" (")[0].strip()
                 if name and not name.startswith("Total:"):
-                    entry = TRANSLATIONS.get(name, {
-                        "arabic": "",
-                        "confidence": "low",
-                        "provenance": "unmapped",
-                    })
-                    units.append({
-                        "name": name,
-                        "section": in_section,
-                        "arabic": entry["arabic"],
-                        "confidence": entry["confidence"],
-                        "provenance": entry["provenance"],
-                    })
+                    entry = TRANSLATIONS.get(
+                        name,
+                        {
+                            "arabic": "",
+                            "confidence": "low",
+                            "provenance": "unmapped",
+                        },
+                    )
+                    units.append(
+                        {
+                            "name": name,
+                            "section": in_section,
+                            "arabic": entry["arabic"],
+                            "confidence": entry["confidence"],
+                            "provenance": entry["provenance"],
+                        }
+                    )
     return units
 
 
@@ -118,11 +150,11 @@ def main():
     with open(output_path, "rb") as f:
         sha256 = hashlib.sha256(f.read()).hexdigest()
 
-    print("Proposal generated: {}".format(output_path))
-    print("SHA-256: {}".format(sha256))
-    print("Total units in proposal: {}".format(len(units)))
-    print("Phase 2A units: {}".format(len(phase2a_units)))
-    print("Phase 2B units: {}".format(len(phase2b_units)))
+    print(f"Proposal generated: {output_path}")
+    print(f"SHA-256: {sha256}")
+    print(f"Total units in proposal: {len(units)}")
+    print(f"Phase 2A units: {len(phase2a_units)}")
+    print(f"Phase 2B units: {len(phase2b_units)}")
 
 
 if __name__ == "__main__":

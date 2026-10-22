@@ -49,12 +49,17 @@ SYSTEM_REDIS_PORT = 6379
 MIN_DISK_KB = 2 * 1024 * 1024
 MAX_BACKUP_AGE_S = 7 * 24 * 3600
 COMMERCIAL_DOCTYPES = [
-    "tabBOQ Header", "tabBOQ Structure", "tabBOQ Item",
-    "tabQuantity Revision", "tabVariation Order",
+    "tabBOQ Header",
+    "tabBOQ Structure",
+    "tabBOQ Item",
+    "tabQuantity Revision",
+    "tabVariation Order",
 ]
 MIGRATION_SCRIPT = os.path.join(
-    BENCH, "apps/construction/docs/ai/work-items/production-migration-readiness"
-    "/evidence/scripts/run_production_bilingual_migration.py")
+    BENCH,
+    "apps/construction/docs/ai/work-items/production-migration-readiness"
+    "/evidence/scripts/run_production_bilingual_migration.py",
+)
 
 results = []
 failures = []
@@ -98,7 +103,9 @@ def latest_backups(site):
     backup_dir = os.path.join(SITES_DIR, site, "private", "backups")
     out = []
     if os.path.isdir(backup_dir):
-        for name in sorted(os.listdir(backup_dir), key=lambda n: os.path.getmtime(os.path.join(backup_dir, n))):
+        for name in sorted(
+            os.listdir(backup_dir), key=lambda n: os.path.getmtime(os.path.join(backup_dir, n))
+        ):
             if name.endswith((".sql.gz", ".tar", ".zip")):
                 out.append(os.path.join(backup_dir, name))
     return out
@@ -109,8 +116,8 @@ def pending_jobs():
     for queue in ("default", "short", "long"):
         try:
             out = subprocess.run(
-                ["redis-cli", "-p", "11000", "llen", queue],
-                capture_output=True, text=True, timeout=5).stdout.strip()
+                ["redis-cli", "-p", "11000", "llen", queue], capture_output=True, text=True, timeout=5
+            ).stdout.strip()
             lengths[queue] = int(out) if out.isdigit() else 0
         except Exception:
             lengths[queue] = 0
@@ -121,11 +128,23 @@ def db_count(site, doctype, cfg):
     """Read-only row census on a commercial DocType; None on error."""
     try:
         out = subprocess.run(
-            ["mysql", "--socket", cfg.get("db_socket", "/run/mysqld/mysqld.sock"),
-             "-u", cfg["db_user"], f"-p{cfg['db_password']}",
-             "--batch", "--raw", "-e",
-             f"SELECT COUNT(*) FROM `{doctype}`", cfg["db_name"]],
-            capture_output=True, text=True, timeout=15)
+            [
+                "mysql",
+                "--socket",
+                cfg.get("db_socket", "/run/mysqld/mysqld.sock"),
+                "-u",
+                cfg["db_user"],
+                f"-p{cfg['db_password']}",
+                "--batch",
+                "--raw",
+                "-e",
+                f"SELECT COUNT(*) FROM `{doctype}`",
+                cfg["db_name"],
+            ],
+            capture_output=True,
+            text=True,
+            timeout=15,
+        )
         lines = [l for l in out.stdout.splitlines() if l.strip()]
         return int(lines[-1]) if lines else None
     except Exception:
@@ -136,30 +155,34 @@ def set_maintenance(site, value, dry_run):
     cfg, path = site_config(site)
     original = cfg.get("maintenance_mode", 0)
     if dry_run:
-        record(f"maintenance[{site}]", "DRY_RUN",
-               f"would set maintenance_mode={value} (original {original}) in {path}")
+        record(
+            f"maintenance[{site}]",
+            "DRY_RUN",
+            f"would set maintenance_mode={value} (original {original}) in {path}",
+        )
         return original
     cfg["maintenance_mode"] = value
     with open(path, "w") as fh:
         json.dump(cfg, fh, indent=1)
     cfg2, _ = site_config(site)
     ok = cfg2.get("maintenance_mode") == value
-    record(f"maintenance[{site}]", "PASS" if ok else "FAIL",
-           f"maintenance_mode {original} -> {value} (verified {ok})")
+    record(
+        f"maintenance[{site}]",
+        "PASS" if ok else "FAIL",
+        f"maintenance_mode {original} -> {value} (verified {ok})",
+    )
     return original
 
 
 def restore_maintenance(site, original, dry_run):
     cfg, path = site_config(site)
     if dry_run:
-        record(f"maintenance-restore[{site}]", "DRY_RUN",
-               f"would restore maintenance_mode={original}")
+        record(f"maintenance-restore[{site}]", "DRY_RUN", f"would restore maintenance_mode={original}")
         return
     cfg["maintenance_mode"] = original
     with open(path, "w") as fh:
         json.dump(cfg, fh, indent=1)
-    record(f"maintenance-restore[{site}]", "PASS",
-           f"maintenance_mode restored to {original}")
+    record(f"maintenance-restore[{site}]", "PASS", f"maintenance_mode restored to {original}")
 
 
 def verify_backup(site, path, cfg, dry_run):
@@ -175,16 +198,24 @@ def verify_backup(site, path, cfg, dry_run):
         gzip_ok = proc.returncode == 0
         # Restoration timing measurement: stream-decompress to /dev/null.
         start = time.monotonic()
-        subprocess.run(["gzip", "-dc", path], stdout=subprocess.DEVNULL,
-                       stderr=subprocess.DEVNULL)
+        subprocess.run(["gzip", "-dc", path], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         restore_s = time.monotonic() - start
     status = "PASS" if (size_ok and age_ok and gzip_ok) else "FAIL"
-    record(f"backup-verify[{site}]", status,
-           f"{os.path.basename(path)} size={size}B age={age_s:.0f}s "
-           f"sha256={digest[:16]}... gzip_ok={gzip_ok} "
-           f"restore_timing={restore_s or 0:.2f}s dry_run={dry_run}")
-    return {"path": path, "size": size, "sha256": digest, "age_s": age_s,
-            "gzip_ok": gzip_ok, "restore_timing_s": restore_s}
+    record(
+        f"backup-verify[{site}]",
+        status,
+        f"{os.path.basename(path)} size={size}B age={age_s:.0f}s "
+        f"sha256={digest[:16]}... gzip_ok={gzip_ok} "
+        f"restore_timing={restore_s or 0:.2f}s dry_run={dry_run}",
+    )
+    return {
+        "path": path,
+        "size": size,
+        "sha256": digest,
+        "age_s": age_s,
+        "gzip_ok": gzip_ok,
+        "restore_timing_s": restore_s,
+    }
 
 
 def phase_preflight(dry_run):
@@ -194,28 +225,39 @@ def phase_preflight(dry_run):
         try:
             cfg, path = site_config(site)
             ok = bool(cfg.get("db_name") and cfg.get("db_user") and cfg.get("encryption_key"))
-            record(f"config[{site}]", "PASS" if ok else "FAIL",
-                   f"db_name={cfg.get('db_name')} maintenance_mode={cfg.get('maintenance_mode', 0)}")
+            record(
+                f"config[{site}]",
+                "PASS" if ok else "FAIL",
+                f"db_name={cfg.get('db_name')} maintenance_mode={cfg.get('maintenance_mode', 0)}",
+            )
         except Exception as exc:
             record(f"config[{site}]", "FAIL", str(exc))
             continue
         for name, port in REDIS_PORTS:
             up = redis_ping(port)
-            record(f"redis[{site}:{name}:{port}]", "PASS" if up else "WARN",
-                   "reachable" if up else "not running (start idempotently for drills)")
+            record(
+                f"redis[{site}:{name}:{port}]",
+                "PASS" if up else "WARN",
+                "reachable" if up else "not running (start idempotently for drills)",
+            )
         backups = latest_backups(site)
         if backups:
             b = backups[-1]
-            record(f"backup[{site}]", "PASS",
-                   f"latest={os.path.basename(b)} age={time.time()-os.path.getmtime(b):.0f}s")
+            record(
+                f"backup[{site}]",
+                "PASS",
+                f"latest={os.path.basename(b)} age={time.time()-os.path.getmtime(b):.0f}s",
+            )
         else:
             record(f"backup[{site}]", "WARN", "no local backup under private/backups")
         disk = shutil.disk_usage(SITES_DIR)
-        record(f"disk[{site}]", "PASS" if disk.free // 1024 > MIN_DISK_KB else "FAIL",
-               f"free={disk.free / (1 << 30):.2f} GiB")
+        record(
+            f"disk[{site}]",
+            "PASS" if disk.free // 1024 > MIN_DISK_KB else "FAIL",
+            f"free={disk.free / (1 << 30):.2f} GiB",
+        )
     jobs = pending_jobs()
-    record("pending-jobs", "PASS" if sum(jobs.values()) == 0 else "FAIL",
-           f"rq queue lengths {jobs}")
+    record("pending-jobs", "PASS" if sum(jobs.values()) == 0 else "FAIL", f"rq queue lengths {jobs}")
     return not failures
 
 
@@ -239,8 +281,11 @@ def phase_cutover(dry_run, fail_step=None):
             if c is not None:
                 counts[dt] = c
         baseline[site] = counts
-        record(f"census[{site}]", "PASS",
-               f"{len(counts)}/{len(COMMERCIAL_DOCTYPES)} commercial doctypes countable (read-only)")
+        record(
+            f"census[{site}]",
+            "PASS",
+            f"{len(counts)}/{len(COMMERCIAL_DOCTYPES)} commercial doctypes countable (read-only)",
+        )
         if fail_step == "census":
             record("injected-fault", "FAIL", "simulated data-loss census failure")
             raise SimulatedFailure()
@@ -251,21 +296,37 @@ def phase_cutover(dry_run, fail_step=None):
             if fail_step == "drill":
                 raise SimulatedFailure()
             if dry_run:
-                record(f"migrate-drill[{site}]", "DRY_RUN",
-                       "would run: bench --site %s migrate --skip-search-index "
-                       "(idempotent patch classification, zero writes)" % site)
+                record(
+                    f"migrate-drill[{site}]",
+                    "DRY_RUN",
+                    f"would run: bench --site {site} migrate --skip-search-index "
+                    "(idempotent patch classification, zero writes)",
+                )
             else:
                 proc = subprocess.run(
                     ["bench", "--site", site, "migrate", "--skip-search-index"],
-                    cwd=BENCH, capture_output=True, text=True)
-                record(f"migrate-drill[{site}]", "PASS" if proc.returncode == 0 else "FAIL",
-                       f"rc={proc.returncode}")
+                    cwd=BENCH,
+                    capture_output=True,
+                    text=True,
+                )
+                record(
+                    f"migrate-drill[{site}]",
+                    "PASS" if proc.returncode == 0 else "FAIL",
+                    f"rc={proc.returncode}",
+                )
             if site == "v16.localhost" and os.path.exists(MIGRATION_SCRIPT):
                 proc = subprocess.run(
                     [os.path.join(BENCH, "env/bin/python"), MIGRATION_SCRIPT, "--dry-run"],
-                    cwd=BENCH, capture_output=True, text=True, timeout=600)
-                record("bilingual-migration-dry-run",
-                       "PASS" if proc.returncode == 0 else "WARN", f"rc={proc.returncode}")
+                    cwd=BENCH,
+                    capture_output=True,
+                    text=True,
+                    timeout=600,
+                )
+                record(
+                    "bilingual-migration-dry-run",
+                    "PASS" if proc.returncode == 0 else "WARN",
+                    f"rc={proc.returncode}",
+                )
         finally:
             restore_maintenance(site, original, dry_run)
         if fail_step == "maintenance":
@@ -280,33 +341,41 @@ def phase_cutover(dry_run, fail_step=None):
             c = db_count(site, dt, cfg)
             if c is not None:
                 after[dt] = c
-        lost = {k: (baseline.get(site, {}).get(k), after.get(k))
-                for k in set(baseline.get(site, {})) | set(after)
-                if baseline.get(site, {}).get(k) != after.get(k)}
-        record(f"zero-data-loss[{site}]", "PASS" if not lost else "FAIL",
-               f"drift={lost if lost else 'none'}")
+        lost = {
+            k: (baseline.get(site, {}).get(k), after.get(k))
+            for k in set(baseline.get(site, {})) | set(after)
+            if baseline.get(site, {}).get(k) != after.get(k)
+        }
+        record(f"zero-data-loss[{site}]", "PASS" if not lost else "FAIL", f"drift={lost if lost else 'none'}")
     return not failures
 
 
 def phase_rollback(dry_run, sim_fail=True):
     log("\n===== PHASE rollback =====")
-    record("simulated-failure", "TRIGGERED",
-           "injected mid-drill fault: maintenance toggled on, no data written")
+    record(
+        "simulated-failure", "TRIGGERED", "injected mid-drill fault: maintenance toggled on, no data written"
+    )
     for site in SITES:
         cfg, _ = site_config(site)
         original = cfg.get("maintenance_mode", 0)
         restore_maintenance(site, 0 if not dry_run else original, dry_run) if not dry_run else record(
-            f"rollback-maintenance[{site}]", "DRY_RUN",
-            f"would restore maintenance_mode=0 (currently {original})")
+            f"rollback-maintenance[{site}]",
+            "DRY_RUN",
+            f"would restore maintenance_mode=0 (currently {original})",
+        )
     for site in SITES:
         backups = latest_backups(site)
         if backups:
             b = backups[-1]
             ok = os.path.getsize(b) > 1024
-            gz = b.endswith(".gz") and subprocess.run(
-                ["gzip", "-t", b], capture_output=True).returncode == 0 or not b.endswith(".gz")
-            record(f"backup-restorable[{site}]", "PASS" if ok and gz else "FAIL",
-                   f"{os.path.basename(b)} validated (gzip -t ok={gz})")
+            gz = (
+                b.endswith(".gz") and subprocess.run(["gzip", "-t", b], capture_output=True).returncode == 0
+            ) or not b.endswith(".gz")
+            record(
+                f"backup-restorable[{site}]",
+                "PASS" if ok and gz else "FAIL",
+                f"{os.path.basename(b)} validated (gzip -t ok={gz})",
+            )
         else:
             record(f"backup-restorable[{site}]", "WARN", "no local backup to validate")
     cfg_state = []
@@ -322,15 +391,15 @@ class SimulatedFailure(Exception):
 
 
 def main():
-    ap = argparse.ArgumentParser(description=__doc__,
-                                 formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--dry-run", action="store_true",
-                    help="no writes to site_config, DB, or redis")
-    ap.add_argument("--phase", default="all",
-                    choices=["preflight", "cutover", "rollback", "all"])
-    ap.add_argument("--fail-step", default=None,
-                    choices=["census", "drill", "maintenance"],
-                    help="inject a simulated mid-cutover failure (rollback proof)")
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--dry-run", action="store_true", help="no writes to site_config, DB, or redis")
+    ap.add_argument("--phase", default="all", choices=["preflight", "cutover", "rollback", "all"])
+    ap.add_argument(
+        "--fail-step",
+        default=None,
+        choices=["census", "drill", "maintenance"],
+        help="inject a simulated mid-cutover failure (rollback proof)",
+    )
     args = ap.parse_args()
 
     log(f"orchestrate_cutover.py phase={args.phase} dry_run={args.dry_run}")

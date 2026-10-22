@@ -158,7 +158,7 @@ Complete mapping of server-side document lifecycle events declared in `hooks.py`
 | `Purchase Invoice` | `on_cancel` | `construction.services.resource_price_service.cancel_price_history_for_document` | Cancels recorded resource price history |
 | `Stock Entry` | `validate` | `construction.services.boq_transaction_validation.validate_document` | Material issue/transfer validation against BOQ |
 | `Timesheet` | `validate` | `construction.services.boq_transaction_validation.validate_document` | Labor log validation against BOQ activity |
-| `Journal Entry` | `validate` | `construction.services.boq_transaction_validation.validate_document` | Direct cost validation against BOQ accounts |
+| `Journal Entry` | `validate` | `construction.services.boq_transaction_validation.validate_document`<br>`construction.services.boq_journal_project.validate_document` | Direct cost validation against BOQ accounts, then derivation and validation of the authoritative BOQ project of every BOQ-bearing row (the wildcard scope hook never sees a Journal Entry Account project) |
 | `Sales Invoice` | `validate` | `construction.services.boq_transaction_validation.validate_document` | Billing validation against BOQ milestones |
 | `Material Request` | `validate` | `construction.services.boq_transaction_validation.validate_document` | Procurement requisition validation against BOQ |
 | `BOQ Item Stage` | `before_delete` | `construction.services.boq_lifecycle.before_delete_boq_item_stage` | Blocks deletion of committed stage records |

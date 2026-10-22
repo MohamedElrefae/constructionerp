@@ -11,7 +11,7 @@ TRANSLATIONS: dict[str, str] = {
     "Email verification failed.": "فشل التحقق من البريد الإلكتروني.",
     "Enable to apply SLA on every {0}": "تفعيل تطبيق اتفاقية مستوى الخدمة على كل {0}",
     "First Response SLA Failed by {}": "فشلت اتفاقية مستوى الخدمة للاستجابة الأولى من قِبل {}",
-    "In row {0} of Appointment Booking Slots: \"To Time\" must be later than \"From Time\".": "في الصف {0} من فترات حجز المواعيد: يجب أن يكون \"إلى وقت\" بعد \"من وقت\".",
+    'In row {0} of Appointment Booking Slots: "To Time" must be later than "From Time".': 'في الصف {0} من فترات حجز المواعيد: يجب أن يكون "إلى وقت" بعد "من وقت".',
     "Lead Owner cannot be same as the Lead Email Address": "لا يمكن أن يكون مالك العميل المحتمل هو نفسه عنوان البريد الإلكتروني للعميل المحتمل",
     "Lost Reasons are required in case opportunity is Lost.": "أسباب الخسارة مطلوبة في حال كانت الفرصة خاسرة.",
     "No of Employees": "عدد الموظفين",

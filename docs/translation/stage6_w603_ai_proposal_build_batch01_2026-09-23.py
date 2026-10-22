@@ -106,7 +106,7 @@ A = {
     "(E) Balance Stock Value in Queue": "(E) قيمة رصيد المخزون في الطابور",
     "(F) Change in Stock Value": "(F) التغير في قيمة المخزون",
     "(G) Sum of Change in Stock Value": "(G) مجموع التغير في قيمة المخزون",
-    "(Good Units Produced / Total Units Produced) × 100": "(الوحدات الجيدة المنتجة / إجمالي الوحدات المنتجة) × 100",
+    "(Good Units Produced / Total Units Produced) × 100": "(الوحدات الجيدة المنتجة / إجمالي الوحدات المنتجة) × 100",  # noqa: RUF001 -- preserve the approved multiplication glyph
     "(H) Change in Stock Value (FIFO Queue)": "(H) التغير في قيمة المخزون (طابور FIFO)",
     "(H) Valuation Rate": "(H) سعر التقييم",
     "(I) Valuation Rate": "(I) سعر التقييم",
@@ -237,7 +237,7 @@ def main():
     for s, ar in A.items():
         assert "\x00" not in ar
         assert ar[: len(ar) - len(ar.lstrip())] == s[: len(s) - len(s.lstrip())], f"affix-lstrip: {s!r}"
-        assert ar[len(ar.rstrip()):] == s[len(s.rstrip()):], f"affix-rstrip: {s!r} -> {ar!r}"
+        assert ar[len(ar.rstrip()) :] == s[len(s.rstrip()) :], f"affix-rstrip: {s!r} -> {ar!r}"
         src_ph = sorted(ph_re.findall(s))
         ar_ph = sorted(ph_re.findall(ar))
         assert src_ph == ar_ph, f"placeholder mismatch on {s!r}: {src_ph} != {ar_ph}"

@@ -23,9 +23,18 @@ import frappe
 PRIVATE = "/home/mohamed/frappe-bench/sites/v16.localhost/private/company-phase1-population"
 APPROVED_SHA = "b5fcc02a6854ebb27b71082b71c1b3f9d4ac43f737b013809697c2a23e79478a"
 AR_FIELD, NORM_FIELD, LABEL_FIELD = "company_name_ar", "company_name_ar_norm", "company_name"
-FROZEN_FIELDS = ["name", LABEL_FIELD, "abbr", "default_currency", "country",
-                 "parent_company", "is_group", "chart_of_accounts",
-                 AR_FIELD, NORM_FIELD]
+FROZEN_FIELDS = [
+    "name",
+    LABEL_FIELD,
+    "abbr",
+    "default_currency",
+    "country",
+    "parent_company",
+    "is_group",
+    "chart_of_accounts",
+    AR_FIELD,
+    NORM_FIELD,
+]
 TOTAL_EXPECTED = 21
 EXCLUDED_EXPECTED = 20
 
@@ -40,8 +49,23 @@ def byte_scan(value):
         problems.append("whitespace")
     for ch in value:
         cp = ord(ch)
-        if cp in (0x200E, 0x200F, 0x202A, 0x202B, 0x202C, 0x202D, 0x202E,
-                  0x2066, 0x2067, 0x2068, 0x2069, 0x200B, 0x200C, 0x200D, 0xFEFF):
+        if cp in (
+            0x200E,
+            0x200F,
+            0x202A,
+            0x202B,
+            0x202C,
+            0x202D,
+            0x202E,
+            0x2066,
+            0x2067,
+            0x2068,
+            0x2069,
+            0x200B,
+            0x200C,
+            0x200D,
+            0xFEFF,
+        ):
             problems.append(f"bidi/zw U+{cp:04X}")
         elif cp < 0x20 or cp == 0x7F or 0x80 <= cp <= 0x9F:
             problems.append(f"control U+{cp:04X}")
@@ -103,11 +127,19 @@ def main():
             f"abbr={snap['abbr']!r} currency={snap['default_currency']!r} "
             f"country={snap['country']!r} coa={snap['chart_of_accounts']!r}"
         )
-        rows_out.append({"doctype": "Company", "name": name,
-                         "label": snap[LABEL_FIELD], "before": current,
-                         "after": value if not current else current,
-                         "norm_preview": norm_preview, "state": state,
-                         "save_path": "PLAIN_SAVE", "snapshot": snap})
+        rows_out.append(
+            {
+                "doctype": "Company",
+                "name": name,
+                "label": snap[LABEL_FIELD],
+                "before": current,
+                "after": value if not current else current,
+                "norm_preview": norm_preview,
+                "state": state,
+                "save_path": "PLAIN_SAVE",
+                "snapshot": snap,
+            }
+        )
 
     excluded = frappe.db.count("Company") - len(rows_out)
     if excluded != EXCLUDED_EXPECTED:
@@ -125,16 +157,17 @@ def main():
         print(f"FAIL: rows={len(rows_out)} would_write={would}, expected 1/1")
         sys.exit(1)
 
-    private = {"proposal_sha256": sha, "rows": rows_out,
-               "excluded_rows": excluded, "writes_performed": 0}
+    private = {"proposal_sha256": sha, "rows": rows_out, "excluded_rows": excluded, "writes_performed": 0}
     with open(f"{PRIVATE}/dry-run.json", "w", encoding="utf-8") as fh:
         json.dump(private, fh, indent=2, ensure_ascii=False)
         fh.write("\n")
     dry_sha = hashlib.sha256(open(f"{PRIVATE}/dry-run.json", "rb").read()).hexdigest()
     print(f"PRIVATE dry-run.json sha256={dry_sha}")
     print("WRITES_PERFORMED: 0")
-    print("DRY-RUN RESULT: PASS (1/1 row validated; PLAIN save planned; "
-          "approved v2 sha matched; zero writes)")
+    print(
+        "DRY-RUN RESULT: PASS (1/1 row validated; PLAIN save planned; "
+        "approved v2 sha matched; zero writes)"
+    )
 
 
 if __name__ == "__main__":

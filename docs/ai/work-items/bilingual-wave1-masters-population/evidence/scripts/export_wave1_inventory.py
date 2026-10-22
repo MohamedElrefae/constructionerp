@@ -50,7 +50,7 @@ def rows(doctype, arabic_field, label_field):
 
 def main():
     fail = []
-    print("WAVE1_INVENTORY_EXPORT v1 site=%s" % frappe.local.site)
+    print(f"WAVE1_INVENTORY_EXPORT v1 site={frappe.local.site}")
 
     items, items_nf = rows("Item", "item_name_ar", "item_name")
     customers, customers_nf = rows("Customer", "customer_name_in_arabic", "customer_name")
@@ -58,23 +58,31 @@ def main():
 
     for label, all_rows, nf, in_scope, scaffold, arabic_field, label_field in (
         ("ITEM", items, items_nf, IN_SCOPE_ITEMS, SCAFFOLD_ITEMS, "item_name_ar", "item_name"),
-        ("CUSTOMER", customers, customers_nf, IN_SCOPE_CUSTOMERS, SCAFFOLD_CUSTOMERS,
-         "customer_name_in_arabic", "customer_name"),
-        ("SUPPLIER", suppliers, suppliers_nf, IN_SCOPE_SUPPLIERS, set(),
-         "supplier_name_in_arabic", "supplier_name"),
+        (
+            "CUSTOMER",
+            customers,
+            customers_nf,
+            IN_SCOPE_CUSTOMERS,
+            SCAFFOLD_CUSTOMERS,
+            "customer_name_in_arabic",
+            "customer_name",
+        ),
+        (
+            "SUPPLIER",
+            suppliers,
+            suppliers_nf,
+            IN_SCOPE_SUPPLIERS,
+            set(),
+            "supplier_name_in_arabic",
+            "supplier_name",
+        ),
     ):
         nf_names = {r["name"] for r in nf}
         missing = [n for n in in_scope if n not in nf_names]
         if missing:
             fail.append(f"{label}: in-scope rows absent from site: {missing}")
-        unexpected_nf = sorted(
-            n
-            for n in nf_names
-            if n not in in_scope and n not in scaffold
-        )
-        populated_nf = sorted(
-            r["name"] for r in nf if r[arabic_field]
-        )
+        unexpected_nf = sorted(n for n in nf_names if n not in in_scope and n not in scaffold)
+        populated_nf = sorted(r["name"] for r in nf if r[arabic_field])
         print(f"{label}_TOTAL {len(all_rows)}")
         print(f"{label}_NON_FIXTURE {len(nf)}")
         print(f"{label}_IN_SCOPE {len(in_scope)}")
@@ -85,13 +93,10 @@ def main():
         print(f"{label}_NON_FIXTURE_ALREADY_POPULATED {populated_nf}")
         for r in sorted(nf, key=lambda x: x["name"]):
             ar_val = r[arabic_field]
-            marker = "IN_SCOPE" if r["name"] in in_scope else (
-                "SCAFFOLD" if r["name"] in scaffold else "OTHER"
+            marker = (
+                "IN_SCOPE" if r["name"] in in_scope else ("SCAFFOLD" if r["name"] in scaffold else "OTHER")
             )
-            print(
-                f"ROW {label} {marker} name={r['name']!r} label={r[label_field]!r} "
-                f"arabic={ar_val!r}"
-            )
+            print(f"ROW {label} {marker} name={r['name']!r} label={r[label_field]!r} " f"arabic={ar_val!r}")
 
     # Pre-state: every in-scope row must currently be empty (nothing to overwrite).
     for r in items_nf:

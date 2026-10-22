@@ -14,6 +14,7 @@ Verifies:
 import os
 import re
 import sys
+
 import frappe
 
 TRIAGE_LOG_PATH = "/home/mohamed/frappe-bench/apps/construction/docs/ai/work-items/bilingual-uom-phase2-triage/evidence/inventory-triage.log"
@@ -101,7 +102,7 @@ def main():
     if derived_phase2c != frozen_phase2c:
         diff_derived_not_frozen = set(derived_phase2c) - set(frozen_phase2c)
         diff_frozen_not_derived = set(frozen_phase2c) - set(derived_phase2c)
-        log_lines.append(f"FAIL: Drift detected between database derivation and inventory-triage.log:")
+        log_lines.append("FAIL: Drift detected between database derivation and inventory-triage.log:")
         log_lines.append(f"  In derived but not frozen: {diff_derived_not_frozen}")
         log_lines.append(f"  In frozen but not derived: {diff_frozen_not_derived}")
         print("\n".join(log_lines))
@@ -158,11 +159,15 @@ def main():
     discovered_pairs = {(r["TABLE_NAME"], r["COLUMN_NAME"]) for r in schema_cols}
     for table_name, col_name in mandatory_checks:
         if (table_name, col_name) not in discovered_pairs:
-            log_lines.append(f"FAIL: Mandatory audit target {table_name}.{col_name} not found in database schema!")
+            log_lines.append(
+                f"FAIL: Mandatory audit target {table_name}.{col_name} not found in database schema!"
+            )
             print("\n".join(log_lines))
             return False
 
-    log_lines.append(f"  PASS: All {len(mandatory_checks)} mandatory audit targets confirmed present in schema.")
+    log_lines.append(
+        f"  PASS: All {len(mandatory_checks)} mandatory audit targets confirmed present in schema."
+    )
 
     # 5. Parameterized zero-usage query across all discovered table/column pairs
     log_lines.append("\nQuerying references across all tables (parameterized IN query)...")

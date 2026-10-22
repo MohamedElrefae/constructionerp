@@ -1,4 +1,5 @@
 """Cycle build for W6-1 Accounts Batch 02."""
+
 from __future__ import annotations
 
 import csv
@@ -28,17 +29,42 @@ APPROVED_BEFORE_SHA = "eca393077f38eeb63b0a10d873033a86c5a0f8607b2e7898d64ffe68c
 DECISIONS_BEFORE_SHA = "df8e02a1fc44487ca12507196c218f425fa46201655c4a76c861e24e3f9c39c9"
 
 REVIEWERS = (
-    {"id": "AI-A1", "session": "d7cb1de1-df4f-4219-a5aa-2785cfb7709a", "path": "docs/ai/work-items/scope-context-portability/evidence/stage6-w601-ai-a1-accounts-batch02-2026-09-27.md"},
-    {"id": "AI-A2", "session": "7bd1c810-f6fb-425f-964a-be60ceed2834", "path": "docs/ai/work-items/scope-context-portability/evidence/stage6-w601-ai-a2-accounts-batch02-2026-09-27.md"},
-    {"id": "AI-A3", "session": "28bd74db-d987-47f4-8e3e-d6c528a039d7", "path": "docs/ai/work-items/scope-context-portability/evidence/stage6-w601-ai-a3-accounts-batch02-2026-09-27.md"},
+    {
+        "id": "AI-A1",
+        "session": "d7cb1de1-df4f-4219-a5aa-2785cfb7709a",
+        "path": "docs/ai/work-items/scope-context-portability/evidence/stage6-w601-ai-a1-accounts-batch02-2026-09-27.md",
+    },
+    {
+        "id": "AI-A2",
+        "session": "7bd1c810-f6fb-425f-964a-be60ceed2834",
+        "path": "docs/ai/work-items/scope-context-portability/evidence/stage6-w601-ai-a2-accounts-batch02-2026-09-27.md",
+    },
+    {
+        "id": "AI-A3",
+        "session": "28bd74db-d987-47f4-8e3e-d6c528a039d7",
+        "path": "docs/ai/work-items/scope-context-portability/evidence/stage6-w601-ai-a3-accounts-batch02-2026-09-27.md",
+    },
 )
 VERSION = "1.12"
 DOMAIN = "accounts"
 FIELDS = [
-    "language", "source_text", "context", "ct_app", "translated_text", "domain",
-    "release_status", "release_version", "a1_reviewer", "a1_approved_at",
-    "a2_reviewer", "a2_approved_at", "a3_reviewer", "a3_approved_at",
-    "references", "notes", "decision_ref",
+    "language",
+    "source_text",
+    "context",
+    "ct_app",
+    "translated_text",
+    "domain",
+    "release_status",
+    "release_version",
+    "a1_reviewer",
+    "a1_approved_at",
+    "a2_reviewer",
+    "a2_approved_at",
+    "a3_reviewer",
+    "a3_approved_at",
+    "references",
+    "notes",
+    "decision_ref",
 ]
 
 
@@ -75,7 +101,9 @@ def main():
     }
     site_map = {row["source_text"]: row["translated_text"] for row in recon["site_overrides"]}
     assert len(site_map) == 160
-    assert all(row["proposed_ar"] == site_map[row["source_text"]] for row in dispositions["preserved-site-override"])
+    assert all(
+        row["proposed_ar"] == site_map[row["source_text"]] for row in dispositions["preserved-site-override"]
+    )
 
     for reviewer in REVIEWERS:
         report = (ROOT / reviewer["path"]).read_text(encoding="utf-8")
@@ -98,25 +126,27 @@ def main():
     for row in dispositions["PROPOSED-payload"]:
         source = row["source_text"]
         arabic = row["proposed_ar"]
-        released_rows.append({
-            "language": "ar",
-            "source_text": source.strip(),
-            "context": "",
-            "ct_app": "erpnext",
-            "translated_text": arabic.strip(),
-            "domain": DOMAIN,
-            "release_status": "Released",
-            "release_version": VERSION,
-            "a1_reviewer": reviewer_names["AI-A1"],
-            "a1_approved_at": now,
-            "a2_reviewer": reviewer_names["AI-A2"],
-            "a2_approved_at": now,
-            "a3_reviewer": reviewer_names["AI-A3"],
-            "a3_approved_at": now,
-            "references": row.get("locations", ""),
-            "notes": "Owner approved W6-1 Accounts Batch 02 on test site v16.localhost",
-            "decision_ref": "",  # will be set to content:
-        })
+        released_rows.append(
+            {
+                "language": "ar",
+                "source_text": source.strip(),
+                "context": "",
+                "ct_app": "erpnext",
+                "translated_text": arabic.strip(),
+                "domain": DOMAIN,
+                "release_status": "Released",
+                "release_version": VERSION,
+                "a1_reviewer": reviewer_names["AI-A1"],
+                "a1_approved_at": now,
+                "a2_reviewer": reviewer_names["AI-A2"],
+                "a2_approved_at": now,
+                "a3_reviewer": reviewer_names["AI-A3"],
+                "a3_approved_at": now,
+                "references": row.get("locations", ""),
+                "notes": "Owner approved W6-1 Accounts Batch 02 on test site v16.localhost",
+                "decision_ref": "",  # will be set to content:
+            }
+        )
     assert len(released_rows) == 89
 
     # Write content evidence file
@@ -147,7 +177,10 @@ def main():
             "release_version": r["release_version"],
             "references": r["references"],
             "proposal": {"arabic": value, "sha256": hashlib.sha256(f"{source}|{value}".encode()).hexdigest()},
-            "verdicts": {role: {"decision": "approve", "confidence": "high", "session": reviewer_names[role]} for role in ("AI-A1", "AI-A2", "AI-A3")},
+            "verdicts": {
+                role: {"decision": "approve", "confidence": "high", "session": reviewer_names[role]}
+                for role in ("AI-A1", "AI-A2", "AI-A3")
+            },
             "artifacts": refs,
         }
     assert len(new_decisions) == 89
@@ -157,7 +190,9 @@ def main():
     assert len(old_decisions) == 3460 + 89 == 3549
     decision_doc["generated_utc"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     decision_doc["note"] = "W6-1 Accounts Batch 02 decisions added; content-evidence bound."
-    DECISIONS.write_text(json.dumps(decision_doc, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    DECISIONS.write_text(
+        json.dumps(decision_doc, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
 
     # Update catalog
     approved_all = approved + released_rows
@@ -185,17 +220,19 @@ def main():
             q_dec = "preserved-site-override"
             notes = "Preserved verbatim from live v16.localhost; not imported"
             d_ref = row["decision_ref"]
-        applied_rows.append({
-            "source_text": source,
-            "proposed_ar": arabic,
-            "translated_text": arabic,
-            "proposed_disposition": disposition,
-            "quorum_decision": q_dec,
-            "disposition_rationale": row["disposition_rationale"],
-            "decision_ref": d_ref,
-            "locations": row.get("locations", ""),
-            "notes": notes,
-        })
+        applied_rows.append(
+            {
+                "source_text": source,
+                "proposed_ar": arabic,
+                "translated_text": arabic,
+                "proposed_disposition": disposition,
+                "quorum_decision": q_dec,
+                "disposition_rationale": row["disposition_rationale"],
+                "decision_ref": d_ref,
+                "locations": row.get("locations", ""),
+                "notes": notes,
+            }
+        )
     with PAYLOAD.open("w", encoding="utf-8", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=list(applied_rows[0]), lineterminator="\n")
         writer.writeheader()

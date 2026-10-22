@@ -2,6 +2,7 @@ import hashlib
 import json
 
 import frappe
+from frappe import _
 from frappe.translate import MERGED_TRANSLATION_KEY, USER_TRANSLATION_KEY, strip_html_tags
 from frappe.utils import cint, now_datetime
 
@@ -18,7 +19,7 @@ def _compute_digest(language, source_text, context, ct_app, is_catalog):
         or "\x00" in (ct_app or "")
         or "\x00" in (language or "")
     ):
-        frappe.throw("Translation key contains embedded NUL character")
+        frappe.throw(_("Translation key contains embedded NUL character"))
     if is_catalog:
         payload = [language or "", source_text, context or "", ct_app or "", "catalog"]
     else:
@@ -126,7 +127,7 @@ def _apply_origin(doc, origin, release_version, released_by):
     if not origin:
         origin = "Site Override"
     if origin not in ("Packaged Release", "Site Override"):
-        frappe.throw("ct_origin must be Packaged Release or Site Override for runtime rows")
+        frappe.throw(_("ct_origin must be Packaged Release or Site Override for runtime rows"))
     doc.ct_origin = origin
     if release_version and doc.meta.has_field("ct_release_version"):
         doc.ct_release_version = release_version
@@ -159,6 +160,7 @@ def upsert_runtime_translation(
     reason=None,
     ignore_permissions=False,
     released_by=None,
+    defer_cache_invalidation=False,
 ):
     source_text = _runtime_source(source_text)
     translated_text = translated_text or ""
@@ -228,10 +230,12 @@ def upsert_runtime_translation(
             if doc2.meta.has_field("ct_search_normalized"):
                 doc2.ct_search_normalized = _search_normalized(source_text)
             doc2.save(ignore_permissions=ignore_permissions)
-            invalidate_translation_caches(language)
+            if not defer_cache_invalidation:
+                invalidate_translation_caches(language)
             return doc2.name
         raise
-    invalidate_translation_caches(language)
+    if not defer_cache_invalidation:
+        invalidate_translation_caches(language)
     return doc.name
 
 
@@ -291,6 +295,47 @@ def sync_catalog(apps=None, dry_run=True):
     from construction.api.translation_tools import sync_translation_catalog as _sync
 
     return _sync(apps=apps, dry_run=dry_run)
+
+
+def _finish_released_override_import(changed):
+    """Refresh translation caches only after the caller's transaction commits."""
+    operations = [
+        (
+            "translation drift-check timestamp",
+            lambda: frappe.cache.set_value("translation_last_drift_check", frappe.utils.now()),
+        )
+    ]
+    if changed:
+        operations.extend(
+            (
+                (
+                    "user translation cache invalidation",
+                    lambda: frappe.cache.hdel(USER_TRANSLATION_KEY, "ar"),
+                ),
+                (
+                    "merged translation cache invalidation",
+                    lambda: frappe.cache.hdel(MERGED_TRANSLATION_KEY, "ar"),
+                ),
+                (
+                    "translation cache-key invalidation",
+                    lambda: frappe.cache.delete_value(
+                        keys=["bootinfo", USER_TRANSLATION_KEY, MERGED_TRANSLATION_KEY]
+                    ),
+                ),
+                ("translation cache clearing", frappe.clear_cache),
+            )
+        )
+
+    for description, operation in operations:
+        try:
+            operation()
+        except Exception:
+            try:
+                frappe.logger("translation_service").exception(
+                    "Committed released translations, but %s failed", description
+                )
+            except Exception:
+                pass
 
 
 def import_released_overrides(path=None, dry_run=True, _skip_permission=False):
@@ -471,6 +516,7 @@ def import_released_overrides(path=None, dry_run=True, _skip_permission=False):
             release_version=ver,
             ignore_permissions=True,
             released_by=row.get("a1_reviewer") or "packaged",
+            defer_cache_invalidation=True,
         )
         if isinstance(res, dict) and res.get("skipped"):
             if res.get("reason") == "drift_site_override":
@@ -511,12 +557,7 @@ def import_released_overrides(path=None, dry_run=True, _skip_permission=False):
             except Exception:
                 pass
     if not dry_run:
-        try:
-            frappe.cache.set_value("translation_last_drift_check", frappe.utils.now())
-        except Exception:
-            pass
-    if not dry_run and (created or updated):
-        frappe.db.commit()
+        frappe.db.after_commit.add(lambda: _finish_released_override_import(bool(created or updated)))
     return {
         "total": total,
         "created": created,
@@ -531,9 +572,9 @@ def import_released_overrides(path=None, dry_run=True, _skip_permission=False):
 def submit_review_decision(key, persona, decision, notes="", references=""):
     frappe.only_for("Translator")
     if persona not in ("A1", "A2", "A3"):
-        frappe.throw("persona must be A1, A2, or A3")
+        frappe.throw(_("persona must be A1, A2, or A3"))
     if not frappe.db.has_column("Translation", "ct_proposed_translation"):
-        frappe.throw("ct_proposed_translation field not yet migrated")
+        frappe.throw(_("ct_proposed_translation field not yet migrated"))
     source_text, context, ct_app = key if isinstance(key, list | tuple) and len(key) == 3 else (key, "", "")
     if isinstance(key, dict):
         source_text = key.get("source_text") or ""
@@ -541,7 +582,7 @@ def submit_review_decision(key, persona, decision, notes="", references=""):
         ct_app = key.get("ct_app") or ""
     has_catalog = frappe.db.has_column("Translation", "ct_is_catalog_entry")
     if not has_catalog:
-        frappe.throw("catalog fields not present")
+        frappe.throw(_("catalog fields not present"))
     rows = frappe.get_all(
         "Translation",
         filters={"language": "ar", "source_text": source_text, "ct_is_catalog_entry": 1},
@@ -554,7 +595,7 @@ def submit_review_decision(key, persona, decision, notes="", references=""):
             target = r
             break
     if not target:
-        frappe.throw("catalog row not found for key")
+        frappe.throw(_("catalog row not found for key"))
     field_map = {"A1": "a1_status", "A2": "a2_status", "A3": "a3_status"}
     frappe.db.set_value("Translation", target.name, {f"ct_{field_map[persona].lower()}": decision})
     return target.name
@@ -570,7 +611,7 @@ def release_proposal(key, release_version):
     elif isinstance(key, list | tuple):
         source_text, context, ct_app, translated = ([*list(key), "", "", "", ""])[:4]
     else:
-        frappe.throw("invalid key")
+        frappe.throw(_("invalid key"))
     if not translated:
         row = frappe.db.get_value(
             "Translation",
@@ -585,7 +626,7 @@ def release_proposal(key, release_version):
         )
         translated = row or ""
     if not translated:
-        frappe.throw("no proposed translation to release")
+        frappe.throw(_("no proposed translation to release"))
     upsert_runtime_translation(
         source_text,
         translated,
@@ -800,7 +841,7 @@ def assert_translation_health():
     if h["using_safe_fallback"]:
         errors.append("using safe fallback (catalog fields missing)")
     if errors:
-        frappe.throw("Translation health check failed: " + "; ".join(errors))
+        frappe.throw(_("Translation health check failed: {0}").format("; ".join(errors)))
     return h
 
 
@@ -818,7 +859,7 @@ def adopt_matching_packaged_translation(source_text, decision_ref, language="ar"
 
     frappe.only_for("System Manager")
     if not isinstance(decision_ref, str) or not decision_ref.strip():
-        frappe.throw("An operator decision reference is required")
+        frappe.throw(_("An operator decision reference is required"))
     source_text = _runtime_source(source_text)
     context = (context or "").strip()
     path = Path(frappe.get_app_path("construction", "data", "translations", "approved_ar_overrides.csv"))
@@ -832,19 +873,19 @@ def adopt_matching_packaged_translation(source_text, decision_ref, language="ar"
             and (row.get("context") or "").strip() == context
         ]
     if len(matches) != 1:
-        frappe.throw("Exactly one matching packaged release is required")
+        frappe.throw(_("Exactly one matching packaged release is required"))
     rows = _get_runtime_rows(language, source_text, context)
     if len(rows) != 1:
-        frappe.throw("Exactly one existing runtime translation is required")
+        frappe.throw(_("Exactly one existing runtime translation is required"))
     payload = matches[0]
     doc = frappe.get_doc("Translation", rows[0].name)
     doc.check_permission("write")
     if doc.translated_text != payload.get("translated_text"):
-        frappe.throw("Translation text differs from the packaged release; explicit review is required")
+        frappe.throw(_("Translation text differs from the packaged release; explicit review is required"))
     if doc.get("ct_origin") == "Packaged Release":
         return {"name": doc.name, "changed": False}
     if doc.get("ct_origin") not in ("Site Override", "", None):
-        frappe.throw("Unsupported translation origin")
+        frappe.throw(_("Unsupported translation origin"))
     previous_version = doc.get("ct_release_version")
     previous_app = doc.get("ct_app")
     # Runtime identities exclude app; align provenance without changing the key.
